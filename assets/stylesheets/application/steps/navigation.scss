@@ -1,0 +1,51 @@
+.steps-navigation {
+  margin-bottom: 30px;
+  padding: 30px 0;
+  border-bottom: 1px solid #eee;
+  background-color: #fff;
+
+  .container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .step-navigation {
+    position: relative;
+    padding-left: 30px;
+    color: #8197a2;
+    text-transform: uppercase;
+    line-height: 20px;
+    font-size: 11px;
+    font-weight: bold;
+
+    @for $i from 1 through 5 {
+      &:nth-child(#{$i}):before {
+        content: "#{$i}";
+      }
+    }
+
+    &:before {
+      transform: translateY(-50%);
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      left: 0;
+      top: 50%;
+      border-radius: 50%;
+      background-color: fade-out(#8197a2, 0.6);
+      color: #fff;
+      line-height: 20px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    &_active {
+      color: #333;
+
+      &:before {
+        background-color: #08b3f2;
+      }
+    }
+  }
+}

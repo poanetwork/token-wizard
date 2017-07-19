@@ -1,0 +1,44 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+p, h1, h2, h3, h4 {
+  margin: 0;
+  padding: 0;
+  font-family: 'Open Sans', sans-serif;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  position: relative;
+  width: 100%;
+  min-width: 1000px;
+  min-height: 100%;
+  box-sizing: border-box;
+  padding: $header-height 0 $footer-height;
+  background-color: #fbfbfc;
+}
+
+.container {
+  width: 960px;
+  margin: 0 auto;
+}
+
+.hidden {
+  overflow: hidden;
+}
+
+.left {
+  width: 46%;
+  float: left;
+}
+
+.right {
+  width: 46%;
+  float: right;
+}

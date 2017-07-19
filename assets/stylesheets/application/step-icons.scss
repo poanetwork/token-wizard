@@ -1,0 +1,34 @@
+.step-icons {
+  @include image-2x('../images/step-icons@2x.png', 100px, 480px);
+  background-image: url(../images/step-icons.png);
+
+  &_crowdsale-contract {
+  	width: 80px;
+  	height: 100px;
+  	background-position: 0 0;
+  }
+
+  &_crowdsale-page {
+  	width: 100px;
+  	height: 80px;
+  	background-position: 0 -100px;
+  }
+
+  &_crowdsale-setup {
+  	width: 88px;
+  	height: 100px;
+  	background-position: 0 -180px;
+  }
+
+  &_publish {
+  	width: 100px;
+  	height: 100px;
+  	background-position: 0 -280px;
+  }
+
+  &_token-setup {
+  	width: 100px;
+  	height: 100px;
+  	background-position: 0 -380px;
+  }
+}

@@ -1,0 +1,17 @@
+.header {
+  @extend %full-width;
+  position: absolute;
+  top: 0;
+  height: $header-height;
+  background-image: url(../images/bg.png);
+  background-size: cover;
+  background-position: center center;
+
+  .logo {
+    @extend %logos;
+    width: 149px;
+  	height: 35px;
+    margin-top: ($header-height - 35px) / 2;
+  	background-position: 0 -25px;
+  }
+}

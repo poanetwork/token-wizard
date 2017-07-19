@@ -1,0 +1,78 @@
+.total-funds {
+  .right {
+    text-align: right;
+  }
+
+  &-title {
+    margin-bottom: 15px;
+    color: #642f9c;
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  &-description {
+    color: #8197a2;
+    font-size: 14px;
+  }
+
+  &-chart {
+    position: relative;
+    z-index: 1;
+    height: 20px;
+    margin-bottom: 30px;
+    border-radius: 10px;
+    background-color: #f5f5f5;
+
+    &-active {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      border-radius: 10px;
+      background-image: linear-gradient(to right, #7738b9, #853ecf);
+    }
+
+    &-container {
+      position: relative;
+    }
+
+    &-division {
+      position: absolute;
+      z-index: 0;
+      top: -5px;
+      bottom: -5px;
+      width: 1px;
+      background-color: #ddd;
+
+      @for $i from 1 through 9 {
+        &:nth-child(#{$i}) {
+          left: $i * 10%;
+        }
+      }
+    }
+  }
+
+  &-statistics {
+    .left,
+    .right {
+      width: 50%;
+      padding-right: 10px;
+      box-sizing: border-box;
+    }
+
+    .title,
+    .hash {
+      margin-bottom: 10px;
+      color: #642f9c;
+      font-weight: bold;
+    }
+
+    .title {
+      font-size: 16px;
+    }
+
+    .hash {
+      font-size: 14px;
+    }
+  }
+}

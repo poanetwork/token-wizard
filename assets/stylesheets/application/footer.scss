@@ -1,0 +1,41 @@
+.footer {
+  @extend %full-width;
+  position: absolute;
+  bottom: 0;
+  height: $footer-height;
+  background-image: url(../images/bg.png);
+  background-size: cover;
+  background-position: center center;
+  color: #fff;
+
+  .container {
+    position: relative;
+  }
+
+  .logo,
+  .socials {
+    transform: translateY(-50%);
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+  }
+
+  .logo {
+    @extend %logos;
+    left: 0;
+    width: 100px;
+  	height: 25px;
+  	background-position: 0 0;
+  }
+
+  .rights {
+    color: #fff;
+    line-height: $footer-height;
+    text-align: center;
+    font-size: 12px;
+  }
+
+  .socials {
+    right: 0;
+  }
+}

@@ -1,0 +1,9 @@
+%home-items {
+  @extend %full-width;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: absolute;
+  height: 50%;
+  box-sizing: border-box;
+}
