@@ -1,195 +1,171 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title></title>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="./assets/stylesheets/application.css">
-</head>
-<body>
-  <header class="header">
-    <div class="container">
-      <a href="#" class="logo"></a>
-    </div>
-  </header>
-  <section class="steps steps_publish">
-    <div class="steps-navigation">
-      <div class="container">
-        <div class="step-navigation">Crowdsale Contract</div>
-        <div class="step-navigation">Token Setup</div>
-        <div class="step-navigation">Crowdsale Setup</div>
-        <div class="step-navigation step-navigation_active">Publish</div>
-        <div class="step-navigation">Crowdsale Page</div>
+import React from 'react'
+import '../assets/stylesheets/application.css';
+import { Link } from 'react-router-dom'
+
+export const stepFour = () => (
+	  <section className="steps steps_publish">
+    <div className="steps-navigation">
+      <div className="container">
+        <div className="step-navigation">Crowdsale Contract</div>
+        <div className="step-navigation">Token Setup</div>
+        <div className="step-navigation">Crowdsale Setup</div>
+        <div className="step-navigation step-navigation_active">Publish</div>
+        <div className="step-navigation">Crowdsale Page</div>
       </div>
     </div>
-    <div class="steps-content container">
-      <div class="about-step">
-        <div class="step-icons step-icons_publish"></div>
-        <p class="title">Publish</p>
-        <p class="description">
+    <div className="steps-content container">
+      <div className="about-step">
+        <div className="step-icons step-icons_publish"></div>
+        <p className="title">Publish</p>
+        <p className="description">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
           enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
           in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
         </p>
       </div>
-      <div class="hidden">
-        <div class="item">
-          <div class="publish-title-container">
-            <p class="publish-title" data-step="1">Crowdsale Contract</p>
+      <div className="hidden">
+        <div className="item">
+          <div className="publish-title-container">
+            <p className="publish-title" data-step="1">Crowdsale Contract</p>
           </div>
-          <p class="label">Standard</p>
-          <p class="description">
+          <p className="label">Standard</p>
+          <p className="description">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
             nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
           </p>
         </div>
-        <div class="publish-title-container">
-          <p class="publish-title" data-step="2">Token Setup</p>
+        <div className="publish-title-container">
+          <p className="publish-title" data-step="2">Token Setup</p>
         </div>
-        <div class="hidden">
-          <div class="left">
-            <p class="label">Name</p>
-            <p class="value">Token Name</p>
-            <p class="description">
+        <div className="hidden">
+          <div className="left">
+            <p className="label">Name</p>
+            <p className="value">Token Name</p>
+            <p className="description">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </p>
           </div>
-          <div class="right">
-            <p class="label">Ticker</p>
-            <p class="value">Ticker</p>
-            <p class="description">
+          <div className="right">
+            <p className="label">Ticker</p>
+            <p className="value">Ticker</p>
+            <p className="description">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </p>
           </div>
-          <div class="left">
-            <p class="label">SUPPLY</p>
-            <p class="value">100</p>
-            <p class="description">
+          <div className="left">
+            <p className="label">SUPPLY</p>
+            <p className="value">100</p>
+            <p className="description">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </p>
           </div>
-          <div class="right">
-            <p class="label">DECIMALS</p>
-            <p class="value">485</p>
-            <p class="description">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
-          </div>
-        </div>
-        <div class="publish-title-container">
-          <p class="publish-title" data-step="3">Crowdsale Setup</p>
-        </div>
-        <div class="hidden">
-          <div class="left">
-            <p class="label">Start block</p>
-            <p class="value">4500000</p>
-            <p class="description">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
-          </div>
-          <div class="right">
-            <p class="label">End block</p>
-            <p class="value">8000000</p>
-            <p class="description">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
-          </div>
-          <div class="left">
-            <p class="label">Wallet address</p>
-            <p class="value">0xc1253365dADE090649147Db89EE781d10f2b972f</p>
-            <p class="description">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
-          </div>
-          <div class="right">
-            <p class="label">SUPPLY</p>
-            <p class="value">485</p>
-            <p class="description">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
-          </div>
-          <div class="left">
-            <p class="label">RATE</p>
-            <p class="value">1 ETH</p>
-            <p class="description">
+          <div className="right">
+            <p className="label">DECIMALS</p>
+            <p className="value">485</p>
+            <p className="description">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </p>
           </div>
         </div>
-        <div class="publish-title-container">
-          <p class="publish-title" data-step="4">Crowdsale Setup</p>
+        <div className="publish-title-container">
+          <p className="publish-title" data-step="3">Crowdsale Setup</p>
         </div>
-        <div class="item">
-          <p class="label">Compiler Version</p>
-          <p class="value">1.0.0.2</p>
-          <p class="description">
+        <div className="hidden">
+          <div className="left">
+            <p className="label">Start block</p>
+            <p className="value">4500000</p>
+            <p className="description">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+          </div>
+          <div className="right">
+            <p className="label">End block</p>
+            <p className="value">8000000</p>
+            <p className="description">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+          </div>
+          <div className="left">
+            <p className="label">Wallet address</p>
+            <p className="value">0xc1253365dADE090649147Db89EE781d10f2b972f</p>
+            <p className="description">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+          </div>
+          <div className="right">
+            <p className="label">SUPPLY</p>
+            <p className="value">485</p>
+            <p className="description">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+          </div>
+          <div className="left">
+            <p className="label">RATE</p>
+            <p className="value">1 ETH</p>
+            <p className="description">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+          </div>
+        </div>
+        <div className="publish-title-container">
+          <p className="publish-title" data-step="4">Crowdsale Setup</p>
+        </div>
+        <div className="item">
+          <p className="label">Compiler Version</p>
+          <p className="value">1.0.0.2</p>
+          <p className="description">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           </p>
         </div>
-        <div class="item">
-          <p class="label">Contract Source Code</p>
+        <div className="item">
+          <p className="label">Contract Source Code</p>
           <pre>
-[{"constant":true,"inputs":[],"name":"endBlock","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},
+{`[{"constant":true,"inputs":[],"name":"endBlock","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},
 {"constant":true,"inputs":[],"name":"rate","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,
 "inputs":[],"name":"weiRaised","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],
 "name":"startBlock","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":
 "wallet","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"beneficiary",
 "type":"address"}],"name":"buyTokens","outputs":[],"payable":true,"type":"function"},{"constant":true,"inputs":[],"name":"hasEnded",
-"outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"token","outputs":
+"outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"token","outputs":`}
           </pre>
-          <p class="description">
+          <p className="description">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           </p>
         </div>
-        <div class="item">
-          <p class="label">Contract ABI</p>
+        <div className="item">
+          <p className="label">Contract ABI</p>
           <pre>
-[{"constant":true,"inputs":[],"name":"endBlock","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},
+{`[{"constant":true,"inputs":[],"name":"endBlock","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},
 {"constant":true,"inputs":[],"name":"rate","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,
 "inputs":[],"name":"weiRaised","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],
 "name":"startBlock","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":
 "wallet","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"beneficiary",
 "type":"address"}],"name":"buyTokens","outputs":[],"payable":true,"type":"function"},{"constant":true,"inputs":[],"name":"hasEnded",
-"outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"token","outputs":
+"outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"token","outputs":`}
           </pre>
-          <p class="description">
+          <p className="description">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           </p>
         </div>
-        <div class="item">
-          <p class="label">Constructor Arguments (ABI-encoded and appended to the ByteCode above)</p>
+        <div className="item">
+          <p className="label">Constructor Arguments (ABI-encoded and appended to the ByteCode above)</p>
           <pre>
-[{"constant":true,"inputs":[],"name":"endBlock","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},
+{`[{"constant":true,"inputs":[],"name":"endBlock","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},
 {"constant":true,"inputs":[],"name":"rate","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,
 "inputs":[],"name":"weiRaised","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],
 "name":"startBlock","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":
 "wallet","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"beneficiary",
 "type":"address"}],"name":"buyTokens","outputs":[],"payable":true,"type":"function"},{"constant":true,"inputs":[],"name":"hasEnded",
-"outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"token","outputs":
+"outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"token","outputs":`}
           </pre>
-          <p class="description">
+          <p className="description">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           </p>
         </div>
       </div>
     </div>
-    <div class="button-container">
-      <a href="#" class="button button_fill">Continue</a>
+    <div className="button-container">
+      <Link to='/5'><a href="#" className="button button_fill">Continue</a></Link>
     </div>
   </section>
-  <footer class="footer">
-    <div class="container">
-      <p class="rights">2017 Oracles. All rights reserved.</p>
-      <a href="#" class="logo"></a>
-      <div class="socials">
-        <a href="#" class="social social_reddit"></a>
-        <a href="#" class="social social_twitter"></a>
-        <a href="#" class="social social_oracles"></a>
-        <a href="#" class="social social_telegram"></a>
-        <a href="#" class="social social_github"></a>
-      </div>
-    </div>
-  </footer>
-</body>
-</html>
+)
