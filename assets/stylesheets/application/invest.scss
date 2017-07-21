@@ -1,0 +1,173 @@
+.invest {
+  margin: 30px auto;
+  padding-left: 30px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  background-color: #fff;
+
+  .timer {
+    position: absolute;
+    z-index: 2;
+    left: 25px;
+    top: 25px;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background-color: #fff;
+    line-height: 180px;
+    text-align: center;
+
+    &-inner {
+      line-height: normal;
+      display: inline-block;
+    }
+
+    &-i {
+      display: inline-block;
+      vertical-align: middle;
+      margin: 0 5px;
+      font-size: 0;
+      text-align: center;
+    }
+
+    &-count {
+      display: block;
+      margin-bottom: 5px;
+      color: #642f9c;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    &-interval {
+      display: block;
+      text-transform: uppercase;
+      font-size: 10px;
+      color: #8197a2;
+    }
+
+    &-container {
+      position: absolute;
+      z-index: 1;
+      left: 0;
+      top: 30px;
+      border-radius: 50%;
+      background-color: #eee;
+    }
+  }
+
+  .hashes {
+    position: relative;
+    margin-top: 30px;
+    padding-left: 260px;
+
+    &-i {
+      margin-bottom: 30px;
+    }
+
+    &-title {
+      margin-bottom: 10px;
+      color: #642f9c;
+      font-weight: bold;
+    }
+
+    &-description {
+      color: #8197a2;
+      font-size: 12px;
+    }
+  }
+
+  .balance {
+    border-bottom: 1px solid #eee;
+    padding: 30px;
+
+    &-title {
+      margin-bottom: 5px;
+      color: #642f9c;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    &-description {
+      margin-bottom: 30px;
+      color: #8197a2;
+    }
+  }
+
+  .description {
+    color: #8197a2;
+    line-height: 20px;
+    font-size: 12px;
+  }
+
+  &-form {
+    padding: 30px;
+
+    ::placeholder {
+      color: #8197a2;
+    }
+
+    &-label {
+      color: #8197a2;
+    }
+
+    &-input {
+      display: block;
+      width: 100%;
+      height: 44px;
+      outline: none;
+      padding-right: 30px;
+      border: 0;
+      border-bottom: 1px solid #eee;
+      box-sizing: border-box;
+      color: #8197a2;
+      font-size: 14px;
+      font-weight: bold;
+
+      &-container {
+        position: relative;
+        margin: 15px 0 30px;
+
+        .invest-form-label {
+          transform: translateY(-50%);
+          position: absolute;
+          right: 0;
+          top: 50%;
+        }
+      }
+    }
+
+    .button {
+      margin-bottom: 30px;
+    }
+  }
+
+  &-title {
+    margin-bottom: 10px;
+    color: #333;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+
+  &-description {
+    margin-bottom: 30px;
+    color: #8197a2;
+    line-height: 18px;
+    font-size: 12px;
+  }
+
+  &-table {
+    display: table;
+    width: 100%;
+
+    &-cell {
+      display: table-cell;
+
+      &_left {
+        position: relative;
+        width: 600px;
+        padding-right: 30px;
+        border-right: 1px solid #eee;
+      }
+    }
+  }
+}
