@@ -6,6 +6,7 @@ To Start:
 ```
 git clone https://github.com/oraclesorg/ico-wizard.git wiz
 cd wiz
+npm install
 npm start
 ```
 
