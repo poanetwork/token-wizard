@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title></title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./assets/stylesheets/application.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <a href="#" class="logo"></a>
+    </div>
+  </header>
+  <div class="invest container">
+    <div class="invest-table">
+      <div class="invest-table-cell invest-table-cell_left">
+        <div class="timer-container">
+          <div class="timer">
+            <div class="timer-inner">
+              <div class="timer-i">
+                <div class="timer-count"></div>
+                <div class="timer-interval">Days</div>
+              </div>
+              <div class="timer-i">
+                <div class="timer-count"></div>
+                <div class="timer-interval">Hours</div>
+              </div>
+              <div class="timer-i">
+                <div class="timer-count"></div>
+                <div class="timer-interval">Mins</div>
+              </div>
+            </div>
+          </div>
+          <div class="pie"></div>
+        </div>
+        <div class="hashes">
+          <div class="hashes-i">
+            <p class="hashes-title">0x00579ab5e7d886bc7caea16085307edaa563a</p>
+            <p class="hashes-description">Current Account</p>
+          </div>
+          <div class="hashes-i">
+            <p class="hashes-title">0x2b399e68fe95f8bc1a1a985634099a37709b3d4c</p>
+            <p class="hashes-description">Token Address</p>
+          </div>
+          <div class="hashes-i">
+            <p class="hashes-title">0x6b0770d930bB22990c83fBBfcba6faB129AD7E385</p>
+            <p class="hashes-description">Crowdsale Contract Address</p>
+          </div>
+          <div class="hashes-i hidden">
+            <div class="left">
+              <p class="hashes-title">Oracles Network</p>
+              <p class="hashes-description">Name</p>
+            </div>
+            <div class="left">
+              <p class="hashes-title">ORC</p>
+              <p class="hashes-description">Ticker</p>
+            </div>
+          </div>
+          <div class="hashes-i">
+            <p class="hashes-title">2,000,000,000 ORC</p>
+            <p class="hashes-description">Total Supply</p>
+          </div>
+        </div>
+        <p class="invest-title">LOREM IPSUM</p>
+        <p class="invest-description">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+          dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+          ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate.
+        </p>
+      </div>
+      <div class="invest-table-cell invest-table-cell_right">
+        <div class="balance">
+          <p class="balance-title">100,000 ORC</p>
+          <p class="balance-description">Balance</p>
+          <p class="description">
+            Lorem ipsum dolor sit amet, consectetur
+            adipiscing elit, sed do eiusmod tempor
+            incididunt ut labore et dolore.
+          </p>
+        </div>
+        <form class="invest-form">
+          <label for="" class="invest-form-label">Choose amount to invest</label>
+          <div class="invest-form-input-container">
+            <input type="text" class="invest-form-input" placeholder="0">
+            <div class="invest-form-label">TOKENS</div>
+          </div>
+          <a href="#" class="button button_fill">Invest now</a>
+          <p class="description">
+            Lorem ipsum dolor sit amet, consectetur
+            adipiscing elit, sed do eiusmod
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+  <footer class="footer">
+    <div class="container">
+      <p class="rights">2017 Oracles. All rights reserved.</p>
+      <a href="#" class="logo"></a>
+      <div class="socials">
+        <a href="#" class="social social_reddit"></a>
+        <a href="#" class="social social_twitter"></a>
+        <a href="#" class="social social_oracles"></a>
+        <a href="#" class="social social_telegram"></a>
+        <a href="#" class="social social_github"></a>
+      </div>
+    </div>
+  </footer>
+  <script src="./assets/javascripts/jquery.min.js"></script>
+  <script src="./assets/javascripts/jquery.pietimer.js"></script>
+  <script>
+    $(function() {
+      var startEvent = new Date(2017, 6, 19);
+      var endEvent = new Date(2017, 6, 24);
+
+      $('.pie').pietimer({
+        seconds: (endEvent - startEvent) / 1000,
+        color: '#6a32a6',
+        height: 230,
+        width: 230,
+        is_reversed: true,
+        initial_time: startEvent,
+        accrued_time: startEvent
+      },
+      function() { });
+      $('.pie').pietimer('start');
+
+      var seconds = (endEvent - new Date()) / 1000;
+      var timing = function() {
+        var timerCount  = $('.timer-count');
+        var days        = Math.floor(seconds/24/60/60);
+        var hoursLeft   = Math.floor((seconds) - (days*86400));
+        var hours       = Math.floor(hoursLeft/3600);
+        var minutesLeft = Math.floor((hoursLeft) - (hours*3600));
+        var minutes     = Math.floor(minutesLeft/60);
+        var remainingSeconds = seconds % 60;
+        if (remainingSeconds < 10) {
+          remainingSeconds = "0" + remainingSeconds;
+        }
+
+        timerCount.eq(0).text(days);
+        timerCount.eq(1).text(hours);
+        timerCount.eq(2).text(minutes);
+
+        if (seconds == 0) {
+          clearInterval(countdownTimer);
+        } else {
+          seconds--;
+        }
+      }
+      timing();
+      var countdownTimer = setInterval(timing, 1000);
+    });
+  </script>
+</body>
+</html>
