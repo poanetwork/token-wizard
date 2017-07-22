@@ -99,7 +99,7 @@ export const stepFive = () => (
 			</div>
 		</div>
 		<div className="button-container">
-			<Link to='/'><a href="#" className="button button_fill">Continue</a></Link>
+			<Link to='/invest'><a href="#" className="button button_fill">Invest</a></Link>
 		</div>
 	</section>
 )
