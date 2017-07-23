@@ -15,8 +15,8 @@ export class Home extends Component {
                 veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea  commodo consequat.
               </p>
               <div className="buttons">
-                <Link to='/3'><a href="#" className="button button_fill">New crowdsale</a></Link>
-                <Link to='/1'><a href="#" className="button button_outline">Choose contract</a></Link>
+                <Link to='/1'><a href="#" className="button button_fill">New crowdsale</a></Link>
+                {/*<Link to='/1'><a href="#" className="button button_outline">Choose contract</a></Link>*/}
               </div>
             </div>
           </div>
