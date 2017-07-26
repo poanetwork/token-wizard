@@ -1,4 +1,3 @@
-
 ICO Wizard DApp
 
 To Start:
