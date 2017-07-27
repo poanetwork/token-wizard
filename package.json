@@ -3,11 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "concurrently": "^3.5.0",
+    "gulp": "^3.9.1",
+    "gulp-add-src": "^0.2.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-include": "^2.3.1",
+    "gulp-order": "^1.1.1",
+    "gulp-uglify": "^2.0.0",
     "react-scripts": "1.0.10"
   },
   "dependencies": {
     "install": "^0.10.1",
     "npm": "^5.3.0",
+    "oracles-combine-solidity": "file:src/components/oracles-combine-solidity",
     "react": "^15.6.1",
     "react-countdown-clock": "^2.0.0",
     "react-dom": "^15.6.1",
@@ -15,8 +23,8 @@
     "zeppelin-solidity": "^1.2.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "concurrently \"node src/components/oracles-combine-solidity/index.js node_modules/zeppelin-solidity/contracts/crowdsale/Crowdsale.sol ./public/contracts\" \"node src/components/oracles-combine-solidity/index.js node_modules/zeppelin-solidity/contracts/crowdsale/CappedCrowdsale.sol ./public/contracts\" \"react-scripts start\"",
+    "build": "concurrently \"git submodule update --init --recursive --remote\" \"react-scripts build\"",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }
