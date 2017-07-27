@@ -23,8 +23,8 @@
     "zeppelin-solidity": "^1.2.0"
   },
   "scripts": {
-    "start": " concurrently \"node src/components/oracles-combine-solidity/index.js node_modules/zeppelin-solidity/contracts/crowdsale/Crowdsale.sol ./public/contracts\" \"node src/components/oracles-combine-solidity/index.js node_modules/zeppelin-solidity/contracts/crowdsale/CappedCrowdsale.sol ./public/contracts\" \"react-scripts start\"",
-    "build": "react-scripts build",
+    "start": "concurrently \"node src/components/oracles-combine-solidity/index.js node_modules/zeppelin-solidity/contracts/crowdsale/Crowdsale.sol ./public/contracts\" \"node src/components/oracles-combine-solidity/index.js node_modules/zeppelin-solidity/contracts/crowdsale/CappedCrowdsale.sol ./public/contracts\" \"react-scripts start\"",
+    "build": "concurrently \"git submodule update --init --recursive --remote\" \"react-scripts build\"",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }
