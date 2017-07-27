@@ -16,8 +16,8 @@ gulp.task('javascript', function() {
     ], {base: '.'}))
     .pipe(include())
     .pipe(concat('application.js'))
-    .pipe(uglify())
-    .pipe(gulp.dest('assets/javascripts'));
+    //.pipe(uglify())
+    .pipe(gulp.dest('public'));
 });
 
 gulp.task('watch', function() {
