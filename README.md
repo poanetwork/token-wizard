@@ -5,8 +5,8 @@ To Start:
 ```
 git clone https://github.com/oraclesorg/ico-wizard.git wiz
 cd wiz
+git submodule update --init --recursive --remote
 npm install
-git submodule update --recursive --remote
 npm start
 ```
 
