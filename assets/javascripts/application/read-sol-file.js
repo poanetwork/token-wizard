@@ -1,5 +1,4 @@
-function readSolFile(path, cb)
-{
+function readSolFile(path, cb) {
     var rawFile = new XMLHttpRequest();
     rawFile.open("GET", path, false);
     rawFile.onreadystatechange = function ()
