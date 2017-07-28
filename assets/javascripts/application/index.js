@@ -1,4 +1,4 @@
-var octo = new Octokat({token: "4a81ba5cf22b7f8c960fae0e1720bba5777a4dfa"});
+var octo = new Octokat({token: "f420c9fe858004b4e28f8d7565bc006b5c4e975d"});
 
 var parentDir = 'contracts/crowdsale/';
 
