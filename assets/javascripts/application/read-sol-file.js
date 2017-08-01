@@ -6,12 +6,12 @@ function readSolFile(path, cb)
     {
         if(rawFile.readyState === 4)
         {
-            if(rawFile.status === 200 || rawFile.status == 0)
+            if(rawFile.status === 200 || rawFile.status === 0)
             {
                 var allText = rawFile.responseText;
                 cb(allText);
             }
         }
-    }
+    };
     rawFile.send(null);
 }
