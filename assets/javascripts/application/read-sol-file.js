@@ -14,6 +14,6 @@ var readSolFile = function(path, cb)
         }
     };
     rawFile.send(null);
-}
+};
 
 window.readSolFile = readSolFile;
