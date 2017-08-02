@@ -1,4 +1,4 @@
-function readSolFile(path, cb)
+var readSolFile = function(path, cb)
 {
     var rawFile = new XMLHttpRequest();
     rawFile.open("GET", path, false);
@@ -15,3 +15,5 @@ function readSolFile(path, cb)
     };
     rawFile.send(null);
 }
+
+window.readSolFile = readSolFile;

@@ -1,9 +1,12 @@
-$(function() {
-	readSolFile("./contracts/Crowdsale_flat.sol", function(content) {
-		$("#crowdsale_flat_src").text(content);
-	});
+"use strict";
 
-	readSolFile("./contracts/CappedCrowdsale_flat.sol", function(content) {
-		$("#capped_crowdsale_flat_src").text(content);
-	});
+$(function () {
+	function setFlatFileContentToPage (file, target) {
+		window.readSolFile(file, function(content) {
+			$(target).text(content);
+		});
+	}
+
+	setFlatFileContentToPage("./contracts/Crowdsale_flat.sol", "#crowdsale_flat_src");
+	setFlatFileContentToPage("./contracts/CappedCrowdsale_flat.sol", "#capped_crowdsale_flat_src");
 });
