@@ -33,7 +33,7 @@ export const stepOne = () => (
           </span>
         </label>
         <label className="radio">
-          <input type="radio" name="contract-type"/>
+          <input type="radio" disabled name="contract-type"/>
           <span className="title title_soon">Capped</span>
           <span className="description">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,

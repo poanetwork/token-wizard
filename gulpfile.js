@@ -14,7 +14,7 @@ gulp.task("javascript", function() {
       "assets/javascripts/vendor/index.js",
       "assets/javascripts/application/read-sol-file.js",
       "assets/javascripts/application/index.js"
-    ], {base: '.'}))
+    ], {base: "."}))
     .pipe(include())
     .pipe(concat("application.js"))
     //.pipe(uglify())
