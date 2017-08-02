@@ -12,8 +12,7 @@ gulp.task("javascript", function() {
     .pipe(addsrc("assets/javascripts/vendor/index.js"))
     .pipe(order([
       "assets/javascripts/vendor/index.js",
-      "assets/javascripts/application/read-sol-file.js",
-      "assets/javascripts/application/index.js"
+      "assets/javascripts/application/*.js"
     ], {base: "."}))
     .pipe(include())
     .pipe(concat("application.js"))

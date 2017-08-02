@@ -5,14 +5,14 @@ import { Link } from 'react-router-dom'
 export class stepTwo extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
-    this.changeState = this.changeState.bind(this);
+    this.state = props?props.location?props.location.query?props.location.query.state?props.location.query.state:{}:{}:{}:{};
+    if (this.changeState.bind)
+      this.changeState = this.changeState.bind(this);
   }
 
   changeState(event, prop, ref) {
     var state = this.state;
     state[prop] = event.target.value;
-    console.log(this.refs);
     if (this.refs[ref]) 
       this.setState(state);
     console.log(this.state);

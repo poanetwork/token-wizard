@@ -97,19 +97,12 @@ export class stepFour extends React.Component {
               </div>
               <div className="left">
                 <p className="label">Wallet address</p>
-                <p className="value">{this.state.walletAddress?this.state.walletAddress:0xc1253365dADE090649147Db89EE781d10f2b972f}</p>
+                <p className="value">{this.state.walletAddress?this.state.walletAddress:"0xc1253365dADE090649147Db89EE781d10f2b972f"}</p>
                 <p className="description">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
               </div>
               <div className="right">
-                <p className="label">SUPPLY</p>
-                <p className="value">{this.state.supply?this.state.supply:485}</p>
-                <p className="description">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </p>
-              </div>
-              <div className="left">
                 <p className="label">RATE</p>
                 <p className="value">{this.state.rate?this.state.rate:1} ETH</p>
                 <p className="description">
@@ -130,13 +123,7 @@ export class stepFour extends React.Component {
             <div className="item">
               <p className="label">Contract Source Code</p>
               <pre>
-    {`[{"constant":true,"inputs":[],"name":"endBlock","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},
-    {"constant":true,"inputs":[],"name":"rate","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,
-    "inputs":[],"name":"weiRaised","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],
-    "name":"startBlock","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":
-    "wallet","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"beneficiary",
-    "type":"address"}],"name":"buyTokens","outputs":[],"payable":true,"type":"function"},{"constant":true,"inputs":[],"name":"hasEnded",
-    "outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"token","outputs":`}
+                {this.state.contracts?this.state.contracts.crowdsale?this.state.contracts.crowdsale:"":""}
               </pre>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
