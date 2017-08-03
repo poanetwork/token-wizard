@@ -64,7 +64,7 @@ export class stepThree extends React.Component {
             </div>
             <div className="right">
               <label for="" className="label">Supply</label>
-              <input type="text" className="input" value={this.state.supply} onChange={(e) => this.changeState(e, "supply")}/>
+              <input type="text" className="input" value={this.state.crowdsaleSupply} onChange={(e) => this.changeState(e, "supply")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.

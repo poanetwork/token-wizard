@@ -23,8 +23,13 @@ export class stepFour extends React.Component {
       var source = $this.state.contracts?$this.state.contracts.crowdsale?$this.state.contracts.crowdsale.src:"":"";
       var bin = $this.state.contracts?$this.state.contracts.crowdsale?$this.state.contracts.crowdsale.bin:"":"";
       var abi = $this.state.contracts?$this.state.contracts.crowdsale?JSON.parse($this.state.contracts.crowdsale.abi):[]:[];
-      deployContract(web3, abi, bin, function(err, addr) {
-        if (err) console.log(err);
+      var params = {};
+      params.startBlock = $this.state.startBlock;
+      params.endBlock = $this.state.endBlock;
+      params.rate = $this.state.rate;
+      params.walletAddress = $this.state.walletAddress;
+      deployContract(web3, abi, bin, params, function(err, addr) {
+        if (err) return console.log(err);
         var state = $this.state;
         state.contracts.crowdsale.addr = addr;
         state.redirect = true;
@@ -89,7 +94,7 @@ export class stepFour extends React.Component {
               </div>
               <div className="left">
                 <p className="label">SUPPLY</p>
-                <p className="value">{this.state.supply?this.state.supply:100}</p>
+                <p className="value">{this.state.tokensSupply?this.state.tokensSupply:100}</p>
                 <p className="description">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
