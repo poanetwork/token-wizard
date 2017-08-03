@@ -1,6 +1,8 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
+import { Redirect } from 'react-router';
+import { deployContract, getWeb3 } from './web3'
 
 export class stepFour extends React.Component {
   constructor(props) {
@@ -9,9 +11,32 @@ export class stepFour extends React.Component {
     this.changeState = props?props.location?props.location.query?props.location.query.changeState?this.props.location.query.changeState:{}:{}:{}:{};
     if (this.changeState.bind)
       this.changeState = this.changeState.bind(this);
+    if (this.deployCrowdsale.bind)
+      this.deployCrowdsale = this.deployCrowdsale.bind(this);
+  }
+
+  deployCrowdsale() {
+    var $this = this;
+    getWeb3(function(web3, isOraclesNetwork) {
+      console.log(web3);
+      console.log(isOraclesNetwork);
+      var source = $this.state.contracts?$this.state.contracts.crowdsale?$this.state.contracts.crowdsale.src:"":"";
+      var bin = $this.state.contracts?$this.state.contracts.crowdsale?$this.state.contracts.crowdsale.bin:"":"";
+      var abi = $this.state.contracts?$this.state.contracts.crowdsale?JSON.parse($this.state.contracts.crowdsale.abi):[]:[];
+      deployContract(web3, abi, bin, function(err, addr) {
+        if (err) console.log(err);
+        var state = $this.state;
+        state.contracts.crowdsale.addr = addr;
+        state.redirect = true;
+        $this.setState(state);
+      });
+    });
   }
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect push to={{ pathname: '/5', query: { state: this.state, changeState: this.changeState } }} />;
+    }
     return (
   	  <section className="steps steps_publish">
         <div className="steps-navigation">
@@ -123,7 +148,7 @@ export class stepFour extends React.Component {
             <div className="item">
               <p className="label">Contract Source Code</p>
               <pre>
-                {this.state.contracts?this.state.contracts.crowdsale?this.state.contracts.crowdsale:"":""}
+                {this.state.contracts?this.state.contracts.crowdsale?this.state.contracts.crowdsale.src:"":""}
               </pre>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
@@ -132,13 +157,7 @@ export class stepFour extends React.Component {
             <div className="item">
               <p className="label">Contract ABI</p>
               <pre>
-    {`[{"constant":true,"inputs":[],"name":"endBlock","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},
-    {"constant":true,"inputs":[],"name":"rate","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,
-    "inputs":[],"name":"weiRaised","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],
-    "name":"startBlock","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":
-    "wallet","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"beneficiary",
-    "type":"address"}],"name":"buyTokens","outputs":[],"payable":true,"type":"function"},{"constant":true,"inputs":[],"name":"hasEnded",
-    "outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"token","outputs":`}
+                {this.state.contracts?this.state.contracts.crowdsale?this.state.contracts.crowdsale.abi:"":""}
               </pre>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
@@ -162,7 +181,8 @@ export class stepFour extends React.Component {
           </div>
         </div>
         <div className="button-container">
-          <Link to='/5'><a href="#" className="button button_fill">Continue</a></Link>
+          {/*<Link to='/5' onClick={this.deployCrowdsale}><a href="#" className="button button_fill">Continue</a></Link>*/}
+          <a href="#" onClick={this.deployCrowdsale} className="button button_fill">Continue</a>
         </div>
       </section>
     )}
