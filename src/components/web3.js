@@ -75,8 +75,7 @@ function checkNetworkVersion(web3, cb) {
   });
 }
 
-export function deployContract(web3, abi, bin, cb) {
-    var $this = this;
+export function deployContract(web3, abi, bin, params, cb) {
     console.log(web3.eth.accounts);
     console.log(web3.eth.defaultAccount);
 
@@ -93,10 +92,10 @@ export function deployContract(web3, abi, bin, cb) {
           from: web3.eth.defaultAccount
       };
       crowdSaleContract.new(
-        $this.state.startBlock,
-        $this.state.endBlock,
-        $this.state.rate,
-        $this.state.walletAddress,
+        params.startBlock,
+        params.endBlock,
+        params.rate,
+        params.walletAddress,
         opts, function(err, contract) {
         console.log(err);
         console.log(contract);

@@ -40,7 +40,7 @@ export class stepFive extends React.Component {
 							</p>
 						</div>
 						<div className="right">
-							<p className="total-funds-title">175,000 ETH</p>
+							<p className="total-funds-title">{this.state.rate?this.state.tokensSupply/this.state.rate:"175,000"} ETH</p>
 							<p className="total-funds-description">
 								Goal
 							</p>
@@ -86,13 +86,13 @@ export class stepFive extends React.Component {
 						<div className="right">
 							<div className="hidden">
 								<div className="left">
-									<p className="title">5,750</p>
+									<p className="title">{this.state.rate?this.state.rate:"5,750"}</p>
 									<p className="description">
 										Price (Tokens/ETH)
 									</p>
 								</div>
 								<div className="right">
-									<p className="title">9,250</p>
+									<p className="title">{this.state.tokensSupply?this.state.tokensSupply:"9,250"}</p>
 									<p className="description">
 										Total Supply
 									</p>

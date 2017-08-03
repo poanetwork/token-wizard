@@ -1,15 +1,17 @@
 import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
 import { getWeb3 } from './web3'
+import { getQueryVariable } from './utils'
+
+const startEvent = new Date(2017, 6, 19)
+const endEvent = new Date(2017, 6, 24)
 
 export class Invest extends React.Component {
   constructor(props) {
       super(props);
       console.log(props);
-      //var state = props?props.location?props.location.query?props.location.query.state?props.location.query.state:{}:{}:{}:{};
-      //this.setState(state);
       this.state = {
-        seconds: (props.endEvent - props.startEvent)/2 ,
+        seconds: (endEvent - startEvent)/2 ,
       }
 
       var $this = this;
@@ -23,6 +25,16 @@ export class Invest extends React.Component {
   componentWillMount () {
     const timeInterval = setInterval(() => this.setState({ seconds: this.state.seconds - 1}), 1000)
     this.setState({ timeInterval })
+  }
+
+  componentDidMount () {
+    var $this = this;
+    var addr = getQueryVariable("addr");
+    this.state.contractAddr = addr;
+    this.state.tokenAddr = addr;
+    getWeb3(function(web3, isOraclesNetwork) {
+      $this.state.curAddr = web3.eth.defaultAccount;
+    });
   }
 
   renderPieTracker () {
@@ -81,15 +93,15 @@ export class Invest extends React.Component {
           </div>
           <div className="hashes">
             <div className="hashes-i">
-              <p className="hashes-title">0xf36045454F66C7318adCDdF3B801E3bF8CfBc6a1</p>
+              <p className="hashes-title">{this.state.curAddr?this.state.curAddr:"0xf36045454F66C7318adCDdF3B801E3bF8CfBc6a1"}</p>
               <p className="hashes-description">Current Account</p>
             </div>
             <div className="hashes-i">
-              <p className="hashes-title">0x2b399e68fe95f8bc1a1a985634099a37709b3d4c</p>
+              <p className="hashes-title">{this.state.contractAddr?this.state.tokenAddr:"0x2b399e68fe95f8bc1a1a985634099a37709b3d4c"}</p>
               <p className="hashes-description">Token Address</p>
             </div>
             <div className="hashes-i">
-              <p className="hashes-title">0x6b0770d930bB22990c83fBBfcba6faB129AD7E385</p>
+              <p className="hashes-title">{this.state.contractAddr?this.state.contractAddr:"0x6b0770d930bB22990c83fBBfcba6faB129AD7E385"}</p>
               <p className="hashes-description">Crowdsale Contract Address</p>
             </div>
             <div className="hashes-i hidden">

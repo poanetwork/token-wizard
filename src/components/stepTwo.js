@@ -57,7 +57,7 @@ export class stepTwo extends React.Component {
             </div>
             <div className="left">
               <label for="" className="label">Supply</label>
-              <input type="text" className="input" value={this.state.supply} onChange={(e) => this.changeState(e, "supply", "two")}/>
+              <input type="text" className="input" value={this.state.tokensSupply} onChange={(e) => this.changeState(e, "supply", "two")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
