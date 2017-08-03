@@ -31,7 +31,7 @@
   },
   "scripts": {
     "start": "npm run generateFlatSolidityContract && npm run generateFlatSolidityCappedContract && npm run compileContract && react-scripts start",
-    "build": "git submodule update --init --recursive --remote && react-scripts build",
+    "build": "npm run generateFlatSolidityContract && npm run generateFlatSolidityCappedContract && npm run compileContract && git submodule update --init --recursive --remote && react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "generateFlatSolidityContract": "node $npm_package_config_combine_solidity_script $npm_package_config_zeppelin_path/Crowdsale.sol $npm_package_config_contract_folder",
