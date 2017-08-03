@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 export class Home extends Component {
   constructor(props) {
     super(props);
-    this.state = {contracts: {}};
+    this.state = {contracts: {crowdsale: {}, capped: {}}};
     this.setFlatFileContentToState = this.setFlatFileContentToState.bind(this);
   }
 
@@ -13,14 +13,24 @@ export class Home extends Component {
     var $this = this;
     this.setFlatFileContentToState("./contracts/Crowdsale_flat.sol", function(content) {
       var state = $this.state;
-      state.contracts.crowdsale = content;
+      state.contracts.crowdsale.src = content;
       $this.setState(state);
     });
-    this.setFlatFileContentToState("./contracts/CappedCrowdsale_flat.sol", function(content) {
+    this.setFlatFileContentToState("./contracts/Crowdsale_flat.bin", function(content) {
+      var state = $this.state;
+      state.contracts.crowdsale.bin = content;
+      $this.setState(state);
+    });
+    this.setFlatFileContentToState("./contracts/Crowdsale_flat.abi", function(content) {
+      var state = $this.state;
+      state.contracts.crowdsale.abi = content;
+      $this.setState(state);
+    });
+    /*this.setFlatFileContentToState("./contracts/CappedCrowdsale_flat.sol", function(content) {
       var state = $this.state;
       state.contracts.capped = content;
       $this.setState(state);
-    })
+    });*/
   }
 
   readSolFile(path, cb)
@@ -51,8 +61,6 @@ export class Home extends Component {
     return (
       <div>
         <section className="home">
-          <input id="crowdsale_flat_src" style={{display: "none"}} value="fdsfsdf" ref="crowdsaleFlat"/>
-          <span id="capped_crowdsale_flat_src" style={{display: "none"}} ref="cappedCrowdsaleFlat"></span>
           <div className="crowdsale">
             <div className="container">
               <h1 className="title">Create crowdsale</h1>

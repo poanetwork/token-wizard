@@ -7,8 +7,12 @@ export class stepThree extends React.Component {
     super(props);
     this.state = props?props.location?props.location.query?props.location.query.state?props.location.query.state:{}:{}:{}:{};
     this.changeState = props?props.location?props.location.query?props.location.query.changeState?this.props.location.query.changeState:{}:{}:{}:{};
-    if (this.changeState.bind)
-      this.changeState = this.changeState.bind(this);
+    if (this.changeState.bind) this.changeState = this.changeState.bind(this);
+
+    this.state.startBlock = 4500000;
+    this.state.endBlock = 8000000;
+    this.state.rate = 1;
+    this.state.walletAddress = "0xDd0BB0e2a1594240fED0c2f2c17C1E9AB4F87126";
   }
 
   render() {
@@ -36,7 +40,7 @@ export class stepThree extends React.Component {
           <div className="hidden">
             <div className="left">
               <label for="" className="label">Start block</label>
-              <input type="text" className="input" value={this.props.startBlock} onChange={(e) => this.changeState(e, "startBlock", "three")}/>
+              <input type="text" className="input" value={this.state.startBlock} onChange={(e) => this.changeState(e, "startBlock", "three")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
@@ -44,7 +48,7 @@ export class stepThree extends React.Component {
             </div>
             <div className="right">
               <label for="" className="label">End block</label>
-              <input type="text" className="input" value={this.props.endBlock} onChange={(e) => this.changeState(e, "endBlock", "three")}/>
+              <input type="text" className="input" value={this.state.endBlock} onChange={(e) => this.changeState(e, "endBlock", "three")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
@@ -52,7 +56,7 @@ export class stepThree extends React.Component {
             </div>
             <div className="left">
               <label for="" className="label">Wallet address</label>
-              <input type="text" className="input" value={this.props.walletAddress} onChange={(e) => this.changeState(e, "walletAddress", "three")}/>
+              <input type="text" className="input" value={this.state.walletAddress} onChange={(e) => this.changeState(e, "walletAddress", "three")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
@@ -60,7 +64,7 @@ export class stepThree extends React.Component {
             </div>
             <div className="right">
               <label for="" className="label">Supply</label>
-              <input type="text" className="input" value={this.props.supply} onChange={(e) => this.changeState(e, "supply")}/>
+              <input type="text" className="input" value={this.state.supply} onChange={(e) => this.changeState(e, "supply")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
@@ -68,7 +72,7 @@ export class stepThree extends React.Component {
             </div>
             <div className="left">
               <label for="" className="label">Rate</label>
-              <input type="text" className="input" value={this.props.rate} onChange={(e) => this.changeState(e, "rate")}/>
+              <input type="text" className="input" value={this.state.rate} onChange={(e) => this.changeState(e, "rate")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.

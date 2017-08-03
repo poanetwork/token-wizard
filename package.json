@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "concurrently": "^3.5.0",
     "gulp": "^3.9.1",
     "gulp-add-src": "^0.2.0",
     "gulp-concat": "^2.6.1",
@@ -16,16 +15,27 @@
     "install": "^0.10.1",
     "npm": "^5.3.0",
     "oracles-combine-solidity": "file:src/components/oracles-combine-solidity",
+    "path": "^0.12.7",
     "react": "^15.6.1",
     "react-countdown-clock": "^2.0.0",
     "react-dom": "^15.6.1",
     "react-router-dom": "^4.1.2",
+    "solc": "^0.4.14",
+    "web3": "^0.17.0-beta",
     "zeppelin-solidity": "^1.2.0"
   },
+  "config": {
+    "contract_folder": "./public/contracts",
+    "combine_solidity_script": "src/components/oracles-combine-solidity/index.js",
+    "zeppelin_path": "node_modules/zeppelin-solidity/contracts/crowdsale/"
+  },
   "scripts": {
-    "start": "concurrently \"node src/components/oracles-combine-solidity/index.js node_modules/zeppelin-solidity/contracts/crowdsale/Crowdsale.sol ./public/contracts\" \"node src/components/oracles-combine-solidity/index.js node_modules/zeppelin-solidity/contracts/crowdsale/CappedCrowdsale.sol ./public/contracts\" \"react-scripts start\"",
-    "build": "concurrently \"git submodule update --init --recursive --remote\" \"react-scripts build\"",
+    "start": "npm run generateFlatSolidityContract && npm run generateFlatSolidityCappedContract && npm run compileContract && react-scripts start",
+    "build": "git submodule update --init --recursive --remote && react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "generateFlatSolidityContract": "node $npm_package_config_combine_solidity_script $npm_package_config_zeppelin_path/Crowdsale.sol $npm_package_config_contract_folder",
+    "generateFlatSolidityCappedContract": "node $npm_package_config_combine_solidity_script $npm_package_config_zeppelin_path/CappedCrowdsale.sol $npm_package_config_contract_folder",
+    "compileContract": "node ./scripts/compileContract.js $npm_package_config_contract_folder/Crowdsale_flat.sol Crowdsale $npm_package_config_contract_folder"
   }
 }
