@@ -12,6 +12,7 @@ export class stepFive extends React.Component {
 	    this.state.contracts = {"crowdsale": {}, "token": {}};
 		this.state.crowdsale = {};
       	this.state.token = {};
+      	this.state.crowdsale.supply = 2700;
 	}
 
 	componentWillMount () {

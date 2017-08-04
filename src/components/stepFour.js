@@ -32,7 +32,7 @@ export class stepFour extends React.Component {
       var abiToken = contracts?contracts.token?contracts.token.abi:[]:[];
 
       var crowdsale = $this.state.crowdsale;
-      var paramsCrowdsale = [crowdsale.startBlock, crowdsale.endBlock, crowdsale.rate, crowdsale.walletAddress];
+      var paramsCrowdsale = [crowdsale.startBlock, crowdsale.endBlock, web3.toWei(crowdsale.rate, "ether"), crowdsale.walletAddress];
       deployContract(web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, function(err, crowdsaleAddr) {
         console.log(crowdsaleAddr);
         if (err) return console.log(err);
