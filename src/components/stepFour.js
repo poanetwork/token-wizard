@@ -32,7 +32,17 @@ export class stepFour extends React.Component {
       var abiToken = contracts?contracts.token?contracts.token.abi:[]:[];
 
       var crowdsale = $this.state.crowdsale;
-      var paramsCrowdsale = [crowdsale.startBlock, crowdsale.endBlock, crowdsale.rate, crowdsale.walletAddress];
+      var paramsCrowdsale = [
+        crowdsale.startBlock, 
+        crowdsale.endBlock, 
+        web3.toWei(crowdsale.rate, "ether"), 
+        crowdsale.walletAddress,
+        parseInt($this.state.crowdsale.supply),
+        $this.state.token.name,
+        $this.state.token.ticker,
+        parseInt($this.state.token.decimals),
+        parseInt($this.state.token.supply)
+      ];
       deployContract(web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, function(err, crowdsaleAddr) {
         console.log(crowdsaleAddr);
         if (err) return console.log(err);
@@ -47,7 +57,7 @@ export class stepFour extends React.Component {
 
         if (contracts) {
           if (contracts.crowdsale) {
-            if (contracts.crowdsale.addr) $this.props.history.push(`/5?crowdsale=` + contracts.crowdsale.addr);
+            if (contracts.crowdsale.addr) $this.props.history.push(`/5?addr=` + contracts.crowdsale.addr);
             else $this.props.history.push(`/5`);
           }
           else $this.props.history.push(`/5`);

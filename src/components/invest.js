@@ -10,6 +10,8 @@ export class Invest extends React.Component {
   constructor(props) {
       super(props);
       console.log(props);
+      if (this.tokensToInvestOnChange.bind) this.tokensToInvestOnChange = this.tokensToInvestOnChange.bind(this);
+      if (this.investToTokens.bind) this.investToTokens = this.investToTokens.bind(this);
       this.state = {
         seconds: (endEvent - startEvent)/2 ,
       };
@@ -18,14 +20,12 @@ export class Invest extends React.Component {
       this.state.token = {};
   }
 
-  componentWillMount () {
+  componentDidMount () {
     const timeInterval = setInterval(() => this.setState({ seconds: this.state.seconds - 1}), 1000);
     this.setState({ timeInterval });
 
-    var crowdsaleAddr = getQueryVariable("crowdsale");
-    //var tokenAddr = getQueryVariable("token");
+    var crowdsaleAddr = getQueryVariable("addr");
     this.state.contracts.crowdsale.addr = crowdsaleAddr;
-    //this.state.contracts.token.addr = tokenAddr;
 
     var derivativesLength = 4;
     var derivativesIterator = 0;
@@ -88,6 +88,26 @@ export class Invest extends React.Component {
           $this.setState(state);
         });
 
+        crowdsaleContract.rate.call(function(err, rate) {
+          if (err) return console.log(err);
+          
+          console.log("rate:");
+          console.log("result: " + web3.fromWei(parseInt(rate), "ether"));
+          let state = $this.state;
+          state.crowdsale.rate = web3.fromWei(parseInt(rate), "ether");
+          $this.setState(state);
+        });
+
+        crowdsaleContract.supply.call(function(err, supply) {
+          if (err) return console.log(err);
+          
+          console.log("supply:");
+          console.log("result: " + supply);
+          let state = $this.state;
+          state.crowdsale.supply = supply;
+          $this.setState(state);
+        });
+
         crowdsaleContract.token.call(function(err, tokenAddr) {
           if (err) return console.log(err);
           
@@ -118,10 +138,72 @@ export class Invest extends React.Component {
               console.log("result: " + ticker);
               $this.state.token.ticker = ticker;
             });
+            tokenContract.supply.call(function(err, supply) {
+              if (err) console.log(err);
+              console.log("supply:");
+              console.log("result: " + supply);
+              $this.state.token.supply = supply;
+            });
           });
         });
       });
     });
+  }
+
+  investToTokens() {
+    var $this = this;
+    console.log($this.state.tokensToInvest);
+    console.log($this.state.crowdsale.rate);
+    getWeb3(function(web3, isOraclesNetwork) {
+      console.log(web3);
+      console.log(isOraclesNetwork);
+      var weiToSend = web3.toWei($this.state.tokensToInvest/$this.state.crowdsale.rate, "ether");
+      console.log(weiToSend);
+      web3.eth.getGasPrice(function(err, gp) {
+        console.log("gp:" + gp);
+        var opts = {
+          from: web3.eth.defaultAccount,
+          to: $this.state.contracts.crowdsale.addr,
+          value: weiToSend,
+          gas: 100000,
+          //gasPrice: 3000000000
+          //data: "0x"
+        };
+
+        console.log(opts);
+
+        /*attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr, function(err, crowdsaleContract) {
+          console.log("attach to crowdsale contract");
+          if (err) return console.log(err);
+          if (!crowdsaleContract) return console.log("There is no contract at this address");
+
+          console.log(crowdsaleContract);
+          console.log(web3.eth.defaultAccount);
+          console.log(opts);
+
+          crowdsaleContract.buyTokens.sendTransaction(web3.eth.defaultAccount, opts, function(err, txHash) {
+            if (err) return console.log(err);
+            
+            console.log("txHash: " + txHash);
+          });
+        });*/
+
+
+        web3.eth.sendTransaction(opts, function(err, transactionHash) {
+          if (err) console.log(err);
+          if (!err) {
+            console.log(transactionHash);
+            window.location.reload();
+          }
+        });
+      });
+    });
+  }
+
+  tokensToInvestOnChange(event) {
+    var state = this.state;
+    state["tokensToInvest"] = event.target.value;
+    this.setState(state);
   }
 
   renderPieTracker () {
@@ -193,16 +275,16 @@ export class Invest extends React.Component {
             </div>
             <div className="hashes-i hidden">
               <div className="left">
-                <p className="hashes-title">{this.state.token.name}</p>
+                <p className="hashes-title">{this.state.token.name?this.state.token.name.toString():"Oracles network"}</p>
                 <p className="hashes-description">Name</p>
               </div>
               <div className="left">
-                <p className="hashes-title">{this.state.token.ticker?this.state.token.ticker.toString():""}</p>
+                <p className="hashes-title">{this.state.token.ticker?this.state.token.ticker.toString():"ORC"}</p>
                 <p className="hashes-description">Ticker</p>
               </div>
             </div>
             <div className="hashes-i">
-              <p className="hashes-title">2,000,000,000 {this.state.token.ticker}</p>
+              <p className="hashes-title">{this.state.token.supply?this.state.token.supply.toString():"2,000,000,000"} {this.state.token.ticker?this.state.token.ticker.toString(): "ORC"}</p>
               <p className="hashes-description">Total Supply</p>
             </div>
           </div>
@@ -215,7 +297,7 @@ export class Invest extends React.Component {
         </div>
         <div className="invest-table-cell invest-table-cell_right">
           <div className="balance">
-            <p className="balance-title">{this.state.crowdsale.weiRaised?this.state.crowdsale.weiRaised.toString():0} {this.state.token.ticker}</p>
+            <p className="balance-title">{this.state.crowdsale.weiRaised?this.state.crowdsale.weiRaised.toString():"0"} {this.state.token.ticker?this.state.token.ticker.toString(): "ORC"}</p>
             <p className="balance-description">Balance</p>
             <p className="description">
               Lorem ipsum dolor sit amet, consectetur
@@ -226,10 +308,10 @@ export class Invest extends React.Component {
           <form className="invest-form">
             <label for="" className="invest-form-label">Choose amount to invest</label>
             <div className="invest-form-input-container">
-              <input type="text" className="invest-form-input" placeholder="0"/>
+              <input type="text" className="invest-form-input" value={this.tokensToInvest} onChange={this.tokensToInvestOnChange} placeholder="0"/>
               <div className="invest-form-label">TOKENS</div>
             </div>
-            <a href="#" className="button button_fill">Invest now</a>
+            <a href="#" className="button button_fill" onClick={this.investToTokens}>Invest now</a>
             <p className="description">
               Lorem ipsum dolor sit amet, consectetur
               adipiscing elit, sed do eiusmod

@@ -8,13 +8,16 @@ export class stepFive extends React.Component {
 	constructor(props) {
 	    super(props);
 	    console.log(props);
+	    if (this.goToInvestPage.bind)
+      this.goToInvestPage = this.goToInvestPage.bind(this);
 	    this.state = {};
 	    this.state.contracts = {"crowdsale": {}, "token": {}};
 		this.state.crowdsale = {};
       	this.state.token = {};
+      	this.state.crowdsale.supply = 2700;
 	}
 
-	componentWillMount () {
+	componentDidMount () {
 	    var crowdsaleAddr = getQueryVariable("crowdsale");
 	    //var tokenAddr = getQueryVariable("token");
 	    this.state.contracts.crowdsale.addr = crowdsaleAddr;
@@ -91,6 +94,16 @@ export class stepFive extends React.Component {
 	          $this.setState(state);
 	        });
 
+	        crowdsaleContract.supply.call(function(err, supply) {
+	          if (err) return console.log(err);
+	          
+	          console.log("supply:");
+	          console.log("result: " + supply);
+	          let state = $this.state;
+	          state.crowdsale.supply = supply;
+	          $this.setState(state);
+	        });
+
 	        crowdsaleContract.token.call(function(err, tokenAddr) {
 	          if (err) return console.log(err);
 	          
@@ -121,10 +134,20 @@ export class stepFive extends React.Component {
 	              console.log("result: " + ticker);
 	              $this.state.token.ticker = ticker;
 	            });
+	            tokenContract.supply.call(function(err, supply) {
+	              if (err) console.log(err);
+	              console.log("supply:");
+	              console.log("result: " + supply);
+	              $this.state.token.supply = supply;
+	            });
 	          });
 	        });
 	      });
 	    });
+  	}
+
+  	goToInvestPage() {
+        this.props.history.push(this.state.contracts.crowdsale.addr?('/invest' + ('?addr=' + this.state.contracts.crowdsale.addr):""):'/invest');
   	}
 
 	render() {
@@ -225,7 +248,8 @@ export class stepFive extends React.Component {
 				</div>
 			</div>
 			<div className="button-container">
-				<Link to={{ pathname: this.state.contracts.crowdsale.addr?('/invest' + ('?crowdsale=' + this.state.contracts.crowdsale.addr):""):'/invest' }}><a href="#" className="button button_fill">Invest</a></Link>
+				{/*<Link to={{ pathname: this.state.contracts.crowdsale.addr?('/invest' + ('?crowdsale=' + this.state.contracts.crowdsale.addr):""):'/invest' }}><a href="#" className="button button_fill">Invest</a></Link>*/}
+				<a href="#" onClick={this.goToInvestPage} className="button button_fill">Invest</a>
 			</div>
 		</section>
 		)

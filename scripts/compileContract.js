@@ -27,7 +27,7 @@ fs.readFile(inputFilePath, "utf8", function(err, content) {
 		for (let contractName in output.contracts) {
 			for (let i in targetContractNames) {
 				let targetContractName = targetContractNames[i];
-				if (targetContractName.toLowerCase() == contractName.substr(contractName.indexOf(":") + 1).toLowerCase()) {
+				if (targetContractName.toLowerCase() === contractName.substr(contractName.indexOf(":") + 1).toLowerCase()) {
 					fs.writeFileSync(outputFolder + "/" + targetContractName + "_flat.bin", output.contracts[contractName].bytecode);
 					fs.writeFileSync(outputFolder + "/" + targetContractName + "_flat.abi", output.contracts[contractName].interface);
 				}
