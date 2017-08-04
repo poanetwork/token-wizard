@@ -36,6 +36,6 @@
     "eject": "react-scripts eject",
     "generateFlatSolidityContract": "node $npm_package_config_combine_solidity_script $npm_package_config_zeppelin_path/Crowdsale.sol $npm_package_config_contract_folder",
     "generateFlatSolidityCappedContract": "node $npm_package_config_combine_solidity_script $npm_package_config_zeppelin_path/CappedCrowdsale.sol $npm_package_config_contract_folder",
-    "compileContract": "node ./scripts/compileContract.js $npm_package_config_contract_folder/Crowdsale_flat.sol Crowdsale $npm_package_config_contract_folder"
+    "compileContract": "node ./scripts/compileContract.js $npm_package_config_contract_folder/Crowdsale_flat.sol SampleCrowdsale SampleCrowdsaleToken $npm_package_config_contract_folder"
   }
 }
