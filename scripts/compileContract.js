@@ -11,12 +11,17 @@ let outputFolder = args.length > 3?args[3]:"/out";
 var targetContractNames = [crowdsaleContractName, tokenContractName];
 
 fs.readFile(inputFilePath, "utf8", function(err, content) {
-	if (err) return console.log(err.message);
+	if (err) {
+		return console.log(err.message);
+	}
 	addExtendedCode(content, function(err, contentUpdated) {
-		if (err) return console.log(err.message);
+		if (err) {
+			return console.log(err.message);
+		}
 
-		fs.writeFileSync(inputFilePath.replace(pathLib.basename(inputFilePath), "Sample" + pathLib.basename(inputFilePath)), contentUpdated);
-		var solcV011 = solc.setupMethods(require("./bin/soljson-v0.4.11+commit.68ef5810.js"))
+		var outputFilePath = inputFilePath.replace(pathLib.basename(inputFilePath), "Sample" + pathLib.basename(inputFilePath));
+		fs.writeFileSync(outputFilePath, contentUpdated);
+		var solcV011 = solc.setupMethods(require("./bin/soljson-v0.4.11+commit.68ef5810.js"));
 		//var solcV011 = solc.useVersion('v0.4.11+commit.68ef5810');
 		var output = solcV011.compile(contentUpdated, 1);
 		for (let contractName in output.contracts) {
