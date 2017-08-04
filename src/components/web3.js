@@ -82,7 +82,7 @@ export function deployContract(web3, abi, bin, params, cb) {
     }, function(err, estimatedGas) {
       if (err) console.log(err);
 
-      if (!estimatedGas) estimatedGas = 2674662;
+      if (!estimatedGas) estimatedGas = 3516260;
       else estimatedGas += 100000;
       
       var contractInstance = web3.eth.contract(abi);
