@@ -20,7 +20,7 @@ export function getCurrentProvider() {
 }
 
 export function getWeb3(callback) {
-  if (typeof window.web3 === 'undefined') {
+	if (typeof window.web3 === 'undefined') {
     // no web3, use fallback
     console.error("Please use a web3 browser");
     var msgNotEthereum = "You aren't connected to Oracles Network. Please, switch on Oracles plugin and refresh the page. Check Oracles network <a href='https://github.com/oraclesorg/oracles-wiki' target='blank'>wiki</a> for more info.";
@@ -76,36 +76,62 @@ function checkNetworkVersion(web3, cb) {
 }
 
 export function deployContract(web3, abi, bin, params, cb) {
-    console.log(web3.eth.accounts);
-    console.log(web3.eth.defaultAccount);
-
     web3.eth.estimateGas({
         from: web3.eth.defaultAccount, 
         data: bin
     }, function(err, estimatedGas) {
       if (err) console.log(err);
 
-      var crowdSaleContract = web3.eth.contract(abi);
+      if (!estimatedGas) estimatedGas = 2674662;
+      else estimatedGas += 100000;
+      
+      var contractInstance = web3.eth.contract(abi);
       var opts = {
-          data: "0x" + bin,
-          gas: estimatedGas,
-          from: web3.eth.defaultAccount
+        from: web3.eth.defaultAccount,
+        data: "0x" + bin,
+        gas: estimatedGas
       };
-      crowdSaleContract.new(
-        params.startBlock,
-        params.endBlock,
-        params.rate,
-        params.walletAddress,
-        opts, function(err, contract) {
+      var totalParams = params;
+      totalParams.push(opts);
+      totalParams.push(deployContractCB);
+      contractInstance.new(...totalParams);
+
+      /*contractInstance.new(
+        params[0],
+        params[1],
+        params[2],
+        params[3],
+        opts, deployContractCB
+      );*/
+
+      function deployContractCB(err, contract) {
         console.log(err);
         console.log(contract);
-        if (err) return cb(err);
-        
-        console.log(contract);
-        console.log('Contract mined! address: ' + contract.address + ' transactionHash: ' + contract.transactionHash);
-        cb(null, contract.address);
-      })
+        if (err) console.log(err);
+        if (contract) {
+          if (contract.address) {
+            console.log(contract);
+            console.log('Contract mined! address: ' + contract.address + ' transactionHash: ' + contract.transactionHash);
+            cb(null, contract.address);
+          }
+        }
+      };
     });
+}
+
+export function attachToContract(web3, abi, addr, cb) {
+	if(!web3.isConnected()) {
+		if (cb) cb({code: 200, title: "Error", message: "check RPC availability"});
+	} else {
+		console.log("web3.eth.defaultAccount:");
+		console.log(web3.eth.defaultAccount);
+		
+		var MyContract = web3.eth.contract(abi);
+
+		contract = MyContract.at(addr);
+		
+		if (cb) cb(null, contract);
+	}
 }
 
 // Abstraction:

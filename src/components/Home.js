@@ -1,59 +1,30 @@
 import React, { Component } from 'react';
 import '../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
+import { setFlatFileContentToState } from './utils';
 
 export class Home extends Component {
   constructor(props) {
     super(props);
-    this.state = {contracts: {crowdsale: {}, capped: {}}};
-    this.setFlatFileContentToState = this.setFlatFileContentToState.bind(this);
+    this.state = {contracts: {crowdsale: {}, token: {}}};
   }
 
   componentDidMount() {
     var $this = this;
-    this.setFlatFileContentToState("./contracts/Crowdsale_flat.sol", function(content) {
-      var state = $this.state;
-      state.contracts.crowdsale.src = content;
-      $this.setState(state);
+    setFlatFileContentToState("./contracts/SampleCrowdsale_flat.sol", function(content) {
+      $this.state.contracts.crowdsale.src = content;
     });
-    this.setFlatFileContentToState("./contracts/Crowdsale_flat.bin", function(content) {
-      var state = $this.state;
-      state.contracts.crowdsale.bin = content;
-      $this.setState(state);
+    setFlatFileContentToState("./contracts/SampleCrowdsale_flat.bin", function(content) {
+      $this.state.contracts.crowdsale.bin = content;
     });
-    this.setFlatFileContentToState("./contracts/Crowdsale_flat.abi", function(content) {
-      var state = $this.state;
-      state.contracts.crowdsale.abi = content;
-      $this.setState(state);
+    setFlatFileContentToState("./contracts/SampleCrowdsale_flat.abi", function(content) {
+      $this.state.contracts.crowdsale.abi = JSON.parse(content);
     });
-    /*this.setFlatFileContentToState("./contracts/CappedCrowdsale_flat.sol", function(content) {
-      var state = $this.state;
-      state.contracts.capped = content;
-      $this.setState(state);
-    });*/
-  }
-
-  readSolFile(path, cb)
-  {
-      var rawFile = new XMLHttpRequest();
-      rawFile.open("GET", path, false);
-      rawFile.onreadystatechange = function ()
-      {
-          if(rawFile.readyState === 4)
-          {
-              if(rawFile.status === 200 || rawFile.status === 0)
-              {
-                  var allText = rawFile.responseText;
-                  cb(allText);
-              }
-          }
-      };
-      rawFile.send(null);
-  }
-
-  setFlatFileContentToState(file, cb) {
-    this.readSolFile(file, function(content) {
-      cb(content);
+    setFlatFileContentToState("./contracts/SampleCrowdsaleToken_flat.bin", function(content) {
+      $this.state.contracts.token.bin = content;
+    });
+    setFlatFileContentToState("./contracts/SampleCrowdsaleToken_flat.abi", function(content) {
+      $this.state.contracts.token.abi = JSON.parse(content);
     });
   }
 

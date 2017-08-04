@@ -1,6 +1,7 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
+import { getWeb3 } from './web3'
 
 export class stepThree extends React.Component {
   constructor(props) {
@@ -9,10 +10,20 @@ export class stepThree extends React.Component {
     this.changeState = props?props.location?props.location.query?props.location.query.changeState?this.props.location.query.changeState:{}:{}:{}:{};
     if (this.changeState.bind) this.changeState = this.changeState.bind(this);
 
-    this.state.startBlock = 4500000;
-    this.state.endBlock = 8000000;
-    this.state.rate = 1;
-    this.state.walletAddress = "0xDd0BB0e2a1594240fED0c2f2c17C1E9AB4F87126";
+    this.state.crowdsale = {};
+    this.state.crowdsale.startBlock = 4500000;
+    this.state.crowdsale.endBlock = 8000000;
+    this.state.crowdsale.rate = 1;
+  }
+
+  componentWillMount () {
+    var $this = this;
+    getWeb3(function(web3, isOraclesNetwork) {
+      console.log(web3.eth.defaultAccount);
+      var state = $this.state;
+      state.crowdsale.walletAddress = web3.eth.defaultAccount;
+      $this.setState(state);
+    });
   }
 
   render() {
@@ -40,7 +51,7 @@ export class stepThree extends React.Component {
           <div className="hidden">
             <div className="left">
               <label for="" className="label">Start block</label>
-              <input type="text" className="input" value={this.state.startBlock} onChange={(e) => this.changeState(e, "startBlock", "three")}/>
+              <input type="text" className="input" value={this.state.crowdsale.startBlock} onChange={(e) => this.changeState(e, "crowdsale", "startBlock", "three")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
@@ -48,7 +59,7 @@ export class stepThree extends React.Component {
             </div>
             <div className="right">
               <label for="" className="label">End block</label>
-              <input type="text" className="input" value={this.state.endBlock} onChange={(e) => this.changeState(e, "endBlock", "three")}/>
+              <input type="text" className="input" value={this.state.crowdsale.endBlock} onChange={(e) => this.changeState(e, "crowdsale", "endBlock", "three")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
@@ -56,7 +67,7 @@ export class stepThree extends React.Component {
             </div>
             <div className="left">
               <label for="" className="label">Wallet address</label>
-              <input type="text" className="input" value={this.state.walletAddress} onChange={(e) => this.changeState(e, "walletAddress", "three")}/>
+              <input type="text" className="input" value={this.state.crowdsale.walletAddress} onChange={(e) => this.changeState(e, "crowdsale", "walletAddress", "three")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
@@ -64,7 +75,7 @@ export class stepThree extends React.Component {
             </div>
             <div className="right">
               <label for="" className="label">Supply</label>
-              <input type="text" className="input" value={this.state.crowdsaleSupply} onChange={(e) => this.changeState(e, "supply")}/>
+              <input type="text" className="input" value={this.state.crowdsale.supply} onChange={(e) => this.changeState(e, "crowdsale", "supply")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
@@ -72,7 +83,7 @@ export class stepThree extends React.Component {
             </div>
             <div className="left">
               <label for="" className="label">Rate</label>
-              <input type="text" className="input" value={this.state.rate} onChange={(e) => this.changeState(e, "rate")}/>
+              <input type="text" className="input" value={this.state.crowdsale.rate} onChange={(e) => this.changeState(e, "crowdsale", "rate")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
