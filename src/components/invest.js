@@ -70,6 +70,7 @@ export class Invest extends React.Component {
       console.log("getWeb3");
       var state = $this.state;
       state.curAddr = web3.eth.accounts[0];
+      state.web3 = web3;
       $this.setState(state);
 
       if (!$this.state.contracts.crowdsale.addr) return;
@@ -153,32 +154,29 @@ export class Invest extends React.Component {
 
   investToTokens() {
     var $this = this;
-    getWeb3(function(web3, isOraclesNetwork) {
-      console.log(web3);
-      console.log(isOraclesNetwork);
-      var weiToSend = web3.toWei($this.state.tokensToInvest/$this.state.crowdsale.rate, "ether");
-      var opts = {
-        from: web3.eth.defaultAccount,
-        value: weiToSend
-      };
+    let web3 = this.state.web3;
+    var weiToSend = web3.toWei($this.state.tokensToInvest/$this.state.crowdsale.rate, "ether");
+    var opts = {
+      from: web3.eth.accounts[0],
+      value: weiToSend
+    };
 
+    console.log(opts);
+
+    attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr, function(err, crowdsaleContract) {
+      console.log("attach to crowdsale contract");
+      if (err) return console.log(err);
+      if (!crowdsaleContract) return console.log("There is no contract at this address");
+
+      console.log(crowdsaleContract);
+      console.log(web3.eth.defaultAccount);
       console.log(opts);
 
-      attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr, function(err, crowdsaleContract) {
-        console.log("attach to crowdsale contract");
+      crowdsaleContract.buyTokens.sendTransaction(web3.eth.accounts[0], opts, function(err, txHash) {
         if (err) return console.log(err);
-        if (!crowdsaleContract) return console.log("There is no contract at this address");
-
-        console.log(crowdsaleContract);
-        console.log(web3.eth.defaultAccount);
-        console.log(opts);
-
-        crowdsaleContract.buyTokens.sendTransaction(web3.eth.defaultAccount, opts, function(err, txHash) {
-          if (err) return console.log(err);
-          
-          console.log("txHash: " + txHash);
-          window.location.reload();
-        });
+        
+        console.log("txHash: " + txHash);
+        window.location.reload();
       });
     });
   }
