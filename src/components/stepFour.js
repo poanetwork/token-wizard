@@ -28,8 +28,6 @@ export class stepFour extends React.Component {
       var source = contracts?contracts.crowdsale?contracts.crowdsale.src:"":"";
       var binCrowdsale = contracts?contracts.crowdsale?contracts.crowdsale.bin:"":"";
       var abiCrowdsale = contracts?contracts.crowdsale?contracts.crowdsale.abi:[]:[];
-      var binToken = contracts?contracts.token?contracts.token.bin:"":"";
-      var abiToken = contracts?contracts.token?contracts.token.abi:[]:[];
 
       var crowdsale = $this.state.crowdsale;
       var paramsCrowdsale = [
@@ -65,15 +63,6 @@ export class stepFour extends React.Component {
         else $this.props.history.push(`/5`);
         
         //state.redirect = true;
-        /*deployContract(web3, abiToken, binToken, paramsToken, function(err, tokenAddr) {
-          console.log(tokenAddr);
-          if (err) return console.log(err);
-
-          let state = $this.state;
-          state.contracts.token.addr = tokenAddr;
-          state.redirect = true;
-          $this.setState(state);
-        });*/
       });
     });
   }

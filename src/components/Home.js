@@ -11,21 +11,25 @@ export class Home extends Component {
 
   componentDidMount() {
     var $this = this;
-    setFlatFileContentToState("./contracts/SampleCrowdsale_flat.sol", function(content) {
+    var contractName = "SampleCrowdsale";
+    //var contractName = "RomanCrowdsale";
+    setFlatFileContentToState("./contracts/" + contractName + "_flat.sol", function(content) {
       $this.state.contracts.crowdsale.src = content;
     });
-    setFlatFileContentToState("./contracts/SampleCrowdsale_flat.bin", function(content) {
-      $this.state.contracts.crowdsale.bin = content;
+    setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", function(_bin) {
+      $this.state.contracts.crowdsale.bin = _bin;
     });
-    setFlatFileContentToState("./contracts/SampleCrowdsale_flat.abi", function(content) {
-      $this.state.contracts.crowdsale.abi = JSON.parse(content);
+    setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", function(_abi) {
+      $this.state.contracts.crowdsale.abi = JSON.parse(_abi);
     });
-    setFlatFileContentToState("./contracts/SampleCrowdsaleToken_flat.bin", function(content) {
+
+
+    /*setFlatFileContentToState("./contracts/SampleCrowdsaleToken_flat.bin", function(content) {
       $this.state.contracts.token.bin = content;
     });
     setFlatFileContentToState("./contracts/SampleCrowdsaleToken_flat.abi", function(content) {
       $this.state.contracts.token.abi = JSON.parse(content);
-    });
+    });*/
   }
 
   render() {

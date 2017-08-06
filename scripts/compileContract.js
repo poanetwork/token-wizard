@@ -18,8 +18,12 @@ fs.readFile(inputFilePath, "utf8", function(err, content) {
 		if (err) {
 			return console.log(err.message);
 		}
+		//test
+		//var contentUpdated = content;
+		//var outputFilePath = inputFilePath;
 
 		var outputFilePath = inputFilePath.replace(pathLib.basename(inputFilePath), "Sample" + pathLib.basename(inputFilePath));
+
 		fs.writeFileSync(outputFilePath, contentUpdated);
 		var solcV011 = solc.setupMethods(require("./bin/soljson-v0.4.11+commit.68ef5810.js"));
 		//var solcV011 = solc.useVersion('v0.4.11+commit.68ef5810');

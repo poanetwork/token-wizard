@@ -11,10 +11,11 @@ export class stepTwo extends React.Component {
     this.state.token = {};
   }
 
-  changeState(event, parent, prop, ref) {
-    var state = this.state;
-    if (this.refs[ref]) state[parent][prop] = event.target.value;
-    this.setState(state);
+  changeState(event, $this, parent, prop, ref) {
+    var state = $this.state;
+    console.log(state);
+    if ($this.refs[ref]) state[parent][prop] = event.target.value;
+    $this.setState(state);
   }
 
   render() {
@@ -42,7 +43,7 @@ export class stepTwo extends React.Component {
           <div className="hidden">
             <div className="left">
               <label for="" className="label">Name</label>
-              <input type="text" className="input" value={this.state.token.name} onChange={(e) => this.changeState(e, "token", "name", "two")}/>
+              <input type="text" className="input" value={this.state.token.name} onChange={(e) => this.changeState(e, this, "token", "name", "two")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
@@ -50,7 +51,7 @@ export class stepTwo extends React.Component {
             </div>
             <div className="right">
               <label for="" className="label">Ticker</label>
-              <input type="text" className="input" value={this.state.token.ticker} onChange={(e) => this.changeState(e, "token", "ticker", "two")}/>
+              <input type="text" className="input" value={this.state.token.ticker} onChange={(e) => this.changeState(e, this, "token", "ticker", "two")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
@@ -58,7 +59,7 @@ export class stepTwo extends React.Component {
             </div>
             <div className="left">
               <label for="" className="label">Supply</label>
-              <input type="text" className="input" value={this.state.token.supply} onChange={(e) => this.changeState(e, "token", "supply", "two")}/>
+              <input type="text" className="input" value={this.state.token.supply} onChange={(e) => this.changeState(e, this, "token", "supply", "two")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
@@ -66,7 +67,7 @@ export class stepTwo extends React.Component {
             </div>
             <div className="right">
               <label for="" className="label">Decimals</label>
-              <input type="text" className="input" value={this.state.token.decimals} onChange={(e) => this.changeState(e, "token", "decimals", "two")}/>
+              <input type="text" className="input" value={this.state.token.decimals} onChange={(e) => this.changeState(e, this, "token", "decimals", "two")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.

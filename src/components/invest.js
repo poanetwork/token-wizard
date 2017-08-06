@@ -68,7 +68,9 @@ export class Invest extends React.Component {
     console.log($this.state);
     getWeb3(function(web3, isOraclesNetwork) {
       console.log("getWeb3");
-      $this.state.curAddr = web3.eth.defaultAccount;
+      var state = $this.state;
+      state.curAddr = web3.eth.accounts[0];
+      $this.setState(state);
 
       if (!$this.state.contracts.crowdsale.addr) return;
       attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr, function(err, crowdsaleContract) {
@@ -81,8 +83,7 @@ export class Invest extends React.Component {
         crowdsaleContract.weiRaised.call(function(err, weiRaised) {
           if (err) return console.log(err);
           
-          console.log("weiRaised:");
-          console.log("result: " + web3.fromWei(parseInt(weiRaised), "ether"));
+          console.log("weiRaised: " + web3.fromWei(parseInt(weiRaised), "ether"));
           let state = $this.state;
           state.crowdsale.weiRaised = web3.fromWei(parseInt(weiRaised), "ether");
           $this.setState(state);
@@ -91,8 +92,7 @@ export class Invest extends React.Component {
         crowdsaleContract.rate.call(function(err, rate) {
           if (err) return console.log(err);
           
-          console.log("rate:");
-          console.log("result: " + web3.fromWei(parseInt(rate), "ether"));
+          console.log("rate: " + web3.fromWei(parseInt(rate), "ether"));
           let state = $this.state;
           state.crowdsale.rate = web3.fromWei(parseInt(rate), "ether");
           $this.setState(state);
@@ -101,8 +101,7 @@ export class Invest extends React.Component {
         crowdsaleContract.supply.call(function(err, supply) {
           if (err) return console.log(err);
           
-          console.log("supply:");
-          console.log("result: " + supply);
+          console.log("supply: " + supply);
           let state = $this.state;
           state.crowdsale.supply = supply;
           $this.setState(state);
@@ -111,13 +110,12 @@ export class Invest extends React.Component {
         crowdsaleContract.token.call(function(err, tokenAddr) {
           if (err) return console.log(err);
           
-          console.log("token:");
-          console.log("result: " + tokenAddr);
+          console.log("token: " + tokenAddr);
           let state = $this.state;
           state.contracts.token.addr = tokenAddr;
           $this.setState(state);
 
-          if (!$this.state.contracts.token.addr || $this.state.contracts.token.addr == "0x") return;
+          if (!tokenAddr || tokenAddr == "0x") return;
           attachToContract(web3, $this.state.contracts.token.abi, $this.state.contracts.token.addr, function(err, tokenContract) {
             console.log("attach to token contract");
             if (err) return console.log(err);
@@ -128,21 +126,24 @@ export class Invest extends React.Component {
             tokenContract.name.call(function(err, name) {
               if (err) return console.log(err);
               
-              console.log("name:");
-              console.log("result: " + name);
-              $this.state.token.name = name;
+              console.log("token name: " + name);
+              let state = $this.state;
+              state.token.name = name;
+              $this.setState(state);
             });
             tokenContract.symbol.call(function(err, ticker) {
               if (err) console.log(err);
-              console.log("ticker:");
-              console.log("result: " + ticker);
-              $this.state.token.ticker = ticker;
+              console.log("token ticker: " + ticker);
+              let state = $this.state;
+              state.token.ticker = ticker;
+              $this.setState(state);
             });
             tokenContract.supply.call(function(err, supply) {
               if (err) console.log(err);
-              console.log("supply:");
-              console.log("result: " + supply);
-              $this.state.token.supply = supply;
+              let state = $this.state;
+              console.log("token supply: " + supply);
+              state.token.supply = supply;
+              $this.setState(state);
             });
           });
         });
@@ -152,49 +153,31 @@ export class Invest extends React.Component {
 
   investToTokens() {
     var $this = this;
-    console.log($this.state.tokensToInvest);
-    console.log($this.state.crowdsale.rate);
     getWeb3(function(web3, isOraclesNetwork) {
       console.log(web3);
       console.log(isOraclesNetwork);
       var weiToSend = web3.toWei($this.state.tokensToInvest/$this.state.crowdsale.rate, "ether");
-      console.log(weiToSend);
-      web3.eth.getGasPrice(function(err, gp) {
-        console.log("gp:" + gp);
-        var opts = {
-          from: web3.eth.defaultAccount,
-          to: $this.state.contracts.crowdsale.addr,
-          value: weiToSend,
-          gas: 100000,
-          //gasPrice: 3000000000
-          //data: "0x"
-        };
+      var opts = {
+        from: web3.eth.defaultAccount,
+        value: weiToSend
+      };
 
+      console.log(opts);
+
+      attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr, function(err, crowdsaleContract) {
+        console.log("attach to crowdsale contract");
+        if (err) return console.log(err);
+        if (!crowdsaleContract) return console.log("There is no contract at this address");
+
+        console.log(crowdsaleContract);
+        console.log(web3.eth.defaultAccount);
         console.log(opts);
 
-        /*attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr, function(err, crowdsaleContract) {
-          console.log("attach to crowdsale contract");
+        crowdsaleContract.buyTokens.sendTransaction(web3.eth.defaultAccount, opts, function(err, txHash) {
           if (err) return console.log(err);
-          if (!crowdsaleContract) return console.log("There is no contract at this address");
-
-          console.log(crowdsaleContract);
-          console.log(web3.eth.defaultAccount);
-          console.log(opts);
-
-          crowdsaleContract.buyTokens.sendTransaction(web3.eth.defaultAccount, opts, function(err, txHash) {
-            if (err) return console.log(err);
-            
-            console.log("txHash: " + txHash);
-          });
-        });*/
-
-
-        web3.eth.sendTransaction(opts, function(err, transactionHash) {
-          if (err) console.log(err);
-          if (!err) {
-            console.log(transactionHash);
-            window.location.reload();
-          }
+          
+          console.log("txHash: " + txHash);
+          window.location.reload();
         });
       });
     });
