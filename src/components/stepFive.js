@@ -18,50 +18,49 @@ export class stepFive extends React.Component {
 	}
 
 	componentDidMount () {
-	    var crowdsaleAddr = getQueryVariable("crowdsale");
-	    //var tokenAddr = getQueryVariable("token");
-	    this.state.contracts.crowdsale.addr = crowdsaleAddr;
-	    //this.state.contracts.token.addr = tokenAddr;
+		var state = this.state;
+	    var crowdsaleAddr = getQueryVariable("addr");
+	    state.contracts.crowdsale.addr = crowdsaleAddr;
 	    
 	    var derivativesLength = 4;
 	    var derivativesIterator = 0;
 	    var $this = this;
 	    setFlatFileContentToState("./contracts/SampleCrowdsale_flat.bin", function(_bin) {
 	      derivativesIterator++;
-	      $this.state.contracts.crowdsale.bin = _bin;
+	      state.contracts.crowdsale.bin = _bin;
 
 	      if (derivativesIterator == derivativesLength) {
-	        $this.extractContractsData($this);
+	        $this.extractContractsData($this, state);
 	      }
 	    });
 	    setFlatFileContentToState("./contracts/SampleCrowdsale_flat.abi", function(_abi) {
 	      derivativesIterator++;
-	      $this.state.contracts.crowdsale.abi = JSON.parse(_abi);
+	      state.contracts.crowdsale.abi = JSON.parse(_abi);
 
 	      if (derivativesIterator == derivativesLength) {
-	        $this.extractContractsData($this);
+	        $this.extractContractsData($this, state);
 	      }
 	    });
 	    setFlatFileContentToState("./contracts/SampleCrowdsaleToken_flat.bin", function(_bin) {
 	      derivativesIterator++;
-	      $this.state.contracts.token.bin = _bin;
+	      state.contracts.token.bin = _bin;
 
 	      if (derivativesIterator == derivativesLength) {
-	        $this.extractContractsData($this);
+	        $this.extractContractsData($this, state);
 	      }
 	    });
 	    setFlatFileContentToState("./contracts/SampleCrowdsaleToken_flat.abi", function(_abi) {
 	      derivativesIterator++;
-	      $this.state.contracts.token.abi = JSON.parse(_abi);
+	      state.contracts.token.abi = JSON.parse(_abi);
 
 	      if (derivativesIterator == derivativesLength) {
-	        $this.extractContractsData($this);
+	        $this.extractContractsData($this, state);
 	      }
 	    });
 	}
 
-	extractContractsData($this) {
-	    console.log($this.state);
+	extractContractsData($this, state) {
+		$this.setState(state);
 	    getWeb3(function(web3, isOraclesNetwork) {
 	      console.log("getWeb3");
 	      $this.state.curAddr = web3.eth.defaultAccount;
@@ -77,8 +76,7 @@ export class stepFive extends React.Component {
 	        crowdsaleContract.weiRaised.call(function(err, weiRaised) {
 	          if (err) return console.log(err);
 	          
-	          console.log("weiRaised:");
-	          console.log("result: " + web3.fromWei(parseInt(weiRaised), "ether"));
+	          console.log("weiRaised: " + web3.fromWei(parseInt(weiRaised), "ether"));
 	          let state = $this.state;
 	          state.crowdsale.weiRaised = web3.fromWei(parseInt(weiRaised), "ether");
 	          $this.setState(state);
@@ -87,8 +85,7 @@ export class stepFive extends React.Component {
 	        crowdsaleContract.rate.call(function(err, rate) {
 	          if (err) return console.log(err);
 	          
-	          console.log("rate:");
-	          console.log("result: " + web3.fromWei(parseInt(rate), "ether"));
+	          console.log("rate: " + web3.fromWei(parseInt(rate), "ether"));
 	          let state = $this.state;
 	          state.crowdsale.rate = web3.fromWei(parseInt(rate), "ether");
 	          $this.setState(state);
@@ -97,8 +94,7 @@ export class stepFive extends React.Component {
 	        crowdsaleContract.supply.call(function(err, supply) {
 	          if (err) return console.log(err);
 	          
-	          console.log("supply:");
-	          console.log("result: " + supply);
+	          console.log("supply: " + supply);
 	          let state = $this.state;
 	          state.crowdsale.supply = supply;
 	          $this.setState(state);
@@ -107,13 +103,12 @@ export class stepFive extends React.Component {
 	        crowdsaleContract.token.call(function(err, tokenAddr) {
 	          if (err) return console.log(err);
 	          
-	          console.log("token:");
-	          console.log("result: " + tokenAddr);
+	          console.log("token: " + tokenAddr);
 	          let state = $this.state;
 	          state.contracts.token.addr = tokenAddr;
 	          $this.setState(state);
 
-	          if (!$this.state.contracts.token.addr || $this.state.contracts.token.addr == "0x") return;
+	          if (!tokenAddr || tokenAddr == "0x") return;
 	          attachToContract(web3, $this.state.contracts.token.abi, $this.state.contracts.token.addr, function(err, tokenContract) {
 	            console.log("attach to token contract");
 	            if (err) return console.log(err);
@@ -124,21 +119,24 @@ export class stepFive extends React.Component {
 	            tokenContract.name.call(function(err, name) {
 	              if (err) return console.log(err);
 	              
-	              console.log("name:");
-	              console.log("result: " + name);
-	              $this.state.token.name = name;
+	              console.log("token name: " + name);
+	              let state = $this.state;
+	              state.token.name = name;
+	              $this.setState(state);
 	            });
 	            tokenContract.symbol.call(function(err, ticker) {
 	              if (err) console.log(err);
-	              console.log("ticker:");
-	              console.log("result: " + ticker);
-	              $this.state.token.ticker = ticker;
+	              console.log("token ticker: " + ticker);
+	              let state = $this.state;
+	              state.token.ticker = ticker;
+	              $this.setState(state);
 	            });
 	            tokenContract.supply.call(function(err, supply) {
 	              if (err) console.log(err);
-	              console.log("supply:");
-	              console.log("result: " + supply);
-	              $this.state.token.supply = supply;
+	              let state = $this.state;
+	              console.log("token supply: " + supply);
+	              state.token.supply = supply;
+	              $this.setState(state);
 	            });
 	          });
 	        });
@@ -213,7 +211,7 @@ export class stepFive extends React.Component {
 									</p>
 								</div>
 								<div className="right">
-									<p className="title">573</p>
+									<p className="title">1</p>
 									<p className="description">
 										Contributors
 									</p>
@@ -233,7 +231,7 @@ export class stepFive extends React.Component {
 									</p>
 								</div>
 								<div className="right">
-									<p className="title">{this.state.crowdsale.supply?this.state.crowdsale.supply:0}</p>
+									<p className="title">{this.state.crowdsale.supply?this.state.crowdsale.supply.toString():0}</p>
 									<p className="description">
 										Total Supply
 									</p>

@@ -11,9 +11,9 @@ export class stepThree extends React.Component {
     if (this.changeState.bind) this.changeState = this.changeState.bind(this);
 
     this.state.crowdsale = {};
-    this.state.crowdsale.startBlock = 4500000;
-    this.state.crowdsale.endBlock = 8000000;
-    this.state.crowdsale.rate = 1;
+    //this.state.crowdsale.startBlock = 3036872;//3000164;
+    //this.state.crowdsale.endBlock = 5000000;
+    //this.state.crowdsale.rate = 1;
   }
 
   componentWillMount () {
@@ -51,7 +51,7 @@ export class stepThree extends React.Component {
           <div className="hidden">
             <div className="left">
               <label for="" className="label">Start block</label>
-              <input type="text" className="input" value={this.state.crowdsale.startBlock} onChange={(e) => this.changeState(e, "crowdsale", "startBlock", "three")}/>
+              <input type="text" className="input" value={this.state.crowdsale.startBlock} onChange={(e) => this.changeState(e, this, "crowdsale", "startBlock", "three")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
@@ -59,7 +59,7 @@ export class stepThree extends React.Component {
             </div>
             <div className="right">
               <label for="" className="label">End block</label>
-              <input type="text" className="input" value={this.state.crowdsale.endBlock} onChange={(e) => this.changeState(e, "crowdsale", "endBlock", "three")}/>
+              <input type="text" className="input" value={this.state.crowdsale.endBlock} onChange={(e) => this.changeState(e, this, "crowdsale", "endBlock", "three")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
@@ -67,7 +67,7 @@ export class stepThree extends React.Component {
             </div>
             <div className="left">
               <label for="" className="label">Wallet address</label>
-              <input type="text" className="input" value={this.state.crowdsale.walletAddress} onChange={(e) => this.changeState(e, "crowdsale", "walletAddress", "three")}/>
+              <input type="text" className="input" value={this.state.crowdsale.walletAddress} onChange={(e) => this.changeState(e, this, "crowdsale", "walletAddress", "three")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
@@ -75,7 +75,7 @@ export class stepThree extends React.Component {
             </div>
             <div className="right">
               <label for="" className="label">Supply</label>
-              <input type="text" className="input" value={this.state.crowdsale.supply} onChange={(e) => this.changeState(e, "crowdsale", "supply")}/>
+              <input type="text" className="input" value={this.state.crowdsale.supply} onChange={(e) => this.changeState(e, this, "crowdsale", "supply", "three")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
@@ -83,7 +83,7 @@ export class stepThree extends React.Component {
             </div>
             <div className="left">
               <label for="" className="label">Rate</label>
-              <input type="text" className="input" value={this.state.crowdsale.rate} onChange={(e) => this.changeState(e, "crowdsale", "rate")}/>
+              <input type="text" className="input" value={this.state.crowdsale.rate} onChange={(e) => this.changeState(e, this, "crowdsale", "rate", "three")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
