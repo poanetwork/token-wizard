@@ -21,7 +21,7 @@
     "react-dom": "^15.6.1",
     "react-router-dom": "^4.1.2",
     "solc": "^0.4.14",
-    "web3": "^0.17.0-beta",
+    "web3": "^0.19.1",
     "zeppelin-solidity": "^1.2.0"
   },
   "config": {

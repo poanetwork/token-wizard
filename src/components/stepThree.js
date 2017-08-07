@@ -10,20 +10,24 @@ export class stepThree extends React.Component {
     this.changeState = props?props.location?props.location.query?props.location.query.changeState?this.props.location.query.changeState:{}:{}:{}:{};
     if (this.changeState.bind) this.changeState = this.changeState.bind(this);
 
-    this.state.crowdsale = {};
-    //this.state.crowdsale.startBlock = 3036872;//3000164;
+    var state = this.state;
+    state.crowdsale = {};
+    this.setState(state);
+    //this.state.crowdsale.startBlock = 3036872;
     //this.state.crowdsale.endBlock = 5000000;
     //this.state.crowdsale.rate = 1;
   }
 
-  componentWillMount () {
+  componentDidMount () {
     var $this = this;
-    getWeb3(function(web3, isOraclesNetwork) {
-      console.log(web3.eth.defaultAccount);
-      var state = $this.state;
-      state.crowdsale.walletAddress = web3.eth.defaultAccount;
-      $this.setState(state);
-    });
+    setTimeout(function() {
+      getWeb3(function(web3) {
+        console.log(web3.eth.defaultAccount);
+        var state = $this.state;
+        state.crowdsale.walletAddress = web3.eth.defaultAccount;
+        $this.setState(state);
+      });
+    }, 500);
   }
 
   render() {
@@ -92,7 +96,7 @@ export class stepThree extends React.Component {
           </div>
         </div>
         <div className="button-container">
-          <Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}><a href="#" className="button button_fill">Continue</a></Link>
+          <Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}><a className="button button_fill">Continue</a></Link>
         </div>
       </section>
     )}

@@ -7,8 +7,9 @@ export class stepTwo extends React.Component {
     super(props);
     this.state = props?props.location?props.location.query?props.location.query.state?props.location.query.state:{}:{}:{}:{};
     if (this.changeState.bind) this.changeState = this.changeState.bind(this);
-
-    this.state.token = {};
+    var state = this.state;
+    state.token = {};
+    this.setState(state);
   }
 
   changeState(event, $this, parent, prop, ref) {
@@ -76,7 +77,7 @@ export class stepTwo extends React.Component {
           </div>
         </div>
         <div className="button-container">
-          <Link to={{ pathname: '/3', query: { state: this.state, changeState: this.changeState } }}><a href="#" className="button button_fill">Continue</a></Link>
+          <Link to={{ pathname: '/3', query: { state: this.state, changeState: this.changeState } }}><a className="button button_fill">Continue</a></Link>
         </div>
       </section>
   )}

@@ -1,8 +1,8 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { Link } from 'react-router-dom'
-import { Redirect } from 'react-router';
 import { deployContract, getWeb3 } from './web3'
+
+//const web3 = getWeb3()
 
 export class stepFour extends React.Component {
   constructor(props) {
@@ -13,19 +13,18 @@ export class stepFour extends React.Component {
       this.changeState = this.changeState.bind(this);
     if (this.deployCrowdsale.bind)
       this.deployCrowdsale = this.deployCrowdsale.bind(this);
-    if (!this.state.token) this.state.token = {};
-    if (!this.state.crowdsale) this.state.crowdsale = {};
-    this.state.redirect = false;
+    var state = this.state;
+    if (!state.token) state.token = {};
+    if (!state.crowdsale) state.crowdsale = {};
+    this.setState(state);
     console.log(this.state);
   }
 
   deployCrowdsale() {
     var $this = this;
-    getWeb3(function(web3, isOraclesNetwork) {
+    getWeb3(function(web3) {
       console.log(web3);
-      console.log(isOraclesNetwork);
       var contracts = $this.state.contracts;
-      var source = contracts?contracts.crowdsale?contracts.crowdsale.src:"":"";
       var binCrowdsale = contracts?contracts.crowdsale?contracts.crowdsale.bin:"":"";
       var abiCrowdsale = contracts?contracts.crowdsale?contracts.crowdsale.abi:[]:[];
 
@@ -35,11 +34,11 @@ export class stepFour extends React.Component {
         crowdsale.endBlock, 
         web3.toWei(crowdsale.rate, "ether"), 
         crowdsale.walletAddress,
-        parseInt($this.state.crowdsale.supply),
+        parseInt($this.state.crowdsale.supply, 10),
         $this.state.token.name,
         $this.state.token.ticker,
-        parseInt($this.state.token.decimals),
-        parseInt($this.state.token.supply)
+        parseInt($this.state.token.decimals, 10),
+        parseInt($this.state.token.supply, 10)
       ];
       deployContract(web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, function(err, crowdsaleAddr) {
         console.log(crowdsaleAddr);
@@ -47,9 +46,6 @@ export class stepFour extends React.Component {
 
         let state = $this.state;
         state.contracts.crowdsale.addr = crowdsaleAddr;
-
-        var token = $this.state.token;
-        var paramsToken = [token.name, token.ticker, token.decimals];
 
         $this.setState(state);
 
@@ -61,16 +57,11 @@ export class stepFour extends React.Component {
           else $this.props.history.push(`/5`);
         }
         else $this.props.history.push(`/5`);
-        
-        //state.redirect = true;
       });
     });
   }
 
   render() {
-    /*if (this.state.redirect) {
-      {return <Redirect push to={{ pathname: '/5?crowdsale=' + this.state.contracts.crowdsale.addr, query: { state: this.state, changeState: this.changeState } }} />;}
-    }*/
     return (
   	  <section className="steps steps_publish">
         <div className="steps-navigation">
@@ -213,7 +204,7 @@ export class stepFour extends React.Component {
         </div>
         <div className="button-container">
           {/*<Link to='/5' onClick={this.deployCrowdsale}><a href="#" className="button button_fill">Continue</a></Link>*/}
-          <a href="#" onClick={this.deployCrowdsale} className="button button_fill">Continue</a>
+          <a onClick={this.deployCrowdsale} className="button button_fill">Continue</a>
         </div>
       </section>
     )}

@@ -9,143 +9,154 @@ const endEvent = new Date(2017, 6, 24)
 export class Invest extends React.Component {
   constructor(props) {
       super(props);
-      console.log(props);
       if (this.tokensToInvestOnChange.bind) this.tokensToInvestOnChange = this.tokensToInvestOnChange.bind(this);
       if (this.investToTokens.bind) this.investToTokens = this.investToTokens.bind(this);
       this.state = {
         seconds: (endEvent - startEvent)/2 ,
       };
-      this.state.contracts = {"crowdsale": {}, "token": {}};
-      this.state.crowdsale = {};
-      this.state.token = {};
+      var state = this.state;
+      state.contracts = {"crowdsale": {}, "token": {}};
+      state.crowdsale = {};
+      state.token = {};
+      this.setState(state);
   }
 
   componentDidMount () {
-    const timeInterval = setInterval(() => this.setState({ seconds: this.state.seconds - 1}), 1000);
-    this.setState({ timeInterval });
-
-    var crowdsaleAddr = getQueryVariable("addr");
-    this.state.contracts.crowdsale.addr = crowdsaleAddr;
-
-    var derivativesLength = 4;
-    var derivativesIterator = 0;
     var $this = this;
-    setFlatFileContentToState("./contracts/SampleCrowdsale_flat.bin", function(_bin) {
-      derivativesIterator++;
-      $this.state.contracts.crowdsale.bin = _bin;
-
-      if (derivativesIterator == derivativesLength) {
-        $this.extractContractsData($this);
-      }
-    });
-    setFlatFileContentToState("./contracts/SampleCrowdsale_flat.abi", function(_abi) {
-      derivativesIterator++;
-      $this.state.contracts.crowdsale.abi = JSON.parse(_abi);
-
-      if (derivativesIterator == derivativesLength) {
-        $this.extractContractsData($this);
-      }
-    });
-    setFlatFileContentToState("./contracts/SampleCrowdsaleToken_flat.bin", function(_bin) {
-      derivativesIterator++;
-      $this.state.contracts.token.bin = _bin;
-
-      if (derivativesIterator == derivativesLength) {
-        $this.extractContractsData($this);
-      }
-    });
-    setFlatFileContentToState("./contracts/SampleCrowdsaleToken_flat.abi", function(_abi) {
-      derivativesIterator++;
-      $this.state.contracts.token.abi = JSON.parse(_abi);
-
-      if (derivativesIterator == derivativesLength) {
-        $this.extractContractsData($this);
-      }
-    });
-  }
-
-  extractContractsData($this) {
-    console.log($this.state);
-    getWeb3(function(web3, isOraclesNetwork) {
-      console.log("getWeb3");
+    setTimeout(function() {
+     getWeb3(function(web3) {
+      if (!web3) return;
       var state = $this.state;
-      state.curAddr = web3.eth.accounts[0];
       state.web3 = web3;
       $this.setState(state);
+      const timeInterval = setInterval(() => $this.setState({ seconds: $this.state.seconds - 1}), 1000);
+      $this.setState({ timeInterval });
 
-      if (!$this.state.contracts.crowdsale.addr) return;
-      attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr, function(err, crowdsaleContract) {
-        console.log("attach to crowdsale contract");
+      var crowdsaleAddr = getQueryVariable("addr");
+      $this.state.contracts.crowdsale.addr = crowdsaleAddr;
+
+      var derivativesLength = 4;
+      var derivativesIterator = 0;
+      setFlatFileContentToState("./contracts/SampleCrowdsale_flat.bin", function(_bin) {
+        derivativesIterator++;
+        $this.state.contracts.crowdsale.bin = _bin;
+
+        if (derivativesIterator === derivativesLength) {
+          $this.extractContractsData($this, web3);
+        }
+      });
+      setFlatFileContentToState("./contracts/SampleCrowdsale_flat.abi", function(_abi) {
+        derivativesIterator++;
+        $this.state.contracts.crowdsale.abi = JSON.parse(_abi);
+
+        if (derivativesIterator === derivativesLength) {
+          $this.extractContractsData($this, web3);
+        }
+      });
+      setFlatFileContentToState("./contracts/SampleCrowdsaleToken_flat.bin", function(_bin) {
+        derivativesIterator++;
+        $this.state.contracts.token.bin = _bin;
+
+        if (derivativesIterator === derivativesLength) {
+          $this.extractContractsData($this, web3);
+        }
+      });
+      setFlatFileContentToState("./contracts/SampleCrowdsaleToken_flat.abi", function(_abi) {
+        derivativesIterator++;
+        $this.state.contracts.token.abi = JSON.parse(_abi);
+
+        if (derivativesIterator === derivativesLength) {
+          $this.extractContractsData($this, web3);
+        }
+      });
+    });
+   }, 500);
+  }
+
+  extractContractsData($this, web3) {
+    var state = $this.state;
+    console.log(web3);
+    console.log(web3.currentProvider);
+    console.log(web3.providers);
+    console.log(web3.eth.accounts);
+
+    if (web3.eth.accounts.length === 0) return;
+
+    state.curAddr = web3.eth.accounts[0];
+    $this.setState(state);
+
+    if (!$this.state.contracts.crowdsale.addr) return;
+    attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr, function(err, crowdsaleContract) {
+      console.log("attach to crowdsale contract");
+      if (err) return console.log(err);
+      if (!crowdsaleContract) return console.log("There is no contract at this address");
+
+      console.log(crowdsaleContract);
+
+      crowdsaleContract.weiRaised.call(function(err, weiRaised) {
         if (err) return console.log(err);
-        if (!crowdsaleContract) return console.log("There is no contract at this address");
+        
+        console.log("weiRaised: " + web3.fromWei(parseInt(weiRaised, 10), "ether"));
+        let state = $this.state;
+        state.crowdsale.weiRaised = web3.fromWei(parseInt(weiRaised, 10), "ether");
+        $this.setState(state);
+      });
 
-        console.log(crowdsaleContract);
+      crowdsaleContract.rate.call(function(err, rate) {
+        if (err) return console.log(err);
+        
+        console.log("rate: " + web3.fromWei(parseInt(rate, 10), "ether"));
+        let state = $this.state;
+        state.crowdsale.rate = web3.fromWei(parseInt(rate, 10), "ether");
+        $this.setState(state);
+      });
 
-        crowdsaleContract.weiRaised.call(function(err, weiRaised) {
+      crowdsaleContract.supply.call(function(err, supply) {
+        if (err) return console.log(err);
+        
+        console.log("supply: " + supply);
+        let state = $this.state;
+        state.crowdsale.supply = supply;
+        $this.setState(state);
+      });
+
+      crowdsaleContract.token.call(function(err, tokenAddr) {
+        if (err) return console.log(err);
+        
+        console.log("token: " + tokenAddr);
+        let state = $this.state;
+        state.contracts.token.addr = tokenAddr;
+        $this.setState(state);
+
+        if (!tokenAddr || tokenAddr === "0x") return;
+        attachToContract(web3, $this.state.contracts.token.abi, $this.state.contracts.token.addr, function(err, tokenContract) {
+          console.log("attach to token contract");
           if (err) return console.log(err);
-          
-          console.log("weiRaised: " + web3.fromWei(parseInt(weiRaised), "ether"));
-          let state = $this.state;
-          state.crowdsale.weiRaised = web3.fromWei(parseInt(weiRaised), "ether");
-          $this.setState(state);
-        });
+          if (!tokenContract) return console.log("There is no contract at this address");
 
-        crowdsaleContract.rate.call(function(err, rate) {
-          if (err) return console.log(err);
-          
-          console.log("rate: " + web3.fromWei(parseInt(rate), "ether"));
-          let state = $this.state;
-          state.crowdsale.rate = web3.fromWei(parseInt(rate), "ether");
-          $this.setState(state);
-        });
+          console.log(tokenContract);
 
-        crowdsaleContract.supply.call(function(err, supply) {
-          if (err) return console.log(err);
-          
-          console.log("supply: " + supply);
-          let state = $this.state;
-          state.crowdsale.supply = supply;
-          $this.setState(state);
-        });
-
-        crowdsaleContract.token.call(function(err, tokenAddr) {
-          if (err) return console.log(err);
-          
-          console.log("token: " + tokenAddr);
-          let state = $this.state;
-          state.contracts.token.addr = tokenAddr;
-          $this.setState(state);
-
-          if (!tokenAddr || tokenAddr == "0x") return;
-          attachToContract(web3, $this.state.contracts.token.abi, $this.state.contracts.token.addr, function(err, tokenContract) {
-            console.log("attach to token contract");
+          tokenContract.name.call(function(err, name) {
             if (err) return console.log(err);
-            if (!tokenContract) return console.log("There is no contract at this address");
-
-            console.log(tokenContract);
-
-            tokenContract.name.call(function(err, name) {
-              if (err) return console.log(err);
-              
-              console.log("token name: " + name);
-              let state = $this.state;
-              state.token.name = name;
-              $this.setState(state);
-            });
-            tokenContract.symbol.call(function(err, ticker) {
-              if (err) console.log(err);
-              console.log("token ticker: " + ticker);
-              let state = $this.state;
-              state.token.ticker = ticker;
-              $this.setState(state);
-            });
-            tokenContract.supply.call(function(err, supply) {
-              if (err) console.log(err);
-              let state = $this.state;
-              console.log("token supply: " + supply);
-              state.token.supply = supply;
-              $this.setState(state);
-            });
+            
+            console.log("token name: " + name);
+            let state = $this.state;
+            state.token.name = name;
+            $this.setState(state);
+          });
+          tokenContract.symbol.call(function(err, ticker) {
+            if (err) console.log(err);
+            console.log("token ticker: " + ticker);
+            let state = $this.state;
+            state.token.ticker = ticker;
+            $this.setState(state);
+          });
+          tokenContract.supply.call(function(err, supply) {
+            if (err) console.log(err);
+            let state = $this.state;
+            console.log("token supply: " + supply);
+            state.token.supply = supply;
+            $this.setState(state);
           });
         });
       });
@@ -256,16 +267,16 @@ export class Invest extends React.Component {
             </div>
             <div className="hashes-i hidden">
               <div className="left">
-                <p className="hashes-title">{this.state.token.name?this.state.token.name.toString():"Oracles network"}</p>
+                <p className="hashes-title">{this.state.token.name?this.state.token.name.toString():""}</p>
                 <p className="hashes-description">Name</p>
               </div>
               <div className="left">
-                <p className="hashes-title">{this.state.token.ticker?this.state.token.ticker.toString():"ORC"}</p>
+                <p className="hashes-title">{this.state.token.ticker?this.state.token.ticker.toString():""}</p>
                 <p className="hashes-description">Ticker</p>
               </div>
             </div>
             <div className="hashes-i">
-              <p className="hashes-title">{this.state.token.supply?this.state.token.supply.toString():"2,000,000,000"} {this.state.token.ticker?this.state.token.ticker.toString(): "ORC"}</p>
+              <p className="hashes-title">{this.state.token.supply?this.state.token.supply.toString():"0"} {this.state.token.ticker?this.state.token.ticker.toString(): ""}</p>
               <p className="hashes-description">Total Supply</p>
             </div>
           </div>
@@ -278,7 +289,7 @@ export class Invest extends React.Component {
         </div>
         <div className="invest-table-cell invest-table-cell_right">
           <div className="balance">
-            <p className="balance-title">{this.state.crowdsale.weiRaised?this.state.crowdsale.weiRaised.toString():"0"} {this.state.token.ticker?this.state.token.ticker.toString(): "ORC"}</p>
+            <p className="balance-title">{this.state.crowdsale.weiRaised?this.state.crowdsale.weiRaised.toString():"0"} {this.state.token.ticker?this.state.token.ticker.toString(): ""}</p>
             <p className="balance-description">Balance</p>
             <p className="description">
               Lorem ipsum dolor sit amet, consectetur
@@ -292,7 +303,7 @@ export class Invest extends React.Component {
               <input type="text" className="invest-form-input" value={this.tokensToInvest} onChange={this.tokensToInvestOnChange} placeholder="0"/>
               <div className="invest-form-label">TOKENS</div>
             </div>
-            <a href="#" className="button button_fill" onClick={this.investToTokens}>Invest now</a>
+            <a className="button button_fill" onClick={this.investToTokens}>Invest now</a>
             <p className="description">
               Lorem ipsum dolor sit amet, consectetur
               adipiscing elit, sed do eiusmod
