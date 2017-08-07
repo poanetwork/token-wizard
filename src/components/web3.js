@@ -19,31 +19,29 @@ export function getCurrentProvider() {
   return web3.currentProvider;
 }
 
-export function getWeb3(callback) {
-  window.addEventListener('load', function() {
-  	if (typeof window.web3 === 'undefined') {
+export function getWeb3(cb) {
+  //window.addEventListener('load', function() {
+    var web3 = window.web3;
+  	if (typeof web3 === 'undefined') {
       // no web3, use fallback
       console.error("Please use a web3 browser");
       var msgNotEthereum = "You aren't connected to Oracles Network. Please, switch on Oracles plugin and refresh the page. Check Oracles network <a href='https://github.com/oraclesorg/oracles-wiki' target='blank'>wiki</a> for more info.";
       console.log(msgNotEthereum);
-      callback(myWeb3, false);
+      cb(web3, false);
     } else {
       // window.web3 == web3 most of the time. Don't override the provided,
       // web3, just wrap it in your Web3.
-      var myWeb3 = new Web3(window.web3.currentProvider); 
+      var myWeb3 = new Web3(web3.currentProvider); 
 
-      // the default account doesn't seem to be persisted, copy it to our
-      // new instance
-      myWeb3.eth.defaultAccount = window.web3.eth.defaultAccount;
-
-      checkNetworkVersion(myWeb3, function(isOraclesNetwork) {
-        callback(myWeb3, isOraclesNetwork);
-      });
+      //checkNetworkVersion(myWeb3, function(isOraclesNetwork) {
+      cb(myWeb3, false);
+      //});
     }
-  });
+    return myWeb3;
+  //});
 }
 
-function checkNetworkVersion(web3, cb) {
+/*function checkNetworkVersion(web3, cb) {
   var msgNotOracles = "You aren't connected to Oracles network. Please, switch on Oracles plugin and choose Oracles network. Check Oracles network <a href='https://github.com/oraclesorg/oracles-wiki' target='blank'>wiki</a> for more info.";
   web3.version.getNetwork(function(err, netId) {
     if (err) console.log(err);
@@ -75,7 +73,7 @@ function checkNetworkVersion(web3, cb) {
       } break;
     }
   });
-}
+}*/
 
 export function deployContract(web3, abi, bin, params, cb) {
     web3.eth.estimateGas({
@@ -125,14 +123,16 @@ export function attachToContract(web3, abi, addr, cb) {
 	if(!web3.isConnected()) {
 		if (cb) cb({code: 200, title: "Error", message: "check RPC availability"});
 	} else {
+    web3.eth.defaultAccount = web3.eth.accounts[0];
 		console.log("web3.eth.defaultAccount:");
 		console.log(web3.eth.defaultAccount);
+    console.log(web3.eth.accounts);
 		
 		var MyContract = web3.eth.contract(abi);
 
-		contract = MyContract.at(addr);
+		var contractInstance = MyContract.at(addr);
 		
-		if (cb) cb(null, contract);
+		if (cb) cb(null, contractInstance);
 	}
 }
 

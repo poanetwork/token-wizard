@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './assets/stylesheets/application.css';
 import { Header, Footer, Home, stepOne, stepTwo, stepThree, stepFour, stepFive, Invest } from './components/index'
 import {

@@ -50,7 +50,7 @@ export class stepOne extends React.Component {
           </div>
         </div>
         <div className="button-container">
-          <Link to={{ pathname: '/2', query: { state: this.state } }}><a href="#" className="button button_fill">Continue</a></Link>
+          <Link to={{ pathname: '/2', query: { state: this.state } }}><a className="button button_fill">Continue</a></Link>
         </div>
       </section>
     )}
