@@ -2,9 +2,10 @@ import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
 import { getWeb3, attachToContract } from './web3'
 import { getQueryVariable, setFlatFileContentToState } from './utils'
+import sweetAlert from 'sweetalert';
+import 'sweetalert/dist/sweetalert.css';
 
-const startEvent = new Date(2017, 6, 19)
-const endEvent = new Date(2017, 6, 24)
+const blockTimeGeneration = 17; //in seconds
 
 export class Invest extends React.Component {
   constructor(props) {
@@ -12,7 +13,7 @@ export class Invest extends React.Component {
       if (this.tokensToInvestOnChange.bind) this.tokensToInvestOnChange = this.tokensToInvestOnChange.bind(this);
       if (this.investToTokens.bind) this.investToTokens = this.investToTokens.bind(this);
       this.state = {
-        seconds: (endEvent - startEvent)/2 ,
+        seconds: 0,
       };
       var state = this.state;
       state.contracts = {"crowdsale": {}, "token": {}};
@@ -89,7 +90,12 @@ export class Invest extends React.Component {
     attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr, function(err, crowdsaleContract) {
       console.log("attach to crowdsale contract");
       if (err) return console.log(err);
-      if (!crowdsaleContract) return console.log("There is no contract at this address");
+      if (!crowdsaleContract) return sweetAlert({
+        title: "Warning",
+        text: "There is no contract at this address",
+        html: true,
+        type: "warning"
+      });
 
       console.log(crowdsaleContract);
 
@@ -120,6 +126,35 @@ export class Invest extends React.Component {
         $this.setState(state);
       });
 
+      crowdsaleContract.startBlock.call(function(err, startBlock) {
+        if (err) return console.log(err);
+        
+        console.log("startBlock: " + startBlock);
+        let state = $this.state;
+        state.crowdsale.startBlock = startBlock;
+        $this.setState(state);
+      });
+
+      crowdsaleContract.endBlock.call(function(err, endBlock) {
+        if (err) return console.log(err);
+        
+        console.log("endBlock: " + endBlock);
+        let state = $this.state;
+        state.crowdsale.endBlock = endBlock;
+        $this.setState(state);
+        web3.eth.getBlockNumber(function(err, curBlock) {
+          if (err) return console.log(err);
+
+          console.log("curBlock: " + curBlock);
+          var blocksDiff = parseInt($this.state.crowdsale.endBlock, 10) - parseInt(curBlock, 10);
+          console.log("blocksDiff: " + blocksDiff);
+          var blocksDiffInSec = blocksDiff * blockTimeGeneration;
+          console.log("blocksDiffInSec: " + blocksDiffInSec);
+          state.seconds = blocksDiffInSec;
+          $this.setState(state);
+        });
+      });
+
       crowdsaleContract.token.call(function(err, tokenAddr) {
         if (err) return console.log(err);
         
@@ -132,7 +167,12 @@ export class Invest extends React.Component {
         attachToContract(web3, $this.state.contracts.token.abi, $this.state.contracts.token.addr, function(err, tokenContract) {
           console.log("attach to token contract");
           if (err) return console.log(err);
-          if (!tokenContract) return console.log("There is no contract at this address");
+          if (!tokenContract) return sweetAlert({
+            title: "Warning",
+            text: "There is no contract at this address",
+            html: true,
+            type: "warning"
+          });
 
           console.log(tokenContract);
 
@@ -165,29 +205,55 @@ export class Invest extends React.Component {
 
   investToTokens() {
     var $this = this;
-    let web3 = this.state.web3;
-    var weiToSend = web3.toWei($this.state.tokensToInvest/$this.state.crowdsale.rate, "ether");
-    var opts = {
-      from: web3.eth.accounts[0],
-      value: weiToSend
-    };
-
-    console.log(opts);
-
-    attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr, function(err, crowdsaleContract) {
-      console.log("attach to crowdsale contract");
+    var startBlock = parseInt($this.state.crowdsale.startBlock, 10);
+    if (isNaN(startBlock) || startBlock === 0) return;
+    let web3 = $this.state.web3;
+    web3.eth.getBlockNumber(function(err, curBlock) {
       if (err) return console.log(err);
-      if (!crowdsaleContract) return console.log("There is no contract at this address");
 
-      console.log(crowdsaleContract);
-      console.log(web3.eth.defaultAccount);
+      if (startBlock > parseInt(curBlock, 10)) {
+        return sweetAlert({
+          title: "Warning",
+          text: "Wait, please. Crowdsale company hasn't started yet. It'll start from <b>" + startBlock + "</b> block. Current block is <b>" + curBlock + "</b>.",
+          html: true,
+          type: "warning"
+        });
+      }
+
+      var weiToSend = web3.toWei($this.state.tokensToInvest/$this.state.crowdsale.rate, "ether");
+      var opts = {
+        from: web3.eth.accounts[0],
+        value: weiToSend
+      };
+
       console.log(opts);
 
-      crowdsaleContract.buyTokens.sendTransaction(web3.eth.accounts[0], opts, function(err, txHash) {
+      attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr, function(err, crowdsaleContract) {
+        console.log("attach to crowdsale contract");
         if (err) return console.log(err);
-        
-        console.log("txHash: " + txHash);
-        window.location.reload();
+        if (!crowdsaleContract) return sweetAlert({
+          title: "Warning",
+          text: "There is no contract at this address",
+          html: true,
+          type: "warning"
+        });
+
+        console.log(crowdsaleContract);
+        console.log(web3.eth.defaultAccount);
+
+        crowdsaleContract.buyTokens.sendTransaction(web3.eth.accounts[0], opts, function(err, txHash) {
+          if (err) return console.log(err);
+          
+          console.log("txHash: " + txHash);
+          sweetAlert({
+            title: "Success",
+            text: "Congrats! You are successfully buy " + $this.state.tokensToInvest + " tokens!",
+            html: true,
+            type: "success"
+          }, function() {
+            window.location.reload();
+          });
+        });
       });
     });
   }
@@ -212,7 +278,9 @@ export class Invest extends React.Component {
   shouldStopCountDown () {
     const { seconds } = this.state
     if(seconds < 0) {
-      this.state({ seconds: 0 })
+      var state = this.state;
+      state.seconds = 0;
+      this.setState(state);
       clearInterval(this.state.timeInterval)
     }
   }
