@@ -2,8 +2,7 @@ import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
 import { getWeb3, attachToContract } from './web3'
 import { getQueryVariable, setFlatFileContentToState } from './utils'
-import sweetAlert from 'sweetalert';
-import 'sweetalert/dist/sweetalert.css';
+import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, successfulInvestmentAlert } from './alerts'
 
 const blockTimeGeneration = 17; //in seconds
 
@@ -90,12 +89,7 @@ export class Invest extends React.Component {
     attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr, function(err, crowdsaleContract) {
       console.log("attach to crowdsale contract");
       if (err) return console.log(err);
-      if (!crowdsaleContract) return sweetAlert({
-        title: "Warning",
-        text: "There is no contract at this address",
-        html: true,
-        type: "warning"
-      });
+      if (!crowdsaleContract) return noContractAlert();
 
       console.log(crowdsaleContract);
 
@@ -167,12 +161,7 @@ export class Invest extends React.Component {
         attachToContract(web3, $this.state.contracts.token.abi, $this.state.contracts.token.addr, function(err, tokenContract) {
           console.log("attach to token contract");
           if (err) return console.log(err);
-          if (!tokenContract) return sweetAlert({
-            title: "Warning",
-            text: "There is no contract at this address",
-            html: true,
-            type: "warning"
-          });
+          if (!tokenContract) return noContractAlert();
 
           console.log(tokenContract);
 
@@ -208,16 +197,14 @@ export class Invest extends React.Component {
     var startBlock = parseInt($this.state.crowdsale.startBlock, 10);
     if (isNaN(startBlock) || startBlock === 0) return;
     let web3 = $this.state.web3;
+    if (web3.eth.accounts.length == 0) {
+      return noMetaMaskAlert();
+    }
     web3.eth.getBlockNumber(function(err, curBlock) {
       if (err) return console.log(err);
 
       if (startBlock > parseInt(curBlock, 10)) {
-        return sweetAlert({
-          title: "Warning",
-          text: "Wait, please. Crowdsale company hasn't started yet. It'll start from <b>" + startBlock + "</b> block. Current block is <b>" + curBlock + "</b>.",
-          html: true,
-          type: "warning"
-        });
+        return investmentDisabledAlert(startBlock, curBlock);
       }
 
       var weiToSend = web3.toWei($this.state.tokensToInvest/$this.state.crowdsale.rate, "ether");
@@ -231,12 +218,7 @@ export class Invest extends React.Component {
       attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr, function(err, crowdsaleContract) {
         console.log("attach to crowdsale contract");
         if (err) return console.log(err);
-        if (!crowdsaleContract) return sweetAlert({
-          title: "Warning",
-          text: "There is no contract at this address",
-          html: true,
-          type: "warning"
-        });
+        if (!crowdsaleContract) return noContractAlert();
 
         console.log(crowdsaleContract);
         console.log(web3.eth.defaultAccount);
@@ -245,14 +227,7 @@ export class Invest extends React.Component {
           if (err) return console.log(err);
           
           console.log("txHash: " + txHash);
-          sweetAlert({
-            title: "Success",
-            text: "Congrats! You are successfully buy " + $this.state.tokensToInvest + " tokens!",
-            html: true,
-            type: "success"
-          }, function() {
-            window.location.reload();
-          });
+          successfulInvestmentAlert($this.state.tokensToInvest);
         });
       });
     });
@@ -344,7 +319,7 @@ export class Invest extends React.Component {
               </div>
             </div>
             <div className="hashes-i">
-              <p className="hashes-title">{this.state.token.supply?this.state.token.supply.toString():"0"} {this.state.token.ticker?this.state.token.ticker.toString(): ""}</p>
+              <p className="hashes-title">{this.state.crowdsale.supply?this.state.crowdsale.supply.toString():"0"} {this.state.token.ticker?this.state.token.ticker.toString(): ""}</p>
               <p className="hashes-description">Total Supply</p>
             </div>
           </div>

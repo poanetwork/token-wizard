@@ -2,8 +2,7 @@ import React from 'react'
 import '../assets/stylesheets/application.css';
 import { getWeb3, attachToContract } from './web3'
 import { getQueryVariable, setFlatFileContentToState } from './utils'
-import sweetAlert from 'sweetalert';
-import 'sweetalert/dist/sweetalert.css';
+import { noContractAlert } from './alerts'
 
 export class stepFive extends React.Component {
 	constructor(props) {
@@ -74,12 +73,7 @@ export class stepFive extends React.Component {
       attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr, function(err, crowdsaleContract) {
         console.log("attach to crowdsale contract");
         if (err) return console.log(err);
-        if (!crowdsaleContract) return sweetAlert({
-          title: "Warning",
-          text: "There is no contract at this address",
-          html: true,
-          type: "warning"
-        });
+        if (!crowdsaleContract) return noContractAlert();
 
         console.log(crowdsaleContract);
 
