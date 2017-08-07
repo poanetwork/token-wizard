@@ -1,8 +1,7 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
 import { deployContract, getWeb3 } from './web3'
-
-//const web3 = getWeb3()
+import { noMetaMaskAlert } from './alerts'
 
 export class stepFour extends React.Component {
   constructor(props) {
@@ -24,6 +23,9 @@ export class stepFour extends React.Component {
     var $this = this;
     getWeb3(function(web3) {
       console.log(web3);
+      if (web3.eth.accounts.length == 0) {
+        return noMetaMaskAlert();
+      }
       var contracts = $this.state.contracts;
       var binCrowdsale = contracts?contracts.crowdsale?contracts.crowdsale.bin:"":"";
       var abiCrowdsale = contracts?contracts.crowdsale?contracts.crowdsale.abi:[]:[];
