@@ -8,7 +8,7 @@ export class stepFive extends React.Component {
 	    super(props);
 	    console.log(props);
 	    if (this.goToInvestPage.bind)
-      this.goToInvestPage = this.goToInvestPage.bind(this);
+      		this.goToInvestPage = this.goToInvestPage.bind(this);
 	    this.state = {};
 	    var state = this.state;
 	    state.contracts = {"crowdsale": {}, "token": {}};
