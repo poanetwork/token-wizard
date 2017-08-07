@@ -23,8 +23,9 @@ export class stepThree extends React.Component {
     setTimeout(function() {
       getWeb3(function(web3) {
         console.log(web3.eth.defaultAccount);
+        console.log(web3.eth.accounts);
         var state = $this.state;
-        state.crowdsale.walletAddress = web3.eth.defaultAccount;
+        state.crowdsale.walletAddress = web3.eth.accounts[0];
         $this.setState(state);
       });
     }, 500);

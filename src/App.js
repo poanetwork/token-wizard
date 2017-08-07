@@ -15,8 +15,8 @@ const App = () => (
         <Route path="/2" component={stepTwo}/>
         <Route path="/3" component={stepThree}/>
         <Route path="/4" component={stepFour}/>
-        <Route path="/5" component={stepFive}/>
-        <Route path='/invest' component={Invest}/>
+        <Route path="/crowdsale" component={stepFive}/>
+        <Route path="/invest" component={Invest}/>
       <Footer/>
     </div>
   </Router>

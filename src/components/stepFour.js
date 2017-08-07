@@ -51,12 +51,12 @@ export class stepFour extends React.Component {
 
         if (contracts) {
           if (contracts.crowdsale) {
-            if (contracts.crowdsale.addr) $this.props.history.push(`/5?addr=` + contracts.crowdsale.addr);
-            else $this.props.history.push(`/5`);
+            if (contracts.crowdsale.addr) $this.props.history.push(`/crowdsale?addr=` + contracts.crowdsale.addr);
+            else $this.props.history.push(`/crowdsale`);
           }
-          else $this.props.history.push(`/5`);
+          else $this.props.history.push(`/crowdsale`);
         }
-        else $this.props.history.push(`/5`);
+        else $this.props.history.push(`/crowdsale`);
       });
     });
   }
