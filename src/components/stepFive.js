@@ -2,6 +2,8 @@ import React from 'react'
 import '../assets/stylesheets/application.css';
 import { getWeb3, attachToContract } from './web3'
 import { getQueryVariable, setFlatFileContentToState } from './utils'
+import sweetAlert from 'sweetalert';
+import 'sweetalert/dist/sweetalert.css';
 
 export class stepFive extends React.Component {
 	constructor(props) {
@@ -72,7 +74,12 @@ export class stepFive extends React.Component {
       attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr, function(err, crowdsaleContract) {
         console.log("attach to crowdsale contract");
         if (err) return console.log(err);
-        if (!crowdsaleContract) return console.log("There is no contract at this address");
+        if (!crowdsaleContract) return sweetAlert({
+          title: "Warning",
+          text: "There is no contract at this address",
+          html: true,
+          type: "warning"
+        });
 
         console.log(crowdsaleContract);
 
@@ -181,7 +188,7 @@ export class stepFive extends React.Component {
 							</p>
 						</div>
 						<div className="right">
-							<p className="total-funds-title">{this.state.crowdsale.rate?(this.state.crowdsale.supply/this.state.crowdsale.rate):0} ETH</p>
+							<p className="total-funds-title">{this.state.crowdsale.rate?isNaN(this.state.crowdsale.supply/this.state.crowdsale.rate)?0:(this.state.crowdsale.supply/this.state.crowdsale.rate):0} ETH</p>
 							<p className="total-funds-description">
 								Goal
 							</p>
@@ -213,7 +220,7 @@ export class stepFive extends React.Component {
 									</p>
 								</div>
 								<div className="right">
-									<p className="title">1</p>
+									<p className="title">0</p>
 									<p className="description">
 										Contributors
 									</p>
