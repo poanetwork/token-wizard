@@ -77,7 +77,7 @@ export function getWeb3(cb) {
 
 export function deployContract(web3, abi, bin, params, cb) {
     web3.eth.estimateGas({
-        from: web3.eth.defaultAccount, 
+        from: web3.eth.accounts[0], 
         data: bin
     }, function(err, estimatedGas) {
       if (err) console.log(err);
@@ -87,13 +87,14 @@ export function deployContract(web3, abi, bin, params, cb) {
       
       var contractInstance = web3.eth.contract(abi);
       var opts = {
-        from: web3.eth.defaultAccount,
+        from: web3.eth.accounts[0],
         data: "0x" + bin,
         gas: estimatedGas
       };
       var totalParams = params;
       totalParams.push(opts);
       totalParams.push(deployContractCB);
+      console.log(totalParams);
       contractInstance.new(...totalParams);
 
       /*contractInstance.new(
