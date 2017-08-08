@@ -14,7 +14,6 @@ export class stepTwo extends React.Component {
 
   changeState(event, $this, parent, prop, ref) {
     var state = $this.state;
-    console.log(state);
     if ($this.refs[ref]) state[parent][prop] = event.target.value;
     $this.setState(state);
   }

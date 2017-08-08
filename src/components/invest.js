@@ -197,7 +197,7 @@ export class Invest extends React.Component {
     var startBlock = parseInt($this.state.crowdsale.startBlock, 10);
     if (isNaN(startBlock) || startBlock === 0) return;
     let web3 = $this.state.web3;
-    if (web3.eth.accounts.length == 0) {
+    if (web3.eth.accounts.length === 0) {
       return noMetaMaskAlert();
     }
     web3.eth.getBlockNumber(function(err, curBlock) {
