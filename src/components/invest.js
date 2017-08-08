@@ -120,6 +120,15 @@ export class Invest extends React.Component {
         $this.setState(state);
       });
 
+      crowdsaleContract.investors.call(function(err, investors) {
+        if (err) return console.log(err);
+        
+        console.log("investors: " + investors);
+        let state = $this.state;
+        state.crowdsale.investors = investors;
+        $this.setState(state);
+      });
+
       crowdsaleContract.startBlock.call(function(err, startBlock) {
         if (err) return console.log(err);
         
@@ -223,7 +232,7 @@ export class Invest extends React.Component {
         console.log(crowdsaleContract);
         console.log(web3.eth.defaultAccount);
 
-        crowdsaleContract.buyTokens.sendTransaction(web3.eth.accounts[0], opts, function(err, txHash) {
+        crowdsaleContract.buySampleTokens.sendTransaction(web3.eth.accounts[0], opts, function(err, txHash) {
           if (err) return console.log(err);
           
           console.log("txHash: " + txHash);

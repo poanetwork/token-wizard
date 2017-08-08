@@ -104,6 +104,15 @@ export class stepFive extends React.Component {
           $this.setState(state);
         });
 
+        crowdsaleContract.investors.call(function(err, investors) {
+          if (err) return console.log(err);
+          
+          console.log("investors: " + investors);
+          let state = $this.state;
+          state.crowdsale.investors = investors;
+          $this.setState(state);
+        });
+
         crowdsaleContract.token.call(function(err, tokenAddr) {
           if (err) return console.log(err);
           
@@ -214,7 +223,7 @@ export class stepFive extends React.Component {
 									</p>
 								</div>
 								<div className="right">
-									<p className="title">0</p>
+									<p className="title">{this.state.crowdsale.investors?this.state.crowdsale.investors.toString():0}</p>
 									<p className="description">
 										Contributors
 									</p>

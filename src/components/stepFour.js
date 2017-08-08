@@ -41,8 +41,8 @@ export class stepFour extends React.Component {
 
       var crowdsale = $this.state.crowdsale;
       var paramsCrowdsale = [
-        crowdsale.startBlock, 
-        crowdsale.endBlock, 
+        parseInt(crowdsale.startBlock, 10), 
+        parseInt(crowdsale.endBlock, 10), 
         web3.toWei(crowdsale.rate, "ether"), 
         crowdsale.walletAddress,
         parseInt($this.state.crowdsale.supply, 10),
