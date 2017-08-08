@@ -15,6 +15,15 @@ export class stepFour extends React.Component {
     var state = this.state;
     if (!state.token) state.token = {};
     if (!state.crowdsale) state.crowdsale = {};
+    let abiCrowdsale = state.contracts?state.contracts.crowdsale?state.contracts.crowdsale.abi:[]:[];
+    for (let i = 0; i < abiCrowdsale.length; i++) {
+      var abiObj = abiCrowdsale[i];
+      if (abiObj.type === "constructor") {
+        console.log(abiObj);
+        console.log(abiObj.inputs);
+        state.contracts.crowdsale.abiConstructor = abiObj.inputs;
+      }
+    }
     this.setState(state);
     console.log(this.state);
   }
@@ -29,16 +38,6 @@ export class stepFour extends React.Component {
       var contracts = $this.state.contracts;
       var binCrowdsale = contracts?contracts.crowdsale?contracts.crowdsale.bin:"":"";
       var abiCrowdsale = contracts?contracts.crowdsale?contracts.crowdsale.abi:[]:[];
-      console.log(abiCrowdsale);
-      for (let i = 0; i < abiCrowdsale.length; i++) {
-        var abiObj = abiCrowdsale[i];
-        if (abiObj.type === "constructor") {
-          console.log(abiObj);
-          var state = $this.state;
-          state.contracts.crowdsale.abiConstructor = abiObj.inputs;
-          $this.setState(state);
-        }
-      }
 
       var crowdsale = $this.state.crowdsale;
       var paramsCrowdsale = [
