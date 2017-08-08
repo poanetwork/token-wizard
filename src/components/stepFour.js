@@ -23,12 +23,22 @@ export class stepFour extends React.Component {
     var $this = this;
     getWeb3(function(web3) {
       console.log(web3);
-      if (web3.eth.accounts.length == 0) {
+      if (web3.eth.accounts.length === 0) {
         return noMetaMaskAlert();
       }
       var contracts = $this.state.contracts;
       var binCrowdsale = contracts?contracts.crowdsale?contracts.crowdsale.bin:"":"";
       var abiCrowdsale = contracts?contracts.crowdsale?contracts.crowdsale.abi:[]:[];
+      console.log(abiCrowdsale);
+      for (let i = 0; i < abiCrowdsale.length; i++) {
+        var abiObj = abiCrowdsale[i];
+        if (abiObj.type === "constructor") {
+          console.log(abiObj);
+          var state = $this.state;
+          state.contracts.crowdsale.abiConstructor = abiObj.inputs;
+          $this.setState(state);
+        }
+      }
 
       var crowdsale = $this.state.crowdsale;
       var paramsCrowdsale = [
@@ -193,10 +203,7 @@ export class stepFour extends React.Component {
             <div className="item">
               <p className="label">Constructor Arguments (ABI-encoded and appended to the ByteCode above)</p>
               <pre>
-    {`[{"constant":true,"inputs":[],"name":"endBlock","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},
-    {"constant":true,"inputs":[],"name":"rate","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],
-    "name":"startBlock","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":
-    "wallet","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"}]`}
+                {this.state.contracts?this.state.contracts.crowdsale?JSON.stringify(this.state.contracts.crowdsale.abiConstructor):"":""}
               </pre>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
