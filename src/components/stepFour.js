@@ -1,6 +1,6 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { deployContract, getWeb3 } from './web3'
+import { deployContract, getWeb3, getNetworkVersion } from './web3'
 import { noMetaMaskAlert } from './alerts'
 
 export class stepFour extends React.Component {
@@ -25,49 +25,50 @@ export class stepFour extends React.Component {
       }
     }
     this.setState(state);
-    console.log(this.state);
   }
 
   deployCrowdsale() {
     var $this = this;
     getWeb3(function(web3) {
-      console.log(web3);
-      if (web3.eth.accounts.length === 0) {
-        return noMetaMaskAlert();
-      }
-      var contracts = $this.state.contracts;
-      var binCrowdsale = contracts?contracts.crowdsale?contracts.crowdsale.bin:"":"";
-      var abiCrowdsale = contracts?contracts.crowdsale?contracts.crowdsale.abi:[]:[];
-
-      var crowdsale = $this.state.crowdsale;
-      var paramsCrowdsale = [
-        parseInt(crowdsale.startBlock, 10), 
-        parseInt(crowdsale.endBlock, 10), 
-        web3.toWei(crowdsale.rate, "ether"), 
-        crowdsale.walletAddress,
-        parseInt($this.state.crowdsale.supply, 10),
-        $this.state.token.name,
-        $this.state.token.ticker,
-        parseInt($this.state.token.decimals, 10),
-        parseInt($this.state.token.supply, 10)
-      ];
-      deployContract(web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, function(err, crowdsaleAddr) {
-        console.log(crowdsaleAddr);
-        if (err) return console.log(err);
-
-        let state = $this.state;
-        state.contracts.crowdsale.addr = crowdsaleAddr;
-
-        $this.setState(state);
-
-        if (contracts) {
-          if (contracts.crowdsale) {
-            if (contracts.crowdsale.addr) $this.props.history.push(`/crowdsale?addr=` + contracts.crowdsale.addr);
-            else $this.props.history.push(`/crowdsale`);
-          }
-          else $this.props.history.push(`/crowdsale`);
+      getNetworkVersion(web3, function(_networkID) {
+        if (web3.eth.accounts.length === 0) {
+          return noMetaMaskAlert();
         }
-        else $this.props.history.push(`/crowdsale`);
+        var contracts = $this.state.contracts;
+        var binCrowdsale = contracts?contracts.crowdsale?contracts.crowdsale.bin:"":"";
+        var abiCrowdsale = contracts?contracts.crowdsale?contracts.crowdsale.abi:[]:[];
+
+        var crowdsale = $this.state.crowdsale;
+        var paramsCrowdsale = [
+          parseInt(crowdsale.startBlock, 10), 
+          parseInt(crowdsale.endBlock, 10), 
+          web3.toWei(crowdsale.rate, "ether"), 
+          crowdsale.walletAddress,
+          parseInt($this.state.crowdsale.supply, 10),
+          $this.state.token.name,
+          $this.state.token.ticker,
+          parseInt($this.state.token.decimals, 10),
+          parseInt($this.state.token.supply, 10)
+        ];
+        deployContract(web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, function(err, crowdsaleAddr) {
+          console.log(crowdsaleAddr);
+          if (err) return console.log(err);
+
+          let state = $this.state;
+          state.contracts.crowdsale.addr = crowdsaleAddr;
+
+          $this.setState(state);
+
+          let crowdsalePage = "/crowdsale";
+          if (contracts) {
+            if (contracts.crowdsale) {
+              if (contracts.crowdsale.addr) $this.props.history.push(crowdsalePage + `?addr=` + contracts.crowdsale.addr + `&networkID=` + _networkID);
+              else $this.props.history.push(crowdsalePage);
+            }
+            else $this.props.history.push(crowdsalePage);
+          }
+          else $this.props.history.push(crowdsalePage);
+        });
       });
     });
   }
