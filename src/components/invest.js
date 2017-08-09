@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
-import { getWeb3, attachToContract } from './web3'
-import { getQueryVariable, setFlatFileContentToState } from './utils'
-import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, successfulInvestmentAlert } from './alerts'
+import { getWeb3, attachToContract } from '../utils/web3'
+import { getQueryVariable, setFlatFileContentToState } from '../utils/utils'
+import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, successfulInvestmentAlert } from '../utils/alerts'
 
 const blockTimeGeneration = 17; //in seconds
 

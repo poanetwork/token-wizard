@@ -1,29 +1,38 @@
 import React, { Component } from 'react';
 import '../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
-import { setFlatFileContentToState } from './utils';
+import { setFlatFileContentToState } from '../utils/utils';
 
 export class Home extends Component {
   constructor(props) {
     super(props);
-    this.state = {contracts: {crowdsale: {}, token: {}}};
+    this.state = {
+      contracts: {
+        crowdsale: {}, 
+        token: {}
+      }
+    };
+  }
+
+  addContractsToState (src, bin, abi) {
+    this.setState({
+      contracts: {
+        src,
+        bin,
+        abi: JSON.parse(abi)
+      },
+      token: {}
+    })
   }
 
   componentDidMount() {
-    var $this = this;
-    var contractName = "SampleCrowdsale";
+    const contractName = "SampleCrowdsale";
+    let src, bin
+    console.log('hello hello')
     //var contractName = "RomanCrowdsale";
-    setFlatFileContentToState("./contracts/" + contractName + "_flat.sol", function(content) {
-      $this.state.contracts.crowdsale.src = content;
-    });
-    setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", function(_bin) {
-      $this.state.contracts.crowdsale.bin = _bin;
-    });
-    setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", function(_abi) {
-      $this.state.contracts.crowdsale.abi = JSON.parse(_abi);
-    });
-
-
+    setFlatFileContentToState("./contracts/" + contractName + "_flat.sol", (content) => src = content);
+    setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", (_bin) => bin = _bin);
+    setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", (_abi) => this.addContractsToState(src, bin, _abi));
     /*setFlatFileContentToState("./contracts/SampleCrowdsaleToken_flat.bin", function(content) {
       $this.state.contracts.token.bin = content;
     });

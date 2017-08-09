@@ -1,7 +1,7 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { deployContract, getWeb3 } from './web3'
-import { noMetaMaskAlert } from './alerts'
+import { deployContract, getWeb3 } from '../utils/web3'
+import { noMetaMaskAlert } from '../utils/alerts'
 
 export class stepFour extends React.Component {
   constructor(props) {

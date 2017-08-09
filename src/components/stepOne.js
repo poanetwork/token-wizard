@@ -5,7 +5,9 @@ import { Link } from 'react-router-dom'
 export class stepOne extends React.Component {
   constructor(props) {
     super(props);
-    this.state = props?props.location?props.location.query?props.location.query.state?props.location.query.state:{}:{}:{}:{};
+    const oldState = props && props.location && props.location.query && props.location.query.state
+    this.state = Object.assign({}, oldState)
+    console.log('this.state in step one', this.state)
   }
 
   render() {

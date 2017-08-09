@@ -1,7 +1,7 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
-import { getWeb3 } from './web3'
+import { getWeb3 } from '../utils/web3'
 
 export class stepThree extends React.Component {
   constructor(props) {
