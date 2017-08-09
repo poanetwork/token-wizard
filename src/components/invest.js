@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
-import { getWeb3, attachToContract } from './web3'
+import { getWeb3, attachToContract, checkNetWorkByID } from './web3'
 import { getQueryVariable, setFlatFileContentToState } from './utils'
 import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, successfulInvestmentAlert } from './alerts'
 
@@ -33,6 +33,8 @@ export class Invest extends React.Component {
       $this.setState({ timeInterval });
 
       var crowdsaleAddr = getQueryVariable("addr");
+      var networkID = getQueryVariable("networkID");
+      checkNetWorkByID(web3, networkID);
       $this.state.contracts.crowdsale.addr = crowdsaleAddr;
 
       var derivativesLength = 4;
