@@ -1,6 +1,6 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { deployContract, getWeb3, getNetworkVersion } from './web3'
+import { deployContract, getWeb3, getNetworkVersion, getABIEncodedParams } from './web3'
 import { noMetaMaskAlert } from './alerts'
 
 export class stepFour extends React.Component {
@@ -15,16 +15,65 @@ export class stepFour extends React.Component {
     var state = this.state;
     if (!state.token) state.token = {};
     if (!state.crowdsale) state.crowdsale = {};
-    let abiCrowdsale = state.contracts?state.contracts.crowdsale?state.contracts.crowdsale.abi:[]:[];
-    for (let i = 0; i < abiCrowdsale.length; i++) {
-      var abiObj = abiCrowdsale[i];
-      if (abiObj.type === "constructor") {
-        console.log(abiObj);
-        console.log(abiObj.inputs);
-        state.contracts.crowdsale.abiConstructor = abiObj.inputs;
-      }
-    }
     this.setState(state);
+  }
+
+  componentDidMount () {
+    var $this = this;
+    var state = this.state;
+    setTimeout(function() {
+      getWeb3(function(web3) {
+        let abiCrowdsale = state.contracts?state.contracts.crowdsale?state.contracts.crowdsale.abi:[]:[];
+        for (let i = 0; i < abiCrowdsale.length; i++) {
+          var abiObj = abiCrowdsale[i];
+          if (abiObj.type === "constructor") {
+            console.log(abiObj);
+            console.log(abiObj.inputs);
+            console.log(abiObj.inputs.length);
+            let params = {"types": [], "values": []};
+            for (let j = 0; j < abiObj.inputs.length; j++) {
+              let inp = abiObj.inputs[j];
+              params.types.push(inp.type);
+              switch(inp.name) {
+                case "_startBlock": {
+                  params.values.push(state.crowdsale.startBlock);
+                } break;
+                case "_endBlock": {
+                  params.values.push(state.crowdsale.endBlock);
+                } break;
+                case "_rate": {
+                  params.values.push(state.crowdsale.rate);
+                } break;
+                case "_wallet": {
+                  params.values.push(state.crowdsale.walletAddress);
+                } break;
+                case "_crowdsaleSupply": {
+                  params.values.push(state.crowdsale.supply);
+                } break;
+                case "_name": {
+                  params.values.push(state.token.name);
+                } break;
+                case "_symbol": {
+                  params.values.push(state.token.ticker);
+                } break;
+                case "_decimals": {
+                  params.values.push(state.token.decimals);
+                } break;
+                case "_tokenSupply": {
+                  params.values.push(state.token.supply);
+                } break;
+                default: {
+                  params.values.push("");
+                } break;
+              }
+            }
+            state.contracts.crowdsale.abiConstructor = getABIEncodedParams(web3, params.types, params.values);
+            break;
+          }
+        }
+        $this.setState(state);
+      });
+    });
   }
 
   deployCrowdsale() {
@@ -203,7 +252,7 @@ export class stepFour extends React.Component {
             <div className="item">
               <p className="label">Constructor Arguments (ABI-encoded and appended to the ByteCode above)</p>
               <pre>
-                {this.state.contracts?this.state.contracts.crowdsale?JSON.stringify(this.state.contracts.crowdsale.abiConstructor):"":""}
+                {this.state.contracts?this.state.contracts.crowdsale?this.state.contracts.crowdsale.abiConstructor:"":""}
               </pre>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

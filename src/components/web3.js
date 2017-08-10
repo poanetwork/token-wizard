@@ -1,8 +1,10 @@
 import Web3 from 'web3';
+import ETH from 'web3-eth';
 import { incorrectNetworkAlert} from './alerts'
 
 // instantiate new web3 instance
 const web3 = new Web3();
+const eth = new ETH();
 
 // providers
 export const providers = {
@@ -18,6 +20,11 @@ if (typeof window.web3 !== 'undefined' && typeof window.web3.currentProvider !==
 export function getCurrentProvider() {
 	console.log(web3.currentProvider);
   return web3.currentProvider;
+}
+
+export function getABIEncodedParams(web3, types, vals) {
+  var encoded = eth.abi.encodeParameters(types, vals);
+  return encoded;
 }
 
 export function getWeb3(cb) {
