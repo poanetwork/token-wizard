@@ -4,11 +4,12 @@ import { Link } from 'react-router-dom'
 import { getWeb3 } from '../utils/web3'
 import { defaultState } from '../utils/constants'
 import { stepTwo } from './stepTwo'
+import { getOldState } from '../utils/utils'
 
 export class stepThree extends stepTwo {
   constructor(props) {
     super(props);
-    const oldState = props && props.location && props.location.query && props.location.query.state || defaultState
+    const oldState = getOldState(props, defaultState)
     this.state = Object.assign({}, oldState)
     //this.state.crowdsale.startBlock = 3036872;
     //this.state.crowdsale.endBlock = 5000000;
@@ -16,14 +17,11 @@ export class stepThree extends stepTwo {
   }
 
   componentDidMount () {
-    var $this = this;
-    setTimeout(function() {
-      getWeb3(function(web3) {
-        console.log(web3.eth.defaultAccount);
-        console.log(web3.eth.accounts);
-        var state = $this.state;
-        state.crowdsale.walletAddress = web3.eth.accounts[0];
-        $this.setState(state);
+    setTimeout( () => {
+      getWeb3((web3) => {
+        let newState = {...this.state}
+        newState.crowdsale.walletAddress = web3.eth.accounts[0];
+        this.setState(newState);
       });
     }, 500);
   }

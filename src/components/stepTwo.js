@@ -2,18 +2,18 @@ import React from 'react'
 import '../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
 import { defaultState } from '../utils/constants'
+import { getOldState } from '../utils/utils'
 
 export class stepTwo extends React.Component {
   constructor(props) {
     super(props);
-    let oldState = props && props.location && props.location.query && props.location.query.state || defaultState
+    let oldState = getOldState(props, defaultState)
     this.state = Object.assign({}, defaultState)
   }
 
   getNewParent (property, parent, value) {
     let newParent = { ...this.state[`${parent}`] }
     newParent[property] = value
-    console.log('newParent', newParent)
     return newParent
   }
 
@@ -22,15 +22,7 @@ export class stepTwo extends React.Component {
     let newState = Object.assign({}, this.state)
     newState[parent] = newParent
     this.setState(newState)
-    setTimeout(() => console.log('state', this.state))
   }
-
-  // changeState(event, $this, parent, prop, ref) {
-  //   var state = $this.state;
-  //   console.log(state);
-  //   if ($this.refs[ref]) state[parent][prop] = event.target.value;
-  //   $this.setState(state);
-  // }
 
   render() {
     return (

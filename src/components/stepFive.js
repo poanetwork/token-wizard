@@ -1,6 +1,6 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { getWeb3, attachToContract } from '../utils/web3'
+import { getWeb3, attachToContract, checkNetWorkByID } from '../utils/web3'
 import { getQueryVariable, setFlatFileContentToState } from '../utils/utils'
 import { noContractAlert } from '../utils/alerts'
 
@@ -19,13 +19,16 @@ export class stepFive extends React.Component {
 	}
 
 	componentDidMount () {
+		const crowdsaleAddr = getQueryVariable("addr");
+		const networkID = getQueryVariable("networkID");
 		var $this = this;
 		setTimeout(function() {
 			getWeb3(function(web3) {
 				var state = $this.state;
 				state.web3 = web3;
-			    var crowdsaleAddr = getQueryVariable("addr");
+      			checkNetWorkByID(web3, networkID);
 			    state.contracts.crowdsale.addr = crowdsaleAddr;
+			    state.contracts.crowdsale.networkID = networkID;
 			    
 			    var derivativesLength = 4;
 			    var derivativesIterator = 0;
@@ -75,8 +78,6 @@ export class stepFive extends React.Component {
         if (err) return console.log(err);
         if (!crowdsaleContract) return noContractAlert();
 
-        console.log(crowdsaleContract);
-
         crowdsaleContract.weiRaised.call(function(err, weiRaised) {
           if (err) return console.log(err);
           
@@ -104,6 +105,15 @@ export class stepFive extends React.Component {
           $this.setState(state);
         });
 
+        crowdsaleContract.investors.call(function(err, investors) {
+          if (err) return console.log(err);
+          
+          console.log("investors: " + investors);
+          let state = $this.state;
+          state.crowdsale.investors = investors;
+          $this.setState(state);
+        });
+
         crowdsaleContract.token.call(function(err, tokenAddr) {
           if (err) return console.log(err);
           
@@ -117,8 +127,6 @@ export class stepFive extends React.Component {
             console.log("attach to token contract");
             if (err) return console.log(err);
             if (!tokenContract) return console.log("There is no contract at this address");
-
-            console.log(tokenContract);
 
             tokenContract.name.call(function(err, name) {
               if (err) return console.log(err);
@@ -148,7 +156,14 @@ export class stepFive extends React.Component {
   	}
 
   	goToInvestPage() {
-        this.props.history.push(this.state.contracts.crowdsale.addr?('/invest' + ('?addr=' + this.state.contracts.crowdsale.addr):""):'/invest');
+  		let queryStr = "";
+  		if (this.state.contracts.crowdsale.addr) {
+  			queryStr = "?addr=" + this.state.contracts.crowdsale.addr;
+  			if (this.state.contracts.crowdsale.networkID)
+  				queryStr += "&networkID=" + this.state.contracts.crowdsale.networkID;
+  		}
+
+        this.props.history.push('/invest' + queryStr);
   	}
 
 	render() {
@@ -214,13 +229,13 @@ export class stepFive extends React.Component {
 									</p>
 								</div>
 								<div className="right">
-									<p className="title">0</p>
+									<p className="title">{this.state.crowdsale.investors?this.state.crowdsale.investors.toString():0}</p>
 									<p className="description">
 										Contributors
 									</p>
 								</div>
 							</div>
-							<p className="hash">{this.state.contracts?this.state.contracts.token.addr:"0xc1253365dADE090649147Db89EE781d10f2b972f"}</p>
+							<p className="hash">{this.state.contracts?this.state.contracts.token.addr:""}</p>
 							<p className="description">
 								Token Address
 							</p>
@@ -240,7 +255,7 @@ export class stepFive extends React.Component {
 									</p>
 								</div>
 							</div>
-							<p className="hash">{this.state.contracts?this.state.contracts.crowdsale.addr:"0xc1253365dADE090649147Db89EE781d10f2b972f"}</p>
+							<p className="hash">{this.state.contracts?this.state.contracts.crowdsale.addr:""}</p>
 							<p className="description">
 								Crowdsale Contract Address
 							</p>

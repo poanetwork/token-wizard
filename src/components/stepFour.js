@@ -1,59 +1,59 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { deployContract, getWeb3 } from '../utils/web3'
+import { deployContract, getWeb3, getNetworkVersion } from '../utils/web3'
 import { noMetaMaskAlert } from '../utils/alerts'
 import { defaultState } from '../utils/constants'
+import { findConstructor, getOldState } from '../utils/utils'
 import { stepTwo } from './stepTwo'
 
 export class stepFour extends stepTwo {
   constructor(props) {
     super(props);
-    const oldState = props && props.location && props.location.query && props.location.query.state || defaultState
-    this.state = Object.assign({}, oldState)
-    console.log('stepFour', this.state);
+    let oldState = getOldState(props, defaultState)
+    let abiCrowdsale = this.state.contracts && this.state.contracts.crowdsale && this.state.contracts.crowdsale.abi || []
+    const newState = findConstructor(abiCrowdsale, oldState)
+    this.state = Object.assign({}, newState)
+  }
+
+  handleDeployedContract = (err, crowdsaleAddr) => {
+    if (err) return console.log(err);
+    let newState = { ...this.state }
+    newState.contracts.crowdsale.addr = crowdsaleAddr;
+    this.setState(newState);
+    let crowdsalePage = "/crowdsale";
+    const {contracts} = this.state
+    const isValidContract = contracts && contracts.crowdsale && contracts.crowdsale.addr
+    let newHistory = isValidContract ? crowdsalePage + `?addr=` + contracts.crowdsale.addr : crowdsalePage
+    this.props.history.push(newHistory);
+  }
+
+  getCrowdSaleParams = (web3, crowdsale) => {
+    return [
+      parseInt(crowdsale.startBlock, 10), 
+      parseInt(crowdsale.endBlock, 10), 
+      web3.toWei(crowdsale.rate, "ether"), 
+      crowdsale.walletAddress,
+      parseInt(this.state.crowdsale.supply, 10),
+      this.state.token.name,
+      this.state.token.ticker,
+      parseInt(this.state.token.decimals, 10),
+      parseInt(this.state.token.supply, 10)
+    ]
   }
 
   deployCrowdsale = () => {
     getWeb3((web3) => {
-      console.log(web3);
-      if (web3.eth.accounts.length === 0) {
-        return noMetaMaskAlert();
-      }
-      var contracts = this.state.contracts;
-      var binCrowdsale = contracts?contracts.crowdsale?contracts.crowdsale.bin:"":"";
-      var abiCrowdsale = contracts?contracts.crowdsale?contracts.crowdsale.abi:[]:[];
-console.log('abicrowd', abiCrowdsale)
-      var crowdsale = this.state.crowdsale;
-      var paramsCrowdsale = [
-        crowdsale.startBlock, 
-        crowdsale.endBlock, 
-        web3.toWei(crowdsale.rate, "ether"), 
-        crowdsale.walletAddress,
-        parseInt(this.state.crowdsale.supply, 10),
-        this.state.token.name,
-        this.state.token.ticker,
-        parseInt(this.state.token.decimals, 10),
-        parseInt(this.state.token.supply, 10)
-      ];
-      console.log('web3 herere', web3.toWei(crowdsale.rate, "ether"), 'asdf')
-
-      deployContract(web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, function(err, crowdsaleAddr) {
-        console.log(crowdsaleAddr);
-        if (err) return console.log(err);
-        let newState = { ...this.state }
-        newState.contracts.crowdsale.addr = crowdsaleAddr;
-
-        this.setState(newState);
-
-        if (contracts) {
-          if (contracts.crowdsale) {
-            if (contracts.crowdsale.addr) this.props.history.push(`/crowdsale?addr=` + contracts.crowdsale.addr);
-            else this.props.history.push(`/crowdsale`);
-          }
-          else this.props.history.push(`/crowdsale`);
+      getNetworkVersion(web3, (_networkID) => {
+        if (web3.eth.accounts.length === 0) {
+          return noMetaMaskAlert();
         }
-        else this.props.history.push(`/crowdsale`);
-      });
+        var contracts = this.state.contracts;
+        var binCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.bin || ''
+        var abiCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.abi || []
+        var crowdsale = this.state.crowdsale;
+        var paramsCrowdsale = this.getCrowdSaleParams(web3, crowdsale)
+        deployContract(web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, this.handleDeployedContract)
+       });
     });
   }
 
@@ -187,10 +187,7 @@ console.log('abicrowd', abiCrowdsale)
             <div className="item">
               <p className="label">Constructor Arguments (ABI-encoded and appended to the ByteCode above)</p>
               <pre>
-    {`[{"constant":true,"inputs":[],"name":"endBlock","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},
-    {"constant":true,"inputs":[],"name":"rate","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],
-    "name":"startBlock","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":
-    "wallet","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"}]`}
+                {this.state.contracts?this.state.contracts.crowdsale?JSON.stringify(this.state.contracts.crowdsale.abiConstructor):"":""}
               </pre>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
