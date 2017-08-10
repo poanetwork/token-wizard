@@ -2,33 +2,27 @@ import React, { Component } from 'react';
 import '../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
 import { setFlatFileContentToState } from '../utils/utils';
+import { defaultState } from '../utils/constants'
 
 export class Home extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      contracts: {
-        crowdsale: {}, 
-        token: {}
-      }
-    };
+    this.state = defaultState
   }
 
   addContractsToState (src, bin, abi) {
-    this.setState({
-      contracts: {
-        src,
-        bin,
-        abi: JSON.parse(abi)
-      },
-      token: {}
-    })
+    let newState = Object.assign({}, this.state)
+    newState.contracts.crowdsale = {
+      src,
+      bin,
+      abi: JSON.parse(abi)
+    }
+    this.setState(newState)
   }
 
   componentDidMount() {
     const contractName = "SampleCrowdsale";
     let src, bin
-    console.log('hello hello')
     //var contractName = "RomanCrowdsale";
     setFlatFileContentToState("./contracts/" + contractName + "_flat.sol", (content) => src = content);
     setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", (_bin) => bin = _bin);
@@ -54,7 +48,6 @@ export class Home extends Component {
               </p>
               <div className="buttons">
                 <Link to={{ pathname: '/1', query: { state: this.state } }}><a className="button button_fill">New crowdsale</a></Link>
-                {/*<Link to='/1'><a href="#" className="button button_outline">Choose contract</a></Link>*/}
               </div>
             </div>
           </div>

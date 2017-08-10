@@ -1,13 +1,13 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
+import { defaultState } from '../utils/constants'
 
 export class stepOne extends React.Component {
   constructor(props) {
     super(props);
-    const oldState = props && props.location && props.location.query && props.location.query.state
+    let oldState = props && props.location && props.location.query && props.location.query.state || defaultState
     this.state = Object.assign({}, oldState)
-    console.log('this.state in step one', this.state)
   }
 
   render() {
