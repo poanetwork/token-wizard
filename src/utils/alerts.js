@@ -38,3 +38,12 @@ export function investmentDisabledAlert(startBlock, curBlock) {
       type: "warning"
     });
 }
+
+export function incorrectNetworkAlert(correctNetworkName, incorrectNetworkName) {
+    sweetAlert({
+      title: "Warning",
+      text: "Crowdsale contract is from <b>" + correctNetworkName + " network</b>. But you are connected to <b>" + incorrectNetworkName + " network</b>. Please, change connection in MetaMask/Oracles plugin.",
+      html: true,
+      type: "warning"
+    });
+}

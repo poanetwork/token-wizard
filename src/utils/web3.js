@@ -1,4 +1,5 @@
 import Web3 from 'web3';
+import { incorrectNetworkAlert} from './alerts'
 
 // instantiate new web3 instance
 const web3 = new Web3();
@@ -20,68 +21,84 @@ export function getCurrentProvider() {
 }
 
 export function getWeb3(cb) {
-  //window.addEventListener('load', function() {
-    var web3 = window.web3;
-  	if (typeof web3 === 'undefined') {
-      // no web3, use fallback
-      console.error("Please use a web3 browser");
-      var msgNotEthereum = "You aren't connected to Oracles Network. Please, switch on Oracles plugin and refresh the page. Check Oracles network <a href='https://github.com/oraclesorg/oracles-wiki' target='blank'>wiki</a> for more info.";
-      console.log(msgNotEthereum);
-      cb(web3, false);
-    } else {
-      // window.web3 == web3 most of the time. Don't override the provided,
-      // web3, just wrap it in your Web3.
-      var myWeb3 = new Web3(web3.currentProvider); 
+  var web3 = window.web3;
+	if (typeof web3 === 'undefined') {
+    // no web3, use fallback
+    console.error("Please use a web3 browser");
+    cb(web3, false);
+  } else {
+    // window.web3 == web3 most of the time. Don't override the provided,
+    // web3, just wrap it in your Web3.
+    var myWeb3 = new Web3(web3.currentProvider); 
 
-      //checkNetworkVersion(myWeb3, function(isOraclesNetwork) {
-      cb(myWeb3, false);
-      //});
-    }
-    return myWeb3;
-  //});
+    //checkNetworkVersion(myWeb3, function(isOraclesNetwork) {
+    cb(myWeb3, false);
+    //});
+  }
+  return myWeb3;
 }
 
-/*function checkNetworkVersion(web3, cb) {
-  var msgNotOracles = "You aren't connected to Oracles network. Please, switch on Oracles plugin and choose Oracles network. Check Oracles network <a href='https://github.com/oraclesorg/oracles-wiki' target='blank'>wiki</a> for more info.";
-  web3.version.getNetwork(function(err, netId) {
-    if (err) console.log(err);
-    console.log("netId: " + netId);
-    switch (netId) {
-      case "1": {
-        console.log('This is mainnet');
-        console.log(msgNotOracles);
-        cb(false);
-      } break;
-      case "2": {
-        console.log('This is the deprecated Morden test network.');
-        console.log(msgNotOracles);
-        cb(false);
-      } break;
-      case "3": {
-        console.log('This is the ropsten test network.');
-        console.log(msgNotOracles);
-        cb(false);
-      }  break;
-       case "12648430": {
-         console.log('This is Oracles from Metamask');
-         cb(true);
-      }  break;
-      default: {
-        console.log('This is an unknown network.');
-        console.log(msgNotOracles);
-        cb(false);
-      } break;
+export function checkNetWorkByID(web3, _networkIdFromGET) {
+  web3.version.getNetwork(function(err, _networkIdFromNetwork) {
+    if (err) {
+      console.log(err);
+    }
+
+    let networkNameFromGET = getNetWorkNameById(_networkIdFromGET);
+    let networkNameFromNetwork = getNetWorkNameById(_networkIdFromNetwork);
+    console.log(networkNameFromGET +"!="+ networkNameFromNetwork);
+    if (networkNameFromGET !== networkNameFromNetwork) {
+      incorrectNetworkAlert(networkNameFromGET, networkNameFromNetwork);
     }
   });
-}*/
+}
+
+function getNetWorkNameById(_id) {
+  console.log(_id);
+  switch (parseInt(_id, 10)) {
+    case 1: {
+      return "Mainnet";
+    } break;
+    case 2: {
+      return "Morden";
+    } break;
+    case 3: {
+      return "Ropsten";
+    }  break;
+    case 4: {
+      return "Rinkeby";
+    }  break;
+    case 42: {
+      return "Kovan";
+    }  break;
+     case 12648430: {
+       return "Oracles dev test";
+    }  break;
+    default: {
+      return "Unknown";
+    } break;
+  }
+}
+
+export function getNetworkVersion(web3, cb) {
+  web3.version.getNetwork(function(err, netId) {
+    if (err) {
+      console.log(err);
+      cb(null);
+    }
+    
+    cb(netId);
+  });
+}
 
 export function deployContract(web3, abi, bin, params, cb) {
+  console.log('web3.eth.accounts[0]', web3.eth.accounts[0], bin)
     web3.eth.estimateGas({
         from: web3.eth.accounts[0], 
         data: bin
     }, function(err, estimatedGas) {
       if (err) console.log(err);
-
+      console.log('gas is estimated', estimatedGas, 'err', err)
       if (!estimatedGas) estimatedGas = 3516260;
       else estimatedGas += 100000;
       
@@ -94,7 +111,7 @@ export function deployContract(web3, abi, bin, params, cb) {
       var totalParams = params;
       totalParams.push(opts);
       totalParams.push(deployContractCB);
-      console.log(totalParams);
+      console.log('totalParams', totalParams);
       contractInstance.new(...totalParams);
 
       /*contractInstance.new(
@@ -106,8 +123,6 @@ export function deployContract(web3, abi, bin, params, cb) {
       );*/
 
       function deployContractCB(err, contract) {
-        console.log(err);
-        console.log(contract);
         if (err) console.log(err);
         if (contract) {
           if (contract.address) {

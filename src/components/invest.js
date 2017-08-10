@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
-import { getWeb3, attachToContract } from '../utils/web3'
+import { getWeb3, attachToContract, checkNetWorkByID } from '../utils/web3'
 import { getQueryVariable, setFlatFileContentToState } from '../utils/utils'
 import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, successfulInvestmentAlert } from '../utils/alerts'
 
@@ -33,6 +33,8 @@ export class Invest extends React.Component {
       $this.setState({ timeInterval });
 
       var crowdsaleAddr = getQueryVariable("addr");
+      var networkID = getQueryVariable("networkID");
+      checkNetWorkByID(web3, networkID);
       $this.state.contracts.crowdsale.addr = crowdsaleAddr;
 
       var derivativesLength = 4;
@@ -120,6 +122,15 @@ export class Invest extends React.Component {
         $this.setState(state);
       });
 
+      crowdsaleContract.investors.call(function(err, investors) {
+        if (err) return console.log(err);
+        
+        console.log("investors: " + investors);
+        let state = $this.state;
+        state.crowdsale.investors = investors;
+        $this.setState(state);
+      });
+
       crowdsaleContract.startBlock.call(function(err, startBlock) {
         if (err) return console.log(err);
         
@@ -197,7 +208,7 @@ export class Invest extends React.Component {
     var startBlock = parseInt($this.state.crowdsale.startBlock, 10);
     if (isNaN(startBlock) || startBlock === 0) return;
     let web3 = $this.state.web3;
-    if (web3.eth.accounts.length == 0) {
+    if (web3.eth.accounts.length === 0) {
       return noMetaMaskAlert();
     }
     web3.eth.getBlockNumber(function(err, curBlock) {
@@ -223,7 +234,7 @@ export class Invest extends React.Component {
         console.log(crowdsaleContract);
         console.log(web3.eth.defaultAccount);
 
-        crowdsaleContract.buyTokens.sendTransaction(web3.eth.accounts[0], opts, function(err, txHash) {
+        crowdsaleContract.buySampleTokens.sendTransaction(web3.eth.accounts[0], opts, function(err, txHash) {
           if (err) return console.log(err);
           
           console.log("txHash: " + txHash);
