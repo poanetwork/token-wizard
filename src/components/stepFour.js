@@ -30,7 +30,9 @@ export class stepFour extends React.Component {
   deployCrowdsale() {
     var $this = this;
     getWeb3(function(web3) {
+      console.log('almost have network version')
       getNetworkVersion(web3, function(_networkID) {
+        console.log('getting network version')
         if (web3.eth.accounts.length === 0) {
           return noMetaMaskAlert();
         }
@@ -50,6 +52,7 @@ export class stepFour extends React.Component {
           parseInt($this.state.token.decimals, 10),
           parseInt($this.state.token.supply, 10)
         ];
+        console.log('about to deploy contract')
         deployContract(web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, function(err, crowdsaleAddr) {
           console.log(crowdsaleAddr);
           if (err) return console.log(err);
