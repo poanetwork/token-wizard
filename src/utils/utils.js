@@ -32,3 +32,18 @@ function readSolFile(path, cb) {
     };
     rawFile.send(null);
 }
+
+export const findConstructor = (abiCrowdsale, oldState) => {
+    let newState = { ...oldState }
+    console.log('abiCrowdSale,', abiCrowdsale)
+    abiCrowdsale.forEach(abiObj => {
+        if (abiObj.type === "constructor") {
+            console.log(abiObj);
+            console.log(abiObj.inputs);
+            newState.contracts.crowdsale.abiConstructor = abiObj.inputs;
+        }
+    })
+    return newState
+}
+
+export const getOldState = (props, defaultState) => props && props.location && props.location.query && props.location.query.state || defaultState

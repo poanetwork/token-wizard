@@ -1,8 +1,8 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { getWeb3, attachToContract, checkNetWorkByID } from './web3'
-import { getQueryVariable, setFlatFileContentToState } from './utils'
-import { noContractAlert } from './alerts'
+import { getWeb3, attachToContract, checkNetWorkByID } from '../utils/web3'
+import { getQueryVariable, setFlatFileContentToState } from '../utils/utils'
+import { noContractAlert } from '../utils/alerts'
 
 export class stepFive extends React.Component {
 	constructor(props) {
