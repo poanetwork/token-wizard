@@ -1,21 +1,27 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
+import { defaultState } from '../utils/constants'
+import { getOldState } from '../utils/utils'
 
 export class stepTwo extends React.Component {
   constructor(props) {
     super(props);
-    this.state = props?props.location?props.location.query?props.location.query.state?props.location.query.state:{}:{}:{}:{};
-    if (this.changeState.bind) this.changeState = this.changeState.bind(this);
-    var state = this.state;
-    state.token = {};
-    this.setState(state);
+    let oldState = getOldState(props, defaultState)
+    this.state = Object.assign({}, defaultState)
   }
 
-  changeState(event, $this, parent, prop, ref) {
-    var state = $this.state;
-    if ($this.refs[ref]) state[parent][prop] = event.target.value;
-    $this.setState(state);
+  getNewParent (property, parent, value) {
+    let newParent = { ...this.state[`${parent}`] }
+    newParent[property] = value
+    return newParent
+  }
+
+  changeState (event, parent, property) {
+    let newParent = this.getNewParent(property, parent, event.target.value)
+    let newState = Object.assign({}, this.state)
+    newState[parent] = newParent
+    this.setState(newState)
   }
 
   render() {
@@ -42,32 +48,32 @@ export class stepTwo extends React.Component {
           </div>
           <div className="hidden">
             <div className="left">
-              <label for="" className="label">Name</label>
-              <input type="text" className="input" value={this.state.token.name} onChange={(e) => this.changeState(e, this, "token", "name", "two")}/>
+              <label className="label">Name</label>
+              <input type="text" className="input" value={this.state.token.name} onChange={(e) => this.changeState(e, "token", "name")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
               </p>
             </div>
             <div className="right">
-              <label for="" className="label">Ticker</label>
-              <input type="text" className="input" value={this.state.token.ticker} onChange={(e) => this.changeState(e, this, "token", "ticker", "two")}/>
+              <label className="label">Ticker</label>
+              <input type="text" className="input" value={this.state.token.ticker} onChange={(e) => this.changeState(e, "token","ticker")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
               </p>
             </div>
             <div className="left">
-              <label for="" className="label">Supply</label>
-              <input type="text" className="input" value={this.state.token.supply} onChange={(e) => this.changeState(e, this, "token", "supply", "two")}/>
+              <label className="label">Supply</label>
+              <input type="text" className="input" value={this.state.token.supply} onChange={(e) => this.changeState(e, "token", "supply")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
               </p>
             </div>
             <div className="right">
-              <label for="" className="label">Decimals</label>
-              <input type="text" className="input" value={this.state.token.decimals} onChange={(e) => this.changeState(e, this, "token", "decimals", "two")}/>
+              <label className="label">Decimals</label>
+              <input type="text" className="input" value={this.state.token.decimals} onChange={(e) => this.changeState(e, "token", "decimals")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
@@ -76,7 +82,7 @@ export class stepTwo extends React.Component {
           </div>
         </div>
         <div className="button-container">
-          <Link to={{ pathname: '/3', query: { state: this.state, changeState: this.changeState } }}><a className="button button_fill">Continue</a></Link>
+          <Link  className="button button_fill" to={{ pathname: '/3', query: { state: this.state, changeState: this.changeState } }}>Continue</Link>
         </div>
       </section>
   )}

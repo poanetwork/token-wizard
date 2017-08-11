@@ -1,30 +1,27 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
-import { getWeb3 } from './web3'
+import { getWeb3 } from '../utils/web3'
+import { defaultState } from '../utils/constants'
+import { stepTwo } from './stepTwo'
+import { getOldState } from '../utils/utils'
 
-export class stepThree extends React.Component {
+export class stepThree extends stepTwo {
   constructor(props) {
     super(props);
-    this.state = props?props.location?props.location.query?props.location.query.state?props.location.query.state:{}:{}:{}:{};
-    this.changeState = props?props.location?props.location.query?props.location.query.changeState?this.props.location.query.changeState:{}:{}:{}:{};
-    if (this.changeState.bind) this.changeState = this.changeState.bind(this);
-
-    var state = this.state;
-    state.crowdsale = {};
-    this.setState(state);
+    const oldState = getOldState(props, defaultState)
+    this.state = Object.assign({}, oldState)
     //this.state.crowdsale.startBlock = 3036872;
     //this.state.crowdsale.endBlock = 5000000;
     //this.state.crowdsale.rate = 1;
   }
 
   componentDidMount () {
-    var $this = this;
-    setTimeout(function() {
-      getWeb3(function(web3) {
-        var state = $this.state;
-        state.crowdsale.walletAddress = web3.eth.accounts[0];
-        $this.setState(state);
+    setTimeout( () => {
+      getWeb3((web3) => {
+        let newState = {...this.state}
+        newState.crowdsale.walletAddress = web3.eth.accounts[0];
+        this.setState(newState);
       });
     }, 500);
   }
@@ -53,40 +50,40 @@ export class stepThree extends React.Component {
           </div>
           <div className="hidden">
             <div className="left">
-              <label for="" className="label">Start block</label>
-              <input type="text" className="input" value={this.state.crowdsale.startBlock} onChange={(e) => this.changeState(e, this, "crowdsale", "startBlock", "three")}/>
+              <label className="label">Start block</label>
+              <input type="text" className="input" value={this.state.crowdsale.startBlock} onChange={(e) => this.changeState(e, "crowdsale", "startBlock")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
               </p>
             </div>
             <div className="right">
-              <label for="" className="label">End block</label>
-              <input type="text" className="input" value={this.state.crowdsale.endBlock} onChange={(e) => this.changeState(e, this, "crowdsale", "endBlock", "three")}/>
+              <label className="label">End block</label>
+              <input type="text" className="input" value={this.state.crowdsale.endBlock} onChange={(e) => this.changeState(e, "crowdsale", "endBlock")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
               </p>
             </div>
             <div className="left">
-              <label for="" className="label">Wallet address</label>
-              <input type="text" className="input" value={this.state.crowdsale.walletAddress} onChange={(e) => this.changeState(e, this, "crowdsale", "walletAddress", "three")}/>
+              <label className="label">Wallet address</label>
+              <input type="text" className="input" value={this.state.crowdsale.walletAddress} onChange={(e) => this.changeState(e, "crowdsale", "walletAddress")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
               </p>
             </div>
             <div className="right">
-              <label for="" className="label">Supply</label>
-              <input type="text" className="input" value={this.state.crowdsale.supply} onChange={(e) => this.changeState(e, this, "crowdsale", "supply", "three")}/>
+              <label className="label">Supply</label>
+              <input type="text" className="input" value={this.state.crowdsale.supply} onChange={(e) => this.changeState(e, "crowdsale", "supply")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
               </p>
             </div>
             <div className="left">
-              <label for="" className="label">Rate</label>
-              <input type="text" className="input" value={this.state.crowdsale.rate} onChange={(e) => this.changeState(e, this, "crowdsale", "rate", "three")}/>
+              <label className="label">Rate</label>
+              <input type="text" className="input" value={this.state.crowdsale.rate} onChange={(e) => this.changeState(e, "crowdsale", "rate")}/>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.

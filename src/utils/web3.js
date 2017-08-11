@@ -92,12 +92,13 @@ export function getNetworkVersion(web3, cb) {
 }
 
 export function deployContract(web3, abi, bin, params, cb) {
+  console.log('web3.eth.accounts[0]', web3.eth.accounts[0], bin)
     web3.eth.estimateGas({
         from: web3.eth.accounts[0], 
         data: bin
     }, function(err, estimatedGas) {
       if (err) console.log(err);
-
+      console.log('gas is estimated', estimatedGas, 'err', err)
       if (!estimatedGas) estimatedGas = 3516260;
       else estimatedGas += 100000;
       
@@ -110,7 +111,7 @@ export function deployContract(web3, abi, bin, params, cb) {
       var totalParams = params;
       totalParams.push(opts);
       totalParams.push(deployContractCB);
-      console.log(totalParams);
+      console.log('totalParams', totalParams);
       contractInstance.new(...totalParams);
 
       /*contractInstance.new(
