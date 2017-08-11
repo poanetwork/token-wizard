@@ -25,14 +25,14 @@ export function getWeb3(cb) {
 	if (typeof web3 === 'undefined') {
     // no web3, use fallback
     console.error("Please use a web3 browser");
-    cb(web3, false);
+    // cb(web3, false);
   } else {
     // window.web3 == web3 most of the time. Don't override the provided,
     // web3, just wrap it in your Web3.
     var myWeb3 = new Web3(web3.currentProvider); 
 
     //checkNetworkVersion(myWeb3, function(isOraclesNetwork) {
-    cb(myWeb3, false);
+    // cb(myWeb3, false);
     //});
   }
   return myWeb3;
@@ -81,14 +81,8 @@ function getNetWorkNameById(_id) {
 }
 
 export function getNetworkVersion(web3, cb) {
-  web3.version.getNetwork(function(err, netId) {
-    if (err) {
-      console.log(err);
-      cb(null);
-    }
-    
-    cb(netId);
-  });
+  console.log('web3', web3.version.getNetwork, 'cb')
+  return web3.version.getNetwork();
 }
 
 export function deployContract(web3, abi, bin, params, cb) {

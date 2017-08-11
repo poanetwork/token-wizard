@@ -23,49 +23,52 @@ export class stepFour extends stepTwo {
   }
 
   deployCrowdsale = () => {
-    getWeb3((web3) => {
-      getNetworkVersion(web3, (_networkID) => {
-        console.log(web3);
-        if (web3.eth.accounts.length === 0) {
-          return noMetaMaskAlert();
-        }
-        var contracts = this.state.contracts;
-        var binCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.bin || ''
-        var abiCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.abi || []
-  console.log('abicrowd', abiCrowdsale)
-        var crowdsale = this.state.crowdsale;
-        var paramsCrowdsale = [
-          parseInt(crowdsale.startBlock, 10), 
-          parseInt(crowdsale.endBlock, 10), 
-          web3.toWei(crowdsale.rate, "ether"), 
-          crowdsale.walletAddress,
-          parseInt(this.state.crowdsale.supply, 10),
-          this.state.token.name,
-          this.state.token.ticker,
-          parseInt(this.state.token.decimals, 10),
-          parseInt(this.state.token.supply, 10)
-        ];
-        console.log('web3 herere', web3.toWei(crowdsale.rate, "ether"), 'asdf')
+    const web3 = getWeb3()
 
-        deployContract(web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, function(err, crowdsaleAddr) {
-          console.log(crowdsaleAddr);
-          if (err) return console.log(err);
-          let newState = { ...this.state }
-          newState.contracts.crowdsale.addr = crowdsaleAddr;
+//     getNetworkVersion(web3, (_networkID) => {
+//       console.log('aasdfasdf')
+//       console.log(web3);
+//       if (web3.eth.accounts.length === 0) {
+//         return noMetaMaskAlert();
+//       }
+//       var contracts = this.state.contracts;
+//       var binCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.bin || ''
+//       var abiCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.abi || []
+// console.log('abicrowd', abiCrowdsale)
+//       var crowdsale = this.state.crowdsale;
+//       var paramsCrowdsale = [
+//         parseInt(crowdsale.startBlock, 10), 
+//         parseInt(crowdsale.endBlock, 10), 
+//         web3.toWei(crowdsale.rate, "ether"), 
+//         crowdsale.walletAddress,
+//         parseInt(this.state.crowdsale.supply, 10),
+//         this.state.token.name,
+//         this.state.token.ticker,
+//         parseInt(this.state.token.decimals, 10),
+//         parseInt(this.state.token.supply, 10)
+//       ];
+//       console.log('web3 herere', web3.toWei(crowdsale.rate, "ether"), 'asdf')
 
-          this.setState(newState);
-          let crowdsalePage = "/crowdsale";
-          if (contracts) {
-            if (contracts.crowdsale) {
-              if (contracts.crowdsale.addr) this.props.history.push( crowdsalePage + `?addr=` + contracts.crowdsale.addr);
-              else this.props.history.push(crowdsalePage);
-            }
-            else this.props.history.push(crowdsalePage);
-          }
-          else this.props.history.push(crowdsalePage);
-        });
-      });
-    });
+//       deployContract(web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, (err, crowdsaleAddr) => {
+//         console.log('deploying contract')
+//         console.log(crowdsaleAddr);
+//         if (err) return console.log(err);
+//         let newState = { ...this.state }
+//         newState.contracts.crowdsale.addr = crowdsaleAddr;
+
+//         this.setState(newState);
+//         let crowdsalePage = "/crowdsale";
+//         if (contracts) {
+//           if (contracts.crowdsale) {
+//             if (contracts.crowdsale.addr) this.props.history.push( crowdsalePage + `?addr=` + contracts.crowdsale.addr);
+//             else this.props.history.push(crowdsalePage);
+//           }
+//           else this.props.history.push(crowdsalePage);
+//         }
+//         else this.props.history.push(crowdsalePage);
+//       });
+//     });
+    console.log('networkVersion', getNetworkVersion(web3))
   }
 
   render() {
