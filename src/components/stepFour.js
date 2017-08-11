@@ -25,6 +25,7 @@ export class stepFour extends stepTwo {
     const isValidContract = contracts && contracts.crowdsale && contracts.crowdsale.addr
     let newHistory = isValidContract ? crowdsalePage + `?addr=` + contracts.crowdsale.addr : crowdsalePage
     this.props.history.push(newHistory);
+
   }
 
   getCrowdSaleParams = (web3, crowdsale) => {
