@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
-import { getWeb3, attachToContract, checkNetWorkByID } from './web3'
-import { getQueryVariable, setFlatFileContentToState } from './utils'
-import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, successfulInvestmentAlert } from './alerts'
+import { getWeb3, attachToContract, checkNetWorkByID } from '../utils/web3'
+import { getQueryVariable, setFlatFileContentToState } from '../utils/utils'
+import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, successfulInvestmentAlert } from '../utils/alerts'
 
 const blockTimeGeneration = 17; //in seconds
 
@@ -352,7 +352,7 @@ export class Invest extends React.Component {
             </p>
           </div>
           <form className="invest-form">
-            <label for="" className="invest-form-label">Choose amount to invest</label>
+            <label className="invest-form-label">Choose amount to invest</label>
             <div className="invest-form-input-container">
               <input type="text" className="invest-form-input" value={this.tokensToInvest} onChange={this.tokensToInvestOnChange} placeholder="0"/>
               <div className="invest-form-label">TOKENS</div>
