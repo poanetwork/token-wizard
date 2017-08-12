@@ -3,6 +3,9 @@ import '../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
 import { defaultState } from '../utils/constants'
 import { getOldState } from '../utils/utils'
+import { StepNavigation } from './StepNavigation'
+import { NAVIGATION_STEPS } from '../utils/constants'
+const { CROWDSALE_CONTRACT, TOKEN_SETUP, CROWDSALE_SETUP, PUBLISH, CROWDSALE_PAGE } = NAVIGATION_STEPS
 
 export class stepOne extends React.Component {
   constructor(props) {
@@ -14,15 +17,7 @@ export class stepOne extends React.Component {
   render() {
     return (
     	 <section className="steps steps_crowdsale-contract">
-        <div className="steps-navigation">
-          <div className="container">
-            <div className="step-navigation step-navigation_active">Crowdsale Contract</div>
-            <div className="step-navigation">Token Setup</div>
-            <div className="step-navigation">Crowdsale Setup</div>
-            <div className="step-navigation">Publish</div>
-            <div className="step-navigation">Crowdsale Page</div>
-          </div>
-        </div>
+       <StepNavigation activeStep={CROWDSALE_CONTRACT}/>
         <div className="steps-content container">
           <div className="about-step">
             <div className="step-icons step-icons_crowdsale-contract"></div>

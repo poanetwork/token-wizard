@@ -47,3 +47,5 @@ export const findConstructor = (abiCrowdsale, oldState) => {
 }
 
 export const getOldState = (props, defaultState) => props && props.location && props.location.query && props.location.query.state || defaultState
+
+export const getStepClass = (step, activeStep) => step === activeStep ? "step-navigation step-navigation_active" : "step-navigation"

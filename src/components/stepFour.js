@@ -5,6 +5,9 @@ import { noMetaMaskAlert } from '../utils/alerts'
 import { defaultState } from '../utils/constants'
 import { findConstructor, getOldState } from '../utils/utils'
 import { stepTwo } from './stepTwo'
+import { StepNavigation } from './StepNavigation'
+import { NAVIGATION_STEPS } from '../utils/constants'
+const { PUBLISH } = NAVIGATION_STEPS
 
 export class stepFour extends stepTwo {
   constructor(props) {
@@ -61,15 +64,7 @@ export class stepFour extends stepTwo {
   render() {
     return (
   	  <section className="steps steps_publish">
-        <div className="steps-navigation">
-          <div className="container">
-            <div className="step-navigation">Crowdsale Contract</div>
-            <div className="step-navigation">Token Setup</div>
-            <div className="step-navigation">Crowdsale Setup</div>
-            <div className="step-navigation step-navigation_active">Publish</div>
-            <div className="step-navigation">Crowdsale Page</div>
-          </div>
-        </div>
+        <StepNavigation activeStep={PUBLISH} />
         <div className="steps-content container">
           <div className="about-step">
             <div className="step-icons step-icons_publish"></div>

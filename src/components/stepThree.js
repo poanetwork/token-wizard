@@ -5,6 +5,9 @@ import { getWeb3 } from '../utils/web3'
 import { defaultState } from '../utils/constants'
 import { stepTwo } from './stepTwo'
 import { getOldState } from '../utils/utils'
+import { StepNavigation } from './StepNavigation'
+import { NAVIGATION_STEPS } from '../utils/constants'
+const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 
 export class stepThree extends stepTwo {
   constructor(props) {
@@ -29,15 +32,7 @@ export class stepThree extends stepTwo {
   render() {
     return (
       <section className="steps steps_crowdsale-contract" ref="three">
-        <div className="steps-navigation">
-          <div className="container">
-            <div className="step-navigation">Crowdsale Contract</div>
-            <div className="step-navigation">Token Setup</div>
-            <div className="step-navigation step-navigation_active">Crowdsale Setup</div>
-            <div className="step-navigation">Publish</div>
-            <div className="step-navigation">Crowdsale Page</div>
-          </div>
-        </div>
+        <StepNavigation activeStep={CROWDSALE_SETUP}/>
         <div className="steps-content container">
           <div className="about-step">
             <div className="step-icons step-icons_crowdsale-setup"></div>
