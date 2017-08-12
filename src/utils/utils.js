@@ -49,11 +49,3 @@ export const findConstructor = (abiCrowdsale, oldState) => {
 export const getOldState = (props, defaultState) => props && props.location && props.location.query && props.location.query.state || defaultState
 
 export const getStepClass = (step, activeStep) => step === activeStep ? "step-navigation step-navigation_active" : "step-navigation"
-
-export const stepsAreValid = (steps) => {
-    const stepArray = Object.values(steps)
-    const invalidStepValue = stepArray.find( step => step === false)
-    return invalidStepValue === undefined
-}
-
-export const isValidName = (name) => name.length > 1 
