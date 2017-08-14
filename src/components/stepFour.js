@@ -3,19 +3,30 @@ import '../assets/stylesheets/application.css';
 import { deployContract, getWeb3, getNetworkVersion } from '../utils/web3'
 import { noMetaMaskAlert } from '../utils/alerts'
 import { defaultState } from '../utils/constants'
-import { findConstructor, getOldState } from '../utils/utils'
+import { getOldState } from '../utils/utils'
+import { getEncodedABI } from '../utils/microservices'
 import { stepTwo } from './stepTwo'
 import { StepNavigation } from './Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../utils/constants'
+
 const { PUBLISH } = NAVIGATION_STEPS
 
 export class stepFour extends stepTwo {
   constructor(props) {
     super(props);
     let oldState = getOldState(props, defaultState)
+    this.state = Object.assign({}, oldState)
+  }
+
+  componentDidMount() {
     let abiCrowdsale = this.state.contracts && this.state.contracts.crowdsale && this.state.contracts.crowdsale.abi || []
-    const newState = findConstructor(abiCrowdsale, oldState)
-    this.state = Object.assign({}, newState)
+    let $this = this;
+    let state = { ...this.state }
+    setTimeout(function() {
+       getWeb3((web3) => {
+         getEncodedABI(abiCrowdsale, state, $this);
+      });
+    });
   }
 
   handleDeployedContract = (err, crowdsaleAddr) => {
@@ -28,7 +39,6 @@ export class stepFour extends stepTwo {
     const isValidContract = contracts && contracts.crowdsale && contracts.crowdsale.addr
     let newHistory = isValidContract ? crowdsalePage + `?addr=` + contracts.crowdsale.addr + `&networkID=` + contracts.crowdsale.networkID : crowdsalePage
     this.props.history.push(newHistory);
-
   }
 
   getCrowdSaleParams = (web3, crowdsale) => {
@@ -186,7 +196,7 @@ export class stepFour extends stepTwo {
             <div className="item">
               <p className="label">Constructor Arguments (ABI-encoded and appended to the ByteCode above)</p>
               <pre>
-                {this.state.contracts?this.state.contracts.crowdsale?JSON.stringify(this.state.contracts.crowdsale.abiConstructor):"":""}
+                {this.state.contracts?this.state.contracts.crowdsale?this.state.contracts.crowdsale.abiConstructor:"":""}
               </pre>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
