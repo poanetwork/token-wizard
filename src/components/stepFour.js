@@ -26,7 +26,7 @@ export class stepFour extends stepTwo {
     let crowdsalePage = "/crowdsale";
     const {contracts} = this.state
     const isValidContract = contracts && contracts.crowdsale && contracts.crowdsale.addr
-    let newHistory = isValidContract ? crowdsalePage + `?addr=` + contracts.crowdsale.addr : crowdsalePage
+    let newHistory = isValidContract ? crowdsalePage + `?addr=` + contracts.crowdsale.addr + `&networkID=` + contracts.crowdsale.networkID : crowdsalePage
     this.props.history.push(newHistory);
 
   }
@@ -51,6 +51,9 @@ export class stepFour extends stepTwo {
         if (web3.eth.accounts.length === 0) {
           return noMetaMaskAlert();
         }
+        let newState = { ...this.state }
+        newState.contracts.crowdsale.networkID = _networkID;
+        this.setState(newState);
         var contracts = this.state.contracts;
         var binCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.bin || ''
         var abiCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.abi || []
@@ -63,7 +66,7 @@ export class stepFour extends stepTwo {
 
   render() {
     return (
-  	  <section className="steps steps_publish">
+      <section className="steps steps_publish">
         <StepNavigation activeStep={PUBLISH} />
         <div className="steps-content container">
           <div className="about-step">
