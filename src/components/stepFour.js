@@ -63,7 +63,7 @@ export class stepFour extends stepTwo {
 
   render() {
     return (
-  	  <section className="steps steps_publish">
+      <section className="steps steps_publish">
         <StepNavigation activeStep={PUBLISH} />
         <div className="steps-content container">
           <div className="about-step">
