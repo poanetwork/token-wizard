@@ -138,14 +138,14 @@ export class stepFour extends stepTwo {
             <div className="hidden">
               <div className="left">
                 <p className="label">Start block</p>
-                <p className="value">{this.state.crowdsale.startBlock?this.state.crowdsale.startBlock:4500000}</p>
+                <p className="value">{this.state.crowdsale.startBlock?this.state.crowdsale.startBlock:""}</p>
                 <p className="description">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
               </div>
               <div className="right">
                 <p className="label">End block</p>
-                <p className="value">{this.state.crowdsale.endBlock?this.state.crowdsale.endBlock:8000000}</p>
+                <p className="value">{this.state.crowdsale.endBlock?this.state.crowdsale.endBlock:""}</p>
                 <p className="description">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>

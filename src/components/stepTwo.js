@@ -50,10 +50,10 @@ export class stepTwo extends React.Component {
             </p>
           </div>
           <div className="hidden">
-            <InputField side='left' title={'Name'} value={this.state.token.name} onChange={(e) => this.changeState(e, 'token', 'name')}/>
-            <InputField side='right' title={'Ticker'} value={this.state.token.ticker} onChange={(e) => this.changeState(e, 'token', 'ticker')}/>
-            <InputField side='left' title={'Supply'} value={this.state.token.supply} onChange={(e) => this.changeState(e, 'token', 'supply')}/>
-            <InputField side='right' title={'Decimals'} value={this.state.token.decimals} onChange={(e) => this.changeState(e, 'token', 'decimals')}/>
+            <InputField side='left' type='text' title={'Name'} value={this.state.token.name} onChange={(e) => this.changeState(e, 'token', 'name')}/>
+            <InputField side='right' type='text' title={'Ticker'} value={this.state.token.ticker} onChange={(e) => this.changeState(e, 'token', 'ticker')}/>
+            <InputField side='left' type='number' title={'Supply'} value={this.state.token.supply} onChange={(e) => this.changeState(e, 'token', 'supply')}/>
+            <InputField side='right' type='number' title={'Decimals'} value={this.state.token.decimals} onChange={(e) => this.changeState(e, 'token', 'decimals')}/>
           </div>
         </div>
         <div className="button-container">
