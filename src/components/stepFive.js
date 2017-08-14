@@ -1,21 +1,18 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { getWeb3, attachToContract, checkNetWorkByID } from './web3'
-import { getQueryVariable, setFlatFileContentToState } from './utils'
-import { noContractAlert } from './alerts'
+import { getWeb3, attachToContract, checkNetWorkByID } from '../utils/web3'
+import { getQueryVariable, setFlatFileContentToState } from '../utils/utils'
+import { noContractAlert } from '../utils/alerts'
+import { StepNavigation } from './Common/StepNavigation'
+import { NAVIGATION_STEPS } from '../utils/constants'
+import { defaultState } from '../utils/constants'
+const { CROWDSALE_PAGE } = NAVIGATION_STEPS
 
 export class stepFive extends React.Component {
 	constructor(props) {
 	    super(props);
 	    console.log(props);
-	    if (this.goToInvestPage.bind)
-      		this.goToInvestPage = this.goToInvestPage.bind(this);
-	    this.state = {};
-	    var state = this.state;
-	    state.contracts = {"crowdsale": {}, "token": {}};
-		state.crowdsale = {};
-      	state.token = {};
-      	this.setState(state);
+	    this.state = defaultState;
 	}
 
 	componentDidMount () {
@@ -155,29 +152,20 @@ export class stepFive extends React.Component {
       });
   	}
 
-  	goToInvestPage() {
+  	goToInvestPage = () => {
   		let queryStr = "";
   		if (this.state.contracts.crowdsale.addr) {
   			queryStr = "?addr=" + this.state.contracts.crowdsale.addr;
   			if (this.state.contracts.crowdsale.networkID)
   				queryStr += "&networkID=" + this.state.contracts.crowdsale.networkID;
   		}
-
         this.props.history.push('/invest' + queryStr);
   	}
 
 	render() {
 	    return (
 		<section className="steps steps_crowdsale-page">
-			<div className="steps-navigation">
-				<div className="container">
-					<div className="step-navigation">Crowdsale Contract</div>
-					<div className="step-navigation">Token Setup</div>
-					<div className="step-navigation">Crowdsale Setup</div>
-					<div className="step-navigation">Publish</div>
-					<div className="step-navigation step-navigation_active">Crowdsale Page</div>
-				</div>
-			</div>
+			<StepNavigation activeStep={CROWDSALE_PAGE} />
 			<div className="steps-content container">
 				<div className="about-step">
 					<div className="step-icons step-icons_crowdsale-page"></div>
