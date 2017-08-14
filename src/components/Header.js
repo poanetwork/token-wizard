@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 export const Header = () => (
 	<header className="header">
     <div className="container">
-      <Link to='/'><a href="#" className="logo"></a></Link>
+      <Link className="logo" to='/'></Link>
     </div>
   </header>
 )
