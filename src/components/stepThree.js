@@ -42,8 +42,8 @@ export class stepThree extends stepTwo {
             </p>
           </div>
           <div className="hidden">
-            <InputField side='left' type='number' title={'Start block'} value={this.state.crowdsale.startBlock} onChange={(e) => this.changeState(e, 'crowdsale', 'startBlock')}/>
-            <InputField side='right' type='number' title={'End block'} value={this.state.crowdsale.endBlock} onChange={(e) => this.changeState(e, 'crowdsale', 'endBlock')}/>
+            <InputField side='left' type='datetime-local' title={'Start time'} value={this.state.crowdsale.startTime} onChange={(e) => this.changeState(e, 'crowdsale', 'startTime')}/>
+            <InputField side='right' type='datetime-local' title={'End time'} value={this.state.crowdsale.endTime} onChange={(e) => this.changeState(e, 'crowdsale', 'endTime')}/>
             <InputField side='left' type='text' title={'Wallet address'} value={this.state.crowdsale.walletAddress} onChange={(e) => this.changeState(e, 'crowdsale', 'walletAddress')}/>
             <InputField side='right' type='number' title={'Supply'} value={this.state.crowdsale.supply} onChange={(e) => this.changeState(e, 'crowdsale', 'supply')}/>
             <InputField side='left' type='number' title={'Rate'} value={this.state.crowdsale.rate} onChange={(e) => this.changeState(e, 'crowdsale', 'rate')}/>

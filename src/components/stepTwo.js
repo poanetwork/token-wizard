@@ -1,6 +1,7 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
+import { calculateFutureBlock } from '../utils/web3'
 import { defaultState } from '../utils/constants'
 import { getOldState, stepsAreValid, isValidName } from '../utils/utils'
 import { StepNavigation } from './Common/StepNavigation'
@@ -22,10 +23,27 @@ export class stepTwo extends React.Component {
   }
 
   changeState (event, parent, property) {
-    let newParent = this.getNewParent(property, parent, event.target.value)
+    let val = event.target.value
+    let newParent = this.getNewParent(property, parent, val)
     let newState = Object.assign({}, this.state)
     newState[parent] = newParent
-    this.setState(newState)
+    //set startBlock and endBlock
+    if (property == "startTime" || property == "endTime") {
+      let $this = this;
+      let targetTime = new Date(val);
+      calculateFutureBlock(targetTime, newState.blockTimeGeneration, function(targetBlock) {
+        if (property == "startTime") {
+          newState.crowdsale.startBlock = targetBlock;
+          console.log("startBlock: " + newState.crowdsale.startBlock);
+        } else if (property == "endTime") {
+          newState.crowdsale.endBlock = targetBlock;
+          console.log("endBlock: " + newState.crowdsale.endBlock);
+        }
+        $this.setState(newState);
+      });
+    } else {
+      this.setState(newState)
+    }
   }
 
   renderLinkComponent () {
