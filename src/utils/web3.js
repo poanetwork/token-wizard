@@ -58,10 +58,7 @@ export function calculateFutureBlock(targetTime, blockTimeGeneration, cb) {
     web3.eth.getBlockNumber(function(err, curBlock) {
       if (err) return console.log(err);
 
-      console.log("curBlock: " + curBlock);
-
       let curTime = new Date();
-      console.log("curTime: " + curTime);
 
       let curTimeInSec = curTime.getTime()/1000;
       let targetTimeInSec = targetTime.getTime()/1000;

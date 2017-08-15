@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { getWeb3 } from '../utils/web3'
 import { defaultState } from '../utils/constants'
 import { stepTwo } from './stepTwo'
-import { getOldState } from '../utils/utils'
+import { getOldState, defaultCompanyStartDate, defaultCompanyEndDate } from '../utils/utils'
 import { StepNavigation } from './Common/StepNavigation'
 import { InputField } from './Common/InputField'
 import { NAVIGATION_STEPS } from '../utils/constants'
@@ -22,6 +22,8 @@ export class stepThree extends stepTwo {
       getWeb3((web3) => {
         let newState = {...this.state}
         newState.crowdsale.walletAddress = web3.eth.accounts[0];
+        newState.crowdsale.startTime = defaultCompanyStartDate();
+        newState.crowdsale.endTime = defaultCompanyEndDate(newState.crowdsale.startTime);
         this.setState(newState);
       });
     }, 500);

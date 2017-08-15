@@ -113,8 +113,8 @@ export class stepFour extends stepTwo {
               <p className="publish-title" data-step="3">Crowdsale Setup</p>
             </div>
             <div className="hidden">
-              <DisplayField side='left' title={'Start time'} value={this.state.crowdsale.startTime?this.state.crowdsale.startTime:""}/>
-              <DisplayField side='right' title={'End time'} value={this.state.crowdsale.endTime?this.state.crowdsale.endTime:""}/>
+              <DisplayField side='left' title={'Start time'} value={this.state.crowdsale.startTime?this.state.crowdsale.startTime.split("T").join(" "):""}/>
+              <DisplayField side='right' title={'End time'} value={this.state.crowdsale.endTime?this.state.crowdsale.endTime.split("T").join(" "):""}/>
               <DisplayField side='left' title={'Wallet address'} value={this.state.crowdsale.walletAddress?this.state.crowdsale.walletAddress:"0xc1253365dADE090649147Db89EE781d10f2b972f"}/>
               <DisplayField side='right' title={'RATE'} value={this.state.crowdsale.rate?this.state.crowdsale.rate:1 + " ETH"}/>
             </div>
