@@ -4,7 +4,8 @@ export const defaultState = {
 		crowdsale: {} 
 	}, 
 	token: {},
-	crowdsale: {}
+	crowdsale: {},
+	blockTimeGeneration: 17
 }
 
 export const NAVIGATION_STEPS = {

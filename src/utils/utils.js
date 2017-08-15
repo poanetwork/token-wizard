@@ -15,6 +15,22 @@ export function setFlatFileContentToState(file, cb) {
   });
 }
 
+export function defaultCompanyStartDate() {
+    let curDate = new Date();
+    curDate = curDate.setDate(curDate.getDate() + 1);
+    curDate = new Date(curDate).setUTCHours(0);
+    curDate = new Date(curDate).setMinutes(0);
+    let curDateISO = new Date(curDate).toISOString();
+    let targetDate = curDateISO.split(".")[0].substring(0, curDateISO.lastIndexOf(":"))
+    return targetDate;
+}
+
+export function defaultCompanyEndDate(startDate) {
+    let endDate = new Date(startDate).setDate(new Date(startDate).getDate() + 4);
+    endDate = new Date(endDate).setUTCHours(0);
+    return new Date(endDate).toISOString().split(".")[0];
+}
+
 function readSolFile(path, cb) {
     var rawFile = new XMLHttpRequest();
     rawFile.open("GET", path, false);

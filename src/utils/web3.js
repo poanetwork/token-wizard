@@ -53,6 +53,23 @@ export function checkNetWorkByID(web3, _networkIdFromGET) {
   });
 }
 
+export function calculateFutureBlock(targetTime, blockTimeGeneration, cb) {
+  getWeb3((web3) => {
+    web3.eth.getBlockNumber(function(err, curBlock) {
+      if (err) return console.log(err);
+
+      let curTime = new Date();
+
+      let curTimeInSec = curTime.getTime()/1000;
+      let targetTimeInSec = targetTime.getTime()/1000;
+      let timeDiffInSec = targetTimeInSec - curTimeInSec;
+      let targetBlockDiff = Math.round(timeDiffInSec / blockTimeGeneration, 0);
+      let targetBlock = curBlock + targetBlockDiff;
+      cb(targetBlock);
+    });
+  });
+}
+
 function getNetWorkNameById(_id) {
   console.log(_id);
   switch (parseInt(_id, 10)) {

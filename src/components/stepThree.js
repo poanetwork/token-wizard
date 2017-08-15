@@ -4,8 +4,9 @@ import { Link } from 'react-router-dom'
 import { getWeb3 } from '../utils/web3'
 import { defaultState } from '../utils/constants'
 import { stepTwo } from './stepTwo'
-import { getOldState } from '../utils/utils'
+import { getOldState, defaultCompanyStartDate, defaultCompanyEndDate } from '../utils/utils'
 import { StepNavigation } from './Common/StepNavigation'
+import { InputField } from './Common/InputField'
 import { NAVIGATION_STEPS } from '../utils/constants'
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 
@@ -14,9 +15,6 @@ export class stepThree extends stepTwo {
     super(props);
     const oldState = getOldState(props, defaultState)
     this.state = Object.assign({}, oldState)
-    //this.state.crowdsale.startBlock = 3036872;
-    //this.state.crowdsale.endBlock = 5000000;
-    //this.state.crowdsale.rate = 1;
   }
 
   componentDidMount () {
@@ -24,6 +22,8 @@ export class stepThree extends stepTwo {
       getWeb3((web3) => {
         let newState = {...this.state}
         newState.crowdsale.walletAddress = web3.eth.accounts[0];
+        newState.crowdsale.startTime = defaultCompanyStartDate();
+        newState.crowdsale.endTime = defaultCompanyEndDate(newState.crowdsale.startTime);
         this.setState(newState);
       });
     }, 500);
@@ -44,46 +44,11 @@ export class stepThree extends stepTwo {
             </p>
           </div>
           <div className="hidden">
-            <div className="left">
-              <label className="label">Start block</label>
-              <input type="text" className="input" value={this.state.crowdsale.startBlock} onChange={(e) => this.changeState(e, "crowdsale", "startBlock")}/>
-              <p className="description">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
-              </p>
-            </div>
-            <div className="right">
-              <label className="label">End block</label>
-              <input type="text" className="input" value={this.state.crowdsale.endBlock} onChange={(e) => this.changeState(e, "crowdsale", "endBlock")}/>
-              <p className="description">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
-              </p>
-            </div>
-            <div className="left">
-              <label className="label">Wallet address</label>
-              <input type="text" className="input" value={this.state.crowdsale.walletAddress} onChange={(e) => this.changeState(e, "crowdsale", "walletAddress")}/>
-              <p className="description">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
-              </p>
-            </div>
-            <div className="right">
-              <label className="label">Supply</label>
-              <input type="text" className="input" value={this.state.crowdsale.supply} onChange={(e) => this.changeState(e, "crowdsale", "supply")}/>
-              <p className="description">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
-              </p>
-            </div>
-            <div className="left">
-              <label className="label">Rate</label>
-              <input type="text" className="input" value={this.state.crowdsale.rate} onChange={(e) => this.changeState(e, "crowdsale", "rate")}/>
-              <p className="description">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
-              </p>
-            </div>
+            <InputField side='left' type='datetime-local' title={'Start time'} value={this.state.crowdsale.startTime} onChange={(e) => this.changeState(e, 'crowdsale', 'startTime')}/>
+            <InputField side='right' type='datetime-local' title={'End time'} value={this.state.crowdsale.endTime} onChange={(e) => this.changeState(e, 'crowdsale', 'endTime')}/>
+            <InputField side='left' type='text' title={'Wallet address'} value={this.state.crowdsale.walletAddress} onChange={(e) => this.changeState(e, 'crowdsale', 'walletAddress')}/>
+            <InputField side='right' type='number' title={'Supply'} value={this.state.crowdsale.supply} onChange={(e) => this.changeState(e, 'crowdsale', 'supply')}/>
+            <InputField side='left' type='number' title={'Rate'} value={this.state.crowdsale.rate} onChange={(e) => this.changeState(e, 'crowdsale', 'rate')}/>
           </div>
         </div>
         <div className="button-container">

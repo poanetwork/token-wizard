@@ -7,6 +7,7 @@ import { getOldState } from '../utils/utils'
 import { getEncodedABI } from '../utils/microservices'
 import { stepTwo } from './stepTwo'
 import { StepNavigation } from './Common/StepNavigation'
+import { DisplayField } from './Common/DisplayField'
 import { NAVIGATION_STEPS } from '../utils/constants'
 
 const { PUBLISH } = NAVIGATION_STEPS
@@ -103,67 +104,19 @@ export class stepFour extends stepTwo {
               <p className="publish-title" data-step="2">Token Setup</p>
             </div>
             <div className="hidden">
-              <div className="left">
-                <p className="label">Name</p>
-                <p className="value">{this.state.token.name?this.state.token.name:"Token Name"}</p>
-                <p className="description">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </p>
-              </div>
-              <div className="right">
-                <p className="label">Ticker</p>
-                <p className="value">{this.state.token.ticker?this.state.token.ticker:"Ticker"}</p>
-                <p className="description">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </p>
-              </div>
-              <div className="left">
-                <p className="label">SUPPLY</p>
-                <p className="value">{this.state.token.supply?this.state.token.supply:100}</p>
-                <p className="description">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </p>
-              </div>
-              <div className="right">
-                <p className="label">DECIMALS</p>
-                <p className="value">{this.state.token.decimals?this.state.token.decimals:485}</p>
-                <p className="description">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </p>
-              </div>
+              <DisplayField side='left' title={'Name'} value={this.state.token.name?this.state.token.name:"Token Name"}/>
+              <DisplayField side='right' title={'Ticker'} value={this.state.token.ticker?this.state.token.ticker:"Ticker"}/>
+              <DisplayField side='left' title={'SUPPLY'} value={this.state.token.supply?this.state.token.supply:100}/>
+              <DisplayField side='right' title={'DECIMALS'} value={this.state.token.decimals?this.state.token.decimals:485}/>
             </div>
             <div className="publish-title-container">
               <p className="publish-title" data-step="3">Crowdsale Setup</p>
             </div>
             <div className="hidden">
-              <div className="left">
-                <p className="label">Start block</p>
-                <p className="value">{this.state.crowdsale.startBlock?this.state.crowdsale.startBlock:4500000}</p>
-                <p className="description">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </p>
-              </div>
-              <div className="right">
-                <p className="label">End block</p>
-                <p className="value">{this.state.crowdsale.endBlock?this.state.crowdsale.endBlock:8000000}</p>
-                <p className="description">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </p>
-              </div>
-              <div className="left">
-                <p className="label">Wallet address</p>
-                <p className="value">{this.state.crowdsale.walletAddress?this.state.crowdsale.walletAddress:"0xc1253365dADE090649147Db89EE781d10f2b972f"}</p>
-                <p className="description">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </p>
-              </div>
-              <div className="right">
-                <p className="label">RATE</p>
-                <p className="value">{this.state.crowdsale.rate?this.state.crowdsale.rate:1} ETH</p>
-                <p className="description">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </p>
-              </div>
+              <DisplayField side='left' title={'Start time'} value={this.state.crowdsale.startTime?this.state.crowdsale.startTime.split("T").join(" "):""}/>
+              <DisplayField side='right' title={'End time'} value={this.state.crowdsale.endTime?this.state.crowdsale.endTime.split("T").join(" "):""}/>
+              <DisplayField side='left' title={'Wallet address'} value={this.state.crowdsale.walletAddress?this.state.crowdsale.walletAddress:"0xc1253365dADE090649147Db89EE781d10f2b972f"}/>
+              <DisplayField side='right' title={'RATE'} value={this.state.crowdsale.rate?this.state.crowdsale.rate:1 + " ETH"}/>
             </div>
             <div className="publish-title-container">
               <p className="publish-title" data-step="4">Crowdsale Setup</p>

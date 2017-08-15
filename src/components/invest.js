@@ -4,8 +4,6 @@ import { getWeb3, attachToContract, checkNetWorkByID } from '../utils/web3'
 import { getQueryVariable, setFlatFileContentToState } from '../utils/utils'
 import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, successfulInvestmentAlert } from '../utils/alerts'
 
-const blockTimeGeneration = 17; //in seconds
-
 export class Invest extends React.Component {
   constructor(props) {
       super(props);
@@ -153,7 +151,7 @@ export class Invest extends React.Component {
           console.log("curBlock: " + curBlock);
           var blocksDiff = parseInt($this.state.crowdsale.endBlock, 10) - parseInt(curBlock, 10);
           console.log("blocksDiff: " + blocksDiff);
-          var blocksDiffInSec = blocksDiff * blockTimeGeneration;
+          var blocksDiffInSec = blocksDiff * state.blockTimeGeneration;
           console.log("blocksDiffInSec: " + blocksDiffInSec);
           state.seconds = blocksDiffInSec;
           $this.setState(state);
