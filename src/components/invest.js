@@ -3,19 +3,19 @@ import ReactCountdownClock from 'react-countdown-clock'
 import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData } from '../utils/web3'
 import { getQueryVariable, setFlatFileContentToState } from '../utils/utils'
 import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, successfulInvestmentAlert } from '../utils/alerts'
+import { defaultState } from '../utils/constants'
 
 export class Invest extends React.Component {
   constructor(props) {
       super(props);
       if (this.tokensToInvestOnChange.bind) this.tokensToInvestOnChange = this.tokensToInvestOnChange.bind(this);
       if (this.investToTokens.bind) this.investToTokens = this.investToTokens.bind(this);
-      this.state = {
-        seconds: 0,
-      };
+      this.state = defaultState
       var state = this.state;
       state.contracts = {"crowdsale": {}, "token": {}};
       state.crowdsale = {};
       state.token = {};
+      state.seconds = 0;
       this.setState(state);
   }
 
