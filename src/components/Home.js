@@ -21,18 +21,12 @@ export class Home extends Component {
   }
 
   componentDidMount() {
+    //const contractName = "RomanCrowdsale";
     const contractName = "SampleCrowdsale";
     let src, bin
-    //var contractName = "RomanCrowdsale";
     setFlatFileContentToState("./contracts/" + contractName + "_flat.sol", (content) => src = content);
     setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", (_bin) => bin = _bin);
     setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", (_abi) => this.addContractsToState(src, bin, _abi));
-    /*setFlatFileContentToState("./contracts/SampleCrowdsaleToken_flat.bin", function(content) {
-      $this.state.contracts.token.bin = content;
-    });
-    setFlatFileContentToState("./contracts/SampleCrowdsaleToken_flat.abi", function(content) {
-      $this.state.contracts.token.abi = JSON.parse(content);
-    });*/
   }
 
   render() {
