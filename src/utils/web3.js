@@ -1,5 +1,5 @@
 import Web3 from 'web3';
-import { incorrectNetworkAlert} from './alerts'
+import { incorrectNetworkAlert, noContractAlert } from './alerts'
 
 // instantiate new web3 instance
 const web3 = new Web3();
@@ -95,6 +95,124 @@ function getNetWorkNameById(_id) {
       return "Unknown";
     } break;
   }
+}
+
+export function getCrowdsaleData(web3, $this) {
+  attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr, function(err, crowdsaleContract) {
+    console.log("attach to crowdsale contract");
+    if (err) return console.log(err);
+    if (!crowdsaleContract) return noContractAlert();
+
+    console.log(crowdsaleContract);
+
+    crowdsaleContract.weiRaised.call(function(err, weiRaised) {
+      if (err) return console.log(err);
+      
+      console.log("weiRaised: " + web3.fromWei(parseInt(weiRaised, 10), "ether"));
+      let state = $this.state;
+      state.crowdsale.weiRaised = web3.fromWei(parseInt(weiRaised, 10), "ether");
+      $this.setState(state);
+    });
+
+    crowdsaleContract.rate.call(function(err, rate) {
+      if (err) return console.log(err);
+      
+      console.log("rate: " + web3.fromWei(parseInt(rate, 10), "ether"));
+      let state = $this.state;
+      state.crowdsale.rate = web3.fromWei(parseInt(rate, 10), "ether");
+      $this.setState(state);
+    });
+
+    crowdsaleContract.supply.call(function(err, supply) {
+      if (err) return console.log(err);
+      
+      console.log("supply: " + supply);
+      let state = $this.state;
+      state.crowdsale.supply = supply;
+      $this.setState(state);
+    });
+
+    crowdsaleContract.investors.call(function(err, investors) {
+      if (err) return console.log(err);
+      
+      console.log("investors: " + investors);
+      let state = $this.state;
+      state.crowdsale.investors = investors;
+      $this.setState(state);
+    });
+
+    crowdsaleContract.startBlock.call(function(err, startBlock) {
+      if (err) return console.log(err);
+      
+      console.log("startBlock: " + startBlock);
+      let state = $this.state;
+      state.crowdsale.startBlock = startBlock;
+      $this.setState(state);
+    });
+
+    crowdsaleContract.endBlock.call(function(err, endBlock) {
+      if (err) return console.log(err);
+      
+      console.log("endBlock: " + endBlock);
+      let state = $this.state;
+      state.crowdsale.endBlock = endBlock;
+      $this.setState(state);
+      web3.eth.getBlockNumber(function(err, curBlock) {
+        if (err) return console.log(err);
+
+        console.log("curBlock: " + curBlock);
+        var blocksDiff = parseInt($this.state.crowdsale.endBlock, 10) - parseInt(curBlock, 10);
+        console.log("blocksDiff: " + blocksDiff);
+        var blocksDiffInSec = blocksDiff * state.blockTimeGeneration;
+        console.log("blocksDiffInSec: " + blocksDiffInSec);
+        state.seconds = blocksDiffInSec;
+        $this.setState(state);
+      });
+    });
+
+    crowdsaleContract.token.call(function(err, tokenAddr) {
+      if (err) return console.log(err);
+      
+      console.log("token: " + tokenAddr);
+      let state = $this.state;
+      state.contracts.token.addr = tokenAddr;
+      $this.setState(state);
+
+      if (!tokenAddr || tokenAddr === "0x") return;
+      getTokenData(web3, $this);
+    });
+  });
+}
+
+function getTokenData(web3, $this) {
+  attachToContract(web3, $this.state.contracts.token.abi, $this.state.contracts.token.addr, function(err, tokenContract) {
+    console.log("attach to token contract");
+    if (err) return console.log(err);
+    if (!tokenContract) return noContractAlert();
+
+    tokenContract["name"].call(function(err, name) {
+      if (err) return console.log(err);
+      
+      console.log("token name: " + name);
+      let state = $this.state;
+      state.token.name = name;
+      $this.setState(state);
+    });
+    tokenContract["symbol"].call(function(err, ticker) {
+      if (err) console.log(err);
+      console.log("token ticker: " + ticker);
+      let state = $this.state;
+      state.token.ticker = ticker;
+      $this.setState(state);
+    });
+    tokenContract["supply"].call(function(err, supply) {
+      if (err) console.log(err);
+      let state = $this.state;
+      console.log("token supply: " + supply);
+      state.token.supply = supply;
+      $this.setState(state);
+    });
+  });
 }
 
 export function getNetworkVersion(web3, cb) {
