@@ -1,3 +1,6 @@
+import { VALIDATION_TYPES } from './constants'
+const { VALID, EMPTY, INVALID } = VALIDATION_TYPES
+
 export function getQueryVariable(variable) {
     var query = window.location.search.substring(1);
     var vars = query.split('&');
@@ -49,7 +52,6 @@ function readSolFile(path, cb) {
 }
 
 export const findConstructor = (abiCrowdsale) => {
-    console.log('abiCrowdSale,', abiCrowdsale)
     let abiConstructor
     abiCrowdsale.forEach(abiObj => {
         if (abiObj.type === "constructor") {
@@ -64,9 +66,6 @@ export const findConstructor = (abiCrowdsale) => {
 export const getconstructorParams = (abiConstructor, state) => {
     let params = {"types": [], "vals": []};
     if (!abiConstructor) return params;
-
-    console.log(abiConstructor.length);
-    console.log(state);
     for (let j = 0; j < abiConstructor.length; j++) {
         let inp = abiConstructor[j];
         params.types.push(inp.type);
@@ -109,3 +108,39 @@ export const getconstructorParams = (abiConstructor, state) => {
 export const getOldState = (props, defaultState) => props && props.location && props.location.query && props.location.query.state || defaultState
 
 export const getStepClass = (step, activeStep) => step === activeStep ? "step-navigation step-navigation_active" : "step-navigation"
+
+export const stepsAreValid = (steps) => Object.values(steps).every(step => step === VALID)
+
+const validateName = (name) => typeof name === 'string' && name.length > 0 && name.length < 27
+
+const validateSupply = (supply) =>  isNaN(Number(supply)) === false && supply.length > 0
+
+const validateDecimals = (decimals) => isNaN(Number(decimals)) === false && decimals.length > 0
+
+const validateTicker = (ticker) => typeof ticker === 'string' && ticker.length < 4 && ticker.length > 0
+
+const validateTime = (time) => time > Date.now()
+
+const validateWallet = () => true
+
+const validateRate = (rate) => isNaN(Number(rate)) === false && rate > 0
+
+const inputFieldValidators = {
+    name: validateName,
+    ticker: validateTicker,
+    decimals: validateDecimals,
+    supply: validateSupply,
+    startTime: validateTime,
+    endTime: validateTime,
+    walletAddress: validateWallet,
+    rate: validateRate
+}
+
+export const getValidationValue = (event, parent) => {
+    let validationFunction = inputFieldValidators[parent]
+    console.log('inputFieldValidators', inputFieldValidators, 'parent', parent)
+    const valueIsValid = validationFunction(event.target.value)
+    console.log('validationFunction', validationFunction, 'valueIsValid', valueIsValid)
+    return valueIsValid === true ? VALID : INVALID
+}
+
