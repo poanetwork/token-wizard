@@ -22,7 +22,8 @@ export class Home extends Component {
 
   componentDidMount() {
     //const contractName = "RomanCrowdsale";
-    const contractName = "SampleCrowdsale";
+    //const contractName = "SampleCrowdsale";
+    const contractName = "Crowdsale";
     let src, bin
     setFlatFileContentToState("./contracts/" + contractName + "_flat.sol", (content) => src = content);
     setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", (_bin) => bin = _bin);

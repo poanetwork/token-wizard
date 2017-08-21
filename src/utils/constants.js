@@ -5,6 +5,7 @@ export const defaultState = {
 	}, 
 	token: {},
 	crowdsale: {},
+	pricingStrategy: {},
 	blockTimeGeneration: 17
 }
 

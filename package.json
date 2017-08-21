@@ -35,15 +35,23 @@
   "config": {
     "contract_folder": "./public/contracts",
     "combine_solidity_script": "src/components/oracles-combine-solidity/index.js",
-    "zeppelin_path": "node_modules/zeppelin-solidity/contracts/crowdsale/"
+    "extension_path": "./scripts/OraclesExtendedCrowdSale.sol",
+    "zeppelin_path": "node_modules/zeppelin-solidity/contracts/crowdsale/",
+    "tokenmarketnet_path": "src/components/token-market-net-ico/contracts/",
+    "crowdsale_contract_name": "UncappedCrowdsale",
+    "crowdsale_token_contract_name": "CrowdsaleToken",
+    "crowdsale_pricing_strategy_contract_name": "EthTranchePricing"
   },
   "scripts": {
-    "start": "npm run generateFlatSolidityContract && npm run compileContract && react-scripts start",
-    "build": "npm run generateFlatSolidityContract && npm run compileContract && git submodule update --init --recursive --remote && react-scripts build",
+    "start": "npm run generateFlatSolidityCrowdsaleContract && npm run generateFlatSolidityCrowdsaleTokenContract && npm run generateFlatSolidityCrowdsalePricingStrategyContract && npm run compileCrowdsaleContract && npm run compileCrowdsaleTokenContract && npm run compileCrowdsalePricingStrategyContract && react-scripts start",
+    "build": "npm run generateFlatSolidityCrowdsaleContract && npm run generateFlatSolidityCrowdsaleTokenContract && npm run generateFlatSolidityCrowdsalePricingStrategyContract && npm run compileCrowdsaleContract && npm run compileCrowdsaleTokenContract && npm run compileCrowdsalePricingStrategyContract && git submodule update --init --recursive --remote && react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "generateFlatSolidityContract": "node $npm_package_config_combine_solidity_script $npm_package_config_zeppelin_path/Crowdsale.sol $npm_package_config_contract_folder",
-    "compileContract": "node ./scripts/compileContract.js $npm_package_config_contract_folder/Crowdsale_flat.sol SampleCrowdsale SampleCrowdsaleToken $npm_package_config_contract_folder",
-    "generateFlatSolidityCappedContract": "node $npm_package_config_combine_solidity_script $npm_package_config_zeppelin_path/CappedCrowdsale.sol $npm_package_config_contract_folder"
+    "generateFlatSolidityCrowdsaleContract": "node $npm_package_config_combine_solidity_script $npm_package_config_tokenmarketnet_path/$npm_package_config_crowdsale_contract_name.sol $npm_package_config_contract_folder Crowdsale",
+    "generateFlatSolidityCrowdsaleTokenContract": "node $npm_package_config_combine_solidity_script $npm_package_config_tokenmarketnet_path/$npm_package_config_crowdsale_token_contract_name.sol $npm_package_config_contract_folder CrowdsaleToken",
+    "generateFlatSolidityCrowdsalePricingStrategyContract": "node $npm_package_config_combine_solidity_script $npm_package_config_tokenmarketnet_path/$npm_package_config_crowdsale_pricing_strategy_contract_name.sol $npm_package_config_contract_folder CrowdsalePricingStrategy",
+    "compileCrowdsaleContract": "node ./scripts/compileContract.js $npm_package_config_contract_folder/Crowdsale_flat.sol $npm_package_config_contract_folder $npm_package_config_extension_path false $npm_package_config_crowdsale_contract_name Crowdsale",
+    "compileCrowdsaleTokenContract": "node ./scripts/compileContract.js $npm_package_config_contract_folder/CrowdsaleToken_flat.sol $npm_package_config_contract_folder $npm_package_config_extension_path false $npm_package_config_crowdsale_token_contract_name CrowdsaleToken",
+    "compileCrowdsalePricingStrategyContract": "node ./scripts/compileContract.js $npm_package_config_contract_folder/CrowdsalePricingStrategy_flat.sol $npm_package_config_contract_folder $npm_package_config_extension_path false $npm_package_config_crowdsale_pricing_strategy_contract_name CrowdsalePricingStrategy"
   }
 }

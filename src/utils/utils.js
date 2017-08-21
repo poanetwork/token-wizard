@@ -71,17 +71,26 @@ export const getconstructorParams = (abiConstructor, state) => {
         let inp = abiConstructor[j];
         params.types.push(inp.type);
         switch(inp.name) {
-            case "_startBlock": {
+            case "_startBlock":
+            case "_start": {
                 params.vals.push(state.crowdsale.startBlock);
             } break;
-            case "_endBlock": {
+            case "_endBlock":
+            case "_end": {
                 params.vals.push(state.crowdsale.endBlock);
             } break;
             case "_rate": {
                 params.vals.push(state.crowdsale.rate);
             } break;
-            case "_wallet": {
+            case "_wallet":
+            case "_multisigWallet": {
                 params.vals.push(state.crowdsale.walletAddress);
+            } break;
+            case "_pricingStrategy": {
+                params.vals.push(state.crowdsale.walletAddress); //todo
+            } break;
+            case "_token": {
+                params.vals.push(state.crowdsale.walletAddress); //todo
             } break;
             case "_crowdsaleSupply": {
                 params.vals.push(state.crowdsale.supply);
@@ -95,7 +104,8 @@ export const getconstructorParams = (abiConstructor, state) => {
             case "_decimals": {
                 params.vals.push(state.token.decimals);
             } break;
-            case "_tokenSupply": {
+            case "_tokenSupply":
+            case "_minimumFundingGoal": {
                 params.vals.push(state.token.supply);
             } break;
             default: {

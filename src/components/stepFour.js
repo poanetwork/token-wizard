@@ -42,7 +42,7 @@ export class stepFour extends stepTwo {
     this.props.history.push(newHistory);
   }
 
-  getCrowdSaleParams = (web3, crowdsale) => {
+  /*getCrowdSaleParams = (web3, crowdsale) => {
     return [
       parseInt(crowdsale.startBlock, 10), 
       parseInt(crowdsale.endBlock, 10), 
@@ -52,6 +52,17 @@ export class stepFour extends stepTwo {
       this.state.token.name,
       this.state.token.ticker,
       parseInt(this.state.token.decimals, 10),
+      parseInt(this.state.token.supply, 10)
+    ]
+  }*/
+
+  getCrowdSaleParams = (web3, crowdsale) => {
+    return [
+      crowdsale.walletAddress,
+      crowdsale.walletAddress,
+      "0xf4C5feeEe6482379AD511bCDfb62E287aAdC5c48",
+      parseInt(crowdsale.startBlock, 10), 
+      parseInt(crowdsale.endBlock, 10), 
       parseInt(this.state.token.supply, 10)
     ]
   }
