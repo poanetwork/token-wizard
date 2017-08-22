@@ -259,6 +259,7 @@ export function deployContract(web3, abi, bin, params, cb) {
 
       function deployContractCB(err, contract) {
         if (err) console.log(err);
+        console.log(contract);
         if (contract) {
           if (contract.address) {
             console.log(contract);

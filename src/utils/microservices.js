@@ -1,8 +1,8 @@
 import { findConstructor, getconstructorParams } from '../utils/utils'
 import $ from 'jquery'
 
-export function getEncodedABI(abiCrowdsale, state, $this) {
-	const abiConstructor = findConstructor(abiCrowdsale, state)
+export function getEncodedABI(abi, cntrct, state, $this) {
+	const abiConstructor = findConstructor(abi, state)
      let params = getconstructorParams(abiConstructor, state);
      console.log(params);
      $.ajax({
@@ -13,7 +13,9 @@ export function getEncodedABI(abiCrowdsale, state, $this) {
 	      dataType:"json"
 	  }).done(function(data) {
 	    console.log(data);
-	    state.contracts.crowdsale.abiConstructor = data.body.ABIencoded;
+	    state.contracts[cntrct].abiConstructor = data.body.ABIencoded;
+	    console.log(cntrct + " ABI encoded params constructor");
+	    console.log(data.body.ABIencoded);
 	    $this.setState(state);
 	  }).fail(function(err) {
 	    console.log(err);

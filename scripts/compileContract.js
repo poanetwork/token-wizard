@@ -37,7 +37,8 @@ function compileContract(content) {
 	console.log(output);
 	for (let contractName in output.contracts) {
 		if (targetContractName.toLowerCase() === contractName.substr(contractName.indexOf(":") + 1).toLowerCase()) {
-			//fs.writeFileSync(outputFolder + "/" + outputContractName + "_flat.bin", output.contracts[contractName].bytecode);
+			output.contracts[contractName].bytecode = solc.linkBytecode(output.contracts[contractName].bytecode, { ':SafeMathLib': '0x072ba774dfd4e827c539ecfc9c6e2fae8d012534' })
+			fs.writeFileSync(outputFolder + "/" + outputContractName + "_flat.bin", output.contracts[contractName].bytecode);
 			fs.writeFileSync(outputFolder + "/" + outputContractName + "_flat.abi", output.contracts[contractName].interface);
 		}
 	}

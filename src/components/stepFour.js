@@ -21,13 +21,33 @@ export class stepFour extends stepTwo {
 
   componentDidMount() {
     let abiCrowdsale = this.state.contracts && this.state.contracts.crowdsale && this.state.contracts.crowdsale.abi || []
+    let abiToken = this.state.contracts && this.state.contracts.token && this.state.contracts.token.abi || []
+    let abiPricingStrategy = this.state.contracts && this.state.contracts.pricingStrategy && this.state.contracts.pricingStrategy.abi || []
+    
     let $this = this;
     let state = { ...this.state }
     setTimeout(function() {
        getWeb3((web3) => {
-         getEncodedABI(abiCrowdsale, state, $this);
+        state.web3 = web3;
+        $this.setState(state);
+        getEncodedABI(abiToken, "token", state, $this);
+        getEncodedABI(abiPricingStrategy, "pricingStrategy", state, $this);
+        $this.deployToken();
       });
     });
+  }
+
+  handleDeployedToken = (err, tokenAddr) => {
+    if (err) return console.log(err);
+    let newState = { ...this.state }
+    newState.contracts.token.addr = tokenAddr;
+    this.deployPricingStrategy();
+  }
+
+  handleDeployedPricingStrategy = (err, pricingStrategyAddr) => {
+    if (err) return console.log(err);
+    let newState = { ...this.state }
+    newState.contracts.pricingStrategy.addr = pricingStrategyAddr;
   }
 
   handleDeployedContract = (err, crowdsaleAddr) => {
@@ -56,6 +76,24 @@ export class stepFour extends stepTwo {
     ]
   }*/
 
+  getTokenParams = (web3, token) => {
+    console.log(token);
+    return [
+      token.name,
+      token.ticker,
+      parseInt(token.supply, 10),
+      parseInt(token.decimals, 10),
+      true
+    ]
+  }
+
+  getPricingStrategyParams = (web3, pricingStrategy) => {
+    console.log(pricingStrategy);
+    return [
+      pricingStrategy.tranches
+    ]
+  }
+
   getCrowdSaleParams = (web3, crowdsale) => {
     return [
       "0x870d809780fb26a416a7187e8bb7f2e609684e56",
@@ -63,12 +101,12 @@ export class stepFour extends stepTwo {
       "0xf4c5feeee6482379ad511bcdfb62e287aadc5c48",
       parseInt(crowdsale.startBlock, 10), 
       parseInt(crowdsale.endBlock, 10), 
-      parseInt(this.state.token.supply, 10),
-      "0x005364854d51A0A12cb3cb9A402ef8b30702a565"
+      parseInt(this.state.token.supply, 10)
     ]
   }
 
   deployCrowdsale = () => {
+    console.log("***Deploy crowdsale contract***");
     getWeb3((web3) => {
       getNetworkVersion(web3, (_networkID) => {
         if (web3.eth.accounts.length === 0) {
@@ -86,6 +124,44 @@ export class stepFour extends stepTwo {
         deployContract(web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, this.handleDeployedContract)
        });
     });
+  }
+
+  deployToken = () => {
+    console.log("***Deploy token contract***");
+    getNetworkVersion(this.state.web3, (_networkID) => {
+      if (this.state.web3.eth.accounts.length === 0) {
+        return noMetaMaskAlert();
+      }
+      let newState = { ...this.state }
+      newState.contracts.crowdsale.networkID = _networkID;
+      this.setState(newState);
+      var contracts = this.state.contracts;
+      var binToken = contracts && contracts.token && contracts.token.bin || ''
+      var abiToken = contracts && contracts.token && contracts.token.abi || []
+      var token = this.state.token;
+      var paramsToken = this.getTokenParams(this.state.web3, token)
+      console.log(paramsToken);
+      deployContract(this.state.web3, abiToken, binToken, paramsToken, this.handleDeployedToken)
+     });
+  }
+
+  deployPricingStrategy = () => {
+    console.log("***Deploy pricing strategy contract***");
+    getNetworkVersion(this.state.web3, (_networkID) => {
+      if (this.state.web3.eth.accounts.length === 0) {
+        return noMetaMaskAlert();
+      }
+      let newState = { ...this.state }
+      newState.contracts.crowdsale.networkID = _networkID;
+      this.setState(newState);
+      var contracts = this.state.contracts;
+      var binPricingStrategy = contracts && contracts.pricingStrategy && contracts.pricingStrategy.bin || ''
+      var abiPricingStrategy = contracts && contracts.pricingStrategy && contracts.pricingStrategy.abi || []
+      var pricingStrategy = this.state.pricingStrategy;
+      var paramsPricingStrategy = this.getPricingStrategyParams(this.state.web3, pricingStrategy)
+      console.log(paramsPricingStrategy);
+      deployContract(this.state.web3, abiPricingStrategy, binPricingStrategy, paramsPricingStrategy, this.handleDeployedPricingStrategy)
+     });
   }
 
   render() {

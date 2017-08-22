@@ -108,8 +108,15 @@ export const getconstructorParams = (abiConstructor, state) => {
                 params.vals.push(state.token.decimals);
             } break;
             case "_tokenSupply":
-            case "_minimumFundingGoal": {
+            case "_minimumFundingGoal": 
+            case "_initialSupply": {
                 params.vals.push(state.token.supply);
+            } break;
+            case "_mintable": {
+                params.vals.push(true);
+            } break;
+            case "_tranches": {
+                params.vals.push(state.pricingStrategy.tranches);
             } break;
             default: {
                 params.vals.push("");
