@@ -87,10 +87,13 @@ export const getconstructorParams = (abiConstructor, state) => {
                 params.vals.push(state.crowdsale.walletAddress);
             } break;
             case "_pricingStrategy": {
-                params.vals.push(state.crowdsale.walletAddress); //todo
+                params.vals.push("0xfdb2e623113b12e4109018654e7598d70706e635");//params.vals.push(state.crowdsale.walletAddress); //todo
             } break;
             case "_token": {
-                params.vals.push(state.crowdsale.walletAddress); //todo
+                params.vals.push("0x870d809780fb26a416a7187e8bb7f2e609684e56");//params.vals.push(state.crowdsale.walletAddress); //todo
+            } break;
+            case "_beneficiary": {
+                params.vals.push("0x005364854d51A0A12cb3cb9A402ef8b30702a565"); //todo
             } break;
             case "_crowdsaleSupply": {
                 params.vals.push(state.crowdsale.supply);

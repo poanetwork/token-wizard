@@ -37,7 +37,7 @@ function compileContract(content) {
 	console.log(output);
 	for (let contractName in output.contracts) {
 		if (targetContractName.toLowerCase() === contractName.substr(contractName.indexOf(":") + 1).toLowerCase()) {
-			fs.writeFileSync(outputFolder + "/" + outputContractName + "_flat.bin", output.contracts[contractName].bytecode);
+			//fs.writeFileSync(outputFolder + "/" + outputContractName + "_flat.bin", output.contracts[contractName].bytecode);
 			fs.writeFileSync(outputFolder + "/" + outputContractName + "_flat.abi", output.contracts[contractName].interface);
 		}
 	}

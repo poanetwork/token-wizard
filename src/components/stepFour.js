@@ -58,12 +58,13 @@ export class stepFour extends stepTwo {
 
   getCrowdSaleParams = (web3, crowdsale) => {
     return [
-      crowdsale.walletAddress,
-      crowdsale.walletAddress,
-      "0xf4C5feeEe6482379AD511bCDfb62E287aAdC5c48",
+      "0x870d809780fb26a416a7187e8bb7f2e609684e56",
+      "0xfdb2e623113b12e4109018654e7598d70706e635",
+      "0xf4c5feeee6482379ad511bcdfb62e287aadc5c48",
       parseInt(crowdsale.startBlock, 10), 
       parseInt(crowdsale.endBlock, 10), 
-      parseInt(this.state.token.supply, 10)
+      parseInt(this.state.token.supply, 10),
+      "0x005364854d51A0A12cb3cb9A402ef8b30702a565"
     ]
   }
 
@@ -81,6 +82,7 @@ export class stepFour extends stepTwo {
         var abiCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.abi || []
         var crowdsale = this.state.crowdsale;
         var paramsCrowdsale = this.getCrowdSaleParams(web3, crowdsale)
+        console.log(paramsCrowdsale);
         deployContract(web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, this.handleDeployedContract)
        });
     });
