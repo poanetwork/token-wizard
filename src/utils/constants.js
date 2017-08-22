@@ -1,7 +1,8 @@
 export const defaultState = { 
 	contracts: { 
 		token: {}, 
-		crowdsale: {} 
+		crowdsale: {},
+		pricingStrategy: {}
 	}, 
 	token: {},
 	crowdsale: {},

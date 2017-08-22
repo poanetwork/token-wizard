@@ -30,7 +30,7 @@ export class stepFive extends React.Component {
 			    state.contracts.crowdsale.addr = crowdsaleAddr;
 			    state.contracts.crowdsale.networkID = networkID;
 			    
-			    var derivativesLength = 4;
+			    var derivativesLength = 6;
 			    var derivativesIterator = 0;
 			    setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", function(_bin) {
 			      derivativesIterator++;
@@ -59,6 +59,22 @@ export class stepFive extends React.Component {
 			    setFlatFileContentToState("./contracts/" + contractName + "Token_flat.abi", function(_abi) {
 			      derivativesIterator++;
 			      state.contracts.token.abi = JSON.parse(_abi);
+
+			      if (derivativesIterator === derivativesLength) {
+			        $this.extractContractsData($this, state, web3);
+			      }
+			    });
+			    setFlatFileContentToState("./contracts/" + contractName + "PricingStrategy_flat.bin", function(_bin) {
+			      derivativesIterator++;
+			      state.contracts.pricingStrategy.bin = _bin;
+
+			      if (derivativesIterator === derivativesLength) {
+			        $this.extractContractsData($this, state, web3);
+			      }
+			    });
+			    setFlatFileContentToState("./contracts/" + contractName + "PricingStrategy_flat.abi", function(_abi) {
+			      derivativesIterator++;
+			      state.contracts.pricingStrategy.abi = JSON.parse(_abi);
 
 			      if (derivativesIterator === derivativesLength) {
 			        $this.extractContractsData($this, state, web3);
@@ -109,7 +125,7 @@ export class stepFive extends React.Component {
 							</p>
 						</div>
 						<div className="right">
-							<p className="total-funds-title">{this.state.crowdsale.rate?isNaN(this.state.crowdsale.supply/this.state.crowdsale.rate)?0:(this.state.crowdsale.supply/this.state.crowdsale.rate):0} ETH</p>
+							<p className="total-funds-title">{this.state.pricingStrategy.rate?isNaN(this.state.crowdsale.supply/this.state.pricingStrategy.rate)?0:(this.state.crowdsale.supply/this.state.pricingStrategy.rate):0} ETH</p>
 							<p className="total-funds-description">
 								Goal
 							</p>
@@ -135,7 +151,7 @@ export class stepFive extends React.Component {
 						<div className="left">
 							<div className="hidden">
 								<div className="left">
-									<p className="title">{this.state.crowdsale.weiRaised*this.state.crowdsale.rate}</p>
+									<p className="title">{this.state.crowdsale.weiRaised*this.state.pricingStrategy.rate}</p>
 									<p className="description">
 										Tokens Claimed
 									</p>
@@ -155,7 +171,7 @@ export class stepFive extends React.Component {
 						<div className="right">
 							<div className="hidden">
 								<div className="left">
-									<p className="title">{this.state.crowdsale.rate?this.state.crowdsale.rate:0}</p>
+									<p className="title">{this.state.pricingStrategy.rate?this.state.pricingStrategy.rate:0}</p>
 									<p className="description">
 										Price (Tokens/ETH)
 									</p>

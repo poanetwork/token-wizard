@@ -12,7 +12,6 @@ export class Invest extends React.Component {
       if (this.investToTokens.bind) this.investToTokens = this.investToTokens.bind(this);
       this.state = defaultState
       var state = this.state;
-      state.contracts = {"crowdsale": {}, "token": {}};
       state.crowdsale = {};
       state.token = {};
       state.seconds = 0;
@@ -20,6 +19,7 @@ export class Invest extends React.Component {
   }
 
   componentDidMount () {
+    const contractName = "Crowdsale";
     var $this = this;
     setTimeout(function() {
      getWeb3(function(web3) {
@@ -35,35 +35,51 @@ export class Invest extends React.Component {
       checkNetWorkByID(web3, networkID);
       $this.state.contracts.crowdsale.addr = crowdsaleAddr;
 
-      var derivativesLength = 4;
+      var derivativesLength = 6;
       var derivativesIterator = 0;
-      setFlatFileContentToState("./contracts/SampleCrowdsale_flat.bin", function(_bin) {
+      setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", function(_bin) {
         derivativesIterator++;
-        $this.state.contracts.crowdsale.bin = _bin;
+        state.contracts.crowdsale.bin = _bin;
 
         if (derivativesIterator === derivativesLength) {
           $this.extractContractsData($this, web3);
         }
       });
-      setFlatFileContentToState("./contracts/SampleCrowdsale_flat.abi", function(_abi) {
+      setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", function(_abi) {
         derivativesIterator++;
-        $this.state.contracts.crowdsale.abi = JSON.parse(_abi);
+        state.contracts.crowdsale.abi = JSON.parse(_abi);
 
         if (derivativesIterator === derivativesLength) {
           $this.extractContractsData($this, web3);
         }
       });
-      setFlatFileContentToState("./contracts/SampleCrowdsaleToken_flat.bin", function(_bin) {
+      setFlatFileContentToState("./contracts/" + contractName + "Token_flat.bin", function(_bin) {
         derivativesIterator++;
-        $this.state.contracts.token.bin = _bin;
+        state.contracts.token.bin = _bin;
 
         if (derivativesIterator === derivativesLength) {
           $this.extractContractsData($this, web3);
         }
       });
-      setFlatFileContentToState("./contracts/SampleCrowdsaleToken_flat.abi", function(_abi) {
+      setFlatFileContentToState("./contracts/" + contractName + "Token_flat.abi", function(_abi) {
         derivativesIterator++;
-        $this.state.contracts.token.abi = JSON.parse(_abi);
+        state.contracts.token.abi = JSON.parse(_abi);
+
+        if (derivativesIterator === derivativesLength) {
+          $this.extractContractsData($this, web3);
+        }
+      });
+      setFlatFileContentToState("./contracts/" + contractName + "PricingStrategy_flat.bin", function(_bin) {
+        derivativesIterator++;
+        state.contracts.pricingStrategy.bin = _bin;
+
+        if (derivativesIterator === derivativesLength) {
+          $this.extractContractsData($this, web3);
+        }
+      });
+      setFlatFileContentToState("./contracts/" + contractName + "PricingStrategy_flat.abi", function(_abi) {
+        derivativesIterator++;
+        state.contracts.pricingStrategy.abi = JSON.parse(_abi);
 
         if (derivativesIterator === derivativesLength) {
           $this.extractContractsData($this, web3);
@@ -92,19 +108,24 @@ export class Invest extends React.Component {
   investToTokens() {
     var $this = this;
     var startBlock = parseInt($this.state.crowdsale.startBlock, 10);
-    if (isNaN(startBlock) || startBlock === 0) return;
+    var startDate = $this.state.crowdsale.startDate;
+    if ((isNaN(startBlock) || startBlock === 0) && !startDate) return;
     let web3 = $this.state.web3;
     if (web3.eth.accounts.length === 0) {
       return noMetaMaskAlert();
     }
-    web3.eth.getBlockNumber(function(err, curBlock) {
-      if (err) return console.log(err);
+    //web3.eth.getBlockNumber(function(err, curBlock) {
+      //if (err) return console.log(err);
 
-      if (startBlock > parseInt(curBlock, 10)) {
-        return investmentDisabledAlert(startBlock, curBlock);
+      //if (startBlock > parseInt(curBlock, 10)) {
+      console.log("startDate: " + startDate);
+      console.log("(new Date()).getTime(): " + (new Date()).getTime());
+      if (startDate > (new Date()).getTime()) {
+        return investmentDisabledAlert(startDate, (new Date()).getTime());
+        //return investmentDisabledAlert(startBlock, curBlock);
       }
 
-      var weiToSend = web3.toWei($this.state.tokensToInvest/$this.state.crowdsale.rate, "ether");
+      var weiToSend = web3.toWei($this.state.tokensToInvest/$this.state.pricingStrategy.rate, "ether");
       var opts = {
         from: web3.eth.accounts[0],
         value: weiToSend
@@ -118,14 +139,14 @@ export class Invest extends React.Component {
         console.log(crowdsaleContract);
         console.log(web3.eth.defaultAccount);
 
-        crowdsaleContract.buySampleTokens.sendTransaction(web3.eth.accounts[0], opts, function(err, txHash) {
+        crowdsaleContract.invest.sendTransaction(web3.eth.accounts[0], opts, function(err, txHash) {
           if (err) return console.log(err);
           
           console.log("txHash: " + txHash);
           successfulInvestmentAlert($this.state.tokensToInvest);
         });
       });
-    });
+    //});
   }
 
   tokensToInvestOnChange(event) {
