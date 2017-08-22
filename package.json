@@ -40,7 +40,7 @@
     "tokenmarketnet_path": "src/components/token-market-net-ico/contracts/",
     "crowdsale_contract_name": "UncappedCrowdsale",
     "crowdsale_token_contract_name": "CrowdsaleToken",
-    "crowdsale_pricing_strategy_contract_name": "EthTranchePricing"
+    "crowdsale_pricing_strategy_contract_name": "FlatPricing"
   },
   "scripts": {
     "start": "npm run generateFlatSolidityCrowdsaleContract && npm run generateFlatSolidityCrowdsaleTokenContract && npm run generateFlatSolidityCrowdsalePricingStrategyContract && npm run compileCrowdsaleContract && npm run compileCrowdsaleTokenContract && npm run compileCrowdsalePricingStrategyContract && react-scripts start",

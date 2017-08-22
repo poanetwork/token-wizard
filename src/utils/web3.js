@@ -119,7 +119,7 @@ export function getCrowdsaleData(web3, $this) {
       
       console.log("rate: " + web3.fromWei(parseInt(rate, 10), "ether"));
       let state = $this.state;
-      state.crowdsale.rate = web3.fromWei(parseInt(rate, 10), "ether");
+      state.pricingStrategy.rate = web3.fromWei(parseInt(rate, 10), "ether");
       $this.setState(state);
     });*/
 
@@ -236,14 +236,24 @@ function getPricingStrategyData(web3, $this) {
     if (err) return console.log(err);
     if (!pricingStrategyContract) return noContractAlert();
 
-    pricingStrategyContract.getCurrentPrice($this.state.crowdsale.weiRaised, function(err, rate) {
+    pricingStrategyContract.oneTokenInWei.call(function(err, rate) {
+      if (err) console.log(err);
+      
+      console.log("pricing strategy rate: " + rate);
+      let state = $this.state;
+      state.pricingStrategy.rate = web3.fromWei(parseInt(rate, 10), "ether");
+      $this.setState(state);
+    });
+
+    //EthTranchePricing
+    /*pricingStrategyContract.getCurrentPrice($this.state.crowdsale.weiRaised, function(err, rate) {
       if (err) console.log(err);
       
       console.log("pricing strategy rate: " + rate);
       let state = $this.state;
       state.pricingStrategy.rate = rate.toString();
       $this.setState(state);
-    });
+    });*/
   });
 }
 

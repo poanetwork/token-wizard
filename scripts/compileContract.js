@@ -34,7 +34,7 @@ function compileContract(content) {
 	var solcV011 = solc.setupMethods(require("./bin/soljson-v0.4.11+commit.68ef5810.js"));
 	//var solcV011 = solc.useVersion('v0.4.11+commit.68ef5810');
 	var output = solcV011.compile(content, 1);
-	console.log(output);
+	//console.log(output);
 	for (let contractName in output.contracts) {
 		if (targetContractName.toLowerCase() === contractName.substr(contractName.indexOf(":") + 1).toLowerCase()) {
 			output.contracts[contractName].bytecode = solc.linkBytecode(output.contracts[contractName].bytecode, { ':SafeMathLib': '0x072ba774dfd4e827c539ecfc9c6e2fae8d012534' })

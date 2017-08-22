@@ -68,7 +68,7 @@ export class stepFour extends stepTwo {
     return [
       parseInt(crowdsale.startBlock, 10), 
       parseInt(crowdsale.endBlock, 10), 
-      web3.toWei(crowdsale.rate, "ether"), 
+      web3.toWei(pricingStrategy.rate, "ether"), 
       crowdsale.walletAddress,
       parseInt(this.state.crowdsale.supply, 10),
       this.state.token.name,
@@ -92,9 +92,17 @@ export class stepFour extends stepTwo {
   getPricingStrategyParams = (web3, pricingStrategy) => {
     console.log(pricingStrategy);
     return [
-      pricingStrategy.tranches
+      web3.toWei(pricingStrategy.rate, "ether")
     ]
   }
+
+  //EthTranchePricing
+  /*getPricingStrategyParams = (web3, pricingStrategy) => {
+    console.log(pricingStrategy);
+    return [
+      pricingStrategy.tranches
+    ]
+  }*/
 
   getCrowdSaleParams = (web3) => {
     return [
@@ -206,7 +214,7 @@ export class stepFour extends stepTwo {
               <DisplayField side='left' title={'Start time'} value={this.state.crowdsale.startTime?this.state.crowdsale.startTime.split("T").join(" "):""}/>
               <DisplayField side='right' title={'End time'} value={this.state.crowdsale.endTime?this.state.crowdsale.endTime.split("T").join(" "):""}/>
               <DisplayField side='left' title={'Wallet address'} value={this.state.crowdsale.walletAddress?this.state.crowdsale.walletAddress:"0xc1253365dADE090649147Db89EE781d10f2b972f"}/>
-              <DisplayField side='right' title={'RATE'} value={this.state.crowdsale.rate?this.state.crowdsale.rate:1 + " ETH"}/>
+              <DisplayField side='right' title={'RATE'} value={this.state.pricingStrategy.rate?this.state.pricingStrategy.rate:1 + " ETH"}/>
             </div>
             <div className="publish-title-container">
               <p className="publish-title" data-step="4">Crowdsale Setup</p>

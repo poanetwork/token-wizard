@@ -80,7 +80,7 @@ export const getconstructorParams = (abiConstructor, state) => {
                 params.vals.push(state.crowdsale.endBlock);
             } break;
             case "_rate": {
-                params.vals.push(state.crowdsale.rate);
+                params.vals.push(state.pricingStrategy.rate);
             } break;
             case "_wallet":
             case "_multisigWallet": {
