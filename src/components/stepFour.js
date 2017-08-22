@@ -20,7 +20,6 @@ export class stepFour extends stepTwo {
   }
 
   componentDidMount() {
-    let abiCrowdsale = this.state.contracts && this.state.contracts.crowdsale && this.state.contracts.crowdsale.abi || []
     let abiToken = this.state.contracts && this.state.contracts.token && this.state.contracts.token.abi || []
     let abiPricingStrategy = this.state.contracts && this.state.contracts.pricingStrategy && this.state.contracts.pricingStrategy.abi || []
     
@@ -32,6 +31,7 @@ export class stepFour extends stepTwo {
         $this.setState(state);
         getEncodedABI(abiToken, "token", state, $this);
         getEncodedABI(abiPricingStrategy, "pricingStrategy", state, $this);
+
         $this.deployToken();
       });
     });
@@ -48,6 +48,8 @@ export class stepFour extends stepTwo {
     if (err) return console.log(err);
     let newState = { ...this.state }
     newState.contracts.pricingStrategy.addr = pricingStrategyAddr;
+    let abiCrowdsale = this.state.contracts && this.state.contracts.crowdsale && this.state.contracts.crowdsale.abi || []
+    getEncodedABI(abiCrowdsale, "crowdsale", newState, this);
   }
 
   handleDeployedContract = (err, crowdsaleAddr) => {
@@ -94,13 +96,13 @@ export class stepFour extends stepTwo {
     ]
   }
 
-  getCrowdSaleParams = (web3, crowdsale) => {
+  getCrowdSaleParams = (web3) => {
     return [
-      "0x870d809780fb26a416a7187e8bb7f2e609684e56",
-      "0xfdb2e623113b12e4109018654e7598d70706e635",
+      this.state.contracts.token.addr,
+      this.state.contracts.pricingStrategy.addr,
       "0xf4c5feeee6482379ad511bcdfb62e287aadc5c48",
-      parseInt(crowdsale.startBlock, 10), 
-      parseInt(crowdsale.endBlock, 10), 
+      parseInt(Date.parse(this.state.crowdsale.startTime)/1000, 10), 
+      parseInt(Date.parse(this.state.crowdsale.endTime)/1000, 10), 
       parseInt(this.state.token.supply, 10)
     ]
   }
@@ -118,8 +120,7 @@ export class stepFour extends stepTwo {
         var contracts = this.state.contracts;
         var binCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.bin || ''
         var abiCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.abi || []
-        var crowdsale = this.state.crowdsale;
-        var paramsCrowdsale = this.getCrowdSaleParams(web3, crowdsale)
+        var paramsCrowdsale = this.getCrowdSaleParams(web3, this.state)
         console.log(paramsCrowdsale);
         deployContract(web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, this.handleDeployedContract)
        });
