@@ -37,7 +37,7 @@
     "combine_solidity_script": "src/components/oracles-combine-solidity/index.js",
     "extension_path": "./scripts/OraclesExtendedCrowdSale.sol",
     "zeppelin_path": "node_modules/zeppelin-solidity/contracts/crowdsale/",
-    "tokenmarketnet_path": "src/components/token-market-net-ico/contracts/",
+    "tokenmarketnet_path": "src/components/token-market-net-ico-updated/contracts/",
     "0xproject_path": "src/components/0xproject/contracts/",
     "token_transfer_proxy_contract_name": "TokenTransferProxy",
     "multisig_contract_name": "MultiSigWalletWithTimeLockExceptRemoveAuthorizedAddress",

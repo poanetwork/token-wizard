@@ -105,7 +105,7 @@ export function addWhiteList(web3, whitelist, abi, addr, cb) {
     if (err) return console.log(err);
     if (!crowdsaleContract) return noContractAlert();
 
-    crowdsaleContract.setEarlyParicipantWhitelist.sendTransaction(whitelist[0].addr, true, function(err, result) {
+    crowdsaleContract.setEarlyParicipantWhitelist.sendTransaction(whitelist[0].addr, true, whitelist[0].minCap, whitelist[0].maxCap, function(err, result) {
       if (err) return console.log(err);
 
       console.log("setEarlyParicipantWhitelist function transaction: " + result);
