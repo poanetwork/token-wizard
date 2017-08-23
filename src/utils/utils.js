@@ -1,3 +1,7 @@
+import { VALIDATION_TYPES } from './constants'
+import { getWeb3 } from '../utils/web3'
+const { VALID, EMPTY, INVALID } = VALIDATION_TYPES
+
 export function getQueryVariable(variable) {
     var query = window.location.search.substring(1);
     var vars = query.split('&');
@@ -49,7 +53,6 @@ function readSolFile(path, cb) {
 }
 
 export const findConstructor = (abiCrowdsale) => {
-    console.log('abiCrowdSale,', abiCrowdsale)
     let abiConstructor
     abiCrowdsale.forEach(abiObj => {
         if (abiObj.type === "constructor") {
@@ -64,9 +67,6 @@ export const findConstructor = (abiCrowdsale) => {
 export const getconstructorParams = (abiConstructor, state) => {
     let params = {"types": [], "vals": []};
     if (!abiConstructor) return params;
-
-    console.log(abiConstructor.length);
-    console.log(state);
     for (let j = 0; j < abiConstructor.length; j++) {
         let inp = abiConstructor[j];
         params.types.push(inp.type);
@@ -123,6 +123,67 @@ export const getconstructorParams = (abiConstructor, state) => {
     return params;
 }
 
+const getTimeAsNumber = (time) => new Date(time).getTime()
+
 export const getOldState = (props, defaultState) => props && props.location && props.location.query && props.location.query.state || defaultState
 
 export const getStepClass = (step, activeStep) => step === activeStep ? "step-navigation step-navigation_active" : "step-navigation"
+
+export const stepsAreValid = (steps) => Object.values(steps).every(step => step === VALID)
+
+const validateName = (name) => typeof name === 'string' && name.length > 0 && name.length < 27
+
+const validateSupply = (supply) =>  isNaN(Number(supply)) === false && supply.length > 0
+
+const validateDecimals = (decimals) => isNaN(Number(decimals)) === false && decimals.length > 0
+
+const validateTicker = (ticker) => typeof ticker === 'string' && ticker.length < 4 && ticker.length > 0
+
+const validateTime = (time) => getTimeAsNumber(time) > Date.now() 
+
+const validateRate = (rate) => isNaN(Number(rate)) === false && rate > 0
+
+const validateAddress = (address) => {
+    if(!address || address.length !== 42 ) {
+        return false
+    }
+    return true
+}
+
+const inputFieldValidators = {
+    name: validateName,
+    ticker: validateTicker,
+    decimals: validateDecimals,
+    supply: validateSupply,
+    startTime: validateTime,
+    endTime: validateTime,
+    walletAddress: validateAddress,
+    rate: validateRate
+}
+
+const inputFieldIsUnsubmitted = (currentValidation, newValidation) => console.log('currentValidation, newValidation', currentValidation, newValidation) || currentValidation === EMPTY
+
+export const validateValue = (value, property) => {
+    let validationFunction = inputFieldValidators[property]
+    // console.log('inputFieldValidators', inputFieldValidators, 'property', property)
+    const valueIsValid = validationFunction(value)
+    // console.log('validationFunction', validationFunction, 'valueIsValid', valueIsValid)
+    return  valueIsValid === true ? VALID : INVALID
+}
+
+export const getValidationValue = (value, property, state) => {
+    let currentValidation = state[`validations`][property]  
+    let newValidation = validateValue(value, property)
+    return inputFieldIsUnsubmitted(currentValidation, newValidation) ? EMPTY : newValidation
+} 
+
+export const getNewValue = (value, property) => property === "startTime" || property === "endTime" ? getTimeAsNumber(value) : value
+
+export const allFieldsAreValid = (parent, state) => {
+    let newState = { ...state }
+    // console.log('validateAllFields', state)
+    let properties = Object.keys(newState.validations)
+    let values = properties.map(property => newState[parent][property])
+    console.log('values.find(value => value === INVALID ) === undefined', values.find(value => value === INVALID ) === undefined)
+    return values.find(value => value === INVALID ) === undefined
+}

@@ -9,7 +9,6 @@ import { stepTwo } from './stepTwo'
 import { StepNavigation } from './Common/StepNavigation'
 import { DisplayField } from './Common/DisplayField'
 import { NAVIGATION_STEPS } from '../utils/constants'
-
 const { PUBLISH } = NAVIGATION_STEPS
 
 export class stepFour extends stepTwo {
@@ -17,6 +16,7 @@ export class stepFour extends stepTwo {
     super(props);
     let oldState = getOldState(props, defaultState)
     this.state = Object.assign({}, oldState)
+    console.log('oldState oldState oldState', oldState)
   }
 
   componentDidMount() {

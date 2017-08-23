@@ -14,13 +14,13 @@ class App extends Component {
       <Router>
         <div>
           <Header/>
-            <Route exact path="/" component={crowdsaleAddr?stepFive:Home}/>
-            <Route path="/1" component={stepOne}/>
-            <Route path="/2" component={stepTwo}/>
-            <Route path="/3" component={stepThree}/>
-            <Route path="/4" component={stepFour}/>
-            <Route path="/crowdsale" component={stepFive}/>
-            <Route path="/invest" component={Invest}/>
+          <Route exact path="/" component={crowdsaleAddr?stepFive:Home}/>
+          <Route path="/1" component={stepOne}/>
+          <Route path="/2" component={stepTwo}/>
+          <Route path="/3" component={stepThree}/>
+          <Route path="/4" component={stepFour}/>
+          <Route path="/crowdsale" component={stepFive}/>
+          <Route path="/invest" component={Invest}/>
           <Footer/>
         </div>
       </Router>
