@@ -5,7 +5,7 @@ export const defaultState = {
 		pricingStrategy: {}
 	}, 
 	token: {},
-	crowdsale: {},
+	crowdsale: {whitelist: {}},
 	//pricingStrategy: {tranches: [0, 2272727272727, 45000000000000000000000, 2380952380952, 90000000000000000000000, 2500000000000, 999999999999999000000000000000000, 0]},
 	pricingStrategy: {},
 	blockTimeGeneration: 17,
@@ -45,7 +45,11 @@ export const TEXT_FIELDS = {
 	RATE: 'Rate',
 	WALLET_ADDRESS: 'Wallet Address',
 	START_TIME: 'Start Time',
-	END_TIME: 'End Time'
+	END_TIME: 'End Time',
+	CROWDSALE_SETUP_NAME: 'Crowdsale setup name',
+	ADDRESS: 'Address',
+	MIN: 'Max',
+	MAX: 'Min'
 }
 
 export const VALIDATION_TYPES = {
