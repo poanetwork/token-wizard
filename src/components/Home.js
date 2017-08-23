@@ -1,45 +1,12 @@
 import React, { Component } from 'react';
 import '../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
-import { setFlatFileContentToState } from '../utils/utils';
 import { defaultState } from '../utils/constants'
 
 export class Home extends Component {
   constructor(props) {
     super(props);
     this.state = defaultState
-  }
-
-  addContractsToState (src, bin, abi, contract) {
-    let newState = Object.assign({}, this.state)
-    newState.contracts[contract] = {
-      src,
-      bin,
-      abi: JSON.parse(abi)
-    }
-    this.setState(newState)
-  }
-
-  componentDidMount() {
-    //const contractName = "RomanCrowdsale";
-    //const contractName = "SampleCrowdsale";
-    const contractName = "Crowdsale";
-    let srcC, binC
-    setFlatFileContentToState("./contracts/" + contractName + "_flat.sol", (content) => srcC = content);
-    setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", (_bin) => binC = _bin);
-    setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", (_abi) => this.addContractsToState(srcC, binC, _abi, "crowdsale"));
-
-    const tokenName = "CrowdsaleToken";
-    let srcT, binT
-    setFlatFileContentToState("./contracts/" + tokenName + "_flat.sol", (content) => srcT = content);
-    setFlatFileContentToState("./contracts/" + tokenName + "_flat.bin", (_bin) => binT = _bin);
-    setFlatFileContentToState("./contracts/" + tokenName + "_flat.abi", (_abi) => this.addContractsToState(srcT, binT, _abi, "token"));
-    
-    const pricingStrategyName = "CrowdsalePricingStrategy";
-    let srcP, binP
-    setFlatFileContentToState("./contracts/" + pricingStrategyName + "_flat.sol", (content) => srcP = content);
-    setFlatFileContentToState("./contracts/" + pricingStrategyName + "_flat.bin", (_bin) => binP = _bin);
-    setFlatFileContentToState("./contracts/" + pricingStrategyName + "_flat.abi", (_abi) => this.addContractsToState(srcP, binP, _abi, "pricingStrategy"));
   }
 
   render() {

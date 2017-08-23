@@ -2,6 +2,7 @@ import React from 'react'
 import '../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
 import { defaultState } from '../utils/constants'
+import { setFlatFileContentToState } from '../utils/utils';
 import { getOldState } from '../utils/utils'
 import { StepNavigation } from './Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../utils/constants'
@@ -12,6 +13,38 @@ export class stepOne extends React.Component {
     super(props);
     let oldState = getOldState(props, defaultState)
     this.state = Object.assign({}, oldState)
+  }
+
+  componentDidMount() {
+    //const contractName = "RomanCrowdsale";
+    //const contractName = "SampleCrowdsale";
+    const contractName = "Crowdsale";
+    let srcC, binC
+    setFlatFileContentToState("./contracts/" + contractName + "_flat.sol", (content) => srcC = content);
+    setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", (_bin) => binC = _bin);
+    setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", (_abi) => this.addContractsToState(srcC, binC, _abi, "crowdsale"));
+
+    const tokenName = "CrowdsaleToken";
+    let srcT, binT
+    setFlatFileContentToState("./contracts/" + tokenName + "_flat.sol", (content) => srcT = content);
+    setFlatFileContentToState("./contracts/" + tokenName + "_flat.bin", (_bin) => binT = _bin);
+    setFlatFileContentToState("./contracts/" + tokenName + "_flat.abi", (_abi) => this.addContractsToState(srcT, binT, _abi, "token"));
+    
+    const pricingStrategyName = "CrowdsalePricingStrategy";
+    let srcP, binP
+    setFlatFileContentToState("./contracts/" + pricingStrategyName + "_flat.sol", (content) => srcP = content);
+    setFlatFileContentToState("./contracts/" + pricingStrategyName + "_flat.bin", (_bin) => binP = _bin);
+    setFlatFileContentToState("./contracts/" + pricingStrategyName + "_flat.abi", (_abi) => this.addContractsToState(srcP, binP, _abi, "pricingStrategy"));
+  }
+
+  addContractsToState (src, bin, abi, contract) {
+    let newState = Object.assign({}, this.state)
+    newState.contracts[contract] = {
+      src,
+      bin,
+      abi: JSON.parse(abi)
+    }
+    this.setState(newState)
   }
 
   render() {
@@ -32,6 +65,14 @@ export class stepOne extends React.Component {
             <label className="radio">
               <input type="radio" checked name="contract-type"/>
               <span className="title">Standard</span>
+              <span className="description">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+              </span>
+            </label>
+            <label className="radio">
+              <input type="radio" name="contract-type"/>
+              <span className="title title_soon">Whitelist with Cap</span>
               <span className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
                 quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
