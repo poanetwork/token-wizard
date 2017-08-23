@@ -20,21 +20,31 @@ export class stepFour extends stepTwo {
   }
 
   componentDidMount() {
-    let abiToken = this.state.contracts && this.state.contracts.token && this.state.contracts.token.abi || []
-    let abiPricingStrategy = this.state.contracts && this.state.contracts.pricingStrategy && this.state.contracts.pricingStrategy.abi || []
-    
-    let $this = this;
-    let state = { ...this.state }
-    setTimeout(function() {
-       getWeb3((web3) => {
-        state.web3 = web3;
-        $this.setState(state);
-        getEncodedABI(abiToken, "token", state, $this);
-        getEncodedABI(abiPricingStrategy, "pricingStrategy", state, $this);
+    switch (this.state.contractType) {
+      case this.state.contractTypes.standard: {
+        let abiCrowdsale = this.state.contracts && this.state.contracts.crowdsale && this.state.contracts.crowdsale.abi || []
+        getEncodedABI(abiCrowdsale, "crowdsale", this.state, this);
+      } break;
+      case this.state.contractTypes.whitelistwithcap: {
+        let abiToken = this.state.contracts && this.state.contracts.token && this.state.contracts.token.abi || []
+        let abiPricingStrategy = this.state.contracts && this.state.contracts.pricingStrategy && this.state.contracts.pricingStrategy.abi || []
+        
+        let $this = this;
+        let state = { ...this.state }
+        setTimeout(function() {
+           getWeb3((web3) => {
+            state.web3 = web3;
+            $this.setState(state);
+            getEncodedABI(abiToken, "token", state, $this);
+            getEncodedABI(abiPricingStrategy, "pricingStrategy", state, $this);
 
-        $this.deployToken();
-      });
-    });
+            $this.deployToken();
+          });
+        });
+      } break;
+      default:
+        break;
+    }
   }
 
   handleDeployedToken = (err, tokenAddr) => {
@@ -64,7 +74,7 @@ export class stepFour extends stepTwo {
     this.props.history.push(newHistory);
   }
 
-  /*getCrowdSaleParams = (web3, crowdsale) => {
+  getStandardCrowdSaleParams = (web3, crowdsale, pricingStrategy) => {
     return [
       parseInt(crowdsale.startBlock, 10), 
       parseInt(crowdsale.endBlock, 10), 
@@ -76,7 +86,7 @@ export class stepFour extends stepTwo {
       parseInt(this.state.token.decimals, 10),
       parseInt(this.state.token.supply, 10)
     ]
-  }*/
+  }
 
   getTokenParams = (web3, token) => {
     console.log(token);

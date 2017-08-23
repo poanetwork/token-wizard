@@ -15,36 +15,72 @@ export class stepOne extends React.Component {
     this.state = Object.assign({}, oldState)
   }
 
-  componentDidMount() {
+  getStandardCrowdsaleAssets (state) {
+    const contractName = "CrowdsaleStandard";
+    let srcC, binC
+    setFlatFileContentToState("./contracts/" + contractName + "_flat.sol", (content) => srcC = content);
+    setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", (_bin) => binC = _bin);
+    setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", (_abi) => this.addContractsToState(srcC, binC, _abi, "crowdsale", state));
+
+    const tokenName = "CrowdsaleStandardToken";
+    let srcT, binT
+    setFlatFileContentToState("./contracts/" + tokenName + "_flat.sol", (content) => srcT = content);
+    setFlatFileContentToState("./contracts/" + tokenName + "_flat.bin", (_bin) => binT = _bin);
+    setFlatFileContentToState("./contracts/" + tokenName + "_flat.abi", (_abi) => this.addContractsToState(srcT, binT, _abi, "token", state));
+  }
+
+  getWhiteListWithCapCrowdsaleAssets (state) {
     //const contractName = "RomanCrowdsale";
     //const contractName = "SampleCrowdsale";
     const contractName = "CrowdsaleWhiteListWithCap";
     let srcC, binC
     setFlatFileContentToState("./contracts/" + contractName + "_flat.sol", (content) => srcC = content);
     setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", (_bin) => binC = _bin);
-    setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", (_abi) => this.addContractsToState(srcC, binC, _abi, "crowdsale"));
+    setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", (_abi) => this.addContractsToState(srcC, binC, _abi, "crowdsale", state));
 
     const tokenName = "CrowdsaleWhiteListWithCapToken";
     let srcT, binT
     setFlatFileContentToState("./contracts/" + tokenName + "_flat.sol", (content) => srcT = content);
     setFlatFileContentToState("./contracts/" + tokenName + "_flat.bin", (_bin) => binT = _bin);
-    setFlatFileContentToState("./contracts/" + tokenName + "_flat.abi", (_abi) => this.addContractsToState(srcT, binT, _abi, "token"));
+    setFlatFileContentToState("./contracts/" + tokenName + "_flat.abi", (_abi) => this.addContractsToState(srcT, binT, _abi, "token", state));
     
     const pricingStrategyName = "CrowdsaleWhiteListWithCapPricingStrategy";
     let srcP, binP
     setFlatFileContentToState("./contracts/" + pricingStrategyName + "_flat.sol", (content) => srcP = content);
     setFlatFileContentToState("./contracts/" + pricingStrategyName + "_flat.bin", (_bin) => binP = _bin);
-    setFlatFileContentToState("./contracts/" + pricingStrategyName + "_flat.abi", (_abi) => this.addContractsToState(srcP, binP, _abi, "pricingStrategy"));
+    setFlatFileContentToState("./contracts/" + pricingStrategyName + "_flat.abi", (_abi) => this.addContractsToState(srcP, binP, _abi, "pricingStrategy", state));
   }
 
-  addContractsToState (src, bin, abi, contract) {
-    let newState = Object.assign({}, this.state)
-    newState.contracts[contract] = {
+  componentDidMount() {
+    let newState = { ...this.state }
+    newState.contractType = this.state.contractTypes.standard
+    this.getStandardCrowdsaleAssets(newState);
+  }
+
+  addContractsToState (src, bin, abi, contract, state) {
+    //let newState = Object.assign({}, state)
+    state.contracts[contract] = {
       src,
       bin,
       abi: JSON.parse(abi)
     }
-    this.setState(newState)
+    this.setState(state)
+  }
+
+  contractTypeSelected(e) {
+    let newState = { ...this.state }
+    newState.contractType = e.currentTarget.id;
+    console.log(e.currentTarget.id);
+    switch (e.currentTarget.id) {
+      case this.state.contractTypes.standard: {
+        this.getStandardCrowdsaleAssets(newState);
+      } break;
+      case this.state.contractTypes.whitelistwithcap: {
+        this.getWhiteListWithCapCrowdsaleAssets(newState);
+      } break;
+      default:
+        break;
+    }
   }
 
   render() {
@@ -63,7 +99,13 @@ export class stepOne extends React.Component {
           </div>
           <div className="radios">
             <label className="radio">
-              <input type="radio" checked name="contract-type"/>
+              <input 
+                type="radio" 
+                checked={this.state.contractType === this.state.contractTypes.standard}            
+                name="contract-type"
+                id={this.state.contractTypes.standard}
+                onChange={(e) => this.contractTypeSelected(e)}
+              />
               <span className="title">Standard</span>
               <span className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
@@ -71,7 +113,13 @@ export class stepOne extends React.Component {
               </span>
             </label>
             <label className="radio">
-              <input type="radio" name="contract-type"/>
+              <input 
+                type="radio" 
+                checked={this.state.contractType === this.state.contractTypes.whitelistwithcap}    
+                name="contract-type"
+                id={this.state.contractTypes.whitelistwithcap}
+                onChange={(e) => this.contractTypeSelected(e)}
+              />
               <span className="title title_soon">Whitelist with Cap</span>
               <span className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
@@ -79,7 +127,14 @@ export class stepOne extends React.Component {
               </span>
             </label>
             <label className="radio">
-              <input type="radio" disabled name="contract-type"/>
+              <input 
+                type="radio" 
+                disabled 
+                checked={this.state.contractType === this.state.contractTypes.capped}    
+                name="contract-type"
+                id={this.state.contractTypes.whitelistwithcap}
+                onChange={(e) => this.contractTypeSelected(e)}
+              />
               <span className="title title_soon">Capped</span>
               <span className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
