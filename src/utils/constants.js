@@ -2,7 +2,9 @@ export const defaultState = {
 	contracts: { 
 		token: {}, 
 		crowdsale: {},
-		pricingStrategy: {}
+		pricingStrategy: {},
+		multisig: {},
+		tokenTransferProxy: {}
 	}, 
 	token: {},
 	crowdsale: {whitelist: [

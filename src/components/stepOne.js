@@ -49,6 +49,18 @@ export class stepOne extends React.Component {
     setFlatFileContentToState("./contracts/" + pricingStrategyName + "_flat.sol", (content) => srcP = content);
     setFlatFileContentToState("./contracts/" + pricingStrategyName + "_flat.bin", (_bin) => binP = _bin);
     setFlatFileContentToState("./contracts/" + pricingStrategyName + "_flat.abi", (_abi) => this.addContractsToState(srcP, binP, _abi, "pricingStrategy", state));
+  
+    const tokenTransferProxyName = "TokenTransferProxy";
+    let srcTTP, binTTP
+    setFlatFileContentToState("./contracts/" + tokenTransferProxyName + "_flat.sol", (content) => srcTTP = content);
+    setFlatFileContentToState("./contracts/" + tokenTransferProxyName + "_flat.bin", (_bin) => binTTP = _bin);
+    setFlatFileContentToState("./contracts/" + tokenTransferProxyName + "_flat.abi", (_abi) => this.addContractsToState(srcTTP, binTTP, _abi, "multisig", state));
+
+    const multiSigName = "MultiSig";
+    let srcM, binM
+    setFlatFileContentToState("./contracts/" + multiSigName + "_flat.sol", (content) => srcM = content);
+    setFlatFileContentToState("./contracts/" + multiSigName + "_flat.bin", (_bin) => binM = _bin);
+    setFlatFileContentToState("./contracts/" + multiSigName + "_flat.abi", (_abi) => this.addContractsToState(srcM, binM, _abi, "tokenTransferProxy", state));
   }
 
   componentDidMount() {
