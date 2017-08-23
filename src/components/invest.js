@@ -3,6 +3,7 @@ import ReactCountdownClock from 'react-countdown-clock'
 import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData } from '../utils/web3'
 import { getQueryVariable, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
 import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, successfulInvestmentAlert } from '../utils/alerts'
+import { Loader } from './Common/Loader'
 import { defaultState } from '../utils/constants'
 
 export class Invest extends React.Component {
@@ -19,6 +20,9 @@ export class Invest extends React.Component {
   }
 
   componentDidMount () {
+    let newState = { ...this.state }
+    newState.loading = true;
+    this.setState(newState);
     var $this = this;
     setTimeout(function() {
      getWeb3(function(web3) {
@@ -234,6 +238,7 @@ export class Invest extends React.Component {
           </form>
         </div>
       </div>
+      <Loader show={this.state.loading}></Loader>
     </div>
   }
 }

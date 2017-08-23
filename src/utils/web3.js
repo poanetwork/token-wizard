@@ -271,6 +271,10 @@ export function getCrowdsaleData(web3, $this) {
         getPricingStrategyData(web3, $this);
       });
     });
+
+    let newState = $this.state;
+    newState.loading = false;
+    $this.setState(newState);
   });
 }
 

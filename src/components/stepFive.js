@@ -6,6 +6,7 @@ import { noContractAlert } from '../utils/alerts'
 import { StepNavigation } from './Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../utils/constants'
 import { defaultState } from '../utils/constants'
+import { Loader } from './Common/Loader'
 const { CROWDSALE_PAGE } = NAVIGATION_STEPS
 
 export class stepFive extends React.Component {
@@ -16,6 +17,9 @@ export class stepFive extends React.Component {
 	}
 
 	componentDidMount () {
+		let newState = { ...this.state }
+	    newState.loading = true;
+	    this.setState(newState);
 		const crowdsaleAddr = getQueryVariable("addr");
 		const networkID = getQueryVariable("networkID");
 		const contractType = getQueryVariable("contractType");
@@ -160,6 +164,7 @@ export class stepFive extends React.Component {
 				{/*<Link to={{ pathname: this.state.contracts.crowdsale.addr?('/invest' + ('?crowdsale=' + this.state.contracts.crowdsale.addr):""):'/invest' }}><a href="#" className="button button_fill">Invest</a></Link>*/}
 				<a onClick={this.goToInvestPage} className="button button_fill">Invest</a>
 			</div>
+			<Loader show={this.state.loading}></Loader>
 		</section>
 		)
 	}
