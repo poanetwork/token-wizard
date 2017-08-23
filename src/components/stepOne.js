@@ -18,19 +18,19 @@ export class stepOne extends React.Component {
   componentDidMount() {
     //const contractName = "RomanCrowdsale";
     //const contractName = "SampleCrowdsale";
-    const contractName = "Crowdsale";
+    const contractName = "CrowdsaleWhiteListWithCap";
     let srcC, binC
     setFlatFileContentToState("./contracts/" + contractName + "_flat.sol", (content) => srcC = content);
     setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", (_bin) => binC = _bin);
     setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", (_abi) => this.addContractsToState(srcC, binC, _abi, "crowdsale"));
 
-    const tokenName = "CrowdsaleToken";
+    const tokenName = "CrowdsaleWhiteListWithCapToken";
     let srcT, binT
     setFlatFileContentToState("./contracts/" + tokenName + "_flat.sol", (content) => srcT = content);
     setFlatFileContentToState("./contracts/" + tokenName + "_flat.bin", (_bin) => binT = _bin);
     setFlatFileContentToState("./contracts/" + tokenName + "_flat.abi", (_abi) => this.addContractsToState(srcT, binT, _abi, "token"));
     
-    const pricingStrategyName = "CrowdsalePricingStrategy";
+    const pricingStrategyName = "CrowdsaleWhiteListWithCapPricingStrategy";
     let srcP, binP
     setFlatFileContentToState("./contracts/" + pricingStrategyName + "_flat.sol", (content) => srcP = content);
     setFlatFileContentToState("./contracts/" + pricingStrategyName + "_flat.bin", (_bin) => binP = _bin);

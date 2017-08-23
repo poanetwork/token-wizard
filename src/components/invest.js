@@ -19,7 +19,7 @@ export class Invest extends React.Component {
   }
 
   componentDidMount () {
-    const contractName = "Crowdsale";
+    const contractName = "CrowdsaleWhiteListWithCap";
     var $this = this;
     setTimeout(function() {
      getWeb3(function(web3) {
