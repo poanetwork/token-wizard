@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
 import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData } from '../utils/web3'
-import { getQueryVariable, setFlatFileContentToState } from '../utils/utils'
+import { getQueryVariable, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
 import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, successfulInvestmentAlert } from '../utils/alerts'
 import { defaultState } from '../utils/constants'
 
@@ -19,7 +19,6 @@ export class Invest extends React.Component {
   }
 
   componentDidMount () {
-    const contractName = "CrowdsaleWhiteListWithCap";
     var $this = this;
     setTimeout(function() {
      getWeb3(function(web3) {
@@ -30,61 +29,26 @@ export class Invest extends React.Component {
       const timeInterval = setInterval(() => $this.setState({ seconds: $this.state.seconds - 1}), 1000);
       $this.setState({ timeInterval });
 
-      var crowdsaleAddr = getQueryVariable("addr");
-      var networkID = getQueryVariable("networkID");
+      const crowdsaleAddr = getQueryVariable("addr");
+      const networkID = getQueryVariable("networkID");
+      const contractType = getQueryVariable("contractType");
       checkNetWorkByID(web3, networkID);
       $this.state.contracts.crowdsale.addr = crowdsaleAddr;
 
-      var derivativesLength = 6;
-      var derivativesIterator = 0;
-      setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", function(_bin) {
-        derivativesIterator++;
-        state.contracts.crowdsale.bin = _bin;
-
-        if (derivativesIterator === derivativesLength) {
-          $this.extractContractsData($this, web3);
-        }
+      switch (contractType) {
+        case $this.state.contractTypes.standard: {
+          getStandardCrowdsaleAssets(state, function(newState) {
+        $this.extractContractsData($this, web3);
       });
-      setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", function(_abi) {
-        derivativesIterator++;
-        state.contracts.crowdsale.abi = JSON.parse(_abi);
-
-        if (derivativesIterator === derivativesLength) {
-          $this.extractContractsData($this, web3);
-        }
+        } break;
+        case $this.state.contractTypes.whitelistwithcap: {
+          getWhiteListWithCapCrowdsaleAssets(state, function(newState) {
+        $this.extractContractsData($this, web3);
       });
-      setFlatFileContentToState("./contracts/" + contractName + "Token_flat.bin", function(_bin) {
-        derivativesIterator++;
-        state.contracts.token.bin = _bin;
-
-        if (derivativesIterator === derivativesLength) {
-          $this.extractContractsData($this, web3);
-        }
-      });
-      setFlatFileContentToState("./contracts/" + contractName + "Token_flat.abi", function(_abi) {
-        derivativesIterator++;
-        state.contracts.token.abi = JSON.parse(_abi);
-
-        if (derivativesIterator === derivativesLength) {
-          $this.extractContractsData($this, web3);
-        }
-      });
-      setFlatFileContentToState("./contracts/" + contractName + "PricingStrategy_flat.bin", function(_bin) {
-        derivativesIterator++;
-        state.contracts.pricingStrategy.bin = _bin;
-
-        if (derivativesIterator === derivativesLength) {
-          $this.extractContractsData($this, web3);
-        }
-      });
-      setFlatFileContentToState("./contracts/" + contractName + "PricingStrategy_flat.abi", function(_abi) {
-        derivativesIterator++;
-        state.contracts.pricingStrategy.abi = JSON.parse(_abi);
-
-        if (derivativesIterator === derivativesLength) {
-          $this.extractContractsData($this, web3);
-        }
-      });
+        } break;
+        default:
+          break;
+      }
     });
    }, 500);
   }

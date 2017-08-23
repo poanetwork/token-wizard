@@ -19,6 +19,102 @@ export function setFlatFileContentToState(file, cb) {
   });
 }
 
+export function getWhiteListWithCapCrowdsaleAssets(state, cb) {
+    //const contractName = "RomanCrowdsale";
+    //const contractName = "SampleCrowdsale";
+    const contractName = "CrowdsaleWhitelistWithCap";
+    var derivativesLength = 6;
+    var derivativesIterator = 0;
+    setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", function(_bin) {
+      derivativesIterator++;
+      state.contracts.crowdsale.bin = _bin;
+
+      if (derivativesIterator === derivativesLength) {
+        cb(state);
+      }
+    });
+    setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", function(_abi) {
+      derivativesIterator++;
+      state.contracts.crowdsale.abi = JSON.parse(_abi);
+
+      if (derivativesIterator === derivativesLength) {
+        cb(state);
+      }
+    });
+    setFlatFileContentToState("./contracts/" + contractName + "Token_flat.bin", function(_bin) {
+      derivativesIterator++;
+      state.contracts.token.bin = _bin;
+
+      if (derivativesIterator === derivativesLength) {
+        cb(state);
+      }
+    });
+    setFlatFileContentToState("./contracts/" + contractName + "Token_flat.abi", function(_abi) {
+      derivativesIterator++;
+      state.contracts.token.abi = JSON.parse(_abi);
+
+      if (derivativesIterator === derivativesLength) {
+        cb(state);
+      }
+    });
+    setFlatFileContentToState("./contracts/" + contractName + "PricingStrategy_flat.bin", function(_bin) {
+      derivativesIterator++;
+      state.contracts.pricingStrategy.bin = _bin;
+
+      if (derivativesIterator === derivativesLength) {
+        cb(state);
+      }
+    });
+    setFlatFileContentToState("./contracts/" + contractName + "PricingStrategy_flat.abi", function(_abi) {
+      derivativesIterator++;
+      state.contracts.pricingStrategy.abi = JSON.parse(_abi);
+
+      if (derivativesIterator === derivativesLength) {
+        cb(state);
+      }
+    });
+}
+
+export function getStandardCrowdsaleAssets(state, cb) {
+    //const contractName = "RomanCrowdsale";
+    //const contractName = "SampleCrowdsale";
+    const contractName = "CrowdsaleStandard";
+    var derivativesLength = 4;
+    var derivativesIterator = 0;
+    setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", function(_bin) {
+      derivativesIterator++;
+      state.contracts.crowdsale.bin = _bin;
+
+      if (derivativesIterator === derivativesLength) {
+        cb(state);
+      }
+    });
+    setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", function(_abi) {
+      derivativesIterator++;
+      state.contracts.crowdsale.abi = JSON.parse(_abi);
+
+      if (derivativesIterator === derivativesLength) {
+        cb(state);
+      }
+    });
+    setFlatFileContentToState("./contracts/" + contractName + "Token_flat.bin", function(_bin) {
+      derivativesIterator++;
+      state.contracts.token.bin = _bin;
+
+      if (derivativesIterator === derivativesLength) {
+        cb(state);
+      }
+    });
+    setFlatFileContentToState("./contracts/" + contractName + "Token_flat.abi", function(_abi) {
+      derivativesIterator++;
+      state.contracts.token.abi = JSON.parse(_abi);
+
+      if (derivativesIterator === derivativesLength) {
+        cb(state);
+      }
+    });
+}
+
 export function defaultCompanyStartDate() {
     let curDate = new Date();
     curDate = curDate.setDate(curDate.getDate() + 1);

@@ -70,16 +70,16 @@ export class stepFour extends stepTwo {
     let crowdsalePage = "/crowdsale";
     const {contracts} = this.state
     const isValidContract = contracts && contracts.crowdsale && contracts.crowdsale.addr
-    let newHistory = isValidContract ? crowdsalePage + `?addr=` + contracts.crowdsale.addr + `&networkID=` + contracts.crowdsale.networkID : crowdsalePage
+    let newHistory = isValidContract ? crowdsalePage + `?addr=` + contracts.crowdsale.addr + `&networkID=` + contracts.crowdsale.networkID + `&contractType=` + contracts.contractType : crowdsalePage
     this.props.history.push(newHistory);
   }
 
-  getStandardCrowdSaleParams = (web3, crowdsale, pricingStrategy) => {
+  getStandardCrowdSaleParams = (web3) => {
     return [
-      parseInt(crowdsale.startBlock, 10), 
-      parseInt(crowdsale.endBlock, 10), 
-      web3.toWei(pricingStrategy.rate, "ether"), 
-      crowdsale.walletAddress,
+      parseInt(this.state.crowdsale.startBlock, 10), 
+      parseInt(this.state.crowdsale.endBlock, 10), 
+      web3.toWei(this.state.pricingStrategy.rate, "ether"), 
+      this.state.crowdsale.walletAddress,
       parseInt(this.state.crowdsale.supply, 10),
       this.state.token.name,
       this.state.token.ticker,
@@ -135,10 +135,20 @@ export class stepFour extends stepTwo {
         let newState = { ...this.state }
         newState.contracts.crowdsale.networkID = _networkID;
         this.setState(newState);
-        var contracts = this.state.contracts;
-        var binCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.bin || ''
-        var abiCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.abi || []
-        var paramsCrowdsale = this.getCrowdSaleParams(web3, this.state)
+        let contracts = this.state.contracts;
+        let binCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.bin || ''
+        let abiCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.abi || []
+        let paramsCrowdsale;
+        switch (this.state.contractType) {
+          case this.state.contractTypes.standard: {
+            paramsCrowdsale = this.getStandardCrowdSaleParams(web3)
+          } break;
+          case this.state.contractTypes.whitelistwithcap: {
+            paramsCrowdsale = this.getCrowdSaleParams(web3)
+          } break;
+          default:
+            break;
+        }
         console.log(paramsCrowdsale);
         deployContract(web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, this.handleDeployedContract)
        });

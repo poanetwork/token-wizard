@@ -1,7 +1,7 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
 import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData } from '../utils/web3'
-import { getQueryVariable, setFlatFileContentToState } from '../utils/utils'
+import { getQueryVariable, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
 import { noContractAlert } from '../utils/alerts'
 import { StepNavigation } from './Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../utils/constants'
@@ -16,11 +16,9 @@ export class stepFive extends React.Component {
 	}
 
 	componentDidMount () {
-		//const contractName = "RomanCrowdsale";
-	    //const contractName = "SampleCrowdsale";
-	    const contractName = "Crowdsale";
 		const crowdsaleAddr = getQueryVariable("addr");
 		const networkID = getQueryVariable("networkID");
+		const contractType = getQueryVariable("contractType");
 		var $this = this;
 		setTimeout(function() {
 			getWeb3(function(web3) {
@@ -29,57 +27,22 @@ export class stepFive extends React.Component {
       			checkNetWorkByID(web3, networkID);
 			    state.contracts.crowdsale.addr = crowdsaleAddr;
 			    state.contracts.crowdsale.networkID = networkID;
-			    
-			    var derivativesLength = 6;
-			    var derivativesIterator = 0;
-			    setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", function(_bin) {
-			      derivativesIterator++;
-			      state.contracts.crowdsale.bin = _bin;
+			    state.contracts.crowdsale.contractType = contractType;
 
-			      if (derivativesIterator === derivativesLength) {
-			        $this.extractContractsData($this, state, web3);
-			      }
-			    });
-			    setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", function(_abi) {
-			      derivativesIterator++;
-			      state.contracts.crowdsale.abi = JSON.parse(_abi);
-
-			      if (derivativesIterator === derivativesLength) {
-			        $this.extractContractsData($this, state, web3);
-			      }
-			    });
-			    setFlatFileContentToState("./contracts/" + contractName + "Token_flat.bin", function(_bin) {
-			      derivativesIterator++;
-			      state.contracts.token.bin = _bin;
-
-			      if (derivativesIterator === derivativesLength) {
-			        $this.extractContractsData($this, state, web3);
-			      }
-			    });
-			    setFlatFileContentToState("./contracts/" + contractName + "Token_flat.abi", function(_abi) {
-			      derivativesIterator++;
-			      state.contracts.token.abi = JSON.parse(_abi);
-
-			      if (derivativesIterator === derivativesLength) {
-			        $this.extractContractsData($this, state, web3);
-			      }
-			    });
-			    setFlatFileContentToState("./contracts/" + contractName + "PricingStrategy_flat.bin", function(_bin) {
-			      derivativesIterator++;
-			      state.contracts.pricingStrategy.bin = _bin;
-
-			      if (derivativesIterator === derivativesLength) {
-			        $this.extractContractsData($this, state, web3);
-			      }
-			    });
-			    setFlatFileContentToState("./contracts/" + contractName + "PricingStrategy_flat.abi", function(_abi) {
-			      derivativesIterator++;
-			      state.contracts.pricingStrategy.abi = JSON.parse(_abi);
-
-			      if (derivativesIterator === derivativesLength) {
-			        $this.extractContractsData($this, state, web3);
-			      }
-			    });
+			    switch (contractType) {
+		          case $this.state.contractTypes.standard: {
+		            getStandardCrowdsaleAssets(state, function(newState) {
+				    	$this.extractContractsData($this, newState, web3);
+				    });
+		          } break;
+		          case $this.state.contractTypes.whitelistwithcap: {
+		            getWhiteListWithCapCrowdsaleAssets(state, function(newState) {
+				    	$this.extractContractsData($this, newState, web3);
+				    });
+		          } break;
+		          default:
+		            break;
+		        }
 			});
 		}, 500);
 	}
@@ -98,6 +61,8 @@ export class stepFive extends React.Component {
   			queryStr = "?addr=" + this.state.contracts.crowdsale.addr;
   			if (this.state.contracts.crowdsale.networkID)
   				queryStr += "&networkID=" + this.state.contracts.crowdsale.networkID;
+  			if (this.state.contracts.crowdsale.contractType)
+  				queryStr += "&contractType=" + this.state.contracts.crowdsale.contractType;
   		}
         this.props.history.push('/invest' + queryStr);
   	}
