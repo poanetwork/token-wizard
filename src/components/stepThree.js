@@ -115,10 +115,10 @@ export class stepThree extends stepTwo {
               side='left' 
               type='number' 
               title={RATE} 
-              value={this.state.crowdsale.rate} 
+              value={this.state.pricingStrategy.rate} 
               valid={validations.rate} 
               errorMessage={VALIDATION_MESSAGES.RATE} 
-              onChange={(e) => this.changeState(e, 'crowdsale', 'rate')}/>
+              onChange={(e) => this.changeState(e, 'pricingStrategy', 'rate')}/>
           </div>
         </div>
         <div className="button-container">

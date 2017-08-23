@@ -1,8 +1,8 @@
 import { findConstructor, getconstructorParams } from '../utils/utils'
 import $ from 'jquery'
 
-export const getEncodedABI = (abiCrowdsale, state, $this) => {
-	const abiConstructor = findConstructor(abiCrowdsale, state)
+export function getEncodedABI(abi, cntrct, state, $this) {
+	const abiConstructor = findConstructor(abi, state)
      let params = getconstructorParams(abiConstructor, state);
      $.ajax({
 	      url:"https://ico-wizard-encoded-abi.herokuapp.com",
@@ -12,9 +12,10 @@ export const getEncodedABI = (abiCrowdsale, state, $this) => {
 	      dataType:"json"
 	  }).done((data) => {
 	    console.log(data);
-			let newState = { ...state }
-	    newState.contracts.crowdsale.abiConstructor = data.body.ABIencoded;
-	    $this.setState(newState);
+	    state.contracts[cntrct].abiConstructor = data.body.ABIencoded;
+	    console.log(cntrct + " ABI encoded params constructor");
+	    console.log(data.body.ABIencoded);
+	    $this.setState(state);
 	  }).fail(function(err) {
 	    console.log('failfailfail',err);
 	  })

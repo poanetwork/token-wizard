@@ -1,3 +1,6 @@
 [submodule "src/components/oracles-combine-solidity"]
 	path = src/components/oracles-combine-solidity
 	url = https://github.com/oraclesorg/oracles-combine-solidity
+[submodule "src/components/token-market-net-ico"]
+	path = src/components/token-market-net-ico
+	url = https://github.com/TokenMarketNet/ico

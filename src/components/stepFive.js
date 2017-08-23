@@ -1,7 +1,7 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
 import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData } from '../utils/web3'
-import { getQueryVariable, setFlatFileContentToState } from '../utils/utils'
+import { getQueryVariable, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
 import { noContractAlert } from '../utils/alerts'
 import { StepNavigation } from './Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../utils/constants'
@@ -18,6 +18,7 @@ export class stepFive extends React.Component {
 	componentDidMount () {
 		const crowdsaleAddr = getQueryVariable("addr");
 		const networkID = getQueryVariable("networkID");
+		const contractType = getQueryVariable("contractType");
 		var $this = this;
 		setTimeout(function() {
 			getWeb3(function(web3) {
@@ -26,41 +27,22 @@ export class stepFive extends React.Component {
       			checkNetWorkByID(web3, networkID);
 			    state.contracts.crowdsale.addr = crowdsaleAddr;
 			    state.contracts.crowdsale.networkID = networkID;
-			    
-			    var derivativesLength = 4;
-			    var derivativesIterator = 0;
-			    setFlatFileContentToState("./contracts/SampleCrowdsale_flat.bin", function(_bin) {
-			      derivativesIterator++;
-			      state.contracts.crowdsale.bin = _bin;
+			    state.contracts.crowdsale.contractType = contractType;
 
-			      if (derivativesIterator === derivativesLength) {
-			        $this.extractContractsData($this, state, web3);
-			      }
-			    });
-			    setFlatFileContentToState("./contracts/SampleCrowdsale_flat.abi", function(_abi) {
-			      derivativesIterator++;
-			      state.contracts.crowdsale.abi = JSON.parse(_abi);
-
-			      if (derivativesIterator === derivativesLength) {
-			        $this.extractContractsData($this, state, web3);
-			      }
-			    });
-			    setFlatFileContentToState("./contracts/SampleCrowdsaleToken_flat.bin", function(_bin) {
-			      derivativesIterator++;
-			      state.contracts.token.bin = _bin;
-
-			      if (derivativesIterator === derivativesLength) {
-			        $this.extractContractsData($this, state, web3);
-			      }
-			    });
-			    setFlatFileContentToState("./contracts/SampleCrowdsaleToken_flat.abi", function(_abi) {
-			      derivativesIterator++;
-			      state.contracts.token.abi = JSON.parse(_abi);
-
-			      if (derivativesIterator === derivativesLength) {
-			        $this.extractContractsData($this, state, web3);
-			      }
-			    });
+			    switch (contractType) {
+		          case $this.state.contractTypes.standard: {
+		            getStandardCrowdsaleAssets(state, function(newState) {
+				    	$this.extractContractsData($this, newState, web3);
+				    });
+		          } break;
+		          case $this.state.contractTypes.whitelistwithcap: {
+		            getWhiteListWithCapCrowdsaleAssets(state, function(newState) {
+				    	$this.extractContractsData($this, newState, web3);
+				    });
+		          } break;
+		          default:
+		            break;
+		        }
 			});
 		}, 500);
 	}
@@ -79,6 +61,8 @@ export class stepFive extends React.Component {
   			queryStr = "?addr=" + this.state.contracts.crowdsale.addr;
   			if (this.state.contracts.crowdsale.networkID)
   				queryStr += "&networkID=" + this.state.contracts.crowdsale.networkID;
+  			if (this.state.contracts.crowdsale.contractType)
+  				queryStr += "&contractType=" + this.state.contracts.crowdsale.contractType;
   		}
         this.props.history.push('/invest' + queryStr);
   	}
@@ -106,7 +90,7 @@ export class stepFive extends React.Component {
 							</p>
 						</div>
 						<div className="right">
-							<p className="total-funds-title">{this.state.crowdsale.rate?isNaN(this.state.crowdsale.supply/this.state.crowdsale.rate)?0:(this.state.crowdsale.supply/this.state.crowdsale.rate):0} ETH</p>
+							<p className="total-funds-title">{this.state.pricingStrategy.rate?isNaN(this.state.crowdsale.supply/this.state.pricingStrategy.rate)?0:(this.state.crowdsale.supply/this.state.pricingStrategy.rate):0} ETH</p>
 							<p className="total-funds-description">
 								Goal
 							</p>
@@ -132,7 +116,7 @@ export class stepFive extends React.Component {
 						<div className="left">
 							<div className="hidden">
 								<div className="left">
-									<p className="title">{this.state.crowdsale.weiRaised*this.state.crowdsale.rate}</p>
+									<p className="title">{this.state.crowdsale.weiRaised*this.state.pricingStrategy.rate}</p>
 									<p className="description">
 										Tokens Claimed
 									</p>
@@ -152,7 +136,7 @@ export class stepFive extends React.Component {
 						<div className="right">
 							<div className="hidden">
 								<div className="left">
-									<p className="title">{this.state.crowdsale.rate?this.state.crowdsale.rate:0}</p>
+									<p className="title">{this.state.pricingStrategy.rate?this.state.pricingStrategy.rate:0}</p>
 									<p className="description">
 										Price (Tokens/ETH)
 									</p>

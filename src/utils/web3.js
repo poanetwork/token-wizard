@@ -114,61 +114,121 @@ export function getCrowdsaleData(web3, $this) {
       $this.setState(state);
     });
 
-    crowdsaleContract.rate.call(function(err, rate) {
-      if (err) return console.log(err);
-      
-      console.log("rate: " + web3.fromWei(parseInt(rate, 10), "ether"));
-      let state = $this.state;
-      state.crowdsale.rate = web3.fromWei(parseInt(rate, 10), "ether");
-      $this.setState(state);
-    });
-
-    crowdsaleContract.supply.call(function(err, supply) {
-      if (err) return console.log(err);
-      
-      console.log("supply: " + supply);
-      let state = $this.state;
-      state.crowdsale.supply = supply;
-      $this.setState(state);
-    });
-
-    crowdsaleContract.investors.call(function(err, investors) {
-      if (err) return console.log(err);
-      
-      console.log("investors: " + investors);
-      let state = $this.state;
-      state.crowdsale.investors = investors;
-      $this.setState(state);
-    });
-
-    crowdsaleContract.startBlock.call(function(err, startBlock) {
-      if (err) return console.log(err);
-      
-      console.log("startBlock: " + startBlock);
-      let state = $this.state;
-      state.crowdsale.startBlock = startBlock;
-      $this.setState(state);
-    });
-
-    crowdsaleContract.endBlock.call(function(err, endBlock) {
-      if (err) return console.log(err);
-      
-      console.log("endBlock: " + endBlock);
-      let state = $this.state;
-      state.crowdsale.endBlock = endBlock;
-      $this.setState(state);
-      web3.eth.getBlockNumber(function(err, curBlock) {
+    if (crowdsaleContract.rate) {
+      crowdsaleContract.rate.call(function(err, rate) {
         if (err) return console.log(err);
-
-        console.log("curBlock: " + curBlock);
-        var blocksDiff = parseInt($this.state.crowdsale.endBlock, 10) - parseInt(curBlock, 10);
-        console.log("blocksDiff: " + blocksDiff);
-        var blocksDiffInSec = blocksDiff * state.blockTimeGeneration;
-        console.log("blocksDiffInSec: " + blocksDiffInSec);
-        state.seconds = blocksDiffInSec;
+        
+        console.log("rate: " + web3.fromWei(parseInt(rate, 10), "ether"));
+        let state = $this.state;
+        state.pricingStrategy.rate = web3.fromWei(parseInt(rate, 10), "ether");
         $this.setState(state);
       });
-    });
+    }
+
+    if (crowdsaleContract.minimumFundingGoal) {
+      crowdsaleContract.minimumFundingGoal.call(function(err, supply) {
+        if (err) return console.log(err);
+        
+        console.log("supply: " + supply);
+        let state = $this.state;
+        state.crowdsale.supply = supply;
+        $this.setState(state);
+      });
+    }
+
+    if (crowdsaleContract.supply) {
+      crowdsaleContract.supply.call(function(err, supply) {
+        if (err) return console.log(err);
+        
+        console.log("supply: " + supply);
+        let state = $this.state;
+        state.crowdsale.supply = supply;
+        $this.setState(state);
+      });
+    }
+
+    let getInvestors;
+    if (crowdsaleContract.investorCount) getInvestors = crowdsaleContract.investorCount;
+    else if (crowdsaleContract.investors) getInvestors = crowdsaleContract.investors;
+
+    if (getInvestors) {
+      getInvestors.call(function(err, investors) {
+        if (err) return console.log(err);
+        
+        console.log("investors: " + investors);
+        let state = $this.state;
+        state.crowdsale.investors = investors;
+        $this.setState(state);
+      });
+    }
+
+    if (crowdsaleContract.startBlock) {
+      crowdsaleContract.startBlock.call(function(err, startBlock) {
+        if (err) return console.log(err); 
+                   
+        console.log("startBlock: " + startBlock);
+        let state = $this.state;
+        state.crowdsale.startBlock = startBlock;
+         $this.setState(state);
+      });
+    }
+
+    if (crowdsaleContract.startsAt) {
+      crowdsaleContract.startsAt.call(function(err, startDate) {
+        if (err) return console.log(err);
+        
+        console.log("startDate: " + startDate*1000);
+        let state = $this.state;
+        state.crowdsale.startDate = startDate*1000;
+        $this.setState(state);
+      });
+    }
+
+    if (crowdsaleContract.endBlock) {
+      crowdsaleContract.endBlock.call(function(err, endBlock) {
+        if (err) return console.log(err);
+                   
+        console.log("endBlock: " + endBlock);
+        let state = $this.state;
+        state.crowdsale.endBlock = endBlock;
+        $this.setState(state);
+        web3.eth.getBlockNumber(function(err, curBlock) {
+          if (err) return console.log(err);
+       
+          console.log("curBlock: " + curBlock);
+          var blocksDiff = parseInt($this.state.crowdsale.endBlock, 10) - parseInt(curBlock, 10);
+          console.log("blocksDiff: " + blocksDiff);
+          var blocksDiffInSec = blocksDiff * state.blockTimeGeneration;
+          console.log("blocksDiffInSec: " + blocksDiffInSec); 
+          state.seconds = blocksDiffInSec;
+           $this.setState(state);
+         });
+      });
+    }
+
+    if (crowdsaleContract.endsAt) {
+      crowdsaleContract.endsAt.call(function(err, endDate) {
+        if (err) return console.log(err);
+        
+        console.log("endDate: " + endDate*1000);
+        let state = $this.state;
+        state.crowdsale.endDate = endDate*1000;
+        $this.setState(state);
+        web3.eth.getBlockNumber(function(err, curBlock) {
+          if (err) return console.log(err);
+
+          console.log("curDate: " + new Date().getTime());
+          /*console.log("curBlock: " + curBlock);
+          var blocksDiff = parseInt($this.state.crowdsale.endBlock, 10) - parseInt(curBlock, 10);
+          console.log("blocksDiff: " + blocksDiff);
+          var blocksDiffInSec = blocksDiff * state.blockTimeGeneration;
+          console.log("blocksDiffInSec: " + blocksDiffInSec);
+          state.seconds = blocksDiffInSec;*/
+          state.seconds = (state.crowdsale.endDate - new Date().getTime())/1000;
+          $this.setState(state);
+        });
+      });
+    }
 
     crowdsaleContract.token.call(function(err, tokenAddr) {
       if (err) return console.log(err);
@@ -180,6 +240,19 @@ export function getCrowdsaleData(web3, $this) {
 
       if (!tokenAddr || tokenAddr === "0x") return;
       getTokenData(web3, $this);
+      if (!crowdsaleContract.pricingStrategy) return;
+
+      crowdsaleContract.pricingStrategy.call(function(err, pricingStrategyAddr) {
+        if (err) return console.log(err);
+        
+        console.log("pricingStrategy: " + pricingStrategyAddr);
+        let state = $this.state;
+        state.contracts.pricingStrategy.addr = pricingStrategyAddr;
+        $this.setState(state);
+
+        if (!pricingStrategyAddr || pricingStrategyAddr === "0x") return;
+        getPricingStrategyData(web3, $this);
+      });
     });
   });
 }
@@ -205,13 +278,40 @@ function getTokenData(web3, $this) {
       state.token.ticker = ticker;
       $this.setState(state);
     });
-    tokenContract["supply"].call(function(err, supply) {
+    tokenContract["totalSupply"].call(function(err, supply) {
       if (err) console.log(err);
       let state = $this.state;
       console.log("token supply: " + supply);
       state.token.supply = supply;
       $this.setState(state);
     });
+  });
+}
+
+function getPricingStrategyData(web3, $this) {
+  attachToContract(web3, $this.state.contracts.pricingStrategy.abi, $this.state.contracts.pricingStrategy.addr, function(err, pricingStrategyContract) {
+    console.log("attach to pricing strategy contract");
+    if (err) return console.log(err);
+    if (!pricingStrategyContract) return noContractAlert();
+
+    pricingStrategyContract.oneTokenInWei.call(function(err, rate) {
+      if (err) console.log(err);
+      
+      console.log("pricing strategy rate: " + rate);
+      let state = $this.state;
+      state.pricingStrategy.rate = web3.fromWei(parseInt(rate, 10), "ether");
+      $this.setState(state);
+    });
+
+    //EthTranchePricing
+    /*pricingStrategyContract.getCurrentPrice($this.state.crowdsale.weiRaised, function(err, rate) {
+      if (err) console.log(err);
+      
+      console.log("pricing strategy rate: " + rate);
+      let state = $this.state;
+      state.pricingStrategy.rate = rate.toString();
+      $this.setState(state);
+    });*/
   });
 }
 
@@ -260,6 +360,7 @@ export function deployContract(web3, abi, bin, params, cb) {
 
       function deployContractCB(err, contract) {
         if (err) console.log(err);
+        console.log(contract);
         if (contract) {
           if (contract.address) {
             console.log(contract);

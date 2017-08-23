@@ -15,7 +15,8 @@ export class stepTwo extends React.Component {
   constructor(props) {
     super(props);
     let oldState = getOldState(props, defaultState)
-    this.state = Object.assign({}, defaultState, {validations: {name: EMPTY, supply: EMPTY, decimals: EMPTY, ticker: EMPTY }})
+    this.state = Object.assign({}, oldState, {validations: {name: EMPTY, supply: EMPTY, decimals: EMPTY, ticker: EMPTY }})
+    console.log(this.state);
   }
 
   getNewParent (property, parent, value) {

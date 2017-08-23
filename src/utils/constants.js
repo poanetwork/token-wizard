@@ -1,11 +1,20 @@
 export const defaultState = { 
 	contracts: { 
 		token: {}, 
-		crowdsale: {} 
+		crowdsale: {},
+		pricingStrategy: {}
 	}, 
 	token: {},
 	crowdsale: {},
-	blockTimeGeneration: 17
+	//pricingStrategy: {tranches: [0, 2272727272727, 45000000000000000000000, 2380952380952, 90000000000000000000000, 2500000000000, 999999999999999000000000000000000, 0]},
+	pricingStrategy: {},
+	blockTimeGeneration: 17,
+	contractType: "",
+	contractTypes: {
+		standard: "standard",
+		capped: "capped",
+		whitelistwithcap: "white-list-with-cap"
+	}
 }
 
 export const NAVIGATION_STEPS = {
