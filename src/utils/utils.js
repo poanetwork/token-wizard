@@ -20,10 +20,8 @@ export function setFlatFileContentToState(file, cb) {
 }
 
 export function getWhiteListWithCapCrowdsaleAssets(state, cb) {
-    //const contractName = "RomanCrowdsale";
-    //const contractName = "SampleCrowdsale";
     const contractName = "CrowdsaleWhitelistWithCap";
-    var derivativesLength = 6;
+    var derivativesLength = 10;
     var derivativesIterator = 0;
     setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", function(_bin) {
       derivativesIterator++;
@@ -68,6 +66,40 @@ export function getWhiteListWithCapCrowdsaleAssets(state, cb) {
     setFlatFileContentToState("./contracts/" + contractName + "PricingStrategy_flat.abi", function(_abi) {
       derivativesIterator++;
       state.contracts.pricingStrategy.abi = JSON.parse(_abi);
+
+      if (derivativesIterator === derivativesLength) {
+        cb(state);
+      }
+    });
+    const tokenTransferProxyContractName = "TokenTransferProxy";
+    setFlatFileContentToState("./contracts/" + tokenTransferProxyContractName + "_flat.bin", function(_bin) {
+      derivativesIterator++;
+      state.contracts.tokenTransferProxy.bin = _bin;
+
+      if (derivativesIterator === derivativesLength) {
+        cb(state);
+      }
+    });
+    setFlatFileContentToState("./contracts/" + tokenTransferProxyContractName + "_flat.abi", function(_abi) {
+      derivativesIterator++;
+      state.contracts.tokenTransferProxy.abi = JSON.parse(_abi);
+
+      if (derivativesIterator === derivativesLength) {
+        cb(state);
+      }
+    });
+    const multisigContractName = "MultiSig";
+    setFlatFileContentToState("./contracts/" + multisigContractName + "_flat.bin", function(_bin) {
+      derivativesIterator++;
+      state.contracts.multisig.bin = _bin;
+
+      if (derivativesIterator === derivativesLength) {
+        cb(state);
+      }
+    });
+    setFlatFileContentToState("./contracts/" + multisigContractName + "_flat.abi", function(_abi) {
+      derivativesIterator++;
+      state.contracts.multisig.abi = JSON.parse(_abi);
 
       if (derivativesIterator === derivativesLength) {
         cb(state);

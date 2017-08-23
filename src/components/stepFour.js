@@ -41,13 +41,35 @@ export class stepFour extends stepTwo {
             getEncodedABI(abiToken, "token", state, $this);
             getEncodedABI(abiPricingStrategy, "pricingStrategy", state, $this);
 
-            $this.deployToken();
+            $this.deployMultisig();
           });
         });
       } break;
       default:
         break;
     }
+  }
+
+  handleDeployedTokenTransferProxy = (err, tokenTransferProxyAddr) => {
+    let newState = { ...this.state }
+    if (err) {
+      newState.loading = false;
+      this.setState(newState);
+      return console.log(err);
+    }
+    newState.contracts.tokenTransferProxy.addr = tokenTransferProxyAddr;
+    this.deployMultisig();
+  }
+
+  handleDeployedMultisig = (err, multisigAddr) => {
+    let newState = { ...this.state }
+    if (err) {
+      newState.loading = false;
+      this.setState(newState);
+      return console.log(err);
+    }
+    newState.contracts.multisig.addr = multisigAddr;
+    this.deployToken();
   }
 
   handleDeployedToken = (err, tokenAddr) => {
@@ -117,6 +139,16 @@ export class stepFour extends stepTwo {
     ]
   }
 
+  getMultisigParams = (web3, multisig) => {
+    console.log(multisig);
+    return [
+      [web3.eth.defaultAccount],
+      1,
+      60,
+      "0xFFCd39B8a61a47997594D1ce2CA6dF3A0b2957dE" //this.state.contracts.tokenTransferProxy.addr
+    ]
+  }
+
   getTokenParams = (web3, token) => {
     console.log(token);
     return [
@@ -147,11 +179,73 @@ export class stepFour extends stepTwo {
     return [
       this.state.contracts.token.addr,
       this.state.contracts.pricingStrategy.addr,
-      "0xf4c5feeee6482379ad511bcdfb62e287aadc5c48",
+      this.state.contracts.multisig.addr,
       parseInt(Date.parse(this.state.crowdsale.startTime)/1000, 10), 
       parseInt(Date.parse(this.state.crowdsale.endTime)/1000, 10), 
       parseInt(this.state.token.supply, 10)
     ]
+  }
+
+  deployTokenTransferProxy = () => {
+    console.log("***Deploy tokenTransferProxy contract***");
+    getNetworkVersion(this.state.web3, (_networkID) => {
+      if (this.state.web3.eth.accounts.length === 0) {
+        return noMetaMaskAlert();
+      }
+      var contracts = this.state.contracts;
+      var binTokenTransferProxy = contracts && contracts.tokenTransferProxy && contracts.tokenTransferProxy.bin || ''
+      var abiTokenTransferProxy = contracts && contracts.tokenTransferProxy && contracts.tokenTransferProxy.abi || []
+      var tokenTransferProxy = this.state.tokenTransferProxy;
+      deployContract(this.state.web3, abiTokenTransferProxy, binTokenTransferProxy, [], this.handleDeployedTokenTransferProxy)
+     });
+  }
+
+  deployMultisig = () => {
+    console.log("***Deploy multisig contract***");
+    getNetworkVersion(this.state.web3, (_networkID) => {
+      if (this.state.web3.eth.accounts.length === 0) {
+        return noMetaMaskAlert();
+      }
+      var contracts = this.state.contracts;
+      var binMultisig = contracts && contracts.multisig && contracts.multisig.bin || ''
+      var abiMultisig = contracts && contracts.multisig && contracts.multisig.abi || []
+      var multisig = this.state.multisig;
+      var paramsMultisig = this.getMultisigParams(this.state.web3, multisig)
+      console.log(paramsMultisig);
+      deployContract(this.state.web3, abiMultisig, binMultisig, paramsMultisig, this.handleDeployedMultisig)
+     });
+  }
+
+  deployToken = () => {
+    console.log("***Deploy token contract***");
+    getNetworkVersion(this.state.web3, (_networkID) => {
+      if (this.state.web3.eth.accounts.length === 0) {
+        return noMetaMaskAlert();
+      }
+      var contracts = this.state.contracts;
+      var binToken = contracts && contracts.token && contracts.token.bin || ''
+      var abiToken = contracts && contracts.token && contracts.token.abi || []
+      var token = this.state.token;
+      var paramsToken = this.getTokenParams(this.state.web3, token)
+      console.log(paramsToken);
+      deployContract(this.state.web3, abiToken, binToken, paramsToken, this.handleDeployedToken)
+     });
+  }
+
+  deployPricingStrategy = () => {
+    console.log("***Deploy pricing strategy contract***");
+    getNetworkVersion(this.state.web3, (_networkID) => {
+      if (this.state.web3.eth.accounts.length === 0) {
+        return noMetaMaskAlert();
+      }
+      var contracts = this.state.contracts;
+      var binPricingStrategy = contracts && contracts.pricingStrategy && contracts.pricingStrategy.bin || ''
+      var abiPricingStrategy = contracts && contracts.pricingStrategy && contracts.pricingStrategy.abi || []
+      var pricingStrategy = this.state.pricingStrategy;
+      var paramsPricingStrategy = this.getPricingStrategyParams(this.state.web3, pricingStrategy)
+      console.log(paramsPricingStrategy);
+      deployContract(this.state.web3, abiPricingStrategy, binPricingStrategy, paramsPricingStrategy, this.handleDeployedPricingStrategy)
+     });
   }
 
   deployCrowdsale = () => {
@@ -182,44 +276,6 @@ export class stepFour extends stepTwo {
         deployContract(web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, this.handleDeployedContract)
        });
     });
-  }
-
-  deployToken = () => {
-    console.log("***Deploy token contract***");
-    getNetworkVersion(this.state.web3, (_networkID) => {
-      if (this.state.web3.eth.accounts.length === 0) {
-        return noMetaMaskAlert();
-      }
-      let newState = { ...this.state }
-      newState.contracts.crowdsale.networkID = _networkID;
-      this.setState(newState);
-      var contracts = this.state.contracts;
-      var binToken = contracts && contracts.token && contracts.token.bin || ''
-      var abiToken = contracts && contracts.token && contracts.token.abi || []
-      var token = this.state.token;
-      var paramsToken = this.getTokenParams(this.state.web3, token)
-      console.log(paramsToken);
-      deployContract(this.state.web3, abiToken, binToken, paramsToken, this.handleDeployedToken)
-     });
-  }
-
-  deployPricingStrategy = () => {
-    console.log("***Deploy pricing strategy contract***");
-    getNetworkVersion(this.state.web3, (_networkID) => {
-      if (this.state.web3.eth.accounts.length === 0) {
-        return noMetaMaskAlert();
-      }
-      let newState = { ...this.state }
-      newState.contracts.crowdsale.networkID = _networkID;
-      this.setState(newState);
-      var contracts = this.state.contracts;
-      var binPricingStrategy = contracts && contracts.pricingStrategy && contracts.pricingStrategy.bin || ''
-      var abiPricingStrategy = contracts && contracts.pricingStrategy && contracts.pricingStrategy.abi || []
-      var pricingStrategy = this.state.pricingStrategy;
-      var paramsPricingStrategy = this.getPricingStrategyParams(this.state.web3, pricingStrategy)
-      console.log(paramsPricingStrategy);
-      deployContract(this.state.web3, abiPricingStrategy, binPricingStrategy, paramsPricingStrategy, this.handleDeployedPricingStrategy)
-     });
   }
 
   render() {

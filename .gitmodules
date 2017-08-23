@@ -4,3 +4,6 @@
 [submodule "src/components/token-market-net-ico"]
 	path = src/components/token-market-net-ico
 	url = https://github.com/TokenMarketNet/ico
+[submodule "src/components/0xproject"]
+	path = src/components/0xproject
+	url = https://github.com/0xProject/contracts
