@@ -9,7 +9,6 @@ import { stepTwo } from './stepTwo'
 import { StepNavigation } from './Common/StepNavigation'
 import { DisplayField } from './Common/DisplayField'
 import { NAVIGATION_STEPS } from '../utils/constants'
-
 const { PUBLISH } = NAVIGATION_STEPS
 
 export class stepFour extends stepTwo {
@@ -17,15 +16,16 @@ export class stepFour extends stepTwo {
     super(props);
     let oldState = getOldState(props, defaultState)
     this.state = Object.assign({}, oldState)
+    console.log('oldState oldState oldState', oldState)
   }
 
   componentDidMount() {
     let abiCrowdsale = this.state.contracts && this.state.contracts.crowdsale && this.state.contracts.crowdsale.abi || []
-    let $this = this;
-    let state = { ...this.state }
-    setTimeout(function() {
+    let newState = { ...this.state }
+    setTimeout(() => {
+      console.log('this.state', newState)
        getWeb3((web3) => {
-         getEncodedABI(abiCrowdsale, state, $this);
+         getEncodedABI(abiCrowdsale, newState, this);
       });
     });
   }
