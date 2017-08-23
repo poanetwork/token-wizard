@@ -3,7 +3,7 @@ import '../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
 import { getWeb3, calculateFutureBlock } from '../utils/web3'
 import { stepTwo } from './stepTwo'
-import { getOldState, defaultCompanyStartDate, defaultCompanyEndDate } from '../utils/utils'
+import { getOldState, defaultCompanyStartDate, defaultCompanyEndDate, stepsAreValid, allFieldsAreValid } from '../utils/utils'
 import { StepNavigation } from './Common/StepNavigation'
 import { InputField } from './Common/InputField'
 import { NAVIGATION_STEPS, defaultState, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS } from '../utils/constants'
@@ -15,7 +15,21 @@ export class stepThree extends stepTwo {
   constructor(props) {
     super(props);
     const oldState = getOldState(props, defaultState)
-    this.state = Object.assign({}, oldState, {validations: { ...oldState.validations, startTime: VALID, endTime: VALID, walletAddress: VALID, supply: EMPTY, rate: EMPTY } } )
+    this.state = Object.assign({}, oldState, {validations: { ...oldState.validations, startTime: VALID, endTime: VALID, walletAddress: EMPTY, supply: EMPTY, rate: EMPTY } } )
+  }
+
+  renderLink () {
+    console.log('render link four')
+    return <Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}><a className="button button_fill">Continue</a></Link>
+  }
+
+  renderLinkComponent () {
+    if(stepsAreValid(this.state.validations) || allFieldsAreValid('crowdsale', this.state)){
+      console.log('steeeeeep 33333')
+      return this.renderLink()
+    }
+    console.log('not valid')
+    return <div onClick={() => this.showErrorMessages('crowdsale')} className="button button_fill"> Continue</div>
   }
 
   componentDidMount () {
@@ -49,6 +63,8 @@ export class stepThree extends stepTwo {
   }
 
   render() {
+    const { validations } = this.state
+    console.log('333 validations', validations)
     return (
       <section className="steps steps_crowdsale-contract" ref="three">
         <StepNavigation activeStep={CROWDSALE_SETUP}/>
@@ -63,15 +79,50 @@ export class stepThree extends stepTwo {
             </p>
           </div>
           <div className="hidden">
-            <InputField side='left' type='datetime-local' title={START_TIME} value={this.state.crowdsale.startTime} onChange={(e) => this.changeState(e, 'crowdsale', 'startTime')}/>
-            <InputField side='right' type='datetime-local' title={END_TIME} value={this.state.crowdsale.endTime} onChange={(e) => this.changeState(e, 'crowdsale', 'endTime')}/>
-            <InputField side='left' type='text' title={WALLET_ADDRESS} value={this.state.crowdsale.walletAddress} onChange={(e) => this.changeState(e, 'crowdsale', 'walletAddress')}/>
-            <InputField side='right' type='number' title={SUPPLY} value={this.state.crowdsale.supply} onChange={(e) => this.changeState(e, 'crowdsale', 'supply')}/>
-            <InputField side='left' type='number' title={RATE} value={this.state.crowdsale.rate} onChange={(e) => this.changeState(e, 'crowdsale', 'rate')}/>
+            <InputField 
+              side='left' 
+              type='datetime-local' 
+              title={START_TIME} 
+              value={this.state.crowdsale.startTime} 
+              valid={validations.startTime} 
+              errorMessage={VALIDATION_MESSAGES.START_TIME} 
+              onChange={(e) => this.changeState(e, 'crowdsale', 'startTime')}/>
+            <InputField 
+              side='right' 
+              type='datetime-local' 
+              title={END_TIME} 
+              value={this.state.crowdsale.endTime} 
+              valid={validations.endTime} 
+              errorMessage={VALIDATION_MESSAGES.END_TIME} 
+              onChange={(e) => this.changeState(e, 'crowdsale', 'endTime')}/>
+            <InputField 
+              side='left' 
+              type='text' 
+              title={WALLET_ADDRESS} 
+              value={this.state.crowdsale.walletAddress} 
+              valid={validations.walletAddress} 
+              errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS} 
+              onChange={(e) => this.changeState(e, 'crowdsale', 'walletAddress')}/>
+            <InputField 
+              side='right' 
+              type='number' 
+              title={SUPPLY} 
+              value={this.state.crowdsale.supply} 
+              valid={validations.supply} 
+              errorMessage={VALIDATION_MESSAGES.SUPPLY} 
+              onChange={(e) => this.changeState(e, 'crowdsale', 'supply')}/>
+            <InputField 
+              side='left' 
+              type='number' 
+              title={RATE} 
+              value={this.state.crowdsale.rate} 
+              valid={validations.rate} 
+              errorMessage={VALIDATION_MESSAGES.RATE} 
+              onChange={(e) => this.changeState(e, 'crowdsale', 'rate')}/>
           </div>
         </div>
         <div className="button-container">
-          <Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}><a className="button button_fill">Continue</a></Link>
+          {this.renderLinkComponent()}
         </div>
       </section>
     )}

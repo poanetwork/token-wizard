@@ -1,8 +1,9 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
+import { Redirect } from 'react-router'
 import { calculateFutureBlock } from '../utils/web3'
-import { getOldState, stepsAreValid, getValidationValue } from '../utils/utils'
+import { getOldState, stepsAreValid, getValidationValue, getNewValue, validateValue, allFieldsAreValid } from '../utils/utils'
 import { StepNavigation } from './Common/StepNavigation'
 import { InputField } from './Common/InputField'
 import { NAVIGATION_STEPS, VALIDATION_MESSAGES, VALIDATION_TYPES, defaultState, TEXT_FIELDS } from '../utils/constants'
@@ -23,23 +24,14 @@ export class stepTwo extends React.Component {
     return newParent
   }
 
-  showErrorMessages = () => {
-    const { name, supply, decimals, ticker } = this.state.validations
-    this.setState({
-      ...this.state,
-      validations: {
-        name: name !== VALID ? INVALID : VALID,
-        supply: supply !== VALID ? INVALID : VALID,
-        decimals: decimals !== VALID ? INVALID : VALID,
-        ticker: ticker !== VALID ? INVALID : VALID 
-      }
-    })
+  showErrorMessages = (parent) => {
+    this.validateAllFields(parent)
   }
   
-  setBlockTimes (event, property) {
+   setBlockTimes (event, property) {
     let targetTime = new Date(event.target.value);
-    let newState = Object.assign({}, this.state)
-    calculateFutureBlock(targetTime, newState.blockTimeGeneration, (targetBlock) => {
+    calculateFutureBlock(targetTime, this.state.blockTimeGeneration, (targetBlock) => {
+      let newState = Object.assign({}, this.state)
       if (property == "startTime") {
         newState.crowdsale.startBlock = targetBlock;
         console.log("startBlock: " + newState.crowdsale.startBlock);
@@ -54,26 +46,41 @@ export class stepTwo extends React.Component {
   changeState (event, parent, property) {
     if (property == "startTime" || property == "endTime") {
       this.setBlockTimes(event, property)
-    }else {
-      const newParent = this.getNewParent(property, parent, event.target.value)
-      let newValidationValue = getValidationValue(event, property)
-      let newState = Object.assign({}, this.state)
-      newState[parent] = newParent
-      newState[`validations`][property] = newValidationValue
-      this.setState(newState)
     }
+    let value = event.target.value
+    let newState = { ...this.state }
+    newState[parent] = this.getNewParent(property, parent, value)
+    newState[`validations`][property] = getValidationValue(value, property, newState)
+    console.log('newState[`validations`][property]',  newState[`validations`][property])
+    this.setState(newState)
+  }
+
+  renderLink () {
+    return <Link className="button button_fill" to={{ pathname: '/3', query: { state: this.state, changeState: this.changeState } }}>Continue</Link>
+  }
+  
+  validateAllFields (parent) {
+    let newState = { ...this.state }
+    console.log('validateAllFields', this.state)
+    let properties = Object.keys(newState.validations)
+    let values = properties.map(property => newState[parent][property])
+    properties.forEach((property, index) => {
+      newState[`validations`][property] = validateValue(values[index], property)
+    })
+    this.setState(newState)
   }
 
   renderLinkComponent () {
-    if(stepsAreValid(this.state.validations)){
-      console.log('returningn')
-      return <Link className="button button_fill" to={{ pathname: '/3', query: { state: this.state, changeState: this.changeState } }}>Continue</Link>
+    if(stepsAreValid(this.state.validations) || allFieldsAreValid('token', this.state)){
+      return this.renderLink()
     }
-    return <div onClick={this.showErrorMessages} className="button button_fill"> Continue</div>
+    return <div onClick={this.showErrorMessages.bind(this, 'token')} className="button button_fill"> Continue</div>
   }
 
   render() {
     const { token, validations } = this.state
+     console.log('step 2 validations', validations)
+
     return (
     	<section className="steps steps_crowdsale-contract" ref="two">
         <StepNavigation activeStep={TOKEN_SETUP}/>

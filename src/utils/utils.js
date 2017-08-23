@@ -1,4 +1,5 @@
 import { VALIDATION_TYPES } from './constants'
+import { getWeb3 } from '../utils/web3'
 const { VALID, EMPTY, INVALID } = VALIDATION_TYPES
 
 export function getQueryVariable(variable) {
@@ -105,6 +106,8 @@ export const getconstructorParams = (abiConstructor, state) => {
     return params;
 }
 
+const getTimeAsNumber = (time) => new Date(time).getTime()
+
 export const getOldState = (props, defaultState) => props && props.location && props.location.query && props.location.query.state || defaultState
 
 export const getStepClass = (step, activeStep) => step === activeStep ? "step-navigation step-navigation_active" : "step-navigation"
@@ -119,11 +122,16 @@ const validateDecimals = (decimals) => isNaN(Number(decimals)) === false && deci
 
 const validateTicker = (ticker) => typeof ticker === 'string' && ticker.length < 4 && ticker.length > 0
 
-const validateTime = (time) => time > Date.now()
-
-const validateWallet = () => true
+const validateTime = (time) => getTimeAsNumber(time) > Date.now() 
 
 const validateRate = (rate) => isNaN(Number(rate)) === false && rate > 0
+
+const validateAddress = (address) => {
+    if(!address || address.length !== 42 ) {
+        return false
+    }
+    return true
+}
 
 const inputFieldValidators = {
     name: validateName,
@@ -132,15 +140,33 @@ const inputFieldValidators = {
     supply: validateSupply,
     startTime: validateTime,
     endTime: validateTime,
-    walletAddress: validateWallet,
+    walletAddress: validateAddress,
     rate: validateRate
 }
 
-export const getValidationValue = (event, parent) => {
-    let validationFunction = inputFieldValidators[parent]
-    console.log('inputFieldValidators', inputFieldValidators, 'parent', parent)
-    const valueIsValid = validationFunction(event.target.value)
-    console.log('validationFunction', validationFunction, 'valueIsValid', valueIsValid)
-    return valueIsValid === true ? VALID : INVALID
+const inputFieldIsUnsubmitted = (currentValidation, newValidation) => console.log('currentValidation, newValidation', currentValidation, newValidation) || currentValidation === EMPTY
+
+export const validateValue = (value, property) => {
+    let validationFunction = inputFieldValidators[property]
+    // console.log('inputFieldValidators', inputFieldValidators, 'property', property)
+    const valueIsValid = validationFunction(value)
+    // console.log('validationFunction', validationFunction, 'valueIsValid', valueIsValid)
+    return  valueIsValid === true ? VALID : INVALID
 }
 
+export const getValidationValue = (value, property, state) => {
+    let currentValidation = state[`validations`][property]  
+    let newValidation = validateValue(value, property)
+    return inputFieldIsUnsubmitted(currentValidation, newValidation) ? EMPTY : newValidation
+} 
+
+export const getNewValue = (value, property) => property === "startTime" || property === "endTime" ? getTimeAsNumber(value) : value
+
+export const allFieldsAreValid = (parent, state) => {
+    let newState = { ...state }
+    // console.log('validateAllFields', state)
+    let properties = Object.keys(newState.validations)
+    let values = properties.map(property => newState[parent][property])
+    console.log('values.find(value => value === INVALID ) === undefined', values.find(value => value === INVALID ) === undefined)
+    return values.find(value => value === INVALID ) === undefined
+}

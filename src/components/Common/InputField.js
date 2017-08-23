@@ -4,6 +4,13 @@ import { VALIDATION_TYPES } from '../../utils/constants'
 const { INVALID } = VALIDATION_TYPES
 
 export const InputField = ({side, type, value, onChange, title, valid, errorMessage }) => {
+	const errorStyle={
+		color: 'red',
+		fontWeight: 'bold',
+		fontSize: '12px',
+		width: '100%',
+		height: '10px'
+	}
 	const error = valid === INVALID ? errorMessage : ''
 	return <div className={side}>
 		<label className="label">{title}</label>
@@ -12,6 +19,6 @@ export const InputField = ({side, type, value, onChange, title, valid, errorMess
 			Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
 			tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
 		</p>
-		<p className='errorMessage'>{error}</p>
+		<p style={errorStyle}>{error}</p>
 	</div>
 }
