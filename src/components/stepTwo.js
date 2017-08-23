@@ -45,14 +45,19 @@ export class stepTwo extends React.Component {
   }
 
   changeState (event, parent, property) {
-    if (property == "startTime" || property == "endTime") {
-      this.setBlockTimes(event, property)
-    }
     let value = event.target.value
     let newState = { ...this.state }
+    if (property == "startTime" || property == "endTime") {
+      this.setBlockTimes(event, property)
+    } else if (property.indexOf("whitelist") == 0) {
+      let prop = property.split("_")[1];
+      newState[`crowdsale`][`whitelist`][0][prop] = value
+    }
     newState[parent] = this.getNewParent(property, parent, value)
-    newState[`validations`][property] = getValidationValue(value, property, newState)
-    console.log('newState[`validations`][property]',  newState[`validations`][property])
+    if (property.indexOf("whitelist") == -1) {
+      newState[`validations`][property] = getValidationValue(value, property, newState)
+      console.log('newState[`validations`][property]',  newState[`validations`][property])
+    }
     this.setState(newState)
   }
 

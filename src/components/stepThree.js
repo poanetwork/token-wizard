@@ -196,20 +196,20 @@ export class stepThree extends stepTwo {
                 side='white-list-item-property-left' 
                 type='text' 
                 title={ADDRESS} 
-                value={this.state.crowdsale.whitelist.address} 
-                onChange={(e) => this.changeState(e, 'crowdsale', 'walletAddress')}/>
+                value={this.state.crowdsale.whitelist[0].addr} 
+                onChange={(e) => this.changeState(e, 'crowdsale', 'whitelist_addr')}/>
               <InputField 
                 side='white-list-item-property-middle' 
                 type='number' 
                 title={MIN} 
-                value={this.state.crowdsale.whitelist.min} 
-                onChange={(e) => this.changeState(e, 'crowdsale', 'supply')}/>
+                value={this.state.crowdsale.whitelist[0].min} 
+                onChange={(e) => this.changeState(e, 'crowdsale', 'whitelist_min')}/>
               <InputField 
                 side='white-list-item-property-right'
                 type='number' 
                 title={MAX} 
-                value={this.state.crowdsale.whitelist.max} 
-                onChange={(e) => this.changeState(e, 'crowdsale', 'supply')}/>
+                value={this.state.crowdsale.whitelist[0].max} 
+                onChange={(e) => this.changeState(e, 'crowdsale', 'whitelist_max')}/>
             </div>
           </div>
           <div className="button-container">

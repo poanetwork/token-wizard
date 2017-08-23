@@ -97,6 +97,23 @@ function getNetWorkNameById(_id) {
   }
 }
 
+export function addWhiteList(web3, whitelist, abi, addr, cb) {
+  console.log("###whitelist:###");
+  console.log(whitelist);
+  attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
+    console.log("attach to crowdsale contract");
+    if (err) return console.log(err);
+    if (!crowdsaleContract) return noContractAlert();
+
+    crowdsaleContract.setEarlyParicipantWhitelist.sendTransaction(whitelist[0].addr, true, function(err, result) {
+      if (err) return console.log(err);
+
+      console.log("setEarlyParicipantWhitelist function transaction: " + result);
+      cb();
+    });
+  });
+}
+
 export function getCrowdsaleData(web3, $this) {
   attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr, function(err, crowdsaleContract) {
     console.log("attach to crowdsale contract");
