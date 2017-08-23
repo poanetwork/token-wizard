@@ -1,6 +1,6 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { deployContract, getWeb3, getNetworkVersion } from '../utils/web3'
+import { deployContract, getWeb3, getNetworkVersion, addWhiteList } from '../utils/web3'
 import { noMetaMaskAlert } from '../utils/alerts'
 import { defaultState } from '../utils/constants'
 import { getOldState } from '../utils/utils'
@@ -67,10 +67,21 @@ export class stepFour extends stepTwo {
     let newState = { ...this.state }
     newState.contracts.crowdsale.addr = crowdsaleAddr;
     this.setState(newState);
+
+    if (this.state.contractType == this.state.contractTypes.whitelistwithcap) {
+      addWhiteList(this.state.web3, this.state.crowdsale.whitelist, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, () => {
+        this.goToCrowdsalePage();
+      });
+    } else {
+      this.goToCrowdsalePage();
+    }
+  }
+
+  goToCrowdsalePage = () => {
     let crowdsalePage = "/crowdsale";
     const {contracts} = this.state
     const isValidContract = contracts && contracts.crowdsale && contracts.crowdsale.addr
-    let newHistory = isValidContract ? crowdsalePage + `?addr=` + contracts.crowdsale.addr + `&networkID=` + contracts.crowdsale.networkID + `&contractType=` + contracts.contractType : crowdsalePage
+    let newHistory = isValidContract ? crowdsalePage + `?addr=` + contracts.crowdsale.addr + `&networkID=` + contracts.crowdsale.networkID + `&contractType=` + this.state.contractType : crowdsalePage
     this.props.history.push(newHistory);
   }
 

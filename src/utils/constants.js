@@ -5,7 +5,9 @@ export const defaultState = {
 		pricingStrategy: {}
 	}, 
 	token: {},
-	crowdsale: {whitelist: {}},
+	crowdsale: {whitelist: [
+		 {addr: "", max: 0, min: 0}
+		]},
 	//pricingStrategy: {tranches: [0, 2272727272727, 45000000000000000000000, 2380952380952, 90000000000000000000000, 2500000000000, 999999999999999000000000000000000, 0]},
 	pricingStrategy: {},
 	blockTimeGeneration: 17,
