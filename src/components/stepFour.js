@@ -8,6 +8,7 @@ import { getEncodedABI } from '../utils/microservices'
 import { stepTwo } from './stepTwo'
 import { StepNavigation } from './Common/StepNavigation'
 import { DisplayField } from './Common/DisplayField'
+import { Loader } from './Common/Loader'
 import { NAVIGATION_STEPS } from '../utils/constants'
 const { PUBLISH } = NAVIGATION_STEPS
 
@@ -26,11 +27,13 @@ export class stepFour extends stepTwo {
         getEncodedABI(abiCrowdsale, "crowdsale", this.state, this);
       } break;
       case this.state.contractTypes.whitelistwithcap: {
+        let state = { ...this.state }
+        state.loading = true;
+        this.setState(state);
         let abiToken = this.state.contracts && this.state.contracts.token && this.state.contracts.token.abi || []
         let abiPricingStrategy = this.state.contracts && this.state.contracts.pricingStrategy && this.state.contracts.pricingStrategy.abi || []
         
         let $this = this;
-        let state = { ...this.state }
         setTimeout(function() {
            getWeb3((web3) => {
             state.web3 = web3;
@@ -48,24 +51,39 @@ export class stepFour extends stepTwo {
   }
 
   handleDeployedToken = (err, tokenAddr) => {
-    if (err) return console.log(err);
     let newState = { ...this.state }
+    if (err) {
+      newState.loading = false;
+      this.setState(newState);
+      return console.log(err);
+    }
     newState.contracts.token.addr = tokenAddr;
     this.deployPricingStrategy();
   }
 
   handleDeployedPricingStrategy = (err, pricingStrategyAddr) => {
-    if (err) return console.log(err);
     let newState = { ...this.state }
+    if (err) {
+      newState.loading = false;
+      this.setState(newState);
+      return console.log(err);
+    }
     newState.contracts.pricingStrategy.addr = pricingStrategyAddr;
+    newState.loading = false;
+    this.setState(newState);
     let abiCrowdsale = this.state.contracts && this.state.contracts.crowdsale && this.state.contracts.crowdsale.abi || []
     getEncodedABI(abiCrowdsale, "crowdsale", newState, this);
   }
 
   handleDeployedContract = (err, crowdsaleAddr) => {
-    if (err) return console.log(err);
     let newState = { ...this.state }
+    if (err) {
+      newState.loading = false;
+      this.setState(newState);
+      return console.log(err);
+    }
     newState.contracts.crowdsale.addr = crowdsaleAddr;
+    newState.loading = false;
     this.setState(newState);
 
     if (this.state.contractType == this.state.contractTypes.whitelistwithcap) {
@@ -252,7 +270,7 @@ export class stepFour extends stepTwo {
             </div>
             <div className="item">
               <p className="label">Compiler Version</p>
-              <p className="value">0.4.14</p>
+              <p className="value">0.4.11</p>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
@@ -290,6 +308,7 @@ export class stepFour extends stepTwo {
           {/*<Link to='/5' onClick={this.deployCrowdsale}><a href="#" className="button button_fill">Continue</a></Link>*/}
           <a onClick={this.deployCrowdsale} className="button button_fill">Continue</a>
         </div>
+        <Loader show={this.state.loading}></Loader>
       </section>
     )}
 }
