@@ -27,9 +27,8 @@ export class Invest extends React.Component {
     setTimeout(function() {
      getWeb3(function(web3) {
       if (!web3) return;
-      var state = $this.state;
-      state.web3 = web3;
-      $this.setState(state);
+      newState.web3 = web3;
+      $this.setState(newState);
       const timeInterval = setInterval(() => $this.setState({ seconds: $this.state.seconds - 1}), 1000);
       $this.setState({ timeInterval });
 
@@ -42,12 +41,12 @@ export class Invest extends React.Component {
 
       switch (contractType) {
         case $this.state.contractTypes.standard: {
-          getStandardCrowdsaleAssets(state, function(newState) {
+          getStandardCrowdsaleAssets(newState, function(newState) {
         $this.extractContractsData($this, web3);
       });
         } break;
         case $this.state.contractTypes.whitelistwithcap: {
-          getWhiteListWithCapCrowdsaleAssets(state, function(newState) {
+          getWhiteListWithCapCrowdsaleAssets(newState, function(newState) {
         $this.extractContractsData($this, web3);
       });
         } break;
