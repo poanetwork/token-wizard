@@ -39,6 +39,15 @@ export function investmentDisabledAlert(startBlock, curBlock) {
     });
 }
 
+export function investmentDisabledAlertInTime(startTime) {
+    sweetAlert({
+      title: "Warning",
+      text: "Wait, please. Crowdsale company hasn't started yet. It'll start from <b>" + new Date(startTime) + "</b>.",
+      html: true,
+      type: "warning"
+    });
+}
+
 export function incorrectNetworkAlert(correctNetworkName, incorrectNetworkName) {
     sweetAlert({
       title: "Warning",

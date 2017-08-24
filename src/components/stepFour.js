@@ -1,6 +1,6 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { deployContract, getWeb3, getNetworkVersion, addWhiteList } from '../utils/web3'
+import { deployContract, getWeb3, getNetworkVersion, addWhiteList, setFinalizeAgent } from '../utils/web3'
 import { noMetaMaskAlert } from '../utils/alerts'
 import { defaultState } from '../utils/constants'
 import { getOldState } from '../utils/utils'
@@ -105,12 +105,32 @@ export class stepFour extends stepTwo {
       return console.log(err);
     }
     newState.contracts.crowdsale.addr = crowdsaleAddr;
+
+    if (this.state.contractType == this.state.contractTypes.whitelistwithcap) {
+      this.deployFinalizeAgent();
+    } else {
+      newState.loading = false;
+      this.setState(newState);
+      this.goToCrowdsalePage();
+    }
+  }
+
+  handleDeployedFinalizeAgent = (err, finalizeAgentAddr) => {
+    let newState = { ...this.state }
+    if (err) {
+      newState.loading = false;
+      this.setState(newState);
+      return console.log(err);
+    }
+    newState.contracts.finalizeAgent.addr = finalizeAgentAddr;
     newState.loading = false;
     this.setState(newState);
 
     if (this.state.contractType == this.state.contractTypes.whitelistwithcap) {
       addWhiteList(this.state.web3, this.state.crowdsale.whitelist, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, () => {
-        this.goToCrowdsalePage();
+        setFinalizeAgent(this.state.web3, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, finalizeAgentAddr, () => {
+          this.goToCrowdsalePage();
+        });
       });
     } else {
       this.goToCrowdsalePage();
@@ -183,6 +203,12 @@ export class stepFour extends stepTwo {
       parseInt(Date.parse(this.state.crowdsale.startTime)/1000, 10), 
       parseInt(Date.parse(this.state.crowdsale.endTime)/1000, 10), 
       parseInt(this.state.token.supply, 10)
+    ]
+  }
+
+  getFinalizeAgentParams = (web3) => {
+    return [
+      this.state.contracts.crowdsale.addr
     ]
   }
 
@@ -276,6 +302,22 @@ export class stepFour extends stepTwo {
         deployContract(web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, this.handleDeployedContract)
        });
     });
+  }
+
+  deployFinalizeAgent = () => {
+    console.log("***Deploy finalize agent contract***");
+    getNetworkVersion(this.state.web3, (_networkID) => {
+      if (this.state.web3.eth.accounts.length === 0) {
+        return noMetaMaskAlert();
+      }
+      var contracts = this.state.contracts;
+      var binFinalizeAgent = contracts && contracts.finalizeAgent && contracts.finalizeAgent.bin || ''
+      var abiFinalizeAgent = contracts && contracts.finalizeAgent && contracts.finalizeAgent.abi || []
+      var finalizeAgent = this.state.finalizeAgent;
+      var paramsFinalizeAgent = this.getFinalizeAgentParams(this.state.web3)
+      console.log(paramsFinalizeAgent);
+      deployContract(this.state.web3, abiFinalizeAgent, binFinalizeAgent, paramsFinalizeAgent, this.handleDeployedFinalizeAgent)
+     });
   }
 
   render() {

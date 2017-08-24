@@ -21,7 +21,7 @@ export function setFlatFileContentToState(file, cb) {
 
 export function getWhiteListWithCapCrowdsaleAssets(state, cb) {
     const contractName = "CrowdsaleWhitelistWithCap";
-    var derivativesLength = 10;
+    var derivativesLength = 12;
     var derivativesIterator = 0;
     setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", function(_bin) {
       derivativesIterator++;
@@ -98,6 +98,23 @@ export function getWhiteListWithCapCrowdsaleAssets(state, cb) {
       }
     });
     setFlatFileContentToState("./contracts/" + multisigContractName + "_flat.abi", function(_abi) {
+      derivativesIterator++;
+      state.contracts.multisig.abi = JSON.parse(_abi);
+
+      if (derivativesIterator === derivativesLength) {
+        cb(state);
+      }
+    });
+    const finalizeAgentContractName = "FinalizeAgent";
+    setFlatFileContentToState("./contracts/" + finalizeAgentContractName + "_flat.bin", function(_bin) {
+      derivativesIterator++;
+      state.contracts.multisig.bin = _bin;
+
+      if (derivativesIterator === derivativesLength) {
+        cb(state);
+      }
+    });
+    setFlatFileContentToState("./contracts/" + finalizeAgentContractName + "_flat.abi", function(_abi) {
       derivativesIterator++;
       state.contracts.multisig.abi = JSON.parse(_abi);
 

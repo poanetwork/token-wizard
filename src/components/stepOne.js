@@ -30,8 +30,6 @@ export class stepOne extends React.Component {
   }
 
   getWhiteListWithCapCrowdsaleAssets (state) {
-    //const contractName = "RomanCrowdsale";
-    //const contractName = "SampleCrowdsale";
     const contractName = "CrowdsaleWhiteListWithCap";
     let srcC, binC
     setFlatFileContentToState("./contracts/" + contractName + "_flat.sol", (content) => srcC = content);
@@ -61,6 +59,12 @@ export class stepOne extends React.Component {
     setFlatFileContentToState("./contracts/" + multiSigName + "_flat.sol", (content) => srcM = content);
     setFlatFileContentToState("./contracts/" + multiSigName + "_flat.bin", (_bin) => binM = _bin);
     setFlatFileContentToState("./contracts/" + multiSigName + "_flat.abi", (_abi) => this.addContractsToState(srcM, binM, _abi, "tokenTransferProxy", state));
+
+    const finalizeAgentName = "FinalizeAgent";
+    let srcF, binF
+    setFlatFileContentToState("./contracts/" + finalizeAgentName + "_flat.sol", (content) => srcF = content);
+    setFlatFileContentToState("./contracts/" + finalizeAgentName + "_flat.bin", (_bin) => binF = _bin);
+    setFlatFileContentToState("./contracts/" + finalizeAgentName + "_flat.abi", (_abi) => this.addContractsToState(srcF, binF, _abi, "finalizeAgent", state));
   }
 
   componentDidMount() {
