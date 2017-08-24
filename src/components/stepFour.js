@@ -41,7 +41,7 @@ export class stepFour extends stepTwo {
             getEncodedABI(abiToken, "token", state, $this);
             getEncodedABI(abiPricingStrategy, "pricingStrategy", state, $this);
 
-            $this.deployMultisig();
+            $this.deployTokenTransferProxy();
           });
         });
       } break;
@@ -159,13 +159,12 @@ export class stepFour extends stepTwo {
     ]
   }
 
-  getMultisigParams = (web3, multisig) => {
-    console.log(multisig);
+  getMultisigParams = (web3) => {
     return [
       [web3.eth.defaultAccount],
       1,
       60,
-      "0xFFCd39B8a61a47997594D1ce2CA6dF3A0b2957dE" //this.state.contracts.tokenTransferProxy.addr
+      this.state.contracts.tokenTransferProxy.addr  //0xFFCd39B8a61a47997594D1ce2CA6dF3A0b2957dE
     ]
   }
 
@@ -183,7 +182,7 @@ export class stepFour extends stepTwo {
   getPricingStrategyParams = (web3, pricingStrategy) => {
     console.log(pricingStrategy);
     return [
-      web3.toWei(pricingStrategy.rate, "ether")
+      web3.toWei(1/pricingStrategy.rate, "ether")
     ]
   }
 
@@ -236,7 +235,7 @@ export class stepFour extends stepTwo {
       var binMultisig = contracts && contracts.multisig && contracts.multisig.bin || ''
       var abiMultisig = contracts && contracts.multisig && contracts.multisig.abi || []
       var multisig = this.state.multisig;
-      var paramsMultisig = this.getMultisigParams(this.state.web3, multisig)
+      var paramsMultisig = this.getMultisigParams(this.state.web3)
       console.log(paramsMultisig);
       deployContract(this.state.web3, abiMultisig, binMultisig, paramsMultisig, this.handleDeployedMultisig)
      });

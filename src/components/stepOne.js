@@ -52,13 +52,13 @@ export class stepOne extends React.Component {
     let srcTTP, binTTP
     setFlatFileContentToState("./contracts/" + tokenTransferProxyName + "_flat.sol", (content) => srcTTP = content);
     setFlatFileContentToState("./contracts/" + tokenTransferProxyName + "_flat.bin", (_bin) => binTTP = _bin);
-    setFlatFileContentToState("./contracts/" + tokenTransferProxyName + "_flat.abi", (_abi) => this.addContractsToState(srcTTP, binTTP, _abi, "multisig", state));
+    setFlatFileContentToState("./contracts/" + tokenTransferProxyName + "_flat.abi", (_abi) => this.addContractsToState(srcTTP, binTTP, _abi, "tokenTransferProxy", state));
 
     const multiSigName = "MultiSig";
     let srcM, binM
     setFlatFileContentToState("./contracts/" + multiSigName + "_flat.sol", (content) => srcM = content);
     setFlatFileContentToState("./contracts/" + multiSigName + "_flat.bin", (_bin) => binM = _bin);
-    setFlatFileContentToState("./contracts/" + multiSigName + "_flat.abi", (_abi) => this.addContractsToState(srcM, binM, _abi, "tokenTransferProxy", state));
+    setFlatFileContentToState("./contracts/" + multiSigName + "_flat.abi", (_abi) => this.addContractsToState(srcM, binM, _abi, "multisig", state));
 
     const finalizeAgentName = "FinalizeAgent";
     let srcF, binF

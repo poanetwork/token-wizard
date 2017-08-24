@@ -130,11 +130,11 @@ export class Invest extends React.Component {
   investToTokensForWhitelistedCrowdsale(web3, $this) {
     console.log("startDate: " + $this.state.crowdsale.startDate);
     console.log("(new Date()).getTime(): " + (new Date()).getTime());
-    if ($this.state.crowdsale.startDate > (new Date()).getTime()) {
+    /*if ($this.state.crowdsale.startDate > (new Date()).getTime()) {
       return investmentDisabledAlertInTime($this.state.crowdsale.startDate);
-    }
+    }*/
 
-    var weiToSend = web3.toWei($this.state.tokensToInvest/$this.state.pricingStrategy.rate, "ether");
+    var weiToSend = web3.toWei($this.state.tokensToInvest*$this.state.pricingStrategy.rate, "ether");
     var opts = {
       from: web3.eth.accounts[0],
       value: weiToSend
