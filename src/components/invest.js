@@ -2,7 +2,7 @@ import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
 import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData } from '../utils/web3'
 import { getQueryVariable, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
-import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, successfulInvestmentAlert } from '../utils/alerts'
+import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert } from '../utils/alerts'
 import { Loader } from './Common/Loader'
 import { defaultState } from '../utils/constants'
 
@@ -130,11 +130,11 @@ export class Invest extends React.Component {
   investToTokensForWhitelistedCrowdsale(web3, $this) {
     console.log("startDate: " + $this.state.crowdsale.startDate);
     console.log("(new Date()).getTime(): " + (new Date()).getTime());
-    if ($this.state.crowdsale.startDate > (new Date()).getTime()) {
-      return investmentDisabledAlert($this.state.crowdsale.startDate, (new Date()).getTime());
-    }
+    /*if ($this.state.crowdsale.startDate > (new Date()).getTime()) {
+      return investmentDisabledAlertInTime($this.state.crowdsale.startDate);
+    }*/
 
-    var weiToSend = web3.toWei($this.state.tokensToInvest/$this.state.pricingStrategy.rate, "ether");
+    var weiToSend = web3.toWei($this.state.tokensToInvest*$this.state.pricingStrategy.rate, "ether");
     var opts = {
       from: web3.eth.accounts[0],
       value: weiToSend

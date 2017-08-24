@@ -114,6 +114,21 @@ export function addWhiteList(web3, whitelist, abi, addr, cb) {
   });
 }
 
+export function setFinalizeAgent(web3, abi, addr, finalizeAgentAddr, cb) {
+  attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
+    console.log("attach to crowdsale contract");
+    if (err) return console.log(err);
+    if (!crowdsaleContract) return noContractAlert();
+
+    crowdsaleContract.setFinalizeAgent.sendTransaction(finalizeAgentAddr, function(err, result) {
+      if (err) return console.log(err);
+
+      console.log("setFinalizeAgent function transaction: " + result);
+      cb();
+    });
+  });
+}
+
 export function getCrowdsaleData(web3, $this) {
   attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr, function(err, crowdsaleContract) {
     console.log("attach to crowdsale contract");

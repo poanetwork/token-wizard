@@ -4,6 +4,7 @@ export const defaultState = {
 		crowdsale: {},
 		pricingStrategy: {},
 		multisig: {},
+		finalizeAgent: {},
 		tokenTransferProxy: {}
 	}, 
 	token: {},
