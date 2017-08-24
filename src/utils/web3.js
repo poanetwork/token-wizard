@@ -97,6 +97,55 @@ function getNetWorkNameById(_id) {
   }
 }
 
+export function approve(web3, abi, addr, crowdsaleAddr, initialSupplyInWei, cb) {
+  console.log("###approve:###");
+  attachToContract(web3, abi, addr, function(err, tokenContract) {
+    console.log("attach to token contract");
+    if (err) return console.log(err);
+    if (!tokenContract) return noContractAlert();
+
+    tokenContract.approve.sendTransaction(crowdsaleAddr, initialSupplyInWei, function(err, result) {
+      if (err) return console.log(err);
+
+      console.log("approve function transaction: " + result);
+      cb();
+    });
+  });
+}
+
+export function setTransferAgent(web3, abi, addr, targetAddr, cb) {
+  console.log("###setTransferAgent:###");
+  attachToContract(web3, abi, addr, function(err, tokenContract) {
+    console.log("attach to token contract");
+    if (err) return console.log(err);
+    if (!tokenContract) return noContractAlert();
+
+    tokenContract.setTransferAgent.sendTransaction(targetAddr, true, function(err, result) {
+      if (err) return console.log(err);
+
+      console.log("setTransferAgent function transaction: " + result);
+      cb();
+    });
+  });
+}
+
+//for mintable token
+export function setMintAgent(web3, abi, addr, cb) {
+  console.log("###setMintAgent:###");
+  attachToContract(web3, abi, addr, function(err, tokenContract) {
+    console.log("attach to token contract");
+    if (err) return console.log(err);
+    if (!tokenContract) return noContractAlert();
+
+    tokenContract.setMintAgent.sendTransaction(web3.eth.defaultAccount, true, function(err, result) {
+      if (err) return console.log(err);
+
+      console.log("setMintAgent function transaction: " + result);
+      cb();
+    });
+  });
+}
+
 export function addWhiteList(web3, whitelist, abi, addr, cb) {
   console.log("###whitelist:###");
   console.log(whitelist);

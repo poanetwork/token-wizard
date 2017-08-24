@@ -44,7 +44,7 @@
     "finalize_agent_contract_name": "NullFinalizeAgent",
     "standard_crowdsale_contract_name": "SampleCrowdsale",
     "standard_crowdsale_token_contract_name": "SampleCrowdsaleToken",
-    "crowdsale_contract_name": "UncappedCrowdsale",
+    "crowdsale_contract_name": "AllocatedCrowdsale",
     "crowdsale_token_contract_name": "CrowdsaleToken",
     "crowdsale_pricing_strategy_contract_name": "FlatPricing"
   },

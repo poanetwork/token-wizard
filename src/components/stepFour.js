@@ -1,6 +1,6 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { deployContract, getWeb3, getNetworkVersion, addWhiteList, setFinalizeAgent } from '../utils/web3'
+import { deployContract, getWeb3, getNetworkVersion, addWhiteList, setFinalizeAgent, approve, setTransferAgent } from '../utils/web3'
 import { noMetaMaskAlert } from '../utils/alerts'
 import { defaultState } from '../utils/constants'
 import { getOldState } from '../utils/utils'
@@ -123,13 +123,26 @@ export class stepFour extends stepTwo {
       return console.log(err);
     }
     newState.contracts.finalizeAgent.addr = finalizeAgentAddr;
-    newState.loading = false;
-    this.setState(newState);
 
     if (this.state.contractType == this.state.contractTypes.whitelistwithcap) {
-      addWhiteList(this.state.web3, this.state.crowdsale.whitelist, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, () => {
-        setFinalizeAgent(this.state.web3, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, finalizeAgentAddr, () => {
-          this.goToCrowdsalePage();
+      let initialSupplyInWei = this.state.web3.toWei(this.state.token.supply/this.state.pricingStrategy.rate, "ether")
+      console.log("initialSupplyInWei: " + initialSupplyInWei)
+      approve(this.state.web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.crowdsale.addr, initialSupplyInWei, () => {
+        setTransferAgent(this.state.web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.multisig.addr, () => {
+          setTransferAgent(this.state.web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.crowdsale.addr, () => {
+            setTransferAgent(this.state.web3, this.state.contracts.token.abi, this.state.contracts.token.addr, finalizeAgentAddr, () => {
+              setTransferAgent(this.state.web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.crowdsale.walletAddress, () => {
+                addWhiteList(this.state.web3, this.state.crowdsale.whitelist, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, () => {
+                  setFinalizeAgent(this.state.web3, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, finalizeAgentAddr, () => {
+                    newState.contracts.finalizeAgent.addr = finalizeAgentAddr;
+                    newState.loading = false;
+                    this.setState(newState);
+                    this.goToCrowdsalePage();
+                  });
+                });
+              });
+            });
+          });
         });
       });
     } else {
@@ -175,7 +188,7 @@ export class stepFour extends stepTwo {
       token.ticker,
       parseInt(token.supply, 10),
       parseInt(token.decimals, 10),
-      true
+      false
     ]
   }
 
@@ -201,7 +214,8 @@ export class stepFour extends stepTwo {
       this.state.contracts.multisig.addr,
       parseInt(Date.parse(this.state.crowdsale.startTime)/1000, 10), 
       parseInt(Date.parse(this.state.crowdsale.endTime)/1000, 10), 
-      parseInt(this.state.token.supply, 10)
+      parseInt(this.state.token.supply, 10),
+      this.state.crowdsale.walletAddress
     ]
   }
 
@@ -282,6 +296,7 @@ export class stepFour extends stepTwo {
         }
         let newState = { ...this.state }
         newState.contracts.crowdsale.networkID = _networkID;
+        newState.loading = true;
         this.setState(newState);
         let contracts = this.state.contracts;
         let binCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.bin || ''
