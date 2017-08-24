@@ -38,6 +38,7 @@ export class Invest extends React.Component {
       const contractType = getQueryVariable("contractType");
       checkNetWorkByID(web3, networkID);
       $this.state.contracts.crowdsale.addr = crowdsaleAddr;
+      $this.state.contractType = contractType;
 
       switch (contractType) {
         case $this.state.contractTypes.standard: {
@@ -82,39 +83,78 @@ export class Invest extends React.Component {
     if (web3.eth.accounts.length === 0) {
       return noMetaMaskAlert();
     }
-    //web3.eth.getBlockNumber(function(err, curBlock) {
-      //if (err) return console.log(err);
 
-      //if (startBlock > parseInt(curBlock, 10)) {
-      console.log("startDate: " + startDate);
-      console.log("(new Date()).getTime(): " + (new Date()).getTime());
-      if (startDate > (new Date()).getTime()) {
-        return investmentDisabledAlert(startDate, (new Date()).getTime());
-        //return investmentDisabledAlert(startBlock, curBlock);
-      }
-
-      var weiToSend = web3.toWei($this.state.tokensToInvest/$this.state.pricingStrategy.rate, "ether");
-      var opts = {
-        from: web3.eth.accounts[0],
-        value: weiToSend
-      };
-
-      attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr, function(err, crowdsaleContract) {
-        console.log("attach to crowdsale contract");
-        if (err) return console.log(err);
-        if (!crowdsaleContract) return noContractAlert();
-
-        console.log(crowdsaleContract);
-        console.log(web3.eth.defaultAccount);
-
-        crowdsaleContract.invest.sendTransaction(web3.eth.accounts[0], opts, function(err, txHash) {
+    switch (this.state.contractType) {
+      case $this.state.contractTypes.standard: {
+        web3.eth.getBlockNumber(function(err, curBlock) {
           if (err) return console.log(err);
-          
-          console.log("txHash: " + txHash);
-          successfulInvestmentAlert($this.state.tokensToInvest);
+          $this.investToTokensForStandardCrowdsale(web3, $this, curBlock)
         });
+      } break;
+      case $this.state.contractTypes.whitelistwithcap: {
+        this.investToTokensForWhitelistedCrowdsale(web3, $this)
+      } break;
+      default:
+        break;
+    }
+  }
+
+  investToTokensForStandardCrowdsale(web3, $this, curBlock) {
+    if (parseInt($this.state.crowdsale.startBlock, 10) > parseInt(curBlock, 10)) {
+      return investmentDisabledAlert(parseInt($this.state.crowdsale.startBlock, 10), curBlock);
+    }
+
+    var weiToSend = web3.toWei($this.state.tokensToInvest/$this.state.pricingStrategy.rate, "ether");
+    var opts = {
+      from: web3.eth.accounts[0],
+      value: weiToSend
+    };
+
+    attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr, function(err, crowdsaleContract) {
+      console.log("attach to crowdsale contract");
+      if (err) return console.log(err);
+      if (!crowdsaleContract) return noContractAlert();
+
+      console.log(crowdsaleContract);
+      console.log(web3.eth.defaultAccount);
+
+      crowdsaleContract.buySampleTokens.sendTransaction(web3.eth.accounts[0], opts, function(err, txHash) {
+        if (err) return console.log(err);
+        
+        console.log("txHash: " + txHash);
+        successfulInvestmentAlert($this.state.tokensToInvest);
       });
-    //});
+    });
+  }
+
+  investToTokensForWhitelistedCrowdsale(web3, $this) {
+    console.log("startDate: " + $this.state.crowdsale.startDate);
+    console.log("(new Date()).getTime(): " + (new Date()).getTime());
+    if ($this.state.crowdsale.startDate > (new Date()).getTime()) {
+      return investmentDisabledAlert($this.state.crowdsale.startDate, (new Date()).getTime());
+    }
+
+    var weiToSend = web3.toWei($this.state.tokensToInvest/$this.state.pricingStrategy.rate, "ether");
+    var opts = {
+      from: web3.eth.accounts[0],
+      value: weiToSend
+    };
+
+    attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr, function(err, crowdsaleContract) {
+      console.log("attach to crowdsale contract");
+      if (err) return console.log(err);
+      if (!crowdsaleContract) return noContractAlert();
+
+      console.log(crowdsaleContract);
+      console.log(web3.eth.defaultAccount);
+
+      crowdsaleContract.invest.sendTransaction(web3.eth.accounts[0], opts, function(err, txHash) {
+        if (err) return console.log(err);
+        
+        console.log("txHash: " + txHash);
+        successfulInvestmentAlert($this.state.tokensToInvest);
+      });
+    });
   }
 
   tokensToInvestOnChange(event) {
