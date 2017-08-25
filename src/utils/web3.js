@@ -195,6 +195,17 @@ export function getCrowdsaleData(web3, $this) {
       $this.setState(state);
     });
 
+    if (crowdsaleContract.tokenAmountOf) {
+      crowdsaleContract.tokenAmountOf.call(web3.eth.defaultAccount, function(err, tokenAmountOf) {
+        if (err) return console.log(err);
+        
+        console.log("tokenAmountOf: " + tokenAmountOf);
+        let state = $this.state;
+        state.crowdsale.tokenAmountOf = tokenAmountOf;
+        $this.setState(state);
+      });
+    }
+
     if (crowdsaleContract.rate) {
       crowdsaleContract.rate.call(function(err, rate) {
         if (err) return console.log(err);

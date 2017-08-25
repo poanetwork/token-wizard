@@ -235,10 +235,10 @@ export const getconstructorParams = (abiConstructor, state) => {
                 params.vals.push(state.crowdsale.walletAddress);
             } break;
             case "_pricingStrategy": {
-                params.vals.push(state.contracts.pricingStrategy.addr);//params.vals.push("0xfdb2e623113b12e4109018654e7598d70706e635");//params.vals.push(state.crowdsale.walletAddress); //todo
+                params.vals.push(state.contracts.pricingStrategy.addr);
             } break;
             case "_token": {
-                params.vals.push(state.contracts.token.addr);//params.vals.push("0x870d809780fb26a416a7187e8bb7f2e609684e56");//params.vals.push(state.crowdsale.walletAddress); //todo
+                params.vals.push(state.contracts.token.addr);
             } break;
             case "_crowdsaleSupply": {
                 params.vals.push(state.crowdsale.supply);
