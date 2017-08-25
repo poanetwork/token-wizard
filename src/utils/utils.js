@@ -211,61 +211,65 @@ export const findConstructor = (abiCrowdsale) => {
     return abiConstructor
 }
 
-export const getconstructorParams = (abiConstructor, state) => {
+export const getconstructorParams = (abiConstructor, state, vals) => {
     let params = {"types": [], "vals": []};
     if (!abiConstructor) return params;
     for (let j = 0; j < abiConstructor.length; j++) {
         let inp = abiConstructor[j];
         params.types.push(inp.type);
-        switch(inp.name) {
-            case "_startBlock":
-            case "_start": {
-                params.vals.push(state.crowdsale.startBlock);
-            } break;
-            case "_endBlock":
-            case "_end": {
-                params.vals.push(state.crowdsale.endBlock);
-            } break;
-            case "_rate": {
-                params.vals.push(state.pricingStrategy.rate);
-            } break;
-            case "_wallet":
-            case "_beneficiary":
-            case "_multisigWallet": {
-                params.vals.push(state.crowdsale.walletAddress);
-            } break;
-            case "_pricingStrategy": {
-                params.vals.push(state.contracts.pricingStrategy.addr);//params.vals.push("0xfdb2e623113b12e4109018654e7598d70706e635");//params.vals.push(state.crowdsale.walletAddress); //todo
-            } break;
-            case "_token": {
-                params.vals.push(state.contracts.token.addr);//params.vals.push("0x870d809780fb26a416a7187e8bb7f2e609684e56");//params.vals.push(state.crowdsale.walletAddress); //todo
-            } break;
-            case "_crowdsaleSupply": {
-                params.vals.push(state.crowdsale.supply);
-            } break;
-            case "_name": {
-                params.vals.push(state.token.name);
-            } break;
-            case "_symbol": {
-                params.vals.push(state.token.ticker);
-            } break;
-            case "_decimals": {
-                params.vals.push(state.token.decimals);
-            } break;
-            case "_tokenSupply":
-            case "_minimumFundingGoal": 
-            case "_initialSupply": {
-                params.vals.push(state.token.supply);
-            } break;
-            case "_mintable": {
-                params.vals.push(true);
-            } break;
-            case "_tranches": {
-                params.vals.push(state.pricingStrategy.tranches);
-            } break;
-            default: {
-                params.vals.push("");
-            } break;
+        if (vals.length > 0) {
+            params.vals.push(vals[j]);
+        } else {
+            switch(inp.name) {
+                case "_startBlock":
+                case "_start": {
+                    params.vals.push(state.crowdsale.startBlock);
+                } break;
+                case "_endBlock":
+                case "_end": {
+                    params.vals.push(state.crowdsale.endBlock);
+                } break;
+                case "_rate": {
+                    params.vals.push(state.pricingStrategy.rate);
+                } break;
+                case "_wallet":
+                case "_beneficiary":
+                case "_multisigWallet": {
+                    params.vals.push(state.crowdsale.walletAddress);
+                } break;
+                case "_pricingStrategy": {
+                    params.vals.push(state.contracts.pricingStrategy.addr);
+                } break;
+                case "_token": {
+                    params.vals.push(state.contracts.token.addr);
+                } break;
+                case "_crowdsaleSupply": {
+                    params.vals.push(state.crowdsale.supply);
+                } break;
+                case "_name": {
+                    params.vals.push(state.token.name);
+                } break;
+                case "_symbol": {
+                    params.vals.push(state.token.ticker);
+                } break;
+                case "_decimals": {
+                    params.vals.push(state.token.decimals);
+                } break;
+                case "_tokenSupply":
+                case "_minimumFundingGoal": 
+                case "_initialSupply": {
+                    params.vals.push(state.token.supply);
+                } break;
+                case "_mintable": {
+                    params.vals.push(true);
+                } break;
+                case "_tranches": {
+                    params.vals.push(state.pricingStrategy.tranches);
+                } break;
+                default: {
+                    params.vals.push("");
+                } break;
+            }
         }
     }
     return params;
