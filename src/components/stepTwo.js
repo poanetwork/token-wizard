@@ -33,6 +33,8 @@ export class stepTwo extends React.Component {
       newState.crowdsale[key].endTime = new Date(targetTimeTemp).toISOString().split(".")[0];
       if (newState.crowdsale[key + 1]) {
         newState.crowdsale[key + 1].startTime = newState.crowdsale[key].endTime;
+        let newEndDate = new Date(newState.crowdsale[key].endTime).setDate(new Date(newState.crowdsale[key].endTime).getDate() + 4);;
+        newState.crowdsale[key + 1].endTime = new Date(newEndDate).toISOString().split(".")[0];;
       }
     }
     calculateFutureBlock(targetTime, this.state.blockTimeGeneration, (targetBlock) => {
