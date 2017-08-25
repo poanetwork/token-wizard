@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
 import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData } from '../utils/web3'
-import { getQueryVariable, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
+import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
 import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert } from '../utils/alerts'
 import { Loader } from './Common/Loader'
 import { defaultState } from '../utils/constants'
@@ -27,11 +27,14 @@ export class Invest extends React.Component {
      getWeb3(function(web3) {
       if (!web3) return;
 
-      const crowdsaleAddr = getQueryVariable("addr");
+      const crowdsaleAddrs = getURLParam("addr");
+      let crowdsaleAddr;
+      if (crowdsaleAddrs.length == 1)
+        crowdsaleAddr = crowdsaleAddr[0];
       const networkID = getQueryVariable("networkID");
       const contractType = getQueryVariable("contractType");
       checkNetWorkByID(web3, networkID);
-      newState.contracts.crowdsale.addr = crowdsaleAddr;
+      newState.contracts.crowdsale.addr = crowdsaleAddrs;
       newState.contractType = contractType;
 
       const timeInterval = setInterval(() => $this.setState({ seconds: $this.state.seconds - 1}), 1000);
@@ -106,7 +109,7 @@ export class Invest extends React.Component {
       value: weiToSend
     };
 
-    attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr, function(err, crowdsaleContract) {
+    attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr[0], function(err, crowdsaleContract) {
       console.log("attach to crowdsale contract");
       if (err) return console.log(err);
       if (!crowdsaleContract) return noContractAlert();
@@ -130,26 +133,51 @@ export class Invest extends React.Component {
       return investmentDisabledAlertInTime($this.state.crowdsale.startDate);
     }
 
+    this.findCurrentContractRecursively(0, $this, web3)
+  }
+
+  findCurrentContractRecursively(i, $this, web3) {
+    let crowdsaleAddr = $this.state.contracts.crowdsale.addr[i];
+    attachToContract(web3, $this.state.contracts.crowdsale.abi, crowdsaleAddr, function(err, crowdsaleContract) {
+      console.log("attach to crowdsale contract");
+      if (err) return console.log(err);
+      if (!crowdsaleContract) return noContractAlert();
+
+      crowdsaleContract.startsAt.call(function(err, startDate) {
+        if (err) return console.log(err);
+        
+        startDate = startDate*1000;
+        console.log("startDate: " + startDate);
+        crowdsaleContract.endsAt.call(function(err, endDate) {
+          if (err) return console.log(err);
+          
+          endDate = endDate*1000;
+          console.log("endDate: " + endDate);
+          
+          let curDate = new Date().getTime();
+          console.log("curDate: " + curDate); 
+          if (curDate < endDate && curDate >= startDate) {
+            $this.investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, web3, $this);
+          } else {
+            i++;
+            $this.findCurrentContractRecursively(i, $this, web3);
+          }
+        });
+      });
+    });
+  }
+
+  investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, web3, $this) {
     var weiToSend = web3.toWei($this.state.tokensToInvest*$this.state.pricingStrategy.rate, "ether");
     var opts = {
       from: web3.eth.accounts[0],
       value: weiToSend
     };
-
-    attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr, function(err, crowdsaleContract) {
-      console.log("attach to crowdsale contract");
+    crowdsaleContract.buy.sendTransaction(opts, function(err, txHash) {
       if (err) return console.log(err);
-      if (!crowdsaleContract) return noContractAlert();
-
-      console.log(crowdsaleContract);
-      console.log(web3.eth.defaultAccount);
-
-      crowdsaleContract.buy.sendTransaction(opts, function(err, txHash) {
-        if (err) return console.log(err);
-        
-        console.log("txHash: " + txHash);
-        successfulInvestmentAlert($this.state.tokensToInvest);
-      });
+      
+      console.log("txHash: " + txHash);
+      successfulInvestmentAlert($this.state.tokensToInvest);
     });
   }
 
@@ -225,7 +253,7 @@ export class Invest extends React.Component {
               <p className="hashes-description">Token Address</p>
             </div>
             <div className="hashes-i">
-              <p className="hashes-title">{this.state.contracts.crowdsale.addr}</p>
+              <p className="hashes-title">{this.state.contracts.crowdsale.addr[0]}</p>
               <p className="hashes-description">Crowdsale Contract Address</p>
             </div>
             <div className="hashes-i hidden">

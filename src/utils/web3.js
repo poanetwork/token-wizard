@@ -219,7 +219,7 @@ export function transferOwnership(web3, abi, addr, finalizeAgentAddr, cb) {
 }
 
 export function getCrowdsaleData(web3, $this) {
-  attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr, function(err, crowdsaleContract) {
+  attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr[0], function(err, crowdsaleContract) {
     console.log("attach to crowdsale contract");
     if (err) return console.log(err);
     if (!crowdsaleContract) return noContractAlert();

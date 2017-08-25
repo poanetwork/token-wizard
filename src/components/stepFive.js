@@ -1,7 +1,7 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
 import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData } from '../utils/web3'
-import { getQueryVariable, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
+import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
 import { noContractAlert } from '../utils/alerts'
 import { StepNavigation } from './Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../utils/constants'
@@ -20,7 +20,10 @@ export class stepFive extends React.Component {
 		let newState = { ...this.state }
 	    newState.loading = true;
 	    this.setState(newState);
-		const crowdsaleAddr = getQueryVariable("addr");
+		const crowdsaleAddrs = getURLParam("addr");
+		let crowdsaleAddr;
+		if (crowdsaleAddrs.length == 1)
+			crowdsaleAddr = crowdsaleAddr[0];
 		const networkID = getQueryVariable("networkID");
 		const contractType = getQueryVariable("contractType");
 		var $this = this;
@@ -29,7 +32,7 @@ export class stepFive extends React.Component {
 				var state = $this.state;
 				state.web3 = web3;
       			checkNetWorkByID(web3, networkID);
-			    state.contracts.crowdsale.addr = crowdsaleAddr;
+			    state.contracts.crowdsale.addr = crowdsaleAddrs;
 			    state.contracts.crowdsale.networkID = networkID;
 			    state.contracts.crowdsale.contractType = contractType;
 
@@ -68,7 +71,10 @@ export class stepFive extends React.Component {
   	goToInvestPage = () => {
   		let queryStr = "";
   		if (this.state.contracts.crowdsale.addr) {
-  			queryStr = "?addr=" + this.state.contracts.crowdsale.addr;
+  			queryStr = "?addr=" + this.state.contracts.crowdsale.addr[0];
+  			for (let i = 1; i < this.state.contracts.crowdsale.addr.length; i++) {
+		      queryStr += `&addr=` + this.state.contracts.crowdsale.addr[i]
+		    }
   			if (this.state.contracts.crowdsale.networkID)
   				queryStr += "&networkID=" + this.state.contracts.crowdsale.networkID;
   			if (this.state.contracts.crowdsale.contractType)
