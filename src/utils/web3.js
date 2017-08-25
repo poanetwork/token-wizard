@@ -171,6 +171,7 @@ export function addWhiteList(web3, whitelist, abi, addr, cb) {
 }
 
 export function setFinalizeAgent(web3, abi, addr, finalizeAgentAddr, cb) {
+  console.log("###setFinalizeAgent:###");
   attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
     console.log("attach to crowdsale contract");
     if (err) return console.log(err);
@@ -186,6 +187,7 @@ export function setFinalizeAgent(web3, abi, addr, finalizeAgentAddr, cb) {
 }
 
 export function setReleaseAgent(web3, abi, addr, finalizeAgentAddr, cb) {
+  console.log("###setReleaseAgent:###");
   attachToContract(web3, abi, addr, function(err, tokenContract) {
     console.log("attach to token contract");
     if (err) return console.log(err);
@@ -201,6 +203,7 @@ export function setReleaseAgent(web3, abi, addr, finalizeAgentAddr, cb) {
 }
 
 export function transferOwnership(web3, abi, addr, finalizeAgentAddr, cb) {
+  console.log("###transferOwnership:###");
   attachToContract(web3, abi, addr, function(err, tokenContract) {
     console.log("attach to token contract");
     if (err) return console.log(err);
@@ -576,9 +579,7 @@ export function attachToContract(web3, abi, addr, cb) {
 		if (cb) cb({code: 200, title: "Error", message: "check RPC availability"});
 	} else {
     web3.eth.defaultAccount = web3.eth.accounts[0];
-		console.log("web3.eth.defaultAccount:");
-		console.log(web3.eth.defaultAccount);
-    console.log(web3.eth.accounts);
+		console.log("web3.eth.defaultAccount:" + web3.eth.defaultAccount);
 		
 		var MyContract = web3.eth.contract(abi);
 
