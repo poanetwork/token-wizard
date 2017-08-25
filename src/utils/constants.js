@@ -52,7 +52,8 @@ export const TEXT_FIELDS = {
 	CROWDSALE_SETUP_NAME: 'Crowdsale setup name',
 	ADDRESS: 'Address',
 	MIN: 'Min',
-	MAX: 'Max'
+	MAX: 'Max',
+	MAX_CAP: 'Max cap'
 }
 
 export const VALIDATION_TYPES = {

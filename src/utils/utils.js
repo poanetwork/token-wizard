@@ -256,15 +256,32 @@ export const getconstructorParams = (abiConstructor, state, vals) => {
                     params.vals.push(state.token.decimals);
                 } break;
                 case "_tokenSupply":
-                case "_minimumFundingGoal": 
+                case "_maximumSellableTokens": 
                 case "_initialSupply": {
                     params.vals.push(state.token.supply);
+                } break;
+                case "_minimumFundingGoal": {
+                  params.vals.push(0);
                 } break;
                 case "_mintable": {
                     params.vals.push(true);
                 } break;
                 case "_tranches": {
                     params.vals.push(state.pricingStrategy[0].tranches);
+                } break;
+                case "_secondsTimeLocked": {
+                  params.vals.push(1)
+                } break;
+                case "_tokenTransferProxy": {
+                  params.vals.push(state.contracts.tokenTransferProxy.addr)
+                } break;
+                case "_required": {
+                  params.vals.push(1)
+                } break;
+                case "_owners": {
+                  let owners = [];
+                  owners.push(state.crowdsale[0].walletAddress);
+                  params.vals.push(owners)
                 } break;
                 default: {
                     params.vals.push("");

@@ -1,6 +1,6 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { deployContract, getWeb3, getNetworkVersion, addWhiteList, setFinalizeAgent, approve, setTransferAgent } from '../utils/web3'
+import { deployContract, getWeb3, getNetworkVersion, addWhiteList, setFinalizeAgent, approve, setTransferAgent, setMintAgent, setReleaseAgent, transferOwnership } from '../utils/web3'
 import { noMetaMaskAlert } from '../utils/alerts'
 import { defaultState } from '../utils/constants'
 import { getOldState } from '../utils/utils'
@@ -135,6 +135,7 @@ export class stepFour extends stepTwo {
       return console.log(err);
     }
     newState.contracts.crowdsale.addr = crowdsaleAddr;
+    this.setState(newState);
 
     if (this.state.contractType == this.state.contractTypes.whitelistwithcap) {
       this.deployFinalizeAgent();
@@ -155,7 +156,9 @@ export class stepFour extends stepTwo {
     newState.contracts.finalizeAgent.addr = finalizeAgentAddr;
 
     if (this.state.contractType == this.state.contractTypes.whitelistwithcap) {
-      let initialSupplyInWei = this.state.web3.toWei(this.state.token.supply/this.state.pricingStrategy[0].rate, "ether")
+      let web3 = this.state.web3;
+      //post actions for Allocated crowdsale
+      /*let initialSupplyInWei = this.state.web3.toWei(this.state.token.supply/this.state.pricingStrategy[0].rate, "ether")
       console.log("initialSupplyInWei: " + initialSupplyInWei)
       approve(this.state.web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.crowdsale.addr, initialSupplyInWei, () => {
         setTransferAgent(this.state.web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.multisig.addr, () => {
@@ -169,6 +172,23 @@ export class stepFour extends stepTwo {
                     this.setState(newState);
                     this.goToCrowdsalePage();
                   });
+                });
+              });
+            });
+          });
+        });
+      });*/
+      //post actions for mintablecappedcrowdsale
+      setMintAgent(web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.crowdsale.addr, () => {
+        setMintAgent(web3, this.state.contracts.token.abi, this.state.contracts.token.addr, finalizeAgentAddr, () => {
+          addWhiteList(web3, this.state.crowdsale[0].whitelist, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, () => {
+            setFinalizeAgent(web3, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, finalizeAgentAddr, () => {
+              setReleaseAgent(web3, this.state.contracts.token.abi, this.state.contracts.token.addr, finalizeAgentAddr, () => {
+                transferOwnership(web3, this.state.contracts.token.abi, this.state.contracts.token.addr, finalizeAgentAddr, () => {
+                  newState.contracts.finalizeAgent.addr = finalizeAgentAddr;
+                  newState.loading = false;
+                  this.setState(newState);
+                  this.goToCrowdsalePage();
                 });
               });
             });
@@ -218,10 +238,11 @@ export class stepFour extends stepTwo {
       token.ticker,
       parseInt(token.supply, 10),
       parseInt(token.decimals, 10),
-      false
+      true
     ]
   }
 
+  //FlatPricing
   getPricingStrategyParams = (web3, pricingStrategy) => {
     console.log(pricingStrategy);
     return [
@@ -237,7 +258,47 @@ export class stepFour extends stepTwo {
     ]
   }*/
 
-  getCrowdSaleParams = (web3) => {
+  //MilestonePricing
+  /*getPricingStrategyParams = (web3, crowdsale, pricingStrategy) => {
+    console.log(crowdsale);
+    let pricing = [];
+    for (let i = 0; i < crowdsale.length; i++) {
+      let crowdsaleItem = crowdsale[i];
+      let pricingStrategyItem = pricingStrategy[i];
+      let endDate = new Date(crowdsaleItem.endDate).getTime()/1000;
+      console.log("Milestone end date: " + endDate);
+      let oneTokenInWei = web3.toWei(1/pricingStrategyItem.rate, "ether")
+      console.log("oneTokenInWei: " + oneTokenInWei);
+      pricing.push(endDate);
+      pricing.push(oneTokenInWei);
+    }
+    console.log("Pricing strategy params:");
+    console.log(pricing);
+    return [
+      pricing
+    ]
+  }*/
+
+  //TokenTranchePricing
+  /*getPricingStrategyParams = (web3, crowdsale, pricingStrategy) => {
+    console.log(crowdsale);
+    let pricing = [];
+    for (let i = 0; i < crowdsale.length; i++) {
+      let crowdsaleItem = crowdsale[i];
+      let pricingStrategyItem = pricingStrategy[i];
+      let supply = crowdsaleItem.supply;
+      pricing.push(supply);
+      pricing.push(oneTokenInWei);
+    }
+    console.log("Pricing strategy params:");
+    console.log(pricing);
+    return [
+      pricing
+    ]
+  }*/
+
+  //AllocatedCrowdsale
+  /*getCrowdSaleParams = (web3) => {
     return [
       this.state.contracts.token.addr,
       this.state.contracts.pricingStrategy.addr,
@@ -246,6 +307,19 @@ export class stepFour extends stepTwo {
       parseInt(Date.parse(this.state.crowdsale[0].endTime)/1000, 10), 
       parseInt(this.state.token.supply, 10),
       this.state.crowdsale[0].walletAddress
+    ]
+  }*/
+
+  //MintedTokenCappedCrowdsale
+  getCrowdSaleParams = (web3) => {
+    return [
+      this.state.contracts.token.addr,
+      this.state.contracts.pricingStrategy.addr,
+      this.state.contracts.multisig.addr,
+      parseInt(Date.parse(this.state.crowdsale[0].startTime)/1000, 10), 
+      parseInt(Date.parse(this.state.crowdsale[0].endTime)/1000, 10), 
+      0,
+      parseInt(this.state.token.supply, 10)
     ]
   }
 

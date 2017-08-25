@@ -131,14 +131,20 @@ export function setTransferAgent(web3, abi, addr, targetAddr, cb) {
 }
 
 //for mintable token
-export function setMintAgent(web3, abi, addr, cb) {
+export function setMintAgent(web3, abi, addr, acc, cb) {
   console.log("###setMintAgent:###");
+  console.log("abi:");
+  console.log(abi);
+  console.log("addr:");
+  console.log(addr);
+  console.log("acc:");
+  console.log(acc);
   attachToContract(web3, abi, addr, function(err, tokenContract) {
     console.log("attach to token contract");
     if (err) return console.log(err);
     if (!tokenContract) return noContractAlert();
 
-    tokenContract.setMintAgent.sendTransaction(web3.eth.defaultAccount, true, function(err, result) {
+    tokenContract.setMintAgent.sendTransaction(acc, true, function(err, result) {
       if (err) return console.log(err);
 
       console.log("setMintAgent function transaction: " + result);
@@ -174,6 +180,36 @@ export function setFinalizeAgent(web3, abi, addr, finalizeAgentAddr, cb) {
       if (err) return console.log(err);
 
       console.log("setFinalizeAgent function transaction: " + result);
+      cb();
+    });
+  });
+}
+
+export function setReleaseAgent(web3, abi, addr, finalizeAgentAddr, cb) {
+  attachToContract(web3, abi, addr, function(err, tokenContract) {
+    console.log("attach to token contract");
+    if (err) return console.log(err);
+    if (!tokenContract) return noContractAlert();
+
+    tokenContract.setReleaseAgent.sendTransaction(finalizeAgentAddr, function(err, result) {
+      if (err) return console.log(err);
+
+      console.log("setReleaseAgent function transaction: " + result);
+      cb();
+    });
+  });
+}
+
+export function transferOwnership(web3, abi, addr, finalizeAgentAddr, cb) {
+  attachToContract(web3, abi, addr, function(err, tokenContract) {
+    console.log("attach to token contract");
+    if (err) return console.log(err);
+    if (!tokenContract) return noContractAlert();
+
+    tokenContract.transferOwnership.sendTransaction(finalizeAgentAddr, function(err, result) {
+      if (err) return console.log(err);
+
+      console.log("transferOwnership function transaction: " + result);
       cb();
     });
   });
