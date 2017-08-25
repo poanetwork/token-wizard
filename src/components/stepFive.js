@@ -1,6 +1,6 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData } from '../utils/web3'
+import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData, getAccumulativeCrowdsaleData, findCurrentContractRecursively } from '../utils/web3'
 import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
 import { noContractAlert } from '../utils/alerts'
 import { StepNavigation } from './Common/StepNavigation'
@@ -64,7 +64,11 @@ export class stepFive extends React.Component {
       state.web3 = web3;
       $this.setState(state, () => {
       	if (!$this.state.contracts.crowdsale.addr) return;
-      	getCrowdsaleData(web3, $this);
+      	findCurrentContractRecursively(0, $this, web3, function(crowdsaleContract) {
+	      getCrowdsaleData(web3, $this, crowdsaleContract, function() {
+	        getAccumulativeCrowdsaleData(web3, $this);
+	      });
+	    })
       });
   	}
 
@@ -106,7 +110,7 @@ export class stepFive extends React.Component {
 							</p>
 						</div>
 						<div className="right">
-							<p className="total-funds-title">{this.state.pricingStrategy.rate?isNaN(this.state.crowdsale.supply*this.state.pricingStrategy.rate)?0:(this.state.crowdsale.supply*this.state.pricingStrategy.rate):0} ETH</p>
+							<p className="total-funds-title">{this.state.pricingStrategy.rate?isNaN(this.state.token.supply*this.state.pricingStrategy.rate)?0:(this.state.token.supply*this.state.pricingStrategy.rate):0} ETH</p>
 							<p className="total-funds-description">
 								Goal
 							</p>
@@ -124,7 +128,7 @@ export class stepFive extends React.Component {
 					<div className="total-funds-chart-division"></div>
 					<div className="total-funds-chart-division"></div>
 					<div className="total-funds-chart">
-						<div className="total-funds-chart-active" style={{width : (this.state.crowdsale.supply?this.state.crowdsale.weiRaised/this.state.crowdsale.supply:"0") + "%"}}></div>
+						<div className="total-funds-chart-active" style={{width : (this.state.token.supply?this.state.crowdsale.weiRaised/this.state.token.supply:"0") + "%"}}></div>
 					</div>
 				</div>
 				<div className="total-funds-statistics">
@@ -158,7 +162,7 @@ export class stepFive extends React.Component {
 									</p>
 								</div>
 								<div className="right">
-									<p className="title">{this.state.crowdsale.supply?this.state.crowdsale.supply.toString():0}</p>
+									<p className="title">{this.state.token.supply?this.state.token.supply.toString():0}</p>
 									<p className="description">
 										Total Supply
 									</p>

@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
-import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData } from '../utils/web3'
+import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData, getAccumulativeCrowdsaleData, findCurrentContractRecursively } from '../utils/web3'
 import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
 import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert } from '../utils/alerts'
 import { Loader } from './Common/Loader'
@@ -70,7 +70,11 @@ export class Invest extends React.Component {
     $this.setState(state);
 
     if (!$this.state.contracts.crowdsale.addr) return;
-    getCrowdsaleData(web3, $this);
+    findCurrentContractRecursively(0, $this, web3, function(crowdsaleContract) {
+      getCrowdsaleData(web3, $this, crowdsaleContract, function() {
+        getAccumulativeCrowdsaleData(web3, $this);
+      });
+    })
   }
 
   investToTokens() {
@@ -133,38 +137,9 @@ export class Invest extends React.Component {
       return investmentDisabledAlertInTime($this.state.crowdsale.startDate);
     }
 
-    this.findCurrentContractRecursively(0, $this, web3)
-  }
-
-  findCurrentContractRecursively(i, $this, web3) {
-    let crowdsaleAddr = $this.state.contracts.crowdsale.addr[i];
-    attachToContract(web3, $this.state.contracts.crowdsale.abi, crowdsaleAddr, function(err, crowdsaleContract) {
-      console.log("attach to crowdsale contract");
-      if (err) return console.log(err);
-      if (!crowdsaleContract) return noContractAlert();
-
-      crowdsaleContract.startsAt.call(function(err, startDate) {
-        if (err) return console.log(err);
-        
-        startDate = startDate*1000;
-        console.log("startDate: " + startDate);
-        crowdsaleContract.endsAt.call(function(err, endDate) {
-          if (err) return console.log(err);
-          
-          endDate = endDate*1000;
-          console.log("endDate: " + endDate);
-          
-          let curDate = new Date().getTime();
-          console.log("curDate: " + curDate); 
-          if (curDate < endDate && curDate >= startDate) {
-            $this.investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, web3, $this);
-          } else {
-            i++;
-            $this.findCurrentContractRecursively(i, $this, web3);
-          }
-        });
-      });
-    });
+    findCurrentContractRecursively(0, $this, web3, function(crowdsaleContract) {
+      $this.investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, web3, $this);
+    })
   }
 
   investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, web3, $this) {
@@ -267,7 +242,7 @@ export class Invest extends React.Component {
               </div>
             </div>
             <div className="hashes-i">
-              <p className="hashes-title">{this.state.crowdsale.supply?this.state.crowdsale.supply.toString():"0"} {this.state.token.ticker?this.state.token.ticker.toString(): ""}</p>
+              <p className="hashes-title">{this.state.token.supply?this.state.token.supply.toString():"0"} {this.state.token.ticker?this.state.token.ticker.toString(): ""}</p>
               <p className="hashes-description">Total Supply</p>
             </div>
           </div>

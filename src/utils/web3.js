@@ -133,12 +133,6 @@ export function setTransferAgent(web3, abi, addr, targetAddr, cb) {
 //for mintable token
 export function setMintAgent(web3, abi, addr, acc, cb) {
   console.log("###setMintAgent:###");
-  console.log("abi:");
-  console.log(abi);
-  console.log("addr:");
-  console.log(addr);
-  console.log("acc:");
-  console.log(acc);
   attachToContract(web3, abi, addr, function(err, tokenContract) {
     console.log("attach to token contract");
     if (err) return console.log(err);
@@ -218,230 +212,288 @@ export function transferOwnership(web3, abi, addr, finalizeAgentAddr, cb) {
   });
 }
 
-export function getCrowdsaleData(web3, $this) {
-  attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr[0], function(err, crowdsaleContract) {
-    console.log("attach to crowdsale contract");
-    if (err) return console.log(err);
-    if (!crowdsaleContract) return noContractAlert();
-
-    console.log(crowdsaleContract);
-    let propsCount = 0;
-    let cbCount = 0;
-
-    propsCount++;
-    crowdsaleContract.weiRaised.call(function(err, weiRaised) {
-      cbCount++;
+export function findCurrentContractRecursively(i, $this, web3, cb) {
+    let crowdsaleAddr = $this.state.contracts.crowdsale.addr[i];
+    attachToContract(web3, $this.state.contracts.crowdsale.abi, crowdsaleAddr, function(err, crowdsaleContract) {
+      console.log("attach to crowdsale contract");
       if (err) return console.log(err);
-      
-      console.log("weiRaised: " + web3.fromWei(parseInt(weiRaised, 10), "ether"));
-      let state = $this.state;
-      state.crowdsale.weiRaised = web3.fromWei(parseInt(weiRaised, 10), "ether");
+      if (!crowdsaleContract) return noContractAlert();
 
-      if (propsCount == cbCount) {
-        state.loading = false;
-        $this.setState(state);
-      }
-    });
-
-    if (crowdsaleContract.tokenAmountOf) {
-      propsCount++;
-      console.log(web3.eth.accounts[0]);
-      crowdsaleContract.tokenAmountOf.call($this.state.curAddr, function(err, tokenAmountOf) {
-        cbCount++;
-        if (err) return console.log(err);
-        
-        console.log("tokenAmountOf: " + tokenAmountOf);
-        let state = $this.state;
-        state.crowdsale.tokenAmountOf = tokenAmountOf;
-        if (propsCount == cbCount) {
-          state.loading = false;
-          $this.setState(state);
-        }
-      });
-    }
-
-    if (crowdsaleContract.rate) {
-      propsCount++;
-      crowdsaleContract.rate.call(function(err, rate) {
-        cbCount++;
-        if (err) return console.log(err);
-        
-        console.log("rate: " + web3.fromWei(parseInt(rate, 10), "ether"));
-        let state = $this.state;
-        state.pricingStrategy.rate = web3.fromWei(parseInt(rate, 10), "ether");
-        if (propsCount == cbCount) {
-          state.loading = false;
-          $this.setState(state);
-        }
-      });
-    }
-
-    if (crowdsaleContract.minimumFundingGoal) {
-      propsCount++;
-      crowdsaleContract.minimumFundingGoal.call(function(err, supply) {
-        cbCount++;
-        if (err) return console.log(err);
-        
-        console.log("supply: " + supply);
-        let state = $this.state;
-        state.crowdsale.supply = supply;
-        if (propsCount == cbCount) {
-          state.loading = false;
-          $this.setState(state);
-        }
-      });
-    }
-
-    if (crowdsaleContract.supply) {
-      propsCount++;
-      crowdsaleContract.supply.call(function(err, supply) {
-        cbCount++;
-        if (err) return console.log(err);
-        
-        console.log("supply: " + supply);
-        let state = $this.state;
-        state.crowdsale.supply = supply;
-        if (propsCount == cbCount) {
-          state.loading = false;
-          $this.setState(state);
-        }
-      });
-    }
-
-    let getInvestors;
-    if (crowdsaleContract.investorCount) getInvestors = crowdsaleContract.investorCount;
-    else if (crowdsaleContract.investors) getInvestors = crowdsaleContract.investors;
-
-    if (getInvestors) {
-      propsCount++;
-      getInvestors.call(function(err, investors) {
-        cbCount++;
-        if (err) return console.log(err);
-        
-        console.log("investors: " + investors);
-        let state = $this.state;
-        state.crowdsale.investors = investors;
-        if (propsCount == cbCount) {
-          state.loading = false;
-          $this.setState(state);
-        }
-      });
-    }
-
-    if (crowdsaleContract.startBlock) {
-      propsCount++;
-      crowdsaleContract.startBlock.call(function(err, startBlock) {
-        cbCount++;
-        if (err) return console.log(err); 
-                   
-        console.log("startBlock: " + startBlock);
-        let state = $this.state;
-        state.crowdsale.startBlock = startBlock;
-        if (propsCount == cbCount) {
-          state.loading = false;
-          $this.setState(state);
-        }
-      });
-    }
-
-    if (crowdsaleContract.startsAt) {
-      propsCount++;
       crowdsaleContract.startsAt.call(function(err, startDate) {
+        if (err) return console.log(err);
+        
+        startDate = startDate*1000;
+        console.log("startDate: " + startDate);
+        crowdsaleContract.endsAt.call(function(err, endDate) {
+          if (err) return console.log(err);
+          
+          endDate = endDate*1000;
+          console.log("endDate: " + endDate);
+          
+          let curDate = new Date().getTime();
+          console.log("curDate: " + curDate); 
+          if (curDate < endDate && curDate >= startDate) {
+            cb(crowdsaleContract);
+          } else {
+            i++;
+            $this.findCurrentContractRecursively(i, $this, web3, cb);
+          }
+        });
+      });
+    });
+  }
+
+export function getAccumulativeCrowdsaleData(web3, $this) {
+  for (let i = 0; i < $this.state.contracts.crowdsale.addr.length; i++) {
+    let crowdsaleAddr = $this.state.contracts.crowdsale.addr[i];
+    attachToContract(web3, $this.state.contracts.crowdsale.abi, crowdsaleAddr, function(err, crowdsaleContract) {
+      console.log("attach to crowdsale contract");
+      if (err) return console.log(err);
+      if (!crowdsaleContract) return noContractAlert();
+      let propsCount = 0;
+      let cbCount = 0;
+
+      propsCount++;
+      crowdsaleContract.weiRaised.call(function(err, weiRaised) {
         cbCount++;
         if (err) return console.log(err);
         
-        console.log("startDate: " + startDate*1000);
+        console.log("weiRaised: " + web3.fromWei(parseInt(weiRaised, 10), "ether"));
         let state = $this.state;
-        state.crowdsale.startDate = startDate*1000;
+        if (state.crowdsale.weiRaised)
+          state.crowdsale.weiRaised += parseFloat(web3.fromWei(parseInt(weiRaised, 10), "ether"));
+        else
+          state.crowdsale.weiRaised = parseFloat(web3.fromWei(parseInt(weiRaised, 10), "ether"));
+
         if (propsCount == cbCount) {
           state.loading = false;
           $this.setState(state);
         }
       });
-    }
 
-    if (crowdsaleContract.endBlock) {
-      propsCount++;
-      crowdsaleContract.endBlock.call(function(err, endBlock) {
-        cbCount++;
-        if (err) return console.log(err);
-                   
-        console.log("endBlock: " + endBlock);
-        let state = $this.state;
-        state.crowdsale.endBlock = endBlock;
-        web3.eth.getBlockNumber(function(err, curBlock) {
+      if (crowdsaleContract.tokenAmountOf) {
+        propsCount++;
+        console.log(web3.eth.accounts[0]);
+        crowdsaleContract.tokenAmountOf.call($this.state.curAddr, function(err, tokenAmountOf) {
+          cbCount++;
           if (err) return console.log(err);
-       
-          console.log("curBlock: " + curBlock);
-          var blocksDiff = parseInt($this.state.crowdsale.endBlock, 10) - parseInt(curBlock, 10);
-          console.log("blocksDiff: " + blocksDiff);
-          var blocksDiffInSec = blocksDiff * state.blockTimeGeneration;
-          console.log("blocksDiffInSec: " + blocksDiffInSec); 
-          state.seconds = blocksDiffInSec;
-          if (propsCount == cbCount) {
-            state.loading = false;
-            $this.setState(state);
-          }
-         });
-      });
-    }
-
-    if (crowdsaleContract.endsAt) {
-      propsCount++;
-      crowdsaleContract.endsAt.call(function(err, endDate) {
-        cbCount++;
-        if (err) return console.log(err);
-        
-        console.log("endDate: " + endDate*1000);
-        let state = $this.state;
-        state.crowdsale.endDate = endDate*1000;
-        web3.eth.getBlockNumber(function(err, curBlock) {
-          if (err) return console.log(err);
-
-          console.log("curDate: " + new Date().getTime());
-          state.seconds = (state.crowdsale.endDate - new Date().getTime())/1000;
+          
+          console.log("tokenAmountOf: " + tokenAmountOf);
+          let state = $this.state;
+          if (state.crowdsale.tokenAmountOf)
+            state.crowdsale.tokenAmountOf += parseInt(tokenAmountOf);
+          else
+            state.crowdsale.tokenAmountOf = parseInt(tokenAmountOf);
           if (propsCount == cbCount) {
             state.loading = false;
             $this.setState(state);
           }
         });
-      });
-    }
+      }
 
+      let getInvestors;
+      if (crowdsaleContract.investorCount) getInvestors = crowdsaleContract.investorCount;
+      else if (crowdsaleContract.investors) getInvestors = crowdsaleContract.investors;
+
+      if (getInvestors) {
+        propsCount++;
+        getInvestors.call(function(err, investors) {
+          cbCount++;
+          if (err) return console.log(err);
+          
+          console.log("investors: " + investors);
+          let state = $this.state;
+          if (state.crowdsale.investors)
+            state.crowdsale.investors += parseInt(investors);
+          else
+            state.crowdsale.investors = parseInt(investors);
+          if (propsCount == cbCount) {
+            state.loading = false;
+            $this.setState(state);
+          }
+        });
+      }
+    });
+  }
+}
+
+export function getCrowdsaleData(web3, $this, crowdsaleContract, cb) {
+  if (!crowdsaleContract) return noContractAlert();
+
+  console.log(crowdsaleContract);
+  let propsCount = 0;
+  let cbCount = 0;
+
+  if (crowdsaleContract.rate) {
     propsCount++;
-    crowdsaleContract.token.call(function(err, tokenAddr) {
+    crowdsaleContract.rate.call(function(err, rate) {
       cbCount++;
       if (err) return console.log(err);
       
-      console.log("token: " + tokenAddr);
+      console.log("rate: " + web3.fromWei(parseInt(rate, 10), "ether"));
       let state = $this.state;
-      state.contracts.token.addr = tokenAddr;
+      state.pricingStrategy.rate = web3.fromWei(parseInt(rate, 10), "ether");
       if (propsCount == cbCount) {
         state.loading = false;
         $this.setState(state);
+        cb();
       }
+    });
+  }
 
-      if (!tokenAddr || tokenAddr === "0x") return;
-      getTokenData(web3, $this);
+  if (crowdsaleContract.minimumFundingGoal) {
+    propsCount++;
+    crowdsaleContract.minimumFundingGoal.call(function(err, supply) {
+      cbCount++;
+      if (err) return console.log(err);
+      
+      console.log("supply: " + supply);
+      let state = $this.state;
+      state.crowdsale.supply = supply;
+      if (propsCount == cbCount) {
+        state.loading = false;
+        $this.setState(state);
+        cb();
+      }
+    });
+  }
 
-      if (!crowdsaleContract.pricingStrategy) return;
+  if (crowdsaleContract.supply) {
+    propsCount++;
+    crowdsaleContract.supply.call(function(err, supply) {
+      cbCount++;
+      if (err) return console.log(err);
+      
+      console.log("supply: " + supply);
+      let state = $this.state;
+      state.crowdsale.supply = supply;
+      if (propsCount == cbCount) {
+        state.loading = false;
+        $this.setState(state);
+        cb();
+      }
+    });
+  }
 
-      propsCount++;
-      crowdsaleContract.pricingStrategy.call(function(err, pricingStrategyAddr) {
-        cbCount++;
+  if (crowdsaleContract.startBlock) {
+    propsCount++;
+    crowdsaleContract.startBlock.call(function(err, startBlock) {
+      cbCount++;
+      if (err) return console.log(err); 
+                 
+      console.log("startBlock: " + startBlock);
+      let state = $this.state;
+      state.crowdsale.startBlock = startBlock;
+      if (propsCount == cbCount) {
+        state.loading = false;
+        $this.setState(state);
+        cb();
+      }
+    });
+  }
+
+  if (crowdsaleContract.startsAt) {
+    propsCount++;
+    crowdsaleContract.startsAt.call(function(err, startDate) {
+      cbCount++;
+      if (err) return console.log(err);
+      
+      console.log("startDate: " + startDate*1000);
+      let state = $this.state;
+      state.crowdsale.startDate = startDate*1000;
+      if (propsCount == cbCount) {
+        state.loading = false;
+        $this.setState(state);
+        cb();
+      }
+    });
+  }
+
+  if (crowdsaleContract.endBlock) {
+    propsCount++;
+    crowdsaleContract.endBlock.call(function(err, endBlock) {
+      cbCount++;
+      if (err) return console.log(err);
+                 
+      console.log("endBlock: " + endBlock);
+      let state = $this.state;
+      state.crowdsale.endBlock = endBlock;
+      web3.eth.getBlockNumber(function(err, curBlock) {
         if (err) return console.log(err);
-        
-        console.log("pricingStrategy: " + pricingStrategyAddr);
-        let state = $this.state;
-        state.contracts.pricingStrategy.addr = pricingStrategyAddr;
+     
+        console.log("curBlock: " + curBlock);
+        var blocksDiff = parseInt($this.state.crowdsale.endBlock, 10) - parseInt(curBlock, 10);
+        console.log("blocksDiff: " + blocksDiff);
+        var blocksDiffInSec = blocksDiff * state.blockTimeGeneration;
+        console.log("blocksDiffInSec: " + blocksDiffInSec); 
+        state.seconds = blocksDiffInSec;
         if (propsCount == cbCount) {
           state.loading = false;
           $this.setState(state);
+          cb();
         }
+       });
+    });
+  }
 
-        if (!pricingStrategyAddr || pricingStrategyAddr === "0x") return;
-        getPricingStrategyData(web3, $this);
+  if (crowdsaleContract.endsAt) {
+    propsCount++;
+    crowdsaleContract.endsAt.call(function(err, endDate) {
+      cbCount++;
+      if (err) return console.log(err);
+      
+      console.log("endDate: " + endDate*1000);
+      let state = $this.state;
+      state.crowdsale.endDate = endDate*1000;
+      web3.eth.getBlockNumber(function(err, curBlock) {
+        if (err) return console.log(err);
+
+        console.log("curDate: " + new Date().getTime());
+        state.seconds = (state.crowdsale.endDate - new Date().getTime())/1000;
+        if (propsCount == cbCount) {
+          state.loading = false;
+          $this.setState(state);
+          cb();
+        }
       });
+    });
+  }
+
+  propsCount++;
+  crowdsaleContract.token.call(function(err, tokenAddr) {
+    cbCount++;
+    if (err) return console.log(err);
+    
+    console.log("token: " + tokenAddr);
+    let state = $this.state;
+    state.contracts.token.addr = tokenAddr;
+    if (propsCount == cbCount) {
+      state.loading = false;
+      $this.setState(state);
+      cb();
+    }
+
+    if (!tokenAddr || tokenAddr === "0x") return;
+    getTokenData(web3, $this);
+
+    if (!crowdsaleContract.pricingStrategy) return;
+
+    propsCount++;
+    crowdsaleContract.pricingStrategy.call(function(err, pricingStrategyAddr) {
+      cbCount++;
+      if (err) return console.log(err);
+      
+      console.log("pricingStrategy: " + pricingStrategyAddr);
+      let state = $this.state;
+      state.contracts.pricingStrategy.addr = pricingStrategyAddr;
+      if (propsCount == cbCount) {
+        state.loading = false;
+        $this.setState(state);
+        cb();
+      }
+
+      if (!pricingStrategyAddr || pricingStrategyAddr === "0x") return;
+      getPricingStrategyData(web3, $this);
     });
   });
 }
