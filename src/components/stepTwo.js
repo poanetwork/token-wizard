@@ -19,45 +19,58 @@ export class stepTwo extends React.Component {
     console.log(this.state);
   }
 
-  getNewParent (property, parent, value) {
-    let newParent = { ...this.state[`${parent}`] }
-    newParent[property] = value
-    return newParent
-  }
-
   showErrorMessages = (parent) => {
     this.validateAllFields(parent)
   }
   
-   setBlockTimes (event, property) {
+   setBlockTimes (event, key, property) {
     let targetTime = new Date(event.target.value);
     calculateFutureBlock(targetTime, this.state.blockTimeGeneration, (targetBlock) => {
       let newState = Object.assign({}, this.state)
       if (property == "startTime") {
-        newState.crowdsale.startBlock = targetBlock;
-        console.log("startBlock: " + newState.crowdsale.startBlock);
+        newState.crowdsale[key].startBlock = targetBlock;
+        console.log("startBlock: " + newState.crowdsale[key].startBlock);
       } else if (property == "endTime") {
-        newState.crowdsale.endBlock = targetBlock;
-        console.log("endBlock: " + newState.crowdsale.endBlock);
+        newState.crowdsale[key].endBlock = targetBlock;
+        console.log("endBlock: " + newState.crowdsale[key].endBlock);
       }
       this.setState(newState);
     });
   }
 
-  changeState (event, parent, property) {
+  /*getNewParent (property, parent, key, value) {
+    if( Object.prototype.toString.call( {...this.state[`${parent}`]} ) === '[object Array]' ) {
+      let newParent = { ...this.state[`${parent}`][key] }
+      newParent[property][key] = value
+      return newParent
+    } else {
+      let newParent = { ...this.state[`${parent}`] }
+      newParent[property] = value
+      return newParent
+    }
+  }*/
+
+  changeState (event, parent, key, property) {
+    console.log("parent: " + parent, "key: " + key, "property: " + property);
     let value = event.target.value
     let newState = { ...this.state }
     if (property == "startTime" || property == "endTime") {
-      this.setBlockTimes(event, property)
+      this.setBlockTimes(event, key, property)
     } else if (property.indexOf("whitelist") == 0) {
       let prop = property.split("_")[1];
-      newState[`crowdsale`][`whitelist`][0][prop] = value
+      newState.crowdsale[key][`whitelist`][0][prop] = value
+    } else {
+      if( Object.prototype.toString.call( newState[parent] ) === '[object Array]' ) {
+        newState[parent][key][property] = value;//this.getNewParent(property, parent, key, value)
+      } else {
+        newState[parent][property] = value;//this.getNewParent(property, parent, key, value)
+      }
     }
-    newState[parent] = this.getNewParent(property, parent, value)
     if (property.indexOf("whitelist") == -1) {
       newState[`validations`][property] = getValidationValue(value, property, newState)
       console.log('newState[`validations`][property]',  newState[`validations`][property])
     }
+    console.log(newState);
     this.setState(newState)
   }
 
@@ -105,7 +118,7 @@ export class stepTwo extends React.Component {
               errorMessage={VALIDATION_MESSAGES.NAME} 
               valid={validations.name} title={NAME} 
               value={token.name} 
-              onChange={(e) => this.changeState(e, 'token', 'name')}
+              onChange={(e) => this.changeState(e, 'token', 0, 'name')}
             />
             <InputField 
               side='right' type='text' 
@@ -113,7 +126,7 @@ export class stepTwo extends React.Component {
               valid={validations.ticker} 
               title={TICKER} 
               value={token.ticker} 
-              onChange={(e) => this.changeState(e, 'token', 'ticker')}
+              onChange={(e) => this.changeState(e, 'token', 0, 'ticker')}
             />
             <InputField 
               side='left' type='number' 
@@ -121,7 +134,7 @@ export class stepTwo extends React.Component {
               valid={validations.supply} 
               title={SUPPLY} 
               value={token.supply} 
-              onChange={(e) => this.changeState(e, 'token', 'supply')}
+              onChange={(e) => this.changeState(e, 'token', 0, 'supply')}
             />
             <InputField 
               side='right' type='number'
@@ -129,7 +142,7 @@ export class stepTwo extends React.Component {
               valid={validations.decimals} 
               title={DECIMALS}
               value={token.decimals} 
-              onChange={(e) => this.changeState(e, 'token', 'decimals')}
+              onChange={(e) => this.changeState(e, 'token', 0, 'decimals')}
             />
           </div>
         </div>

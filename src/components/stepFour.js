@@ -155,14 +155,14 @@ export class stepFour extends stepTwo {
     newState.contracts.finalizeAgent.addr = finalizeAgentAddr;
 
     if (this.state.contractType == this.state.contractTypes.whitelistwithcap) {
-      let initialSupplyInWei = this.state.web3.toWei(this.state.token.supply/this.state.pricingStrategy.rate, "ether")
+      let initialSupplyInWei = this.state.web3.toWei(this.state.token.supply/this.state.pricingStrategy[0].rate, "ether")
       console.log("initialSupplyInWei: " + initialSupplyInWei)
       approve(this.state.web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.crowdsale.addr, initialSupplyInWei, () => {
         setTransferAgent(this.state.web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.multisig.addr, () => {
           setTransferAgent(this.state.web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.crowdsale.addr, () => {
             setTransferAgent(this.state.web3, this.state.contracts.token.abi, this.state.contracts.token.addr, finalizeAgentAddr, () => {
-              setTransferAgent(this.state.web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.crowdsale.walletAddress, () => {
-                addWhiteList(this.state.web3, this.state.crowdsale.whitelist, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, () => {
+              setTransferAgent(this.state.web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.crowdsale[0].walletAddress, () => {
+                addWhiteList(this.state.web3, this.state.crowdsale[0].whitelist, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, () => {
                   setFinalizeAgent(this.state.web3, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, finalizeAgentAddr, () => {
                     newState.contracts.finalizeAgent.addr = finalizeAgentAddr;
                     newState.loading = false;
@@ -190,11 +190,11 @@ export class stepFour extends stepTwo {
 
   getStandardCrowdSaleParams = (web3) => {
     return [
-      parseInt(this.state.crowdsale.startBlock, 10), 
-      parseInt(this.state.crowdsale.endBlock, 10), 
-      web3.toWei(this.state.pricingStrategy.rate, "ether"), 
-      this.state.crowdsale.walletAddress,
-      parseInt(this.state.crowdsale.supply, 10),
+      parseInt(this.state.crowdsale[0].startBlock, 10), 
+      parseInt(this.state.crowdsale[0].endBlock, 10), 
+      web3.toWei(this.state.pricingStrategy[0].rate, "ether"), 
+      this.state.crowdsale[0].walletAddress,
+      parseInt(this.state.crowdsale[0].supply, 10),
       this.state.token.name,
       this.state.token.ticker,
       parseInt(this.state.token.decimals, 10),
@@ -242,10 +242,10 @@ export class stepFour extends stepTwo {
       this.state.contracts.token.addr,
       this.state.contracts.pricingStrategy.addr,
       this.state.contracts.multisig.addr,
-      parseInt(Date.parse(this.state.crowdsale.startTime)/1000, 10), 
-      parseInt(Date.parse(this.state.crowdsale.endTime)/1000, 10), 
+      parseInt(Date.parse(this.state.crowdsale[0].startTime)/1000, 10), 
+      parseInt(Date.parse(this.state.crowdsale[0].endTime)/1000, 10), 
       parseInt(this.state.token.supply, 10),
-      this.state.crowdsale.walletAddress
+      this.state.crowdsale[0].walletAddress
     ]
   }
 
@@ -310,7 +310,7 @@ export class stepFour extends stepTwo {
       var contracts = this.state.contracts;
       var binPricingStrategy = contracts && contracts.pricingStrategy && contracts.pricingStrategy.bin || ''
       var abiPricingStrategy = contracts && contracts.pricingStrategy && contracts.pricingStrategy.abi || []
-      var pricingStrategy = this.state.pricingStrategy;
+      var pricingStrategy = this.state.pricingStrategy[0];
       var paramsPricingStrategy = this.getPricingStrategyParams(this.state.web3, pricingStrategy)
       console.log(paramsPricingStrategy);
       deployContract(this.state.web3, abiPricingStrategy, binPricingStrategy, paramsPricingStrategy, this.state, this.handleDeployedPricingStrategy)
@@ -402,10 +402,10 @@ export class stepFour extends stepTwo {
               <p className="publish-title" data-step="3">Crowdsale Setup</p>
             </div>
             <div className="hidden">
-              <DisplayField side='left' title={'Start time'} value={this.state.crowdsale.startTime?this.state.crowdsale.startTime.split("T").join(" "):""}/>
-              <DisplayField side='right' title={'End time'} value={this.state.crowdsale.endTime?this.state.crowdsale.endTime.split("T").join(" "):""}/>
-              <DisplayField side='left' title={'Wallet address'} value={this.state.crowdsale.walletAddress?this.state.crowdsale.walletAddress:"0xc1253365dADE090649147Db89EE781d10f2b972f"}/>
-              <DisplayField side='right' title={'RATE'} value={this.state.pricingStrategy.rate?this.state.pricingStrategy.rate:1 + " ETH"}/>
+              <DisplayField side='left' title={'Start time'} value={this.state.crowdsale[0].startTime?this.state.crowdsale[0].startTime.split("T").join(" "):""}/>
+              <DisplayField side='right' title={'End time'} value={this.state.crowdsale[0].endTime?this.state.crowdsale[0].endTime.split("T").join(" "):""}/>
+              <DisplayField side='left' title={'Wallet address'} value={this.state.crowdsale[0].walletAddress?this.state.crowdsale[0].walletAddress:"0xc1253365dADE090649147Db89EE781d10f2b972f"}/>
+              <DisplayField side='right' title={'RATE'} value={this.state.pricingStrategy[0].rate?this.state.pricingStrategy[0].rate:1 + " ETH"}/>
             </div>
             <div className="publish-title-container">
               <p className="publish-title" data-step="4">Crowdsale Setup</p>
