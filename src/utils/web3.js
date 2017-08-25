@@ -1,5 +1,6 @@
 import Web3 from 'web3';
 import { incorrectNetworkAlert, noContractAlert } from './alerts'
+import { getEncodedABI } from './microservices'
 
 // instantiate new web3 instance
 const web3 = new Web3();
@@ -185,57 +186,86 @@ export function getCrowdsaleData(web3, $this) {
     if (!crowdsaleContract) return noContractAlert();
 
     console.log(crowdsaleContract);
+    let propsCount = 0;
+    let cbCount = 0;
 
+    propsCount++;
     crowdsaleContract.weiRaised.call(function(err, weiRaised) {
+      cbCount++;
       if (err) return console.log(err);
       
       console.log("weiRaised: " + web3.fromWei(parseInt(weiRaised, 10), "ether"));
       let state = $this.state;
       state.crowdsale.weiRaised = web3.fromWei(parseInt(weiRaised, 10), "ether");
-      $this.setState(state);
+
+      if (propsCount == cbCount) {
+        state.loading = false;
+        $this.setState(state);
+      }
     });
 
     if (crowdsaleContract.tokenAmountOf) {
-      crowdsaleContract.tokenAmountOf.call(web3.eth.defaultAccount, function(err, tokenAmountOf) {
+      propsCount++;
+      console.log(web3.eth.accounts[0]);
+      crowdsaleContract.tokenAmountOf.call($this.state.curAddr, function(err, tokenAmountOf) {
+        cbCount++;
         if (err) return console.log(err);
         
         console.log("tokenAmountOf: " + tokenAmountOf);
         let state = $this.state;
         state.crowdsale.tokenAmountOf = tokenAmountOf;
-        $this.setState(state);
+        if (propsCount == cbCount) {
+          state.loading = false;
+          $this.setState(state);
+        }
       });
     }
 
     if (crowdsaleContract.rate) {
+      propsCount++;
       crowdsaleContract.rate.call(function(err, rate) {
+        cbCount++;
         if (err) return console.log(err);
         
         console.log("rate: " + web3.fromWei(parseInt(rate, 10), "ether"));
         let state = $this.state;
         state.pricingStrategy.rate = web3.fromWei(parseInt(rate, 10), "ether");
-        $this.setState(state);
+        if (propsCount == cbCount) {
+          state.loading = false;
+          $this.setState(state);
+        }
       });
     }
 
     if (crowdsaleContract.minimumFundingGoal) {
+      propsCount++;
       crowdsaleContract.minimumFundingGoal.call(function(err, supply) {
+        cbCount++;
         if (err) return console.log(err);
         
         console.log("supply: " + supply);
         let state = $this.state;
         state.crowdsale.supply = supply;
-        $this.setState(state);
+        if (propsCount == cbCount) {
+          state.loading = false;
+          $this.setState(state);
+        }
       });
     }
 
     if (crowdsaleContract.supply) {
+      propsCount++;
       crowdsaleContract.supply.call(function(err, supply) {
+        cbCount++;
         if (err) return console.log(err);
         
         console.log("supply: " + supply);
         let state = $this.state;
         state.crowdsale.supply = supply;
-        $this.setState(state);
+        if (propsCount == cbCount) {
+          state.loading = false;
+          $this.setState(state);
+        }
       });
     }
 
@@ -244,46 +274,62 @@ export function getCrowdsaleData(web3, $this) {
     else if (crowdsaleContract.investors) getInvestors = crowdsaleContract.investors;
 
     if (getInvestors) {
+      propsCount++;
       getInvestors.call(function(err, investors) {
+        cbCount++;
         if (err) return console.log(err);
         
         console.log("investors: " + investors);
         let state = $this.state;
         state.crowdsale.investors = investors;
-        $this.setState(state);
+        if (propsCount == cbCount) {
+          state.loading = false;
+          $this.setState(state);
+        }
       });
     }
 
     if (crowdsaleContract.startBlock) {
+      propsCount++;
       crowdsaleContract.startBlock.call(function(err, startBlock) {
+        cbCount++;
         if (err) return console.log(err); 
                    
         console.log("startBlock: " + startBlock);
         let state = $this.state;
         state.crowdsale.startBlock = startBlock;
-         $this.setState(state);
+        if (propsCount == cbCount) {
+          state.loading = false;
+          $this.setState(state);
+        }
       });
     }
 
     if (crowdsaleContract.startsAt) {
+      propsCount++;
       crowdsaleContract.startsAt.call(function(err, startDate) {
+        cbCount++;
         if (err) return console.log(err);
         
         console.log("startDate: " + startDate*1000);
         let state = $this.state;
         state.crowdsale.startDate = startDate*1000;
-        $this.setState(state);
+        if (propsCount == cbCount) {
+          state.loading = false;
+          $this.setState(state);
+        }
       });
     }
 
     if (crowdsaleContract.endBlock) {
+      propsCount++;
       crowdsaleContract.endBlock.call(function(err, endBlock) {
+        cbCount++;
         if (err) return console.log(err);
                    
         console.log("endBlock: " + endBlock);
         let state = $this.state;
         state.crowdsale.endBlock = endBlock;
-        $this.setState(state);
         web3.eth.getBlockNumber(function(err, curBlock) {
           if (err) return console.log(err);
        
@@ -293,93 +339,118 @@ export function getCrowdsaleData(web3, $this) {
           var blocksDiffInSec = blocksDiff * state.blockTimeGeneration;
           console.log("blocksDiffInSec: " + blocksDiffInSec); 
           state.seconds = blocksDiffInSec;
-           $this.setState(state);
+          if (propsCount == cbCount) {
+            state.loading = false;
+            $this.setState(state);
+          }
          });
       });
     }
 
     if (crowdsaleContract.endsAt) {
+      propsCount++;
       crowdsaleContract.endsAt.call(function(err, endDate) {
+        cbCount++;
         if (err) return console.log(err);
         
         console.log("endDate: " + endDate*1000);
         let state = $this.state;
         state.crowdsale.endDate = endDate*1000;
-        $this.setState(state);
         web3.eth.getBlockNumber(function(err, curBlock) {
           if (err) return console.log(err);
 
           console.log("curDate: " + new Date().getTime());
-          /*console.log("curBlock: " + curBlock);
-          var blocksDiff = parseInt($this.state.crowdsale.endBlock, 10) - parseInt(curBlock, 10);
-          console.log("blocksDiff: " + blocksDiff);
-          var blocksDiffInSec = blocksDiff * state.blockTimeGeneration;
-          console.log("blocksDiffInSec: " + blocksDiffInSec);
-          state.seconds = blocksDiffInSec;*/
           state.seconds = (state.crowdsale.endDate - new Date().getTime())/1000;
-          $this.setState(state);
+          if (propsCount == cbCount) {
+            state.loading = false;
+            $this.setState(state);
+          }
         });
       });
     }
 
+    propsCount++;
     crowdsaleContract.token.call(function(err, tokenAddr) {
+      cbCount++;
       if (err) return console.log(err);
       
       console.log("token: " + tokenAddr);
       let state = $this.state;
       state.contracts.token.addr = tokenAddr;
-      $this.setState(state);
+      if (propsCount == cbCount) {
+        state.loading = false;
+        $this.setState(state);
+      }
 
       if (!tokenAddr || tokenAddr === "0x") return;
       getTokenData(web3, $this);
+
       if (!crowdsaleContract.pricingStrategy) return;
 
+      propsCount++;
       crowdsaleContract.pricingStrategy.call(function(err, pricingStrategyAddr) {
+        cbCount++;
         if (err) return console.log(err);
         
         console.log("pricingStrategy: " + pricingStrategyAddr);
         let state = $this.state;
         state.contracts.pricingStrategy.addr = pricingStrategyAddr;
-        $this.setState(state);
+        if (propsCount == cbCount) {
+          state.loading = false;
+          $this.setState(state);
+        }
 
         if (!pricingStrategyAddr || pricingStrategyAddr === "0x") return;
         getPricingStrategyData(web3, $this);
       });
     });
-
-    let newState = $this.state;
-    newState.loading = false;
-    $this.setState(newState);
   });
 }
 
 function getTokenData(web3, $this) {
+  let propsCount = 0;
+  let cbCount = 0;
   attachToContract(web3, $this.state.contracts.token.abi, $this.state.contracts.token.addr, function(err, tokenContract) {
     console.log("attach to token contract");
     if (err) return console.log(err);
     if (!tokenContract) return noContractAlert();
 
+    propsCount++;
     tokenContract["name"].call(function(err, name) {
+      cbCount++;
       if (err) return console.log(err);
       
       console.log("token name: " + name);
       let state = $this.state;
       state.token.name = name;
-      $this.setState(state);
+      if (propsCount == cbCount) {
+        state.loading = false;
+        $this.setState(state);
+      }
     });
+    propsCount++;
     tokenContract["symbol"].call(function(err, ticker) {
+      cbCount++;
       if (err) console.log(err);
       console.log("token ticker: " + ticker);
       let state = $this.state;
       state.token.ticker = ticker;
-      $this.setState(state);
+      if (propsCount == cbCount) {
+        state.loading = false;
+        $this.setState(state);
+      }
     });
+    propsCount++;
     tokenContract["totalSupply"].call(function(err, supply) {
+      cbCount++;
       if (err) console.log(err);
       let state = $this.state;
       console.log("token supply: " + supply);
       state.token.supply = supply;
-      $this.setState(state);
+      if (propsCount == cbCount) {
+        state.loading = false;
+        $this.setState(state);
+      }
     });
   });
 }
@@ -422,11 +493,14 @@ export function getNetworkVersion(web3, cb) {
   });
 }
 
-export function deployContract(web3, abi, bin, params, cb) {
+export function deployContract(web3, abi, bin, params, state, cb) {
   console.log('web3.eth.accounts[0]', web3.eth.accounts[0], 'bin', bin)
+  getEncodedABI(abi, state, params, (ABIencoded) => {
+    console.log(ABIencoded);
+    let binFull = bin + ABIencoded.substr(2);
     web3.eth.estimateGas({
-        from: web3.eth.accounts[0], 
-        data: bin
+      from: web3.eth.accounts[0], 
+      data: binFull
     }, function(err, estimatedGas) {
       console.log('estimated gas callback', estimatedGas)
       if (err) console.log('errrrrrrrrrrrrrrrrr', err);
@@ -446,14 +520,6 @@ export function deployContract(web3, abi, bin, params, cb) {
       console.log('totalParams', totalParams);
       contractInstance.new(...totalParams);
 
-      /*contractInstance.new(
-        params[0],
-        params[1],
-        params[2],
-        params[3],
-        opts, deployContractCB
-      );*/
-
       function deployContractCB(err, contract) {
         if (err) console.log(err);
         console.log(contract);
@@ -466,6 +532,7 @@ export function deployContract(web3, abi, bin, params, cb) {
         }
       };
     });
+  });
 }
 
 export function attachToContract(web3, abi, addr, cb) {

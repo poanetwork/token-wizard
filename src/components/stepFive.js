@@ -35,13 +35,15 @@ export class stepFive extends React.Component {
 
 			    switch (contractType) {
 		          case $this.state.contractTypes.standard: {
-		            getStandardCrowdsaleAssets(state, function(newState) {
-				    	$this.extractContractsData($this, newState, web3);
+		            getStandardCrowdsaleAssets(state, function(_newState) {
+		            	$this.setState(_newState);
+				    	$this.extractContractsData($this, web3);
 				    });
 		          } break;
 		          case $this.state.contractTypes.whitelistwithcap: {
-		            getWhiteListWithCapCrowdsaleAssets(state, function(newState) {
-				    	$this.extractContractsData($this, newState, web3);
+		            getWhiteListWithCapCrowdsaleAssets(state, function(_newState) {
+		            	$this.setState(_newState);
+				    	$this.extractContractsData($this, web3);
 				    });
 		          } break;
 		          default:
@@ -51,9 +53,11 @@ export class stepFive extends React.Component {
 		}, 500);
 	}
 
-	extractContractsData($this, state, web3) {
-	  $this.setState(state);
-      $this.state.curAddr = web3.eth.defaultAccount;
+	extractContractsData($this, web3) {
+	  var state = $this.state;
+	  state.curAddr = web3.eth.defaultAccount;
+      state.web3 = web3;
+      $this.setState(state);
 
       if (!$this.state.contracts.crowdsale.addr) return;
       getCrowdsaleData(web3, $this);

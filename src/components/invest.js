@@ -59,10 +59,6 @@ export class Invest extends React.Component {
 
   extractContractsData($this, web3) {
     var state = $this.state;
-    console.log(web3);
-    console.log(web3.currentProvider);
-    console.log(web3.providers);
-    console.log(web3.eth.accounts);
 
     if (web3.eth.accounts.length === 0) return;
 
