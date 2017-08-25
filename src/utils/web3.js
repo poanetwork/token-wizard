@@ -213,45 +213,133 @@ export function transferOwnership(web3, abi, addr, finalizeAgentAddr, cb) {
 }
 
 export function findCurrentContractRecursively(i, $this, web3, cb) {
-    let crowdsaleAddr = $this.state.contracts.crowdsale.addr[i];
-    attachToContract(web3, $this.state.contracts.crowdsale.abi, crowdsaleAddr, function(err, crowdsaleContract) {
+  let crowdsaleAddr = $this.state.contracts.crowdsale.addr[i];
+  attachToContract(web3, $this.state.contracts.crowdsale.abi, crowdsaleAddr, function(err, crowdsaleContract) {
+    console.log("attach to crowdsale contract");
+    if (err) return console.log(err);
+    if (!crowdsaleContract) return noContractAlert();
+
+    crowdsaleContract.startsAt.call(function(err, startDate) {
+      if (err) return console.log(err);
+      
+      startDate = startDate*1000;
+      console.log("startDate: " + startDate);
+      crowdsaleContract.endsAt.call(function(err, endDate) {
+        if (err) return console.log(err);
+        
+        endDate = endDate*1000;
+        console.log("endDate: " + endDate);
+        
+        let curDate = new Date().getTime();
+        console.log("curDate: " + curDate); 
+        if (curDate < endDate && curDate >= startDate) {
+          cb(crowdsaleContract);
+        } else {
+          i++;
+          $this.findCurrentContractRecursively(i, $this, web3, cb);
+        }
+      });
+    });
+  });
+}
+
+export function getCrowdsaleTargetDates(web3, $this, cb) {
+  let propsCount = 0;
+  let cbCount = 0;
+  let state = $this.state;
+  for (let i = 0; i < state.contracts.crowdsale.addr.length; i++) {
+    let crowdsaleAddr = state.contracts.crowdsale.addr[i];
+    attachToContract(web3, state.contracts.crowdsale.abi, crowdsaleAddr, function(err, crowdsaleContract) {
       console.log("attach to crowdsale contract");
       if (err) return console.log(err);
       if (!crowdsaleContract) return noContractAlert();
-
-      crowdsaleContract.startsAt.call(function(err, startDate) {
-        if (err) return console.log(err);
-        
-        startDate = startDate*1000;
-        console.log("startDate: " + startDate);
-        crowdsaleContract.endsAt.call(function(err, endDate) {
-          if (err) return console.log(err);
-          
-          endDate = endDate*1000;
-          console.log("endDate: " + endDate);
-          
-          let curDate = new Date().getTime();
-          console.log("curDate: " + curDate); 
-          if (curDate < endDate && curDate >= startDate) {
-            cb(crowdsaleContract);
-          } else {
-            i++;
-            $this.findCurrentContractRecursively(i, $this, web3, cb);
+      if (crowdsaleContract.startBlock) {
+        propsCount++;
+        crowdsaleContract.startBlock.call(function(err, startBlock) {
+          cbCount++;
+          if (err) return console.log(err); 
+                     
+          console.log("startBlock: " + startBlock);
+          if (!state.crowdsale.startBlock || state.crowdsale.startBlock > startBlock)
+            state.crowdsale.startBlock = startBlock;
+          if (propsCount == cbCount) {
+            state.loading = false;
+            $this.setState(state, cb);
           }
         });
+      }
+
+      if (crowdsaleContract.startsAt) {
+        propsCount++;
+        crowdsaleContract.startsAt.call(function(err, startDate) {
+          cbCount++;
+          if (err) return console.log(err);
+          
+          console.log("startDate: " + startDate*1000);
+          if (!state.crowdsale.startDate || state.crowdsale.startDate > startDate*1000)
+            state.crowdsale.startDate = startDate*1000;
+          if (propsCount == cbCount) {
+            state.loading = false;
+            $this.setState(state, cb);
+          }
+        });
+      }
+
+      if (crowdsaleContract.endBlock) {
+        propsCount++;
+        crowdsaleContract.endBlock.call(function(err, endBlock) {
+          cbCount++;
+          if (err) return console.log(err);
+                     
+          console.log("endBlock: " + endBlock);
+          if (!state.crowdsale.endBlock || state.crowdsale.endBlock < endBlock)
+            state.crowdsale.endBlock = endBlock;
+          web3.eth.getBlockNumber(function(err, curBlock) {
+            if (err) return console.log(err);
+         
+            console.log("curBlock: " + curBlock);
+            var blocksDiff = parseInt($this.state.crowdsale.endBlock, 10) - parseInt(curBlock, 10);
+            console.log("blocksDiff: " + blocksDiff);
+            var blocksDiffInSec = blocksDiff * state.blockTimeGeneration;
+            console.log("blocksDiffInSec: " + blocksDiffInSec); 
+            state.seconds = blocksDiffInSec;
+            if (propsCount == cbCount) {
+              state.loading = false;
+              $this.setState(state, cb);
+            }
+           });
+        });
+      }
+
+      if (crowdsaleContract.endsAt) {
+        propsCount++;
+        crowdsaleContract.endsAt.call(function(err, endDate) {
+          cbCount++;
+          if (err) return console.log(err);
+          
+          console.log("endDate: " + endDate*1000);
+          if (!state.crowdsale.endDate || state.crowdsale.endDate < endDate*1000)
+            state.crowdsale.endDate = endDate*1000;
+          console.log("curDate: " + new Date().getTime());
+          if (propsCount == cbCount) {
+            state.loading = false;
+            $this.setState(state, cb);
+          }
       });
+      }
     });
   }
+}
 
-export function getAccumulativeCrowdsaleData(web3, $this) {
+export function getAccumulativeCrowdsaleData(web3, $this, cb) {
+  let propsCount = 0;
+  let cbCount = 0;
   for (let i = 0; i < $this.state.contracts.crowdsale.addr.length; i++) {
     let crowdsaleAddr = $this.state.contracts.crowdsale.addr[i];
     attachToContract(web3, $this.state.contracts.crowdsale.abi, crowdsaleAddr, function(err, crowdsaleContract) {
       console.log("attach to crowdsale contract");
       if (err) return console.log(err);
       if (!crowdsaleContract) return noContractAlert();
-      let propsCount = 0;
-      let cbCount = 0;
 
       propsCount++;
       crowdsaleContract.weiRaised.call(function(err, weiRaised) {
@@ -267,7 +355,7 @@ export function getAccumulativeCrowdsaleData(web3, $this) {
 
         if (propsCount == cbCount) {
           state.loading = false;
-          $this.setState(state);
+          $this.setState(state, cb);
         }
       });
 
@@ -286,7 +374,7 @@ export function getAccumulativeCrowdsaleData(web3, $this) {
             state.crowdsale.tokenAmountOf = parseInt(tokenAmountOf);
           if (propsCount == cbCount) {
             state.loading = false;
-            $this.setState(state);
+            $this.setState(state, cb);
           }
         });
       }
@@ -309,7 +397,7 @@ export function getAccumulativeCrowdsaleData(web3, $this) {
             state.crowdsale.investors = parseInt(investors);
           if (propsCount == cbCount) {
             state.loading = false;
-            $this.setState(state);
+            $this.setState(state, cb);
           }
         });
       }
@@ -335,8 +423,7 @@ export function getCrowdsaleData(web3, $this, crowdsaleContract, cb) {
       state.pricingStrategy.rate = web3.fromWei(parseInt(rate, 10), "ether");
       if (propsCount == cbCount) {
         state.loading = false;
-        $this.setState(state);
-        cb();
+        $this.setState(state, cb);
       }
     });
   }
@@ -352,8 +439,7 @@ export function getCrowdsaleData(web3, $this, crowdsaleContract, cb) {
       state.crowdsale.supply = supply;
       if (propsCount == cbCount) {
         state.loading = false;
-        $this.setState(state);
-        cb();
+        $this.setState(state, cb);
       }
     });
   }
@@ -369,93 +455,8 @@ export function getCrowdsaleData(web3, $this, crowdsaleContract, cb) {
       state.crowdsale.supply = supply;
       if (propsCount == cbCount) {
         state.loading = false;
-        $this.setState(state);
-        cb();
+        $this.setState(state, cb);
       }
-    });
-  }
-
-  if (crowdsaleContract.startBlock) {
-    propsCount++;
-    crowdsaleContract.startBlock.call(function(err, startBlock) {
-      cbCount++;
-      if (err) return console.log(err); 
-                 
-      console.log("startBlock: " + startBlock);
-      let state = $this.state;
-      state.crowdsale.startBlock = startBlock;
-      if (propsCount == cbCount) {
-        state.loading = false;
-        $this.setState(state);
-        cb();
-      }
-    });
-  }
-
-  if (crowdsaleContract.startsAt) {
-    propsCount++;
-    crowdsaleContract.startsAt.call(function(err, startDate) {
-      cbCount++;
-      if (err) return console.log(err);
-      
-      console.log("startDate: " + startDate*1000);
-      let state = $this.state;
-      state.crowdsale.startDate = startDate*1000;
-      if (propsCount == cbCount) {
-        state.loading = false;
-        $this.setState(state);
-        cb();
-      }
-    });
-  }
-
-  if (crowdsaleContract.endBlock) {
-    propsCount++;
-    crowdsaleContract.endBlock.call(function(err, endBlock) {
-      cbCount++;
-      if (err) return console.log(err);
-                 
-      console.log("endBlock: " + endBlock);
-      let state = $this.state;
-      state.crowdsale.endBlock = endBlock;
-      web3.eth.getBlockNumber(function(err, curBlock) {
-        if (err) return console.log(err);
-     
-        console.log("curBlock: " + curBlock);
-        var blocksDiff = parseInt($this.state.crowdsale.endBlock, 10) - parseInt(curBlock, 10);
-        console.log("blocksDiff: " + blocksDiff);
-        var blocksDiffInSec = blocksDiff * state.blockTimeGeneration;
-        console.log("blocksDiffInSec: " + blocksDiffInSec); 
-        state.seconds = blocksDiffInSec;
-        if (propsCount == cbCount) {
-          state.loading = false;
-          $this.setState(state);
-          cb();
-        }
-       });
-    });
-  }
-
-  if (crowdsaleContract.endsAt) {
-    propsCount++;
-    crowdsaleContract.endsAt.call(function(err, endDate) {
-      cbCount++;
-      if (err) return console.log(err);
-      
-      console.log("endDate: " + endDate*1000);
-      let state = $this.state;
-      state.crowdsale.endDate = endDate*1000;
-      web3.eth.getBlockNumber(function(err, curBlock) {
-        if (err) return console.log(err);
-
-        console.log("curDate: " + new Date().getTime());
-        state.seconds = (state.crowdsale.endDate - new Date().getTime())/1000;
-        if (propsCount == cbCount) {
-          state.loading = false;
-          $this.setState(state);
-          cb();
-        }
-      });
     });
   }
 
@@ -469,8 +470,7 @@ export function getCrowdsaleData(web3, $this, crowdsaleContract, cb) {
     state.contracts.token.addr = tokenAddr;
     if (propsCount == cbCount) {
       state.loading = false;
-      $this.setState(state);
-      cb();
+      $this.setState(state, cb);
     }
 
     if (!tokenAddr || tokenAddr === "0x") return;
@@ -488,8 +488,7 @@ export function getCrowdsaleData(web3, $this, crowdsaleContract, cb) {
       state.contracts.pricingStrategy.addr = pricingStrategyAddr;
       if (propsCount == cbCount) {
         state.loading = false;
-        $this.setState(state);
-        cb();
+        $this.setState(state, cb);
       }
 
       if (!pricingStrategyAddr || pricingStrategyAddr === "0x") return;

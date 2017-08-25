@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
-import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData, getAccumulativeCrowdsaleData, findCurrentContractRecursively } from '../utils/web3'
+import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively } from '../utils/web3'
 import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
 import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert } from '../utils/alerts'
 import { Loader } from './Common/Loader'
@@ -72,7 +72,16 @@ export class Invest extends React.Component {
     if (!$this.state.contracts.crowdsale.addr) return;
     findCurrentContractRecursively(0, $this, web3, function(crowdsaleContract) {
       getCrowdsaleData(web3, $this, crowdsaleContract, function() {
-        getAccumulativeCrowdsaleData(web3, $this);
+        getAccumulativeCrowdsaleData(web3, $this, function() {
+          getCrowdsaleTargetDates(web3, $this, function() {
+            console.log($this.state.crowdsale);
+            if ($this.state.crowdsale.endDate) {
+              let state = $this.state;
+              state.seconds = (state.crowdsale.endDate - new Date().getTime())/1000;
+              $this.setState(state);
+            }
+          })
+        });
       });
     })
   }

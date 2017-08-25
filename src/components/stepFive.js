@@ -1,6 +1,6 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData, getAccumulativeCrowdsaleData, findCurrentContractRecursively } from '../utils/web3'
+import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively } from '../utils/web3'
 import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
 import { noContractAlert } from '../utils/alerts'
 import { StepNavigation } from './Common/StepNavigation'
@@ -66,7 +66,11 @@ export class stepFive extends React.Component {
       	if (!$this.state.contracts.crowdsale.addr) return;
       	findCurrentContractRecursively(0, $this, web3, function(crowdsaleContract) {
 	      getCrowdsaleData(web3, $this, crowdsaleContract, function() {
-	        getAccumulativeCrowdsaleData(web3, $this);
+	        getAccumulativeCrowdsaleData(web3, $this, function() {
+	          getCrowdsaleTargetDates(web3, $this, function() {
+	            
+	          })
+	        });
 	      });
 	    })
       });
