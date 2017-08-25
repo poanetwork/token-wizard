@@ -238,7 +238,7 @@ export const getconstructorParams = (abiConstructor, state, vals) => {
                     params.vals.push(state.crowdsale[0].walletAddress);
                 } break;
                 case "_pricingStrategy": {
-                    params.vals.push(state.contracts.pricingStrategy.addr);
+                    params.vals.push(state.contracts.pricingStrategy.addr[0]);
                 } break;
                 case "_token": {
                     params.vals.push(state.contracts.token.addr);
