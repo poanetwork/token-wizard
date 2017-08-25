@@ -223,19 +223,19 @@ export const getconstructorParams = (abiConstructor, state, vals) => {
             switch(inp.name) {
                 case "_startBlock":
                 case "_start": {
-                    params.vals.push(state.crowdsale.startBlock);
+                    params.vals.push(state.crowdsale[0].startBlock);
                 } break;
                 case "_endBlock":
                 case "_end": {
-                    params.vals.push(state.crowdsale.endBlock);
+                    params.vals.push(state.crowdsale[0].endBlock);
                 } break;
                 case "_rate": {
-                    params.vals.push(state.pricingStrategy.rate);
+                    params.vals.push(state.pricingStrategy[0].rate);
                 } break;
                 case "_wallet":
                 case "_beneficiary":
                 case "_multisigWallet": {
-                    params.vals.push(state.crowdsale.walletAddress);
+                    params.vals.push(state.crowdsale[0].walletAddress);
                 } break;
                 case "_pricingStrategy": {
                     params.vals.push(state.contracts.pricingStrategy.addr);
@@ -244,7 +244,7 @@ export const getconstructorParams = (abiConstructor, state, vals) => {
                     params.vals.push(state.contracts.token.addr);
                 } break;
                 case "_crowdsaleSupply": {
-                    params.vals.push(state.crowdsale.supply);
+                    params.vals.push(state.crowdsale[0].supply);
                 } break;
                 case "_name": {
                     params.vals.push(state.token.name);
@@ -264,7 +264,7 @@ export const getconstructorParams = (abiConstructor, state, vals) => {
                     params.vals.push(true);
                 } break;
                 case "_tranches": {
-                    params.vals.push(state.pricingStrategy.tranches);
+                    params.vals.push(state.pricingStrategy[0].tranches);
                 } break;
                 default: {
                     params.vals.push("");
@@ -318,7 +318,7 @@ const inputFieldIsUnsubmitted = (currentValidation, newValidation) => console.lo
 export const validateValue = (value, property) => {
     let validationFunction = inputFieldValidators[property]
     // console.log('inputFieldValidators', inputFieldValidators, 'property', property)
-    const valueIsValid = validationFunction(value)
+    const valueIsValid = validationFunction?validationFunction(value):true
     // console.log('validationFunction', validationFunction, 'valueIsValid', valueIsValid)
     return  valueIsValid === true ? VALID : INVALID
 }
