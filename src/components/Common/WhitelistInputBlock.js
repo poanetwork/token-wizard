@@ -13,17 +13,22 @@ export class WhitelistInputBlock extends React.Component {
         let oldState = getOldState(props, defaultState)
         this.state = Object.assign({}, oldState)
         let state = this.state
-        state.children = [];
+        state.crowdsale[this.props.crowdsaleNum].whiteListElements = [];
         this.setState(state);
     }
 
-    addWhitelistItem = () => {
-        console.log("fdjsksdjf");
+    addWhitelistItem = (addr, min, max) => {
         let state = this.state
-        state.children.push(<WhitelistItem 
-                addr={"bla"}
-                min={"dfgjdfg"}
-                max={"kfdslfkd"}></WhitelistItem>);
+        let childrenLen = this.state.crowdsale[this.props.crowdsaleNum].whiteListElements.length;
+        state.crowdsale[this.props.crowdsaleNum].whiteListElements.push(<WhitelistItem 
+                addr={addr}
+                min={min}
+                max={max}></WhitelistItem>);
+        state.crowdsale[this.props.crowdsaleNum].whitelist.push({
+            addr,
+            min,
+            max
+        });
         this.setState(state);
     }
 
@@ -47,9 +52,9 @@ export class WhitelistInputBlock extends React.Component {
                 title={MAX} 
                 value={this.props.max} 
                 onChange={(e) => this.props.onChange(e, 'crowdsale', this.props.num, 'whitelist_max')}/>
-              <div className="plus-button-container"><div onClick={this.addWhitelistItem} className="button button_fill button_fill_plus"></div></div>
+              <div className="plus-button-container"><div onClick={(e) => this.addWhitelistItem(this.props.addr, this.props.min, this.props.max)} className="button button_fill button_fill_plus"></div></div>
             </div>
-            {this.state.children}
+            {this.state.crowdsale[this.props.crowdsaleNum].whiteListElements}
             </div>)
     }
 }
