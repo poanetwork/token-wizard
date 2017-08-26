@@ -32,7 +32,7 @@ export class stepThree extends stepTwo {
     console.log(newState.children);
     let num = newState.children.length + 1;
     console.log(num);
-    newState.crowdsale.push({whitelist:[{}]});
+    newState.crowdsale.push({whitelist:[{}], whiteListInput:{}});
     newState.crowdsale[num].startTime = newState.crowdsale[num - 1].endTime
     newState.pricingStrategy.push({});
     this.setState(newState, () => this.addCrowdsaleBlock(num));
@@ -243,10 +243,7 @@ export class stepThree extends stepTwo {
               <p className="title">Whitelist</p>
             </div>
             <WhitelistInputBlock
-              addr={this.state.crowdsale[0].whitelist[0].addr}
-              min={this.state.crowdsale[0].whitelist[0].min}
-              max={this.state.crowdsale[0].whitelist[0].max}
-              crowdsaleNum={0}
+              num={0}
               onChange={(e, cntrct, num, prop) => this.changeState(e, cntrct, 0, prop)}
             ></WhitelistInputBlock>
           </div>

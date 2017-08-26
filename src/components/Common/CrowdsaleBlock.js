@@ -66,9 +66,6 @@ export const CrowdsaleBlock = ({num, state, onChange}) => {
             </div>
             <WhitelistInputBlock
               num = {num}
-              addr={state.crowdsale[num].whitelist[0].addr}
-              min={state.crowdsale[num].whitelist[0].min}
-              max={state.crowdsale[num].whitelist[0].max}
               onChange={(e, cntrct, num, prop) => onChange(e, cntrct, num, prop)}
             ></WhitelistInputBlock>
           </div>

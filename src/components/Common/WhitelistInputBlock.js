@@ -13,18 +13,18 @@ export class WhitelistInputBlock extends React.Component {
         let oldState = getOldState(props, defaultState)
         this.state = Object.assign({}, oldState)
         let state = this.state
-        state.crowdsale[this.props.crowdsaleNum].whiteListElements = [];
+        state.crowdsale[this.props.num].whiteListElements = [];
         this.setState(state);
     }
 
     addWhitelistItem = (addr, min, max) => {
         let state = this.state
-        let childrenLen = this.state.crowdsale[this.props.crowdsaleNum].whiteListElements.length;
-        state.crowdsale[this.props.crowdsaleNum].whiteListElements.push(<WhitelistItem 
+        let childrenLen = this.state.crowdsale[this.props.num].whiteListElements.length;
+        state.crowdsale[this.props.num].whiteListElements.push(<WhitelistItem 
                 addr={addr}
                 min={min}
                 max={max}></WhitelistItem>);
-        state.crowdsale[this.props.crowdsaleNum].whitelist.push({
+        state.crowdsale[this.props.num].whitelist.push({
             addr,
             min,
             max
@@ -38,23 +38,23 @@ export class WhitelistInputBlock extends React.Component {
                 side='white-list-input-property-left' 
                 type='text' 
                 title={ADDRESS} 
-                value={this.props.addr} 
+                value={this.state.crowdsale[this.props.num].whiteListInput.addr} 
                 onChange={(e) => this.props.onChange(e, 'crowdsale', this.props.num, 'whitelist_addr')}/>
               <InputField 
                 side='white-list-input-property-middle' 
                 type='number' 
                 title={MIN} 
-                value={this.props.min} 
+                value={this.state.crowdsale[this.props.num].whiteListInput.min} 
                 onChange={(e) => this.props.onChange(e, 'crowdsale', this.props.num, 'whitelist_min')}/>
               <InputField 
                 side='white-list-input-property-right'
                 type='number' 
                 title={MAX} 
-                value={this.props.max} 
+                value={this.state.crowdsale[this.props.num].whiteListInput.max} 
                 onChange={(e) => this.props.onChange(e, 'crowdsale', this.props.num, 'whitelist_max')}/>
-              <div className="plus-button-container"><div onClick={(e) => this.addWhitelistItem(this.props.addr, this.props.min, this.props.max)} className="button button_fill button_fill_plus"></div></div>
+              <div className="plus-button-container"><div onClick={(e) => this.addWhitelistItem(this.state.crowdsale[this.props.num].whiteListInput.addr, this.state.crowdsale[this.props.num].whiteListInput.min, this.state.crowdsale[this.props.num].whiteListInput.max)} className="button button_fill button_fill_plus"></div></div>
             </div>
-            {this.state.crowdsale[this.props.crowdsaleNum].whiteListElements}
+            {this.state.crowdsale[this.props.num].whiteListElements}
             </div>)
     }
 }
