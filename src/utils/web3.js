@@ -1,6 +1,7 @@
 import Web3 from 'web3';
 import { incorrectNetworkAlert, noContractAlert } from './alerts'
 import { getEncodedABI } from './microservices'
+import { findCurrentContractRecursively as findCurrentContractRecursively2 } from './web3'
 
 // instantiate new web3 instance
 const web3 = new Web3();
@@ -243,7 +244,6 @@ export function transferOwnership(web3, abi, addr, finalizeAgentAddr, cb) {
 }
 
 export function findCurrentContractRecursively(i, $this, web3, cb) {
-  let $this2 = this;
   console.log($this.state.contracts.crowdsale.addr);
   let crowdsaleAddr = $this.state.contracts.crowdsale.addr[i];
   attachToContract(web3, $this.state.contracts.crowdsale.abi, crowdsaleAddr, function(err, crowdsaleContract) {
@@ -268,7 +268,7 @@ export function findCurrentContractRecursively(i, $this, web3, cb) {
           cb(crowdsaleContract);
         } else {
           i++;
-          $this2.findCurrentContractRecursively(i, $this, web3, cb);
+          findCurrentContractRecursively2(i, $this, web3, cb);
         }
       });
     });
