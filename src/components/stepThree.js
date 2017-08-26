@@ -7,7 +7,7 @@ import { getOldState, defaultCompanyStartDate, defaultCompanyEndDate, stepsAreVa
 import { StepNavigation } from './Common/StepNavigation'
 import { InputField } from './Common/InputField'
 import { CrowdsaleBlock } from './Common/CrowdsaleBlock'
-import { WhitelistBlock } from './Common/WhitelistBlock'
+import { WhitelistInputBlock } from './Common/WhitelistInputBlock'
 import { NAVIGATION_STEPS, defaultState, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS } from '../utils/constants'
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
@@ -115,7 +115,7 @@ export class stepThree extends stepTwo {
   render() {
     const { validations } = this.state
     console.log('333 validations', validations)
-    if (this.state.contractType == this.state.contractTypes.standard) {
+    /*if (this.state.contractType == this.state.contractTypes.standard) {
       return (
         <section className="steps steps_crowdsale-contract" ref="three">
           <StepNavigation activeStep={CROWDSALE_SETUP}/>
@@ -177,7 +177,7 @@ export class stepThree extends stepTwo {
           </div>
         </section>
       )
-    } else if (this.state.contractType == this.state.contractTypes.whitelistwithcap) {
+    } else if (this.state.contractType == this.state.contractTypes.whitelistwithcap) {*/
       return (
         <section className="steps steps_crowdsale-contract" ref="three">
           <StepNavigation activeStep={CROWDSALE_SETUP}/>
@@ -242,12 +242,12 @@ export class stepThree extends stepTwo {
             <div className="white-list-title">
               <p className="title">Whitelist</p>
             </div>
-            <WhitelistBlock
+            <WhitelistInputBlock
               addr={this.state.crowdsale[0].whitelist[0].addr}
               min={this.state.crowdsale[0].whitelist[0].min}
               max={this.state.crowdsale[0].whitelist[0].max}
               onChange={(e, cntrct, num, prop) => this.changeState(e, cntrct, 0, prop)}
-            ></WhitelistBlock>
+            ></WhitelistInputBlock>
           </div>
           <div>{this.state.children}</div>
           <div className="button-container">
@@ -255,6 +255,6 @@ export class stepThree extends stepTwo {
           </div>
         </section>
       )
-    }
+    //}
   }
 }

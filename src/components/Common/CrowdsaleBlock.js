@@ -1,6 +1,6 @@
 import React from 'react'
 import '../../assets/stylesheets/application.css';
-import { WhitelistBlock } from './WhitelistBlock'
+import { WhitelistInputBlock } from './WhitelistInputBlock'
 
 import { InputField } from './InputField'
 
@@ -64,12 +64,12 @@ export const CrowdsaleBlock = ({num, state, onChange}) => {
             <div className="white-list-title">
               <p className="title">Whitelist</p>
             </div>
-            <WhitelistBlock
+            <WhitelistInputBlock
               num = {num}
               addr={state.crowdsale[num].whitelist[0].addr}
               min={state.crowdsale[num].whitelist[0].min}
               max={state.crowdsale[num].whitelist[0].max}
               onChange={(e, cntrct, num, prop) => onChange(e, cntrct, num, prop)}
-            ></WhitelistBlock>
+            ></WhitelistInputBlock>
           </div>
 }
