@@ -24,5 +24,6 @@ export const WhitelistBlock = ({num, addr, min, max, onChange}) => {
                 title={MAX} 
                 value={max} 
                 onChange={(e) => onChange(e, 'crowdsale', num, 'whitelist_max')}/>
+              <div className="plus-button-container"><div onClick={() => {}} className="button button_fill button_fill_plus"></div></div>
             </div>
 }
