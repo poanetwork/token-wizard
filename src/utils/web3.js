@@ -150,6 +150,9 @@ export function setMintAgent(web3, abi, addr, acc, cb) {
 export function addWhiteList(web3, whitelist, abi, addr, cb) {
   console.log("###whitelist:###");
   console.log(whitelist);
+  if (whitelist.length == 0) {
+    return cb();
+  }
   attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
     console.log("attach to crowdsale contract");
     if (err) return console.log(err);
