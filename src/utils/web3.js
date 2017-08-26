@@ -147,8 +147,14 @@ export function setMintAgent(web3, abi, addr, acc, cb) {
   });
 }
 
-export function addWhiteList(web3, whitelist, abi, addr, cb) {
+export function addWhiteList(round, web3, crowdsale, abi, addr, cb) {
   console.log("###whitelist:###");
+  let whitelist = [];
+  for (let i = 0; i <= round; i++) {
+    console.log(crowdsale[i]);
+    console.log(crowdsale[i].whitelist);
+    whitelist.push.apply(whitelist, crowdsale[i].whitelist);
+  }
   console.log(whitelist);
   if (whitelist.length == 0) {
     return cb();
@@ -158,10 +164,31 @@ export function addWhiteList(web3, whitelist, abi, addr, cb) {
     if (err) return console.log(err);
     if (!crowdsaleContract) return noContractAlert();
 
-    crowdsaleContract.setEarlyParicipantWhitelist.sendTransaction(whitelist[0].addr, true, whitelist[0].min, whitelist[0].max, function(err, result) {
+    let addrs = [];
+    let statuses = [];
+    let minCaps = [];
+    let maxCaps = [];
+
+    for (let i = 0; i < whitelist.length; i++) {
+      addrs.push(whitelist[i].addr);
+      statuses.push(true);
+      minCaps.push(whitelist[i].min);
+      maxCaps.push(whitelist[i].max);
+    }
+
+    console.log("addrs:");
+    console.log(addrs);
+    console.log("statuses:");
+    console.log(statuses);
+    console.log("minCaps:");
+    console.log(minCaps);
+    console.log("maxCaps:");
+    console.log(maxCaps);
+
+    crowdsaleContract.setEarlyParicipantsWhitelist.sendTransaction(addrs, statuses, minCaps, maxCaps, function(err, result) {
       if (err) return console.log(err);
 
-      console.log("setEarlyParicipantWhitelist function transaction: " + result);
+      console.log("setEarlyParicipantsWhitelist function transaction: " + result);
       cb();
     });
   });
@@ -216,6 +243,8 @@ export function transferOwnership(web3, abi, addr, finalizeAgentAddr, cb) {
 }
 
 export function findCurrentContractRecursively(i, $this, web3, cb) {
+  let $this2 = this;
+  console.log($this.state.contracts.crowdsale.addr);
   let crowdsaleAddr = $this.state.contracts.crowdsale.addr[i];
   attachToContract(web3, $this.state.contracts.crowdsale.abi, crowdsaleAddr, function(err, crowdsaleContract) {
     console.log("attach to crowdsale contract");
@@ -239,7 +268,7 @@ export function findCurrentContractRecursively(i, $this, web3, cb) {
           cb(crowdsaleContract);
         } else {
           i++;
-          $this.findCurrentContractRecursively(i, $this, web3, cb);
+          $this2.findCurrentContractRecursively(i, $this, web3, cb);
         }
       });
     });

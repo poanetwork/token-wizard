@@ -18,6 +18,19 @@ export class WhitelistInputBlock extends React.Component {
     }
 
     addWhitelistItem = (addr, min, max) => {
+        if (!addr || !min || !max) return;
+
+        let isAdded = false;
+        for (let i = 0; i < this.state.crowdsale[this.props.num].whitelist.length; i++) {
+            let addedAddr = this.state.crowdsale[this.props.num].whitelist[i].addr;
+            if (addedAddr == addr) {
+                isAdded = true;
+                break;
+            }
+        }
+
+        if (isAdded) return;
+
         let state = this.state
         let childrenLen = this.state.crowdsale[this.props.num].whiteListElements.length;
         state.crowdsale[this.props.num].whiteListElements.push(<WhitelistItem 
