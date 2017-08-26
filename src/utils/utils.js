@@ -240,7 +240,7 @@ export const findConstructor = (abiCrowdsale) => {
     return abiConstructor
 }
 
-export const getconstructorParams = (abiConstructor, state, vals) => {
+export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) => {
     let params = {"types": [], "vals": []};
     if (!abiConstructor) return params;
     for (let j = 0; j < abiConstructor.length; j++) {
@@ -250,30 +250,34 @@ export const getconstructorParams = (abiConstructor, state, vals) => {
             params.vals.push(vals[j]);
         } else {
             switch(inp.name) {
-                case "_startBlock":
-                case "_start": {
-                    params.vals.push(state.crowdsale[0].startBlock);
+                case "_startBlock": {
+                    params.vals.push(state.crowdsale[crowdsaleNum].startBlock);
                 } break;
-                case "_endBlock":
+                case "_start": {
+                    params.vals.push(new Date(state.crowdsale[crowdsaleNum].startTime).getTime()/1000);
+                } break;
+                case "_endBlock": {
+                    params.vals.push(state.crowdsale[crowdsaleNum].endBlock);
+                } break;
                 case "_end": {
-                    params.vals.push(state.crowdsale[0].endBlock);
+                    params.vals.push(new Date(state.crowdsale[crowdsaleNum].endTime).getTime()/1000);
                 } break;
                 case "_rate": {
-                    params.vals.push(state.pricingStrategy[0].rate);
+                    params.vals.push(state.pricingStrategy[crowdsaleNum].rate);
                 } break;
                 case "_wallet":
                 case "_beneficiary":
                 case "_multisigWallet": {
-                    params.vals.push(state.crowdsale[0].walletAddress);
+                    params.vals.push(state.crowdsale[crowdsaleNum].walletAddress);
                 } break;
                 case "_pricingStrategy": {
-                    params.vals.push(state.contracts.pricingStrategy.addr[0]);
+                    params.vals.push(state.contracts.pricingStrategy.addr[crowdsaleNum]);
                 } break;
                 case "_token": {
                     params.vals.push(state.contracts.token.addr);
                 } break;
                 case "_crowdsaleSupply": {
-                    params.vals.push(state.crowdsale[0].supply);
+                    params.vals.push(state.crowdsale[crowdsaleNum].supply);
                 } break;
                 case "_name": {
                     params.vals.push(state.token.name);
@@ -296,7 +300,7 @@ export const getconstructorParams = (abiConstructor, state, vals) => {
                     params.vals.push(true);
                 } break;
                 case "_tranches": {
-                    params.vals.push(state.pricingStrategy[0].tranches);
+                    params.vals.push(state.pricingStrategy[crowdsaleNum].tranches);
                 } break;
                 case "_secondsTimeLocked": {
                   params.vals.push(1)
@@ -309,7 +313,7 @@ export const getconstructorParams = (abiConstructor, state, vals) => {
                 } break;
                 case "_owners": {
                   let owners = [];
-                  owners.push(state.crowdsale[0].walletAddress);
+                  owners.push(state.crowdsale[crowdsaleNum].walletAddress);
                   params.vals.push(owners)
                 } break;
                 default: {

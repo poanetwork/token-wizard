@@ -583,9 +583,9 @@ export function getNetworkVersion(web3, cb) {
   });
 }
 
-export function deployContract(web3, abi, bin, params, state, cb) {
+export function deployContract(i, web3, abi, bin, params, state, cb) {
   console.log('web3.eth.accounts[0]', web3.eth.accounts[0], 'bin', bin)
-  getEncodedABI(abi, state, params, (ABIencoded) => {
+  getEncodedABI(abi, state, params, i, (ABIencoded) => {
     console.log(ABIencoded);
     let binFull = bin + ABIencoded.substr(2);
     web3.eth.estimateGas({

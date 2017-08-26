@@ -25,7 +25,7 @@ export class stepFour extends stepTwo {
       case this.state.contractTypes.standard: {
         let $this = this;
         let abiCrowdsale = this.state.contracts && this.state.contracts.crowdsale && this.state.contracts.crowdsale.abi || []
-        getEncodedABI(abiCrowdsale, this.state, [], (ABIencoded) => {
+        getEncodedABI(abiCrowdsale, this.state, [], 0, (ABIencoded) => {
           let cntrct = "crowdsale";
           let state = { ...$this.state }
           state.contracts[cntrct].abiConstructor.push(ABIencoded);
@@ -46,7 +46,7 @@ export class stepFour extends stepTwo {
            getWeb3((web3) => {
             state.web3 = web3;
             $this.setState(state);
-            getEncodedABI(abiToken, state, [], (ABIencoded) => {
+            getEncodedABI(abiToken, state, [], 0, (ABIencoded) => {
               let cntrct = "token";
               let state = { ...$this.state }
               state.contracts[cntrct].abiConstructor = ABIencoded;
@@ -54,14 +54,16 @@ export class stepFour extends stepTwo {
               console.log(ABIencoded);
               $this.setState(state);
             });
-            getEncodedABI(abiPricingStrategy, state, [], (ABIencoded) => {
-              let cntrct = "pricingStrategy";
-              let state = { ...$this.state }
-              state.contracts[cntrct].abiConstructor.push(ABIencoded);
-              console.log(cntrct + " ABI encoded params constructor:");
-              console.log(ABIencoded);
-              $this.setState(state);
-            });
+            for (let i = 0; i < $this.state.pricingStrategy.length; i++) {
+              getEncodedABI(abiPricingStrategy, state, [], i, (ABIencoded) => {
+                let cntrct = "pricingStrategy";
+                let state = { ...$this.state }
+                state.contracts[cntrct].abiConstructor.push(ABIencoded);
+                console.log(cntrct + " ABI encoded params constructor:");
+                console.log(ABIencoded);
+                $this.setState(state);
+              });
+            }
 
             $this.deployTokenTransferProxy();
           });
@@ -82,7 +84,7 @@ export class stepFour extends stepTwo {
       var binTokenTransferProxy = contracts && contracts.tokenTransferProxy && contracts.tokenTransferProxy.bin || ''
       var abiTokenTransferProxy = contracts && contracts.tokenTransferProxy && contracts.tokenTransferProxy.abi || []
       var tokenTransferProxy = this.state.tokenTransferProxy;
-      deployContract(this.state.web3, abiTokenTransferProxy, binTokenTransferProxy, [], this.state, this.handleDeployedTokenTransferProxy)
+      deployContract(0, this.state.web3, abiTokenTransferProxy, binTokenTransferProxy, [], this.state, this.handleDeployedTokenTransferProxy)
      });
   }
 
@@ -109,7 +111,7 @@ export class stepFour extends stepTwo {
       var multisig = this.state.multisig;
       var paramsMultisig = this.getMultisigParams(this.state.web3)
       console.log(paramsMultisig);
-      deployContract(this.state.web3, abiMultisig, binMultisig, paramsMultisig, this.state, this.handleDeployedMultisig)
+      deployContract(0, this.state.web3, abiMultisig, binMultisig, paramsMultisig, this.state, this.handleDeployedMultisig)
      });
   }
 
@@ -145,7 +147,7 @@ export class stepFour extends stepTwo {
       var token = this.state.token;
       var paramsToken = this.getTokenParams(this.state.web3, token)
       console.log(paramsToken);
-      deployContract(this.state.web3, abiToken, binToken, paramsToken, this.state, this.handleDeployedToken)
+      deployContract(0, this.state.web3, abiToken, binToken, paramsToken, this.state, this.handleDeployedToken)
      });
   }
 
@@ -190,7 +192,7 @@ export class stepFour extends stepTwo {
     console.log("getPricingStrategyParams:");
     console.log(paramsPricingStrategy);
     if (i < pricingStrategies.length - 1) {
-      deployContract(this.state.web3, abiPricingStrategy, binPricingStrategy, paramsPricingStrategy, this.state, (err, pricingStrategyAddr) => {
+      deployContract(i, this.state.web3, abiPricingStrategy, binPricingStrategy, paramsPricingStrategy, this.state, (err, pricingStrategyAddr) => {
         i++;
         let newState = { ...this.state }
         if (err) {
@@ -203,7 +205,7 @@ export class stepFour extends stepTwo {
         this.deployPricingStrategyRecursive(i, pricingStrategies, binPricingStrategy, abiPricingStrategy);
       })
     } else {
-      deployContract(this.state.web3, abiPricingStrategy, binPricingStrategy, paramsPricingStrategy, this.state, this.handleDeployedPricingStrategy)
+      deployContract(i, this.state.web3, abiPricingStrategy, binPricingStrategy, paramsPricingStrategy, this.state, this.handleDeployedPricingStrategy)
     }
   }
 
@@ -274,14 +276,16 @@ export class stepFour extends stepTwo {
     this.setState(newState);
     let $this = this;
     let abiCrowdsale = this.state.contracts && this.state.contracts.crowdsale && this.state.contracts.crowdsale.abi || []
-    getEncodedABI(abiCrowdsale, newState, [], (ABIencoded) => {
-      let cntrct = "crowdsale";
-      let state = { ...$this.state }
-      state.contracts[cntrct].abiConstructor.push(ABIencoded);
-      console.log(cntrct + " ABI encoded params constructor:");
-      console.log(ABIencoded);
-      $this.setState(state);
-    });
+    for (let i = 0; i < this.state.crowdsale.length; i++) {
+      getEncodedABI(abiCrowdsale, newState, [], i, (ABIencoded) => {
+        let cntrct = "crowdsale";
+        let state = { ...$this.state }
+        state.contracts[cntrct].abiConstructor.push(ABIencoded);
+        console.log(cntrct + " ABI encoded params constructor:");
+        console.log(ABIencoded);
+        $this.setState(state);
+      });
+    }
   }
 
   goToCrowdsalePage = () => {
@@ -333,7 +337,7 @@ export class stepFour extends stepTwo {
     }
     console.log(paramsCrowdsale);
     if (i < crowdsales.length - 1) {
-      deployContract(this.state.web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, this.state, (err, crowdsaleAddr) => {
+      deployContract(i, this.state.web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, this.state, (err, crowdsaleAddr) => {
         i++;
         let newState = { ...this.state }
         if (err) {
@@ -346,7 +350,7 @@ export class stepFour extends stepTwo {
         this.deployCrowdsaleRecursive(i, crowdsales, binCrowdsale, abiCrowdsale);
       })
     } else {
-      deployContract(this.state.web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, this.state, this.handleDeployedContract)
+      deployContract(i, this.state.web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, this.state, this.handleDeployedContract)
     }
   }
 
@@ -429,7 +433,7 @@ export class stepFour extends stepTwo {
     var paramsFinalizeAgent = this.getFinalizeAgentParams(this.state.web3, i)
     console.log(paramsFinalizeAgent);
     if (i < crowdsales.length - 1) {
-      deployContract(web3, abi, bin, paramsFinalizeAgent, state, (err, finalizeAgentAddr) => {
+      deployContract(i, web3, abi, bin, paramsFinalizeAgent, state, (err, finalizeAgentAddr) => {
         i++;
         let newState = { ...this.state }
         if (err) {
@@ -442,7 +446,7 @@ export class stepFour extends stepTwo {
         this.deployFinalizeAgentRecursive(i, crowdsales, web3, abi, bin, state)
       })
     } else {
-      deployContract(web3, abi, bin, paramsFinalizeAgent, state, this.handleDeployedFinalizeAgent)
+      deployContract(i, web3, abi, bin, paramsFinalizeAgent, state, this.handleDeployedFinalizeAgent)
     }
 
   }
