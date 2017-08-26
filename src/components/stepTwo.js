@@ -24,9 +24,20 @@ export class stepTwo extends React.Component {
   }
   
    setBlockTimes (event, key, property) {
+    let newState = Object.assign({}, this.state)
     let targetTime = new Date(event.target.value);
+    let targetTimeTemp = new Date(targetTime).setUTCHours(new Date(targetTime).getHours());
+    if (property == "startTime") {
+      newState.crowdsale[key].startTime = new Date(targetTimeTemp).toISOString().split(".")[0];
+    } else if (property == "endTime") {
+      newState.crowdsale[key].endTime = new Date(targetTimeTemp).toISOString().split(".")[0];
+      if (newState.crowdsale[key + 1]) {
+        newState.crowdsale[key + 1].startTime = newState.crowdsale[key].endTime;
+        let newEndDate = new Date(newState.crowdsale[key].endTime).setDate(new Date(newState.crowdsale[key].endTime).getDate() + 4);;
+        newState.crowdsale[key + 1].endTime = new Date(newEndDate).toISOString().split(".")[0];;
+      }
+    }
     calculateFutureBlock(targetTime, this.state.blockTimeGeneration, (targetBlock) => {
-      let newState = Object.assign({}, this.state)
       if (property == "startTime") {
         newState.crowdsale[key].startBlock = targetBlock;
         console.log("startBlock: " + newState.crowdsale[key].startBlock);

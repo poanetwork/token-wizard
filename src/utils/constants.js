@@ -1,15 +1,14 @@
 export const defaultState = { 
 	contracts: { 
 		token: {}, 
-		crowdsale: {},
-		pricingStrategy: {},
+		crowdsale: {addr:[]},
+		pricingStrategy: {addr:[]},
 		multisig: {},
 		finalizeAgent: {},
 		tokenTransferProxy: {}
 	}, 
 	token: {},
 	crowdsale: [{whitelist:[{}]}],
-	//pricingStrategy: {tranches: [0, 2272727272727, 45000000000000000000000, 2380952380952, 90000000000000000000000, 2500000000000, 999999999999999000000000000000000, 0]},
 	pricingStrategy: [{}],
 	blockTimeGeneration: 17,
 	contractType: "",
@@ -52,7 +51,8 @@ export const TEXT_FIELDS = {
 	CROWDSALE_SETUP_NAME: 'Crowdsale setup name',
 	ADDRESS: 'Address',
 	MIN: 'Min',
-	MAX: 'Max'
+	MAX: 'Max',
+	MAX_CAP: 'Max cap'
 }
 
 export const VALIDATION_TYPES = {

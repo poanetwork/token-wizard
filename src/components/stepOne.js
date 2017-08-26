@@ -78,7 +78,9 @@ export class stepOne extends React.Component {
     state.contracts[contract] = {
       src,
       bin,
-      abi: JSON.parse(abi)
+      abi: JSON.parse(abi),
+      addr: (contract=="crowdsale" || contract=="pricingStrategy" || contract=="finalizeAgent")?[]:"",
+      abiConstructor: (contract=="crowdsale" || contract=="pricingStrategy" || contract=="finalizeAgent")?[]:""
     }
     this.setState(state)
   }

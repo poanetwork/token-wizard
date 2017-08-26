@@ -1,7 +1,7 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData } from '../utils/web3'
-import { getQueryVariable, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
+import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively } from '../utils/web3'
+import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
 import { noContractAlert } from '../utils/alerts'
 import { StepNavigation } from './Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../utils/constants'
@@ -20,7 +20,10 @@ export class stepFive extends React.Component {
 		let newState = { ...this.state }
 	    newState.loading = true;
 	    this.setState(newState);
-		const crowdsaleAddr = getQueryVariable("addr");
+		const crowdsaleAddrs = getURLParam("addr");
+		let crowdsaleAddr;
+		if (crowdsaleAddrs.length == 1)
+			crowdsaleAddr = crowdsaleAddr[0];
 		const networkID = getQueryVariable("networkID");
 		const contractType = getQueryVariable("contractType");
 		var $this = this;
@@ -29,7 +32,7 @@ export class stepFive extends React.Component {
 				var state = $this.state;
 				state.web3 = web3;
       			checkNetWorkByID(web3, networkID);
-			    state.contracts.crowdsale.addr = crowdsaleAddr;
+			    state.contracts.crowdsale.addr = crowdsaleAddrs;
 			    state.contracts.crowdsale.networkID = networkID;
 			    state.contracts.crowdsale.contractType = contractType;
 
@@ -61,14 +64,25 @@ export class stepFive extends React.Component {
       state.web3 = web3;
       $this.setState(state, () => {
       	if (!$this.state.contracts.crowdsale.addr) return;
-      	getCrowdsaleData(web3, $this);
+      	findCurrentContractRecursively(0, $this, web3, function(crowdsaleContract) {
+	      getCrowdsaleData(web3, $this, crowdsaleContract, function() {
+	        getAccumulativeCrowdsaleData(web3, $this, function() {
+	          getCrowdsaleTargetDates(web3, $this, function() {
+	            
+	          })
+	        });
+	      });
+	    })
       });
   	}
 
   	goToInvestPage = () => {
   		let queryStr = "";
   		if (this.state.contracts.crowdsale.addr) {
-  			queryStr = "?addr=" + this.state.contracts.crowdsale.addr;
+  			queryStr = "?addr=" + this.state.contracts.crowdsale.addr[0];
+  			for (let i = 1; i < this.state.contracts.crowdsale.addr.length; i++) {
+		      queryStr += `&addr=` + this.state.contracts.crowdsale.addr[i]
+		    }
   			if (this.state.contracts.crowdsale.networkID)
   				queryStr += "&networkID=" + this.state.contracts.crowdsale.networkID;
   			if (this.state.contracts.crowdsale.contractType)
@@ -100,7 +114,7 @@ export class stepFive extends React.Component {
 							</p>
 						</div>
 						<div className="right">
-							<p className="total-funds-title">{this.state.pricingStrategy.rate?isNaN(this.state.crowdsale.supply*this.state.pricingStrategy.rate)?0:(this.state.crowdsale.supply*this.state.pricingStrategy.rate):0} ETH</p>
+							<p className="total-funds-title">{this.state.pricingStrategy.rate?isNaN(this.state.token.supply*this.state.pricingStrategy.rate)?0:(this.state.token.supply*this.state.pricingStrategy.rate):0} ETH</p>
 							<p className="total-funds-description">
 								Goal
 							</p>
@@ -118,7 +132,7 @@ export class stepFive extends React.Component {
 					<div className="total-funds-chart-division"></div>
 					<div className="total-funds-chart-division"></div>
 					<div className="total-funds-chart">
-						<div className="total-funds-chart-active" style={{width : (this.state.crowdsale.supply?this.state.crowdsale.weiRaised/this.state.crowdsale.supply:"0") + "%"}}></div>
+						<div className="total-funds-chart-active" style={{width : (this.state.token.supply?this.state.crowdsale.weiRaised/this.state.token.supply:"0") + "%"}}></div>
 					</div>
 				</div>
 				<div className="total-funds-statistics">
@@ -152,7 +166,7 @@ export class stepFive extends React.Component {
 									</p>
 								</div>
 								<div className="right">
-									<p className="title">{this.state.crowdsale.supply?this.state.crowdsale.supply.toString():0}</p>
+									<p className="title">{this.state.token.supply?this.state.token.supply.toString():0}</p>
 									<p className="description">
 										Total Supply
 									</p>
