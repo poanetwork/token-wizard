@@ -7,7 +7,7 @@ import { getOldState, defaultCompanyStartDate, defaultCompanyEndDate, stepsAreVa
 import { StepNavigation } from './Common/StepNavigation'
 import { InputField } from './Common/InputField'
 import { CrowdsaleBlock } from './Common/CrowdsaleBlock'
-import { WhitelistBlock } from './Common/WhitelistBlock'
+import { WhitelistInputBlock } from './Common/WhitelistInputBlock'
 import { NAVIGATION_STEPS, defaultState, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS } from '../utils/constants'
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
@@ -32,7 +32,7 @@ export class stepThree extends stepTwo {
     console.log(newState.children);
     let num = newState.children.length + 1;
     console.log(num);
-    newState.crowdsale.push({whitelist:[{}]});
+    newState.crowdsale.push({whitelist:[], whiteListInput:{}});
     newState.crowdsale[num].startTime = newState.crowdsale[num - 1].endTime
     newState.pricingStrategy.push({});
     this.setState(newState, () => this.addCrowdsaleBlock(num));
@@ -242,12 +242,10 @@ export class stepThree extends stepTwo {
             <div className="white-list-title">
               <p className="title">Whitelist</p>
             </div>
-            <WhitelistBlock
-              addr={this.state.crowdsale[0].whitelist[0].addr}
-              min={this.state.crowdsale[0].whitelist[0].min}
-              max={this.state.crowdsale[0].whitelist[0].max}
+            <WhitelistInputBlock
+              num={0}
               onChange={(e, cntrct, num, prop) => this.changeState(e, cntrct, 0, prop)}
-            ></WhitelistBlock>
+            ></WhitelistInputBlock>
           </div>
           <div>{this.state.children}</div>
           <div className="button-container">

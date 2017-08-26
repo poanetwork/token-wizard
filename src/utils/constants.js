@@ -8,7 +8,7 @@ export const defaultState = {
 		tokenTransferProxy: {}
 	}, 
 	token: {},
-	crowdsale: [{whitelist:[{}]}],
+	crowdsale: [{whitelist:[], whiteListInput: {}}],
 	pricingStrategy: [{}],
 	blockTimeGeneration: 17,
 	contractType: "",
