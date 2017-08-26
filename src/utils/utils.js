@@ -112,7 +112,7 @@ export const getOldState = (props, defaultState) => props && props.location && p
 
 export const getStepClass = (step, activeStep) => step === activeStep ? "step-navigation step-navigation_active" : "step-navigation"
 
-export const stepsAreValid = (steps) => Object.values(steps).every(step => step === VALID)
+export const stepsAreValid = (steps) => console.log('Object.values(steps).every(step => step === VALID)', Object.values(steps).every(step => step === VALID)) || Object.values(steps).every(step => step === VALID)
 
 const validateName = (name) => typeof name === 'string' && name.length > 0 && name.length < 27
 
@@ -144,29 +144,24 @@ const inputFieldValidators = {
     rate: validateRate
 }
 
-const inputFieldIsUnsubmitted = (currentValidation, newValidation) => console.log('currentValidation, newValidation', currentValidation, newValidation) || currentValidation === EMPTY
+const inputFieldIsUnsubmitted = (currentValidation, newValidation) => currentValidation === EMPTY
 
 export const validateValue = (value, property) => {
-    let validationFunction = inputFieldValidators[property]
-    // console.log('inputFieldValidators', inputFieldValidators, 'property', property)
-    const valueIsValid = validationFunction(value)
-    // console.log('validationFunction', validationFunction, 'valueIsValid', valueIsValid)
-    return  valueIsValid === true ? VALID : INVALID
+    if(property !== 'startBlock' && property !== 'endBlock') {
+        let validationFunction = inputFieldValidators[property]
+        const valueIsValid = validationFunction(value)
+        return  valueIsValid === true ? VALID : INVALID
+    }
 }
-
-export const getValidationValue = (value, property, state) => {
-    let currentValidation = state[`validations`][property]  
-    let newValidation = validateValue(value, property)
-    return inputFieldIsUnsubmitted(currentValidation, newValidation) ? EMPTY : newValidation
-} 
 
 export const getNewValue = (value, property) => property === "startTime" || property === "endTime" ? getTimeAsNumber(value) : value
 
 export const allFieldsAreValid = (parent, state) => {
     let newState = { ...state }
-    // console.log('validateAllFields', state)
-    let properties = Object.keys(newState.validations)
-    let values = properties.map(property => newState[parent][property])
-    console.log('values.find(value => value === INVALID ) === undefined', values.find(value => value === INVALID ) === undefined)
-    return values.find(value => value === INVALID ) === undefined
+    let properties = Object.keys(newState[parent])
+    let validationValues = properties.filter(property => property !== 'startBlock' && property !== 'endBlock' ).map(property => {
+        let value = newState[parent][property]
+        return validateValue(value, property)
+    })
+    return validationValues.find(value => value === INVALID) === undefined
 }

@@ -6,7 +6,7 @@ import { stepTwo } from './stepTwo'
 import { getOldState, defaultCompanyStartDate, defaultCompanyEndDate, stepsAreValid, allFieldsAreValid } from '../utils/utils'
 import { StepNavigation } from './Common/StepNavigation'
 import { InputField } from './Common/InputField'
-import { NAVIGATION_STEPS, defaultState, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS } from '../utils/constants'
+import { NAVIGATION_STEPS, defaultState, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS, initialStepThreeValues, intitialStepThreeValidations } from '../utils/constants'
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
 const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS } = TEXT_FIELDS
@@ -15,20 +15,17 @@ export class stepThree extends stepTwo {
   constructor(props) {
     super(props);
     const oldState = getOldState(props, defaultState)
-    this.state = Object.assign({}, oldState, {validations: { ...oldState.validations, startTime: VALID, endTime: VALID, walletAddress: EMPTY, supply: EMPTY, rate: EMPTY } } )
+    this.state = Object.assign({}, oldState, initialStepThreeValues, {validations: { ...oldState.validations, intitialStepThreeValidations  } } )
   }
 
   renderLink () {
-    console.log('render link four')
     return <Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}><a className="button button_fill">Continue</a></Link>
   }
 
   renderLinkComponent () {
     if(stepsAreValid(this.state.validations) || allFieldsAreValid('crowdsale', this.state)){
-      console.log('steeeeeep 33333')
       return this.renderLink()
     }
-    console.log('not valid')
     return <div onClick={() => this.showErrorMessages('crowdsale')} className="button button_fill"> Continue</div>
   }
 
@@ -64,7 +61,6 @@ export class stepThree extends stepTwo {
 
   render() {
     const { validations } = this.state
-    console.log('333 validations', validations)
     return (
       <section className="steps steps_crowdsale-contract" ref="three">
         <StepNavigation activeStep={CROWDSALE_SETUP}/>
@@ -86,6 +82,7 @@ export class stepThree extends stepTwo {
               value={this.state.crowdsale.startTime} 
               valid={validations.startTime} 
               errorMessage={VALIDATION_MESSAGES.START_TIME} 
+              onBlur={() => this.handleInputBlur('crowdsale', 'startTime')}
               onChange={(e) => this.changeState(e, 'crowdsale', 'startTime')}/>
             <InputField 
               side='right' 
@@ -94,6 +91,7 @@ export class stepThree extends stepTwo {
               value={this.state.crowdsale.endTime} 
               valid={validations.endTime} 
               errorMessage={VALIDATION_MESSAGES.END_TIME} 
+              onBlur={() => this.handleInputBlur('crowdsale', 'endTime')}
               onChange={(e) => this.changeState(e, 'crowdsale', 'endTime')}/>
             <InputField 
               side='left' 
@@ -102,6 +100,7 @@ export class stepThree extends stepTwo {
               value={this.state.crowdsale.walletAddress} 
               valid={validations.walletAddress} 
               errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS} 
+              onBlur={() => this.handleInputBlur('crowdsale', 'walletAddress')}
               onChange={(e) => this.changeState(e, 'crowdsale', 'walletAddress')}/>
             <InputField 
               side='right' 
@@ -110,6 +109,7 @@ export class stepThree extends stepTwo {
               value={this.state.crowdsale.supply} 
               valid={validations.supply} 
               errorMessage={VALIDATION_MESSAGES.SUPPLY} 
+              onBlur={() => this.handleInputBlur('crowdsale', 'supply')}
               onChange={(e) => this.changeState(e, 'crowdsale', 'supply')}/>
             <InputField 
               side='left' 
@@ -118,6 +118,7 @@ export class stepThree extends stepTwo {
               value={this.state.crowdsale.rate} 
               valid={validations.rate} 
               errorMessage={VALIDATION_MESSAGES.RATE} 
+              onBlur={() => this.handleInputBlur('crowdsale', 'rate')}
               onChange={(e) => this.changeState(e, 'crowdsale', 'rate')}/>
           </div>
         </div>
