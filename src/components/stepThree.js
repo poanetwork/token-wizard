@@ -115,7 +115,7 @@ export class stepThree extends stepTwo {
   render() {
     const { validations } = this.state
     console.log('333 validations', validations)
-    /*if (this.state.contractType == this.state.contractTypes.standard) {
+    if (this.state.contractType == this.state.contractTypes.standard) {
       return (
         <section className="steps steps_crowdsale-contract" ref="three">
           <StepNavigation activeStep={CROWDSALE_SETUP}/>
@@ -177,7 +177,7 @@ export class stepThree extends stepTwo {
           </div>
         </section>
       )
-    } else if (this.state.contractType == this.state.contractTypes.whitelistwithcap) {*/
+    } else if (this.state.contractType == this.state.contractTypes.whitelistwithcap) {
       return (
         <section className="steps steps_crowdsale-contract" ref="three">
           <StepNavigation activeStep={CROWDSALE_SETUP}/>
@@ -255,6 +255,6 @@ export class stepThree extends stepTwo {
           </div>
         </section>
       )
-    //}
+    }
   }
 }
