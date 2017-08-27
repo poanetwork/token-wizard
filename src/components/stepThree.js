@@ -65,6 +65,23 @@ export class stepThree extends stepTwo {
     </div>
   }
 
+  renderStandardLinkComponent () {
+    if(stepsAreValid(this.state.validations) || allFieldsAreValid('crowdsale', this.state)){
+      console.log('steeeeeep 33333')
+      return this.renderLink()
+    }
+    console.log('not valid')
+    return <div onClick={() => this.showErrorMessages('crowdsale')} className="button button_fill"> Continue</div>
+  }
+
+  renderLink () {
+    console.log('render link four')
+    return <div>
+    <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Crowdsale</div>
+    <Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}><a className="button button_fill">Continue</a></Link>
+    </div>
+  }
+
   renderLinkComponent () {
     if(stepsAreValid(this.state.validations) || allFieldsAreValid('crowdsale', this.state)){
       // console.log('step 3 is valididididididididididididididididi')
@@ -129,7 +146,7 @@ export class stepThree extends stepTwo {
                 side='left' 
                 type='datetime-local' 
                 title={START_TIME} 
-                value={this.state.crowdsale[0].startTime} 
+                value={console.log('this.state.crowdsale[0].startTime', this.state) || this.state.crowdsale[0].startTime} 
                 valid={validations.startTime} 
                 errorMessage={VALIDATION_MESSAGES.START_TIME} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'startTime', 0)}

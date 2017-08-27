@@ -81,7 +81,6 @@ export class stepTwo extends React.Component {
       if( Object.prototype.toString.call( newState[parent] ) === '[object Array]' ) {
         newState[parent][key][property] = value;//this.getNewParent(property, parent, key, value)
       } else {
-
         newState[parent][property] = value;//this.getNewParent(property, parent, key, value)
       }
     }

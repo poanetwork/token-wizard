@@ -32,7 +32,13 @@ export class stepFive extends React.Component {
 				var state = $this.state;
 				state.web3 = web3;
       			checkNetWorkByID(web3, networkID);
-			    state.contracts.crowdsale.addr = crowdsaleAddrs;
+      			let _crowdsaleAddrs;
+      			if ( typeof crowdsaleAddrs === 'string' ) {
+				    _crowdsaleAddrs = [ crowdsaleAddrs ];
+				} else {
+					_crowdsaleAddrs = crowdsaleAddrs;
+				}
+			    state.contracts.crowdsale.addr = _crowdsaleAddrs;
 			    state.contracts.crowdsale.networkID = networkID;
 			    state.contracts.crowdsale.contractType = contractType;
 
