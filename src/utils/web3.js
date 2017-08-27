@@ -250,11 +250,11 @@ export function findCurrentContractRecursively(i, $this, web3, firstCrowdsaleCon
   if (!crowdsaleAddr) return cb(null);
   if (!web3.isAddress(crowdsaleAddr)) return cb(null);
   attachToContract(web3, $this.state.contracts.crowdsale.abi, crowdsaleAddr, function(err, crowdsaleContract) {
+    console.log("attach to crowdsale contract");
+    if (err) return console.log(err);
     if (i == 0) {
       firstCrowdsaleContract = crowdsaleContract;
     }
-    console.log("attach to crowdsale contract");
-    if (err) return console.log(err);
     if (!crowdsaleContract) return noContractAlert();
     console.log(crowdsaleContract);
     crowdsaleContract.startsAt.call(function(err, startDate) {
@@ -271,13 +271,33 @@ export function findCurrentContractRecursively(i, $this, web3, firstCrowdsaleCon
         let curDate = new Date().getTime();
         console.log("curDate: " + curDate); 
         if (curDate < endDate && curDate >= startDate) {
-          cb(crowdsaleContract);
+          cb(crowdsaleContract, i);
         } else {
           i++;
           findCurrentContractRecursively2(i, $this, web3, firstCrowdsaleContract, cb);
         }
       });
     });
+  });
+}
+
+export function updateWhiteListRecursively(i, $this, tierNum, web3, cb) {
+  console.log($this.state.contracts.crowdsale.addr);
+  if (tierNum >= $this.state.contracts.crowdsale.addr.length - 1) return cb();
+
+  let crowdsaleAddr = $this.state.contracts.crowdsale.addr[tierNum + 1];
+  attachToContract(web3, $this.state.contracts.crowdsale.abi, crowdsaleAddr, function(err, crowdsaleContract) {
+    console.log("attach to crowdsale contract");
+    if (err) return console.log(err);
+
+    if (!crowdsaleContract) return noContractAlert();
+    console.log(crowdsaleContract);
+
+    crowdsaleContract.updateEarlyParicipantWhitelist.sendTransaction($this.state.tokensToInvest, function(err, txHash) {
+      if (err) return console.log(err);
+
+      console.log("updateEarlyParicipantWhitelist function transaction: " + txHash);
+    })
   });
 }
 
