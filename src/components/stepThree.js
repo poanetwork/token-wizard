@@ -6,11 +6,8 @@ import { stepTwo } from './stepTwo'
 import { getOldState, defaultCompanyStartDate, defaultCompanyEndDate, stepsAreValid, allFieldsAreValid } from '../utils/utils'
 import { StepNavigation } from './Common/StepNavigation'
 import { InputField } from './Common/InputField'
-<<<<<<< HEAD
-=======
 import { CrowdsaleBlock } from './Common/CrowdsaleBlock'
 import { WhitelistBlock } from './Common/WhitelistBlock'
->>>>>>> dev2
 import { NAVIGATION_STEPS, defaultState, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS, initialStepThreeValues, intitialStepThreeValidations } from '../utils/constants'
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
@@ -20,13 +17,6 @@ export class stepThree extends stepTwo {
   constructor(props) {
     super(props);
     const oldState = getOldState(props, defaultState)
-<<<<<<< HEAD
-    this.state = Object.assign({}, oldState, initialStepThreeValues, {validations: { ...oldState.validations, intitialStepThreeValidations  } } )
-  }
-
-  renderLink () {
-    return <Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}><a className="button button_fill">Continue</a></Link>
-=======
     oldState.children = [];
     oldState.crowdsale[0].tier = "Tier 1"
     this.state = Object.assign({}, oldState, {validations: { ...oldState.validations, startTime: VALID, endTime: VALID, walletAddress: VALID, supply: EMPTY, rate: EMPTY } } )
@@ -59,7 +49,6 @@ export class stepThree extends stepTwo {
     console.log('render link four')
     const oldState = getOldState(this.props, defaultState)
     this.state = Object.assign({}, oldState, initialStepThreeValues, {validations: { ...oldState.validations, intitialStepThreeValidations  } } )
->>>>>>> dev2
   }
 
   renderStandardLinkComponent () {
@@ -120,67 +109,6 @@ export class stepThree extends stepTwo {
 
   render() {
     const { validations } = this.state
-<<<<<<< HEAD
-    return (
-      <section className="steps steps_crowdsale-contract" ref="three">
-        <StepNavigation activeStep={CROWDSALE_SETUP}/>
-        <div className="steps-content container">
-          <div className="about-step">
-            <div className="step-icons step-icons_crowdsale-setup"></div>
-            <p className="title">Crowdsale setup</p>
-            <p className="description">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-              in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            </p>
-          </div>
-          <div className="hidden">
-            <InputField 
-              side='left' 
-              type='datetime-local' 
-              title={START_TIME} 
-              value={this.state.crowdsale.startTime} 
-              valid={validations.startTime} 
-              errorMessage={VALIDATION_MESSAGES.START_TIME} 
-              onBlur={() => this.handleInputBlur('crowdsale', 'startTime')}
-              onChange={(e) => this.changeState(e, 'crowdsale', 'startTime')}/>
-            <InputField 
-              side='right' 
-              type='datetime-local' 
-              title={END_TIME} 
-              value={this.state.crowdsale.endTime} 
-              valid={validations.endTime} 
-              errorMessage={VALIDATION_MESSAGES.END_TIME} 
-              onBlur={() => this.handleInputBlur('crowdsale', 'endTime')}
-              onChange={(e) => this.changeState(e, 'crowdsale', 'endTime')}/>
-            <InputField 
-              side='left' 
-              type='text' 
-              title={WALLET_ADDRESS} 
-              value={this.state.crowdsale.walletAddress} 
-              valid={validations.walletAddress} 
-              errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS} 
-              onBlur={() => this.handleInputBlur('crowdsale', 'walletAddress')}
-              onChange={(e) => this.changeState(e, 'crowdsale', 'walletAddress')}/>
-            <InputField 
-              side='right' 
-              type='number' 
-              title={SUPPLY} 
-              value={this.state.crowdsale.supply} 
-              valid={validations.supply} 
-              errorMessage={VALIDATION_MESSAGES.SUPPLY} 
-              onBlur={() => this.handleInputBlur('crowdsale', 'supply')}
-              onChange={(e) => this.changeState(e, 'crowdsale', 'supply')}/>
-            <InputField 
-              side='left' 
-              type='number' 
-              title={RATE} 
-              value={this.state.crowdsale.rate} 
-              valid={validations.rate} 
-              errorMessage={VALIDATION_MESSAGES.RATE} 
-              onBlur={() => this.handleInputBlur('crowdsale', 'rate')}
-              onChange={(e) => this.changeState(e, 'crowdsale', 'rate')}/>
-=======
     console.log('this.state.contractType', this.state.contractType)
     if (this.state.contractType == this.state.contractTypes.standard) {
       return (
@@ -330,7 +258,6 @@ export class stepThree extends stepTwo {
           <div>{this.state.children}</div>
           <div className="button-container">
             {this.renderLinkComponent()}
->>>>>>> dev2
           </div>
         </section>
       )
