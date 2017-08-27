@@ -334,7 +334,7 @@ export const getStepClass = (step, activeStep) => step === activeStep ? "step-na
 export const stepsAreValid = (steps) => {
     let newSteps = Object.assign({}, steps)
     newSteps[0] !== undefined ? delete newSteps[0] : ''
-    return console.log('newSteps.length > 3 && Object.values(newSteps).every(step => step === VALID)', Object.values(newSteps).length > 3 && Object.values(newSteps).every(step => step === VALID)) || Object.values(newSteps).length > 3 && Object.values(newSteps).every(step => step === VALID)
+    return Object.values(newSteps).length > 3 && Object.values(newSteps).every(step => step === VALID)
 }
 
 const validateName = (name) => typeof name === 'string' && name.length > 0 && name.length < 27

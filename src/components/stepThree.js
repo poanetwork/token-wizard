@@ -20,13 +20,13 @@ export class stepThree extends stepTwo {
     oldState.children = [];
     oldState.crowdsale[0].tier = "Tier 1"
     this.state = Object.assign({}, oldState, {validations: { ...oldState.validations, startTime: VALID, endTime: VALID, walletAddress: VALID, supply: EMPTY, rate: EMPTY } } )
-    console.log('this.state', this.state)
+    // console.log('this.state', this.state)
   }
 
   addCrowdsale() {
     let newState = {...this.state}
-    console.log(newState);
-    console.log(newState.children);
+    // console.log(newState);
+    // console.log(newState.children);
     let num = newState.children.length + 1;
     console.log(num);
     newState.crowdsale.push({whitelist:[{}]});
@@ -46,7 +46,7 @@ export class stepThree extends stepTwo {
   }
 
   renderStandardLink () {
-    console.log('render link four')
+    // console.log('render link four')
     const oldState = getOldState(this.props, defaultState)
     this.state = Object.assign({}, oldState, initialStepThreeValues, {validations: { ...oldState.validations, intitialStepThreeValidations  } } )
   }
@@ -67,7 +67,7 @@ export class stepThree extends stepTwo {
 
   renderLinkComponent () {
     if(stepsAreValid(this.state.validations) || allFieldsAreValid('crowdsale', this.state)){
-      console.log('step 3 is valididididididididididididididididi')
+      // console.log('step 3 is valididididididididididididididididi')
       return this.renderLink()
     }
     console.log('not valid')

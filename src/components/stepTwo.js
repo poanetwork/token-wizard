@@ -123,7 +123,7 @@ export class stepTwo extends React.Component {
   }
 
   renderLinkComponent () {
-    console.log(`stepsAreValid(this.state.validations) || allFieldsAreValid('token', this.state)`, stepsAreValid(this.state.validations), allFieldsAreValid('token', this.state))
+    // console.log(`stepsAreValid(this.state.validations) || allFieldsAreValid('token', this.state)`, stepsAreValid(this.state.validations), allFieldsAreValid('token', this.state))
     if(stepsAreValid(this.state.validations) || allFieldsAreValid('token', this.state)){
       return this.renderLink()
     }
