@@ -3,10 +3,10 @@ import '../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
 import { calculateFutureBlock } from '../utils/web3'
-import { getOldState, stepsAreValid, getValidationValue, getNewValue, validateValue, allFieldsAreValid } from '../utils/utils'
+import { getOldState, stepsAreValid, getNewValue, validateValue, allFieldsAreValid } from '../utils/utils'
 import { StepNavigation } from './Common/StepNavigation'
 import { InputField } from './Common/InputField'
-import { NAVIGATION_STEPS, VALIDATION_MESSAGES, VALIDATION_TYPES, defaultState, TEXT_FIELDS } from '../utils/constants'
+import { NAVIGATION_STEPS, VALIDATION_MESSAGES, VALIDATION_TYPES, defaultState, TEXT_FIELDS, initialStepTwoValues, intitialStepTwoValidations } from '../utils/constants'
 const { TOKEN_SETUP } = NAVIGATION_STEPS
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
 const { NAME, TICKER, SUPPLY, DECIMALS } = TEXT_FIELDS
@@ -14,9 +14,16 @@ const { NAME, TICKER, SUPPLY, DECIMALS } = TEXT_FIELDS
 export class stepTwo extends React.Component {
   constructor(props) {
     super(props);
+    console.log('props', props)
     let oldState = getOldState(props, defaultState)
-    this.state = Object.assign({}, oldState, {validations: {name: EMPTY, supply: EMPTY, decimals: EMPTY, ticker: EMPTY }})
-    console.log(this.state);
+    console.log('oldState', oldState)
+    this.state = Object.assign({}, defaultState, oldState, initialStepTwoValues, intitialStepTwoValidations )
+  }
+
+  getNewParent (property, parent, value) {
+    let newParent = { ...this.state[`${parent}`] }
+    newParent[property] = value
+    return newParent
   }
 
   showErrorMessages = (parent) => {
@@ -78,10 +85,25 @@ export class stepTwo extends React.Component {
       }
     }
     if (property.indexOf("whitelist") == -1) {
-      newState[`validations`][property] = getValidationValue(value, property, newState)
-      console.log('newState[`validations`][property]',  newState[`validations`][property])
+      newState[`validations`][property] = validateValue(value, property, newState)
+      console.log('property', property)
+      console.log('newState[`validations`][property]',  newState[`validations`], validateValue(value, property, newState), 'newState', newState)
+            newState[`validations`][property] = validateValue(value, property, newState)
+
     }
-    console.log(newState);
+    console.log('newState', newState)
+    this.setState(newState)
+  }
+
+  handleInputBlur (parent, property, key) {
+    let newState = { ...this.state }
+    let value
+    if(property === 'rate') {
+      value = newState['pricingStrategy'][0][property]
+    } else {
+      value = key === undefined ? newState[parent][property] : newState[parent][key][property]
+    }
+    newState[`validations`][property] = validateValue(value, property, newState)
     this.setState(newState)
   }
 
@@ -89,11 +111,10 @@ export class stepTwo extends React.Component {
     return <Link className="button button_fill" to={{ pathname: '/3', query: { state: this.state, changeState: this.changeState } }}>Continue</Link>
   }
   
-  validateAllFields (parent) {
+  validateAllFields (parent ) {
     let newState = { ...this.state }
-    console.log('validateAllFields', this.state)
-    let properties = Object.keys(newState.validations)
-    let values = properties.map(property => newState[parent][property])
+    let properties = Object.keys(newState[parent])
+    let values = Object.values(newState[parent])
     properties.forEach((property, index) => {
       newState[`validations`][property] = validateValue(values[index], property)
     })
@@ -101,6 +122,7 @@ export class stepTwo extends React.Component {
   }
 
   renderLinkComponent () {
+    // console.log(`stepsAreValid(this.state.validations) || allFieldsAreValid('token', this.state)`, stepsAreValid(this.state.validations), allFieldsAreValid('token', this.state))
     if(stepsAreValid(this.state.validations) || allFieldsAreValid('token', this.state)){
       return this.renderLink()
     }
@@ -109,8 +131,7 @@ export class stepTwo extends React.Component {
 
   render() {
     const { token, validations } = this.state
-     console.log('step 2 validations', validations)
-
+    console.log('step 2', this.state)
     return (
     	<section className="steps steps_crowdsale-contract" ref="two">
         <StepNavigation activeStep={TOKEN_SETUP}/>
@@ -127,8 +148,10 @@ export class stepTwo extends React.Component {
           <div className="hidden">
             <InputField side='left' type='text' 
               errorMessage={VALIDATION_MESSAGES.NAME} 
-              valid={validations.name} title={NAME} 
+              valid={validations.name} 
+              title={NAME} 
               value={token.name} 
+              onBlur={() => this.handleInputBlur('token', 'name')}
               onChange={(e) => this.changeState(e, 'token', 0, 'name')}
             />
             <InputField 
@@ -137,6 +160,7 @@ export class stepTwo extends React.Component {
               valid={validations.ticker} 
               title={TICKER} 
               value={token.ticker} 
+              onBlur={() => this.handleInputBlur('token', 'ticker')}
               onChange={(e) => this.changeState(e, 'token', 0, 'ticker')}
             />
             <InputField 
@@ -145,6 +169,7 @@ export class stepTwo extends React.Component {
               valid={validations.supply} 
               title={SUPPLY} 
               value={token.supply} 
+              onBlur={() => this.handleInputBlur('token', 'supply')}
               onChange={(e) => this.changeState(e, 'token', 0, 'supply')}
             />
             <InputField 
@@ -153,6 +178,7 @@ export class stepTwo extends React.Component {
               valid={validations.decimals} 
               title={DECIMALS}
               value={token.decimals} 
+              onBlur={() => this.handleInputBlur('token', 'decimals')}
               onChange={(e) => this.changeState(e, 'token', 0, 'decimals')}
             />
           </div>

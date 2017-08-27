@@ -306,11 +306,14 @@ export class stepFour extends stepTwo {
     console.log("***Deploy crowdsale contract***");
     getWeb3((web3) => {
       getNetworkVersion(web3, (_networkID) => {
+              console.log('web3', web3)
+
         if (web3.eth.accounts.length === 0) {
           return noMetaMaskAlert();
         }
         let newState = { ...this.state }
         newState.contracts.crowdsale.networkID = _networkID;
+        newState.web3 = web3
         newState.loading = true;
         this.setState(newState);
         let contracts = this.state.contracts;

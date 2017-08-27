@@ -250,7 +250,6 @@ export function findCurrentContractRecursively(i, $this, web3, cb) {
     console.log("attach to crowdsale contract");
     if (err) return console.log(err);
     if (!crowdsaleContract) return noContractAlert();
-
     crowdsaleContract.startsAt.call(function(err, startDate) {
       if (err) return console.log(err);
       
