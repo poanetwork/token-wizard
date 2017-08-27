@@ -34,7 +34,13 @@ export class Invest extends React.Component {
       const networkID = getQueryVariable("networkID");
       const contractType = getQueryVariable("contractType");
       checkNetWorkByID(web3, networkID);
-      newState.contracts.crowdsale.addr = crowdsaleAddrs;
+      let _crowdsaleAddrs;
+      if ( typeof crowdsaleAddrs === 'string' ) {
+          _crowdsaleAddrs = [ crowdsaleAddrs ];
+      } else {
+        _crowdsaleAddrs = crowdsaleAddrs;
+      }
+      newState.contracts.crowdsale.addr = _crowdsaleAddrs;
       newState.contractType = contractType;
 
       const timeInterval = setInterval(() => $this.setState({ seconds: $this.state.seconds - 1}), 1000);

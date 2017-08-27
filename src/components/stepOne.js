@@ -75,6 +75,7 @@ export class stepOne extends React.Component {
 
   addContractsToState (src, bin, abi, contract, state) {
     //let newState = Object.assign({}, state)
+    console.log('state', state)
     state.contracts[contract] = {
       src,
       bin,

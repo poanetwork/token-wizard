@@ -8,7 +8,7 @@ export const defaultState = {
 		tokenTransferProxy: {}
 	}, 
 	token: {},
-	crowdsale: [{whitelist:[{}]}],
+	crowdsale: [{whitelist:[], whiteListInput: {}}],
 	pricingStrategy: [{}],
 	blockTimeGeneration: 17,
 	contractType: "",
@@ -59,4 +59,43 @@ export const VALIDATION_TYPES = {
 	VALID: "VALIDATED",
 	EMPTY: 'EMPTY',
 	INVALID: 'INVALID'
+}
+const { VALID, EMPTY, INVALID } = VALIDATION_TYPES
+
+export const intitialStepTwoValidations = {
+	validations: {
+		name: EMPTY,
+		supply: EMPTY,
+		decimals: EMPTY,
+		ticker: EMPTY 
+	}
+}
+
+export const initialStepTwoValues = {
+	token: {
+		name: '',
+		supply: '',
+		ticker: '',
+		decimals: ''
+	}
+}
+
+export const intitialStepThreeValidations = {
+	validations: {
+		startTime: VALID,
+		endTime: VALID,
+		walletAddress: EMPTY,
+		supply: VALID,
+		rate: EMPTY
+	}
+}
+
+export const initialStepThreeValues = {
+	crowdsale: {
+		startTime: '',
+		endTime: '',
+		walletAddress: '',
+		supply: '',
+		rate: ''
+	}
 }
