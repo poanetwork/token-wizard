@@ -14,8 +14,10 @@ const { NAME, TICKER, SUPPLY, DECIMALS } = TEXT_FIELDS
 export class stepTwo extends React.Component {
   constructor(props) {
     super(props);
+    console.log('props', props)
     let oldState = getOldState(props, defaultState)
-    this.state = Object.assign({}, defaultState, initialStepTwoValues, intitialStepTwoValidations )
+    console.log('oldState', oldState)
+    this.state = Object.assign({}, defaultState, oldState, initialStepTwoValues, intitialStepTwoValidations )
   }
 
   getNewParent (property, parent, value) {
@@ -28,34 +30,80 @@ export class stepTwo extends React.Component {
     this.validateAllFields(parent)
   }
   
-   setBlockTimes (event, property) {
+   setBlockTimes (event, key, property) {
+    let newState = Object.assign({}, this.state)
     let targetTime = new Date(event.target.value);
+    let targetTimeTemp = new Date(targetTime).setUTCHours(new Date(targetTime).getHours());
+    if (property == "startTime") {
+      newState.crowdsale[key].startTime = new Date(targetTimeTemp).toISOString().split(".")[0];
+    } else if (property == "endTime") {
+      newState.crowdsale[key].endTime = new Date(targetTimeTemp).toISOString().split(".")[0];
+      if (newState.crowdsale[key + 1]) {
+        newState.crowdsale[key + 1].startTime = newState.crowdsale[key].endTime;
+        let newEndDate = new Date(newState.crowdsale[key].endTime).setDate(new Date(newState.crowdsale[key].endTime).getDate() + 4);;
+        newState.crowdsale[key + 1].endTime = new Date(newEndDate).toISOString().split(".")[0];;
+      }
+    }
     calculateFutureBlock(targetTime, this.state.blockTimeGeneration, (targetBlock) => {
-      let newState = Object.assign({}, this.state)
       if (property == "startTime") {
-        newState.crowdsale.startBlock = targetBlock;
-        console.log("startBlock: " + newState.crowdsale.startBlock);
+        newState.crowdsale[key].startBlock = targetBlock;
+        console.log("startBlock: " + newState.crowdsale[key].startBlock);
       } else if (property == "endTime") {
-        newState.crowdsale.endBlock = targetBlock;
-        console.log("endBlock: " + newState.crowdsale.endBlock);
+        newState.crowdsale[key].endBlock = targetBlock;
+        console.log("endBlock: " + newState.crowdsale[key].endBlock);
       }
       this.setState(newState);
     });
   }
 
-  changeState (event, parent, property) {
-    if (property == "startTime" || property == "endTime") {
-      this.setBlockTimes(event, property)
+  /*getNewParent (property, parent, key, value) {
+    if( Object.prototype.toString.call( {...this.state[`${parent}`]} ) === '[object Array]' ) {
+      let newParent = { ...this.state[`${parent}`][key] }
+      newParent[property][key] = value
+      return newParent
+    } else {
+      let newParent = { ...this.state[`${parent}`] }
+      newParent[property] = value
+      return newParent
     }
+  }*/
+
+  changeState (event, parent, key, property) {
+    console.log("parent: " + parent, "key: " + key, "property: " + property);
     let value = event.target.value
     let newState = { ...this.state }
-    newState[parent] = this.getNewParent(property, parent, value)
+    if (property == "startTime" || property == "endTime") {
+      this.setBlockTimes(event, key, property)
+    } else if (property.indexOf("whitelist") == 0) {
+      let prop = property.split("_")[1];
+      newState.crowdsale[key][`whitelist`][0][prop] = value
+    } else {
+      if( Object.prototype.toString.call( newState[parent] ) === '[object Array]' ) {
+        newState[parent][key][property] = value;//this.getNewParent(property, parent, key, value)
+      } else {
+
+        newState[parent][property] = value;//this.getNewParent(property, parent, key, value)
+      }
+    }
+    if (property.indexOf("whitelist") == -1) {
+      newState[`validations`][property] = validateValue(value, property, newState)
+      console.log('property', property)
+      console.log('newState[`validations`][property]',  newState[`validations`], validateValue(value, property, newState), 'newState', newState)
+            newState[`validations`][property] = validateValue(value, property, newState)
+
+    }
+    console.log('newState', newState)
     this.setState(newState)
   }
 
-  handleInputBlur (parent, property) {
+  handleInputBlur (parent, property, key) {
     let newState = { ...this.state }
-    const value = newState[parent][property]
+    let value
+    if(property === 'rate') {
+      value = newState['pricingStrategy'][0][property]
+    } else {
+      value = key === undefined ? newState[parent][property] : newState[parent][key][property]
+    }
     newState[`validations`][property] = validateValue(value, property, newState)
     this.setState(newState)
   }
@@ -64,7 +112,7 @@ export class stepTwo extends React.Component {
     return <Link className="button button_fill" to={{ pathname: '/3', query: { state: this.state, changeState: this.changeState } }}>Continue</Link>
   }
   
-  validateAllFields (parent) {
+  validateAllFields (parent ) {
     let newState = { ...this.state }
     let properties = Object.keys(newState[parent])
     let values = Object.values(newState[parent])
@@ -75,6 +123,7 @@ export class stepTwo extends React.Component {
   }
 
   renderLinkComponent () {
+    console.log(`stepsAreValid(this.state.validations) || allFieldsAreValid('token', this.state)`, stepsAreValid(this.state.validations), allFieldsAreValid('token', this.state))
     if(stepsAreValid(this.state.validations) || allFieldsAreValid('token', this.state)){
       return this.renderLink()
     }
@@ -83,6 +132,7 @@ export class stepTwo extends React.Component {
 
   render() {
     const { token, validations } = this.state
+    console.log('step 2', this.state)
     return (
     	<section className="steps steps_crowdsale-contract" ref="two">
         <StepNavigation activeStep={TOKEN_SETUP}/>
@@ -99,11 +149,11 @@ export class stepTwo extends React.Component {
           <div className="hidden">
             <InputField side='left' type='text' 
               errorMessage={VALIDATION_MESSAGES.NAME} 
-              valid={console.log('validations.name', validations.name) || validations.name} 
+              valid={validations.name} 
               title={NAME} 
               value={token.name} 
               onBlur={() => this.handleInputBlur('token', 'name')}
-              onChange={(e) => this.changeState(e, 'token', 'name')}
+              onChange={(e) => this.changeState(e, 'token', 0, 'name')}
             />
             <InputField 
               side='right' type='text' 
@@ -112,7 +162,7 @@ export class stepTwo extends React.Component {
               title={TICKER} 
               value={token.ticker} 
               onBlur={() => this.handleInputBlur('token', 'ticker')}
-              onChange={(e) => this.changeState(e, 'token', 'ticker')}
+              onChange={(e) => this.changeState(e, 'token', 0, 'ticker')}
             />
             <InputField 
               side='left' type='number' 
@@ -121,7 +171,7 @@ export class stepTwo extends React.Component {
               title={SUPPLY} 
               value={token.supply} 
               onBlur={() => this.handleInputBlur('token', 'supply')}
-              onChange={(e) => this.changeState(e, 'token', 'supply')}
+              onChange={(e) => this.changeState(e, 'token', 0, 'supply')}
             />
             <InputField 
               side='right' type='number'
@@ -130,7 +180,7 @@ export class stepTwo extends React.Component {
               title={DECIMALS}
               value={token.decimals} 
               onBlur={() => this.handleInputBlur('token', 'decimals')}
-              onChange={(e) => this.changeState(e, 'token', 'decimals')}
+              onChange={(e) => this.changeState(e, 'token', 0, 'decimals')}
             />
           </div>
         </div>

@@ -1,11 +1,22 @@
 export const defaultState = { 
 	contracts: { 
 		token: {}, 
-		crowdsale: {} 
+		crowdsale: {addr:[]},
+		pricingStrategy: {addr:[]},
+		multisig: {},
+		finalizeAgent: {},
+		tokenTransferProxy: {}
 	}, 
 	token: {},
-	crowdsale: {},
-	blockTimeGeneration: 17
+	crowdsale: [{whitelist:[{}]}],
+	pricingStrategy: [{}],
+	blockTimeGeneration: 17,
+	contractType: "",
+	contractTypes: {
+		standard: "standard",
+		capped: "capped",
+		whitelistwithcap: "white-list-with-cap"
+	}
 }
 
 export const NAVIGATION_STEPS = {
@@ -36,7 +47,12 @@ export const TEXT_FIELDS = {
 	RATE: 'Rate',
 	WALLET_ADDRESS: 'Wallet Address',
 	START_TIME: 'Start Time',
-	END_TIME: 'End Time'
+	END_TIME: 'End Time',
+	CROWDSALE_SETUP_NAME: 'Crowdsale setup name',
+	ADDRESS: 'Address',
+	MIN: 'Min',
+	MAX: 'Max',
+	MAX_CAP: 'Max cap'
 }
 
 export const VALIDATION_TYPES = {

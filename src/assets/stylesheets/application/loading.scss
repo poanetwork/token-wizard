@@ -1,0 +1,79 @@
+@keyframes fadeOut {
+  0% {
+    opacity: .2;
+  }
+  20% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: .2;
+    transform: scale(0.3);
+  }
+}
+
+.loading {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 146px;
+  margin: -30px 0 0 -81.5px;
+  padding-top: 50px;
+
+  &:before {
+    /*@include image-2x('../images/loading@2x.png');*/
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 146px;
+    height: 35px;
+    background-image: url(../images/loading.png);
+    background-position: 0 0;
+  }
+
+  &-container {
+    position: fixed;
+    z-index: 1000000;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: fade-out(#231d73, 0.2);
+  }
+
+  &-i {
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: fadeOut;
+    animation-timing-function: linear;
+    opacity:.2;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background-color: #fff;
+
+    &:nth-child(2) {
+      animation-delay: .1s;
+    }
+
+    &:nth-child(3) {
+      animation-delay: .2s;
+    }
+
+    &:nth-child(4) {
+      animation-delay: .3s;
+    }
+
+    &:nth-child(5) {
+      animation-delay: .4s;
+    }
+
+    &:nth-child(6) {
+      animation-delay: .5s;
+    }
+  }
+}

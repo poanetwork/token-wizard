@@ -1,11 +1,12 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData } from '../utils/web3'
-import { getQueryVariable, setFlatFileContentToState } from '../utils/utils'
+import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively } from '../utils/web3'
+import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
 import { noContractAlert } from '../utils/alerts'
 import { StepNavigation } from './Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../utils/constants'
 import { defaultState } from '../utils/constants'
+import { Loader } from './Common/Loader'
 const { CROWDSALE_PAGE } = NAVIGATION_STEPS
 
 export class stepFive extends React.Component {
@@ -16,69 +17,76 @@ export class stepFive extends React.Component {
 	}
 
 	componentDidMount () {
-		const crowdsaleAddr = getQueryVariable("addr");
+		let newState = { ...this.state }
+	    newState.loading = true;
+	    this.setState(newState);
+		const crowdsaleAddrs = getURLParam("addr");
+		let crowdsaleAddr;
+		if (crowdsaleAddrs.length == 1)
+			crowdsaleAddr = crowdsaleAddr[0];
 		const networkID = getQueryVariable("networkID");
+		const contractType = getQueryVariable("contractType");
 		var $this = this;
 		setTimeout(function() {
 			getWeb3(function(web3) {
 				var state = $this.state;
 				state.web3 = web3;
       			checkNetWorkByID(web3, networkID);
-			    state.contracts.crowdsale.addr = crowdsaleAddr;
+			    state.contracts.crowdsale.addr = crowdsaleAddrs;
 			    state.contracts.crowdsale.networkID = networkID;
-			    
-			    var derivativesLength = 4;
-			    var derivativesIterator = 0;
-			    setFlatFileContentToState("./contracts/SampleCrowdsale_flat.bin", function(_bin) {
-			      derivativesIterator++;
-			      state.contracts.crowdsale.bin = _bin;
+			    state.contracts.crowdsale.contractType = contractType;
 
-			      if (derivativesIterator === derivativesLength) {
-			        $this.extractContractsData($this, state, web3);
-			      }
-			    });
-			    setFlatFileContentToState("./contracts/SampleCrowdsale_flat.abi", function(_abi) {
-			      derivativesIterator++;
-			      state.contracts.crowdsale.abi = JSON.parse(_abi);
-
-			      if (derivativesIterator === derivativesLength) {
-			        $this.extractContractsData($this, state, web3);
-			      }
-			    });
-			    setFlatFileContentToState("./contracts/SampleCrowdsaleToken_flat.bin", function(_bin) {
-			      derivativesIterator++;
-			      state.contracts.token.bin = _bin;
-
-			      if (derivativesIterator === derivativesLength) {
-			        $this.extractContractsData($this, state, web3);
-			      }
-			    });
-			    setFlatFileContentToState("./contracts/SampleCrowdsaleToken_flat.abi", function(_abi) {
-			      derivativesIterator++;
-			      state.contracts.token.abi = JSON.parse(_abi);
-
-			      if (derivativesIterator === derivativesLength) {
-			        $this.extractContractsData($this, state, web3);
-			      }
-			    });
+			    switch (contractType) {
+		          case $this.state.contractTypes.standard: {
+		            getStandardCrowdsaleAssets(state, function(_newState) {
+		            	$this.setState(_newState, () => {
+		            		$this.extractContractsData($this, web3);
+		            	});
+				    });
+		          } break;
+		          case $this.state.contractTypes.whitelistwithcap: {
+		            getWhiteListWithCapCrowdsaleAssets(state, function(_newState) {
+		            	$this.setState(_newState, () => {
+		            		$this.extractContractsData($this, web3);
+		            	});
+				    });
+		          } break;
+		          default:
+		            break;
+		        }
 			});
 		}, 500);
 	}
 
-	extractContractsData($this, state, web3) {
-	  $this.setState(state);
-      $this.state.curAddr = web3.eth.defaultAccount;
-
-      if (!$this.state.contracts.crowdsale.addr) return;
-      getCrowdsaleData(web3, $this);
+	extractContractsData($this, web3) {
+	  var state = $this.state;
+	  state.curAddr = web3.eth.accounts[0];
+      state.web3 = web3;
+      $this.setState(state, () => {
+      	if (!$this.state.contracts.crowdsale.addr) return;
+      	findCurrentContractRecursively(0, $this, web3, function(crowdsaleContract) {
+	      getCrowdsaleData(web3, $this, crowdsaleContract, function() {
+	        getAccumulativeCrowdsaleData(web3, $this, function() {
+	          getCrowdsaleTargetDates(web3, $this, function() {
+	            
+	          })
+	        });
+	      });
+	    })
+      });
   	}
 
   	goToInvestPage = () => {
   		let queryStr = "";
   		if (this.state.contracts.crowdsale.addr) {
-  			queryStr = "?addr=" + this.state.contracts.crowdsale.addr;
+  			queryStr = "?addr=" + this.state.contracts.crowdsale.addr[0];
+  			for (let i = 1; i < this.state.contracts.crowdsale.addr.length; i++) {
+		      queryStr += `&addr=` + this.state.contracts.crowdsale.addr[i]
+		    }
   			if (this.state.contracts.crowdsale.networkID)
   				queryStr += "&networkID=" + this.state.contracts.crowdsale.networkID;
+  			if (this.state.contracts.crowdsale.contractType)
+  				queryStr += "&contractType=" + this.state.contracts.crowdsale.contractType;
   		}
         this.props.history.push('/invest' + queryStr);
   	}
@@ -106,7 +114,7 @@ export class stepFive extends React.Component {
 							</p>
 						</div>
 						<div className="right">
-							<p className="total-funds-title">{this.state.crowdsale.rate?isNaN(this.state.crowdsale.supply/this.state.crowdsale.rate)?0:(this.state.crowdsale.supply/this.state.crowdsale.rate):0} ETH</p>
+							<p className="total-funds-title">{this.state.pricingStrategy.rate?isNaN(this.state.token.supply*this.state.pricingStrategy.rate)?0:(this.state.token.supply*this.state.pricingStrategy.rate):0} ETH</p>
 							<p className="total-funds-description">
 								Goal
 							</p>
@@ -124,7 +132,7 @@ export class stepFive extends React.Component {
 					<div className="total-funds-chart-division"></div>
 					<div className="total-funds-chart-division"></div>
 					<div className="total-funds-chart">
-						<div className="total-funds-chart-active" style={{width : (this.state.crowdsale.supply?this.state.crowdsale.weiRaised/this.state.crowdsale.supply:"0") + "%"}}></div>
+						<div className="total-funds-chart-active" style={{width : (this.state.token.supply?this.state.crowdsale.weiRaised/this.state.token.supply:"0") + "%"}}></div>
 					</div>
 				</div>
 				<div className="total-funds-statistics">
@@ -132,7 +140,7 @@ export class stepFive extends React.Component {
 						<div className="left">
 							<div className="hidden">
 								<div className="left">
-									<p className="title">{this.state.crowdsale.weiRaised*this.state.crowdsale.rate}</p>
+									<p className="title">{this.state.crowdsale.weiRaised*this.state.pricingStrategy.rate}</p>
 									<p className="description">
 										Tokens Claimed
 									</p>
@@ -152,13 +160,13 @@ export class stepFive extends React.Component {
 						<div className="right">
 							<div className="hidden">
 								<div className="left">
-									<p className="title">{this.state.crowdsale.rate?this.state.crowdsale.rate:0}</p>
+									<p className="title">{1/this.state.pricingStrategy.rate?1/this.state.pricingStrategy.rate:0}</p>
 									<p className="description">
 										Price (Tokens/ETH)
 									</p>
 								</div>
 								<div className="right">
-									<p className="title">{this.state.crowdsale.supply?this.state.crowdsale.supply.toString():0}</p>
+									<p className="title">{this.state.token.supply?this.state.token.supply.toString():0}</p>
 									<p className="description">
 										Total Supply
 									</p>
@@ -176,6 +184,7 @@ export class stepFive extends React.Component {
 				{/*<Link to={{ pathname: this.state.contracts.crowdsale.addr?('/invest' + ('?crowdsale=' + this.state.contracts.crowdsale.addr):""):'/invest' }}><a href="#" className="button button_fill">Invest</a></Link>*/}
 				<a onClick={this.goToInvestPage} className="button button_fill">Invest</a>
 			</div>
+			<Loader show={this.state.loading}></Loader>
 		</section>
 		)
 	}
