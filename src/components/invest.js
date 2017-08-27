@@ -11,13 +11,11 @@ export class Invest extends React.Component {
       super(props);
       if (this.tokensToInvestOnChange.bind) this.tokensToInvestOnChange = this.tokensToInvestOnChange.bind(this);
       if (this.investToTokens.bind) this.investToTokens = this.investToTokens.bind(this);
-      this.state = defaultState
-      var state = this.state;
-      state.crowdsale = {};
-      state.token = {};
+      var state = defaultState;
       state.seconds = 0;
       state.loading = true;
-      this.setState(state);
+      this.state = state;
+      var state = this.state;
   }
 
   componentDidMount () {
@@ -81,18 +79,18 @@ export class Invest extends React.Component {
         state.loading = false;
         return $this.setState(state);
       }
-      getCrowdsaleData(web3, $this, crowdsaleContract, function() {
-        getAccumulativeCrowdsaleData(web3, $this, function() {
-          getCrowdsaleTargetDates(web3, $this, function() {
-            console.log($this.state.crowdsale);
-            if ($this.state.crowdsale.endDate) {
-              let state = $this.state;
-              state.seconds = (state.crowdsale.endDate - new Date().getTime())/1000;
-              $this.setState(state);
-            }
-          })
-        });
+      getCrowdsaleData(web3, $this, crowdsaleContract, function() { 
       });
+      getAccumulativeCrowdsaleData(web3, $this, function() {
+      });
+      getCrowdsaleTargetDates(web3, $this, function() {
+        console.log($this.state.crowdsale);
+        if ($this.state.crowdsale.endDate) {
+          let state = $this.state;
+          state.seconds = (state.crowdsale.endDate - new Date().getTime())/1000;
+          $this.setState(state);
+        }
+      })
     })
   }
 
@@ -163,18 +161,24 @@ export class Invest extends React.Component {
         return $this.setState(state);
       }
       //updateWhiteListRecursively(0, $this, tierNum, web3, function() {
-        $this.investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, web3, $this);
+        $this.investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, web3, $this);
       //})
     })
   }
 
-  investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, web3, $this) {
+  investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, web3, $this) {
+    let nextTiers = [];
+    for (let i = tierNum + 1; i < $this.state.contracts.crowdsale.addr.length; i++) {
+      nextTiers.push($this.state.contracts.crowdsale.addr[i]);
+    }
+    console.log("nextTiers: " + nextTiers);
+    console.log(nextTiers.length);
     var weiToSend = web3.toWei($this.state.tokensToInvest*$this.state.pricingStrategy.rate, "ether");
     var opts = {
       from: web3.eth.accounts[0],
       value: weiToSend
     };
-    crowdsaleContract.buy.sendTransaction(opts, function(err, txHash) {
+    crowdsaleContract.buy.sendTransaction(nextTiers, opts, function(err, txHash) {
       if (err) return console.log(err);
       
       console.log("txHash: " + txHash);

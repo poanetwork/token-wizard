@@ -75,12 +75,9 @@ export class stepFive extends React.Component {
       			state.loading = false;
         		return $this.setState(state);
       		}
-		    getCrowdsaleData(web3, $this, crowdsaleContract, function() {
-		        getAccumulativeCrowdsaleData(web3, $this, function() {
-		          getCrowdsaleTargetDates(web3, $this, function() {
-		            
-		          })
-		        });
+		    getCrowdsaleData(web3, $this, crowdsaleContract, function() {  
+		    });
+		    getAccumulativeCrowdsaleData(web3, $this, function() {
 		    });
 	    })
       });
