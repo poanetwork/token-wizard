@@ -243,13 +243,20 @@ export function transferOwnership(web3, abi, addr, finalizeAgentAddr, cb) {
   });
 }
 
-export function findCurrentContractRecursively(i, $this, web3, cb) {
+export function findCurrentContractRecursively(i, $this, web3, firstCrowdsaleContract, cb) {
   console.log($this.state.contracts.crowdsale.addr);
   let crowdsaleAddr = $this.state.contracts.crowdsale.addr[i];
+  if (i == $this.state.contracts.crowdsale.addr.length) return cb(firstCrowdsaleContract);
+  if (!crowdsaleAddr) return cb(null);
+  if (!web3.isAddress(crowdsaleAddr)) return cb(null);
   attachToContract(web3, $this.state.contracts.crowdsale.abi, crowdsaleAddr, function(err, crowdsaleContract) {
+    if (i == 0) {
+      firstCrowdsaleContract = crowdsaleContract;
+    }
     console.log("attach to crowdsale contract");
     if (err) return console.log(err);
     if (!crowdsaleContract) return noContractAlert();
+    console.log(crowdsaleContract);
     crowdsaleContract.startsAt.call(function(err, startDate) {
       if (err) return console.log(err);
       
@@ -267,7 +274,7 @@ export function findCurrentContractRecursively(i, $this, web3, cb) {
           cb(crowdsaleContract);
         } else {
           i++;
-          findCurrentContractRecursively2(i, $this, web3, cb);
+          findCurrentContractRecursively2(i, $this, web3, firstCrowdsaleContract, cb);
         }
       });
     });
