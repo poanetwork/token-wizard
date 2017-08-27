@@ -7,7 +7,7 @@ import { getOldState, defaultCompanyStartDate, defaultCompanyEndDate, stepsAreVa
 import { StepNavigation } from './Common/StepNavigation'
 import { InputField } from './Common/InputField'
 import { CrowdsaleBlock } from './Common/CrowdsaleBlock'
-import { WhitelistBlock } from './Common/WhitelistBlock'
+import { WhitelistInputBlock } from './Common/WhitelistInputBlock'
 import { NAVIGATION_STEPS, defaultState, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS, initialStepThreeValues, intitialStepThreeValidations } from '../utils/constants'
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
@@ -46,14 +46,12 @@ export class stepThree extends stepTwo {
   }
 
   renderStandardLink () {
-    // console.log('render link four')
-    const oldState = getOldState(this.props, defaultState)
-    this.state = Object.assign({}, oldState, initialStepThreeValues, {validations: { ...oldState.validations, intitialStepThreeValidations  } } )
+    return <Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}><a className="button button_fill">Continue</a></Link>
   }
 
   renderStandardLinkComponent () {
     if(stepsAreValid(this.state.validations) || allFieldsAreValid('crowdsale', this.state)){
-      return this.renderLink()
+      return this.renderStandardLink()
     }
     return <div onClick={() => this.showErrorMessages('crowdsale')} className="button button_fill"> Continue</div>
   }
@@ -68,7 +66,7 @@ export class stepThree extends stepTwo {
   renderStandardLinkComponent () {
     if(stepsAreValid(this.state.validations) || allFieldsAreValid('crowdsale', this.state)){
       console.log('steeeeeep 33333')
-      return this.renderLink()
+      return this.renderStandardLink()
     }
     console.log('not valid')
     return <div onClick={() => this.showErrorMessages('crowdsale')} className="button button_fill"> Continue</div>
@@ -265,12 +263,9 @@ export class stepThree extends stepTwo {
             <div className="white-list-title">
               <p className="title">Whitelist</p>
             </div>
-            <WhitelistBlock
-              addr={this.state.crowdsale[0].whitelist[0].addr}
-              min={this.state.crowdsale[0].whitelist[0].min}
-              max={this.state.crowdsale[0].whitelist[0].max}
+            <WhitelistInputBlock
               onChange={(e, cntrct, num, prop) => this.changeState(e, cntrct, 0, prop)}
-            ></WhitelistBlock>
+            ></WhitelistInputBlock>
           </div>
           <div>{this.state.children}</div>
           <div className="button-container">

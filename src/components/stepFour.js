@@ -526,7 +526,7 @@ export class stepFour extends stepTwo {
   }
 
   addWhiteListRecursive = (i, web3, crowdsale, abi, crowdsaleAddrs, cb) => {
-    addWhiteList(web3, crowdsale[i].whitelist, abi, crowdsaleAddrs[i], () => {
+    addWhiteList(i, web3, crowdsale, abi, crowdsaleAddrs[i], () => {
       i++;
       if (i < crowdsaleAddrs.length) {
         this.addWhiteListRecursive(i, web3, crowdsale, abi, crowdsaleAddrs, cb);

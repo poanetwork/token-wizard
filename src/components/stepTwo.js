@@ -76,7 +76,7 @@ export class stepTwo extends React.Component {
       this.setBlockTimes(event, key, property)
     } else if (property.indexOf("whitelist") == 0) {
       let prop = property.split("_")[1];
-      newState.crowdsale[key][`whitelist`][0][prop] = value
+      newState.crowdsale[key][`whiteListInput`][prop] = value
     } else {
       if( Object.prototype.toString.call( newState[parent] ) === '[object Array]' ) {
         newState[parent][key][property] = value;//this.getNewParent(property, parent, key, value)
