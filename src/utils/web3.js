@@ -48,8 +48,8 @@ export function checkNetWorkByID(web3, _networkIdFromGET) {
 
     let networkNameFromGET = getNetWorkNameById(_networkIdFromGET);
     let networkNameFromNetwork = getNetWorkNameById(_networkIdFromNetwork);
-    console.log(networkNameFromGET +"!="+ networkNameFromNetwork);
     if (networkNameFromGET !== networkNameFromNetwork) {
+      console.log(networkNameFromGET +"!="+ networkNameFromNetwork);
       incorrectNetworkAlert(networkNameFromGET, networkNameFromNetwork);
     }
   });
@@ -392,6 +392,7 @@ export function getCrowdsaleTargetDates(web3, $this, cb) {
 export function getAccumulativeCrowdsaleData(web3, $this, cb) {
   let propsCount = 0;
   let cbCount = 0;
+  console.log("$this.state.contracts.crowdsale.addr.length: " + $this.state.contracts.crowdsale.addr.length);
   for (let i = 0; i < $this.state.contracts.crowdsale.addr.length; i++) {
     let crowdsaleAddr = $this.state.contracts.crowdsale.addr[i];
     attachToContract(web3, $this.state.contracts.crowdsale.abi, crowdsaleAddr, function(err, crowdsaleContract) {
@@ -420,7 +421,7 @@ export function getAccumulativeCrowdsaleData(web3, $this, cb) {
       if (crowdsaleContract.tokenAmountOf) {
         propsCount++;
         console.log(web3.eth.accounts[0]);
-        crowdsaleContract.tokenAmountOf.call($this.state.curAddr, function(err, tokenAmountOf) {
+        crowdsaleContract.tokenAmountOf.call(web3.eth.accounts[0], function(err, tokenAmountOf) {
           cbCount++;
           if (err) return console.log(err);
           
@@ -531,9 +532,6 @@ export function getCrowdsaleData(web3, $this, crowdsaleContract, cb) {
       $this.setState(state, cb);
     }
 
-    if (!tokenAddr || tokenAddr === "0x") return;
-    getTokenData(web3, $this);
-
     if (!crowdsaleContract.pricingStrategy) return;
 
     propsCount++;
@@ -552,6 +550,9 @@ export function getCrowdsaleData(web3, $this, crowdsaleContract, cb) {
       if (!pricingStrategyAddr || pricingStrategyAddr === "0x") return;
       getPricingStrategyData(web3, $this);
     });
+
+    if (!tokenAddr || tokenAddr === "0x") return;
+    getTokenData(web3, $this);
   });
 }
 
