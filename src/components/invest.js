@@ -76,7 +76,11 @@ export class Invest extends React.Component {
     $this.setState(state);
 
     if (!$this.state.contracts.crowdsale.addr) return;
-    findCurrentContractRecursively(0, $this, web3, function(crowdsaleContract) {
+    findCurrentContractRecursively(0, $this, web3, null, function(crowdsaleContract) {
+      if (!crowdsaleContract) {
+        state.loading = false;
+        return $this.setState(state);
+      }
       getCrowdsaleData(web3, $this, crowdsaleContract, function() {
         getAccumulativeCrowdsaleData(web3, $this, function() {
           getCrowdsaleTargetDates(web3, $this, function() {
@@ -152,7 +156,12 @@ export class Invest extends React.Component {
       return investmentDisabledAlertInTime($this.state.crowdsale.startDate);
     }
 
-    findCurrentContractRecursively(0, $this, web3, function(crowdsaleContract) {
+    findCurrentContractRecursively(0, $this, web3, null, function(crowdsaleContract) {
+      if (!crowdsaleContract) {
+        let state = $this;
+        state.loading = false;
+        return $this.setState(state);
+      }
       $this.investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, web3, $this);
     })
   }

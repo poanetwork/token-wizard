@@ -70,14 +70,18 @@ export class stepFive extends React.Component {
       state.web3 = web3;
       $this.setState(state, () => {
       	if (!$this.state.contracts.crowdsale.addr) return;
-      	findCurrentContractRecursively(0, $this, web3, function(crowdsaleContract) {
-	      getCrowdsaleData(web3, $this, crowdsaleContract, function() {
-	        getAccumulativeCrowdsaleData(web3, $this, function() {
-	          getCrowdsaleTargetDates(web3, $this, function() {
-	            
-	          })
-	        });
-	      });
+      	findCurrentContractRecursively(0, $this, web3, null, function(crowdsaleContract) {
+      		if (!crowdsaleContract) {
+      			state.loading = false;
+        		return $this.setState(state);
+      		}
+		    getCrowdsaleData(web3, $this, crowdsaleContract, function() {
+		        getAccumulativeCrowdsaleData(web3, $this, function() {
+		          getCrowdsaleTargetDates(web3, $this, function() {
+		            
+		          })
+		        });
+		    });
 	    })
       });
   	}
