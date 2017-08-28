@@ -179,7 +179,8 @@ export class Invest extends React.Component {
 
     //var weiToSend = web3.toWei($this.state.tokensToInvest*$this.state.pricingStrategy.rate/10**$this.state.token.decimals, "ether");
     //var weiToSend = $this.state.tokensToInvest*$this.state.pricingStrategy.rate;
-    var weiToSend = $this.state.tokensToInvest*$this.state.pricingStrategy.rate;///10**$this.state.token.decimals;
+    //var weiToSend = $this.state.tokensToInvest*$this.state.pricingStrategy.rate/10**$this.state.token.decimals;
+    var weiToSend = $this.state.tokensToInvest*$this.state.pricingStrategy.rate;
     console.log("weiToSend: " + weiToSend);
     var opts = {
       from: web3.eth.accounts[0],
