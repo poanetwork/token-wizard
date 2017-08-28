@@ -223,7 +223,8 @@ export class stepFour extends stepTwo {
     return [
       //web3.toWei(1/pricingStrategy.rate, "ether")
       //pricingStrategy.rate
-      web3.toWei(1/pricingStrategy.rate/10**token.decimals, "ether")
+      //web3.toWei(1/pricingStrategy.rate/10**token.decimals, "ether")
+      web3.toWei(1/pricingStrategy.rate, "ether")
     ]
   }
 
