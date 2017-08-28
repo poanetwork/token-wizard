@@ -337,6 +337,8 @@ export const stepsAreValid = (steps) => {
     return Object.values(newSteps).length > 3 && Object.values(newSteps).every(step => step === VALID)
 }
 
+const validateTier = (tier) => typeof tier === 'string' && tier.length > 0 && tier.length < 27
+
 const validateName = (name) => typeof name === 'string' && name.length > 0 && name.length < 27
 
 const validateSupply = (supply) =>  isNaN(Number(supply)) === false && supply.length > 0
@@ -357,6 +359,7 @@ const validateAddress = (address) => {
 }
 
 const inputFieldValidators = {
+    tier: validateTier,
     name: validateName,
     ticker: validateTicker,
     decimals: validateDecimals,
@@ -377,10 +380,12 @@ export const validateValue = (value, property) => {
     let validationFunction, valueIsValid;
     if(isNotWhiteListTierObject(value)) {
         validationFunction = inputFieldValidators[property]
-        valueIsValid = validationFunction(value)
+        if (validationFunction)
+          valueIsValid = validationFunction(value)
     } else if(inputFieldValidators[property]){
         validationFunction = inputFieldValidators[property]
-        valueIsValid = validationFunction(value[property])
+        if (validationFunction)
+          valueIsValid = validationFunction(value[property])
     }
     return  valueIsValid === true ? VALID : INVALID
 }

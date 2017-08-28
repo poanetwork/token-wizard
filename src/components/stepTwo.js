@@ -30,22 +30,8 @@ export class stepTwo extends React.Component {
     this.validateAllFields(parent)
   }
   
-   setBlockTimes (event, key, property) {
-    let newState = Object.assign({}, this.state)
-    let targetTime = new Date(event.target.value);
-    let targetTimeTemp = new Date(targetTime).setUTCHours(new Date(targetTime).getHours());
-    if (property == "startTime") {
-      newState.crowdsale[key].startTime = new Date(targetTimeTemp).toISOString().split(".")[0];
-    } else if (property == "endTime") {
-      newState.crowdsale[key].endTime = new Date(targetTimeTemp).toISOString().split(".")[0];
-      if (newState.crowdsale[key + 1]) {
-        newState.crowdsale[key + 1].startTime = newState.crowdsale[key].endTime;
-        let newEndDate = new Date(newState.crowdsale[key].endTime).setDate(new Date(newState.crowdsale[key].endTime).getDate() + 4);;
-        console.log("newEndDate: " + newEndDate);
-        console.log("new Date(newEndDate).toISOString().split(`.`)[0]: " + new Date(newEndDate).toISOString().split(".")[0]);
-        newState.crowdsale[key + 1].endTime = new Date(newEndDate).toISOString().split(".")[0];
-      }
-    }
+  setBlockTimes = (key, property, targetTime) => {
+    let newState = { ...this.state }
     calculateFutureBlock(targetTime, this.state.blockTimeGeneration, (targetBlock) => {
       if (property == "startTime") {
         newState.crowdsale[key].startBlock = targetBlock;
@@ -70,12 +56,44 @@ export class stepTwo extends React.Component {
     }
   }*/
 
-  changeState (event, parent, key, property) {
-    console.log("parent: " + parent, "key: " + key, "property: " + property);
+  changeState = (event, parent, key, property) => {
     let value = event.target.value
+    //console.log("parent: " + parent, "key: " + key, "property: " + property, "value: " + value);
     let newState = { ...this.state }
+    console.log(newState);
     if (property == "startTime" || property == "endTime") {
-      this.setBlockTimes(event, key, property)
+      //console.log("key: " + key, "property: " + property, "value: " + value);
+      let targetTime = new Date(value);
+      let targetTimeTemp = targetTime.setHours(targetTime.getHours() - targetTime.getTimezoneOffset()/60);//.setUTCHours(new Date(targetTime).getHours());
+      //console.log(targetTimeTemp)
+      //console.log("d.getTimezoneOffset(): " + new Date(targetTimeTemp).getTimezoneOffset())
+      //console.log("new Date(targetTime).getHours(): " + new Date(targetTime).getHours());
+      if (property == "startTime") {
+        console.log("property == startTime");
+        if (targetTimeTemp)
+          newState.crowdsale[key].startTime = new Date(targetTimeTemp).toISOString().split(".")[0];
+        else
+          newState.crowdsale[key].startTime = null;
+      } else if (property == "endTime") {
+        //console.log("property == endTime");
+        //console.log("targetTimeTemp = " + targetTimeTemp);
+        //console.log("targetTimeTemp = " + new Date(targetTimeTemp));
+        //if (targetTimeTemp)
+        //  console.log("targetTimeTemp = " + new Date(targetTimeTemp).toISOString());
+        if (targetTimeTemp)
+          newState.crowdsale[key].endTime = new Date(targetTimeTemp).toISOString().split(".")[0];
+        else 
+          newState.crowdsale[key].endTime = null
+        if (newState.crowdsale[key + 1]) {
+          newState.crowdsale[key + 1].startTime = newState.crowdsale[key].endTime;
+          let newEndDate = new Date(newState.crowdsale[key].endTime);
+          newEndDate = newEndDate.setDate(new Date(newState.crowdsale[key].endTime).getDate() + 4);;
+          //console.log("newEndDate: " + newEndDate);
+          //console.log("new Date(newEndDate).toISOString().split(`.`)[0]: " + new Date(newEndDate).toISOString().split(".")[0]);
+          newState.crowdsale[key + 1].endTime = new Date(newEndDate).toISOString().split(".")[0];
+        }
+      }
+      this.setBlockTimes(key, property, targetTime)
     } else if (property.indexOf("whitelist") == 0) {
       let prop = property.split("_")[1];
       newState.crowdsale[key][`whiteListInput`][prop] = value

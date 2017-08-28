@@ -63,7 +63,7 @@ export function calculateFutureBlock(targetTime, blockTimeGeneration, cb) {
       let curTime = new Date();
 
       let curTimeInSec = curTime.getTime()/1000;
-      let targetTimeInSec = targetTime.getTime()/1000;
+      let targetTimeInSec = targetTime/1000;
       let timeDiffInSec = targetTimeInSec - curTimeInSec;
       let targetBlockDiff = Math.round(timeDiffInSec / blockTimeGeneration, 0);
       let targetBlock = curBlock + targetBlockDiff;
