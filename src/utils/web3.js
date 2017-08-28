@@ -590,6 +590,18 @@ function getTokenData(web3, $this) {
       }
     });
     propsCount++;
+    tokenContract["decimals"].call(function(err, decimals) {
+      cbCount++;
+      if (err) console.log(err);
+      console.log("token decimals: " + decimals);
+      let state = $this.state;
+      state.token.decimals = decimals;
+      if (propsCount == cbCount) {
+        state.loading = false;
+        $this.setState(state);
+      }
+    });
+    propsCount++;
     tokenContract["totalSupply"].call(function(err, supply) {
       cbCount++;
       if (err) console.log(err);

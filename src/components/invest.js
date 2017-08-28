@@ -171,9 +171,10 @@ export class Invest extends React.Component {
     for (let i = tierNum + 1; i < $this.state.contracts.crowdsale.addr.length; i++) {
       nextTiers.push($this.state.contracts.crowdsale.addr[i]);
     }
+    console.log("$this.state.token.decimals: " + $this.state.token.decimals);
     console.log("nextTiers: " + nextTiers);
     console.log(nextTiers.length);
-    var weiToSend = web3.toWei($this.state.tokensToInvest*$this.state.pricingStrategy.rate, "ether");
+    var weiToSend = web3.toWei($this.state.tokensToInvest*$this.state.pricingStrategy.rate/10**$this.state.token.decimals, "ether");
     var opts = {
       from: web3.eth.accounts[0],
       value: weiToSend
