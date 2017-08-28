@@ -221,7 +221,8 @@ export class stepFour extends stepTwo {
   getPricingStrategyParams = (web3, pricingStrategy) => {
     console.log(pricingStrategy);
     return [
-      web3.toWei(1/pricingStrategy.rate, "ether")
+      //web3.toWei(1/pricingStrategy.rate, "ether")
+      pricingStrategy.rate
     ]
   }
 

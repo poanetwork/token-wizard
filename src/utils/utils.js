@@ -316,6 +316,9 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
                   owners.push(state.crowdsale[crowdsaleNum].walletAddress);
                   params.vals.push(owners)
                 } break;
+                case "_oneTokenInWei": {
+                  params.vals.push(state.pricingStrategy[crowdsaleNum].rate);
+                } break;
                 default: {
                     params.vals.push("");
                 } break;

@@ -627,7 +627,7 @@ function getPricingStrategyData(web3, $this) {
       
       console.log("pricing strategy rate: " + rate);
       let state = $this.state;
-      state.pricingStrategy.rate = web3.fromWei(parseInt(rate, 10), "ether");
+      state.pricingStrategy.rate = parseInt(rate, 10);//web3.fromWei(parseInt(rate, 10), "ether");
       $this.setState(state);
     });
 
