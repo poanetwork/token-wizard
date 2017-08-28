@@ -63,7 +63,7 @@ export function calculateFutureBlock(targetTime, blockTimeGeneration, cb) {
       let curTime = new Date();
 
       let curTimeInSec = curTime.getTime()/1000;
-      let targetTimeInSec = targetTime.getTime()/1000;
+      let targetTimeInSec = targetTime/1000;
       let timeDiffInSec = targetTimeInSec - curTimeInSec;
       let targetBlockDiff = Math.round(timeDiffInSec / blockTimeGeneration, 0);
       let targetBlock = curBlock + targetBlockDiff;
@@ -590,6 +590,18 @@ function getTokenData(web3, $this) {
       }
     });
     propsCount++;
+    tokenContract["decimals"].call(function(err, decimals) {
+      cbCount++;
+      if (err) console.log(err);
+      console.log("token decimals: " + decimals);
+      let state = $this.state;
+      state.token.decimals = decimals;
+      if (propsCount == cbCount) {
+        state.loading = false;
+        $this.setState(state);
+      }
+    });
+    propsCount++;
     tokenContract["totalSupply"].call(function(err, supply) {
       cbCount++;
       if (err) console.log(err);
@@ -615,7 +627,7 @@ function getPricingStrategyData(web3, $this) {
       
       console.log("pricing strategy rate: " + rate);
       let state = $this.state;
-      state.pricingStrategy.rate = web3.fromWei(parseInt(rate, 10), "ether");
+      state.pricingStrategy.rate = parseInt(rate, 10);//web3.fromWei(parseInt(rate, 10), "ether");
       $this.setState(state);
     });
 

@@ -25,12 +25,9 @@ export class stepThree extends stepTwo {
 
   addCrowdsale() {
     let newState = {...this.state}
-    // console.log(newState);
-    // console.log(newState.children);
     let num = newState.children.length + 1;
     console.log(num);
-    newState.crowdsale.push({whitelist:[], whiteListInput:{}});
-    newState.crowdsale[num].startTime = newState.crowdsale[num - 1].endTime
+    newState.crowdsale.push({whitelist:[], whiteListElements: [], whiteListInput:{}});
     newState.pricingStrategy.push({});
     this.setState(newState, () => this.addCrowdsaleBlock(num));
   }
@@ -39,7 +36,6 @@ export class stepThree extends stepTwo {
     let newState = {...this.state}
     newState.children.push(<CrowdsaleBlock
       num = {num}
-      state = {newState}
       onChange={(e, cntrct, num, prop) => this.changeState(e, cntrct, num, prop)}
     ></CrowdsaleBlock>)
     this.setState(newState)
@@ -124,6 +120,8 @@ export class stepThree extends stepTwo {
 
   render() {
     const { validations } = this.state
+    let { crowdsale } = this.state
+    let { pricingStrategy } = this.state
     console.log('this.state.contractType', this.state.contractType)
     if (this.state.contractType == this.state.contractTypes.standard) {
       return (
@@ -144,7 +142,7 @@ export class stepThree extends stepTwo {
                 side='left' 
                 type='datetime-local' 
                 title={START_TIME} 
-                value={console.log('this.state.crowdsale[0].startTime', this.state) || this.state.crowdsale[0].startTime} 
+                value={console.log('crowdsale[0].startTime', this.state) || crowdsale[0].startTime} 
                 valid={validations.startTime} 
                 errorMessage={VALIDATION_MESSAGES.START_TIME} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'startTime', 0)}
@@ -153,7 +151,7 @@ export class stepThree extends stepTwo {
                 side='right' 
                 type='datetime-local' 
                 title={END_TIME} 
-                value={this.state.crowdsale[0].endTime} 
+                value={crowdsale[0].endTime} 
                 valid={validations.endTime} 
                 errorMessage={VALIDATION_MESSAGES.END_TIME} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'endTime', 0)}
@@ -162,7 +160,7 @@ export class stepThree extends stepTwo {
                 side='left' 
                 type='text' 
                 title={WALLET_ADDRESS} 
-                value={this.state.crowdsale[0].walletAddress} 
+                value={crowdsale[0].walletAddress} 
                 valid={validations.walletAddress} 
                 errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS}
                 onBlur={() => this.handleInputBlur('crowdsale', 'walletAddress', 0)} 
@@ -171,7 +169,7 @@ export class stepThree extends stepTwo {
                 side='right' 
                 type='number' 
                 title={SUPPLY} 
-                value={this.state.crowdsale[0].supply} 
+                value={crowdsale[0].supply} 
                 valid={validations.supply} 
                 errorMessage={VALIDATION_MESSAGES.SUPPLY}
                 onBlur={() => this.handleInputBlur('crowdsale', 'supply', 0)} 
@@ -180,7 +178,7 @@ export class stepThree extends stepTwo {
                 side='left' 
                 type='number' 
                 title={RATE} 
-                value={this.state.pricingStrategy[0].rate} 
+                value={pricingStrategy[0].rate} 
                 valid={validations.rate} 
                 errorMessage={VALIDATION_MESSAGES.RATE} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'rate', 0)}
@@ -211,14 +209,14 @@ export class stepThree extends stepTwo {
                 side='left' 
                 type='text' 
                 title={CROWDSALE_SETUP_NAME} 
-                value={this.state.crowdsale[0].tier}
+                value={crowdsale[0].tier}
                 onBlur={() => this.handleInputBlur('crowdsale', 'tier', 0)}
                 onChange={(e) => this.changeState(e, 'crowdsale', 0, 'tier')}/>
               <InputField 
                 side='right' 
                 type='text' 
                 title={WALLET_ADDRESS} 
-                value={this.state.crowdsale[0].walletAddress} 
+                value={crowdsale[0].walletAddress} 
                 valid={validations.walletAddress} 
                 errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'walletAddress', 0)}
@@ -227,7 +225,7 @@ export class stepThree extends stepTwo {
                 side='left' 
                 type='datetime-local' 
                 title={START_TIME} 
-                value={this.state.crowdsale[0].startTime} 
+                value={crowdsale[0].startTime} 
                 valid={validations.startTime} 
                 errorMessage={VALIDATION_MESSAGES.START_TIME} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'startTime', 0)}
@@ -236,7 +234,7 @@ export class stepThree extends stepTwo {
                 side='right' 
                 type='datetime-local' 
                 title={END_TIME} 
-                value={this.state.crowdsale[0].endTime} 
+                value={crowdsale[0].endTime} 
                 valid={validations.endTime} 
                 errorMessage={VALIDATION_MESSAGES.END_TIME} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'endTime', 0)}
@@ -245,7 +243,7 @@ export class stepThree extends stepTwo {
                 side='right' 
                 type='number' 
                 title={SUPPLY} 
-                value={this.state.crowdsale[0].supply} 
+                value={crowdsale[0].supply} 
                 valid={validations.supply} 
                 errorMessage={VALIDATION_MESSAGES.SUPPLY} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'supply', 0)}
@@ -254,7 +252,7 @@ export class stepThree extends stepTwo {
                 side='left' 
                 type='number' 
                 title={RATE} 
-                value={this.state.pricingStrategy[0].rate} 
+                value={pricingStrategy[0].rate} 
                 valid={validations.rate} 
                 errorMessage={VALIDATION_MESSAGES.RATE} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'rate', 0)}

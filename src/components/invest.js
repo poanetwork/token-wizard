@@ -173,11 +173,19 @@ export class Invest extends React.Component {
     }
     console.log("nextTiers: " + nextTiers);
     console.log(nextTiers.length);
-    var weiToSend = web3.toWei($this.state.tokensToInvest*$this.state.pricingStrategy.rate, "ether");
+    console.log("$this.state.token.decimals: " + $this.state.token.decimals);
+    console.log("$this.state.pricingStrategy.rate: " + $this.state.pricingStrategy.rate);
+    console.log("$this.state.tokensToInvest*$this.state.pricingStrategy.rate/10**$this.state.token.decimals: " + $this.state.tokensToInvest*$this.state.pricingStrategy.rate/10**$this.state.token.decimals);
+
+    //var weiToSend = web3.toWei($this.state.tokensToInvest*$this.state.pricingStrategy.rate/10**$this.state.token.decimals, "ether");
+    //var weiToSend = $this.state.tokensToInvest*$this.state.pricingStrategy.rate;
+    var weiToSend = web3.toWei($this.state.tokensToInvest*$this.state.pricingStrategy.rate/10**$this.state.token.decimals, "ether");
+    console.log("weiToSend: " + weiToSend);
     var opts = {
       from: web3.eth.accounts[0],
       value: weiToSend
     };
+    console.log(opts);
     crowdsaleContract.buy.sendTransaction(nextTiers, opts, function(err, txHash) {
       if (err) return console.log(err);
       
