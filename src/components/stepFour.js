@@ -4,7 +4,7 @@ import { deployContract, getWeb3, getNetworkVersion, addWhiteList, setFinalizeAg
 import { noMetaMaskAlert } from '../utils/alerts'
 import { defaultState } from '../utils/constants'
 import { getOldState } from '../utils/utils'
-import { getEncodedABI } from '../utils/microservices'
+import { getEncodedABIClientSide } from '../utils/microservices'
 import { stepTwo } from './stepTwo'
 import { StepNavigation } from './Common/StepNavigation'
 import { DisplayField } from './Common/DisplayField'
@@ -25,13 +25,21 @@ export class stepFour extends stepTwo {
       case this.state.contractTypes.standard: {
         let $this = this;
         let abiCrowdsale = this.state.contracts && this.state.contracts.crowdsale && this.state.contracts.crowdsale.abi || []
-        getEncodedABI(abiCrowdsale, this.state, [], 0, (ABIencoded) => {
-          let cntrct = "crowdsale";
-          let state = { ...$this.state }
-          state.contracts[cntrct].abiConstructor.push(ABIencoded);
-          console.log(cntrct + " ABI encoded params constructor:");
-          console.log(ABIencoded);
-          $this.setState(state);
+
+        let state = { ...this.state }
+        setTimeout(function() {
+           getWeb3((web3) => {
+            state.web3 = web3;
+            $this.setState(state);
+            getEncodedABIClientSide(web3, abiCrowdsale, $this.state, [], 0, (ABIencoded) => {
+              let cntrct = "crowdsale";
+              let state = { ...$this.state }
+              state.contracts[cntrct].abiConstructor.push(ABIencoded);
+              console.log(cntrct + " ABI encoded params constructor:");
+              console.log(ABIencoded);
+              $this.setState(state);
+            });
+          });
         });
       } break;
       case this.state.contractTypes.whitelistwithcap: {
@@ -46,7 +54,7 @@ export class stepFour extends stepTwo {
            getWeb3((web3) => {
             state.web3 = web3;
             $this.setState(state);
-            getEncodedABI(abiToken, state, [], 0, (ABIencoded) => {
+            getEncodedABIClientSide(web3, abiToken, state, [], 0, (ABIencoded) => {
               let cntrct = "token";
               let state = { ...$this.state }
               state.contracts[cntrct].abiConstructor = ABIencoded;
@@ -55,7 +63,7 @@ export class stepFour extends stepTwo {
               $this.setState(state);
             });
             for (let i = 0; i < $this.state.pricingStrategy.length; i++) {
-              getEncodedABI(abiPricingStrategy, state, [], i, (ABIencoded) => {
+              getEncodedABIClientSide(web3, abiPricingStrategy, state, [], i, (ABIencoded) => {
                 let cntrct = "pricingStrategy";
                 let state = { ...$this.state }
                 state.contracts[cntrct].abiConstructor.push(ABIencoded);
@@ -277,7 +285,7 @@ export class stepFour extends stepTwo {
     let $this = this;
     let abiCrowdsale = this.state.contracts && this.state.contracts.crowdsale && this.state.contracts.crowdsale.abi || []
     for (let i = 0; i < this.state.crowdsale.length; i++) {
-      getEncodedABI(abiCrowdsale, newState, [], i, (ABIencoded) => {
+      getEncodedABIClientSide(this.state.web3, abiCrowdsale, newState, [], i, (ABIencoded) => {
         let cntrct = "crowdsale";
         let state = { ...$this.state }
         state.contracts[cntrct].abiConstructor.push(ABIencoded);
