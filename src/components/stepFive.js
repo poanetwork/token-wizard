@@ -111,7 +111,7 @@ export class stepFive extends React.Component {
 				<div className="total-funds">
 					<div className="hidden">
 						<div className="left">
-							<p className="total-funds-title">{this.state.crowdsale.weiRaised} ETH</p>
+							<p className="total-funds-title">{this.state.crowdsale.ethRaised} ETH</p>
 							<p className="total-funds-description">
 								Total Raised Funds
 							</p>
@@ -135,7 +135,7 @@ export class stepFive extends React.Component {
 					<div className="total-funds-chart-division"></div>
 					<div className="total-funds-chart-division"></div>
 					<div className="total-funds-chart">
-						<div className="total-funds-chart-active" style={{width : (this.state.token.supply?this.state.crowdsale.weiRaised/this.state.token.supply:"0") + "%"}}></div>
+						<div className="total-funds-chart-active" style={{width : (this.state.token.supply?this.state.crowdsale.ethRaised/(this.state.token.supply*this.state.pricingStrategy.rate):"0") + "%"}}></div>
 					</div>
 				</div>
 				<div className="total-funds-statistics">
@@ -143,7 +143,7 @@ export class stepFive extends React.Component {
 						<div className="left">
 							<div className="hidden">
 								<div className="left">
-									<p className="title">{this.state.crowdsale.weiRaised*this.state.pricingStrategy.rate}</p>
+									<p className="title">{this.state.crowdsale.weiRaised/this.state.pricingStrategy.rate}</p>
 									<p className="description">
 										Tokens Claimed
 									</p>
