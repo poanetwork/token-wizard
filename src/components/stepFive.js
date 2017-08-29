@@ -117,7 +117,7 @@ export class stepFive extends React.Component {
 							</p>
 						</div>
 						<div className="right">
-							<p className="total-funds-title">{this.state.pricingStrategy.rate?isNaN(this.state.token.supply*this.state.pricingStrategy.rate)?0:(this.state.token.supply*this.state.pricingStrategy.rate):0} ETH</p>
+							<p className="total-funds-title">{this.state.pricingStrategy.rate?this.state.token.supply*this.state.pricingStrategy.rate?(this.state.web3.fromWei(this.state.token.supply*this.state.pricingStrategy.rate)):0:0} ETH</p>
 							<p className="total-funds-description">
 								Goal
 							</p>
@@ -163,7 +163,7 @@ export class stepFive extends React.Component {
 						<div className="right">
 							<div className="hidden">
 								<div className="left">
-									<p className="title">{1/this.state.pricingStrategy.rate?1/this.state.pricingStrategy.rate:0}</p>
+									<p className="title">{1/this.state.pricingStrategy.rate?1/this.state.web3.fromWei(this.state.pricingStrategy.rate, "ether"):0}</p>
 									<p className="description">
 										Price (Tokens/ETH)
 									</p>
