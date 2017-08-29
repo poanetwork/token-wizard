@@ -167,14 +167,20 @@ export class Invest extends React.Component {
     }
     console.log("nextTiers: " + nextTiers);
     console.log(nextTiers.length);
-    console.log("$this.state.token.decimals: " + $this.state.token.decimals);
-    console.log("$this.state.pricingStrategy.rate: " + $this.state.pricingStrategy.rate);
-    console.log("$this.state.tokensToInvest*$this.state.pricingStrategy.rate/10**$this.state.token.decimals: " + $this.state.tokensToInvest*$this.state.pricingStrategy.rate/10**$this.state.token.decimals);
+
+    let decimals = parseInt($this.state.token.decimals, 10);
+    console.log("decimals: " + decimals);
+    let rate = parseInt($this.state.pricingStrategy.rate, 10);
+    console.log("rate: " + rate);
+    let tokensToInvest = parseFloat($this.state.tokensToInvest);
+    console.log("tokensToInvest: " + tokensToInvest);
+
+    console.log("tokensToinvest*rate/10**decimals: " + tokensToInvest*rate/10**decimals);
 
     //var weiToSend = web3.toWei($this.state.tokensToInvest*$this.state.pricingStrategy.rate/10**$this.state.token.decimals, "ether");
     //var weiToSend = $this.state.tokensToInvest*$this.state.pricingStrategy.rate;
     //var weiToSend = $this.state.tokensToInvest*$this.state.pricingStrategy.rate/10**$this.state.token.decimals;
-    var weiToSend = $this.state.tokensToInvest*$this.state.pricingStrategy.rate;
+    var weiToSend = parseInt(tokensToInvest*rate, 10);
     console.log("weiToSend: " + weiToSend);
     var opts = {
       from: web3.eth.accounts[0],
