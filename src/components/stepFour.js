@@ -91,7 +91,6 @@ export class stepFour extends stepTwo {
       var contracts = this.state.contracts;
       var binTokenTransferProxy = contracts && contracts.tokenTransferProxy && contracts.tokenTransferProxy.bin || ''
       var abiTokenTransferProxy = contracts && contracts.tokenTransferProxy && contracts.tokenTransferProxy.abi || []
-      var tokenTransferProxy = this.state.tokenTransferProxy;
       deployContract(0, this.state.web3, abiTokenTransferProxy, binTokenTransferProxy, [], this.state, this.handleDeployedTokenTransferProxy)
      });
   }
@@ -116,7 +115,6 @@ export class stepFour extends stepTwo {
       var contracts = this.state.contracts;
       var binMultisig = contracts && contracts.multisig && contracts.multisig.bin || ''
       var abiMultisig = contracts && contracts.multisig && contracts.multisig.abi || []
-      var multisig = this.state.multisig;
       var paramsMultisig = this.getMultisigParams(this.state.web3)
       console.log(paramsMultisig);
       deployContract(0, this.state.web3, abiMultisig, binMultisig, paramsMultisig, this.state, this.handleDeployedMultisig)
@@ -436,8 +434,7 @@ export class stepFour extends stepTwo {
       let contracts = this.state.contracts;
       let binFinalizeAgent = contracts && contracts.finalizeAgent && contracts.finalizeAgent.bin || ''
       let abiFinalizeAgent = contracts && contracts.finalizeAgent && contracts.finalizeAgent.abi || []
-      let finalizeAgent = this.state.finalizeAgent;
-
+      
       let crowdsales = this.state.contracts.crowdsale.addr;
       this.deployFinalizeAgentRecursive(0, crowdsales, this.state.web3, abiFinalizeAgent, binFinalizeAgent, this.state) 
      });

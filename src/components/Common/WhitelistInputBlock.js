@@ -20,7 +20,7 @@ export class WhitelistInputBlock extends React.Component {
         let isAdded = false;
         for (let i = 0; i < this.state.crowdsale[this.props.num].whitelist.length; i++) {
             let addedAddr = this.state.crowdsale[this.props.num].whitelist[i].addr;
-            if (addedAddr == addr) {
+            if (addedAddr === addr) {
                 isAdded = true;
                 break;
             }
@@ -29,7 +29,6 @@ export class WhitelistInputBlock extends React.Component {
         if (isAdded) return;
 
         let state = this.state
-        let childrenLen = this.state.crowdsale[this.props.num].whiteListElements.length;
         state.crowdsale[this.props.num].whiteListElements.push(<WhitelistItem 
                 addr={addr}
                 min={min}
