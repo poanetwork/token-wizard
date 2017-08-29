@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
-import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively, updateWhiteListRecursively } from '../utils/web3'
+import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively } from '../utils/web3'
 import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
 import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert } from '../utils/alerts'
 import { Loader } from './Common/Loader'
@@ -15,7 +15,6 @@ export class Invest extends React.Component {
       state.seconds = 0;
       state.loading = true;
       this.state = state;
-      var state = this.state;
   }
 
   componentDidMount () {
@@ -26,9 +25,6 @@ export class Invest extends React.Component {
       if (!web3) return;
 
       const crowdsaleAddrs = getURLParam("addr");
-      let crowdsaleAddr;
-      if (crowdsaleAddrs.length == 1)
-        crowdsaleAddr = crowdsaleAddr[0];
       const networkID = getQueryVariable("networkID");
       const contractType = getQueryVariable("contractType");
       checkNetWorkByID(web3, networkID);
@@ -160,9 +156,7 @@ export class Invest extends React.Component {
         state.loading = false;
         return $this.setState(state);
       }
-      //updateWhiteListRecursively(0, $this, tierNum, web3, function() {
-        $this.investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, web3, $this);
-      //})
+      $this.investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, web3, $this);
     })
   }
 

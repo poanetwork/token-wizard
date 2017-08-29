@@ -45,7 +45,7 @@ export class stepThree extends stepTwo {
     return <Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}><a className="button button_fill">Continue</a></Link>
   }
 
-  renderStandardLinkComponent () {
+  /*renderStandardLinkComponent () {
     if(stepsAreValid(this.state.validations) || allFieldsAreValid('crowdsale', this.state)){
       return this.renderStandardLink()
     }
@@ -57,7 +57,7 @@ export class stepThree extends stepTwo {
       <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Crowdsale</div>
       <Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}><a className="button button_fill">Continue</a></Link>
     </div>
-  }
+  }*/
 
   renderStandardLinkComponent () {
     if(stepsAreValid(this.state.validations) || allFieldsAreValid('crowdsale', this.state)){
@@ -102,7 +102,7 @@ export class stepThree extends stepTwo {
           newState.crowdsale[0].startBlock = targetBlock;
           datesIterator++;
 
-          if (datesIterator == datesCount) {
+          if (datesIterator === datesCount) {
             $this.setState(newState);
           }
         });
@@ -110,7 +110,7 @@ export class stepThree extends stepTwo {
           newState.crowdsale[0].endBlock = targetBlock;
           datesIterator++;
 
-          if (datesIterator == datesCount) {
+          if (datesIterator === datesCount) {
             $this.setState(newState);
           }
         });
@@ -123,7 +123,7 @@ export class stepThree extends stepTwo {
     let { crowdsale } = this.state
     let { pricingStrategy } = this.state
     console.log('this.state.contractType', this.state.contractType)
-    if (this.state.contractType == this.state.contractTypes.standard) {
+    if (this.state.contractType === this.state.contractTypes.standard) {
       return (
         <section className="steps steps_crowdsale-contract" ref="three">
           <StepNavigation activeStep={CROWDSALE_SETUP}/>
@@ -190,7 +190,7 @@ export class stepThree extends stepTwo {
           </div>
         </section>
       )
-    } else if (this.state.contractType == this.state.contractTypes.whitelistwithcap) {
+    } else if (this.state.contractType === this.state.contractTypes.whitelistwithcap) {
       return (
         <section className="steps steps_crowdsale-contract" ref="three">
           <StepNavigation activeStep={CROWDSALE_SETUP}/>

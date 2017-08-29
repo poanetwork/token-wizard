@@ -1,7 +1,7 @@
 import React from 'react'
 import '../../assets/stylesheets/application.css';
 import { WhitelistInputBlock } from './WhitelistInputBlock'
-import { getOldState, defaultCompanyStartDate, defaultCompanyEndDate } from '../../utils/utils'
+import { getOldState, defaultCompanyEndDate } from '../../utils/utils'
 
 import { InputField } from './InputField'
 
