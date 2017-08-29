@@ -170,12 +170,12 @@ export class Invest extends React.Component {
 
     let decimals = parseInt($this.state.token.decimals, 10);
     console.log("decimals: " + decimals);
-    let rate = parseInt($this.state.pricingStrategy.rate, 10);
+    let rate = parseInt($this.state.pricingStrategy.rate, 10); //it is from contract. It is already in wei. How much 1 token costs in wei.
     console.log("rate: " + rate);
     let tokensToInvest = parseFloat($this.state.tokensToInvest);
     console.log("tokensToInvest: " + tokensToInvest);
 
-    console.log("tokensToinvest*rate/10**decimals: " + tokensToInvest*rate/10**decimals);
+    console.log("tokensToInvest*rate/10**decimals: " + tokensToInvest*rate/10**decimals);
 
     //var weiToSend = web3.toWei($this.state.tokensToInvest*$this.state.pricingStrategy.rate/10**$this.state.token.decimals, "ether");
     //var weiToSend = $this.state.tokensToInvest*$this.state.pricingStrategy.rate;
