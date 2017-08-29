@@ -408,9 +408,11 @@ export function getAccumulativeCrowdsaleData(web3, $this, cb) {
         console.log("weiRaised: " + web3.fromWei(parseInt(weiRaised, 10), "ether"));
         let state = $this.state;
         if (state.crowdsale.weiRaised)
-          state.crowdsale.weiRaised += parseFloat(web3.fromWei(parseInt(weiRaised, 10), "ether"));
+          state.crowdsale.weiRaised += parseInt(weiRaised, 10);//parseFloat(web3.fromWei(parseInt(weiRaised, 10), "ether"));
         else
-          state.crowdsale.weiRaised = parseFloat(web3.fromWei(parseInt(weiRaised, 10), "ether"));
+          state.crowdsale.weiRaised = parseInt(weiRaised, 10);//parseFloat(web3.fromWei(parseInt(weiRaised, 10), "ether"));
+
+        state.crowdsale.ethRaised = parseFloat(web3.fromWei(parseInt(state.crowdsale.weiRaised, 10), "ether"));
 
         if (propsCount === cbCount) {
           state.loading = false;

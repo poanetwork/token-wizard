@@ -294,7 +294,7 @@ export class Invest extends React.Component {
         </div>
         <div className="invest-table-cell invest-table-cell_right">
           <div className="balance">
-            <p className="balance-title">{this.state.crowdsale.tokenAmountOf?this.state.crowdsale.tokenAmountOf.toString():this.state.crowdsale.weiRaised?this.state.crowdsale.weiRaised.toString():"0"} {this.state.token.ticker?this.state.token.ticker.toString(): ""}</p>
+            <p className="balance-title">{(this.state.contractType==this.state.contractTypes.whitelistwithcap)?((this.state.crowdsale.tokenAmountOf&&this.state.token.decimals)?(this.state.crowdsale.tokenAmountOf/10**this.state.token.decimals).toString():"0"):(this.state.crowdsale.weiRaised?this.state.crowdsale.weiRaised.toString():"0")} {this.state.token.ticker?this.state.token.ticker.toString(): ""}</p>
             <p className="balance-description">Balance</p>
             <p className="description">
               Lorem ipsum dolor sit amet, consectetur
