@@ -448,9 +448,9 @@ export function getAccumulativeCrowdsaleData(web3, $this, cb) {
           console.log("maximumSellableTokens: " + maximumSellableTokens);
           let state = $this.state;
           if (state.crowdsale.maximumSellableTokens)
-            state.crowdsale.maximumSellableTokens += maximumSellableTokens;
+            state.crowdsale.maximumSellableTokens += parseInt(maximumSellableTokens, 10);
           else
-            state.crowdsale.maximumSellableTokens = maximumSellableTokens;
+            state.crowdsale.maximumSellableTokens = parseInt(maximumSellableTokens, 10);
           if (propsCount === cbCount) {
             state.loading = false;
             $this.setState(state, cb);

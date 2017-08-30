@@ -236,10 +236,14 @@ export class Invest extends React.Component {
     const { seconds } = this.state
     const { days, hours, minutes } = this.getTimeStamps(seconds)
 
+    const tokenDecimals = this.state.token.decimals;
     const tokenTicker = this.state.token.ticker?this.state.token.ticker.toString():"";
     const tokenName = this.state.token.name?this.state.token.name.toString():"";
-    const investorBalance = (this.state.contractType==this.state.contractTypes.whitelistwithcap)?((this.state.crowdsale.tokenAmountOf)?((this.state.crowdsale.tokenAmountOf > 1000?this.state.crowdsale.tokenAmountOf.toExponential():this.state.crowdsale.tokenAmountOf)).toString():"0"):(this.state.crowdsale.weiRaised?this.state.crowdsale.weiRaised.toString():"0");
-    const tierCap = !isNaN(this.state.crowdsale.maximumSellableTokens)?(this.state.crowdsale.maximumSellableTokens*10**this.state.token.decimals).toString():"0";
+    const maxCapBeforeDecimals = this.state.crowdsale.maximumSellableTokens;
+    const tokenAmountOf = this.state.crowdsale.tokenAmountOf;
+    const weiRaised = this.state.crowdsale.weiRaised;
+    const investorBalance = (this.state.contractType==this.state.contractTypes.whitelistwithcap)?(tokenAmountOf?((tokenAmountOf > 1000?tokenAmountOf.toExponential():tokenAmountOf)).toString():"0"):(weiRaised?weiRaised.toString():"0");
+    const tierCap = !isNaN(maxCapBeforeDecimals)?(maxCapBeforeDecimals*10**tokenDecimals).toString():"0";
 
     return <div className="invest container">
       <div className="invest-table">
