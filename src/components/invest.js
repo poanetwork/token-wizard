@@ -139,7 +139,7 @@ export class Invest extends React.Component {
       crowdsaleContract.buySampleTokens.sendTransaction(web3.eth.accounts[0], opts, function(err, txHash) {
         if (err) return console.log(err);
         
-        console.log("txHash: " + txHash);
+        console.log("tx hash: " + txHash);
         successfulInvestmentAlert($this.state.tokensToInvest);
       });
     });
