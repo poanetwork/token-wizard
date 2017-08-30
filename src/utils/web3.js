@@ -505,6 +505,22 @@ export function getCrowdsaleData(web3, $this, crowdsaleContract, cb) {
     });
   }
 
+  if (crowdsaleContract.maximumSellableTokens) {
+    propsCount++;
+    crowdsaleContract.maximumSellableTokens.call(function(err, maximumSellableTokens) {
+      cbCount++;
+      if (err) return console.log(err);
+      
+      console.log("maximumSellableTokens: " + maximumSellableTokens);
+      let state = $this.state;
+      state.crowdsale.maximumSellableTokens = maximumSellableTokens;
+      if (propsCount === cbCount) {
+        state.loading = false;
+        $this.setState(state, cb);
+      }
+    });
+  }
+
   if (crowdsaleContract.supply) {
     propsCount++;
     crowdsaleContract.supply.call(function(err, supply) {
@@ -696,6 +712,10 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
       };
     });
   });
+}
+
+export function txMinedCallback() {
+
 }
 
 export function attachToContract(web3, abi, addr, cb) {

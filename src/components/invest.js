@@ -235,6 +235,12 @@ export class Invest extends React.Component {
   render(state){
     const { seconds } = this.state
     const { days, hours, minutes } = this.getTimeStamps(seconds)
+
+    const tokenTicker = this.state.token.ticker?this.state.token.ticker.toString():"";
+    const tokenName = this.state.token.name?this.state.token.name.toString():"";
+    const investorBalance = (this.state.contractType==this.state.contractTypes.whitelistwithcap)?((this.state.crowdsale.tokenAmountOf)?((this.state.crowdsale.tokenAmountOf > 1000?this.state.crowdsale.tokenAmountOf.toExponential():this.state.crowdsale.tokenAmountOf)).toString():"0"):(this.state.crowdsale.weiRaised?this.state.crowdsale.weiRaised.toString():"0");
+    const tierCap = !isNaN(this.state.crowdsale.maximumSellableTokens)?(this.state.crowdsale.maximumSellableTokens*10**this.state.token.decimals).toString():"0";
+
     return <div className="invest container">
       <div className="invest-table">
         <div className="invest-table-cell invest-table-cell_left">
@@ -272,16 +278,16 @@ export class Invest extends React.Component {
             </div>
             <div className="hashes-i hidden">
               <div className="left">
-                <p className="hashes-title">{this.state.token.name?this.state.token.name.toString():""}</p>
+                <p className="hashes-title">{tokenName}</p>
                 <p className="hashes-description">Name</p>
               </div>
               <div className="left">
-                <p className="hashes-title">{this.state.token.ticker?this.state.token.ticker.toString():""}</p>
+                <p className="hashes-title">{tokenTicker}</p>
                 <p className="hashes-description">Ticker</p>
               </div>
             </div>
             <div className="hashes-i">
-              <p className="hashes-title">{this.state.token.supply?this.state.token.supply.toString():"0"} {this.state.token.ticker?this.state.token.ticker.toString(): ""}</p>
+              <p className="hashes-title">{tierCap} {tokenTicker}</p>
               <p className="hashes-description">Total Supply</p>
             </div>
           </div>
@@ -294,7 +300,7 @@ export class Invest extends React.Component {
         </div>
         <div className="invest-table-cell invest-table-cell_right">
           <div className="balance">
-            <p className="balance-title">{(this.state.contractType==this.state.contractTypes.whitelistwithcap)?((this.state.crowdsale.tokenAmountOf&&this.state.token.decimals)?(this.state.crowdsale.tokenAmountOf/10**this.state.token.decimals).toString():"0"):(this.state.crowdsale.weiRaised?this.state.crowdsale.weiRaised.toString():"0")} {this.state.token.ticker?this.state.token.ticker.toString(): ""}</p>
+            <p className="balance-title">{investorBalance} {tokenTicker}</p>
             <p className="balance-description">Balance</p>
             <p className="description">
               Lorem ipsum dolor sit amet, consectetur
