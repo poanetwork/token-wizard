@@ -107,8 +107,8 @@ export class Crowdsale extends React.Component {
 		const tokensClaimedRatio = goalInETH?(ethRaised/goalInETH)*100:"0";
 
 		//tokens claimed: tiers, standard
-		const tokensClaimedStandard = rate?(this.state.crowdsale.ethRaised/rate*10**tokenDecimals).toExponential():0;
-		const tokensClaimedTiers = rate?(this.state.crowdsale.weiRaised/rate*10**tokenDecimals).toExponential():0;
+		const tokensClaimedStandard = rate?(this.state.crowdsale.ethRaised/rate.toFixed(tokenDecimals)):0;
+		const tokensClaimedTiers = rate?(this.state.crowdsale.weiRaised/rate.toFixed(tokenDecimals)):0;
 	    const tokensClaimed = (this.state.contracts.crowdsale.contractType == this.state.contractTypes.whitelistwithcap)?tokensClaimedTiers:tokensClaimedStandard;
 	    	    
 
@@ -118,8 +118,8 @@ export class Crowdsale extends React.Component {
 	    const tokensPerETH = (this.state.contracts.crowdsale.contractType == this.state.contractTypes.whitelistwithcap)?tokensPerETHTiers:tokensPerETHStandard;
 	    
 	    //total supply: tiers, standard
-	    const tierCap = maxCapBeforeDecimals?(maxCapBeforeDecimals*10**tokenDecimals).toString():0;
-	    const standardCrowdsaleSupply = !isNaN(this.state.crowdsale.supply)?(this.state.crowdsale.supply*10**tokenDecimals).toString():0;
+	    const tierCap = maxCapBeforeDecimals?(maxCapBeforeDecimals.toFixed(tokenDecimals)).toString():0;
+	    const standardCrowdsaleSupply = !isNaN(this.state.crowdsale.supply)?(this.state.crowdsale.supply.toFixed(tokenDecimals)).toString():0;
     	const totalSupply = (this.state.contracts.crowdsale.contractType == this.state.contractTypes.whitelistwithcap)?tierCap:standardCrowdsaleSupply;
 
 	    //goal in ETH
