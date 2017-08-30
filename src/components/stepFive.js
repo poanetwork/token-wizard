@@ -101,11 +101,11 @@ export class stepFive extends React.Component {
 		const rate = this.state.pricingStrategy.rate;
 		const maxCapBeforeDecimals = this.state.crowdsale.maximumSellableTokens;
 		const investorsCount = this.state.crowdsale.investors?this.state.crowdsale.investors.toString():0;
-	    const crowdaleTotalCap = maxCapBeforeDecimals?maxCapBeforeDecimals.toString():0;
+	    const crowdaleTotalCap = maxCapBeforeDecimals?(maxCapBeforeDecimals*10**decimals).toString():0;
 	    const tokensPerETH = 1/rate?1/this.state.web3.fromWei(rate, "ether"):0;
 	    const tokensClaimed = (this.state.crowdsale.weiRaised/rate*10**decimals).toExponential();
 	    const ETHRaised = this.state.crowdsale.ethRaised;
-		const goalInETH = rate?(this.state.web3.fromWei(crowdaleTotalCap*rate).toString()):0;
+		const goalInETH = rate?(this.state.web3.fromWei(maxCapBeforeDecimals*rate).toString()):0;
 	    const tokensClaimedRatio = goalInETH?(ETHRaised/goalInETH)*100:"0";
 	    return (
 		<section className="steps steps_crowdsale-page">
