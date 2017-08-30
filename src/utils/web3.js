@@ -727,6 +727,7 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
   });
 }
 
+//todo
 export function txMinedCallback() {
 
 }
