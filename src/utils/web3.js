@@ -256,7 +256,9 @@ export function findCurrentContractRecursively(i, $this, web3, firstCrowdsaleCon
       firstCrowdsaleContract = crowdsaleContract;
     }
     if (!crowdsaleContract) return noContractAlert();
-    console.log(crowdsaleContract);
+    console.log($this.state.contracts.crowdsale.contractType);
+    if ($this.state.contracts.crowdsale.contractType == $this.state.contractTypes.standard)
+      return cb(crowdsaleContract, i);
     crowdsaleContract.startsAt.call(function(err, startDate) {
       if (err) return console.log(err);
       
@@ -561,6 +563,9 @@ export function getCrowdsaleData(web3, $this, crowdsaleContract, cb) {
       $this.setState(state, cb);
     }
 
+    if (!tokenAddr || tokenAddr === "0x") return;
+    getTokenData(web3, $this);
+
     if (!crowdsaleContract.pricingStrategy) return;
 
     propsCount++;
@@ -579,9 +584,6 @@ export function getCrowdsaleData(web3, $this, crowdsaleContract, cb) {
       if (!pricingStrategyAddr || pricingStrategyAddr === "0x") return;
       getPricingStrategyData(web3, $this);
     });
-
-    if (!tokenAddr || tokenAddr === "0x") return;
-    getTokenData(web3, $this);
   });
 }
 
@@ -725,6 +727,7 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
   });
 }
 
+//todo
 export function txMinedCallback() {
 
 }
