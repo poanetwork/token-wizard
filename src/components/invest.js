@@ -248,13 +248,13 @@ export class Invest extends React.Component {
     const ethRaised = this.state.crowdsale.ethRaised;
 
     //balance: tiers, standard
-    const investorBalanceTiers = (tokenAmountOf?((tokenAmountOf > 1000?tokenAmountOf.toExponential():tokenAmountOf)).toString():"0");
-    const investorBalanceStandard = (ethRaised?(ethRaised*10**tokenDecimals/rate).toExponential().toString():"0");
+    const investorBalanceTiers = (tokenAmountOf?((tokenAmountOf/10**tokenDecimals)/*.toFixed(tokenDecimals)*/).toString():"0");
+    const investorBalanceStandard = (ethRaised?(ethRaised/*.toFixed(tokenDecimals)*//rate).toString():"0");
     const investorBalance = (this.state.contracts.crowdsale.contractType==this.state.contractTypes.whitelistwithcap)?investorBalanceTiers:investorBalanceStandard;
 
     //total supply: tiers, standard
-    const tierCap = !isNaN(maxCapBeforeDecimals)?(maxCapBeforeDecimals*10**tokenDecimals).toString():"0";
-    const standardCrowdsaleSupply = !isNaN(this.state.crowdsale.supply)?(this.state.crowdsale.supply*10**tokenDecimals).toString():"0";
+    const tierCap = !isNaN(maxCapBeforeDecimals)?(maxCapBeforeDecimals/*.toFixed(tokenDecimals)*/).toString():"0";
+    const standardCrowdsaleSupply = !isNaN(this.state.crowdsale.supply)?(this.state.crowdsale.supply/*.toFixed(tokenDecimals)*/).toString():"0";
     const totalSupply = (this.state.contracts.crowdsale.contractType == this.state.contractTypes.whitelistwithcap)?tierCap:standardCrowdsaleSupply;
 
     return <div className="invest container">

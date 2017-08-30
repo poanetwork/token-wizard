@@ -246,15 +246,6 @@ export class stepThree extends stepTwo {
                 onBlur={() => this.handleInputBlur('crowdsale', 'endTime', 0)}
                 onChange={(e) => this.changeState(e, 'crowdsale', 0, 'endTime')}/>
               <InputField 
-                side='right' 
-                type='number' 
-                title={SUPPLY} 
-                value={crowdsale[0].supply} 
-                valid={validations.supply} 
-                errorMessage={VALIDATION_MESSAGES.SUPPLY} 
-                onBlur={() => this.handleInputBlur('crowdsale', 'supply', 0)}
-                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'supply')}/>
-              <InputField 
                 side='left' 
                 type='number' 
                 title={RATE} 
@@ -263,6 +254,15 @@ export class stepThree extends stepTwo {
                 errorMessage={VALIDATION_MESSAGES.RATE} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'rate', 0)}
                 onChange={(e) => this.changeState(e, 'pricingStrategy', 0, 'rate')}/>
+              <InputField 
+                side='right' 
+                type='number' 
+                title={SUPPLY} 
+                value={crowdsale[0].supply} 
+                valid={validations.supply} 
+                errorMessage={VALIDATION_MESSAGES.SUPPLY} 
+                onBlur={() => this.handleInputBlur('crowdsale', 'supply', 0)}
+                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'supply')}/>
             </div>
             <div className="white-list-title">
               <p className="title">Whitelist</p>

@@ -67,17 +67,17 @@ export class CrowdsaleBlock extends React.Component {
             defaultValue={defaultCompanyEndDate(this.state.crowdsale[this.props.num - 1].endTime)}
             onChange={(e) => onChange(e, 'crowdsale', num, 'endTime')}/>
           <InputField 
-            side='right' 
-            type='number' 
-            title={SUPPLY} 
-            value={crowdsale[num].supply} 
-            onChange={(e) => onChange(e, 'crowdsale', num, 'supply')}/>
-          <InputField 
             side='left' 
             type='number' 
             title={RATE} 
             value={pricingStrategy[num].rate} 
             onChange={(e) => onChange(e, 'pricingStrategy', num, 'rate')}/>
+          <InputField 
+            side='right' 
+            type='number' 
+            title={SUPPLY} 
+            value={crowdsale[num].supply} 
+            onChange={(e) => onChange(e, 'crowdsale', num, 'supply')}/>
         </div>
         <div className="white-list-title">
           <p className="title">Whitelist</p>
