@@ -246,7 +246,7 @@ export function transferOwnership(web3, abi, addr, finalizeAgentAddr, cb) {
 export function findCurrentContractRecursively(i, $this, web3, firstCrowdsaleContract, cb) {
   console.log($this.state.contracts.crowdsale.addr);
   let crowdsaleAddr = $this.state.contracts.crowdsale.addr[i];
-  if (i === $this.state.contracts.crowdsale.addr.length) return cb(firstCrowdsaleContract);
+  if (i === $this.state.contracts.crowdsale.addr.length) return cb(firstCrowdsaleContract, i);
   if (!crowdsaleAddr) return cb(null);
   if (!web3.isAddress(crowdsaleAddr)) return cb(null);
   attachToContract(web3, $this.state.contracts.crowdsale.abi, crowdsaleAddr, function(err, crowdsaleContract) {

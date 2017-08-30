@@ -164,6 +164,7 @@ export class Invest extends React.Component {
 
   investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, web3, $this) {
     let nextTiers = [];
+    console.log($this.state.contracts.crowdsale);
     for (let i = tierNum + 1; i < $this.state.contracts.crowdsale.addr.length; i++) {
       nextTiers.push($this.state.contracts.crowdsale.addr[i]);
     }
