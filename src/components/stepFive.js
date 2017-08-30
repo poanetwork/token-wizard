@@ -1,6 +1,6 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { getWeb3, checkNetWorkByID, getCrowdsaleData, getAccumulativeCrowdsaleData, findCurrentContractRecursively } from '../utils/web3'
+import { getWeb3, checkNetWorkByID, getCrowdsaleData, initializeAccumulativeData, getAccumulativeCrowdsaleData, findCurrentContractRecursively } from '../utils/web3'
 import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
 import { StepNavigation } from './Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../utils/constants'
@@ -73,8 +73,10 @@ export class stepFive extends React.Component {
       		}
 		    getCrowdsaleData(web3, $this, crowdsaleContract, function() {  
 		    });
-		    getAccumulativeCrowdsaleData(web3, $this, function() {
-		    });
+		    initializeAccumulativeData($this, function() {
+	        	getAccumulativeCrowdsaleData(web3, $this, function() {
+	        	});
+	      	});
 	    })
       });
   	}
@@ -95,6 +97,18 @@ export class stepFive extends React.Component {
   	}
 
 	render() {
+		const tokenAddr = this.state.contracts?this.state.contracts.token.addr:"";
+	    const crowdsaleAddr = this.state.contracts?this.state.contracts.crowdsale.addr:"";
+	    const decimals = this.state.token.decimals;
+		const rate = this.state.pricingStrategy.rate;
+		const maxCapBeforeDecimals = this.state.crowdsale.maximumSellableTokens;
+		const investorsCount = this.state.crowdsale.investors?this.state.crowdsale.investors.toString():0;
+	    const crowdaleTotalCap = maxCapBeforeDecimals?(maxCapBeforeDecimals*10**decimals).toString():0;
+	    const tokensPerETH = 1/rate?1/this.state.web3.fromWei(rate, "ether"):0;
+	    const tokensClaimed = rate?(this.state.crowdsale.weiRaised/rate*10**decimals).toExponential():0;
+	    const ETHRaised = this.state.crowdsale.ethRaised;
+		const goalInETH = rate?(this.state.web3.fromWei(maxCapBeforeDecimals*rate).toString()):0;
+	    const tokensClaimedRatio = goalInETH?(ETHRaised/goalInETH)*100:"0";
 	    return (
 		<section className="steps steps_crowdsale-page">
 			<StepNavigation activeStep={CROWDSALE_PAGE} />
@@ -111,13 +125,13 @@ export class stepFive extends React.Component {
 				<div className="total-funds">
 					<div className="hidden">
 						<div className="left">
-							<p className="total-funds-title">{this.state.crowdsale.ethRaised} ETH</p>
+							<p className="total-funds-title">{ETHRaised} ETH</p>
 							<p className="total-funds-description">
 								Total Raised Funds
 							</p>
 						</div>
 						<div className="right">
-							<p className="total-funds-title">{this.state.pricingStrategy.rate?this.state.token.supply*this.state.pricingStrategy.rate?(this.state.web3.fromWei(this.state.token.supply*this.state.pricingStrategy.rate)):0:0} ETH</p>
+							<p className="total-funds-title">{goalInETH} ETH</p>
 							<p className="total-funds-description">
 								Goal
 							</p>
@@ -135,7 +149,7 @@ export class stepFive extends React.Component {
 					<div className="total-funds-chart-division"></div>
 					<div className="total-funds-chart-division"></div>
 					<div className="total-funds-chart">
-						<div className="total-funds-chart-active" style={{width : (this.state.token.supply?this.state.crowdsale.ethRaised/(this.state.token.supply*this.state.pricingStrategy.rate):"0") + "%"}}></div>
+						<div className="total-funds-chart-active" style={{width : tokensClaimedRatio + "%"}}></div>
 					</div>
 				</div>
 				<div className="total-funds-statistics">
@@ -143,19 +157,19 @@ export class stepFive extends React.Component {
 						<div className="left">
 							<div className="hidden">
 								<div className="left">
-									<p className="title">{this.state.crowdsale.weiRaised/this.state.pricingStrategy.rate}</p>
+									<p className="title">{tokensClaimed}</p>
 									<p className="description">
 										Tokens Claimed
 									</p>
 								</div>
 								<div className="right">
-									<p className="title">{this.state.crowdsale.investors?this.state.crowdsale.investors.toString():0}</p>
+									<p className="title">{investorsCount}</p>
 									<p className="description">
 										Contributors
 									</p>
 								</div>
 							</div>
-							<p className="hash">{this.state.contracts?this.state.contracts.token.addr:""}</p>
+							<p className="hash">{tokenAddr}</p>
 							<p className="description">
 								Token Address
 							</p>
@@ -163,19 +177,19 @@ export class stepFive extends React.Component {
 						<div className="right">
 							<div className="hidden">
 								<div className="left">
-									<p className="title">{1/this.state.pricingStrategy.rate?1/this.state.web3.fromWei(this.state.pricingStrategy.rate, "ether"):0}</p>
+									<p className="title">{tokensPerETH}</p>
 									<p className="description">
 										Price (Tokens/ETH)
 									</p>
 								</div>
 								<div className="right">
-									<p className="title">{this.state.token.supply?this.state.token.supply.toString():0}</p>
+									<p className="title">{crowdaleTotalCap}</p>
 									<p className="description">
 										Total Supply
 									</p>
 								</div>
 							</div>
-							<p className="hash">{this.state.contracts?this.state.contracts.crowdsale.addr:""}</p>
+							<p className="hash">{crowdsaleAddr}</p>
 							<p className="description">
 								Crowdsale Contract Address
 							</p>

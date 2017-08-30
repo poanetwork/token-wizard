@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
-import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively } from '../utils/web3'
+import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData, initializeAccumulativeData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively } from '../utils/web3'
 import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
 import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert } from '../utils/alerts'
 import { Loader } from './Common/Loader'
@@ -77,7 +77,9 @@ export class Invest extends React.Component {
       }
       getCrowdsaleData(web3, $this, crowdsaleContract, function() { 
       });
-      getAccumulativeCrowdsaleData(web3, $this, function() {
+      initializeAccumulativeData($this, function() {
+        getAccumulativeCrowdsaleData(web3, $this, function() {
+        });
       });
       getCrowdsaleTargetDates(web3, $this, function() {
         console.log($this.state.crowdsale);
@@ -235,6 +237,16 @@ export class Invest extends React.Component {
   render(state){
     const { seconds } = this.state
     const { days, hours, minutes } = this.getTimeStamps(seconds)
+
+    const tokenDecimals = this.state.token.decimals;
+    const tokenTicker = this.state.token.ticker?this.state.token.ticker.toString():"";
+    const tokenName = this.state.token.name?this.state.token.name.toString():"";
+    const maxCapBeforeDecimals = this.state.crowdsale.maximumSellableTokens;
+    const tokenAmountOf = this.state.crowdsale.tokenAmountOf;
+    const weiRaised = this.state.crowdsale.weiRaised;
+    const investorBalance = (this.state.contractType==this.state.contractTypes.whitelistwithcap)?(tokenAmountOf?((tokenAmountOf > 1000?tokenAmountOf.toExponential():tokenAmountOf)).toString():"0"):(weiRaised?weiRaised.toString():"0");
+    const tierCap = !isNaN(maxCapBeforeDecimals)?(maxCapBeforeDecimals*10**tokenDecimals).toString():"0";
+
     return <div className="invest container">
       <div className="invest-table">
         <div className="invest-table-cell invest-table-cell_left">
@@ -272,16 +284,16 @@ export class Invest extends React.Component {
             </div>
             <div className="hashes-i hidden">
               <div className="left">
-                <p className="hashes-title">{this.state.token.name?this.state.token.name.toString():""}</p>
+                <p className="hashes-title">{tokenName}</p>
                 <p className="hashes-description">Name</p>
               </div>
               <div className="left">
-                <p className="hashes-title">{this.state.token.ticker?this.state.token.ticker.toString():""}</p>
+                <p className="hashes-title">{tokenTicker}</p>
                 <p className="hashes-description">Ticker</p>
               </div>
             </div>
             <div className="hashes-i">
-              <p className="hashes-title">{this.state.token.supply?this.state.token.supply.toString():"0"} {this.state.token.ticker?this.state.token.ticker.toString(): ""}</p>
+              <p className="hashes-title">{tierCap} {tokenTicker}</p>
               <p className="hashes-description">Total Supply</p>
             </div>
           </div>
@@ -294,7 +306,7 @@ export class Invest extends React.Component {
         </div>
         <div className="invest-table-cell invest-table-cell_right">
           <div className="balance">
-            <p className="balance-title">{(this.state.contractType==this.state.contractTypes.whitelistwithcap)?((this.state.crowdsale.tokenAmountOf&&this.state.token.decimals)?(this.state.crowdsale.tokenAmountOf/10**this.state.token.decimals).toString():"0"):(this.state.crowdsale.weiRaised?this.state.crowdsale.weiRaised.toString():"0")} {this.state.token.ticker?this.state.token.ticker.toString(): ""}</p>
+            <p className="balance-title">{investorBalance} {tokenTicker}</p>
             <p className="balance-description">Balance</p>
             <p className="description">
               Lorem ipsum dolor sit amet, consectetur

@@ -389,6 +389,15 @@ export function getCrowdsaleTargetDates(web3, $this, cb) {
   }
 }
 
+export function initializeAccumulativeData($this, cb) {
+  let state = $this.state;
+  state.crowdsale.weiRaised = 0;
+  state.crowdsale.tokenAmountOf = 0;
+  state.crowdsale.maximumSellableTokens = 0;
+  state.crowdsale.investors = 0;
+  $this.setState(state, cb);
+}
+
 export function getAccumulativeCrowdsaleData(web3, $this, cb) {
   let propsCount = 0;
   let cbCount = 0;
@@ -422,7 +431,6 @@ export function getAccumulativeCrowdsaleData(web3, $this, cb) {
 
       if (crowdsaleContract.tokenAmountOf) {
         propsCount++;
-        console.log(web3.eth.accounts[0]);
         crowdsaleContract.tokenAmountOf.call(web3.eth.accounts[0], function(err, tokenAmountOf) {
           cbCount++;
           if (err) return console.log(err);
@@ -433,6 +441,25 @@ export function getAccumulativeCrowdsaleData(web3, $this, cb) {
             state.crowdsale.tokenAmountOf += parseInt(tokenAmountOf, 10);
           else
             state.crowdsale.tokenAmountOf = parseInt(tokenAmountOf, 10);
+          if (propsCount === cbCount) {
+            state.loading = false;
+            $this.setState(state, cb);
+          }
+        });
+      }
+
+      if (crowdsaleContract.maximumSellableTokens) {
+        propsCount++;
+        crowdsaleContract.maximumSellableTokens.call(function(err, maximumSellableTokens) {
+          cbCount++;
+          if (err) return console.log(err);
+          
+          console.log("maximumSellableTokens: " + maximumSellableTokens);
+          let state = $this.state;
+          if (state.crowdsale.maximumSellableTokens)
+            state.crowdsale.maximumSellableTokens += parseInt(maximumSellableTokens, 10);
+          else
+            state.crowdsale.maximumSellableTokens = parseInt(maximumSellableTokens, 10);
           if (propsCount === cbCount) {
             state.loading = false;
             $this.setState(state, cb);
@@ -696,6 +723,10 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
       };
     });
   });
+}
+
+export function txMinedCallback() {
+
 }
 
 export function attachToContract(web3, abi, addr, cb) {
