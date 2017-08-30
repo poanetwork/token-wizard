@@ -1,6 +1,6 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { getWeb3, checkNetWorkByID, getCrowdsaleData, getAccumulativeCrowdsaleData, findCurrentContractRecursively } from '../utils/web3'
+import { getWeb3, checkNetWorkByID, getCrowdsaleData, initializeAccumulativeData, getAccumulativeCrowdsaleData, findCurrentContractRecursively } from '../utils/web3'
 import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
 import { StepNavigation } from './Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../utils/constants'
@@ -73,8 +73,10 @@ export class stepFive extends React.Component {
       		}
 		    getCrowdsaleData(web3, $this, crowdsaleContract, function() {  
 		    });
-		    getAccumulativeCrowdsaleData(web3, $this, function() {
-		    });
+		    initializeAccumulativeData($this, function() {
+	        	getAccumulativeCrowdsaleData(web3, $this, function() {
+	        	});
+	      	});
 	    })
       });
   	}

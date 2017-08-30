@@ -389,6 +389,15 @@ export function getCrowdsaleTargetDates(web3, $this, cb) {
   }
 }
 
+export function initializeAccumulativeData($this, cb) {
+  let state = $this.state;
+  state.crowdsale.weiRaised = 0;
+  state.crowdsale.tokenAmountOf = 0;
+  state.crowdsale.maximumSellableTokens = 0;
+  state.crowdsale.investors = 0;
+  $this.setState(state, cb);
+}
+
 export function getAccumulativeCrowdsaleData(web3, $this, cb) {
   let propsCount = 0;
   let cbCount = 0;
