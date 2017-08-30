@@ -22,7 +22,7 @@ export function noContractAlert() {
 export function successfulInvestmentAlert(tokensToInvest) {
     sweetAlert({
         title: "Success",
-        text: "Congrats! You are successfully buy " + tokensToInvest + " tokens!",
+        text: "Congrats! You've successfully bought " + tokensToInvest + " tokens!",
         html: true,
         type: "success"
     }, function() {
