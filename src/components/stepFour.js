@@ -669,7 +669,7 @@ export class stepFour extends stepTwo {
           </div>
         </div>
         <div className="button-container">
-          {/*<Link to='/5' onClick={this.deployCrowdsale}><a href="#" className="button button_fill">Continue</a></Link>*/}
+          {/*<Link to='/crowdsale' onClick={this.deployCrowdsale}><a href="#" className="button button_fill">Continue</a></Link>*/}
           <a onClick={this.deployCrowdsale} className="button button_fill">Continue</a>
         </div>
         <Loader show={this.state.loading}></Loader>

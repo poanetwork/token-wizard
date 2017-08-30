@@ -8,7 +8,7 @@ import { defaultState } from '../utils/constants'
 import { Loader } from './Common/Loader'
 const { CROWDSALE_PAGE } = NAVIGATION_STEPS
 
-export class stepFive extends React.Component {
+export class Crowdsale extends React.Component {
 	constructor(props) {
 	    super(props);
 	    console.log(props);
@@ -99,16 +99,22 @@ export class stepFive extends React.Component {
 	render() {
 		const tokenAddr = this.state.contracts?this.state.contracts.token.addr:"";
 	    const crowdsaleAddr = this.state.contracts?this.state.contracts.crowdsale.addr:"";
-	    const decimals = this.state.token.decimals;
+	    const tokenDecimals = !isNaN(this.state.token.decimals)?this.state.token.decimals:0;
 		const rate = this.state.pricingStrategy.rate;
 		const maxCapBeforeDecimals = this.state.crowdsale.maximumSellableTokens;
 		const investorsCount = this.state.crowdsale.investors?this.state.crowdsale.investors.toString():0;
-	    const crowdaleTotalCap = maxCapBeforeDecimals?(maxCapBeforeDecimals*10**decimals).toString():0;
 	    const tokensPerETH = 1/rate?1/this.state.web3.fromWei(rate, "ether"):0;
-	    const tokensClaimed = rate?(this.state.crowdsale.weiRaised/rate*10**decimals).toExponential():0;
-	    const ETHRaised = this.state.crowdsale.ethRaised;
+	    const tokensClaimed = rate?(this.state.crowdsale.weiRaised/rate*10**tokenDecimals).toExponential():0;
+	    const ethRaised = this.state.crowdsale.ethRaised;
 		const goalInETH = rate?(this.state.web3.fromWei(maxCapBeforeDecimals*rate).toString()):0;
-	    const tokensClaimedRatio = goalInETH?(ETHRaised/goalInETH)*100:"0";
+	    const tokensClaimedRatio = goalInETH?(ethRaised/goalInETH)*100:"0";
+
+	    //total supply: tiers, standard
+	    const tierCap = maxCapBeforeDecimals?(maxCapBeforeDecimals*10**tokenDecimals).toString():0;
+	    const standardCrowdsaleSupply = !isNaN(this.state.crowdsale.supply)?(this.state.crowdsale.supply*10**tokenDecimals).toString():"0";
+    	const totalSupply = (this.state.contracts.crowdsale.contractType == this.state.contractTypes.whitelistwithcap)?tierCap:standardCrowdsaleSupply;
+
+	    
 	    return (
 		<section className="steps steps_crowdsale-page">
 			<StepNavigation activeStep={CROWDSALE_PAGE} />
@@ -125,7 +131,7 @@ export class stepFive extends React.Component {
 				<div className="total-funds">
 					<div className="hidden">
 						<div className="left">
-							<p className="total-funds-title">{ETHRaised} ETH</p>
+							<p className="total-funds-title">{ethRaised} ETH</p>
 							<p className="total-funds-description">
 								Total Raised Funds
 							</p>
@@ -183,7 +189,7 @@ export class stepFive extends React.Component {
 									</p>
 								</div>
 								<div className="right">
-									<p className="title">{crowdaleTotalCap}</p>
+									<p className="title">{totalSupply}</p>
 									<p className="description">
 										Total Supply
 									</p>
