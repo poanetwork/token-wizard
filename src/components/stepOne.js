@@ -65,6 +65,12 @@ export class stepOne extends React.Component {
     setFlatFileContentToState("./contracts/" + finalizeAgentName + "_flat.sol", (content) => srcF = content);
     setFlatFileContentToState("./contracts/" + finalizeAgentName + "_flat.bin", (_bin) => binF = _bin);
     setFlatFileContentToState("./contracts/" + finalizeAgentName + "_flat.abi", (_abi) => this.addContractsToState(srcF, binF, _abi, "finalizeAgent", state));
+
+    const nullFinalizeAgentName = "NullFinalizeAgent";
+    let srcNF, binNF
+    setFlatFileContentToState("./contracts/" + nullFinalizeAgentName + "_flat.sol", (content) => srcNF = content);
+    setFlatFileContentToState("./contracts/" + nullFinalizeAgentName + "_flat.bin", (_bin) => binNF = _bin);
+    setFlatFileContentToState("./contracts/" + nullFinalizeAgentName + "_flat.abi", (_abi) => this.addContractsToState(srcNF, binNF, _abi, "nullFinalizeAgent", state));
   }
 
   componentDidMount() {

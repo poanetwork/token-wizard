@@ -50,7 +50,7 @@ export function setFlatFileContentToState(file, cb) {
 
 export function getWhiteListWithCapCrowdsaleAssets(state, cb) {
     const contractName = "CrowdsaleWhitelistWithCap";
-    var derivativesLength = 12;
+    var derivativesLength = 6;
     var derivativesIterator = 0;
     setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", function(_bin) {
       derivativesIterator++;
@@ -100,7 +100,7 @@ export function getWhiteListWithCapCrowdsaleAssets(state, cb) {
         cb(state);
       }
     });
-    const tokenTransferProxyContractName = "TokenTransferProxy";
+    /*const tokenTransferProxyContractName = "TokenTransferProxy";
     setFlatFileContentToState("./contracts/" + tokenTransferProxyContractName + "_flat.bin", function(_bin) {
       derivativesIterator++;
       state.contracts.tokenTransferProxy.bin = _bin;
@@ -137,7 +137,7 @@ export function getWhiteListWithCapCrowdsaleAssets(state, cb) {
     const finalizeAgentContractName = "FinalizeAgent";
     setFlatFileContentToState("./contracts/" + finalizeAgentContractName + "_flat.bin", function(_bin) {
       derivativesIterator++;
-      state.contracts.multisig.bin = _bin;
+      state.contracts.finalizeAgent.bin = _bin;
 
       if (derivativesIterator === derivativesLength) {
         cb(state);
@@ -145,17 +145,15 @@ export function getWhiteListWithCapCrowdsaleAssets(state, cb) {
     });
     setFlatFileContentToState("./contracts/" + finalizeAgentContractName + "_flat.abi", function(_abi) {
       derivativesIterator++;
-      state.contracts.multisig.abi = JSON.parse(_abi);
+      state.contracts.finalizeAgent.abi = JSON.parse(_abi);
 
       if (derivativesIterator === derivativesLength) {
         cb(state);
       }
-    });
+    });*/
 }
 
 export function getStandardCrowdsaleAssets(state, cb) {
-    //const contractName = "RomanCrowdsale";
-    //const contractName = "SampleCrowdsale";
     const contractName = "CrowdsaleStandard";
     var derivativesLength = 4;
     var derivativesIterator = 0;
@@ -266,15 +264,20 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
                     params.vals.push(state.pricingStrategy[crowdsaleNum].rate);
                 } break;
                 case "_wallet":
-                case "_beneficiary":
-                case "_multisigWallet": {
+                case "_beneficiary": {
                     params.vals.push(state.crowdsale[crowdsaleNum].walletAddress);
+                } break;
+                case "_multisigWallet": {
+                    params.vals.push(state.contracts.multisig.addr);
                 } break;
                 case "_pricingStrategy": {
                     params.vals.push(state.contracts.pricingStrategy.addr[crowdsaleNum]);
                 } break;
                 case "_token": {
                     params.vals.push(state.contracts.token.addr);
+                } break;
+                case "_crowdsale": {
+                    params.vals.push(state.contracts.crowdsale[crowdsaleNum].addr);
                 } break;
                 case "_crowdsaleSupply": {
                     params.vals.push(state.crowdsale[crowdsaleNum].supply);

@@ -432,17 +432,24 @@ export class stepFour extends stepTwo {
         return noMetaMaskAlert();
       }
       let contracts = this.state.contracts;
+      let binNullFinalizeAgent = contracts && contracts.nullFinalizeAgent && contracts.nullFinalizeAgent.bin || ''
+      let abiNullFinalizeAgent = contracts && contracts.nullFinalizeAgent && contracts.nullFinalizeAgent.abi || []
+
       let binFinalizeAgent = contracts && contracts.finalizeAgent && contracts.finalizeAgent.bin || ''
       let abiFinalizeAgent = contracts && contracts.finalizeAgent && contracts.finalizeAgent.abi || []
       
       let crowdsales = this.state.contracts.crowdsale.addr;
-      this.deployFinalizeAgentRecursive(0, crowdsales, this.state.web3, abiFinalizeAgent, binFinalizeAgent, this.state) 
+      this.deployFinalizeAgentRecursive(0, crowdsales, this.state.web3, abiNullFinalizeAgent, binNullFinalizeAgent, abiFinalizeAgent, binFinalizeAgent, this.state) 
      });
   }
 
-  deployFinalizeAgentRecursive = (i, crowdsales, web3, abi, bin, state) => {
-    var paramsFinalizeAgent = this.getFinalizeAgentParams(this.state.web3, i)
+  deployFinalizeAgentRecursive = (i, crowdsales, web3, abiNull, binNull, abiLast, binLast, state) => {
+    let abi, bin, paramsFinalizeAgent;
+    abi = abiNull;
+    bin = binNull;
+    paramsFinalizeAgent = this.getNullFinalizeAgentParams(this.state.web3, i)
     console.log(paramsFinalizeAgent);
+
     if (i < crowdsales.length - 1) {
       deployContract(i, web3, abi, bin, paramsFinalizeAgent, state, (err, finalizeAgentAddr) => {
         i++;
@@ -454,15 +461,26 @@ export class stepFour extends stepTwo {
         }
         newState.contracts.finalizeAgent.addr.push(finalizeAgentAddr);
         this.setState(newState);
-        this.deployFinalizeAgentRecursive(i, crowdsales, web3, abi, bin, state)
+        this.deployFinalizeAgentRecursive(i, crowdsales, web3, abiNull, binNull, abiLast, binLast, state)
       })
     } else {
+      abi = abiLast;
+      bin = binLast;
+      paramsFinalizeAgent = this.getFinalizeAgentParams(this.state.web3, i)
+      console.log(paramsFinalizeAgent);
       deployContract(i, web3, abi, bin, paramsFinalizeAgent, state, this.handleDeployedFinalizeAgent)
     }
   }
 
+  getNullFinalizeAgentParams = (web3, i) => {
+    return [
+      this.state.contracts.crowdsale.addr[i]
+    ]
+  }
+
   getFinalizeAgentParams = (web3, i) => {
     return [
+      this.state.contracts.token.addr,
       this.state.contracts.crowdsale.addr[i]
     ]
   }
@@ -506,7 +524,6 @@ export class stepFour extends stepTwo {
               this.setFinalizeAgentRecursive(0, web3, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, this.state.contracts.finalizeAgent.addr, () => {
                 this.setReleaseAgentRecursive(0, web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.finalizeAgent.addr, () => {
                   transferOwnership(web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.multisig.addr, () => {
-                  //this.transferOwnershipRecursive(0, web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.finalizeAgent.addr, () => {
                     newState.loading = false;
                     this.setState(newState);
                     this.goToCrowdsalePage();
@@ -560,17 +577,6 @@ export class stepFour extends stepTwo {
       i++;
       if (i < finalizeAgentAddrs.length) {
         this.setReleaseAgentRecursive(i, web3, abi, addr, finalizeAgentAddrs, cb);
-      } else {
-        cb();
-      }
-    })
-  }
-
-  transferOwnershipRecursive = (i, web3, abi, addr, finalizeAgentAddrs, cb) => {
-    transferOwnership(web3, abi, addr, finalizeAgentAddrs[i], () => {
-      i++;
-      if (i < finalizeAgentAddrs.length) {
-        this.transferOwnershipRecursive(i, web3, abi, addr, finalizeAgentAddrs, cb);
       } else {
         cb();
       }
