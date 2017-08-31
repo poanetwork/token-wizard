@@ -9,11 +9,9 @@ export const defaultState = {
 	}, 
 	token: {},
 	crowdsale: [{
-		whitelist:[], 
+		whitelist: [], 
 		whiteListElements: [], 
-		whiteListInput: {},
-		reservedTokensElements: [],
-		reservedTokensInput: {}
+		whiteListInput: {}
 	}],
 	pricingStrategy: [{}],
 	blockTimeGeneration: 17,
@@ -75,7 +73,7 @@ export const intitialStepTwoValidations = {
 		name: EMPTY,
 		supply: EMPTY,
 		decimals: EMPTY,
-		ticker: EMPTY 
+		ticker: EMPTY
 	}
 }
 
@@ -84,7 +82,10 @@ export const initialStepTwoValues = {
 		name: '',
 		supply: '',
 		ticker: '',
-		decimals: ''
+		decimals: '',
+		reservedTokens: [],
+		reservedTokensElements: [],
+		reservedTokensInput: {}
 	}
 }
 

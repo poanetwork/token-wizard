@@ -59,16 +59,12 @@ export class stepTwo extends React.Component {
 
   changeState = (event, parent, key, property) => {
     let value = event.target.value
-    //console.log("parent: " + parent, "key: " + key, "property: " + property, "value: " + value);
+    console.log("parent: " + parent, "key: " + key, "property: " + property, "value: " + value);
     let newState = { ...this.state }
     console.log(newState);
     if (property === "startTime" || property === "endTime") {
-      //console.log("key: " + key, "property: " + property, "value: " + value);
       let targetTime = new Date(value);
       let targetTimeTemp = targetTime.setHours(targetTime.getHours() - targetTime.getTimezoneOffset()/60);//.setUTCHours(new Date(targetTime).getHours());
-      //console.log(targetTimeTemp)
-      //console.log("d.getTimezoneOffset(): " + new Date(targetTimeTemp).getTimezoneOffset())
-      //console.log("new Date(targetTime).getHours(): " + new Date(targetTime).getHours());
       if (property === "startTime") {
         console.log("property == startTime");
         if (targetTimeTemp)
@@ -76,11 +72,6 @@ export class stepTwo extends React.Component {
         else
           newState.crowdsale[key].startTime = null;
       } else if (property === "endTime") {
-        //console.log("property == endTime");
-        //console.log("targetTimeTemp = " + targetTimeTemp);
-        //console.log("targetTimeTemp = " + new Date(targetTimeTemp));
-        //if (targetTimeTemp)
-        //  console.log("targetTimeTemp = " + new Date(targetTimeTemp).toISOString());
         if (targetTimeTemp)
           newState.crowdsale[key].endTime = new Date(targetTimeTemp).toISOString().split(".")[0];
         else 
@@ -89,8 +80,6 @@ export class stepTwo extends React.Component {
           newState.crowdsale[key + 1].startTime = newState.crowdsale[key].endTime;
           let newEndDate = new Date(newState.crowdsale[key].endTime);
           newEndDate = newEndDate.setDate(new Date(newState.crowdsale[key].endTime).getDate() + 4);;
-          //console.log("newEndDate: " + newEndDate);
-          //console.log("new Date(newEndDate).toISOString().split(`.`)[0]: " + new Date(newEndDate).toISOString().split(".")[0]);
           newState.crowdsale[key + 1].endTime = new Date(newEndDate).toISOString().split(".")[0];
         }
       }
@@ -98,14 +87,19 @@ export class stepTwo extends React.Component {
     } else if (property.indexOf("whitelist") === 0) {
       let prop = property.split("_")[1];
       newState.crowdsale[key][`whiteListInput`][prop] = value
+    } else if (property.indexOf("reservedtokens") === 0) {
+      console.log(newState);
+      let prop = property.split("_")[1];
+      newState.token[`reservedTokensInput`][prop] = value
     } else {
       if( Object.prototype.toString.call( newState[parent] ) === '[object Array]' ) {
         newState[parent][key][property] = value;//this.getNewParent(property, parent, key, value)
       } else {
+        console.log("fjdkgjsdlgkds");
         newState[parent][property] = value;//this.getNewParent(property, parent, key, value)
       }
     }
-    if (property.indexOf("whitelist") === -1) {
+    if (property.indexOf("whitelist") === -1 && property.indexOf("reservedtokens") === -1) {
       newState[`validations`][property] = validateValue(value, property, newState)
       console.log('property', property)
       console.log('newState[`validations`][property]',  newState[`validations`], validateValue(value, property, newState), 'newState', newState)
@@ -207,8 +201,7 @@ export class stepTwo extends React.Component {
             <p className="title">Reserved tokens</p>
           </div>
           <ReservedTokensInputBlock
-            num={0}
-            onChange={(e, cntrct, num, prop) => this.changeState(e, cntrct, 0, prop)}
+            onChange={this.changeState}
           ></ReservedTokensInputBlock>
         </div>
         <div className="button-container">
