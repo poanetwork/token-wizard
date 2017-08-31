@@ -6,6 +6,7 @@ import { calculateFutureBlock } from '../utils/web3'
 import { getOldState, stepsAreValid, getNewValue, validateValue, allFieldsAreValid } from '../utils/utils'
 import { StepNavigation } from './Common/StepNavigation'
 import { InputField } from './Common/InputField'
+import { ReservedTokensInputBlock } from './Common/ReservedTokensInputBlock'
 import { NAVIGATION_STEPS, VALIDATION_MESSAGES, VALIDATION_TYPES, defaultState, TEXT_FIELDS, initialStepTwoValues, intitialStepTwoValidations } from '../utils/constants'
 const { TOKEN_SETUP } = NAVIGATION_STEPS
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
@@ -202,6 +203,13 @@ export class stepTwo extends React.Component {
               onChange={(e) => this.changeState(e, 'token', 0, 'decimals')}
             />
           </div>
+          <div className="reserved-tokens-title">
+            <p className="title">Reserved tokens</p>
+          </div>
+          <ReservedTokensInputBlock
+            num={0}
+            onChange={(e, cntrct, num, prop) => this.changeState(e, cntrct, 0, prop)}
+          ></ReservedTokensInputBlock>
         </div>
         <div className="button-container">
           {this.renderLinkComponent()}

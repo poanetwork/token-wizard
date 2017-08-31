@@ -8,7 +8,13 @@ export const defaultState = {
 		tokenTransferProxy: {}
 	}, 
 	token: {},
-	crowdsale: [{whitelist:[], whiteListElements: [], whiteListInput: {}}],
+	crowdsale: [{
+		whitelist:[], 
+		whiteListElements: [], 
+		whiteListInput: {},
+		reservedTokensElements: [],
+		reservedTokensInput: {}
+	}],
 	pricingStrategy: [{}],
 	blockTimeGeneration: 17,
 	contractType: "",
@@ -52,6 +58,8 @@ export const TEXT_FIELDS = {
 	ADDRESS: 'Address',
 	MIN: 'Min',
 	MAX: 'Max',
+	DIMENSION: 'Dimension',
+	VALUE: 'Value',
 	MAX_CAP: 'Max cap'
 }
 
