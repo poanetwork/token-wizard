@@ -315,7 +315,7 @@ export class stepFour extends stepTwo {
     console.log("***Deploy crowdsale contract***");
     getWeb3((web3) => {
       getNetworkVersion(web3, (_networkID) => {
-              console.log('web3', web3)
+        console.log('web3', web3)
 
         if (web3.eth.accounts.length === 0) {
           return noMetaMaskAlert();
@@ -459,7 +459,6 @@ export class stepFour extends stepTwo {
     } else {
       deployContract(i, web3, abi, bin, paramsFinalizeAgent, state, this.handleDeployedFinalizeAgent)
     }
-
   }
 
   getFinalizeAgentParams = (web3, i) => {
@@ -506,7 +505,7 @@ export class stepFour extends stepTwo {
             this.addWhiteListRecursive(0, web3, this.state.crowdsale, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, () => {
               this.setFinalizeAgentRecursive(0, web3, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, this.state.contracts.finalizeAgent.addr, () => {
                 this.setReleaseAgentRecursive(0, web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.finalizeAgent.addr, () => {
-                  transferOwnership(web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.finalizeAgent.addr.slice(-1)[0], () => {
+                  transferOwnership(web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.multisig.addr, () => {
                   //this.transferOwnershipRecursive(0, web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.finalizeAgent.addr, () => {
                     newState.loading = false;
                     this.setState(newState);

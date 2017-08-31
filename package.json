@@ -42,7 +42,7 @@
     "0xproject_path": "src/components/0xproject/contracts/",
     "token_transfer_proxy_contract_name": "TokenTransferProxy",
     "multisig_contract_name": "MultiSigWalletWithTimeLockExceptRemoveAuthorizedAddress",
-    "finalize_agent_contract_name": "NullFinalizeAgent",
+    "finalize_agent_contract_name": "DefaultFinalizeAgent",
     "standard_crowdsale_contract_name": "SampleCrowdsale",
     "standard_crowdsale_token_contract_name": "SampleCrowdsaleToken",
     "crowdsale_contract_name": "MintedTokenCappedCrowdsale",
