@@ -148,6 +148,22 @@ export function setMintAgent(web3, abi, addr, acc, cb) {
   });
 }
 
+export function updateJoinedCrowdsales(web3, abi, addr, joinedCntrctAddr, cb) {
+  console.log("###updateJoinedCrowdsales:###");
+  attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
+    console.log("attach to crowdsale contract");
+    if (err) return console.log(err);
+    if (!crowdsaleContract) return noContractAlert();
+
+    crowdsaleContract.updateJoinedCrowdsales.sendTransaction(joinedCntrctAddr, function(err, result) {
+      if (err) return console.log(err);
+
+      console.log("updateJoinedCrowdsales function transaction: " + result);
+      cb();
+    });
+  });
+}
+
 export function addWhiteList(round, web3, crowdsale, abi, addr, cb) {
   console.log("###whitelist:###");
   let whitelist = [];

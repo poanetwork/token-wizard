@@ -190,7 +190,8 @@ export class Invest extends React.Component {
       value: weiToSend
     };
     console.log(opts);
-    crowdsaleContract.buy.sendTransaction(nextTiers, opts, function(err, txHash) {
+    crowdsaleContract.buy.sendTransaction(opts, function(err, txHash) {
+    //crowdsaleContract.buy.sendTransaction(nextTiers, opts, function(err, txHash) {
       if (err) return console.log(err);
       
       console.log("txHash: " + txHash);
