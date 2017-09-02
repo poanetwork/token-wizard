@@ -412,3 +412,30 @@ export const allFieldsAreValid = (parent, state) => {
     })
     return validationValues.find(value => value === INVALID) === undefined
 }
+
+export const handleTokenForPDF = (content, doc, state) => {
+    const title = content.value
+    const pdfContent = title + state.token[content.field]
+    doc.text(pdfContent, content.x, content.y)
+}
+
+export const handleCrowdsaleForPDF = (content, doc, state) => {
+    const title = content.value
+    const pdfContent = title + state.crowdsale[0][content.field]
+    doc.text(pdfContent, content.x, content.y)
+}
+
+export const handlePricingStrategyForPDF = (content, doc, state) => {
+    const title = content.value
+    const pdfContent = title + state.pricingStrategy[0][content.field]
+    doc.text(pdfContent, content.x, content.y)
+}
+
+export const handleContractsForPDF = (content, doc, state) => {
+    const title = content.value
+    const pdfContent = title + state.contracts.crowdsale[content.field]
+    doc.addPage() 
+    doc.setLineWidth(50)
+    const wrappedPDFContent = doc.splitTextToSize(pdfContent, 180);
+    doc.text(wrappedPDFContent, content.x, content.y)
+}

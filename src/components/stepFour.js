@@ -2,14 +2,15 @@ import React from 'react'
 import '../assets/stylesheets/application.css';
 import { deployContract, getWeb3, getNetworkVersion, addWhiteList, setFinalizeAgent, approve, setTransferAgent, setMintAgent, setReleaseAgent, updateJoinedCrowdsales, transferOwnership } from '../utils/web3'
 import { noMetaMaskAlert } from '../utils/alerts'
-import { defaultState } from '../utils/constants'
-import { getOldState } from '../utils/utils'
+import { defaultState, PDF_CONTENTS } from '../utils/constants'
+import { getOldState, handleContractsForPDF, handleTokenForPDF, handleCrowdsaleForPDF, handlePricingStrategyForPDF } from '../utils/utils'
 import { getEncodedABIClientSide } from '../utils/microservices'
 import { stepTwo } from './stepTwo'
 import { StepNavigation } from './Common/StepNavigation'
 import { DisplayField } from './Common/DisplayField'
 import { Loader } from './Common/Loader'
 import { NAVIGATION_STEPS } from '../utils/constants'
+import jsPDF from 'jspdf'
 const { PUBLISH } = NAVIGATION_STEPS
 
 export class stepFour extends stepTwo {
@@ -80,6 +81,30 @@ export class stepFour extends stepTwo {
       default:
         break;
     }
+  }
+
+  handleContentByParent(content, doc) {
+    switch(content.parent) {
+      case 'token':
+        return handleTokenForPDF(content, doc, this.state)
+      case 'crowdsale':
+        return handleCrowdsaleForPDF(content, doc, this.state)
+      case 'contracts':
+        return handleContractsForPDF(content, doc, this.state)
+      case 'pricingStrategy':
+        return handlePricingStrategyForPDF(content, doc, this.state)
+    }
+  }
+
+  downloadCrowdsaleInfo() {
+    var doc = new jsPDF('p', 'mm', 'a4')
+    doc.setLineWidth(10)
+    PDF_CONTENTS.forEach(content => {
+      this.handleContentByParent(content, doc)
+    })
+    // doc.text('Hello world!', 10, 10)
+    // doc.text('adfasdf', 10, 20)
+    doc.save('crowdsale.pdf')
   }
 
   deployTokenTransferProxy = () => {
@@ -690,6 +715,7 @@ export class stepFour extends stepTwo {
         </div>
         <div className="button-container">
           {/*<Link to='/crowdsale' onClick={this.deployCrowdsale}><a href="#" className="button button_fill">Continue</a></Link>*/}
+          <div onClick={() => this.downloadCrowdsaleInfo()} className="button button_fill_secondary">Download PDF</div>
           <a onClick={this.deployCrowdsale} className="button button_fill">Continue</a>
         </div>
         <Loader show={this.state.loading}></Loader>
