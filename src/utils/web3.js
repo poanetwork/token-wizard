@@ -211,6 +211,32 @@ export function addWhiteList(round, web3, crowdsale, abi, addr, cb) {
   });
 }
 
+export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
+  console.log("###setReservedTokensListMultiple:###");
+  attachToContract(web3, abi, addr, function(err, tokenContract) {
+    console.log("attach to token contract");
+    if (err) return console.log(err);
+    if (!tokenContract) return noContractAlert();
+
+    let addrs = [];
+    let dims = [];
+    let vals = [];
+
+    for (let i = 0; i < token.reservedTokens.length; i++) {
+      addrs.push(token.reservedTokens[i].addr);
+      dims.push(token.reservedTokens[i].dim == "tokens"?true:false);
+      vals.push(token.reservedTokens[i].val);
+    }
+
+    tokenContract.setReservedTokensListMultiple.sendTransaction(addrs, dims, vals, function(err, result) {
+      if (err) return console.log(err);
+
+      console.log("setReservedTokensListMultiple function transaction: " + result);
+      cb();
+    });
+  });
+}
+
 export function setFinalizeAgent(web3, abi, addr, finalizeAgentAddr, cb) {
   console.log("###setFinalizeAgent:###");
   attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
