@@ -500,7 +500,7 @@ export function getAccumulativeCrowdsaleData(web3, $this, cb) {
         }
       });
 
-      if (crowdsaleContract.tokenAmountOf) {
+      /*if (crowdsaleContract.tokenAmountOf) {
         propsCount++;
         crowdsaleContract.tokenAmountOf.call(web3.eth.accounts[0], function(err, tokenAmountOf) {
           cbCount++;
@@ -517,7 +517,7 @@ export function getAccumulativeCrowdsaleData(web3, $this, cb) {
             $this.setState(state, cb);
           }
         });
-      }
+      }*/
 
       if (crowdsaleContract.maximumSellableTokens) {
         propsCount++;
@@ -689,6 +689,24 @@ function getTokenData(web3, $this) {
         $this.setState(state);
       }
     });
+    if (tokenContract.balanceOf) {
+      propsCount++;
+      tokenContract.balanceOf.call(web3.eth.accounts[0], function(err, balanceOf) {
+        cbCount++;
+        if (err) return console.log(err);
+        
+        console.log("balanceOf: " + balanceOf);
+        let state = $this.state;
+        if (state.crowdsale.tokenAmountOf)
+          state.crowdsale.tokenAmountOf += parseInt(balanceOf, 10);
+        else
+          state.crowdsale.tokenAmountOf = parseInt(balanceOf, 10);
+        if (propsCount === cbCount) {
+          state.loading = false;
+          $this.setState(state);
+        }
+      });
+    }
     propsCount++;
     tokenContract["decimals"].call(function(err, decimals) {
       cbCount++;
