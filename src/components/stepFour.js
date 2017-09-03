@@ -303,9 +303,10 @@ export class stepFour extends stepTwo {
     const isValidContract = contracts && contracts.crowdsale && contracts.crowdsale.addr
     let url;
     url = crowdsalePage + `?addr=` + contracts.crowdsale.addr[0]
-    for (let i = 1; i < contracts.crowdsale.addr.length; i++) {
+    //crowdsale contracts relations are in the blockchain
+    /*for (let i = 1; i < contracts.crowdsale.addr.length; i++) {
       url += `&addr=` + contracts.crowdsale.addr[i]
-    }
+    }*/
     url += `&networkID=` + contracts.crowdsale.networkID + `&contractType=` + this.state.contractType
     let newHistory = isValidContract ? url : crowdsalePage
     this.props.history.push(newHistory);

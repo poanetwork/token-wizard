@@ -285,6 +285,33 @@ export function transferOwnership(web3, abi, addr, finalizeAgentAddr, cb) {
   });
 }
 
+export function getJoinedTiers(web3, abi, addr, joinedCrowdsales, cb) {
+  //joinedCrowdsales.push(addr);
+  attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
+    console.log("attach to crowdsale contract");
+    if (err) return console.log(err);
+
+    getJoinedTiersRecursively(0, crowdsaleContract, joinedCrowdsales, function(_joinedCrowdsales) {
+      cb(_joinedCrowdsales);
+    })
+  });
+}
+
+function getJoinedTiersRecursively(i, crowdsaleContract, joinedCrowdsales, cb) {
+  crowdsaleContract.joinedCrowdsales.call(i, function(err, joinedCrowdsale) {
+    if (err) return console.log(err);
+    console.log("joinedCrowdsale: " + joinedCrowdsale);
+
+    if (joinedCrowdsale === "0x") {
+      cb(joinedCrowdsales);
+    } else {
+      joinedCrowdsales.push(joinedCrowdsale);
+      i++;
+      getJoinedTiersRecursively(i, crowdsaleContract, joinedCrowdsales, cb);
+    }
+  })
+}
+
 export function findCurrentContractRecursively(i, $this, web3, firstCrowdsaleContract, cb) {
   console.log($this.state.contracts.crowdsale.addr);
   let crowdsaleAddr = $this.state.contracts.crowdsale.addr[i];
@@ -473,7 +500,7 @@ export function getAccumulativeCrowdsaleData(web3, $this, cb) {
         }
       });
 
-      if (crowdsaleContract.tokenAmountOf) {
+      /*if (crowdsaleContract.tokenAmountOf) {
         propsCount++;
         crowdsaleContract.tokenAmountOf.call(web3.eth.accounts[0], function(err, tokenAmountOf) {
           cbCount++;
@@ -490,7 +517,7 @@ export function getAccumulativeCrowdsaleData(web3, $this, cb) {
             $this.setState(state, cb);
           }
         });
-      }
+      }*/
 
       if (crowdsaleContract.maximumSellableTokens) {
         propsCount++;
@@ -662,6 +689,24 @@ function getTokenData(web3, $this) {
         $this.setState(state);
       }
     });
+    if (tokenContract.balanceOf) {
+      propsCount++;
+      tokenContract.balanceOf.call(web3.eth.accounts[0], function(err, balanceOf) {
+        cbCount++;
+        if (err) return console.log(err);
+        
+        console.log("balanceOf: " + balanceOf);
+        let state = $this.state;
+        if (state.crowdsale.tokenAmountOf)
+          state.crowdsale.tokenAmountOf += parseInt(balanceOf, 10);
+        else
+          state.crowdsale.tokenAmountOf = parseInt(balanceOf, 10);
+        if (propsCount === cbCount) {
+          state.loading = false;
+          $this.setState(state);
+        }
+      });
+    }
     propsCount++;
     tokenContract["decimals"].call(function(err, decimals) {
       cbCount++;
