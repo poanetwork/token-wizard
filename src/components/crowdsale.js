@@ -1,6 +1,6 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { getWeb3, checkNetWorkByID, getCrowdsaleData, initializeAccumulativeData, getAccumulativeCrowdsaleData, findCurrentContractRecursively } from '../utils/web3'
+import { getWeb3, checkNetWorkByID, getCrowdsaleData, initializeAccumulativeData, getAccumulativeCrowdsaleData, findCurrentContractRecursively, getJoinedTiers } from '../utils/web3'
 import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
 import { StepNavigation } from './Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../utils/constants'
@@ -19,7 +19,6 @@ export class Crowdsale extends React.Component {
 		let newState = { ...this.state }
 	    newState.loading = true;
 	    this.setState(newState);
-		const crowdsaleAddrs = getURLParam("addr");
 		const networkID = getQueryVariable("networkID");
 		const contractType = getQueryVariable("contractType");
 		var $this = this;
@@ -28,15 +27,8 @@ export class Crowdsale extends React.Component {
 				var state = $this.state;
 				state.web3 = web3;
       			checkNetWorkByID(web3, networkID);
-      			let _crowdsaleAddrs;
-      			if ( typeof crowdsaleAddrs === 'string' ) {
-				    _crowdsaleAddrs = [ crowdsaleAddrs ];
-				} else {
-					_crowdsaleAddrs = crowdsaleAddrs;
-				}
-			    state.contracts.crowdsale.addr = _crowdsaleAddrs;
-			    state.contracts.crowdsale.networkID = networkID;
-			    state.contracts.crowdsale.contractType = contractType;
+      			state.contracts.crowdsale.networkID = networkID;
+	    		state.contracts.crowdsale.contractType = contractType;
 
 			    switch (contractType) {
 		          case $this.state.contractTypes.standard: {
@@ -61,33 +53,48 @@ export class Crowdsale extends React.Component {
 	}
 
 	extractContractsData($this, web3) {
-	  var state = $this.state;
-	  state.curAddr = web3.eth.accounts[0];
-      state.web3 = web3;
-      $this.setState(state, () => {
-      	if (!$this.state.contracts.crowdsale.addr) return;
-      	findCurrentContractRecursively(0, $this, web3, null, function(crowdsaleContract) {
-      		if (!crowdsaleContract) {
-      			state.loading = false;
-        		return $this.setState(state);
-      		}
-		    getCrowdsaleData(web3, $this, crowdsaleContract, function() {  
-		    });
-		    initializeAccumulativeData($this, function() {
-	        	getAccumulativeCrowdsaleData(web3, $this, function() {
-	        	});
+		const crowdsaleAddrs = getURLParam("addr");
+		console.log($this.state.contracts.crowdsale);
+		getJoinedTiers(web3, $this.state.contracts.crowdsale.abi, crowdsaleAddrs, [], function(joinedCrowdsales) {
+			console.log("joinedCrowdsales: ");
+			console.log(joinedCrowdsales);
+
+			let _crowdsaleAddrs;
+			if ( typeof joinedCrowdsales === 'string' ) {
+			    _crowdsaleAddrs = [ joinedCrowdsales ];
+			} else {
+				_crowdsaleAddrs = joinedCrowdsales;
+			}
+			var state = $this.state;
+		    state.contracts.crowdsale.addr = _crowdsaleAddrs;
+
+		  	state.curAddr = web3.eth.accounts[0];
+	      	state.web3 = web3;
+	      	$this.setState(state, () => {
+		      	if (!$this.state.contracts.crowdsale.addr) return;
+		      	findCurrentContractRecursively(0, $this, web3, null, function(crowdsaleContract) {
+		      		if (!crowdsaleContract) {
+		      			state.loading = false;
+		        		return $this.setState(state);
+		      		}
+				    getCrowdsaleData(web3, $this, crowdsaleContract, function() {  
+				    });
+				    initializeAccumulativeData($this, function() {
+			        	getAccumulativeCrowdsaleData(web3, $this, function() {
+			        	});
+			      	});
+			    })
 	      	});
-	    })
-      });
+		})
   	}
 
   	goToInvestPage = () => {
   		let queryStr = "";
   		if (this.state.contracts.crowdsale.addr) {
   			queryStr = "?addr=" + this.state.contracts.crowdsale.addr[0];
-  			for (let i = 1; i < this.state.contracts.crowdsale.addr.length; i++) {
+  			/*for (let i = 1; i < this.state.contracts.crowdsale.addr.length; i++) {
 		      queryStr += `&addr=` + this.state.contracts.crowdsale.addr[i]
-		    }
+		    }*/
   			if (this.state.contracts.crowdsale.networkID)
   				queryStr += "&networkID=" + this.state.contracts.crowdsale.networkID;
   			if (this.state.contracts.crowdsale.contractType)

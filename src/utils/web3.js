@@ -285,6 +285,33 @@ export function transferOwnership(web3, abi, addr, finalizeAgentAddr, cb) {
   });
 }
 
+export function getJoinedTiers(web3, abi, addr, joinedCrowdsales, cb) {
+  //joinedCrowdsales.push(addr);
+  attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
+    console.log("attach to crowdsale contract");
+    if (err) return console.log(err);
+
+    getJoinedTiersRecursively(0, crowdsaleContract, joinedCrowdsales, function(_joinedCrowdsales) {
+      cb(_joinedCrowdsales);
+    })
+  });
+}
+
+function getJoinedTiersRecursively(i, crowdsaleContract, joinedCrowdsales, cb) {
+  crowdsaleContract.joinedCrowdsales.call(i, function(err, joinedCrowdsale) {
+    if (err) return console.log(err);
+    console.log("joinedCrowdsale: " + joinedCrowdsale);
+
+    if (joinedCrowdsale === "0x") {
+      cb(joinedCrowdsales);
+    } else {
+      joinedCrowdsales.push(joinedCrowdsale);
+      i++;
+      getJoinedTiersRecursively(i, crowdsaleContract, joinedCrowdsales, cb);
+    }
+  })
+}
+
 export function findCurrentContractRecursively(i, $this, web3, firstCrowdsaleContract, cb) {
   console.log($this.state.contracts.crowdsale.addr);
   let crowdsaleAddr = $this.state.contracts.crowdsale.addr[i];
