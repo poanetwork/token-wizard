@@ -433,9 +433,46 @@ export const handlePricingStrategyForPDF = (content, doc, state) => {
 
 export const handleContractsForPDF = (content, doc, state) => {
     const title = content.value
-    const pdfContent = title + state.contracts.crowdsale[content.field]
-    doc.addPage() 
-    doc.setLineWidth(50)
-    const wrappedPDFContent = doc.splitTextToSize(pdfContent, 180);
-    doc.text(wrappedPDFContent, content.x, content.y)
+    if(content.field !== 'src') {
+        let pdfBody = content.field === 'abi' ? JSON.stringify(state.contracts.crowdsale[content.field]) : JSON.stringify(state.contracts.crowdsale[content.field][0])
+        let pdfContent = title + pdfBody
+        doc.addPage() 
+        const wrappedPDFContent = doc.splitTextToSize(pdfContent, 180);
+        doc.text(wrappedPDFContent, content.x, content.y)
+    } else {
+        addSrcToPDF(content, doc, state)
+    }
+}
+
+export const handleConstantForPDF = (content, doc) => {
+    const title = content.value
+    const pdfContent = title + content.pdfValue
+    doc.text(pdfContent, content.x, content.y)
+}
+
+const splitPDFText = (text) => {
+    const length = text.length
+    let splitPDF = []
+    let currentCharacter = 0
+    let splitSections = 8
+    for(var i = 1; i <= splitSections; i++) {
+        if( i !== splitSections){
+            splitPDF.push(text.substring(currentCharacter, Math.floor(length/splitSections) * i))
+            currentCharacter = Math.floor(length/splitSections) * i
+        } else {
+            splitPDF.push(text.substring(currentCharacter))
+        }
+    }
+    return splitPDF
+}
+
+const addSrcToPDF = (content, doc, state) => {
+    const title = content.value
+    const pdfContent = splitPDFText(state.contracts.crowdsale[content.field])
+    pdfContent.forEach((section, i) => {
+        doc.addPage()
+        doc.setFontSize(12)
+        const wrappedPDFContent = doc.splitTextToSize(section, 180);
+        doc.text(wrappedPDFContent, content.x, content.y)
+    })
 }

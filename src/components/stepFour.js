@@ -3,7 +3,7 @@ import '../assets/stylesheets/application.css';
 import { deployContract, getWeb3, getNetworkVersion, addWhiteList, setFinalizeAgent, approve, setTransferAgent, setMintAgent, setReleaseAgent, updateJoinedCrowdsales, transferOwnership, setReservedTokensListMultiple } from '../utils/web3'
 import { noMetaMaskAlert } from '../utils/alerts'
 import { defaultState, PDF_CONTENTS } from '../utils/constants'
-import { getOldState, handleContractsForPDF, handleTokenForPDF, handleCrowdsaleForPDF, handlePricingStrategyForPDF } from '../utils/utils'
+import { getOldState, handleContractsForPDF, handleTokenForPDF, handleCrowdsaleForPDF, handlePricingStrategyForPDF, handleConstantForPDF } from '../utils/utils'
 import { getEncodedABIClientSide } from '../utils/microservices'
 import { stepTwo } from './stepTwo'
 import { StepNavigation } from './Common/StepNavigation'
@@ -93,17 +93,17 @@ export class stepFour extends stepTwo {
         return handleContractsForPDF(content, doc, this.state)
       case 'pricingStrategy':
         return handlePricingStrategyForPDF(content, doc, this.state)
+      case 'none':
+        return handleConstantForPDF(content, doc)
     }
   }
 
   downloadCrowdsaleInfo() {
     var doc = new jsPDF('p', 'mm', 'a4')
-    doc.setLineWidth(10)
+    doc.setLineWidth(50)
     PDF_CONTENTS.forEach(content => {
       this.handleContentByParent(content, doc)
     })
-    // doc.text('Hello world!', 10, 10)
-    // doc.text('adfasdf', 10, 20)
     doc.save('crowdsale.pdf')
   }
 
