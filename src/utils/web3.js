@@ -286,18 +286,25 @@ export function transferOwnership(web3, abi, addr, finalizeAgentAddr, cb) {
 }
 
 export function getJoinedTiers(web3, abi, addr, joinedCrowdsales, cb) {
-  //joinedCrowdsales.push(addr);
   attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
     console.log("attach to crowdsale contract");
     if (err) return console.log(err);
 
-    getJoinedTiersRecursively(0, crowdsaleContract, joinedCrowdsales, function(_joinedCrowdsales) {
-      cb(_joinedCrowdsales);
-    })
+    crowdsaleContract.joinedCrowdsalesLen.call(function(err, joinedCrowdsalesLen) {
+      if (err) return console.log(err);
+
+      getJoinedTiersRecursively(0, crowdsaleContract, joinedCrowdsales, joinedCrowdsalesLen, function(_joinedCrowdsales) {
+        cb(_joinedCrowdsales);
+      })
+    });
   });
 }
 
-function getJoinedTiersRecursively(i, crowdsaleContract, joinedCrowdsales, cb) {
+function getJoinedTiersRecursively(i, crowdsaleContract, joinedCrowdsales, joinedCrowdsalesLen, cb) {
+  if (i >= joinedCrowdsalesLen) {
+    return cb(joinedCrowdsales);
+  }
+  
   crowdsaleContract.joinedCrowdsales.call(i, function(err, joinedCrowdsale) {
     if (err) return console.log(err);
     console.log("joinedCrowdsale: " + joinedCrowdsale);
@@ -307,7 +314,7 @@ function getJoinedTiersRecursively(i, crowdsaleContract, joinedCrowdsales, cb) {
     } else {
       joinedCrowdsales.push(joinedCrowdsale);
       i++;
-      getJoinedTiersRecursively(i, crowdsaleContract, joinedCrowdsales, cb);
+      getJoinedTiersRecursively(i, crowdsaleContract, joinedCrowdsales, joinedCrowdsalesLen, cb);
     }
   })
 }
