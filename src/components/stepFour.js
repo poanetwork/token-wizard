@@ -1,6 +1,6 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { deployContract, getWeb3, getNetworkVersion, addWhiteList, setFinalizeAgent, approve, setTransferAgent, setMintAgent, setReleaseAgent, updateJoinedCrowdsales, transferOwnership } from '../utils/web3'
+import { deployContract, getWeb3, getNetworkVersion, addWhiteList, setFinalizeAgent, approve, setTransferAgent, setMintAgent, setReleaseAgent, updateJoinedCrowdsales, transferOwnership, setReservedTokensListMultiple } from '../utils/web3'
 import { noMetaMaskAlert } from '../utils/alerts'
 import { defaultState, PDF_CONTENTS } from '../utils/constants'
 import { getOldState, handleContractsForPDF, handleTokenForPDF, handleCrowdsaleForPDF, handlePricingStrategyForPDF } from '../utils/utils'
@@ -328,9 +328,10 @@ export class stepFour extends stepTwo {
     const isValidContract = contracts && contracts.crowdsale && contracts.crowdsale.addr
     let url;
     url = crowdsalePage + `?addr=` + contracts.crowdsale.addr[0]
-    for (let i = 1; i < contracts.crowdsale.addr.length; i++) {
+    //crowdsale contracts relations are in the blockchain
+    /*for (let i = 1; i < contracts.crowdsale.addr.length; i++) {
       url += `&addr=` + contracts.crowdsale.addr[i]
-    }
+    }*/
     url += `&networkID=` + contracts.crowdsale.networkID + `&contractType=` + this.state.contractType
     let newHistory = isValidContract ? url : crowdsalePage
     this.props.history.push(newHistory);
@@ -542,17 +543,18 @@ export class stepFour extends stepTwo {
           });
         });*/
         //post actions for mintablecappedcrowdsale
-        console.log(this.state.contracts.crowdsale.addr);
-        this.updateJoinedCrowdsalesRecursive(0, web3, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr[0], this.state.contracts.crowdsale.addr, () => {
-          this.setMintAgentRecursive(0, web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.crowdsale.addr, () => {
-            this.setMintAgentRecursive(0, web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.finalizeAgent.addr, () => {
-              this.addWhiteListRecursive(0, web3, this.state.crowdsale, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, () => {
-                this.setFinalizeAgentRecursive(0, web3, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, this.state.contracts.finalizeAgent.addr, () => {
-                  this.setReleaseAgentRecursive(0, web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.finalizeAgent.addr, () => {
-                    transferOwnership(web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.multisig.addr, () => {
-                      newState.loading = false;
-                      this.setState(newState);
-                      this.goToCrowdsalePage();
+        setReservedTokensListMultiple(web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.token, () => {
+          this.updateJoinedCrowdsalesRecursive(0, web3, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, () => {
+            this.setMintAgentRecursive(0, web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.crowdsale.addr, () => {
+              this.setMintAgentRecursive(0, web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.finalizeAgent.addr, () => {
+                this.addWhiteListRecursive(0, web3, this.state.crowdsale, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, () => {
+                  this.setFinalizeAgentRecursive(0, web3, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, this.state.contracts.finalizeAgent.addr, () => {
+                    this.setReleaseAgentRecursive(0, web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.finalizeAgent.addr, () => {
+                      transferOwnership(web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.multisig.addr, () => {
+                        newState.loading = false;
+                        this.setState(newState);
+                        this.goToCrowdsalePage();
+                      });
                     });
                   });
                 });
@@ -577,12 +579,12 @@ export class stepFour extends stepTwo {
     })
   }
 
-  updateJoinedCrowdsalesRecursive = (i, web3, abi, addr, crowdsaleAddrs, cb) => {
-    if (crowdsaleAddrs.length == 0) return cb();
-    updateJoinedCrowdsales(web3, abi, addr, crowdsaleAddrs[i], () => {
+  updateJoinedCrowdsalesRecursive = (i, web3, abi, addrs, cb) => {
+    if (addrs.length == 0) return cb();
+    updateJoinedCrowdsales(web3, abi, addrs[i], addrs, () => {
       i++;
-      if (i < crowdsaleAddrs.length) {
-        this.updateJoinedCrowdsalesRecursive(i, web3, abi, addr, crowdsaleAddrs, cb);
+      if (i < addrs.length) {
+        this.updateJoinedCrowdsalesRecursive(i, web3, abi, addrs, cb);
       } else {
         cb();
       }

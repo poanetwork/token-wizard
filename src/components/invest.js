@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
-import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData, initializeAccumulativeData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively } from '../utils/web3'
+import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData, initializeAccumulativeData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively, getJoinedTiers } from '../utils/web3'
 import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
 import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert } from '../utils/alerts'
 import { Loader } from './Common/Loader'
@@ -24,17 +24,9 @@ export class Invest extends React.Component {
      getWeb3(function(web3) {
       if (!web3) return;
 
-      const crowdsaleAddrs = getURLParam("addr");
       const networkID = getQueryVariable("networkID");
       const contractType = getQueryVariable("contractType");
       checkNetWorkByID(web3, networkID);
-      let _crowdsaleAddrs;
-      if ( typeof crowdsaleAddrs === 'string' ) {
-          _crowdsaleAddrs = [ crowdsaleAddrs ];
-      } else {
-        _crowdsaleAddrs = crowdsaleAddrs;
-      }
-      newState.contracts.crowdsale.addr = _crowdsaleAddrs;
       newState.contracts.crowdsale.contractType = contractType;
 
       const timeInterval = setInterval(() => $this.setState({ seconds: $this.state.seconds - 1}), 1000);
@@ -63,33 +55,47 @@ export class Invest extends React.Component {
   extractContractsData($this, web3) {
     var state = $this.state;
 
-    if (web3.eth.accounts.length === 0) return;
+    const crowdsaleAddrs = getURLParam("addr");
+    getJoinedTiers(web3, $this.state.contracts.crowdsale.abi, crowdsaleAddrs, [], function(joinedCrowdsales) {
+      console.log("joinedCrowdsales: ");
+      console.log(joinedCrowdsales);
 
-    state.curAddr = web3.eth.accounts[0];
-    state.web3 = web3;
-    $this.setState(state);
-
-    if (!$this.state.contracts.crowdsale.addr) return;
-    findCurrentContractRecursively(0, $this, web3, null, function(crowdsaleContract) {
-      if (!crowdsaleContract) {
-        state.loading = false;
-        return $this.setState(state);
+      let _crowdsaleAddrs;
+      if ( typeof joinedCrowdsales === 'string' ) {
+          _crowdsaleAddrs = [ joinedCrowdsales ];
+      } else {
+        _crowdsaleAddrs = joinedCrowdsales;
       }
-      getCrowdsaleData(web3, $this, crowdsaleContract, function() { 
-      });
-      initializeAccumulativeData($this, function() {
-        getAccumulativeCrowdsaleData(web3, $this, function() {
-        });
-      });
-      getCrowdsaleTargetDates(web3, $this, function() {
-        console.log($this.state.crowdsale);
-        if ($this.state.crowdsale.endDate) {
-          let state = $this.state;
-          state.seconds = (state.crowdsale.endDate - new Date().getTime())/1000;
-          $this.setState(state);
+      state.contracts.crowdsale.addr = _crowdsaleAddrs;
+
+      if (web3.eth.accounts.length === 0) return;
+
+      state.curAddr = web3.eth.accounts[0];
+      state.web3 = web3;
+      $this.setState(state);
+
+      if (!$this.state.contracts.crowdsale.addr) return;
+      findCurrentContractRecursively(0, $this, web3, null, function(crowdsaleContract) {
+        if (!crowdsaleContract) {
+          state.loading = false;
+          return $this.setState(state);
         }
+        getCrowdsaleData(web3, $this, crowdsaleContract, function() { 
+        });
+        initializeAccumulativeData($this, function() {
+          getAccumulativeCrowdsaleData(web3, $this, function() {
+          });
+        });
+        getCrowdsaleTargetDates(web3, $this, function() {
+          console.log($this.state.crowdsale);
+          if ($this.state.crowdsale.endDate) {
+            let state = $this.state;
+            state.seconds = (state.crowdsale.endDate - new Date().getTime())/1000;
+            $this.setState(state);
+          }
+        })
       })
-    })
+    });
   }
 
   investToTokens() {

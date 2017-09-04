@@ -148,14 +148,14 @@ export function setMintAgent(web3, abi, addr, acc, cb) {
   });
 }
 
-export function updateJoinedCrowdsales(web3, abi, addr, joinedCntrctAddr, cb) {
+export function updateJoinedCrowdsales(web3, abi, addr, joinedCntrctAddrs, cb) {
   console.log("###updateJoinedCrowdsales:###");
   attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
     console.log("attach to crowdsale contract");
     if (err) return console.log(err);
     if (!crowdsaleContract) return noContractAlert();
 
-    crowdsaleContract.updateJoinedCrowdsales.sendTransaction(joinedCntrctAddr, function(err, result) {
+    crowdsaleContract.updateJoinedCrowdsalesMultiple.sendTransaction(joinedCntrctAddrs, function(err, result) {
       if (err) return console.log(err);
 
       console.log("updateJoinedCrowdsales function transaction: " + result);
@@ -211,6 +211,32 @@ export function addWhiteList(round, web3, crowdsale, abi, addr, cb) {
   });
 }
 
+export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
+  console.log("###setReservedTokensListMultiple:###");
+  attachToContract(web3, abi, addr, function(err, tokenContract) {
+    console.log("attach to token contract");
+    if (err) return console.log(err);
+    if (!tokenContract) return noContractAlert();
+
+    let addrs = [];
+    let dims = [];
+    let vals = [];
+
+    for (let i = 0; i < token.reservedTokens.length; i++) {
+      addrs.push(token.reservedTokens[i].addr);
+      dims.push(token.reservedTokens[i].dim == "tokens"?true:false);
+      vals.push(token.reservedTokens[i].val);
+    }
+
+    tokenContract.setReservedTokensListMultiple.sendTransaction(addrs, dims, vals, function(err, result) {
+      if (err) return console.log(err);
+
+      console.log("setReservedTokensListMultiple function transaction: " + result);
+      cb();
+    });
+  });
+}
+
 export function setFinalizeAgent(web3, abi, addr, finalizeAgentAddr, cb) {
   console.log("###setFinalizeAgent:###");
   attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
@@ -257,6 +283,33 @@ export function transferOwnership(web3, abi, addr, finalizeAgentAddr, cb) {
       cb();
     });
   });
+}
+
+export function getJoinedTiers(web3, abi, addr, joinedCrowdsales, cb) {
+  //joinedCrowdsales.push(addr);
+  attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
+    console.log("attach to crowdsale contract");
+    if (err) return console.log(err);
+
+    getJoinedTiersRecursively(0, crowdsaleContract, joinedCrowdsales, function(_joinedCrowdsales) {
+      cb(_joinedCrowdsales);
+    })
+  });
+}
+
+function getJoinedTiersRecursively(i, crowdsaleContract, joinedCrowdsales, cb) {
+  crowdsaleContract.joinedCrowdsales.call(i, function(err, joinedCrowdsale) {
+    if (err) return console.log(err);
+    console.log("joinedCrowdsale: " + joinedCrowdsale);
+
+    if (joinedCrowdsale === "0x") {
+      cb(joinedCrowdsales);
+    } else {
+      joinedCrowdsales.push(joinedCrowdsale);
+      i++;
+      getJoinedTiersRecursively(i, crowdsaleContract, joinedCrowdsales, cb);
+    }
+  })
 }
 
 export function findCurrentContractRecursively(i, $this, web3, firstCrowdsaleContract, cb) {
@@ -447,7 +500,7 @@ export function getAccumulativeCrowdsaleData(web3, $this, cb) {
         }
       });
 
-      if (crowdsaleContract.tokenAmountOf) {
+      /*if (crowdsaleContract.tokenAmountOf) {
         propsCount++;
         crowdsaleContract.tokenAmountOf.call(web3.eth.accounts[0], function(err, tokenAmountOf) {
           cbCount++;
@@ -464,7 +517,7 @@ export function getAccumulativeCrowdsaleData(web3, $this, cb) {
             $this.setState(state, cb);
           }
         });
-      }
+      }*/
 
       if (crowdsaleContract.maximumSellableTokens) {
         propsCount++;
@@ -636,6 +689,24 @@ function getTokenData(web3, $this) {
         $this.setState(state);
       }
     });
+    if (tokenContract.balanceOf) {
+      propsCount++;
+      tokenContract.balanceOf.call(web3.eth.accounts[0], function(err, balanceOf) {
+        cbCount++;
+        if (err) return console.log(err);
+        
+        console.log("balanceOf: " + balanceOf);
+        let state = $this.state;
+        if (state.crowdsale.tokenAmountOf)
+          state.crowdsale.tokenAmountOf += parseInt(balanceOf, 10);
+        else
+          state.crowdsale.tokenAmountOf = parseInt(balanceOf, 10);
+        if (propsCount === cbCount) {
+          state.loading = false;
+          $this.setState(state);
+        }
+      });
+    }
     propsCount++;
     tokenContract["decimals"].call(function(err, decimals) {
       cbCount++;
@@ -706,6 +777,7 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
   getEncodedABIClientSide(web3, abi, state, params, i, (ABIencoded) => {
     console.log(ABIencoded);
     let binFull = bin + ABIencoded.substr(2);
+    //console.log(binFull);
     web3.eth.estimateGas({
       from: web3.eth.accounts[0], 
       data: binFull
@@ -713,7 +785,7 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
       console.log('estimated gas callback', estimatedGas)
       if (err) console.log('errrrrrrrrrrrrrrrrr', err);
       console.log('gas is estimated', estimatedGas, 'err', err)
-      if (!estimatedGas) estimatedGas = 3516260;
+      if (!estimatedGas) estimatedGas = 3716260;
       else estimatedGas += 100000;
       
       var contractInstance = web3.eth.contract(abi);
