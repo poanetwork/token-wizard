@@ -433,8 +433,8 @@ export const handlePricingStrategyForPDF = (content, doc, state) => {
 
 export const handleContractsForPDF = (content, doc, state) => {
     const title = content.value
-    if(content.field !== 'src') {
-        let pdfBody = content.field === 'abi' ? JSON.stringify(state.contracts.crowdsale[content.field]) : JSON.stringify(state.contracts.crowdsale[content.field][0])
+    if(content.field !== 'src' && content.field !== 'abi') {
+        let pdfBody = JSON.stringify(state.contracts.crowdsale[content.field][0])
         let pdfContent = title + pdfBody
         doc.addPage() 
         const wrappedPDFContent = doc.splitTextToSize(pdfContent, 180);
@@ -450,11 +450,18 @@ export const handleConstantForPDF = (content, doc) => {
     doc.text(pdfContent, content.x, content.y)
 }
 
-const splitPDFText = (text) => {
+const getSplitSections = (state, content) => {
+    if(content.field !== 'abi') {
+        return state.contractType === state.contractTypes.whitelistwithcap ? 22 : 8 
+    } else {
+        return state.contractType === state.contractTypes.whitelistwithcap ? 2 : 1
+    }
+}
+
+const splitPDFText = (text, state, splitSections) => {
     const length = text.length
     let splitPDF = []
     let currentCharacter = 0
-    let splitSections = 8
     for(var i = 1; i <= splitSections; i++) {
         if( i !== splitSections){
             splitPDF.push(text.substring(currentCharacter, Math.floor(length/splitSections) * i))
@@ -468,7 +475,10 @@ const splitPDFText = (text) => {
 
 const addSrcToPDF = (content, doc, state) => {
     const title = content.value
-    const pdfContent = splitPDFText(state.contracts.crowdsale[content.field])
+    const body = content.field === 'abi' ? JSON.stringify(state.contracts.crowdsale[content.field]) : state.contracts.crowdsale[content.field]
+    const text = title + body
+    const sectionsToSplit = getSplitSections(state, content)
+    const pdfContent = splitPDFText(text, state, sectionsToSplit)
     pdfContent.forEach((section, i) => {
         doc.addPage()
         doc.setFontSize(12)
