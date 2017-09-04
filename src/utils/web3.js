@@ -148,14 +148,14 @@ export function setMintAgent(web3, abi, addr, acc, cb) {
   });
 }
 
-export function updateJoinedCrowdsales(web3, abi, addr, joinedCntrctAddr, cb) {
+export function updateJoinedCrowdsales(web3, abi, addr, joinedCntrctAddrs, cb) {
   console.log("###updateJoinedCrowdsales:###");
   attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
     console.log("attach to crowdsale contract");
     if (err) return console.log(err);
     if (!crowdsaleContract) return noContractAlert();
 
-    crowdsaleContract.updateJoinedCrowdsales.sendTransaction(joinedCntrctAddr, function(err, result) {
+    crowdsaleContract.updateJoinedCrowdsalesMultiple.sendTransaction(joinedCntrctAddrs, function(err, result) {
       if (err) return console.log(err);
 
       console.log("updateJoinedCrowdsales function transaction: " + result);
@@ -777,6 +777,7 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
   getEncodedABIClientSide(web3, abi, state, params, i, (ABIencoded) => {
     console.log(ABIencoded);
     let binFull = bin + ABIencoded.substr(2);
+    //console.log(binFull);
     web3.eth.estimateGas({
       from: web3.eth.accounts[0], 
       data: binFull
@@ -784,7 +785,7 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
       console.log('estimated gas callback', estimatedGas)
       if (err) console.log('errrrrrrrrrrrrrrrrr', err);
       console.log('gas is estimated', estimatedGas, 'err', err)
-      if (!estimatedGas) estimatedGas = 3516260;
+      if (!estimatedGas) estimatedGas = 3716260;
       else estimatedGas += 100000;
       
       var contractInstance = web3.eth.contract(abi);

@@ -519,7 +519,7 @@ export class stepFour extends stepTwo {
         });*/
         //post actions for mintablecappedcrowdsale
         setReservedTokensListMultiple(web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.token, () => {
-          this.updateJoinedCrowdsalesRecursive(0, web3, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr[0], this.state.contracts.crowdsale.addr, () => {
+          this.updateJoinedCrowdsalesRecursive(0, web3, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, () => {
             this.setMintAgentRecursive(0, web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.crowdsale.addr, () => {
               this.setMintAgentRecursive(0, web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.finalizeAgent.addr, () => {
                 this.addWhiteListRecursive(0, web3, this.state.crowdsale, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, () => {
@@ -554,12 +554,12 @@ export class stepFour extends stepTwo {
     })
   }
 
-  updateJoinedCrowdsalesRecursive = (i, web3, abi, addr, crowdsaleAddrs, cb) => {
-    if (crowdsaleAddrs.length == 0) return cb();
-    updateJoinedCrowdsales(web3, abi, addr, crowdsaleAddrs[i], () => {
+  updateJoinedCrowdsalesRecursive = (i, web3, abi, addrs, cb) => {
+    if (addrs.length == 0) return cb();
+    updateJoinedCrowdsales(web3, abi, addrs[i], addrs, () => {
       i++;
-      if (i < crowdsaleAddrs.length) {
-        this.updateJoinedCrowdsalesRecursive(i, web3, abi, addr, crowdsaleAddrs, cb);
+      if (i < addrs.length) {
+        this.updateJoinedCrowdsalesRecursive(i, web3, abi, addrs, cb);
       } else {
         cb();
       }
