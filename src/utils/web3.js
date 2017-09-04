@@ -155,6 +155,8 @@ export function updateJoinedCrowdsales(web3, abi, addr, joinedCntrctAddrs, cb) {
     if (err) return console.log(err);
     if (!crowdsaleContract) return noContractAlert();
 
+    console.log("input: " + joinedCntrctAddrs);
+
     crowdsaleContract.updateJoinedCrowdsalesMultiple.sendTransaction(joinedCntrctAddrs, function(err, result) {
       if (err) return console.log(err);
 
@@ -304,7 +306,7 @@ function getJoinedTiersRecursively(i, crowdsaleContract, joinedCrowdsales, joine
   if (i >= joinedCrowdsalesLen) {
     return cb(joinedCrowdsales);
   }
-  
+
   crowdsaleContract.joinedCrowdsales.call(i, function(err, joinedCrowdsale) {
     if (err) return console.log(err);
     console.log("joinedCrowdsale: " + joinedCrowdsale);

@@ -632,9 +632,9 @@ export class stepFour extends stepTwo {
               <DisplayField side='right' title={'RATE'} value={this.state.pricingStrategy[i].rate?this.state.pricingStrategy[i].rate:1 + " ETH"}/>
             </div></div>);
     }
-    let ABIEncidedOutputs = [];
+    let ABIEncodedOutputs = [];
     for (let i = 0; i < this.state.crowdsale.length; i++) {
-      ABIEncidedOutputs.push(<div key={i.toString()} className="item">
+      ABIEncodedOutputs.push(<div key={i.toString()} className="item">
               <p className="label">Constructor Arguments for {this.state.crowdsale[i].tier?this.state.crowdsale[i].tier : "contract"} (ABI-encoded and appended to the ByteCode above)</p>
               <pre>
                 {this.state.contracts?this.state.contracts.crowdsale?this.state.contracts.crowdsale.abiConstructor?this.state.contracts.crowdsale.abiConstructor[i]:"":"":""}
@@ -689,7 +689,34 @@ export class stepFour extends stepTwo {
               </p>
             </div>
             <div className="item">
-              <p className="label">Contract Source Code</p>
+              <p className="label">Token Contract Source Code</p>
+              <pre>
+                {this.state.contracts?this.state.contracts.token?this.state.contracts.token.src:"":""}
+              </pre>
+              <p className="description">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              </p>
+            </div>
+            <div className="item">
+              <p className="label">Token Contract ABI</p>
+              <pre>
+                {this.state.contracts?this.state.contracts.token?JSON.stringify(this.state.contracts.token.abi):"":""}
+              </pre>
+              <p className="description">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              </p>
+            </div>
+            <div className="item">
+              <p className="label">Token Constructor Arguments (ABI-encoded and appended to the ByteCode above)</p>
+              <pre>
+                {this.state.contracts?this.state.contracts.token?this.state.contracts.token.abiConstructor?this.state.contracts.token.abiConstructor:"":"":""}
+              </pre>
+              <p className="description">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              </p>
+            </div>
+            <div className="item">
+              <p className="label">Crowdsale Contract Source Code</p>
               <pre>
                 {this.state.contracts?this.state.contracts.crowdsale?this.state.contracts.crowdsale.src:"":""}
               </pre>
@@ -698,7 +725,7 @@ export class stepFour extends stepTwo {
               </p>
             </div>
             <div className="item">
-              <p className="label">Contract ABI</p>
+              <p className="label">Crowdsale Contract ABI</p>
               <pre>
                 {this.state.contracts?this.state.contracts.crowdsale?JSON.stringify(this.state.contracts.crowdsale.abi):"":""}
               </pre>
@@ -706,7 +733,7 @@ export class stepFour extends stepTwo {
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
             </div>
-            {ABIEncidedOutputs}
+            {ABIEncodedOutputs}
           </div>
         </div>
         <div className="button-container">
