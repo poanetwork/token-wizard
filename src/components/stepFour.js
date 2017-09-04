@@ -449,8 +449,11 @@ export class stepFour extends stepTwo {
       let abiFinalizeAgent = contracts && contracts.finalizeAgent && contracts.finalizeAgent.abi || []
       
       let crowdsales;
-      if (this.state.tokenIsAlreadyCreated)
-        crowdsales = [this.state.contracts.crowdsale.addr.slice(-1)[0]];
+      if (this.state.tokenIsAlreadyCreated) {
+        let curTierAddr = [ contracts.crowdsale.addr.slice(-1)[0] ];
+        let prevTierAddr = [ contracts.crowdsale.addr.slice(-2)[0] ];
+        crowdsales = [prevTierAddr, curTierAddr];
+      }
       else
         crowdsales = this.state.contracts.crowdsale.addr;
       this.deployFinalizeAgentRecursive(0, crowdsales, this.state.web3, abiNullFinalizeAgent, binNullFinalizeAgent, abiFinalizeAgent, binFinalizeAgent, this.state) 
@@ -459,18 +462,13 @@ export class stepFour extends stepTwo {
 
   deployFinalizeAgentRecursive = (i, crowdsales, web3, abiNull, binNull, abiLast, binLast, state) => {
     let abi, bin, paramsFinalizeAgent;
-    if (abiNull.length > 0) {
+
+    if (i < crowdsales.length - 1) {
       abi = abiNull;
       bin = binNull;
       paramsFinalizeAgent = this.getNullFinalizeAgentParams(this.state.web3, i)
-    } else {
-      abi = abiLast;
-      bin = binLast;
-      paramsFinalizeAgent = this.getFinalizeAgentParams(this.state.web3, i)
-    }
-    console.log(paramsFinalizeAgent);
 
-    if (i < crowdsales.length - 1) {
+      console.log(paramsFinalizeAgent);
       deployContract(i, web3, abi, bin, paramsFinalizeAgent, state, (err, finalizeAgentAddr) => {
         i++;
         let newState = { ...this.state }
@@ -517,8 +515,10 @@ export class stepFour extends stepTwo {
       if (this.state.contractType == this.state.contractTypes.whitelistwithcap) {
         let web3 = this.state.web3;
         let contracts = this.state.contracts;
+        console.log(contracts);
         //post actions for mintablecappedcrowdsale
         if (!this.state.tokenIsAlreadyCreated) {
+          console.log("###we create crowdsale firstly###");
           setReservedTokensListMultiple(web3, contracts.token.abi, contracts.token.addr, this.state.token, () => {
             this.updateJoinedCrowdsalesRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, () => {
               this.setMintAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.crowdsale.addr, () => {
@@ -539,12 +539,15 @@ export class stepFour extends stepTwo {
             });
           });
         } else { // creation of additional tier after crowdsale was set up before
+          console.log("###we add tier after crowdsale is created###");
           let curTierAddr = [ contracts.crowdsale.addr.slice(-1)[0] ];
+          let prevTierAddr = [ contracts.crowdsale.addr.slice(-2)[0] ];
+          let finalizeSet = [prevTierAddr, curTierAddr];
           this.updateJoinedCrowdsalesRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, () => {
             this.setMintAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, curTierAddr, () => {
               this.setMintAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.finalizeAgent.addr, () => {
                 this.addWhiteListRecursive(0, web3, this.state.crowdsale, contracts.crowdsale.abi, curTierAddr, () => {
-                  this.setFinalizeAgentRecursive(0, web3, contracts.crowdsale.abi, curTierAddr, contracts.finalizeAgent.addr, () => {
+                  this.setFinalizeAgentRecursive(0, web3, contracts.crowdsale.abi, finalizeSet, contracts.finalizeAgent.addr, () => {
                     this.setReleaseAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.finalizeAgent.addr, () => {
                       newState.loading = false;
                       this.setState(newState);
@@ -623,27 +626,54 @@ export class stepFour extends stepTwo {
     let crowdsaleSetups = [];
     for (let i = 0; i < this.state.crowdsale.length; i++) {
       crowdsaleSetups.push(<div key={i.toString()}><div className="publish-title-container">
-              <p className="publish-title" data-step={3+i}>Crowdsale Setup {this.state.crowdsale[i].tier}</p>
-            </div>
-            <div className="hidden">
-              <DisplayField side='left' title={'Start time'} value={this.state.crowdsale[i].startTime?this.state.crowdsale[i].startTime.split("T").join(" "):""}/>
-              <DisplayField side='right' title={'End time'} value={this.state.crowdsale[i].endTime?this.state.crowdsale[i].endTime.split("T").join(" "):""}/>
-              <DisplayField side='left' title={'Wallet address'} value={this.state.crowdsale[i].walletAddress?this.state.crowdsale[i].walletAddress:"0xc1253365dADE090649147Db89EE781d10f2b972f"}/>
-              <DisplayField side='right' title={'RATE'} value={this.state.pricingStrategy[i].rate?this.state.pricingStrategy[i].rate:1 + " ETH"}/>
-            </div></div>);
+          <p className="publish-title" data-step={3+i}>Crowdsale Setup {this.state.crowdsale[i].tier}</p>
+        </div>
+        <div className="hidden">
+          <DisplayField side='left' title={'Start time'} value={this.state.crowdsale[i].startTime?this.state.crowdsale[i].startTime.split("T").join(" "):""}/>
+          <DisplayField side='right' title={'End time'} value={this.state.crowdsale[i].endTime?this.state.crowdsale[i].endTime.split("T").join(" "):""}/>
+          <DisplayField side='left' title={'Wallet address'} value={this.state.crowdsale[i].walletAddress?this.state.crowdsale[i].walletAddress:"0xc1253365dADE090649147Db89EE781d10f2b972f"}/>
+          <DisplayField side='right' title={'RATE'} value={this.state.pricingStrategy[i].rate?this.state.pricingStrategy[i].rate:1 + " ETH"}/>
+        </div></div>);
     }
     let ABIEncodedOutputs = [];
     for (let i = 0; i < this.state.crowdsale.length; i++) {
       ABIEncodedOutputs.push(<div key={i.toString()} className="item">
-              <p className="label">Constructor Arguments for {this.state.crowdsale[i].tier?this.state.crowdsale[i].tier : "contract"} (ABI-encoded and appended to the ByteCode above)</p>
-              <pre>
-                {this.state.contracts?this.state.contracts.crowdsale?this.state.contracts.crowdsale.abiConstructor?this.state.contracts.crowdsale.abiConstructor[i]:"":"":""}
-              </pre>
-              <p className="description">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
-            </div>);
+          <p className="label">Constructor Arguments for {this.state.crowdsale[i].tier?this.state.crowdsale[i].tier : "contract"} (ABI-encoded and appended to the ByteCode above)</p>
+          <pre>
+            {this.state.contracts?this.state.contracts.crowdsale?this.state.contracts.crowdsale.abiConstructor?this.state.contracts.crowdsale.abiConstructor[i]:"":"":""}
+          </pre>
+          <p className="description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </p>
+        </div>);
     }
+    let tokenBlock = <div><div className="item">
+          <p className="label">Token Contract Source Code</p>
+          <pre>
+            {this.state.contracts?this.state.contracts.token?this.state.contracts.token.src:"":""}
+          </pre>
+          <p className="description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </p>
+        </div>
+        <div className="item">
+          <p className="label">Token Contract ABI</p>
+          <pre>
+            {this.state.contracts?this.state.contracts.token?JSON.stringify(this.state.contracts.token.abi):"":""}
+          </pre>
+          <p className="description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </p>
+        </div>
+        <div className="item">
+          <p className="label">Token Constructor Arguments (ABI-encoded and appended to the ByteCode above)</p>
+          <pre>
+            {this.state.contracts?this.state.contracts.token?this.state.contracts.token.abiConstructor?this.state.contracts.token.abiConstructor:"":"":""}
+          </pre>
+          <p className="description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </p>
+        </div></div>;
     return (
       <section className="steps steps_publish">
         <StepNavigation activeStep={PUBLISH} />
@@ -688,33 +718,7 @@ export class stepFour extends stepTwo {
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
             </div>
-            <div className="item">
-              <p className="label">Token Contract Source Code</p>
-              <pre>
-                {this.state.contracts?this.state.contracts.token?this.state.contracts.token.src:"":""}
-              </pre>
-              <p className="description">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
-            </div>
-            <div className="item">
-              <p className="label">Token Contract ABI</p>
-              <pre>
-                {this.state.contracts?this.state.contracts.token?JSON.stringify(this.state.contracts.token.abi):"":""}
-              </pre>
-              <p className="description">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
-            </div>
-            <div className="item">
-              <p className="label">Token Constructor Arguments (ABI-encoded and appended to the ByteCode above)</p>
-              <pre>
-                {this.state.contracts?this.state.contracts.token?this.state.contracts.token.abiConstructor?this.state.contracts.token.abiConstructor:"":"":""}
-              </pre>
-              <p className="description">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
-            </div>
+            {!this.state.tokenIsAlreadyCreated?tokenBlock:""}
             <div className="item">
               <p className="label">Crowdsale Contract Source Code</p>
               <pre>

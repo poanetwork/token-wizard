@@ -4,6 +4,7 @@ export const defaultState = {
 		crowdsale: {addr:[], abiConstructor:[]},
 		pricingStrategy: {addr:[], abiConstructor:[]},
 		multisig: {},
+		nullFinalizeAgent: {addr:[]},
 		finalizeAgent: {addr:[]},
 		tokenTransferProxy: {}
 	}, 
