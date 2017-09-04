@@ -47,6 +47,8 @@ export class stepFour extends stepTwo {
         state.loading = true;
         this.setState(state);
         let abiToken = this.state.contracts && this.state.contracts.token && this.state.contracts.token.abi || []
+        let addrToken = this.state.contracts && this.state.contracts.token && this.state.contracts.token.addr || null
+        
         let abiPricingStrategy = this.state.contracts && this.state.contracts.pricingStrategy && this.state.contracts.pricingStrategy.abi || []
         
         let $this = this;
@@ -54,14 +56,16 @@ export class stepFour extends stepTwo {
            getWeb3((web3) => {
             state.web3 = web3;
             $this.setState(state);
-            getEncodedABIClientSide(web3, abiToken, state, [], 0, (ABIencoded) => {
-              let cntrct = "token";
-              let state = { ...$this.state }
-              state.contracts[cntrct].abiConstructor = ABIencoded;
-              console.log(cntrct + " ABI encoded params constructor:");
-              console.log(ABIencoded);
-              $this.setState(state);
-            });
+            if (!addrToken) {
+              getEncodedABIClientSide(web3, abiToken, state, [], 0, (ABIencoded) => {
+                let cntrct = "token";
+                let state = { ...$this.state }
+                state.contracts[cntrct].abiConstructor = ABIencoded;
+                console.log(cntrct + " ABI encoded params constructor:");
+                console.log(ABIencoded);
+                $this.setState(state);
+              });
+            }
             for (let i = 0; i < $this.state.pricingStrategy.length; i++) {
               getEncodedABIClientSide(web3, abiPricingStrategy, state, [], i, (ABIencoded) => {
                 let cntrct = "pricingStrategy";
@@ -73,7 +77,12 @@ export class stepFour extends stepTwo {
               });
             }
 
-            $this.deployTokenTransferProxy();
+            console.log($this.state.contracts.crowdsale.addr.length);
+            if ($this.state.contracts.crowdsale.addr.length == 0) {
+              $this.deployTokenTransferProxy();
+            } else {
+              $this.deployPricingStrategy();
+            }
           });
         });
       } break;
@@ -446,9 +455,15 @@ export class stepFour extends stepTwo {
 
   deployFinalizeAgentRecursive = (i, crowdsales, web3, abiNull, binNull, abiLast, binLast, state) => {
     let abi, bin, paramsFinalizeAgent;
-    abi = abiNull;
-    bin = binNull;
-    paramsFinalizeAgent = this.getNullFinalizeAgentParams(this.state.web3, i)
+    if (abiNull.length > 0) {
+      abi = abiNull;
+      bin = binNull;
+      paramsFinalizeAgent = this.getNullFinalizeAgentParams(this.state.web3, i)
+    } else {
+      abi = abiLast;
+      bin = binLast;
+      paramsFinalizeAgent = this.getFinalizeAgentParams(this.state.web3, i)
+    }
     console.log(paramsFinalizeAgent);
 
     if (i < crowdsales.length - 1) {
@@ -497,16 +512,34 @@ export class stepFour extends stepTwo {
     this.setState(newState, () => {
       if (this.state.contractType == this.state.contractTypes.whitelistwithcap) {
         let web3 = this.state.web3;
-        //post actions for Allocated crowdsale
-        /*let initialSupplyInWei = this.state.web3.toWei(this.state.token.supply/this.state.pricingStrategy[0].rate, "ether")
-        console.log("initialSupplyInWei: " + initialSupplyInWei)
-        approve(this.state.web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.crowdsale.addr, initialSupplyInWei, () => {
-          setTransferAgent(this.state.web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.multisig.addr, () => {
-            setTransferAgent(this.state.web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.crowdsale.addr, () => {
-              setTransferAgent(this.state.web3, this.state.contracts.token.abi, this.state.contracts.token.addr, finalizeAgentAddr, () => {
-                setTransferAgent(this.state.web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.crowdsale[0].walletAddress, () => {
-                  addWhiteList(this.state.web3, this.state.crowdsale[0].whitelist, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, () => {
-                    setFinalizeAgent(this.state.web3, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, finalizeAgentAddr, () => {
+        //post actions for mintablecappedcrowdsale
+        if (!this.state.tokenIsAlreadyCreated) {
+          setReservedTokensListMultiple(web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.token, () => {
+            this.updateJoinedCrowdsalesRecursive(0, web3, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, () => {
+              this.setMintAgentRecursive(0, web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.crowdsale.addr, () => {
+                this.setMintAgentRecursive(0, web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.finalizeAgent.addr, () => {
+                  this.addWhiteListRecursive(0, web3, this.state.crowdsale, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, () => {
+                    this.setFinalizeAgentRecursive(0, web3, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, this.state.contracts.finalizeAgent.addr, () => {
+                      this.setReleaseAgentRecursive(0, web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.finalizeAgent.addr, () => {
+                        transferOwnership(web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.multisig.addr, () => {
+                          newState.loading = false;
+                          this.setState(newState);
+                          this.goToCrowdsalePage();
+                        });
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        } else { // creation of additional tier after crowdsale was set up before
+          this.updateJoinedCrowdsalesRecursive(0, web3, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, () => {
+            this.setMintAgentRecursive(0, web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.crowdsale.addr, () => {
+              this.setMintAgentRecursive(0, web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.finalizeAgent.addr, () => {
+                this.addWhiteListRecursive(0, web3, this.state.crowdsale, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, () => {
+                  this.setFinalizeAgentRecursive(0, web3, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, this.state.contracts.finalizeAgent.addr, () => {
+                    this.setReleaseAgentRecursive(0, web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.finalizeAgent.addr, () => {
                       newState.loading = false;
                       this.setState(newState);
                       this.goToCrowdsalePage();
@@ -516,27 +549,7 @@ export class stepFour extends stepTwo {
               });
             });
           });
-        });*/
-        //post actions for mintablecappedcrowdsale
-        setReservedTokensListMultiple(web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.token, () => {
-          this.updateJoinedCrowdsalesRecursive(0, web3, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, () => {
-            this.setMintAgentRecursive(0, web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.crowdsale.addr, () => {
-              this.setMintAgentRecursive(0, web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.finalizeAgent.addr, () => {
-                this.addWhiteListRecursive(0, web3, this.state.crowdsale, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, () => {
-                  this.setFinalizeAgentRecursive(0, web3, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr, this.state.contracts.finalizeAgent.addr, () => {
-                    this.setReleaseAgentRecursive(0, web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.finalizeAgent.addr, () => {
-                      transferOwnership(web3, this.state.contracts.token.abi, this.state.contracts.token.addr, this.state.contracts.multisig.addr, () => {
-                        newState.loading = false;
-                        this.setState(newState);
-                        this.goToCrowdsalePage();
-                      });
-                    });
-                  });
-                });
-              });
-            });
-          });
-        });
+        }
       } else {
         this.goToCrowdsalePage();
       }
@@ -603,7 +616,7 @@ export class stepFour extends stepTwo {
   render() {
     let crowdsaleSetups = [];
     for (let i = 0; i < this.state.crowdsale.length; i++) {
-      crowdsaleSetups.push(<div><div className="publish-title-container">
+      crowdsaleSetups.push(<div key={i.toString()}><div className="publish-title-container">
               <p className="publish-title" data-step={3+i}>Crowdsale Setup {this.state.crowdsale[i].tier}</p>
             </div>
             <div className="hidden">
@@ -615,10 +628,10 @@ export class stepFour extends stepTwo {
     }
     let ABIEncidedOutputs = [];
     for (let i = 0; i < this.state.crowdsale.length; i++) {
-      ABIEncidedOutputs.push(<div className="item">
+      ABIEncidedOutputs.push(<div key={i.toString()} className="item">
               <p className="label">Constructor Arguments for {this.state.crowdsale[i].tier?this.state.crowdsale[i].tier : "contract"} (ABI-encoded and appended to the ByteCode above)</p>
               <pre>
-                {this.state.contracts?this.state.contracts.crowdsale?this.state.contracts.crowdsale.abiConstructor[i]:"":""}
+                {this.state.contracts?this.state.contracts.crowdsale?this.state.contracts.crowdsale.abiConstructor?this.state.contracts.crowdsale.abiConstructor[i]:"":"":""}
               </pre>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
@@ -655,8 +668,8 @@ export class stepFour extends stepTwo {
             <div className="hidden">
               <DisplayField side='left' title={'Name'} value={this.state.token.name?this.state.token.name:"Token Name"}/>
               <DisplayField side='right' title={'Ticker'} value={this.state.token.ticker?this.state.token.ticker:"Ticker"}/>
-              <DisplayField side='left' title={'SUPPLY'} value={this.state.token.supply?this.state.token.supply:100}/>
-              <DisplayField side='right' title={'DECIMALS'} value={this.state.token.decimals?this.state.token.decimals:485}/>
+              <DisplayField side='left' title={'SUPPLY'} value={this.state.token.supply?this.state.token.supply.toString():100}/>
+              <DisplayField side='right' title={'DECIMALS'} value={this.state.token.decimals?this.state.token.decimals.toString():485}/>
             </div>
             {crowdsaleSetups}
             <div className="publish-title-container">

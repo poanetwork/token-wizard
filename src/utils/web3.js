@@ -761,6 +761,50 @@ function getPricingStrategyData(web3, $this) {
   });
 }
 
+export function setExistingContractParams(abi, addr, $this) {
+    let state = $this.state;
+    setTimeout(function() {
+      getWeb3((web3) => {
+        attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
+          let propsCount = 0;
+          let cbCount = 0;
+          propsCount++;
+          crowdsaleContract.token.call(function(err, tokenAddr) {
+            cbCount++;
+            console.log("tokenAddr: " + tokenAddr);
+            state.contracts.token.addr = tokenAddr;
+
+            if (propsCount == cbCount) {
+              $this.setState(state);
+            }
+          });
+
+          propsCount++;
+          /*crowdsaleContract.pricingStrategy.call(function(err, pricingStrategyAddr) {
+            cbCount++;
+            console.log("pricingStrategyAddr: " + pricingStrategyAddr);
+            state.contracts.pricingStrategy.addr = pricingStrategyAddr;
+
+            if (propsCount == cbCount) {
+              $this.setState(state);
+            }
+          });*/
+
+          propsCount++;
+          crowdsaleContract.multisigWallet.call(function(err, multisigWalletAddr) {
+            cbCount++;
+            console.log("multisigWalletAddr: " + multisigWalletAddr);
+            state.contracts.multisig.addr = multisigWalletAddr;
+
+            if (propsCount == cbCount) {
+              $this.setState(state);
+            }
+          });
+        });
+      })
+    });
+  }
+
 export function getNetworkVersion(web3, cb) {
   web3.version.getNetwork(function(err, netId) {
     if (err) {

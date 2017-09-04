@@ -27,7 +27,7 @@ export class Invest extends React.Component {
       const networkID = getQueryVariable("networkID");
       const contractType = getQueryVariable("contractType");
       checkNetWorkByID(web3, networkID);
-      newState.contracts.crowdsale.contractType = contractType;
+      newState.contractType = contractType;
 
       const timeInterval = setInterval(() => $this.setState({ seconds: $this.state.seconds - 1}), 1000);
       $this.setState({ timeInterval });
@@ -108,7 +108,7 @@ export class Invest extends React.Component {
       return noMetaMaskAlert();
     }
 
-    switch (this.state.contracts.crowdsale.contractType) {
+    switch (this.state.contractType) {
       case $this.state.contractTypes.standard: {
         web3.eth.getBlockNumber(function(err, curBlock) {
           if (err) return console.log(err);
@@ -258,12 +258,12 @@ export class Invest extends React.Component {
     //balance: tiers, standard
     const investorBalanceTiers = (tokenAmountOf?((tokenAmountOf/10**tokenDecimals)/*.toFixed(tokenDecimals)*/).toString():"0");
     const investorBalanceStandard = (ethRaised?(ethRaised/*.toFixed(tokenDecimals)*//rate).toString():"0");
-    const investorBalance = (this.state.contracts.crowdsale.contractType==this.state.contractTypes.whitelistwithcap)?investorBalanceTiers:investorBalanceStandard;
+    const investorBalance = (this.state.contractType==this.state.contractTypes.whitelistwithcap)?investorBalanceTiers:investorBalanceStandard;
 
     //total supply: tiers, standard
     const tierCap = !isNaN(maxCapBeforeDecimals)?(maxCapBeforeDecimals/*.toFixed(tokenDecimals)*/).toString():"0";
     const standardCrowdsaleSupply = !isNaN(this.state.crowdsale.supply)?(this.state.crowdsale.supply/*.toFixed(tokenDecimals)*/).toString():"0";
-    const totalSupply = (this.state.contracts.crowdsale.contractType == this.state.contractTypes.whitelistwithcap)?tierCap:standardCrowdsaleSupply;
+    const totalSupply = (this.state.contractType == this.state.contractTypes.whitelistwithcap)?tierCap:standardCrowdsaleSupply;
 
     return <div className="invest container">
       <div className="invest-table">
