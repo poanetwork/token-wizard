@@ -532,7 +532,7 @@ export function getAccumulativeCrowdsaleData(web3, $this, cb) {
             state.crowdsale.maximumSellableTokens = parseInt(toFixed(maximumSellableTokens), 10);
 
           //calc maximumSellableTokens in Eth
-          setMaximumSellableTokensInEth(crowdsaleContract, maximumSellableTokens, $this);
+          setMaximumSellableTokensInEth(web3, crowdsaleContract, maximumSellableTokens, $this);
 
           if (propsCount === cbCount) {
             state.loading = false;
@@ -567,7 +567,7 @@ export function getAccumulativeCrowdsaleData(web3, $this, cb) {
   }
 }
 
-function setMaximumSellableTokensInEth(crowdsaleContract, maximumSellableTokens, $this) {
+function setMaximumSellableTokensInEth(web3, crowdsaleContract, maximumSellableTokens, $this) {
   crowdsaleContract.pricingStrategy.call(function(err, pricingStrategyAddr) {
     if (err) return console.log(err);
     
