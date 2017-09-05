@@ -148,7 +148,7 @@ export function setMintAgent(web3, abi, addr, acc, cb) {
   });
 }
 
-export function addWhiteList(round, web3, crowdsale, abi, addr, cb) {
+export function addWhiteList(round, web3, crowdsale, token, abi, addr, cb) {
   console.log("###whitelist:###");
   let whitelist = [];
   for (let i = 0; i <= round; i++) {
@@ -173,8 +173,8 @@ export function addWhiteList(round, web3, crowdsale, abi, addr, cb) {
     for (let i = 0; i < whitelist.length; i++) {
       addrs.push(whitelist[i].addr);
       statuses.push(true);
-      minCaps.push(whitelist[i].min);
-      maxCaps.push(whitelist[i].max);
+      minCaps.push(whitelist[i].min*10**token.decimals);
+      maxCaps.push(whitelist[i].max*10**token.decimals);
     }
 
     console.log("addrs:");
@@ -209,7 +209,7 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
     for (let i = 0; i < token.reservedTokens.length; i++) {
       addrs.push(token.reservedTokens[i].addr);
       dims.push(token.reservedTokens[i].dim == "tokens"?true:false);
-      vals.push(token.reservedTokens[i].val);
+      vals.push(token.reservedTokens[i].dim == "tokens"?token.reservedTokens[i].val*10**token.decimals:token.reservedTokens[i].val);
     }
 
     if (addrs.length == 0 && dims.length == 0 && vals.length == 0) return cb();
@@ -366,26 +366,6 @@ export function findCurrentContractRecursively(i, $this, web3, firstCrowdsaleCon
         }
       });
     });
-  });
-}
-
-export function updateWhiteListRecursively(i, $this, tierNum, web3, cb) {
-  console.log($this.state.contracts.crowdsale.addr);
-  if (tierNum >= $this.state.contracts.crowdsale.addr.length - 1) return cb();
-
-  let crowdsaleAddr = $this.state.contracts.crowdsale.addr[tierNum + 1];
-  attachToContract(web3, $this.state.contracts.crowdsale.abi, crowdsaleAddr, function(err, crowdsaleContract) {
-    console.log("attach to crowdsale contract");
-    if (err) return console.log(err);
-
-    if (!crowdsaleContract) return noContractAlert();
-    console.log(crowdsaleContract);
-
-    crowdsaleContract.updateEarlyParicipantWhitelist.sendTransaction($this.state.tokensToInvest, function(err, txHash) {
-      if (err) return console.log(err);
-
-      console.log("updateEarlyParicipantWhitelist function transaction: " + txHash);
-    })
   });
 }
 
