@@ -17,6 +17,7 @@ export class CrowdsaleBlock extends React.Component {
     this.state = Object.assign({}, oldState)
     let state = this.state
     state.crowdsale[props.num].tier = "Tier " + (this.props.num + 1)
+    state.crowdsale[props.num].updatable = "off"
     //state.crowdsale[props.num].startTime = state.crowdsale[props.num - 1].endTime;
     //state.crowdsale[props.num].endTime = defaultCompanyEndDate(state.crowdsale[props.num].startTime);
     //this.setState(newState);
@@ -80,9 +81,10 @@ export class CrowdsaleBlock extends React.Component {
           <RadioInputField 
             side='left' 
             title={ALLOWMODIFYING} 
-            defaultValue="off"
             items={["on", "off"]}
-            vals={[true, false]}
+            vals={["on", "off"]}
+            state={this.state}
+            target={this.state.crowdsale[num].updatable}
             onChange={(e) => onChange(e, 'crowdsale', num, 'updatable')}/>
         </div>
         <div className="white-list-title">

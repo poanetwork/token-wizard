@@ -87,7 +87,7 @@ export const initialStepTwoValues = {
 		decimals: '',
 		reservedTokens: [],
 		reservedTokensElements: [],
-		reservedTokensInput: {}
+		reservedTokensInput: {dim: "tokens"}
 	}
 }
 

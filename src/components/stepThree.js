@@ -24,6 +24,7 @@ export class stepThree extends stepTwo {
     }
     oldState.children = [];
     oldState.crowdsale[0].tier = "Tier 1"
+    oldState.crowdsale[0].updatable = "off"
     this.state = Object.assign({}, oldState, {validations: { ...oldState.validations, startTime: VALID, endTime: VALID, walletAddress: VALID, supply: EMPTY, rate: EMPTY } } )
     //console.log('this.state', this.state)
   }
@@ -271,9 +272,10 @@ export class stepThree extends stepTwo {
               <RadioInputField 
                   side='left' 
                   title={ALLOWMODIFYING} 
-                  defaultValue="off"
                   items={["on", "off"]}
-                  vals={[true, false]}
+                  vals={["on", "off"]}
+                  state={this.state}
+                  target={this.state.crowdsale[0].updatable}
                   onChange={(e) => this.changeState(e, 'crowdsale', 0, 'updatable')}/>
             </div>
             <div className="white-list-title">

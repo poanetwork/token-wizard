@@ -65,9 +65,10 @@ export class ReservedTokensInputBlock extends React.Component {
                   <RadioInputField 
                     side='reserved-tokens-input-property-middle' 
                     title={DIMENSION} 
-                    defaultValue="tokens"
                     items={["tokens", "percentage"]}
                     vals={["tokens", "percentage"]}
+                    state={this.state}
+                    target={this.state.token.reservedTokensInput.dim}
                     onChange={(e) => onChange(e, 'token', 0, 'reservedtokens_dim')}/>
                   <InputField 
                     side='reserved-tokens-input-property-right'
