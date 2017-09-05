@@ -37,8 +37,10 @@ export class ReservedTokensInputBlock extends React.Component {
         if (isAdded) return;
 
         let state = this.state
+        let num = state.token.reservedTokensElements.length;
         state.token.reservedTokensElements.push(
             <ReservedTokensItem 
+                num={num}
                 addr={addr}
                 dim={dim}
                 val={val}>
