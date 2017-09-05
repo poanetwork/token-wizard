@@ -81,9 +81,9 @@ export class Invest extends React.Component {
           return $this.setState(state);
         }
         getCrowdsaleData(web3, $this, crowdsaleContract, function() { 
-        });
-        initializeAccumulativeData($this, function() {
-          getAccumulativeCrowdsaleData(web3, $this, function() {
+          initializeAccumulativeData($this, function() {
+            getAccumulativeCrowdsaleData(web3, $this, function() {
+            });
           });
         });
         getCrowdsaleTargetDates(web3, $this, function() {

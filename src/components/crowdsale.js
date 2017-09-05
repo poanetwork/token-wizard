@@ -78,12 +78,12 @@ export class Crowdsale extends React.Component {
 		      			state.loading = false;
 		        		return $this.setState(state);
 		      		}
-				    getCrowdsaleData(web3, $this, crowdsaleContract, function() {  
+				    getCrowdsaleData(web3, $this, crowdsaleContract, function() { 
+				    	initializeAccumulativeData($this, function() {
+				        	getAccumulativeCrowdsaleData(web3, $this, function() {
+				        	});
+				      	}); 
 				    });
-				    initializeAccumulativeData($this, function() {
-			        	getAccumulativeCrowdsaleData(web3, $this, function() {
-			        	});
-			      	});
 			    })
 	      	});
 		})
@@ -132,7 +132,7 @@ export class Crowdsale extends React.Component {
 
 	    //goal in ETH
 	    const goalInETHStandard = (totalSupply/rate).toExponential();
-	    const goalInETHTiers = rate?(this.state.web3.fromWei(maxCapBeforeDecimals*rate).toString()):0;
+	    const goalInETHTiers = this.state.crowdsale.maximumSellableTokensInWei?(this.state.web3.fromWei(this.state.crowdsale.maximumSellableTokensInWei, "ether").toString()):0;
 	    const goalInETH = (this.state.contractType == this.state.contractTypes.whitelistwithcap)?goalInETHTiers:goalInETHStandard;	    
 
 	    

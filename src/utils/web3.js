@@ -530,6 +530,10 @@ export function getAccumulativeCrowdsaleData(web3, $this, cb) {
             state.crowdsale.maximumSellableTokens += parseInt(toFixed(maximumSellableTokens), 10);
           else
             state.crowdsale.maximumSellableTokens = parseInt(toFixed(maximumSellableTokens), 10);
+
+          //calc maximumSellableTokens in Eth
+          setMaximumSellableTokensInEth(crowdsaleContract, maximumSellableTokens, $this);
+
           if (propsCount === cbCount) {
             state.loading = false;
             $this.setState(state, cb);
@@ -563,6 +567,31 @@ export function getAccumulativeCrowdsaleData(web3, $this, cb) {
   }
 }
 
+function setMaximumSellableTokensInEth(crowdsaleContract, maximumSellableTokens, $this) {
+  crowdsaleContract.pricingStrategy.call(function(err, pricingStrategyAddr) {
+    if (err) return console.log(err);
+    
+    console.log("pricingStrategy: " + pricingStrategyAddr);
+    attachToContract(web3, $this.state.contracts.pricingStrategy.abi, pricingStrategyAddr, function(err, pricingStrategyContract) {
+      console.log("attach to pricing strategy contract");
+      if (err) return console.log(err);
+      if (!pricingStrategyContract) return noContractAlert();
+
+      pricingStrategyContract.oneTokenInWei.call(function(err, oneTokenInWei) {
+        if (err) console.log(err);
+        
+        console.log("pricing strategy oneTokenInWei: " + oneTokenInWei);
+        let state = $this.state;
+        if (state.crowdsale.maximumSellableTokensInWei)
+          state.crowdsale.maximumSellableTokensInWei += parseInt(oneTokenInWei, 10)*maximumSellableTokens/10**$this.state.token.decimals;
+        else
+          state.crowdsale.maximumSellableTokensInWei = parseInt(oneTokenInWei, 10)*maximumSellableTokens/10**$this.state.token.decimals;
+        $this.setState(state);
+      });
+    });
+  });
+}
+
 export function getCrowdsaleData(web3, $this, crowdsaleContract, cb) {
   if (!crowdsaleContract) return noContractAlert();
 
@@ -579,22 +608,6 @@ export function getCrowdsaleData(web3, $this, crowdsaleContract, cb) {
       console.log("rate: " + web3.fromWei(parseInt(rate, 10), "ether"));
       let state = $this.state;
       state.pricingStrategy.rate = web3.fromWei(parseInt(rate, 10), "ether");
-      if (propsCount === cbCount) {
-        state.loading = false;
-        $this.setState(state, cb);
-      }
-    });
-  }
-
-  if (crowdsaleContract.minimumFundingGoal) {
-    propsCount++;
-    crowdsaleContract.minimumFundingGoal.call(function(err, supply) {
-      cbCount++;
-      if (err) return console.log(err);
-      
-      console.log("supply: " + supply);
-      let state = $this.state;
-      state.crowdsale.supply = supply;
       if (propsCount === cbCount) {
         state.loading = false;
         $this.setState(state, cb);
@@ -632,30 +645,38 @@ export function getCrowdsaleData(web3, $this, crowdsaleContract, cb) {
     }
 
     if (!tokenAddr || tokenAddr === "0x") return;
-    getTokenData(web3, $this);
-
-    if (!crowdsaleContract.pricingStrategy) return;
-
     propsCount++;
-    crowdsaleContract.pricingStrategy.call(function(err, pricingStrategyAddr) {
-      cbCount++;
-      if (err) return console.log(err);
-      
-      console.log("pricingStrategy: " + pricingStrategyAddr);
-      let state = $this.state;
-      state.contracts.pricingStrategy.addr = pricingStrategyAddr;
-      if (propsCount === cbCount) {
-        state.loading = false;
-        $this.setState(state, cb);
-      }
+    getTokenData(web3, $this, function() {
 
-      if (!pricingStrategyAddr || pricingStrategyAddr === "0x") return;
-      getPricingStrategyData(web3, $this);
+      if (!crowdsaleContract.pricingStrategy) return;
+
+      propsCount++;
+      crowdsaleContract.pricingStrategy.call(function(err, pricingStrategyAddr) {
+        cbCount++;
+        if (err) return console.log(err);
+        
+        console.log("pricingStrategy: " + pricingStrategyAddr);
+        let state = $this.state;
+        state.contracts.pricingStrategy.addr = pricingStrategyAddr;
+        if (propsCount === cbCount) {
+          state.loading = false;
+          $this.setState(state, cb);
+        }
+
+        if (!pricingStrategyAddr || pricingStrategyAddr === "0x") return;
+        getPricingStrategyData(web3, $this, function() {
+          if (propsCount === cbCount) {
+            state.loading = false;
+            $this.setState(state, cb);
+          }
+        });
+      });
+
     });
   });
 }
 
-function getTokenData(web3, $this) {
+function getTokenData(web3, $this, cb) {
   let propsCount = 0;
   let cbCount = 0;
   attachToContract(web3, $this.state.contracts.token.abi, $this.state.contracts.token.addr, function(err, tokenContract) {
@@ -673,7 +694,7 @@ function getTokenData(web3, $this) {
       state.token.name = name;
       if (propsCount === cbCount) {
         state.loading = false;
-        $this.setState(state);
+        $this.setState(state, cb);
       }
     });
     propsCount++;
@@ -685,7 +706,7 @@ function getTokenData(web3, $this) {
       state.token.ticker = ticker;
       if (propsCount === cbCount) {
         state.loading = false;
-        $this.setState(state);
+        $this.setState(state, cb);
       }
     });
     if (tokenContract.balanceOf) {
@@ -702,7 +723,7 @@ function getTokenData(web3, $this) {
           state.crowdsale.tokenAmountOf = parseInt(balanceOf, 10);
         if (propsCount === cbCount) {
           state.loading = false;
-          $this.setState(state);
+          $this.setState(state, cb);
         }
       });
     }
@@ -715,7 +736,7 @@ function getTokenData(web3, $this) {
       state.token.decimals = decimals;
       if (propsCount === cbCount) {
         state.loading = false;
-        $this.setState(state);
+        $this.setState(state, cb);
       }
     });
     propsCount++;
@@ -727,13 +748,13 @@ function getTokenData(web3, $this) {
       state.token.supply = supply;
       if (propsCount === cbCount) {
         state.loading = false;
-        $this.setState(state);
+        $this.setState(state, cb);
       }
     });
   });
 }
 
-function getPricingStrategyData(web3, $this) {
+function getPricingStrategyData(web3, $this, cb) {
   attachToContract(web3, $this.state.contracts.pricingStrategy.abi, $this.state.contracts.pricingStrategy.addr, function(err, pricingStrategyContract) {
     console.log("attach to pricing strategy contract");
     if (err) return console.log(err);
@@ -745,7 +766,7 @@ function getPricingStrategyData(web3, $this) {
       console.log("pricing strategy rate: " + rate);
       let state = $this.state;
       state.pricingStrategy.rate = parseInt(rate, 10);//web3.fromWei(parseInt(rate, 10), "ether");
-      $this.setState(state);
+      $this.setState(state, cb);
     });
 
     //EthTranchePricing
