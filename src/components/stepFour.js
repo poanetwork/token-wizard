@@ -551,11 +551,11 @@ export class stepFour extends stepTwo {
                   this.addWhiteListRecursive(0, web3, this.state.crowdsale, contracts.crowdsale.abi, contracts.crowdsale.addr, () => {
                     this.setFinalizeAgentRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, contracts.finalizeAgent.addr, () => {
                       this.setReleaseAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.finalizeAgent.addr, () => {
-                        //transferOwnership(web3, this.state.contracts.token.abi, contracts.token.addr, contracts.multisig.addr, () => {
+                        transferOwnership(web3, this.state.contracts.token.abi, contracts.token.addr, contracts.multisig.addr, () => {
                           newState.loading = false;
                           this.setState(newState);
                           this.goToCrowdsalePage();
-                        //});
+                        });
                       });
                     });
                   });
