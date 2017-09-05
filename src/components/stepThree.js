@@ -6,12 +6,13 @@ import { stepTwo } from './stepTwo'
 import { getQueryVariable, getURLParam, getOldState, defaultCompanyStartDate, defaultCompanyEndDate, stepsAreValid, allFieldsAreValid } from '../utils/utils'
 import { StepNavigation } from './Common/StepNavigation'
 import { InputField } from './Common/InputField'
+import { RadioInputField } from './Common/RadioInputField'
 import { CrowdsaleBlock } from './Common/CrowdsaleBlock'
 import { WhitelistInputBlock } from './Common/WhitelistInputBlock'
 import { NAVIGATION_STEPS, defaultState, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS, initialStepThreeValues, intitialStepThreeValidations } from '../utils/constants'
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
-const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME } = TEXT_FIELDS
+const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME, ALLOWMODIFYING } = TEXT_FIELDS
 
 export class stepThree extends stepTwo {
   constructor(props) {
@@ -267,6 +268,13 @@ export class stepThree extends stepTwo {
                 errorMessage={VALIDATION_MESSAGES.SUPPLY} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'supply', 0)}
                 onChange={(e) => this.changeState(e, 'crowdsale', 0, 'supply')}/>
+              <RadioInputField 
+                  side='left' 
+                  title={ALLOWMODIFYING} 
+                  defaultValue="off"
+                  items={["on", "off"]}
+                  vals={[true, false]}
+                  onChange={(e) => this.changeState(e, 'crowdsale', 0, 'updatable')}/>
             </div>
             <div className="white-list-title">
               <p className="title">Whitelist</p>

@@ -1,15 +1,15 @@
 import React from 'react'
 import '../../assets/stylesheets/application.css';
 
-export const RadioInputField = ({side, disabled, defaultValue, onChange, title }) => {
+export const RadioInputField = ({side, disabled, defaultValue, onChange, title, items, vals }) => {
 	return <div className={side}>
 		<label className="label">{title}</label>
 		<div className="reserved-tokens-radio-container">
 			<div className="reserved-tokens-radio-container-item">
-				<input disabled={disabled} type='radio' name="reserved-tokens-dim" className="input-radio" value="tokens" onChange={onChange}/> tokens
+				<input disabled={disabled} type='radio' name="reserved-tokens-dim" className="input-radio" value={vals[0]} onChange={onChange}/> {items[0]}
 			</div>
 			<div className="reserved-tokens-radio-container-item">
-				<input disabled={disabled} type='radio' name="reserved-tokens-dim" className="input-radio" value="percentage" onChange={onChange}/> percentage
+				<input disabled={disabled} type='radio' name="reserved-tokens-dim" className="input-radio" value={vals[1]} onChange={onChange}/> {items[1]}
 			</div>
 		</div>
 		<p className="description">
