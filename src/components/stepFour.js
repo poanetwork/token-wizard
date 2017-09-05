@@ -228,7 +228,7 @@ export class stepFour extends stepTwo {
   }
 
   deployPricingStrategyRecursive = (i, pricingStrategies, binPricingStrategy, abiPricingStrategy) => {
-    var paramsPricingStrategy = this.getPricingStrategyParams(this.state.web3, pricingStrategies[i], this.state.token)
+    var paramsPricingStrategy = this.getPricingStrategyParams(this.state.web3, pricingStrategies[i], i, this.state.token)
     console.log("getPricingStrategyParams:");
     console.log(paramsPricingStrategy);
     if (i < pricingStrategies.length - 1) {
@@ -250,13 +250,14 @@ export class stepFour extends stepTwo {
   }
 
   //FlatPricing
-  getPricingStrategyParams = (web3, pricingStrategy, token) => {
+  getPricingStrategyParams = (web3, pricingStrategy, i, token) => {
     console.log(pricingStrategy);
     return [
       //web3.toWei(1/pricingStrategy.rate, "ether")
       //pricingStrategy.rate
       //web3.toWei(1/pricingStrategy.rate/10**token.decimals, "ether")
-      web3.toWei(1/pricingStrategy.rate, "ether")
+      web3.toWei(1/pricingStrategy.rate, "ether"),
+      this.state.crowdsale[i].updatable?this.state.crowdsale[i].updatable=="on"?true:false:false
     ]
   }
 

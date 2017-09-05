@@ -414,6 +414,8 @@ const inputFieldIsUnsubmitted = (currentValidation, newValidation) => currentVal
 const isNotWhiteListTierObject = (value) => !(typeof value === 'object' && value.hasOwnProperty('whitelist') === true && value.hasOwnProperty('tier') === true)
 // still thinks that we do not have an array... we do
 export const validateValue = (value, property) => {
+  //console.log("'" + property + "'");
+    if (property === '0') return VALID;
     console.log('value of : ' + value + ' and property of : ' + property, Array.isArray(value), JSON.stringify(value))
     let validationFunction, valueIsValid;
     if(isNotWhiteListTierObject(value)) {
