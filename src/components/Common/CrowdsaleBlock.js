@@ -2,12 +2,11 @@ import React from 'react'
 import '../../assets/stylesheets/application.css';
 import { WhitelistInputBlock } from './WhitelistInputBlock'
 import { getOldState, defaultCompanyEndDate } from '../../utils/utils'
-
 import { InputField } from './InputField'
-
+import { RadioInputField } from './RadioInputField'
 import { defaultState, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS } from '../../utils/constants'
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
-const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME } = TEXT_FIELDS
+const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME, ALLOWMODIFYING } = TEXT_FIELDS
 
 export class CrowdsaleBlock extends React.Component {
 
@@ -18,6 +17,7 @@ export class CrowdsaleBlock extends React.Component {
     this.state = Object.assign({}, oldState)
     let state = this.state
     state.crowdsale[props.num].tier = "Tier " + (this.props.num + 1)
+    state.crowdsale[props.num].updatable = "off"
     //state.crowdsale[props.num].startTime = state.crowdsale[props.num - 1].endTime;
     //state.crowdsale[props.num].endTime = defaultCompanyEndDate(state.crowdsale[props.num].startTime);
     //this.setState(newState);
@@ -38,7 +38,7 @@ export class CrowdsaleBlock extends React.Component {
     let { pricingStrategy } = this.state
     let { num } = this.props
     let { onChange } = this.props
-    return (<div style={{"marginTop": "40px"}} className="steps-content container">
+    return (<div key={num.toString()} style={{"marginTop": "40px"}} className="steps-content container">
         <div className="hidden">
           <InputField 
             side='left' 
@@ -78,6 +78,14 @@ export class CrowdsaleBlock extends React.Component {
             title={SUPPLY} 
             value={crowdsale[num].supply} 
             onChange={(e) => onChange(e, 'crowdsale', num, 'supply')}/>
+          <RadioInputField 
+            side='left' 
+            title={ALLOWMODIFYING} 
+            items={["on", "off"]}
+            vals={["on", "off"]}
+            state={this.state}
+            target={this.state.crowdsale[num].updatable}
+            onChange={(e) => onChange(e, 'crowdsale', num, 'updatable')}/>
         </div>
         <div className="white-list-title">
           <p className="title">Whitelist</p>

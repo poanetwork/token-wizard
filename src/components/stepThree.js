@@ -6,12 +6,13 @@ import { stepTwo } from './stepTwo'
 import { getQueryVariable, getURLParam, getOldState, defaultCompanyStartDate, defaultCompanyEndDate, stepsAreValid, allFieldsAreValid } from '../utils/utils'
 import { StepNavigation } from './Common/StepNavigation'
 import { InputField } from './Common/InputField'
+import { RadioInputField } from './Common/RadioInputField'
 import { CrowdsaleBlock } from './Common/CrowdsaleBlock'
 import { WhitelistInputBlock } from './Common/WhitelistInputBlock'
 import { NAVIGATION_STEPS, defaultState, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS, initialStepThreeValues, intitialStepThreeValidations } from '../utils/constants'
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
-const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME } = TEXT_FIELDS
+const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME, ALLOWMODIFYING } = TEXT_FIELDS
 
 export class stepThree extends stepTwo {
   constructor(props) {
@@ -23,6 +24,7 @@ export class stepThree extends stepTwo {
     }
     oldState.children = [];
     oldState.crowdsale[0].tier = "Tier 1"
+    oldState.crowdsale[0].updatable = "off"
     this.state = Object.assign({}, oldState, {validations: { ...oldState.validations, startTime: VALID, endTime: VALID, walletAddress: VALID, supply: EMPTY, rate: EMPTY } } )
     //console.log('this.state', this.state)
   }
@@ -267,6 +269,14 @@ export class stepThree extends stepTwo {
                 errorMessage={VALIDATION_MESSAGES.SUPPLY} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'supply', 0)}
                 onChange={(e) => this.changeState(e, 'crowdsale', 0, 'supply')}/>
+              <RadioInputField 
+                  side='left' 
+                  title={ALLOWMODIFYING} 
+                  items={["on", "off"]}
+                  vals={["on", "off"]}
+                  state={this.state}
+                  target={this.state.crowdsale[0].updatable}
+                  onChange={(e) => this.changeState(e, 'crowdsale', 0, 'updatable')}/>
             </div>
             <div className="white-list-title">
               <p className="title">Whitelist</p>

@@ -59,7 +59,8 @@ export const TEXT_FIELDS = {
 	MAX: 'Max',
 	DIMENSION: 'Dimension',
 	VALUE: 'Value',
-	MAX_CAP: 'Max cap'
+	MAX_CAP: 'Max cap',
+	ALLOWMODIFYING: 'Allow modifying'
 }
 
 export const VALIDATION_TYPES = {
@@ -86,7 +87,7 @@ export const initialStepTwoValues = {
 		decimals: '',
 		reservedTokens: [],
 		reservedTokensElements: [],
-		reservedTokensInput: {}
+		reservedTokensInput: {dim: "tokens"}
 	}
 }
 

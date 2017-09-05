@@ -228,7 +228,7 @@ export class stepFour extends stepTwo {
   }
 
   deployPricingStrategyRecursive = (i, pricingStrategies, binPricingStrategy, abiPricingStrategy) => {
-    var paramsPricingStrategy = this.getPricingStrategyParams(this.state.web3, pricingStrategies[i], this.state.token)
+    var paramsPricingStrategy = this.getPricingStrategyParams(this.state.web3, pricingStrategies[i], i, this.state.token)
     console.log("getPricingStrategyParams:");
     console.log(paramsPricingStrategy);
     if (i < pricingStrategies.length - 1) {
@@ -250,13 +250,14 @@ export class stepFour extends stepTwo {
   }
 
   //FlatPricing
-  getPricingStrategyParams = (web3, pricingStrategy, token) => {
+  getPricingStrategyParams = (web3, pricingStrategy, i, token) => {
     console.log(pricingStrategy);
     return [
       //web3.toWei(1/pricingStrategy.rate, "ether")
       //pricingStrategy.rate
       //web3.toWei(1/pricingStrategy.rate/10**token.decimals, "ether")
-      web3.toWei(1/pricingStrategy.rate, "ether")
+      web3.toWei(1/pricingStrategy.rate, "ether"),
+      this.state.crowdsale[i].updatable?this.state.crowdsale[i].updatable=="on"?true:false:false
     ]
   }
 
@@ -437,7 +438,8 @@ export class stepFour extends stepTwo {
       parseInt(Date.parse(this.state.crowdsale[i].startTime)/1000, 10), 
       parseInt(Date.parse(this.state.crowdsale[i].endTime)/1000, 10), 
       0,
-      toFixed(parseInt(this.state.crowdsale[i].supply, 10)*10**parseInt(this.state.token.decimals, 10))
+      toFixed(parseInt(this.state.crowdsale[i].supply, 10)*10**parseInt(this.state.token.decimals, 10)),
+      this.state.crowdsale[i].updatable?this.state.crowdsale[i].updatable=="on"?true:false:false
     ]
   }
 
@@ -650,6 +652,9 @@ export class stepFour extends stepTwo {
   render() {
     let crowdsaleSetups = [];
     for (let i = 0; i < this.state.crowdsale.length; i++) {
+      let capBlock = <DisplayField side='left' title={'Max cap'} value={this.state.crowdsale[i].supply?this.state.crowdsale[i].supply:""}/>
+      let updatableBlock = <DisplayField side='right' title={'Allow modifying'} value={this.state.crowdsale[i].updatable?this.state.crowdsale[i].updatable:"off"}/>
+          
       crowdsaleSetups.push(<div key={i.toString()}><div className="publish-title-container">
           <p className="publish-title" data-step={3+i}>Crowdsale Setup {this.state.crowdsale[i].tier}</p>
         </div>
@@ -658,14 +663,28 @@ export class stepFour extends stepTwo {
           <DisplayField side='right' title={'End time'} value={this.state.crowdsale[i].endTime?this.state.crowdsale[i].endTime.split("T").join(" "):""}/>
           <DisplayField side='left' title={'Wallet address'} value={this.state.crowdsale[i].walletAddress?this.state.crowdsale[i].walletAddress:"0xc1253365dADE090649147Db89EE781d10f2b972f"}/>
           <DisplayField side='right' title={'RATE'} value={this.state.pricingStrategy[i].rate?this.state.pricingStrategy[i].rate:1 + " ETH"}/>
+          {this.state.contractType==this.state.contractTypes.whitelistwithcap?capBlock:""}
+          {this.state.contractType==this.state.contractTypes.whitelistwithcap?updatableBlock:""}
         </div></div>);
     }
-    let ABIEncodedOutputs = [];
+    let ABIEncodedOutputsCrowdsale = [];
     for (let i = 0; i < this.state.crowdsale.length; i++) {
-      ABIEncodedOutputs.push(<div key={i.toString()} className="item">
+      ABIEncodedOutputsCrowdsale.push(<div key={i.toString()} className="item">
           <p className="label">Constructor Arguments for {this.state.crowdsale[i].tier?this.state.crowdsale[i].tier : "contract"} (ABI-encoded and appended to the ByteCode above)</p>
           <pre>
             {this.state.contracts?this.state.contracts.crowdsale?this.state.contracts.crowdsale.abiConstructor?this.state.contracts.crowdsale.abiConstructor[i]:"":"":""}
+          </pre>
+          <p className="description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </p>
+        </div>);
+    }
+    let ABIEncodedOutputsPricingStrategy = [];
+    for (let i = 0; i < this.state.pricingStrategy.length; i++) {
+      ABIEncodedOutputsPricingStrategy.push(<div key={i.toString()} className="item">
+          <p className="label">Constructor Arguments for {this.state.crowdsale[i].tier?this.state.crowdsale[i].tier : ""} Pricing Strategy Contract (ABI-encoded and appended to the ByteCode above)</p>
+          <pre>
+            {this.state.contracts?this.state.contracts.pricingStrategy?this.state.contracts.pricingStrategy.abiConstructor?this.state.contracts.pricingStrategy.abiConstructor[i]:"":"":""}
           </pre>
           <p className="description">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
@@ -699,6 +718,25 @@ export class stepFour extends stepTwo {
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           </p>
         </div></div>;
+    let pricingStrategyBlock = <div><div className="item">
+          <p className="label">Pricing Strategy Contract Source Code</p>
+          <pre>
+            {this.state.contracts?this.state.contracts.pricingStrategy?this.state.contracts.pricingStrategy.src:"":""}
+          </pre>
+          <p className="description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </p>
+        </div>
+        <div className="item">
+          <p className="label">Pricing Strategy Contract ABI</p>
+          <pre>
+            {this.state.contracts?this.state.contracts.pricingStrategy?JSON.stringify(this.state.contracts.pricingStrategy.abi):"":""}
+          </pre>
+          <p className="description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </p>
+        </div>
+        </div>;
     return (
       <section className="steps steps_publish">
         <StepNavigation activeStep={PUBLISH} />
@@ -717,7 +755,7 @@ export class stepFour extends stepTwo {
               <div className="publish-title-container">
                 <p className="publish-title" data-step="1">Crowdsale Contract</p>
               </div>
-              <p className="label">{this.state.contractType=="standard"?"Standard":"Whitelist with cap"}</p>
+              <p className="label">{this.state.contractType==this.state.contractTypes.standard?"Standard":"Whitelist with cap"}</p>
               <p className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
                 nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
@@ -744,6 +782,8 @@ export class stepFour extends stepTwo {
               </p>
             </div>
             {!this.state.tokenIsAlreadyCreated?tokenBlock:""}
+            {(!this.state.tokenIsAlreadyCreated && this.state.contractType == this.state.contractTypes.whitelistwithcap)?pricingStrategyBlock:""}
+            {this.state.contractType == this.state.contractTypes.whitelistwithcap?ABIEncodedOutputsPricingStrategy:""}
             <div className="item">
               <p className="label">Crowdsale Contract Source Code</p>
               <pre>
@@ -762,7 +802,7 @@ export class stepFour extends stepTwo {
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
             </div>
-            {ABIEncodedOutputs}
+            {ABIEncodedOutputsCrowdsale}
           </div>
         </div>
         <div className="button-container">
