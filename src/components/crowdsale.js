@@ -106,17 +106,17 @@ export class Crowdsale extends React.Component {
 
 	render() {
 		const tokenAddr = this.state.contracts?this.state.contracts.token.addr:"";
-	    const crowdsaleAddr = this.state.contracts?this.state.contracts.crowdsale.addr:"";
+	    const crowdsaleAddr = this.state.contracts?(typeof this.state.contracts.crowdsale.addr === 'string')?this.state.contracts.crowdsale.addr:this.state.contracts.crowdsale.addr[0]:"";
 	    const tokenDecimals = !isNaN(this.state.token.decimals)?this.state.token.decimals:0;
 		const rate = this.state.pricingStrategy.rate; //for tiers: 1 token in wei, for standard: 1/? 1 token in eth
-		const maxCapBeforeDecimals = this.state.crowdsale.maximumSellableTokens;
+		const maxCapBeforeDecimals = this.state.crowdsale.maximumSellableTokens/10**tokenDecimals;
 		const investorsCount = this.state.crowdsale.investors?this.state.crowdsale.investors.toString():0;
 	    const ethRaised = this.state.crowdsale.ethRaised;
 		const tokensClaimedRatio = goalInETH?(ethRaised/goalInETH)*100:"0";
 
 		//tokens claimed: tiers, standard
 		const tokensClaimedStandard = rate?(this.state.crowdsale.ethRaised/rate/*.toFixed(tokenDecimals)*/):0;
-		const tokensClaimedTiers = rate?(this.state.crowdsale.weiRaised/rate/*.toFixed(tokenDecimals)*/):0;
+		const tokensClaimedTiers = rate?(this.state.crowdsale.tokensSold/10**tokenDecimals):0;
 	    const tokensClaimed = (this.state.contractType == this.state.contractTypes.whitelistwithcap)?tokensClaimedTiers:tokensClaimedStandard;
 	    	    
 

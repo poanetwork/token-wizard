@@ -3,7 +3,7 @@ import '../assets/stylesheets/application.css';
 import { deployContract, getWeb3, getNetworkVersion, addWhiteList, setFinalizeAgent, approve, setTransferAgent, setMintAgent, setReleaseAgent, updateJoinedCrowdsales, transferOwnership, setReservedTokensListMultiple } from '../utils/web3'
 import { noMetaMaskAlert } from '../utils/alerts'
 import { defaultState, PDF_CONTENTS } from '../utils/constants'
-import { getOldState, handleContractsForPDF, handleTokenForPDF, handleCrowdsaleForPDF, handlePricingStrategyForPDF, handleConstantForPDF } from '../utils/utils'
+import { getOldState, handleContractsForPDF, handleTokenForPDF, handleCrowdsaleForPDF, handlePricingStrategyForPDF, handleConstantForPDF, toFixed } from '../utils/utils'
 import { getEncodedABIClientSide } from '../utils/microservices'
 import { stepTwo } from './stepTwo'
 import { StepNavigation } from './Common/StepNavigation'
@@ -437,7 +437,7 @@ export class stepFour extends stepTwo {
       parseInt(Date.parse(this.state.crowdsale[i].startTime)/1000, 10), 
       parseInt(Date.parse(this.state.crowdsale[i].endTime)/1000, 10), 
       0,
-      parseInt(this.state.crowdsale[i].supply, 10)
+      toFixed(parseInt(this.state.crowdsale[i].supply, 10)*10**parseInt(this.state.token.decimals, 10))
     ]
   }
 

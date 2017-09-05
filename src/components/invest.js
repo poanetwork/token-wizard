@@ -250,7 +250,7 @@ export class Invest extends React.Component {
     const tokenTicker = this.state.token.ticker?this.state.token.ticker.toString():"";
     const tokenName = this.state.token.name?this.state.token.name.toString():"";
     const rate = this.state.pricingStrategy.rate;
-    const maxCapBeforeDecimals = this.state.crowdsale.maximumSellableTokens;
+    const maxCapBeforeDecimals = this.state.crowdsale.maximumSellableTokens/10**tokenDecimals;
     const tokenAmountOf = this.state.crowdsale.tokenAmountOf;
     const weiRaised = this.state.crowdsale.weiRaised;
     const ethRaised = this.state.crowdsale.ethRaised;

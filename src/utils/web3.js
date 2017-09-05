@@ -2,6 +2,7 @@ import Web3 from 'web3';
 import { incorrectNetworkAlert, noContractAlert } from './alerts'
 import { getEncodedABIClientSide } from './microservices'
 import { findCurrentContractRecursively as findCurrentContractRecursively2 } from './web3'
+import { toFixed } from '../utils/utils'
 
 // instantiate new web3 instance
 const web3 = new Web3();
@@ -497,24 +498,25 @@ export function getAccumulativeCrowdsaleData(web3, $this, cb) {
         }
       });
 
-      /*if (crowdsaleContract.tokenAmountOf) {
+      if (crowdsaleContract.tokensSold) {
         propsCount++;
-        crowdsaleContract.tokenAmountOf.call(web3.eth.accounts[0], function(err, tokenAmountOf) {
+        crowdsaleContract.tokensSold.call(function(err, tokensSold) {
           cbCount++;
           if (err) return console.log(err);
           
-          console.log("tokenAmountOf: " + tokenAmountOf);
+          console.log("tokensSold: " + tokensSold);
           let state = $this.state;
-          if (state.crowdsale.tokenAmountOf)
-            state.crowdsale.tokenAmountOf += parseInt(tokenAmountOf, 10);
+          if (state.crowdsale.tokensSold)
+            state.crowdsale.tokensSold += parseInt(tokensSold, 10);
           else
-            state.crowdsale.tokenAmountOf = parseInt(tokenAmountOf, 10);
+            state.crowdsale.tokensSold = parseInt(tokensSold, 10);
+
           if (propsCount === cbCount) {
             state.loading = false;
             $this.setState(state, cb);
           }
         });
-      }*/
+      };
 
       if (crowdsaleContract.maximumSellableTokens) {
         propsCount++;
@@ -525,9 +527,9 @@ export function getAccumulativeCrowdsaleData(web3, $this, cb) {
           console.log("maximumSellableTokens: " + maximumSellableTokens);
           let state = $this.state;
           if (state.crowdsale.maximumSellableTokens)
-            state.crowdsale.maximumSellableTokens += parseInt(maximumSellableTokens, 10);
+            state.crowdsale.maximumSellableTokens += parseInt(toFixed(maximumSellableTokens), 10);
           else
-            state.crowdsale.maximumSellableTokens = parseInt(maximumSellableTokens, 10);
+            state.crowdsale.maximumSellableTokens = parseInt(toFixed(maximumSellableTokens), 10);
           if (propsCount === cbCount) {
             state.loading = false;
             $this.setState(state, cb);
