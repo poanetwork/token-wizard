@@ -548,7 +548,7 @@ export class stepFour extends stepTwo {
             this.updateJoinedCrowdsalesRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, () => {
               this.setMintAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.crowdsale.addr, () => {
                 this.setMintAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.finalizeAgent.addr, () => {
-                  this.addWhiteListRecursive(0, web3, this.state.crowdsale, contracts.crowdsale.abi, contracts.crowdsale.addr, () => {
+                  this.addWhiteListRecursive(0, web3, this.state.crowdsale, this.state.token, contracts.crowdsale.abi, contracts.crowdsale.addr, () => {
                     this.setFinalizeAgentRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, contracts.finalizeAgent.addr, () => {
                       this.setReleaseAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.finalizeAgent.addr, () => {
                         transferOwnership(web3, this.state.contracts.token.abi, contracts.token.addr, contracts.multisig.addr, () => {
@@ -571,7 +571,7 @@ export class stepFour extends stepTwo {
           this.updateJoinedCrowdsalesRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, () => {
             this.setMintAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, curTierAddr, () => {
               this.setMintAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.finalizeAgent.addr, () => {
-                this.addWhiteListRecursive(0, web3, this.state.crowdsale, contracts.crowdsale.abi, curTierAddr, () => {
+                this.addWhiteListRecursive(0, web3, this.state.crowdsale, this.state.token, contracts.crowdsale.abi, curTierAddr, () => {
                   this.setFinalizeAgentRecursive(0, web3, contracts.crowdsale.abi, finalizeSet, contracts.finalizeAgent.addr, () => {
                     this.setReleaseAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.finalizeAgent.addr, () => {
                       newState.loading = false;
@@ -613,11 +613,11 @@ export class stepFour extends stepTwo {
     })
   }
 
-  addWhiteListRecursive = (i, web3, crowdsale, abi, crowdsaleAddrs, cb) => {
-    addWhiteList(i, web3, crowdsale, abi, crowdsaleAddrs[i], () => {
+  addWhiteListRecursive = (i, web3, crowdsale, token, abi, crowdsaleAddrs, cb) => {
+    addWhiteList(i, web3, crowdsale, token, abi, crowdsaleAddrs[i], () => {
       i++;
       if (i < crowdsaleAddrs.length) {
-        this.addWhiteListRecursive(i, web3, crowdsale, abi, crowdsaleAddrs, cb);
+        this.addWhiteListRecursive(i, web3, crowdsale, token, abi, crowdsaleAddrs, cb);
       } else {
         cb();
       }
