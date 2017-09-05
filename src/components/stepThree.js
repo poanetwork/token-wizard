@@ -1,9 +1,9 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
-import { getWeb3, calculateFutureBlock } from '../utils/web3'
+import { getWeb3, calculateFutureBlock, setExistingContractParams } from '../utils/web3'
 import { stepTwo } from './stepTwo'
-import { getOldState, defaultCompanyStartDate, defaultCompanyEndDate, stepsAreValid, allFieldsAreValid } from '../utils/utils'
+import { getQueryVariable, getURLParam, getOldState, defaultCompanyStartDate, defaultCompanyEndDate, stepsAreValid, allFieldsAreValid } from '../utils/utils'
 import { StepNavigation } from './Common/StepNavigation'
 import { InputField } from './Common/InputField'
 import { CrowdsaleBlock } from './Common/CrowdsaleBlock'
@@ -17,10 +17,14 @@ export class stepThree extends stepTwo {
   constructor(props) {
     super(props);
     const oldState = getOldState(props, defaultState)
+    if (oldState.contracts.crowdsale.addr.length > 0) {
+      oldState.contracts.pricingStrategy.addr = [];
+      setExistingContractParams(oldState.contracts.crowdsale.abi, oldState.contracts.crowdsale.addr[0], this);
+    }
     oldState.children = [];
     oldState.crowdsale[0].tier = "Tier 1"
     this.state = Object.assign({}, oldState, {validations: { ...oldState.validations, startTime: VALID, endTime: VALID, walletAddress: VALID, supply: EMPTY, rate: EMPTY } } )
-    // console.log('this.state', this.state)
+    //console.log('this.state', this.state)
   }
 
   addCrowdsale() {
@@ -60,7 +64,7 @@ export class stepThree extends stepTwo {
 
   renderLink () {
     return <div>
-      <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Crowdsale</div>
+      <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Tier</div>
       <Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}><a className="button button_fill">Continue</a></Link>
     </div>
   }*/
@@ -77,7 +81,7 @@ export class stepThree extends stepTwo {
   renderLink () {
     console.log('render link four')
     return <div>
-    <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Crowdsale</div>
+    <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Tier</div>
     <Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}><a className="button button_fill">Continue</a></Link>
     </div>
   }
@@ -89,7 +93,7 @@ export class stepThree extends stepTwo {
     }
     console.log('not valid')
     return <div>
-      <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Crowdsale</div>
+      <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Tier</div>
       <div onClick={() => this.showErrorMessages('crowdsale')} className="button button_fill"> Continue</div>
     </div>
   }

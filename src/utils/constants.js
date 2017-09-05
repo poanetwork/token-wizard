@@ -1,10 +1,11 @@
 export const defaultState = { 
 	contracts: { 
 		token: {}, 
-		crowdsale: {addr:[]},
-		pricingStrategy: {addr:[]},
+		crowdsale: {addr:[], abiConstructor:[]},
+		pricingStrategy: {addr:[], abiConstructor:[]},
 		multisig: {},
-		finalizeAgent: {},
+		nullFinalizeAgent: {addr:[]},
+		finalizeAgent: {addr:[]},
 		tokenTransferProxy: {}
 	}, 
 	token: {},

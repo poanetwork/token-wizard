@@ -50,8 +50,16 @@ export function setFlatFileContentToState(file, cb) {
 
 export function getWhiteListWithCapCrowdsaleAssets(state, cb) {
     const contractName = "CrowdsaleWhitelistWithCap";
-    var derivativesLength = 6;
-    var derivativesIterator = 0;
+    let derivativesLength = 11;
+    let derivativesIterator = 0;
+    setFlatFileContentToState("./contracts/" + contractName + "_flat.sol", function(_src) {
+      derivativesIterator++;
+      state.contracts.crowdsale.src = _src;
+
+      if (derivativesIterator === derivativesLength) {
+        cb(state);
+      }
+    });
     setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", function(_bin) {
       derivativesIterator++;
       state.contracts.crowdsale.bin = _bin;
@@ -133,7 +141,7 @@ export function getWhiteListWithCapCrowdsaleAssets(state, cb) {
       if (derivativesIterator === derivativesLength) {
         cb(state);
       }
-    });
+    });*/
     const finalizeAgentContractName = "FinalizeAgent";
     setFlatFileContentToState("./contracts/" + finalizeAgentContractName + "_flat.bin", function(_bin) {
       derivativesIterator++;
@@ -150,7 +158,24 @@ export function getWhiteListWithCapCrowdsaleAssets(state, cb) {
       if (derivativesIterator === derivativesLength) {
         cb(state);
       }
-    });*/
+    });
+    const nullFinalizeAgentContractName = "NullFinalizeAgent";
+    setFlatFileContentToState("./contracts/" + nullFinalizeAgentContractName + "_flat.bin", function(_bin) {
+      derivativesIterator++;
+      state.contracts.nullFinalizeAgent.bin = _bin;
+
+      if (derivativesIterator === derivativesLength) {
+        cb(state);
+      }
+    });
+    setFlatFileContentToState("./contracts/" + nullFinalizeAgentContractName + "_flat.abi", function(_abi) {
+      derivativesIterator++;
+      state.contracts.nullFinalizeAgent.abi = JSON.parse(_abi);
+
+      if (derivativesIterator === derivativesLength) {
+        cb(state);
+      }
+    });
 }
 
 export function getStandardCrowdsaleAssets(state, cb) {
