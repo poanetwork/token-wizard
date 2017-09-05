@@ -31,7 +31,7 @@ export class WhitelistInputBlock extends React.Component {
         let state = this.state
         let num = state.crowdsale[this.props.num].whiteListElements.length;
         state.crowdsale[this.props.num].whiteListElements.push(<WhitelistItem 
-            num={num}
+            key={num.toString()}
             addr={addr}
             min={min}
             max={max}></WhitelistItem>);

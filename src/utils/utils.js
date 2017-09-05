@@ -321,7 +321,7 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
                     params.vals.push(state.token.supply);
                 } break;
                 case "_maximumSellableTokens": {
-                  params.vals.push(toFixed(state.crowdsale[crowdsaleNum].supply*10**state.token.decimals));
+                  params.vals.push(toFixed(state.crowdsale[crowdsaleNum].supply*10**state.token.decimals).toString());
                 } break;
                 case "_minimumFundingGoal": {
                   params.vals.push(0);
