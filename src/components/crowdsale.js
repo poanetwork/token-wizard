@@ -226,7 +226,7 @@ export class Crowdsale extends React.Component {
 			</div>
 			<div className="button-container">
 				{/*<Link to={{ pathname: this.state.contracts.crowdsale.addr?('/invest' + ('?crowdsale=' + this.state.contracts.crowdsale.addr):""):'/invest' }}><a href="#" className="button button_fill">Invest</a></Link>*/}
-				<Link className="button button_fill_secondary" to={{ pathname: '/3', query: { state: this.state, changeState: this.changeState } }}>Add crowdsale</Link>
+				{/*<Link className="button button_fill_secondary" to={{ pathname: '/3', query: { state: this.state, changeState: this.changeState } }}>Add crowdsale</Link>*/}
 				<a onClick={this.goToInvestPage} className="button button_fill">Invest</a>
 			</div>
 			<Loader show={this.state.loading}></Loader>
