@@ -82,7 +82,7 @@ export const intitialStepTwoValidations = {
 export const initialStepTwoValues = {
 	token: {
 		name: '',
-		supply: '',
+		supply: '0',
 		ticker: '',
 		decimals: '',
 		reservedTokens: [],

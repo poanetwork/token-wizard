@@ -75,7 +75,7 @@ export class stepOne extends React.Component {
 
   componentDidMount() {
     let newState = { ...this.state }
-    newState.contractType = this.state.contractTypes.standard
+    newState.contractType = this.state.contractTypes.whitelistwithcap
     this.getStandardCrowdsaleAssets(newState);
   }
 
@@ -123,7 +123,7 @@ export class stepOne extends React.Component {
             </p>
           </div>
           <div className="radios">
-            <label className="radio">
+            {/*<label className="radio">
               <input 
                 type="radio" 
                 checked={this.state.contractType === this.state.contractTypes.standard}            
@@ -136,7 +136,7 @@ export class stepOne extends React.Component {
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
                 quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
               </span>
-            </label>
+            </label>*/}
             <label className="radio">
               <input 
                 type="radio" 
@@ -145,7 +145,7 @@ export class stepOne extends React.Component {
                 id={this.state.contractTypes.whitelistwithcap}
                 onChange={(e) => this.contractTypeSelected(e)}
               />
-              <span className="title title_soon">Whitelist with Cap</span>
+              <span className="title">Whitelist with Cap</span>
               <span className="description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
                 quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.

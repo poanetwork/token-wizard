@@ -177,7 +177,7 @@ export class stepTwo extends React.Component {
               onBlur={() => this.handleInputBlur('token', 'ticker')}
               onChange={(e) => this.changeState(e, 'token', 0, 'ticker')}
             />
-            <InputField 
+            {/*<InputField 
               side='left' type='number' 
               errorMessage={VALIDATION_MESSAGES.SUPPLY} 
               valid={validations.supply} 
@@ -185,9 +185,9 @@ export class stepTwo extends React.Component {
               value={token.supply} 
               onBlur={() => this.handleInputBlur('token', 'supply')}
               onChange={(e) => this.changeState(e, 'token', 0, 'supply')}
-            />
+            />*/}
             <InputField 
-              side='right' type='number'
+              side='left' type='number'
               errorMessage={VALIDATION_MESSAGES.DECIMALS} 
               valid={validations.decimals} 
               title={DECIMALS}
