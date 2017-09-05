@@ -438,7 +438,7 @@ export class stepFour extends stepTwo {
       parseInt(Date.parse(this.state.crowdsale[i].startTime)/1000, 10), 
       parseInt(Date.parse(this.state.crowdsale[i].endTime)/1000, 10), 
       0,
-      toFixed(parseInt(this.state.crowdsale[i].supply, 10)*10**parseInt(this.state.token.decimals, 10)),
+      toFixed(parseInt(this.state.crowdsale[i].supply, 10)*10**parseInt(this.state.token.decimals, 10)).toString(),
       this.state.crowdsale[i].updatable?this.state.crowdsale[i].updatable=="on"?true:false:false
     ]
   }
