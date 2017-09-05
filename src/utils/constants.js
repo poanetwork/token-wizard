@@ -108,3 +108,18 @@ export const initialStepThreeValues = {
 		rate: ''
 	}
 }
+
+export const PDF_CONTENTS = [
+	{ field: 'name', value: 'Name: ', parent: 'token', x: 10, y: 10 },
+	{ field: 'ticker', value: 'Ticker: ', parent: 'token', x: 10, y: 20 },
+	{ field: 'supply', value: 'Supply: ', parent: 'token', x: 10, y: 30 },
+	{ field: 'decimals', value: 'Decimals: ', parent: 'token', x: 10, y: 40 },
+	{ field: 'startTime', value: 'Start Time: ', parent: 'crowdsale', x: 10, y: 50 },
+	{ field: 'endTime', value: 'End Time: ', parent: 'crowdsale', x: 10, y: 60 },
+	{ field: 'walletAddress', value: 'Wallet Address: ', parent: 'crowdsale', x: 10, y: 70 },
+	{ field: 'rate', value: 'Rate: ', parent: 'pricingStrategy', x: 10, y: 80 },
+	{ value: 'Compiler Version: ', parent: 'none', pdfValue: '0.4.11', x: 10, y: 90 },
+	{ field: 'src', value: 'Source Contract: ', parent: 'contracts', x: 10, y: 10 },
+	{ field: 'abi', value: 'ABI Contract: ', parent: 'contracts', x: 10, y: 10 },
+	{ field: 'abiConstructor', value: 'ABI Parameters: ', parent: 'contracts', x: 10, y: 10 }
+]
