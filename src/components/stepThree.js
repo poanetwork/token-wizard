@@ -24,7 +24,7 @@ export class stepThree extends stepTwo {
     oldState.children = [];
     oldState.crowdsale[0].tier = "Tier 1"
     this.state = Object.assign({}, oldState, {validations: { ...oldState.validations, startTime: VALID, endTime: VALID, walletAddress: VALID, supply: EMPTY, rate: EMPTY } } )
-    console.log('this.state', this.state)
+    //console.log('this.state', this.state)
   }
 
   addCrowdsale() {
