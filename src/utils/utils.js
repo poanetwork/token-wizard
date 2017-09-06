@@ -293,7 +293,8 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
                     params.vals.push(state.crowdsale[crowdsaleNum].walletAddress);
                 } break;
                 case "_multisigWallet": {
-                    params.vals.push(state.contracts.multisig.addr);
+                    //params.vals.push(state.contracts.multisig.addr);
+                    params.vals.push(state.crowdsale[0].walletAddress);
                 } break;
                 case "_pricingStrategy": {
                     params.vals.push(state.contracts.pricingStrategy.addr[crowdsaleNum]);
