@@ -131,8 +131,7 @@ export class stepOne extends React.Component {
               />
               <span className="title">Standard</span>
               <span className="description">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                Standard crowdsale for educational use.
               </span>
             </label>
             <label className="radio">
@@ -143,13 +142,12 @@ export class stepOne extends React.Component {
                 id={this.state.contractTypes.whitelistwithcap}
                 onChange={(e) => this.contractTypeSelected(e)}
               />
-              <span className="title title_soon">Whitelist with Cap</span>
+              <span className="title">Whitelist with Cap</span>
               <span className="description">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                Modern crowdsale strategy with tiers, whitelists, and limits. 
               </span>
             </label>
-            <label className="radio">
+            {/* <label className="radio">
               <input 
                 type="radio" 
                 disabled 
@@ -163,7 +161,7 @@ export class stepOne extends React.Component {
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
                 quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
               </span>
-            </label>
+            </label> */}
           </div>
         </div>
         <div className="button-container">

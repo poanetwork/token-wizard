@@ -4,7 +4,7 @@ ICO Wizard DApp
 
 ## Introduction
 
-`ICO tools should be available for non-coders for free. Raising funds from crowd is our basic human right.`
+`ICO tools should be available for non-coders for free. Raising funds from a crowd is our basic human right.`
 
 ICO wizard is a tool to create token and crowdsale contracts in 5 simple steps.  Wizard is based on modified [TokenMarket](https://github.com/TokenMarketNet/ico) contracts. Wizard is baked how we like it: decentralized, client side, serverless, open source, free, awesome.
 
@@ -66,6 +66,8 @@ None! Send PR if you are the first.
 Issues which are looking for a handsom contributors are marked as [LookingForContributor] in Issues section of the GitHub (https://github.com/oraclesorg/ico-wizard/issues?q=is%3Aissue+is%3Aopen+label%3ALookingForContributor) 
 
 ## Notable Contributors
+
+Brought to you by [Oracles Network](https://oracles.org/team) team.
 
 We appreciate contributors from the community:
 
