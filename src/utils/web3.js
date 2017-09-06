@@ -866,13 +866,23 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
 
       function deployContractCB(err, contract) {
         if (err) console.log(err);
-        console.log(contract);
         if (contract) {
+          console.log(contract);
           if (contract.address) {
             console.log(contract);
             console.log('Contract mined! address: ' + contract.address + ' transactionHash: ' + contract.transactionHash);
             cb(null, contract.address);
           }
+          /*if (contract.transactionHash) {
+            checkTxMined(web3, contract.transactionHash, function txMinedCallback(receipt) {
+              if (receipt) {
+                if (receipt.blockNumber)
+                  return cb(null, receipt.contractAddress);
+              } else {
+                checkTxMined(web3, contract.transactionHash, txMinedCallback);
+              }
+            })
+          }*/
         }
       };
     });
@@ -880,8 +890,12 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
 }
 
 //todo
-export function txMinedCallback() {
-
+export function checkTxMined(web3, txhash, cb) {
+  web3.eth.getTransactionReceipt(txhash, function(err, receipt) {
+    if (receipt)
+      console.log(receipt);
+    cb(receipt);
+  });
 }
 
 export function attachToContract(web3, abi, addr, cb) {

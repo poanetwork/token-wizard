@@ -251,9 +251,9 @@ function readSolFile(path, cb) {
     rawFile.send(null);
 }
 
-export const findConstructor = (abiCrowdsale) => {
+export const findConstructor = (abi) => {
     let abiConstructor
-    abiCrowdsale.forEach(abiObj => {
+    abi.forEach(abiObj => {
         if (abiObj.type === "constructor") {
             console.log(abiObj);
             console.log(abiObj.inputs);

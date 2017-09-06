@@ -76,7 +76,16 @@ export class stepOne extends React.Component {
   componentDidMount() {
     let newState = { ...this.state }
     newState.contractType = this.state.contractTypes.whitelistwithcap
-    this.getStandardCrowdsaleAssets(newState);
+    switch (newState.contractType) {
+      case this.state.contractTypes.standard: {
+        this.getStandardCrowdsaleAssets(newState);
+      } break;
+      case this.state.contractTypes.whitelistwithcap: {
+        this.getWhiteListWithCapCrowdsaleAssets(newState);
+      } break;
+      default:
+        break;
+    }
   }
 
   addContractsToState (src, bin, abi, contract, state) {
