@@ -80,7 +80,7 @@ export class stepFour extends stepTwo {
 
             console.log($this.state.contracts.crowdsale.addr.length);
             if ($this.state.contracts.crowdsale.addr.length == 0) {
-              $this.deployTokenTransferProxy();
+              $this.deployToken();
             } else {
               $this.deployPricingStrategy();
             }
@@ -116,7 +116,7 @@ export class stepFour extends stepTwo {
     doc.save('crowdsale.pdf')
   }
 
-  deployTokenTransferProxy = () => {
+  /*deployTokenTransferProxy = () => {
     console.log("***Deploy tokenTransferProxy contract***");
     getNetworkVersion(this.state.web3, (_networkID) => {
       if (this.state.web3.eth.accounts.length === 0) {
@@ -173,7 +173,7 @@ export class stepFour extends stepTwo {
     }
     newState.contracts.multisig.addr = multisigAddr;
     this.deployToken();
-  }
+  }*/
 
   deployToken = () => {
     console.log("***Deploy token contract***");
@@ -434,7 +434,7 @@ export class stepFour extends stepTwo {
     return [
       this.state.contracts.token.addr,
       this.state.contracts.pricingStrategy.addr[i],
-      this.state.contracts.multisig.addr,
+      this.state.crowdsale[0].walletAddress, //this.state.contracts.multisig.addr,
       parseInt(Date.parse(this.state.crowdsale[i].startTime)/1000, 10), 
       parseInt(Date.parse(this.state.crowdsale[i].endTime)/1000, 10), 
       0,
@@ -555,7 +555,7 @@ export class stepFour extends stepTwo {
                     this.addWhiteListRecursive(0, web3, this.state.crowdsale, this.state.token, contracts.crowdsale.abi, contracts.crowdsale.addr, () => {
                       this.setFinalizeAgentRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, contracts.finalizeAgent.addr, () => {
                         this.setReleaseAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.finalizeAgent.addr, () => {
-                          transferOwnership(web3, this.state.contracts.token.abi, contracts.token.addr, contracts.multisig.addr, () => {
+                          transferOwnership(web3, this.state.contracts.token.abi, contracts.token.addr, this.state.crowdsale[0].walletAddress, () => {
                             newState.loading = false;
                             this.setState(newState);
                             this.goToCrowdsalePage();
