@@ -22,7 +22,7 @@ export function noContractAlert() {
 export function successfulInvestmentAlert(tokensToInvest) {
     sweetAlert({
         title: "Success",
-        text: "Congrats! You are successfully buy " + tokensToInvest + " tokens!",
+        text: "Congrats! You've successfully bought " + tokensToInvest + " tokens!",
         html: true,
         type: "success"
     }, function() {
@@ -34,6 +34,15 @@ export function investmentDisabledAlert(startBlock, curBlock) {
     sweetAlert({
       title: "Warning",
       text: "Wait, please. Crowdsale company hasn't started yet. It'll start from <b>" + startBlock + "</b> block. Current block is <b>" + curBlock + "</b>.",
+      html: true,
+      type: "warning"
+    });
+}
+
+export function investmentDisabledAlertInTime(startTime) {
+    sweetAlert({
+      title: "Warning",
+      text: "Wait, please. Crowdsale company hasn't started yet. It'll start from <b>" + new Date(startTime) + "</b>.",
       html: true,
       type: "warning"
     });

@@ -1,38 +1,12 @@
 import React, { Component } from 'react';
 import '../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
-import { setFlatFileContentToState } from '../utils/utils';
 import { defaultState } from '../utils/constants'
 
 export class Home extends Component {
   constructor(props) {
     super(props);
     this.state = defaultState
-  }
-
-  addContractsToState (src, bin, abi) {
-    let newState = Object.assign({}, this.state)
-    newState.contracts.crowdsale = {
-      src,
-      bin,
-      abi: JSON.parse(abi)
-    }
-    this.setState(newState)
-  }
-
-  componentDidMount() {
-    const contractName = "SampleCrowdsale";
-    let src, bin
-    //var contractName = "RomanCrowdsale";
-    setFlatFileContentToState("./contracts/" + contractName + "_flat.sol", (content) => src = content);
-    setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", (_bin) => bin = _bin);
-    setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", (_abi) => this.addContractsToState(src, bin, _abi));
-    /*setFlatFileContentToState("./contracts/SampleCrowdsaleToken_flat.bin", function(content) {
-      $this.state.contracts.token.bin = content;
-    });
-    setFlatFileContentToState("./contracts/SampleCrowdsaleToken_flat.abi", function(content) {
-      $this.state.contracts.token.abi = JSON.parse(content);
-    });*/
   }
 
   render() {
