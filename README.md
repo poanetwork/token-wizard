@@ -1,4 +1,6 @@
-ICO Wizard DApp
+![ICO Wizard DApp](https://forum.oracles.org/uploads/default/original/1X/a06ee82b46666b06986a84d648073543fd324b8d.jpg)
+
+# ICO Wizard DApp
 
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/hyperium/hyper/master/LICENSE)
 
