@@ -251,9 +251,9 @@ function readSolFile(path, cb) {
     rawFile.send(null);
 }
 
-export const findConstructor = (abiCrowdsale) => {
+export const findConstructor = (abi) => {
     let abiConstructor
-    abiCrowdsale.forEach(abiObj => {
+    abi.forEach(abiObj => {
         if (abiObj.type === "constructor") {
             console.log(abiObj);
             console.log(abiObj.inputs);
@@ -415,7 +415,10 @@ const isNotWhiteListTierObject = (value) => !(typeof value === 'object' && value
 // still thinks that we do not have an array... we do
 export const validateValue = (value, property) => {
   //console.log("'" + property + "'");
-    if (property === '0') return VALID;
+    if (property === '0' 
+      || property === 'reservedTokensInput'
+      || property === 'reservedTokens'
+      || property === 'reservedTokensElements') return VALID;
     console.log('value of : ' + value + ' and property of : ' + property, Array.isArray(value), JSON.stringify(value))
     let validationFunction, valueIsValid;
     if(isNotWhiteListTierObject(value)) {

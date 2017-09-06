@@ -8,7 +8,9 @@ export const defaultState = {
 		finalizeAgent: {addr:[]},
 		tokenTransferProxy: {}
 	}, 
-	token: {},
+	token: {
+		supply: '0'
+	},
 	crowdsale: [{
 		whitelist: [], 
 		whiteListElements: [], 
@@ -16,7 +18,7 @@ export const defaultState = {
 	}],
 	pricingStrategy: [{}],
 	blockTimeGeneration: 17,
-	contractType: "",
+	contractType: "white-list-with-cap",
 	contractTypes: {
 		standard: "standard",
 		capped: "capped",
@@ -82,7 +84,7 @@ export const intitialStepTwoValidations = {
 export const initialStepTwoValues = {
 	token: {
 		name: '',
-		supply: '',
+		supply: '0',
 		ticker: '',
 		decimals: '',
 		reservedTokens: [],
