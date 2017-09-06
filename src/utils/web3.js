@@ -132,6 +132,22 @@ export function setTransferAgent(web3, abi, addr, targetAddr, cb) {
   });
 }
 
+export function setLastCrowdsale(web3, abi, addr, lastCrowdsale, cb) {
+  console.log("###setLastCrowdsale for Pricing Strategy:###");
+  attachToContract(web3, abi, addr, function(err, pricingStrategyContract) {
+    console.log("attach to pricingStrategy contract");
+    if (err) return console.log(err);
+    if (!pricingStrategyContract) return noContractAlert();
+
+    pricingStrategyContract.setLastCrowdsale.sendTransaction(lastCrowdsale, function(err, result) {
+      if (err) return console.log(err);
+
+      console.log("setLastCrowdsale function transaction: " + result);
+      cb();
+    });
+  });
+}
+
 //for mintable token
 export function setMintAgent(web3, abi, addr, acc, cb) {
   console.log("###setMintAgent:###");
