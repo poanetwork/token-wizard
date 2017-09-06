@@ -23,9 +23,7 @@ export class stepOne extends React.Component {
             <div className="step-icons step-icons_crowdsale-contract"></div>
             <p className="title">Crowdsale Contract</p>
             <p className="description">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-              in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+              Select a strategy for you crowdsale contract. 
             </p>
           </div>
           <div className="radios">

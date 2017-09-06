@@ -41,10 +41,9 @@ export class Home extends Component {
         <section className="home">
           <div className="crowdsale">
             <div className="container">
-              <h1 className="title">Create crowdsale</h1>
+              <h1 className="title">Welcome to ICO Wizard</h1>
               <p className="description">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea  commodo consequat.
+              ICO wizard is a tool to create ERC-20 token and crowdsale contracts in 5 simple steps. There is no need to be a coder to configure an ICO. 
               </p>
               <div className="buttons">
                 <Link to={{ pathname: '/1', query: { state: this.state } }}><a className="button button_fill">New crowdsale</a></Link>
@@ -57,35 +56,35 @@ export class Home extends Component {
                 <div className="step-icons step-icons_crowdsale-contract"></div>
                 <p className="title">Crowdsale Contract</p>
                 <p className="description">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                  Select a strategy for crowdsale contract
                 </p>
               </div>
               <div className="process-item">
                 <div className="step-icons step-icons_token-setup"></div>
                 <p className="title">Token Setup</p>
                 <p className="description">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                  Setup token and reserved distribution
                 </p>
               </div>
               <div className="process-item">
                 <div className="step-icons step-icons_crowdsale-setup"></div>
                 <p className="title">Crowdsale Setup</p>
                 <p className="description">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                  Setup tiers and crowdsale parameters
                 </p>
               </div>
               <div className="process-item">
                 <div className="step-icons step-icons_publish"></div>
                 <p className="title">Publish</p>
                 <p className="description">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                  Get generated code and artifacts for verification in Etherscan
                 </p>
               </div>
               <div className="process-item">
                 <div className="step-icons step-icons_crowdsale-page"></div>
                 <p className="title">Crowdsale Page</p>
                 <p className="description">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                  Bookmark this page for the campaign statistics
                 </p>
               </div>
             </div>
