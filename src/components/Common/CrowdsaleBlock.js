@@ -46,12 +46,18 @@ export class CrowdsaleBlock extends React.Component {
             title={CROWDSALE_SETUP_NAME} 
             value={crowdsale[num].tier}
             onChange={(e) => onChange(e, 'crowdsale', num, 'tier')}/>
-          <InputField 
+          {/*<InputField 
             side='right' 
             type='text' 
             title={WALLET_ADDRESS} 
             value={crowdsale[num].walletAddress} 
-            onChange={(e) => onChange(e, 'crowdsale', num, 'walletAddress')}/>
+            onChange={(e) => onChange(e, 'crowdsale', num, 'walletAddress')}/>*/}
+          <InputField 
+            side='right' 
+            type='number' 
+            title={RATE} 
+            value={pricingStrategy[num].rate} 
+            onChange={(e) => onChange(e, 'pricingStrategy', num, 'rate')}/>
           <InputField 
             side='left' 
             type='datetime-local' 
@@ -69,17 +75,11 @@ export class CrowdsaleBlock extends React.Component {
           <InputField 
             side='left' 
             type='number' 
-            title={RATE} 
-            value={pricingStrategy[num].rate} 
-            onChange={(e) => onChange(e, 'pricingStrategy', num, 'rate')}/>
-          <InputField 
-            side='right' 
-            type='number' 
             title={SUPPLY} 
             value={crowdsale[num].supply} 
             onChange={(e) => onChange(e, 'crowdsale', num, 'supply')}/>
           <RadioInputField 
-            side='left' 
+            side='right' 
             title={ALLOWMODIFYING} 
             items={["on", "off"]}
             vals={["on", "off"]}

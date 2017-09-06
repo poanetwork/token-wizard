@@ -3,7 +3,7 @@ import '../../assets/stylesheets/application.css';
 import { VALIDATION_TYPES } from '../../utils/constants'
 const { INVALID } = VALIDATION_TYPES
 
-export const InputField = ({side, disabled, type, value, defaultValue, onChange, onBlur, title, valid, errorMessage }) => {
+export const InputField = ({side, disabled, type, value, defaultValue, onChange, onBlur, title, valid, errorMessage, description }) => {
 	const errorStyle={
 		color: 'red',
 		fontWeight: 'bold',
@@ -16,8 +16,7 @@ export const InputField = ({side, disabled, type, value, defaultValue, onChange,
 		<label className="label">{title}</label>
 		<input disabled={disabled} type={type} className="input" onBlur={onBlur} value={value} defaultValue={defaultValue} onChange={onChange}/>
 		<p className="description">
-			Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-			tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.
+			{description}
 		</p>
 		<p style={errorStyle}>{error}</p>
 	</div>

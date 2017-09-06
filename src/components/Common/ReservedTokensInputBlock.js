@@ -63,7 +63,10 @@ export class ReservedTokensInputBlock extends React.Component {
                     side='reserved-tokens-input-property-left' 
                     type='text' 
                     title={ADDRESS} 
-                    onChange={(e) => onChange(e, 'token', 0, 'reservedtokens_addr')}/>
+                    onChange={(e) => onChange(e, 'token', 0, 'reservedtokens_addr')}
+                    description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+                  />
                   <RadioInputField 
                     side='reserved-tokens-input-property-middle' 
                     title={DIMENSION} 
@@ -77,7 +80,10 @@ export class ReservedTokensInputBlock extends React.Component {
                     type='number' 
                     title={VALUE} 
                     value={token.reservedTokensInput.val}
-                    onChange={(e) => onChange(e, 'token', 0, 'reservedtokens_val')}/>
+                    onChange={(e) => onChange(e, 'token', 0, 'reservedtokens_val')}
+                    description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+                  />
               <div className="plus-button-container"><div onClick={(e) => this.addReservedTokensItem(token.reservedTokensInput.addr, token.reservedTokensInput.dim, token.reservedTokensInput.val, token)} className="button button_fill button_fill_plus"></div></div>
             </div>
             {token.reservedTokensElements}
