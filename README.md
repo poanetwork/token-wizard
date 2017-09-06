@@ -16,7 +16,7 @@ ICOs usually have two or more contracts. One token contract and one or more crow
 - Google Chrome, Chromium, or Chrome Canary
 - [Metamask](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn). Ethereum web wallet for Google Chrome. Must have
 - Kovan testnet coins.
-    -  Create an account in Metamask, copy it's address and ask for free coint on [Kovan's gitter](https://gitter.im/kovan-testnet/faucet)
+    -  Create an account in Metamask, copy it's address and ask for free coins on [Kovan's gitter](https://gitter.im/kovan-testnet/faucet)
 - Parity for manual operations, e.g., adding people to whitelist after creation of crowdsales, finalizing, etc.
     -  [How to install Parity](https://github.com/paritytech/parity/wiki/Setup)
     - Sync it. `parity --chain kovan --warp ui`
@@ -24,7 +24,7 @@ ICOs usually have two or more contracts. One token contract and one or more crow
 - Patience. Metamask doesn't support bulk transactions. Simplest crowdsale will ask you to sign at least 14 transactions. 
 ## Strategy
 
-At the moment, the Wizard supports one type of crowdsale contract, the mighty "whitelisted with tiers and cap". This strategy is popular in modern ICOs due to regulatory involvement in the process (September 2017). A naive approach to comply with regulation is to perform KYC of buyers and restrict participants from democratic countries, e.g., the U.S. or PRC. 
+At the moment, the Wizard supports one type of crowdsale contract, the mighty "whitelisted with tiers and cap". This strategy is popular in modern ICOs due to regulatory involvement in the process (September 2017). A native approach to comply with regulation is to perform KYC of buyers and restrict participants from democratic countries, e.g., the U.S. or PRC. 
 
 Features of "Whitelisted with tiers and cap" strategy:
 - Tiers. A crowdsale can have one or more tiers. Each tier has a set of configurable parameters:
@@ -63,7 +63,7 @@ None! Send PR if you are the first.
 
 ## Contributors guide
 
-Issues which are looking for a handsom contributors are marked as [LookingForContributor] in Issues section of the GitHub (https://github.com/oraclesorg/ico-wizard/issues?q=is%3Aissue+is%3Aopen+label%3ALookingForContributor) 
+Issues which are looking for a handsome contributors are marked as [LookingForContributor] in Issues section of the GitHub (https://github.com/oraclesorg/ico-wizard/issues?q=is%3Aissue+is%3Aopen+label%3ALookingForContributor) 
 
 ## Notable Contributors
 
