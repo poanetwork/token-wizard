@@ -158,7 +158,10 @@ export class stepThree extends stepTwo {
                 valid={validations.startTime} 
                 errorMessage={VALIDATION_MESSAGES.START_TIME} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'startTime', 0)}
-                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'startTime')}/>
+                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'startTime')}
+                description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+              />
               <InputField 
                 side='right' 
                 type='datetime-local' 
@@ -167,7 +170,10 @@ export class stepThree extends stepTwo {
                 valid={validations.endTime} 
                 errorMessage={VALIDATION_MESSAGES.END_TIME} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'endTime', 0)}
-                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'endTime')}/>
+                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'endTime')}
+                description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+              />
               <InputField 
                 side='left' 
                 type='text' 
@@ -176,7 +182,10 @@ export class stepThree extends stepTwo {
                 valid={validations.walletAddress} 
                 errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS}
                 onBlur={() => this.handleInputBlur('crowdsale', 'walletAddress', 0)} 
-                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'walletAddress')}/>
+                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'walletAddress')}
+                description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+              />
               <InputField 
                 side='right' 
                 type='number' 
@@ -185,7 +194,10 @@ export class stepThree extends stepTwo {
                 valid={validations.supply} 
                 errorMessage={VALIDATION_MESSAGES.SUPPLY}
                 onBlur={() => this.handleInputBlur('crowdsale', 'supply', 0)} 
-                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'supply')}/>
+                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'supply')}
+                description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+              />
               <InputField 
                 side='left' 
                 type='number' 
@@ -194,7 +206,10 @@ export class stepThree extends stepTwo {
                 valid={validations.rate} 
                 errorMessage={VALIDATION_MESSAGES.RATE} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'rate', 0)}
-                onChange={(e) => this.changeState(e, 'pricingStrategy', 0, 'rate')}/>
+                onChange={(e) => this.changeState(e, 'pricingStrategy', 0, 'rate')}
+                description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+              />
             </div>
           </div>
           <div className="button-container">
@@ -223,7 +238,10 @@ export class stepThree extends stepTwo {
                 title={CROWDSALE_SETUP_NAME} 
                 value={crowdsale[0].tier}
                 onBlur={() => this.handleInputBlur('crowdsale', 'tier', 0)}
-                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'tier')}/>
+                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'tier')}
+                description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+              />
               <InputField 
                 side='right' 
                 type='text' 
@@ -232,7 +250,10 @@ export class stepThree extends stepTwo {
                 valid={validations.walletAddress} 
                 errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'walletAddress', 0)}
-                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'walletAddress')}/>
+                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'walletAddress')}
+                description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+              />
               <InputField 
                 side='left' 
                 type='datetime-local' 
@@ -241,7 +262,10 @@ export class stepThree extends stepTwo {
                 valid={validations.startTime} 
                 errorMessage={VALIDATION_MESSAGES.START_TIME} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'startTime', 0)}
-                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'startTime')}/>
+                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'startTime')}
+                description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+              />
               <InputField 
                 side='right' 
                 type='datetime-local' 
@@ -250,7 +274,10 @@ export class stepThree extends stepTwo {
                 valid={validations.endTime} 
                 errorMessage={VALIDATION_MESSAGES.END_TIME} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'endTime', 0)}
-                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'endTime')}/>
+                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'endTime')}
+                description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+              />
               <InputField 
                 side='left' 
                 type='number' 
@@ -259,7 +286,10 @@ export class stepThree extends stepTwo {
                 valid={validations.rate} 
                 errorMessage={VALIDATION_MESSAGES.RATE} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'rate', 0)}
-                onChange={(e) => this.changeState(e, 'pricingStrategy', 0, 'rate')}/>
+                onChange={(e) => this.changeState(e, 'pricingStrategy', 0, 'rate')}
+                description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+              />
               <InputField 
                 side='right' 
                 type='number' 
@@ -268,7 +298,10 @@ export class stepThree extends stepTwo {
                 valid={validations.supply} 
                 errorMessage={VALIDATION_MESSAGES.SUPPLY} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'supply', 0)}
-                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'supply')}/>
+                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'supply')}
+                description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+              />
               <RadioInputField 
                   side='left' 
                   title={ALLOWMODIFYING} 

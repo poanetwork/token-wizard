@@ -165,6 +165,8 @@ export class stepTwo extends React.Component {
               value={token.name} 
               onBlur={() => this.handleInputBlur('token', 'name')}
               onChange={(e) => this.changeState(e, 'token', 0, 'name')}
+              description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
             />
             <InputField 
               side='right' type='text' 
@@ -174,6 +176,8 @@ export class stepTwo extends React.Component {
               value={token.ticker} 
               onBlur={() => this.handleInputBlur('token', 'ticker')}
               onChange={(e) => this.changeState(e, 'token', 0, 'ticker')}
+              description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
             />
             {/*<InputField 
               side='left' type='number' 
@@ -183,6 +187,8 @@ export class stepTwo extends React.Component {
               value={token.supply} 
               onBlur={() => this.handleInputBlur('token', 'supply')}
               onChange={(e) => this.changeState(e, 'token', 0, 'supply')}
+              description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
             />*/}
             <InputField 
               side='left' type='number'
@@ -192,6 +198,8 @@ export class stepTwo extends React.Component {
               value={token.decimals} 
               onBlur={() => this.handleInputBlur('token', 'decimals')}
               onChange={(e) => this.changeState(e, 'token', 0, 'decimals')}
+              description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
             />
           </div>
           <div className="reserved-tokens-title">

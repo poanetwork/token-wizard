@@ -52,19 +52,28 @@ export class WhitelistInputBlock extends React.Component {
                 type='text' 
                 title={ADDRESS} 
                 value={crowdsale[num].whiteListInput.addr} 
-                onChange={(e) => this.props.onChange(e, 'crowdsale', this.props.num, 'whitelist_addr')}/>
+                onChange={(e) => this.props.onChange(e, 'crowdsale', this.props.num, 'whitelist_addr')}
+                description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+              />
               <InputField 
                 side='white-list-input-property-middle' 
                 type='number' 
                 title={MIN} 
                 value={crowdsale[num].whiteListInput.min} 
-                onChange={(e) => this.props.onChange(e, 'crowdsale', this.props.num, 'whitelist_min')}/>
+                onChange={(e) => this.props.onChange(e, 'crowdsale', this.props.num, 'whitelist_min')}
+                description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+              />
               <InputField 
                 side='white-list-input-property-right'
                 type='number' 
                 title={MAX} 
                 value={crowdsale[num].whiteListInput.max} 
-                onChange={(e) => this.props.onChange(e, 'crowdsale', this.props.num, 'whitelist_max')}/>
+                onChange={(e) => this.props.onChange(e, 'crowdsale', this.props.num, 'whitelist_max')}
+                description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+              />
               <div className="plus-button-container"><div onClick={(e) => this.addWhitelistItem(crowdsale[num].whiteListInput.addr, crowdsale[num].whiteListInput.min, crowdsale[num].whiteListInput.max)} className="button button_fill button_fill_plus"></div></div>
             </div>
             {crowdsale[num].whiteListElements}
