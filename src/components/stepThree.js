@@ -33,7 +33,6 @@ export class stepThree extends stepTwo {
   addCrowdsale() {
     let newState = {...this.state}
     let num = newState.children.length + 1;
-    console.log(num);
     newState.crowdsale.push({
       whitelist:[], 
       whiteListElements: [], 
