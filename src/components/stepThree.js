@@ -12,7 +12,7 @@ import { WhitelistInputBlock } from './Common/WhitelistInputBlock'
 import { NAVIGATION_STEPS, defaultState, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS, initialStepThreeValues, intitialStepThreeValidations } from '../utils/constants'
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
-const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME, ALLOWMODIFYING } = TEXT_FIELDS
+const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME, ALLOWMODIFYING, DISABLEWHITELISTING } = TEXT_FIELDS
 
 export class stepThree extends stepTwo {
   constructor(props) {
@@ -25,6 +25,7 @@ export class stepThree extends stepTwo {
     oldState.children = [];
     oldState.crowdsale[0].tier = "Tier 1"
     oldState.crowdsale[0].updatable = "off"
+    oldState.crowdsale[0].whitelistdisabled = "no"
     this.state = Object.assign({}, oldState, {validations: { ...oldState.validations, startTime: VALID, endTime: VALID, walletAddress: VALID, supply: EMPTY, rate: EMPTY } } )
     //console.log('this.state', this.state)
   }
@@ -32,7 +33,6 @@ export class stepThree extends stepTwo {
   addCrowdsale() {
     let newState = {...this.state}
     let num = newState.children.length + 1;
-    console.log(num);
     newState.crowdsale.push({
       whitelist:[], 
       whiteListElements: [], 
@@ -48,6 +48,7 @@ export class stepThree extends stepTwo {
     let newState = {...this.state}
     newState.children.push(<CrowdsaleBlock
       num = {num}
+      state = {this.state}
       onChange={(e, cntrct, num, prop) => this.changeState(e, cntrct, num, prop)}
     ></CrowdsaleBlock>)
     this.setState(newState)
@@ -218,6 +219,12 @@ export class stepThree extends stepTwo {
         </section>
       )
     } else if (this.state.contractType === this.state.contractTypes.whitelistwithcap) {
+      let whitelistInputBlock = <div><div className="white-list-title">
+              <p className="title">Whitelist</p>
+            </div><WhitelistInputBlock
+              num={0}
+              onChange={(e, cntrct, num, prop) => this.changeState(e, cntrct, 0, prop)}
+            ></WhitelistInputBlock></div>;
       return (
         <section className="steps steps_crowdsale-contract" ref="three">
           <StepNavigation activeStep={CROWDSALE_SETUP}/>
@@ -308,16 +315,28 @@ export class stepThree extends stepTwo {
                   items={["on", "off"]}
                   vals={["on", "off"]}
                   state={this.state}
-                  target={this.state.crowdsale[0].updatable}
-                  onChange={(e) => this.changeState(e, 'crowdsale', 0, 'updatable')}/>
+                  num={0}
+                  defaultValue={this.state.crowdsale[0].updatable}
+                  name='crowdsale-updatable-0'
+                  onChange={(e) => this.changeState(e, 'crowdsale', 0, 'updatable')}
+                  description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+              />
+              <RadioInputField 
+                  side='right' 
+                  title={DISABLEWHITELISTING} 
+                  items={["yes", "no"]}
+                  vals={["yes", "no"]}
+                  state={this.state}
+                  num={0}
+                  defaultValue={this.state.crowdsale[0].whitelistdisabled}
+                  name='crowdsale-whitelistdisabled-0'
+                  onChange={(e) => this.changeState(e, 'crowdsale', 0, 'whitelistdisabled')}
+                  description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+              />
             </div>
-            <div className="white-list-title">
-              <p className="title">Whitelist</p>
-            </div>
-            <WhitelistInputBlock
-              num={0}
-              onChange={(e, cntrct, num, prop) => this.changeState(e, cntrct, 0, prop)}
-            ></WhitelistInputBlock>
+            {this.state.crowdsale[0].whitelistdisabled === "yes"?"":whitelistInputBlock}
           </div>
           <div>{this.state.children}</div>
           <div className="button-container">

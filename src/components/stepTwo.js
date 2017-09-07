@@ -84,10 +84,10 @@ export class stepTwo extends React.Component {
         }
       }
       this.setBlockTimes(key, property, targetTime)
-    } else if (property.indexOf("whitelist") === 0) {
+    } else if (property.indexOf("whitelist_") === 0) {
       let prop = property.split("_")[1];
       newState.crowdsale[key][`whiteListInput`][prop] = value
-    } else if (property.indexOf("reservedtokens") === 0) {
+    } else if (property.indexOf("reservedtokens_") === 0) {
       console.log(newState);
       let prop = property.split("_")[1];
       newState.token[`reservedTokensInput`][prop] = value
