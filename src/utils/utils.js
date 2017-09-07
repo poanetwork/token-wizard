@@ -419,7 +419,7 @@ const isNotWhiteListTierObject = (value) => !(typeof value === 'object' && value
 // still thinks that we do not have an array... we do
 export const validateValue = (value, property) => {
   //console.log("'" + property + "'");
-    if (property === '0' 
+    if (isNaN(property)
       || property === 'reservedTokensInput'
       || property === 'reservedTokens'
       || property === 'reservedTokensElements') return VALID;

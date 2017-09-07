@@ -49,6 +49,7 @@ export class stepThree extends stepTwo {
     let newState = {...this.state}
     newState.children.push(<CrowdsaleBlock
       num = {num}
+      state = {this.state}
       onChange={(e, cntrct, num, prop) => this.changeState(e, cntrct, num, prop)}
     ></CrowdsaleBlock>)
     this.setState(newState)
@@ -315,7 +316,8 @@ export class stepThree extends stepTwo {
                   items={["on", "off"]}
                   vals={["on", "off"]}
                   state={this.state}
-                  target={this.state.crowdsale[0].updatable}
+                  num={0}
+                  defaultValue={this.state.crowdsale[0].updatable}
                   name='crowdsale-updatable-0'
                   onChange={(e) => this.changeState(e, 'crowdsale', 0, 'updatable')}
                   description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
@@ -327,7 +329,8 @@ export class stepThree extends stepTwo {
                   items={["yes", "no"]}
                   vals={["yes", "no"]}
                   state={this.state}
-                  target={this.state.crowdsale[0].whitelistdisabled}
+                  num={0}
+                  defaultValue={this.state.crowdsale[0].whitelistdisabled}
                   name='crowdsale-whitelistdisabled-0'
                   onChange={(e) => this.changeState(e, 'crowdsale', 0, 'whitelistdisabled')}
                   description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod

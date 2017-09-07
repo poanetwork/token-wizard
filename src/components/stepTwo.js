@@ -63,7 +63,6 @@ export class stepTwo extends React.Component {
     let newState = { ...this.state }
     console.log(newState);
     if (property === "startTime" || property === "endTime") {
-      console.log("1");
       let targetTime = new Date(value);
       let targetTimeTemp = targetTime.setHours(targetTime.getHours() - targetTime.getTimezoneOffset()/60);//.setUTCHours(new Date(targetTime).getHours());
       if (property === "startTime") {
@@ -86,31 +85,26 @@ export class stepTwo extends React.Component {
       }
       this.setBlockTimes(key, property, targetTime)
     } else if (property.indexOf("whitelist_") === 0) {
-      console.log("2");
       let prop = property.split("_")[1];
       newState.crowdsale[key][`whiteListInput`][prop] = value
     } else if (property.indexOf("reservedtokens_") === 0) {
-      console.log("3");
       console.log(newState);
       let prop = property.split("_")[1];
       newState.token[`reservedTokensInput`][prop] = value
     } else {
-      console.log("4");
       if( Object.prototype.toString.call( newState[parent] ) === '[object Array]' ) {
-        console.log("fgfd");
         newState[parent][key][property] = value;//this.getNewParent(property, parent, key, value)
       } else {
-        console.log("ddds");
         newState[parent][property] = value;//this.getNewParent(property, parent, key, value)
       }
     }
-    /*if (property.indexOf("whitelist") === -1 && property.indexOf("reservedtokens") === -1) {
+    if (property.indexOf("whitelist") === -1 && property.indexOf("reservedtokens") === -1) {
       newState[`validations`][property] = validateValue(value, property, newState)
       console.log('property', property)
       console.log('newState[`validations`][property]',  newState[`validations`], validateValue(value, property, newState), 'newState', newState)
             newState[`validations`][property] = validateValue(value, property, newState)
 
-    }*/
+    }
     console.log('newState', newState)
     this.setState(newState)
   }
