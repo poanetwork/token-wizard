@@ -38,6 +38,15 @@ export class CrowdsaleBlock extends React.Component {
     let { pricingStrategy } = this.state
     let { num } = this.props
     let { onChange } = this.props
+    let whitelistInputBlock = <div>
+      <div className="white-list-title">
+          <p className="title">Whitelist</p>
+        </div>
+        <WhitelistInputBlock
+          num = {num}
+          onChange={(e, cntrct, num, prop) => onChange(e, cntrct, num, prop)}
+        ></WhitelistInputBlock>
+    </div>
     return (<div key={num.toString()} style={{"marginTop": "40px"}} className="steps-content container">
         <div className="hidden">
           <InputField 
@@ -98,23 +107,18 @@ export class CrowdsaleBlock extends React.Component {
           />
           <RadioInputField 
             side='right' 
-            title={ALLOWMODIFYING} 
+            title={ALLOWMODIFYING}
             items={["on", "off"]}
             vals={["on", "off"]}
             state={this.state}
             target={this.state.crowdsale[num].updatable}
+            name={'crowdsale-updatable-' + num}
             onChange={(e) => onChange(e, 'crowdsale', num, 'updatable')}
             description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
       tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
           />
         </div>
-        <div className="white-list-title">
-          <p className="title">Whitelist</p>
-        </div>
-        <WhitelistInputBlock
-          num = {num}
-          onChange={(e, cntrct, num, prop) => onChange(e, cntrct, num, prop)}
-        ></WhitelistInputBlock>
+        {this.state.crowdsale[0].whitelistdisabled === "yes"?"":whitelistInputBlock}
       </div>)
   }
 }

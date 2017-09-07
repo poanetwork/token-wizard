@@ -105,13 +105,13 @@ export const intitialStepThreeValidations = {
 }
 
 export const initialStepThreeValues = {
-	crowdsale: {
+	crowdsale: [{
 		startTime: '',
 		endTime: '',
 		walletAddress: '',
 		supply: '',
 		rate: ''
-	}
+	}]
 }
 
 export const PDF_CONTENTS = [

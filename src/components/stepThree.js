@@ -25,7 +25,7 @@ export class stepThree extends stepTwo {
     oldState.children = [];
     oldState.crowdsale[0].tier = "Tier 1"
     oldState.crowdsale[0].updatable = "off"
-    oldState.crowdsale[0].whitelistdisabled = "yes"
+    oldState.crowdsale[0].whitelistdisabled = "no"
     this.state = Object.assign({}, oldState, {validations: { ...oldState.validations, startTime: VALID, endTime: VALID, walletAddress: VALID, supply: EMPTY, rate: EMPTY } } )
     //console.log('this.state', this.state)
   }
@@ -309,14 +309,18 @@ export class stepThree extends stepTwo {
                 description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
       tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
               />
-              {/*<RadioInputField 
+              <RadioInputField 
                   side='left' 
                   title={ALLOWMODIFYING} 
                   items={["on", "off"]}
                   vals={["on", "off"]}
                   state={this.state}
                   target={this.state.crowdsale[0].updatable}
-                  onChange={(e) => this.changeState(e, 'crowdsale', 0, 'updatable')}/>*/}
+                  name='crowdsale-updatable-0'
+                  onChange={(e) => this.changeState(e, 'crowdsale', 0, 'updatable')}
+                  description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+              />
               <RadioInputField 
                   side='right' 
                   title={DISABLEWHITELISTING} 
@@ -324,7 +328,11 @@ export class stepThree extends stepTwo {
                   vals={["yes", "no"]}
                   state={this.state}
                   target={this.state.crowdsale[0].whitelistdisabled}
-                  onChange={(e) => this.changeState(e, 'crowdsale', 0, 'whitelistdisabled')}/>
+                  name='crowdsale-whitelistdisabled-0'
+                  onChange={(e) => this.changeState(e, 'crowdsale', 0, 'whitelistdisabled')}
+                  description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+              />
             </div>
             {this.state.crowdsale[0].whitelistdisabled === "yes"?"":whitelistInputBlock}
           </div>

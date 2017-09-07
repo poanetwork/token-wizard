@@ -74,7 +74,11 @@ export class ReservedTokensInputBlock extends React.Component {
                     vals={["tokens", "percentage"]}
                     state={this.state}
                     target={this.state.token.reservedTokensInput.dim}
-                    onChange={(e) => onChange(e, 'token', 0, 'reservedtokens_dim')}/>
+                    name={'reserved-tokens-dim'}
+                    onChange={(e) => onChange(e, 'token', 0, 'reservedtokens_dim')}
+                    description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+                  />
                   <InputField 
                     side='reserved-tokens-input-property-right'
                     type='number' 
