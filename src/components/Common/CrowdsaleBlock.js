@@ -32,10 +32,6 @@ export class CrowdsaleBlock extends React.Component {
     //this.props.setState(newState);
   }
 
-  componentDidUpdate() {
-    console.log("fdjgksdfjl");
-  }
-
 	render() {
     const { validations } = this.props.state
     let { crowdsale } = this.props.state
