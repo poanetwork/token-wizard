@@ -62,7 +62,8 @@ export const TEXT_FIELDS = {
 	DIMENSION: 'Dimension',
 	VALUE: 'Value',
 	MAX_CAP: 'Max cap',
-	ALLOWMODIFYING: 'Allow modifying'
+	ALLOWMODIFYING: 'Allow modifying',
+	DISABLEWHITELISTING: 'Disable whitelisting'
 }
 
 export const VALIDATION_TYPES = {

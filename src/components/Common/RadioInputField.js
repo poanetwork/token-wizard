@@ -4,7 +4,6 @@ import '../../assets/stylesheets/application.css';
 export class RadioInputField extends React.Component {
 	constructor(props) {
         super(props);
-        console.log(props);
     }
 
 	render() {

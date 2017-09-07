@@ -45,39 +45,57 @@ export class CrowdsaleBlock extends React.Component {
             type='text' 
             title={CROWDSALE_SETUP_NAME} 
             value={crowdsale[num].tier}
-            onChange={(e) => onChange(e, 'crowdsale', num, 'tier')}/>
+            onChange={(e) => onChange(e, 'crowdsale', num, 'tier')}
+            description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+          />
           {/*<InputField 
             side='right' 
             type='text' 
             title={WALLET_ADDRESS} 
             value={crowdsale[num].walletAddress} 
-            onChange={(e) => onChange(e, 'crowdsale', num, 'walletAddress')}/>*/}
+            onChange={(e) => onChange(e, 'crowdsale', num, 'walletAddress')}
+            description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+          />*/}
           <InputField 
             side='right' 
             type='number' 
             title={RATE} 
             value={pricingStrategy[num].rate} 
-            onChange={(e) => onChange(e, 'pricingStrategy', num, 'rate')}/>
+            onChange={(e) => onChange(e, 'pricingStrategy', num, 'rate')}
+            description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+          />
           <InputField 
             side='left' 
             type='datetime-local' 
             title={START_TIME} 
             value={crowdsale[num].startTimeTemp} 
             defaultValue={this.state.crowdsale[this.props.num - 1].endTime}
-            onChange={(e) => onChange(e, 'crowdsale', num, 'startTime')}/>
+            onChange={(e) => onChange(e, 'crowdsale', num, 'startTime')}
+            description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+          />
           <InputField 
             side='right' 
             type='datetime-local' 
             title={END_TIME} 
             value={crowdsale[num].endTimeTemp} 
             defaultValue={defaultCompanyEndDate(this.state.crowdsale[this.props.num - 1].endTime)}
-            onChange={(e) => onChange(e, 'crowdsale', num, 'endTime')}/>
+            onChange={(e) => onChange(e, 'crowdsale', num, 'endTime')}
+            description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+          />
           <InputField 
             side='left' 
             type='number' 
             title={SUPPLY} 
             value={crowdsale[num].supply} 
-            onChange={(e) => onChange(e, 'crowdsale', num, 'supply')}/>
+            onChange={(e) => onChange(e, 'crowdsale', num, 'supply')}
+            description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+          />
           <RadioInputField 
             side='right' 
             title={ALLOWMODIFYING} 
@@ -85,7 +103,10 @@ export class CrowdsaleBlock extends React.Component {
             vals={["on", "off"]}
             state={this.state}
             target={this.state.crowdsale[num].updatable}
-            onChange={(e) => onChange(e, 'crowdsale', num, 'updatable')}/>
+            onChange={(e) => onChange(e, 'crowdsale', num, 'updatable')}
+            description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+          />
         </div>
         <div className="white-list-title">
           <p className="title">Whitelist</p>

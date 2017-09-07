@@ -355,6 +355,9 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
                 case "_isUpdatable": {
                   params.vals.push(state.crowdsale[crowdsaleNum].updatable?state.crowdsale[crowdsaleNum].updatable=="on"?true:false:false);
                 } break;
+                case "_isWhiteListed": {
+                  params.vals.push(state.crowdsale[0].whitelistdisabled?state.crowdsale[0].whitelistdisabled=="yes"?false:true:false);
+                } break;
                 default: {
                     params.vals.push("");
                 } break;
