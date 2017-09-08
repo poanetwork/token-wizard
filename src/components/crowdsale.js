@@ -144,9 +144,7 @@ export class Crowdsale extends React.Component {
 					<div className="step-icons step-icons_crowdsale-page"></div>
 					<p className="title">Crowdsale Page</p>
 					<p className="description">
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-						enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-						in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+						Page with statistics of crowdsale. Statistics for all tiers combined on the page. Please press Ctrl-D to bookmark the page.
 					</p>
 				</div>
 				<div className="total-funds">

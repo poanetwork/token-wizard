@@ -64,8 +64,7 @@ export class ReservedTokensInputBlock extends React.Component {
                     type='text' 
                     title={ADDRESS} 
                     onChange={(e) => onChange(e, 'token', 0, 'reservedtokens_addr')}
-                    description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+                    description={`Address where to send reserved tokens.`}
                   />
                   <RadioInputField 
                     side='reserved-tokens-input-property-middle' 
@@ -75,8 +74,7 @@ export class ReservedTokensInputBlock extends React.Component {
                     defaultValue={this.state.token.reservedTokensInput.dim}
                     name={'reserved-tokens-dim'}
                     onChange={(e) => onChange(e, 'token', 0, 'reservedtokens_dim')}
-                    description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+                    description={`Fixed amount or % of crowdsaled tokens. Will be deposited to the account after fintalization of the crowdsale. `}
                   />
                   <InputField 
                     side='reserved-tokens-input-property-right'
@@ -84,8 +82,7 @@ export class ReservedTokensInputBlock extends React.Component {
                     title={VALUE} 
                     value={token.reservedTokensInput.val}
                     onChange={(e) => onChange(e, 'token', 0, 'reservedtokens_val')}
-                    description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+                    description={`Value in tokens or percents. Don't forget to press + button for each reserved token.`}
                   />
               <div className="plus-button-container"><div onClick={(e) => this.addReservedTokensItem(token.reservedTokensInput.addr, token.reservedTokensInput.dim, token.reservedTokensInput.val, token)} className="button button_fill button_fill_plus"></div></div>
             </div>

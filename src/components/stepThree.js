@@ -145,9 +145,7 @@ export class stepThree extends stepTwo {
               <div className="step-icons step-icons_crowdsale-setup"></div>
               <p className="title">Crowdsale setup</p>
               <p className="description">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                The most important and exciting part of the crowdsale process. Here you can define parameters of your crowdsale campaign. 
               </p>
             </div>
             <div className="hidden">
@@ -160,8 +158,7 @@ export class stepThree extends stepTwo {
                 errorMessage={VALIDATION_MESSAGES.START_TIME} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'startTime', 0)}
                 onChange={(e) => this.changeState(e, 'crowdsale', 0, 'startTime')}
-                description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+                description={`Date and time when the tier starts. Can't be in the past from the current moment.`}
               />
               <InputField 
                 side='right' 
@@ -172,8 +169,7 @@ export class stepThree extends stepTwo {
                 errorMessage={VALIDATION_MESSAGES.END_TIME} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'endTime', 0)}
                 onChange={(e) => this.changeState(e, 'crowdsale', 0, 'endTime')}
-                description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+                description={`Date and time when the tier ends. Can be only in the future.`}
               />
               <InputField 
                 side='left' 
@@ -184,8 +180,7 @@ export class stepThree extends stepTwo {
                 errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS}
                 onBlur={() => this.handleInputBlur('crowdsale', 'walletAddress', 0)} 
                 onChange={(e) => this.changeState(e, 'crowdsale', 0, 'walletAddress')}
-                description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+                description={`Address where the money goes immediately after each successful transactions. We recommend to setup a multisig wallet with hardware based signers.`}
               />
               <InputField 
                 side='right' 
@@ -196,8 +191,7 @@ export class stepThree extends stepTwo {
                 errorMessage={VALIDATION_MESSAGES.SUPPLY}
                 onBlur={() => this.handleInputBlur('crowdsale', 'supply', 0)} 
                 onChange={(e) => this.changeState(e, 'crowdsale', 0, 'supply')}
-                description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+                description={`How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers`}
               />
               <InputField 
                 side='left' 
@@ -208,8 +202,7 @@ export class stepThree extends stepTwo {
                 errorMessage={VALIDATION_MESSAGES.RATE} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'rate', 0)}
                 onChange={(e) => this.changeState(e, 'pricingStrategy', 0, 'rate')}
-                description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+                description={`Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens`}
               />
             </div>
           </div>
@@ -233,9 +226,7 @@ export class stepThree extends stepTwo {
               <div className="step-icons step-icons_crowdsale-setup"></div>
               <p className="title">Crowdsale setup</p>
               <p className="description">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+              The most important and exciting part of the crowdsale process. Here you can define parameters of your crowdsale campaign.
               </p>
             </div>
             <div className="hidden">
@@ -246,8 +237,7 @@ export class stepThree extends stepTwo {
                 value={crowdsale[0].tier}
                 onBlur={() => this.handleInputBlur('crowdsale', 'tier', 0)}
                 onChange={(e) => this.changeState(e, 'crowdsale', 0, 'tier')}
-                description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+                description={`Name of a tier, e.g. PrePreIco, PreICO, ICO with bonus A, ICO with bonus B, etc. We simplified that and will increment a number after each tier.`}
               />
               <InputField 
                 side='right' 
@@ -258,8 +248,7 @@ export class stepThree extends stepTwo {
                 errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'walletAddress', 0)}
                 onChange={(e) => this.changeState(e, 'crowdsale', 0, 'walletAddress')}
-                description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+                description={`Where the money goes after investors transactions. Immediately after each transaction. We recommend to setup a multisig wallet with hardware based signers.`}
               />
               <InputField 
                 side='left' 
@@ -270,8 +259,7 @@ export class stepThree extends stepTwo {
                 errorMessage={VALIDATION_MESSAGES.START_TIME} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'startTime', 0)}
                 onChange={(e) => this.changeState(e, 'crowdsale', 0, 'startTime')}
-                description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+                description={`Date and time when the tier starts. Can't be in the past from the current moment.`}
               />
               <InputField 
                 side='right' 
@@ -282,8 +270,7 @@ export class stepThree extends stepTwo {
                 errorMessage={VALIDATION_MESSAGES.END_TIME} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'endTime', 0)}
                 onChange={(e) => this.changeState(e, 'crowdsale', 0, 'endTime')}
-                description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+                description={`Date and time when the tier ends. Can be only in the future.`}
               />
               <InputField 
                 side='left' 
@@ -294,8 +281,7 @@ export class stepThree extends stepTwo {
                 errorMessage={VALIDATION_MESSAGES.RATE} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'rate', 0)}
                 onChange={(e) => this.changeState(e, 'pricingStrategy', 0, 'rate')}
-                description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+                description={`Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens`}
               />
               <InputField 
                 side='right' 
@@ -306,8 +292,7 @@ export class stepThree extends stepTwo {
                 errorMessage={VALIDATION_MESSAGES.SUPPLY} 
                 onBlur={() => this.handleInputBlur('crowdsale', 'supply', 0)}
                 onChange={(e) => this.changeState(e, 'crowdsale', 0, 'supply')}
-                description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+                description={`How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers`}
               />
               <RadioInputField 
                   side='left' 
@@ -319,8 +304,7 @@ export class stepThree extends stepTwo {
                   defaultValue={this.state.crowdsale[0].updatable}
                   name='crowdsale-updatable-0'
                   onChange={(e) => this.changeState(e, 'crowdsale', 0, 'updatable')}
-                  description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+                  description={`Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing.`}
               />
               <RadioInputField 
                   side='right' 
@@ -332,8 +316,7 @@ export class stepThree extends stepTwo {
                   defaultValue={this.state.crowdsale[0].whitelistdisabled}
                   name='crowdsale-whitelistdisabled-0'
                   onChange={(e) => this.changeState(e, 'crowdsale', 0, 'whitelistdisabled')}
-                  description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+                  description={`Disables whitelistings. Anyone can buy on the tier.`}
               />
             </div>
             {this.state.crowdsale[0].whitelistdisabled === "yes"?"":whitelistInputBlock}

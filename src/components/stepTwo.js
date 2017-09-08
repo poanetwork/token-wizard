@@ -154,7 +154,7 @@ export class stepTwo extends React.Component {
             <div className="step-icons step-icons_token-setup"></div>
             <p className="title">Token setup</p>
             <p className="description">
-              Configure properties of ERC-20 compatible token. 
+              Configure properties of your token. Created token contract will be ERC-20 compatible. 
             </p>
           </div>
           <div className="hidden">
@@ -165,8 +165,7 @@ export class stepTwo extends React.Component {
               value={token.name} 
               onBlur={() => this.handleInputBlur('token', 'name')}
               onChange={(e) => this.changeState(e, 'token', 0, 'name')}
-              description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+              description={`The name of your token. Will be used by Etherscan and other token browsers. Be afraid of trademarks.`}
             />
             <InputField 
               side='right' type='text' 
@@ -176,8 +175,7 @@ export class stepTwo extends React.Component {
               value={token.ticker} 
               onBlur={() => this.handleInputBlur('token', 'ticker')}
               onChange={(e) => this.changeState(e, 'token', 0, 'ticker')}
-              description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+              description={`The three letter ticker for your token. There are 17,576 combinations for 26 english letters. Be hurry. `}
             />
             {/*<InputField 
               side='left' type='number' 
@@ -198,8 +196,7 @@ export class stepTwo extends React.Component {
               value={token.decimals} 
               onBlur={() => this.handleInputBlur('token', 'decimals')}
               onChange={(e) => this.changeState(e, 'token', 0, 'decimals')}
-              description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
+              description={`18 is the most common number of decimal places.`}
             />
           </div>
           <div className="reserved-tokens-title">
