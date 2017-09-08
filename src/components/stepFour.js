@@ -739,7 +739,7 @@ export class stepFour extends stepTwo {
             {this.state.contracts?this.state.contracts.pricingStrategy?this.state.contracts.pricingStrategy.src:"":""}
           </pre>
           <p className="description">
-          Pricing Strategy Contract Source Cod
+          Pricing Strategy Contract Source Code
           </p>
         </div>
         <div className="item">
