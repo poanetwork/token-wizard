@@ -1,6 +1,6 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { deployContract, getWeb3, getNetworkVersion, addWhiteList, setFinalizeAgent, approve, setTransferAgent, setMintAgent, setReleaseAgent, updateJoinedCrowdsales, transferOwnership, setReservedTokensListMultiple, setLastCrowdsale } from '../utils/web3'
+import { deployContract, getWeb3, checkWeb3, getNetworkVersion, addWhiteList, setFinalizeAgent, approve, setTransferAgent, setMintAgent, setReleaseAgent, updateJoinedCrowdsales, transferOwnership, setReservedTokensListMultiple, setLastCrowdsale } from '../utils/web3'
 import { noMetaMaskAlert } from '../utils/alerts'
 import { defaultState, PDF_CONTENTS } from '../utils/constants'
 import { getOldState, handleContractsForPDF, handleTokenForPDF, handleCrowdsaleForPDF, handlePricingStrategyForPDF, handleConstantForPDF, toFixed } from '../utils/utils'
@@ -22,6 +22,7 @@ export class stepFour extends stepTwo {
   }
 
   componentDidMount() {
+    checkWeb3(this.state.web3);
     switch (this.state.contractType) {
       case this.state.contractTypes.standard: {
         let $this = this;

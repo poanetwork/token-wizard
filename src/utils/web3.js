@@ -3,6 +3,7 @@ import { incorrectNetworkAlert, noContractAlert } from './alerts'
 import { getEncodedABIClientSide } from './microservices'
 import { findCurrentContractRecursively as findCurrentContractRecursively2 } from './web3'
 import { toFixed } from '../utils/utils'
+import { noMetaMaskAlert } from '../utils/alerts'
 
 // instantiate new web3 instance
 const web3 = new Web3();
@@ -21,6 +22,23 @@ if (typeof window.web3 !== 'undefined' && typeof window.web3.currentProvider !==
 export function getCurrentProvider() {
 	console.log(web3.currentProvider);
   return web3.currentProvider;
+}
+
+export function checkWeb3(web3) {
+  if (!web3) {
+    setTimeout(function() {
+      getWeb3((web3) => {
+        if (!web3) return noMetaMaskAlert();
+        if (web3.eth.accounts.length === 0) {
+          return noMetaMaskAlert();
+        }
+      });
+    }, 500);
+  } else {
+    if (web3.eth.accounts.length === 0) {
+      return noMetaMaskAlert();
+    }
+  }
 }
 
 export function getWeb3(cb) {
@@ -693,6 +711,19 @@ export function getCrowdsaleData(web3, $this, crowdsaleContract, cb) {
 }
 
 function getTokenData(web3, $this, cb) {
+  if (!web3) {
+    let state = $this.state;
+    state.loading = false;
+    $this.setState(state, cb);
+    return;
+  } else {
+    if (web3.eth.accounts.length == 0) {
+      let state = $this.state;
+      state.loading = false;
+      $this.setState(state, cb);
+      return;
+    }
+  };
   let propsCount = 0;
   let cbCount = 0;
   attachToContract(web3, $this.state.contracts.token.abi, $this.state.contracts.token.addr, function(err, tokenContract) {

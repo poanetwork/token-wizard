@@ -1,6 +1,6 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { getWeb3, checkNetWorkByID, getCrowdsaleData, initializeAccumulativeData, getAccumulativeCrowdsaleData, findCurrentContractRecursively, getJoinedTiers } from '../utils/web3'
+import { getWeb3, checkWeb3, checkNetWorkByID, getCrowdsaleData, initializeAccumulativeData, getAccumulativeCrowdsaleData, findCurrentContractRecursively, getJoinedTiers } from '../utils/web3'
 import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
 import { StepNavigation } from './Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../utils/constants'
@@ -17,6 +17,7 @@ export class Crowdsale extends React.Component {
 	}
 
 	componentDidMount () {
+		checkWeb3(this.state.web3);
 		let newState = { ...this.state }
 	    newState.loading = true;
 	    newState.tokenIsAlreadyCreated = true;
@@ -26,6 +27,12 @@ export class Crowdsale extends React.Component {
 		var $this = this;
 		setTimeout(function() {
 			getWeb3(function(web3) {
+				if (!web3) {
+					let state = $this.state;
+					state.loading = false;
+		        	$this.setState(state);
+					return
+				};
 				var state = $this.state;
 				state.web3 = web3;
       			checkNetWorkByID(web3, networkID);
