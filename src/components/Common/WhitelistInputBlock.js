@@ -53,7 +53,7 @@ export class WhitelistInputBlock extends React.Component {
                 title={ADDRESS} 
                 value={crowdsale[num].whiteListInput.addr} 
                 onChange={(e) => this.props.onChange(e, 'crowdsale', this.props.num, 'whitelist_addr')}
-                description={`Address of a whitelisted account which can buy with defined limits. Whitelists inherited. E.g., if an accoun is on Tier 1 and didn't buy max cap on Tier 1, he can buy on Tier 2, and other tiers.`}
+                description={`Address of a whitelisted account. Whitelists are inherited. E.g., if an account whitelisted on Tier 1 and didn't buy max cap on Tier 1, he can buy on Tier 2, and following tiers.`}
               />
               <InputField 
                 side='white-list-input-property-middle' 
@@ -61,7 +61,7 @@ export class WhitelistInputBlock extends React.Component {
                 title={MIN} 
                 value={crowdsale[num].whiteListInput.min} 
                 onChange={(e) => this.props.onChange(e, 'crowdsale', this.props.num, 'whitelist_min')}
-                description={`Minimum amount tokens to buy. Not a mininal size of a transaction. E.g. if minCap is 1 token and a user buying 0.1 token it will give an exepction. Although, if minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.`}
+                description={`Minimum amount tokens to buy. Not a mininal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.`}
               />
               <InputField 
                 side='white-list-input-property-right'
@@ -69,7 +69,7 @@ export class WhitelistInputBlock extends React.Component {
                 title={MAX} 
                 value={crowdsale[num].whiteListInput.max} 
                 onChange={(e) => this.props.onChange(e, 'crowdsale', this.props.num, 'whitelist_max')}
-                description={`Maximum is the hard limit. You can not buy more than max cap.`}
+                description={`Maximum is the hard limit.`}
               />
               <div className="plus-button-container"><div onClick={(e) => this.addWhitelistItem(crowdsale[num].whiteListInput.addr, crowdsale[num].whiteListInput.min, crowdsale[num].whiteListInput.max)} className="button button_fill button_fill_plus"></div></div>
             </div>

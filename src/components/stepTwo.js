@@ -154,7 +154,7 @@ export class stepTwo extends React.Component {
             <div className="step-icons step-icons_token-setup"></div>
             <p className="title">Token setup</p>
             <p className="description">
-              Configure properties of your token. The created token will be ERC-20 compatible. 
+              Configure properties of your token. Created token contract will be ERC-20 compatible. 
             </p>
           </div>
           <div className="hidden">
@@ -165,7 +165,7 @@ export class stepTwo extends React.Component {
               value={token.name} 
               onBlur={() => this.handleInputBlur('token', 'name')}
               onChange={(e) => this.changeState(e, 'token', 0, 'name')}
-              description={`The name of your token. Choose wisely.`}
+              description={`The name of your token. Will be used by Etherscan and other token browsers. Be afraid of trademarks.`}
             />
             <InputField 
               side='right' type='text' 
@@ -196,7 +196,7 @@ export class stepTwo extends React.Component {
               value={token.decimals} 
               onBlur={() => this.handleInputBlur('token', 'decimals')}
               onChange={(e) => this.changeState(e, 'token', 0, 'decimals')}
-              description={`Usually, decimals for a token is 18.`}
+              description={`18 is the most common number of decimal places.`}
             />
           </div>
           <div className="reserved-tokens-title">

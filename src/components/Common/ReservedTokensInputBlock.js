@@ -64,7 +64,7 @@ export class ReservedTokensInputBlock extends React.Component {
                     type='text' 
                     title={ADDRESS} 
                     onChange={(e) => onChange(e, 'token', 0, 'reservedtokens_addr')}
-                    description={`Address where to send reserved tokens. It's important.`}
+                    description={`Address where to send reserved tokens.`}
                   />
                   <RadioInputField 
                     side='reserved-tokens-input-property-middle' 
@@ -74,7 +74,7 @@ export class ReservedTokensInputBlock extends React.Component {
                     defaultValue={this.state.token.reservedTokensInput.dim}
                     name={'reserved-tokens-dim'}
                     onChange={(e) => onChange(e, 'token', 0, 'reservedtokens_dim')}
-                    description={`Percentage from crowdsale or Fixed amount. Will be deposited to the account after fintalize of the crowdsale. `}
+                    description={`Fixed amount or % of crowdsaled tokens. Will be deposited to the account after fintalization of the crowdsale. `}
                   />
                   <InputField 
                     side='reserved-tokens-input-property-right'
@@ -82,7 +82,7 @@ export class ReservedTokensInputBlock extends React.Component {
                     title={VALUE} 
                     value={token.reservedTokensInput.val}
                     onChange={(e) => onChange(e, 'token', 0, 'reservedtokens_val')}
-                    description={`Enter value in tokens or percents. Don't forget to press + button for each reserved token.`}
+                    description={`Value in tokens or percents. Don't forget to press + button for each reserved token.`}
                   />
               <div className="plus-button-container"><div onClick={(e) => this.addReservedTokensItem(token.reservedTokensInput.addr, token.reservedTokensInput.dim, token.reservedTokensInput.val, token)} className="button button_fill button_fill_plus"></div></div>
             </div>

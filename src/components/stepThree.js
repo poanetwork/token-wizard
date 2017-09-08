@@ -180,7 +180,7 @@ export class stepThree extends stepTwo {
                 errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS}
                 onBlur={() => this.handleInputBlur('crowdsale', 'walletAddress', 0)} 
                 onChange={(e) => this.changeState(e, 'crowdsale', 0, 'walletAddress')}
-                description={`Where the money goes after investors transactions. Immediately after each transaction. We recommend to setup a multisig wallet with hardware based signers.`}
+                description={`Address where the money goes immediately after each successful transactions. We recommend to setup a multisig wallet with hardware based signers.`}
               />
               <InputField 
                 side='right' 
