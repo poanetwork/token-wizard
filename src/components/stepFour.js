@@ -690,7 +690,7 @@ export class stepFour extends stepTwo {
             {this.state.contracts?this.state.contracts.crowdsale?this.state.contracts.crowdsale.abiConstructor?this.state.contracts.crowdsale.abiConstructor[i]:"":"":""}
           </pre>
           <p className="description">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Encoded ABI
           </p>
         </div>);
     }
@@ -702,7 +702,7 @@ export class stepFour extends stepTwo {
             {this.state.contracts?this.state.contracts.pricingStrategy?this.state.contracts.pricingStrategy.abiConstructor?this.state.contracts.pricingStrategy.abiConstructor[i]:"":"":""}
           </pre>
           <p className="description">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Contructor arguments for pricing strategy contract
           </p>
         </div>);
     }
@@ -712,7 +712,7 @@ export class stepFour extends stepTwo {
             {this.state.contracts?this.state.contracts.token?this.state.contracts.token.src:"":""}
           </pre>
           <p className="description">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          Token Contract Source Code
           </p>
         </div>
         <div className="item">
@@ -721,7 +721,7 @@ export class stepFour extends stepTwo {
             {this.state.contracts?this.state.contracts.token?JSON.stringify(this.state.contracts.token.abi):"":""}
           </pre>
           <p className="description">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          Token Contract ABI
           </p>
         </div>
         <div className="item">
@@ -730,7 +730,7 @@ export class stepFour extends stepTwo {
             {this.state.contracts?this.state.contracts.token?this.state.contracts.token.abiConstructor?this.state.contracts.token.abiConstructor:"":"":""}
           </pre>
           <p className="description">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          Token Constructor Arguments 
           </p>
         </div></div>;
     let pricingStrategyBlock = <div><div className="item">
@@ -739,7 +739,7 @@ export class stepFour extends stepTwo {
             {this.state.contracts?this.state.contracts.pricingStrategy?this.state.contracts.pricingStrategy.src:"":""}
           </pre>
           <p className="description">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          Pricing Strategy Contract Source Cod
           </p>
         </div>
         <div className="item">
@@ -748,7 +748,7 @@ export class stepFour extends stepTwo {
             {this.state.contracts?this.state.contracts.pricingStrategy?JSON.stringify(this.state.contracts.pricingStrategy.abi):"":""}
           </pre>
           <p className="description">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          Pricing Strategy Contract ABI
           </p>
         </div>
         </div>;
@@ -760,9 +760,7 @@ export class stepFour extends stepTwo {
             <div className="step-icons step-icons_publish"></div>
             <p className="title">Publish</p>
             <p className="description">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-              in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+            On this step we provide you artifacts about your token and crowdsale contracts. They are useful to verify contracts source code on <a href="https://etherscan.io/verifyContract">Etherscan</a> 
             </p>
           </div>
           <div className="hidden">
@@ -772,8 +770,7 @@ export class stepFour extends stepTwo {
               </div>
               <p className="label">{this.state.contractType==this.state.contractTypes.standard?"Standard":"Whitelist with cap"}</p>
               <p className="description">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+              Crowdsale Contract
               </p>
             </div>
             <div className="publish-title-container">
@@ -793,7 +790,7 @@ export class stepFour extends stepTwo {
               <p className="label">Compiler Version</p>
               <p className="value">0.4.11</p>
               <p className="description">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              Compiler Version
               </p>
             </div>
             {!this.state.tokenIsAlreadyCreated?tokenBlock:""}
@@ -805,7 +802,7 @@ export class stepFour extends stepTwo {
                 {this.state.contracts?this.state.contracts.crowdsale?this.state.contracts.crowdsale.src:"":""}
               </pre>
               <p className="description">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              Crowdsale Contract Source Code
               </p>
             </div>
             <div className="item">
@@ -814,7 +811,7 @@ export class stepFour extends stepTwo {
                 {this.state.contracts?this.state.contracts.crowdsale?JSON.stringify(this.state.contracts.crowdsale.abi):"":""}
               </pre>
               <p className="description">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              Crowdsale Contract ABI
               </p>
             </div>
             {ABIEncodedOutputsCrowdsale}

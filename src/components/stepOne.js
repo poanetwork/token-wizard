@@ -140,7 +140,7 @@ export class stepOne extends React.Component {
               />
               <span className="title">Standard</span>
               <span className="description">
-                Standard crowdsale for educational use.
+                Basic crowdsale strategy with one tier. Good for educational use. 
               </span>
             </label>
             <label className="radio">
@@ -153,7 +153,7 @@ export class stepOne extends React.Component {
               />
               <span className="title">Whitelist with Cap</span>
               <span className="description">
-                Modern crowdsale strategy with tiers, whitelists, and limits. 
+                Modern crowdsale strategy with multiple tiers, whitelists, and limits. Recommended for every crowdsale. 
               </span>
             </label>
             {/* <label className="radio">

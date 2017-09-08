@@ -6,24 +6,24 @@
 
 ## Introduction
 
-`ICO tools should be available for non-coders for free. Raising funds from a crowd is our basic human right.`
+A quote: `ICO tools should be available for non-coders for free. Raising funds from a crowd is our basic human right.`
 
-ICO wizard is a tool to create token and crowdsale contracts in 5 simple steps.  Wizard is based on modified [TokenMarket](https://github.com/TokenMarketNet/ico) contracts. Wizard is baked how we like it: decentralized, client side, serverless, open source, free, awesome.
+ICO wizard is a tool to create token and crowdsale contracts in five simple steps.  Wizard is based on  [TokenMarket](https://github.com/TokenMarketNet/ico) contracts. Wizard is baked how we like it: decentralized, client side, serverless, open source, free, awesome.
 
 ICOs usually have two or more contracts. One token contract and one or more crowdsale contract plus supplemental contracts, e.g., safe math, pricing strategy, etc. Most token contracts are the same (ERC-20); most crowdsale contracts are different.  Token implementation should be stable for compatibility, and it is crucial to connect token to exchanges and wallets. Crowdsale contracts on another side should follow fashion and differentiate a project from others, e.g., create a new type of [FOMO](http://www.urbandictionary.com/define.php?term=fomo), fear of missing out.
 
 
 ## Requirements
 
-- Google Chrome, Chromium, or Chrome Canary
-- [Metamask](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn). Ethereum web wallet for Google Chrome. Must have
+- Google Chrome, Chromium, or Google Chrome Canary
+- [Metamask](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn). Ethereum web wallet for Google Chrome. Must have to publish contracts to the network.
 - Kovan testnet coins.
     -  Create an account in Metamask, copy it's address and ask for free coins on [Kovan's gitter](https://gitter.im/kovan-testnet/faucet)
 - Parity for manual operations, e.g., adding people to whitelist after creation of crowdsales, finalizing, etc.
     -  [How to install Parity](https://github.com/paritytech/parity/wiki/Setup)
     - Sync it. `parity --chain kovan --warp ui`
     - Export private key from Metamask and import in to Parity in UI.
-- Patience. Metamask doesn't support bulk transactions. Simplest crowdsale will ask you to sign at least 14 transactions. 
+- Patience. Metamask doesn't support bulk transactions. Simplest crowdsale will ask you to sign ~10 transactions. 
 ## Strategy
 
 At the moment, the Wizard supports one type of crowdsale contract, the mighty "whitelisted with tiers and cap". This strategy is popular in modern ICOs due to regulatory involvement in the process (September 2017). A native approach to comply with regulation is to perform KYC of buyers and restrict participants from democratic countries, e.g., the U.S. or PRC. 
@@ -43,7 +43,7 @@ Features of "Whitelisted with tiers and cap" strategy:
 
 ## How to run
 
-Open [https://wizard.oracles.org](https://wizard.oracles.org) and follow steps
+Open [https://wizard.oracles.org](https://wizard.oracles.org) and follow steps.
 
 ### Run local version for development
 
@@ -59,7 +59,7 @@ npm start
 
 Go to [localhost:3000](http://localhost:3000) and look around the app!
 
-## Project built on ICO Wizard
+## Projects built on ICO Wizard
 
 None! Send PR if you are the first.
 

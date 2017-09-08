@@ -17,7 +17,8 @@ export class Home extends Component {
             <div className="container">
               <h1 className="title">Welcome to ICO Wizard</h1>
               <p className="description">
-              ICO wizard is a tool to create ERC-20 token and crowdsale contracts in 5 simple steps. There is no need to be a coder to launch your ICO on the Ethereum blockchain. 
+              ICO Wizard is a client side tool to create token and crowdsale contracts in five steps. It helps you to publish contracts on the Ethereum network, verify them in Etherscan, create a crowdsale page with stats. For participants, the wizard creates a page to invest into the campaign. 
+              <br/>Smart contracts based on TokenMarket contracts. 
               </p>
               <div className="buttons">
                 <Link to={{ pathname: '/1', query: { state: this.state } }}><a className="button button_fill">New crowdsale</a></Link>
