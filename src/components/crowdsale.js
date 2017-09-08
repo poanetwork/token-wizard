@@ -119,7 +119,6 @@ export class Crowdsale extends React.Component {
 		const maxCapBeforeDecimals = this.state.crowdsale.maximumSellableTokens/10**tokenDecimals;
 		const investorsCount = this.state.crowdsale.investors?this.state.crowdsale.investors.toString():0;
 	    const ethRaised = this.state.crowdsale.ethRaised;
-		const tokensClaimedRatio = goalInETH?(ethRaised/goalInETH)*100:"0";
 
 		//tokens claimed: tiers, standard
 		const tokensClaimedStandard = rate?(this.state.crowdsale.ethRaised/rate/*.toFixed(tokenDecimals)*/):0;
@@ -142,6 +141,7 @@ export class Crowdsale extends React.Component {
 	    const goalInETHTiers = this.state.crowdsale.maximumSellableTokensInWei?(this.state.web3.fromWei(this.state.crowdsale.maximumSellableTokensInWei, "ether").toString()):0;
 	    const goalInETH = (this.state.contractType == this.state.contractTypes.whitelistwithcap)?goalInETHTiers:goalInETHStandard;	    
 
+	    const tokensClaimedRatio = goalInETH?(ethRaised/goalInETH)*100:"0";
 	    
 	    return (
 		<section className="steps steps_crowdsale-page">
