@@ -13,6 +13,12 @@ ICO wizard is a tool to create token and crowdsale contracts in five simple step
 ICOs usually have two or more contracts. One token contract and one or more crowdsale contract plus supplemental contracts, e.g., safe math, pricing strategy, etc. Most token contracts are the same (ERC-20); most crowdsale contracts are different.  Token implementation should be stable for compatibility, and it is crucial to connect token to exchanges and wallets. Crowdsale contracts on another side should follow fashion and differentiate a project from others, e.g., create a new type of [FOMO](http://www.urbandictionary.com/define.php?term=fomo), fear of missing out.
 
 
+## Demo
+
+You can try it on [https://wizard.oracles.org](https://wizard.oracles.org) or watch a demo
+
+[![Demo](https://img.youtube.com/vi/Hvs1gICcXGU/0.jpg)](https://www.youtube.com/watch?v=Hvs1gICcXGU)
+
 ## Requirements
 
 - Google Chrome, Chromium, or Google Chrome Canary
@@ -65,7 +71,7 @@ None! Send PR if you are the first.
 
 ## Contributors guide
 
-Issues which are looking for a handsome contributors are marked as [LookingForContributor] in Issues section of the GitHub (https://github.com/oraclesorg/ico-wizard/issues?q=is%3Aissue+is%3Aopen+label%3ALookingForContributor) 
+Issues which are looking for a handsome contributors are marked as _LookingForContributor_ label in [Issues](https://github.com/oraclesorg/ico-wizard/issues?q=is%3Aissue+is%3Aopen+label%3ALookingForContributor)  section of the GitHub 
 
 ## Notable Contributors
 
