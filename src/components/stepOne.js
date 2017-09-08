@@ -1,5 +1,6 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
+import { checkWeb3 } from '../utils/web3'
 import { Link } from 'react-router-dom'
 import { defaultState } from '../utils/constants'
 import { setFlatFileContentToState } from '../utils/utils';
@@ -74,7 +75,10 @@ export class stepOne extends React.Component {
   }
 
   componentDidMount() {
+    checkWeb3(this.state.web3);
+    
     let newState = { ...this.state }
+
     newState.contractType = this.state.contractTypes.whitelistwithcap
     switch (newState.contractType) {
       case this.state.contractTypes.standard: {

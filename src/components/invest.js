@@ -22,7 +22,12 @@ export class Invest extends React.Component {
     var $this = this;
     setTimeout(function() {
      getWeb3(function(web3) {
-      if (!web3) return;
+      if (!web3) {
+        let state = $this.state;
+        state.loading = false;
+        $this.setState(state);
+        return
+      };
 
       const networkID = getQueryVariable("networkID");
       const contractType = getQueryVariable("contractType");
@@ -68,13 +73,23 @@ export class Invest extends React.Component {
       }
       state.contracts.crowdsale.addr = _crowdsaleAddrs;
 
-      if (web3.eth.accounts.length === 0) return;
+      if (web3.eth.accounts.length === 0) {
+        let state = $this.state;
+        state.loading = false;
+        $this.setState(state);
+        return
+      };
 
       state.curAddr = web3.eth.accounts[0];
       state.web3 = web3;
       $this.setState(state);
 
-      if (!$this.state.contracts.crowdsale.addr) return;
+      if (!$this.state.contracts.crowdsale.addr) {
+        let state = $this.state;
+        state.loading = false;
+        $this.setState(state);
+        return
+      };
       findCurrentContractRecursively(0, $this, web3, null, function(crowdsaleContract) {
         if (!crowdsaleContract) {
           state.loading = false;

@@ -2,7 +2,7 @@ import React from 'react'
 import '../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
-import { calculateFutureBlock } from '../utils/web3'
+import { calculateFutureBlock, checkWeb3 } from '../utils/web3'
 import { getOldState, stepsAreValid, getNewValue, validateValue, allFieldsAreValid } from '../utils/utils'
 import { StepNavigation } from './Common/StepNavigation'
 import { InputField } from './Common/InputField'
@@ -19,6 +19,10 @@ export class stepTwo extends React.Component {
     let oldState = getOldState(props, defaultState)
     console.log('oldState', oldState)
     this.state = Object.assign({}, defaultState, oldState, initialStepTwoValues, intitialStepTwoValidations )
+  }
+
+  componentDidMount() {
+    checkWeb3(this.state.web3);
   }
 
   getNewParent (property, parent, value) {

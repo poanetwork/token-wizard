@@ -1,7 +1,7 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
-import { getWeb3, calculateFutureBlock, setExistingContractParams } from '../utils/web3'
+import { getWeb3, checkWeb3, calculateFutureBlock, setExistingContractParams } from '../utils/web3'
 import { stepTwo } from './stepTwo'
 import { getQueryVariable, getURLParam, getOldState, defaultCompanyStartDate, defaultCompanyEndDate, stepsAreValid, allFieldsAreValid } from '../utils/utils'
 import { StepNavigation } from './Common/StepNavigation'
@@ -101,6 +101,7 @@ export class stepThree extends stepTwo {
     </div>
   }
   componentDidMount () {
+    checkWeb3(this.state.web3);
     setTimeout( () => {
       getWeb3((web3) => {
         console.log('timeout state', this.state)

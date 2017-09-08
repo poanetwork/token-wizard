@@ -4,7 +4,7 @@ import 'sweetalert/dist/sweetalert.css';
 export function noMetaMaskAlert() {
     sweetAlert({
       title: "Warning",
-      text: "Download <a href='https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=ru'>MetaMask</a> or <a href='https://chrome.google.com/webstore/detail/oracles/jbdaocneiiinmjbjlgalhcelgbejmnid?hl=ru'>Oracles</a> Google Chrome plugins and setup your account.",
+      text: "You don't have Metamask installed. Check ICO Wizard GitHub for <a href='https://github.com/oraclesorg/ico-wizard' target='blank'>the instruction</a>.",
       html: true,
       type: "warning"
     });
