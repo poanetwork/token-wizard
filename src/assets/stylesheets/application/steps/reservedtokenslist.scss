@@ -26,6 +26,8 @@
     }
   }
   &-input-property {
+    width: 33%;
+
     &-left {
       display: table-cell;
       vertical-align: top;
@@ -47,7 +49,8 @@
   }
   
   &-input-container {
-    margin-bottom: 20px
+    margin-bottom: 20px;
+    display: table;
   }
 
   &-item {
