@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
-import { getWeb3, attachToContract, checkNetWorkByID, getCrowdsaleData, initializeAccumulativeData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively, getJoinedTiers } from '../utils/web3'
+import { getWeb3, checkTxMined, attachToContract, checkNetWorkByID, getCrowdsaleData, initializeAccumulativeData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively, getJoinedTiers } from '../utils/web3'
 import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
 import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert } from '../utils/alerts'
 import { Loader } from './Common/Loader'
@@ -114,9 +114,12 @@ export class Invest extends React.Component {
   }
 
   investToTokens() {
-    var $this = this;
-    var startBlock = parseInt($this.state.crowdsale.startBlock, 10);
-    var startDate = $this.state.crowdsale.startDate;
+    let state = this.state;
+    state.loading = true;
+    this.setState(state);
+    let $this = this;
+    let startBlock = parseInt($this.state.crowdsale.startBlock, 10);
+    let startDate = $this.state.crowdsale.startDate;
     if ((isNaN(startBlock) || startBlock === 0) && !startDate) return;
     let web3 = $this.state.web3;
     if (web3.eth.accounts.length === 0) {
@@ -143,8 +146,8 @@ export class Invest extends React.Component {
       return investmentDisabledAlert(parseInt($this.state.crowdsale.startBlock, 10), curBlock);
     }
 
-    var weiToSend = web3.toWei($this.state.tokensToInvest/$this.state.pricingStrategy.rate, "ether");
-    var opts = {
+    let weiToSend = web3.toWei($this.state.tokensToInvest/$this.state.pricingStrategy.rate, "ether");
+    let opts = {
       from: web3.eth.accounts[0],
       value: weiToSend
     };
@@ -201,27 +204,45 @@ export class Invest extends React.Component {
 
     console.log("tokensToInvest*rate/10**decimals: " + tokensToInvest*rate/10**decimals);
 
-    //var weiToSend = web3.toWei($this.state.tokensToInvest*$this.state.pricingStrategy.rate/10**$this.state.token.decimals, "ether");
-    //var weiToSend = $this.state.tokensToInvest*$this.state.pricingStrategy.rate;
-    //var weiToSend = $this.state.tokensToInvest*$this.state.pricingStrategy.rate/10**$this.state.token.decimals;
-    var weiToSend = parseInt(tokensToInvest*rate, 10);
+    //let weiToSend = web3.toWei($this.state.tokensToInvest*$this.state.pricingStrategy.rate/10**$this.state.token.decimals, "ether");
+    //let weiToSend = $this.state.tokensToInvest*$this.state.pricingStrategy.rate;
+    //let weiToSend = $this.state.tokensToInvest*$this.state.pricingStrategy.rate/10**$this.state.token.decimals;
+    let weiToSend = parseInt(tokensToInvest*rate, 10);
     console.log("weiToSend: " + weiToSend);
-    var opts = {
+    let opts = {
       from: web3.eth.accounts[0],
       value: weiToSend
     };
     console.log(opts);
     crowdsaleContract.buy.sendTransaction(opts, function(err, txHash) {
     //crowdsaleContract.buy.sendTransaction(nextTiers, opts, function(err, txHash) {
-      if (err) return console.log(err);
+      if (err) {
+        let state = $this.state;
+        state.loading = false;
+        $this.setState(state);
+        return console.log(err);
+      }
       
       console.log("txHash: " + txHash);
-      successfulInvestmentAlert($this.state.tokensToInvest);
+      checkTxMined(web3, txHash, function txMinedCallback(receipt) {
+        if (receipt) {
+          if (receipt.blockNumber) {
+            let state = $this.state;
+            state.loading = false;
+            $this.setState(state);
+            successfulInvestmentAlert($this.state.tokensToInvest);
+          }
+        } else {
+          setTimeout(function() {
+            checkTxMined(web3, txHash, txMinedCallback);
+          }, 500);
+        }
+      })
     });
   }
 
   tokensToInvestOnChange(event) {
-    var state = this.state;
+    let state = this.state;
     state["tokensToInvest"] = event.target.value;
     this.setState(state);
   }
