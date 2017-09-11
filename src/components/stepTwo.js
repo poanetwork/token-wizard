@@ -15,6 +15,7 @@ const { NAME, TICKER, SUPPLY, DECIMALS } = TEXT_FIELDS
 export class stepTwo extends React.Component {
   constructor(props) {
     super(props);
+    window.scrollTo(0, 0);
     console.log('props', props)
     let oldState = getOldState(props, defaultState)
     console.log('oldState', oldState)

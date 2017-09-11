@@ -17,6 +17,7 @@ const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME
 export class stepThree extends stepTwo {
   constructor(props) {
     super(props);
+    window.scrollTo(0, 0);
     const oldState = getOldState(props, defaultState)
     if (oldState.contracts.crowdsale.addr.length > 0) {
       oldState.contracts.pricingStrategy.addr = [];

@@ -12,6 +12,7 @@ const { CROWDSALE_CONTRACT, TOKEN_SETUP, CROWDSALE_SETUP, PUBLISH, CROWDSALE_PAG
 export class stepOne extends React.Component {
   constructor(props) {
     super(props);
+    window.scrollTo(0, 0);
     let oldState = getOldState(props, defaultState)
     this.state = Object.assign({}, oldState)
   }

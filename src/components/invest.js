@@ -9,6 +9,7 @@ import { defaultState } from '../utils/constants'
 export class Invest extends React.Component {
   constructor(props) {
       super(props);
+      window.scrollTo(0, 0);
       if (this.tokensToInvestOnChange.bind) this.tokensToInvestOnChange = this.tokensToInvestOnChange.bind(this);
       if (this.investToTokens.bind) this.investToTokens = this.investToTokens.bind(this);
       var state = defaultState;

@@ -541,3 +541,7 @@ const addSrcToPDF = (content, doc, state) => {
         doc.text(wrappedPDFContent, content.x, content.y)
     })
 }
+
+export function scrollToBottom() {
+  window.scrollTo(0,document.body.scrollHeight);
+}
