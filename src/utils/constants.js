@@ -9,7 +9,10 @@ export const defaultState = {
 		tokenTransferProxy: {}
 	}, 
 	token: {
-		supply: '0'
+		supply: '0',
+		reservedTokens: [],
+		reservedTokensElements: [],
+		reservedTokensInput: {dim: "tokens"}
 	},
 	crowdsale: [{
 		whitelist: [], 

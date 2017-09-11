@@ -206,10 +206,12 @@ export function addWhiteList(round, web3, crowdsale, token, abi, addr, cb) {
     let maxCaps = [];
 
     for (let i = 0; i < whitelist.length; i++) {
-      addrs.push(whitelist[i].addr);
-      statuses.push(true);
-      minCaps.push(whitelist[i].min*10**token.decimals);
-      maxCaps.push(whitelist[i].max*10**token.decimals);
+      if (!whitelist[i].deleted) {
+        addrs.push(whitelist[i].addr);
+        statuses.push(true);
+        minCaps.push(whitelist[i].min*10**token.decimals);
+        maxCaps.push(whitelist[i].max*10**token.decimals);
+      }
     }
 
     console.log("addrs:");
@@ -242,9 +244,11 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
     let vals = [];
 
     for (let i = 0; i < token.reservedTokens.length; i++) {
-      addrs.push(token.reservedTokens[i].addr);
-      dims.push(token.reservedTokens[i].dim == "tokens"?true:false);
-      vals.push(token.reservedTokens[i].dim == "tokens"?token.reservedTokens[i].val*10**token.decimals:token.reservedTokens[i].val);
+      if (!token.reservedTokens[i].deleted) {
+        addrs.push(token.reservedTokens[i].addr);
+        dims.push(token.reservedTokens[i].dim == "tokens"?true:false);
+        vals.push(token.reservedTokens[i].dim == "tokens"?token.reservedTokens[i].val*10**token.decimals:token.reservedTokens[i].val);
+      }
     }
 
     if (addrs.length == 0 && dims.length == 0 && vals.length == 0) return cb();
