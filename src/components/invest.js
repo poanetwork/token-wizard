@@ -174,6 +174,9 @@ export class Invest extends React.Component {
     console.log("startDate: " + $this.state.crowdsale.startDate);
     console.log("(new Date()).getTime(): " + (new Date()).getTime());
     if ($this.state.crowdsale.startDate > (new Date()).getTime()) {
+      let state = $this.state;
+      state.loading = false;
+      $this.setState(state);
       return investmentDisabledAlertInTime($this.state.crowdsale.startDate);
     }
 
