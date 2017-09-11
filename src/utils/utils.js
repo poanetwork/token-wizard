@@ -236,7 +236,7 @@ export function defaultCompanyEndDate(startDate) {
 
 function readSolFile(path, cb) {
     var rawFile = new XMLHttpRequest();
-    rawFile.open("GET", path, false);
+    rawFile.open("GET", path, true);
     rawFile.onreadystatechange = function ()
     {
         if(rawFile.readyState === 4)
