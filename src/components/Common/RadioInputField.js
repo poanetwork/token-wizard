@@ -21,14 +21,37 @@ export class RadioInputField extends React.Component {
 	render() {
 		return (<div className={this.props.side}>
 		<label className="label">{this.props.title}</label>
-		<div className="reserved-tokens-radio-container">
+		<div className="radios-inline">
+            <label className="radio-inline">
+              <input 
+                type="radio" 
+                checked={this.state.checked1}            
+                name={this.props.name}
+                onChange={this.onChange.bind(this)}
+                value={this.props.vals[0]}
+              />
+              <span className="title">{this.props.items[0]}</span>
+            </label>
+            <label className="radio-inline">
+              <input 
+                type="radio" 
+                checked={this.state.checked2}    
+                name={this.props.name}
+                onChange={this.onChange.bind(this)}
+                value={this.props.vals[1]}
+              />
+              <span className="title">{this.props.items[1]}</span>
+            </label>
+          </div>
+		{/*<div className="reserved-tokens-radio-container">
 			<div className="reserved-tokens-radio-container-item">
 				<input disabled={this.props.disabled} type='radio' name={this.props.name} className="input-radio" checked={this.state.checked1} value={this.props.vals[0]} onChange={this.onChange.bind(this)}/> {this.props.items[0]}
+				<span class="radio"></span>
 			</div>
 			<div className="reserved-tokens-radio-container-item">
 				<input disabled={this.props.disabled} type='radio' name={this.props.name} className="input-radio" checked={this.state.checked2} value={this.props.vals[1]} onChange={this.onChange.bind(this)}/> {this.props.items[1]}
 			</div>
-		</div>
+		</div>*/}
 		<p className="description">
 			{this.props.description}
 		</p>

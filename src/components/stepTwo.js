@@ -182,17 +182,6 @@ export class stepTwo extends React.Component {
               onChange={(e) => this.changeState(e, 'token', 0, 'ticker')}
               description={`The three letter ticker for your token. There are 17,576 combinations for 26 english letters. Be hurry. `}
             />
-            {/*<InputField 
-              side='left' type='number' 
-              errorMessage={VALIDATION_MESSAGES.SUPPLY} 
-              valid={validations.supply} 
-              title={SUPPLY} 
-              value={token.supply} 
-              onBlur={() => this.handleInputBlur('token', 'supply')}
-              onChange={(e) => this.changeState(e, 'token', 0, 'supply')}
-              description={`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veni.`}
-            />*/}
             <InputField 
               side='left' type='number'
               errorMessage={VALIDATION_MESSAGES.DECIMALS} 
