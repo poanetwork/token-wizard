@@ -19,11 +19,7 @@ export class stepTwo extends React.Component {
     console.log('props', props)
     let oldState = getOldState(props, defaultState)
     console.log('oldState', oldState)
-    this.state = Object.assign({}, defaultState, oldState, initialStepTwoValues, intitialStepTwoValidations )
-  }
-
-  componentDidMount() {
-    checkWeb3(this.state.web3);
+    this.state = Object.assign({}, defaultState, oldState, intitialStepTwoValidations )
   }
 
   getNewParent (property, parent, value) {
@@ -197,7 +193,8 @@ export class stepTwo extends React.Component {
             <p className="title">Reserved tokens</p>
           </div>
           <ReservedTokensInputBlock
-            onChange={this.changeState}
+            state={this.state}
+            onChange={(e, cntrct, num, prop) => this.changeState(e, 'token', 0, prop)}
           ></ReservedTokensInputBlock>
         </div>
         <div className="button-container">

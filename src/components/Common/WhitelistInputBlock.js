@@ -19,8 +19,9 @@ export class WhitelistInputBlock extends React.Component {
 
         let isAdded = false;
         for (let i = 0; i < this.state.crowdsale[this.props.num].whitelist.length; i++) {
-            let addedAddr = this.state.crowdsale[this.props.num].whitelist[i].addr;
-            if (addedAddr === addr) {
+            let item = this.state.crowdsale[this.props.num].whitelist[i];
+            let addedAddr = item.addr;
+            if (addedAddr === addr && !item.deleted) {
                 isAdded = true;
                 break;
             }
@@ -29,12 +30,17 @@ export class WhitelistInputBlock extends React.Component {
         if (isAdded) return;
 
         let state = this.state
-        let num = state.crowdsale[this.props.num].whiteListElements.length;
-        state.crowdsale[this.props.num].whiteListElements.push(<WhitelistItem 
-            key={num.toString()}
-            addr={addr}
-            min={min}
-            max={max}></WhitelistItem>);
+        let whiteListNum = state.crowdsale[this.props.num].whiteListElements.length;
+        state.crowdsale[this.props.num].whiteListElements.push(
+            <WhitelistItem 
+                key={whiteListNum.toString()}
+                crowdsaleNum={this.props.num}
+                whiteListNum={whiteListNum}
+                addr={addr}
+                min={min}
+                max={max}>
+            </WhitelistItem>
+        );
         state.crowdsale[this.props.num].whitelist.push({
             addr,
             min,
@@ -75,11 +81,12 @@ export class WhitelistInputBlock extends React.Component {
                         description={`Maximum is the hard limit.`}
                       />
                     </div>
-                    <div className="plus-button-container"><div onClick={(e) => this.addWhitelistItem(crowdsale[num].whiteListInput.addr, crowdsale[num].whiteListInput.min, crowdsale[num].whiteListInput.max)} className="button button_fill button_fill_plus">
+                    <div className="plus-button-container">
+                        <div onClick={(e) => this.addWhitelistItem(crowdsale[num].whiteListInput.addr, crowdsale[num].whiteListInput.min, crowdsale[num].whiteListInput.max)} className="button button_fill button_fill_plus">
+                        </div>
                     </div>
                 </div>
-            </div>
-            {crowdsale[num].whiteListElements}
+                {crowdsale[num].whiteListElements}
             </div>)
     }
 }
