@@ -22,6 +22,10 @@ export class stepTwo extends React.Component {
     this.state = Object.assign({}, defaultState, oldState, intitialStepTwoValidations )
   }
 
+  componentDidMount() {
+    checkWeb3(this.state.web3);
+  }
+
   getNewParent (property, parent, value) {
     let newParent = { ...this.state[`${parent}`] }
     newParent[property] = value

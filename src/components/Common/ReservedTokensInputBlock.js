@@ -21,7 +21,6 @@ export class ReservedTokensInputBlock extends React.Component {
 
     addReservedTokensItem = (addr, dim, val) => {
         console.log(addr, dim, val);
-        console.log(this.state);
         if (!addr || !dim || !val) return;
 
         let isAdded = false;

@@ -206,7 +206,7 @@ export function addWhiteList(round, web3, crowdsale, token, abi, addr, cb) {
     let maxCaps = [];
 
     for (let i = 0; i < whitelist.length; i++) {
-      if (!whitelist.deleted) {
+      if (!whitelist[i].deleted) {
         addrs.push(whitelist[i].addr);
         statuses.push(true);
         minCaps.push(whitelist[i].min*10**token.decimals);
@@ -244,7 +244,7 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
     let vals = [];
 
     for (let i = 0; i < token.reservedTokens.length; i++) {
-      if (!token.reservedTokens.deleted) {
+      if (!token.reservedTokens[i].deleted) {
         addrs.push(token.reservedTokens[i].addr);
         dims.push(token.reservedTokens[i].dim == "tokens"?true:false);
         vals.push(token.reservedTokens[i].dim == "tokens"?token.reservedTokens[i].val*10**token.decimals:token.reservedTokens[i].val);
