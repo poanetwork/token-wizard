@@ -18,79 +18,61 @@ export class stepOne extends React.Component {
   }
 
   getStandardCrowdsaleAssets (state) {
-    const contractName = "CrowdsaleStandard";
-    let srcC, binC
-    setFlatFileContentToState("./contracts/" + contractName + "_flat.sol", (content) => srcC = content);
-    setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", (_bin) => binC = _bin);
-    setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", (_abi) => this.addContractsToState(srcC, binC, _abi, "crowdsale", state));
-
-    const tokenName = "CrowdsaleStandardToken";
-    let srcT, binT
-    setFlatFileContentToState("./contracts/" + tokenName + "_flat.sol", (content) => srcT = content);
-    setFlatFileContentToState("./contracts/" + tokenName + "_flat.bin", (_bin) => binT = _bin);
-    setFlatFileContentToState("./contracts/" + tokenName + "_flat.abi", (_abi) => this.addContractsToState(srcT, binT, _abi, "token", state));
+    this.getCrowdsaleAsset("CrowdsaleStandard", "crowdsale", state)
+    this.getCrowdsaleAsset("CrowdsaleStandardToken", "token", state)
   }
 
   getWhiteListWithCapCrowdsaleAssets (state) {
-    const contractName = "CrowdsaleWhiteListWithCap";
-    let srcC, binC
-    setFlatFileContentToState("./contracts/" + contractName + "_flat.sol", (content) => srcC = content);
-    setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", (_bin) => binC = _bin);
-    setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", (_abi) => this.addContractsToState(srcC, binC, _abi, "crowdsale", state));
-
-    const tokenName = "CrowdsaleWhiteListWithCapToken";
-    let srcT, binT
-    setFlatFileContentToState("./contracts/" + tokenName + "_flat.sol", (content) => srcT = content);
-    setFlatFileContentToState("./contracts/" + tokenName + "_flat.bin", (_bin) => binT = _bin);
-    setFlatFileContentToState("./contracts/" + tokenName + "_flat.abi", (_abi) => this.addContractsToState(srcT, binT, _abi, "token", state));
-    
-    const pricingStrategyName = "CrowdsaleWhiteListWithCapPricingStrategy";
-    let srcP, binP
-    setFlatFileContentToState("./contracts/" + pricingStrategyName + "_flat.sol", (content) => srcP = content);
-    setFlatFileContentToState("./contracts/" + pricingStrategyName + "_flat.bin", (_bin) => binP = _bin);
-    setFlatFileContentToState("./contracts/" + pricingStrategyName + "_flat.abi", (_abi) => this.addContractsToState(srcP, binP, _abi, "pricingStrategy", state));
-  
-    const tokenTransferProxyName = "TokenTransferProxy";
-    let srcTTP, binTTP
-    setFlatFileContentToState("./contracts/" + tokenTransferProxyName + "_flat.sol", (content) => srcTTP = content);
-    setFlatFileContentToState("./contracts/" + tokenTransferProxyName + "_flat.bin", (_bin) => binTTP = _bin);
-    setFlatFileContentToState("./contracts/" + tokenTransferProxyName + "_flat.abi", (_abi) => this.addContractsToState(srcTTP, binTTP, _abi, "tokenTransferProxy", state));
-
-    const multiSigName = "MultiSig";
-    let srcM, binM
-    setFlatFileContentToState("./contracts/" + multiSigName + "_flat.sol", (content) => srcM = content);
-    setFlatFileContentToState("./contracts/" + multiSigName + "_flat.bin", (_bin) => binM = _bin);
-    setFlatFileContentToState("./contracts/" + multiSigName + "_flat.abi", (_abi) => this.addContractsToState(srcM, binM, _abi, "multisig", state));
-
-    const finalizeAgentName = "FinalizeAgent";
-    let srcF, binF
-    setFlatFileContentToState("./contracts/" + finalizeAgentName + "_flat.sol", (content) => srcF = content);
-    setFlatFileContentToState("./contracts/" + finalizeAgentName + "_flat.bin", (_bin) => binF = _bin);
-    setFlatFileContentToState("./contracts/" + finalizeAgentName + "_flat.abi", (_abi) => this.addContractsToState(srcF, binF, _abi, "finalizeAgent", state));
-
-    const nullFinalizeAgentName = "NullFinalizeAgent";
-    let srcNF, binNF
-    setFlatFileContentToState("./contracts/" + nullFinalizeAgentName + "_flat.sol", (content) => srcNF = content);
-    setFlatFileContentToState("./contracts/" + nullFinalizeAgentName + "_flat.bin", (_bin) => binNF = _bin);
-    setFlatFileContentToState("./contracts/" + nullFinalizeAgentName + "_flat.abi", (_abi) => this.addContractsToState(srcNF, binNF, _abi, "nullFinalizeAgent", state));
+    this.getCrowdsaleAsset("CrowdsaleWhiteListWithCap", "crowdsale", state)
+    this.getCrowdsaleAsset("CrowdsaleWhiteListWithCapToken", "token", state)
+    this.getCrowdsaleAsset("CrowdsaleWhiteListWithCapPricingStrategy", "pricingStrategy", state)
+    this.getCrowdsaleAsset("CrowdsaleWhiteListWithCapPricingStrategy", "pricingStrategy", state)
+    //this.getCrowdsaleAsset("TokenTransferProxy", "tokenTransferProxy", state)
+    //this.getCrowdsaleAsset("MultiSig", "multisig", state)
+    this.getCrowdsaleAsset("FinalizeAgent", "finalizeAgent", state)
+    this.getCrowdsaleAsset("NullFinalizeAgent", "nullFinalizeAgent", state)  
   }
 
-  componentDidMount() {
-    checkWeb3(this.state.web3);
-    
-    let newState = { ...this.state }
+  getCrowdsaleAsset(contractName, stateProp, state) {
+    console.log(contractName, stateProp, state);
+    let src, bin, abi;
+    let assetsCount = 3;
+    let assetsIterator = 0;
+    let $this = this;
 
-    newState.contractType = this.state.contractTypes.whitelistwithcap
-    switch (newState.contractType) {
-      case this.state.contractTypes.standard: {
-        this.getStandardCrowdsaleAssets(newState);
-      } break;
-      case this.state.contractTypes.whitelistwithcap: {
-        this.getWhiteListWithCapCrowdsaleAssets(newState);
-      } break;
-      default:
-        break;
-    }
+    setFlatFileContentToState("./contracts/" + contractName + "_flat.sol", function(_content) {
+      console.log(assetsIterator +"=="+ assetsCount);
+      src = _content;
+      assetsIterator++;
+
+      console.log(assetsIterator +"=="+ assetsCount);
+
+      if (assetsIterator == assetsCount) {
+        $this.addContractsToState(src, bin, abi, stateProp, state);
+      }
+    });
+    setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", function(_bin) {
+      console.log(assetsIterator +"=="+ assetsCount);
+      bin = _bin;
+      assetsIterator++;
+
+      console.log(assetsIterator +"=="+ assetsCount);
+
+      if (assetsIterator == assetsCount) {
+        $this.addContractsToState(src, bin, abi, stateProp, state);
+      }
+    });
+    setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", function(_abi) {
+      console.log(assetsIterator +"=="+ assetsCount);
+      abi = _abi;
+      assetsIterator++;
+
+      console.log(assetsIterator +"=="+ assetsCount);
+
+      if (assetsIterator == assetsCount) {
+        $this.addContractsToState(src, bin, abi, stateProp, state);
+      }
+    });
   }
 
   addContractsToState (src, bin, abi, contract, state) {
@@ -122,6 +104,24 @@ export class stepOne extends React.Component {
     }
   }
 
+  componentDidMount() {
+    checkWeb3(this.state.web3);
+    
+    let newState = { ...this.state }
+
+    newState.contractType = this.state.contractTypes.whitelistwithcap
+    switch (newState.contractType) {
+      case this.state.contractTypes.standard: {
+        this.getStandardCrowdsaleAssets(newState);
+      } break;
+      case this.state.contractTypes.whitelistwithcap: {
+        this.getWhiteListWithCapCrowdsaleAssets(newState);
+      } break;
+      default:
+        break;
+    }
+  }
+
   render() {
     return (
     	 <section className="steps steps_crowdsale-contract">
@@ -135,7 +135,7 @@ export class stepOne extends React.Component {
             </p>
           </div>
           <div className="radios">
-            <label className="radio">
+            {/*<label className="radio">
               <input 
                 type="radio" 
                 checked={this.state.contractType === this.state.contractTypes.standard}            
@@ -147,7 +147,7 @@ export class stepOne extends React.Component {
               <span className="description">
                 Basic crowdsale strategy with one tier. Good for educational use. 
               </span>
-            </label>
+            </label>*/}
             <label className="radio">
               <input 
                 type="radio" 
