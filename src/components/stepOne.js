@@ -7,7 +7,7 @@ import { setFlatFileContentToState } from '../utils/utils';
 import { getOldState } from '../utils/utils'
 import { StepNavigation } from './Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../utils/constants'
-const { CROWDSALE_CONTRACT, TOKEN_SETUP, CROWDSALE_SETUP, PUBLISH, CROWDSALE_PAGE } = NAVIGATION_STEPS
+const { CROWDSALE_CONTRACT } = NAVIGATION_STEPS
 
 export class stepOne extends React.Component {
   constructor(props) {
@@ -45,7 +45,7 @@ export class stepOne extends React.Component {
       src = _content;
       assetsIterator++;
 
-      if (assetsIterator == assetsCount) {
+      if (assetsIterator === assetsCount) {
         $this.addContractsToState(src, bin, abi, stateProp, state);
       }
     });
@@ -54,7 +54,7 @@ export class stepOne extends React.Component {
       bin = _bin;
       assetsIterator++;
 
-      if (assetsIterator == assetsCount) {
+      if (assetsIterator === assetsCount) {
         $this.addContractsToState(src, bin, abi, stateProp, state);
       }
     });
@@ -63,7 +63,7 @@ export class stepOne extends React.Component {
       abi = _abi;
       assetsIterator++;
 
-      if (assetsIterator == assetsCount) {
+      if (assetsIterator === assetsCount) {
         $this.addContractsToState(src, bin, abi, stateProp, state);
       }
     });
@@ -76,8 +76,8 @@ export class stepOne extends React.Component {
       src,
       bin,
       abi: JSON.parse(abi),
-      addr: (contract=="crowdsale" || contract=="pricingStrategy" || contract=="finalizeAgent")?[]:"",
-      abiConstructor: (contract=="crowdsale" || contract=="pricingStrategy" || contract=="finalizeAgent")?[]:""
+      addr: (contract==="crowdsale" || contract==="pricingStrategy" || contract==="finalizeAgent")?[]:"",
+      abiConstructor: (contract==="crowdsale" || contract==="pricingStrategy" || contract==="finalizeAgent")?[]:""
     }
     this.setState(state)
   }

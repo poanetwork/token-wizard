@@ -1,5 +1,4 @@
 import { VALIDATION_TYPES } from './constants'
-import { getWeb3 } from '../utils/web3'
 const { VALID, EMPTY, INVALID } = VALIDATION_TYPES
 
 export function getQueryVariable(variable) {

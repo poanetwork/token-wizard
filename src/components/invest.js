@@ -300,18 +300,17 @@ export class Invest extends React.Component {
     const rate = this.state.pricingStrategy.rate;
     const maxCapBeforeDecimals = this.state.crowdsale.maximumSellableTokens/10**tokenDecimals;
     const tokenAmountOf = this.state.crowdsale.tokenAmountOf;
-    const weiRaised = this.state.crowdsale.weiRaised;
     const ethRaised = this.state.crowdsale.ethRaised;
 
     //balance: tiers, standard
     const investorBalanceTiers = (tokenAmountOf?((tokenAmountOf/10**tokenDecimals)/*.toFixed(tokenDecimals)*/).toString():"0");
     const investorBalanceStandard = (ethRaised?(ethRaised/*.toFixed(tokenDecimals)*//rate).toString():"0");
-    const investorBalance = (this.state.contractType==this.state.contractTypes.whitelistwithcap)?investorBalanceTiers:investorBalanceStandard;
+    const investorBalance = (this.state.contractType === this.state.contractTypes.whitelistwithcap)?investorBalanceTiers:investorBalanceStandard;
 
     //total supply: tiers, standard
     const tierCap = !isNaN(maxCapBeforeDecimals)?(maxCapBeforeDecimals/*.toFixed(tokenDecimals)*/).toString():"0";
     const standardCrowdsaleSupply = !isNaN(this.state.crowdsale.supply)?(this.state.crowdsale.supply/*.toFixed(tokenDecimals)*/).toString():"0";
-    const totalSupply = (this.state.contractType == this.state.contractTypes.whitelistwithcap)?tierCap:standardCrowdsaleSupply;
+    const totalSupply = (this.state.contractType === this.state.contractTypes.whitelistwithcap)?tierCap:standardCrowdsaleSupply;
 
     return <div className="invest container">
       <div className="invest-table">

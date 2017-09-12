@@ -3,13 +3,13 @@ import '../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
 import { getWeb3, checkWeb3, calculateFutureBlock, setExistingContractParams } from '../utils/web3'
 import { stepTwo } from './stepTwo'
-import { getQueryVariable, getURLParam, getOldState, defaultCompanyStartDate, defaultCompanyEndDate, stepsAreValid, allFieldsAreValid } from '../utils/utils'
+import { getOldState, defaultCompanyStartDate, defaultCompanyEndDate, stepsAreValid, allFieldsAreValid } from '../utils/utils'
 import { StepNavigation } from './Common/StepNavigation'
 import { InputField } from './Common/InputField'
 import { RadioInputField } from './Common/RadioInputField'
 import { CrowdsaleBlock } from './Common/CrowdsaleBlock'
 import { WhitelistInputBlock } from './Common/WhitelistInputBlock'
-import { NAVIGATION_STEPS, defaultState, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS, initialStepThreeValues, intitialStepThreeValidations } from '../utils/constants'
+import { NAVIGATION_STEPS, defaultState, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS, intitialStepThreeValidations } from '../utils/constants'
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
 const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME, ALLOWMODIFYING, DISABLEWHITELISTING } = TEXT_FIELDS

@@ -1,6 +1,6 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { deployContract, getWeb3, checkWeb3, getNetworkVersion, addWhiteList, setFinalizeAgent, approve, setTransferAgent, setMintAgent, setReleaseAgent, updateJoinedCrowdsales, transferOwnership, setReservedTokensListMultiple, setLastCrowdsale } from '../utils/web3'
+import { deployContract, getWeb3, checkWeb3, getNetworkVersion, addWhiteList, setFinalizeAgent, setMintAgent, setReleaseAgent, updateJoinedCrowdsales, transferOwnership, setReservedTokensListMultiple, setLastCrowdsale } from '../utils/web3'
 import { noMetaMaskAlert } from '../utils/alerts'
 import { defaultState, PDF_CONTENTS } from '../utils/constants'
 import { getOldState, handleContractsForPDF, handleTokenForPDF, handleCrowdsaleForPDF, handlePricingStrategyForPDF, handleConstantForPDF, toFixed, scrollToBottom } from '../utils/utils'
@@ -81,7 +81,7 @@ export class stepFour extends stepTwo {
             }
 
             console.log($this.state.contracts.crowdsale.addr.length);
-            if ($this.state.contracts.crowdsale.addr.length == 0) {
+            if ($this.state.contracts.crowdsale.addr.length === 0) {
               $this.deployToken();
             } else {
               $this.deployPricingStrategy();
@@ -456,7 +456,7 @@ export class stepFour extends stepTwo {
     newState.contracts.crowdsale.addr.push(crowdsaleAddr);
     this.setState(newState);
 
-    if (this.state.contractType == this.state.contractTypes.whitelistwithcap) {
+    if (this.state.contractType === this.state.contractTypes.whitelistwithcap) {
       this.deployFinalizeAgent();
     } else {
       newState.loading = false;
@@ -542,7 +542,7 @@ export class stepFour extends stepTwo {
     }
     newState.contracts.finalizeAgent.addr.push(finalizeAgentAddr);
     this.setState(newState, () => {
-      if (this.state.contractType == this.state.contractTypes.whitelistwithcap) {
+      if (this.state.contractType === this.state.contractTypes.whitelistwithcap) {
         let web3 = this.state.web3;
         let contracts = this.state.contracts;
         console.log(contracts);
@@ -621,7 +621,7 @@ export class stepFour extends stepTwo {
   }
 
   updateJoinedCrowdsalesRecursive = (i, web3, abi, addrs, cb) => {
-    if (addrs.length == 0) return cb();
+    if (addrs.length === 0) return cb();
     updateJoinedCrowdsales(web3, abi, addrs[i], addrs, () => {
       i++;
       if (i < addrs.length) {
@@ -680,8 +680,8 @@ export class stepFour extends stepTwo {
           <DisplayField side='right' title={'End time'} value={this.state.crowdsale[i].endTime?this.state.crowdsale[i].endTime.split("T").join(" "):""}/>
           <DisplayField side='left' title={'Wallet address'} value={this.state.crowdsale[i].walletAddress?this.state.crowdsale[i].walletAddress:"0xc1253365dADE090649147Db89EE781d10f2b972f"}/>
           <DisplayField side='right' title={'RATE'} value={this.state.pricingStrategy[i].rate?this.state.pricingStrategy[i].rate:1 + " ETH"}/>
-          {this.state.contractType==this.state.contractTypes.whitelistwithcap?capBlock:""}
-          {this.state.contractType==this.state.contractTypes.whitelistwithcap?updatableBlock:""}
+          {this.state.contractType===this.state.contractTypes.whitelistwithcap?capBlock:""}
+          {this.state.contractType===this.state.contractTypes.whitelistwithcap?updatableBlock:""}
         </div></div>);
     }
     let ABIEncodedOutputsCrowdsale = [];
@@ -770,7 +770,7 @@ export class stepFour extends stepTwo {
               <div className="publish-title-container">
                 <p className="publish-title" data-step="1">Crowdsale Contract</p>
               </div>
-              <p className="label">{this.state.contractType==this.state.contractTypes.standard?"Standard":"Whitelist with cap"}</p>
+              <p className="label">{this.state.contractType===this.state.contractTypes.standard?"Standard":"Whitelist with cap"}</p>
               <p className="description">
               Crowdsale Contract
               </p>
@@ -796,8 +796,8 @@ export class stepFour extends stepTwo {
               </p>
             </div>
             {!this.state.tokenIsAlreadyCreated?tokenBlock:""}
-            {(!this.state.tokenIsAlreadyCreated && this.state.contractType == this.state.contractTypes.whitelistwithcap)?pricingStrategyBlock:""}
-            {this.state.contractType == this.state.contractTypes.whitelistwithcap?ABIEncodedOutputsPricingStrategy:""}
+            {(!this.state.tokenIsAlreadyCreated && this.state.contractType === this.state.contractTypes.whitelistwithcap)?pricingStrategyBlock:""}
+            {this.state.contractType === this.state.contractTypes.whitelistwithcap?ABIEncodedOutputsPricingStrategy:""}
             <div className="item">
               <p className="label">Crowdsale Contract Source Code</p>
               <pre>
