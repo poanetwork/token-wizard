@@ -135,7 +135,7 @@ export class stepOne extends React.Component {
             </p>
           </div>
           <div className="radios">
-            <label className="radio">
+            {/*<label className="radio">
               <input 
                 type="radio" 
                 checked={this.state.contractType === this.state.contractTypes.standard}            
@@ -147,7 +147,7 @@ export class stepOne extends React.Component {
               <span className="description">
                 Basic crowdsale strategy with one tier. Good for educational use. 
               </span>
-            </label>
+            </label>*/}
             <label className="radio">
               <input 
                 type="radio" 
