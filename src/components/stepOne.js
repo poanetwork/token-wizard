@@ -45,8 +45,6 @@ export class stepOne extends React.Component {
       src = _content;
       assetsIterator++;
 
-      console.log(assetsIterator +"=="+ assetsCount);
-
       if (assetsIterator == assetsCount) {
         $this.addContractsToState(src, bin, abi, stateProp, state);
       }
@@ -56,8 +54,6 @@ export class stepOne extends React.Component {
       bin = _bin;
       assetsIterator++;
 
-      console.log(assetsIterator +"=="+ assetsCount);
-
       if (assetsIterator == assetsCount) {
         $this.addContractsToState(src, bin, abi, stateProp, state);
       }
@@ -66,8 +62,6 @@ export class stepOne extends React.Component {
       console.log(assetsIterator +"=="+ assetsCount);
       abi = _abi;
       assetsIterator++;
-
-      console.log(assetsIterator +"=="+ assetsCount);
 
       if (assetsIterator == assetsCount) {
         $this.addContractsToState(src, bin, abi, stateProp, state);
