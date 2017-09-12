@@ -121,9 +121,17 @@ export class Invest extends React.Component {
     let $this = this;
     let startBlock = parseInt($this.state.crowdsale.startBlock, 10);
     let startDate = $this.state.crowdsale.startDate;
-    if ((isNaN(startBlock) || startBlock === 0) && !startDate) return;
+    if ((isNaN(startBlock) || startBlock === 0) && !startDate) {
+      let state = $this.state;
+      state.loading = false;
+      $this.setState(state);
+      return;
+    }
     let web3 = $this.state.web3;
     if (web3.eth.accounts.length === 0) {
+      let state = $this.state;
+      state.loading = false;
+      $this.setState(state);
       return noMetaMaskAlert();
     }
 

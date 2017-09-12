@@ -26,8 +26,7 @@ export class ReservedTokensInputBlock extends React.Component {
         let isAdded = false;
         for (let i = 0; i < this.state.token.reservedTokens.length; i++) {
             let item = this.state.token.reservedTokens[i];
-            let addedAddr = item.addr;
-            if (addedAddr === addr && !item.deleted) {
+            if (item.addr === addr && item.dim === dim && !item.deleted) {
                 isAdded = true;
                 break;
             }
