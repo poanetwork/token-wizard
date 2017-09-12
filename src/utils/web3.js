@@ -102,13 +102,13 @@ function getNetWorkNameById(_id) {
     } break;
     case 3: {
       return "Ropsten";
-    }  break;
+    } break;
     case 4: {
       return "Rinkeby";
-    }  break;
+    } break;
     case 42: {
       return "Kovan";
-    }  break;
+    } break;
      case 12648430: {
        return "Oracles dev test";
     }  break;
@@ -280,7 +280,7 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
         let val = token.reservedTokens[i].val;
         let addr = token.reservedTokens[i].addr;
         let obj = map[addr]?map[addr]:{};
-        if (token.reservedTokens[i].dim == "tokens") obj.inTokens = val*10**token.decimals
+        if (token.reservedTokens[i].dim === "tokens") obj.inTokens = val*10**token.decimals
         else obj.inPercentage = val;
         map[addr] = obj;
         //addrs.push(token.reservedTokens[i].addr);
@@ -296,7 +296,7 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
       inPercentage.push(map[keys[i]].inPercentage);
     }
 
-    if (addrs.length == 0 && inTokens.length == 0 && inPercentage.length == 0) return cb();
+    if (addrs.length === 0 && inTokens.length === 0 && inPercentage.length === 0) return cb();
 
     console.log("input: ");
     console.log("addrs: " + addrs);
@@ -460,7 +460,7 @@ export function findCurrentContractRecursively(i, $this, web3, firstCrowdsaleCon
     }
     if (!crowdsaleContract) return noContractAlert();
     console.log($this.state.contracts.crowdsale.contractType);
-    if ($this.state.contracts.crowdsale.contractType == $this.state.contractTypes.standard)
+    if ($this.state.contracts.crowdsale.contractType === $this.state.contractTypes.standard)
       return cb(crowdsaleContract, i);
     crowdsaleContract.startsAt.call(function(err, startDate) {
       if (err) return console.log(err);
@@ -799,7 +799,7 @@ function getTokenData(web3, $this, cb) {
     $this.setState(state, cb);
     return;
   } else {
-    if (web3.eth.accounts.length == 0) {
+    if (web3.eth.accounts.length === 0) {
       let state = $this.state;
       state.loading = false;
       $this.setState(state, cb);
@@ -923,7 +923,7 @@ export function setExistingContractParams(abi, addr, $this) {
             console.log("tokenAddr: " + tokenAddr);
             state.contracts.token.addr = tokenAddr;
 
-            if (propsCount == cbCount) {
+            if (propsCount === cbCount) {
               $this.setState(state);
             }
           });
@@ -945,7 +945,7 @@ export function setExistingContractParams(abi, addr, $this) {
             console.log("multisigWalletAddr: " + multisigWalletAddr);
             state.contracts.multisig.addr = multisigWalletAddr;
 
-            if (propsCount == cbCount) {
+            if (propsCount === cbCount) {
               $this.setState(state);
             }
           });
