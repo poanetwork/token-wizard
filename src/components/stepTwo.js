@@ -10,7 +10,7 @@ import { ReservedTokensInputBlock } from './Common/ReservedTokensInputBlock'
 import { NAVIGATION_STEPS, VALIDATION_MESSAGES, VALIDATION_TYPES, defaultState, TEXT_FIELDS, initialStepTwoValues, intitialStepTwoValidations } from '../utils/constants'
 const { TOKEN_SETUP } = NAVIGATION_STEPS
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
-const { NAME, TICKER, SUPPLY, DECIMALS } = TEXT_FIELDS
+const { NAME, TICKER, DECIMALS } = TEXT_FIELDS
 
 export class stepTwo extends React.Component {
   constructor(props) {

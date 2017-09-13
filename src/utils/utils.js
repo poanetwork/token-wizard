@@ -441,7 +441,6 @@ export const getNewValue = (value, property) => property === "startTime" || prop
 
 export const allFieldsAreValid = (parent, state) => {
     let newState = { ...state }
-    console.log('newState[parent][0]', newState[parent])
     let properties = Object.keys(newState[parent])
     let validationValues = properties.filter(property => property !== 'startBlock' && property !== 'endBlock' ).map(property => {
         let value = newState[parent][property]
@@ -450,49 +449,39 @@ export const allFieldsAreValid = (parent, state) => {
     return validationValues.find(value => value === INVALID) === undefined
 }
 
-export const handleTokenForPDF = (content, doc, state) => {
+export const handleTokenForFile = (content, docData, state) => {
     const title = content.value
-    const pdfContent = title + state.token[content.field]
-    doc.text(pdfContent, content.x, content.y)
+    const fileContent = title + state.token[content.field]
+    docData.data += fileContent + '\n\n' 
 }
 
-export const handleCrowdsaleForPDF = (content, doc, state) => {
+export const handleCrowdsaleForFile = (content, docData, state) => {
     const title = content.value
-    const pdfContent = title + state.crowdsale[0][content.field]
-    doc.text(pdfContent, content.x, content.y)
+    const fileContent = title + state.crowdsale[0][content.field]
+    docData.data += fileContent + '\n\n'
 }
 
-export const handlePricingStrategyForPDF = (content, doc, state) => {
+export const handlePricingStrategyForFile = (content, docData, state) => {
     const title = content.value
-    const pdfContent = title + state.pricingStrategy[0][content.field]
-    doc.text(pdfContent, content.x, content.y)
+    const fileContent = title + state.pricingStrategy[0][content.field]
+    docData.data += fileContent + '\n\n'
 }
 
-export const handleContractsForPDF = (content, doc, state) => {
+export const handleContractsForFile = (content, docData, state) => {
     const title = content.value
     if(content.field !== 'src' && content.field !== 'abi') {
-        let pdfBody = JSON.stringify(state.contracts.crowdsale[content.field][0])
-        let pdfContent = title + pdfBody
-        doc.addPage() 
-        const wrappedPDFContent = doc.splitTextToSize(pdfContent, 180);
-        doc.text(wrappedPDFContent, content.x, content.y)
+        let fileBody = JSON.stringify(state.contracts.crowdsale[content.field][0])
+        let fileContent = title + fileBody
+        docData.data += fileContent + '\n\n'
     } else {
-        addSrcToPDF(content, doc, state)
+        addSrcToFile(content, docData, state)
     }
 }
 
-export const handleConstantForPDF = (content, doc) => {
+export const handleConstantForFile = (content, docData) => {
     const title = content.value
-    const pdfContent = title + content.pdfValue
-    doc.text(pdfContent, content.x, content.y)
-}
-
-const getSplitSections = (state, content) => {
-    if(content.field !== 'abi') {
-        return state.contractType === state.contractTypes.whitelistwithcap ? 22 : 8 
-    } else {
-        return state.contractType === state.contractTypes.whitelistwithcap ? 2 : 1
-    }
+    const fileContent = title + content.fileValue
+    docData.data += fileContent + '\n\n'
 }
 
 export function toFixed(x) {
@@ -513,35 +502,31 @@ export function toFixed(x) {
   return x;
 }
 
-const splitPDFText = (text, state, splitSections) => {
-    const length = text.length
-    let splitPDF = []
-    let currentCharacter = 0
-    for(var i = 1; i <= splitSections; i++) {
-        if( i !== splitSections){
-            splitPDF.push(text.substring(currentCharacter, Math.floor(length/splitSections) * i))
-            currentCharacter = Math.floor(length/splitSections) * i
-        } else {
-            splitPDF.push(text.substring(currentCharacter))
-        }
-    }
-    return splitPDF
-}
-
-const addSrcToPDF = (content, doc, state) => {
+const addSrcToFile = (content, docData, state) => {
     const title = content.value
     const body = content.field === 'abi' ? JSON.stringify(state.contracts.crowdsale[content.field]) : state.contracts.crowdsale[content.field]
     const text = title + body
-    const sectionsToSplit = getSplitSections(state, content)
-    const pdfContent = splitPDFText(text, state, sectionsToSplit)
-    pdfContent.forEach((section, i) => {
-        doc.addPage()
-        doc.setFontSize(12)
-        const wrappedPDFContent = doc.splitTextToSize(section, 180);
-        doc.text(wrappedPDFContent, content.x, content.y)
-    })
+    docData.data += text + '\n\n'
 }
 
 export function scrollToBottom() {
   window.scrollTo(0,document.body.scrollHeight);
+}
+
+export const download = (data, filename, type) => {
+    var file = new Blob([data], {type: type});
+    if (window.navigator.msSaveOrOpenBlob) // IE10+
+        window.navigator.msSaveOrOpenBlob(file, filename);
+    else { // Others
+        var a = document.createElement("a"),
+                url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);  
+        }, 0); 
+    }
 }
