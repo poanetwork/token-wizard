@@ -65,6 +65,32 @@ npm start
 
 Go to [localhost:3000](http://localhost:3000) and look around the app!
 
+### ICO configuration
+If you are the owner of ICO instance, you can add parameters of created ICO to config (`./src/components/Common/config.js`) for [https://github.com/oraclesorg/ico-wizard/issues/133](security reasons).
+Demo config is commented in the file itself.
+```
+const networks = {
+    mainnet: 1,
+    morden: 2,
+    ropsten: 3,
+    rinkeby: 4,
+    kovan: 42,
+    oraclesTest: 12648430
+}
+
+/*
+DEMO CONFIG:
+export const ICOConfig = { 
+    crowdsaleContractURL: '0xc5a21a3e32d9d614ed46e4b2352670fcb21009ee',
+    networkID: networks.kovan
+};
+*/
+
+export const ICOConfig = { 
+    
+};
+```
+
 ## Projects built on ICO Wizard
 
 None! Send PR if you are the first.

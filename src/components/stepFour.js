@@ -344,7 +344,9 @@ export class stepFour extends stepTwo {
     /*for (let i = 1; i < contracts.crowdsale.addr.length; i++) {
       url += `&addr=` + contracts.crowdsale.addr[i]
     }*/
-    url += `&networkID=` + contracts.crowdsale.networkID + `&contractType=` + this.state.contractType
+    url += `&networkID=` + contracts.crowdsale.networkID
+    //uncomment, if more then one contractType will appear
+    //url += `&contractType=` + this.state.contractType
     let newHistory = isValidContract ? url : crowdsalePage
     this.props.history.push(newHistory);
   }
