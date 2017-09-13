@@ -2,8 +2,9 @@ import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
 import { getWeb3, checkTxMined, attachToContract, checkNetWorkByID, getCrowdsaleData, initializeAccumulativeData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively, getJoinedTiers } from '../utils/web3'
 import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
-import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert } from '../utils/alerts'
+import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert, invalidCrowdsaleAddrAlert } from '../utils/alerts'
 import { Loader } from './Common/Loader'
+import { ICOConfig } from './Common/config'
 import { defaultState } from '../utils/constants'
 
 export class Invest extends React.Component {
@@ -30,8 +31,8 @@ export class Invest extends React.Component {
         return
       };
 
-      const networkID = getQueryVariable("networkID");
-      const contractType = getQueryVariable("contractType");
+      const networkID = ICOConfig.networkID?ICOConfig.networkID:getQueryVariable("networkID");
+      const contractType = $this.state.contractTypes.whitelistwithcap;// getQueryVariable("contractType");
       checkNetWorkByID(web3, networkID);
       newState.contractType = contractType;
 
@@ -61,8 +62,14 @@ export class Invest extends React.Component {
   extractContractsData($this, web3) {
     var state = $this.state;
 
-    const crowdsaleAddrs = getURLParam("addr");
-    getJoinedTiers(web3, $this.state.contracts.crowdsale.abi, crowdsaleAddrs, [], function(joinedCrowdsales) {
+    const crowdsaleAddr = ICOConfig.crowdsaleContractURL?ICOConfig.crowdsaleContractURL:getURLParam("addr");
+    if (!web3.isAddress(crowdsaleAddr)) {
+      let state = $this.state;
+      state.loading = false;
+      $this.setState(state);
+      return invalidCrowdsaleAddrAlert();
+    }
+    getJoinedTiers(web3, $this.state.contracts.crowdsale.abi, crowdsaleAddr, [], function(joinedCrowdsales) {
       console.log("joinedCrowdsales: ");
       console.log(joinedCrowdsales);
 

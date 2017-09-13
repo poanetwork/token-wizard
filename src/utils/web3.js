@@ -3,7 +3,7 @@ import { incorrectNetworkAlert, noContractAlert } from './alerts'
 import { getEncodedABIClientSide } from './microservices'
 import { findCurrentContractRecursively as findCurrentContractRecursively2 } from './web3'
 import { toFixed } from '../utils/utils'
-import { noMetaMaskAlert } from '../utils/alerts'
+import { noMetaMaskAlert, invalidNetworkIDAlert } from '../utils/alerts'
 
 // instantiate new web3 instance
 const web3 = new Web3();
@@ -60,6 +60,10 @@ export function getWeb3(cb) {
 }
 
 export function checkNetWorkByID(web3, _networkIdFromGET) {
+  console.log(_networkIdFromGET);
+  if (!_networkIdFromGET) {
+    return invalidNetworkIDAlert();
+  }
   web3.version.getNetwork(function(err, _networkIdFromNetwork) {
     if (err) {
       console.log(err);
