@@ -18,6 +18,7 @@
     "react-scripts": "1.0.10"
   },
   "dependencies": {
+    "clipboard": "^1.7.1",
     "ethereumjs-abi": "^0.6.4",
     "install": "^0.10.1",
     "jquery": "^3.2.1",
