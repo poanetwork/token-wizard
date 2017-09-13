@@ -10,6 +10,7 @@ import { StepNavigation } from './Common/StepNavigation'
 import { DisplayField } from './Common/DisplayField'
 import { Loader } from './Common/Loader'
 import { NAVIGATION_STEPS } from '../utils/constants'
+import { copy } from '../utils/copy';
 import jsPDF from 'jspdf'
 const { PUBLISH } = NAVIGATION_STEPS
 
@@ -23,6 +24,7 @@ export class stepFour extends stepTwo {
 
   componentDidMount() {
     scrollToBottom();
+    copy('copy');
     checkWeb3(this.state.web3);
     switch (this.state.contractType) {
       case this.state.contractTypes.standard: {

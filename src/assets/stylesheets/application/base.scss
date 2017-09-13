@@ -49,11 +49,33 @@ body {
 }
 
 .item-remove {
-      @include image-2x('../images/delete@2x.png', 12px, 12px);
-      background-image: url(../images/delete.png);
-      display: block;
-      width: 12px;
-      height: 12px;
-      cursor: pointer;
-      float: right;
-    }
+  @include image-2x('../images/delete@2x.png', 12px, 12px);
+  background-image: url(../images/delete.png);
+  display: block;
+  width: 12px;
+  height: 12px;
+  cursor: pointer;
+  float: right;
+}
+
+.copy {
+  @include image-2x('../images/copy@2x.png', 12px, 12px);
+  background-image: url(../images/copy.png);
+  display: block;
+  width: 11px;
+  height: 11px;
+  cursor: pointer;
+  float: right;
+
+  &-container {
+    display: table-cell;
+    padding-left: 10px;
+    vertical-align: top;
+    padding-top: 30.5px;
+  }
+}
+
+.display-container {
+  display: table-cell;
+  width: 100%;
+}
