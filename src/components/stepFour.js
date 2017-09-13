@@ -671,17 +671,47 @@ export class stepFour extends stepTwo {
   render() {
     let crowdsaleSetups = [];
     for (let i = 0; i < this.state.crowdsale.length; i++) {
-      let capBlock = <DisplayField side='left' title={'Max cap'} value={this.state.crowdsale[i].supply?this.state.crowdsale[i].supply:""}/>
-      let updatableBlock = <DisplayField side='right' title={'Allow modifying'} value={this.state.crowdsale[i].updatable?this.state.crowdsale[i].updatable:"off"}/>
+      let capBlock = <DisplayField 
+        side='left' 
+        title={'Max cap'} 
+        value={this.state.crowdsale[i].supply?this.state.crowdsale[i].supply:""}
+        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      />
+      let updatableBlock = <DisplayField 
+        side='right' 
+        title={'Allow modifying'} 
+        value={this.state.crowdsale[i].updatable?this.state.crowdsale[i].updatable:"off"} 
+        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      />
           
       crowdsaleSetups.push(<div key={i.toString()}><div className="publish-title-container">
           <p className="publish-title" data-step={3+i}>Crowdsale Setup {this.state.crowdsale[i].tier}</p>
         </div>
         <div className="hidden">
-          <DisplayField side='left' title={'Start time'} value={this.state.crowdsale[i].startTime?this.state.crowdsale[i].startTime.split("T").join(" "):""}/>
-          <DisplayField side='right' title={'End time'} value={this.state.crowdsale[i].endTime?this.state.crowdsale[i].endTime.split("T").join(" "):""}/>
-          <DisplayField side='left' title={'Wallet address'} value={this.state.crowdsale[i].walletAddress?this.state.crowdsale[i].walletAddress:"0xc1253365dADE090649147Db89EE781d10f2b972f"}/>
-          <DisplayField side='right' title={'RATE'} value={this.state.pricingStrategy[i].rate?this.state.pricingStrategy[i].rate:1 + " ETH"}/>
+          <DisplayField 
+            side='left' 
+            title={'Start time'} 
+            value={this.state.crowdsale[i].startTime?this.state.crowdsale[i].startTime.split("T").join(" "):""} 
+            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+          />
+          <DisplayField 
+            side='right' 
+            title={'End time'} 
+            value={this.state.crowdsale[i].endTime?this.state.crowdsale[i].endTime.split("T").join(" "):""} 
+            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+          />
+          <DisplayField 
+            side='left' 
+            title={'Wallet address'} 
+            value={this.state.crowdsale[i].walletAddress?this.state.crowdsale[i].walletAddress:"0xc1253365dADE090649147Db89EE781d10f2b972f"} 
+            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+          />
+          <DisplayField 
+            side='right' 
+            title={'RATE'} 
+            value={this.state.pricingStrategy[i].rate?this.state.pricingStrategy[i].rate:1 + " ETH"} 
+            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+          />
           {this.state.contractType===this.state.contractTypes.whitelistwithcap?capBlock:""}
           {this.state.contractType===this.state.contractTypes.whitelistwithcap?updatableBlock:""}
         </div></div>);
@@ -781,21 +811,54 @@ export class stepFour extends stepTwo {
               <p className="publish-title" data-step="2">Token Setup</p>
             </div>
             <div className="hidden">
-              <DisplayField side='left' title={'Name'} value={this.state.token.name?this.state.token.name:"Token Name"}/>
-              <DisplayField side='right' title={'Ticker'} value={this.state.token.ticker?this.state.token.ticker:"Ticker"}/>
-              <DisplayField side='left' title={'SUPPLY'} value={this.state.token.supply?this.state.token.supply.toString():100}/>
-              <DisplayField side='right' title={'DECIMALS'} value={this.state.token.decimals?this.state.token.decimals.toString():485}/>
+              <DisplayField 
+                side='left' 
+                title='Name' 
+                value={this.state.token.name?this.state.token.name:"Token Name"} 
+                description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+              />
+              <DisplayField 
+                side='right' 
+                title='Ticker' 
+                value={this.state.token.ticker?this.state.token.ticker:"Ticker"} 
+                description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+              />
+              <DisplayField 
+                side='left' 
+                title='SUPPLY' 
+                value={this.state.token.supply?this.state.token.supply.toString():100} 
+                description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+              />
+              <DisplayField 
+                side='right' 
+                title='DECIMALS' 
+                value={this.state.token.decimals?this.state.token.decimals.toString():485} 
+                description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+              />
             </div>
             {crowdsaleSetups}
             <div className="publish-title-container">
               <p className="publish-title" data-step={2 + this.state.crowdsale.length + 1}>Crowdsale Setup</p>
             </div>
-            <div className="item">
-              <p className="label">Compiler Version</p>
-              <p className="value">0.4.11</p>
-              <p className="description">
-              Compiler Version
-              </p>
+            <div className="hidden">
+              <DisplayField 
+                side='left' 
+                title='Compiler Version' 
+                value={this.state.compilerVersion} 
+                description="Compiler Version"
+              />
+              <DisplayField 
+                side='right' 
+                title='Contract name' 
+                value={this.state.contractName} 
+                description="Crowdsale contract name"
+              />
+              <DisplayField 
+                side='left' 
+                title='Optimized' 
+                value={this.state.optimized.toString()} 
+                description="Optimization in compiling"
+              />
             </div>
             {!this.state.tokenIsAlreadyCreated?tokenBlock:""}
             {(!this.state.tokenIsAlreadyCreated && this.state.contractType === this.state.contractTypes.whitelistwithcap)?pricingStrategyBlock:""}
