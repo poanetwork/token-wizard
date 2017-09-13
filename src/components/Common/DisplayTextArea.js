@@ -26,4 +26,3 @@ export class DisplayTextArea extends React.Component {
       </div>)
   }
 }
-

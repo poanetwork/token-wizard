@@ -21,4 +21,3 @@ export class DisplayField extends React.Component {
       </div>)
   	}
 }
-
