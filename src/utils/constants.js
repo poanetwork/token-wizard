@@ -21,6 +21,9 @@ export const defaultState = {
 	}],
 	pricingStrategy: [{}],
 	blockTimeGeneration: 17,
+	compilerVersion: "0.4.11",
+	optimized: true,
+	contractName: "MintedTokenCappedCrowdsaleExt",
 	contractType: "white-list-with-cap",
 	contractTypes: {
 		standard: "standard",
