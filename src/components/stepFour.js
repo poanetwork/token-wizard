@@ -8,6 +8,7 @@ import { getEncodedABIClientSide } from '../utils/microservices'
 import { stepTwo } from './stepTwo'
 import { StepNavigation } from './Common/StepNavigation'
 import { DisplayField } from './Common/DisplayField'
+import { DisplayTextArea } from './Common/DisplayTextArea'
 import { Loader } from './Common/Loader'
 import { NAVIGATION_STEPS } from '../utils/constants'
 import { copy } from '../utils/copy';
@@ -720,74 +721,55 @@ export class stepFour extends stepTwo {
     }
     let ABIEncodedOutputsCrowdsale = [];
     for (let i = 0; i < this.state.crowdsale.length; i++) {
-      ABIEncodedOutputsCrowdsale.push(<div key={i.toString()} className="item">
-          <p className="label">Constructor Arguments for {this.state.crowdsale[i].tier?this.state.crowdsale[i].tier : "contract"} (ABI-encoded and appended to the ByteCode above)</p>
-          <pre>
-            {this.state.contracts?this.state.contracts.crowdsale?this.state.contracts.crowdsale.abiConstructor?this.state.contracts.crowdsale.abiConstructor[i]:"":"":""}
-          </pre>
-          <p className="description">
-            Encoded ABI
-          </p>
-        </div>);
+      ABIEncodedOutputsCrowdsale.push(
+        <DisplayTextArea
+          key={i.toString()}
+          label={"Constructor Arguments for " + (this.state.crowdsale[i].tier?this.state.crowdsale[i].tier : "contract") + " (ABI-encoded and appended to the ByteCode above)"}
+          value={this.state.contracts?this.state.contracts.crowdsale?this.state.contracts.crowdsale.abiConstructor?this.state.contracts.crowdsale.abiConstructor[i]:"":"":""}
+          description="Encoded ABI"
+        />
+      );
     }
     let ABIEncodedOutputsPricingStrategy = [];
     for (let i = 0; i < this.state.pricingStrategy.length; i++) {
-      ABIEncodedOutputsPricingStrategy.push(<div key={i.toString()} className="item">
-          <p className="label">Constructor Arguments for {this.state.crowdsale[i].tier?this.state.crowdsale[i].tier : ""} Pricing Strategy Contract (ABI-encoded and appended to the ByteCode above)</p>
-          <pre>
-            {this.state.contracts?this.state.contracts.pricingStrategy?this.state.contracts.pricingStrategy.abiConstructor?this.state.contracts.pricingStrategy.abiConstructor[i]:"":"":""}
-          </pre>
-          <p className="description">
-            Contructor arguments for pricing strategy contract
-          </p>
-        </div>);
+      ABIEncodedOutputsPricingStrategy.push(
+        <DisplayTextArea
+          key={i.toString()}
+          label={"Constructor Arguments for " + (this.state.crowdsale[i].tier?this.state.crowdsale[i].tier : "") + " Pricing Strategy Contract (ABI-encoded and appended to the ByteCode above)"}
+          value={this.state.contracts?this.state.contracts.pricingStrategy?this.state.contracts.pricingStrategy.abiConstructor?this.state.contracts.pricingStrategy.abiConstructor[i]:"":"":""}
+          description="Contructor arguments for pricing strategy contract"
+        />
+      );
     }
-    let tokenBlock = <div><div className="item">
-          <p className="label">Token Contract Source Code</p>
-          <pre>
-            {this.state.contracts?this.state.contracts.token?this.state.contracts.token.src:"":""}
-          </pre>
-          <p className="description">
-          Token Contract Source Code
-          </p>
-        </div>
-        <div className="item">
-          <p className="label">Token Contract ABI</p>
-          <pre>
-            {this.state.contracts?this.state.contracts.token?JSON.stringify(this.state.contracts.token.abi):"":""}
-          </pre>
-          <p className="description">
-          Token Contract ABI
-          </p>
-        </div>
-        <div className="item">
-          <p className="label">Token Constructor Arguments (ABI-encoded and appended to the ByteCode above)</p>
-          <pre>
-            {this.state.contracts?this.state.contracts.token?this.state.contracts.token.abiConstructor?this.state.contracts.token.abiConstructor:"":"":""}
-          </pre>
-          <p className="description">
-          Token Constructor Arguments 
-          </p>
-        </div></div>;
-    let pricingStrategyBlock = <div><div className="item">
-          <p className="label">Pricing Strategy Contract Source Code</p>
-          <pre>
-            {this.state.contracts?this.state.contracts.pricingStrategy?this.state.contracts.pricingStrategy.src:"":""}
-          </pre>
-          <p className="description">
-          Pricing Strategy Contract Source Code
-          </p>
-        </div>
-        <div className="item">
-          <p className="label">Pricing Strategy Contract ABI</p>
-          <pre>
-            {this.state.contracts?this.state.contracts.pricingStrategy?JSON.stringify(this.state.contracts.pricingStrategy.abi):"":""}
-          </pre>
-          <p className="description">
-          Pricing Strategy Contract ABI
-          </p>
-        </div>
-        </div>;
+    let tokenBlock = <div>
+      <DisplayTextArea
+        label={"Token Contract Source Code"}
+        value={this.state.contracts?this.state.contracts.token?this.state.contracts.token.src:"":""}
+        description="Token Contract Source Code"
+      />
+      <DisplayTextArea
+        label={"Token Contract ABI"}
+        value={this.state.contracts?this.state.contracts.token?JSON.stringify(this.state.contracts.token.abi):"":""}
+        description="Token Contract ABI"
+      />
+       <DisplayTextArea
+        label={"Token Constructor Arguments (ABI-encoded and appended to the ByteCode above)"}
+        value={this.state.contracts?this.state.contracts.token?this.state.contracts.token.abiConstructor?this.state.contracts.token.abiConstructor:"":"":""}
+        description="Token Constructor Arguments"
+      />
+    </div>;
+    let pricingStrategyBlock = <div>
+      <DisplayTextArea
+        label={"Pricing Strategy Contract Source Code"}
+        value={this.state.contracts?this.state.contracts.pricingStrategy?this.state.contracts.pricingStrategy.src:"":""}
+        description="Pricing Strategy Contract Source Code"
+      />
+      <DisplayTextArea
+        label={"Pricing Strategy Contract ABI"}
+        value={this.state.contracts?this.state.contracts.pricingStrategy?JSON.stringify(this.state.contracts.pricingStrategy.abi):"":""}
+        description="Pricing Strategy Contract ABI"
+      />
+    </div>;
     return (
       <section className="steps steps_publish">
         <StepNavigation activeStep={PUBLISH} />
@@ -865,24 +847,16 @@ export class stepFour extends stepTwo {
             {!this.state.tokenIsAlreadyCreated?tokenBlock:""}
             {(!this.state.tokenIsAlreadyCreated && this.state.contractType === this.state.contractTypes.whitelistwithcap)?pricingStrategyBlock:""}
             {this.state.contractType === this.state.contractTypes.whitelistwithcap?ABIEncodedOutputsPricingStrategy:""}
-            <div className="item">
-              <p className="label">Crowdsale Contract Source Code</p>
-              <pre>
-                {this.state.contracts?this.state.contracts.crowdsale?this.state.contracts.crowdsale.src:"":""}
-              </pre>
-              <p className="description">
-              Crowdsale Contract Source Code
-              </p>
-            </div>
-            <div className="item">
-              <p className="label">Crowdsale Contract ABI</p>
-              <pre>
-                {this.state.contracts?this.state.contracts.crowdsale?JSON.stringify(this.state.contracts.crowdsale.abi):"":""}
-              </pre>
-              <p className="description">
-              Crowdsale Contract ABI
-              </p>
-            </div>
+            <DisplayTextArea
+              label={"Crowdsale Contract Source Code"}
+              value={this.state.contracts?this.state.contracts.crowdsale?this.state.contracts.crowdsale.src:"":""}
+              description="Crowdsale Contract Source Code"
+            />
+            <DisplayTextArea
+              label={"Crowdsale Contract ABI"}
+              value={this.state.contracts?this.state.contracts.crowdsale?JSON.stringify(this.state.contracts.crowdsale.abi):"":""}
+              description="Crowdsale Contract ABI"
+            />
             {ABIEncodedOutputsCrowdsale}
           </div>
         </div>
