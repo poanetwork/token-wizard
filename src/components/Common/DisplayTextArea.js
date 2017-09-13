@@ -9,7 +9,14 @@ export class DisplayTextArea extends React.Component {
 	render() {
   	return (
       <div key={this.props.key?this.props.key:""} className="item">
-        <p className="label">{this.props.label}</p>
+        <div>
+          <div className="display-container">
+            <p className="label">{this.props.label}</p>
+          </div>
+          <div className="copy-area-container">
+            <btn className="copy" data-clipboard-action="copy" data-clipboard-text={this.props.value}></btn>
+          </div>
+        </div>
         <pre>
           {this.props.value}
         </pre>

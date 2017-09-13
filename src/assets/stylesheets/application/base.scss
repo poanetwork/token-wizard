@@ -66,13 +66,18 @@ body {
   height: 11px;
   cursor: pointer;
   float: right;
+}
 
-  &-container {
-    display: table-cell;
-    padding-left: 10px;
-    vertical-align: top;
-    padding-top: 30.5px;
-  }
+.copy-field-container {
+  display: table-cell;
+  padding-left: 10px;
+  vertical-align: top;
+  padding-top: 30.5px;
+}
+
+.copy-area-container {
+  display: table-cell;
+  padding-left: 10px;
 }
 
 .display-container {

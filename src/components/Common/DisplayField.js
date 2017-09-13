@@ -15,7 +15,7 @@ export class DisplayField extends React.Component {
 	          {this.props.description}
 	        </p>
         </div>
-        <div className="copy-container">
+        <div className="copy-field-container">
         	<btn className="copy" data-clipboard-action="copy" data-clipboard-text={this.props.value}></btn>
         </div>
       </div>)
