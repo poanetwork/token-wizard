@@ -66,7 +66,7 @@ npm start
 Go to [localhost:3000](http://localhost:3000) and look around the app!
 
 ### ICO configuration
-If you are the owner of ICO instance, you can add parameters of created ICO to config (`./src/components/Common/config.js`) for [https://github.com/oraclesorg/ico-wizard/issues/133](security reasons).
+If you are the owner of ICO instance, you can add parameters of created ICO to config (`./src/components/Common/config.js`) for [security reasons](https://github.com/oraclesorg/ico-wizard/issues/133).
 Demo config is commented in the file itself.
 ```
 const networks = {
