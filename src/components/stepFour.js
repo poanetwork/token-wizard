@@ -677,13 +677,13 @@ export class stepFour extends stepTwo {
         side='left' 
         title={'Max cap'} 
         value={this.state.crowdsale[i].supply?this.state.crowdsale[i].supply:""}
-        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        description="How many tokens will be sold on this tier."
       />
       let updatableBlock = <DisplayField 
         side='right' 
         title={'Allow modifying'} 
         value={this.state.crowdsale[i].updatable?this.state.crowdsale[i].updatable:"off"} 
-        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        description="Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing."
       />
           
       crowdsaleSetups.push(<div key={i.toString()}><div className="publish-title-container">
@@ -694,25 +694,25 @@ export class stepFour extends stepTwo {
             side='left' 
             title={'Start time'} 
             value={this.state.crowdsale[i].startTime?this.state.crowdsale[i].startTime.split("T").join(" "):""} 
-            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+            description="Date and time when the tier starts."
           />
           <DisplayField 
             side='right' 
             title={'End time'} 
             value={this.state.crowdsale[i].endTime?this.state.crowdsale[i].endTime.split("T").join(" "):""} 
-            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+            description="Date and time when the tier ends."
           />
           <DisplayField 
             side='left' 
             title={'Wallet address'} 
             value={this.state.crowdsale[i].walletAddress?this.state.crowdsale[i].walletAddress:"0xc1253365dADE090649147Db89EE781d10f2b972f"} 
-            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+            description="Where the money goes after investors transactions."
           />
           <DisplayField 
             side='right' 
             title={'RATE'} 
             value={this.state.pricingStrategy[i].rate?this.state.pricingStrategy[i].rate:1 + " ETH"} 
-            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+            description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens."
           />
           {this.state.contractType===this.state.contractTypes.whitelistwithcap?capBlock:""}
           {this.state.contractType===this.state.contractTypes.whitelistwithcap?updatableBlock:""}
@@ -798,25 +798,25 @@ export class stepFour extends stepTwo {
                 side='left' 
                 title='Name' 
                 value={this.state.token.name?this.state.token.name:"Token Name"} 
-                description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                description="The name of your token. Will be used by Etherscan and other token browsers."
               />
               <DisplayField 
                 side='right' 
                 title='Ticker' 
                 value={this.state.token.ticker?this.state.token.ticker:"Ticker"} 
-                description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                description="The three letter ticker for your token."
               />
               <DisplayField 
                 side='left' 
                 title='SUPPLY' 
                 value={this.state.token.supply?this.state.token.supply.toString():100} 
-                description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                description="The supply is 0 for your token."
               />
               <DisplayField 
                 side='right' 
                 title='DECIMALS' 
                 value={this.state.token.decimals?this.state.token.decimals.toString():485} 
-                description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                description="The decimals of your token."
               />
             </div>
             {crowdsaleSetups}
