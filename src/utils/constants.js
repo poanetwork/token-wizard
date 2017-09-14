@@ -9,12 +9,20 @@ export const defaultState = {
 		tokenTransferProxy: {}
 	}, 
 	token: {
-		supply: '0',
+		name: '',
+		ticker: '',
+		supply: 0,
+		decimals: '',
 		reservedTokens: [],
 		reservedTokensElements: [],
 		reservedTokensInput: {dim: "tokens"}
 	},
 	crowdsale: [{
+		startTime: '',
+		endTime: '',
+		walletAddress: '',
+		supply: '',
+		rate: '',
 		whitelist: [], 
 		whiteListElements: [], 
 		whiteListInput: {}
@@ -82,7 +90,6 @@ const { VALID, EMPTY, INVALID } = VALIDATION_TYPES
 export const intitialStepTwoValidations = {
 	validations: {
 		name: EMPTY,
-		supply: EMPTY,
 		decimals: EMPTY,
 		ticker: EMPTY
 	}
@@ -91,7 +98,7 @@ export const intitialStepTwoValidations = {
 export const initialStepTwoValues = {
 	token: {
 		name: '',
-		supply: '0',
+		supply: 0,
 		ticker: '',
 		decimals: '',
 		reservedTokens: [],

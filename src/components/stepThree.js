@@ -91,6 +91,7 @@ export class stepThree extends stepTwo {
   }
 
   renderLinkComponent () {
+    console.log(`stepsAreValid(this.state.validations) || allFieldsAreValid('crowdsale', this.state)`, stepsAreValid(this.state.validations), allFieldsAreValid('crowdsale', this.state))
     if(stepsAreValid(this.state.validations) || allFieldsAreValid('crowdsale', this.state)){
       // console.log('step 3 is valididididididididididididididididi')
       return this.renderLink()

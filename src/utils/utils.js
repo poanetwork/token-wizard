@@ -381,7 +381,7 @@ const validateTier = (tier) => typeof tier === 'string' && tier.length > 0 && ti
 
 const validateName = (name) => typeof name === 'string' && name.length > 0 && name.length < 27
 
-const validateSupply = (supply) =>  isNaN(Number(supply)) === false && supply.length > 0
+const validateSupply = (supply) =>  isNaN(Number(supply)) === false && Number(supply) > 0
 
 const validateDecimals = (decimals) => isNaN(Number(decimals)) === false && decimals.length > 0
 
@@ -389,7 +389,7 @@ const validateTicker = (ticker) => typeof ticker === 'string' && ticker.length <
 
 const validateTime = (time) => getTimeAsNumber(time) > Date.now() 
 
-const validateRate = (rate) => isNaN(Number(rate)) === false && rate > 0
+const validateRate = (rate) => isNaN(Number(rate)) === false && Number(rate) > 0
 
 const validateAddress = (address) => {
     if(!address || address.length !== 42 ) {
@@ -423,14 +423,15 @@ export const validateValue = (value, property) => {
     console.log('value of : ' + value + ' and property of : ' + property, Array.isArray(value), JSON.stringify(value))
     let validationFunction, valueIsValid;
     if(isNotWhiteListTierObject(value)) {
-        validationFunction = inputFieldValidators[property]
-        if (validationFunction)
-          valueIsValid = validationFunction(value)
-    } else if(inputFieldValidators[property]){
-        validationFunction = inputFieldValidators[property]
-        if (validationFunction)
-          valueIsValid = validationFunction(value[property])
+      validationFunction = inputFieldValidators[property]
+      if (validationFunction)
+        valueIsValid = validationFunction(value)
+    } else if (inputFieldValidators[property]){
+      validationFunction = inputFieldValidators[property]
+      if (validationFunction)
+        valueIsValid = validationFunction(value[property])
     }
+    console.log("valueIsValid: " + valueIsValid);
     return  valueIsValid === true ? VALID : INVALID
 }
 
@@ -442,8 +443,10 @@ export const allFieldsAreValid = (parent, state) => {
     let properties = Object.keys(newState[parent])
     let validationValues = properties.filter(property => property !== 'startBlock' && property !== 'endBlock' ).map(property => {
         let value = newState[parent][property]
+        if (parent == "token" && property == "supply") return VALID
         return validateValue(value, property)
     })
+    console.log(validationValues);
     return validationValues.find(value => value === INVALID) === undefined
 }
 
