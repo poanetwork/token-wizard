@@ -120,7 +120,7 @@ export const initialStepThreeValues = {
 	}]
 }
 
-export const PDF_CONTENTS = [
+export const FILE_CONTENTS = [
 	{ field: 'name', value: 'Name: ', parent: 'token', x: 10, y: 10 },
 	{ field: 'ticker', value: 'Ticker: ', parent: 'token', x: 10, y: 20 },
 	{ field: 'supply', value: 'Supply: ', parent: 'token', x: 10, y: 30 },
@@ -129,8 +129,11 @@ export const PDF_CONTENTS = [
 	{ field: 'endTime', value: 'End Time: ', parent: 'crowdsale', x: 10, y: 60 },
 	{ field: 'walletAddress', value: 'Wallet Address: ', parent: 'crowdsale', x: 10, y: 70 },
 	{ field: 'rate', value: 'Rate: ', parent: 'pricingStrategy', x: 10, y: 80 },
-	{ value: 'Compiler Version: ', parent: 'none', pdfValue: '0.4.11', x: 10, y: 90 },
-	{ field: 'src', value: 'Source Contract: ', parent: 'contracts', x: 10, y: 10 },
-	{ field: 'abi', value: 'ABI Contract: ', parent: 'contracts', x: 10, y: 10 },
-	{ field: 'abiConstructor', value: 'ABI Parameters: ', parent: 'contracts', x: 10, y: 10 }
+	{ value: 'Compiler Version: ', parent: 'none', fileValue: '0.4.11', x: 10, y: 90 },
+	{ field: 'src', value: 'Source Contract: \n \n', parent: 'contracts', x: 10, y: 10 },
+	{ field: 'abi', value: 'ABI Contract: \n \n', parent: 'contracts', x: 10, y: 10 },
+	{ field: 'abiConstructor', value: 'ABI Parameters: \n \n', parent: 'contracts', x: 10, y: 10 }
 ]
+
+export const DOWNLOAD_NAME = 'contractInfo'
+export const DOWNLOAD_TYPE = 'text/plain'
