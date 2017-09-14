@@ -2,8 +2,8 @@ import React from 'react'
 import '../assets/stylesheets/application.css';
 import { deployContract, getWeb3, checkWeb3, getNetworkVersion, addWhiteList, setFinalizeAgent, setMintAgent, setReleaseAgent, updateJoinedCrowdsales, transferOwnership, setReservedTokensListMultiple, setLastCrowdsale } from '../utils/web3'
 import { noMetaMaskAlert } from '../utils/alerts'
-import { defaultState, PDF_CONTENTS } from '../utils/constants'
-import { getOldState, handleContractsForPDF, handleTokenForPDF, handleCrowdsaleForPDF, handlePricingStrategyForPDF, handleConstantForPDF, toFixed, scrollToBottom } from '../utils/utils'
+import { defaultState, FILE_CONTENTS, DOWNLOAD_NAME, DOWNLOAD_TYPE } from '../utils/constants'
+import { getOldState, handleContractsForFile, handleTokenForFile, handleCrowdsaleForFile, handlePricingStrategyForFile, handleConstantForFile, toFixed, scrollToBottom, download } from '../utils/utils'
 import { getEncodedABIClientSide } from '../utils/microservices'
 import { stepTwo } from './stepTwo'
 import { StepNavigation } from './Common/StepNavigation'
@@ -12,7 +12,6 @@ import { DisplayTextArea } from './Common/DisplayTextArea'
 import { Loader } from './Common/Loader'
 import { NAVIGATION_STEPS } from '../utils/constants'
 import { copy } from '../utils/copy';
-import jsPDF from 'jspdf'
 const { PUBLISH } = NAVIGATION_STEPS
 
 export class stepFour extends stepTwo {
@@ -97,28 +96,28 @@ export class stepFour extends stepTwo {
     }
   }
 
-  handleContentByParent(content, doc) {
+  handleContentByParent(content, docData) {
     switch(content.parent) {
       case 'token':
-        return handleTokenForPDF(content, doc, this.state)
+        return handleTokenForFile(content, docData, this.state)
       case 'crowdsale':
-        return handleCrowdsaleForPDF(content, doc, this.state)
+        return handleCrowdsaleForFile(content, docData, this.state)
       case 'contracts':
-        return handleContractsForPDF(content, doc, this.state)
+        return handleContractsForFile(content, docData, this.state)
       case 'pricingStrategy':
-        return handlePricingStrategyForPDF(content, doc, this.state)
+        return handlePricingStrategyForFile(content, docData, this.state)
       case 'none':
-        return handleConstantForPDF(content, doc)
+        return handleConstantForFile(content, docData)
     }
   }
 
   downloadCrowdsaleInfo() {
-    var doc = new jsPDF('p', 'mm', 'a4')
-    doc.setLineWidth(50)
-    PDF_CONTENTS.forEach(content => {
-      this.handleContentByParent(content, doc)
+    var docData = { data: '' }
+    FILE_CONTENTS.forEach(content => {
+      this.handleContentByParent(content, docData)
     })
-    doc.save('crowdsale.pdf')
+    console.log('docDAta', docData.data)
+    download(docData.data, DOWNLOAD_NAME, DOWNLOAD_TYPE)
   }
 
   /*deployTokenTransferProxy = () => {
@@ -862,7 +861,7 @@ export class stepFour extends stepTwo {
         </div>
         <div className="button-container">
           {/*<Link to='/crowdsale' onClick={this.deployCrowdsale}><a href="#" className="button button_fill">Continue</a></Link>*/}
-          <div onClick={() => this.downloadCrowdsaleInfo()} className="button button_fill_secondary">Download PDF</div>
+          <div onClick={() => this.downloadCrowdsaleInfo()} className="button button_fill_secondary">Download File</div>
           <a onClick={this.deployCrowdsale} className="button button_fill">Continue</a>
         </div>
         <Loader show={this.state.loading}></Loader>
