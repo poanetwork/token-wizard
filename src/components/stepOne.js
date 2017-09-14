@@ -41,7 +41,6 @@ export class stepOne extends React.Component {
     let $this = this;
 
     setFlatFileContentToState("./contracts/" + contractName + "_flat.sol", function(_content) {
-      console.log(assetsIterator +"=="+ assetsCount);
       src = _content;
       assetsIterator++;
 
@@ -50,7 +49,6 @@ export class stepOne extends React.Component {
       }
     });
     setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", function(_bin) {
-      console.log(assetsIterator +"=="+ assetsCount);
       bin = _bin;
       assetsIterator++;
 
@@ -59,7 +57,6 @@ export class stepOne extends React.Component {
       }
     });
     setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", function(_abi) {
-      console.log(assetsIterator +"=="+ assetsCount);
       abi = _abi;
       assetsIterator++;
 

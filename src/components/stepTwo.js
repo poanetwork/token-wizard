@@ -103,25 +103,34 @@ export class stepTwo extends React.Component {
       }
     }
     if (property.indexOf("whitelist") === -1 && property.indexOf("reservedtokens") === -1) {
-      newState[`validations`][property] = validateValue(value, property, newState)
-      console.log('property', property)
-      console.log('newState[`validations`][property]',  newState[`validations`], validateValue(value, property, newState), 'newState', newState)
-            newState[`validations`][property] = validateValue(value, property, newState)
 
+      if ( Object.prototype.toString.call( newState[`validations`] ) === '[object Array]' ) {
+        newState[`validations`][key][property] = validateValue(value, property, newState)
+      } else {
+        newState[`validations`][property] = validateValue(value, property, newState)
+      }
+      //console.log('property', property)
+      //console.log('newState[`validations`][property]',  newState[`validations`], validateValue(value, property, newState), 'newState', newState)
     }
     console.log('newState', newState)
     this.setState(newState)
   }
 
   handleInputBlur (parent, property, key) {
+    //console.log(parent, property, key);
     let newState = { ...this.state }
     let value
-    if(property === 'rate') {
-      value = newState['pricingStrategy'][0][property]
+    if (property === 'rate') {
+      value = newState[parent][key][property]
     } else {
       value = key === undefined ? newState[parent][property] : newState[parent][key][property]
     }
-    newState[`validations`][property] = validateValue(value, property, newState)
+
+    if ( Object.prototype.toString.call( newState[`validations`] ) === '[object Array]' ) {
+      newState[`validations`][key][property] = validateValue(value, property, newState)
+    } else {
+      newState[`validations`][property] = validateValue(value, property, newState)
+    }
     this.setState(newState)
   }
 
@@ -131,10 +140,36 @@ export class stepTwo extends React.Component {
   
   validateAllFields (parent ) {
     let newState = { ...this.state }
-    let properties = Object.keys(newState[parent])
-    let values = Object.values(newState[parent])
+    //let properties = Object.keys(newState[parent])
+    //let values = Object.values(newState[parent])
+
+    let properties = []
+    let values = []
+    let inds = []
+    if( Object.prototype.toString.call( newState[parent] ) === '[object Array]' ) {
+      if (newState[parent].length > 0) {
+        for (let i = 0; i < newState[parent].length; i++) {
+          Object.keys(newState[parent][i]).map(property => {
+            values.push(newState[parent][i][property])
+            properties.push(property);
+            inds.push(i);
+          })
+        }
+      }
+    } else {
+      properties = Object.keys(newState[parent])
+      values = Object.values(newState[parent])
+    }
+
+    //console.log(properties);
+    //console.log(values);
+
     properties.forEach((property, index) => {
-      newState[`validations`][property] = validateValue(values[index], property)
+      if ( Object.prototype.toString.call( newState[`validations`] ) === '[object Array]' ) {
+        newState[`validations`][inds[index]][property] = validateValue(values[index], property)
+      } else {
+        newState[`validations`][property] = validateValue(values[index], property)
+      }
     })
     this.setState(newState)
   }

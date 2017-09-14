@@ -3,21 +3,41 @@ import '../../assets/stylesheets/application.css';
 import { VALIDATION_TYPES } from '../../utils/constants'
 const { INVALID } = VALIDATION_TYPES
 
-export const InputField = ({side, disabled, type, value, defaultValue, onChange, onBlur, title, valid, errorMessage, description }) => {
-	const errorStyle={
-		color: 'red',
-		fontWeight: 'bold',
-		fontSize: '12px',
-		width: '100%',
-		height: '10px'
+export class InputField extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {};
 	}
-	const error = valid === INVALID ? errorMessage : ''
-	return <div className={side}>
-		<label className="label">{title}</label>
-		<input disabled={disabled} type={type} className="input" onBlur={onBlur} value={value} defaultValue={defaultValue} onChange={onChange}/>
-		<p className="description">
-			{description}
-		</p>
-		<p style={errorStyle}>{error}</p>
-	</div>
+
+	onChange = (e) => {
+		let state = {...this.state}
+		state.val = e.target.value;
+		this.setState(state);
+		this.props.onChange(e);
+	}
+
+	componentDidMount() {
+		let state = {...this.state}
+		state.val = this.props.value;
+		this.setState(state);
+	}
+
+	render() {
+		const errorStyle={
+			color: 'red',
+			fontWeight: 'bold',
+			fontSize: '12px',
+			width: '100%',
+			height: '10px'
+		}
+		const error = this.props.valid === INVALID ? this.props.errorMessage : ''
+		return (<div className={this.props.side}>
+			<label className="label">{this.props.title}</label>
+			<input disabled={this.props.disabled} type={this.props.type} className="input" onBlur={this.props.onBlur} value={this.state.val} defaultValue={this.props.defaultValue} onChange={this.onChange}/>
+			<p className="description">
+				{this.props.description}
+			</p>
+			<p style={errorStyle}>{error}</p>
+		</div>)
+	}
 }

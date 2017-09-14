@@ -377,11 +377,11 @@ export const stepsAreValid = (steps) => {
     return Object.values(newSteps).length > 3 && Object.values(newSteps).every(step => step === VALID)
 }
 
-const validateTier = (tier) => typeof tier === 'string' && tier.length > 0 && tier.length < 27
+const validateTier = (tier) => typeof tier === 'string' && tier.length > 0 && tier.length < 30
 
-const validateName = (name) => typeof name === 'string' && name.length > 0 && name.length < 27
+const validateName = (name) => typeof name === 'string' && name.length > 0 && name.length < 30
 
-const validateSupply = (supply) =>  isNaN(Number(supply)) === false && supply.length > 0
+const validateSupply = (supply) =>  isNaN(Number(supply)) === false && Number(supply) > 0
 
 const validateDecimals = (decimals) => isNaN(Number(decimals)) === false && decimals.length > 0
 
@@ -389,7 +389,7 @@ const validateTicker = (ticker) => typeof ticker === 'string' && ticker.length <
 
 const validateTime = (time) => getTimeAsNumber(time) > Date.now() 
 
-const validateRate = (rate) => isNaN(Number(rate)) === false && rate > 0
+const validateRate = (rate) => isNaN(Number(rate)) === false && Number(rate) > 0
 
 const validateAddress = (address) => {
     if(!address || address.length !== 42 ) {
@@ -413,24 +413,27 @@ const inputFieldValidators = {
 const inputFieldIsUnsubmitted = (currentValidation, newValidation) => currentValidation === EMPTY
 
 const isNotWhiteListTierObject = (value) => !(typeof value === 'object' && value.hasOwnProperty('whitelist') === true && value.hasOwnProperty('tier') === true)
+
 // still thinks that we do not have an array... we do
 export const validateValue = (value, property) => {
   //console.log("'" + property + "'");
+  //console.log("'" + value + "'");
     if (!isNaN(property)
       || property === 'reservedTokensInput'
       || property === 'reservedTokens'
       || property === 'reservedTokensElements') return VALID;
-    console.log('value of : ' + value + ' and property of : ' + property, Array.isArray(value), JSON.stringify(value))
+    //console.log('value of : ' + value + ' and property of : ' + property, Array.isArray(value), JSON.stringify(value))
     let validationFunction, valueIsValid;
     if(isNotWhiteListTierObject(value)) {
-        validationFunction = inputFieldValidators[property]
-        if (validationFunction)
-          valueIsValid = validationFunction(value)
-    } else if(inputFieldValidators[property]){
-        validationFunction = inputFieldValidators[property]
-        if (validationFunction)
-          valueIsValid = validationFunction(value[property])
+      validationFunction = inputFieldValidators[property]
+      if (validationFunction)
+        valueIsValid = validationFunction(value)
+    } else if (inputFieldValidators[property]){
+      validationFunction = inputFieldValidators[property]
+      if (validationFunction)
+        valueIsValid = validationFunction(value[property])
     }
+    //console.log("valueIsValid: " + valueIsValid);
     return  valueIsValid === true ? VALID : INVALID
 }
 
@@ -438,11 +441,44 @@ export const getNewValue = (value, property) => property === "startTime" || prop
 
 export const allFieldsAreValid = (parent, state) => {
     let newState = { ...state }
-    let properties = Object.keys(newState[parent])
-    let validationValues = properties.filter(property => property !== 'startBlock' && property !== 'endBlock' ).map(property => {
-        let value = newState[parent][property]
+    let properties = []
+    let values = []
+    if( Object.prototype.toString.call( newState[parent] ) === '[object Array]' ) {
+      if (newState[parent].length > 0) {
+        for (let i = 0; i < newState[parent].length; i++) {
+          Object.keys(newState[parent][i]).map(property => {
+            values.push(newState[parent][i][property])
+            properties.push(property);
+          })
+        }
+      }
+    } else {
+      properties = Object.keys(newState[parent])
+    }
+    //console.log(newState);
+    //console.log(properties);
+    //console.log(properties.filter(property => property !== 'startBlock' && property !== 'endBlock' && property !== 'updatable' && property.toLowerCase().indexOf("whitelist") == -1 ));
+    let iterator = 0
+    let validationValues = properties/*.filter(property => property !== 'startBlock' && property !== 'endBlock' && property !== 'updatable' && property.toLowerCase().indexOf("whitelist") == -1 )*/.map(property => {
+        if (property === 'startBlock' || property === 'endBlock' || property === 'updatable' || property.toLowerCase().indexOf("whitelist") > -1) {
+          iterator++
+          return VALID
+        } 
+        let value
+        if( Object.prototype.toString.call( newState[parent] ) === '[object Array]' ) {
+          if (newState[parent].length > 0)
+            value = values[iterator]
+        } else {
+          value = newState[parent][property]
+        }
+        //console.log("value: " + value, "property: " + property, "iterator: " + iterator);
+        iterator++
+        if (parent == "token" && property == "supply") return VALID
         return validateValue(value, property)
     })
+    //console.log(validationValues);
+    //console.log(values);
+    
     return validationValues.find(value => value === INVALID) === undefined
 }
 

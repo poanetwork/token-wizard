@@ -23,6 +23,7 @@ export class DisplayTextArea extends React.Component {
         <p className="description">
           {this.props.description}
         </p>
-      </div>)
+      </div>
+    )
   }
 }
