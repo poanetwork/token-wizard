@@ -2,8 +2,9 @@ import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
 import { getWeb3, checkTxMined, attachToContract, checkNetWorkByID, getCrowdsaleData, initializeAccumulativeData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively, getJoinedTiers } from '../utils/web3'
 import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
-import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert } from '../utils/alerts'
+import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert, invalidCrowdsaleAddrAlert } from '../utils/alerts'
 import { Loader } from './Common/Loader'
+import { ICOConfig } from './Common/config'
 import { defaultState } from '../utils/constants'
 
 export class Invest extends React.Component {
@@ -30,8 +31,8 @@ export class Invest extends React.Component {
         return
       };
 
-      const networkID = getQueryVariable("networkID");
-      const contractType = getQueryVariable("contractType");
+      const networkID = ICOConfig.networkID?ICOConfig.networkID:getQueryVariable("networkID");
+      const contractType = $this.state.contractTypes.whitelistwithcap;// getQueryVariable("contractType");
       checkNetWorkByID(web3, networkID);
       newState.contractType = contractType;
 
@@ -61,8 +62,14 @@ export class Invest extends React.Component {
   extractContractsData($this, web3) {
     var state = $this.state;
 
-    const crowdsaleAddrs = getURLParam("addr");
-    getJoinedTiers(web3, $this.state.contracts.crowdsale.abi, crowdsaleAddrs, [], function(joinedCrowdsales) {
+    const crowdsaleAddr = ICOConfig.crowdsaleContractURL?ICOConfig.crowdsaleContractURL:getURLParam("addr");
+    if (!web3.isAddress(crowdsaleAddr)) {
+      let state = $this.state;
+      state.loading = false;
+      $this.setState(state);
+      return invalidCrowdsaleAddrAlert();
+    }
+    getJoinedTiers(web3, $this.state.contracts.crowdsale.abi, crowdsaleAddr, [], function(joinedCrowdsales) {
       console.log("joinedCrowdsales: ");
       console.log(joinedCrowdsales);
 
@@ -121,9 +128,17 @@ export class Invest extends React.Component {
     let $this = this;
     let startBlock = parseInt($this.state.crowdsale.startBlock, 10);
     let startDate = $this.state.crowdsale.startDate;
-    if ((isNaN(startBlock) || startBlock === 0) && !startDate) return;
+    if ((isNaN(startBlock) || startBlock === 0) && !startDate) {
+      let state = $this.state;
+      state.loading = false;
+      $this.setState(state);
+      return;
+    }
     let web3 = $this.state.web3;
     if (web3.eth.accounts.length === 0) {
+      let state = $this.state;
+      state.loading = false;
+      $this.setState(state);
       return noMetaMaskAlert();
     }
 
@@ -292,18 +307,17 @@ export class Invest extends React.Component {
     const rate = this.state.pricingStrategy.rate;
     const maxCapBeforeDecimals = this.state.crowdsale.maximumSellableTokens/10**tokenDecimals;
     const tokenAmountOf = this.state.crowdsale.tokenAmountOf;
-    const weiRaised = this.state.crowdsale.weiRaised;
     const ethRaised = this.state.crowdsale.ethRaised;
 
     //balance: tiers, standard
     const investorBalanceTiers = (tokenAmountOf?((tokenAmountOf/10**tokenDecimals)/*.toFixed(tokenDecimals)*/).toString():"0");
     const investorBalanceStandard = (ethRaised?(ethRaised/*.toFixed(tokenDecimals)*//rate).toString():"0");
-    const investorBalance = (this.state.contractType==this.state.contractTypes.whitelistwithcap)?investorBalanceTiers:investorBalanceStandard;
+    const investorBalance = (this.state.contractType === this.state.contractTypes.whitelistwithcap)?investorBalanceTiers:investorBalanceStandard;
 
     //total supply: tiers, standard
     const tierCap = !isNaN(maxCapBeforeDecimals)?(maxCapBeforeDecimals/*.toFixed(tokenDecimals)*/).toString():"0";
     const standardCrowdsaleSupply = !isNaN(this.state.crowdsale.supply)?(this.state.crowdsale.supply/*.toFixed(tokenDecimals)*/).toString():"0";
-    const totalSupply = (this.state.contractType == this.state.contractTypes.whitelistwithcap)?tierCap:standardCrowdsaleSupply;
+    const totalSupply = (this.state.contractType === this.state.contractTypes.whitelistwithcap)?tierCap:standardCrowdsaleSupply;
 
     return <div className="invest container">
       <div className="invest-table">

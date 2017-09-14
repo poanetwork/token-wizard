@@ -4,9 +4,10 @@ import { getWeb3, checkWeb3, checkNetWorkByID, getCrowdsaleData, initializeAccum
 import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
 import { StepNavigation } from './Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../utils/constants'
+import { invalidCrowdsaleAddrAlert } from '../utils/alerts'
 import { defaultState } from '../utils/constants'
 import { Loader } from './Common/Loader'
-import { Link } from 'react-router-dom'
+import { ICOConfig } from './Common/config'
 const { CROWDSALE_PAGE } = NAVIGATION_STEPS
 
 export class Crowdsale extends React.Component {
@@ -22,8 +23,8 @@ export class Crowdsale extends React.Component {
 	    newState.loading = true;
 	    newState.tokenIsAlreadyCreated = true;
 	    this.setState(newState);
-		const networkID = getQueryVariable("networkID");
-		const contractType = getQueryVariable("contractType");
+		const networkID = ICOConfig.networkID?ICOConfig.networkID:getQueryVariable("networkID");
+		const contractType = this.state.contractTypes.whitelistwithcap;//getQueryVariable("contractType");
 		var $this = this;
 		setTimeout(function() {
 			getWeb3(function(web3) {
@@ -62,8 +63,14 @@ export class Crowdsale extends React.Component {
 	}
 
 	extractContractsData($this, web3) {
-		const crowdsaleAddrs = getURLParam("addr");
-		getJoinedTiers(web3, $this.state.contracts.crowdsale.abi, crowdsaleAddrs, [], function(joinedCrowdsales) {
+		const crowdsaleAddr = ICOConfig.crowdsaleContractURL?ICOConfig.crowdsaleContractURL:getURLParam("addr");
+		if (!web3.isAddress(crowdsaleAddr)) {
+			let state = $this.state;
+			state.loading = false;
+        	$this.setState(state);
+			return invalidCrowdsaleAddrAlert();
+		}
+		getJoinedTiers(web3, $this.state.contracts.crowdsale.abi, crowdsaleAddr, [], function(joinedCrowdsales) {
 			console.log("joinedCrowdsales: ");
 			console.log(joinedCrowdsales);
 
@@ -98,15 +105,18 @@ export class Crowdsale extends React.Component {
 
   	goToInvestPage = () => {
   		let queryStr = "";
-  		if (this.state.contracts.crowdsale.addr) {
-  			queryStr = "?addr=" + this.state.contracts.crowdsale.addr[0];
-  			/*for (let i = 1; i < this.state.contracts.crowdsale.addr.length; i++) {
-		      queryStr += `&addr=` + this.state.contracts.crowdsale.addr[i]
-		    }*/
-  			if (this.state.networkID)
-  				queryStr += "&networkID=" + this.state.networkID;
-  			if (this.state.contractType)
-  				queryStr += "&contractType=" + this.state.contractType;
+  		if (!ICOConfig.crowdsaleContractURL || !ICOConfig.networkID) {
+  			if (this.state.contracts.crowdsale.addr) {
+	  			queryStr = "?addr=" + this.state.contracts.crowdsale.addr[0];
+	  			/*for (let i = 1; i < this.state.contracts.crowdsale.addr.length; i++) {
+			      queryStr += `&addr=` + this.state.contracts.crowdsale.addr[i]
+			    }*/
+	  			if (this.state.networkID)
+	  				queryStr += "&networkID=" + this.state.networkID;
+	  			//uncomment, if more then one contractType will appear
+	  			/*if (this.state.contractType)
+	  				queryStr += "&contractType=" + this.state.contractType;*/
+	  		}
   		}
         this.props.history.push('/invest' + queryStr);
   	}
@@ -123,23 +133,23 @@ export class Crowdsale extends React.Component {
 		//tokens claimed: tiers, standard
 		const tokensClaimedStandard = rate?(this.state.crowdsale.ethRaised/rate/*.toFixed(tokenDecimals)*/):0;
 		const tokensClaimedTiers = rate?(this.state.crowdsale.tokensSold/10**tokenDecimals):0;
-	    const tokensClaimed = (this.state.contractType == this.state.contractTypes.whitelistwithcap)?tokensClaimedTiers:tokensClaimedStandard;
+	    const tokensClaimed = (this.state.contractType === this.state.contractTypes.whitelistwithcap)?tokensClaimedTiers:tokensClaimedStandard;
 	    	    
 
 	    //price: tiers, standard
 	    const tokensPerETHStandard = !isNaN(rate)?rate:0;
 	    const tokensPerETHTiers = !isNaN(1/rate)?1/this.state.web3.fromWei(rate, "ether"):0;
-	    const tokensPerETH = (this.state.contractType == this.state.contractTypes.whitelistwithcap)?tokensPerETHTiers:tokensPerETHStandard;
+	    const tokensPerETH = (this.state.contractType === this.state.contractTypes.whitelistwithcap)?tokensPerETHTiers:tokensPerETHStandard;
 	    
 	    //total supply: tiers, standard
 	    const tierCap = maxCapBeforeDecimals?(maxCapBeforeDecimals/*.toFixed(tokenDecimals)*/).toString():0;
 	    const standardCrowdsaleSupply = !isNaN(this.state.crowdsale.supply)?(this.state.crowdsale.supply/*.toFixed(tokenDecimals)*/).toString():0;
-    	const totalSupply = (this.state.contractType == this.state.contractTypes.whitelistwithcap)?tierCap:standardCrowdsaleSupply;
+    	const totalSupply = (this.state.contractType === this.state.contractTypes.whitelistwithcap)?tierCap:standardCrowdsaleSupply;
 
 	    //goal in ETH
 	    const goalInETHStandard = (totalSupply/rate).toExponential();
 	    const goalInETHTiers = this.state.crowdsale.maximumSellableTokensInWei?(this.state.web3.fromWei(this.state.crowdsale.maximumSellableTokensInWei, "ether").toString()):0;
-	    const goalInETH = (this.state.contractType == this.state.contractTypes.whitelistwithcap)?goalInETHTiers:goalInETHStandard;	    
+	    const goalInETH = (this.state.contractType === this.state.contractTypes.whitelistwithcap)?goalInETHTiers:goalInETHStandard;	    
 
 	    const tokensClaimedRatio = goalInETH?(ethRaised/goalInETH)*100:"0";
 	    

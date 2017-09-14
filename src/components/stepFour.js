@@ -1,6 +1,6 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { deployContract, getWeb3, checkWeb3, getNetworkVersion, addWhiteList, setFinalizeAgent, approve, setTransferAgent, setMintAgent, setReleaseAgent, updateJoinedCrowdsales, transferOwnership, setReservedTokensListMultiple, setLastCrowdsale } from '../utils/web3'
+import { deployContract, getWeb3, checkWeb3, getNetworkVersion, addWhiteList, setFinalizeAgent, setMintAgent, setReleaseAgent, updateJoinedCrowdsales, transferOwnership, setReservedTokensListMultiple, setLastCrowdsale } from '../utils/web3'
 import { noMetaMaskAlert } from '../utils/alerts'
 import { defaultState, FILE_CONTENTS, DOWNLOAD_NAME, DOWNLOAD_TYPE } from '../utils/constants'
 import { getOldState, handleContractsForFile, handleTokenForFile, handleCrowdsaleForFile, handlePricingStrategyForFile, handleConstantForFile, toFixed, scrollToBottom, download } from '../utils/utils'
@@ -8,8 +8,10 @@ import { getEncodedABIClientSide } from '../utils/microservices'
 import { stepTwo } from './stepTwo'
 import { StepNavigation } from './Common/StepNavigation'
 import { DisplayField } from './Common/DisplayField'
+import { DisplayTextArea } from './Common/DisplayTextArea'
 import { Loader } from './Common/Loader'
 import { NAVIGATION_STEPS } from '../utils/constants'
+import { copy } from '../utils/copy';
 const { PUBLISH } = NAVIGATION_STEPS
 
 export class stepFour extends stepTwo {
@@ -22,6 +24,7 @@ export class stepFour extends stepTwo {
 
   componentDidMount() {
     scrollToBottom();
+    copy('copy');
     checkWeb3(this.state.web3);
     switch (this.state.contractType) {
       case this.state.contractTypes.standard: {
@@ -80,7 +83,7 @@ export class stepFour extends stepTwo {
             }
 
             console.log($this.state.contracts.crowdsale.addr.length);
-            if ($this.state.contracts.crowdsale.addr.length == 0) {
+            if ($this.state.contracts.crowdsale.addr.length === 0) {
               $this.deployToken();
             } else {
               $this.deployPricingStrategy();
@@ -343,7 +346,9 @@ export class stepFour extends stepTwo {
     /*for (let i = 1; i < contracts.crowdsale.addr.length; i++) {
       url += `&addr=` + contracts.crowdsale.addr[i]
     }*/
-    url += `&networkID=` + contracts.crowdsale.networkID + `&contractType=` + this.state.contractType
+    url += `&networkID=` + contracts.crowdsale.networkID
+    //uncomment, if more then one contractType will appear
+    //url += `&contractType=` + this.state.contractType
     let newHistory = isValidContract ? url : crowdsalePage
     this.props.history.push(newHistory);
   }
@@ -455,7 +460,7 @@ export class stepFour extends stepTwo {
     newState.contracts.crowdsale.addr.push(crowdsaleAddr);
     this.setState(newState);
 
-    if (this.state.contractType == this.state.contractTypes.whitelistwithcap) {
+    if (this.state.contractType === this.state.contractTypes.whitelistwithcap) {
       this.deployFinalizeAgent();
     } else {
       newState.loading = false;
@@ -541,7 +546,7 @@ export class stepFour extends stepTwo {
     }
     newState.contracts.finalizeAgent.addr.push(finalizeAgentAddr);
     this.setState(newState, () => {
-      if (this.state.contractType == this.state.contractTypes.whitelistwithcap) {
+      if (this.state.contractType === this.state.contractTypes.whitelistwithcap) {
         let web3 = this.state.web3;
         let contracts = this.state.contracts;
         console.log(contracts);
@@ -620,7 +625,7 @@ export class stepFour extends stepTwo {
   }
 
   updateJoinedCrowdsalesRecursive = (i, web3, abi, addrs, cb) => {
-    if (addrs.length == 0) return cb();
+    if (addrs.length === 0) return cb();
     updateJoinedCrowdsales(web3, abi, addrs[i], addrs, () => {
       i++;
       if (i < addrs.length) {
@@ -668,91 +673,102 @@ export class stepFour extends stepTwo {
   render() {
     let crowdsaleSetups = [];
     for (let i = 0; i < this.state.crowdsale.length; i++) {
-      let capBlock = <DisplayField side='left' title={'Max cap'} value={this.state.crowdsale[i].supply?this.state.crowdsale[i].supply:""}/>
-      let updatableBlock = <DisplayField side='right' title={'Allow modifying'} value={this.state.crowdsale[i].updatable?this.state.crowdsale[i].updatable:"off"}/>
+      let capBlock = <DisplayField 
+        side='left' 
+        title={'Max cap'} 
+        value={this.state.crowdsale[i].supply?this.state.crowdsale[i].supply:""}
+        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      />
+      let updatableBlock = <DisplayField 
+        side='right' 
+        title={'Allow modifying'} 
+        value={this.state.crowdsale[i].updatable?this.state.crowdsale[i].updatable:"off"} 
+        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      />
           
       crowdsaleSetups.push(<div key={i.toString()}><div className="publish-title-container">
           <p className="publish-title" data-step={3+i}>Crowdsale Setup {this.state.crowdsale[i].tier}</p>
         </div>
         <div className="hidden">
-          <DisplayField side='left' title={'Start time'} value={this.state.crowdsale[i].startTime?this.state.crowdsale[i].startTime.split("T").join(" "):""}/>
-          <DisplayField side='right' title={'End time'} value={this.state.crowdsale[i].endTime?this.state.crowdsale[i].endTime.split("T").join(" "):""}/>
-          <DisplayField side='left' title={'Wallet address'} value={this.state.crowdsale[i].walletAddress?this.state.crowdsale[i].walletAddress:"0xc1253365dADE090649147Db89EE781d10f2b972f"}/>
-          <DisplayField side='right' title={'RATE'} value={this.state.pricingStrategy[i].rate?this.state.pricingStrategy[i].rate:1 + " ETH"}/>
-          {this.state.contractType==this.state.contractTypes.whitelistwithcap?capBlock:""}
-          {this.state.contractType==this.state.contractTypes.whitelistwithcap?updatableBlock:""}
+          <DisplayField 
+            side='left' 
+            title={'Start time'} 
+            value={this.state.crowdsale[i].startTime?this.state.crowdsale[i].startTime.split("T").join(" "):""} 
+            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+          />
+          <DisplayField 
+            side='right' 
+            title={'End time'} 
+            value={this.state.crowdsale[i].endTime?this.state.crowdsale[i].endTime.split("T").join(" "):""} 
+            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+          />
+          <DisplayField 
+            side='left' 
+            title={'Wallet address'} 
+            value={this.state.crowdsale[i].walletAddress?this.state.crowdsale[i].walletAddress:"0xc1253365dADE090649147Db89EE781d10f2b972f"} 
+            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+          />
+          <DisplayField 
+            side='right' 
+            title={'RATE'} 
+            value={this.state.pricingStrategy[i].rate?this.state.pricingStrategy[i].rate:1 + " ETH"} 
+            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+          />
+          {this.state.contractType===this.state.contractTypes.whitelistwithcap?capBlock:""}
+          {this.state.contractType===this.state.contractTypes.whitelistwithcap?updatableBlock:""}
         </div></div>);
     }
     let ABIEncodedOutputsCrowdsale = [];
     for (let i = 0; i < this.state.crowdsale.length; i++) {
-      ABIEncodedOutputsCrowdsale.push(<div key={i.toString()} className="item">
-          <p className="label">Constructor Arguments for {this.state.crowdsale[i].tier?this.state.crowdsale[i].tier : "contract"} (ABI-encoded and appended to the ByteCode above)</p>
-          <pre>
-            {this.state.contracts?this.state.contracts.crowdsale?this.state.contracts.crowdsale.abiConstructor?this.state.contracts.crowdsale.abiConstructor[i]:"":"":""}
-          </pre>
-          <p className="description">
-            Encoded ABI
-          </p>
-        </div>);
+      ABIEncodedOutputsCrowdsale.push(
+        <DisplayTextArea
+          key={i.toString()}
+          label={"Constructor Arguments for " + (this.state.crowdsale[i].tier?this.state.crowdsale[i].tier : "contract") + " (ABI-encoded and appended to the ByteCode above)"}
+          value={this.state.contracts?this.state.contracts.crowdsale?this.state.contracts.crowdsale.abiConstructor?this.state.contracts.crowdsale.abiConstructor[i]:"":"":""}
+          description="Encoded ABI"
+        />
+      );
     }
     let ABIEncodedOutputsPricingStrategy = [];
     for (let i = 0; i < this.state.pricingStrategy.length; i++) {
-      ABIEncodedOutputsPricingStrategy.push(<div key={i.toString()} className="item">
-          <p className="label">Constructor Arguments for {this.state.crowdsale[i].tier?this.state.crowdsale[i].tier : ""} Pricing Strategy Contract (ABI-encoded and appended to the ByteCode above)</p>
-          <pre>
-            {this.state.contracts?this.state.contracts.pricingStrategy?this.state.contracts.pricingStrategy.abiConstructor?this.state.contracts.pricingStrategy.abiConstructor[i]:"":"":""}
-          </pre>
-          <p className="description">
-            Contructor arguments for pricing strategy contract
-          </p>
-        </div>);
+      ABIEncodedOutputsPricingStrategy.push(
+        <DisplayTextArea
+          key={i.toString()}
+          label={"Constructor Arguments for " + (this.state.crowdsale[i].tier?this.state.crowdsale[i].tier : "") + " Pricing Strategy Contract (ABI-encoded and appended to the ByteCode above)"}
+          value={this.state.contracts?this.state.contracts.pricingStrategy?this.state.contracts.pricingStrategy.abiConstructor?this.state.contracts.pricingStrategy.abiConstructor[i]:"":"":""}
+          description="Contructor arguments for pricing strategy contract"
+        />
+      );
     }
-    let tokenBlock = <div><div className="item">
-          <p className="label">Token Contract Source Code</p>
-          <pre>
-            {this.state.contracts?this.state.contracts.token?this.state.contracts.token.src:"":""}
-          </pre>
-          <p className="description">
-          Token Contract Source Code
-          </p>
-        </div>
-        <div className="item">
-          <p className="label">Token Contract ABI</p>
-          <pre>
-            {this.state.contracts?this.state.contracts.token?JSON.stringify(this.state.contracts.token.abi):"":""}
-          </pre>
-          <p className="description">
-          Token Contract ABI
-          </p>
-        </div>
-        <div className="item">
-          <p className="label">Token Constructor Arguments (ABI-encoded and appended to the ByteCode above)</p>
-          <pre>
-            {this.state.contracts?this.state.contracts.token?this.state.contracts.token.abiConstructor?this.state.contracts.token.abiConstructor:"":"":""}
-          </pre>
-          <p className="description">
-          Token Constructor Arguments 
-          </p>
-        </div></div>;
-    let pricingStrategyBlock = <div><div className="item">
-          <p className="label">Pricing Strategy Contract Source Code</p>
-          <pre>
-            {this.state.contracts?this.state.contracts.pricingStrategy?this.state.contracts.pricingStrategy.src:"":""}
-          </pre>
-          <p className="description">
-          Pricing Strategy Contract Source Code
-          </p>
-        </div>
-        <div className="item">
-          <p className="label">Pricing Strategy Contract ABI</p>
-          <pre>
-            {this.state.contracts?this.state.contracts.pricingStrategy?JSON.stringify(this.state.contracts.pricingStrategy.abi):"":""}
-          </pre>
-          <p className="description">
-          Pricing Strategy Contract ABI
-          </p>
-        </div>
-        </div>;
+    let tokenBlock = <div>
+      <DisplayTextArea
+        label={"Token Contract Source Code"}
+        value={this.state.contracts?this.state.contracts.token?this.state.contracts.token.src:"":""}
+        description="Token Contract Source Code"
+      />
+      <DisplayTextArea
+        label={"Token Contract ABI"}
+        value={this.state.contracts?this.state.contracts.token?JSON.stringify(this.state.contracts.token.abi):"":""}
+        description="Token Contract ABI"
+      />
+       <DisplayTextArea
+        label={"Token Constructor Arguments (ABI-encoded and appended to the ByteCode above)"}
+        value={this.state.contracts?this.state.contracts.token?this.state.contracts.token.abiConstructor?this.state.contracts.token.abiConstructor:"":"":""}
+        description="Token Constructor Arguments"
+      />
+    </div>;
+    let pricingStrategyBlock = <div>
+      <DisplayTextArea
+        label={"Pricing Strategy Contract Source Code"}
+        value={this.state.contracts?this.state.contracts.pricingStrategy?this.state.contracts.pricingStrategy.src:"":""}
+        description="Pricing Strategy Contract Source Code"
+      />
+      <DisplayTextArea
+        label={"Pricing Strategy Contract ABI"}
+        value={this.state.contracts?this.state.contracts.pricingStrategy?JSON.stringify(this.state.contracts.pricingStrategy.abi):"":""}
+        description="Pricing Strategy Contract ABI"
+      />
+    </div>;
     return (
       <section className="steps steps_publish">
         <StepNavigation activeStep={PUBLISH} />
@@ -769,7 +785,7 @@ export class stepFour extends stepTwo {
               <div className="publish-title-container">
                 <p className="publish-title" data-step="1">Crowdsale Contract</p>
               </div>
-              <p className="label">{this.state.contractType==this.state.contractTypes.standard?"Standard":"Whitelist with cap"}</p>
+              <p className="label">{this.state.contractType===this.state.contractTypes.standard?"Standard":"Whitelist with cap"}</p>
               <p className="description">
               Crowdsale Contract
               </p>
@@ -778,43 +794,68 @@ export class stepFour extends stepTwo {
               <p className="publish-title" data-step="2">Token Setup</p>
             </div>
             <div className="hidden">
-              <DisplayField side='left' title={'Name'} value={this.state.token.name?this.state.token.name:"Token Name"}/>
-              <DisplayField side='right' title={'Ticker'} value={this.state.token.ticker?this.state.token.ticker:"Ticker"}/>
-              <DisplayField side='left' title={'SUPPLY'} value={this.state.token.supply?this.state.token.supply.toString():100}/>
-              <DisplayField side='right' title={'DECIMALS'} value={this.state.token.decimals?this.state.token.decimals.toString():485}/>
+              <DisplayField 
+                side='left' 
+                title='Name' 
+                value={this.state.token.name?this.state.token.name:"Token Name"} 
+                description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+              />
+              <DisplayField 
+                side='right' 
+                title='Ticker' 
+                value={this.state.token.ticker?this.state.token.ticker:"Ticker"} 
+                description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+              />
+              <DisplayField 
+                side='left' 
+                title='SUPPLY' 
+                value={this.state.token.supply?this.state.token.supply.toString():100} 
+                description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+              />
+              <DisplayField 
+                side='right' 
+                title='DECIMALS' 
+                value={this.state.token.decimals?this.state.token.decimals.toString():485} 
+                description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+              />
             </div>
             {crowdsaleSetups}
             <div className="publish-title-container">
               <p className="publish-title" data-step={2 + this.state.crowdsale.length + 1}>Crowdsale Setup</p>
             </div>
-            <div className="item">
-              <p className="label">Compiler Version</p>
-              <p className="value">0.4.11</p>
-              <p className="description">
-              Compiler Version
-              </p>
+            <div className="hidden">
+              <DisplayField 
+                side='left' 
+                title='Compiler Version' 
+                value={this.state.compilerVersion} 
+                description="Compiler Version"
+              />
+              <DisplayField 
+                side='right' 
+                title='Contract name' 
+                value={this.state.contractName} 
+                description="Crowdsale contract name"
+              />
+              <DisplayField 
+                side='left' 
+                title='Optimized' 
+                value={this.state.optimized.toString()} 
+                description="Optimization in compiling"
+              />
             </div>
             {!this.state.tokenIsAlreadyCreated?tokenBlock:""}
-            {(!this.state.tokenIsAlreadyCreated && this.state.contractType == this.state.contractTypes.whitelistwithcap)?pricingStrategyBlock:""}
-            {this.state.contractType == this.state.contractTypes.whitelistwithcap?ABIEncodedOutputsPricingStrategy:""}
-            <div className="item">
-              <p className="label">Crowdsale Contract Source Code</p>
-              <pre>
-                {this.state.contracts?this.state.contracts.crowdsale?this.state.contracts.crowdsale.src:"":""}
-              </pre>
-              <p className="description">
-              Crowdsale Contract Source Code
-              </p>
-            </div>
-            <div className="item">
-              <p className="label">Crowdsale Contract ABI</p>
-              <pre>
-                {this.state.contracts?this.state.contracts.crowdsale?JSON.stringify(this.state.contracts.crowdsale.abi):"":""}
-              </pre>
-              <p className="description">
-              Crowdsale Contract ABI
-              </p>
-            </div>
+            {(!this.state.tokenIsAlreadyCreated && this.state.contractType === this.state.contractTypes.whitelistwithcap)?pricingStrategyBlock:""}
+            {this.state.contractType === this.state.contractTypes.whitelistwithcap?ABIEncodedOutputsPricingStrategy:""}
+            <DisplayTextArea
+              label={"Crowdsale Contract Source Code"}
+              value={this.state.contracts?this.state.contracts.crowdsale?this.state.contracts.crowdsale.src:"":""}
+              description="Crowdsale Contract Source Code"
+            />
+            <DisplayTextArea
+              label={"Crowdsale Contract ABI"}
+              value={this.state.contracts?this.state.contracts.crowdsale?JSON.stringify(this.state.contracts.crowdsale.abi):"":""}
+              description="Crowdsale Contract ABI"
+            />
             {ABIEncodedOutputsCrowdsale}
           </div>
         </div>

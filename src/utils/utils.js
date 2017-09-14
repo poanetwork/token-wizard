@@ -1,5 +1,4 @@
 import { VALIDATION_TYPES } from './constants'
-import { getWeb3 } from '../utils/web3'
 const { VALID, EMPTY, INVALID } = VALIDATION_TYPES
 
 export function getQueryVariable(variable) {
@@ -15,29 +14,28 @@ export function getQueryVariable(variable) {
 
 export function getURLParam(key,target){
     var values = [];
-    if(!target){
-        target = window.location.href;
+    if(!target) {
+      target = window.location.href;
     }
 
     key = key.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
 
     var pattern = key + '=([^&#]+)';
     var o_reg = new RegExp(pattern,'ig');
-    while(true){
+    while (true) {
         var matches = o_reg.exec(target);
-        if(matches && matches[1]){
-            values.push(matches[1]);
+        if(matches && matches[1]) {
+          values.push(matches[1]);
         }
-        else{
-            break;
+        else {
+          break;
         }
     }
 
-    if(!values.length){
-         return null;   
-     }
-    else{
-       return values.length == 1 ? values[0] : values;
+    if (!values.length) {
+      return null;   
+    } else {
+      return values.length == 1 ? values[0] : values;
     }
 
 }
@@ -413,7 +411,6 @@ const inputFieldValidators = {
 }
 
 const inputFieldIsUnsubmitted = (currentValidation, newValidation) => currentValidation === EMPTY
-
 
 const isNotWhiteListTierObject = (value) => !(typeof value === 'object' && value.hasOwnProperty('whitelist') === true && value.hasOwnProperty('tier') === true)
 // still thinks that we do not have an array... we do

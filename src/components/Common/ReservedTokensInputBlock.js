@@ -2,7 +2,7 @@ import React from 'react'
 import '../../assets/stylesheets/application.css';
 import { InputField } from './InputField'
 import { RadioInputField } from './RadioInputField'
-import { TEXT_FIELDS, defaultState, initialStepTwoValues, intitialStepTwoValidations } from '../../utils/constants'
+import { TEXT_FIELDS, defaultState } from '../../utils/constants'
 import { ReservedTokensItem } from './ReservedTokensItem'
 import { getOldState } from '../../utils/utils'
 const { ADDRESS, DIMENSION, VALUE } = TEXT_FIELDS
@@ -26,8 +26,7 @@ export class ReservedTokensInputBlock extends React.Component {
         let isAdded = false;
         for (let i = 0; i < this.state.token.reservedTokens.length; i++) {
             let item = this.state.token.reservedTokens[i];
-            let addedAddr = item.addr;
-            if (addedAddr === addr && !item.deleted) {
+            if (item.addr === addr && item.dim === dim && !item.deleted) {
                 isAdded = true;
                 break;
             }

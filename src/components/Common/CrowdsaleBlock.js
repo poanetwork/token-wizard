@@ -1,12 +1,12 @@
 import React from 'react'
 import '../../assets/stylesheets/application.css';
 import { WhitelistInputBlock } from './WhitelistInputBlock'
-import { getOldState, defaultCompanyEndDate } from '../../utils/utils'
+import { defaultCompanyEndDate } from '../../utils/utils'
 import { InputField } from './InputField'
 import { RadioInputField } from './RadioInputField'
-import { defaultState, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS } from '../../utils/constants'
+import { VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS } from '../../utils/constants'
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
-const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME, ALLOWMODIFYING } = TEXT_FIELDS
+const { START_TIME, END_TIME, RATE, SUPPLY, CROWDSALE_SETUP_NAME, ALLOWMODIFYING } = TEXT_FIELDS
 
 export class CrowdsaleBlock extends React.Component {
 

@@ -19,6 +19,24 @@ export function noContractAlert() {
     });
 }
 
+export function invalidCrowdsaleAddrAlert() {
+    sweetAlert({
+      title: "Warning",
+      text: "Invalid crowdsale address is indicated in config and/or in query string.",
+      html: true,
+      type: "warning"
+    });
+}
+
+export function invalidNetworkIDAlert() {
+    sweetAlert({
+      title: "Warning",
+      text: "Invalid network ID is indicated in config and/or in query string.",
+      html: true,
+      type: "warning"
+    });
+}
+
 export function successfulInvestmentAlert(tokensToInvest) {
     sweetAlert({
         title: "Success",

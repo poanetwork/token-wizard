@@ -5,16 +5,16 @@ export class RadioInputField extends React.Component {
 	constructor(props) {
         super(props);
         this.state = {
-        	"checked1": props.defaultValue==this.props.vals[0]?true:false, 
-        	"checked2": props.defaultValue==this.props.vals[0]?false:true
+        	"checked1": props.defaultValue===this.props.vals[0]?true:false, 
+        	"checked2": props.defaultValue===this.props.vals[0]?false:true
         }
     }
 
     onChange(e) {
     	console.log(e.target);
     	this.setState({
-    		"checked1": e.target.value==this.props.vals[0]?true:false, 
-    		"checked2": e.target.value==this.props.vals[0]?false:true});
+    		"checked1": e.target.value===this.props.vals[0]?true:false, 
+    		"checked2": e.target.value===this.props.vals[0]?false:true});
     	this.props.onChange(e);
     }
 
