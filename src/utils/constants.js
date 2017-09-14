@@ -22,12 +22,11 @@ export const defaultState = {
 		endTime: '',
 		walletAddress: '',
 		supply: '',
-		rate: '',
 		whitelist: [], 
 		whiteListElements: [], 
 		whiteListInput: {}
 	}],
-	pricingStrategy: [{}],
+	pricingStrategy: [{rate: ''}],
 	blockTimeGeneration: 17,
 	compilerVersion: "0.4.11",
 	optimized: true,
@@ -50,6 +49,7 @@ export const NAVIGATION_STEPS = {
 
 
 export const VALIDATION_MESSAGES = {
+	TIER: 'Please enter a valid tier name between 1-30 characters',
 	NAME: 'Please enter a valid name between 1-30 characters',
 	TICKER: 'Please enter a valid Ticker that is less than three characters',
 	SUPPLY: 'Please enter a valid number greater than 0',
@@ -108,22 +108,23 @@ export const initialStepTwoValues = {
 }
 
 export const intitialStepThreeValidations = {
-	validations: {
+	validations: [{
+		tier: VALID,
 		startTime: VALID,
 		endTime: VALID,
 		walletAddress: EMPTY,
 		supply: VALID,
 		rate: EMPTY
-	}
+	}]
 }
 
 export const initialStepThreeValues = {
 	crowdsale: [{
+		tier: '',
 		startTime: '',
 		endTime: '',
 		walletAddress: '',
-		supply: '',
-		rate: ''
+		supply: ''
 	}]
 }
 
