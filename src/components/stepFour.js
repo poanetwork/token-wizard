@@ -203,7 +203,7 @@ export class stepFour extends stepTwo {
       parseInt(token.supply, 10),
       parseInt(token.decimals, 10),
       true,
-      this.state.token.globalmincap?toFixed(this.state.token.globalmincap*10**this.state.token.decimals).toString():0
+      this.state.crowdsale[0].whitelistdisabled === "yes"?this.state.token.globalmincap?toFixed(this.state.token.globalmincap*10**this.state.token.decimals).toString():0:0
     ]
   }
 
@@ -745,6 +745,17 @@ export class stepFour extends stepTwo {
         />
       );
     }
+    let globalLimitsBlock = <div><div className="publish-title-container">
+      <p className="publish-title" data-step={2 + this.state.crowdsale.length + 2}>Global Limits</p>
+    </div>
+    <div className="hidden">
+      <DisplayField 
+        side='left' 
+        title='Min Cap' 
+        value={this.state.token.globalmincap} 
+        description="Min Cap for all onvestors"
+      /></div>
+    </div>;
     let tokenBlock = <div>
       <DisplayTextArea
         label={"Token Contract Source Code"}
@@ -852,6 +863,7 @@ export class stepFour extends stepTwo {
                 description="Optimization in compiling"
               />
             </div>
+            {this.state.crowdsale[0].whitelistdisabled === "yes"?globalLimitsBlock:""}
             {!this.state.tokenIsAlreadyCreated?tokenBlock:""}
             {(!this.state.tokenIsAlreadyCreated && this.state.contractType === this.state.contractTypes.whitelistwithcap)?pricingStrategyBlock:""}
             {this.state.contractType === this.state.contractTypes.whitelistwithcap?ABIEncodedOutputsPricingStrategy:""}
