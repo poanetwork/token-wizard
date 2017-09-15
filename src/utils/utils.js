@@ -316,7 +316,7 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
                     params.vals.push(state.token.decimals);
                 } break;
                 case "_globalMinCap": {
-                  params.vals.push(state.token.globalmincap?toFixed(state.token.globalmincap*10**state.token.decimals).toString():0);
+                  params.vals.push(state.crowdsale[0].whitelistdisabled === "yes"?state.token.globalmincap?toFixed(state.token.globalmincap*10**state.token.decimals).toString():0:0);
                 } break;
                 case "_tokenSupply":
                 case "_initialSupply": {
