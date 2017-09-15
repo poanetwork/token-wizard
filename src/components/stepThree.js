@@ -154,7 +154,7 @@ export class stepThree extends stepTwo {
 
   render() {
     const { validations } = this.state
-    //console.log(validations);
+    let { token } = this.state
     let { crowdsale } = this.state
     let { pricingStrategy } = this.state
     console.log('this.state.contractType', this.state.contractType)
@@ -166,11 +166,11 @@ export class stepThree extends stepTwo {
           side='left' 
           type='number' 
           title={MINCAP} 
-          value={crowdsale[0].mincap} 
-          valid={validations[0].mincap} 
+          value={token.globalmincap} 
+          valid={validations.globalmincap} 
           errorMessage={VALIDATION_MESSAGES.MINCAP} 
-          onBlur={() => this.handleInputBlur('crowdsale', 'mincap', 0)}
-          onChange={(e) => this.changeState(e, 'pricingStrategy', 0, 'mincap')}
+          onBlur={() => this.handleInputBlur('token', 'globalmincap')}
+          onChange={(e) => this.changeState(e, 'token', 0, 'globalmincap')}
           description={`Minimum amount tokens to buy. Not a mininal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.`}
         />
       </div></div>

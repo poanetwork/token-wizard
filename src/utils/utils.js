@@ -315,6 +315,9 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
                 case "_decimals": {
                     params.vals.push(state.token.decimals);
                 } break;
+                case "_globalMinCap": {
+                  params.vals.push(state.token.globalmincap?toFixed(state.token.globalmincap*10**state.token.decimals).toString():0);
+                } break;
                 case "_tokenSupply":
                 case "_initialSupply": {
                     params.vals.push(state.token.supply);

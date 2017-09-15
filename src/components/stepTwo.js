@@ -127,7 +127,11 @@ export class stepTwo extends React.Component {
     }
 
     if ( Object.prototype.toString.call( newState[`validations`] ) === '[object Array]' ) {
-      newState[`validations`][key][property] = validateValue(value, property, newState)
+      if (!key) {
+        newState[`validations`][property] = validateValue(value, property, newState)
+      } else {
+        newState[`validations`][key][property] = validateValue(value, property, newState)
+      }
     } else {
       newState[`validations`][property] = validateValue(value, property, newState)
     }

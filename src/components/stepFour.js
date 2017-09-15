@@ -202,7 +202,8 @@ export class stepFour extends stepTwo {
       token.ticker,
       parseInt(token.supply, 10),
       parseInt(token.decimals, 10),
-      true
+      true,
+      this.state.token.globalmincap?toFixed(this.state.token.globalmincap*10**this.state.token.decimals).toString():0
     ]
   }
 
