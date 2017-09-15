@@ -39,7 +39,7 @@ export class CrowdsaleBlock extends React.Component {
     let { onChange } = this.props
     let { handleInputBlur } = this.props
     let whitelistInputBlock = <div>
-      <div className="white-list-title">
+      <div className="section-title">
           <p className="title">Whitelist</p>
         </div>
         <WhitelistInputBlock
