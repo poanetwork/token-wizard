@@ -13,7 +13,7 @@ import { WhitelistInputBlock } from './Common/WhitelistInputBlock'
 import { NAVIGATION_STEPS, defaultState, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS, intitialStepThreeValidations } from '../utils/constants'
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
-const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME, ALLOWMODIFYING, DISABLEWHITELISTING } = TEXT_FIELDS
+const { START_TIME, END_TIME, MINCAP, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME, ALLOWMODIFYING, DISABLEWHITELISTING } = TEXT_FIELDS
 
 export class stepThree extends stepTwo {
   constructor(props) {
@@ -158,6 +158,22 @@ export class stepThree extends stepTwo {
     let { crowdsale } = this.state
     let { pricingStrategy } = this.state
     console.log('this.state.contractType', this.state.contractType)
+    let globalSettingsBlock = <div><div className="section-title">
+        <p className="title">Global limits</p>
+      </div>
+      <div className='input-block-container'>
+        <InputField 
+          side='left' 
+          type='number' 
+          title={MINCAP} 
+          value={crowdsale[0].mincap} 
+          valid={validations[0].mincap} 
+          errorMessage={VALIDATION_MESSAGES.MINCAP} 
+          onBlur={() => this.handleInputBlur('crowdsale', 'mincap', 0)}
+          onChange={(e) => this.changeState(e, 'pricingStrategy', 0, 'mincap')}
+          description={`Minimum amount tokens to buy. Not a mininal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.`}
+        />
+      </div></div>
     if (this.state.contractType === this.state.contractTypes.standard) {
       return (
         <section className="steps steps_crowdsale-contract" ref="three">
@@ -238,7 +254,7 @@ export class stepThree extends stepTwo {
         </section>
       )
     } else if (this.state.contractType === this.state.contractTypes.whitelistwithcap) {
-      let whitelistInputBlock = <div><div className="white-list-title">
+      let whitelistInputBlock = <div><div className="section-title">
               <p className="title">Whitelist</p>
             </div><WhitelistInputBlock
               num={0}
@@ -354,6 +370,7 @@ export class stepThree extends stepTwo {
                   description={`Disables whitelistings. Anyone can buy on the tier.`}
               />
               </div>
+              {this.state.crowdsale[0].whitelistdisabled === "no"?"":globalSettingsBlock}
             </div>
             {this.state.crowdsale[0].whitelistdisabled === "yes"?"":whitelistInputBlock}
           </div>
