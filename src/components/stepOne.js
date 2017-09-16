@@ -23,6 +23,7 @@ export class stepOne extends React.Component {
   }
 
   getWhiteListWithCapCrowdsaleAssets (state) {
+    this.getCrowdsaleAsset("SafeMathLibExt", "safeMathLib", state)
     this.getCrowdsaleAsset("CrowdsaleWhiteListWithCap", "crowdsale", state)
     this.getCrowdsaleAsset("CrowdsaleWhiteListWithCapToken", "token", state)
     this.getCrowdsaleAsset("CrowdsaleWhiteListWithCapPricingStrategy", "pricingStrategy", state)

@@ -41,7 +41,7 @@ function compileContract(content) {
 			//0xbf90948c40197c1c22b5fdd72a212efda3994d68 - safemathlib with divides
 			//output.contracts[contractName].bytecode = solc.linkBytecode(output.contracts[contractName].bytecode, { ':SafeMathLib': '0xbf90948c40197c1c22b5fdd72a212efda3994d68' });
 			//0xe9ae538ffea453eae179e45a787ca76db619d40d - safemathlibext
-			output.contracts[contractName].bytecode = solc.linkBytecode(output.contracts[contractName].bytecode, { ":SafeMathLibExt": "0xe9ae538ffea453eae179e45a787ca76db619d40d" });
+			//output.contracts[contractName].bytecode = solc.linkBytecode(output.contracts[contractName].bytecode, { ":SafeMathLibExt": "0xe9ae538ffea453eae179e45a787ca76db619d40d" });
 			fs.writeFileSync(outputFolder + "/" + outputContractName + "_flat.bin", output.contracts[contractName].bytecode);
 			fs.writeFileSync(outputFolder + "/" + outputContractName + "_flat.abi", output.contracts[contractName].interface);
 		}
