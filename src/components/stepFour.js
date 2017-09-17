@@ -451,19 +451,6 @@ export class stepFour extends stepTwo {
     ]
   }
 
-  //AllocatedCrowdsale
-  /*getCrowdSaleParams = (web3) => {
-    return [
-      this.state.contracts.token.addr,
-      this.state.contracts.pricingStrategy.addr,
-      this.state.contracts.multisig.addr,
-      parseInt(Date.parse(this.state.crowdsale[0].startTime)/1000, 10), 
-      parseInt(Date.parse(this.state.crowdsale[0].endTime)/1000, 10), 
-      parseInt(this.state.token.supply, 10),
-      this.state.crowdsale[0].walletAddress
-    ]
-  }*/
-
   //MintedTokenCappedCrowdsale
   getCrowdSaleParams = (web3, i) => {
     return [
