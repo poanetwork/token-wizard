@@ -197,17 +197,12 @@ export class stepFour extends stepTwo {
     }
     newState.contracts.safeMathLib.addr = safeMathLibAddr;
     let contracts = newState.contracts;
-    console.log(contracts);
     let keys = Object.keys(contracts);
     for(let i=0;i<keys.length;i++){
         let key = keys[i];
-        console.log(key);
-        console.log(contracts[key]);
         if (contracts[key].bin)
           contracts[key].bin = window.reaplaceAll("__:SafeMathLibExt_______________________", safeMathLibAddr.substr(2), contracts[key].bin);
     }
-    console.log(contracts);
-    console.log(contracts["token"].bin);
     newState.contracts = contracts;
     this.setState(newState, () => {
       this.deployToken();
