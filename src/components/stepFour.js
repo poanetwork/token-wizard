@@ -204,9 +204,10 @@ export class stepFour extends stepTwo {
         console.log(key);
         console.log(contracts[key]);
         if (contracts[key].bin)
-          contracts[key].bin = window.reaplaceAll("__:SafeMathLibExt_______________________", safeMathLibAddr, contracts[key].bin);
+          contracts[key].bin = window.reaplaceAll("__:SafeMathLibExt_______________________", safeMathLibAddr.substr(2), contracts[key].bin);
     }
     console.log(contracts);
+    console.log(contracts["token"].bin);
     newState.contracts = contracts;
     this.setState(newState, () => {
       this.deployToken();
