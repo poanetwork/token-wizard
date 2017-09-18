@@ -998,7 +998,9 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
       contractInstance.new(...totalParams);
 
       function deployContractCB(err, contract) {
-        if (err) console.log(err);
+        if (err) {
+          return cb(err, null);
+        }
         if (contract) {
           console.log(contract);
           if (contract.address) {
