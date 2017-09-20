@@ -4,7 +4,7 @@ node_js:
   - "7"
 
 install:
-  - cd ./submodules/oracles-token-market-net-ico/
   - npm install
-  - cd ../../
-  - npm install
+
+after-script:
+  - sudo kill `sudo lsof -t -i:8545`
