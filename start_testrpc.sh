@@ -1,3 +1,2 @@
 #!/usr/bin/bash
-node_modules/.bin/testrpc --gasLimit 0x989680
-exit 1
+nohup node_modules/.bin/testrpc --gasLimit 0x989680 &>/dev/null &
