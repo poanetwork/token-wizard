@@ -3,8 +3,13 @@ node_js:
   - "node"
   - "7"
 
-before_install:
+install:
   - npm install
+  - cd ./submodules/oracles-token-market-net-ico/
+  - npm install
+
+
+before-script:
   - bash ./start_testrpc.sh
 
 script: 
