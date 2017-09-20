@@ -7,6 +7,4 @@ install:
   - npm install
   - cd ./submodules/oracles-token-market-net-ico/
   - npm install
-
-script: 
-  - npm test
+  - cd ../../
