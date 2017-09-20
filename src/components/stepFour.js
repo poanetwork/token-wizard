@@ -836,7 +836,7 @@ export class stepFour extends stepTwo {
                 <DisplayField 
                   side='left' 
                   title='SUPPLY' 
-                  value={this.state.token.supply?this.state.token.supply.toString():100} 
+                  value={this.state.token.supply?this.state.token.supply.toString():0} 
                   description="The supply is 0 for your token."
                 />
                 <DisplayField 
