@@ -2,3 +2,9 @@ language: node_js
 node_js:
   - "node"
   - "7"
+
+before-script:
+  - node_modules/.bin/testrpc --gasLimit 0x989680
+
+script: 
+  - npm test
