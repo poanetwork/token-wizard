@@ -3,7 +3,7 @@ node_js:
   - "node"
   - "7"
 
-before-script:
+before_install:
   - node_modules/.bin/testrpc --gasLimit 0x989680
 
 script: 
