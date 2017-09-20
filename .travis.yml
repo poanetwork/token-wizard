@@ -5,7 +5,7 @@ node_js:
 
 before_install:
   - npm install
-  - node_modules/.bin/testrpc --gasLimit 0x989680
+  - bash ./start_testrpc.sh
 
 script: 
   - npm test
