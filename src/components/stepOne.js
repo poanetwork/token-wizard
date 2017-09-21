@@ -39,30 +39,29 @@ export class stepOne extends React.Component {
     let src, bin, abi;
     let assetsCount = 3;
     let assetsIterator = 0;
-    let $this = this;
 
-    setFlatFileContentToState("./contracts/" + contractName + "_flat.sol", function(_content) {
+    setFlatFileContentToState("./contracts/" + contractName + "_flat.sol", (_content) => {
       src = _content;
       assetsIterator++;
 
       if (assetsIterator === assetsCount) {
-        $this.addContractsToState(src, bin, abi, stateProp, state);
+        this.addContractsToState(src, bin, abi, stateProp, state);
       }
     });
-    setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", function(_bin) {
+    setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", (_bin) => {
       bin = _bin;
       assetsIterator++;
 
       if (assetsIterator === assetsCount) {
-        $this.addContractsToState(src, bin, abi, stateProp, state);
+        this.addContractsToState(src, bin, abi, stateProp, state);
       }
     });
-    setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", function(_abi) {
+    setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", (_abi) => {
       abi = _abi;
       assetsIterator++;
 
       if (assetsIterator === assetsCount) {
-        $this.addContractsToState(src, bin, abi, stateProp, state);
+        this.addContractsToState(src, bin, abi, stateProp, state);
       }
     });
   }

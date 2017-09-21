@@ -28,21 +28,20 @@ export class stepFour extends stepTwo {
     checkWeb3(this.state.web3);
     switch (this.state.contractType) {
       case this.state.contractTypes.standard: {
-        let $this = this;
         let abiCrowdsale = this.state.contracts && this.state.contracts.crowdsale && this.state.contracts.crowdsale.abi || []
 
         let state = { ...this.state }
-        setTimeout(function() {
+        setTimeout(() => {
            getWeb3((web3) => {
             state.web3 = web3;
-            $this.setState(state);
-            getEncodedABIClientSide(web3, abiCrowdsale, $this.state, [], 0, (ABIencoded) => {
+            this.setState(state);
+            getEncodedABIClientSide(web3, abiCrowdsale, this.state, [], 0, (ABIencoded) => {
               let cntrct = "crowdsale";
-              let state = { ...$this.state }
+              let state = { ...this.state }
               state.contracts[cntrct].abiConstructor.push(ABIencoded);
               console.log(cntrct + " ABI encoded params constructor:");
               console.log(ABIencoded);
-              $this.setState(state);
+              this.setState(state);
             });
           });
         });
@@ -56,37 +55,36 @@ export class stepFour extends stepTwo {
         
         let abiPricingStrategy = this.state.contracts && this.state.contracts.pricingStrategy && this.state.contracts.pricingStrategy.abi || []
         
-        let $this = this;
-        setTimeout(function() {
+        setTimeout(() => {
            getWeb3((web3) => {
             state.web3 = web3;
-            $this.setState(state);
+            this.setState(state);
             if (!addrToken) {
               getEncodedABIClientSide(web3, abiToken, state, [], 0, (ABIencoded) => {
                 let cntrct = "token";
-                let state = { ...$this.state }
+                let state = { ...this.state }
                 state.contracts[cntrct].abiConstructor = ABIencoded;
                 console.log(cntrct + " ABI encoded params constructor:");
                 console.log(ABIencoded);
-                $this.setState(state);
+                this.setState(state);
               });
             }
-            for (let i = 0; i < $this.state.pricingStrategy.length; i++) {
+            for (let i = 0; i < this.state.pricingStrategy.length; i++) {
               getEncodedABIClientSide(web3, abiPricingStrategy, state, [], i, (ABIencoded) => {
                 let cntrct = "pricingStrategy";
-                let state = { ...$this.state }
+                let state = { ...this.state }
                 state.contracts[cntrct].abiConstructor.push(ABIencoded);
                 console.log(cntrct + " ABI encoded params constructor:");
                 console.log(ABIencoded);
-                $this.setState(state);
+                this.setState(state);
               });
             }
 
-            console.log($this.state.contracts.crowdsale.addr.length);
-            if ($this.state.contracts.crowdsale.addr.length === 0) {
-              $this.deploySafeMathLibrary();
+            console.log(this.state.contracts.crowdsale.addr.length);
+            if (this.state.contracts.crowdsale.addr.length === 0) {
+              this.deploySafeMathLibrary();
             } else {
-              $this.deployPricingStrategy();
+              this.deployPricingStrategy();
             }
           });
         });
@@ -346,16 +344,15 @@ export class stepFour extends stepTwo {
     newState.contracts.pricingStrategy.addr.push(pricingStrategyAddr);
     newState.loading = false;
     this.setState(newState);
-    let $this = this;
     let abiCrowdsale = this.state.contracts && this.state.contracts.crowdsale && this.state.contracts.crowdsale.abi || []
     for (let i = 0; i < this.state.crowdsale.length; i++) {
       getEncodedABIClientSide(this.state.web3, abiCrowdsale, newState, [], i, (ABIencoded) => {
         let cntrct = "crowdsale";
-        let state = { ...$this.state }
+        let state = { ...this.state }
         state.contracts[cntrct].abiConstructor.push(ABIencoded);
         console.log(cntrct + " ABI encoded params constructor:");
         console.log(ABIencoded);
-        $this.setState(state);
+        this.setState(state);
       });
     }
   }
