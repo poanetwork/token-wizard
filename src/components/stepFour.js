@@ -425,7 +425,7 @@ export class stepFour extends stepTwo {
         this.deployCrowdsaleRecursive(i, crowdsales, binCrowdsale, abiCrowdsale);
       })
     } else {
-      deployContract(i, this.state.web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, this.state, this.handleDeployedContract)
+      deployContract(i, this.state.web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, this.state, this.handleDeployedCrowdsaleContract)
     }
   }
 
@@ -458,7 +458,7 @@ export class stepFour extends stepTwo {
     ]
   }
 
-  handleDeployedContract = (err, crowdsaleAddr) => {
+  handleDeployedCrowdsaleContract = (err, crowdsaleAddr) => {
     let newState = { ...this.state }
     if (err) {
       newState.loading = false;
