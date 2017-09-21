@@ -131,21 +131,20 @@ export class stepThree extends stepTwo {
         newState.crowdsale[0].endTime = defaultCompanyEndDate(newState.crowdsale[0].startTime);
         let datesIterator = 0;
         let datesCount = 2;
-        let $this = this;
-        calculateFutureBlock(new Date(newState.crowdsale[0].startTime), newState.blockTimeGeneration, function(targetBlock) {
+        calculateFutureBlock(new Date(newState.crowdsale[0].startTime), newState.blockTimeGeneration, (targetBlock) => {
           newState.crowdsale[0].startBlock = targetBlock;
           datesIterator++;
 
           if (datesIterator === datesCount) {
-            $this.setState(newState);
+            this.setState(newState);
           }
         });
-        calculateFutureBlock(new Date(newState.crowdsale[0].endTime), newState.blockTimeGeneration, function(targetBlock) {
+        calculateFutureBlock(new Date(newState.crowdsale[0].endTime), newState.blockTimeGeneration, (targetBlock) => {
           newState.crowdsale[0].endBlock = targetBlock;
           datesIterator++;
 
           if (datesIterator === datesCount) {
-            $this.setState(newState);
+            this.setState(newState);
           }
         });
       });

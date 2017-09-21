@@ -21,35 +21,34 @@ export class Invest extends React.Component {
 
   componentDidMount () {
     let newState = { ...this.state }
-    var $this = this;
-    setTimeout(function() {
-     getWeb3(function(web3) {
+    setTimeout(() => {
+     getWeb3((web3) => {
       if (!web3) {
-        let state = $this.state;
+        let state = this.state;
         state.loading = false;
-        $this.setState(state);
+        this.setState(state);
         return
       };
 
       const networkID = ICOConfig.networkID?ICOConfig.networkID:getQueryVariable("networkID");
-      const contractType = $this.state.contractTypes.whitelistwithcap;// getQueryVariable("contractType");
+      const contractType = this.state.contractTypes.whitelistwithcap;// getQueryVariable("contractType");
       checkNetWorkByID(web3, networkID);
       newState.contractType = contractType;
 
-      const timeInterval = setInterval(() => $this.setState({ seconds: $this.state.seconds - 1}), 1000);
-      $this.setState({ timeInterval });
+      const timeInterval = setInterval(() => this.setState({ seconds: this.state.seconds - 1}), 1000);
+      this.setState({ timeInterval });
 
       switch (contractType) {
-        case $this.state.contractTypes.standard: {
-          getStandardCrowdsaleAssets(newState, function(_newState) {
-            $this.setState(_newState);
-            $this.extractContractsData($this, web3);
+        case this.state.contractTypes.standard: {
+          getStandardCrowdsaleAssets(newState, (_newState) => {
+            this.setState(_newState);
+            this.extractContractsData(web3);
           });
         } break;
-        case $this.state.contractTypes.whitelistwithcap: {
-          getWhiteListWithCapCrowdsaleAssets(newState, function(_newState) {
-            $this.setState(_newState);
-            $this.extractContractsData($this, web3);
+        case this.state.contractTypes.whitelistwithcap: {
+          getWhiteListWithCapCrowdsaleAssets(newState, (_newState) => {
+            this.setState(_newState);
+            this.extractContractsData(web3);
           });
         } break;
         default:
@@ -59,17 +58,16 @@ export class Invest extends React.Component {
    }, 500);
   }
 
-  extractContractsData($this, web3) {
-    var state = $this.state;
+  extractContractsData(web3) {
+    let state = this.state;
 
     const crowdsaleAddr = ICOConfig.crowdsaleContractURL?ICOConfig.crowdsaleContractURL:getURLParam("addr");
     if (!web3.isAddress(crowdsaleAddr)) {
-      let state = $this.state;
       state.loading = false;
-      $this.setState(state);
+      this.setState(state);
       return invalidCrowdsaleAddrAlert();
     }
-    getJoinedTiers(web3, $this.state.contracts.crowdsale.abi, crowdsaleAddr, [], function(joinedCrowdsales) {
+    getJoinedTiers(web3, this.state.contracts.crowdsale.abi, crowdsaleAddr, [], (joinedCrowdsales) => {
       console.log("joinedCrowdsales: ");
       console.log(joinedCrowdsales);
 
@@ -82,39 +80,39 @@ export class Invest extends React.Component {
       state.contracts.crowdsale.addr = _crowdsaleAddrs;
 
       if (web3.eth.accounts.length === 0) {
-        let state = $this.state;
+        let state = this.state;
         state.loading = false;
-        $this.setState(state);
+        this.setState(state);
         return
       };
 
       state.curAddr = web3.eth.accounts[0];
       state.web3 = web3;
-      $this.setState(state);
+      this.setState(state);
 
-      if (!$this.state.contracts.crowdsale.addr) {
-        let state = $this.state;
+      if (!this.state.contracts.crowdsale.addr) {
+        let state = this.state;
         state.loading = false;
-        $this.setState(state);
+        this.setState(state);
         return
       };
-      findCurrentContractRecursively(0, $this, web3, null, function(crowdsaleContract) {
+      findCurrentContractRecursively(0, this, web3, null, (crowdsaleContract) => {
         if (!crowdsaleContract) {
           state.loading = false;
-          return $this.setState(state);
+          return this.setState(state);
         }
-        getCrowdsaleData(web3, $this, crowdsaleContract, function() { 
-          initializeAccumulativeData($this, function() {
-            getAccumulativeCrowdsaleData(web3, $this, function() {
+        getCrowdsaleData(web3, this, crowdsaleContract, () => { 
+          initializeAccumulativeData(this, () => {
+            getAccumulativeCrowdsaleData(web3, this, () => {
             });
           });
         });
-        getCrowdsaleTargetDates(web3, $this, function() {
-          console.log($this.state.crowdsale);
-          if ($this.state.crowdsale.endDate) {
-            let state = $this.state;
+        getCrowdsaleTargetDates(web3, this, () => {
+          console.log(this.state.crowdsale);
+          if (this.state.crowdsale.endDate) {
+            let state = this.state;
             state.seconds = (state.crowdsale.endDate - new Date().getTime())/1000;
-            $this.setState(state);
+            this.setState(state);
           }
         })
       })
@@ -125,50 +123,49 @@ export class Invest extends React.Component {
     let state = this.state;
     state.loading = true;
     this.setState(state);
-    let $this = this;
-    let startBlock = parseInt($this.state.crowdsale.startBlock, 10);
-    let startDate = $this.state.crowdsale.startDate;
+    let startBlock = parseInt(this.state.crowdsale.startBlock, 10);
+    let startDate = this.state.crowdsale.startDate;
     if ((isNaN(startBlock) || startBlock === 0) && !startDate) {
-      let state = $this.state;
+      let state = this.state;
       state.loading = false;
-      $this.setState(state);
+      this.setState(state);
       return;
     }
-    let web3 = $this.state.web3;
+    let web3 = this.state.web3;
     if (web3.eth.accounts.length === 0) {
-      let state = $this.state;
+      let state = this.state;
       state.loading = false;
-      $this.setState(state);
+      this.setState(state);
       return noMetaMaskAlert();
     }
 
     switch (this.state.contractType) {
-      case $this.state.contractTypes.standard: {
-        web3.eth.getBlockNumber(function(err, curBlock) {
+      case this.state.contractTypes.standard: {
+        web3.eth.getBlockNumber((err, curBlock) => {
           if (err) return console.log(err);
-          $this.investToTokensForStandardCrowdsale(web3, $this, curBlock)
+          this.investToTokensForStandardCrowdsale(web3, curBlock)
         });
       } break;
-      case $this.state.contractTypes.whitelistwithcap: {
-        this.investToTokensForWhitelistedCrowdsale(web3, $this)
+      case this.state.contractTypes.whitelistwithcap: {
+        this.investToTokensForWhitelistedCrowdsale(web3)
       } break;
       default:
         break;
     }
   }
 
-  investToTokensForStandardCrowdsale(web3, $this, curBlock) {
-    if (parseInt($this.state.crowdsale.startBlock, 10) > parseInt(curBlock, 10)) {
-      return investmentDisabledAlert(parseInt($this.state.crowdsale.startBlock, 10), curBlock);
+  investToTokensForStandardCrowdsale(web3, curBlock) {
+    if (parseInt(this.state.crowdsale.startBlock, 10) > parseInt(curBlock, 10)) {
+      return investmentDisabledAlert(parseInt(this.state.crowdsale.startBlock, 10), curBlock);
     }
 
-    let weiToSend = web3.toWei($this.state.tokensToInvest/$this.state.pricingStrategy.rate, "ether");
+    let weiToSend = web3.toWei(this.state.tokensToInvest/this.state.pricingStrategy.rate, "ether");
     let opts = {
       from: web3.eth.accounts[0],
       value: weiToSend
     };
 
-    attachToContract(web3, $this.state.contracts.crowdsale.abi, $this.state.contracts.crowdsale.addr[0], function(err, crowdsaleContract) {
+    attachToContract(web3, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr[0], (err, crowdsaleContract) => {
       console.log("attach to crowdsale contract");
       if (err) return console.log(err);
       if (!crowdsaleContract) return noContractAlert();
@@ -176,56 +173,56 @@ export class Invest extends React.Component {
       console.log(crowdsaleContract);
       console.log(web3.eth.defaultAccount);
 
-      crowdsaleContract.buySampleTokens.sendTransaction(web3.eth.accounts[0], opts, function(err, txHash) {
+      crowdsaleContract.buySampleTokens.sendTransaction(web3.eth.accounts[0], opts, (err, txHash) => {
         if (err) return console.log(err);
         
         console.log("tx hash: " + txHash);
-        successfulInvestmentAlert($this.state.tokensToInvest);
+        successfulInvestmentAlert(this.state.tokensToInvest);
       });
     });
   }
 
-  investToTokensForWhitelistedCrowdsale(web3, $this) {
-    console.log("startDate: " + $this.state.crowdsale.startDate);
+  investToTokensForWhitelistedCrowdsale(web3) {
+    console.log("startDate: " + this.state.crowdsale.startDate);
     console.log("(new Date()).getTime(): " + (new Date()).getTime());
-    if ($this.state.crowdsale.startDate > (new Date()).getTime()) {
-      let state = $this.state;
+    if (this.state.crowdsale.startDate > (new Date()).getTime()) {
+      let state = this.state;
       state.loading = false;
-      $this.setState(state);
-      return investmentDisabledAlertInTime($this.state.crowdsale.startDate);
+      this.setState(state);
+      return investmentDisabledAlertInTime(this.state.crowdsale.startDate);
     }
 
-    findCurrentContractRecursively(0, $this, web3, null, function(crowdsaleContract, tierNum) {
+    findCurrentContractRecursively(0, this, web3, null, (crowdsaleContract, tierNum) => {
       if (!crowdsaleContract) {
-        let state = $this;
+        let state = this;
         state.loading = false;
-        return $this.setState(state);
+        return this.setState(state);
       }
-      $this.investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, web3, $this);
+      this.investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, web3);
     })
   }
 
-  investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, web3, $this) {
+  investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, web3) {
     let nextTiers = [];
-    console.log($this.state.contracts.crowdsale);
-    for (let i = tierNum + 1; i < $this.state.contracts.crowdsale.addr.length; i++) {
-      nextTiers.push($this.state.contracts.crowdsale.addr[i]);
+    console.log(this.state.contracts.crowdsale);
+    for (let i = tierNum + 1; i < this.state.contracts.crowdsale.addr.length; i++) {
+      nextTiers.push(this.state.contracts.crowdsale.addr[i]);
     }
     console.log("nextTiers: " + nextTiers);
     console.log(nextTiers.length);
 
-    let decimals = parseInt($this.state.token.decimals, 10);
+    let decimals = parseInt(this.state.token.decimals, 10);
     console.log("decimals: " + decimals);
-    let rate = parseInt($this.state.pricingStrategy.rate, 10); //it is from contract. It is already in wei. How much 1 token costs in wei.
+    let rate = parseInt(this.state.pricingStrategy.rate, 10); //it is from contract. It is already in wei. How much 1 token costs in wei.
     console.log("rate: " + rate);
-    let tokensToInvest = parseFloat($this.state.tokensToInvest);
+    let tokensToInvest = parseFloat(this.state.tokensToInvest);
     console.log("tokensToInvest: " + tokensToInvest);
 
     console.log("tokensToInvest*rate/10**decimals: " + tokensToInvest*rate/10**decimals);
 
-    //let weiToSend = web3.toWei($this.state.tokensToInvest*$this.state.pricingStrategy.rate/10**$this.state.token.decimals, "ether");
-    //let weiToSend = $this.state.tokensToInvest*$this.state.pricingStrategy.rate;
-    //let weiToSend = $this.state.tokensToInvest*$this.state.pricingStrategy.rate/10**$this.state.token.decimals;
+    //let weiToSend = web3.toWei(this.state.tokensToInvest*this.state.pricingStrategy.rate/10**this.state.token.decimals, "ether");
+    //let weiToSend = this.state.tokensToInvest*this.state.pricingStrategy.rate;
+    //let weiToSend = this.state.tokensToInvest*this.state.pricingStrategy.rate/10**this.state.token.decimals;
     let weiToSend = parseInt(tokensToInvest*rate, 10);
     console.log("weiToSend: " + weiToSend);
     let opts = {
@@ -233,16 +230,17 @@ export class Invest extends React.Component {
       value: weiToSend
     };
     console.log(opts);
-    crowdsaleContract.buy.sendTransaction(opts, function(err, txHash) {
-    //crowdsaleContract.buy.sendTransaction(nextTiers, opts, function(err, txHash) {
+    crowdsaleContract.buy.sendTransaction(opts, (err, txHash) => {
+    //crowdsaleContract.buy.sendTransaction(nextTiers, opts, (err, txHash) => {
       if (err) {
-        let state = $this.state;
+        let state = this.state;
         state.loading = false;
-        $this.setState(state);
+        this.setState(state);
         return console.log(err);
       }
       
       console.log("txHash: " + txHash);
+      let $this = this;
       checkTxMined(web3, txHash, function txMinedCallback(receipt) {
         if (receipt) {
           if (receipt.blockNumber) {
@@ -252,7 +250,7 @@ export class Invest extends React.Component {
             successfulInvestmentAlert($this.state.tokensToInvest);
           }
         } else {
-          setTimeout(function() {
+          setTimeout(() => {
             checkTxMined(web3, txHash, txMinedCallback);
           }, 500);
         }
