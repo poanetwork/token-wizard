@@ -20,6 +20,7 @@
   "dependencies": {
     "clipboard": "^1.7.1",
     "ethereumjs-abi": "^0.6.4",
+    "ethereumjs-testrpc": "^4.1.3",
     "install": "^0.10.1",
     "jquery": "^3.2.1",
     "jspdf": "^1.3.3",
@@ -33,6 +34,7 @@
     "replaceall": "^0.1.6",
     "solc": "^0.4.14",
     "sweetalert": "^1.1.3",
+    "truffle": "^3.4.9",
     "web3": "^0.19.1",
     "zeppelin-solidity": "^1.2.0"
   },
@@ -56,7 +58,7 @@
   "scripts": {
     "start": "npm run generateFlatSoliditySafeMathLibContract && npm run generateFlatSolidityCrowdsaleNullFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleContract && npm run generateFlatSolidityCrowdsaleTokenContract && npm run generateFlatSolidityCrowdsalePricingStrategyContract && npm run compileSafeMathLibExtContract && npm run compileCrowdsaleNullFinalizeAgentContract && npm run compileCrowdsaleFinalizeAgentContract && npm run compileCrowdsaleContract && npm run compileCrowdsaleTokenContract && npm run compileCrowdsalePricingStrategyContract && react-scripts start",
     "build": "git submodule update --init --recursive --remote && npm run generateFlatSoliditySafeMathLibContract && npm run generateFlatSolidityCrowdsaleNullFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleContract && npm run generateFlatSolidityCrowdsaleTokenContract && npm run generateFlatSolidityCrowdsalePricingStrategyContract && npm run compileSafeMathLibExtContract && npm run compileCrowdsaleNullFinalizeAgentContract && npm run compileCrowdsaleFinalizeAgentContract && npm run compileCrowdsaleContract && npm run compileCrowdsaleTokenContract && npm run compileCrowdsalePricingStrategyContract && react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "bash ./start_testrpc.sh && cd ./submodules/oracles-token-market-net-ico/ && npm install && node_modules/.bin/truffle migrate --network testrpc && react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "generateFlatSolidityTokenTransferProxyContract": "node $npm_package_config_combine_solidity_script $npm_package_config_0xproject_path/TokenTransferProxy.sol $npm_package_config_contract_folder TokenTransferProxy",
     "generateFlatSolidityMultiSigContract": "node $npm_package_config_combine_solidity_script $npm_package_config_0xproject_path/MultiSigWalletWithTimeLockExceptRemoveAuthorizedAddress.sol $npm_package_config_contract_folder MultiSig",

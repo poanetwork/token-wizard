@@ -2,3 +2,9 @@ language: node_js
 node_js:
   - "node"
   - "7"
+
+install:
+  - npm install
+
+after-script:
+  - sudo kill `sudo lsof -t -i:8545`
