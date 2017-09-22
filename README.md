@@ -101,6 +101,8 @@ Test scripts are added to Travis CI and executed at every pull request.
 If you want to start it by yourself, simply run the command `npm test` from the root directory. 
 It will start testrpc at port 8545, Truffle will compile, deploy contracts to it and Truffle will execute tests. 
 
+*Note:* Kill testrpc after tests will executed: sudo kill `sudo lsof -t -i:8545'`.
+
 Currently available tests cover the following functionality:
 
 ```
