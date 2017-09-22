@@ -107,55 +107,55 @@ Currently available tests cover the following functionality:
 
 ```
 Contract: CrowdsaleTokenExt
-    ✓ should get absolute reserved tokens for investor
-    ✓ should get reserved tokens in percentage for investor
+    ✓ should get absolute reserved tokens for investor (48ms)
+    ✓ should get reserved tokens in percentage for investor (50ms)
     ✓ should get mint agent: crowdsale contract
     ✓ should get mint agent: NullFinalizeAgentExt contract
     ✓ should get mint agent: ReservedTokensFinalizeAgent contract
-    ✓ should get release agent
+    ✓ should get release agent (57ms)
     ✓ should get owner
   Contract: FlatPricingExt
     ✓ should get last crowdsale tier for pricing strategy contract
     ✓ should return rate of pricing strategy contract
   Contract: MintedTokenCappedCrowdsaleExt
     ✓ should get last crowdsale tier for crowdsale contract
-    ✓ should get finalize agent (115ms)
-    ✓ should get early participant white list (43ms)
-    ✓ should get early participant white list minCap (38ms)
-    ✓ should get early participant white list maxCap (44ms)
-    ✓ shouldn't accept investment from not whitelisted user (87ms)
-    ✓ shouldn't accept investment from whitelisted user less than minCap (108ms)
-    ✓ shouldn't accept investment from whitelisted user more than maxCap (109ms)
-    ✓ should accept buy from whitelisted user within cap range (209ms)
-    ✓ should return updated balance of multisig (104ms)
+    ✓ should get finalize agent
+    ✓ should get early participant white list (42ms)
+    ✓ should get early participant white list minCap (77ms)
+    ✓ should get early participant white list maxCap (55ms)
+    ✓ shouldn't accept investment from not whitelisted user (117ms)
+    ✓ shouldn't accept investment from whitelisted user less than minCap (122ms)
+    ✓ shouldn't accept investment from whitelisted user more than maxCap (117ms)
+    ✓ should accept buy from whitelisted user within cap range (185ms)
+    ✓ should return updated balance of multisig (108ms)
     ✓ should return token's balance we have bought in previous step
-    ✓ should accept buy less than minCap at second buy (204ms)
-    ✓ should return updated balance of multisig (103ms)
-    ✓ should accept buy of fractioned amount of tokens from whitelisted user within cap range (172ms)
-    ✓ should return token balance we have bought in previous step
+    ✓ should accept buy less than minCap at second buy (221ms)
     ✓ should return updated balance of multisig (105ms)
-    ✓ shouldn't accept investment from whitelisted user that exceeds maxCap (96ms)
-    ✓ should set endsAt for crowdsale (47ms)
-    ✓ should get state for crowdsale (84ms)
-    ✓ should get state for crowdsale (91ms)
-    ✓ should get state for crowdsale (90ms)
-    ✓ should get state for crowdsale (84ms)
-    ✓ should get state for crowdsale (123ms)
-    ✓ should get state for crowdsale (95ms)
-    ✓ should get state for crowdsale (89ms)
-    ✓ should get state for crowdsale (95ms)
+    ✓ should accept buy of fractionated amount of tokens from whitelisted user within cap range (178ms)
+    ✓ should return token balance we have bought in previous step
+    ✓ should return updated balance of multisig (104ms)
+    ✓ shouldn't accept investment from whitelisted user that exceeds maxCap (111ms)
+    ✓ should set endsAt for crowdsale (46ms)
+    ✓ should get state for crowdsale (139ms)
+    ✓ should get state for crowdsale (104ms)
+    ✓ should get state for crowdsale (94ms)
+    ✓ should get state for crowdsale (104ms)
+    ✓ should get state for crowdsale (102ms)
+    ✓ should get state for crowdsale (92ms)
+    ✓ should get state for crowdsale (94ms)
+    ✓ should get state for crowdsale (106ms)
     ✓ should get state for crowdsale (88ms)
-    ✓ should get state for crowdsale (84ms)
-    ✓ should finalize crowdsale (249ms)
+    ✓ should get state for crowdsale (126ms)
+    ✓ should finalize crowdsale (346ms)
     ✓ should return updated token balance of user include reserved tokens
   Contract: NullFinalizeAgentExt
     ✓ 
   Contract: ReservedTokensFinalizeAgent
     ✓ 
   Contract: SafeMathLibExt
-    ✓ should accurately multipliy numbers
+    ✓ should accurately multiply numbers
     ✓ should accurately divide numbers
-    ✓ should accurately substract numbers
+    ✓ should accurately subtract numbers
     ✓ should accurately add numbers
   45 passing (4s)
 ```
