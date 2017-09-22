@@ -1,9 +1,9 @@
 ![ICO Wizard DApp](https://forum.oracles.org/uploads/default/original/1X/a06ee82b46666b06986a84d648073543fd324b8d.jpg)
-[![Build Status](https://travis-ci.org/oraclesorg/ico-wizard.svg?branch=master)](https://travis-ci.org/oraclesorg/ico-wizard)
 
 # ICO Wizard DApp
 
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/hyperium/hyper/master/LICENSE)
+[![Build Status](https://travis-ci.org/oraclesorg/ico-wizard.svg?branch=master)](https://travis-ci.org/oraclesorg/ico-wizard)
 
 ## Introduction
 
@@ -95,67 +95,64 @@ export const ICOConfig = {
 ### Tests
 
 ICO wizard contracts tests are written in javascript with [Truffle framework](http://truffleframework.com/). 
-Contracts are deploying in [testrpc](https://github.com/ethereumjs/testrpc) with script.
+Contracts are deploying in [testrpc](https://github.com/ethereumjs/testrpc) with the script.
 Test scripts are added to Travis CI and executed at every pull request.
 
 If you want to start it by yourself, simply run the command `npm test` from the root directory. 
-It will start `testrpc` at port 8545, `truffle` will compile, deploy contracts to it and will execute tests. 
+It will start testrpc at port 8545, Truffle will compile, deploy contracts to it and Truffle will execute tests. 
 
-Currently available tests cover the following functionality:
+*Note:* Kill testrpc after tests will executed: sudo kill `sudo lsof -t -i:8545'`.
+
+Currently available tests cover the following scenario:
+
+The updatable, whitelisted one tier crowdsale contract with one address in white list and reserved tokens for the same address (both: in absoulute values and in percentage)
+
+Checklist of contracts' testing:
 
 ```
 Contract: CrowdsaleTokenExt
-    ✓ should get absolute reserved tokens for investor
-    ✓ should get reserved tokens in percentage for investor
+    ✓ should get absolute reserved tokens for investor (48ms)
+    ✓ should get reserved tokens in percentage for investor (50ms)
     ✓ should get mint agent: crowdsale contract
     ✓ should get mint agent: NullFinalizeAgentExt contract
     ✓ should get mint agent: ReservedTokensFinalizeAgent contract
-    ✓ should get release agent
+    ✓ should get release agent (57ms)
     ✓ should get owner
   Contract: FlatPricingExt
     ✓ should get last crowdsale tier for pricing strategy contract
     ✓ should return rate of pricing strategy contract
   Contract: MintedTokenCappedCrowdsaleExt
     ✓ should get last crowdsale tier for crowdsale contract
-    ✓ should get finalize agent (115ms)
-    ✓ should get early participant white list (43ms)
-    ✓ should get early participant white list minCap (38ms)
-    ✓ should get early participant white list maxCap (44ms)
-    ✓ shouldn't accept investment from not whitelisted user (87ms)
-    ✓ shouldn't accept investment from whitelisted user less than minCap (108ms)
-    ✓ shouldn't accept investment from whitelisted user more than maxCap (109ms)
-    ✓ should accept buy from whitelisted user within cap range (209ms)
-    ✓ should return updated balance of multisig (104ms)
+    ✓ should get finalize agent
+    ✓ should get early participant white list (42ms)
+    ✓ should get early participant white list minCap (77ms)
+    ✓ should get early participant white list maxCap (55ms)
+    ✓ shouldn't accept investment from not whitelisted user (117ms)
+    ✓ shouldn't accept investment from whitelisted user less than minCap (122ms)
+    ✓ shouldn't accept investment from whitelisted user more than maxCap (117ms)
+    ✓ should accept buy from whitelisted user within cap range (185ms)
+    ✓ should return updated balance of multisig (108ms)
     ✓ should return token's balance we have bought in previous step
-    ✓ should accept buy less than minCap at second buy (204ms)
-    ✓ should return updated balance of multisig (103ms)
-    ✓ should accept buy of fractioned amount of tokens from whitelisted user within cap range (172ms)
-    ✓ should return token balance we have bought in previous step
+    ✓ should accept buy less than minCap at second buy (221ms)
     ✓ should return updated balance of multisig (105ms)
-    ✓ shouldn't accept investment from whitelisted user that exceeds maxCap (96ms)
-    ✓ should set endsAt for crowdsale (47ms)
-    ✓ should get state for crowdsale (84ms)
-    ✓ should get state for crowdsale (91ms)
-    ✓ should get state for crowdsale (90ms)
-    ✓ should get state for crowdsale (84ms)
-    ✓ should get state for crowdsale (123ms)
-    ✓ should get state for crowdsale (95ms)
-    ✓ should get state for crowdsale (89ms)
-    ✓ should get state for crowdsale (95ms)
-    ✓ should get state for crowdsale (88ms)
-    ✓ should get state for crowdsale (84ms)
-    ✓ should finalize crowdsale (249ms)
+    ✓ should accept buy of fractionated amount of tokens from whitelisted user within cap range (178ms)
+    ✓ should return token balance we have bought in previous step
+    ✓ should return updated balance of multisig (104ms)
+    ✓ shouldn't accept investment from whitelisted user that exceeds maxCap (111ms)
+    ✓ should set endsAt for crowdsale (46ms)
+    ✓ should get state for crowdsale (139ms)
+    ✓ should finalize crowdsale (346ms)
     ✓ should return updated token balance of user include reserved tokens
   Contract: NullFinalizeAgentExt
     ✓ 
   Contract: ReservedTokensFinalizeAgent
     ✓ 
   Contract: SafeMathLibExt
-    ✓ should accurately multipliy numbers
+    ✓ should accurately multiply numbers
     ✓ should accurately divide numbers
-    ✓ should accurately substract numbers
+    ✓ should accurately subtract numbers
     ✓ should accurately add numbers
-  45 passing (4s)
+  36 passing (4s)
 ```
 
 ## Projects built on ICO Wizard
