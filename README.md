@@ -101,6 +101,63 @@ Test scripts are added to Travis CI and executed at every pull request.
 If you want to start it by yourself, simply run the command `npm test` from the root directory. 
 It will start `testrpc` at port 8545, `truffle` will compile, deploy contracts to it and will execute tests. 
 
+Currently available tests cover the following functionality:
+
+```
+Contract: CrowdsaleTokenExt
+    ✓ should get absolute reserved tokens for investor
+    ✓ should get reserved tokens in percentage for investor
+    ✓ should get mint agent: crowdsale contract
+    ✓ should get mint agent: NullFinalizeAgentExt contract
+    ✓ should get mint agent: ReservedTokensFinalizeAgent contract
+    ✓ should get release agent
+    ✓ should get owner
+  Contract: FlatPricingExt
+    ✓ should get last crowdsale tier for pricing strategy contract
+    ✓ should return rate of pricing strategy contract
+  Contract: MintedTokenCappedCrowdsaleExt
+    ✓ should get last crowdsale tier for crowdsale contract
+    ✓ should get finalize agent (115ms)
+    ✓ should get early participant white list (43ms)
+    ✓ should get early participant white list minCap (38ms)
+    ✓ should get early participant white list maxCap (44ms)
+    ✓ shouldn't accept investment from not whitelisted user (87ms)
+    ✓ shouldn't accept investment from whitelisted user less than minCap (108ms)
+    ✓ shouldn't accept investment from whitelisted user more than maxCap (109ms)
+    ✓ should accept buy from whitelisted user within cap range (209ms)
+    ✓ should return updated balance of multisig (104ms)
+    ✓ should return token's balance we have bought in previous step
+    ✓ should accept buy less than minCap at second buy (204ms)
+    ✓ should return updated balance of multisig (103ms)
+    ✓ should accept buy of fractioned amount of tokens from whitelisted user within cap range (172ms)
+    ✓ should return token balance we have bought in previous step
+    ✓ should return updated balance of multisig (105ms)
+    ✓ shouldn't accept investment from whitelisted user that exceeds maxCap (96ms)
+    ✓ should set endsAt for crowdsale (47ms)
+    ✓ should get state for crowdsale (84ms)
+    ✓ should get state for crowdsale (91ms)
+    ✓ should get state for crowdsale (90ms)
+    ✓ should get state for crowdsale (84ms)
+    ✓ should get state for crowdsale (123ms)
+    ✓ should get state for crowdsale (95ms)
+    ✓ should get state for crowdsale (89ms)
+    ✓ should get state for crowdsale (95ms)
+    ✓ should get state for crowdsale (88ms)
+    ✓ should get state for crowdsale (84ms)
+    ✓ should finalize crowdsale (249ms)
+    ✓ should return updated token balance of user include reserved tokens
+  Contract: NullFinalizeAgentExt
+    ✓ 
+  Contract: ReservedTokensFinalizeAgent
+    ✓ 
+  Contract: SafeMathLibExt
+    ✓ should accurately multipliy numbers
+    ✓ should accurately divide numbers
+    ✓ should accurately substract numbers
+    ✓ should accurately add numbers
+  45 passing (4s)
+```
+
 ## Projects built on ICO Wizard
 
 None! Send PR if you are the first.
