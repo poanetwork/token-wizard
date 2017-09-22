@@ -103,7 +103,11 @@ It will start testrpc at port 8545, Truffle will compile, deploy contracts to it
 
 *Note:* Kill testrpc after tests will executed: sudo kill `sudo lsof -t -i:8545'`.
 
-Currently available tests cover the following functionality:
+Currently available tests cover the following scenario:
+
+The updatable, whitelisted one tier crowdsale contract with one address in white list and reserved tokens for the same address (both: in absoulute values and in percentage)
+
+Checklist of contracts' testing:
 
 ```
 Contract: CrowdsaleTokenExt
@@ -137,15 +141,6 @@ Contract: CrowdsaleTokenExt
     ✓ shouldn't accept investment from whitelisted user that exceeds maxCap (111ms)
     ✓ should set endsAt for crowdsale (46ms)
     ✓ should get state for crowdsale (139ms)
-    ✓ should get state for crowdsale (104ms)
-    ✓ should get state for crowdsale (94ms)
-    ✓ should get state for crowdsale (104ms)
-    ✓ should get state for crowdsale (102ms)
-    ✓ should get state for crowdsale (92ms)
-    ✓ should get state for crowdsale (94ms)
-    ✓ should get state for crowdsale (106ms)
-    ✓ should get state for crowdsale (88ms)
-    ✓ should get state for crowdsale (126ms)
     ✓ should finalize crowdsale (346ms)
     ✓ should return updated token balance of user include reserved tokens
   Contract: NullFinalizeAgentExt
@@ -157,7 +152,7 @@ Contract: CrowdsaleTokenExt
     ✓ should accurately divide numbers
     ✓ should accurately subtract numbers
     ✓ should accurately add numbers
-  45 passing (4s)
+  36 passing (4s)
 ```
 
 ## Projects built on ICO Wizard
