@@ -1,9 +1,9 @@
 ![ICO Wizard DApp](https://forum.oracles.org/uploads/default/original/1X/a06ee82b46666b06986a84d648073543fd324b8d.jpg)
-[![Build Status](https://travis-ci.org/oraclesorg/ico-wizard.svg?branch=master)](https://travis-ci.org/oraclesorg/ico-wizard)
 
 # ICO Wizard DApp
 
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/hyperium/hyper/master/LICENSE)
+[![Build Status](https://travis-ci.org/oraclesorg/ico-wizard.svg?branch=master)](https://travis-ci.org/oraclesorg/ico-wizard)
 
 ## Introduction
 
@@ -95,11 +95,11 @@ export const ICOConfig = {
 ### Tests
 
 ICO wizard contracts tests are written in javascript with [Truffle framework](http://truffleframework.com/). 
-Contracts are deploying in [testrpc](https://github.com/ethereumjs/testrpc) with script.
+Contracts are deploying in [testrpc](https://github.com/ethereumjs/testrpc) with the script.
 Test scripts are added to Travis CI and executed at every pull request.
 
 If you want to start it by yourself, simply run the command `npm test` from the root directory. 
-It will start `testrpc` at port 8545, `truffle` will compile, deploy contracts to it and will execute tests. 
+It will start testrpc at port 8545, Truffle will compile, deploy contracts to it and Truffle will execute tests. 
 
 Currently available tests cover the following functionality:
 
