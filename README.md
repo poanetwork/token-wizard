@@ -91,6 +91,15 @@ export const ICOConfig = {
 };
 ```
 
+### Tests
+
+ICO wizard contracts tests are written in javascript with [Truffle framework](http://truffleframework.com/). 
+Contracts are deploying in [testrpc](https://github.com/ethereumjs/testrpc) with script.
+Test scripts are added to Travis CI and executed at every pull request.
+
+If you want to start it by yourself, simply run the command `npm test` from the root directory. 
+It will start `testrpc` at port 8545, `truffle` will compile, deploy contracts to it and will execute tests. 
+
 ## Projects built on ICO Wizard
 
 None! Send PR if you are the first.
