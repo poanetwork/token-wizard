@@ -105,7 +105,7 @@ It will start testrpc at port 8545, Truffle will compile, deploy contracts to it
 
 Currently available tests cover the following scenario:
 
-The updatable, whitelisted one tier crowdsale contract with one address in white list and reserved tokens for the same address (both: in absoulute values and in percentage)
+The updatable, whitelisted one tier crowdsale contract with one address in white list and reserved tokens for the same address (both: in absolute values and in percentage)
 
 Checklist of contracts' testing:
 

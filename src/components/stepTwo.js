@@ -228,7 +228,7 @@ export class stepTwo extends React.Component {
               value={token.decimals} 
               onBlur={() => this.handleInputBlur('token', 'decimals')}
               onChange={(e) => this.changeState(e, 'token', 0, 'decimals')}
-              description={`18 is the most common number of decimal places.`}
+              description={`Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous).`}
             />
           </div>
           <div className="reserved-tokens-title">
