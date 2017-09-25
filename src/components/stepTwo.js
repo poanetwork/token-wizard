@@ -1,7 +1,7 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
-import { calculateFutureBlock, checkWeb3 } from '../utils/web3'
+import { checkWeb3 } from '../utils/blockchainHelpers'
 import { getOldState, stepsAreValid, validateValue, allFieldsAreValid } from '../utils/utils'
 import { StepNavigation } from './Common/StepNavigation'
 import { InputField } from './Common/InputField'
@@ -35,7 +35,8 @@ export class stepTwo extends React.Component {
     this.validateAllFields(parent)
   }
   
-  setBlockTimes = (key, property, targetTime) => {
+  //depreciated
+  /*setBlockTimes = (key, property, targetTime) => {
     let newState = { ...this.state }
     calculateFutureBlock(targetTime, this.state.blockTimeGeneration, (targetBlock) => {
       if (property === "startTime") {
@@ -47,7 +48,7 @@ export class stepTwo extends React.Component {
       }
       this.setState(newState);
     });
-  }
+  }*/
 
   /*getNewParent (property, parent, key, value) {
     if( Object.prototype.toString.call( {...this.state[`${parent}`]} ) === '[object Array]' ) {
@@ -87,7 +88,8 @@ export class stepTwo extends React.Component {
           newState.crowdsale[key + 1].endTime = new Date(newEndDate).toISOString().split(".")[0];
         }
       }
-      this.setBlockTimes(key, property, targetTime)
+      //depreciated
+      //this.setBlockTimes(key, property, targetTime)
     } else if (property.indexOf("whitelist_") === 0) {
       let prop = property.split("_")[1];
       newState.crowdsale[key][`whiteListInput`][prop] = value

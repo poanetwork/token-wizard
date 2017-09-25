@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
-import { getWeb3, checkTxMined, attachToContract, checkNetWorkByID, getCrowdsaleData, initializeAccumulativeData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively, getJoinedTiers } from '../utils/web3'
+import { getWeb3, checkTxMined, attachToContract, checkNetWorkByID } from '../utils/blockchainHelpers'
+import { getCrowdsaleData, getCurrentRate, initializeAccumulativeData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively, getJoinedTiers } from './crowdsale/utils'
 import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
 import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert, invalidCrowdsaleAddrAlert } from '../utils/alerts'
 import { Loader } from './Common/Loader'
@@ -198,7 +199,9 @@ export class Invest extends React.Component {
         state.loading = false;
         return this.setState(state);
       }
-      this.investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, web3);
+      getCurrentRate(web3, this, crowdsaleContract, () => { 
+        this.investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, web3);
+      });
     })
   }
 
@@ -218,11 +221,6 @@ export class Invest extends React.Component {
     let tokensToInvest = parseFloat(this.state.tokensToInvest);
     console.log("tokensToInvest: " + tokensToInvest);
 
-    console.log("tokensToInvest*rate/10**decimals: " + tokensToInvest*rate/10**decimals);
-
-    //let weiToSend = web3.toWei(this.state.tokensToInvest*this.state.pricingStrategy.rate/10**this.state.token.decimals, "ether");
-    //let weiToSend = this.state.tokensToInvest*this.state.pricingStrategy.rate;
-    //let weiToSend = this.state.tokensToInvest*this.state.pricingStrategy.rate/10**this.state.token.decimals;
     let weiToSend = parseInt(tokensToInvest*rate, 10);
     console.log("weiToSend: " + weiToSend);
     let opts = {
@@ -231,7 +229,6 @@ export class Invest extends React.Component {
     };
     console.log(opts);
     crowdsaleContract.buy.sendTransaction(opts, (err, txHash) => {
-    //crowdsaleContract.buy.sendTransaction(nextTiers, opts, (err, txHash) => {
       if (err) {
         let state = this.state;
         state.loading = false;

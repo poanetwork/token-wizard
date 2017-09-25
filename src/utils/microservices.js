@@ -1,7 +1,8 @@
 import { findConstructor, getconstructorParams, toFixed } from '../utils/utils'
-import $ from 'jquery'
+//import $ from 'jquery'
 
-export function getEncodedABIServerSide(abi, state, vals, crowdsaleNum, cb) {
+//depreciated
+/*export function getEncodedABIServerSide(abi, state, vals, crowdsaleNum, cb) {
 	const abiConstructor = findConstructor(abi, state)
     let params = getconstructorParams(abiConstructor, state, vals, crowdsaleNum);
     $.ajax({
@@ -15,7 +16,7 @@ export function getEncodedABIServerSide(abi, state, vals, crowdsaleNum, cb) {
 	}).fail(function(err) {
 	    console.log('failfailfail',err);
 	})
-}
+}*/
 
 export function getEncodedABIClientSide(web3, abi, state, vals, crowdsaleNum, cb) {
 	const abiConstructor = findConstructor(abi, state)
