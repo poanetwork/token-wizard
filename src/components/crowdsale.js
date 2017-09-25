@@ -1,6 +1,7 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { getWeb3, checkWeb3, checkNetWorkByID, getCrowdsaleData, initializeAccumulativeData, getAccumulativeCrowdsaleData, findCurrentContractRecursively, getJoinedTiers } from '../utils/web3'
+import { getWeb3, checkWeb3, checkNetWorkByID } from '../utils/blockchainHelpers'
+import { getCrowdsaleData, initializeAccumulativeData, getAccumulativeCrowdsaleData, findCurrentContractRecursively, getJoinedTiers } from './crowdsale/utils'
 import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
 import { StepNavigation } from './Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../utils/constants'

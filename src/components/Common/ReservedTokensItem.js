@@ -17,8 +17,6 @@ export class ReservedTokensItem extends React.Component {
 	}
 
 	render() {
-		console.log(this.props);
-		console.log(this.state);
 		return this.state.token.reservedTokens[this.props.num]?this.state.token.reservedTokens[this.props.num].deleted?null:(
 			<div className={"reserved-tokens-item-container"}>
 				<div className="reserved-tokens-item-container-inner">

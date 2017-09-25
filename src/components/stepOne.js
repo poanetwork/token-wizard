@@ -1,6 +1,6 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { checkWeb3 } from '../utils/web3'
+import { checkWeb3 } from '../utils/blockchainHelpers'
 import { Link } from 'react-router-dom'
 import { defaultState } from '../utils/constants'
 import { setFlatFileContentToState } from '../utils/utils';

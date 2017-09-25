@@ -23,6 +23,8 @@ export class ReservedTokensInputBlock extends React.Component {
         console.log(addr, dim, val);
         if (!addr || !dim || !val) return;
 
+        this.clearReservedTokenInputs()
+
         let isAdded = false;
         for (let i = 0; i < this.state.token.reservedTokens.length; i++) {
             let item = this.state.token.reservedTokens[i];
@@ -55,6 +57,15 @@ export class ReservedTokensInputBlock extends React.Component {
         });
     }
 
+    clearReservedTokenInputs = () => {
+        let state = this.state
+        state.token.reservedTokensInput.addr = ""
+        state.token.reservedTokensInput.val = ""
+        this.setState(state)
+        this.reservedTokensInputAddr.clearVal()
+        this.reservedTokensInputVal.clearVal()
+    }
+
     render() {
         let { token } = this.state
         let { onChange } = this.props
@@ -63,9 +74,11 @@ export class ReservedTokensInputBlock extends React.Component {
                 <div className="reserved-tokens-input-container">
                     <div className="reserved-tokens-input-container-inner">
                       <InputField 
+                        ref={reservedTokensInputAddr => this.reservedTokensInputAddr = reservedTokensInputAddr}
                         side='reserved-tokens-input-property reserved-tokens-input-property-left' 
                         type='text' 
                         title={ADDRESS} 
+                        value={token.reservedTokensInput.addr}
                         onChange={(e) => onChange(e, 'token', 0, 'reservedtokens_addr')}
                         description={`Address where to send reserved tokens.`}
                       />
@@ -80,6 +93,7 @@ export class ReservedTokensInputBlock extends React.Component {
                         description={`Fixed amount or % of crowdsaled tokens. Will be deposited to the account after fintalization of the crowdsale. `}
                       />
                       <InputField 
+                        ref={reservedTokensInputVal => this.reservedTokensInputVal = reservedTokensInputVal}
                         side='reserved-tokens-input-property reserved-tokens-input-property-right'
                         type='number' 
                         title={VALUE} 

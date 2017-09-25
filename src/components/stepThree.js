@@ -1,7 +1,7 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
-import { getWeb3, checkWeb3, calculateFutureBlock, setExistingContractParams } from '../utils/web3'
+import { getWeb3, checkWeb3, setExistingContractParams } from '../utils/blockchainHelpers'
 import { stepTwo } from './stepTwo'
 import { getOldState, defaultCompanyStartDate, defaultCompanyEndDate, stepsAreValid, allFieldsAreValid } from '../utils/utils'
 import { StepNavigation } from './Common/StepNavigation'
@@ -129,7 +129,9 @@ export class stepThree extends stepTwo {
         newState.crowdsale[0].walletAddress = web3.eth.accounts[0];
         newState.crowdsale[0].startTime = defaultCompanyStartDate();
         newState.crowdsale[0].endTime = defaultCompanyEndDate(newState.crowdsale[0].startTime);
-        let datesIterator = 0;
+        this.setState(newState);
+        //depreciated
+        /*let datesIterator = 0;
         let datesCount = 2;
         calculateFutureBlock(new Date(newState.crowdsale[0].startTime), newState.blockTimeGeneration, (targetBlock) => {
           newState.crowdsale[0].startBlock = targetBlock;
@@ -146,7 +148,7 @@ export class stepThree extends stepTwo {
           if (datesIterator === datesCount) {
             this.setState(newState);
           }
-        });
+        });*/
       });
     }, 500);
   }

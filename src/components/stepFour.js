@@ -1,6 +1,7 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
-import { deployContract, getWeb3, checkWeb3, getNetworkVersion, addWhiteList, setFinalizeAgent, setMintAgent, setReleaseAgent, updateJoinedCrowdsales, transferOwnership, setReservedTokensListMultiple, setLastCrowdsale } from '../utils/web3'
+import { deployContract, getWeb3, checkWeb3, getNetworkVersion } from '../utils/blockchainHelpers'
+import { addWhiteList, setFinalizeAgent, setMintAgent, setReleaseAgent, updateJoinedCrowdsales, transferOwnership, setReservedTokensListMultiple, setLastCrowdsale } from './stepFour/utils'
 import { noMetaMaskAlert } from '../utils/alerts'
 import { defaultState, FILE_CONTENTS, DOWNLOAD_NAME, DOWNLOAD_TYPE } from '../utils/constants'
 import { getOldState, handleContractsForFile, handleTokenForFile, handleCrowdsaleForFile, handlePricingStrategyForFile, handleConstantForFile, toFixed, scrollToBottom, download } from '../utils/utils'
@@ -118,6 +119,7 @@ export class stepFour extends stepTwo {
     download(docData.data, DOWNLOAD_NAME, DOWNLOAD_TYPE)
   }
 
+  //depreciated
   /*deployTokenTransferProxy = () => {
     console.log("***Deploy tokenTransferProxy contract***");
     if (this.state.web3.eth.accounts.length === 0) {
@@ -129,6 +131,7 @@ export class stepFour extends stepTwo {
     deployContract(0, this.state.web3, abiTokenTransferProxy, binTokenTransferProxy, [], this.state, this.handleDeployedTokenTransferProxy)
   }
 
+  //depreciated
   handleDeployedTokenTransferProxy = (err, tokenTransferProxyAddr) => {
     let newState = { ...this.state }
     if (err) {
@@ -140,6 +143,7 @@ export class stepFour extends stepTwo {
     this.deployMultisig();
   }
 
+  //depreciated
   deployMultisig = () => {
     console.log("***Deploy multisig contract***");
     if (this.state.web3.eth.accounts.length === 0) {
@@ -153,6 +157,7 @@ export class stepFour extends stepTwo {
     deployContract(0, this.state.web3, abiMultisig, binMultisig, paramsMultisig, this.state, this.handleDeployedMultisig)
   }
 
+  //depreciated
   getMultisigParams = (web3) => {
     return [
       [web3.eth.accounts[0]],
