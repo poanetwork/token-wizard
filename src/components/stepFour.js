@@ -1,10 +1,10 @@
 import React from 'react'
 import '../assets/stylesheets/application.css';
 import { deployContract, getWeb3, checkWeb3, getNetworkVersion } from '../utils/blockchainHelpers'
-import { addWhiteList, setFinalizeAgent, setMintAgent, setReleaseAgent, updateJoinedCrowdsales, transferOwnership, setReservedTokensListMultiple, setLastCrowdsale } from './stepFour/utils'
+import { addWhiteList, setFinalizeAgent, setMintAgent, setReleaseAgent, updateJoinedCrowdsales, transferOwnership, setReservedTokensListMultiple, setLastCrowdsale, download, handleContractsForFile, handleTokenForFile, handleCrowdsaleForFile, handlePricingStrategyForFile, handleFinalizeAgentForFile, handleConstantForFile } from './stepFour/utils'
 import { noMetaMaskAlert } from '../utils/alerts'
 import { defaultState, FILE_CONTENTS, DOWNLOAD_NAME, DOWNLOAD_TYPE } from '../utils/constants'
-import { getOldState, handleContractsForFile, handleTokenForFile, handleCrowdsaleForFile, handlePricingStrategyForFile, handleFinalizeAgentForFile, handleConstantForFile, toFixed, scrollToBottom, download } from '../utils/utils'
+import { getOldState, toFixed, scrollToBottom } from '../utils/utils'
 import { getEncodedABIClientSide } from '../utils/microservices'
 import { stepTwo } from './stepTwo'
 import { StepNavigation } from './Common/StepNavigation'
@@ -837,14 +837,14 @@ export class stepFour extends stepTwo {
                 />
               </div>
               <div className="hidden">
-                <DisplayField 
+                {/*<DisplayField 
                   side='left' 
                   title='SUPPLY' 
                   value={this.state.token.supply?this.state.token.supply.toString():0} 
                   description="The supply is 0 for your token."
-                />
+                />*/}
                 <DisplayField 
-                  side='right' 
+                  side='left' 
                   title='DECIMALS' 
                   value={this.state.token.decimals?this.state.token.decimals.toString():485} 
                   description="The decimals of your token."

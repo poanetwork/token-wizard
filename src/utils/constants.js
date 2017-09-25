@@ -144,16 +144,16 @@ export const FILE_CONTENTS = [
 	{ field: 'addr', value: 'SafeMatlLib library address: ', parent: 'contracts', child: 'safeMathLib', x: 10, y: 10 },
 	{ field: 'src', value: 'Crowdsale contract source: \n \n', parent: 'contracts', child: 'crowdsale', x: 10, y: 10 },
 	{ field: 'abi', value: 'Crowdsale contract ABI: \n \n', parent: 'contracts', child: 'crowdsale', x: 10, y: 10 },
-	{ field: 'abiConstructor', value: 'Crowdsale contract ABI encoded constructor arguments: \n \n', parent: 'contracts', child: 'crowdsale', x: 10, y: 10 },
+	{ field: 'abiConstructor', value: 'Crowdsale contract ABI encoded constructor arguments', parent: 'contracts', child: 'crowdsale', x: 10, y: 10 },
 	{ field: 'src', value: 'Token contract source: \n \n', parent: 'contracts', child: 'token', x: 10, y: 10 },
 	{ field: 'abi', value: 'Token contract ABI: \n \n', parent: 'contracts', child: 'token', x: 10, y: 10 },
-	{ field: 'abiConstructor', value: 'Token contract ABI encoded constructor arguments: \n \n', parent: 'contracts', child: 'token', x: 10, y: 10 },
+	{ field: 'abiConstructor', value: 'Token contract ABI encoded constructor arguments', parent: 'contracts', child: 'token', x: 10, y: 10 },
 	{ field: 'src', value: 'Pricing strategy contract source: \n \n', parent: 'contracts', child: 'pricingStrategy', x: 10, y: 10 },
 	{ field: 'abi', value: 'Pricing strategy contract ABI: \n \n', parent: 'contracts', child: 'pricingStrategy', x: 10, y: 10 },
-	{ field: 'abiConstructor', value: 'Pricing strategy contract ABI encoded constructor arguments: \n \n', parent: 'contracts', child: 'pricingStrategy', x: 10, y: 10 },
+	{ field: 'abiConstructor', value: 'Pricing strategy contract ABI encoded constructor arguments', parent: 'contracts', child: 'pricingStrategy', x: 10, y: 10 },
 	{ field: 'src', value: 'Finalize agent contract source: \n \n', parent: 'contracts', child: 'finalizeAgent', x: 10, y: 10 },
 	{ field: 'abi', value: 'Finalize agent contract ABI: \n \n', parent: 'contracts', child: 'finalizeAgent', x: 10, y: 10 },
-	{ field: 'abiConstructor', value: 'Finalize agent contract ABI encoded constructor arguments: \n \n', parent: 'contracts', child: 'finalizeAgent', x: 10, y: 10 }
+	{ field: 'abiConstructor', value: 'Finalize agent contract ABI encoded constructor arguments', parent: 'contracts', child: 'finalizeAgent', x: 10, y: 10 }
 ]
 
 export const DOWNLOAD_NAME = 'contractInfo'
