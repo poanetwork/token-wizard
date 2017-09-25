@@ -130,18 +130,30 @@ export const initialStepThreeValues = {
 }
 
 export const FILE_CONTENTS = [
-	{ field: 'name', value: 'Name: ', parent: 'token', x: 10, y: 10 },
-	{ field: 'ticker', value: 'Ticker: ', parent: 'token', x: 10, y: 20 },
-	{ field: 'supply', value: 'Supply: ', parent: 'token', x: 10, y: 30 },
-	{ field: 'decimals', value: 'Decimals: ', parent: 'token', x: 10, y: 40 },
-	{ field: 'startTime', value: 'Start Time: ', parent: 'crowdsale', x: 10, y: 50 },
-	{ field: 'endTime', value: 'End Time: ', parent: 'crowdsale', x: 10, y: 60 },
-	{ field: 'walletAddress', value: 'Wallet Address: ', parent: 'crowdsale', x: 10, y: 70 },
-	{ field: 'rate', value: 'Rate: ', parent: 'pricingStrategy', x: 10, y: 80 },
-	{ value: 'Compiler Version: ', parent: 'none', fileValue: '0.4.11', x: 10, y: 90 },
-	{ field: 'src', value: 'Source Contract: \n \n', parent: 'contracts', x: 10, y: 10 },
-	{ field: 'abi', value: 'ABI Contract: \n \n', parent: 'contracts', x: 10, y: 10 },
-	{ field: 'abiConstructor', value: 'ABI Parameters: \n \n', parent: 'contracts', x: 10, y: 10 }
+	{ field: 'name', value: 'Token name: ', parent: 'token', x: 10, y: 10 },
+	{ field: 'ticker', value: 'Token ticker: ', parent: 'token', x: 10, y: 10 },
+	//{ field: 'supply', value: 'Supply: ', parent: 'token', x: 10, y: 30 },
+	{ field: 'decimals', value: 'Token decimals: ', parent: 'token', x: 10, y: 10 },
+	{ field: 'startTime', value: 'Crowdsale start time: ', parent: 'crowdsale', x: 10, y: 10 },
+	{ field: 'endTime', value: 'Crowdsale end time: ', parent: 'crowdsale', x: 10, y: 10 },
+	{ field: 'walletAddress', value: 'Wallet Address: ', parent: 'crowdsale', x: 10, y: 10 },
+	{ field: 'rate', value: 'Rate: ', parent: 'pricingStrategy', x: 10, y: 10 },
+	{ value: 'Compiler Version: ', parent: 'none', fileValue: '0.4.11', x: 10, y: 10 },
+	{ value: 'Is optimization enabled?: ', parent: 'none', fileValue: 'true', x: 10, y: 10 },
+	{ value: 'SafeMatlLib library name: ', parent: 'none', fileValue: 'SafeMathLibExt', x: 10, y: 10 },
+	{ field: 'addr', value: 'SafeMatlLib library address: ', parent: 'contracts', child: 'safeMathLib', x: 10, y: 10 },
+	{ field: 'src', value: 'Crowdsale contract source: \n \n', parent: 'contracts', child: 'crowdsale', x: 10, y: 10 },
+	{ field: 'abi', value: 'Crowdsale contract ABI: \n \n', parent: 'contracts', child: 'crowdsale', x: 10, y: 10 },
+	{ field: 'abiConstructor', value: 'Crowdsale contract ABI encoded constructor arguments: \n \n', parent: 'contracts', child: 'crowdsale', x: 10, y: 10 },
+	{ field: 'src', value: 'Token contract source: \n \n', parent: 'contracts', child: 'token', x: 10, y: 10 },
+	{ field: 'abi', value: 'Token contract ABI: \n \n', parent: 'contracts', child: 'token', x: 10, y: 10 },
+	{ field: 'abiConstructor', value: 'Token contract ABI encoded constructor arguments: \n \n', parent: 'contracts', child: 'token', x: 10, y: 10 },
+	{ field: 'src', value: 'Pricing strategy contract source: \n \n', parent: 'contracts', child: 'pricingStrategy', x: 10, y: 10 },
+	{ field: 'abi', value: 'Pricing strategy contract ABI: \n \n', parent: 'contracts', child: 'pricingStrategy', x: 10, y: 10 },
+	{ field: 'abiConstructor', value: 'Pricing strategy contract ABI encoded constructor arguments: \n \n', parent: 'contracts', child: 'pricingStrategy', x: 10, y: 10 },
+	{ field: 'src', value: 'Finalize agent contract source: \n \n', parent: 'contracts', child: 'finalizeAgent', x: 10, y: 10 },
+	{ field: 'abi', value: 'Finalize agent contract ABI: \n \n', parent: 'contracts', child: 'finalizeAgent', x: 10, y: 10 },
+	{ field: 'abiConstructor', value: 'Finalize agent contract ABI encoded constructor arguments: \n \n', parent: 'contracts', child: 'finalizeAgent', x: 10, y: 10 }
 ]
 
 export const DOWNLOAD_NAME = 'contractInfo'

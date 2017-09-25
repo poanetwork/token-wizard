@@ -4,7 +4,7 @@ import { deployContract, getWeb3, checkWeb3, getNetworkVersion } from '../utils/
 import { addWhiteList, setFinalizeAgent, setMintAgent, setReleaseAgent, updateJoinedCrowdsales, transferOwnership, setReservedTokensListMultiple, setLastCrowdsale } from './stepFour/utils'
 import { noMetaMaskAlert } from '../utils/alerts'
 import { defaultState, FILE_CONTENTS, DOWNLOAD_NAME, DOWNLOAD_TYPE } from '../utils/constants'
-import { getOldState, handleContractsForFile, handleTokenForFile, handleCrowdsaleForFile, handlePricingStrategyForFile, handleConstantForFile, toFixed, scrollToBottom, download } from '../utils/utils'
+import { getOldState, handleContractsForFile, handleTokenForFile, handleCrowdsaleForFile, handlePricingStrategyForFile, handleFinalizeAgentForFile, handleConstantForFile, toFixed, scrollToBottom, download } from '../utils/utils'
 import { getEncodedABIClientSide } from '../utils/microservices'
 import { stepTwo } from './stepTwo'
 import { StepNavigation } from './Common/StepNavigation'
@@ -105,6 +105,8 @@ export class stepFour extends stepTwo {
         return handleContractsForFile(content, docData, this.state)
       case 'pricingStrategy':
         return handlePricingStrategyForFile(content, docData, this.state)
+      case 'finalizeAgent':
+        return handleFinalizeAgentForFile(content, docData, this.state)
       case 'none':
         return handleConstantForFile(content, docData)
     }

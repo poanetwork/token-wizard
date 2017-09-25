@@ -503,10 +503,22 @@ export const handlePricingStrategyForFile = (content, docData, state) => {
     docData.data += fileContent + '\n\n'
 }
 
+export const handleFinalizeAgentForFile = (content, docData, state) => {
+    const title = content.value
+    const fileContent = title + state.finalizeAgent[0][content.field]
+    docData.data += fileContent + '\n\n'
+}
+
 export const handleContractsForFile = (content, docData, state) => {
     const title = content.value
-    if(content.field !== 'src' && content.field !== 'abi') {
-        let fileBody = JSON.stringify(state.contracts.crowdsale[content.field][0])
+    if(content.field !== 'src' && content.field !== 'abi' && content.field !== 'addr') {
+        if (!state.contracts[content.child][content.field][0]) return;
+        let fileBody
+        if ( Object.prototype.toString.call( state.contracts[content.child][content.field] ) === '[object Array]' ) {
+            fileBody = state.contracts[content.child][content.field][0]
+        } else {
+          fileBody = state.contracts[content.child][content.field]
+        }
         let fileContent = title + fileBody
         docData.data += fileContent + '\n\n'
     } else {
@@ -540,7 +552,7 @@ export function toFixed(x) {
 
 const addSrcToFile = (content, docData, state) => {
     const title = content.value
-    const body = content.field === 'abi' ? JSON.stringify(state.contracts.crowdsale[content.field]) : state.contracts.crowdsale[content.field]
+    const body = content.field === 'abi' ? JSON.stringify(state.contracts[content.child][content.field]) : state.contracts[content.child][content.field]
     const text = title + body
     docData.data += text + '\n\n'
 }
