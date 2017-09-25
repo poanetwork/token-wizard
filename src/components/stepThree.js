@@ -27,7 +27,7 @@ export class stepThree extends stepTwo {
     oldState.children = [];
     oldState.crowdsale[0].tier = "Tier 1"
     oldState.crowdsale[0].updatable = "off"
-    oldState.crowdsale[0].whitelistdisabled = "no"
+    oldState.crowdsale[0].whitelistdisabled = "yes"
     //this.state = Object.assign({}, oldState, {validations: { ...oldState.validations, startTime: VALID, endTime: VALID, walletAddress: VALID, supply: EMPTY, rate: EMPTY } } )
     this.state = Object.assign({}, oldState, intitialStepThreeValidations )
     //console.log('this.state', this.state)
