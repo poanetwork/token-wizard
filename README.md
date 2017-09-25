@@ -158,6 +158,38 @@ Contract: CrowdsaleTokenExt
   36 passing (4s)
 ```
 
+## How to verify contracts in Etherscan
+
+To be able to verify any of contracts from ICO wizard download file with crowdsale info from step 4 by clicking **Download file** button.
+
+### Crowdsale contract verification:
+
+1. Open Etherscan verification link. For example, for kovan chain: `https://kovan.etherscan.io/verifyContract?a=[crowdsale_contract_address]`.
+2. Fill the form inputs with the data from the file. The mapping is the following:
+
+2.1. *Contract Name:* - *Crowdsale contract name* (For example, `MintedTokenCappedCrowdsaleExt`)
+
+2.2. *Compiler:* - *Compiler Version* (For example, if *Compiler Version* value is 0.4.11, you should choose: `v0.4.11+commit.68ef5810`)
+
+2.3. *Optimization:* - *Is optimization enabled?*
+
+2.4. *Enter the Solidity Contract Code below:* - *Crowdsale contract source*
+
+2.5. *Constructor Arguments ABI-encoded (For contracts that accept constructor parameters):* - *Crowdsale contract ABI encoded constructor arguments for [Tier name]*
+
+3. For *Contract Library Address (For contracts that use libraries, supports up to 5 libraries):* add one library:
+
+*Library_1 Name* - type `:` and then the value of *SafeMatlLib library name* header from the file. For example: `:SafeMathLibExt`.
+
+*Library Contract Address:* - the value of *SafeMatlLib library address* header form the file. Fro example: `0xe9ae538ffea453eae179e45a787ca76db619d40d`.
+
+4. Then click **Verify and publish** button.
+
+You can find the example of verified crowdsale contract [here](https://kovan.etherscan.io/address/0xd973cd4c34a0d6fbb5286d0f53f36347a6bef60f#code).
+
+The procedure is the same to verify other contracts (token, pricingStrategy, finalizeAgent). In steps **2.1**, **2.4**, **2.5** you should find appropriate values in the downloaded file.
+
+
 ## Projects built on ICO Wizard
 
 None! Send PR if you are the first.
