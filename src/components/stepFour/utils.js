@@ -1,7 +1,7 @@
 import { attachToContract } from '../../utils/blockchainHelpers'
 import { noContractAlert } from '../../utils/alerts'
 
-export function setTransferAgent(web3, abi, addr, targetAddr, cb) {
+/*function setTransferAgent(web3, abi, addr, targetAddr, cb) {
   console.log("###setTransferAgent:###");
   attachToContract(web3, abi, addr, function(err, tokenContract) {
     console.log("attach to token contract");
@@ -21,9 +21,9 @@ export function setTransferAgent(web3, abi, addr, targetAddr, cb) {
       cb();
     });
   });
-}
+}*/
 
-export function setLastCrowdsale(web3, abi, addr, lastCrowdsale, cb) {
+function setLastCrowdsale(web3, abi, addr, lastCrowdsale, cb) {
   console.log("###setLastCrowdsale for Pricing Strategy:###");
   attachToContract(web3, abi, addr, function(err, pricingStrategyContract) {
     console.log("attach to pricingStrategy contract");
@@ -46,7 +46,7 @@ export function setLastCrowdsale(web3, abi, addr, lastCrowdsale, cb) {
 }
 
 //for mintable token
-export function setMintAgent(web3, abi, addr, acc, cb) {
+function setMintAgent(web3, abi, addr, acc, cb) {
   console.log("###setMintAgent:###");
   attachToContract(web3, abi, addr, function(err, tokenContract) {
     console.log("attach to token contract");
@@ -68,7 +68,7 @@ export function setMintAgent(web3, abi, addr, acc, cb) {
   });
 }
 
-export function addWhiteList(round, web3, crowdsale, token, abi, addr, cb) {
+function addWhiteList(round, web3, crowdsale, token, abi, addr, cb) {
   console.log("###whitelist:###");
   let whitelist = [];
   for (let i = 0; i <= round; i++) {
@@ -127,6 +127,75 @@ export function addWhiteList(round, web3, crowdsale, token, abi, addr, cb) {
       }
 
       console.log("setEarlyParicipantsWhitelist function transaction: " + result);
+      cb();
+    });
+  });
+}
+
+function updateJoinedCrowdsales(web3, abi, addr, joinedCntrctAddrs, cb) {
+  console.log("###updateJoinedCrowdsales:###");
+  attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
+    console.log("attach to crowdsale contract");
+    if (err) {
+      console.log(err)
+      return cb();
+    }
+    if (!crowdsaleContract) return noContractAlert();
+
+    console.log("input: ");
+    console.log(joinedCntrctAddrs);
+
+    crowdsaleContract.updateJoinedCrowdsalesMultiple.sendTransaction(joinedCntrctAddrs, function(err, result) {
+      if (err) {
+        console.log(err)
+        return cb();
+      }
+
+      console.log("updateJoinedCrowdsales function transaction: " + result);
+      cb();
+    });
+  });
+}
+
+function setFinalizeAgent(web3, abi, addr, finalizeAgentAddr, cb) {
+  console.log("###setFinalizeAgent:###");
+  attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
+    console.log("attach to crowdsale contract");
+    if (err) {
+      console.log(err)
+      return cb();
+    }
+    if (!crowdsaleContract) return noContractAlert();
+
+    crowdsaleContract.setFinalizeAgent.sendTransaction(finalizeAgentAddr, function(err, result) {
+      if (err) {
+        console.log(err)
+        return cb();
+      }
+
+      console.log("setFinalizeAgent function transaction: " + result);
+      cb();
+    });
+  });
+}
+
+function setReleaseAgent(web3, abi, addr, finalizeAgentAddr, cb) {
+  console.log("###setReleaseAgent:###");
+  attachToContract(web3, abi, addr, function(err, tokenContract) {
+    console.log("attach to token contract");
+    if (err) {
+      console.log(err)
+      return cb();
+    }
+    if (!tokenContract) return noContractAlert();
+
+    tokenContract.setReleaseAgent.sendTransaction(finalizeAgentAddr, function(err, result) {
+      if (err) {
+        console.log(err)
+        return cb();
+      }
+
+      console.log("setReleaseAgent function transaction: " + result);
       cb();
     });
   });
@@ -199,75 +268,6 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
   });
 }
 
-export function updateJoinedCrowdsales(web3, abi, addr, joinedCntrctAddrs, cb) {
-  console.log("###updateJoinedCrowdsales:###");
-  attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
-    console.log("attach to crowdsale contract");
-    if (err) {
-      console.log(err)
-      return cb();
-    }
-    if (!crowdsaleContract) return noContractAlert();
-
-    console.log("input: ");
-    console.log(joinedCntrctAddrs);
-
-    crowdsaleContract.updateJoinedCrowdsalesMultiple.sendTransaction(joinedCntrctAddrs, function(err, result) {
-      if (err) {
-        console.log(err)
-        return cb();
-      }
-
-      console.log("updateJoinedCrowdsales function transaction: " + result);
-      cb();
-    });
-  });
-}
-
-export function setFinalizeAgent(web3, abi, addr, finalizeAgentAddr, cb) {
-  console.log("###setFinalizeAgent:###");
-  attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
-    console.log("attach to crowdsale contract");
-    if (err) {
-      console.log(err)
-      return cb();
-    }
-    if (!crowdsaleContract) return noContractAlert();
-
-    crowdsaleContract.setFinalizeAgent.sendTransaction(finalizeAgentAddr, function(err, result) {
-      if (err) {
-        console.log(err)
-        return cb();
-      }
-
-      console.log("setFinalizeAgent function transaction: " + result);
-      cb();
-    });
-  });
-}
-
-export function setReleaseAgent(web3, abi, addr, finalizeAgentAddr, cb) {
-  console.log("###setReleaseAgent:###");
-  attachToContract(web3, abi, addr, function(err, tokenContract) {
-    console.log("attach to token contract");
-    if (err) {
-      console.log(err)
-      return cb();
-    }
-    if (!tokenContract) return noContractAlert();
-
-    tokenContract.setReleaseAgent.sendTransaction(finalizeAgentAddr, function(err, result) {
-      if (err) {
-        console.log(err)
-        return cb();
-      }
-
-      console.log("setReleaseAgent function transaction: " + result);
-      cb();
-    });
-  });
-}
-
 export function transferOwnership(web3, abi, addr, finalizeAgentAddr, cb) {
   console.log("###transferOwnership:###");
   attachToContract(web3, abi, addr, function(err, tokenContract) {
@@ -288,6 +288,73 @@ export function transferOwnership(web3, abi, addr, finalizeAgentAddr, cb) {
       cb();
     });
   });
+}
+
+export function setLastCrowdsaleRecursive (i, web3, abi, pricingStrategyAddrs, lastCrowdsale, cb) {
+  setLastCrowdsale(web3, abi, pricingStrategyAddrs[i], lastCrowdsale, () => {
+    i++;
+    if (i < pricingStrategyAddrs.length) {
+      setLastCrowdsaleRecursive(i, web3, abi, pricingStrategyAddrs, lastCrowdsale, cb);
+    } else {
+      cb();
+    }
+  })
+}
+
+export function  setMintAgentRecursive (i, web3, abi, addr, crowdsaleAddrs, cb) {
+  setMintAgent(web3, abi, addr, crowdsaleAddrs[i], () => {
+    i++;
+    if (i < crowdsaleAddrs.length) {
+      setMintAgentRecursive(i, web3, abi, addr, crowdsaleAddrs, cb);
+    } else {
+      cb();
+    }
+  })
+}
+
+export function updateJoinedCrowdsalesRecursive (i, web3, abi, addrs, cb) {
+  if (addrs.length === 0) return cb();
+  updateJoinedCrowdsales(web3, abi, addrs[i], addrs, () => {
+    i++;
+    if (i < addrs.length) {
+      updateJoinedCrowdsalesRecursive(i, web3, abi, addrs, cb);
+    } else {
+      cb();
+    }
+  })
+}
+
+export function addWhiteListRecursive (i, web3, crowdsale, token, abi, crowdsaleAddrs, cb) {
+  addWhiteList(i, web3, crowdsale, token, abi, crowdsaleAddrs[i], () => {
+    i++;
+    if (i < crowdsaleAddrs.length) {
+      addWhiteListRecursive(i, web3, crowdsale, token, abi, crowdsaleAddrs, cb);
+    } else {
+      cb();
+    }
+  })
+}
+
+export function setFinalizeAgentRecursive (i, web3, abi, addrs, finalizeAgentAddrs, cb) {
+  setFinalizeAgent(web3, abi, addrs[i], finalizeAgentAddrs[i], () => {
+    i++;
+    if (i < finalizeAgentAddrs.length) {
+      setFinalizeAgentRecursive(i, web3, abi, addrs, finalizeAgentAddrs, cb);
+    } else {
+      cb();
+    }
+  })
+}
+           
+export function setReleaseAgentRecursive (i, web3, abi, addr, finalizeAgentAddrs, cb) {
+  setReleaseAgent(web3, abi, addr, finalizeAgentAddrs[i], () => {
+    i++;
+    if (i < finalizeAgentAddrs.length) {
+      setReleaseAgentRecursive(i, web3, abi, addr, finalizeAgentAddrs, cb);
+    } else {
+      cb();
+    }
+  })
 }
 
 export const handleTokenForFile = (content, docData, state) => {
@@ -323,7 +390,7 @@ export const handleContractsForFile = (content, docData, state) => {
             fileBody = state.contracts[content.child][content.field][i]
 
             if (!fileBody) return
-            let fileContent = title + " for " + state.crowdsale[i].tier + ": \n \n" + fileBody
+            let fileContent = title + " for " + state.crowdsale[i].tier + ":**** \n \n" + fileBody
             docData.data += fileContent + '\n\n'
           }
         } else {
@@ -349,7 +416,7 @@ const addSrcToFile = (content, docData, state) => {
     if ( Object.prototype.toString.call( state.contracts[content.child][content.field] ) === '[object Array]'  && content.field !== 'abi') {
       for (let i = 0; i < state.contracts[content.child][content.field].length; i++) {
         const body = state.contracts[content.child][content.field][i]
-        const text = title + body
+        const text = title + " for " + state.crowdsale[i].tier + ": " + body
         docData.data += text + '\n\n'
       }
     } else {
