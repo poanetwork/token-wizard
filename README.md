@@ -160,26 +160,26 @@ Contract: CrowdsaleTokenExt
 
 ## How to verify ICO Wizard contracts in Etherscan
 
-*Important!*
-
-All information required for verification of ICO Wizard contracts located in a text file. You must download it on the Step 4 of ICO Wizard. There is *no* way to get it later and you'll need to repeat wizard for the new set of conracts to get the file.
+**Important!:** All information required for verification of ICO Wizard contracts located in a text file. You must download it on the Step 4 of ICO Wizard. There is *no* way to get it later and you'll need to repeat wizard for the new set of conracts to get the file.
 
 ### Crowdsale contract verification:
 
 1. Open Etherscan verification link. For example, for the Kovan chain: [https://kovan.etherscan.io/verifyContract](https://kovan.etherscan.io/verifyContract).
 2. Fill the form inputs with the data from the file. The mapping is the following:
 
-   2.1. **Contract Name:** is *Crowdsale contract name*. Default value: `MintedTokenCappedCrowdsaleExt`
+   2.1. **Contract address** is *Crowdsale contract address*.
 
-   2.2. **Compiler:** is *Compiler Version*. Default valueis 0.4.11. You should choose a value with `cmmit` message inside. For example, *Compiler Version* value will be: `v0.4.11+commit.68ef5810`
+   2.2. **Contract Name** is *Crowdsale contract name*. Default value: `MintedTokenCappedCrowdsaleExt`
 
-   2.3. **Optimization:** is *Is optimization enabled?*. Default value: `true`
+   2.3. **Compiler** is *Compiler Version*. Default valueis 0.4.11. You should choose a value with `cmmit` message inside. For example, *Compiler Version* value will be: `v0.4.11+commit.68ef5810`
 
-   2.4. **Enter the Solidity Contract Code below:** is *Crowdsale contract source*
+   2.4. **Optimization** is *Is optimization enabled?*. Default value: `true`
 
-   2.5. **Constructor Arguments ABI-encoded (For contracts that accept constructor parameters):** is *Crowdsale contract ABI encoded constructor arguments for [Tier name]*
+   2.5. **Enter the Solidity Contract Code below** is *Crowdsale contract source*
 
-3. For **Contract Library Address (For contracts that use libraries, supports up to 5 libraries):** By default we use only one library.
+   2.6. **Constructor Arguments ABI-encoded (For contracts that accept constructor parameters)** is *Crowdsale contract ABI encoded constructor arguments for [Tier name]*
+
+3. For **Contract Library Address (For contracts that use libraries, supports up to 5 libraries)** By default we use only one library.
 
 **Library_1 Name** type `:` and then the value of *SafeMatlLib library name* header from the file. Default value: `:SafeMathLibExt`.
 
@@ -199,13 +199,12 @@ You can verify other contracts:
 
 Therefore, for a simple crowdsale contract with one tier you should verify 5 contracts. For a crowdsale with n-tiers you should verify 3n+2 contracts on Etherscan. 
 
-You can find values to verify each contract in the downloaded file. For steps **2.1**, **2.4**, **2.5** values will be different. Other value are the same for the same crowdsale.
-
+You can find values to verify each contract in the downloaded file. For steps **2.1**, **2.2**, **2.5**, **2.6** values will be different. Other value are the same for the same crowdsale.
 
 ## Projects built on ICO Wizard
 
 None! Send PR if you are the first.
-We created ICO Wizard for a crowdsale of Oracles Network.
+We created ICO Wizard for a crowdsale of [Oracles Network](https://oracles.org/).
 
 ## Contributors guide
 

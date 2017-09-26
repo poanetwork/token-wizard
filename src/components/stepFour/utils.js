@@ -345,9 +345,18 @@ export const handleConstantForFile = (content, docData) => {
 
 const addSrcToFile = (content, docData, state) => {
     const title = content.value
-    const body = content.field === 'abi' ? JSON.stringify(state.contracts[content.child][content.field]) : state.contracts[content.child][content.field]
-    const text = title + body
-    docData.data += text + '\n\n'
+
+    if ( Object.prototype.toString.call( state.contracts[content.child][content.field] ) === '[object Array]' ) {
+      for (let i = 0; i < state.contracts[content.child][content.field].length; i++) {
+        const body = content.field === 'abi' ? JSON.stringify(state.contracts[content.child][content.field][i]) : state.contracts[content.child][content.field][i]
+        const text = title + body
+        docData.data += text + '\n\n'
+      }
+    } else {
+      const body = content.field === 'abi' ? JSON.stringify(state.contracts[content.child][content.field]) : state.contracts[content.child][content.field]
+      const text = title + body
+      docData.data += text + '\n\n'
+    }
 }
 
 export const download = (data, filename, type) => {
