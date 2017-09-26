@@ -1,14 +1,14 @@
 import React from 'react'
-import '../assets/stylesheets/application.css';
-import { getWeb3, checkWeb3, checkNetWorkByID } from '../utils/blockchainHelpers'
-import { getCrowdsaleData, initializeAccumulativeData, getAccumulativeCrowdsaleData, findCurrentContractRecursively, getJoinedTiers } from './crowdsale/utils'
-import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
-import { StepNavigation } from './Common/StepNavigation'
-import { NAVIGATION_STEPS } from '../utils/constants'
-import { invalidCrowdsaleAddrAlert } from '../utils/alerts'
-import { defaultState } from '../utils/constants'
-import { Loader } from './Common/Loader'
-import { ICOConfig } from './Common/config'
+import '../../assets/stylesheets/application.css';
+import { getWeb3, checkWeb3, checkNetWorkByID } from '../../utils/blockchainHelpers'
+import { getCrowdsaleData, initializeAccumulativeData, getAccumulativeCrowdsaleData, findCurrentContractRecursively, getJoinedTiers } from './utils'
+import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../../utils/utils'
+import { StepNavigation } from '../Common/StepNavigation'
+import { NAVIGATION_STEPS } from '../../utils/constants'
+import { invalidCrowdsaleAddrAlert } from '../../utils/alerts'
+import { defaultState } from '../../utils/constants'
+import { Loader } from '../Common/Loader'
+import { ICOConfig } from '../Common/config'
 const { CROWDSALE_PAGE } = NAVIGATION_STEPS
 
 export class Crowdsale extends React.Component {
