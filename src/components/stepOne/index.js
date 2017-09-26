@@ -1,12 +1,12 @@
 import React from 'react'
-import '../assets/stylesheets/application.css';
-import { checkWeb3 } from '../utils/blockchainHelpers'
+import '../../assets/stylesheets/application.css';
+import { checkWeb3 } from '../../utils/blockchainHelpers'
 import { Link } from 'react-router-dom'
-import { defaultState } from '../utils/constants'
-import { setFlatFileContentToState } from '../utils/utils';
-import { getOldState } from '../utils/utils'
-import { StepNavigation } from './Common/StepNavigation'
-import { NAVIGATION_STEPS } from '../utils/constants'
+import { defaultState } from '../../utils/constants'
+import { setFlatFileContentToState } from '../../utils/utils';
+import { getOldState } from '../../utils/utils'
+import { StepNavigation } from '../Common/StepNavigation'
+import { NAVIGATION_STEPS } from '../../utils/constants'
 const { CROWDSALE_CONTRACT } = NAVIGATION_STEPS
 
 export class stepOne extends React.Component {

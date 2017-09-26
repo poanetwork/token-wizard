@@ -376,3 +376,7 @@ export const download = (data, filename, type) => {
         }, 0); 
     }
 }
+
+export function scrollToBottom() {
+  window.scrollTo(0,document.body.scrollHeight);
+}

@@ -1,18 +1,18 @@
 import React from 'react'
-import '../assets/stylesheets/application.css';
-import { deployContract, getWeb3, checkWeb3, getNetworkVersion } from '../utils/blockchainHelpers'
-import { addWhiteList, setFinalizeAgent, setMintAgent, setReleaseAgent, updateJoinedCrowdsales, transferOwnership, setReservedTokensListMultiple, setLastCrowdsale, download, handleContractsForFile, handleTokenForFile, handleCrowdsaleForFile, handlePricingStrategyForFile, handleFinalizeAgentForFile, handleConstantForFile } from './stepFour/utils'
-import { noMetaMaskAlert } from '../utils/alerts'
-import { defaultState, FILE_CONTENTS, DOWNLOAD_NAME, DOWNLOAD_TYPE } from '../utils/constants'
-import { getOldState, toFixed, scrollToBottom } from '../utils/utils'
-import { getEncodedABIClientSide } from '../utils/microservices'
-import { stepTwo } from './stepTwo'
-import { StepNavigation } from './Common/StepNavigation'
-import { DisplayField } from './Common/DisplayField'
-import { DisplayTextArea } from './Common/DisplayTextArea'
-import { Loader } from './Common/Loader'
-import { NAVIGATION_STEPS } from '../utils/constants'
-import { copy } from '../utils/copy';
+import '../../assets/stylesheets/application.css';
+import { deployContract, getWeb3, checkWeb3, getNetworkVersion } from '../../utils/blockchainHelpers'
+import { addWhiteList, setFinalizeAgent, setMintAgent, setReleaseAgent, updateJoinedCrowdsales, transferOwnership, setReservedTokensListMultiple, setLastCrowdsale, download, handleContractsForFile, handleTokenForFile, handleCrowdsaleForFile, handlePricingStrategyForFile, handleFinalizeAgentForFile, handleConstantForFile, scrollToBottom } from './utils'
+import { noMetaMaskAlert } from '../../utils/alerts'
+import { defaultState, FILE_CONTENTS, DOWNLOAD_NAME, DOWNLOAD_TYPE } from '../../utils/constants'
+import { getOldState, toFixed } from '../../utils/utils'
+import { getEncodedABIClientSide } from '../../utils/microservices'
+import { stepTwo } from '../stepTwo'
+import { StepNavigation } from '../Common/StepNavigation'
+import { DisplayField } from '../Common/DisplayField'
+import { DisplayTextArea } from '../Common/DisplayTextArea'
+import { Loader } from '../Common/Loader'
+import { NAVIGATION_STEPS } from '../../utils/constants'
+import { copy } from '../../utils/copy';
 const { PUBLISH } = NAVIGATION_STEPS
 
 export class stepFour extends stepTwo {
