@@ -171,7 +171,7 @@ Contract: CrowdsaleTokenExt
 
    2.2. **Contract Name** is *Crowdsale contract name*. Default value: `MintedTokenCappedCrowdsaleExt`
 
-   2.3. **Compiler** is *Compiler Version*. Default valueis 0.4.11. You should choose a value with `cmmit` message inside. For example, *Compiler Version* value will be: `v0.4.11+commit.68ef5810`
+   2.3. **Compiler** is *Compiler Version*. Default valueis 0.4.11. You should choose a value with `commit` message inside. For example, *Compiler Version* value will be: `v0.4.11+commit.68ef5810`
 
    2.4. **Optimization** is *Is optimization enabled?*. Default value: `true`
 

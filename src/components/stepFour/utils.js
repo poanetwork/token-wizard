@@ -346,9 +346,9 @@ export const handleConstantForFile = (content, docData) => {
 const addSrcToFile = (content, docData, state) => {
     const title = content.value
 
-    if ( Object.prototype.toString.call( state.contracts[content.child][content.field] ) === '[object Array]' ) {
+    if ( Object.prototype.toString.call( state.contracts[content.child][content.field] ) === '[object Array]'  && content.field !== 'abi') {
       for (let i = 0; i < state.contracts[content.child][content.field].length; i++) {
-        const body = content.field === 'abi' ? JSON.stringify(state.contracts[content.child][content.field][i]) : state.contracts[content.child][content.field][i]
+        const body = state.contracts[content.child][content.field][i]
         const text = title + body
         docData.data += text + '\n\n'
       }
