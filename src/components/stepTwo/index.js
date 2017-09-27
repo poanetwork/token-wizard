@@ -15,9 +15,7 @@ export class stepTwo extends React.Component {
   constructor(props) {
     super(props);
     window.scrollTo(0, 0);
-    console.log('props', props)
     let oldState = getOldState(props, defaultState)
-    console.log('oldState', oldState)
     this.state = Object.assign({}, defaultState, oldState, intitialStepTwoValidations )
   }
 
@@ -34,44 +32,14 @@ export class stepTwo extends React.Component {
   showErrorMessages = (parent) => {
     this.validateAllFields(parent)
   }
-  
-  //depreciated
-  /*setBlockTimes = (key, property, targetTime) => {
-    let newState = { ...this.state }
-    calculateFutureBlock(targetTime, this.state.blockTimeGeneration, (targetBlock) => {
-      if (property === "startTime") {
-        newState.crowdsale[key].startBlock = targetBlock;
-        console.log("startBlock: " + newState.crowdsale[key].startBlock);
-      } else if (property === "endTime") {
-        newState.crowdsale[key].endBlock = targetBlock;
-        console.log("endBlock: " + newState.crowdsale[key].endBlock);
-      }
-      this.setState(newState);
-    });
-  }*/
-
-  /*getNewParent (property, parent, key, value) {
-    if( Object.prototype.toString.call( {...this.state[`${parent}`]} ) === '[object Array]' ) {
-      let newParent = { ...this.state[`${parent}`][key] }
-      newParent[property][key] = value
-      return newParent
-    } else {
-      let newParent = { ...this.state[`${parent}`] }
-      newParent[property] = value
-      return newParent
-    }
-  }*/
 
   changeState = (event, parent, key, property) => {
     let value = event.target.value
-    console.log("parent: " + parent, "key: " + key, "property: " + property, "value: " + value);
     let newState = { ...this.state }
-    console.log(newState);
     if (property === "startTime" || property === "endTime") {
       let targetTime = new Date(value);
       let targetTimeTemp = targetTime.setHours(targetTime.getHours() - targetTime.getTimezoneOffset()/60);//.setUTCHours(new Date(targetTime).getHours());
       if (property === "startTime") {
-        console.log("property == startTime");
         if (targetTimeTemp)
           newState.crowdsale[key].startTime = new Date(targetTimeTemp).toISOString().split(".")[0];
         else
@@ -88,8 +56,6 @@ export class stepTwo extends React.Component {
           newState.crowdsale[key + 1].endTime = new Date(newEndDate).toISOString().split(".")[0];
         }
       }
-      //depreciated
-      //this.setBlockTimes(key, property, targetTime)
     } else if (property.indexOf("whitelist_") === 0) {
       let prop = property.split("_")[1];
       newState.crowdsale[key][`whiteListInput`][prop] = value
@@ -111,15 +77,11 @@ export class stepTwo extends React.Component {
       } else {
         newState[`validations`][property] = validateValue(value, property, newState)
       }
-      //console.log('property', property)
-      //console.log('newState[`validations`][property]',  newState[`validations`], validateValue(value, property, newState), 'newState', newState)
     }
-    console.log('newState', newState)
     this.setState(newState)
   }
 
   handleInputBlur (parent, property, key) {
-    //console.log(parent, property, key);
     let newState = { ...this.state }
     let value
     if (property === 'rate') {
@@ -146,8 +108,6 @@ export class stepTwo extends React.Component {
   
   validateAllFields (parent ) {
     let newState = { ...this.state }
-    //let properties = Object.keys(newState[parent])
-    //let values = Object.values(newState[parent])
 
     let properties = []
     let values = []
@@ -167,8 +127,6 @@ export class stepTwo extends React.Component {
       values = Object.values(newState[parent])
     }
 
-    //console.log(properties);
-    //console.log(values);
 
     properties.forEach((property, index) => {
       if ( Object.prototype.toString.call( newState[`validations`] ) === '[object Array]' ) {
@@ -181,7 +139,6 @@ export class stepTwo extends React.Component {
   }
 
   renderLinkComponent () {
-    // console.log(`stepsAreValid(this.state.validations) || allFieldsAreValid('token', this.state)`, stepsAreValid(this.state.validations), allFieldsAreValid('token', this.state))
     if(stepsAreValid(this.state.validations) || allFieldsAreValid('token', this.state)){
       return this.renderLink()
     }
@@ -190,7 +147,6 @@ export class stepTwo extends React.Component {
 
   render() {
     const { token, validations } = this.state
-    console.log('step 2', this.state)
     return (
     	<section className="steps steps_crowdsale-contract" ref="two">
         <StepNavigation activeStep={TOKEN_SETUP}/>

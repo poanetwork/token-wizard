@@ -29,9 +29,7 @@ export class stepThree extends stepTwo {
     oldState.crowdsale[0].tier = "Tier 1"
     oldState.crowdsale[0].updatable = "off"
     oldState.crowdsale[0].whitelistdisabled = "yes"
-    //this.state = Object.assign({}, oldState, {validations: { ...oldState.validations, startTime: VALID, endTime: VALID, walletAddress: VALID, supply: EMPTY, rate: EMPTY } } )
     this.state = Object.assign({}, oldState, intitialStepThreeValidations )
-    //console.log('this.state', this.state)
   }
 
   addCrowdsale() {
@@ -52,8 +50,6 @@ export class stepThree extends stepTwo {
       supply: EMPTY,
       rate: EMPTY
     });
-    //newState.crowdsale[num].startTime = newState.crowdsale[num - 1].endTime;
-    //newState.crowdsale[num].endTime = defaultCompanyEndDate(newState.crowdsale[num].startTime);
     newState.pricingStrategy.push({rate: 0});
     this.setState(newState, () => this.addCrowdsaleBlock(num));
   }
@@ -75,31 +71,14 @@ export class stepThree extends stepTwo {
     return <Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}><a className="button button_fill">Continue</a></Link>
   }
 
-  /*renderStandardLinkComponent () {
-    if(stepsAreValid(this.state.validations) || allFieldsAreValid('crowdsale', this.state)){
-      return this.renderStandardLink()
-    }
-    return <div onClick={() => this.showErrorMessages('crowdsale')} className="button button_fill"> Continue</div>
-  }
-
-  renderLink () {
-    return <div>
-      <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Tier</div>
-      <Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}><a className="button button_fill">Continue</a></Link>
-    </div>
-  }*/
-
   renderStandardLinkComponent () {
     if(stepsAreValid(this.state.validations) || (allFieldsAreValid('crowdsale', this.state) && allFieldsAreValid('pricingStrategy', this.state))){
-      console.log('steeeeeep 33333')
       return this.renderStandardLink()
     }
-    console.log('not valid')
     return <div onClick={() => this.showErrorMessages('crowdsale')} className="button button_fill"> Continue</div>
   }
 
   renderLink () {
-    console.log('render link four')
     return <div>
     <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Tier</div>
     <Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}><a className="button button_fill">Continue</a></Link>
@@ -107,12 +86,9 @@ export class stepThree extends stepTwo {
   }
 
   renderLinkComponent () {
-    //console.log(`stepsAreValid(this.state.validations) || allFieldsAreValid('crowdsale', this.state)`, stepsAreValid(this.state.validations), allFieldsAreValid('crowdsale', this.state))
     if(stepsAreValid(this.state.validations) || (allFieldsAreValid('crowdsale', this.state) && allFieldsAreValid('pricingStrategy', this.state))){
-      // console.log('step 3 is valididididididididididididididididi')
       return this.renderLink()
     }
-    console.log('not valid')
     return <div>
       <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Tier</div>
       <div onClick={() => {
@@ -131,25 +107,6 @@ export class stepThree extends stepTwo {
         newState.crowdsale[0].startTime = defaultCompanyStartDate();
         newState.crowdsale[0].endTime = defaultCompanyEndDate(newState.crowdsale[0].startTime);
         this.setState(newState);
-        //depreciated
-        /*let datesIterator = 0;
-        let datesCount = 2;
-        calculateFutureBlock(new Date(newState.crowdsale[0].startTime), newState.blockTimeGeneration, (targetBlock) => {
-          newState.crowdsale[0].startBlock = targetBlock;
-          datesIterator++;
-
-          if (datesIterator === datesCount) {
-            this.setState(newState);
-          }
-        });
-        calculateFutureBlock(new Date(newState.crowdsale[0].endTime), newState.blockTimeGeneration, (targetBlock) => {
-          newState.crowdsale[0].endBlock = targetBlock;
-          datesIterator++;
-
-          if (datesIterator === datesCount) {
-            this.setState(newState);
-          }
-        });*/
       });
     }, 500);
   }
@@ -159,7 +116,6 @@ export class stepThree extends stepTwo {
     let { token } = this.state
     let { crowdsale } = this.state
     let { pricingStrategy } = this.state
-    console.log('this.state.contractType', this.state.contractType)
     let globalSettingsBlock = <div><div className="section-title">
         <p className="title">Global limits</p>
       </div>

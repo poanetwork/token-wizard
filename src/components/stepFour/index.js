@@ -455,21 +455,6 @@ export class stepFour extends stepTwo {
     }
   }
 
-  //depreciated
-  /*getStandardCrowdSaleParams = (web3) => {
-    return [
-      parseInt(this.state.crowdsale[0].startBlock, 10), 
-      parseInt(this.state.crowdsale[0].endBlock, 10), 
-      web3.toWei(this.state.pricingStrategy[0].rate, "ether"), 
-      this.state.crowdsale[0].walletAddress,
-      parseInt(this.state.crowdsale[0].supply, 10),
-      this.state.token.name,
-      this.state.token.ticker,
-      parseInt(this.state.token.decimals, 10),
-      parseInt(this.state.token.supply, 10)
-    ]
-  }*/
-
   //MintedTokenCappedCrowdsale
   getCrowdSaleParams = (web3, i) => {
     return [
@@ -496,15 +481,6 @@ export class stepFour extends stepTwo {
     this.setState(newState);
 
     this.deployFinalizeAgent();
-
-    //depreciated
-    /*if (this.state.contractType === this.state.contractTypes.whitelistwithcap) {
-      this.deployFinalizeAgent();
-    } else {
-      newState.loading = false;
-      this.setState(newState);
-      this.goToCrowdsalePage();
-    }*/
   }
 
   deployFinalizeAgent = () => {
@@ -613,27 +589,6 @@ export class stepFour extends stepTwo {
           });
         });
       });
-      /*} else { // creation of additional tier after crowdsale was set up before
-        console.log("###we add tier after crowdsale is created###");
-        let curTierAddr = [ contracts.crowdsale.addr.slice(-1)[0] ];
-        let prevTierAddr = [ contracts.crowdsale.addr.slice(-2)[0] ];
-        let finalizeSet = [prevTierAddr, curTierAddr];
-        this.updateJoinedCrowdsalesRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, () => {
-          this.setMintAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, curTierAddr, () => {
-            this.setMintAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.finalizeAgent.addr, () => {
-              this.addWhiteListRecursive(0, web3, this.state.crowdsale, this.state.token, contracts.crowdsale.abi, curTierAddr, () => {
-                this.setFinalizeAgentRecursive(0, web3, contracts.crowdsale.abi, finalizeSet, contracts.finalizeAgent.addr, () => {
-                  this.setReleaseAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.finalizeAgent.addr, () => {
-                    newState.loading = false;
-                    this.setState(newState);
-                    this.goToCrowdsalePage();
-                  });
-                });
-              });
-            });
-          });
-        });
-      }*/
     });
   }
 
