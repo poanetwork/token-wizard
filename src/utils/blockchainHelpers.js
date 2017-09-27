@@ -181,8 +181,11 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
       console.log('estimated gas callback', estimatedGas)
       if (err) console.log('errrrrrrrrrrrrrrrrr', err);
       console.log('gas is estimated', estimatedGas, 'err', err)
-      if (!estimatedGas) estimatedGas = 3716260;
+      let estimatedGasMax = 3716260;
+      if (!estimatedGas) estimatedGas = estimatedGasMax;
       else estimatedGas += 100000;
+
+      if (estimatedGas > estimatedGasMax) estimatedGas = estimatedGasMax;
       
       var contractInstance = web3.eth.contract(abi);
       var opts = {
