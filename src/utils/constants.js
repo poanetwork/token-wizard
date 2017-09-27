@@ -153,6 +153,8 @@ export const FILE_CONTENTS = [
 	{ value: 'Finalize agent contract name: ', parent: 'none', fileValue: 'ReservedTokensFinalizeAgent', x: 10, y: 10 },
 	{ field: 'addr', value: 'Finalize agent contract address', parent: 'contracts', child: 'finalizeAgent', x: 10, y: 10 },
 	{ value: '*****************************', parent: 'none', fileValue: '', x: 10, y: 10 },
+	{ field: 'src', value: '****SafeMatlLib contract source:**** \n \n', parent: 'contracts', child: 'safeMathLib', x: 10, y: 10 },
+	{ field: 'abi', value: '****SafeMatlLib contract ABI:**** \n \n', parent: 'contracts', child: 'safeMathLib', x: 10, y: 10 },
 	{ field: 'src', value: '****Crowdsale contract source:**** \n \n', parent: 'contracts', child: 'crowdsale', x: 10, y: 10 },
 	{ field: 'abi', value: '****Crowdsale contract ABI:**** \n \n', parent: 'contracts', child: 'crowdsale', x: 10, y: 10 },
 	{ field: 'abiConstructor', value: '****Crowdsale contract ABI encoded constructor arguments', parent: 'contracts', child: 'crowdsale', x: 10, y: 10 },

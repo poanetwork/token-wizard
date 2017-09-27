@@ -74,14 +74,33 @@ function addWhiteList(round, web3, crowdsale, token, abi, addr, cb) {
   for (let i = 0; i <= round; i++) {
     console.log(crowdsale[i]);
     console.log(crowdsale[i].whitelist);
-    whitelist.push.apply(whitelist, crowdsale[i].whitelist);
 
-    for (let i = 0; i <= round; i++) {
-      if (crowdsale[i].whiteListInput.addr && crowdsale[i].whiteListInput.min && crowdsale[i].whiteListInput.max) {
+    for (let j = 0; j < crowdsale[i].whitelist.length; j++) {
+      let itemIsAdded = false;
+      for (let k = 0; k < whitelist.length; k++) {
+        if (whitelist[k].addr == crowdsale[i].whitelist[j].addr) {
+          itemIsAdded = true;
+          break;
+        }
+      }
+      if (!itemIsAdded) {
+        whitelist.push.apply(whitelist, crowdsale[i].whitelist);
+      }
+    }
+
+    if (crowdsale[i].whiteListInput.addr && crowdsale[i].whiteListInput.min && crowdsale[i].whiteListInput.max) {
+      let itemIsAdded = false;
+      for (let k = 0; k < whitelist.length; k++) {
+        if (whitelist[k].addr == crowdsale[i].whiteListInput.addr) {
+          itemIsAdded = true;
+          break;
+        }
+      }
+      if (!itemIsAdded) {
         whitelist.push({
-            "addr": crowdsale[i].whiteListInput.addr,
-            "min": crowdsale[i].whiteListInput.min,
-            "max": crowdsale[i].whiteListInput.max
+          "addr": crowdsale[i].whiteListInput.addr,
+          "min": crowdsale[i].whiteListInput.min,
+          "max": crowdsale[i].whiteListInput.max
         });
       }
     }
@@ -396,7 +415,7 @@ export const handleContractsForFile = (content, docData, state) => {
         } else {
           fileBody = state.contracts[content.child][content.field]
           if (!fileBody) return
-          let fileContent = title + fileBody
+          let fileContent = title + ":**** \n \n" + fileBody
           docData.data += fileContent + '\n\n'
         }
     } else {

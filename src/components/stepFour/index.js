@@ -50,6 +50,13 @@ export class stepFour extends stepTwo {
         });
       } break;*/
       case this.state.contractTypes.whitelistwithcap: {
+        if (!this.state.contracts.safeMathLib) {
+          let newState = { ...this.state }
+          newState.loading = false;
+          this.setState(newState);
+          return noContractDataAlert();
+        } 
+
         let state = { ...this.state }
         state.loading = true;
         this.setState(state);
@@ -62,36 +69,29 @@ export class stepFour extends stepTwo {
            getWeb3((web3) => {
             state.web3 = web3;
             this.setState(state);
+            let counter = 0;
             if (!addrToken) {
               getEncodedABIClientSide(web3, abiToken, state, [], 0, (ABIencoded) => {
+                counter++;
                 let cntrct = "token";
-                let state = { ...this.state }
                 state.contracts[cntrct].abiConstructor = ABIencoded;
                 console.log(cntrct + " ABI encoded params constructor:");
                 console.log(ABIencoded);
-                this.setState(state);
+                if (counter == (this.state.pricingStrategy.length + 1))
+                  this.setState(state, this.deploySafeMathLibrary());
               });
             }
             for (let i = 0; i < this.state.pricingStrategy.length; i++) {
               getEncodedABIClientSide(web3, abiPricingStrategy, state, [], i, (ABIencoded) => {
+                counter++;
                 let cntrct = "pricingStrategy";
-                let state = { ...this.state }
                 state.contracts[cntrct].abiConstructor.push(ABIencoded);
                 console.log(cntrct + " ABI encoded params constructor:");
                 console.log(ABIencoded);
-                this.setState(state);
+                if (counter == (this.state.pricingStrategy.length + 1))
+                  this.setState(state, this.deploySafeMathLibrary());
               });
             }
-
-            console.log(this.state.contracts);
-            if (!this.state.contracts.safeMathLib) {
-              let newState = { ...this.state }
-              newState.loading = false;
-              this.setState(newState);
-              return noContractDataAlert();
-            }     
-
-            this.deploySafeMathLibrary();
 
             //depreciated
             /*console.log(this.state.contracts.crowdsale.addr.length);
@@ -377,18 +377,21 @@ export class stepFour extends stepTwo {
       return console.log(err);
     }
     newState.contracts.pricingStrategy.addr.push(pricingStrategyAddr);
-    newState.loading = false;
+    //newState.loading = false;
     this.setState(newState);
     let abiCrowdsale = this.state.contracts && this.state.contracts.crowdsale && this.state.contracts.crowdsale.abi || []
+    let counter = 0;
     for (let i = 0; i < this.state.crowdsale.length; i++) {
       getEncodedABIClientSide(this.state.web3, abiCrowdsale, newState, [], i, (ABIencoded) => {
+        counter++;
         let cntrct = "crowdsale";
         let state = { ...this.state }
         state.contracts[cntrct].abiConstructor.push(ABIencoded);
         console.log(cntrct + " ABI encoded params constructor:");
         console.log(ABIencoded);
         this.setState(state);
-        this.deployCrowdsale();
+        if (counter == this.state.crowdsale.length)
+          this.deployCrowdsale();
       });
     }
   }
@@ -731,6 +734,17 @@ export class stepFour extends stepTwo {
         />
       );
     }
+    let ABIEncodedOutputsFinalizeAgent = [];
+    for (let i = 0; i < this.state.crowdsale.length; i++) {
+      ABIEncodedOutputsFinalizeAgent.push(
+        <DisplayTextArea
+          key={i.toString()}
+          label={"Constructor Arguments for " + (this.state.crowdsale[i].tier?this.state.crowdsale[i].tier : "") + " Finalize Agent Contract (ABI-encoded and appended to the ByteCode above)"}
+          value={this.state.contracts?this.state.contracts.finalizeAgent?this.state.contracts.finalizeAgent.abiConstructor?this.state.contracts.finalizeAgent.abiConstructor[i]:"":"":""}
+          description="Contructor arguments for finalize agent contract"
+        />
+      );
+    }
     let globalLimitsBlock = <div><div className="publish-title-container">
       <p className="publish-title" data-step={2 + this.state.crowdsale.length + 2}>Global Limits</p>
     </div>
@@ -769,6 +783,18 @@ export class stepFour extends stepTwo {
         label={"Pricing Strategy Contract ABI"}
         value={this.state.contracts?this.state.contracts.pricingStrategy?JSON.stringify(this.state.contracts.pricingStrategy.abi):"":""}
         description="Pricing Strategy Contract ABI"
+      />
+    </div>;
+    let finalizeAgentBlock = <div>
+      <DisplayTextArea
+        label={"Finalize Agent Contract Source Code"}
+        value={this.state.contracts?this.state.contracts.finalizeAgent?this.state.contracts.finalizeAgent.src:"":""}
+        description="Finalize Agent Contract Source Code"
+      />
+      <DisplayTextArea
+        label={"Finalize Agent Contract ABI"}
+        value={this.state.contracts?this.state.contracts.finalizeAgent?JSON.stringify(this.state.contracts.finalizeAgent.abi):"":""}
+        description="Finalize Agent Contract ABI"
       />
     </div>;
     return (
@@ -811,12 +837,6 @@ export class stepFour extends stepTwo {
                 />
               </div>
               <div className="hidden">
-                {/*<DisplayField 
-                  side='left' 
-                  title='SUPPLY' 
-                  value={this.state.token.supply?this.state.token.supply.toString():0} 
-                  description="The supply is 0 for your token."
-                />*/}
                 <DisplayField 
                   side='left' 
                   title='DECIMALS' 
@@ -850,9 +870,11 @@ export class stepFour extends stepTwo {
               />
             </div>
             {this.state.crowdsale[0].whitelistdisabled === "yes"?globalLimitsBlock:""}
-            {!this.state.tokenIsAlreadyCreated?tokenBlock:""}
-            {(!this.state.tokenIsAlreadyCreated && this.state.contractType === this.state.contractTypes.whitelistwithcap)?pricingStrategyBlock:""}
-            {this.state.contractType === this.state.contractTypes.whitelistwithcap?ABIEncodedOutputsPricingStrategy:""}
+            {tokenBlock}
+            {pricingStrategyBlock}
+            {ABIEncodedOutputsPricingStrategy}
+            {finalizeAgentBlock}
+            {ABIEncodedOutputsFinalizeAgent}
             <DisplayTextArea
               label={"Crowdsale Contract Source Code"}
               value={this.state.contracts?this.state.contracts.crowdsale?this.state.contracts.crowdsale.src:"":""}

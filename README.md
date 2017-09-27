@@ -160,14 +160,14 @@ Contract: CrowdsaleTokenExt
 
 ## How to verify ICO Wizard contracts in Etherscan
 
-**Important!:** All information required for verification of ICO Wizard contracts located in a text file. You must download it on the Step 4 of ICO Wizard. There is *no* way to get it later and you'll need to repeat wizard for the new set of conracts to get the file.
+**Important!:** All information required for verification of ICO Wizard contracts located in a text file. You must download it on the Step 4 of ICO Wizard. There is **no** way to get it later and you'll need to repeat wizard for the new set of conracts to get the file.
 
 ### Crowdsale contract verification:
 
 1. Open Etherscan verification link. For example, for the Kovan chain: [https://kovan.etherscan.io/verifyContract](https://kovan.etherscan.io/verifyContract).
 2. Fill the form inputs with the data from the file. The mapping is the following:
 
-   2.1. **Contract address** is *Crowdsale contract address*.
+   2.1. **Contract address** is *Crowdsale contract address for [Tier name]*.
 
    2.2. **Contract Name** is *Crowdsale contract name*. Default value: `MintedTokenCappedCrowdsaleExt`
 
@@ -190,12 +190,12 @@ Contract: CrowdsaleTokenExt
 You can find an example of a verified crowdsale contract [here](https://kovan.etherscan.io/address/0xd973cd4c34a0d6fbb5286d0f53f36347a6bef60f#code).
 
 You can verify other contracts:
-- `SafeMathLibExt`. Unique.
-- `MintedTokenCappedCrowdsaleExt`. The crowdsale contract for a tier. One crowdsale may have multiple tiers. By default there is one tier.
-- `CrowdsaleTokenExt`. The token contract. Unique.
-- `FlatPricingExt`. The pricing strategy contract. Each tier has one pricing strategy contract.
+- `SafeMathLibExt`. Unique. The example of verified [SafeMathLibExt](https://kovan.etherscan.io/address/0x58cfad3f53a86ebeaab117a5436aaf948d4be3cb#code)
+- `MintedTokenCappedCrowdsaleExt`. The crowdsale contract for a tier. One crowdsale may have multiple tiers. By default there is one tier. The example of verified [MintedTokenCappedCrowdsaleExt](https://kovan.etherscan.io/address/0x1c1e2efd273210ba642b07db36580d4b45550968#code).
+- `CrowdsaleTokenExt`. The token contract. Unique. The example of verified [CrowdsaleTokenExt](https://kovan.etherscan.io/address/0xd791d3bcafb29014b37956105315f15e2481b331#code).
+- `FlatPricingExt`. The pricing strategy contract. Each tier has one pricing strategy contract. The example of verified [FlatPricingExt](https://kovan.etherscan.io/address/0x47832db4fc8b296acec4b5bc008b42797b9bf702#code).
 - `NullFinalizeAgentExt`. The finalize agent contract for every tier that is not the last. If you have n tiers. There will be n-1 `NullFinalizeAgentExt` contract.
-- `ReservedTokensFinalizeAgent`. The finalize agent contract of the last tier. Unique. Only last finalize agent is used to finalize the crowdsale for all tiers. 
+- `ReservedTokensFinalizeAgent`. The finalize agent contract of the last tier. Unique. Only last finalize agent is used to finalize the crowdsale for all tiers. The example of verified [ReservedTokensFinalizeAgent](https://kovan.etherscan.io/address/0x032b4c44f1729eb0ccc673682463e3f4763aaade#code).
 
 Therefore, for a simple crowdsale contract with one tier you should verify 5 contracts. For a crowdsale with n-tiers you should verify 3n+2 contracts on Etherscan. 
 
