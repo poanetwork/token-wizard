@@ -142,8 +142,8 @@ export function setExistingContractParams(abi, addr, $this) {
           }
         });
 
-        propsCount++;
-        /*crowdsaleContract.pricingStrategy.call(function(err, pricingStrategyAddr) {
+        /*propsCount++;
+        crowdsaleContract.pricingStrategy.call(function(err, pricingStrategyAddr) {
           cbCount++;
           console.log("pricingStrategyAddr: " + pricingStrategyAddr);
           state.contracts.pricingStrategy.addr = pricingStrategyAddr;
@@ -223,7 +223,6 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
   });
 }
 
-//todo
 export function checkTxMined(web3, txhash, cb) {
   web3.eth.getTransactionReceipt(txhash, function(err, receipt) {
     if (receipt)
