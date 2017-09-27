@@ -225,7 +225,8 @@ transferOwnership: 00:40
 
 Attention!
 
-Deploying to the Mainnet is expensive. For a contract with one tier the price is 0.16 ETH
+Deploying to the Mainnet is expensive. For a contract with one tier the price is 0.16 ETH.
+
 With the price of 1 ETH of $300.0 USD the price of one deployment will be $48.0 USD.
 
 
