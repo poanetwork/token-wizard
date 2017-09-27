@@ -10,6 +10,15 @@ export function noMetaMaskAlert() {
     });
 }
 
+export function noContractDataAlert() {
+    sweetAlert({
+      title: "Warning",
+      text: "The crowdsale data is empty. There is nothing to deploy. Please, start ICO Wizard from the beginning.",
+      html: true,
+      type: "warning"
+    });
+}
+
 export function noContractAlert() {
     sweetAlert({
       title: "Warning",

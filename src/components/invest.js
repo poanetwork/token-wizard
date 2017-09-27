@@ -374,7 +374,7 @@ export class Invest extends React.Component {
             <p className="balance-title">{investorBalance} {tokenTicker}</p>
             <p className="balance-description">Balance</p>
             <p className="description">
-              Your balance in tokens. Please 
+              Your balance in tokens. 
             </p>
           </div>
           <form className="invest-form">
