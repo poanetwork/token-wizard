@@ -194,9 +194,13 @@ Estimates for each contracts:
 
 
 SafeMathLib : 02:00
+
 Token: 04:15
+
 Pricing strategy: 01:32
+
 Crowdsale: 04:52
+
 Finalize agent: 01:52
 
 
@@ -204,11 +208,17 @@ Estimates for each methods invocation:
 
 
 setLastCrowdsale for Pricing Strategy: 00:58
+
 updateJoinedCrowdsales: 02:00
+
 setMintAgent: 01:30
+
 setMintAgent: 02:10
+
 setFinalizeAgent: 01:20
+
 setReleaseAgent: 00:53
+
 transferOwnership: 00:40
 
 ### Price
