@@ -244,6 +244,7 @@ export const findConstructor = (abi) => {
 }
 
 export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) => {
+    //console.log(abiConstructor, state, vals, crowdsaleNum);
     let params = {"types": [], "vals": []};
     if (!abiConstructor) return params;
     for (let j = 0; j < abiConstructor.length; j++) {
@@ -283,7 +284,7 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
                     params.vals.push(state.contracts.token.addr);
                 } break;
                 case "_crowdsale": {
-                    params.vals.push(state.contracts.crowdsale[crowdsaleNum].addr);
+                    params.vals.push(state.contracts.crowdsale.addr[crowdsaleNum]);
                 } break;
                 case "_crowdsaleSupply": {
                     params.vals.push(state.crowdsale[crowdsaleNum].supply);
