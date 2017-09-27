@@ -455,21 +455,6 @@ export class stepFour extends stepTwo {
     }
   }
 
-  //depreciated
-  /*getStandardCrowdSaleParams = (web3) => {
-    return [
-      parseInt(this.state.crowdsale[0].startBlock, 10), 
-      parseInt(this.state.crowdsale[0].endBlock, 10), 
-      web3.toWei(this.state.pricingStrategy[0].rate, "ether"), 
-      this.state.crowdsale[0].walletAddress,
-      parseInt(this.state.crowdsale[0].supply, 10),
-      this.state.token.name,
-      this.state.token.ticker,
-      parseInt(this.state.token.decimals, 10),
-      parseInt(this.state.token.supply, 10)
-    ]
-  }*/
-
   //MintedTokenCappedCrowdsale
   getCrowdSaleParams = (web3, i) => {
     return [
@@ -496,15 +481,6 @@ export class stepFour extends stepTwo {
     this.setState(newState);
 
     this.deployFinalizeAgent();
-
-    //depreciated
-    /*if (this.state.contractType === this.state.contractTypes.whitelistwithcap) {
-      this.deployFinalizeAgent();
-    } else {
-      newState.loading = false;
-      this.setState(newState);
-      this.goToCrowdsalePage();
-    }*/
   }
 
   deployFinalizeAgent = () => {
