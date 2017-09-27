@@ -188,11 +188,11 @@ Contract: CrowdsaleTokenExt
 4. Then click **Verify and publish** button.
 
 You can verify other contracts:
-- `SafeMathLibExt`. Unique. The example of verified [SafeMathLibExt is here](https://kovan.etherscan.io/address/0x58cfad3f53a86ebeaab117a5436aaf948d4be3cb#code)
+- `SafeMathLibExt`. Unique. The example of verified [SafeMathLibExt is here](https://kovan.etherscan.io/address/0x58cfad3f53a86ebeaab117a5436aaf948d4be3cb#code).
 - `MintedTokenCappedCrowdsaleExt`. The crowdsale contract for a tier. One crowdsale may have multiple tiers. By default there is one tier. The example of verified [MintedTokenCappedCrowdsaleExt is here](https://kovan.etherscan.io/address/0x1c1e2efd273210ba642b07db36580d4b45550968#code).
 - `CrowdsaleTokenExt`. The token contract. Unique. The example of verified [CrowdsaleTokenExt is here](https://kovan.etherscan.io/address/0xd791d3bcafb29014b37956105315f15e2481b331#code).
 - `FlatPricingExt`. The pricing strategy contract. Each tier has one pricing strategy contract. The example of verified [FlatPricingExt is here](https://kovan.etherscan.io/address/0x47832db4fc8b296acec4b5bc008b42797b9bf702#code).
-- `NullFinalizeAgentExt`. The finalize agent contract for every tier that is not the last. If you have n tiers, there will be n-1 `NullFinalizeAgentExt` contract. Thus, it is used only with multiple tiers crowdsale.
+- `NullFinalizeAgentExt`. The finalize agent contract for every tier that is not the last. If you have n tiers, there will be n-1 `NullFinalizeAgentExt` contract. Thus, it is used only with multiple tiers crowdsale. The example of verified [NullFinalizeAgentExt is here](https://kovan.etherscan.io/address/0x4706E44874361A3288E2233e8FB4b30369cC3e4b#code).
 - `ReservedTokensFinalizeAgent`. The finalize agent contract of the last tier. Unique. Only last finalize agent is used to finalize the crowdsale for all tiers. The example of verified [ReservedTokensFinalizeAgent is here](https://kovan.etherscan.io/address/0x032b4c44f1729eb0ccc673682463e3f4763aaade#code).
 
 Therefore, for a simple crowdsale contract with one tier you should verify 5 contracts. For a crowdsale with n-tiers you should verify 3n+2 contracts on Etherscan. 
