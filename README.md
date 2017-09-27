@@ -1,9 +1,29 @@
-![ICO Wizard DApp](https://forum.oracles.org/uploads/default/original/1X/a06ee82b46666b06986a84d648073543fd324b8d.jpg)
+![ICO Wizard DApp](https://forum.oracles.org//uploads/default/original/1X/0883f34b870fac19914d7b5e43e4f815dbe5c267.png)
 
 # ICO Wizard DApp
 
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/hyperium/hyper/master/LICENSE)
 [![Build Status](https://travis-ci.org/oraclesorg/ico-wizard.svg?branch=master)](https://travis-ci.org/oraclesorg/ico-wizard)
+
+- [ICO Wizard DApp](#ico-wizard-dapp)
+  * [Introduction](#introduction)
+  * [Demo](#demo)
+  * [Requirements](#requirements)
+  * [Strategy](#strategy)
+  * [How to run](#how-to-run)
+    + [Run local version for development](#run-local-version-for-development)
+    + [ICO configuration](#ico-configuration)
+    + [Tests](#tests)
+  * [Deploying of crowdsale to Mainnet](#deploying-of-crowdsale-to-mainnet)
+    + [Time](#time)
+    + [Price](#price)
+  * [How to verify ICO Wizard contracts in Etherscan](#how-to-verify-ico-wizard-contracts-in-etherscan)
+    + [Crowdsale contract verification:](#crowdsale-contract-verification)
+  * [Projects built on ICO Wizard](#projects-built-on-ico-wizard)
+  * [Contributors guide](#contributors-guide)
+  * [Notable Contributors](#notable-contributors)
+  * [Disclaimer](#disclaimer)
+
 
 ## Introduction
 
@@ -158,6 +178,40 @@ Contract: CrowdsaleTokenExt
   36 passing (4s)
 ```
 
+## Deploying of crowdsale to Mainnet
+
+
+### Time
+
+The one-tier crowdsale contract takes ~24 minutes in total.
+
+Estimates for each contracts:
+
+SafeMathLib : 02:00
+Token: 04:15
+Pricing strategy: 01:32
+Crowdsale: 04:52
+Finalize agent: 01:52
+
+Estimates for each methods invocation:
+
+setLastCrowdsale for Pricing Strategy: 00:58
+updateJoinedCrowdsales: 02:00
+setMintAgent: 01:30
+setMintAgent: 02:10
+setFinalizeAgent: 01:20
+setReleaseAgent: 00:53
+transferOwnership: 00:40
+
+### Price
+
+Attention!
+
+Deploying to the Mainnet is expensive. For a contract with one tier the price is 0.25 ETH
+With the price of 1 ETH of $300.0 USD the price of one deployment will be $60.0 USD.
+
+
+
 ## How to verify ICO Wizard contracts in Etherscan
 
 **Important!:** All information required for verification of ICO Wizard contracts located in a text file. You must download it on the Step 4 of ICO Wizard. There is **no** way to get it later and you'll need to repeat wizard for the new set of conracts to get the file.
@@ -216,3 +270,12 @@ We appreciate contributors from the community:
 
 - Jeff Christian
 - Roman Storm
+
+## Disclaimer
+
+The software is in Beta stage. 
+ICO Wizard is constantly under active development. The “Beta” labelling implies that while the core features of the software have been implemented, bugs and issues may still remain undiscovered until this phase of testing is complete. As such, ICO Wizard may experience the following issues, but not limited to, during usage:
+
+- lost of tokens/funds from incorrect configuration;
+- unexpected delays;
+- unexpected visual artifacts.
