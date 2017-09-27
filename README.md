@@ -171,7 +171,7 @@ Contract: CrowdsaleTokenExt
 
    2.2. **Contract Name** is *Crowdsale contract name*. Default value: `MintedTokenCappedCrowdsaleExt`
 
-   2.3. **Compiler** is *Compiler Version*. Default valueis 0.4.11. You should choose a value with `commit` message inside. For example, *Compiler Version* value will be: `v0.4.11+commit.68ef5810`
+   2.3. **Compiler** is *Compiler Version*. Default value is 0.4.11. You should choose a value with `commit` message inside. For example, *Compiler Version* value will be: `v0.4.11+commit.68ef5810`
 
    2.4. **Optimization** is *Is optimization enabled?*. Default value: `true`
 
@@ -181,9 +181,9 @@ Contract: CrowdsaleTokenExt
 
 3. For **Contract Library Address (For contracts that use libraries, supports up to 5 libraries)** By default we use only one library.
 
-**Library_1 Name** type `:` and then the value of *SafeMatlLib library name* header from the file. Default value: `:SafeMathLibExt`.
+**Library_1 Name** type `:` and then the value of *SafeMathlLib library name* header from the file. Default value: `:SafeMathLibExt`.
 
-**Library Contract Address:** is the value of *SafeMatlLib library address* header form the file. Fro example: `0xe9ae538ffea453eae179e45a787ca76db619d40d`.
+**Library Contract Address:** is the value of *SafeMathlLib library address* header form the file. Fro example: `0xe9ae538ffea453eae179e45a787ca76db619d40d`.
 
 4. Then click **Verify and publish** button.
 
@@ -194,7 +194,7 @@ You can verify other contracts:
 - `MintedTokenCappedCrowdsaleExt`. The crowdsale contract for a tier. One crowdsale may have multiple tiers. By default there is one tier. The example of verified [MintedTokenCappedCrowdsaleExt](https://kovan.etherscan.io/address/0x1c1e2efd273210ba642b07db36580d4b45550968#code).
 - `CrowdsaleTokenExt`. The token contract. Unique. The example of verified [CrowdsaleTokenExt](https://kovan.etherscan.io/address/0xd791d3bcafb29014b37956105315f15e2481b331#code).
 - `FlatPricingExt`. The pricing strategy contract. Each tier has one pricing strategy contract. The example of verified [FlatPricingExt](https://kovan.etherscan.io/address/0x47832db4fc8b296acec4b5bc008b42797b9bf702#code).
-- `NullFinalizeAgentExt`. The finalize agent contract for every tier that is not the last. If you have n tiers. There will be n-1 `NullFinalizeAgentExt` contract.
+- `NullFinalizeAgentExt`. The finalize agent contract for every tier that is not the last. If you have n tiers, there will be n-1 `NullFinalizeAgentExt` contract. Thus, it is used only with multiple tiers crowdsale.
 - `ReservedTokensFinalizeAgent`. The finalize agent contract of the last tier. Unique. Only last finalize agent is used to finalize the crowdsale for all tiers. The example of verified [ReservedTokensFinalizeAgent](https://kovan.etherscan.io/address/0x032b4c44f1729eb0ccc673682463e3f4763aaade#code).
 
 Therefore, for a simple crowdsale contract with one tier you should verify 5 contracts. For a crowdsale with n-tiers you should verify 3n+2 contracts on Etherscan. 
