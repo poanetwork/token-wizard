@@ -32,7 +32,7 @@ export class Invest extends React.Component {
       };
 
       const networkID = ICOConfig.networkID?ICOConfig.networkID:getQueryVariable("networkID");
-      const contractType = this.state.contractTypes.whitelistwithcap;// getQueryVariable("contractType");
+      const contractType = this.state.contractTypes.whitelistwithcap;
       checkNetWorkByID(web3, networkID);
       newState.contractType = contractType;
 
