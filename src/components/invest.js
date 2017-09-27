@@ -102,7 +102,7 @@ export class Invest extends React.Component {
           state.loading = false;
           return this.setState(state);
         }
-        getCrowdsaleData(web3, this, crowdsaleContract, () => { 
+        getCrowdsaleData(web3, this, crowdsaleContract, () => {
           initializeAccumulativeData(this, () => {
             getAccumulativeCrowdsaleData(web3, this, () => {
             });
@@ -176,7 +176,7 @@ export class Invest extends React.Component {
 
       crowdsaleContract.buySampleTokens.sendTransaction(web3.eth.accounts[0], opts, (err, txHash) => {
         if (err) return console.log(err);
-        
+
         console.log("tx hash: " + txHash);
         successfulInvestmentAlert(this.state.tokensToInvest);
       });
@@ -199,7 +199,7 @@ export class Invest extends React.Component {
         state.loading = false;
         return this.setState(state);
       }
-      getCurrentRate(web3, this, crowdsaleContract, () => { 
+      getCurrentRate(web3, this, crowdsaleContract, () => {
         this.investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, web3);
       });
     })
@@ -235,7 +235,7 @@ export class Invest extends React.Component {
         this.setState(state);
         return console.log(err);
       }
-      
+
       console.log("txHash: " + txHash);
       let $this = this;
       checkTxMined(web3, txHash, function txMinedCallback(receipt) {
@@ -263,7 +263,7 @@ export class Invest extends React.Component {
 
   renderPieTracker () {
     return <div style={{marginLeft: '-20px', marginTop: '-20px'}}>
-      <ReactCountdownClock 
+      <ReactCountdownClock
         seconds={this.state.seconds}
         color="#733EAB"
         alpha={0.9}
@@ -288,7 +288,7 @@ export class Invest extends React.Component {
     var hoursLeft   = Math.floor((seconds) - (days*86400));
     var hours       = Math.floor(hoursLeft/3600);
     var minutesLeft = Math.floor((hoursLeft) - (hours*3600));
-    var minutes     = Math.floor(minutesLeft/60); 
+    var minutes     = Math.floor(minutesLeft/60);
     return { days, hours, minutes}
   }
 
@@ -366,7 +366,8 @@ export class Invest extends React.Component {
           </div>
           <p className="invest-title">Invest page</p>
           <p className="invest-description">
-            Here you can invest in the crowdsale campaign. At the momemnt, you need Metamask client to invest into the crowdsale. If you don't have Metamask, you can send ethers to the crowdsale address with a MethodID: 0xa6f2ae3a. Sample <a href="https://kovan.etherscan.io/tx/0x42073576a160206e61b4d9b70b436359b8d220f8b88c7c272c77023513c62c3d">transaction</a>.
+            {"Here you can invest in the crowdsale campaign. At the momemnt, you need Metamask client to invest into the crowdsale. If you don't have Metamask, you can send ethers to the crowdsale address with a MethodID: 0xa6f2ae3a. Sample "}
+            <a href="https://kovan.etherscan.io/tx/0x42073576a160206e61b4d9b70b436359b8d220f8b88c7c272c77023513c62c3d">transaction</a>.
           </p>
         </div>
         <div className="invest-table-cell invest-table-cell_right">
@@ -374,7 +375,7 @@ export class Invest extends React.Component {
             <p className="balance-title">{investorBalance} {tokenTicker}</p>
             <p className="balance-description">Balance</p>
             <p className="description">
-              Your balance in tokens. Please 
+              Your balance in tokens. Please
             </p>
           </div>
           <form className="invest-form">
@@ -383,16 +384,45 @@ export class Invest extends React.Component {
               <input type="text" className="invest-form-input" value={this.tokensToInvest} onChange={this.tokensToInvestOnChange} placeholder="0"/>
               <div className="invest-form-label">TOKENS</div>
             </div>
-            <a className="button button_fill" onClick={this.investToTokens}>Invest now</a>
+            <div className="invest-through-container">
+              <select className="invest-through">
+                <option value="">Metamask</option>
+                <option value="">Kovan</option>
+              </select>
+              <a className="button button_fill" onClick={this.investToTokens}>Invest</a>
+            </div>
             <p className="description">
-            Think twice before investment in ICOs. Tokens will be deposited on a wallet you used to buy tokens.
+              Think twice before investment in ICOs. Tokens will be deposited on a wallet you used to buy tokens.
             </p>
           </form>
+          <div className="payment-process">
+            <img src="https://lh6.ggpht.com/ufwUy4SGVTqCs8fcp6Ajxfpae0bNImN1Rq2cXUjWI7jlmNMCsXgQE5C3yUEzBu5Gadkz=w300" className="payment-process-qr"/>
+            <p className="payment-process-description">Send up to 15 ETH to this address</p>
+            <p className="payment-process-hash">
+              0x6b0770d930bB22990c83fBBfcba6faB129AD7E385
+            </p>
+            <a href="#" className="payment-process-copy">Copy Address</a>
+            <div className="payment-process-loader">Waiting for payment</div>
+            <div className="payment-process-notation">
+              <p className="payment-process-notation-title">Important</p>
+              <p className="payment-process-notation-description">
+                Send ethers to the crowdsale address with a MethodID: 0xf2fde38b
+              </p>
+            </div>
+          </div>
+          <div className="payment-process">
+            <div className="payment-process-success"></div>
+            <p className="payment-process-description">
+              Your Project tokens were sent to
+            </p>
+            <p className="payment-process-hash">
+              0x6b0770d930bB22990c83fBBfcba6faB129AD7E385
+            </p>
+            <a href="#" className="payment-process-see">See it on the blockchain</a>
+          </div>
         </div>
       </div>
       <Loader show={this.state.loading}></Loader>
     </div>
   }
 }
- 
-
