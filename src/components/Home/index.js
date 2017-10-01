@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import '../assets/stylesheets/application.css';
+import '../../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
-import { defaultState } from '../utils/constants'
+import { defaultState } from '../../utils/constants'
 
 export class Home extends Component {
   constructor(props) {
