@@ -1,6 +1,6 @@
 import { observable, computed, action } from 'mobx';
 
-class PricingStrategies {
+class PricingStrategyStore {
 
 	@observable strategies;
 	
@@ -24,7 +24,7 @@ class PricingStrategies {
 
 }
 
-const pricingStrategies = new PricingStrategies();
+const pricingStrategies = new PricingStrategyStore();
 
 export default pricingStrategies;
-export { PricingStrategies };
+export { PricingStrategyStore };
