@@ -1,6 +1,6 @@
 import { observable, computed, action } from 'mobx';
 
-class ReservedTokens {
+class ReservedTokenStore {
 
 	@observable tokens;
 	
@@ -24,7 +24,7 @@ class ReservedTokens {
 
 }
 
-const reservedTokens = new ReservedTokens();
+const reservedTokens = new ReservedTokenStore();
 
 export default reservedTokens;
-export { ReservedTokens };
+export { ReservedTokenStore };

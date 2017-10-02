@@ -3,9 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-preset-es2015": "^6.24.1",
     "gulp": "^3.9.1",
     "gulp-add-src": "^0.2.0",
     "gulp-autoprefixer": "^3.1.1",
+    "gulp-babel": "^7.0.0",
     "gulp-concat": "^2.6.1",
     "gulp-include": "^2.3.1",
     "gulp-order": "^1.1.1",
@@ -15,6 +19,7 @@
     "gulp-uglify": "^2.0.0",
     "gulp-uglifycss": "^1.0.6",
     "gulp-util": "^3.0.8",
+    "mobx-react-devtools": "^4.2.15",
     "react-scripts": "1.0.10"
   },
   "dependencies": {
@@ -58,6 +63,7 @@
     "safe_math_lib_contract_name": "SafeMathLibExt"
   },
   "scripts": {
+    "start2": "react-scripts start",
     "start": "npm run generateFlatSoliditySafeMathLibContract && npm run generateFlatSolidityCrowdsaleNullFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleContract && npm run generateFlatSolidityCrowdsaleTokenContract && npm run generateFlatSolidityCrowdsalePricingStrategyContract && npm run compileSafeMathLibExtContract && npm run compileCrowdsaleNullFinalizeAgentContract && npm run compileCrowdsaleFinalizeAgentContract && npm run compileCrowdsaleContract && npm run compileCrowdsaleTokenContract && npm run compileCrowdsalePricingStrategyContract && react-scripts start",
     "build": "git submodule update --init --recursive --remote && npm run generateFlatSoliditySafeMathLibContract && npm run generateFlatSolidityCrowdsaleNullFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleContract && npm run generateFlatSolidityCrowdsaleTokenContract && npm run generateFlatSolidityCrowdsalePricingStrategyContract && npm run compileSafeMathLibExtContract && npm run compileCrowdsaleNullFinalizeAgentContract && npm run compileCrowdsaleFinalizeAgentContract && npm run compileCrowdsaleContract && npm run compileCrowdsaleTokenContract && npm run compileCrowdsalePricingStrategyContract && react-scripts build",
     "test": "bash ./start_testrpc.sh && cd ./submodules/oracles-token-market-net-ico/ && npm install && node_modules/.bin/truffle migrate --network testrpc && node_modules/.bin/truffle test --network testrpc",
