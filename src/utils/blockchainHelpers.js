@@ -191,7 +191,8 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
       var opts = {
         from: web3.eth.accounts[0],
         data: "0x" + bin,
-        gas: estimatedGas
+        gas: estimatedGas,
+        gasPrice: 21000000000
       };
       var totalParams = params;
       totalParams.push(opts);
