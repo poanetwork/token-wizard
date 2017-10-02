@@ -210,16 +210,16 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
             console.log('Contract mined! address: ' + contract.address + ' transactionHash: ' + contract.transactionHash);
             cb(null, contract.address);
           }
-          /*if (contract.transactionHash) {
+          else if (contract.transactionHash) {
             checkTxMined(web3, contract.transactionHash, function txMinedCallback(receipt) {
               if (receipt) {
                 if (receipt.blockNumber)
                   return cb(null, receipt.contractAddress);
               } else {
-                checkTxMined(web3, contract.transactionHash, txMinedCallback);
+                setTimeout(checkTxMined(web3, contract.transactionHash, txMinedCallback), 1000);
               }
             })
-          }*/
+          }
         }
       };
     });
