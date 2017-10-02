@@ -1,6 +1,6 @@
 import { observable, computed, action } from 'mobx';
 
-class stepTwoValidationStore {
+class StepTwoValidationStore {
 
   @observable name;
 	@observable ticker;

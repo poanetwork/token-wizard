@@ -6,16 +6,15 @@ import {
   BrowserRouter as Router,
   Route
 } from 'react-router-dom'
-import { Provider, observable } from 'mobx-react';
-// import * as stores from './stores';
-import ContractStore from './stores/ContractStore';
+import { Provider } from 'mobx-react';
+import * as stores from './stores';
 
 class App extends Component {
   render() {
     var crowdsaleAddr = getQueryVariable("addr");
     return (
       <Provider>
-        <Router>
+        <Router stores={stores}>
           <div>
             <Header/>
             <Route exact path="/" component={crowdsaleAddr?Crowdsale:Home}/>

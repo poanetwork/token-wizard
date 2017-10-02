@@ -1,6 +1,6 @@
 import { observable, computed, action } from 'mobx';
 
-class ReservedTokensInputStore {
+class ReservedTokenInputStore {
 
 	@observable dim;
 	@observable addr;
@@ -12,7 +12,7 @@ class ReservedTokensInputStore {
 
 }
 
-const reservedTokensInput = new ReservedTokensInputStore();
+const reservedTokensInput = new ReservedTokenInputStore();
 
 export default reservedTokensInput;
-export { ReservedTokensInputStore };
+export { ReservedTokenInputStore };

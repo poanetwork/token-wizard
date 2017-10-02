@@ -1,6 +1,6 @@
 import { observable, computed, action } from 'mobx';
 
-class stepThreeValidationStore {
+class StepThreeValidationStore {
 
   @observable name;
 	@observable walletAddress;
