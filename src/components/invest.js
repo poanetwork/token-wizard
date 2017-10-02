@@ -225,7 +225,8 @@ export class Invest extends React.Component {
     console.log("weiToSend: " + weiToSend);
     let opts = {
       from: web3.eth.accounts[0],
-      value: weiToSend
+      value: weiToSend,
+      gasPrice: 21000000000
     };
     console.log(opts);
     crowdsaleContract.buy.sendTransaction(opts, (err, txHash) => {
