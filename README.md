@@ -187,11 +187,11 @@ Contract: CrowdsaleTokenExt
 
 1. Open MetaMask Chrome plugin
 
-2. Connect to the network, where the crowdsale contract is deployed. For example `mainnet`
+2. Connect to the network, where the crowdsale contract is deployed. For example `mainnet`.
 
 3. Choose an account with sufficient balance at this network.
 
-4. Send transaction to the address of the crowdsale contract with the data `0xa6f2ae3a`.
+4. Send transaction to the address of the crowdsale contract with the data `0xa6f2ae3a`. Value to send is in ETH. For example, if you put 0.01 to input, you will invest 0.01 ETH.
 
 ![](./docs/MetaMaskInvest.png)
 
