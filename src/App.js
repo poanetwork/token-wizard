@@ -19,8 +19,8 @@ class App extends Component {
           <Route path="/2" component={stepTwo}/>
           <Route path="/3" component={stepThree}/>
           <Route path="/4" component={stepFour}/>
-          <Route path="/crowdsale" component={Crowdsale}/>
-          <Route path="/invest" component={Invest}/>
+          <Route exact path="/crowdsale" component={Crowdsale}/>
+          <Route exact path="/invest" component={Invest}/>
           <Footer/>
         </div>
       </Router>
