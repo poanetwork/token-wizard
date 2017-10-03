@@ -1,14 +1,16 @@
 import React from 'react'
 import '../../assets/stylesheets/application.css';
-import { checkWeb3 } from '../../utils/blockchainHelpers'
-import { Link } from 'react-router-dom'
-import { defaultState } from '../../utils/constants'
+import { checkWeb3 } from '../../utils/blockchainHelpers';
+import { Link } from 'react-router-dom';
+import { defaultState } from '../../utils/constants';
 import { setFlatFileContentToState } from '../../utils/utils';
-import { getOldState } from '../../utils/utils'
-import { StepNavigation } from '../Common/StepNavigation'
-import { NAVIGATION_STEPS } from '../../utils/constants'
-const { CROWDSALE_CONTRACT } = NAVIGATION_STEPS
+import { getOldState } from '../../utils/utils';
+import { StepNavigation } from '../Common/StepNavigation';
+import { NAVIGATION_STEPS } from '../../utils/constants';
+import { inject, observer } from 'mobx-react';
+const { CROWDSALE_CONTRACT } = NAVIGATION_STEPS;
 
+@inject('ContractStore') @observer
 export class stepOne extends React.Component {
   constructor(props) {
     super(props);

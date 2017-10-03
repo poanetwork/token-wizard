@@ -6,14 +6,11 @@ import {
   BrowserRouter as Router,
   Route
 } from 'react-router-dom'
-import { Provider } from 'mobx-react';
-import * as stores from './stores';
 
 class App extends Component {
   render() {
     var crowdsaleAddr = getQueryVariable("addr");
     return (
-      <Provider stores={stores}>
         <Router>
           <div>
             <Header/>
@@ -27,7 +24,6 @@ class App extends Component {
             <Footer/>
           </div>
         </Router>
-      </Provider>
     )
   }
 }
