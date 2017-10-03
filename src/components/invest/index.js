@@ -1,12 +1,12 @@
 import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
-import { getWeb3, checkTxMined, attachToContract, checkNetWorkByID } from '../utils/blockchainHelpers'
-import { getCrowdsaleData, getCurrentRate, initializeAccumulativeData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively, getJoinedTiers } from './crowdsale/utils'
-import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
-import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert, invalidCrowdsaleAddrAlert } from '../utils/alerts'
-import { Loader } from './Common/Loader'
-import { ICOConfig } from './Common/config'
-import { defaultState } from '../utils/constants'
+import { getWeb3, checkTxMined, attachToContract, checkNetWorkByID } from '../../utils/blockchainHelpers'
+import { getCrowdsaleData, getCurrentRate, initializeAccumulativeData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively, getJoinedTiers } from '../crowdsale/utils'
+import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../../utils/utils'
+import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert, invalidCrowdsaleAddrAlert } from '../../utils/alerts'
+import { Loader } from '../Common/Loader'
+import { ICOConfig } from '../Common/config'
+import { defaultState } from '../../utils/constants'
 
 export class Invest extends React.Component {
   constructor(props) {
