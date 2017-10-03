@@ -18,6 +18,7 @@ Please, read instruction before you'll start to create crowdsales using ICO Wiza
     + [Run local version for development](#run-local-version-for-development)
     + [ICO configuration](#ico-configuration)
     + [Tests](#tests)
+    + [Investment with transaction from MetaMask](#investment-with-transaction-from-metamask)
   * [Deploying of crowdsale to Mainnet](#deploying-of-crowdsale-to-mainnet)
     + [Time](#time)
     + [Price](#price)
