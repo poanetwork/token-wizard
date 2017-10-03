@@ -24,7 +24,7 @@ class TierStore {
 
 }
 
-const tiers = new TierStore();
+const tierStore = new TierStore();
 
-export default tiers;
+export default tierStore;
 export { TierStore };

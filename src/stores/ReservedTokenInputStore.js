@@ -12,7 +12,7 @@ class ReservedTokenInputStore {
 
 }
 
-const reservedTokensInput = new ReservedTokenInputStore();
+const reservedTokenInputStore = new ReservedTokenInputStore();
 
-export default reservedTokensInput;
+export default reservedTokenInputStore;
 export { ReservedTokenInputStore };

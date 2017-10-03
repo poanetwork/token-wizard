@@ -25,7 +25,7 @@ class ReservedTokensElementStore {
 
 }
 
-const reservedTokensElements = new ReservedTokensElementStore();
+const reservedTokensElementStore = new ReservedTokensElementStore();
 
-export default reservedTokensElements;
+export default reservedTokensElementStore;
 export { ReservedTokensElementStore };

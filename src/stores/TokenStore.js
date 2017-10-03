@@ -13,7 +13,7 @@ class TokenStore {
 
 }
 
-const token = new TokenStore();
+const tokenStore = new TokenStore();
 
-export default token;
+export default tokenStore;
 export { TokenStore };

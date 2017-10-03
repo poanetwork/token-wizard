@@ -24,7 +24,7 @@ class PricingStrategyStore {
 
 }
 
-const pricingStrategies = new PricingStrategyStore();
+const pricingStrategyStore = new PricingStrategyStore();
 
-export default pricingStrategies;
+export default pricingStrategyStore;
 export { PricingStrategyStore };
