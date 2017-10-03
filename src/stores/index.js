@@ -1,21 +1,21 @@
-import ContractStore from './ContractStore';
-import PricingStrategyStore from './PricingStrategyStore';
-import ReservedTokenStore from './ReservedTokenStore';
-import ReservedTokenInputStore from './ReservedTokenInputStore';
-import ReservedTokenElementStore from './ReservedTokenElementStore';
-import StepThreeValidationStore from './StepThreeValidationStore';
-import StepTwoValidationStore from './StepTwoValidationStore';
-import TierStore from './TierStore';
-import TokenStore from './TokenStore';
+import contractStore from './ContractStore';
+import pricingStrategyStore from './PricingStrategyStore';
+import reservedTokenStore from './ReservedTokenStore';
+import reservedTokenInputStore from './ReservedTokenInputStore';
+import reservedTokenElementStore from './ReservedTokenElementStore';
+import stepThreeValidationStore from './StepThreeValidationStore';
+import stepTwoValidationStore from './StepTwoValidationStore';
+import tierStore from './TierStore';
+import tokenStore from './TokenStore';
 
 export {
-    ContractStore,
-    PricingStrategyStore,
-    ReservedTokenStore,
-    ReservedTokenInputStore,
-    ReservedTokenElementStore,
-    StepThreeValidationStore,
-    StepTwoValidationStore,
-    TierStore,
-    TokenStore
+    contractStore,
+    pricingStrategyStore,
+    reservedTokenStore,
+    reservedTokenInputStore,
+    reservedTokenElementStore,
+    stepThreeValidationStore,
+    stepTwoValidationStore,
+    tierStore,
+    tokenStore
 };
