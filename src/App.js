@@ -13,8 +13,8 @@ class App extends Component {
   render() {
     var crowdsaleAddr = getQueryVariable("addr");
     return (
-      <Provider>
-        <Router stores={stores}>
+      <Provider stores={stores}>
+        <Router>
           <div>
             <Header/>
             <Route exact path="/" component={crowdsaleAddr?Crowdsale:Home}/>

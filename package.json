@@ -99,7 +99,7 @@
     "safe_math_lib_contract_name": "SafeMathLibExt"
   },
   "scripts": {
-    "start2": "node build_scripts/start.js",
+    "startReact": "node build_scripts/start.js",
     "start": "npm run generateFlatSoliditySafeMathLibContract && npm run generateFlatSolidityCrowdsaleNullFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleContract && npm run generateFlatSolidityCrowdsaleTokenContract && npm run generateFlatSolidityCrowdsalePricingStrategyContract && npm run compileSafeMathLibExtContract && npm run compileCrowdsaleNullFinalizeAgentContract && npm run compileCrowdsaleFinalizeAgentContract && npm run compileCrowdsaleContract && npm run compileCrowdsaleTokenContract && npm run compileCrowdsalePricingStrategyContract && node build_scripts/start.js",
     "build": "git submodule update --init --recursive --remote && npm run generateFlatSoliditySafeMathLibContract && npm run generateFlatSolidityCrowdsaleNullFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleContract && npm run generateFlatSolidityCrowdsaleTokenContract && npm run generateFlatSolidityCrowdsalePricingStrategyContract && npm run compileSafeMathLibExtContract && npm run compileCrowdsaleNullFinalizeAgentContract && npm run compileCrowdsaleFinalizeAgentContract && npm run compileCrowdsaleContract && npm run compileCrowdsaleTokenContract && npm run compileCrowdsalePricingStrategyContract && node build_scripts/build.js",
     "test": "bash ./start_testrpc.sh && cd ./submodules/oracles-token-market-net-ico/ && npm install && node_modules/.bin/truffle migrate --network testrpc && node_modules/.bin/truffle test --network testrpc",
