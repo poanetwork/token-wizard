@@ -39,6 +39,12 @@ export const defaultState = {
 	}
 }
 
+export const CONTRACT_TYPES = {
+	standard: "standard",
+	capped: "capped",
+	whitelistwithcap: "white-list-with-cap"
+}
+
 export const NAVIGATION_STEPS = {
 	CROWDSALE_CONTRACT: 'Crowdsale Contract',
 	TOKEN_SETUP: 'Token Setup',

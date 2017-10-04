@@ -1,4 +1,5 @@
 import { observable, computed, action } from 'mobx';
+import { CONTRACT_TYPES } from '../utils/constants';
 
 class ContractStore {
 
@@ -10,9 +11,18 @@ class ContractStore {
 	@observable finalizeAgent;
 	@observable tokenTransferProxy;
 	@observable safeMathLib;
+	@observable contractType;
+
+	constructor() {
+		this.contractType = CONTRACT_TYPES.whitelistwithcap;
+	}
 
   @action setContract = (contractName, contractObj) => {
     this[contractName] = contractObj;
+	}
+
+	@action setContractType = (contractType) => {
+		this.contractType = contractType;
 	}
 	
 	@action setContractProperty = (contractName, property, value) => {
