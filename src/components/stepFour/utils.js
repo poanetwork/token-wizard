@@ -1,4 +1,4 @@
-import { attachToContract } from '../../utils/blockchainHelpers'
+import { attachToContract, checkTxMined } from '../../utils/blockchainHelpers'
 import { noContractAlert } from '../../utils/alerts'
 
 /*function setTransferAgent(web3, abi, addr, targetAddr, cb) {
@@ -33,14 +33,22 @@ function setLastCrowdsale(web3, abi, addr, lastCrowdsale, cb) {
     }
     if (!pricingStrategyContract) return noContractAlert();
 
-    pricingStrategyContract.setLastCrowdsale.sendTransaction(lastCrowdsale, function(err, result) {
+    pricingStrategyContract.setLastCrowdsale.sendTransaction(lastCrowdsale, {gasPrice: 21000000000}, function(err, txHash) {
       if (err) {
         console.log(err)
         return cb();
       }
 
-      console.log("setLastCrowdsale function transaction: " + result);
-      cb();
+      checkTxMined(web3, txHash, function txMinedCallback(receipt) {
+        if (receipt) {
+          if (receipt.blockNumber) {
+            console.log("setLastCrowdsale function transaction: " + txHash);
+            return cb();
+          }
+        } else {
+          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
+        }
+      })
     });
   });
 }
@@ -56,14 +64,22 @@ function setMintAgent(web3, abi, addr, acc, cb) {
     }
     if (!tokenContract) return noContractAlert();
 
-    tokenContract.setMintAgent.sendTransaction(acc, true, function(err, result) {
+    tokenContract.setMintAgent.sendTransaction(acc, true, {gasPrice: 21000000000}, function(err, txHash) {
       if (err) {
         console.log(err)
         return cb();
       }
 
-      console.log("setMintAgent function transaction: " + result);
-      cb();
+      checkTxMined(web3, txHash, function txMinedCallback(receipt) {
+        if (receipt) {
+          if (receipt.blockNumber) {
+            console.log("setMintAgent function transaction: " + txHash);
+            return cb();
+          }
+        } else {
+          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
+        }
+      })
     });
   });
 }
@@ -139,14 +155,22 @@ function addWhiteList(round, web3, crowdsale, token, abi, addr, cb) {
     console.log("maxCaps:");
     console.log(maxCaps);
 
-    crowdsaleContract.setEarlyParicipantsWhitelist.sendTransaction(addrs, statuses, minCaps, maxCaps, function(err, result) {
+    crowdsaleContract.setEarlyParicipantsWhitelist.sendTransaction(addrs, statuses, minCaps, maxCaps, {gasPrice: 21000000000}, function(err, txHash) {
       if (err) {
         console.log(err)
         return cb();
       }
 
-      console.log("setEarlyParicipantsWhitelist function transaction: " + result);
-      cb();
+      checkTxMined(web3, txHash, function txMinedCallback(receipt) {
+        if (receipt) {
+          if (receipt.blockNumber) {
+            console.log("setEarlyParicipantsWhitelist function transaction: " + txHash);
+            return cb();
+          }
+        } else {
+          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
+        }
+      })
     });
   });
 }
@@ -164,14 +188,22 @@ function updateJoinedCrowdsales(web3, abi, addr, joinedCntrctAddrs, cb) {
     console.log("input: ");
     console.log(joinedCntrctAddrs);
 
-    crowdsaleContract.updateJoinedCrowdsalesMultiple.sendTransaction(joinedCntrctAddrs, function(err, result) {
+    crowdsaleContract.updateJoinedCrowdsalesMultiple.sendTransaction(joinedCntrctAddrs, {gasPrice: 21000000000}, function(err, txHash) {
       if (err) {
         console.log(err)
         return cb();
       }
 
-      console.log("updateJoinedCrowdsales function transaction: " + result);
-      cb();
+      checkTxMined(web3, txHash, function txMinedCallback(receipt) {
+        if (receipt) {
+          if (receipt.blockNumber) {
+            console.log("updateJoinedCrowdsales function transaction: " + txHash);
+            return cb();
+          }
+        } else {
+          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
+        }
+      })
     });
   });
 }
@@ -186,14 +218,22 @@ function setFinalizeAgent(web3, abi, addr, finalizeAgentAddr, cb) {
     }
     if (!crowdsaleContract) return noContractAlert();
 
-    crowdsaleContract.setFinalizeAgent.sendTransaction(finalizeAgentAddr, function(err, result) {
+    crowdsaleContract.setFinalizeAgent.sendTransaction(finalizeAgentAddr, {gasPrice: 21000000000}, function(err, txHash) {
       if (err) {
         console.log(err)
         return cb();
       }
 
-      console.log("setFinalizeAgent function transaction: " + result);
-      cb();
+      checkTxMined(web3, txHash, function txMinedCallback(receipt) {
+        if (receipt) {
+          if (receipt.blockNumber) {
+            console.log("setFinalizeAgent function transaction: " + txHash);
+            return cb();
+          }
+        } else {
+          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
+        }
+      })
     });
   });
 }
@@ -208,14 +248,22 @@ function setReleaseAgent(web3, abi, addr, finalizeAgentAddr, cb) {
     }
     if (!tokenContract) return noContractAlert();
 
-    tokenContract.setReleaseAgent.sendTransaction(finalizeAgentAddr, function(err, result) {
+    tokenContract.setReleaseAgent.sendTransaction(finalizeAgentAddr, {gasPrice: 21000000000}, function(err, txHash) {
       if (err) {
         console.log(err)
         return cb();
       }
 
-      console.log("setReleaseAgent function transaction: " + result);
-      cb();
+      checkTxMined(web3, txHash, function txMinedCallback(receipt) {
+        if (receipt) {
+          if (receipt.blockNumber) {
+            console.log("setReleaseAgent function transaction: " + txHash);
+            return cb();
+          }
+        } else {
+          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
+        }
+      })
     });
   });
 }
@@ -275,14 +323,22 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
     console.log("inTokens: " + inTokens);
     console.log("inPercentage: " + inPercentage);
 
-    tokenContract.setReservedTokensListMultiple.sendTransaction(addrs, inTokens, inPercentage, function(err, result) {
+    tokenContract.setReservedTokensListMultiple.sendTransaction(addrs, inTokens, inPercentage, {gasPrice: 21000000000}, function(err, txHash) {
       if (err) {
         console.log(err)
         return cb();
       }
 
-      console.log("setReservedTokensListMultiple function transaction: " + result);
-      cb();
+      checkTxMined(web3, txHash, function txMinedCallback(receipt) {
+        if (receipt) {
+          if (receipt.blockNumber) {
+            console.log("setReservedTokensListMultiple function transaction: " + txHash);
+            return cb();
+          }
+        } else {
+          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
+        }
+      })
     });
   });
 }
@@ -297,14 +353,22 @@ export function transferOwnership(web3, abi, addr, finalizeAgentAddr, cb) {
     }
     if (!tokenContract) return noContractAlert();
 
-    tokenContract.transferOwnership.sendTransaction(finalizeAgentAddr, function(err, result) {
+    tokenContract.transferOwnership.sendTransaction(finalizeAgentAddr, {gasPrice: 21000000000}, function(err, txHash) {
       if (err) {
         console.log(err)
         return cb();
       }
 
-      console.log("transferOwnership function transaction: " + result);
-      cb();
+      checkTxMined(web3, txHash, function txMinedCallback(receipt) {
+        if (receipt) {
+          if (receipt.blockNumber) {
+            console.log("transferOwnership function transaction: " + txHash);
+            return cb();
+          }
+        } else {
+          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
+        }
+      })
     });
   });
 }

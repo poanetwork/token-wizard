@@ -19,6 +19,7 @@ import { findConstructor, getconstructorParams, toFixed } from '../utils/utils'
 }*/
 
 export function getEncodedABIClientSide(web3, abi, state, vals, crowdsaleNum, cb) {
+	//console.log(web3, abi, state, vals, crowdsaleNum);
 	const abiConstructor = findConstructor(abi, state)
     let params = getconstructorParams(abiConstructor, state, vals, crowdsaleNum);
     console.log("params.types: ");

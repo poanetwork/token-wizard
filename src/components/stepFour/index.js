@@ -493,18 +493,37 @@ export class stepFour extends stepTwo {
       return console.log(err);
     }
     newState.contracts.crowdsale.addr.push(crowdsaleAddr);
-    this.setState(newState);
+    this.setState(newState, this.calculateABIEncodedArgumentsForFinalizeAgentContractDeployment);    
+  }
 
-    this.deployFinalizeAgent();
+  calculateABIEncodedArgumentsForFinalizeAgentContractDeployment = () => {
+    let newState = { ...this.state }
+    console.log(newState);
 
-    //depreciated
-    /*if (this.state.contractType === this.state.contractTypes.whitelistwithcap) {
-      this.deployFinalizeAgent();
-    } else {
-      newState.loading = false;
-      this.setState(newState);
-      this.goToCrowdsalePage();
-    }*/
+    let abiFinalizeAgent = this.state.contracts && this.state.contracts.finalizeAgent && this.state.contracts.finalizeAgent.abi || []
+    let counter = 0;
+
+    for (let i = 0; i < this.state.pricingStrategy.length; i++) {
+      getEncodedABIClientSide(this.state.web3, abiFinalizeAgent, this.state, [], i, (ABIencoded) => {
+        counter++;
+        let cntrct = "finalizeAgent";
+        newState.contracts[cntrct].abiConstructor.push(ABIencoded);
+        console.log(cntrct + " ABI encoded params constructor:");
+        console.log(ABIencoded);
+        if (counter == (this.state.pricingStrategy.length)) {
+          this.setState(newState, this.deployFinalizeAgent);
+
+          //depreciated
+          /*if (this.state.contractType === this.state.contractTypes.whitelistwithcap) {
+            this.deployFinalizeAgent();
+          } else {
+            newState.loading = false;
+            this.setState(newState);
+            this.goToCrowdsalePage();
+          }*/
+        }
+      });
+    }
   }
 
   deployFinalizeAgent = () => {
