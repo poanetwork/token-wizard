@@ -181,14 +181,18 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
       console.log('estimated gas callback', estimatedGas)
       if (err) console.log('errrrrrrrrrrrrrrrrr', err);
       console.log('gas is estimated', estimatedGas, 'err', err)
-      if (!estimatedGas) estimatedGas = 3716260;
+      let estimatedGasMax = 3716260;
+      if (!estimatedGas) estimatedGas = estimatedGasMax;
       else estimatedGas += 100000;
+
+      if (estimatedGas > estimatedGasMax) estimatedGas = estimatedGasMax;
       
       var contractInstance = web3.eth.contract(abi);
       var opts = {
         from: web3.eth.accounts[0],
         data: "0x" + bin,
-        gas: estimatedGas
+        gas: estimatedGas,
+        gasPrice: 21000000000
       };
       var totalParams = params;
       totalParams.push(opts);
@@ -207,16 +211,16 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
             console.log('Contract mined! address: ' + contract.address + ' transactionHash: ' + contract.transactionHash);
             cb(null, contract.address);
           }
-          /*if (contract.transactionHash) {
+          else if (contract.transactionHash) {
             checkTxMined(web3, contract.transactionHash, function txMinedCallback(receipt) {
               if (receipt) {
                 if (receipt.blockNumber)
                   return cb(null, receipt.contractAddress);
               } else {
-                checkTxMined(web3, contract.transactionHash, txMinedCallback);
+                setTimeout(checkTxMined(web3, contract.transactionHash, txMinedCallback), 1000);
               }
             })
-          }*/
+          }
         }
       };
     });

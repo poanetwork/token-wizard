@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
-import '../assets/stylesheets/application.css';
+import '../../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
+<<<<<<< HEAD:src/components/Home.js
+=======
+import { defaultState } from '../../utils/constants'
+>>>>>>> e75fadd96da91e922cdde06f821733c591e6e7e6:src/components/Home/index.js
 
 export class Home extends Component {
   render() {

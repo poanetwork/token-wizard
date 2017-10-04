@@ -1,12 +1,12 @@
 import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
-import { getWeb3, checkTxMined, attachToContract, checkNetWorkByID } from '../utils/blockchainHelpers'
-import { getCrowdsaleData, getCurrentRate, initializeAccumulativeData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively, getJoinedTiers } from './crowdsale/utils'
-import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../utils/utils'
-import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert, invalidCrowdsaleAddrAlert } from '../utils/alerts'
-import { Loader } from './Common/Loader'
-import { ICOConfig } from './Common/config'
-import { defaultState } from '../utils/constants'
+import { getWeb3, checkTxMined, attachToContract, checkNetWorkByID } from '../../utils/blockchainHelpers'
+import { getCrowdsaleData, getCurrentRate, initializeAccumulativeData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively, getJoinedTiers } from '../crowdsale/utils'
+import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../../utils/utils'
+import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert, invalidCrowdsaleAddrAlert } from '../../utils/alerts'
+import { Loader } from '../Common/Loader'
+import { ICOConfig } from '../Common/config'
+import { defaultState } from '../../utils/constants'
 
 export class Invest extends React.Component {
   constructor(props) {
@@ -225,7 +225,8 @@ export class Invest extends React.Component {
     console.log("weiToSend: " + weiToSend);
     let opts = {
       from: web3.eth.accounts[0],
-      value: weiToSend
+      value: weiToSend,
+      gasPrice: 21000000000
     };
     console.log(opts);
     crowdsaleContract.buy.sendTransaction(opts, (err, txHash) => {
@@ -366,7 +367,7 @@ export class Invest extends React.Component {
           </div>
           <p className="invest-title">Invest page</p>
           <p className="invest-description">
-            Here you can invest in the crowdsale campaign. At the momemnt, you need Metamask client to invest into the crowdsale. If you don't have Metamask, you can send ethers to the crowdsale address with a MethodID: 0xa6f2ae3a. Sample <a href="https://kovan.etherscan.io/tx/0x42073576a160206e61b4d9b70b436359b8d220f8b88c7c272c77023513c62c3d">transaction</a>.
+            Here you can invest in the crowdsale campaign. At the moment, you need MetaMask client to invest into the crowdsale. If you don't have MetaMask, you can send ethers to the crowdsale address with a MethodID: 0xa6f2ae3a. Sample <a href="https://kovan.etherscan.io/tx/0x42073576a160206e61b4d9b70b436359b8d220f8b88c7c272c77023513c62c3d">transaction</a>.
           </p>
         </div>
         <div className="invest-table-cell invest-table-cell_right">
