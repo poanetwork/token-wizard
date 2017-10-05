@@ -29,7 +29,7 @@ Please, read instruction before you'll start to create crowdsales using ICO Wiza
   * [Support](#support)
   * [Notable Contributors](#notable-contributors)
   * [Disclaimer](#disclaimer)
-  * [Bridge testing](#bridge_testing)
+  * [Bridge testing](#bridge-testing)
 
 
 ## Introduction
