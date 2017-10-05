@@ -19,6 +19,7 @@ Please, read instruction before you'll start to create crowdsales using ICO Wiza
     + [ICO configuration](#ico-configuration)
     + [Tests](#tests)
     + [Investment with transaction from MetaMask](#investment-with-transaction-from-metamask)
+    + [Change maxCap for tier from MetaMask](#change_maxcap_for_tier_from_metamask)
   * [Deploying of crowdsale to Mainnet](#deploying-of-crowdsale-to-mainnet)
     + [Time](#time)
     + [Price](#price)
@@ -195,6 +196,24 @@ Contract: CrowdsaleTokenExt
 4. Send transaction to the address of the crowdsale contract with the data `0xa6f2ae3a`. Value to send is in ETH. For example, if you put 0.01 to input, you will invest 0.01 ETH.
 
 ![](./docs/MetaMaskInvest.png)
+
+### Change maxCap for tier from MetaMask
+
+1. Open MetaMask Chrome plugin
+
+2. Connect to the network, where the crowdsale contract is deployed. For example `mainnet`.
+
+3. Choose an account, which is the owner of crowdsale. This account should has sufficient balance at this network too.
+
+4. Send transaction to the address of the crowdsale contract with the data = `0x2c2de40a` + `hex(n*10**decimals)`.
+
+where `n` - maxCap of the tier,
+
+`decimals` - token decimals
+
+`hex(x)` - hexademical representation of `x`, normalized to 32 bytes (required number of zeros before hex). 
+
+For example, if you need to set `maxCap = 1000` for tier of crowdsale joined with token of 18 `decimals` the data should be: `0000000000000000000000000000000000000000000000003635c9adc5dea00000`. Amount to send should be 0.
 
 ## Deploying of crowdsale to Mainnet
 
