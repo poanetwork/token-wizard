@@ -1,7 +1,6 @@
 import Web3 from 'web3';
-import { incorrectNetworkAlert, noContractAlert, noMetaMaskAlert, invalidNetworkIDAlert } from './alerts'
+import { incorrectNetworkAlert, noMetaMaskAlert, invalidNetworkIDAlert } from './alerts'
 import { getEncodedABIClientSide } from './microservices'
-import { toFixed } from '../utils/utils'
 
 // instantiate new web3 instance
 const web3 = new Web3();

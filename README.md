@@ -29,6 +29,7 @@ Please, read instruction before you'll start to create crowdsales using ICO Wiza
   * [Support](#support)
   * [Notable Contributors](#notable-contributors)
   * [Disclaimer](#disclaimer)
+  * [Bridge testing](#bridge_testing)
 
 
 ## Introduction
@@ -315,3 +316,78 @@ ICO Wizard is constantly under active development. The “Beta” labelling impl
 - lost of tokens/funds from incorrect configuration;
 - unexpected delays;
 - unexpected visual artifacts.
+
+## Bridge testing
+
+### Prerequisites
+
+#### Parity
+
+Install parity 1.8
+
+1. git clone `https://github.com/paritytech/parity parity-master`
+
+2. `cd parity-master`
+
+3. `cargo build --release`
+
+
+#### ICO Wizard side
+
+1. `git clone https://github.com/oraclesorg/ico-wizard -b bridge ico-wizard-bridge`
+
+2. `cd ico-wizard-bridge` 
+
+3. `git submodule update --init --recursive --remote`
+
+4. `npm install`
+
+5. `npm start`
+
+6. Go to [localhost:3000](http://localhost:3000)
+
+
+#### Bridge side
+
+1. `git clone https://github.com/oraclesorg/parity-bridge oracles-parity-bridge`
+
+2. `cd oracles-parity-bridge/jsTests`
+
+3. `npm install`
+
+4. Generate account for the Kovan network. It will be soon: `node generateAccountForRightSide`
+
+5. `cd ..`
+
+*Attention!* - Change the path to Parity 1.8 bin (`parity-master/target/release/parity`) for both scripts, if it isn't in environment `$PATH` variable
+
+7. `./examples/parity_start_oracles.sh` - starting of the left-side network
+
+8. `./examples/parity_start_kovan.sh` - starting of the right-side network
+
+9. `./target/release/bridge --config ./examples/config_bridge.toml --database ./examples/db.toml` - starting of the bridge to generate db.toml firstly
+
+*Attention!* - it'll generate bridge contracts at both sides. After we'll lanching wizard, we'll change left side contract with crowdsale from wizard one. It is a lack of bridge for now.
+
+10. stop the bridge.
+
+11. Verify right-side contract in Etherscan.
+
+
+#### Right-side contract verification in Etherscan
+
+It should be used latest solidity compilator
+
+### Getting started
+
+1. Create a crowdsale with ICO Wizard at [localhost:3000](http://localhost:3000)
+
+2. Copy crowdsale contract address
+
+3. Paste it to the parity-bridge db config file `oracles-parity-bridge\examples\db.toml` for the property `mainnet_contract_address`
+
+4. Start the bridge: `cd oracles-parity-bridge` `./target/release/bridge --config ./examples/config_bridge.toml --database ./examples/db.toml`
+
+5. Invest in the crowdsale page
+
+6. After ~10 - 20 seconds (for Oracles network) check at Kovan: https://kovan.etherscan.io/address/[verified right-side bridge contract address]#readContract `balances` for the same address that invest at ICO Wizard.
