@@ -213,10 +213,7 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
           }
           else if (contract.transactionHash) {
             checkTxMined(web3, contract.transactionHash, function txMinedCallback(receipt) {
-              if (receipt) {
-                if (receipt.blockNumber)
-                  return cb(null, receipt.contractAddress);
-              } else {
+              if (!receipt) {
                 setTimeout(checkTxMined(web3, contract.transactionHash, txMinedCallback), 1000);
               }
             })
