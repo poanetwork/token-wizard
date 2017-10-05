@@ -355,7 +355,7 @@ Install parity 1.8
 
 3. `npm install`
 
-4. Ask in [Kovan faucet gitter](https://gitter.im/kovan-testnet/faucet) to add some KETH to the account `0xe83fdc372e6c5c0bc1500b42282c035b994d8b78`. 
+4. Ask in [Kovan faucet gitter](https://gitter.im/kovan-testnet/faucet) to add some KETH to the account `0x00dB9af45C6f241432F2cBE412c6969cB7778d98`. 
 
 5. `cd ..`
 
@@ -384,18 +384,22 @@ Contract name is `KovanBridge`.
 
 Constract source is in `oracles-parity-bridge/contracts/bridge.sol` folder.
 
-ABI-encoded arguments for the contract are the last 96 bytes of the transaction to create right-side bridge contract. The contract creator is `0xe83fdc372e6c5c0bc1500b42282c035b994d8b78`.
+ABI-encoded arguments for the contract are the last 96 bytes of the transaction to create right-side bridge contract. The contract creator is `0x00dB9af45C6f241432F2cBE412c6969cB7778d98`.
 
 ### Getting started
 
-1. Create a crowdsale with ICO Wizard at [localhost:3000](http://localhost:3000)
+1. Open ICO wizard at [localhost:3000](http://localhost:3000)
 
-2. Copy crowdsale contract address
+2. In MetaMask connect to custom RPC with URL `http://localhost:8545`. It'll be Oracles network.
 
-3. Paste it to the parity-bridge db config file `oracles-parity-bridge\examples\db.toml` for the property `mainnet_contract_address`
+3. Create a crowdsale with ICO Wizard.
 
-4. Start the bridge: `cd oracles-parity-bridge` `./target/release/bridge --config ./examples/config_bridge.toml --database ./examples/db.toml`
+4. Copy crowdsale contract address.
 
-5. Invest in the crowdsale page
+5. Paste it to the parity-bridge db config file `oracles-parity-bridge\examples\db.toml` for the property `mainnet_contract_address`.
 
-6. After ~10 - 20 seconds (for Oracles network) check at Kovan: https://kovan.etherscan.io/address/[verified_right-side_bridge_contract_address]#readContract `balances` for the same address that invest at ICO Wizard.
+6. Start the bridge: `cd oracles-parity-bridge` `./target/release/bridge --config ./examples/config_bridge.toml --database ./examples/db.toml`.
+
+7. Invest in the crowdsale page.
+
+8. After ~10 - 20 seconds (for Oracles network) check at Kovan: https://kovan.etherscan.io/address/[verified_right-side_bridge_contract_address]#readContract `balances` for the same address that invest at ICO Wizard.
