@@ -384,11 +384,11 @@ Install parity 1.8
 
 [Link](https://kovan.etherscan.io/verifyContract) to verification. 
 
-It should be used the latest solidity compiler without optimization.
+The latest solidity compiler without optimization should be used.
 
 Contract name is `KovanBridge`.
 
-Constract source is in `oracles-parity-bridge/contracts/bridge.sol` folder.
+Constract source is in `oracles-parity-bridge/contracts/bridge.sol` folder. Copy and paste full content of this file.
 
 ABI-encoded arguments for the contract are the last 96 bytes of the transaction to create right-side bridge contract. The contract creator is `0x00dB9af45C6f241432F2cBE412c6969cB7778d98`.
 
@@ -396,7 +396,7 @@ ABI-encoded arguments for the contract are the last 96 bytes of the transaction 
 
 1. Open ICO wizard at [localhost:3000](http://localhost:3000)
 
-2. In MetaMask connect to custom RPC with URL `http://localhost:8545`. It'll be Oracles network.
+2. In MetaMask connect to custom RPC with URL `http://localhost:8545`. It'll be the Oracles network.
 
 3. Create a crowdsale with ICO Wizard.
 
@@ -404,7 +404,7 @@ ABI-encoded arguments for the contract are the last 96 bytes of the transaction 
 
 5. Paste it to the parity-bridge db config file `oracles-parity-bridge\examples\db.toml` for the property `mainnet_contract_address`.
 
-6. Start the bridge: `cd oracles-parity-bridge` `./target/release/bridge --config ./examples/config_bridge.toml --database ./examples/db.toml`.
+6. Start the bridge again: `cd oracles-parity-bridge` `./target/release/bridge --config ./examples/config_bridge.toml --database ./examples/db.toml`.
 
 7. Invest in the crowdsale page.
 
