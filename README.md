@@ -376,7 +376,15 @@ Install parity 1.8
 
 #### Right-side contract verification in Etherscan
 
-It should be used latest solidity compilator
+[Link](https://kovan.etherscan.io/verifyContract) to verification. 
+
+It should be used the latest solidity compiler without optimization.
+
+Contract name is `KovanBridge`.
+
+Constract source is in `oracles-parity-bridge/contracts/bridge.sol` folder.
+
+ABI-encoded arguments for the contract are the last 96 bytes of the transaction to create right-side bridge contract. The contract creator is `0xe83fdc372e6c5c0bc1500b42282c035b994d8b78`.
 
 ### Getting started
 
@@ -390,4 +398,4 @@ It should be used latest solidity compilator
 
 5. Invest in the crowdsale page
 
-6. After ~10 - 20 seconds (for Oracles network) check at Kovan: https://kovan.etherscan.io/address/[verified right-side bridge contract address]#readContract `balances` for the same address that invest at ICO Wizard.
+6. After ~10 - 20 seconds (for Oracles network) check at Kovan: https://kovan.etherscan.io/address/[verified_right-side_bridge_contract_address]#readContract `balances` for the same address that invest at ICO Wizard.
