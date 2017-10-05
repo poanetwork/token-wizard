@@ -1,6 +1,6 @@
 import { observable, computed, action } from 'mobx';
 
-class Token {
+class TokenStore {
 
   @observable name;
 	@observable ticker;
@@ -13,7 +13,7 @@ class Token {
 
 }
 
-const token = new Token();
+const tokenStore = new TokenStore();
 
-export default token;
-export { Token };
+export default tokenStore;
+export { TokenStore };

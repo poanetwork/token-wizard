@@ -1,6 +1,6 @@
 import { observable, computed, action } from 'mobx';
 
-class stepThreeValidations {
+class StepThreeValidationStore {
 
   @observable name;
 	@observable walletAddress;
@@ -26,7 +26,7 @@ class stepThreeValidations {
 
 }
 
-const stepThreeValidations = new StepThreeValidations();
+const stepThreeValidationStore = new StepThreeValidationStore();
 
-export default stepThreeValidations;
-export { StepThreeValidations };
+export default stepThreeValidationStore;
+export { StepThreeValidationStore };

@@ -1,6 +1,6 @@
 import { observable, computed, action } from 'mobx';
 
-class Contracts {
+class ContractStore {
 
   @observable token;
 	@observable crowdsale;
@@ -23,7 +23,7 @@ class Contracts {
 
 }
 
-const contracts = new Contracts();
+const contractStore = new ContractStore();
 
-export default contracts;
-export { Contracts };
+export default contractStore;
+export { ContractStore };

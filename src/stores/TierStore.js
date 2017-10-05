@@ -1,6 +1,6 @@
 import { observable, computed, action } from 'mobx';
 
-class Tiers {
+class TierStore {
 
 	@observable tiers;
 	
@@ -24,7 +24,7 @@ class Tiers {
 
 }
 
-const tiers = new Tiers();
+const tierStore = new TierStore();
 
-export default tiers;
-export { Tiers };
+export default tierStore;
+export { TierStore };
