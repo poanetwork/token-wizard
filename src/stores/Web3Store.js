@@ -1,5 +1,5 @@
 import { observable } from 'mobx';
-import { getWeb3 } from '../../utils/blockchainHelpers'
+import { getWeb3 } from '../utils/blockchainHelpers'
 
 class Web3Store {
 
