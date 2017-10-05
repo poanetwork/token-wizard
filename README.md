@@ -19,7 +19,7 @@ Please, read instruction before you'll start to create crowdsales using ICO Wiza
     + [ICO configuration](#ico-configuration)
     + [Tests](#tests)
     + [Investment with transaction from MetaMask](#investment-with-transaction-from-metamask)
-    + [Change maxCap for tier from MetaMask](#change_maxcap_for_tier_from_metamask)
+    + [Change maxCap for tier from MetaMask](#change-maxcap-for-tier-from-metamask)
   * [Deploying of crowdsale to Mainnet](#deploying-of-crowdsale-to-mainnet)
     + [Time](#time)
     + [Price](#price)
@@ -213,7 +213,7 @@ where `n` - maxCap of the tier,
 
 `hex(x)` - hexademical representation of `x`, normalized to 32 bytes (required number of zeros before hex). 
 
-For example, if you need to set `maxCap = 1000` for tier of crowdsale joined with token of 18 `decimals` the data should be: `0000000000000000000000000000000000000000000000003635c9adc5dea00000`. Amount to send should be 0.
+For example, if you need to set `maxCap = 1000` for tier of crowdsale joined with token of 18 `decimals` the data should be: `0x2c2de40a00000000000000000000000000000000000000000000003635c9adc5dea00000`. Amount to send should be 0.
 
 ## Deploying of crowdsale to Mainnet
 
