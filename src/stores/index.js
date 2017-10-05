@@ -7,6 +7,8 @@ import stepThreeValidationStore from './StepThreeValidationStore';
 import stepTwoValidationStore from './StepTwoValidationStore';
 import tierStore from './TierStore';
 import tokenStore from './TokenStore';
+import web3Store from './Web3Store';
+
 
 export {
     contractStore,
@@ -17,5 +19,6 @@ export {
     stepThreeValidationStore,
     stepTwoValidationStore,
     tierStore,
-    tokenStore
+    tokenStore,
+    web3Store
 };
