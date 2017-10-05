@@ -355,23 +355,23 @@ Install parity 1.8
 
 3. `npm install`
 
-4. Generate account for the Kovan network. It will be soon: `node generateAccountForRightSide`
+4. Ask in [Kovan faucet gitter](https://gitter.im/kovan-testnet/faucet) to add some KETH to the account `0xe83fdc372e6c5c0bc1500b42282c035b994d8b78`. 
 
 5. `cd ..`
 
 *Attention!* - Change the path to Parity 1.8 bin (`parity-master/target/release/parity`) for both scripts, if it isn't in environment `$PATH` variable
 
-7. `./examples/parity_start_oracles.sh` - starting of the left-side network
+6. `./examples/parity_start_oracles.sh` - starting of the left-side network
 
-8. `./examples/parity_start_kovan.sh` - starting of the right-side network
+7. `./examples/parity_start_kovan.sh` - starting of the right-side network
 
-9. `./target/release/bridge --config ./examples/config_bridge.toml --database ./examples/db.toml` - starting of the bridge to generate db.toml firstly
+8. `./target/release/bridge --config ./examples/config_bridge.toml --database ./examples/db.toml` - starting of the bridge to generate db.toml firstly
 
 *Attention!* - it'll generate bridge contracts at both sides. After we'll lanching wizard, we'll change left side contract with crowdsale from wizard one. It is a lack of bridge for now.
 
-10. stop the bridge.
+9. stop the bridge.
 
-11. Verify right-side contract in Etherscan.
+10. Verify right-side contract in Etherscan.
 
 
 #### Right-side contract verification in Etherscan
