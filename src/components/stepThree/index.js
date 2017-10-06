@@ -13,10 +13,17 @@ import { CrowdsaleBlock } from '../Common/CrowdsaleBlock'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
 import { NAVIGATION_STEPS, defaultState, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS, intitialStepThreeValidations } from '../../utils/constants'
 import { observer } from 'mobx-react'
+import { contractStore, crowdsaleStore, pricingStrategyStore, stepThreeValidationsStore, childrenStore, web3Store} from '../../stores';
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
 const { START_TIME, END_TIME, MINCAP, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME, ALLOWMODIFYING, DISABLEWHITELISTING } = TEXT_FIELDS
-
+//stores to get
+  //contracts
+  //crowdsale
+  //validations
+  //pricing strategy
+  //children
+  //web3
 @observer export class stepThree extends stepTwo {
   constructor(props) {
     super(props);
