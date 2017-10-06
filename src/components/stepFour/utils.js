@@ -1,5 +1,6 @@
 import { attachToContract, checkTxMined } from '../../utils/blockchainHelpers'
 import { noContractAlert } from '../../utils/alerts'
+import { toFixed } from '../../utils/utils'
 
 /*function setTransferAgent(web3, abi, addr, targetAddr, cb) {
   console.log("###setTransferAgent:###");
@@ -11,7 +12,7 @@ import { noContractAlert } from '../../utils/alerts'
     }
     if (!tokenContract) return noContractAlert();
 
-    tokenContract.setTransferAgent.sendTransaction(targetAddr, true, function(err, result) {
+    tokenContract.methods.setTransferAgent(targetAddr, true).send(function(err, result) {
       if (err) {
         console.log(err)
         return cb();
@@ -33,7 +34,7 @@ function setLastCrowdsale(web3, abi, addr, lastCrowdsale, cb) {
     }
     if (!pricingStrategyContract) return noContractAlert();
 
-    pricingStrategyContract.setLastCrowdsale.sendTransaction(lastCrowdsale, {gasPrice: 21000000000}, function(err, txHash) {
+    pricingStrategyContract.methods.setLastCrowdsale(lastCrowdsale).send({gasPrice: 21000000000}, function(err, txHash) {
       if (err) {
         console.log(err)
         return cb();
@@ -64,7 +65,7 @@ function setMintAgent(web3, abi, addr, acc, cb) {
     }
     if (!tokenContract) return noContractAlert();
 
-    tokenContract.setMintAgent.sendTransaction(acc, true, {gasPrice: 21000000000}, function(err, txHash) {
+    tokenContract.methods.setMintAgent(acc, true).send({gasPrice: 21000000000}, function(err, txHash) {
       if (err) {
         console.log(err)
         return cb();
@@ -155,7 +156,7 @@ function addWhiteList(round, web3, crowdsale, token, abi, addr, cb) {
     console.log("maxCaps:");
     console.log(maxCaps);
 
-    crowdsaleContract.setEarlyParicipantsWhitelist.sendTransaction(addrs, statuses, minCaps, maxCaps, {gasPrice: 21000000000}, function(err, txHash) {
+    crowdsaleContract.methods.setEarlyParicipantsWhitelist(addrs, statuses, minCaps, maxCaps).send({gasPrice: 21000000000}, function(err, txHash) {
       if (err) {
         console.log(err)
         return cb();
@@ -188,7 +189,7 @@ function updateJoinedCrowdsales(web3, abi, addr, joinedCntrctAddrs, cb) {
     console.log("input: ");
     console.log(joinedCntrctAddrs);
 
-    crowdsaleContract.updateJoinedCrowdsalesMultiple.sendTransaction(joinedCntrctAddrs, {gasPrice: 21000000000}, function(err, txHash) {
+    crowdsaleContract.methods.updateJoinedCrowdsalesMultiple(joinedCntrctAddrs).send({gasPrice: 21000000000}, function(err, txHash) {
       if (err) {
         console.log(err)
         return cb();
@@ -218,7 +219,7 @@ function setFinalizeAgent(web3, abi, addr, finalizeAgentAddr, cb) {
     }
     if (!crowdsaleContract) return noContractAlert();
 
-    crowdsaleContract.setFinalizeAgent.sendTransaction(finalizeAgentAddr, {gasPrice: 21000000000}, function(err, txHash) {
+    crowdsaleContract.methods.setFinalizeAgent(finalizeAgentAddr).send({gasPrice: 21000000000}, function(err, txHash) {
       if (err) {
         console.log(err)
         return cb();
@@ -248,7 +249,7 @@ function setReleaseAgent(web3, abi, addr, finalizeAgentAddr, cb) {
     }
     if (!tokenContract) return noContractAlert();
 
-    tokenContract.setReleaseAgent.sendTransaction(finalizeAgentAddr, {gasPrice: 21000000000}, function(err, txHash) {
+    tokenContract.methods.setReleaseAgent(finalizeAgentAddr).send({gasPrice: 21000000000}, function(err, txHash) {
       if (err) {
         console.log(err)
         return cb();
@@ -312,8 +313,8 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
     let keys = Object.keys(map);
     for (let i = 0; i < keys.length; i++) {
       addrs.push(keys[i]);
-      inTokens.push(map[keys[i]].inTokens);
-      inPercentage.push(map[keys[i]].inPercentage);
+      inTokens.push(map[keys[i]].inTokens?toFixed(map[keys[i]].inTokens.toString()):0);
+      inPercentage.push(map[keys[i]].inPercentage?map[keys[i]].inPercentage:0);
     }
 
     if (addrs.length === 0 && inTokens.length === 0 && inPercentage.length === 0) return cb();
@@ -323,7 +324,7 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
     console.log("inTokens: " + inTokens);
     console.log("inPercentage: " + inPercentage);
 
-    tokenContract.setReservedTokensListMultiple.sendTransaction(addrs, inTokens, inPercentage, {gasPrice: 21000000000}, function(err, txHash) {
+    tokenContract.methods.setReservedTokensListMultiple(addrs, inTokens, inPercentage).send({gasPrice: 21000000000}, function(err, txHash) {
       if (err) {
         console.log(err)
         return cb();
@@ -353,7 +354,7 @@ export function transferOwnership(web3, abi, addr, finalizeAgentAddr, cb) {
     }
     if (!tokenContract) return noContractAlert();
 
-    tokenContract.transferOwnership.sendTransaction(finalizeAgentAddr, {gasPrice: 21000000000}, function(err, txHash) {
+    tokenContract.methods.transferOwnership(finalizeAgentAddr).send({gasPrice: 21000000000}, function(err, txHash) {
       if (err) {
         console.log(err)
         return cb();
