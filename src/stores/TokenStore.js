@@ -5,12 +5,12 @@ class TokenStore {
   @observable name;
 	@observable ticker;
 	@observable supply;
-	@observable decimals;
+  @observable decimals;
 
 	@action setProperty = (property, value) => {
-		this[property] = value
-	}
-
+		this[property] = value;
+  }
+  
 }
 
 const tokenStore = new TokenStore();

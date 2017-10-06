@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import '../../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
 import { checkWeb3 } from '../../utils/blockchainHelpers'
@@ -7,11 +7,13 @@ import { StepNavigation } from '../Common/StepNavigation'
 import { InputField } from '../Common/InputField'
 import { ReservedTokensInputBlock } from '../Common/ReservedTokensInputBlock'
 import { NAVIGATION_STEPS, VALIDATION_MESSAGES, VALIDATION_TYPES, defaultState, TEXT_FIELDS, intitialStepTwoValidations } from '../../utils/constants'
+import { inject, observer } from 'mobx-react';
 const { TOKEN_SETUP } = NAVIGATION_STEPS
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
 const { NAME, TICKER, DECIMALS } = TEXT_FIELDS
 
-export class stepTwo extends React.Component {
+@inject('contractStore', 'tokenStore', 'web3Store') @observer
+export class stepTwo extends Component {
   constructor(props) {
     super(props);
     window.scrollTo(0, 0);
@@ -22,7 +24,7 @@ export class stepTwo extends React.Component {
   }
 
   componentDidMount() {
-    checkWeb3(this.state.web3);
+    checkWeb3(this.props.web3Store.web3);
   }
 
   getNewParent (property, parent, value) {
@@ -62,7 +64,45 @@ export class stepTwo extends React.Component {
     }
   }*/
 
-  changeState = (event, parent, key, property) => {
+  updateTimes = (key, property, value) => {
+    let targetTime = new Date(value);
+    let targetTimeTemp = targetTime.setHours(targetTime.getHours() - targetTime.getTimezoneOffset()/60);//.setUTCHours(new Date(targetTime).getHours());
+    if (property === 'startTime') {
+      if (targetTimeTemp) {
+        const val = new Date(targetTimeTemp).toISOString().split('.')[0];
+        this.props.contractStore.setTierCrowdsaleList(key, 'startTime', val); 
+      } else {
+        this.props.contractStore.setTierCrowdsaleList(key, 'startTime', null); 
+      }
+    } else {
+      if (targetTimeTemp) {
+        const val = new Date(targetTimeTemp).toISOString().split('.')[0];          
+        this.props.contractStore.setTierCrowdsaleList(key, 'endTime', val); 
+      } else {
+       this.props.contractStore.setTierCrowdsaleList(key, 'endtTime', null);          
+      }
+
+      if (this.props.contractStore.tierCrowdsaleList[key + 1]) {
+        this.props.contractStore.setTierCrowdsaleList(key + 1, 'startTime', this.props.contractStore.tierCrowdsaleList[key].endTime);
+        let newEndDate = new Date(this.props.contractStore.tierCrowdsaleList[key].endTime);
+        newEndDate = newEndDate.setDate(newEndDate).getDate() + 4;
+        const endTime = new Date(newEndDate).toISOString().split('.')[0];
+        this.props.contractStore.setTierCrowdsaleList(key + 1, 'endTime', endTime);
+      }
+    }
+  }
+
+  // changeInputField = (event, item, key, property) => {
+  //   let value = event.target.value
+
+  //   if (property === "startTime" || property === "endTime") {
+  //     this.updateTimes(key, property, value);
+  //   } else if (property === 'token') {
+  //     this.props.tokenStore.setProperty(item, property);
+  //   } 
+  // }
+
+  changeInputField = (event, parent, key, property) => {
     let value = event.target.value
     console.log("parent: " + parent, "key: " + key, "property: " + property, "value: " + value);
     let newState = { ...this.state }
@@ -141,7 +181,7 @@ export class stepTwo extends React.Component {
   }
 
   renderLink () {
-    return <Link className="button button_fill" to={{ pathname: '/3', query: { state: this.state, changeState: this.changeState } }}>Continue</Link>
+    return <Link className="button button_fill" to={{ pathname: '/3', query: { state: this.state, changeInputField: this.changeInputField } }}>Continue</Link>
   }
   
   validateAllFields (parent ) {
@@ -209,7 +249,7 @@ export class stepTwo extends React.Component {
               title={NAME} 
               value={token.name} 
               onBlur={() => this.handleInputBlur('token', 'name')}
-              onChange={(e) => this.changeState(e, 'token', 0, 'name')}
+              onChange={(e) => this.changeInputField(e, 'token', 0, 'name')}
               description={`The name of your token. Will be used by Etherscan and other token browsers. Be afraid of trademarks.`}
             />
             <InputField 
@@ -219,7 +259,7 @@ export class stepTwo extends React.Component {
               title={TICKER} 
               value={token.ticker} 
               onBlur={() => this.handleInputBlur('token', 'ticker')}
-              onChange={(e) => this.changeState(e, 'token', 0, 'ticker')}
+              onChange={(e) => this.changeInputField(e, 'token', 0, 'ticker')}
               description={`The three letter ticker for your token. There are 17,576 combinations for 26 english letters. Be hurry. `}
             />
             <InputField 
@@ -229,7 +269,7 @@ export class stepTwo extends React.Component {
               title={DECIMALS}
               value={token.decimals} 
               onBlur={() => this.handleInputBlur('token', 'decimals')}
-              onChange={(e) => this.changeState(e, 'token', 0, 'decimals')}
+              onChange={(e) => this.changeInputField(e, 'token', 0, 'decimals')} // changeInputField
               description={`Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous).`}
             />
           </div>
@@ -238,7 +278,7 @@ export class stepTwo extends React.Component {
           </div>
           <ReservedTokensInputBlock
             state={this.state}
-            onChange={(e, cntrct, num, prop) => this.changeState(e, 'token', 0, prop)}
+            onChange={(e, cntrct, num, prop) => this.changeInputField(e, 'token', 0, prop)}
           ></ReservedTokensInputBlock>
         </div>
         <div className="button-container">
