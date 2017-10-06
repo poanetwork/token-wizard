@@ -1,31 +1,10 @@
 import { findConstructor, getconstructorParams, toFixed } from '../utils/utils'
-//import $ from 'jquery'
-
-//depreciated
-/*export function getEncodedABIServerSide(abi, state, vals, crowdsaleNum, cb) {
-	const abiConstructor = findConstructor(abi, state)
-    let params = getconstructorParams(abiConstructor, state, vals, crowdsaleNum);
-    $.ajax({
-	    url:"https://ico-wizard-encoded-abi.herokuapp.com",
-	    type:"POST",
-	    data:JSON.stringify(params),
-	    contentType:"application/json; charset=utf-8",
-	    dataType:"json"
-	}).done((data) => {
-	  	cb(data.body.ABIencoded);
-	}).fail(function(err) {
-	    console.log('failfailfail',err);
-	})
-}*/
 
 export function getEncodedABIClientSide(web3, abi, state, vals, crowdsaleNum, cb) {
 	//console.log(web3, abi, state, vals, crowdsaleNum);
 	const abiConstructor = findConstructor(abi, state)
     let params = getconstructorParams(abiConstructor, state, vals, crowdsaleNum);
-    console.log("params.types: ");
-    console.log(params.types);
-    console.log("params.vals: ");
-    console.log(params.vals);
+
     getABIencoded(web3, params.types, params.vals, function(encoded) {
 		cb(encoded);
 	});
