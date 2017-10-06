@@ -16,6 +16,7 @@ fs.readFile(inputFilePath, "utf8", function(err, content) {
 		return console.log(err.message);
 	}
 
+	content = "// Created using ICO Wizard https://github.com/oraclesorg/ico-wizard by Oracles Network \n" + content;
 	if (!isExtended) return compileContract(content);
 
 	addExtendedCode(extensionFilePath, content, function(err, contentUpdated) {
