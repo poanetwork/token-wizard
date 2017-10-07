@@ -125,31 +125,33 @@ export class stepThree extends stepTwo {
     checkWeb3(this.state.web3);
     setTimeout( () => {
       getWeb3((web3) => {
-        console.log('timeout state', this.state)
-        let newState = {...this.state}
-        newState.crowdsale[0].walletAddress = web3.eth.accounts[0];
-        newState.crowdsale[0].startTime = defaultCompanyStartDate();
-        newState.crowdsale[0].endTime = defaultCompanyEndDate(newState.crowdsale[0].startTime);
-        this.setState(newState);
-        //depreciated
-        /*let datesIterator = 0;
-        let datesCount = 2;
-        calculateFutureBlock(new Date(newState.crowdsale[0].startTime), newState.blockTimeGeneration, (targetBlock) => {
-          newState.crowdsale[0].startBlock = targetBlock;
-          datesIterator++;
+        web3.eth.getAccounts().then((accounts) => {
+          console.log('timeout state', this.state)
+          let newState = {...this.state}
+          newState.crowdsale[0].walletAddress = accounts[0];
+          newState.crowdsale[0].startTime = defaultCompanyStartDate();
+          newState.crowdsale[0].endTime = defaultCompanyEndDate(newState.crowdsale[0].startTime);
+          this.setState(newState);
+          //depreciated
+          /*let datesIterator = 0;
+          let datesCount = 2;
+          calculateFutureBlock(new Date(newState.crowdsale[0].startTime), newState.blockTimeGeneration, (targetBlock) => {
+            newState.crowdsale[0].startBlock = targetBlock;
+            datesIterator++;
 
-          if (datesIterator === datesCount) {
-            this.setState(newState);
-          }
-        });
-        calculateFutureBlock(new Date(newState.crowdsale[0].endTime), newState.blockTimeGeneration, (targetBlock) => {
-          newState.crowdsale[0].endBlock = targetBlock;
-          datesIterator++;
+            if (datesIterator === datesCount) {
+              this.setState(newState);
+            }
+          });
+          calculateFutureBlock(new Date(newState.crowdsale[0].endTime), newState.blockTimeGeneration, (targetBlock) => {
+            newState.crowdsale[0].endBlock = targetBlock;
+            datesIterator++;
 
-          if (datesIterator === datesCount) {
-            this.setState(newState);
-          }
-        });*/
+            if (datesIterator === datesCount) {
+              this.setState(newState);
+            }
+          });*/
+        })
       });
     }, 500);
   }

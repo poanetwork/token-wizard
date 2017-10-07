@@ -1,7 +1,6 @@
 import Web3 from 'web3';
-import { incorrectNetworkAlert, noContractAlert, noMetaMaskAlert, invalidNetworkIDAlert } from './alerts'
+import { incorrectNetworkAlert, noMetaMaskAlert, invalidNetworkIDAlert } from './alerts'
 import { getEncodedABIClientSide } from './microservices'
-import { toFixed } from '../utils/utils'
 
 // instantiate new web3 instance
 const web3 = new Web3();
@@ -17,15 +16,19 @@ export function checkWeb3(web3) {
     setTimeout(function() {
       getWeb3((web3) => {
         if (!web3) return noMetaMaskAlert();
-        if (web3.eth.accounts.length === 0) {
-          return noMetaMaskAlert();
-        }
+        web3.eth.getAccounts().then((accounts) => {
+          if (accounts.length === 0) {
+            return noMetaMaskAlert();
+          }
+        });
       });
     }, 500);
   } else {
-    if (web3.eth.accounts.length === 0) {
-      return noMetaMaskAlert();
-    }
+    web3.eth.getAccounts().then((accounts) => {
+      if (accounts.length === 0) {
+        return noMetaMaskAlert();
+      }
+    });
   }
 }
 
@@ -52,11 +55,7 @@ export function checkNetWorkByID(web3, _networkIdFromGET) {
   if (!_networkIdFromGET) {
     return invalidNetworkIDAlert();
   }
-  web3.version.getNetwork(function(err, _networkIdFromNetwork) {
-    if (err) {
-      console.log(err);
-    }
-
+  web3.eth.net.getId().then((_networkIdFromNetwork) => {
     let networkNameFromGET = getNetWorkNameById(_networkIdFromGET);
     let networkNameFromNetwork = getNetWorkNameById(_networkIdFromNetwork);
     if (networkNameFromGET !== networkNameFromNetwork) {
@@ -65,26 +64,6 @@ export function checkNetWorkByID(web3, _networkIdFromGET) {
     }
   });
 }
-
-/*
-//depreciated
-export function calculateFutureBlock(targetTime, blockTimeGeneration, cb) {
-  getWeb3((web3) => {
-    web3.eth.getBlockNumber(function(err, curBlock) {
-      if (err) return console.log(err);
-
-      let curTime = new Date();
-
-      let curTimeInSec = curTime.getTime()/1000;
-      let targetTimeInSec = targetTime/1000;
-      let timeDiffInSec = targetTimeInSec - curTimeInSec;
-      let targetBlockDiff = Math.round(timeDiffInSec / blockTimeGeneration, 0);
-      let targetBlock = curBlock + targetBlockDiff;
-      cb(targetBlock);
-    });
-  });
-}
-*/
 
 function getNetWorkNameById(_id) {
   console.log(_id);
@@ -114,12 +93,7 @@ function getNetWorkNameById(_id) {
 }
 
 export function getNetworkVersion(web3, cb) {
-  web3.version.getNetwork(function(err, netId) {
-    if (err) {
-      console.log(err);
-      cb(null);
-    }
-    
+  web3.eth.net.getId().then((netId) => {
     cb(netId);
   });
 }
@@ -142,17 +116,6 @@ export function setExistingContractParams(abi, addr, $this) {
           }
         });
 
-        /*propsCount++;
-        crowdsaleContract.pricingStrategy.call(function(err, pricingStrategyAddr) {
-          cbCount++;
-          console.log("pricingStrategyAddr: " + pricingStrategyAddr);
-          state.contracts.pricingStrategy.addr = pricingStrategyAddr;
-
-          if (propsCount == cbCount) {
-            $this.setState(state);
-          }
-        });*/
-
         propsCount++;
         crowdsaleContract.multisigWallet.call(function(err, multisigWalletAddr) {
           cbCount++;
@@ -169,60 +132,56 @@ export function setExistingContractParams(abi, addr, $this) {
 }
 
 export function deployContract(i, web3, abi, bin, params, state, cb) {
-  //console.log('web3.eth.accounts[0]', web3.eth.accounts[0], 'bin', bin)
   getEncodedABIClientSide(web3, abi, state, params, i, (ABIencoded) => {
     console.log(ABIencoded);
     let binFull = bin + ABIencoded.substr(2);
-    //console.log(binFull);
-    web3.eth.estimateGas({
-      from: web3.eth.accounts[0], 
-      data: binFull
-    }, function(err, estimatedGas) {
-      console.log('estimated gas callback', estimatedGas)
-      if (err) console.log('errrrrrrrrrrrrrrrrr', err);
-      console.log('gas is estimated', estimatedGas, 'err', err)
-      let estimatedGasMax = 3716260;
-      if (!estimatedGas) estimatedGas = estimatedGasMax;
-      else estimatedGas += 100000;
+    web3.eth.getAccounts().then(function(accounts) {
+      web3.eth.estimateGas({
+        from: accounts[0], 
+        data: binFull
+      }, function(err, estimatedGas) {
+        console.log('estimated gas callback', estimatedGas)
+        if (err) console.log('errrrrrrrrrrrrrrrrr', err);
+        console.log('gas is estimated', estimatedGas, 'err', err)
+        let estimatedGasMax = 3716260;
+        if (!estimatedGas) estimatedGas = estimatedGasMax;
+        else estimatedGas += 100000;
 
-      if (estimatedGas > estimatedGasMax) estimatedGas = estimatedGasMax;
-      
-      var contractInstance = web3.eth.contract(abi);
-      var opts = {
-        from: web3.eth.accounts[0],
-        data: "0x" + bin,
-        gas: estimatedGas,
-        gasPrice: 21000000000
-      };
-      var totalParams = params;
-      totalParams.push(opts);
-      totalParams.push(deployContractCB);
-      console.log('totalParams', totalParams);
-      contractInstance.new(...totalParams);
+        if (estimatedGas > estimatedGasMax) estimatedGas = estimatedGasMax;
 
-      function deployContractCB(err, contract) {
-        if (err) {
-          return cb(err, null);
-        }
-        if (contract) {
-          console.log(contract);
-          if (contract.address) {
-            console.log(contract);
-            console.log('Contract mined! address: ' + contract.address + ' transactionHash: ' + contract.transactionHash);
-            cb(null, contract.address);
+        var contractInstance = new web3.eth.Contract(abi);
+
+        var deployOpts = {
+          data: "0x" + bin,
+          arguments: params
+        };
+
+        var sendOpts = {
+          from: accounts[0],
+          gas: estimatedGas,
+          gasPrice: 21000000000
+        };
+
+        contractInstance.deploy(deployOpts).send(sendOpts, deployContractCB)
+        //contractInstance.new(...totalParams)
+        .on('error', function(error){ return cb(err, null); })
+        //.on('transactionHash', function(transactionHash){ console.log(transactionHash); })
+        /*.on('receipt', function(receipt){
+           console.log(receipt.contractAddress) // contains the new contract address
+        })*/
+        //.on('confirmation', function(confirmationNumber, receipt){ console.log(confirmationNumber, receipt); })
+        .then(function(newContractInstance){
+            console.log(newContractInstance.options.address) // instance with the new contract address
+            cb(null, newContractInstance.options.address);
+        });
+
+        function deployContractCB(err, txHash) {
+          console.log(txHash);
+          if (err) {
+            return cb(err, null);
           }
-          else if (contract.transactionHash) {
-            checkTxMined(web3, contract.transactionHash, function txMinedCallback(receipt) {
-              if (receipt) {
-                if (receipt.blockNumber)
-                  return cb(null, receipt.contractAddress);
-              } else {
-                setTimeout(checkTxMined(web3, contract.transactionHash, txMinedCallback), 1000);
-              }
-            })
-          }
-        }
-      };
+        };
+      });
     });
   });
 }
@@ -236,18 +195,19 @@ export function checkTxMined(web3, txhash, cb) {
 }
 
 export function attachToContract(web3, abi, addr, cb) {
-	if(!web3.isConnected()) {
-		if (cb) cb({code: 200, title: "Error", message: "check RPC availability"});
-	} else {
-    web3.eth.defaultAccount = web3.eth.accounts[0];
+  web3.eth.getAccounts().then((accounts) => {
+    web3.eth.defaultAccount = accounts[0];
 		console.log("web3.eth.defaultAccount:" + web3.eth.defaultAccount);
 		
-		var MyContract = web3.eth.contract(abi);
+		let contractInstance = new web3.eth.Contract(abi, addr, {
+      from: web3.eth.defaultAccount
+    });
 
-		var contractInstance = MyContract.at(addr);
+    //console.log(contractInstance);
+    //console.log(contractInstance.options);
 		
 		if (cb) cb(null, contractInstance);
-	}
+  });
 }
 
 // export web3 object instance

@@ -334,7 +334,7 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
                 case "_oneTokenInWei": {
                   //params.vals.push(state.pricingStrategy[crowdsaleNum].rate);
                   //params.vals.push(state.web3.toWei(1/state.pricingStrategy[crowdsaleNum].rate/10**state.token.decimals, "ether"));
-                  params.vals.push(state.web3.toWei(1/state.pricingStrategy[crowdsaleNum].rate, "ether"));
+                  params.vals.push(state.web3.utils.toWei(1/state.pricingStrategy[crowdsaleNum].rate, "ether"));
                 } break;
                 case "_isUpdatable": {
                   params.vals.push(state.crowdsale[crowdsaleNum].updatable?state.crowdsale[crowdsaleNum].updatable=="on"?true:false:false);
