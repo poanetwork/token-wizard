@@ -365,13 +365,13 @@ export const stepsAreValid = (steps) => {
 
 const validateTier = (tier) => typeof tier === 'string' && tier.length > 0 && tier.length < 30
 
-const validateName = (name) => typeof name === 'string' && name.length > 0 && name.length < 30
+export const validateName = (name) => typeof name === 'string' && name.length > 0 && name.length < 30
 
 const validateSupply = (supply) =>  isNaN(Number(supply)) === false && Number(supply) > 0
 
-const validateDecimals = (decimals) => isNaN(Number(decimals)) === false && decimals.length > 0
+export const validateDecimals = (decimals) => isNaN(Number(decimals)) === false && decimals.length > 0
 
-const validateTicker = (ticker) => typeof ticker === 'string' && ticker.length < 4 && ticker.length > 0
+export const validateTicker = (ticker) => typeof ticker === 'string' && ticker.length < 4 && ticker.length > 0
 
 const validateTime = (time) => getTimeAsNumber(time) > Date.now() 
 

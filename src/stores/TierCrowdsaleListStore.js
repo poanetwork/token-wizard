@@ -5,7 +5,7 @@ class TierCrowdsaleListStore {
 	@observable crowdsaleList;
 	
 	constructor(crowdsaleList = []) {
-    this.crowdsaleList = crowdsaleList;
+	  this.crowdsaleList = crowdsaleList;
   }
 
   @action addCrowdsaleItem = (crowdsaleItem) => {

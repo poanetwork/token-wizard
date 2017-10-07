@@ -83,6 +83,38 @@ const { START_TIME, END_TIME, MINCAP, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SE
     return <Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}><a className="button button_fill">Continue</a></Link>
   }
 
+  // ready for updating time to store 
+  // updateTimes = (event, key, property) => {
+  //   const value = event.target.value,
+  //     crowdsaleList = this.props.tierCrowdsaleListStore.crowdsalelist,
+  //     targetTime = new Date(value),
+  //     targetTimeTemp = targetTime.setHours(targetTime.getHours() - targetTime.getTimezoneOffset()/60);//.setUTCHours(new Date(targetTime).getHours());
+    
+  //     if (property === 'startTime') {
+  //     if (targetTimeTemp) {
+  //       const val = new Date(targetTimeTemp).toISOString().split('.')[0];
+  //       crowdsaleList.setCrowdsaleProperty(key, 'startTime', val); 
+  //     } else {
+  //       crowdsaleList.setCrowdsaleProperty(key, 'startTime', null); 
+  //     }
+  //   } else {
+  //     if (targetTimeTemp) {
+  //       const val = new Date(targetTimeTemp).toISOString().split('.')[0];          
+  //       crowdsaleList.setCrowdsaleProperty(key, 'endTime', val); 
+  //     } else {
+  //      crowdsaleList.setCrowdsaleProperty(key, 'endtTime', null);          
+  //     }
+
+  //     if (crowdsaleList.tierCrowdsaleList[key + 1]) {
+  //       crowdsaleList.setCrowdsaleProperty(key + 1, 'startTime', crowdsaleList.tierCrowdsaleList[key].endTime);
+  //       let newEndDate = new Date(crowdsaleList.tierCrowdsaleList[key].endTime);
+  //       newEndDate = newEndDate.setDate(newEndDate).getDate() + 4;
+  //       const endTime = new Date(newEndDate).toISOString().split('.')[0];
+  //       crowdsaleList.setCrowdsaleProperty(key + 1, 'endTime', endTime);
+  //     }
+  //   }
+  // }
+
   /*renderStandardLinkComponent () {
     if(stepsAreValid(this.state.validations) || allFieldsAreValid('crowdsale', this.state)){
       return this.renderStandardLink()

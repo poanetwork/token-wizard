@@ -12,7 +12,7 @@ const { TOKEN_SETUP } = NAVIGATION_STEPS
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
 const { NAME, TICKER, DECIMALS } = TEXT_FIELDS
 
-@inject('contractStore', 'tokenStore', 'web3Store') @observer
+@inject('tokenStore', 'web3Store', 'tierCrowdsaleListStore') @observer
 export class stepTwo extends Component {
   constructor(props) {
     super(props);
@@ -64,32 +64,9 @@ export class stepTwo extends Component {
     }
   }*/
 
-  updateTimes = (key, property, value) => {
-    let targetTime = new Date(value);
-    let targetTimeTemp = targetTime.setHours(targetTime.getHours() - targetTime.getTimezoneOffset()/60);//.setUTCHours(new Date(targetTime).getHours());
-    if (property === 'startTime') {
-      if (targetTimeTemp) {
-        const val = new Date(targetTimeTemp).toISOString().split('.')[0];
-        this.props.contractStore.setTierCrowdsaleList(key, 'startTime', val); 
-      } else {
-        this.props.contractStore.setTierCrowdsaleList(key, 'startTime', null); 
-      }
-    } else {
-      if (targetTimeTemp) {
-        const val = new Date(targetTimeTemp).toISOString().split('.')[0];          
-        this.props.contractStore.setTierCrowdsaleList(key, 'endTime', val); 
-      } else {
-       this.props.contractStore.setTierCrowdsaleList(key, 'endtTime', null);          
-      }
-
-      if (this.props.contractStore.tierCrowdsaleList[key + 1]) {
-        this.props.contractStore.setTierCrowdsaleList(key + 1, 'startTime', this.props.contractStore.tierCrowdsaleList[key].endTime);
-        let newEndDate = new Date(this.props.contractStore.tierCrowdsaleList[key].endTime);
-        newEndDate = newEndDate.setDate(newEndDate).getDate() + 4;
-        const endTime = new Date(newEndDate).toISOString().split('.')[0];
-        this.props.contractStore.setTierCrowdsaleList(key + 1, 'endTime', endTime);
-      }
-    }
+  updateTokenStore = (event, property) => {
+    const value = event.target.value;
+    this.props.tokenStore.setProperty(property, value);
   }
 
   // changeInputField = (event, item, key, property) => {
@@ -102,61 +79,61 @@ export class stepTwo extends Component {
   //   } 
   // }
 
-  changeInputField = (event, parent, key, property) => {
-    let value = event.target.value
-    console.log("parent: " + parent, "key: " + key, "property: " + property, "value: " + value);
-    let newState = { ...this.state }
-    console.log(newState);
-    if (property === "startTime" || property === "endTime") {
-      let targetTime = new Date(value);
-      let targetTimeTemp = targetTime.setHours(targetTime.getHours() - targetTime.getTimezoneOffset()/60);//.setUTCHours(new Date(targetTime).getHours());
-      if (property === "startTime") {
-        console.log("property == startTime");
-        if (targetTimeTemp)
-          newState.crowdsale[key].startTime = new Date(targetTimeTemp).toISOString().split(".")[0];
-        else
-          newState.crowdsale[key].startTime = null;
-      } else if (property === "endTime") {
-        if (targetTimeTemp)
-          newState.crowdsale[key].endTime = new Date(targetTimeTemp).toISOString().split(".")[0];
-        else 
-          newState.crowdsale[key].endTime = null
-        if (newState.crowdsale[key + 1]) {
-          newState.crowdsale[key + 1].startTime = newState.crowdsale[key].endTime;
-          let newEndDate = new Date(newState.crowdsale[key].endTime);
-          newEndDate = newEndDate.setDate(new Date(newState.crowdsale[key].endTime).getDate() + 4);;
-          newState.crowdsale[key + 1].endTime = new Date(newEndDate).toISOString().split(".")[0];
-        }
-      }
-      //depreciated
-      //this.setBlockTimes(key, property, targetTime)
-    } else if (property.indexOf("whitelist_") === 0) {
-      let prop = property.split("_")[1];
-      newState.crowdsale[key][`whiteListInput`][prop] = value
-    } else if (property.indexOf("reservedtokens_") === 0) {
-      console.log(newState);
-      let prop = property.split("_")[1];
-      newState.token[`reservedTokensInput`][prop] = value
-    } else {
-      if( Object.prototype.toString.call( newState[parent] ) === '[object Array]' ) {
-        newState[parent][key][property] = value;//this.getNewParent(property, parent, key, value)
-      } else {
-        newState[parent][property] = value;//this.getNewParent(property, parent, key, value)
-      }
-    }
-    if (property.indexOf("whitelist") === -1 && property.indexOf("reservedtokens") === -1) {
+  // changeInputField = (event, parent, key, property) => {
+  //   let value = event.target.value
+  //   console.log("parent: " + parent, "key: " + key, "property: " + property, "value: " + value);
+  //   let newState = { ...this.state }
+  //   console.log(newState);
+  //   if (property === "startTime" || property === "endTime") {
+  //     let targetTime = new Date(value);
+  //     let targetTimeTemp = targetTime.setHours(targetTime.getHours() - targetTime.getTimezoneOffset()/60);//.setUTCHours(new Date(targetTime).getHours());
+  //     if (property === "startTime") {
+  //       console.log("property == startTime");
+  //       if (targetTimeTemp)
+  //         newState.crowdsale[key].startTime = new Date(targetTimeTemp).toISOString().split(".")[0];
+  //       else
+  //         newState.crowdsale[key].startTime = null;
+  //     } else if (property === "endTime") {
+  //       if (targetTimeTemp)
+  //         newState.crowdsale[key].endTime = new Date(targetTimeTemp).toISOString().split(".")[0];
+  //       else 
+  //         newState.crowdsale[key].endTime = null
+  //       if (newState.crowdsale[key + 1]) {
+  //         newState.crowdsale[key + 1].startTime = newState.crowdsale[key].endTime;
+  //         let newEndDate = new Date(newState.crowdsale[key].endTime);
+  //         newEndDate = newEndDate.setDate(new Date(newState.crowdsale[key].endTime).getDate() + 4);;
+  //         newState.crowdsale[key + 1].endTime = new Date(newEndDate).toISOString().split(".")[0];
+  //       }
+  //     }
+  //     //depreciated
+  //     //this.setBlockTimes(key, property, targetTime)
+  //   } else if (property.indexOf("whitelist_") === 0) {
+  //     let prop = property.split("_")[1];
+  //     newState.crowdsale[key][`whiteListInput`][prop] = value
+  //   } else if (property.indexOf("reservedtokens_") === 0) {
+  //     console.log(newState);
+  //     let prop = property.split("_")[1];
+  //     newState.token[`reservedTokensInput`][prop] = value
+  //   } else {
+  //     if( Object.prototype.toString.call( newState[parent] ) === '[object Array]' ) {
+  //       newState[parent][key][property] = value;//this.getNewParent(property, parent, key, value)
+  //     } else {
+  //       newState[parent][property] = value;//this.getNewParent(property, parent, key, value)
+  //     }
+  //   }
+  //   if (property.indexOf("whitelist") === -1 && property.indexOf("reservedtokens") === -1) {
 
-      if ( Object.prototype.toString.call( newState[`validations`] ) === '[object Array]' ) {
-        newState[`validations`][key][property] = validateValue(value, property, newState)
-      } else {
-        newState[`validations`][property] = validateValue(value, property, newState)
-      }
-      //console.log('property', property)
-      //console.log('newState[`validations`][property]',  newState[`validations`], validateValue(value, property, newState), 'newState', newState)
-    }
-    console.log('newState', newState)
-    this.setState(newState)
-  }
+  //     if ( Object.prototype.toString.call( newState[`validations`] ) === '[object Array]' ) {
+  //       newState[`validations`][key][property] = validateValue(value, property, newState)
+  //     } else {
+  //       newState[`validations`][property] = validateValue(value, property, newState)
+  //     }
+  //     //console.log('property', property)
+  //     //console.log('newState[`validations`][property]',  newState[`validations`], validateValue(value, property, newState), 'newState', newState)
+  //   }
+  //   console.log('newState', newState)
+  //   this.setState(newState)
+  // }
 
   handleInputBlur (parent, property, key) {
     //console.log(parent, property, key);
@@ -181,48 +158,57 @@ export class stepTwo extends Component {
   }
 
   renderLink () {
-    return <Link className="button button_fill" to={{ pathname: '/3', query: { state: this.state, changeInputField: this.changeInputField } }}>Continue</Link>
+    return <Link className="button button_fill" to='/3'>Continue</Link>
   }
+
+  // validateAllFields() {
+  //   let validToken = [this.props.tokenStore.validName, 
+  //       this.props.tokenStore.validTicker, 
+  //       this.props.validDecimals].every((val) => {
+  //         return val === EMPTY;
+  //       });
+  // }
   
-  validateAllFields (parent ) {
-    let newState = { ...this.state }
-    //let properties = Object.keys(newState[parent])
-    //let values = Object.values(newState[parent])
+  // validateAllFields (parent ) {
+  //   let newState = { ...this.state }
+  //   //let properties = Object.keys(newState[parent])
+  //   //let values = Object.values(newState[parent])
 
-    let properties = []
-    let values = []
-    let inds = []
-    if( Object.prototype.toString.call( newState[parent] ) === '[object Array]' ) {
-      if (newState[parent].length > 0) {
-        for (let i = 0; i < newState[parent].length; i++) {
-          Object.keys(newState[parent][i]).map(property => {
-            values.push(newState[parent][i][property])
-            properties.push(property);
-            inds.push(i);
-          })
-        }
-      }
-    } else {
-      properties = Object.keys(newState[parent])
-      values = Object.values(newState[parent])
-    }
+  //   let properties = []
+  //   let values = []
+  //   let inds = []
+  //   if( Object.prototype.toString.call( newState[parent] ) === '[object Array]' ) {
+  //     if (newState[parent].length > 0) {
+  //       for (let i = 0; i < newState[parent].length; i++) {
+  //         Object.keys(newState[parent][i]).map(property => {
+  //           values.push(newState[parent][i][property])
+  //           properties.push(property);
+  //           inds.push(i);
+  //         })
+  //       }
+  //     }
+  //   } else {
+  //     properties = Object.keys(newState[parent])
+  //     values = Object.values(newState[parent])
+  //   }
 
-    //console.log(properties);
-    //console.log(values);
+  //   //console.log(properties);
+  //   //console.log(values);
 
-    properties.forEach((property, index) => {
-      if ( Object.prototype.toString.call( newState[`validations`] ) === '[object Array]' ) {
-        newState[`validations`][inds[index]][property] = validateValue(values[index], property)
-      } else {
-        newState[`validations`][property] = validateValue(values[index], property)
-      }
-    })
-    this.setState(newState)
-  }
+  //   properties.forEach((property, index) => {
+  //     if ( Object.prototype.toString.call( newState[`validations`] ) === '[object Array]' ) {
+  //       newState[`validations`][inds[index]][property] = validateValue(values[index], property)
+  //     } else {
+  //       newState[`validations`][property] = validateValue(values[index], property)
+  //     }
+  //   })
+  //   this.setState(newState)
+  // }
 
-  renderLinkComponent () {
+  renderLinkComponent = () => {
     // console.log(`stepsAreValid(this.state.validations) || allFieldsAreValid('token', this.state)`, stepsAreValid(this.state.validations), allFieldsAreValid('token', this.state))
-    if(stepsAreValid(this.state.validations) || allFieldsAreValid('token', this.state)){
+    // if(stepsAreValid(this.state.validations) || allFieldsAreValid('token', this.state)){
+    if(this.props.tokenStore.validName === VALID && this.props.tokenStore.validDecimals === VALID && this.props.tokenStore.validTicker === VALID) {
       return this.renderLink()
     }
     return <div onClick={this.showErrorMessages.bind(this, 'token')} className="button button_fill"> Continue</div>
@@ -245,31 +231,31 @@ export class stepTwo extends Component {
           <div className="hidden">
             <InputField side='left' type='text' 
               errorMessage={VALIDATION_MESSAGES.NAME} 
-              valid={validations.name} 
+              valid={this.props.tokenStore.validName} 
               title={NAME} 
-              value={token.name} 
+              value={this.props.tokenStore.name} 
               onBlur={() => this.handleInputBlur('token', 'name')}
-              onChange={(e) => this.changeInputField(e, 'token', 0, 'name')}
+              onChange={(e) => this.updateTokenStore(e, 'name')}
               description={`The name of your token. Will be used by Etherscan and other token browsers. Be afraid of trademarks.`}
             />
             <InputField 
               side='right' type='text' 
               errorMessage={VALIDATION_MESSAGES.TICKER} 
-              valid={validations.ticker} 
+              valid={this.props.tokenStore.validTicker} 
               title={TICKER} 
-              value={token.ticker} 
+              value={this.props.tokenStore.ticker} 
               onBlur={() => this.handleInputBlur('token', 'ticker')}
-              onChange={(e) => this.changeInputField(e, 'token', 0, 'ticker')}
+              onChange={(e) => this.updateTokenStore(e, 'ticker')}
               description={`The three letter ticker for your token. There are 17,576 combinations for 26 english letters. Be hurry. `}
             />
             <InputField 
               side='left' type='number'
               errorMessage={VALIDATION_MESSAGES.DECIMALS} 
-              valid={validations.decimals} 
+              valid={this.props.tokenStore.validDecimals} 
               title={DECIMALS}
-              value={token.decimals} 
+              value={this.props.tokenStore.decimals} 
               onBlur={() => this.handleInputBlur('token', 'decimals')}
-              onChange={(e) => this.changeInputField(e, 'token', 0, 'decimals')} // changeInputField
+              onChange={(e) => this.updateTokenStore(e, 'decimals')} // changeInputField
               description={`Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous).`}
             />
           </div>
@@ -278,7 +264,7 @@ export class stepTwo extends Component {
           </div>
           <ReservedTokensInputBlock
             state={this.state}
-            onChange={(e, cntrct, num, prop) => this.changeInputField(e, 'token', 0, prop)}
+            onChange={(e, cntrct, num, prop) => this.props.tokenStore.updateTokenStore(e, 'reservedToken', 0, prop)}
           ></ReservedTokensInputBlock>
         </div>
         <div className="button-container">
