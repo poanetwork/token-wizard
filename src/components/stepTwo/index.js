@@ -1,12 +1,12 @@
 import React from 'react'
-import '../assets/stylesheets/application.css';
+import '../../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
-import { checkWeb3 } from '../utils/blockchainHelpers'
-import { getOldState, stepsAreValid, validateValue, allFieldsAreValid } from '../utils/utils'
-import { StepNavigation } from './Common/StepNavigation'
-import { InputField } from './Common/InputField'
-import { ReservedTokensInputBlock } from './Common/ReservedTokensInputBlock'
-import { NAVIGATION_STEPS, VALIDATION_MESSAGES, VALIDATION_TYPES, defaultState, TEXT_FIELDS, intitialStepTwoValidations } from '../utils/constants'
+import { checkWeb3 } from '../../utils/blockchainHelpers'
+import { getOldState, stepsAreValid, validateValue, allFieldsAreValid } from '../../utils/utils'
+import { StepNavigation } from '../Common/StepNavigation'
+import { InputField } from '../Common/InputField'
+import { ReservedTokensInputBlock } from '../Common/ReservedTokensInputBlock'
+import { NAVIGATION_STEPS, VALIDATION_MESSAGES, VALIDATION_TYPES, defaultState, TEXT_FIELDS, intitialStepTwoValidations } from '../../utils/constants'
 const { TOKEN_SETUP } = NAVIGATION_STEPS
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
 const { NAME, TICKER, DECIMALS } = TEXT_FIELDS

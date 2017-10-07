@@ -214,24 +214,6 @@ export function getStandardCrowdsaleAssets(state, cb) {
     });
 }
 
-export function defaultCompanyStartDate() {
-    let curDate = new Date();
-    /*curDate = curDate.setDate(curDate.getDate() + 1);
-    curDate = new Date(curDate).setUTCHours(0);
-    curDate = new Date(curDate).setMinutes(0);*/
-    curDate = new Date(curDate).setUTCHours(new Date().getHours());
-    curDate = new Date(curDate).setMinutes(new Date(curDate).getMinutes() + 5);
-    let curDateISO = new Date(curDate).toISOString();
-    let targetDate = curDateISO.split(".")[0].substring(0, curDateISO.lastIndexOf(":"))
-    return targetDate;
-}
-
-export function defaultCompanyEndDate(startDate) {
-    let endDate = new Date(startDate).setDate(new Date(startDate).getDate() + 4);
-    endDate = new Date(endDate).setUTCHours(0);
-    return new Date(endDate).toISOString().split(".")[0];
-}
-
 function readSolFile(path, cb) {
     var rawFile = new XMLHttpRequest();
     rawFile.open("GET", path, true);
@@ -262,6 +244,7 @@ export const findConstructor = (abi) => {
 }
 
 export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) => {
+    //console.log(abiConstructor, state, vals, crowdsaleNum);
     let params = {"types": [], "vals": []};
     if (!abiConstructor) return params;
     for (let j = 0; j < abiConstructor.length; j++) {
@@ -301,7 +284,7 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
                     params.vals.push(state.contracts.token.addr);
                 } break;
                 case "_crowdsale": {
-                    params.vals.push(state.contracts.crowdsale[crowdsaleNum].addr);
+                    params.vals.push(state.contracts.crowdsale.addr[crowdsaleNum]);
                 } break;
                 case "_crowdsaleSupply": {
                     params.vals.push(state.crowdsale[crowdsaleNum].supply);
@@ -351,7 +334,7 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
                 case "_oneTokenInWei": {
                   //params.vals.push(state.pricingStrategy[crowdsaleNum].rate);
                   //params.vals.push(state.web3.toWei(1/state.pricingStrategy[crowdsaleNum].rate/10**state.token.decimals, "ether"));
-                  params.vals.push(state.web3.toWei(1/state.pricingStrategy[crowdsaleNum].rate, "ether"));
+                  params.vals.push(state.web3.utils.toWei(1/state.pricingStrategy[crowdsaleNum].rate, "ether"));
                 } break;
                 case "_isUpdatable": {
                   params.vals.push(state.crowdsale[crowdsaleNum].updatable?state.crowdsale[crowdsaleNum].updatable=="on"?true:false:false);
@@ -503,6 +486,8 @@ export function toFixed(x) {
   return x;
 }
 
-export function scrollToBottom() {
-  window.scrollTo(0,document.body.scrollHeight);
+export function defaultCompanyEndDate(startDate) {
+    let endDate = new Date(startDate).setDate(new Date(startDate).getDate() + 4);
+    endDate = new Date(endDate).setUTCHours(0);
+    return new Date(endDate).toISOString().split(".")[0];
 }

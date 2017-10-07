@@ -1,16 +1,17 @@
 import React from 'react'
-import '../assets/stylesheets/application.css';
+import '../../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
-import { getWeb3, checkWeb3, setExistingContractParams } from '../utils/blockchainHelpers'
-import { stepTwo } from './stepTwo'
-import { getOldState, defaultCompanyStartDate, defaultCompanyEndDate, stepsAreValid, allFieldsAreValid } from '../utils/utils'
-import { StepNavigation } from './Common/StepNavigation'
-import { InputField } from './Common/InputField'
-import { InputFieldExt } from './Common/InputFieldExt'
-import { RadioInputField } from './Common/RadioInputField'
-import { CrowdsaleBlock } from './Common/CrowdsaleBlock'
-import { WhitelistInputBlock } from './Common/WhitelistInputBlock'
-import { NAVIGATION_STEPS, defaultState, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS, intitialStepThreeValidations } from '../utils/constants'
+import { getWeb3, checkWeb3, setExistingContractParams } from '../../utils/blockchainHelpers'
+import { stepTwo } from '../stepTwo'
+import { defaultCompanyStartDate } from './utils'
+import { getOldState, stepsAreValid, allFieldsAreValid, defaultCompanyEndDate } from '../../utils/utils'
+import { StepNavigation } from '../Common/StepNavigation'
+import { InputField } from '../Common/InputField'
+import { InputFieldExt } from '../Common/InputFieldExt'
+import { RadioInputField } from '../Common/RadioInputField'
+import { CrowdsaleBlock } from '../Common/CrowdsaleBlock'
+import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
+import { NAVIGATION_STEPS, defaultState, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS, intitialStepThreeValidations } from '../../utils/constants'
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
 const { START_TIME, END_TIME, MINCAP, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME, ALLOWMODIFYING, DISABLEWHITELISTING } = TEXT_FIELDS
@@ -124,31 +125,33 @@ export class stepThree extends stepTwo {
     checkWeb3(this.state.web3);
     setTimeout( () => {
       getWeb3((web3) => {
-        console.log('timeout state', this.state)
-        let newState = {...this.state}
-        newState.crowdsale[0].walletAddress = web3.eth.accounts[0];
-        newState.crowdsale[0].startTime = defaultCompanyStartDate();
-        newState.crowdsale[0].endTime = defaultCompanyEndDate(newState.crowdsale[0].startTime);
-        this.setState(newState);
-        //depreciated
-        /*let datesIterator = 0;
-        let datesCount = 2;
-        calculateFutureBlock(new Date(newState.crowdsale[0].startTime), newState.blockTimeGeneration, (targetBlock) => {
-          newState.crowdsale[0].startBlock = targetBlock;
-          datesIterator++;
+        web3.eth.getAccounts().then((accounts) => {
+          console.log('timeout state', this.state)
+          let newState = {...this.state}
+          newState.crowdsale[0].walletAddress = accounts[0];
+          newState.crowdsale[0].startTime = defaultCompanyStartDate();
+          newState.crowdsale[0].endTime = defaultCompanyEndDate(newState.crowdsale[0].startTime);
+          this.setState(newState);
+          //depreciated
+          /*let datesIterator = 0;
+          let datesCount = 2;
+          calculateFutureBlock(new Date(newState.crowdsale[0].startTime), newState.blockTimeGeneration, (targetBlock) => {
+            newState.crowdsale[0].startBlock = targetBlock;
+            datesIterator++;
 
-          if (datesIterator === datesCount) {
-            this.setState(newState);
-          }
-        });
-        calculateFutureBlock(new Date(newState.crowdsale[0].endTime), newState.blockTimeGeneration, (targetBlock) => {
-          newState.crowdsale[0].endBlock = targetBlock;
-          datesIterator++;
+            if (datesIterator === datesCount) {
+              this.setState(newState);
+            }
+          });
+          calculateFutureBlock(new Date(newState.crowdsale[0].endTime), newState.blockTimeGeneration, (targetBlock) => {
+            newState.crowdsale[0].endBlock = targetBlock;
+            datesIterator++;
 
-          if (datesIterator === datesCount) {
-            this.setState(newState);
-          }
-        });*/
+            if (datesIterator === datesCount) {
+              this.setState(newState);
+            }
+          });*/
+        })
       });
     }, 500);
   }

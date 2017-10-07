@@ -1,7 +1,8 @@
-import { attachToContract } from '../../utils/blockchainHelpers'
+import { attachToContract, checkTxMined } from '../../utils/blockchainHelpers'
 import { noContractAlert } from '../../utils/alerts'
+import { toFixed } from '../../utils/utils'
 
-export function setTransferAgent(web3, abi, addr, targetAddr, cb) {
+/*function setTransferAgent(web3, abi, addr, targetAddr, cb) {
   console.log("###setTransferAgent:###");
   attachToContract(web3, abi, addr, function(err, tokenContract) {
     console.log("attach to token contract");
@@ -11,7 +12,7 @@ export function setTransferAgent(web3, abi, addr, targetAddr, cb) {
     }
     if (!tokenContract) return noContractAlert();
 
-    tokenContract.setTransferAgent.sendTransaction(targetAddr, true, function(err, result) {
+    tokenContract.methods.setTransferAgent(targetAddr, true).send(function(err, result) {
       if (err) {
         console.log(err)
         return cb();
@@ -21,9 +22,9 @@ export function setTransferAgent(web3, abi, addr, targetAddr, cb) {
       cb();
     });
   });
-}
+}*/
 
-export function setLastCrowdsale(web3, abi, addr, lastCrowdsale, cb) {
+function setLastCrowdsale(web3, abi, addr, lastCrowdsale, cb) {
   console.log("###setLastCrowdsale for Pricing Strategy:###");
   attachToContract(web3, abi, addr, function(err, pricingStrategyContract) {
     console.log("attach to pricingStrategy contract");
@@ -33,20 +34,28 @@ export function setLastCrowdsale(web3, abi, addr, lastCrowdsale, cb) {
     }
     if (!pricingStrategyContract) return noContractAlert();
 
-    pricingStrategyContract.setLastCrowdsale.sendTransaction(lastCrowdsale, function(err, result) {
+    pricingStrategyContract.methods.setLastCrowdsale(lastCrowdsale).send({gasPrice: 21000000000}, function(err, txHash) {
       if (err) {
         console.log(err)
         return cb();
       }
 
-      console.log("setLastCrowdsale function transaction: " + result);
-      cb();
+      checkTxMined(web3, txHash, function txMinedCallback(receipt) {
+        if (receipt) {
+          if (receipt.blockNumber) {
+            console.log("setLastCrowdsale function transaction: " + txHash);
+            return cb();
+          }
+        } else {
+          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
+        }
+      })
     });
   });
 }
 
 //for mintable token
-export function setMintAgent(web3, abi, addr, acc, cb) {
+function setMintAgent(web3, abi, addr, acc, cb) {
   console.log("###setMintAgent:###");
   attachToContract(web3, abi, addr, function(err, tokenContract) {
     console.log("attach to token contract");
@@ -56,32 +65,59 @@ export function setMintAgent(web3, abi, addr, acc, cb) {
     }
     if (!tokenContract) return noContractAlert();
 
-    tokenContract.setMintAgent.sendTransaction(acc, true, function(err, result) {
+    tokenContract.methods.setMintAgent(acc, true).send({gasPrice: 21000000000}, function(err, txHash) {
       if (err) {
         console.log(err)
         return cb();
       }
 
-      console.log("setMintAgent function transaction: " + result);
-      cb();
+      checkTxMined(web3, txHash, function txMinedCallback(receipt) {
+        if (receipt) {
+          if (receipt.blockNumber) {
+            console.log("setMintAgent function transaction: " + txHash);
+            return cb();
+          }
+        } else {
+          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
+        }
+      })
     });
   });
 }
 
-export function addWhiteList(round, web3, crowdsale, token, abi, addr, cb) {
+function addWhiteList(round, web3, crowdsale, token, abi, addr, cb) {
   console.log("###whitelist:###");
   let whitelist = [];
   for (let i = 0; i <= round; i++) {
     console.log(crowdsale[i]);
     console.log(crowdsale[i].whitelist);
-    whitelist.push.apply(whitelist, crowdsale[i].whitelist);
 
-    for (let i = 0; i <= round; i++) {
-      if (crowdsale[i].whiteListInput.addr && crowdsale[i].whiteListInput.min && crowdsale[i].whiteListInput.max) {
+    for (let j = 0; j < crowdsale[i].whitelist.length; j++) {
+      let itemIsAdded = false;
+      for (let k = 0; k < whitelist.length; k++) {
+        if (whitelist[k].addr == crowdsale[i].whitelist[j].addr) {
+          itemIsAdded = true;
+          break;
+        }
+      }
+      if (!itemIsAdded) {
+        whitelist.push.apply(whitelist, crowdsale[i].whitelist);
+      }
+    }
+
+    if (crowdsale[i].whiteListInput.addr && crowdsale[i].whiteListInput.min && crowdsale[i].whiteListInput.max) {
+      let itemIsAdded = false;
+      for (let k = 0; k < whitelist.length; k++) {
+        if (whitelist[k].addr == crowdsale[i].whiteListInput.addr) {
+          itemIsAdded = true;
+          break;
+        }
+      }
+      if (!itemIsAdded) {
         whitelist.push({
-            "addr": crowdsale[i].whiteListInput.addr,
-            "min": crowdsale[i].whiteListInput.min,
-            "max": crowdsale[i].whiteListInput.max
+          "addr": crowdsale[i].whiteListInput.addr,
+          "min": crowdsale[i].whiteListInput.min,
+          "max": crowdsale[i].whiteListInput.max
         });
       }
     }
@@ -120,14 +156,115 @@ export function addWhiteList(round, web3, crowdsale, token, abi, addr, cb) {
     console.log("maxCaps:");
     console.log(maxCaps);
 
-    crowdsaleContract.setEarlyParicipantsWhitelist.sendTransaction(addrs, statuses, minCaps, maxCaps, function(err, result) {
+    crowdsaleContract.methods.setEarlyParicipantsWhitelist(addrs, statuses, minCaps, maxCaps).send({gasPrice: 21000000000}, function(err, txHash) {
       if (err) {
         console.log(err)
         return cb();
       }
 
-      console.log("setEarlyParicipantsWhitelist function transaction: " + result);
-      cb();
+      checkTxMined(web3, txHash, function txMinedCallback(receipt) {
+        if (receipt) {
+          if (receipt.blockNumber) {
+            console.log("setEarlyParicipantsWhitelist function transaction: " + txHash);
+            return cb();
+          }
+        } else {
+          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
+        }
+      })
+    });
+  });
+}
+
+function updateJoinedCrowdsales(web3, abi, addr, joinedCntrctAddrs, cb) {
+  console.log("###updateJoinedCrowdsales:###");
+  attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
+    console.log("attach to crowdsale contract");
+    if (err) {
+      console.log(err)
+      return cb();
+    }
+    if (!crowdsaleContract) return noContractAlert();
+
+    console.log("input: ");
+    console.log(joinedCntrctAddrs);
+
+    crowdsaleContract.methods.updateJoinedCrowdsalesMultiple(joinedCntrctAddrs).send({gasPrice: 21000000000}, function(err, txHash) {
+      if (err) {
+        console.log(err)
+        return cb();
+      }
+
+      checkTxMined(web3, txHash, function txMinedCallback(receipt) {
+        if (receipt) {
+          if (receipt.blockNumber) {
+            console.log("updateJoinedCrowdsales function transaction: " + txHash);
+            return cb();
+          }
+        } else {
+          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
+        }
+      })
+    });
+  });
+}
+
+function setFinalizeAgent(web3, abi, addr, finalizeAgentAddr, cb) {
+  console.log("###setFinalizeAgent:###");
+  attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
+    console.log("attach to crowdsale contract");
+    if (err) {
+      console.log(err)
+      return cb();
+    }
+    if (!crowdsaleContract) return noContractAlert();
+
+    crowdsaleContract.methods.setFinalizeAgent(finalizeAgentAddr).send({gasPrice: 21000000000}, function(err, txHash) {
+      if (err) {
+        console.log(err)
+        return cb();
+      }
+
+      checkTxMined(web3, txHash, function txMinedCallback(receipt) {
+        if (receipt) {
+          if (receipt.blockNumber) {
+            console.log("setFinalizeAgent function transaction: " + txHash);
+            return cb();
+          }
+        } else {
+          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
+        }
+      })
+    });
+  });
+}
+
+function setReleaseAgent(web3, abi, addr, finalizeAgentAddr, cb) {
+  console.log("###setReleaseAgent:###");
+  attachToContract(web3, abi, addr, function(err, tokenContract) {
+    console.log("attach to token contract");
+    if (err) {
+      console.log(err)
+      return cb();
+    }
+    if (!tokenContract) return noContractAlert();
+
+    tokenContract.methods.setReleaseAgent(finalizeAgentAddr).send({gasPrice: 21000000000}, function(err, txHash) {
+      if (err) {
+        console.log(err)
+        return cb();
+      }
+
+      checkTxMined(web3, txHash, function txMinedCallback(receipt) {
+        if (receipt) {
+          if (receipt.blockNumber) {
+            console.log("setReleaseAgent function transaction: " + txHash);
+            return cb();
+          }
+        } else {
+          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
+        }
+      })
     });
   });
 }
@@ -176,8 +313,8 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
     let keys = Object.keys(map);
     for (let i = 0; i < keys.length; i++) {
       addrs.push(keys[i]);
-      inTokens.push(map[keys[i]].inTokens);
-      inPercentage.push(map[keys[i]].inPercentage);
+      inTokens.push(map[keys[i]].inTokens?toFixed(map[keys[i]].inTokens.toString()):0);
+      inPercentage.push(map[keys[i]].inPercentage?map[keys[i]].inPercentage:0);
     }
 
     if (addrs.length === 0 && inTokens.length === 0 && inPercentage.length === 0) return cb();
@@ -187,83 +324,22 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
     console.log("inTokens: " + inTokens);
     console.log("inPercentage: " + inPercentage);
 
-    tokenContract.setReservedTokensListMultiple.sendTransaction(addrs, inTokens, inPercentage, function(err, result) {
+    tokenContract.methods.setReservedTokensListMultiple(addrs, inTokens, inPercentage).send({gasPrice: 21000000000}, function(err, txHash) {
       if (err) {
         console.log(err)
         return cb();
       }
 
-      console.log("setReservedTokensListMultiple function transaction: " + result);
-      cb();
-    });
-  });
-}
-
-export function updateJoinedCrowdsales(web3, abi, addr, joinedCntrctAddrs, cb) {
-  console.log("###updateJoinedCrowdsales:###");
-  attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
-    console.log("attach to crowdsale contract");
-    if (err) {
-      console.log(err)
-      return cb();
-    }
-    if (!crowdsaleContract) return noContractAlert();
-
-    console.log("input: ");
-    console.log(joinedCntrctAddrs);
-
-    crowdsaleContract.updateJoinedCrowdsalesMultiple.sendTransaction(joinedCntrctAddrs, function(err, result) {
-      if (err) {
-        console.log(err)
-        return cb();
-      }
-
-      console.log("updateJoinedCrowdsales function transaction: " + result);
-      cb();
-    });
-  });
-}
-
-export function setFinalizeAgent(web3, abi, addr, finalizeAgentAddr, cb) {
-  console.log("###setFinalizeAgent:###");
-  attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
-    console.log("attach to crowdsale contract");
-    if (err) {
-      console.log(err)
-      return cb();
-    }
-    if (!crowdsaleContract) return noContractAlert();
-
-    crowdsaleContract.setFinalizeAgent.sendTransaction(finalizeAgentAddr, function(err, result) {
-      if (err) {
-        console.log(err)
-        return cb();
-      }
-
-      console.log("setFinalizeAgent function transaction: " + result);
-      cb();
-    });
-  });
-}
-
-export function setReleaseAgent(web3, abi, addr, finalizeAgentAddr, cb) {
-  console.log("###setReleaseAgent:###");
-  attachToContract(web3, abi, addr, function(err, tokenContract) {
-    console.log("attach to token contract");
-    if (err) {
-      console.log(err)
-      return cb();
-    }
-    if (!tokenContract) return noContractAlert();
-
-    tokenContract.setReleaseAgent.sendTransaction(finalizeAgentAddr, function(err, result) {
-      if (err) {
-        console.log(err)
-        return cb();
-      }
-
-      console.log("setReleaseAgent function transaction: " + result);
-      cb();
+      checkTxMined(web3, txHash, function txMinedCallback(receipt) {
+        if (receipt) {
+          if (receipt.blockNumber) {
+            console.log("setReservedTokensListMultiple function transaction: " + txHash);
+            return cb();
+          }
+        } else {
+          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
+        }
+      })
     });
   });
 }
@@ -278,16 +354,91 @@ export function transferOwnership(web3, abi, addr, finalizeAgentAddr, cb) {
     }
     if (!tokenContract) return noContractAlert();
 
-    tokenContract.transferOwnership.sendTransaction(finalizeAgentAddr, function(err, result) {
+    tokenContract.methods.transferOwnership(finalizeAgentAddr).send({gasPrice: 21000000000}, function(err, txHash) {
       if (err) {
         console.log(err)
         return cb();
       }
 
-      console.log("transferOwnership function transaction: " + result);
-      cb();
+      checkTxMined(web3, txHash, function txMinedCallback(receipt) {
+        if (receipt) {
+          if (receipt.blockNumber) {
+            console.log("transferOwnership function transaction: " + txHash);
+            return cb();
+          }
+        } else {
+          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
+        }
+      })
     });
   });
+}
+
+export function setLastCrowdsaleRecursive (i, web3, abi, pricingStrategyAddrs, lastCrowdsale, cb) {
+  setLastCrowdsale(web3, abi, pricingStrategyAddrs[i], lastCrowdsale, () => {
+    i++;
+    if (i < pricingStrategyAddrs.length) {
+      setLastCrowdsaleRecursive(i, web3, abi, pricingStrategyAddrs, lastCrowdsale, cb);
+    } else {
+      cb();
+    }
+  })
+}
+
+export function  setMintAgentRecursive (i, web3, abi, addr, crowdsaleAddrs, cb) {
+  setMintAgent(web3, abi, addr, crowdsaleAddrs[i], () => {
+    i++;
+    if (i < crowdsaleAddrs.length) {
+      setMintAgentRecursive(i, web3, abi, addr, crowdsaleAddrs, cb);
+    } else {
+      cb();
+    }
+  })
+}
+
+export function updateJoinedCrowdsalesRecursive (i, web3, abi, addrs, cb) {
+  if (addrs.length === 0) return cb();
+  updateJoinedCrowdsales(web3, abi, addrs[i], addrs, () => {
+    i++;
+    if (i < addrs.length) {
+      updateJoinedCrowdsalesRecursive(i, web3, abi, addrs, cb);
+    } else {
+      cb();
+    }
+  })
+}
+
+export function addWhiteListRecursive (i, web3, crowdsale, token, abi, crowdsaleAddrs, cb) {
+  addWhiteList(i, web3, crowdsale, token, abi, crowdsaleAddrs[i], () => {
+    i++;
+    if (i < crowdsaleAddrs.length) {
+      addWhiteListRecursive(i, web3, crowdsale, token, abi, crowdsaleAddrs, cb);
+    } else {
+      cb();
+    }
+  })
+}
+
+export function setFinalizeAgentRecursive (i, web3, abi, addrs, finalizeAgentAddrs, cb) {
+  setFinalizeAgent(web3, abi, addrs[i], finalizeAgentAddrs[i], () => {
+    i++;
+    if (i < finalizeAgentAddrs.length) {
+      setFinalizeAgentRecursive(i, web3, abi, addrs, finalizeAgentAddrs, cb);
+    } else {
+      cb();
+    }
+  })
+}
+           
+export function setReleaseAgentRecursive (i, web3, abi, addr, finalizeAgentAddrs, cb) {
+  setReleaseAgent(web3, abi, addr, finalizeAgentAddrs[i], () => {
+    i++;
+    if (i < finalizeAgentAddrs.length) {
+      setReleaseAgentRecursive(i, web3, abi, addr, finalizeAgentAddrs, cb);
+    } else {
+      cb();
+    }
+  })
 }
 
 export const handleTokenForFile = (content, docData, state) => {
@@ -323,13 +474,13 @@ export const handleContractsForFile = (content, docData, state) => {
             fileBody = state.contracts[content.child][content.field][i]
 
             if (!fileBody) return
-            let fileContent = title + " for " + state.crowdsale[i].tier + ": \n \n" + fileBody
+            let fileContent = title + " for " + state.crowdsale[i].tier + ":**** \n \n" + fileBody
             docData.data += fileContent + '\n\n'
           }
         } else {
           fileBody = state.contracts[content.child][content.field]
           if (!fileBody) return
-          let fileContent = title + fileBody
+          let fileContent = title + ":**** \n \n" + fileBody
           docData.data += fileContent + '\n\n'
         }
     } else {
@@ -349,7 +500,7 @@ const addSrcToFile = (content, docData, state) => {
     if ( Object.prototype.toString.call( state.contracts[content.child][content.field] ) === '[object Array]'  && content.field !== 'abi') {
       for (let i = 0; i < state.contracts[content.child][content.field].length; i++) {
         const body = state.contracts[content.child][content.field][i]
-        const text = title + body
+        const text = title + " for " + state.crowdsale[i].tier + ": " + body
         docData.data += text + '\n\n'
       }
     } else {
@@ -375,4 +526,8 @@ export const download = (data, filename, type) => {
             window.URL.revokeObjectURL(url);  
         }, 0); 
     }
+}
+
+export function scrollToBottom() {
+  window.scrollTo(0,document.body.scrollHeight);
 }
