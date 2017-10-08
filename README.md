@@ -420,7 +420,7 @@ ABI-encoded arguments for the contract are the last 96 bytes of the transaction 
 
 4. Copy crowdsale contract address.
 
-5. Paste it to the parity-bridge db config file `oracles-parity-bridge\examples\db.toml` for the property `mainnet_contract_address`.
+5. Paste it to the parity-bridge db config file `oracles-parity-bridge/examples/db.toml` for the property `mainnet_contract_address`.
 
 6. Start the bridge again: `cd oracles-parity-bridge` `./target/release/bridge --config ./examples/config_bridge.toml --database ./examples/db.toml`.
 
