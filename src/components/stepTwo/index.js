@@ -34,7 +34,8 @@ export class stepTwo extends Component {
   }
 
   showErrorMessages = (parent) => {
-    this.validateAllFields(parent)
+    // this.validateAllFields(parent)
+    this.props.tokenStore.invalidateToken();
   }
   
   //depreciated
@@ -67,6 +68,7 @@ export class stepTwo extends Component {
   updateTokenStore = (event, property) => {
     const value = event.target.value;
     this.props.tokenStore.setProperty(property, value);
+    this.props.tokenStore.validateTokens(property);
   }
 
   // changeInputField = (event, item, key, property) => {
@@ -162,11 +164,7 @@ export class stepTwo extends Component {
   }
 
   // validateAllFields() {
-  //   let validToken = [this.props.tokenStore.validName, 
-  //       this.props.tokenStore.validTicker, 
-  //       this.props.validDecimals].every((val) => {
-  //         return val === EMPTY;
-  //       });
+  //   this.props.tokenStore.invalidateToken();
   // }
   
   // validateAllFields (parent ) {
@@ -208,7 +206,7 @@ export class stepTwo extends Component {
   renderLinkComponent = () => {
     // console.log(`stepsAreValid(this.state.validations) || allFieldsAreValid('token', this.state)`, stepsAreValid(this.state.validations), allFieldsAreValid('token', this.state))
     // if(stepsAreValid(this.state.validations) || allFieldsAreValid('token', this.state)){
-    if(this.props.tokenStore.validName === VALID && this.props.tokenStore.validDecimals === VALID && this.props.tokenStore.validTicker === VALID) {
+    if(this.props.tokenStore.isTokenValid) {
       return this.renderLink()
     }
     return <div onClick={this.showErrorMessages.bind(this, 'token')} className="button button_fill"> Continue</div>
@@ -231,7 +229,7 @@ export class stepTwo extends Component {
           <div className="hidden">
             <InputField side='left' type='text' 
               errorMessage={VALIDATION_MESSAGES.NAME} 
-              valid={this.props.tokenStore.validName} 
+              valid={this.props.tokenStore.validToken['name']} 
               title={NAME} 
               value={this.props.tokenStore.name} 
               onBlur={() => this.handleInputBlur('token', 'name')}
@@ -241,7 +239,7 @@ export class stepTwo extends Component {
             <InputField 
               side='right' type='text' 
               errorMessage={VALIDATION_MESSAGES.TICKER} 
-              valid={this.props.tokenStore.validTicker} 
+              valid={this.props.tokenStore.validToken['ticker']} 
               title={TICKER} 
               value={this.props.tokenStore.ticker} 
               onBlur={() => this.handleInputBlur('token', 'ticker')}
@@ -251,7 +249,7 @@ export class stepTwo extends Component {
             <InputField 
               side='left' type='number'
               errorMessage={VALIDATION_MESSAGES.DECIMALS} 
-              valid={this.props.tokenStore.validDecimals} 
+              valid={this.props.tokenStore.validToken['decimals']} 
               title={DECIMALS}
               value={this.props.tokenStore.decimals} 
               onBlur={() => this.handleInputBlur('token', 'decimals')}
