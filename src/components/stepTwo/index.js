@@ -1,12 +1,13 @@
 import React from 'react'
 import '../../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
-import { checkWeb3 } from '../../utils/blockchainHelpers'
+import { checkWeb3, getWeb3, getNetworkVersion } from '../../utils/blockchainHelpers'
 import { getOldState, stepsAreValid, validateValue, allFieldsAreValid } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { InputField } from '../Common/InputField'
 import { ReservedTokensInputBlock } from '../Common/ReservedTokensInputBlock'
 import { NAVIGATION_STEPS, VALIDATION_MESSAGES, VALIDATION_TYPES, defaultState, TEXT_FIELDS, intitialStepTwoValidations } from '../../utils/constants'
+import { noDeploymentOnMainnetAlert } from '../../utils/alerts'
 const { TOKEN_SETUP } = NAVIGATION_STEPS
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
 const { NAME, TICKER, DECIMALS } = TEXT_FIELDS
@@ -23,6 +24,18 @@ export class stepTwo extends React.Component {
 
   componentDidMount() {
     checkWeb3(this.state.web3);
+
+    //emergency alert
+    setTimeout(() => {
+      getWeb3((web3) => {
+        getNetworkVersion(web3, (_networkID) => {
+          console.log(_networkID);
+          if (_networkID == 1) {
+            return noDeploymentOnMainnetAlert();
+          }
+        })
+      })
+    }, 500);
   }
 
   getNewParent (property, parent, value) {

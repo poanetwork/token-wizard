@@ -13,14 +13,16 @@ export class Home extends Component {
 
   componentDidMount() {
     //emergency alert
-    getWeb3((web3) => {
-      getNetworkVersion(web3, (_networkID) => {
-        console.log(_networkID);
-        if (_networkID == 1) {
-          return noDeploymentOnMainnetAlert();
-        }
+    setTimeout(() => {
+      getWeb3((web3) => {
+        getNetworkVersion(web3, (_networkID) => {
+          console.log(_networkID);
+          if (_networkID == 1) {
+            return noDeploymentOnMainnetAlert();
+          }
+        })
       })
-    })
+    }, 500);
   }
 
   render() {
