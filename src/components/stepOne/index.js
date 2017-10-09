@@ -86,7 +86,7 @@ export class stepOne extends React.Component {
     checkWeb3(this.state.web3);
 
     //emergency alert
-    /*setTimeout(() => {
+    setTimeout(() => {
       getWeb3((web3) => {
         getNetworkVersion(web3, (_networkID) => {
           console.log(_networkID);
@@ -95,7 +95,7 @@ export class stepOne extends React.Component {
           }
         })
       })
-    }, 500);*/
+    }, 500);
     
     let newState = { ...this.state }
 

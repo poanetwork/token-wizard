@@ -128,12 +128,12 @@ export class stepThree extends stepTwo {
       getWeb3((web3) => {
 
         //emergency alert
-        /*getNetworkVersion(web3, (_networkID) => {
+        getNetworkVersion(web3, (_networkID) => {
           console.log(_networkID);
           if (_networkID == 1) {
             return noDeploymentOnMainnetAlert();
           }
-        })*/
+        })
 
         web3.eth.getAccounts().then((accounts) => {
           console.log('timeout state', this.state)
