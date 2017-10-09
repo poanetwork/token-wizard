@@ -2,7 +2,7 @@ import React from 'react'
 import '../../assets/stylesheets/application.css';
 import { getWeb3, checkWeb3, checkNetWorkByID } from '../../utils/blockchainHelpers'
 import { getCrowdsaleData, initializeAccumulativeData, getAccumulativeCrowdsaleData, findCurrentContractRecursively, getJoinedTiers } from './utils'
-import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../../utils/utils'
+import { getQueryVariable, getURLParam, getWhiteListWithCapCrowdsaleAssets } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../../utils/constants'
 import { invalidCrowdsaleAddrAlert } from '../../utils/alerts'
@@ -44,24 +44,11 @@ export class Crowdsale extends React.Component {
 		state.networkID = networkID;
 		state.contractType = contractType;
 
-	    switch (contractType) {
-          case this.state.contractTypes.standard: {
-            getStandardCrowdsaleAssets(state, (_newState) => {
-            	this.setState(_newState, () => {
-            		this.extractContractsData(web3);
-            	});
-		    });
-          } break;
-          case this.state.contractTypes.whitelistwithcap: {
-            getWhiteListWithCapCrowdsaleAssets(state, (_newState) => {
-            	this.setState(_newState, () => {
-            		this.extractContractsData(web3);
-            	});
-		    });
-          } break;
-          default:
-            break;
-        }
+	    getWhiteListWithCapCrowdsaleAssets(state, (_newState) => {
+        	this.setState(_newState, () => {
+        		this.extractContractsData(web3);
+        	});
+	    });
 	}
 
 	extractContractsData(web3) {

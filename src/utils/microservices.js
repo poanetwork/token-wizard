@@ -27,7 +27,6 @@ function getABIencoded(web3, types, vals, cb) {
 	console.log(types);
 	console.log(vals);
 
-	let encoded = window.abi.rawEncode(types, vals);
-	console.log(encoded.toString("hex"));
+	let encoded = web3.eth.abi.encodeParameters(types, vals);
 	cb(encoded.toString("hex"));
 }
