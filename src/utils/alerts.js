@@ -83,3 +83,12 @@ export function incorrectNetworkAlert(correctNetworkName, incorrectNetworkName) 
       type: "warning"
     });
 }
+
+export function noDeploymentOnMainnetAlert() {
+    sweetAlert({
+      title: "Warning",
+      text: "Wizard is under maintenance on Ethereum Mainnet. Please come back later or use Kovan/Rinkeby/Oracles. Follow <a href='https://twitter.com/oraclesorg'>https://twitter.com/oraclesorg</a> for status.",
+      html: true,
+      type: "warning"
+    });
+}
