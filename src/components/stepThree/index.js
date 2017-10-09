@@ -1,7 +1,7 @@
 import React from 'react'
 import '../../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
-import { getWeb3, checkWeb3, setExistingContractParams } from '../../utils/blockchainHelpers'
+import { getWeb3, checkWeb3, setExistingContractParams, getNetworkVersion } from '../../utils/blockchainHelpers'
 import { stepTwo } from '../stepTwo'
 import { defaultCompanyStartDate } from './utils'
 import { getOldState, stepsAreValid, allFieldsAreValid, defaultCompanyEndDate } from '../../utils/utils'
@@ -12,6 +12,7 @@ import { RadioInputField } from '../Common/RadioInputField'
 import { CrowdsaleBlock } from '../Common/CrowdsaleBlock'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
 import { NAVIGATION_STEPS, defaultState, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS, intitialStepThreeValidations } from '../../utils/constants'
+import { noDeploymentOnMainnetAlert } from '../../utils/alerts'
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
 const { START_TIME, END_TIME, MINCAP, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME, ALLOWMODIFYING, DISABLEWHITELISTING } = TEXT_FIELDS
@@ -125,6 +126,15 @@ export class stepThree extends stepTwo {
     checkWeb3(this.state.web3);
     setTimeout( () => {
       getWeb3((web3) => {
+
+        //emergency alert
+        getNetworkVersion(web3, (_networkID) => {
+          console.log(_networkID);
+          if (_networkID == 1) {
+            return noDeploymentOnMainnetAlert();
+          }
+        })
+
         web3.eth.getAccounts().then((accounts) => {
           console.log('timeout state', this.state)
           let newState = {...this.state}
