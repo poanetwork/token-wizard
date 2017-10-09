@@ -160,6 +160,8 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
           gasPrice: 21000000000
         };
 
+        let errorArised;
+
         contractInstance.deploy(deployOpts).send(sendOpts)
         //contractInstance.new(...totalParams)
         .on('error', function(error) { 
