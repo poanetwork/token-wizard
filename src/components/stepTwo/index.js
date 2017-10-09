@@ -26,7 +26,7 @@ export class stepTwo extends React.Component {
     checkWeb3(this.state.web3);
 
     //emergency alert
-    /*setTimeout(() => {
+    setTimeout(() => {
       getWeb3((web3) => {
         getNetworkVersion(web3, (_networkID) => {
           console.log(_networkID);
@@ -35,7 +35,7 @@ export class stepTwo extends React.Component {
           }
         })
       })
-    }, 500);*/
+    }, 500);
   }
 
   getNewParent (property, parent, value) {

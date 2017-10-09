@@ -13,7 +13,7 @@ export class Home extends Component {
 
   componentDidMount() {
     //emergency alert
-    /*setTimeout(() => {
+    setTimeout(() => {
       getWeb3((web3) => {
         getNetworkVersion(web3, (_networkID) => {
           console.log(_networkID);
@@ -22,7 +22,7 @@ export class Home extends Component {
           }
         })
       })
-    }, 500);*/
+    }, 500);
   }
 
   render() {

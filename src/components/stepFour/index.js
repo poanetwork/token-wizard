@@ -41,7 +41,6 @@ export class stepFour extends stepTwo {
         state.loading = true;
         this.setState(state);
         let abiToken = this.state.contracts && this.state.contracts.token && this.state.contracts.token.abi || []
-        let addrToken = this.state.contracts && this.state.contracts.token && this.state.contracts.token.addr || null
         
         let abiPricingStrategy = this.state.contracts && this.state.contracts.pricingStrategy && this.state.contracts.pricingStrategy.abi || []
         
@@ -50,17 +49,15 @@ export class stepFour extends stepTwo {
             state.web3 = web3;
             this.setState(state);
             let counter = 0;
-            if (!addrToken) {
-              getEncodedABIClientSide(web3, abiToken, state, [], 0, (ABIencoded) => {
-                counter++;
-                let cntrct = "token";
-                state.contracts[cntrct].abiConstructor = ABIencoded;
-                console.log(cntrct + " ABI encoded params constructor:");
-                console.log(ABIencoded);
-                if (counter == (this.state.pricingStrategy.length + 1))
-                  this.setState(state, this.deploySafeMathLibrary());
-              });
-            }
+            getEncodedABIClientSide(web3, abiToken, state, [], 0, (ABIencoded) => {
+              counter++;
+              let cntrct = "token";
+              state.contracts[cntrct].abiConstructor = ABIencoded;
+              console.log(cntrct + " ABI encoded params constructor:");
+              console.log(ABIencoded);
+              if (counter == (this.state.pricingStrategy.length + 1))
+                this.setState(state, this.deploySafeMathLibrary());
+            });
             for (let i = 0; i < this.state.pricingStrategy.length; i++) {
               getEncodedABIClientSide(web3, abiPricingStrategy, state, [], i, (ABIencoded) => {
                 counter++;
@@ -125,6 +122,10 @@ export class stepFour extends stepTwo {
       var binSafeMathLib = contracts && contracts.safeMathLib && contracts.safeMathLib.bin || ''
       var abiSafeMathLib = contracts && contracts.safeMathLib && contracts.safeMathLib.abi || []
       var safeMathLib = this.state.safeMathLib;
+      console.log(this.state.web3);
+      console.log(this.state.web3._requestManager);
+      console.log(this.state.web3._requestManager.provider);
+      console.log(this.state.web3._requestManager.provider.on);
       deployContract(0, this.state.web3, abiSafeMathLib, binSafeMathLib, [], this.state, this.handleDeployedSafeMathLibrary)
     });
   }
