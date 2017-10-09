@@ -142,8 +142,8 @@ function addWhiteList(round, web3, crowdsale, token, abi, addr, cb) {
       if (!whitelist[i].deleted) {
         addrs.push(whitelist[i].addr);
         statuses.push(true);
-        minCaps.push(whitelist[i].min*10**token.decimals);
-        maxCaps.push(whitelist[i].max*10**token.decimals);
+        minCaps.push(whitelist[i].min*10**token.decimals?toFixed((whitelist[i].min*10**token.decimals).toString()):0);
+        maxCaps.push(whitelist[i].max*10**token.decimals?toFixed((whitelist[i].max*10**token.decimals).toString()):0);
       }
     }
 

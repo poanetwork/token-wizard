@@ -73,7 +73,7 @@ export class stepFour extends stepTwo {
               });
             }
           });
-        });
+        }, 500);
       } break;
       default:
         break;
