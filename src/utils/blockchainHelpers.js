@@ -164,7 +164,7 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
         //contractInstance.new(...totalParams)
         .on('error', function(error) { 
           console.log(error);
-          return cb(error, null); 
+          //return cb(error, null); 
         })
         //.on('transactionHash', function(transactionHash){ console.log(transactionHash); })
         /*.on('receipt', function(receipt){
