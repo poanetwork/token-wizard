@@ -140,14 +140,12 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
         from: accounts[0], 
         data: binFull
       }, function(err, estimatedGas) {
-        console.log('estimated gas callback', estimatedGas)
         if (err) console.log('errrrrrrrrrrrrrrrrr', err);
         console.log('gas is estimated', estimatedGas, 'err', err)
         let estimatedGasMax = 3716260;
         if (!estimatedGas) estimatedGas = estimatedGasMax;
-        else estimatedGas += 100000;
-
         if (estimatedGas > estimatedGasMax) estimatedGas = estimatedGasMax;
+        else estimatedGas += 100000;
 
         var contractInstance = new web3.eth.Contract(abi);
 
@@ -162,17 +160,21 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
           gasPrice: 21000000000
         };
 
-        contractInstance.deploy(deployOpts).send(sendOpts, deployContractCB)
+        contractInstance.deploy(deployOpts).send(sendOpts)
         //contractInstance.new(...totalParams)
-        .on('error', function(error){ return cb(err, null); })
+        .on('error', function(error) { 
+          console.log(error);
+          return cb(error, null); 
+        })
         //.on('transactionHash', function(transactionHash){ console.log(transactionHash); })
         /*.on('receipt', function(receipt){
            console.log(receipt.contractAddress) // contains the new contract address
         })*/
         //.on('confirmation', function(confirmationNumber, receipt){ console.log(confirmationNumber, receipt); })
         .then(function(newContractInstance){
-            console.log(newContractInstance.options.address) // instance with the new contract address
-            cb(null, newContractInstance.options.address);
+          //console.log(newContractInstance);
+          console.log(newContractInstance.options.address) // instance with the new contract address
+          cb(null, newContractInstance.options.address);
         });
 
         function deployContractCB(err, txHash) {

@@ -334,9 +334,9 @@ export class stepFour extends stepTwo {
       this.state.contracts.token.addr,
       this.state.contracts.pricingStrategy.addr[i],
       this.state.crowdsale[0].walletAddress, //this.state.contracts.multisig.addr,
-      parseInt(Date.parse(this.state.crowdsale[i].startTime)/1000, 10), 
-      parseInt(Date.parse(this.state.crowdsale[i].endTime)/1000, 10), 
-      0,
+      toFixed(parseInt(Date.parse(this.state.crowdsale[i].startTime)/1000, 10).toString()), 
+      toFixed(parseInt(Date.parse(this.state.crowdsale[i].endTime)/1000, 10).toString()), 
+      toFixed("0"),
       toFixed(parseInt(this.state.crowdsale[i].supply, 10)*10**parseInt(this.state.token.decimals, 10)).toString(),
       this.state.crowdsale[i].updatable?this.state.crowdsale[i].updatable=="on"?true:false:false,
       this.state.crowdsale[0].whitelistdisabled?this.state.crowdsale[0].whitelistdisabled=="yes"?false:true:false
