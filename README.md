@@ -109,7 +109,7 @@ npm run startWin
 ```
 
 
-Others (Mac, Ubuntu):
+Others (macOS, Linux):
 
 ```
 git clone https://github.com/oraclesorg/ico-wizard.git wiz
