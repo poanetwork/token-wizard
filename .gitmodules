@@ -4,3 +4,7 @@
 [submodule "submodules/oracles-combine-solidity"]
 	path = submodules/oracles-combine-solidity
 	url = https://github.com/oraclesorg/oracles-combine-solidity
+[submodule "submodules/oracles-web3-1.0"]
+	path = submodules/oracles-web3-1.0
+	url = https://github.com/oraclesorg/web3.js
+	branch = 1.0
