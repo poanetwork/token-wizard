@@ -160,22 +160,19 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
           gasPrice: 21000000000
         };
 
-        let errorArised;
-
         contractInstance.deploy(deployOpts).send(sendOpts)
         //contractInstance.new(...totalParams)
         .on('error', function(error) { 
-          errorArised = error;
-          console.log(errorArised);
-          //return cb(error, null); 
+          console.log(error);
+          return cb(error, null); 
         })
         //.on('transactionHash', function(transactionHash){ console.log(transactionHash); })
-        .on('receipt', function(receipt){
+        /*.on('receipt', function(receipt){
           if (errorArised) {
            console.log(receipt.contractAddress) // contains the new contract address
            cb(null, receipt.contractAddress);
           }
-        })
+        })*/
         .on('confirmation', function(confirmationNumber, receipt){ 
           //console.log(confirmationNumber, receipt); 
           /*if (errorArised) {
@@ -185,11 +182,11 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
 
         })
         .then(function(newContractInstance){
-          if (!errorArised) {
+          //if (!errorArised) {
             //console.log(newContractInstance);
             console.log(newContractInstance.options.address) // instance with the new contract address
             cb(null, newContractInstance.options.address);
-          }
+          //}
         });
 
         function deployContractCB(err, txHash) {
