@@ -122,10 +122,6 @@ export class stepFour extends stepTwo {
       var binSafeMathLib = contracts && contracts.safeMathLib && contracts.safeMathLib.bin || ''
       var abiSafeMathLib = contracts && contracts.safeMathLib && contracts.safeMathLib.abi || []
       var safeMathLib = this.state.safeMathLib;
-      console.log(this.state.web3);
-      console.log(this.state.web3._requestManager);
-      console.log(this.state.web3._requestManager.provider);
-      console.log(this.state.web3._requestManager.provider.on);
       deployContract(0, this.state.web3, abiSafeMathLib, binSafeMathLib, [], this.state, this.handleDeployedSafeMathLibrary)
     });
   }
