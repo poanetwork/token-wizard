@@ -83,6 +83,34 @@ Open [https://wizard.oracles.org](https://wizard.oracles.org) and follow steps.
 
 For dev purposes you can build and run ICO Wizard on your machine.
 
+#### Prerequisites
+
+Nodejs >= v.6.11.4
+
+##### For Windows users:
+
+```
+npm install --global --production windows-build-tools
+npm install --global node-gyp
+```
+
+restart CMD and run it `As Administrator`
+
+#### Getting started
+
+For Windows:
+
+```
+git clone https://github.com/oraclesorg/ico-wizard.git wiz
+cd wiz
+git submodule update --init --recursive --remote
+npm install
+npm run startWin
+```
+
+
+Others (Mac, Ubuntu):
+
 ```
 git clone https://github.com/oraclesorg/ico-wizard.git wiz
 cd wiz
