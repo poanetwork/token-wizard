@@ -147,18 +147,20 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
         if (estimatedGas > estimatedGasMax) estimatedGas = estimatedGasMax;
         else estimatedGas += 100000;
 
-        var contractInstance = new web3.eth.Contract(abi);
+        let contractInstance = new web3.eth.Contract(abi);
 
-        var deployOpts = {
+        let deployOpts = {
           data: "0x" + bin,
           arguments: params
         };
 
-        var sendOpts = {
+        let sendOpts = {
           from: accounts[0],
           gas: estimatedGas,
           gasPrice: 21000000000
         };
+
+        let isMined = false;
 
         contractInstance.deploy(deployOpts).send(sendOpts)
         //contractInstance.new(...totalParams)
@@ -166,7 +168,32 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
           console.log(error);
           return cb(error, null); 
         })
-        //.on('transactionHash', function(transactionHash){ console.log(transactionHash); })
+        .on('transactionHash', function(transactionHash){ 
+          console.log("contract deployment transaction: " + transactionHash);
+
+          checkTxMined(web3, transactionHash, function txMinedCallback(receipt) {
+            if (isMined) return;
+
+            if (receipt) {
+              if (receipt.blockNumber) {
+                console.log("Contract deployment is mined from polling of tx receipt");
+                isMined = true;
+                console.log(receipt.contractAddress) // instance with the new contract address
+                return cb(null, receipt.contractAddress);
+              } else {
+                console.log("Still mining... Polling of transaction once more");
+                setTimeout(function() {
+                  checkTxMined(web3, transactionHash, txMinedCallback)
+                }, 5000);
+              }
+            } else {
+              console.log("Still mining... Polling of transaction once more");
+              setTimeout(function() {
+                checkTxMined(web3, transactionHash, txMinedCallback)
+              }, 5000);
+            }
+          })
+        })
         /*.on('receipt', function(receipt){
           if (errorArised) {
            console.log(receipt.contractAddress) // contains the new contract address
@@ -182,11 +209,12 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
 
         })
         .then(function(newContractInstance){
-          //if (!errorArised) {
-            //console.log(newContractInstance);
+          if (!isMined) {
+            console.log("Contract deployment is mined from Promise");
+            isMined = true;
             console.log(newContractInstance.options.address) // instance with the new contract address
             cb(null, newContractInstance.options.address);
-          //}
+          }
         });
 
         function deployContractCB(err, txHash) {
