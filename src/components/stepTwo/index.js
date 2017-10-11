@@ -47,33 +47,6 @@ export class stepTwo extends React.Component {
   showErrorMessages = (parent) => {
     this.validateAllFields(parent)
   }
-  
-  //depreciated
-  /*setBlockTimes = (key, property, targetTime) => {
-    let newState = { ...this.state }
-    calculateFutureBlock(targetTime, this.state.blockTimeGeneration, (targetBlock) => {
-      if (property === "startTime") {
-        newState.crowdsale[key].startBlock = targetBlock;
-        console.log("startBlock: " + newState.crowdsale[key].startBlock);
-      } else if (property === "endTime") {
-        newState.crowdsale[key].endBlock = targetBlock;
-        console.log("endBlock: " + newState.crowdsale[key].endBlock);
-      }
-      this.setState(newState);
-    });
-  }*/
-
-  /*getNewParent (property, parent, key, value) {
-    if( Object.prototype.toString.call( {...this.state[`${parent}`]} ) === '[object Array]' ) {
-      let newParent = { ...this.state[`${parent}`][key] }
-      newParent[property][key] = value
-      return newParent
-    } else {
-      let newParent = { ...this.state[`${parent}`] }
-      newParent[property] = value
-      return newParent
-    }
-  }*/
 
   changeState = (event, parent, key, property) => {
     let value = event.target.value
@@ -101,8 +74,6 @@ export class stepTwo extends React.Component {
           newState.crowdsale[key + 1].endTime = new Date(newEndDate).toISOString().split(".")[0];
         }
       }
-      //depreciated
-      //this.setBlockTimes(key, property, targetTime)
     } else if (property.indexOf("whitelist_") === 0) {
       let prop = property.split("_")[1];
       newState.crowdsale[key][`whiteListInput`][prop] = value
