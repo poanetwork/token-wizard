@@ -16,7 +16,7 @@ class TokenStore {
 			'name': EMPTY,
 			'ticker': EMPTY,
 			'decimals': EMPTY
-		}
+		};
 	}
 
 	@action setProperty = (property, value) => {
@@ -34,6 +34,10 @@ class TokenStore {
 	}
 
 	@action invalidateToken = () => {
+		if (!this.validToken) {
+			return;
+		}
+
 		Object.keys(this.validToken).forEach(key => {
 			if (this.validToken[key] === EMPTY) {
 				this.validToken[key] = INVALID;
@@ -43,7 +47,11 @@ class TokenStore {
 	
 	// Getters 
 	@computed get isTokenValid() {
-		return Object.keys(this.validToken).filter((key) => {
+		if (!this.validToken) {
+			return;
+		}
+		
+		Object.keys(this.validToken).filter((key) => {
 			if (this.validToken[key] === VALID) {
 				return true;
 			} else {

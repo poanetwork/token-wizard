@@ -6,10 +6,19 @@ class ReservedTokenInputStore {
 	@observable addr;
 	@observable val;
 
-  @action setProperty = (property, value) => {
-    this[property] = value
+	constructor() {
+		this.dim = 'tokens';
 	}
 
+  @action setProperty = (property, value) => {
+    this[property] = value;
+	}
+
+	@action clearInput = () => {
+		this['dim'] = 'tokens';
+		this['addr'] = '';
+		this['val'] = '';
+	}
 }
 
 const reservedTokenInputStore = new ReservedTokenInputStore();

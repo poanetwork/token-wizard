@@ -204,8 +204,6 @@ export class stepTwo extends Component {
   // }
 
   renderLinkComponent = () => {
-    // console.log(`stepsAreValid(this.state.validations) || allFieldsAreValid('token', this.state)`, stepsAreValid(this.state.validations), allFieldsAreValid('token', this.state))
-    // if(stepsAreValid(this.state.validations) || allFieldsAreValid('token', this.state)){
     if(this.props.tokenStore.isTokenValid) {
       return this.renderLink()
     }
@@ -260,10 +258,7 @@ export class stepTwo extends Component {
           <div className="reserved-tokens-title">
             <p className="title">Reserved tokens</p>
           </div>
-          <ReservedTokensInputBlock
-            state={this.state}
-            onChange={(e, cntrct, num, prop) => this.props.tokenStore.updateTokenStore(e, 'reservedToken', 0, prop)}
-          ></ReservedTokensInputBlock>
+          <ReservedTokensInputBlock />
         </div>
         <div className="button-container">
           {this.renderLinkComponent()}
