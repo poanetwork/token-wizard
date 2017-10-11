@@ -34,7 +34,6 @@ export class stepTwo extends Component {
   }
 
   showErrorMessages = (parent) => {
-    // this.validateAllFields(parent)
     this.props.tokenStore.invalidateToken();
   }
   
@@ -70,16 +69,6 @@ export class stepTwo extends Component {
     this.props.tokenStore.setProperty(property, value);
     this.props.tokenStore.validateTokens(property);
   }
-
-  // changeInputField = (event, item, key, property) => {
-  //   let value = event.target.value
-
-  //   if (property === "startTime" || property === "endTime") {
-  //     this.updateTimes(key, property, value);
-  //   } else if (property === 'token') {
-  //     this.props.tokenStore.setProperty(item, property);
-  //   } 
-  // }
 
   // changeInputField = (event, parent, key, property) => {
   //   let value = event.target.value
@@ -162,46 +151,6 @@ export class stepTwo extends Component {
   renderLink () {
     return <Link className="button button_fill" to='/3'>Continue</Link>
   }
-
-  // validateAllFields() {
-  //   this.props.tokenStore.invalidateToken();
-  // }
-  
-  // validateAllFields (parent ) {
-  //   let newState = { ...this.state }
-  //   //let properties = Object.keys(newState[parent])
-  //   //let values = Object.values(newState[parent])
-
-  //   let properties = []
-  //   let values = []
-  //   let inds = []
-  //   if( Object.prototype.toString.call( newState[parent] ) === '[object Array]' ) {
-  //     if (newState[parent].length > 0) {
-  //       for (let i = 0; i < newState[parent].length; i++) {
-  //         Object.keys(newState[parent][i]).map(property => {
-  //           values.push(newState[parent][i][property])
-  //           properties.push(property);
-  //           inds.push(i);
-  //         })
-  //       }
-  //     }
-  //   } else {
-  //     properties = Object.keys(newState[parent])
-  //     values = Object.values(newState[parent])
-  //   }
-
-  //   //console.log(properties);
-  //   //console.log(values);
-
-  //   properties.forEach((property, index) => {
-  //     if ( Object.prototype.toString.call( newState[`validations`] ) === '[object Array]' ) {
-  //       newState[`validations`][inds[index]][property] = validateValue(values[index], property)
-  //     } else {
-  //       newState[`validations`][property] = validateValue(values[index], property)
-  //     }
-  //   })
-  //   this.setState(newState)
-  // }
 
   renderLinkComponent = () => {
     if(this.props.tokenStore.isTokenValid) {
