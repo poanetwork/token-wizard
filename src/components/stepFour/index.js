@@ -455,10 +455,8 @@ export class stepFour extends stepTwo {
       let web3 = this.state.web3;
       let contracts = this.state.contracts;
       console.log(contracts);
-      //post actions for mintablecappedcrowdsale
-      //if (!this.state.tokenIsAlreadyCreated) {
-      console.log("###we create crowdsale firstly###");
-      
+      this.downloadCrowdsaleInfo();
+
       setLastCrowdsaleRecursive(0, web3, contracts.pricingStrategy.abi, contracts.pricingStrategy.addr, contracts.crowdsale.addr.slice(-1)[0], () => {
         setReservedTokensListMultiple(web3, contracts.token.abi, contracts.token.addr, this.state.token, () => {
           updateJoinedCrowdsalesRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, () => {
