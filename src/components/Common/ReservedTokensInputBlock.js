@@ -16,23 +16,21 @@ export class ReservedTokensInputBlock extends React.Component {
   }
 
   addReservedTokensItem = () => {
-    const addr = this.props.reservedTokenInputStore.addr;
-    const dim = this.props.reservedTokenInputStore.dim;
-    const val = this.props.reservedTokenInputStore.val;
+    const addr = this.props.reservedTokenInputStore.addr.toString();
+    const dim = this.props.reservedTokenInputStore.dim.toString();
+    const val = this.props.reservedTokenInputStore.val.toString();
     if (!addr || !dim || !val) return;
 
     this.props.reservedTokenInputStore.clearInput();
-    let token = {
+    let newToken = {
         'addr': addr,
         'dim': dim,
         'val': val
     };
 
-    if (this.props.reservedTokenStore.findToken(token)) {
-      return;
-    }
-
-    this.props.reservedTokenStore.addToken(token);
+    if (!this.props.reservedTokenStore.findToken(newToken)) {
+      this.props.reservedTokenStore.addToken(newToken);      
+    } 
   }
 
   removeReservedToken = (index) => {

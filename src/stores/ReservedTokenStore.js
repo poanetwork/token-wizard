@@ -22,9 +22,13 @@ class ReservedTokenStore {
     this.tokens.splice(index,1);
   }
 
-  @action findToken = (inputToken) => {
-    this.tokens.find((token) => {
-      return inputToken.dim === token.dim && inputToken.addr === token.addr && inputToken.val === token.val;
+  findToken(inputToken) {
+    return this.tokens.find((token) => {
+      if (inputToken['dim'] === token['dim'] && inputToken['addr'] === token['addr'] && inputToken['val'] === token['val']) {
+        return true;
+      }
+
+      return false;
     });
   }
 }
