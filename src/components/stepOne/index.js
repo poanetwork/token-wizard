@@ -2,22 +2,14 @@ import React from 'react'
 import '../../assets/stylesheets/application.css';
 import { checkWeb3 } from '../../utils/blockchainHelpers';
 import { Link } from 'react-router-dom';
-import { defaultState } from '../../utils/constants';
 import { setFlatFileContentToState } from '../../utils/utils';
-import { getOldState } from '../../utils/utils';
 import { StepNavigation } from '../Common/StepNavigation';
 import { NAVIGATION_STEPS, CONTRACT_TYPES } from '../../utils/constants';
 import { inject, observer } from 'mobx-react';
 const { CROWDSALE_CONTRACT } = NAVIGATION_STEPS;
 
-@inject('contractStore') @observer
+@inject('contractStore', 'web3Store') @observer
 export class stepOne extends React.Component {
-  constructor(props) {
-    super(props);
-    window.scrollTo(0, 0);
-    let oldState = getOldState(props, defaultState)
-    this.state = Object.assign({}, oldState)
-  }
 
   getStandardCrowdsaleAssets() {
     this.getCrowdsaleAsset("CrowdsaleStandard", "crowdsale")
@@ -94,7 +86,7 @@ export class stepOne extends React.Component {
   }
 
   componentDidMount() {
-    checkWeb3(this.state.web3);
+    checkWeb3(this.props.web3Store.web3);
 
     switch (this.props.contractStore.contractType) {
       case CONTRACT_TYPES.standard:
