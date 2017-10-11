@@ -47,7 +47,9 @@ function setLastCrowdsale(web3, abi, addr, lastCrowdsale, cb) {
             return cb();
           }
         } else {
-          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
+          setTimeout(function() {
+            checkTxMined(web3, txHash, txMinedCallback)
+          }, 5000);
         }
       })
     });
@@ -78,7 +80,9 @@ function setMintAgent(web3, abi, addr, acc, cb) {
             return cb();
           }
         } else {
-          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
+          setTimeout(function() {
+            checkTxMined(web3, txHash, txMinedCallback)
+          }, 5000);
         }
       })
     });
@@ -169,7 +173,9 @@ function addWhiteList(round, web3, crowdsale, token, abi, addr, cb) {
             return cb();
           }
         } else {
-          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
+          setTimeout(function() {
+            checkTxMined(web3, txHash, txMinedCallback)
+          }, 5000);
         }
       })
     });
@@ -202,7 +208,9 @@ function updateJoinedCrowdsales(web3, abi, addr, joinedCntrctAddrs, cb) {
             return cb();
           }
         } else {
-          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
+          setTimeout(function() {
+            checkTxMined(web3, txHash, txMinedCallback)
+          }, 5000);
         }
       })
     });
@@ -232,7 +240,9 @@ function setFinalizeAgent(web3, abi, addr, finalizeAgentAddr, cb) {
             return cb();
           }
         } else {
-          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
+          setTimeout(function() {
+            checkTxMined(web3, txHash, txMinedCallback)
+          }, 5000);
         }
       })
     });
@@ -262,7 +272,9 @@ function setReleaseAgent(web3, abi, addr, finalizeAgentAddr, cb) {
             return cb();
           }
         } else {
-          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
+          setTimeout(function() {
+            checkTxMined(web3, txHash, txMinedCallback)
+          }, 5000);
         }
       })
     });
@@ -337,7 +349,9 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
             return cb();
           }
         } else {
-          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
+          setTimeout(function() {
+            checkTxMined(web3, txHash, txMinedCallback)
+          }, 5000);
         }
       })
     });
@@ -367,7 +381,9 @@ export function transferOwnership(web3, abi, addr, finalizeAgentAddr, cb) {
             return cb();
           }
         } else {
-          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
+          setTimeout(function() {
+            checkTxMined(web3, txHash, txMinedCallback)
+          }, 5000);
         }
       })
     });
