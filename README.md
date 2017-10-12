@@ -341,13 +341,9 @@ ICO Wizard is constantly under active development. The “Beta” labelling impl
 
 #### Parity
 
-Install parity 1.8
+Install stable [release](https://github.com/paritytech/parity/releases) of parity (1.7.4 for now)
 
-1. git clone `https://github.com/paritytech/parity parity-master`
-
-2. `cd parity-master`
-
-3. `cargo build --release`
+The simpliest way for macOS users is installation through [brew](https://github.com/paritytech/homebrew-paritytech/blob/master/README.md).
 
 
 #### ICO Wizard side
@@ -373,9 +369,7 @@ Install parity 1.8
 
 3. `cargo build -p bridge-cli --release`
 
-4. Check for balance of [0x00dB9af45C6f241432F2cBE412c6969cB7778d98](https://kovan.etherscan.io/address/0x00dB9af45C6f241432F2cBE412c6969cB7778d98) in Etherscan. If it is 0, ask in [Kovan faucet gitter](https://gitter.im/kovan-testnet/faucet) to add some KETH to it. 
-
-*Attention!* - Change the path to Parity 1.8 bin (`parity-master/target/release/parity`) for both scripts, if it isn't in environment `$PATH` variable
+4. Check for balance of [0x00dB9af45C6f241432F2cBE412c6969cB7778d98](https://kovan.etherscan.io/address/0x00dB9af45C6f241432F2cBE412c6969cB7778d98) in Etherscan. If it is 0, ask in [Kovan faucet gitter](https://gitter.im/kovan-testnet/faucet) to add some KETH to it.
 
 5. delete `./examples/db.toml` file, if it is exists.
 
@@ -400,9 +394,13 @@ The latest solidity compiler without optimization should be used.
 
 Contract name is `KovanBridge`.
 
-Constract source is in `oracles-parity-bridge/contracts/bridge.sol` folder. Copy and paste full content of this file.
+Constract source code is in `oracles-parity-bridge/contracts/bridge.sol` folder. Copy and paste full content of this file.
 
 ABI-encoded arguments for the contract are the last 96 bytes of the transaction to create right-side bridge contract. The contract creator is `0x00dB9af45C6f241432F2cBE412c6969cB7778d98`.
+
+*Attention!* - if the right-side contract can't be verified, you can use Parity UI for the right side. Launch it with `./parity --chain kovan --warp --ws-port 8567 --port 30304 --jsonrpc-port 8565 ui`
+
+ABI of the right-side contract is [here](https://github.com/oraclesorg/parity-bridge/blob/master/contracts/KovanBridge.abi).
 
 ### Getting started
 
