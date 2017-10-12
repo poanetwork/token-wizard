@@ -176,44 +176,6 @@ export function getWhiteListWithCapCrowdsaleAssets(state, cb) {
     });
 }
 
-export function getStandardCrowdsaleAssets(state, cb) {
-    const contractName = "CrowdsaleStandard";
-    var derivativesLength = 4;
-    var derivativesIterator = 0;
-    setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", function(_bin) {
-      derivativesIterator++;
-      state.contracts.crowdsale.bin = _bin;
-
-      if (derivativesIterator === derivativesLength) {
-        cb(state);
-      }
-    });
-    setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", function(_abi) {
-      derivativesIterator++;
-      state.contracts.crowdsale.abi = JSON.parse(_abi);
-
-      if (derivativesIterator === derivativesLength) {
-        cb(state);
-      }
-    });
-    setFlatFileContentToState("./contracts/" + contractName + "Token_flat.bin", function(_bin) {
-      derivativesIterator++;
-      state.contracts.token.bin = _bin;
-
-      if (derivativesIterator === derivativesLength) {
-        cb(state);
-      }
-    });
-    setFlatFileContentToState("./contracts/" + contractName + "Token_flat.abi", function(_abi) {
-      derivativesIterator++;
-      state.contracts.token.abi = JSON.parse(_abi);
-
-      if (derivativesIterator === derivativesLength) {
-        cb(state);
-      }
-    });
-}
-
 function readSolFile(path, cb) {
     var rawFile = new XMLHttpRequest();
     rawFile.open("GET", path, true);
@@ -254,17 +216,32 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
             params.vals.push(vals[j]);
         } else {
             switch(inp.name) {
-                case "_startBlock": {
-                    params.vals.push(state.crowdsale[crowdsaleNum].startBlock);
+                case "_token": {
+                    params.vals.push(state.contracts.token.addr);
+                } break;
+                case "_pricingStrategy": {
+                    params.vals.push(state.contracts.pricingStrategy.addr[crowdsaleNum]);
+                } break;
+                case "_multisigWallet": {
+                    params.vals.push(state.crowdsale[0].walletAddress);
                 } break;
                 case "_start": {
-                    params.vals.push(new Date(state.crowdsale[crowdsaleNum].startTime).getTime()/1000);
-                } break;
-                case "_endBlock": {
-                    params.vals.push(state.crowdsale[crowdsaleNum].endBlock);
+                    params.vals.push(toFixed((new Date(state.crowdsale[crowdsaleNum].startTime).getTime()/1000).toString()));
                 } break;
                 case "_end": {
-                    params.vals.push(new Date(state.crowdsale[crowdsaleNum].endTime).getTime()/1000);
+                    params.vals.push(toFixed((new Date(state.crowdsale[crowdsaleNum].endTime).getTime()/1000).toString()));
+                } break;
+                case "_minimumFundingGoal": {
+                  params.vals.push("0");
+                } break;
+                case "_maximumSellableTokens": {
+                  params.vals.push(toFixed(state.crowdsale[crowdsaleNum].supply*10**state.token.decimals).toString());
+                } break;
+                case "_isUpdatable": {
+                  params.vals.push(state.crowdsale[crowdsaleNum].updatable?state.crowdsale[crowdsaleNum].updatable=="on"?true:false:false);
+                } break;
+                case "_isWhiteListed": {
+                  params.vals.push(state.crowdsale[0].whitelistdisabled?state.crowdsale[0].whitelistdisabled=="yes"?false:true:false);
                 } break;
                 case "_rate": {
                     params.vals.push(state.pricingStrategy[crowdsaleNum].rate);
@@ -272,16 +249,6 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
                 case "_wallet":
                 case "_beneficiary": {
                     params.vals.push(state.crowdsale[crowdsaleNum].walletAddress);
-                } break;
-                case "_multisigWallet": {
-                    //params.vals.push(state.contracts.multisig.addr);
-                    params.vals.push(state.crowdsale[0].walletAddress);
-                } break;
-                case "_pricingStrategy": {
-                    params.vals.push(state.contracts.pricingStrategy.addr[crowdsaleNum]);
-                } break;
-                case "_token": {
-                    params.vals.push(state.contracts.token.addr);
                 } break;
                 case "_crowdsale": {
                     params.vals.push(state.contracts.crowdsale.addr[crowdsaleNum]);
@@ -305,42 +272,16 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
                 case "_initialSupply": {
                     params.vals.push(state.token.supply);
                 } break;
-                case "_maximumSellableTokens": {
-                  params.vals.push(toFixed(state.crowdsale[crowdsaleNum].supply*10**state.token.decimals).toString());
-                } break;
-                case "_minimumFundingGoal": {
-                  params.vals.push(0);
-                } break;
                 case "_mintable": {
                     params.vals.push(true);
-                } break;
-                case "_tranches": {
-                    params.vals.push(state.pricingStrategy[crowdsaleNum].tranches);
-                } break;
-                case "_secondsTimeLocked": {
-                  params.vals.push(1)
-                } break;
-                case "_tokenTransferProxy": {
-                  params.vals.push(state.contracts.tokenTransferProxy.addr)
                 } break;
                 case "_required": {
                   params.vals.push(1)
                 } break;
-                case "_owners": {
-                  let owners = [];
-                  owners.push(state.crowdsale[crowdsaleNum].walletAddress);
-                  params.vals.push(owners)
-                } break;
                 case "_oneTokenInWei": {
                   //params.vals.push(state.pricingStrategy[crowdsaleNum].rate);
                   //params.vals.push(state.web3.toWei(1/state.pricingStrategy[crowdsaleNum].rate/10**state.token.decimals, "ether"));
-                  params.vals.push(state.web3.toWei(1/state.pricingStrategy[crowdsaleNum].rate, "ether"));
-                } break;
-                case "_isUpdatable": {
-                  params.vals.push(state.crowdsale[crowdsaleNum].updatable?state.crowdsale[crowdsaleNum].updatable=="on"?true:false:false);
-                } break;
-                case "_isWhiteListed": {
-                  params.vals.push(state.crowdsale[0].whitelistdisabled?state.crowdsale[0].whitelistdisabled=="yes"?false:true:false);
+                  params.vals.push(state.web3.utils.toWei(1/state.pricingStrategy[crowdsaleNum].rate, "ether"));
                 } break;
                 default: {
                     params.vals.push("");

@@ -1,12 +1,13 @@
 import React from 'react'
 import '../../assets/stylesheets/application.css';
-import { checkWeb3 } from '../../utils/blockchainHelpers'
+import { checkWeb3, getWeb3, getNetworkVersion } from '../../utils/blockchainHelpers'
 import { Link } from 'react-router-dom'
 import { defaultState } from '../../utils/constants'
 import { setFlatFileContentToState } from '../../utils/utils';
 import { getOldState } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../../utils/constants'
+import { noDeploymentOnMainnetAlert } from '../../utils/alerts'
 const { CROWDSALE_CONTRACT } = NAVIGATION_STEPS
 
 export class stepOne extends React.Component {
@@ -15,11 +16,6 @@ export class stepOne extends React.Component {
     window.scrollTo(0, 0);
     let oldState = getOldState(props, defaultState)
     this.state = Object.assign({}, oldState)
-  }
-
-  getStandardCrowdsaleAssets (state) {
-    this.getCrowdsaleAsset("CrowdsaleStandard", "crowdsale", state)
-    this.getCrowdsaleAsset("CrowdsaleStandardToken", "token", state)
   }
 
   getWhiteListWithCapCrowdsaleAssets (state) {
@@ -83,34 +79,28 @@ export class stepOne extends React.Component {
     let newState = { ...this.state }
     newState.contractType = e.currentTarget.id;
     console.log(e.currentTarget.id);
-    switch (e.currentTarget.id) {
-      case this.state.contractTypes.standard: {
-        this.getStandardCrowdsaleAssets(newState);
-      } break;
-      case this.state.contractTypes.whitelistwithcap: {
-        this.getWhiteListWithCapCrowdsaleAssets(newState);
-      } break;
-      default:
-        break;
-    }
+    this.getWhiteListWithCapCrowdsaleAssets(newState);
   }
 
   componentDidMount() {
     checkWeb3(this.state.web3);
+
+    //emergency alert
+    /*setTimeout(() => {
+      getWeb3((web3) => {
+        getNetworkVersion(web3, (_networkID) => {
+          console.log(_networkID);
+          if (_networkID == 1) {
+            return noDeploymentOnMainnetAlert();
+          }
+        })
+      })
+    }, 500);*/
     
     let newState = { ...this.state }
 
     newState.contractType = this.state.contractTypes.whitelistwithcap
-    switch (newState.contractType) {
-      case this.state.contractTypes.standard: {
-        this.getStandardCrowdsaleAssets(newState);
-      } break;
-      case this.state.contractTypes.whitelistwithcap: {
-        this.getWhiteListWithCapCrowdsaleAssets(newState);
-      } break;
-      default:
-        break;
-    }
+    this.getWhiteListWithCapCrowdsaleAssets(newState);
   }
 
   render() {
