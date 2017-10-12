@@ -343,7 +343,7 @@ ICO Wizard is constantly under active development. The “Beta” labelling impl
 
 Install stable [release](https://github.com/paritytech/parity/releases) of parity (1.7.4 for now)
 
-The simpliest way for macOS users is installation through [brew](https://github.com/paritytech/homebrew-paritytech/blob/master/README.md).
+The simplest way for macOS users is installation through [brew](https://github.com/paritytech/homebrew-paritytech/blob/master/README.md).
 
 
 #### ICO Wizard side
@@ -371,7 +371,7 @@ The simpliest way for macOS users is installation through [brew](https://github.
 
 4. Check for balance of [0x00dB9af45C6f241432F2cBE412c6969cB7778d98](https://kovan.etherscan.io/address/0x00dB9af45C6f241432F2cBE412c6969cB7778d98) in Etherscan. If it is 0, ask in [Kovan faucet gitter](https://gitter.im/kovan-testnet/faucet) to add some KETH to it.
 
-5. delete `./examples/db.toml` file, if it is exists.
+5. delete `./examples/db.toml` file, if it exists.
 
 6. `./examples/parity_start_oracles.sh` - starting of the left-side network
 
@@ -379,7 +379,7 @@ The simpliest way for macOS users is installation through [brew](https://github.
 
 8. `./target/release/bridge --config ./examples/config_bridge.toml --database ./examples/db.toml` - starting of the bridge to generate db.toml firstly
 
-*Attention!* - it'll generate bridge contracts at both sides. After we'll lanching wizard, we'll change left side contract with crowdsale from wizard one. It is a lack of bridge for now.
+*Attention!* - it'll generate bridge contracts at both sides. After you'll launching wizard, you'll change the left-side contract with crowdsale from wizard one. It is a lack of bridge for now.
 
 9. stop the bridge.
 
@@ -394,7 +394,7 @@ The latest solidity compiler without optimization should be used.
 
 Contract name is `KovanBridge`.
 
-Constract source code is in `oracles-parity-bridge/contracts/bridge.sol` folder. Copy and paste full content of this file.
+Contract source code is in `oracles-parity-bridge/contracts/bridge.sol` folder. Copy and paste full content of this file.
 
 ABI-encoded arguments for the contract are the last 96 bytes of the transaction to create right-side bridge contract. The contract creator is `0x00dB9af45C6f241432F2cBE412c6969cB7778d98`.
 
