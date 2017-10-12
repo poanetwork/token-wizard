@@ -373,29 +373,23 @@ Install parity 1.8
 
 3. `cargo build -p bridge-cli --release`
 
-4. `cd ./jsTests`
-
-5. `npm install`
-
-6. Check for balance of [0x00dB9af45C6f241432F2cBE412c6969cB7778d98](https://kovan.etherscan.io/address/0x00dB9af45C6f241432F2cBE412c6969cB7778d98) in Etherscan. If it is 0, ask in [Kovan faucet gitter](https://gitter.im/kovan-testnet/faucet) to add some KETH to it. 
-
-7. `cd ..`
+4. Check for balance of [0x00dB9af45C6f241432F2cBE412c6969cB7778d98](https://kovan.etherscan.io/address/0x00dB9af45C6f241432F2cBE412c6969cB7778d98) in Etherscan. If it is 0, ask in [Kovan faucet gitter](https://gitter.im/kovan-testnet/faucet) to add some KETH to it. 
 
 *Attention!* - Change the path to Parity 1.8 bin (`parity-master/target/release/parity`) for both scripts, if it isn't in environment `$PATH` variable
 
-8. delete `./examples/db.toml` file, if it is exists.
+5. delete `./examples/db.toml` file, if it is exists.
 
-9. `./examples/parity_start_oracles.sh` - starting of the left-side network
+6. `./examples/parity_start_oracles.sh` - starting of the left-side network
 
-10. `./examples/parity_start_kovan.sh` - starting of the right-side network. Wait until Kovan is synchronized.
+7. `./examples/parity_start_kovan.sh` - starting of the right-side network. Wait until Kovan is synchronized.
 
-11. `./target/release/bridge --config ./examples/config_bridge.toml --database ./examples/db.toml` - starting of the bridge to generate db.toml firstly
+8. `./target/release/bridge --config ./examples/config_bridge.toml --database ./examples/db.toml` - starting of the bridge to generate db.toml firstly
 
 *Attention!* - it'll generate bridge contracts at both sides. After we'll lanching wizard, we'll change left side contract with crowdsale from wizard one. It is a lack of bridge for now.
 
-12. stop the bridge.
+9. stop the bridge.
 
-13. Verify right-side contract in Etherscan.
+10. Verify right-side contract in Etherscan.
 
 
 #### Right-side contract verification in Etherscan
