@@ -1,12 +1,28 @@
 import React, { Component } from 'react';
 import '../../assets/stylesheets/application.css';
+import { getWeb3, getNetworkVersion } from '../../utils/blockchainHelpers'
 import { Link } from 'react-router-dom'
 import { defaultState } from '../../utils/constants'
+import { noDeploymentOnMainnetAlert } from '../../utils/alerts'
 
 export class Home extends Component {
   constructor(props) {
     super(props);
     this.state = defaultState
+  }
+
+  componentDidMount() {
+    //emergency alert
+    /*setTimeout(() => {
+      getWeb3((web3) => {
+        getNetworkVersion(web3, (_networkID) => {
+          console.log(_networkID);
+          if (_networkID == 1) {
+            return noDeploymentOnMainnetAlert();
+          }
+        })
+      })
+    }, 500);*/
   }
 
   render() {

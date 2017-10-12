@@ -2,7 +2,7 @@ import React from 'react'
 import '../../assets/stylesheets/application.css';
 import { getWeb3, checkWeb3, checkNetWorkByID } from '../../utils/blockchainHelpers'
 import { getCrowdsaleData, initializeAccumulativeData, getAccumulativeCrowdsaleData, findCurrentContractRecursively, getJoinedTiers } from './utils'
-import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../../utils/utils'
+import { getQueryVariable, getURLParam, getWhiteListWithCapCrowdsaleAssets, toFixed } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../../utils/constants'
 import { invalidCrowdsaleAddrAlert } from '../../utils/alerts'
@@ -27,44 +27,33 @@ export class Crowdsale extends React.Component {
 		const networkID = ICOConfig.networkID?ICOConfig.networkID:getQueryVariable("networkID");
 		const contractType = this.state.contractTypes.whitelistwithcap;//getQueryVariable("contractType");
 		setTimeout(() => {
-			getWeb3((web3) => {
-				if (!web3) {
-					let state = this.state;
-					state.loading = false;
-		        	this.setState(state);
-					return
-				};
-				var state = this.state;
-				state.web3 = web3;
-      			checkNetWorkByID(web3, networkID);
-      			state.networkID = networkID;
-	    		state.contractType = contractType;
-
-			    switch (contractType) {
-		          case this.state.contractTypes.standard: {
-		            getStandardCrowdsaleAssets(state, (_newState) => {
-		            	this.setState(_newState, () => {
-		            		this.extractContractsData(web3);
-		            	});
-				    });
-		          } break;
-		          case this.state.contractTypes.whitelistwithcap: {
-		            getWhiteListWithCapCrowdsaleAssets(state, (_newState) => {
-		            	this.setState(_newState, () => {
-		            		this.extractContractsData(web3);
-		            	});
-				    });
-		          } break;
-		          default:
-		            break;
-		        }
-			});
+			getWeb3((web3) => this.getCrowdsale(web3, networkID, contractType));
 		}, 500);
+	}
+
+	getCrowdsale (web3, networkID, contractType) {
+		if (!web3) {
+			let state = this.state;
+			state.loading = false;
+        	this.setState(state);
+			return
+		};
+		var state = this.state;
+		state.web3 = web3;
+		checkNetWorkByID(web3, networkID);
+		state.networkID = networkID;
+		state.contractType = contractType;
+
+	    getWhiteListWithCapCrowdsaleAssets(state, (_newState) => {
+        	this.setState(_newState, () => {
+        		this.extractContractsData(web3);
+        	});
+	    });
 	}
 
 	extractContractsData(web3) {
 		const crowdsaleAddr = ICOConfig.crowdsaleContractURL?ICOConfig.crowdsaleContractURL:getURLParam("addr");
-		if (!web3.isAddress(crowdsaleAddr)) {
+		if (!web3.utils.isAddress(crowdsaleAddr)) {
 			let state = this.state;
 			state.loading = false;
         	this.setState(state);
@@ -83,24 +72,30 @@ export class Crowdsale extends React.Component {
 			var state = this.state;
 		    state.contracts.crowdsale.addr = _crowdsaleAddrs;
 
-		  	state.curAddr = web3.eth.accounts[0];
-	      	state.web3 = web3;
-	      	this.setState(state, () => {
-		      	if (!this.state.contracts.crowdsale.addr) return;
-		      	findCurrentContractRecursively(0, this, web3, null, (crowdsaleContract) => {
-		      		if (!crowdsaleContract) {
-		      			state.loading = false;
-		        		return this.setState(state);
-		      		}
-				    getCrowdsaleData(web3, this, crowdsaleContract, () => { 
-				    	initializeAccumulativeData(this, () => {
-				        	getAccumulativeCrowdsaleData(web3, this, () => {
-				        	});
-				      	}); 
-				    });
-			    })
+		    web3.eth.getAccounts().then((accounts) => {
+			  	state.curAddr = accounts[0];
+		      	state.web3 = web3;
+		      	this.setState(state, () => {
+			      	if (!this.state.contracts.crowdsale.addr) return;
+			      	findCurrentContractRecursively(0, this, web3, null, (crowdsaleContract) => {
+			      		if (!crowdsaleContract) {
+			      			state.loading = false;
+			        		return this.setState(state);
+			      		}
+			      		this.getFullCrowdsaleData(web3, crowdsaleContract)
+				    })
+		      	});
 	      	});
 		})
+  	}
+
+  	getFullCrowdsaleData(web3, crowdsaleContract) {
+  		getCrowdsaleData(web3, this, crowdsaleContract, () => { 
+	    	initializeAccumulativeData(this, () => {
+	    		getAccumulativeCrowdsaleData(web3, this, () => {
+	        	});
+	      	}); 
+	    });
   	}
 
   	goToInvestPage = () => {
@@ -138,7 +133,7 @@ export class Crowdsale extends React.Component {
 
 	    //price: tiers, standard
 	    const tokensPerETHStandard = !isNaN(rate)?rate:0;
-	    const tokensPerETHTiers = !isNaN(1/rate)?1/this.state.web3.fromWei(rate, "ether"):0;
+	    const tokensPerETHTiers = !isNaN(1/rate)?1/this.state.web3.utils.fromWei(toFixed(rate).toString(), "ether"):0;
 	    const tokensPerETH = (this.state.contractType === this.state.contractTypes.whitelistwithcap)?tokensPerETHTiers:tokensPerETHStandard;
 	    
 	    //total supply: tiers, standard
@@ -148,7 +143,8 @@ export class Crowdsale extends React.Component {
 
 	    //goal in ETH
 	    const goalInETHStandard = (totalSupply/rate).toExponential();
-	    const goalInETHTiers = this.state.crowdsale.maximumSellableTokensInWei?(this.state.web3.fromWei(this.state.crowdsale.maximumSellableTokensInWei, "ether").toString()):0;
+	    let goalInETHTiers = this.state.crowdsale.maximumSellableTokensInWei?(this.state.web3.utils.fromWei(toFixed(this.state.crowdsale.maximumSellableTokensInWei).toString(), "ether").toString()):0;
+	    goalInETHTiers = 1.0 / 100 * Math.floor(100 * goalInETHTiers)
 	    const goalInETH = (this.state.contractType === this.state.contractTypes.whitelistwithcap)?goalInETHTiers:goalInETHStandard;	    
 
 	    const tokensClaimedRatio = goalInETH?(ethRaised/goalInETH)*100:"0";

@@ -1,7 +1,7 @@
 import React from 'react'
 import '../../assets/stylesheets/application.css';
-import { Link } from 'react-router-dom'
-import { getWeb3, checkWeb3, setExistingContractParams } from '../../utils/blockchainHelpers'
+import { Link, Redirect } from 'react-router-dom'
+import { getWeb3, checkWeb3, setExistingContractParams, getNetworkVersion } from '../../utils/blockchainHelpers'
 import { stepTwo } from '../stepTwo'
 import { defaultCompanyStartDate } from './utils'
 import { getOldState, stepsAreValid, allFieldsAreValid, defaultCompanyEndDate } from '../../utils/utils'
@@ -12,6 +12,7 @@ import { RadioInputField } from '../Common/RadioInputField'
 import { CrowdsaleBlock } from '../Common/CrowdsaleBlock'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
 import { NAVIGATION_STEPS, defaultState, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS, intitialStepThreeValidations } from '../../utils/constants'
+import { noDeploymentOnMainnetAlert, warningOnMainnetAlert } from '../../utils/alerts'
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
 const { START_TIME, END_TIME, MINCAP, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME, ALLOWMODIFYING, DISABLEWHITELISTING } = TEXT_FIELDS
@@ -58,6 +59,14 @@ export class stepThree extends stepTwo {
     this.setState(newState, () => this.addCrowdsaleBlock(num));
   }
 
+  gotoDeploymentStage() {
+    console.log("###gotoDeploymentStage###");
+    let state = this.state;
+    state.redirect = true;
+    console.log(state);
+    this.setState(state);
+  }
+
   addCrowdsaleBlock(num) {
     let newState = {...this.state}
     newState.children.push(
@@ -71,47 +80,25 @@ export class stepThree extends stepTwo {
     this.setState(newState)
   }
 
-  renderStandardLink () {
-    return <Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}><a className="button button_fill">Continue</a></Link>
-  }
-
-  /*renderStandardLinkComponent () {
-    if(stepsAreValid(this.state.validations) || allFieldsAreValid('crowdsale', this.state)){
-      return this.renderStandardLink()
-    }
-    return <div onClick={() => this.showErrorMessages('crowdsale')} className="button button_fill"> Continue</div>
-  }
-
   renderLink () {
-    return <div>
-      <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Tier</div>
-      <Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}><a className="button button_fill">Continue</a></Link>
-    </div>
-  }*/
-
-  renderStandardLinkComponent () {
-    if(stepsAreValid(this.state.validations) || (allFieldsAreValid('crowdsale', this.state) && allFieldsAreValid('pricingStrategy', this.state))){
-      console.log('steeeeeep 33333')
-      return this.renderStandardLink()
+    if (this.state.redirect) {
+      return <Redirect to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}><a className="button button_fill">Continue</a></Redirect>
     }
-    console.log('not valid')
-    return <div onClick={() => this.showErrorMessages('crowdsale')} className="button button_fill"> Continue</div>
-  }
 
-  renderLink () {
     console.log('render link four')
     return <div>
     <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Tier</div>
-    <Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}><a className="button button_fill">Continue</a></Link>
+    <div onClick={() => warningOnMainnetAlert(this.state.crowdsale.length, () => this.gotoDeploymentStage())} className="button button_fill"> Continue</div>
+    {/*<Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}><a className="button button_fill">Continue</a></Link>*/}
     </div>
   }
 
   renderLinkComponent () {
     //console.log(`stepsAreValid(this.state.validations) || allFieldsAreValid('crowdsale', this.state)`, stepsAreValid(this.state.validations), allFieldsAreValid('crowdsale', this.state))
     if(stepsAreValid(this.state.validations) || (allFieldsAreValid('crowdsale', this.state) && allFieldsAreValid('pricingStrategy', this.state))){
-      // console.log('step 3 is valididididididididididididididididi')
       return this.renderLink()
     }
+
     console.log('not valid')
     return <div>
       <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Tier</div>
@@ -125,31 +112,23 @@ export class stepThree extends stepTwo {
     checkWeb3(this.state.web3);
     setTimeout( () => {
       getWeb3((web3) => {
-        console.log('timeout state', this.state)
-        let newState = {...this.state}
-        newState.crowdsale[0].walletAddress = web3.eth.accounts[0];
-        newState.crowdsale[0].startTime = defaultCompanyStartDate();
-        newState.crowdsale[0].endTime = defaultCompanyEndDate(newState.crowdsale[0].startTime);
-        this.setState(newState);
-        //depreciated
-        /*let datesIterator = 0;
-        let datesCount = 2;
-        calculateFutureBlock(new Date(newState.crowdsale[0].startTime), newState.blockTimeGeneration, (targetBlock) => {
-          newState.crowdsale[0].startBlock = targetBlock;
-          datesIterator++;
 
-          if (datesIterator === datesCount) {
-            this.setState(newState);
+        //emergency alert
+        /*getNetworkVersion(web3, (_networkID) => {
+          console.log(_networkID);
+          if (_networkID == 1) {
+            return noDeploymentOnMainnetAlert();
           }
-        });
-        calculateFutureBlock(new Date(newState.crowdsale[0].endTime), newState.blockTimeGeneration, (targetBlock) => {
-          newState.crowdsale[0].endBlock = targetBlock;
-          datesIterator++;
+        })*/
 
-          if (datesIterator === datesCount) {
-            this.setState(newState);
-          }
-        });*/
+        web3.eth.getAccounts().then((accounts) => {
+          console.log('timeout state', this.state)
+          let newState = {...this.state}
+          newState.crowdsale[0].walletAddress = accounts[0];
+          newState.crowdsale[0].startTime = defaultCompanyStartDate();
+          newState.crowdsale[0].endTime = defaultCompanyEndDate(newState.crowdsale[0].startTime);
+          this.setState(newState);
+        })
       });
     }, 500);
   }
@@ -176,86 +155,6 @@ export class stepThree extends stepTwo {
           description={`Minimum amount tokens to buy. Not a mininal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.`}
         />
       </div></div>
-    if (this.state.contractType === this.state.contractTypes.standard) {
-      return (
-        <section className="steps steps_crowdsale-contract" ref="three">
-          <StepNavigation activeStep={CROWDSALE_SETUP}/>
-          <div className="steps-content container">
-            <div className="about-step">
-              <div className="step-icons step-icons_crowdsale-setup"></div>
-              <p className="title">Crowdsale setup</p>
-              <p className="description">
-                The most important and exciting part of the crowdsale process. Here you can define parameters of your crowdsale campaign. 
-              </p>
-            </div>
-            <div className="hidden">
-              <div>
-              <InputField 
-                side='left' 
-                type='datetime-local' 
-                title={START_TIME} 
-                value={console.log('crowdsale[0].startTime', this.state) || crowdsale[0].startTime} 
-                valid={validations[0].startTime} 
-                errorMessage={VALIDATION_MESSAGES.START_TIME} 
-                onBlur={() => this.handleInputBlur('crowdsale', 'startTime', 0)}
-                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'startTime')}
-                description={`Date and time when the tier starts. Can't be in the past from the current moment.`}
-              />
-              <InputField 
-                side='right' 
-                type='datetime-local' 
-                title={END_TIME} 
-                value={crowdsale[0].endTime} 
-                valid={validations[0].endTime} 
-                errorMessage={VALIDATION_MESSAGES.END_TIME} 
-                onBlur={() => this.handleInputBlur('crowdsale', 'endTime', 0)}
-                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'endTime')}
-                description={`Date and time when the tier ends. Can be only in the future.`}
-              />
-              </div>
-              <div>
-              <InputField 
-                side='left' 
-                type='text' 
-                title={WALLET_ADDRESS} 
-                value={crowdsale[0].walletAddress} 
-                valid={validations[0].walletAddress} 
-                errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS}
-                onBlur={() => this.handleInputBlur('crowdsale', 'walletAddress', 0)} 
-                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'walletAddress')}
-                description={`Address where the money goes immediately after each successful transactions. We recommend to setup a multisig wallet with hardware based signers.`}
-              />
-              <InputField 
-                side='right' 
-                type='number' 
-                title={SUPPLY} 
-                value={crowdsale[0].supply} 
-                valid={validations[0].supply} 
-                errorMessage={VALIDATION_MESSAGES.SUPPLY}
-                onBlur={() => this.handleInputBlur('crowdsale', 'supply', 0)} 
-                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'supply')}
-                description={`How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers`}
-              />
-              </div>
-              <InputField 
-                side='left' 
-                type='number' 
-                title={RATE} 
-                value={pricingStrategy[0].rate} 
-                valid={validations[0].rate} 
-                errorMessage={VALIDATION_MESSAGES.RATE} 
-                onBlur={() => this.handleInputBlur('pricingStrategy', 'rate', 0)}
-                onChange={(e) => this.changeState(e, 'pricingStrategy', 0, 'rate')}
-                description={`Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens`}
-              />
-            </div>
-          </div>
-          <div className="button-container">
-            {this.renderStandardLinkComponent()}
-          </div>
-        </section>
-      )
-    } else if (this.state.contractType === this.state.contractTypes.whitelistwithcap) {
       let whitelistInputBlock = <div><div className="section-title">
               <p className="title">Whitelist</p>
             </div><WhitelistInputBlock
@@ -382,6 +281,5 @@ export class stepThree extends stepTwo {
           </div>
         </section>
       )
-    }
   }
 }

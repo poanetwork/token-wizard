@@ -29,31 +29,9 @@ export class stepFour extends stepTwo {
     copy('copy');
     checkWeb3(this.state.web3);
     switch (this.state.contractType) {
-      //depreciated
-      /*case this.state.contractTypes.standard: {
-        let abiCrowdsale = this.state.contracts && this.state.contracts.crowdsale && this.state.contracts.crowdsale.abi || []
-
-        let state = { ...this.state }
-        setTimeout(() => {
-           getWeb3((web3) => {
-            state.web3 = web3;
-            this.setState(state);
-            getEncodedABIClientSide(web3, abiCrowdsale, this.state, [], 0, (ABIencoded) => {
-              let cntrct = "crowdsale";
-              let state = { ...this.state }
-              state.contracts[cntrct].abiConstructor.push(ABIencoded);
-              console.log(cntrct + " ABI encoded params constructor:");
-              console.log(ABIencoded);
-              this.setState(state);
-            });
-          });
-        });
-      } break;*/
       case this.state.contractTypes.whitelistwithcap: {
         if (!this.state.contracts.safeMathLib) {
-          let newState = { ...this.state }
-          newState.loading = false;
-          this.setState(newState);
+          this.hideLoader();
           return noContractDataAlert();
         } 
 
@@ -61,7 +39,6 @@ export class stepFour extends stepTwo {
         state.loading = true;
         this.setState(state);
         let abiToken = this.state.contracts && this.state.contracts.token && this.state.contracts.token.abi || []
-        let addrToken = this.state.contracts && this.state.contracts.token && this.state.contracts.token.addr || null
         
         let abiPricingStrategy = this.state.contracts && this.state.contracts.pricingStrategy && this.state.contracts.pricingStrategy.abi || []
         
@@ -70,17 +47,15 @@ export class stepFour extends stepTwo {
             state.web3 = web3;
             this.setState(state);
             let counter = 0;
-            if (!addrToken) {
-              getEncodedABIClientSide(web3, abiToken, state, [], 0, (ABIencoded) => {
-                counter++;
-                let cntrct = "token";
-                state.contracts[cntrct].abiConstructor = ABIencoded;
-                console.log(cntrct + " ABI encoded params constructor:");
-                console.log(ABIencoded);
-                if (counter == (this.state.pricingStrategy.length + 1))
-                  this.setState(state, this.deploySafeMathLibrary());
-              });
-            }
+            getEncodedABIClientSide(web3, abiToken, state, [], 0, (ABIencoded) => {
+              counter++;
+              let cntrct = "token";
+              state.contracts[cntrct].abiConstructor = ABIencoded;
+              console.log(cntrct + " ABI encoded params constructor:");
+              console.log(ABIencoded);
+              if (counter == (this.state.pricingStrategy.length + 1))
+                this.setState(state, this.deploySafeMathLibrary());
+            });
             for (let i = 0; i < this.state.pricingStrategy.length; i++) {
               getEncodedABIClientSide(web3, abiPricingStrategy, state, [], i, (ABIencoded) => {
                 counter++;
@@ -92,21 +67,64 @@ export class stepFour extends stepTwo {
                   this.setState(state, this.deploySafeMathLibrary());
               });
             }
-
-            //depreciated
-            /*console.log(this.state.contracts.crowdsale.addr.length);
-            if (this.state.contracts.crowdsale.addr.length === 0) {
-              this.deploySafeMathLibrary();
-            } else {
-              this.deployPricingStrategy();
-            }*/
           });
-        });
+        }, 500);
       } break;
       default:
         break;
     }
   }
+
+  hideLoader() {
+    let newState = { ...this.state }
+    newState.loading = false;
+    this.setState(newState);
+  }
+
+  /*testM() {
+    let state = this.state;
+    //mainnet
+    //state.contracts.finalizeAgent.addr[0] = "0x9ee173a3e54014c6b89e5d5e01d06b269315a6e9"
+    //state.contracts.crowdsale.addr[0] = "0x1c6d46dedd61ef982f0938e73975404b8de6d739"
+    //state.contracts.pricingStrategy.addr[0] = "0xf188df9b40f5a5598a1d7088021a679312e62d03"
+    //state.contracts.token.addr = "0x13462c0292f3007ee6d0aaf600dbe1db2ebcf4be"
+    //testnet
+    state.contracts.finalizeAgent.addr[0] = "0x24430ab3a5564034b2c878746223f4148cae1471"
+    state.contracts.crowdsale.addr[0] = "0x050007744327a34a00c472951faebcdea1f8560e"
+    state.contracts.pricingStrategy.addr[0] = "0x85704d886ba65b233dd589300509e40136a5bd68"
+    state.contracts.token.addr = "0x12f05ca69f6244bf5aa48eecd3f5c516821a5326"
+    this.setState(() => {
+      let web3 = this.state.web3;
+      let contracts = this.state.contracts;
+      setLastCrowdsaleRecursive(0, web3, contracts.pricingStrategy.abi, contracts.pricingStrategy.addr, contracts.crowdsale.addr.slice(-1)[0], 42982, (err) => {
+        if (err) return this.hideLoader();
+        setReservedTokensListMultiple(web3, contracts.token.abi, contracts.token.addr, this.state.token, (err) => {
+          if (err) return this.hideLoader();
+          updateJoinedCrowdsalesRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, (err) => {
+            if (err) return this.hideLoader();
+            setMintAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.crowdsale.addr, 68425, (err) => {
+              if (err) return this.hideLoader();
+              setMintAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.finalizeAgent.addr, 68425, (err) => {
+                if (err) return this.hideLoader();
+                addWhiteListRecursive(0, web3, this.state.crowdsale, this.state.token, contracts.crowdsale.abi, contracts.crowdsale.addr, (err) => {
+                  if (err) return this.hideLoader();
+                  setFinalizeAgentRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, contracts.finalizeAgent.addr, 68622, (err) => {
+                    if (err) return this.hideLoader();
+                    setReleaseAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.finalizeAgent.addr, 65905, (err) => {
+                      transferOwnership(web3, this.state.contracts.token.abi, contracts.token.addr, this.state.crowdsale[0].walletAddress, 46699, (err) => {
+                        if (err) return this.hideLoader();
+                        //this.goToCrowdsalePage();
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+  }*/
 
   handleContentByParent(content, docData) {
     switch(content.parent) {
@@ -134,94 +152,31 @@ export class stepFour extends stepTwo {
     download(docData.data, DOWNLOAD_NAME, DOWNLOAD_TYPE)
   }
 
-  //depreciated
-  /*deployTokenTransferProxy = () => {
-    console.log("***Deploy tokenTransferProxy contract***");
-    if (this.state.web3.eth.accounts.length === 0) {
-      return noMetaMaskAlert();
-    }
-    var contracts = this.state.contracts;
-    var binTokenTransferProxy = contracts && contracts.tokenTransferProxy && contracts.tokenTransferProxy.bin || ''
-    var abiTokenTransferProxy = contracts && contracts.tokenTransferProxy && contracts.tokenTransferProxy.abi || []
-    deployContract(0, this.state.web3, abiTokenTransferProxy, binTokenTransferProxy, [], this.state, this.handleDeployedTokenTransferProxy)
-  }
-
-  //depreciated
-  handleDeployedTokenTransferProxy = (err, tokenTransferProxyAddr) => {
-    let newState = { ...this.state }
-    if (err) {
-      newState.loading = false;
-      this.setState(newState);
-      return console.log(err);
-    }
-    newState.contracts.tokenTransferProxy.addr = tokenTransferProxyAddr;
-    this.deployMultisig();
-  }
-
-  //depreciated
-  deployMultisig = () => {
-    console.log("***Deploy multisig contract***");
-    if (this.state.web3.eth.accounts.length === 0) {
-      return noMetaMaskAlert();
-    }
-    var contracts = this.state.contracts;
-    var binMultisig = contracts && contracts.multisig && contracts.multisig.bin || ''
-    var abiMultisig = contracts && contracts.multisig && contracts.multisig.abi || []
-    var paramsMultisig = this.getMultisigParams(this.state.web3)
-    console.log(paramsMultisig);
-    deployContract(0, this.state.web3, abiMultisig, binMultisig, paramsMultisig, this.state, this.handleDeployedMultisig)
-  }
-
-  //depreciated
-  getMultisigParams = (web3) => {
-    return [
-      [web3.eth.accounts[0]],
-      1,
-      60,
-      this.state.contracts.tokenTransferProxy.addr
-    ]
-  }
-
-  handleDeployedMultisig = (err, multisigAddr) => {
-    let newState = { ...this.state }
-    if (err) {
-      newState.loading = false;
-      this.setState(newState);
-      return console.log(err);
-    }
-    newState.contracts.multisig.addr = multisigAddr;
-    this.deployToken();
-  }*/
-
   deploySafeMathLibrary = () => {
     console.log("***Deploy safeMathLib contract***");
     if (!this.state.web3) {
-      let newState = { ...this.state }
-      newState.loading = false;
-      this.setState(newState);
+      this.hideLoader();
       return noMetaMaskAlert();
     }
-    if (this.state.web3.eth.accounts.length === 0) {
-      let newState = { ...this.state }
-      newState.loading = false;
-      this.setState(newState);
-      return noMetaMaskAlert();
-    }
-    var contracts = this.state.contracts;
-    var binSafeMathLib = contracts && contracts.safeMathLib && contracts.safeMathLib.bin || ''
-    var abiSafeMathLib = contracts && contracts.safeMathLib && contracts.safeMathLib.abi || []
-    var safeMathLib = this.state.safeMathLib;
-    deployContract(0, this.state.web3, abiSafeMathLib, binSafeMathLib, [], this.state, this.handleDeployedSafeMathLibrary)
+    this.state.web3.eth.getAccounts().then((accounts) => {
+      if (accounts.length === 0) {
+        this.hideLoader();
+        return noMetaMaskAlert();
+      }
+      var contracts = this.state.contracts;
+      var binSafeMathLib = contracts && contracts.safeMathLib && contracts.safeMathLib.bin || ''
+      var abiSafeMathLib = contracts && contracts.safeMathLib && contracts.safeMathLib.abi || []
+      var safeMathLib = this.state.safeMathLib;
+      deployContract(0, this.state.web3, abiSafeMathLib, binSafeMathLib, [], this.state, this.handleDeployedSafeMathLibrary)
+    });
   }
 
   handleDeployedSafeMathLibrary = (err, safeMathLibAddr) => {
     console.log("safeMathLibAddr: " + safeMathLibAddr);
-    let newState = { ...this.state }
     if (err) {
-      newState.loading = false;
-      this.setState(newState);
-      return console.log(err);
+      return this.hideLoader();
     }
+    let newState = { ...this.state }
     newState.contracts.safeMathLib.addr = safeMathLibAddr;
     let contracts = newState.contracts;
     let keys = Object.keys(contracts);
@@ -238,19 +193,19 @@ export class stepFour extends stepTwo {
 
   deployToken = () => {
     console.log("***Deploy token contract***");
-    if (this.state.web3.eth.accounts.length === 0) {
-      let newState = { ...this.state }
-      newState.loading = false;
-      this.setState(newState);
-      return noMetaMaskAlert();
-    }
-    var contracts = this.state.contracts;
-    var binToken = contracts && contracts.token && contracts.token.bin || ''
-    var abiToken = contracts && contracts.token && contracts.token.abi || []
-    var token = this.state.token;
-    var paramsToken = this.getTokenParams(this.state.web3, token)
-    console.log(paramsToken);
-    deployContract(0, this.state.web3, abiToken, binToken, paramsToken, this.state, this.handleDeployedToken)
+    this.state.web3.eth.getAccounts().then((accounts) => {
+      if (accounts.length === 0) {
+        this.hideLoader();
+        return noMetaMaskAlert();
+      }
+      var contracts = this.state.contracts;
+      var binToken = contracts && contracts.token && contracts.token.bin || ''
+      var abiToken = contracts && contracts.token && contracts.token.abi || []
+      var token = this.state.token;
+      var paramsToken = this.getTokenParams(this.state.web3, token)
+      console.log(paramsToken);
+      deployContract(0, this.state.web3, abiToken, binToken, paramsToken, this.state, this.handleDeployedToken)
+    });
   }
 
   getTokenParams = (web3, token) => {
@@ -266,29 +221,27 @@ export class stepFour extends stepTwo {
   }
 
   handleDeployedToken = (err, tokenAddr) => {
-    let newState = { ...this.state }
     if (err) {
-      newState.loading = false;
-      this.setState(newState);
-      return console.log(err);
+      return this.hideLoader();
     }
+    let newState = { ...this.state }
     newState.contracts.token.addr = tokenAddr;
     this.deployPricingStrategy();
   }
 
   deployPricingStrategy = () => {
     console.log("***Deploy pricing strategy contract***");
-    if (this.state.web3.eth.accounts.length === 0) {
-      let newState = { ...this.state }
-      newState.loading = false;
-      this.setState(newState);
-      return noMetaMaskAlert();
-    }
-    let contracts = this.state.contracts;
-    let binPricingStrategy = contracts && contracts.pricingStrategy && contracts.pricingStrategy.bin || ''
-    let abiPricingStrategy = contracts && contracts.pricingStrategy && contracts.pricingStrategy.abi || []
-    let pricingStrategies = this.state.pricingStrategy;
-    this.deployPricingStrategyRecursive(0, pricingStrategies, binPricingStrategy, abiPricingStrategy)
+    this.state.web3.eth.getAccounts().then((accounts) => {
+      if (accounts.length === 0) {
+        this.hideLoader();
+        return noMetaMaskAlert();
+      }
+      let contracts = this.state.contracts;
+      let binPricingStrategy = contracts && contracts.pricingStrategy && contracts.pricingStrategy.bin || ''
+      let abiPricingStrategy = contracts && contracts.pricingStrategy && contracts.pricingStrategy.abi || []
+      let pricingStrategies = this.state.pricingStrategy;
+      this.deployPricingStrategyRecursive(0, pricingStrategies, binPricingStrategy, abiPricingStrategy)
+    });
   }
 
   deployPricingStrategyRecursive = (i, pricingStrategies, binPricingStrategy, abiPricingStrategy) => {
@@ -298,12 +251,10 @@ export class stepFour extends stepTwo {
     if (i < pricingStrategies.length - 1) {
       deployContract(i, this.state.web3, abiPricingStrategy, binPricingStrategy, paramsPricingStrategy, this.state, (err, pricingStrategyAddr) => {
         i++;
-        let newState = { ...this.state }
         if (err) {
-          newState.loading = false;
-          this.setState(newState);
-          return console.log(err);
+          return this.hideLoader();
         }
+        let newState = { ...this.state }
         newState.contracts.pricingStrategy.addr.push(pricingStrategyAddr);
         this.setState(newState);
         this.deployPricingStrategyRecursive(i, pricingStrategies, binPricingStrategy, abiPricingStrategy);
@@ -317,67 +268,17 @@ export class stepFour extends stepTwo {
   getPricingStrategyParams = (web3, pricingStrategy, i, token) => {
     console.log(pricingStrategy);
     return [
-      web3.toWei(1/pricingStrategy.rate, "ether"),
+      web3.utils.toWei(1/pricingStrategy.rate, "ether"),
       this.state.crowdsale[i].updatable?this.state.crowdsale[i].updatable=="on"?true:false:false
     ]
   }
 
-  //EthTranchePricing
-  /*getPricingStrategyParams = (web3, pricingStrategy) => {
-    console.log(pricingStrategy);
-    return [
-      pricingStrategy.tranches
-    ]
-  }*/
-
-  //MilestonePricing
-  /*getPricingStrategyParams = (web3, crowdsale, pricingStrategy) => {
-    console.log(crowdsale);
-    let pricing = [];
-    for (let i = 0; i < crowdsale.length; i++) {
-      let crowdsaleItem = crowdsale[i];
-      let pricingStrategyItem = pricingStrategy[i];
-      let endDate = new Date(crowdsaleItem.endDate).getTime()/1000;
-      console.log("Milestone end date: " + endDate);
-      let oneTokenInWei = web3.toWei(1/pricingStrategyItem.rate, "ether")
-      console.log("oneTokenInWei: " + oneTokenInWei);
-      pricing.push(endDate);
-      pricing.push(oneTokenInWei);
-    }
-    console.log("Pricing strategy params:");
-    console.log(pricing);
-    return [
-      pricing
-    ]
-  }*/
-
-  //TokenTranchePricing
-  /*getPricingStrategyParams = (web3, crowdsale, pricingStrategy) => {
-    console.log(crowdsale);
-    let pricing = [];
-    for (let i = 0; i < crowdsale.length; i++) {
-      let crowdsaleItem = crowdsale[i];
-      let pricingStrategyItem = pricingStrategy[i];
-      let supply = crowdsaleItem.supply;
-      pricing.push(supply);
-      pricing.push(oneTokenInWei);
-    }
-    console.log("Pricing strategy params:");
-    console.log(pricing);
-    return [
-      pricing
-    ]
-  }*/
-
   handleDeployedPricingStrategy = (err, pricingStrategyAddr) => {
-    let newState = { ...this.state }
     if (err) {
-      newState.loading = false;
-      this.setState(newState);
-      return console.log(err);
+      return this.hideLoader();
     }
+    let newState = { ...this.state }
     newState.contracts.pricingStrategy.addr.push(pricingStrategyAddr);
-    //newState.loading = false;
     this.setState(newState);
     let abiCrowdsale = this.state.contracts && this.state.contracts.crowdsale && this.state.contracts.crowdsale.abi || []
     let counter = 0;
@@ -401,24 +302,23 @@ export class stepFour extends stepTwo {
     getWeb3((web3) => {
       getNetworkVersion(web3, (_networkID) => {
         console.log('web3', web3)
-
-        if (web3.eth.accounts.length === 0) {
+        web3.eth.getAccounts().then((accounts) => {
+          if (accounts.length === 0) {
+            this.hideLoader();
+            return noMetaMaskAlert();
+          }
           let newState = { ...this.state }
-          newState.loading = false;
+          newState.contracts.crowdsale.networkID = _networkID;
+          newState.web3 = web3
+          newState.loading = true;
           this.setState(newState);
-          return noMetaMaskAlert();
-        }
-        let newState = { ...this.state }
-        newState.contracts.crowdsale.networkID = _networkID;
-        newState.web3 = web3
-        newState.loading = true;
-        this.setState(newState);
-        let contracts = this.state.contracts;
-        let binCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.bin || ''
-        let abiCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.abi || []
-        let crowdsales = this.state.crowdsale;
-        
-        this.deployCrowdsaleRecursive(0, crowdsales, binCrowdsale, abiCrowdsale)
+          let contracts = this.state.contracts;
+          let binCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.bin || ''
+          let abiCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.abi || []
+          let crowdsales = this.state.crowdsale;
+          
+          this.deployCrowdsaleRecursive(0, crowdsales, binCrowdsale, abiCrowdsale)
+        });
        });
     });
   }
@@ -440,12 +340,10 @@ export class stepFour extends stepTwo {
     if (i < crowdsales.length - 1) {
       deployContract(i, this.state.web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, this.state, (err, crowdsaleAddr) => {
         i++;
-        let newState = { ...this.state }
         if (err) {
-          newState.loading = false;
-          this.setState(newState);
-          return console.log(err);
+          return this.hideLoader();
         }
+        let newState = { ...this.state }
         newState.contracts.crowdsale.addr.push(crowdsaleAddr);
         this.setState(newState);
         this.deployCrowdsaleRecursive(i, crowdsales, binCrowdsale, abiCrowdsale);
@@ -455,30 +353,15 @@ export class stepFour extends stepTwo {
     }
   }
 
-  //depreciated
-  /*getStandardCrowdSaleParams = (web3) => {
-    return [
-      parseInt(this.state.crowdsale[0].startBlock, 10), 
-      parseInt(this.state.crowdsale[0].endBlock, 10), 
-      web3.toWei(this.state.pricingStrategy[0].rate, "ether"), 
-      this.state.crowdsale[0].walletAddress,
-      parseInt(this.state.crowdsale[0].supply, 10),
-      this.state.token.name,
-      this.state.token.ticker,
-      parseInt(this.state.token.decimals, 10),
-      parseInt(this.state.token.supply, 10)
-    ]
-  }*/
-
   //MintedTokenCappedCrowdsale
   getCrowdSaleParams = (web3, i) => {
     return [
       this.state.contracts.token.addr,
       this.state.contracts.pricingStrategy.addr[i],
       this.state.crowdsale[0].walletAddress, //this.state.contracts.multisig.addr,
-      parseInt(Date.parse(this.state.crowdsale[i].startTime)/1000, 10), 
-      parseInt(Date.parse(this.state.crowdsale[i].endTime)/1000, 10), 
-      0,
+      toFixed(parseInt(Date.parse(this.state.crowdsale[i].startTime)/1000, 10).toString()), 
+      toFixed(parseInt(Date.parse(this.state.crowdsale[i].endTime)/1000, 10).toString()), 
+      toFixed("0"),
       toFixed(parseInt(this.state.crowdsale[i].supply, 10)*10**parseInt(this.state.token.decimals, 10)).toString(),
       this.state.crowdsale[i].updatable?this.state.crowdsale[i].updatable=="on"?true:false:false,
       this.state.crowdsale[0].whitelistdisabled?this.state.crowdsale[0].whitelistdisabled=="yes"?false:true:false
@@ -486,12 +369,10 @@ export class stepFour extends stepTwo {
   }
 
   handleDeployedCrowdsaleContract = (err, crowdsaleAddr) => {
-    let newState = { ...this.state }
     if (err) {
-      newState.loading = false;
-      this.setState(newState);
-      return console.log(err);
+      return this.hideLoader();
     }
+    let newState = { ...this.state }
     newState.contracts.crowdsale.addr.push(crowdsaleAddr);
     this.setState(newState, this.calculateABIEncodedArgumentsForFinalizeAgentContractDeployment);    
   }
@@ -512,15 +393,6 @@ export class stepFour extends stepTwo {
         console.log(ABIencoded);
         if (counter == (this.state.pricingStrategy.length)) {
           this.setState(newState, this.deployFinalizeAgent);
-
-          //depreciated
-          /*if (this.state.contractType === this.state.contractTypes.whitelistwithcap) {
-            this.deployFinalizeAgent();
-          } else {
-            newState.loading = false;
-            this.setState(newState);
-            this.goToCrowdsalePage();
-          }*/
         }
       });
     }
@@ -528,28 +400,28 @@ export class stepFour extends stepTwo {
 
   deployFinalizeAgent = () => {
     console.log("***Deploy finalize agent contract***");
-    if (this.state.web3.eth.accounts.length === 0) {
-      let newState = { ...this.state }
-      newState.loading = false;
-      this.setState(newState);
-      return noMetaMaskAlert();
-    }
-    let contracts = this.state.contracts;
-    let binNullFinalizeAgent = contracts && contracts.nullFinalizeAgent && contracts.nullFinalizeAgent.bin || ''
-    let abiNullFinalizeAgent = contracts && contracts.nullFinalizeAgent && contracts.nullFinalizeAgent.abi || []
+    this.state.web3.eth.getAccounts().then((accounts) => {
+      if (accounts.length === 0) {
+        this.hideLoader();
+        return noMetaMaskAlert();
+      }
+      let contracts = this.state.contracts;
+      let binNullFinalizeAgent = contracts && contracts.nullFinalizeAgent && contracts.nullFinalizeAgent.bin || ''
+      let abiNullFinalizeAgent = contracts && contracts.nullFinalizeAgent && contracts.nullFinalizeAgent.abi || []
 
-    let binFinalizeAgent = contracts && contracts.finalizeAgent && contracts.finalizeAgent.bin || ''
-    let abiFinalizeAgent = contracts && contracts.finalizeAgent && contracts.finalizeAgent.abi || []
-    
-    let crowdsales;
-    if (this.state.tokenIsAlreadyCreated) {
-      let curTierAddr = [ contracts.crowdsale.addr.slice(-1)[0] ];
-      let prevTierAddr = [ contracts.crowdsale.addr.slice(-2)[0] ];
-      crowdsales = [prevTierAddr, curTierAddr];
-    }
-    else
-      crowdsales = this.state.contracts.crowdsale.addr;
-    this.deployFinalizeAgentRecursive(0, crowdsales, this.state.web3, abiNullFinalizeAgent, binNullFinalizeAgent, abiFinalizeAgent, binFinalizeAgent, this.state) 
+      let binFinalizeAgent = contracts && contracts.finalizeAgent && contracts.finalizeAgent.bin || ''
+      let abiFinalizeAgent = contracts && contracts.finalizeAgent && contracts.finalizeAgent.abi || []
+      
+      let crowdsales;
+      if (this.state.tokenIsAlreadyCreated) {
+        let curTierAddr = [ contracts.crowdsale.addr.slice(-1)[0] ];
+        let prevTierAddr = [ contracts.crowdsale.addr.slice(-2)[0] ];
+        crowdsales = [prevTierAddr, curTierAddr];
+      }
+      else
+        crowdsales = this.state.contracts.crowdsale.addr;
+      this.deployFinalizeAgentRecursive(0, crowdsales, this.state.web3, abiNullFinalizeAgent, binNullFinalizeAgent, abiFinalizeAgent, binFinalizeAgent, this.state) 
+    })
   }
 
   deployFinalizeAgentRecursive = (i, crowdsales, web3, abiNull, binNull, abiLast, binLast, state) => {
@@ -563,12 +435,10 @@ export class stepFour extends stepTwo {
       console.log(paramsFinalizeAgent);
       deployContract(i, web3, abi, bin, paramsFinalizeAgent, state, (err, finalizeAgentAddr) => {
         i++;
-        let newState = { ...this.state }
         if (err) {
-          newState.loading = false;
-          this.setState(newState);
-          return console.log(err);
+          return this.hideLoader();
         }
+        let newState = { ...this.state }
         newState.contracts.finalizeAgent.addr.push(finalizeAgentAddr);
         this.setState(newState);
         this.deployFinalizeAgentRecursive(i, crowdsales, web3, abiNull, binNull, abiLast, binLast, state)
@@ -596,33 +466,38 @@ export class stepFour extends stepTwo {
   }
 
   handleDeployedFinalizeAgent = (err, finalizeAgentAddr) => {
-    let newState = { ...this.state }
     if (err) {
-      newState.loading = false;
-      this.setState(newState);
-      return console.log(err);
+      return this.hideLoader();
     }
+    let newState = { ...this.state }
     newState.contracts.finalizeAgent.addr.push(finalizeAgentAddr);
     this.setState(newState, () => {
       let web3 = this.state.web3;
       let contracts = this.state.contracts;
       console.log(contracts);
-      //post actions for mintablecappedcrowdsale
-      //if (!this.state.tokenIsAlreadyCreated) {
-      console.log("###we create crowdsale firstly###");
-      
-      setLastCrowdsaleRecursive(0, web3, contracts.pricingStrategy.abi, contracts.pricingStrategy.addr, contracts.crowdsale.addr.slice(-1)[0], () => {
-        setReservedTokensListMultiple(web3, contracts.token.abi, contracts.token.addr, this.state.token, () => {
-          updateJoinedCrowdsalesRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, () => {
-            setMintAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.crowdsale.addr, () => {
-              setMintAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.finalizeAgent.addr, () => {
-                addWhiteListRecursive(0, web3, this.state.crowdsale, this.state.token, contracts.crowdsale.abi, contracts.crowdsale.addr, () => {
-                  setFinalizeAgentRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, contracts.finalizeAgent.addr, () => {
-                    setReleaseAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.finalizeAgent.addr, () => {
-                      transferOwnership(web3, this.state.contracts.token.abi, contracts.token.addr, this.state.crowdsale[0].walletAddress, () => {
-                        newState.loading = false;
-                        this.setState(newState);
-                        //this.goToCrowdsalePage();
+      this.downloadCrowdsaleInfo();
+
+      this.setState(() => {
+        setLastCrowdsaleRecursive(0, web3, contracts.pricingStrategy.abi, contracts.pricingStrategy.addr, contracts.crowdsale.addr.slice(-1)[0], 42982, (err) => {
+          if (err) return this.hideLoader();
+          setReservedTokensListMultiple(web3, contracts.token.abi, contracts.token.addr, this.state.token, (err) => {
+            if (err) return this.hideLoader();
+            updateJoinedCrowdsalesRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, (err) => {
+              if (err) return this.hideLoader();
+              setMintAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.crowdsale.addr, 68425, (err) => {
+                if (err) return this.hideLoader();
+                setMintAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.finalizeAgent.addr, 68425, (err) => {
+                  if (err) return this.hideLoader();
+                  addWhiteListRecursive(0, web3, this.state.crowdsale, this.state.token, contracts.crowdsale.abi, contracts.crowdsale.addr, (err) => {
+                    if (err) return this.hideLoader();
+                    setFinalizeAgentRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, contracts.finalizeAgent.addr, 68622, (err) => {
+                      if (err) return this.hideLoader();
+                      setReleaseAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.finalizeAgent.addr, 65905, (err) => {
+                        transferOwnership(web3, this.state.contracts.token.abi, contracts.token.addr, this.state.crowdsale[0].walletAddress, 46699, (err) => {
+                          if (err) return this.hideLoader();
+                          this.hideLoader();
+                          //this.goToCrowdsalePage();
+                        });
                       });
                     });
                   });
@@ -632,27 +507,6 @@ export class stepFour extends stepTwo {
           });
         });
       });
-      /*} else { // creation of additional tier after crowdsale was set up before
-        console.log("###we add tier after crowdsale is created###");
-        let curTierAddr = [ contracts.crowdsale.addr.slice(-1)[0] ];
-        let prevTierAddr = [ contracts.crowdsale.addr.slice(-2)[0] ];
-        let finalizeSet = [prevTierAddr, curTierAddr];
-        this.updateJoinedCrowdsalesRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, () => {
-          this.setMintAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, curTierAddr, () => {
-            this.setMintAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.finalizeAgent.addr, () => {
-              this.addWhiteListRecursive(0, web3, this.state.crowdsale, this.state.token, contracts.crowdsale.abi, curTierAddr, () => {
-                this.setFinalizeAgentRecursive(0, web3, contracts.crowdsale.abi, finalizeSet, contracts.finalizeAgent.addr, () => {
-                  this.setReleaseAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.finalizeAgent.addr, () => {
-                    newState.loading = false;
-                    this.setState(newState);
-                    this.goToCrowdsalePage();
-                  });
-                });
-              });
-            });
-          });
-        });
-      }*/
     });
   }
 
