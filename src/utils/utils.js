@@ -281,7 +281,11 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
                 case "_oneTokenInWei": {
                   //params.vals.push(state.pricingStrategy[crowdsaleNum].rate);
                   //params.vals.push(state.web3.toWei(1/state.pricingStrategy[crowdsaleNum].rate/10**state.token.decimals, "ether"));
-                  params.vals.push(state.web3.utils.toWei(1/state.pricingStrategy[crowdsaleNum].rate, "ether"));
+                  
+                  let n = 1000000000000000000 //fraction to round
+                  let oneTokenInETH = 1/state.pricingStrategy[crowdsaleNum].rate;
+                  oneTokenInETH = 1.0 / n * Math.ceil(n * oneTokenInETH)
+                  params.vals.push(state.web3.utils.toWei(oneTokenInETH, "ether"));
                 } break;
                 default: {
                     params.vals.push("");
