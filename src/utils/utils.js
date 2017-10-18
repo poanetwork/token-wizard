@@ -281,7 +281,10 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
                 case "_oneTokenInWei": {
                   //params.vals.push(state.pricingStrategy[crowdsaleNum].rate);
                   //params.vals.push(state.web3.toWei(1/state.pricingStrategy[crowdsaleNum].rate/10**state.token.decimals, "ether"));
-                  params.vals.push(state.web3.utils.toWei(1/state.pricingStrategy[crowdsaleNum].rate, "ether"));
+                  
+                  let oneTokenInETHRaw = 1/state.pricingStrategy[crowdsaleNum].rate
+                  let oneTokenInETH = roundToDecimals(1000000000000000000, oneTokenInETHRaw)
+                  params.vals.push(state.web3.utils.toWei(oneTokenInETH, "ether"));
                 } break;
                 default: {
                     params.vals.push("");
@@ -290,6 +293,10 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
         }
     }
     return params;
+}
+
+export function roundToDecimals(n, input) {
+  return 1.0 / n * Math.ceil(n * input)
 }
 
 const getTimeAsNumber = (time) => new Date(time).getTime()
