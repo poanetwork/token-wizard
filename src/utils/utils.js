@@ -296,7 +296,7 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
 }
 
 export function roundToDecimals(n, input) {
-  return 1.0 / n * Math.ceil(n * output)
+  return 1.0 / n * Math.ceil(n * input)
 }
 
 const getTimeAsNumber = (time) => new Date(time).getTime()
