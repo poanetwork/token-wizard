@@ -12,7 +12,7 @@ class PricingStrategyStore {
     this.strategies.push(strategy)
 	}
 	
-	@action setStrategyProperty = (index, property, value) => {
+	@action setStrategyProperty = (value, property, index) => {
 		let newStrategy = {...this.strategies[index]}
 		newStrategy[property] = value
     this.strategies[index] = newStrategy;

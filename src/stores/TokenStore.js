@@ -10,6 +10,7 @@ class TokenStore {
   @observable supply;
   @observable decimals;
   @observable validToken;
+  @observable reservedTokensInput;
 
   constructor() {
     this.validToken = {
@@ -17,6 +18,8 @@ class TokenStore {
       'ticker': EMPTY,
       'decimals': EMPTY
     };
+    this.supply = 0
+    this.reservedTokensInput = {}
   }
 
   @action setProperty = (property, value) => {
@@ -51,13 +54,14 @@ class TokenStore {
       return;
     }
     
-    Object.keys(this.validToken).filter((key) => {
+    const validKeys = Object.keys(this.validToken).filter((key) => {
       if (this.validToken[key] === VALID) {
         return true;
       } else {
         return false;
       }
     });
+    return validKeys.length === Object.keys(this.validToken).length
   }
 }
 

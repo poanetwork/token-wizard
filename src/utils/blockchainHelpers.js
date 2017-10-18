@@ -124,8 +124,7 @@ export function getNetworkVersion(web3, cb) {
   });
 }
 
-export function setExistingContractParams(abi, addr, $this) {
-  let state = $this.state;
+export function setExistingContractParams(abi, addr, setContractProperty) {
   setTimeout(function() {
     getWeb3((web3) => {
       attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
@@ -135,11 +134,11 @@ export function setExistingContractParams(abi, addr, $this) {
         crowdsaleContract.token.call(function(err, tokenAddr) {
           cbCount++;
           console.log("tokenAddr: " + tokenAddr);
-          state.contracts.token.addr = tokenAddr;
-
-          if (propsCount === cbCount) {
-            $this.setState(state);
-          }
+          // state.contracts.token.addr = tokenAddr;
+          setContractProperty('token', 'addr', tokenAddr)
+          // if (propsCount === cbCount) {
+          //   $this.setState(state);
+          // }
         });
 
         /*propsCount++;
@@ -157,11 +156,11 @@ export function setExistingContractParams(abi, addr, $this) {
         crowdsaleContract.multisigWallet.call(function(err, multisigWalletAddr) {
           cbCount++;
           console.log("multisigWalletAddr: " + multisigWalletAddr);
-          state.contracts.multisig.addr = multisigWalletAddr;
-
-          if (propsCount === cbCount) {
-            $this.setState(state);
-          }
+          // state.contracts.multisig.addr = multisigWalletAddr;
+          setContractProperty('multisig', 'addr', multisigWalletAddr)
+          // if (propsCount === cbCount) {
+          //   $this.setState(state);
+          // }
         });
       });
     })
@@ -170,7 +169,7 @@ export function setExistingContractParams(abi, addr, $this) {
 
 export function deployContract(i, web3, abi, bin, params, state, cb) {
   //console.log('web3.eth.accounts[0]', web3.eth.accounts[0], 'bin', bin)
-  getEncodedABIClientSide(web3, abi, state, params, i, (ABIencoded) => {
+  getEncodedABIClientSide(web3, abi, params, i, (ABIencoded) => {
     console.log(ABIencoded);
     let binFull = bin + ABIencoded.substr(2);
     //console.log(binFull);

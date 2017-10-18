@@ -7,6 +7,10 @@ import {
   Route
 } from 'react-router-dom'
 
+const myDiv = () => ( <div> my div</div>)
+
+
+console.log('stepThree', stepThree, 'stepTwo', stepTwo)
 class App extends Component {
   render() {
     var crowdsaleAddr = getQueryVariable("addr");
