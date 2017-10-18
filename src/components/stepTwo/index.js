@@ -18,6 +18,8 @@ export class stepTwo extends Component {
   }
 
   showErrorMessages = (parent) => {
+
+    console.log('error',  this.props.tokenStore, this.props.tokenStore.validToken, this.props.tokenStore.isTokenValid)
     this.props.tokenStore.invalidateToken();
   }
   
@@ -62,7 +64,6 @@ export class stepTwo extends Component {
     if(this.props.tokenStore.isTokenValid) {
       return this.renderLink();
     }
-
     return <div onClick={this.showErrorMessages.bind(this, 'token')} className="button button_fill"> Continue</div>
   }
 

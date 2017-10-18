@@ -84,39 +84,39 @@ function setMintAgent(web3, abi, addr, acc, cb) {
   });
 }
 
-function addWhiteList(round, web3, crowdsale, token, abi, addr, cb) {
+function addWhiteList(round, web3, tierStore, token, abi, addr, cb) {
   console.log("###whitelist:###");
   let whitelist = [];
   for (let i = 0; i <= round; i++) {
-    console.log(crowdsale[i]);
-    console.log(crowdsale[i].whitelist);
+    console.log(tierStore.tiers[i]);
+    console.log(tierStore.tiers[i].whitelist);
 
-    for (let j = 0; j < crowdsale[i].whitelist.length; j++) {
+    for (let j = 0; j < tierStore.tiers[i].whitelist.length; j++) {
       let itemIsAdded = false;
       for (let k = 0; k < whitelist.length; k++) {
-        if (whitelist[k].addr == crowdsale[i].whitelist[j].addr) {
+        if (whitelist[k].addr == tierStore.tiers[i].whitelist[j].addr) {
           itemIsAdded = true;
           break;
         }
       }
       if (!itemIsAdded) {
-        whitelist.push.apply(whitelist, crowdsale[i].whitelist);
+        whitelist.push.apply(whitelist, tierStore.tiers[i].whitelist);
       }
     }
 
-    if (crowdsale[i].whiteListInput.addr && crowdsale[i].whiteListInput.min && crowdsale[i].whiteListInput.max) {
+    if (tierStore.tiers[i].whiteListInput.addr && tierStore.tiers[i].whiteListInput.min && tierStore.tiers[i].whiteListInput.max) {
       let itemIsAdded = false;
       for (let k = 0; k < whitelist.length; k++) {
-        if (whitelist[k].addr == crowdsale[i].whiteListInput.addr) {
+        if (whitelist[k].addr == tierStore.tiers[i].whiteListInput.addr) {
           itemIsAdded = true;
           break;
         }
       }
       if (!itemIsAdded) {
         whitelist.push({
-          "addr": crowdsale[i].whiteListInput.addr,
-          "min": crowdsale[i].whiteListInput.min,
-          "max": crowdsale[i].whiteListInput.max
+          "addr": tierStore.tiers[i].whiteListInput.addr,
+          "min": tierStore.tiers[i].whiteListInput.min,
+          "max": tierStore.tiers[i].whiteListInput.max
         });
       }
     }
@@ -407,11 +407,11 @@ export function updateJoinedCrowdsalesRecursive (i, web3, abi, addrs, cb) {
   })
 }
 
-export function addWhiteListRecursive (i, web3, crowdsale, token, abi, crowdsaleAddrs, cb) {
-  addWhiteList(i, web3, crowdsale, token, abi, crowdsaleAddrs[i], () => {
+export function addWhiteListRecursive (i, web3, tierStore, token, abi, crowdsaleAddrs, cb) {
+  addWhiteList(i, web3, tierStore, token, abi, crowdsaleAddrs[i], () => {
     i++;
     if (i < crowdsaleAddrs.length) {
-      addWhiteListRecursive(i, web3, crowdsale, token, abi, crowdsaleAddrs, cb);
+      addWhiteListRecursive(i, web3, tierStore, token, abi, crowdsaleAddrs, cb);
     } else {
       cb();
     }

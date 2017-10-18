@@ -11,9 +11,9 @@ import { InputFieldExt } from '../Common/InputFieldExt'
 import { RadioInputField } from '../Common/RadioInputField'
 import { CrowdsaleBlock } from '../Common/CrowdsaleBlock'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
-import { NAVIGATION_STEPS, defaultState, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS, intitialStepThreeValidations } from '../../utils/constants'
-import { observer } from 'mobx-react'
-import { contractStore, crowdsaleStore, pricingStrategyStore, stepThreeValidationsStore, childrenStore, web3Store} from '../../stores';
+import { NAVIGATION_STEPS, defaultState, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS, intitialStepThreeValidations, CONTRACT_TYPES } from '../../utils/constants'
+import { inject, observer } from 'mobx-react'
+import { contractStore, crowdsaleStore, pricingStrategyStore, stepThreeValidationsStore, crowdsaleBlockListStore, web3Store, tierCrowdsaleListStore} from '../../stores';
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
 const { START_TIME, END_TIME, MINCAP, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME, ALLOWMODIFYING, DISABLEWHITELISTING } = TEXT_FIELDS
@@ -22,65 +22,89 @@ const { START_TIME, END_TIME, MINCAP, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SE
   //crowdsale
   //validations
   //pricing strategy
-  //children
-  //web3
-@observer export class stepThree extends stepTwo {
+  //crowdsaleBlockListStore
+  //web3,
+	//tierCrowdsaleListStore
+@inject('contractStore', 'crowdsaleBlockListStore', 'pricingStrategyStore', 'web3Store', 'tierStore') @observer
+export class stepThree extends React.Component{
   constructor(props) {
     super(props);
     window.scrollTo(0, 0);
-    const oldState = getOldState(props, defaultState)
-    if (oldState.contracts.crowdsale.addr.length > 0) {
-      oldState.contracts.pricingStrategy.addr = [];
-      setExistingContractParams(oldState.contracts.crowdsale.abi, oldState.contracts.crowdsale.addr[0], this);
+    // const oldState = getOldState(props, defaultState)
+    if (contractStore.crowdsale.addr.length > 0) {
+      contractStore.setContractProperty('pricingStrategy','addr',[]);
+      setExistingContractParams(contractStore.abi, contractStore.addr[0], contractStore.setContractProperty);
     }
-    oldState.children = [];
-    oldState.crowdsale[0].tier = "Tier 1"
-    oldState.crowdsale[0].updatable = "off"
-    oldState.crowdsale[0].whitelistdisabled = "yes"
+    // oldState.children = [];
+    crowdsaleBlockListStore.emptyList()
+    this.props.tierStore.setTierProperty("Tier 1", 'name', 0)
+    // oldState.crowdsale[0].tier = "Tier 1"
+    this.props.tierStore.setTierProperty( "off", 'updatable', 0)
+    // oldState.crowdsale[0].updatable = "off"
+    this.props.tierStore.setTierProperty( "yes", 'whitelistdisabled', 0)
+    // oldState.crowdsale[0].whitelistdisabled = "yes"
     //this.state = Object.assign({}, oldState, {validations: { ...oldState.validations, startTime: VALID, endTime: VALID, walletAddress: VALID, supply: EMPTY, rate: EMPTY } } )
-    this.state = Object.assign({}, oldState, intitialStepThreeValidations )
+    // this.state = Object.assign({}, oldState, intitialStepThreeValidations )
     //console.log('this.state', this.state)
   }
 
   addCrowdsale() {
-    let newState = {...this.state}
-    let num = newState.children.length + 1;
-    newState.crowdsale.push({
+    // let newState = {...this.state}
+    const { crowdsaleBlockListStore, tierStore } = this.props
+    let num = crowdsaleBlockListStore.blockList.length + 1;
+    const newTier = {
       tier: "Tier " + (num + 1),
       supply: 0,
+      rate: 0,
       updatable: "off",
       whitelist:[], 
       whiteListElements: [], 
       whiteListInput:{}
-    });
-    newState.validations.push({
+    }
+
+    const newTierValidations = {
       tier: VALID,
       startTime: VALID,
       endTime: VALID,
       supply: EMPTY,
       rate: EMPTY
-    });
+    }
+
+    tierStore.addTier(newTier)
+    tierStore.addTierValidations(newTierValidations)
     //newState.crowdsale[num].startTime = newState.crowdsale[num - 1].endTime;
     //newState.crowdsale[num].endTime = defaultCompanyEndDate(newState.crowdsale[num].startTime);
-    newState.pricingStrategy.push({rate: 0});
-    this.setState(newState, () => this.addCrowdsaleBlock(num));
+    this.addCrowdsaleBlock(num)
+  }
+
+  updateCrowdsaleBlockListStore = (event, property, index) => {
+    const { crowdsaleBlockListStore } = this.props
+    const value = event.target.value;
+    crowdsaleBlockListStore.setCrowdsaleBlockProperty(value, property, index);
+    crowdsaleBlockListStore.validateCrowdsaleListBlockProperty(property, index);
+  }
+
+  updateTierStore = (event, property, index) => {
+    const { tierStore } = this.props
+    const value = event.target.value;
+    tierStore.setTierProperty(value, property, index);
+    tierStore.validateTiers(property, index)
+  }
+
+  updatePricingStrategyStore = (event, index, property) => {
+    const { pricingStrategyStore } = this.props
+    const value = event.target.value;
+    pricingStrategyStore.setStrategyProperty(value, property, index);
   }
 
   addCrowdsaleBlock(num) {
-    let newState = {...this.state}
-    newState.children.push(
-      <CrowdsaleBlock
-        num = {num}
-        state = {this.state}
-        onChange={(e, cntrct, num, prop) => this.changeState(e, cntrct, num, prop)}
-        handleInputBlur={(parent, property, key) => this.handleInputBlur(parent, property, key)}
-      />
+    this.props.crowdsaleBlockListStore.addCrowdsaleItem(
+      <CrowdsaleBlock num = {num}/>
     )
-    this.setState(newState)
   }
 
   renderStandardLink () {
-    return <Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}><a className="button button_fill">Continue</a></Link>
+    return <Link to={{ pathname: '/4', query: { changeState: this.changeState } }}><a className="button button_fill">Continue</a></Link>
   }
 
   /*renderStandardLinkComponent () {
@@ -98,7 +122,7 @@ const { START_TIME, END_TIME, MINCAP, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SE
   }*/
 
   renderStandardLinkComponent () {
-    if(stepsAreValid(this.state.validations) || (allFieldsAreValid('crowdsale', this.state) && allFieldsAreValid('pricingStrategy', this.state))){
+    if(this.props.tierStore.areTiersValid){
       console.log('steeeeeep 33333')
       return this.renderStandardLink()
     }
@@ -116,58 +140,30 @@ const { START_TIME, END_TIME, MINCAP, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SE
 
   renderLinkComponent () {
     //console.log(`stepsAreValid(this.state.validations) || allFieldsAreValid('crowdsale', this.state)`, stepsAreValid(this.state.validations), allFieldsAreValid('crowdsale', this.state))
-    if(stepsAreValid(this.state.validations) || (allFieldsAreValid('crowdsale', this.state) && allFieldsAreValid('pricingStrategy', this.state))){
+    if(this.props.tierStore.areTiersValid){
       // console.log('step 3 is valididididididididididididididididi')
       return this.renderLink()
     }
     console.log('not valid')
     return <div>
       <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Tier</div>
-      <div onClick={() => {
-        this.showErrorMessages('crowdsale')
-        this.showErrorMessages('pricingStrategy')
-      }} className="button button_fill"> Continue</div>
+      <div className="button button_fill"> Continue</div>
     </div>
   }
-  componentDidMount () {
-    checkWeb3(this.state.web3);
-    setTimeout( () => {
-      getWeb3((web3) => {
-        console.log('timeout state', this.state)
-        let newState = {...this.state}
-        newState.crowdsale[0].walletAddress = web3.eth.accounts[0];
-        newState.crowdsale[0].startTime = defaultCompanyStartDate();
-        newState.crowdsale[0].endTime = defaultCompanyEndDate(newState.crowdsale[0].startTime);
-        this.setState(newState);
-        //depreciated
-        /*let datesIterator = 0;
-        let datesCount = 2;
-        calculateFutureBlock(new Date(newState.crowdsale[0].startTime), newState.blockTimeGeneration, (targetBlock) => {
-          newState.crowdsale[0].startBlock = targetBlock;
-          datesIterator++;
 
-          if (datesIterator === datesCount) {
-            this.setState(newState);
-          }
-        });
-        calculateFutureBlock(new Date(newState.crowdsale[0].endTime), newState.blockTimeGeneration, (targetBlock) => {
-          newState.crowdsale[0].endBlock = targetBlock;
-          datesIterator++;
-
-          if (datesIterator === datesCount) {
-            this.setState(newState);
-          }
-        });*/
-      });
-    }, 500);
-  }
+    componentDidMount () {
+      const { tierStore, web3Store } = this.props
+      const accounts = web3Store.web3.eth.accounts
+      tierStore.setTierProperty(accounts[0], 'walletAddress', 0)
+      tierStore.setTierProperty(defaultCompanyStartDate(), 'startTime', 0)
+      tierStore.setTierProperty(defaultCompanyEndDate(tierStore.tiers[0].startTime), 'endTime', 0)
+    }
 
   render() {
-    const { validations } = this.state
-    let { token } = this.state
-    let { crowdsale } = this.state
-    let { pricingStrategy } = this.state
-    console.log('this.state.contractType', this.state.contractType)
+    const { contractStore, pricingStrategyStore, crowdsaleBlockListStore, tierStore } = this.props
+    const validations = crowdsaleBlockListStore.validCrowdsales
+    // let { pricingStrategy } = this.state
+    // console.log('this.state.contractType', this.state.contractType)
     let globalSettingsBlock = <div><div className="section-title">
         <p className="title">Global limits</p>
       </div>
@@ -176,21 +172,20 @@ const { START_TIME, END_TIME, MINCAP, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SE
           side='left' 
           type='number' 
           title={MINCAP} 
-          value={token.globalmincap} 
-          valid={validations.globalmincap} 
+          value={tierStore.globalMinCap} 
+          valid={VALID} 
           errorMessage={VALIDATION_MESSAGES.MINCAP} 
-          onBlur={() => this.handleInputBlur('token', 'globalmincap')}
-          onChange={(e) => this.changeState(e, 'token', 0, 'globalmincap')}
+          onChange={(e) => tierStore.setGlobalMinCap(e.target.value)}
           description={`Minimum amount tokens to buy. Not a mininal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.`}
         />
       </div></div>
-    if (this.state.contractType === this.state.contractTypes.standard) {
+    if ( contractStore.contractType === CONTRACT_TYPES.standard) {
       return (
         <section className="steps steps_crowdsale-contract" ref="three">
           <StepNavigation activeStep={CROWDSALE_SETUP}/>
           <div className="steps-content container">
             <div className="about-step">
-              <div className="step-icons step-icons_crowdsale-setup"></div>
+                <div className="step-icons step-icons_crowdsale-setup"></div>  
               <p className="title">Crowdsale setup</p>
               <p className="description">
                 The most important and exciting part of the crowdsale process. Here you can define parameters of your crowdsale campaign. 
@@ -202,22 +197,20 @@ const { START_TIME, END_TIME, MINCAP, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SE
                 side='left' 
                 type='datetime-local' 
                 title={START_TIME} 
-                value={console.log('crowdsale[0].startTime', this.state) || crowdsale[0].startTime} 
-                valid={validations[0].startTime} 
+                value={tierStore.tiers[0].startTime} 
+                valid={tierStore.validTiers[0].startTime} 
                 errorMessage={VALIDATION_MESSAGES.START_TIME} 
-                onBlur={() => this.handleInputBlur('crowdsale', 'startTime', 0)}
-                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'startTime')}
+                onChange={(e) => this.updateTierStore(e, 'startTime', 0)}
                 description={`Date and time when the tier starts. Can't be in the past from the current moment.`}
               />
               <InputField 
                 side='right' 
                 type='datetime-local' 
                 title={END_TIME} 
-                value={crowdsale[0].endTime} 
-                valid={validations[0].endTime} 
+                value={tierStore.tiers[0].endTime} 
+                valid={tierStore.validTiers[0].endTime} 
                 errorMessage={VALIDATION_MESSAGES.END_TIME} 
-                onBlur={() => this.handleInputBlur('crowdsale', 'endTime', 0)}
-                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'endTime')}
+                onChange={(e) => this.updateTierStore(e, 'endTime', 0)}
                 description={`Date and time when the tier ends. Can be only in the future.`}
               />
               </div>
@@ -226,22 +219,20 @@ const { START_TIME, END_TIME, MINCAP, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SE
                 side='left' 
                 type='text' 
                 title={WALLET_ADDRESS} 
-                value={crowdsale[0].walletAddress} 
-                valid={validations[0].walletAddress} 
+                value={tierStore.tiers[0].walletAddress} 
+                valid={tierStore.validTiers[0].walletAddress} 
                 errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS}
-                onBlur={() => this.handleInputBlur('crowdsale', 'walletAddress', 0)} 
-                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'walletAddress')}
+                onChange={(e) => this.updateTierStore(e, 'walletAddress', 0)}
                 description={`Address where the money goes immediately after each successful transactions. We recommend to setup a multisig wallet with hardware based signers.`}
               />
               <InputField 
                 side='right' 
                 type='number' 
                 title={SUPPLY} 
-                value={crowdsale[0].supply} 
-                valid={validations[0].supply} 
+                value={tierStore.tiers[0].supply} 
+                valid={tierStore.validTiers[0].supply} 
                 errorMessage={VALIDATION_MESSAGES.SUPPLY}
-                onBlur={() => this.handleInputBlur('crowdsale', 'supply', 0)} 
-                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'supply')}
+                onChange={(e) => this.updateTierStore(e, 'supply', 0)}
                 description={`How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers`}
               />
               </div>
@@ -249,11 +240,10 @@ const { START_TIME, END_TIME, MINCAP, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SE
                 side='left' 
                 type='number' 
                 title={RATE} 
-                value={pricingStrategy[0].rate} 
-                valid={validations[0].rate} 
+                value={pricingStrategyStore.strategies[0].rate} 
+                valid={true} 
                 errorMessage={VALIDATION_MESSAGES.RATE} 
-                onBlur={() => this.handleInputBlur('pricingStrategy', 'rate', 0)}
-                onChange={(e) => this.changeState(e, 'pricingStrategy', 0, 'rate')}
+                onChange={(e) => this.updatePricingStrategyStore(e, 'rate', 0)}
                 description={`Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens`}
               />
             </div>
@@ -263,7 +253,7 @@ const { START_TIME, END_TIME, MINCAP, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SE
           </div>
         </section>
       )
-    } else if (this.state.contractType === this.state.contractTypes.whitelistwithcap) {
+    } else if (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap) {
       let whitelistInputBlock = <div><div className="section-title">
               <p className="title">Whitelist</p>
             </div><WhitelistInputBlock
@@ -287,22 +277,20 @@ const { START_TIME, END_TIME, MINCAP, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SE
                 side='left' 
                 type='text' 
                 title={CROWDSALE_SETUP_NAME} 
-                value={crowdsale[0].tier}
-                valid={validations[0].tier} 
+                value={tierStore.tiers[0].name}
+                valid={tierStore.validTiers[0].name} 
                 errorMessage={VALIDATION_MESSAGES.TIER} 
-                onBlur={() => this.handleInputBlur('crowdsale', 'tier', 0)}
-                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'tier')}
+                onChange={(e) => this.updateTierStore(e, 'name', 0)}
                 description={`Name of a tier, e.g. PrePreIco, PreICO, ICO with bonus A, ICO with bonus B, etc. We simplified that and will increment a number after each tier.`}
               />
               <InputFieldExt 
                 side='right' 
                 type='text' 
                 title={WALLET_ADDRESS} 
-                value={crowdsale[0].walletAddress} 
-                valid={validations[0].walletAddress} 
+                value={tierStore.tiers[0].walletAddress} 
+                valid={tierStore.validTiers[0].walletAddress} 
                 errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS} 
-                onBlur={() => this.handleInputBlur('crowdsale', 'walletAddress', 0)}
-                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'walletAddress')}
+                onChange={(e) => this.updateTierStore(e, 'walletAddress', 0)}
                 description={`Where the money goes after investors transactions. Immediately after each transaction. We recommend to setup a multisig wallet with hardware based signers.`}
               />
               </div>
@@ -311,22 +299,20 @@ const { START_TIME, END_TIME, MINCAP, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SE
                 side='left' 
                 type='datetime-local' 
                 title={START_TIME} 
-                value={crowdsale[0].startTime} 
-                valid={validations[0].startTime} 
+                value={tierStore.tiers[0].startTime} 
+                valid={tierStore.validTiers[0].startTime} 
                 errorMessage={VALIDATION_MESSAGES.START_TIME} 
-                onBlur={() => this.handleInputBlur('crowdsale', 'startTime', 0)}
-                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'startTime')}
+                onChange={(e) => this.updateTierStore(e, 'startTime', 0)}
                 description={`Date and time when the tier starts. Can't be in the past from the current moment.`}
               />
               <InputFieldExt 
                 side='right' 
                 type='datetime-local' 
                 title={END_TIME} 
-                value={crowdsale[0].endTime} 
-                valid={validations[0].endTime} 
+                value={tierStore.tiers[0].endTime} 
+                valid={tierStore.validTiers[0].endTime} 
                 errorMessage={VALIDATION_MESSAGES.END_TIME} 
-                onBlur={() => this.handleInputBlur('crowdsale', 'endTime', 0)}
-                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'endTime')}
+                onChange={(e) => this.updateTierStore(e, 'endTime', 0)}
                 description={`Date and time when the tier ends. Can be only in the future.`}
               />
               </div>
@@ -335,22 +321,20 @@ const { START_TIME, END_TIME, MINCAP, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SE
                 side='left' 
                 type='number' 
                 title={RATE} 
-                value={pricingStrategy[0].rate} 
-                valid={validations[0].rate} 
+                value={tierStore.tiers[0].rate} 
+                valid={tierStore.validTiers[0].rate} 
                 errorMessage={VALIDATION_MESSAGES.RATE} 
-                onBlur={() => this.handleInputBlur('pricingStrategy', 'rate', 0)}
-                onChange={(e) => this.changeState(e, 'pricingStrategy', 0, 'rate')}
+                onChange={(e) => this.updateTierStore(e, 'rate', 0)}
                 description={`Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens`}
               />
               <InputField 
                 side='right' 
                 type='number' 
                 title={SUPPLY} 
-                value={crowdsale[0].supply} 
-                valid={validations[0].supply} 
+                value={tierStore.tiers[0].supply} 
+                valid={tierStore.validTiers[0].supply} 
                 errorMessage={VALIDATION_MESSAGES.SUPPLY} 
-                onBlur={() => this.handleInputBlur('crowdsale', 'supply', 0)}
-                onChange={(e) => this.changeState(e, 'crowdsale', 0, 'supply')}
+                onChange={(e) => this.updateTierStore(e, 'supply', 0)}
                 description={`How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers`}
               />
               </div>
@@ -362,9 +346,9 @@ const { START_TIME, END_TIME, MINCAP, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SE
                   vals={["on", "off"]}
                   state={this.state}
                   num={0}
-                  defaultValue={this.state.crowdsale[0].updatable}
+                  defaultValue={tierStore.tiers[0].updatable}
                   name='crowdsale-updatable-0'
-                  onChange={(e) => this.changeState(e, 'crowdsale', 0, 'updatable')}
+                  onChange={(e) => this.updateTierStore(e, 'updatable', 0)}
                   description={`Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing.`}
               />
               <RadioInputField 
@@ -374,17 +358,17 @@ const { START_TIME, END_TIME, MINCAP, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SE
                   vals={["yes", "no"]}
                   state={this.state}
                   num={0}
-                  defaultValue={this.state.crowdsale[0].whitelistdisabled}
+                  defaultValue={tierStore.tiers[0].whitelistdisabled}
                   name='crowdsale-whitelistdisabled-0'
-                  onChange={(e) => this.changeState(e, 'crowdsale', 0, 'whitelistdisabled')}
+                  onChange={(e) => this.updateTierStore(e, 'whitelistdisabled', 0)}
                   description={`Disables whitelistings. Anyone can buy on the tier.`}
               />
               </div>
-              {this.state.crowdsale[0].whitelistdisabled === "no"?"":globalSettingsBlock}
+              {tierStore.tiers[0].whitelistdisabled === "no"?"":globalSettingsBlock}
             </div>
-            {this.state.crowdsale[0].whitelistdisabled === "yes"?"":whitelistInputBlock}
+            {tierStore.tiers[0].whitelistdisabled === "yes"?"":whitelistInputBlock}
           </div>
-          <div>{this.state.children}</div>
+          <div>{crowdsaleBlockListStore.blockList}</div>
           <div className="button-container">
             {this.renderLinkComponent()}
           </div>

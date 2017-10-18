@@ -2,27 +2,27 @@ import { observable, action } from 'mobx';
 
 class StepThreeValidationStore {
 
-  @observable name;
-	@observable walletAddress;
-	@observable rate;
-	@observable supply;
-	@observable startTime;
-	@observable endTime;
-	@observable updatable;
+	@observable validationsList 
 
 	constructor() {
-		this.name = 'EMPTY'
-		this.walletAddress = 'EMPTY'
-		this.rate = 'EMPTY'
-		this.supply = 'EMPTY'
-		this.startTime = 'VALIDATED'
-		this.endTime = 'VALIDATED'
-		this.updatable = "VALIDATED"
+		this[0] = {}
+		this[0].name = 'EMPTY'
+		this[0].walletAddress = 'EMPTY'
+		this[0].rate = 'EMPTY'
+		this[0].supply = 'EMPTY'
+		this[0].startTime = 'VALIDATED'
+		this[0].endTime = 'VALIDATED'
+		this[0].updatable = "VALIDATED"
 	}
 
-	@action property = (property, value) => {
-		this[property] = value
+	@action changeProperty = (index, property, value) => {
+		this[index][property] = value
 	}
+
+	@action addValidationItem = (item) => {
+		this.validationsList.push(item)
+	}
+
 
 }
 
