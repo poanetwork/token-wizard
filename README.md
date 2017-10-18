@@ -390,9 +390,9 @@ The simplest way for macOS users is installation through [brew](https://github.c
 
 [Link](https://kovan.etherscan.io/verifyContract) to verification. 
 
-The latest solidity compiler without optimization should be used.
+The latest stable solidity compiler without optimization should be used.
 
-Contract name is `KovanBridge`.
+Contract name is `ForeignBridge`.
 
 Contract source code is in `oracles-parity-bridge/contracts/bridge.sol` folder. Copy and paste full content of this file.
 
@@ -400,7 +400,7 @@ ABI-encoded arguments for the contract are the last 96 bytes of the transaction 
 
 *Attention!* - if the right-side contract can't be verified, you can use Parity UI for the right side. Launch it with `./parity --chain kovan --warp --ws-port 8567 --port 30304 --jsonrpc-port 8565 ui`
 
-ABI of the right-side contract is [here](https://github.com/oraclesorg/parity-bridge/blob/master/contracts/KovanBridge.abi).
+ABI of the right-side contract is [here](https://github.com/oraclesorg/parity-bridge/blob/master/contracts/ForeignBridge.abi).
 
 ### Getting started
 
