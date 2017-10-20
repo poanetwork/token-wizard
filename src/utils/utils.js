@@ -283,7 +283,7 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
                   //params.vals.push(state.web3.toWei(1/state.pricingStrategy[crowdsaleNum].rate/10**state.token.decimals, "ether"));
                   
                   let oneTokenInETHRaw = 1/state.pricingStrategy[crowdsaleNum].rate
-                  let oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, oneTokenInETHRaw)
+                  let oneTokenInETH = roundToDecimals(1000000000000000000, oneTokenInETHRaw)
                   params.vals.push(state.web3.utils.toWei(oneTokenInETH, "ether"));
                 } break;
                 default: {
@@ -295,25 +295,8 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
     return params;
 }
 
-export const floorToDecimals = (n, input) => Math.floor10(input, n)
-
-const decimalAdjust = (type, value, exp) => {
-    if (typeof exp === 'undefined' || +exp === 0) {
-      return Math[type](value);
-    }
-    value = +value;
-    exp = +exp;
-    if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0)) {
-      return NaN;
-    }
-    value = value.toString().split('e');
-    value = Math[type](+(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp)));
-    value = value.toString().split('e');
-    return +(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp));
-}
-
-if (!Math.floor10) {
-  Math.floor10 = (value, exp) => decimalAdjust('floor', value, exp)
+export function roundToDecimals(n, input) {
+  return 1.0 / n * Math.ceil(n * input)
 }
 
 const getTimeAsNumber = (time) => new Date(time).getTime()
