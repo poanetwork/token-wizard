@@ -6,7 +6,7 @@ import { getQueryVariable, getURLParam, getWhiteListWithCapCrowdsaleAssets } fro
 import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert, invalidCrowdsaleAddrAlert } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
 import { ICOConfig } from '../Common/config'
-import { defaultState } from '../../utils/constants'
+import { defaultState, GAS_PRICE } from '../../utils/constants'
 
 export class Invest extends React.Component {
   constructor(props) {
@@ -181,7 +181,7 @@ export class Invest extends React.Component {
     let opts = {
       from: accounts[0],
       value: weiToSend,
-      gasPrice: 21000000000
+      gasPrice: GAS_PRICE
     };
     console.log(opts);
     sendTXToContract(web3, crowdsaleContract.methods.buy().send(opts), (err) => {
