@@ -39,6 +39,10 @@ export const defaultState = {
 	}
 }
 
+export const TRUNC_TO_DECIMALS = {
+	DECIMALS18: -18
+}
+
 export const NAVIGATION_STEPS = {
 	CROWDSALE_CONTRACT: 'Crowdsale Contract',
 	TOKEN_SETUP: 'Token Setup',
