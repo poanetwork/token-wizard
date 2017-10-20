@@ -1,4 +1,4 @@
-import { VALIDATION_TYPES, TRUNC_TO_DECIMALS } from './constants'
+import { VALIDATION_TYPES } from './constants'
 const { VALID, EMPTY, INVALID } = VALIDATION_TYPES
 
 export function getQueryVariable(variable) {

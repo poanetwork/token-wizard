@@ -12,7 +12,7 @@ import { StepNavigation } from '../Common/StepNavigation'
 import { DisplayField } from '../Common/DisplayField'
 import { DisplayTextArea } from '../Common/DisplayTextArea'
 import { Loader } from '../Common/Loader'
-import { NAVIGATION_STEPS, TRUNC_TO_DECIMALS } from '../../utils/constants'
+import { NAVIGATION_STEPS } from '../../utils/constants'
 import { copy } from '../../utils/copy';
 const { PUBLISH } = NAVIGATION_STEPS
 
