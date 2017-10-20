@@ -31,7 +31,7 @@ export class stepThree extends React.Component{
     super(props);
     window.scrollTo(0, 0);
     // const oldState = getOldState(props, defaultState)
-    if (contractStore.crowdsale.addr.length > 0) {
+    if (contractStore.crowdsale && contractStore.crowdsale.addr.length > 0) {
       contractStore.setContractProperty('pricingStrategy','addr',[]);
       setExistingContractParams(contractStore.abi, contractStore.addr[0], contractStore.setContractProperty);
     }
@@ -46,6 +46,10 @@ export class stepThree extends React.Component{
     //this.state = Object.assign({}, oldState, {validations: { ...oldState.validations, startTime: VALID, endTime: VALID, walletAddress: VALID, supply: EMPTY, rate: EMPTY } } )
     // this.state = Object.assign({}, oldState, intitialStepThreeValidations )
     //console.log('this.state', this.state)
+  }
+
+  showErrorMessages = (parent) => {
+    this.props.tierStore.invalidateToken();
   }
 
   addCrowdsale() {
@@ -147,7 +151,7 @@ export class stepThree extends React.Component{
     console.log('not valid')
     return <div>
       <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Tier</div>
-      <div className="button button_fill"> Continue</div>
+      <div onClick={this.showErrorMessages.bind(this)} className="button button_fill"> Continue</div>
     </div>
   }
 
