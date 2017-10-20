@@ -1,6 +1,7 @@
 import { attachToContract, checkTxMined, sendTXToContract } from '../../utils/blockchainHelpers'
 import { noContractAlert } from '../../utils/alerts'
 import { toFixed } from '../../utils/utils'
+import { GAS_PRICE } from '../../utils/constants'
 
 function setLastCrowdsale(web3, abi, addr, lastCrowdsale, gasLimit, cb) {
   console.log("###setLastCrowdsale for Pricing Strategy:###");
@@ -12,7 +13,7 @@ function setLastCrowdsale(web3, abi, addr, lastCrowdsale, gasLimit, cb) {
     }
     if (!pricingStrategyContract) return noContractAlert();
 
-    sendTXToContract(web3, pricingStrategyContract.methods.setLastCrowdsale(lastCrowdsale).send({gasLimit: gasLimit, gasPrice: 21000000000}), cb);
+    sendTXToContract(web3, pricingStrategyContract.methods.setLastCrowdsale(lastCrowdsale).send({gasLimit: gasLimit, gasPrice: GAS_PRICE}), cb);
   });
 }
 
@@ -27,7 +28,7 @@ function setMintAgent(web3, abi, addr, acc, gasLimit, cb) {
     }
     if (!tokenContract) return noContractAlert();
 
-    sendTXToContract(web3, tokenContract.methods.setMintAgent(acc, true).send({gasLimit: gasLimit, gasPrice: 21000000000}), cb);
+    sendTXToContract(web3, tokenContract.methods.setMintAgent(acc, true).send({gasLimit: gasLimit, gasPrice: GAS_PRICE}), cb);
   });
 }
 
@@ -102,7 +103,7 @@ function addWhiteList(round, web3, crowdsale, token, abi, addr, cb) {
     console.log("maxCaps:");
     console.log(maxCaps);
 
-    sendTXToContract(web3, crowdsaleContract.methods.setEarlyParicipantsWhitelist(addrs, statuses, minCaps, maxCaps).send({gasPrice: 21000000000}), cb)
+    sendTXToContract(web3, crowdsaleContract.methods.setEarlyParicipantsWhitelist(addrs, statuses, minCaps, maxCaps).send({gasPrice: GAS_PRICE}), cb)
   });
 }
 
@@ -119,7 +120,7 @@ function updateJoinedCrowdsales(web3, abi, addr, joinedCntrctAddrs, cb) {
     console.log("input: ");
     console.log(joinedCntrctAddrs);
 
-    sendTXToContract(web3, crowdsaleContract.methods.updateJoinedCrowdsalesMultiple(joinedCntrctAddrs).send({gasPrice: 21000000000}), cb);
+    sendTXToContract(web3, crowdsaleContract.methods.updateJoinedCrowdsalesMultiple(joinedCntrctAddrs).send({gasPrice: GAS_PRICE}), cb);
   });
 }
 
@@ -133,7 +134,7 @@ function setFinalizeAgent(web3, abi, addr, finalizeAgentAddr, gasLimit, cb) {
     }
     if (!crowdsaleContract) return noContractAlert();
 
-    sendTXToContract(web3, crowdsaleContract.methods.setFinalizeAgent(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: 21000000000}), cb);
+    sendTXToContract(web3, crowdsaleContract.methods.setFinalizeAgent(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: GAS_PRICE}), cb);
   });
 }
 
@@ -147,7 +148,7 @@ function setReleaseAgent(web3, abi, addr, finalizeAgentAddr, gasLimit, cb) {
     }
     if (!tokenContract) return noContractAlert();
 
-    sendTXToContract(web3, tokenContract.methods.setReleaseAgent(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: 21000000000}), cb);
+    sendTXToContract(web3, tokenContract.methods.setReleaseAgent(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: GAS_PRICE}), cb);
   });
 }
 
@@ -206,7 +207,7 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
     console.log("inTokens: " + inTokens);
     console.log("inPercentage: " + inPercentage);
 
-    sendTXToContract(web3, tokenContract.methods.setReservedTokensListMultiple(addrs, inTokens, inPercentage).send({gasPrice: 21000000000}), cb);
+    sendTXToContract(web3, tokenContract.methods.setReservedTokensListMultiple(addrs, inTokens, inPercentage).send({gasPrice: GAS_PRICE}), cb);
   });
 }
 
@@ -220,7 +221,7 @@ export function transferOwnership(web3, abi, addr, finalizeAgentAddr, gasLimit, 
     }
     if (!tokenContract) return noContractAlert();
 
-    sendTXToContract(web3, tokenContract.methods.transferOwnership(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: 21000000000}), cb);
+    sendTXToContract(web3, tokenContract.methods.transferOwnership(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: GAS_PRICE}), cb);
   });
 }
 
