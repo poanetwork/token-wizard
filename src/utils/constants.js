@@ -39,6 +39,8 @@ export const defaultState = {
 	}
 }
 
+export const GAS_PRICE = 5000000000
+
 export const TRUNC_TO_DECIMALS = {
 	DECIMALS18: -18
 }

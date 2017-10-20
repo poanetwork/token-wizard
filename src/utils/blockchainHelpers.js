@@ -1,6 +1,7 @@
 import Web3 from 'web3';
 import { incorrectNetworkAlert, noMetaMaskAlert, invalidNetworkIDAlert } from './alerts'
 import { getEncodedABIClientSide } from './microservices'
+import { GAS_PRICE } from './constants'
 
 // instantiate new web3 instance
 const web3 = new Web3();
@@ -157,7 +158,7 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
         let sendOpts = {
           from: accounts[0],
           gas: estimatedGas,
-          gasPrice: 21000000000
+          gasPrice: GAS_PRICE
         };
 
         let isMined = false;
