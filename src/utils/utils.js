@@ -297,19 +297,20 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
 
 export const floorToDecimals = (n, input) => Math.floor10(input, n)
 
-const decimalAdjust = (type, value, exp) => {
+const decimalAdjust = (type, inputNumber, exp) => {
     if (typeof exp === 'undefined' || +exp === 0) {
-      return Math[type](value);
+      return Math[type](inputNumber);
     }
-    value = +value;
+    inputNumber = +inputNumber;
     exp = +exp;
-    if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0)) {
+    let checkForNaN = isNaN(inputNumber) || !(typeof exp === 'number' && exp % 1 === 0);
+    if (checkForNaN) {
       return NaN;
     }
-    value = value.toString().split('e');
-    value = Math[type](+(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp)));
-    value = value.toString().split('e');
-    return +(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp));
+    inputNumber = inputNumber.toString().split('e');
+    inputNumber = Math[type](+(inputNumber[0] + 'e' + (inputNumber[1] ? (+inputNumber[1] - exp) : -exp)));
+    inputNumber = inputNumber.toString().split('e');
+    return +(inputNumber[0] + 'e' + (inputNumber[1] ? (+inputNumber[1] + exp) : exp));
 }
 
 if (!Math.floor10) {
