@@ -5,7 +5,7 @@ import { setLastCrowdsaleRecursive, addWhiteListRecursive, setFinalizeAgentRecur
 import {download, handleContractsForFile, handleTokenForFile, handleCrowdsaleForFile, handlePricingStrategyForFile, handleFinalizeAgentForFile, handleConstantForFile, scrollToBottom } from './utils'
 import { noMetaMaskAlert, noContractDataAlert } from '../../utils/alerts'
 import { defaultState, FILE_CONTENTS, DOWNLOAD_NAME, DOWNLOAD_TYPE } from '../../utils/constants'
-import { getOldState, toFixed, roundToDecimals } from '../../utils/utils'
+import { getOldState, toFixed, floorToDecimals } from '../../utils/utils'
 import { getEncodedABIClientSide } from '../../utils/microservices'
 import { stepTwo } from '../stepTwo'
 import { StepNavigation } from '../Common/StepNavigation'
