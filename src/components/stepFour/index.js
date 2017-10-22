@@ -267,7 +267,7 @@ export class stepFour extends stepTwo {
   //FlatPricing
   getPricingStrategyParams = (web3, pricingStrategy, i, token) => {
     console.log(pricingStrategy);
-    let oneTokenInETH = roundToDecimals(1000000000000000000, 1/pricingStrategy.rate)
+    let oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, 1/pricingStrategy.rate)
     return [
       web3.utils.toWei(oneTokenInETH, "ether"),
       this.state.crowdsale[i].updatable?this.state.crowdsale[i].updatable=="on"?true:false:false
