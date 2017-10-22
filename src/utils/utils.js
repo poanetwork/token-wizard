@@ -1,4 +1,4 @@
-import { VALIDATION_TYPES, TRUNC_TO_DECIMALS } from './constants'
+import { VALIDATION_TYPES } from './constants'
 const { VALID, EMPTY, INVALID } = VALIDATION_TYPES
 
 export function getQueryVariable(variable) {
@@ -283,7 +283,7 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
                   //params.vals.push(state.web3.toWei(1/state.pricingStrategy[crowdsaleNum].rate/10**state.token.decimals, "ether"));
                   
                   let oneTokenInETHRaw = 1/state.pricingStrategy[crowdsaleNum].rate
-                  let oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, oneTokenInETHRaw)
+                  let oneTokenInETH = roundToDecimals(1000000000000000000, oneTokenInETHRaw)
                   params.vals.push(state.web3.utils.toWei(oneTokenInETH, "ether"));
                 } break;
                 default: {
