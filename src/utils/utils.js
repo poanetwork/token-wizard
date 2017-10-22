@@ -1,4 +1,4 @@
-import { VALIDATION_TYPES } from './constants'
+import { VALIDATION_TYPES, TRUNC_TO_DECIMALS } from './constants'
 const { VALID, EMPTY, INVALID } = VALIDATION_TYPES
 
 export function getQueryVariable(variable) {
@@ -283,7 +283,7 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
                   //params.vals.push(state.web3.toWei(1/state.pricingStrategy[crowdsaleNum].rate/10**state.token.decimals, "ether"));
                   
                   let oneTokenInETHRaw = 1/state.pricingStrategy[crowdsaleNum].rate
-                  let oneTokenInETH = roundToDecimals(1000000000000000000, oneTokenInETHRaw)
+                  let oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, oneTokenInETHRaw)
                   params.vals.push(state.web3.utils.toWei(oneTokenInETH, "ether"));
                 } break;
                 default: {
@@ -295,8 +295,26 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
     return params;
 }
 
-export function roundToDecimals(n, input) {
-  return 1.0 / n * Math.ceil(n * input)
+export const floorToDecimals = (n, input) => Math.floor10(input, n)
+
+const decimalAdjust = (type, inputNumber, exp) => {
+    if (typeof exp === 'undefined' || +exp === 0) {
+      return Math[type](inputNumber);
+    }
+    inputNumber = +inputNumber;
+    exp = +exp;
+    let checkForNaN = isNaN(inputNumber) || !(typeof exp === 'number' && exp % 1 === 0);
+    if (checkForNaN) {
+      return NaN;
+    }
+    inputNumber = inputNumber.toString().split('e');
+    inputNumber = Math[type](+(inputNumber[0] + 'e' + (inputNumber[1] ? (+inputNumber[1] - exp) : -exp)));
+    inputNumber = inputNumber.toString().split('e');
+    return +(inputNumber[0] + 'e' + (inputNumber[1] ? (+inputNumber[1] + exp) : exp));
+}
+
+if (!Math.floor10) {
+  Math.floor10 = (value, exp) => decimalAdjust('floor', value, exp)
 }
 
 const getTimeAsNumber = (time) => new Date(time).getTime()
