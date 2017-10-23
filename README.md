@@ -83,6 +83,34 @@ Open [https://wizard.oracles.org](https://wizard.oracles.org) and follow steps.
 
 For dev purposes you can build and run ICO Wizard on your machine.
 
+#### Prerequisites
+
+Nodejs >= v.6.11.4
+
+##### For Windows users:
+
+```
+npm install --global --production windows-build-tools
+npm install --global node-gyp
+```
+
+restart CMD and run it `As Administrator`
+
+#### Getting started
+
+For Windows:
+
+```
+git clone https://github.com/oraclesorg/ico-wizard.git wiz
+cd wiz
+git submodule update --init --recursive --remote
+npm install
+npm run startWin
+```
+
+
+Others (macOS, Linux):
+
 ```
 git clone https://github.com/oraclesorg/ico-wizard.git wiz
 cd wiz
@@ -184,36 +212,6 @@ Contract: CrowdsaleTokenExt
     ✓ should accurately add numbers
   36 passing (4s)
 ```
-
-### Investment with transaction from MetaMask
-
-1. Open MetaMask Chrome plugin
-
-2. Connect to the network, where the crowdsale contract is deployed. For example `mainnet`.
-
-3. Choose an account with sufficient balance at this network.
-
-4. Send transaction to the address of the crowdsale contract with the data `0xa6f2ae3a`. Value to send is in ETH. For example, if you put 0.01 to input, you will invest 0.01 ETH.
-
-![](./docs/MetaMaskInvest.png)
-
-### Change maxCap for tier from MetaMask
-
-1. Open MetaMask Chrome plugin
-
-2. Connect to the network, where the crowdsale contract is deployed. For example `mainnet`.
-
-3. Choose an account, which is the owner of crowdsale. This account should has sufficient balance at this network too.
-
-4. Send transaction to the address of the crowdsale contract with the data = `0x2c2de40a` + `hex(n*10**decimals)`.
-
-where `n` - maxCap of the tier,
-
-`decimals` - token decimals
-
-`hex(x)` - hexademical representation of `x`, normalized to 32 bytes (required number of zeros before hex). 
-
-For example, if you need to set `maxCap = 1000` for tier of crowdsale joined with token of 18 `decimals` the data should be: `0x2c2de40a00000000000000000000000000000000000000000000003635c9adc5dea00000`. Amount to send should be 0.
 
 ## Deploying of crowdsale to Mainnet
 
@@ -398,7 +396,7 @@ Contract source code is in `oracles-parity-bridge/contracts/bridge.sol` folder. 
 
 ABI-encoded arguments for the contract are the last 96 bytes of the transaction to create right-side bridge contract. The contract creator is `0x00dB9af45C6f241432F2cBE412c6969cB7778d98`.
 
-*Attention!* - if the right-side contract can't be verified, you can use Parity UI for the right side. Launch it with `./parity --chain kovan --warp --ws-port 8567 --port 30304 --jsonrpc-port 8565 ui`
+*Attention!:* if the right-side contract can't be verified, you can use Parity UI for the right side. Launch it with `./parity --chain kovan --warp --ws-port 8567 --port 30304 --jsonrpc-port 8565 ui`
 
 ABI of the right-side contract is [here](https://github.com/oraclesorg/parity-bridge/blob/master/contracts/ForeignBridge.abi).
 
@@ -412,10 +410,12 @@ ABI of the right-side contract is [here](https://github.com/oraclesorg/parity-br
 
 4. Copy crowdsale contract address.
 
-5. Paste it to the parity-bridge db config file `oracles-parity-bridge\examples\db.toml` for the property `mainnet_contract_address`.
+5. Paste it to the parity-bridge db config file `oracles-parity-bridge\examples\db.toml` for the property `home_contract_address`.
 
-6. Start the bridge again: `cd oracles-parity-bridge` `./target/release/bridge --config ./examples/config_bridge.toml --database ./examples/db.toml`.
+6. **Important!:** Fill `home_deploy` property with the block number, where crowdsale contract was mined.
 
-7. Invest in the crowdsale page.
+7. Start the bridge again: `cd oracles-parity-bridge` `./target/release/bridge --config ./examples/config_bridge.toml --database ./examples/db.toml`.
 
-8. After ~10 - 20 seconds (for Oracles network) check at Kovan: https://kovan.etherscan.io/address/[verified_right-side_bridge_contract_address]#readContract `balances` for the same address that invest at ICO Wizard.
+8. Invest in the crowdsale page.
+
+9. After ~10 - 20 seconds (for Oracles network) check at Kovan: https://kovan.etherscan.io/address/[verified_right-side_bridge_contract_address]#readContract `balances` for the same address that invest at ICO Wizard.
