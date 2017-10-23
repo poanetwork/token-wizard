@@ -1,6 +1,7 @@
 import { attachToContract, checkTxMined, sendTXToContract } from '../../utils/blockchainHelpers'
 import { noContractAlert } from '../../utils/alerts'
 import { toFixed } from '../../utils/utils'
+import { GAS_PRICE } from '../../utils/constants'
 
 function setLastCrowdsale(web3, abi, addr, lastCrowdsale, gasLimit, cb) {
   console.log("###setLastCrowdsale for Pricing Strategy:###");
@@ -12,7 +13,8 @@ function setLastCrowdsale(web3, abi, addr, lastCrowdsale, gasLimit, cb) {
     }
     if (!pricingStrategyContract) return noContractAlert();
 
-    sendTXToContract(web3, pricingStrategyContract.methods.setLastCrowdsale(lastCrowdsale).send({gasLimit: gasLimit, gasPrice: 21000000000}), cb);
+    let method = pricingStrategyContract.methods.setLastCrowdsale(lastCrowdsale).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
+    sendTXToContract(web3, method, cb);
   });
 }
 
@@ -27,7 +29,8 @@ function setMintAgent(web3, abi, addr, acc, gasLimit, cb) {
     }
     if (!tokenContract) return noContractAlert();
 
-    sendTXToContract(web3, tokenContract.methods.setMintAgent(acc, true).send({gasLimit: gasLimit, gasPrice: 21000000000}), cb);
+    let method = tokenContract.methods.setMintAgent(acc, true).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
+    sendTXToContract(web3, method, cb);
   });
 }
 
@@ -102,7 +105,8 @@ function addWhiteList(round, web3, crowdsale, token, abi, addr, cb) {
     console.log("maxCaps:");
     console.log(maxCaps);
 
-    sendTXToContract(web3, crowdsaleContract.methods.setEarlyParicipantsWhitelist(addrs, statuses, minCaps, maxCaps).send({gasPrice: 21000000000}), cb)
+    let method = crowdsaleContract.methods.setEarlyParicipantsWhitelist(addrs, statuses, minCaps, maxCaps).send({gasPrice: GAS_PRICE})
+    sendTXToContract(web3, method, cb)
   });
 }
 
@@ -119,7 +123,8 @@ function updateJoinedCrowdsales(web3, abi, addr, joinedCntrctAddrs, cb) {
     console.log("input: ");
     console.log(joinedCntrctAddrs);
 
-    sendTXToContract(web3, crowdsaleContract.methods.updateJoinedCrowdsalesMultiple(joinedCntrctAddrs).send({gasPrice: 21000000000}), cb);
+    let method = crowdsaleContract.methods.updateJoinedCrowdsalesMultiple(joinedCntrctAddrs).send({gasPrice: GAS_PRICE})
+    sendTXToContract(web3, method, cb);
   });
 }
 
@@ -133,7 +138,8 @@ function setFinalizeAgent(web3, abi, addr, finalizeAgentAddr, gasLimit, cb) {
     }
     if (!crowdsaleContract) return noContractAlert();
 
-    sendTXToContract(web3, crowdsaleContract.methods.setFinalizeAgent(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: 21000000000}), cb);
+    let method = crowdsaleContract.methods.setFinalizeAgent(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
+    sendTXToContract(web3, method, cb);
   });
 }
 
@@ -147,7 +153,8 @@ function setReleaseAgent(web3, abi, addr, finalizeAgentAddr, gasLimit, cb) {
     }
     if (!tokenContract) return noContractAlert();
 
-    sendTXToContract(web3, tokenContract.methods.setReleaseAgent(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: 21000000000}), cb);
+    let method = tokenContract.methods.setReleaseAgent(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
+    sendTXToContract(web3, method, cb);
   });
 }
 
@@ -162,10 +169,7 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
     if (!tokenContract) return noContractAlert();
 
     let map = {};
-
-    let addrs = [];
-    let inTokens = [];
-    let inPercentage = [];
+    let addrs = [], inTokens = [], inPercentageUnit = [], inPercentageDecimals = [];
 
     if (token.reservedTokensInput.addr && token.reservedTokensInput.dim && token.reservedTokensInput.val) {
       token.reservedTokens.push({
@@ -180,33 +184,38 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
 
     for (let i = 0; i < token.reservedTokens.length; i++) {
       if (!token.reservedTokens[i].deleted) {
-        let val = token.reservedTokens[i].val;
-        let addr = token.reservedTokens[i].addr;
-        let obj = map[addr]?map[addr]:{};
-        if (token.reservedTokens[i].dim === "tokens") obj.inTokens = val*10**token.decimals
-        else obj.inPercentage = val;
-        map[addr] = obj;
-        //addrs.push(token.reservedTokens[i].addr);
-        //dims.push(token.reservedTokens[i].dim == "tokens"?true:false);
-        //vals.push(token.reservedTokens[i].dim == "tokens"?token.reservedTokens[i].val*10**token.decimals:token.reservedTokens[i].val);
+        let val = token.reservedTokens[i].val
+        let addr = token.reservedTokens[i].addr
+        let obj = map[addr]?map[addr]:{}
+        if (token.reservedTokens[i].dim === "tokens") 
+          obj.inTokens = val * 10**token.decimals
+        else {
+          obj.inPercentageDecimals = countDecimals(val)
+          obj.inPercentageUnit = val * 10**obj.inPercentageDecimals
+        }
+        map[addr] = obj
       }
     }
 
     let keys = Object.keys(map);
     for (let i = 0; i < keys.length; i++) {
-      addrs.push(keys[i]);
-      inTokens.push(map[keys[i]].inTokens?toFixed(map[keys[i]].inTokens.toString()):0);
-      inPercentage.push(map[keys[i]].inPercentage?map[keys[i]].inPercentage:0);
+      let key = keys[i]
+      let obj = map[key]
+      addrs.push(key)
+      inTokens.push(obj.inTokens?toFixed(obj.inTokens.toString()):0)
+      inPercentageUnit.push(obj.inPercentageUnit?obj.inPercentageUnit:0)
+      inPercentageDecimals.push(obj.inPercentageDecimals?obj.inPercentageDecimals:0)
     }
 
-    if (addrs.length === 0 && inTokens.length === 0 && inPercentage.length === 0) return cb();
+    if (addrs.length === 0 && inTokens.length === 0 && inPercentageUnit.length === 0 && inPercentageDecimals.length === 0) return cb()
 
-    console.log("input: ");
-    console.log("addrs: " + addrs);
-    console.log("inTokens: " + inTokens);
-    console.log("inPercentage: " + inPercentage);
+    console.log("addrs: " + addrs)
+    console.log("inTokens: " + inTokens)
+    console.log("inPercentageUnit: " + inPercentageUnit)
+    console.log("inPercentageDecimals: " + inPercentageDecimals)
 
-    sendTXToContract(web3, tokenContract.methods.setReservedTokensListMultiple(addrs, inTokens, inPercentage).send({gasPrice: 21000000000}), cb);
+    let method = tokenContract.methods.setReservedTokensListMultiple(addrs, inTokens, inPercentageUnit, inPercentageDecimals).send({gasPrice: GAS_PRICE})
+    sendTXToContract(web3, method, cb)
   });
 }
 
@@ -220,7 +229,8 @@ export function transferOwnership(web3, abi, addr, finalizeAgentAddr, gasLimit, 
     }
     if (!tokenContract) return noContractAlert();
 
-    sendTXToContract(web3, tokenContract.methods.transferOwnership(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: 21000000000}), cb);
+    let method = tokenContract.methods.transferOwnership(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
+    sendTXToContract(web3, method, cb);
   });
 }
 
@@ -380,4 +390,9 @@ export const download = (data, filename, type) => {
 
 export function scrollToBottom() {
   window.scrollTo(0,document.body.scrollHeight);
+}
+
+var countDecimals = function (inputFloat) {
+    if(Math.floor(inputFloat) === inputFloat) return 0;
+    return inputFloat.toString().split(".")[1].length || 0; 
 }

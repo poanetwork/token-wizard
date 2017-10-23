@@ -5,14 +5,14 @@ import { setLastCrowdsaleRecursive, addWhiteListRecursive, setFinalizeAgentRecur
 import {download, handleContractsForFile, handleTokenForFile, handleCrowdsaleForFile, handlePricingStrategyForFile, handleFinalizeAgentForFile, handleConstantForFile, scrollToBottom } from './utils'
 import { noMetaMaskAlert, noContractDataAlert } from '../../utils/alerts'
 import { defaultState, FILE_CONTENTS, DOWNLOAD_NAME, DOWNLOAD_TYPE } from '../../utils/constants'
-import { getOldState, toFixed } from '../../utils/utils'
+import { getOldState, toFixed, floorToDecimals } from '../../utils/utils'
 import { getEncodedABIClientSide } from '../../utils/microservices'
 import { stepTwo } from '../stepTwo'
 import { StepNavigation } from '../Common/StepNavigation'
 import { DisplayField } from '../Common/DisplayField'
 import { DisplayTextArea } from '../Common/DisplayTextArea'
 import { Loader } from '../Common/Loader'
-import { NAVIGATION_STEPS } from '../../utils/constants'
+import { NAVIGATION_STEPS, TRUNC_TO_DECIMALS } from '../../utils/constants'
 import { copy } from '../../utils/copy';
 const { PUBLISH } = NAVIGATION_STEPS
 
@@ -267,9 +267,7 @@ export class stepFour extends stepTwo {
   //FlatPricing
   getPricingStrategyParams = (web3, pricingStrategy, i, token) => {
     console.log(pricingStrategy);
-    let n = 1000000000000000000 //fraction to round
-    let oneTokenInETH = 1/pricingStrategy.rate;
-    oneTokenInETH = 1.0 / n * Math.ceil(n * oneTokenInETH)
+    let oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, 1/pricingStrategy.rate)
     return [
       web3.utils.toWei(oneTokenInETH, "ether"),
       this.state.crowdsale[i].updatable?this.state.crowdsale[i].updatable=="on"?true:false:false
