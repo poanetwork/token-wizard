@@ -154,14 +154,14 @@ Test scripts are added to Travis CI and executed at every pull request.
 If you want to start it by yourself, simply run the command `npm test` from the root directory. 
 It will start testrpc at port 8545, Truffle will compile, deploy contracts to it and Truffle will execute tests. 
 
-*Note:* Kill testrpc after tests will executed: 
+*Note:* Kill testrpc after tests will be executed: 
 ```
 sudo kill `sudo lsof -t -i:8545`.
 ```
 
-Currently available tests cover the following scenario:
+Currently, available tests cover the following scenario:
 
-The updatable, whitelisted one tier crowdsale contract with one address in white list and reserved tokens for the same address (both: in absolute values and in percentage)
+The updatable, whitelisted one tier crowdsale contract with one address in whitelist and reserved tokens for the same address (both: in absolute values and in percentage)
 
 Checklist of contracts' testing:
 
@@ -218,7 +218,7 @@ Contract: CrowdsaleTokenExt
 
 The one-tier crowdsale contract takes ~24 minutes in total.
 
-Estimates for each contracts:
+Estimates for each contract:
 
 
 SafeMathLib : 02:00
@@ -253,15 +253,15 @@ transferOwnership: 00:40
 
 Attention!
 
-Deploying to the Mainnet is expensive. For a contract with one tier the price is 0.16 ETH.
+Deploying to the Mainnet is expensive. For a contract with one tier, the price is 0.16 ETH.
 
-With the price of 1 ETH of $300.0 USD the price of one deployment will be $48.0 USD.
+With the price of 1 ETH of $300.0 USD, the price of one deployment will be $48.0 USD.
 
 
 
 ## How to verify ICO Wizard contracts in Etherscan
 
-**Important!:** All information required for verification of ICO Wizard contracts located in a text file. You must download it on the Step 4 of ICO Wizard. There is **no** way to get it later and you'll need to repeat wizard for the new set of conracts to get the file.
+**Important!:** All information required for verification of ICO Wizard contracts located in a text file. You must download it on Step 4 of ICO Wizard. There is **no** way to get it later and you'll need to repeat wizard for the new set of contracts to get the file.
 
 ### Crowdsale contract verification:
 
@@ -280,7 +280,7 @@ With the price of 1 ETH of $300.0 USD the price of one deployment will be $48.0 
 
    2.6. **Constructor Arguments ABI-encoded (For contracts that accept constructor parameters)** is *Crowdsale contract ABI encoded constructor arguments for [Tier name]*
 
-3. For **Contract Library Address (For contracts that use libraries, supports up to 5 libraries)** By default we use only one library.
+3. For **Contract Library Address (For contracts that use libraries, supports up to 5 libraries)** By default, we use only one library.
 
 **Library_1 Name** type `:` and then the value of *SafeMathlLib library name* header from the file. Default value: `:SafeMathLibExt`.
 
