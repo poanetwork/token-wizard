@@ -32,6 +32,7 @@ export class stepThree extends React.Component{
     window.scrollTo(0, 0);
     // const oldState = getOldState(props, defaultState)
     if (contractStore.crowdsale && contractStore.crowdsale.addr.length > 0) {
+    // if (contractStore.crowdsale.addr.length > 0) {
       contractStore.setContractProperty('pricingStrategy','addr',[]);
       setExistingContractParams(contractStore.abi, contractStore.addr[0], contractStore.setContractProperty);
     }
