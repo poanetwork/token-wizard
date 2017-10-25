@@ -47,7 +47,7 @@ export function setFlatFileContentToState(file, cb) {
 }
 
 export function getWhiteListWithCapCrowdsaleAssets(state, cb) {
-    const contractName = "CrowdsaleWhitelistWithCap";
+    const contractName = "CrowdsaleWhiteListWithCap";
     let derivativesLength = 11;
     let derivativesIterator = 0;
     setFlatFileContentToState("./contracts/" + contractName + "_flat.sol", function(_src) {
