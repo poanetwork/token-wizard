@@ -39,6 +39,16 @@ export const defaultState = {
   }
 }
 
+export const defaultTiers = [{
+  startTime: '',
+  endTime: '',
+  walletAddress: '',
+  supply: '',
+  whitelist: [], 
+  whiteListElements: [], 
+  whiteListInput: {}
+}]
+
 export const CONTRACT_TYPES = {
   standard: "standard",
   capped: "capped",

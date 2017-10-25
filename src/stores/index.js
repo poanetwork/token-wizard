@@ -10,8 +10,13 @@ import tokenStore from './TokenStore';
 import web3Store from './Web3Store';
 import tierCrowdsaleListStore from './TierCrowdsaleListStore'
 import crowdsaleBlockListStore from './CrowdsaleBlockListStore'
+import generalStore from './GeneralStore'
+import crowdsalePageStore from './CrowdsalePageStore'
+import investStore from './InvestStore'
 
 export {
+    generalStore,
+    crowdsalePageStore,
     tierCrowdsaleListStore,
     crowdsaleBlockListStore,
     contractStore,
@@ -23,5 +28,6 @@ export {
     stepTwoValidationStore,
     tierStore,
     tokenStore,
-    web3Store
+    web3Store,
+    investStore
 };

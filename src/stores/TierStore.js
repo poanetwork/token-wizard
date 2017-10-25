@@ -1,5 +1,5 @@
 import { observable, action, computed } from 'mobx';
-import { VALIDATION_TYPES } from '../utils/constants'
+import { VALIDATION_TYPES, defaultTiers } from '../utils/constants'
 import { validateName, validateTime, validateSupply, validateRate, validateAddress } from '../utils/utils'
 const { VALID, INVALID, EMPTY } = VALIDATION_TYPES
 class TierStore {
@@ -8,7 +8,7 @@ class TierStore {
 	@observable validTiers;
 	@observable globalMinCap;
 
-	constructor(tiers = []) {
+	constructor(tiers = defaultTiers) {
 		this.tiers = tiers;
 		this.validTiers = [{
 			name: 'VALIDATED',
@@ -26,7 +26,9 @@ class TierStore {
 	}
 
   @action addTier = (tier) => {
-    this.tiers.push(tier)
+		this.tiers.push(tier)
+		console.log('tier', tier)
+		console.log('this.tiers', this.tiers)
 	}
 
 	@action addTierValidations = (validations) => {
