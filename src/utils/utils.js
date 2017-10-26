@@ -47,64 +47,64 @@ export function setFlatFileContentToState(file, cb) {
   });
 }
 
-export function getWhiteListWithCapCrowdsaleAssets(state, cb) {
+export function getWhiteListWithCapCrowdsaleAssets(cb) {
     const contractName = "CrowdsaleWhitelistWithCap";
     let derivativesLength = 11;
     let derivativesIterator = 0;
     setFlatFileContentToState("./contracts/" + contractName + "_flat.sol", function(_src) {
       derivativesIterator++;
-      state.contracts.crowdsale.src = _src;
-
+      contractStore.setContractProperty('crowdsale', 'src', _src);
+      
       if (derivativesIterator === derivativesLength) {
-        cb(state);
+        cb(contractStore);
       }
     });
     setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", function(_bin) {
       derivativesIterator++;
-      state.contracts.crowdsale.bin = _bin;
-
+      contractStore.setContractProperty('crowdsale', 'bin', _bin);
+      
       if (derivativesIterator === derivativesLength) {
-        cb(state);
+        cb(contractStore);
       }
     });
     setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", function(_abi) {
       derivativesIterator++;
-      state.contracts.crowdsale.abi = JSON.parse(_abi);
-
+      contractStore.setContractProperty('crowdsale', 'abi', JSON.parse(_abi));
+      
       if (derivativesIterator === derivativesLength) {
-        cb(state);
+        cb(contractStore);
       }
     });
     setFlatFileContentToState("./contracts/" + contractName + "Token_flat.bin", function(_bin) {
       derivativesIterator++;
-      state.contracts.token.bin = _bin;
+      contractStore.setContractProperty('token', 'bin', _bin);      
 
       if (derivativesIterator === derivativesLength) {
-        cb(state);
+        cb(contractStore);
       }
     });
     setFlatFileContentToState("./contracts/" + contractName + "Token_flat.abi", function(_abi) {
       derivativesIterator++;
-      state.contracts.token.abi = JSON.parse(_abi);
+      contractStore.setContractProperty('token', 'abi', JSON.parse(_abi));            
 
       if (derivativesIterator === derivativesLength) {
-        cb(state);
+        cb(contractStore);
       }
     });
     setFlatFileContentToState("./contracts/" + contractName + "PricingStrategy_flat.bin", function(_bin) {
       derivativesIterator++;
-      state.contracts.pricingStrategy.bin = _bin;
-
+      contractStore.setContractProperty('pricingStrategy', 'bin', _bin);            
+      
       if (derivativesIterator === derivativesLength) {
-        cb(state);
+        cb(contractStore);
       }
     });
     setFlatFileContentToState("./contracts/" + contractName + "PricingStrategy_flat.abi", function(_abi) {
       derivativesIterator++;
-      state.contracts.pricingStrategy.abi = JSON.parse(_abi);
-
+      contractStore.setContractProperty('pricingStrategy', 'abi', JSON.parse(_abi));            
+    
       if (derivativesIterator === derivativesLength) {
-        cb(state);
+        cb(contractStore);
       }
     });
     /*const tokenTransferProxyContractName = "TokenTransferProxy";
@@ -144,73 +144,72 @@ export function getWhiteListWithCapCrowdsaleAssets(state, cb) {
     const finalizeAgentContractName = "FinalizeAgent";
     setFlatFileContentToState("./contracts/" + finalizeAgentContractName + "_flat.bin", function(_bin) {
       derivativesIterator++;
-      state.contracts.finalizeAgent.bin = _bin;
-
+      contractStore.setContractProperty('finalizeAgent', 'bin', _bin);            
+      
       if (derivativesIterator === derivativesLength) {
-        cb(state);
+        cb(contractStore);
       }
     });
     setFlatFileContentToState("./contracts/" + finalizeAgentContractName + "_flat.abi", function(_abi) {
       derivativesIterator++;
-      state.contracts.finalizeAgent.abi = JSON.parse(_abi);
+      contractStore.setContractProperty('finalizeAgent', 'abi', JSON.parse(_abi));                  
 
       if (derivativesIterator === derivativesLength) {
-        cb(state);
+        cb(contractStore);
       }
     });
     const nullFinalizeAgentContractName = "NullFinalizeAgent";
     setFlatFileContentToState("./contracts/" + nullFinalizeAgentContractName + "_flat.bin", function(_bin) {
       derivativesIterator++;
-      state.contracts.nullFinalizeAgent.bin = _bin;
+      contractStore.setContractProperty('nullFinalizeAgent', 'bin', _bin);                  
 
       if (derivativesIterator === derivativesLength) {
-        cb(state);
+        cb(contractStore);
       }
     });
     setFlatFileContentToState("./contracts/" + nullFinalizeAgentContractName + "_flat.abi", function(_abi) {
       derivativesIterator++;
-      state.contracts.nullFinalizeAgent.abi = JSON.parse(_abi);
+      contractStore.setContractProperty('nullFinalizeAgent', 'abi', JSON.parse(_abi));                        
 
       if (derivativesIterator === derivativesLength) {
-        cb(state);
+        cb(contractStore);
       }
     });
 }
 
-export function getStandardCrowdsaleAssets(state, cb) {
+export function getStandardCrowdsaleAssets(cb) {
     const contractName = "CrowdsaleStandard";
     var derivativesLength = 4;
     var derivativesIterator = 0;
     setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", function(_bin) {
       derivativesIterator++;
-      state.contracts.crowdsale.bin = _bin;
+      contractStore.setContractProperty('crowdsale', 'bin', _bin);
 
       if (derivativesIterator === derivativesLength) {
-        cb(state);
+        cb(contractStore);
       }
     });
     setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", function(_abi) {
       derivativesIterator++;
-      state.contracts.crowdsale.abi = JSON.parse(_abi);
-
+      contractStore.setContractProperty('crowdsale', 'abi', JSON.parse(_abi));
       if (derivativesIterator === derivativesLength) {
-        cb(state);
+        cb(contractStore);
       }
     });
     setFlatFileContentToState("./contracts/" + contractName + "Token_flat.bin", function(_bin) {
       derivativesIterator++;
-      state.contracts.token.bin = _bin;
-
+      contractStore.setContractProperty('token', 'abi', _bin);
+      
       if (derivativesIterator === derivativesLength) {
-        cb(state);
+        cb(contractStore);
       }
     });
     setFlatFileContentToState("./contracts/" + contractName + "Token_flat.abi", function(_abi) {
       derivativesIterator++;
-      state.contracts.token.abi = JSON.parse(_abi);
-
+      contractStore.setContractProperty('token', 'abi', JSON.parse(_abi));
+      
       if (derivativesIterator === derivativesLength) {
-        cb(state);
+        cb(contractStore);
       }
     });
 }
@@ -275,7 +274,7 @@ export const getconstructorParams = (abiConstructor, vals, crowdsaleNum) => {
                     params.vals.push(tierStore.tiers[crowdsaleNum].walletAddress);
                 } break;
                 case "_multisigWallet": {
-                    //params.vals.push(state.contracts.multisig.addr);
+                    //params.vals.push(contractStore.multisig.addr);
                     params.vals.push(tierStore.tiers[0].walletAddress);
                 } break;
                 case "_pricingStrategy": {

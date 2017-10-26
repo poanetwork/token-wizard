@@ -11,9 +11,8 @@ import { InputFieldExt } from '../Common/InputFieldExt'
 import { RadioInputField } from '../Common/RadioInputField'
 import { CrowdsaleBlock } from '../Common/CrowdsaleBlock'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
-import { NAVIGATION_STEPS, defaultState, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS, intitialStepThreeValidations, CONTRACT_TYPES } from '../../utils/constants'
+import { NAVIGATION_STEPS, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS, intitialStepThreeValidations, CONTRACT_TYPES } from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
-import { contractStore, crowdsaleStore, pricingStrategyStore, stepThreeValidationsStore, crowdsaleBlockListStore, web3Store, tierCrowdsaleListStore} from '../../stores';
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
 const { START_TIME, END_TIME, MINCAP, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME, ALLOWMODIFYING, DISABLEWHITELISTING } = TEXT_FIELDS
@@ -29,6 +28,7 @@ const { START_TIME, END_TIME, MINCAP, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SE
 export class stepThree extends React.Component{
   constructor(props) {
     super(props);
+    const { contractStore, crowdsaleBlockListStore, tierStore } = props
     window.scrollTo(0, 0);
     // const oldState = getOldState(props, defaultState)
     if (contractStore.crowdsale && contractStore.crowdsale.addr.length > 0) {
@@ -38,11 +38,11 @@ export class stepThree extends React.Component{
     }
     // oldState.children = [];
     crowdsaleBlockListStore.emptyList()
-    this.props.tierStore.setTierProperty("Tier 1", 'name', 0)
+    tierStore.setTierProperty("Tier 1", 'name', 0)
     // oldState.crowdsale[0].tier = "Tier 1"
-    this.props.tierStore.setTierProperty( "off", 'updatable', 0)
+    tierStore.setTierProperty( "off", 'updatable', 0)
     // oldState.crowdsale[0].updatable = "off"
-    this.props.tierStore.setTierProperty( "yes", 'whitelistdisabled', 0)
+    tierStore.setTierProperty( "yes", 'whitelistdisabled', 0)
     // oldState.crowdsale[0].whitelistdisabled = "yes"
     //this.state = Object.assign({}, oldState, {validations: { ...oldState.validations, startTime: VALID, endTime: VALID, walletAddress: VALID, supply: EMPTY, rate: EMPTY } } )
     // this.state = Object.assign({}, oldState, intitialStepThreeValidations )

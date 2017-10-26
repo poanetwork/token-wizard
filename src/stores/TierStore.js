@@ -1,5 +1,5 @@
 import { observable, action, computed } from 'mobx';
-import { VALIDATION_TYPES } from '../utils/constants'
+import { VALIDATION_TYPES, defaultTiers } from '../utils/constants'
 import { validateName, validateTime, validateSupply, validateRate, validateAddress } from '../utils/utils'
 const { VALID, INVALID, EMPTY } = VALIDATION_TYPES
 class TierStore {
@@ -8,26 +8,28 @@ class TierStore {
   @observable validTiers;
   @observable globalMinCap;
 
-  constructor(tiers = []) {
-    this.tiers = tiers;
-    this.validTiers = [{
-      name: 'VALIDATED',
-      walletAddress: 'VALIDATED',
-      rate: 'EMPTY',
-      supply: 'EMPTY',
-      startTime: 'VALIDATED',
-      endTime: 'VALIDATED',
-      updatable: "VALIDATED"
-    }]
-  }
-  
-  @action setGlobalMinCap = (minCap) => {
-    this.globalmincap = minCap
-  }
+	constructor(tiers = defaultTiers) {
+		this.tiers = tiers;
+		this.validTiers = [{
+			name: 'VALIDATED',
+			walletAddress: 'VALIDATED',
+			rate: 'EMPTY',
+			supply: 'EMPTY',
+			startTime: 'VALIDATED',
+			endTime: 'VALIDATED',
+			updatable: "VALIDATED"
+		}]
+	}
+	
+	@action setGlobalMinCap = (minCap) => {
+		this.globalmincap = minCap
+	}
 
   @action addTier = (tier) => {
-    this.tiers.push(tier)
-  }
+		this.tiers.push(tier)
+		console.log('tier', tier)
+		console.log('this.tiers', this.tiers)
+	}
 
   @action addTierValidations = (validations) => {
     this.validTiers.push(validations)

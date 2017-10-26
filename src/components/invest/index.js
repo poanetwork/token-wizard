@@ -6,15 +6,17 @@ import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteList
 import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert, invalidCrowdsaleAddrAlert } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
 import { ICOConfig } from '../Common/config'
-import { defaultState } from '../../utils/constants'
+import { CONTRACT_TYPES } from '../../utils/constants'
+import { observer, inject } from 'mobx-react' 
 
-export class Invest extends React.Component {
+@inject('contractStore', 'crowdsalePageStore', 'web3Store', 'tierStore', 'tokenStore', 'generalStore', 'investStore')
+@observer export class Invest extends React.Component {
   constructor(props) {
       super(props);
       window.scrollTo(0, 0);
       if (this.tokensToInvestOnChange.bind) this.tokensToInvestOnChange = this.tokensToInvestOnChange.bind(this);
       if (this.investToTokens.bind) this.investToTokens = this.investToTokens.bind(this);
-      var state = defaultState;
+      var state = {};
       state.seconds = 0;
       state.loading = true;
       this.state = state;
@@ -22,44 +24,43 @@ export class Invest extends React.Component {
 
   componentDidMount () {
     let newState = { ...this.state }
-    setTimeout(() => {
-     getWeb3((web3) => {
-      if (!web3) {
-        let state = this.state;
-        state.loading = false;
-        this.setState(state);
-        return
-      };
+    const { web3Store, contractStore } = this.props
+    const web3 = web3Store.web3
+    if (!web3) {
+      let state = this.state;
+      state.loading = false;
+      this.setState(state);
+      return
+    };
 
-      const networkID = ICOConfig.networkID?ICOConfig.networkID:getQueryVariable("networkID");
-      const contractType = this.state.contractTypes.whitelistwithcap;// getQueryVariable("contractType");
-      checkNetWorkByID(web3, networkID);
-      newState.contractType = contractType;
+    const networkID = ICOConfig.networkID?ICOConfig.networkID:getQueryVariable("networkID");
+    const contractType = CONTRACT_TYPES.whitelistwithcap;// getQueryVariable("contractType");
+    checkNetWorkByID(web3, networkID);
+    contractStore.setContractType(contractType);
 
-      const timeInterval = setInterval(() => this.setState({ seconds: this.state.seconds - 1}), 1000);
-      this.setState({ timeInterval });
+    const timeInterval = setInterval(() => this.setState({ seconds: this.state.seconds - 1}), 1000);
+    this.setState({ timeInterval });
 
-      switch (contractType) {
-        case this.state.contractTypes.standard: {
-          getStandardCrowdsaleAssets(newState, (_newState) => {
-            this.setState(_newState);
-            this.extractContractsData(web3);
-          });
-        } break;
-        case this.state.contractTypes.whitelistwithcap: {
-          getWhiteListWithCapCrowdsaleAssets(newState, (_newState) => {
-            this.setState(_newState);
-            this.extractContractsData(web3);
-          });
-        } break;
-        default:
-          break;
-      }
-    });
-   }, 500);
+    switch (contractType) {
+      case CONTRACT_TYPES.standard: {
+        getStandardCrowdsaleAssets((_newState) => {
+          this.setState(_newState);
+          this.extractContractsData(web3);
+        });
+      } break;
+      case CONTRACT_TYPES.whitelistwithcap: {
+        getWhiteListWithCapCrowdsaleAssets((_newState) => {
+          this.setState(_newState);
+          this.extractContractsData(web3);
+        });
+      } break;
+      default:
+        break;
+    }
   }
 
   extractContractsData(web3) {
+    const { contractStore, crowdsalePageStore } = this.props
     let state = this.state;
 
     const crowdsaleAddr = ICOConfig.crowdsaleContractURL?ICOConfig.crowdsaleContractURL:getURLParam("addr");
@@ -68,7 +69,7 @@ export class Invest extends React.Component {
       this.setState(state);
       return invalidCrowdsaleAddrAlert();
     }
-    getJoinedTiers(web3, this.state.contracts.crowdsale.abi, crowdsaleAddr, [], (joinedCrowdsales) => {
+    getJoinedTiers(web3, contractStore.crowdsale.abi, crowdsaleAddr, [], (joinedCrowdsales) => {
       console.log("joinedCrowdsales: ");
       console.log(joinedCrowdsales);
 
@@ -78,7 +79,7 @@ export class Invest extends React.Component {
       } else {
         _crowdsaleAddrs = joinedCrowdsales;
       }
-      state.contracts.crowdsale.addr = _crowdsaleAddrs;
+      contractStore.setContractProperty('crowdsale', 'addr', _crowdsaleAddrs);
 
       if (web3.eth.accounts.length === 0) {
         let state = this.state;
@@ -91,7 +92,7 @@ export class Invest extends React.Component {
       state.web3 = web3;
       this.setState(state);
 
-      if (!this.state.contracts.crowdsale.addr) {
+      if (!contractStore.crowdsale.addr) {
         let state = this.state;
         state.loading = false;
         this.setState(state);
@@ -103,16 +104,16 @@ export class Invest extends React.Component {
           return this.setState(state);
         }
         getCrowdsaleData(web3, this, crowdsaleContract, () => { 
-          initializeAccumulativeData(this, () => {
+          initializeAccumulativeData(() => {
             getAccumulativeCrowdsaleData(web3, this, () => {
             });
           });
         });
         getCrowdsaleTargetDates(web3, this, () => {
-          console.log(this.state.crowdsale);
-          if (this.state.crowdsale.endDate) {
+          console.log(crowdsalePageStore);
+          if (crowdsalePageStore.endDate) {
             let state = this.state;
-            state.seconds = (state.crowdsale.endDate - new Date().getTime())/1000;
+            state.seconds = (crowdsalePageStore.endDate - new Date().getTime())/1000;
             this.setState(state);
           }
         })
@@ -121,33 +122,36 @@ export class Invest extends React.Component {
   }
 
   investToTokens() {
-    let state = this.state;
+    const { crowdsalePageStore, web3Store, contractStore } = this.props
+    const web3 = web3Store.web3
+    let state = { ...this.state };
     state.loading = true;
     this.setState(state);
-    let startBlock = parseInt(this.state.crowdsale.startBlock, 10);
-    let startDate = this.state.crowdsale.startDate;
+    let startBlock = parseInt(crowdsalePageStore.startBlock, 10);
+    let startDate = crowdsalePageStore.startDate;
     if ((isNaN(startBlock) || startBlock === 0) && !startDate) {
       let state = this.state;
       state.loading = false;
       this.setState(state);
       return;
     }
-    let web3 = this.state.web3;
     if (web3.eth.accounts.length === 0) {
       let state = this.state;
       state.loading = false;
       this.setState(state);
       return noMetaMaskAlert();
     }
-
-    switch (this.state.contractType) {
-      case this.state.contractTypes.standard: {
+    console.log('contractStore.contractType', contractStore.contractType)
+    
+    switch (contractStore.contractType) {
+      case CONTRACT_TYPES.standard: {
         web3.eth.getBlockNumber((err, curBlock) => {
           if (err) return console.log(err);
           this.investToTokensForStandardCrowdsale(web3, curBlock)
         });
       } break;
-      case this.state.contractTypes.whitelistwithcap: {
+      case CONTRACT_TYPES.whitelistwithcap: {
+        console.log('CONTRACT_TYPES.whitelistwithcap', CONTRACT_TYPES.whitelistwithcap)
         this.investToTokensForWhitelistedCrowdsale(web3)
       } break;
       default:
@@ -156,17 +160,18 @@ export class Invest extends React.Component {
   }
 
   investToTokensForStandardCrowdsale(web3, curBlock) {
-    if (parseInt(this.state.crowdsale.startBlock, 10) > parseInt(curBlock, 10)) {
-      return investmentDisabledAlert(parseInt(this.state.crowdsale.startBlock, 10), curBlock);
+    const { crowdsalePageStore, investStore, contractStore } = this.props
+    if (parseInt(crowdsalePageStore.startBlock, 10) > parseInt(curBlock, 10)) {
+      return investmentDisabledAlert(parseInt(crowdsalePageStore.startBlock, 10), curBlock);
     }
 
-    let weiToSend = web3.toWei(this.state.tokensToInvest/this.state.pricingStrategy.rate, "ether");
+    let weiToSend = web3.toWei(investStore.tokensToInvest/crowdsalePageStore.rate, "ether");
     let opts = {
       from: web3.eth.accounts[0],
       value: weiToSend
     };
 
-    attachToContract(web3, this.state.contracts.crowdsale.abi, this.state.contracts.crowdsale.addr[0], (err, crowdsaleContract) => {
+    attachToContract(web3, contractStore.crowdsale.abi, contractStore.crowdsale.addr[0], (err, crowdsaleContract) => {
       console.log("attach to crowdsale contract");
       if (err) return console.log(err);
       if (!crowdsaleContract) return noContractAlert();
@@ -178,19 +183,20 @@ export class Invest extends React.Component {
         if (err) return console.log(err);
         
         console.log("tx hash: " + txHash);
-        successfulInvestmentAlert(this.state.tokensToInvest);
+        successfulInvestmentAlert(investStore.tokensToInvest);
       });
     });
   }
 
   investToTokensForWhitelistedCrowdsale(web3) {
-    console.log("startDate: " + this.state.crowdsale.startDate);
+    const { crowdsalePageStore } = this.props 
+    console.log("startDate: " +  crowdsalePageStore.startDate);
     console.log("(new Date()).getTime(): " + (new Date()).getTime());
-    if (this.state.crowdsale.startDate > (new Date()).getTime()) {
+    if (crowdsalePageStore.startDate > (new Date()).getTime()) {
       let state = this.state;
       state.loading = false;
       this.setState(state);
-      return investmentDisabledAlertInTime(this.state.crowdsale.startDate);
+      return investmentDisabledAlertInTime(crowdsalePageStore.startDate);
     }
 
     findCurrentContractRecursively(0, this, web3, null, (crowdsaleContract, tierNum) => {
@@ -206,19 +212,20 @@ export class Invest extends React.Component {
   }
 
   investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, web3) {
+    const { contractStore, tokenStore, crowdsalePageStore, investStore } = this.props 
     let nextTiers = [];
-    console.log(this.state.contracts.crowdsale);
-    for (let i = tierNum + 1; i < this.state.contracts.crowdsale.addr.length; i++) {
-      nextTiers.push(this.state.contracts.crowdsale.addr[i]);
+    console.log(contractStore.crowdsale);
+    for (let i = tierNum + 1; i < contractStore.crowdsale.addr.length; i++) {
+      nextTiers.push(contractStore.crowdsale.addr[i]);
     }
     console.log("nextTiers: " + nextTiers);
     console.log(nextTiers.length);
 
-    let decimals = parseInt(this.state.token.decimals, 10);
+    let decimals = parseInt(tokenStore.decimals, 10);
     console.log("decimals: " + decimals);
-    let rate = parseInt(this.state.pricingStrategy.rate, 10); //it is from contract. It is already in wei. How much 1 token costs in wei.
+    let rate = parseInt(crowdsalePageStore.rate, 10); //it is from contract. It is already in wei. How much 1 token costs in wei.
     console.log("rate: " + rate);
-    let tokensToInvest = parseFloat(this.state.tokensToInvest);
+    let tokensToInvest = parseFloat(investStore.tokensToInvest);
     console.log("tokensToInvest: " + tokensToInvest);
 
     let weiToSend = parseInt(tokensToInvest*rate, 10);
@@ -245,7 +252,7 @@ export class Invest extends React.Component {
             let state = $this.state;
             state.loading = false;
             $this.setState(state);
-            successfulInvestmentAlert($this.state.tokensToInvest);
+            successfulInvestmentAlert(investStore.tokensToInvest);
           }
         } else {
           setTimeout(() => {
@@ -257,9 +264,7 @@ export class Invest extends React.Component {
   }
 
   tokensToInvestOnChange(event) {
-    let state = this.state;
-    state["tokensToInvest"] = event.target.value;
-    this.setState(state);
+    this.props.investStore.setProperty('tokensToInvest', event.target.value)
   }
 
   renderPieTracker () {
@@ -295,25 +300,26 @@ export class Invest extends React.Component {
 
   render(state){
     const { seconds } = this.state
+    const { crowdsalePageStore, tokenStore, contractStore, investStore } = this.props
     const { days, hours, minutes } = this.getTimeStamps(seconds)
 
-    const tokenDecimals = !isNaN(this.state.token.decimals)?this.state.token.decimals:0;
-    const tokenTicker = this.state.token.ticker?this.state.token.ticker.toString():"";
-    const tokenName = this.state.token.name?this.state.token.name.toString():"";
-    const rate = this.state.pricingStrategy.rate;
-    const maxCapBeforeDecimals = this.state.crowdsale.maximumSellableTokens/10**tokenDecimals;
-    const tokenAmountOf = this.state.crowdsale.tokenAmountOf;
-    const ethRaised = this.state.crowdsale.ethRaised;
+    const tokenDecimals = !isNaN(tokenStore.decimals)?tokenStore.decimals:0;
+    const tokenTicker = tokenStore.ticker?tokenStore.ticker.toString():"";
+    const tokenName = tokenStore.name?tokenStore.name.toString():"";
+    const rate = crowdsalePageStore.rate;
+    const maxCapBeforeDecimals = crowdsalePageStore.maximumSellableTokens/10**tokenDecimals;
+    const tokenAmountOf = crowdsalePageStore.tokenAmountOf;
+    const ethRaised = crowdsalePageStore.ethRaised;
 
     //balance: tiers, standard
     const investorBalanceTiers = (tokenAmountOf?((tokenAmountOf/10**tokenDecimals)/*.toFixed(tokenDecimals)*/).toString():"0");
     const investorBalanceStandard = (ethRaised?(ethRaised/*.toFixed(tokenDecimals)*//rate).toString():"0");
-    const investorBalance = (this.state.contractType === this.state.contractTypes.whitelistwithcap)?investorBalanceTiers:investorBalanceStandard;
+    const investorBalance = (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap)?investorBalanceTiers:investorBalanceStandard;
 
     //total supply: tiers, standard
     const tierCap = !isNaN(maxCapBeforeDecimals)?(maxCapBeforeDecimals/*.toFixed(tokenDecimals)*/).toString():"0";
-    const standardCrowdsaleSupply = !isNaN(this.state.crowdsale.supply)?(this.state.crowdsale.supply/*.toFixed(tokenDecimals)*/).toString():"0";
-    const totalSupply = (this.state.contractType === this.state.contractTypes.whitelistwithcap)?tierCap:standardCrowdsaleSupply;
+    const standardCrowdsaleSupply = !isNaN(crowdsalePageStore.supply)?(crowdsalePageStore.supply/*.toFixed(tokenDecimals)*/).toString():"0";
+    const totalSupply = (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap)?tierCap:standardCrowdsaleSupply;
 
     return <div className="invest container">
       <div className="invest-table">
@@ -343,11 +349,11 @@ export class Invest extends React.Component {
               <p className="hashes-description">Current Account</p>
             </div>
             <div className="hashes-i">
-              <p className="hashes-title">{this.state.contracts.token.addr}</p>
+              <p className="hashes-title">{contractStore.token.addr}</p>
               <p className="hashes-description">Token Address</p>
             </div>
             <div className="hashes-i">
-              <p className="hashes-title">{this.state.contracts.crowdsale.addr[0]}</p>
+              <p className="hashes-title">{contractStore.crowdsale.addr[0]}</p>
               <p className="hashes-description">Crowdsale Contract Address</p>
             </div>
             <div className="hashes-i hidden">
@@ -381,7 +387,7 @@ export class Invest extends React.Component {
           <form className="invest-form">
             <label className="invest-form-label">Choose amount to invest</label>
             <div className="invest-form-input-container">
-              <input type="text" className="invest-form-input" value={this.tokensToInvest} onChange={this.tokensToInvestOnChange} placeholder="0"/>
+              <input type="text" className="invest-form-input" value={investStore.tokensToInvest} onChange={this.tokensToInvestOnChange} placeholder="0"/>
               <div className="invest-form-label">TOKENS</div>
             </div>
             <a className="button button_fill" onClick={this.investToTokens}>Invest now</a>
