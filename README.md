@@ -1,4 +1,4 @@
-![ICO Wizard DApp](https://forum.oracles.org//uploads/default/original/1X/0883f34b870fac19914d7b5e43e4f815dbe5c267.png)
+![ICO Wizard DApp](https://forum.oracles.org/uploads/default/original/1X/4defd4c248825a9216a247ab3c5cb1f613d7e5ef.png)
 
 # ICO Wizard DApp
 
