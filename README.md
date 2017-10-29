@@ -221,33 +221,32 @@ The one-tier crowdsale contract takes ~24 minutes in total.
 Estimates for each contract:
 
 
-SafeMathLib : 02:00
+* SafeMathLib : 02:00
 
-Token: 04:15
+* Token: 04:15
 
-Pricing strategy: 01:32
+* Pricing strategy: 01:32
 
-Crowdsale: 04:52
+* Crowdsale: 04:52
 
-Finalize agent: 01:52
+* Finalize agent: 01:52
 
 
 Estimates for each methods invocation:
 
+* setLastCrowdsale for Pricing Strategy: 00:58
 
-setLastCrowdsale for Pricing Strategy: 00:58
+* updateJoinedCrowdsales: 02:00
 
-updateJoinedCrowdsales: 02:00
+* setMintAgent: 01:30
 
-setMintAgent: 01:30
+* setMintAgent: 02:10
 
-setMintAgent: 02:10
+* setFinalizeAgent: 01:20
 
-setFinalizeAgent: 01:20
+* setReleaseAgent: 00:53
 
-setReleaseAgent: 00:53
-
-transferOwnership: 00:40
+* transferOwnership: 00:40
 
 ### Price
 
@@ -307,7 +306,9 @@ We created ICO Wizard for a crowdsale of [Oracles Network](https://oracles.org/)
 
 ## Contributors guide
 
-Issues which are looking for a handsome contributors are marked as _LookingForContributor_ label in [Issues](https://github.com/oraclesorg/ico-wizard/issues?q=is%3Aissue+is%3Aopen+label%3ALookingForContributor)  section of the GitHub 
+Issues which are looking for a handsome contributors are marked as _LookingForContributor_ label in [Issues](https://github.com/oraclesorg/ico-wizard/issues?q=is%3Aissue+is%3Aopen+label%3ALookingForContributor)  section of the GitHub.
+
+Take a look at our [PR Policy](https://github.com/oraclesorg/ico-wizard/wiki/Pull-Request-Policy).
 
 ## Support 
 
