@@ -132,8 +132,8 @@ export class stepThree extends React.Component{
 
     componentDidMount () {
       const { tierStore, web3Store } = this.props
-      const accounts = web3Store.web3.eth.accounts
-      tierStore.setTierProperty(accounts[0], 'walletAddress', 0)
+      const { curAddress } = web3Store
+      tierStore.setTierProperty(curAddress, 'walletAddress', 0)
       tierStore.setTierProperty(defaultCompanyStartDate(), 'startTime', 0)
       tierStore.setTierProperty(defaultCompanyEndDate(tierStore.tiers[0].startTime), 'endTime', 0)
     }
