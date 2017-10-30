@@ -314,6 +314,8 @@ Take a look at our [PR Policy](https://github.com/oraclesorg/ico-wizard/wiki/Pul
 
 You can get support on [Telegram](https://t.me/oraclesnetwork).
 
+Need more info? [Go Wiki](https://github.com/oraclesorg/ico-wizard/wiki).
+
 ## Notable Contributors
 
 Brought to you by [Oracles Network](https://oracles.org/team) team.
