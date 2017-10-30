@@ -167,8 +167,8 @@ const { PUBLISH } = NAVIGATION_STEPS
       return noMetaMaskAlert();
     }
     var contracts = contractStore;
-    var binSafeMathLib = contracts && contracts.safeMathLib && contracts.safeMathLib.bin || ''
-    var abiSafeMathLib = contracts && contracts.safeMathLib && contracts.safeMathLib.abi || []
+    var binSafeMathLib = contracts.safeMathLib.bin || ''
+    var abiSafeMathLib = contracts.safeMathLib.abi || []
     var safeMathLib = contractStore.safeMathLib;
     deployContract(0, web3, abiSafeMathLib, binSafeMathLib, [], this.state, this.handleDeployedSafeMathLibrary)
   }
