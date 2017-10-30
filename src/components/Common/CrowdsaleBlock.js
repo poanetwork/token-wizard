@@ -9,10 +9,6 @@ import { VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS } from '../../utils/
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
 const { START_TIME, END_TIME, RATE, SUPPLY, CROWDSALE_SETUP_NAME, ALLOWMODIFYING } = TEXT_FIELDS
 
-//behaves like normal tier block
- // accesses data from tierstore
- //remove all this
- //pass down onChange function
 @inject ('tierStore')
 @observer export class CrowdsaleBlock extends React.Component {
   constructor(props) {
