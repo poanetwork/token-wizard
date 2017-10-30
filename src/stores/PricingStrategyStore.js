@@ -1,6 +1,6 @@
-import { observable, computed, action } from 'mobx';
+import { observable, action } from 'mobx';
 
-class PricingStrategies {
+class PricingStrategyStore {
 
 	@observable strategies;
 	
@@ -12,7 +12,7 @@ class PricingStrategies {
     this.strategies.push(strategy)
 	}
 	
-	@action setStrategyProperty = (index, property, value) => {
+	@action setStrategyProperty = (value, property, index) => {
 		let newStrategy = {...this.strategies[index]}
 		newStrategy[property] = value
     this.strategies[index] = newStrategy;
@@ -24,7 +24,7 @@ class PricingStrategies {
 
 }
 
-const pricingStrategies = new PricingStrategies();
+const pricingStrategyStore = new PricingStrategyStore();
 
-export default pricingStrategies;
-export { PricingStrategies };
+export default pricingStrategyStore;
+export { PricingStrategyStore };

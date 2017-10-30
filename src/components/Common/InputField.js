@@ -1,9 +1,11 @@
 import React from 'react'
 import '../../assets/stylesheets/application.css';
 import { VALIDATION_TYPES } from '../../utils/constants'
+import { observer } from 'mobx-react'
 const { INVALID } = VALIDATION_TYPES
 
-export class InputField extends React.Component {
+
+@observer export class InputField extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -39,7 +41,7 @@ export class InputField extends React.Component {
 		const error = this.props.valid === INVALID ? this.props.errorMessage : ''
 		return (<div className={this.props.side}>
 			<label className="label">{this.props.title}</label>
-			<input ref={this.props.ref} disabled={this.props.disabled} type={this.props.type} className="input" onBlur={this.props.onBlur} value={this.state.val} defaultValue={this.props.defaultValue} onChange={this.onChange}/>
+			<input ref={this.props.ref} disabled={this.props.disabled} type={this.props.type} className="input" onBlur={this.props.onBlur} value={this.props.value} defaultValue={this.props.defaultValue} onChange={this.onChange}/>
 			<p className="description">
 				{this.props.description}
 			</p>

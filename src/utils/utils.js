@@ -1,4 +1,5 @@
 import { VALIDATION_TYPES, TRUNC_TO_DECIMALS } from './constants'
+import { contractStore, tokenStore, tierStore, web3Store } from '../stores'
 const { VALID, EMPTY, INVALID } = VALIDATION_TYPES
 
 export function getQueryVariable(variable) {
@@ -46,64 +47,64 @@ export function setFlatFileContentToState(file, cb) {
   });
 }
 
-export function getWhiteListWithCapCrowdsaleAssets(state, cb) {
+export function getWhiteListWithCapCrowdsaleAssets(cb) {
     const contractName = "CrowdsaleWhitelistWithCap";
     let derivativesLength = 11;
     let derivativesIterator = 0;
     setFlatFileContentToState("./contracts/" + contractName + "_flat.sol", function(_src) {
       derivativesIterator++;
-      state.contracts.crowdsale.src = _src;
-
+      contractStore.setContractProperty('crowdsale', 'src', _src);
+      
       if (derivativesIterator === derivativesLength) {
-        cb(state);
+        cb(contractStore);
       }
     });
     setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", function(_bin) {
       derivativesIterator++;
-      state.contracts.crowdsale.bin = _bin;
-
+      contractStore.setContractProperty('crowdsale', 'bin', _bin);
+      
       if (derivativesIterator === derivativesLength) {
-        cb(state);
+        cb(contractStore);
       }
     });
     setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", function(_abi) {
       derivativesIterator++;
-      state.contracts.crowdsale.abi = JSON.parse(_abi);
-
+      contractStore.setContractProperty('crowdsale', 'abi', JSON.parse(_abi));
+      
       if (derivativesIterator === derivativesLength) {
-        cb(state);
+        cb(contractStore);
       }
     });
     setFlatFileContentToState("./contracts/" + contractName + "Token_flat.bin", function(_bin) {
       derivativesIterator++;
-      state.contracts.token.bin = _bin;
+      contractStore.setContractProperty('token', 'bin', _bin);      
 
       if (derivativesIterator === derivativesLength) {
-        cb(state);
+        cb(contractStore);
       }
     });
     setFlatFileContentToState("./contracts/" + contractName + "Token_flat.abi", function(_abi) {
       derivativesIterator++;
-      state.contracts.token.abi = JSON.parse(_abi);
+      contractStore.setContractProperty('token', 'abi', JSON.parse(_abi));            
 
       if (derivativesIterator === derivativesLength) {
-        cb(state);
+        cb(contractStore);
       }
     });
     setFlatFileContentToState("./contracts/" + contractName + "PricingStrategy_flat.bin", function(_bin) {
       derivativesIterator++;
-      state.contracts.pricingStrategy.bin = _bin;
-
+      contractStore.setContractProperty('pricingStrategy', 'bin', _bin);            
+      
       if (derivativesIterator === derivativesLength) {
-        cb(state);
+        cb(contractStore);
       }
     });
     setFlatFileContentToState("./contracts/" + contractName + "PricingStrategy_flat.abi", function(_abi) {
       derivativesIterator++;
-      state.contracts.pricingStrategy.abi = JSON.parse(_abi);
-
+      contractStore.setContractProperty('pricingStrategy', 'abi', JSON.parse(_abi));            
+    
       if (derivativesIterator === derivativesLength) {
-        cb(state);
+        cb(contractStore);
       }
     });
     /*const tokenTransferProxyContractName = "TokenTransferProxy";
@@ -143,35 +144,35 @@ export function getWhiteListWithCapCrowdsaleAssets(state, cb) {
     const finalizeAgentContractName = "FinalizeAgent";
     setFlatFileContentToState("./contracts/" + finalizeAgentContractName + "_flat.bin", function(_bin) {
       derivativesIterator++;
-      state.contracts.finalizeAgent.bin = _bin;
-
+      contractStore.setContractProperty('finalizeAgent', 'bin', _bin);            
+      
       if (derivativesIterator === derivativesLength) {
-        cb(state);
+        cb(contractStore);
       }
     });
     setFlatFileContentToState("./contracts/" + finalizeAgentContractName + "_flat.abi", function(_abi) {
       derivativesIterator++;
-      state.contracts.finalizeAgent.abi = JSON.parse(_abi);
+      contractStore.setContractProperty('finalizeAgent', 'abi', JSON.parse(_abi));                  
 
       if (derivativesIterator === derivativesLength) {
-        cb(state);
+        cb(contractStore);
       }
     });
     const nullFinalizeAgentContractName = "NullFinalizeAgent";
     setFlatFileContentToState("./contracts/" + nullFinalizeAgentContractName + "_flat.bin", function(_bin) {
       derivativesIterator++;
-      state.contracts.nullFinalizeAgent.bin = _bin;
+      contractStore.setContractProperty('nullFinalizeAgent', 'bin', _bin);                  
 
       if (derivativesIterator === derivativesLength) {
-        cb(state);
+        cb(contractStore);
       }
     });
     setFlatFileContentToState("./contracts/" + nullFinalizeAgentContractName + "_flat.abi", function(_abi) {
       derivativesIterator++;
-      state.contracts.nullFinalizeAgent.abi = JSON.parse(_abi);
+      contractStore.setContractProperty('nullFinalizeAgent', 'abi', JSON.parse(_abi));                        
 
       if (derivativesIterator === derivativesLength) {
-        cb(state);
+        cb(contractStore);
       }
     });
 }
@@ -205,8 +206,8 @@ export const findConstructor = (abi) => {
     return abiConstructor
 }
 
-export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) => {
-    //console.log(abiConstructor, state, vals, crowdsaleNum);
+export const getconstructorParams = (abiConstructor, vals, crowdsaleNum) => {
+    console.log(abiConstructor, vals, crowdsaleNum);
     let params = {"types": [], "vals": []};
     if (!abiConstructor) return params;
     for (let j = 0; j < abiConstructor.length; j++) {
@@ -216,75 +217,94 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
             params.vals.push(vals[j]);
         } else {
             switch(inp.name) {
-                case "_token": {
-                    params.vals.push(state.contracts.token.addr);
-                } break;
-                case "_pricingStrategy": {
-                    params.vals.push(state.contracts.pricingStrategy.addr[crowdsaleNum]);
-                } break;
-                case "_multisigWallet": {
-                    params.vals.push(state.crowdsale[0].walletAddress);
+                case "_startBlock": {
+                    params.vals.push(tierStore.tiers[crowdsaleNum].startBlock);
                 } break;
                 case "_start": {
-                    params.vals.push(toFixed((new Date(state.crowdsale[crowdsaleNum].startTime).getTime()/1000).toString()));
+                    params.vals.push(toFixed(new Date(tierStore.tiers[crowdsaleNum].startTime).getTime()/1000).toString());
+                } break;
+                case "_endBlock": {
+                    params.vals.push(tierStore.tiers[crowdsaleNum].endBlock);
                 } break;
                 case "_end": {
-                    params.vals.push(toFixed((new Date(state.crowdsale[crowdsaleNum].endTime).getTime()/1000).toString()));
-                } break;
-                case "_minimumFundingGoal": {
-                  params.vals.push("0");
-                } break;
-                case "_maximumSellableTokens": {
-                  params.vals.push(toFixed(state.crowdsale[crowdsaleNum].supply*10**state.token.decimals).toString());
-                } break;
-                case "_isUpdatable": {
-                  params.vals.push(state.crowdsale[crowdsaleNum].updatable?state.crowdsale[crowdsaleNum].updatable=="on"?true:false:false);
-                } break;
-                case "_isWhiteListed": {
-                  params.vals.push(state.crowdsale[0].whitelistdisabled?state.crowdsale[0].whitelistdisabled=="yes"?false:true:false);
+                    params.vals.push(toFixed(new Date(tierStore.tiers[crowdsaleNum].endTime).getTime()/1000).toString());
                 } break;
                 case "_rate": {
-                    params.vals.push(state.pricingStrategy[crowdsaleNum].rate);
+                    params.vals.push(tierStore.tiers[crowdsaleNum].rate);
                 } break;
                 case "_wallet":
                 case "_beneficiary": {
-                    params.vals.push(state.crowdsale[crowdsaleNum].walletAddress);
+                    params.vals.push(tierStore.tiers[crowdsaleNum].walletAddress);
+                } break;
+                case "_multisigWallet": {
+                    //params.vals.push(contractStore.multisig.addr);
+                    params.vals.push(tierStore.tiers[0].walletAddress);
+                } break;
+                case "_pricingStrategy": {
+                    params.vals.push(contractStore.pricingStrategy.addr[crowdsaleNum]);
+                } break;
+                case "_token": {
+                    params.vals.push(contractStore.token.addr);
                 } break;
                 case "_crowdsale": {
-                    params.vals.push(state.contracts.crowdsale.addr[crowdsaleNum]);
+                    params.vals.push(contractStore.crowdsale.addr[crowdsaleNum]);
                 } break;
                 case "_crowdsaleSupply": {
-                    params.vals.push(state.crowdsale[crowdsaleNum].supply);
+                    params.vals.push(tierStore.tiers[crowdsaleNum].supply);
                 } break;
                 case "_name": {
-                    params.vals.push(state.token.name);
+                    params.vals.push(tokenStore.name);
                 } break;
                 case "_symbol": {
-                    params.vals.push(state.token.ticker);
+                    params.vals.push(tokenStore.ticker);
                 } break;
                 case "_decimals": {
-                    params.vals.push(state.token.decimals);
+                    params.vals.push(tokenStore.decimals);
                 } break;
                 case "_globalMinCap": {
-                  params.vals.push(state.crowdsale[0].whitelistdisabled === "yes"?state.token.globalmincap?toFixed(state.token.globalmincap*10**state.token.decimals).toString():0:0);
+                  params.vals.push(tierStore.tiers[0].whitelistdisabled === "yes"?tokenStore.globalmincap?toFixed(tokenStore.globalmincap*10**tokenStore.decimals).toString():0:0);
                 } break;
                 case "_tokenSupply":
                 case "_initialSupply": {
-                    params.vals.push(state.token.supply);
+                    params.vals.push(tokenStore.supply);
+                } break;
+                case "_maximumSellableTokens": {
+                  params.vals.push(toFixed(tierStore.tiers[crowdsaleNum].supply*10**tokenStore.decimals).toString());
+                } break;
+                case "_minimumFundingGoal": {
+                  params.vals.push(0);
                 } break;
                 case "_mintable": {
                     params.vals.push(true);
                 } break;
+                case "_tranches": {
+                    params.vals.push(tierStore.tiers[crowdsaleNum].tranches);
+                } break;
+                case "_secondsTimeLocked": {
+                  params.vals.push(1)
+                } break;
+                case "_tokenTransferProxy": {
+                  params.vals.push(contractStore.tokenTransferProxy.addr)
+                } break;
                 case "_required": {
                   params.vals.push(1)
                 } break;
+                case "_owners": {
+                  let owners = [];
+                  owners.push(tierStore.tiers[crowdsaleNum].walletAddress);
+                  params.vals.push(owners)
+                } break;
                 case "_oneTokenInWei": {
                   //params.vals.push(state.pricingStrategy[crowdsaleNum].rate);
-                  //params.vals.push(state.web3.toWei(1/state.pricingStrategy[crowdsaleNum].rate/10**state.token.decimals, "ether"));
-                  
-                  let oneTokenInETHRaw = 1/state.pricingStrategy[crowdsaleNum].rate
+                  //params.vals.push(state.web3.toWei(1/state.pricingStrategy[crowdsaleNum].rate/10**tokenStore.decimals, "ether"));
+                  let oneTokenInETHRaw = 1/tierStore.tiers[crowdsaleNum].rate
                   let oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, oneTokenInETHRaw)
-                  params.vals.push(state.web3.utils.toWei(oneTokenInETH, "ether"));
+                  params.vals.push(web3Store.web3.utils.toWei(oneTokenInETH, "ether"));                } break;
+                case "_isUpdatable": {
+                  params.vals.push(tierStore.tiers[crowdsaleNum].updatable?tierStore.tiers[crowdsaleNum].updatable=="on"?true:false:false);
+                } break;
+                case "_isWhiteListed": {
+                  params.vals.push(tierStore.tiers[0].whitelistdisabled?tierStore.tiers[0].whitelistdisabled=="yes"?false:true:false);
                 } break;
                 default: {
                     params.vals.push("");
@@ -329,21 +349,21 @@ export const stepsAreValid = (steps) => {
     return Object.values(newSteps).length > 3 && Object.values(newSteps).every(step => step === VALID)
 }
 
-const validateTier = (tier) => typeof tier === 'string' && tier.length > 0 && tier.length < 30
+export const validateTier = (tier) => typeof tier === 'string' && tier.length > 0 && tier.length < 30
 
-const validateName = (name) => typeof name === 'string' && name.length > 0 && name.length < 30
+export const validateName = (name) => typeof name === 'string' && name.length > 0 && name.length < 30
 
-const validateSupply = (supply) =>  isNaN(Number(supply)) === false && Number(supply) > 0
+export const validateSupply = (supply) =>  isNaN(Number(supply)) === false && Number(supply) > 0
 
-const validateDecimals = (decimals) => isNaN(Number(decimals)) === false && decimals.length > 0
+export const validateDecimals = (decimals) => isNaN(Number(decimals)) === false && decimals.length > 0
 
-const validateTicker = (ticker) => typeof ticker === 'string' && ticker.length < 4 && ticker.length > 0
+export const validateTicker = (ticker) => typeof ticker === 'string' && ticker.length < 4 && ticker.length > 0
 
-const validateTime = (time) => getTimeAsNumber(time) > Date.now() 
+export const validateTime = (time) => getTimeAsNumber(time) > Date.now() 
 
-const validateRate = (rate) => isNaN(Number(rate)) === false && Number(rate) > 0
+export const validateRate = (rate) => isNaN(Number(rate)) === false && Number(rate) > 0
 
-const validateAddress = (address) => {
+export const validateAddress = (address) => {
     if(!address || address.length !== 42 ) {
         return false
     }

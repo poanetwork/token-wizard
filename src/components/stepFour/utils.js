@@ -34,39 +34,39 @@ function setMintAgent(web3, abi, addr, acc, gasLimit, cb) {
   });
 }
 
-function addWhiteList(round, web3, crowdsale, token, abi, addr, cb) {
+function addWhiteList(round, web3, tierStore, token, abi, addr, cb) {
   console.log("###whitelist:###");
   let whitelist = [];
   for (let i = 0; i <= round; i++) {
-    console.log(crowdsale[i]);
-    console.log(crowdsale[i].whitelist);
+    console.log(tierStore.tiers[i]);
+    console.log(tierStore.tiers[i].whitelist);
 
-    for (let j = 0; j < crowdsale[i].whitelist.length; j++) {
+    for (let j = 0; j < tierStore.tiers[i].whitelist.length; j++) {
       let itemIsAdded = false;
       for (let k = 0; k < whitelist.length; k++) {
-        if (whitelist[k].addr == crowdsale[i].whitelist[j].addr) {
+        if (whitelist[k].addr == tierStore.tiers[i].whitelist[j].addr) {
           itemIsAdded = true;
           break;
         }
       }
       if (!itemIsAdded) {
-        whitelist.push.apply(whitelist, crowdsale[i].whitelist);
+        whitelist.push.apply(whitelist, tierStore.tiers[i].whitelist);
       }
     }
 
-    if (crowdsale[i].whiteListInput.addr && crowdsale[i].whiteListInput.min && crowdsale[i].whiteListInput.max) {
+    if (tierStore.tiers[i].whiteListInput.addr && tierStore.tiers[i].whiteListInput.min && tierStore.tiers[i].whiteListInput.max) {
       let itemIsAdded = false;
       for (let k = 0; k < whitelist.length; k++) {
-        if (whitelist[k].addr == crowdsale[i].whiteListInput.addr) {
+        if (whitelist[k].addr == tierStore.tiers[i].whiteListInput.addr) {
           itemIsAdded = true;
           break;
         }
       }
       if (!itemIsAdded) {
         whitelist.push({
-          "addr": crowdsale[i].whiteListInput.addr,
-          "min": crowdsale[i].whiteListInput.min,
-          "max": crowdsale[i].whiteListInput.max
+          "addr": tierStore.tiers[i].whiteListInput.addr,
+          "min": tierStore.tiers[i].whiteListInput.min,
+          "max": tierStore.tiers[i].whiteListInput.max
         });
       }
     }
@@ -169,7 +169,10 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
     if (!tokenContract) return noContractAlert();
 
     let map = {};
-    let addrs = [], inTokens = [], inPercentageUnit = [], inPercentageDecimals = [];
+
+    let addrs = [];
+    let inTokens = [];
+    let inPercentage = [];
 
     if (token.reservedTokensInput.addr && token.reservedTokensInput.dim && token.reservedTokensInput.val) {
       token.reservedTokens.push({
@@ -184,38 +187,34 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
 
     for (let i = 0; i < token.reservedTokens.length; i++) {
       if (!token.reservedTokens[i].deleted) {
-        let val = token.reservedTokens[i].val
-        let addr = token.reservedTokens[i].addr
-        let obj = map[addr]?map[addr]:{}
-        if (token.reservedTokens[i].dim === "tokens") 
-          obj.inTokens = val * 10**token.decimals
-        else {
-          obj.inPercentageDecimals = countDecimals(val)
-          obj.inPercentageUnit = val * 10**obj.inPercentageDecimals
-        }
-        map[addr] = obj
+        let val = token.reservedTokens[i].val;
+        let addr = token.reservedTokens[i].addr;
+        let obj = map[addr]?map[addr]:{};
+        if (token.reservedTokens[i].dim === "tokens") obj.inTokens = val*10**token.decimals
+        else obj.inPercentage = val;
+        map[addr] = obj;
+        //addrs.push(token.reservedTokens[i].addr);
+        //dims.push(token.reservedTokens[i].dim == "tokens"?true:false);
+        //vals.push(token.reservedTokens[i].dim == "tokens"?token.reservedTokens[i].val*10**token.decimals:token.reservedTokens[i].val);
       }
     }
 
     let keys = Object.keys(map);
     for (let i = 0; i < keys.length; i++) {
-      let key = keys[i]
-      let obj = map[key]
-      addrs.push(key)
-      inTokens.push(obj.inTokens?toFixed(obj.inTokens.toString()):0)
-      inPercentageUnit.push(obj.inPercentageUnit?obj.inPercentageUnit:0)
-      inPercentageDecimals.push(obj.inPercentageDecimals?obj.inPercentageDecimals:0)
+      addrs.push(keys[i]);
+      inTokens.push(map[keys[i]].inTokens?toFixed(map[keys[i]].inTokens.toString()):0);
+      inPercentage.push(map[keys[i]].inPercentage?map[keys[i]].inPercentage:0);
     }
 
-    if (addrs.length === 0 && inTokens.length === 0 && inPercentageUnit.length === 0 && inPercentageDecimals.length === 0) return cb()
+    if (addrs.length === 0 && inTokens.length === 0 && inPercentage.length === 0) return cb();
 
-    console.log("addrs: " + addrs)
-    console.log("inTokens: " + inTokens)
-    console.log("inPercentageUnit: " + inPercentageUnit)
-    console.log("inPercentageDecimals: " + inPercentageDecimals)
+    console.log("input: ");
+    console.log("addrs: " + addrs);
+    console.log("inTokens: " + inTokens);
+    console.log("inPercentage: " + inPercentage);
 
-    let method = tokenContract.methods.setReservedTokensListMultiple(addrs, inTokens, inPercentageUnit, inPercentageDecimals).send({gasPrice: GAS_PRICE})
-    sendTXToContract(web3, method, cb)
+    let method = tokenContract.methods.setReservedTokensListMultiple(addrs, inTokens, inPercentage).send({gasPrice: GAS_PRICE})
+    sendTXToContract(web3, method, cb);
   });
 }
 
@@ -268,11 +267,11 @@ export function updateJoinedCrowdsalesRecursive (i, web3, abi, addrs, cb) {
   })
 }
 
-export function addWhiteListRecursive (i, web3, crowdsale, token, abi, crowdsaleAddrs, cb) {
-  addWhiteList(i, web3, crowdsale, token, abi, crowdsaleAddrs[i], (err) => {
+export function addWhiteListRecursive (i, web3, tierStore, token, abi, crowdsaleAddrs, cb) {
+  addWhiteList(i, web3, tierStore, token, abi, crowdsaleAddrs[i], (err) => {
     i++;
     if (i < crowdsaleAddrs.length) {
-      addWhiteListRecursive(i, web3, crowdsale, token, abi, crowdsaleAddrs, cb);
+      addWhiteListRecursive(i, web3, tierStore, token, abi, crowdsaleAddrs, cb);
     } else {
       cb(err);
     }
@@ -390,9 +389,4 @@ export const download = (data, filename, type) => {
 
 export function scrollToBottom() {
   window.scrollTo(0,document.body.scrollHeight);
-}
-
-var countDecimals = function (inputFloat) {
-  if(Math.floor(inputFloat) === parseFloat(inputFloat)) return 0;
-  return inputFloat.toString().split(".")[1].length || 0; 
 }
