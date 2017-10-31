@@ -1,12 +1,12 @@
 import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
-import { getWeb3, checkTxMined, attachToContract, checkNetWorkByID } from '../../utils/blockchainHelpers'
+import { getWeb3, checkTxMined, attachToContract, checkNetWorkByID, sendTXToContract } from '../../utils/blockchainHelpers'
 import { getCrowdsaleData, getCurrentRate, initializeAccumulativeData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively, getJoinedTiers } from '../crowdsale/utils'
 import { getQueryVariable, getURLParam, getWhiteListWithCapCrowdsaleAssets } from '../../utils/utils'
 import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert, invalidCrowdsaleAddrAlert } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
 import { ICOConfig } from '../Common/config'
-import { defaultState } from '../../utils/constants'
+import { defaultState, GAS_PRICE } from '../../utils/constants'
 
 export class Invest extends React.Component {
   constructor(props) {
@@ -160,7 +160,6 @@ export class Invest extends React.Component {
   }
 
   investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, web3, accounts) {
-    console.log(web3)
     let nextTiers = [];
     console.log(this.state.contracts.crowdsale);
     for (let i = tierNum + 1; i < this.state.contracts.crowdsale.addr.length; i++) {
@@ -182,10 +181,17 @@ export class Invest extends React.Component {
     let opts = {
       from: accounts[0],
       value: weiToSend,
-      gasPrice: 21000000000
+      gasPrice: GAS_PRICE
     };
     console.log(opts);
-    crowdsaleContract.methods.buy().send(opts, (err, txHash) => {
+    sendTXToContract(web3, crowdsaleContract.methods.buy().send(opts), (err) => {
+      let state = this.state;
+      state.loading = false;
+      this.setState(state);
+      successfulInvestmentAlert(this.state.tokensToInvest);
+    });
+
+    /*crowdsaleContract.methods.buy().send(opts, (err, txHash) => {
       if (err) {
         let state = this.state;
         state.loading = false;
@@ -196,7 +202,7 @@ export class Invest extends React.Component {
       console.log("txHash: " + txHash);
       console.log(web3)
       checkTxMined(web3, txHash, (receipt) => this.txMinedCallback(web3, txHash, receipt))
-    });
+    });*/
   }
 
   txMinedCallback(web3, txHash, receipt) {

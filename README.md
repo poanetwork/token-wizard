@@ -18,8 +18,6 @@ Please, read instruction before you'll start to create crowdsales using ICO Wiza
     + [Run local version for development](#run-local-version-for-development)
     + [ICO configuration](#ico-configuration)
     + [Tests](#tests)
-    + [Investment with transaction from MetaMask](#investment-with-transaction-from-metamask)
-    + [Change maxCap for tier from MetaMask](#change-maxcap-for-tier-from-metamask)
   * [Deploying of crowdsale to Mainnet](#deploying-of-crowdsale-to-mainnet)
     + [Time](#time)
     + [Price](#price)
@@ -83,6 +81,34 @@ Open [https://wizard.oracles.org](https://wizard.oracles.org) and follow steps.
 
 For dev purposes you can build and run ICO Wizard on your machine.
 
+#### Prerequisites
+
+Nodejs >= v.6.11.4
+
+##### For Windows users:
+
+```
+npm install --global --production windows-build-tools
+npm install --global node-gyp
+```
+
+restart CMD and run it `As Administrator`
+
+#### Getting started
+
+For Windows:
+
+```
+git clone https://github.com/oraclesorg/ico-wizard.git wiz
+cd wiz
+git submodule update --init --recursive --remote
+npm install
+npm run startWin
+```
+
+
+Others (macOS, Linux):
+
 ```
 git clone https://github.com/oraclesorg/ico-wizard.git wiz
 cd wiz
@@ -128,14 +154,14 @@ Test scripts are added to Travis CI and executed at every pull request.
 If you want to start it by yourself, simply run the command `npm test` from the root directory. 
 It will start testrpc at port 8545, Truffle will compile, deploy contracts to it and Truffle will execute tests. 
 
-*Note:* Kill testrpc after tests will executed: 
+*Note:* Kill testrpc after tests will be executed: 
 ```
 sudo kill `sudo lsof -t -i:8545`.
 ```
 
-Currently available tests cover the following scenario:
+Currently, available tests cover the following scenario:
 
-The updatable, whitelisted one tier crowdsale contract with one address in white list and reserved tokens for the same address (both: in absolute values and in percentage)
+The updatable, whitelisted one tier crowdsale contract with one address in whitelist and reserved tokens for the same address (both: in absolute values and in percentage)
 
 Checklist of contracts' testing:
 
@@ -185,36 +211,6 @@ Contract: CrowdsaleTokenExt
   36 passing (4s)
 ```
 
-### Investment with transaction from MetaMask
-
-1. Open MetaMask Chrome plugin
-
-2. Connect to the network, where the crowdsale contract is deployed. For example `mainnet`.
-
-3. Choose an account with sufficient balance at this network.
-
-4. Send transaction to the address of the crowdsale contract with the data `0xa6f2ae3a`. Value to send is in ETH. For example, if you put 0.01 to input, you will invest 0.01 ETH.
-
-![](./docs/MetaMaskInvest.png)
-
-### Change maxCap for tier from MetaMask
-
-1. Open MetaMask Chrome plugin
-
-2. Connect to the network, where the crowdsale contract is deployed. For example `mainnet`.
-
-3. Choose an account, which is the owner of crowdsale. This account should has sufficient balance at this network too.
-
-4. Send transaction to the address of the crowdsale contract with the data = `0x2c2de40a` + `hex(n*10**decimals)`.
-
-where `n` - maxCap of the tier,
-
-`decimals` - token decimals
-
-`hex(x)` - hexademical representation of `x`, normalized to 32 bytes (required number of zeros before hex). 
-
-For example, if you need to set `maxCap = 1000` for tier of crowdsale joined with token of 18 `decimals` the data should be: `0x2c2de40a00000000000000000000000000000000000000000000003635c9adc5dea00000`. Amount to send should be 0.
-
 ## Deploying of crowdsale to Mainnet
 
 
@@ -222,7 +218,7 @@ For example, if you need to set `maxCap = 1000` for tier of crowdsale joined wit
 
 The one-tier crowdsale contract takes ~24 minutes in total.
 
-Estimates for each contracts:
+Estimates for each contract:
 
 
 SafeMathLib : 02:00
@@ -257,15 +253,15 @@ transferOwnership: 00:40
 
 Attention!
 
-Deploying to the Mainnet is expensive. For a contract with one tier the price is 0.16 ETH.
+Deploying to the Mainnet is expensive. For a contract with one tier, the price is 0.16 ETH.
 
-With the price of 1 ETH of $300.0 USD the price of one deployment will be $48.0 USD.
+With the price of 1 ETH of $300.0 USD, the price of one deployment will be $48.0 USD.
 
 
 
 ## How to verify ICO Wizard contracts in Etherscan
 
-**Important!:** All information required for verification of ICO Wizard contracts located in a text file. You must download it on the Step 4 of ICO Wizard. There is **no** way to get it later and you'll need to repeat wizard for the new set of conracts to get the file.
+**Important!:** All information required for verification of ICO Wizard contracts located in a text file. You must download it on Step 4 of ICO Wizard. There is **no** way to get it later and you'll need to repeat wizard for the new set of contracts to get the file.
 
 ### Crowdsale contract verification:
 
@@ -284,7 +280,7 @@ With the price of 1 ETH of $300.0 USD the price of one deployment will be $48.0 
 
    2.6. **Constructor Arguments ABI-encoded (For contracts that accept constructor parameters)** is *Crowdsale contract ABI encoded constructor arguments for [Tier name]*
 
-3. For **Contract Library Address (For contracts that use libraries, supports up to 5 libraries)** By default we use only one library.
+3. For **Contract Library Address (For contracts that use libraries, supports up to 5 libraries)** By default, we use only one library.
 
 **Library_1 Name** type `:` and then the value of *SafeMathlLib library name* header from the file. Default value: `:SafeMathLibExt`.
 

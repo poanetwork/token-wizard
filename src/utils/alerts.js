@@ -83,3 +83,32 @@ export function incorrectNetworkAlert(correctNetworkName, incorrectNetworkName) 
       type: "warning"
     });
 }
+
+export function noDeploymentOnMainnetAlert() {
+    sweetAlert({
+      title: "Warning",
+      text: "Wizard is under maintenance on Ethereum Mainnet. Please come back later or use Kovan/Rinkeby/Oracles. Follow <a href='https://twitter.com/oraclesorg'>https://twitter.com/oraclesorg</a> for status.",
+      html: true,
+      type: "warning"
+    });
+}
+
+export function warningOnMainnetAlert(tiersCount, cb) {
+  let n = 100 //fraction to round
+    let estimatedCost = 1.0 / n * Math.ceil(n * tiersCount * 0.16)
+    let estimatedTxsCount = tiersCount * 12
+    sweetAlert({
+      title: "Warning",
+      text: "You are about to sign " + estimatedTxsCount + " TXs. You will see an individual Metamask windows for each of it. Please don't open two or more instances of Wizard in one browser. ICO Wizard will create " + tiersCount + "-tier(s) crowdsale for you. The total cost will be around " + estimatedCost + " ETH. Are you sure you want to proceed?",
+      html: true,
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonText: 'Yes, I am sure!',
+      cancelButtonText: "No, cancel it!",
+    },
+    function(isConfirm) {
+        if (isConfirm) {
+          cb();
+        }
+    });
+}

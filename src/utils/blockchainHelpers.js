@@ -1,6 +1,7 @@
 import Web3 from 'web3';
 import { incorrectNetworkAlert, noMetaMaskAlert, invalidNetworkIDAlert } from './alerts'
 import { getEncodedABIClientSide } from './microservices'
+import { GAS_PRICE } from './constants'
 
 // instantiate new web3 instance
 const web3 = new Web3();
@@ -140,49 +141,132 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
         from: accounts[0], 
         data: binFull
       }, function(err, estimatedGas) {
-        console.log('estimated gas callback', estimatedGas)
         if (err) console.log('errrrrrrrrrrrrrrrrr', err);
         console.log('gas is estimated', estimatedGas, 'err', err)
         let estimatedGasMax = 3716260;
         if (!estimatedGas) estimatedGas = estimatedGasMax;
+        if (estimatedGas > estimatedGasMax) estimatedGas = estimatedGasMax;
         else estimatedGas += 100000;
 
-        if (estimatedGas > estimatedGasMax) estimatedGas = estimatedGasMax;
+        let contractInstance = new web3.eth.Contract(abi);
 
-        var contractInstance = new web3.eth.Contract(abi);
-
-        var deployOpts = {
+        let deployOpts = {
           data: "0x" + bin,
           arguments: params
         };
 
-        var sendOpts = {
+        let sendOpts = {
           from: accounts[0],
           gas: estimatedGas,
-          gasPrice: 21000000000
+          gasPrice: GAS_PRICE
         };
 
-        contractInstance.deploy(deployOpts).send(sendOpts, deployContractCB)
+        let isMined = false;
+
+        contractInstance.deploy(deployOpts).send(sendOpts)
         //contractInstance.new(...totalParams)
-        .on('error', function(error){ return cb(err, null); })
-        //.on('transactionHash', function(transactionHash){ console.log(transactionHash); })
+        .on('error', function(error) { 
+          console.log(error);
+          return cb(error, null); 
+        })
+        .on('transactionHash', function(transactionHash){ 
+          console.log("contract deployment transaction: " + transactionHash);
+
+          checkTxMined(web3, transactionHash, function txMinedCallback(receipt) {
+            if (isMined) return;
+
+            if (receipt) {
+              if (receipt.blockNumber) {
+                console.log("Contract deployment is mined from polling of tx receipt");
+                isMined = true;
+                console.log(receipt.contractAddress) // instance with the new contract address
+                return cb(null, receipt.contractAddress);
+              } else {
+                console.log("Still mining... Polling of transaction once more");
+                setTimeout(function() {
+                  checkTxMined(web3, transactionHash, txMinedCallback)
+                }, 5000);
+              }
+            } else {
+              console.log("Still mining... Polling of transaction once more");
+              setTimeout(function() {
+                checkTxMined(web3, transactionHash, txMinedCallback)
+              }, 5000);
+            }
+          })
+        })
         /*.on('receipt', function(receipt){
+          if (errorArised) {
            console.log(receipt.contractAddress) // contains the new contract address
+           cb(null, receipt.contractAddress);
+          }
         })*/
-        //.on('confirmation', function(confirmationNumber, receipt){ console.log(confirmationNumber, receipt); })
+        .on('confirmation', function(confirmationNumber, receipt){ 
+          //console.log(confirmationNumber, receipt); 
+          /*if (errorArised) {
+           console.log(receipt.contractAddress) // contains the new contract address
+           cb(null, receipt.contractAddress);
+          }*/
+
+        })
         .then(function(newContractInstance){
+          if (!isMined) {
+            console.log("Contract deployment is mined from Promise");
+            isMined = true;
             console.log(newContractInstance.options.address) // instance with the new contract address
             cb(null, newContractInstance.options.address);
-        });
-
-        function deployContractCB(err, txHash) {
-          console.log(txHash);
-          if (err) {
-            return cb(err, null);
           }
-        };
+        });
       });
     });
+  });
+}
+
+export function sendTXToContract(web3, method, cb) {
+  let isMined = false;
+  method
+  //contractInstance.new(...totalParams)
+  .on('error', function(error) { 
+    console.log(error);
+    return cb(error); 
+  })
+  .on('transactionHash', function(transactionHash){ 
+    console.log("contract method transaction: " + transactionHash);
+
+    checkTxMined(web3, transactionHash, function txMinedCallback(receipt) {
+      if (isMined) return;
+
+      if (receipt) {
+        if (receipt.blockNumber) {
+          console.log("Sending tx to contract is mined from polling of tx receipt");
+          isMined = true;
+          console.log(receipt) // instance with the new contract address
+          return cb();
+        } else {
+          console.log("Still mining... Polling of transaction once more");
+          setTimeout(function() {
+            checkTxMined(web3, transactionHash, txMinedCallback)
+          }, 5000);
+        }
+      } else {
+        console.log("Still mining... Polling of transaction once more");
+        setTimeout(function() {
+          checkTxMined(web3, transactionHash, txMinedCallback)
+        }, 5000);
+      }
+    })
+  })
+  /*.on('receipt', function(receipt){
+  })*/
+  .on('confirmation', function(confirmationNumber, receipt){ 
+  })
+  .then(function(result){
+    if (!isMined) {
+      console.log("Sending tx to contract is mined from Promise");
+      isMined = true;
+      console.log(result) // instance with the new contract address
+      cb();
+    }
   });
 }
 
