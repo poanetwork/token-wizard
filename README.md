@@ -4,6 +4,8 @@
 
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/hyperium/hyper/master/LICENSE)
 [![Build Status](https://travis-ci.org/oraclesorg/ico-wizard.svg?branch=master)](https://travis-ci.org/oraclesorg/ico-wizard)
+[![Waffle.io - Columns and their card count](https://badge.waffle.io/oraclesorg/ico-wizard.svg?columns=all)](http://waffle.io/oraclesorg/ico-wizard)
+[![Join the chat at https://gitter.im/oraclesorg/ico-wizard](https://badges.gitter.im/oraclesorg/ico-wizard.svg)](https://gitter.im/oraclesorg/ico-wizard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 _Attention_!
 
