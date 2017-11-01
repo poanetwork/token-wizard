@@ -314,6 +314,7 @@ const { PUBLISH } = NAVIGATION_STEPS
       let newState = { ...this.state }
       newState.loading = true;
       this.setState(newState);
+      contractStore.crowdsale.networkID = _networkID;
       let contracts = contractStore;
       let binCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.bin || ''
       let abiCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.abi || []
