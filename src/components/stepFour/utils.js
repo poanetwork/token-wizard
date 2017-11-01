@@ -309,13 +309,13 @@ export const handleTokenForFile = (content, docData) => {
 
 export const handleCrowdsaleForFile = (content, docData) => {
     const title = content.value
-    const fileContent = title + tierStore[0][content.field]
+    const fileContent = title + tierStore.tiers[0][content.field]
     docData.data += fileContent + '\n\n'
 }
 
 export const handlePricingStrategyForFile = (content, docData) => {
     const title = content.value
-    const fileContent = title + tierStore[0][content.field]
+    const fileContent = title + tierStore.tiers[0][content.field]
     docData.data += fileContent + '\n\n'
 }
 
@@ -334,7 +334,7 @@ export const handleContractsForFile = (content, docData) => {
             fileBody = contractStore[content.child][content.field][i]
 
             if (!fileBody) return
-            let fileContent = title + " for " + tierStore[i].tier + ":**** \n \n" + fileBody
+            let fileContent = title + " for " + tierStore.tiers[i].tier + ":**** \n \n" + fileBody
             docData.data += fileContent + '\n\n'
           }
         } else {
@@ -357,14 +357,14 @@ export const handleConstantForFile = (content, docData) => {
 const addSrcToFile = (content, docData, state) => {
     const title = content.value
 
-    if ( Object.prototype.toString.call( state.contracts[content.child][content.field] ) === '[object Array]'  && content.field !== 'abi') {
-      for (let i = 0; i < state.contracts[content.child][content.field].length; i++) {
-        const body = state.contracts[content.child][content.field][i]
-        const text = title + " for " + tierStore[i].tier + ": " + body
+    if ( Object.prototype.toString.call( contractStore[content.child][content.field] ) === '[object Array]'  && content.field !== 'abi') {
+      for (let i = 0; i < contractStore[content.child][content.field].length; i++) {
+        const body = contractStore[content.child][content.field][i]
+        const text = title + " for " + tierStore.tiers[i].tier + ": " + body
         docData.data += text + '\n\n'
       }
     } else {
-      const body = content.field === 'abi' ? JSON.stringify(state.contracts[content.child][content.field]) : state.contracts[content.child][content.field]
+      const body = content.field === 'abi' ? JSON.stringify(contractStore[content.child][content.field]) : contractStore[content.child][content.field]
       const text = title + body
       docData.data += text + '\n\n'
     }
