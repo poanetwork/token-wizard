@@ -38,6 +38,10 @@ export function getWeb3(cb) {
 	if (typeof web3 === 'undefined') {
     // no web3, use fallback
     console.error("Please use a web3 browser");
+    if (process.env.NODE_ENV === 'development') {
+      web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+    }
+
     cb(web3, false);
   } else {
     // window.web3 == web3 most of the time. Don't override the provided,
