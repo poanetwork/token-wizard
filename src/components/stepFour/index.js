@@ -67,7 +67,7 @@ const { PUBLISH } = NAVIGATION_STEPS
               counter++;
               let cntrct = "pricingStrategy";
               const newContract = contractStore[cntrct].abiConstructor.concat(ABIencoded)
-              contractStore.setContractProperty(cntrct, 'abiContstructor', newContract);
+              contractStore.setContractProperty(cntrct, 'abiConstructor', newContract);
               console.log(cntrct + " ABI encoded params constructor:");
               console.log(ABIencoded);
               if (counter == (tierStore.tiers.length + 1))
@@ -314,6 +314,7 @@ const { PUBLISH } = NAVIGATION_STEPS
       let newState = { ...this.state }
       newState.loading = true;
       this.setState(newState);
+      contractStore.crowdsale.networkID = _networkID;
       let contracts = contractStore;
       let binCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.bin || ''
       let abiCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.abi || []
@@ -492,24 +493,28 @@ const { PUBLISH } = NAVIGATION_STEPS
     //post actions for mintablecappedcrowdsale
     //if (!tokenStoreIsAlreadyCreated) {
     console.log("###we create crowdsale firstly###");
-    setLastCrowdsaleRecursive(0, web3, contractStore.pricingStrategy.abi, contractStore.pricingStrategy.addr, contractStore.crowdsale.addr.slice(-1)[0], () => {
+    let tokenABI = JSON.parse(JSON.stringify(contractStore.token.abi))
+    let pricingStrategyABI = JSON.parse(JSON.stringify(contractStore.pricingStrategy.abi))
+    let crowdsaleABI = JSON.parse(JSON.stringify(contractStore.crowdsale.abi))
+
+    setLastCrowdsaleRecursive(0, web3, pricingStrategyABI, contractStore.pricingStrategy.addr, contractStore.crowdsale.addr.slice(-1)[0], 42982, (err) => {
       if (err) return this.hideLoader();
-      setReservedTokensListMultiple(web3, contractStore.token.abi, contractStore.token.addr, tokenStore, () => {
+      setReservedTokensListMultiple(web3, tokenABI, contractStore.token.addr, tokenStore, (err) => {
         if (err) return this.hideLoader();
-        updateJoinedCrowdsalesRecursive(0, web3, contractStore.crowdsale.abi, contractStore.crowdsale.addr, () => {
+        updateJoinedCrowdsalesRecursive(0, web3, crowdsaleABI, contractStore.crowdsale.addr, (err) => {
           if (err) return this.hideLoader();
-          setMintAgentRecursive(0, web3, contractStore.token.abi, contractStore.token.addr, contractStore.crowdsale.addr, () => {
+          setMintAgentRecursive(0, web3, tokenABI, contractStore.token.addr, contractStore.crowdsale.addr, 68425, (err) => {
             if (err) return this.hideLoader();
-            setMintAgentRecursive(0, web3, contractStore.token.abi, contractStore.token.addr, contractStore.finalizeAgent.addr, () => {
+            setMintAgentRecursive(0, web3, tokenABI, contractStore.token.addr, contractStore.finalizeAgent.addr, 68425, (err) => {
               if (err) return this.hideLoader();
-              addWhiteListRecursive(0, web3, tierStore, tokenStore, contractStore.crowdsale.abi, contractStore.crowdsale.addr, () => {
+              addWhiteListRecursive(0, web3, tierStore, tokenStore, crowdsaleABI, contractStore.crowdsale.addr, (err) => {
                 if (err) return this.hideLoader();
-                setFinalizeAgentRecursive(0, web3, contractStore.crowdsale.abi, contractStore.crowdsale.addr, contractStore.finalizeAgent.addr, () => {
+                setFinalizeAgentRecursive(0, web3, crowdsaleABI, contractStore.crowdsale.addr, contractStore.finalizeAgent.addr, 68622, (err) => {
                   if (err) return this.hideLoader();
-                  setReleaseAgentRecursive(0, web3, contractStore.token.abi, contractStore.token.addr, contractStore.finalizeAgent.addr, () => {
+                  setReleaseAgentRecursive(0, web3, tokenABI, contractStore.token.addr, contractStore.finalizeAgent.addr, 65905, (err) => {
                     if (err) return this.hideLoader();
-                    transferOwnership(web3, contractStore.token.abi, contractStore.token.addr, tierStore.tiers[0].walletAddress, () => {
-                      if (err) return this.hideLoader();
+                    transferOwnership(web3, tokenABI, contractStore.token.addr, tierStore.tiers[0].walletAddress, 46699, (err) => {
+                      this.hideLoader();
                       //this.goToCrowdsalePage();
                     });
                   });

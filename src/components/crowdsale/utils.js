@@ -51,7 +51,7 @@ export function findCurrentContractRecursively(i, $this, web3, firstCrowdsaleCon
   let crowdsaleAddr = contractStore.crowdsale.addr[i];
   if (i === contractStore.crowdsale.addr.length) return cb(firstCrowdsaleContract, i);
   if (!crowdsaleAddr) return cb(null);
-  if (!web3.isAddress(crowdsaleAddr)) return cb(null);
+  if (!web3.utils.isAddress(crowdsaleAddr)) return cb(null);
   attachToContract(web3, contractStore.crowdsale.abi, crowdsaleAddr, (err, crowdsaleContract) => {
     console.log("attach to crowdsale contract");
     if (err) return console.log(err);
