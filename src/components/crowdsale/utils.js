@@ -4,6 +4,7 @@ import { toFixed } from '../../utils/utils'
 import { CONTRACT_TYPES } from '../../utils/constants'
 import { crowdsalePageStore, contractStore, web3Store, tokenStore } from '../../stores'
 import { findCurrentContractRecursively as findCurrentContractRecursively2 } from './utils'
+import { toJSON } from 'mobx';
 
 export function getJoinedTiers(web3, abi, addr, joinedCrowdsales, cb) {
   attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
@@ -421,7 +422,9 @@ function getTokenData($this, cb) {
   };
   let propsCount = 0;
   let cbCount = 0;
-  attachToContract(web3, contractStore.token.abi, contractStore.token.addr, function(err, tokenContract) {
+  let tokenObj = toJSON(contractStore.token.map(toJSON))
+  console.log('tokenObj', tokenObj)
+  attachToContract(web3, tokenObj.abi, tokenObj.addr, function(err, tokenContract) {
     console.log("attach to token contract");
     if (err) return console.log(err);
     if (!tokenContract) return noContractAlert();

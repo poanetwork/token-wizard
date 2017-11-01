@@ -249,9 +249,7 @@ const { PUBLISH } = NAVIGATION_STEPS
   deployPricingStrategyRecursive = (i, pricingStrategies, binPricingStrategy, abiPricingStrategy) => {
     const { web3Store, contractStore, tokenStore } = this.props
     const web3 = web3Store.web3
-    var paramsPricingStrategy = this.getPricingStrategyParams(web3, pricingStrategies[i], i, tokenStore)
-    console.log("getPricingStrategyParams:");
-    console.log(paramsPricingStrategy);
+    var paramsPricingStrategy = this.getPricingStrategyParams(pricingStrategies[i], i, tokenStore)
     if (i < pricingStrategies.length - 1) {
       deployContract(i, web3, abiPricingStrategy, binPricingStrategy, paramsPricingStrategy, this.state, (err, pricingStrategyAddr) => {
         i++;
@@ -268,12 +266,12 @@ const { PUBLISH } = NAVIGATION_STEPS
   }
 
   //FlatPricing
-  getPricingStrategyParams = (web3, pricingStrategy, i, token) => {
-    const { tierStore } = this.props
-    console.log(pricingStrategy);
+  getPricingStrategyParams = (pricingStrategy, i, token) => {
+    const { tierStore, web3Store } = this.props
+    console.log('web3Store', web3Store.web3, web3Store.web3.utils.toWei)
     let oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, 1/pricingStrategy.rate)
     return [
-      web3.toWei(oneTokenInETH, "ether"),
+      web3Store.web3.utils.toWei(oneTokenInETH, "ether"),
       tierStore.tiers[i].updatable?tierStore.tiers[i].updatable=="on"?true:false:false
     ]
   }
