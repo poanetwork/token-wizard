@@ -2,6 +2,7 @@ import { attachToContract, checkTxMined, sendTXToContract } from '../../utils/bl
 import { noContractAlert } from '../../utils/alerts'
 import { toFixed } from '../../utils/utils'
 import { GAS_PRICE } from '../../utils/constants'
+import { tokenStore, tierStore, contractStore } from '../../stores'
 
 function setLastCrowdsale(web3, abi, addr, lastCrowdsale, gasLimit, cb) {
   console.log("###setLastCrowdsale for Pricing Strategy:###");
@@ -300,50 +301,50 @@ export function setReleaseAgentRecursive (i, web3, abi, addr, finalizeAgentAddrs
   })
 }
 
-export const handleTokenForFile = (content, docData, state) => {
+export const handleTokenForFile = (content, docData) => {
     const title = content.value
-    const fileContent = title + state.token[content.field]
+    const fileContent = title + tokenStore[content.field]
     docData.data += fileContent + '\n\n' 
 }
 
-export const handleCrowdsaleForFile = (content, docData, state) => {
+export const handleCrowdsaleForFile = (content, docData) => {
     const title = content.value
-    const fileContent = title + state.crowdsale[0][content.field]
+    const fileContent = title + tierStore.tiers[0][content.field]
     docData.data += fileContent + '\n\n'
 }
 
-export const handlePricingStrategyForFile = (content, docData, state) => {
+export const handlePricingStrategyForFile = (content, docData) => {
     const title = content.value
-    const fileContent = title + state.pricingStrategy[0][content.field]
+    const fileContent = title + tierStore.tiers[0][content.field]
     docData.data += fileContent + '\n\n'
 }
 
-export const handleFinalizeAgentForFile = (content, docData, state) => {
+export const handleFinalizeAgentForFile = (content, docData) => {
     const title = content.value
-    const fileContent = title + state.finalizeAgent[0][content.field]
+    const fileContent = title + contractStore[0][content.field]
     docData.data += fileContent + '\n\n'
 }
 
-export const handleContractsForFile = (content, docData, state) => {
+export const handleContractsForFile = (content, docData) => {
     const title = content.value
     if(content.field !== 'src' && content.field !== 'abi' && content.field !== 'addr') {
         let fileBody
-        if ( Object.prototype.toString.call( state.contracts[content.child][content.field] ) === '[object Array]' ) {
-          for (let i = 0; i < state.contracts[content.child][content.field].length; i++) {
-            fileBody = state.contracts[content.child][content.field][i]
+        if ( Object.prototype.toString.call( contractStore[content.child][content.field] ) === '[object Array]' ) {
+          for (let i = 0; i < contractStore[content.child][content.field].length; i++) {
+            fileBody = contractStore[content.child][content.field][i]
 
             if (!fileBody) return
-            let fileContent = title + " for " + state.crowdsale[i].tier + ":**** \n \n" + fileBody
+            let fileContent = title + " for " + tierStore.tiers[i].tier + ":**** \n \n" + fileBody
             docData.data += fileContent + '\n\n'
           }
         } else {
-          fileBody = state.contracts[content.child][content.field]
+          fileBody = contractStore[content.child][content.field]
           if (!fileBody) return
           let fileContent = title + ":**** \n \n" + fileBody
           docData.data += fileContent + '\n\n'
         }
     } else {
-        addSrcToFile(content, docData, state)
+        addSrcToFile(content, docData)
     }
 }
 
@@ -356,14 +357,14 @@ export const handleConstantForFile = (content, docData) => {
 const addSrcToFile = (content, docData, state) => {
     const title = content.value
 
-    if ( Object.prototype.toString.call( state.contracts[content.child][content.field] ) === '[object Array]'  && content.field !== 'abi') {
-      for (let i = 0; i < state.contracts[content.child][content.field].length; i++) {
-        const body = state.contracts[content.child][content.field][i]
-        const text = title + " for " + state.crowdsale[i].tier + ": " + body
+    if ( Object.prototype.toString.call( contractStore[content.child][content.field] ) === '[object Array]'  && content.field !== 'abi') {
+      for (let i = 0; i < contractStore[content.child][content.field].length; i++) {
+        const body = contractStore[content.child][content.field][i]
+        const text = title + " for " + tierStore.tiers[i].tier + ": " + body
         docData.data += text + '\n\n'
       }
     } else {
-      const body = content.field === 'abi' ? JSON.stringify(state.contracts[content.child][content.field]) : state.contracts[content.child][content.field]
+      const body = content.field === 'abi' ? JSON.stringify(contractStore[content.child][content.field]) : contractStore[content.child][content.field]
       const text = title + body
       docData.data += text + '\n\n'
     }

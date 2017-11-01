@@ -3,6 +3,7 @@ import { incorrectNetworkAlert, noMetaMaskAlert, invalidNetworkIDAlert } from '.
 import { getEncodedABIClientSide } from './microservices'
 import { GAS_PRICE } from './constants'
 import { web3Store } from '../stores'
+import { toJSON, isObservable, toJS } from 'mobx'
 // instantiate new web3 instance
 const web3 = web3Store.web3
 
@@ -149,11 +150,12 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
         if (estimatedGas > estimatedGasMax) estimatedGas = estimatedGasMax;
         else estimatedGas += 100000;
         console.log('abi', abi)
-        let contractInstance = new web3.eth.Contract(abi);
+        const objAbi = JSON.parse(JSON.stringify(abi))
+        let contractInstance = new web3.eth.Contract(objAbi);
 
         let deployOpts = {
           data: "0x" + bin,
-          arguments: params
+          arguments: params,
         };
 
         let sendOpts = {
@@ -161,10 +163,9 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
           gas: estimatedGas,
           gasPrice: GAS_PRICE
         };
-
         let isMined = false;
 
-        contractInstance.deploy(console.log('deployOpts', deployOpts) || deployOpts).send(console.log('sendOpts') || sendOpts)
+        contractInstance.deploy(deployOpts).send(sendOpts)
         //contractInstance.new(...totalParams)
         .on('error', function(error) { 
           console.log(error);

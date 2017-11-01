@@ -67,7 +67,7 @@ const { PUBLISH } = NAVIGATION_STEPS
               counter++;
               let cntrct = "pricingStrategy";
               const newContract = contractStore[cntrct].abiConstructor.concat(ABIencoded)
-              contractStore.setContractProperty(cntrct, 'abiContstructor', newContract);
+              contractStore.setContractProperty(cntrct, 'abiConstructor', newContract);
               console.log(cntrct + " ABI encoded params constructor:");
               console.log(ABIencoded);
               if (counter == (tierStore.tiers.length + 1))
@@ -249,9 +249,7 @@ const { PUBLISH } = NAVIGATION_STEPS
   deployPricingStrategyRecursive = (i, pricingStrategies, binPricingStrategy, abiPricingStrategy) => {
     const { web3Store, contractStore, tokenStore } = this.props
     const web3 = web3Store.web3
-    var paramsPricingStrategy = this.getPricingStrategyParams(web3, pricingStrategies[i], i, tokenStore)
-    console.log("getPricingStrategyParams:");
-    console.log(paramsPricingStrategy);
+    var paramsPricingStrategy = this.getPricingStrategyParams(pricingStrategies[i], i, tokenStore)
     if (i < pricingStrategies.length - 1) {
       deployContract(i, web3, abiPricingStrategy, binPricingStrategy, paramsPricingStrategy, this.state, (err, pricingStrategyAddr) => {
         i++;
@@ -268,12 +266,12 @@ const { PUBLISH } = NAVIGATION_STEPS
   }
 
   //FlatPricing
-  getPricingStrategyParams = (web3, pricingStrategy, i, token) => {
-    const { tierStore } = this.props
-    console.log(pricingStrategy);
+  getPricingStrategyParams = (pricingStrategy, i, token) => {
+    const { tierStore, web3Store } = this.props
+    console.log('web3Store', web3Store.web3, web3Store.web3.utils.toWei)
     let oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, 1/pricingStrategy.rate)
     return [
-      web3.toWei(oneTokenInETH, "ether"),
+      web3Store.web3.utils.toWei(oneTokenInETH, "ether"),
       tierStore.tiers[i].updatable?tierStore.tiers[i].updatable=="on"?true:false:false
     ]
   }
@@ -494,24 +492,28 @@ const { PUBLISH } = NAVIGATION_STEPS
     //post actions for mintablecappedcrowdsale
     //if (!tokenStoreIsAlreadyCreated) {
     console.log("###we create crowdsale firstly###");
-    setLastCrowdsaleRecursive(0, web3, contractStore.pricingStrategy.abi, contractStore.pricingStrategy.addr, contractStore.crowdsale.addr.slice(-1)[0], () => {
+    let tokenABI = JSON.parse(JSON.stringify(contractStore.token.abi))
+    let pricingStrategyABI = JSON.parse(JSON.stringify(contractStore.pricingStrategy.abi))
+    let crowdsaleABI = JSON.parse(JSON.stringify(contractStore.crowdsale.abi))
+
+    setLastCrowdsaleRecursive(0, web3, pricingStrategyABI, contractStore.pricingStrategy.addr, contractStore.crowdsale.addr.slice(-1)[0], 42982, (err) => {
       if (err) return this.hideLoader();
-      setReservedTokensListMultiple(web3, contractStore.token.abi, contractStore.token.addr, tokenStore, () => {
+      setReservedTokensListMultiple(web3, tokenABI, contractStore.token.addr, tokenStore, (err) => {
         if (err) return this.hideLoader();
-        updateJoinedCrowdsalesRecursive(0, web3, contractStore.crowdsale.abi, contractStore.crowdsale.addr, () => {
+        updateJoinedCrowdsalesRecursive(0, web3, crowdsaleABI, contractStore.crowdsale.addr, (err) => {
           if (err) return this.hideLoader();
-          setMintAgentRecursive(0, web3, contractStore.token.abi, contractStore.token.addr, contractStore.crowdsale.addr, () => {
+          setMintAgentRecursive(0, web3, tokenABI, contractStore.token.addr, contractStore.crowdsale.addr, 68425, (err) => {
             if (err) return this.hideLoader();
-            setMintAgentRecursive(0, web3, contractStore.token.abi, contractStore.token.addr, contractStore.finalizeAgent.addr, () => {
+            setMintAgentRecursive(0, web3, tokenABI, contractStore.token.addr, contractStore.finalizeAgent.addr, 68425, (err) => {
               if (err) return this.hideLoader();
-              addWhiteListRecursive(0, web3, tierStore, tokenStore, contractStore.crowdsale.abi, contractStore.crowdsale.addr, () => {
+              addWhiteListRecursive(0, web3, tierStore, tokenStore, crowdsaleABI, contractStore.crowdsale.addr, (err) => {
                 if (err) return this.hideLoader();
-                setFinalizeAgentRecursive(0, web3, contractStore.crowdsale.abi, contractStore.crowdsale.addr, contractStore.finalizeAgent.addr, () => {
+                setFinalizeAgentRecursive(0, web3, crowdsaleABI, contractStore.crowdsale.addr, contractStore.finalizeAgent.addr, 68622, (err) => {
                   if (err) return this.hideLoader();
-                  setReleaseAgentRecursive(0, web3, contractStore.token.abi, contractStore.token.addr, contractStore.finalizeAgent.addr, () => {
+                  setReleaseAgentRecursive(0, web3, tokenABI, contractStore.token.addr, contractStore.finalizeAgent.addr, 65905, (err) => {
                     if (err) return this.hideLoader();
-                    transferOwnership(web3, contractStore.token.abi, contractStore.token.addr, tierStore.tiers[0].walletAddress, () => {
-                      if (err) return this.hideLoader();
+                    transferOwnership(web3, tokenABI, contractStore.token.addr, tierStore.tiers[0].walletAddress, 46699, (err) => {
+                      this.hideLoader();
                       //this.goToCrowdsalePage();
                     });
                   });
