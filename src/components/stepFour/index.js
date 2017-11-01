@@ -479,11 +479,11 @@ export class stepFour extends stepTwo {
       this.downloadCrowdsaleInfo();
 
       this.setState(() => {
-        setLastCrowdsaleRecursive(0, web3, contracts.pricingStrategy.abi, contracts.pricingStrategy.addr, contracts.crowdsale.addr.slice(-1)[0], 42982, (err) => {
+        setLastCrowdsaleRecursive(0, web3, contracts.pricingStrategy.abi, contracts.pricingStrategy.addr, contracts.crowdsale.addr.slice(-1)[0], 142982, (err) => {
           if (err) return this.hideLoader();
           setReservedTokensListMultiple(web3, contracts.token.abi, contracts.token.addr, this.state.token, (err) => {
             if (err) return this.hideLoader();
-            updateJoinedCrowdsalesRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, (err) => {
+            updateJoinedCrowdsalesRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, 212103, (err) => {
               if (err) return this.hideLoader();
               setMintAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.crowdsale.addr, 68425, (err) => {
                 if (err) return this.hideLoader();
