@@ -163,6 +163,7 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
           gas: estimatedGas,
           gasPrice: GAS_PRICE
         };
+        
         let isMined = false;
 
         contractInstance.deploy(deployOpts).send(sendOpts)

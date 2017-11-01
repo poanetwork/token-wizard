@@ -1,7 +1,3 @@
-[submodule "submodules/oracles-web3-1.0"]
-	path = submodules/oracles-web3-1.0
-	url = https://github.com/oraclesorg/web3.js
-	branch = 1.0
 [submodule "submodules/oracles-token-market-net-ico"]
 	path = submodules/oracles-token-market-net-ico
 	url = https://github.com/oraclesorg/ico
@@ -10,3 +6,7 @@
 	path = submodules/oracles-combine-solidity
 	url = https://github.com/oraclesorg/oracles-combine-solidity
 	branch = master
+[submodule "submodules/oracles-web3-1.0"]
+	path = submodules/oracles-web3-1.0
+	url = https://github.com/oraclesorg/web3.js
+	branch = 1.0
