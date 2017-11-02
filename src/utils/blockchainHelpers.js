@@ -285,8 +285,8 @@ export function attachToContract(web3, abi, addr, cb) {
   web3.eth.getAccounts().then((accounts) => {
     web3.eth.defaultAccount = accounts[0];
 		console.log("web3.eth.defaultAccount:" + web3.eth.defaultAccount);
-		
-		let contractInstance = new web3.eth.Contract(abi, addr, {
+		const objAbi = JSON.parse(JSON.stringify(abi))
+		let contractInstance = new web3.eth.Contract(objAbi, addr, {
       from: web3.eth.defaultAccount
     });
 

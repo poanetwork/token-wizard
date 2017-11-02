@@ -205,7 +205,7 @@ export function getAccumulativeCrowdsaleData(web3, $this, cb) {
           crowdsalePageStore.setProperty('weiRaised', oldWeiRaised + parseInt(weiRaised, 10));//parseFloat(web3.fromWei(parseInt(weiRaised, 10), "ether"));
         else
           crowdsalePageStore.setProperty('weiRaised', parseInt(weiRaised, 10));//parseFloat(web3.fromWei(parseInt(weiRaised, 10), "ether"));
-        crowdsalePageStore.setProperty('ethRaised', parseFloat(web3.fromWei(parseInt(crowdsalePageStore.weiRaised, 10), "ether")));
+        crowdsalePageStore.setProperty('ethRaised', parseFloat(web3.utils.fromWei(parseInt(crowdsalePageStore.weiRaised, 10), "ether")));
 
         if (propsCount === cbCount) {
           state.loading = false;
@@ -422,7 +422,7 @@ function getTokenData($this, cb) {
   };
   let propsCount = 0;
   let cbCount = 0;
-  let tokenObj = toJSON(contractStore.token.map(toJSON))
+  let tokenObj = JSON.parse(JSON.stringify(contractStore.token))
   console.log('tokenObj', tokenObj)
   attachToContract(web3, tokenObj.abi, tokenObj.addr, function(err, tokenContract) {
     console.log("attach to token contract");
@@ -498,7 +498,7 @@ function getTokenData($this, cb) {
       } else {
         let propsCount = 0;
         let cbCount = 0;
-        attachToContract(web3, $this.state.contracts.token.abi, $this.state.contracts.token.addr, function(err, tokenContract) {
+        attachToContract(web3, contractStore.token.abi, contractStore.token.addr, function(err, tokenContract) {
           console.log("attach to token contract");
           if (err) return console.log(err);
           if (!tokenContract) return noContractAlert();
@@ -590,4 +590,9 @@ export function getPricingStrategyData(web3, cb) {
       cb();
     });
   });
+}
+
+export const getContractStoreProperty = (contract, property) => {
+  const text = contractStore && contractStore[contract] && contractStore[contract][property]
+  return text === undefined ? '' : text
 }

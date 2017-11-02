@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
 import { checkTxMined, attachToContract, checkNetWorkByID, sendTXToContract } from '../../utils/blockchainHelpers'
-import { getCrowdsaleData, getCurrentRate, initializeAccumulativeData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively, getJoinedTiers } from '../crowdsale/utils'
+import { getCrowdsaleData, getCurrentRate, initializeAccumulativeData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively, getJoinedTiers, getContractStoreProperty } from '../crowdsale/utils'
 import { getQueryVariable, getURLParam, getWhiteListWithCapCrowdsaleAssets } from '../../utils/utils'
 import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert, invalidCrowdsaleAddrAlert } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
@@ -284,6 +284,8 @@ import { observer, inject } from 'mobx-react'
     const maxCapBeforeDecimals = crowdsalePageStore.maximumSellableTokens/10**tokenDecimals;
     const tokenAmountOf = crowdsalePageStore.tokenAmountOf;
     const ethRaised = crowdsalePageStore.ethRaised;
+    const tokenAddress = getContractStoreProperty('token', 'addr')
+    const crowdsaleAddress = getContractStoreProperty('crowdsale', 'addr') && getContractStoreProperty('crowdsale', 'addr')[0]
 
     //balance: tiers, standard
     const investorBalanceTiers = (tokenAmountOf?((tokenAmountOf/10**tokenDecimals)/*.toFixed(tokenDecimals)*/).toString():"0");
@@ -323,11 +325,11 @@ import { observer, inject } from 'mobx-react'
               <p className="hashes-description">Current Account</p>
             </div>
             <div className="hashes-i">
-              <p className="hashes-title">{contractStore.token.addr}</p>
+              <p className="hashes-title">{tokenAddress}</p>
               <p className="hashes-description">Token Address</p>
             </div>
             <div className="hashes-i">
-              <p className="hashes-title">{contractStore.crowdsale.addr[0]}</p>
+              <p className="hashes-title">{crowdsaleAddress}</p>
               <p className="hashes-description">Crowdsale Contract Address</p>
             </div>
             <div className="hashes-i hidden">

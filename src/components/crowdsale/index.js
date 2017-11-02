@@ -1,7 +1,7 @@
 import React from 'react'
 import '../../assets/stylesheets/application.css';
 import { getWeb3, checkWeb3, checkNetWorkByID } from '../../utils/blockchainHelpers'
-import { getCrowdsaleData, initializeAccumulativeData, getAccumulativeCrowdsaleData, findCurrentContractRecursively, getJoinedTiers } from './utils'
+import { getCrowdsaleData, initializeAccumulativeData, getAccumulativeCrowdsaleData, findCurrentContractRecursively, getJoinedTiers, getContractStoreProperty } from './utils'
 import { getQueryVariable, getURLParam, getWhiteListWithCapCrowdsaleAssets, toFixed } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { NAVIGATION_STEPS, CONTRACT_TYPES } from '../../utils/constants'
@@ -15,10 +15,10 @@ const { CROWDSALE_PAGE } = NAVIGATION_STEPS
 @observer export class Crowdsale extends React.Component {
 	constructor(){
 		super()
-		this.state = { loading: false}
+		this.state = { loading: true}
 	}
 
-	componentDidMount () {
+	componentWillMount () {
 		const { web3Store } = this.props
 		const web3 = web3Store.web3
 		checkWeb3(web3);
@@ -52,8 +52,9 @@ const { CROWDSALE_PAGE } = NAVIGATION_STEPS
 		}
 	}
 
-	extractContractsData(web3) {
-		const { contractStore } = this.props
+	extractContractsData() {
+		const { contractStore, web3Store } = this.props
+		const web3 = web3Store.web3
 		const crowdsaleAddr = ICOConfig.crowdsaleContractURL?ICOConfig.crowdsaleContractURL:getURLParam("addr");
 		if (!web3.utils.isAddress(crowdsaleAddr)) {
 			let state = this.state;
@@ -67,7 +68,7 @@ const { CROWDSALE_PAGE } = NAVIGATION_STEPS
 
 			let _crowdsaleAddrs;
 			if ( typeof joinedCrowdsales === 'string' ) {
-					_crowdsaleAddrs = [ joinedCrowdsales ];
+				_crowdsaleAddrs = [ joinedCrowdsales ];
 			} else {
 				_crowdsaleAddrs = joinedCrowdsales;
 			}
@@ -117,8 +118,9 @@ const { CROWDSALE_PAGE } = NAVIGATION_STEPS
 	render() {
 		const { web3Store, contractStore, tokenStore, crowdsalePageStore } = this.props
 		const web3 = web3Store.web3
-		const tokenAddr = contractStore.token.addr
-	  const crowdsaleAddr = typeof contractStore.crowdsale.addr === 'string'? contractStore.crowdsale.addr :contractStore.crowdsale.addr[0]
+		const tokenAddr = getContractStoreProperty('token','addr')
+		const tempCrowdsaleAddr = getContractStoreProperty('crowdsale','addr') 
+		const crowdsaleAddr = tempCrowdsaleAddr === 'string'? tempCrowdsaleAddr : tempCrowdsaleAddr[0]
 	  const tokenDecimals = !isNaN(tokenStore.decimals)?tokenStore.decimals:0;
 		const rate = crowdsalePageStore.rate; //for tiers: 1 token in wei, for standard: 1/? 1 token in eth
 		const maxCapBeforeDecimals = crowdsalePageStore.maximumSellableTokens/10**tokenDecimals;
@@ -133,7 +135,7 @@ const { CROWDSALE_PAGE } = NAVIGATION_STEPS
 
 		//price: tiers, standard
 		const tokensPerETHStandard = !isNaN(rate)?rate:0;
-		const tokensPerETHTiers = !isNaN(1/rate)?1/web3.fromWei(toFixed(rate).toString(), "ether"):0;
+		const tokensPerETHTiers = !isNaN(1/rate)?1/web3.utils.fromWei(toFixed(rate).toString(), "ether"):0;
 		const tokensPerETH = (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap)?tokensPerETHTiers:tokensPerETHStandard;
 		
 		//total supply: tiers, standard
@@ -143,13 +145,14 @@ const { CROWDSALE_PAGE } = NAVIGATION_STEPS
 
 		//goal in ETH
 		const goalInETHStandard = (totalSupply/rate).toExponential();
-		let goalInETHTiers = crowdsalePageStore.maximumSellableTokensInWei?(web3.fromWei(toFixed(crowdsalePageStore.maximumSellableTokensInWei).toString(), "ether").toString()):0;
+		let goalInETHTiers = crowdsalePageStore.maximumSellableTokensInWei?(web3.utils.fromWei(toFixed(crowdsalePageStore.maximumSellableTokensInWei).toString(), "ether").toString()):0;
 		goalInETHTiers = 1.0 / 100 * Math.floor(100 * goalInETHTiers)		
 		const goalInETH = (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap)?goalInETHTiers:goalInETHStandard;	    
 
 		const tokensClaimedRatio = goalInETH?(ethRaised/goalInETH)*100:"0";
 		
-		return (
+		return this.state.loading? 	<Loader show={this.state.loading}></Loader> :
+		(
 			<section className="steps steps_crowdsale-page">
 				<StepNavigation activeStep={CROWDSALE_PAGE} />
 				<div className="steps-content container">
@@ -240,7 +243,6 @@ const { CROWDSALE_PAGE } = NAVIGATION_STEPS
 					{/*<Link className="button button_fill_secondary" to={{ pathname: '/3', query: { state: this.state, changeState: this.changeState } }}>Add crowdsale</Link>*/}
 					<a onClick={this.goToInvestPage} className="button button_fill">Invest</a>
 				</div>
-				<Loader show={this.state.loading}></Loader>
 			</section>
 		)
 	}
