@@ -2,6 +2,9 @@
   "name": "ico_wizard",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "8.9.0"
+  },
   "devDependencies": {
     "ethereumjs-testrpc": "^4.1.3",
     "gulp": "^3.9.1",
