@@ -23,16 +23,6 @@
       background-color: #34c3f8;
       cursor: pointer;
     }
-
-    &.disabled {
-      background-color: #cccccc;
-      color: #666666;
-  
-      &:hover {
-        background-color: #cccccc;
-        cursor: default;
-      }
-    }
   }
 
   &_fill_secondary {
