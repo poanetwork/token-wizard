@@ -110,7 +110,7 @@ function addWhiteList(round, web3, crowdsale, token, abi, addr, cb) {
   });
 }
 
-function updateJoinedCrowdsales(web3, abi, addr, joinedCntrctAddrs, cb) {
+function updateJoinedCrowdsales(web3, abi, addr, joinedCntrctAddrs, gasLimit, cb) {
   console.log("###updateJoinedCrowdsales:###");
   attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
     console.log("attach to crowdsale contract");
@@ -123,7 +123,7 @@ function updateJoinedCrowdsales(web3, abi, addr, joinedCntrctAddrs, cb) {
     console.log("input: ");
     console.log(joinedCntrctAddrs);
 
-    let method = crowdsaleContract.methods.updateJoinedCrowdsalesMultiple(joinedCntrctAddrs).send({gasPrice: GAS_PRICE})
+    let method = crowdsaleContract.methods.updateJoinedCrowdsalesMultiple(joinedCntrctAddrs).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
     sendTXToContract(web3, method, cb);
   });
 }
@@ -255,12 +255,12 @@ export function  setMintAgentRecursive (i, web3, abi, addr, crowdsaleAddrs, gasL
   })
 }
 
-export function updateJoinedCrowdsalesRecursive (i, web3, abi, addrs, cb) {
+export function updateJoinedCrowdsalesRecursive (i, web3, abi, addrs, gasLimit, cb) {
   if (addrs.length === 0) return cb();
-  updateJoinedCrowdsales(web3, abi, addrs[i], addrs, (err) => {
+  updateJoinedCrowdsales(web3, abi, addrs[i], addrs, gasLimit, (err) => {
     i++;
     if (i < addrs.length) {
-      updateJoinedCrowdsalesRecursive(i, web3, abi, addrs, cb);
+      updateJoinedCrowdsalesRecursive(i, web3, abi, addrs, gasLimit, cb);
     } else {
       cb(err);
     }
