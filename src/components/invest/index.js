@@ -7,6 +7,7 @@ import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDi
 import { Loader } from '../Common/Loader'
 import { ICOConfig } from '../Common/config'
 import { defaultState, GAS_PRICE } from '../../utils/constants'
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 export class Invest extends React.Component {
   constructor(props) {
@@ -17,6 +18,8 @@ export class Invest extends React.Component {
       var state = defaultState;
       state.seconds = 0;
       state.loading = true;
+      state.investThrough = 'metamask'
+      state.crowdsaleAddress = ICOConfig.crowdsaleContractURL || getURLParam("addr")
       this.state = state;
   }
 
@@ -259,7 +262,43 @@ export class Invest extends React.Component {
     return { days, hours, minutes}
   }
 
-  render(state){
+  renderInvestThroughQR() {
+    return (
+      <div>
+        <div className="payment-process">
+          { /* <img src="https://lh6.ggpht.com/ufwUy4SGVTqCs8fcp6Ajxfpae0bNImN1Rq2cXUjWI7jlmNMCsXgQE5C3yUEzBu5Gadkz=w300" className="payment-process-qr"/> */}
+          <p className="payment-process-description">Send up to 15 ETH to this address</p>
+          <p className="payment-process-hash">
+            { this.state.crowdsaleAddress }
+          </p>
+
+          <CopyToClipboard text={this.state.crowdsaleAddress}>
+            <a href="" onClick={e => e.preventDefault()} className="payment-process-copy">Copy Address</a>
+          </CopyToClipboard>
+
+          <div className="payment-process-loader">Waiting for payment</div>
+          <div className="payment-process-notation">
+            <p className="payment-process-notation-title">Important</p>
+            <p className="payment-process-notation-description">
+              Send ethers to the crowdsale address with a MethodID: 0xf2fde38b
+            </p>
+          </div>
+        </div>
+        { /* <div className="payment-process">
+          <div className="payment-process-success"></div>
+          <p className="payment-process-description">
+            Your Project tokens were sent to
+          </p>
+          <p className="payment-process-hash">
+            0x6b0770d930bB22990c83fBBfcba6faB129AD7E385
+          </p>
+          <a href="#" className="payment-process-see">See it on the blockchain</a>
+        </div> */ }
+      </div>
+    )
+  }
+
+  render(state) {
     const { seconds } = this.state
     const { days, hours, minutes } = this.getTimeStamps(seconds)
 
@@ -352,9 +391,9 @@ export class Invest extends React.Component {
               <div className="invest-form-label">TOKENS</div>
             </div>
             <div className="invest-through-container">
-              <select className="invest-through">
-                <option value="">Metamask</option>
-                <option value="">Kovan</option>
+              <select className="invest-through" onChange={(e) => this.setState({ investThrough: e.target.value })}>
+                <option value="metamask">Metamask</option>
+                <option value="qr">QR</option>
               </select>
               <a className="button button_fill" onClick={this.investToTokens}>Invest</a>
             </div>
@@ -362,31 +401,9 @@ export class Invest extends React.Component {
               Think twice before investment in ICOs. Tokens will be deposited on a wallet you used to buy tokens.
             </p>
           </form>
-          <div className="payment-process">
-            <img src="https://lh6.ggpht.com/ufwUy4SGVTqCs8fcp6Ajxfpae0bNImN1Rq2cXUjWI7jlmNMCsXgQE5C3yUEzBu5Gadkz=w300" className="payment-process-qr"/>
-            <p className="payment-process-description">Send up to 15 ETH to this address</p>
-            <p className="payment-process-hash">
-              0x6b0770d930bB22990c83fBBfcba6faB129AD7E385
-            </p>
-            <a href="#" className="payment-process-copy">Copy Address</a>
-            <div className="payment-process-loader">Waiting for payment</div>
-            <div className="payment-process-notation">
-              <p className="payment-process-notation-title">Important</p>
-              <p className="payment-process-notation-description">
-                Send ethers to the crowdsale address with a MethodID: 0xf2fde38b
-              </p>
-            </div>
-          </div>
-          <div className="payment-process">
-            <div className="payment-process-success"></div>
-            <p className="payment-process-description">
-              Your Project tokens were sent to
-            </p>
-            <p className="payment-process-hash">
-              0x6b0770d930bB22990c83fBBfcba6faB129AD7E385
-            </p>
-            <a href="#" className="payment-process-see">See it on the blockchain</a>
-          </div>
+          {
+            this.state.investThrough === 'qr' ? this.renderInvestThroughQR() : null
+          }
         </div>
       </div>
       <Loader show={this.state.loading}></Loader>
