@@ -394,5 +394,5 @@ export function scrollToBottom() {
 
 var countDecimals = function (inputFloat) {
   if(Math.floor(inputFloat) === parseFloat(inputFloat)) return 0;
-  return inputFloat.toString().split(".")[1].length || 0; 
+  return inputFloat.toString().split(".")[1].length || 0;
 }

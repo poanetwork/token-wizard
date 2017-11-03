@@ -47,7 +47,7 @@ export function setFlatFileContentToState(file, cb) {
 }
 
 export function getWhiteListWithCapCrowdsaleAssets(state, cb) {
-    const contractName = "CrowdsaleWhitelistWithCap";
+    const contractName = "CrowdsaleWhiteListWithCap";
     let derivativesLength = 11;
     let derivativesIterator = 0;
     setFlatFileContentToState("./contracts/" + contractName + "_flat.sol", function(_src) {
@@ -282,7 +282,7 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
                   //params.vals.push(state.pricingStrategy[crowdsaleNum].rate);
                   //params.vals.push(state.web3.toWei(1/state.pricingStrategy[crowdsaleNum].rate/10**state.token.decimals, "ether"));
                   
-                  let oneTokenInETHRaw = 1/state.pricingStrategy[crowdsaleNum].rate
+                  let oneTokenInETHRaw = toFixed(1/state.pricingStrategy[crowdsaleNum].rate).toString()
                   let oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, oneTokenInETHRaw)
                   params.vals.push(state.web3.utils.toWei(oneTokenInETH, "ether"));
                 } break;
@@ -295,7 +295,9 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
     return params;
 }
 
-export const floorToDecimals = (n, input) => Math.floor10(input, n)
+export const floorToDecimals = (n, input) => {
+  return toFixed(Math.floor10(input, n)).toString()
+}
 
 const decimalAdjust = (type, inputNumber, exp) => {
     if (typeof exp === 'undefined' || +exp === 0) {
