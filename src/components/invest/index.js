@@ -8,6 +8,7 @@ import { Loader } from '../Common/Loader'
 import { ICOConfig } from '../Common/config'
 import { defaultState, GAS_PRICE } from '../../utils/constants'
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import QRCode from 'qrcode.react';
 
 export class Invest extends React.Component {
   constructor(props) {
@@ -280,7 +281,9 @@ export class Invest extends React.Component {
     return (
       <div>
         <div className="payment-process">
-          { /* <img src="https://lh6.ggpht.com/ufwUy4SGVTqCs8fcp6Ajxfpae0bNImN1Rq2cXUjWI7jlmNMCsXgQE5C3yUEzBu5Gadkz=w300" className="payment-process-qr"/> */}
+          <div className="payment-process-qr">
+            <QRCode value={this.state.crowdsaleAddress}></QRCode>
+          </div>
           <p className="payment-process-description">Send up to 15 ETH to this address</p>
           <p className="payment-process-hash">
             { this.state.crowdsaleAddress }
