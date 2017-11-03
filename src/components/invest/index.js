@@ -11,13 +11,13 @@ import { defaultState, GAS_PRICE } from '../../utils/constants'
 export class Invest extends React.Component {
   constructor(props) {
       super(props);
-      this.pristineTokenInput = true;
       window.scrollTo(0, 0);
       if (this.tokensToInvestOnChange.bind) this.tokensToInvestOnChange = this.tokensToInvestOnChange.bind(this);
       if (this.investToTokens.bind) this.investToTokens = this.investToTokens.bind(this);
       var state = defaultState;
       state.seconds = 0;
       state.loading = true;
+      state.pristineTokenInput = true;
       this.state = state;
   }
 
@@ -115,7 +115,7 @@ export class Invest extends React.Component {
     event.preventDefault();
 
     if (!this.isValidToken(this.state.tokensToInvest)) {
-      this.pristineTokenInput = false;
+      this.setState({ pristineTokenInput: false });
       return;
     }
 
@@ -231,7 +231,7 @@ export class Invest extends React.Component {
   }
 
   tokensToInvestOnChange(event) {
-    this.pristineTokenInput = false;
+    this.setState({ pristineTokenInput: false });
 
     let state = this.state;
     state["tokensToInvest"] = event.target.value;
@@ -296,7 +296,7 @@ export class Invest extends React.Component {
     const totalSupply = (this.state.contractType === this.state.contractTypes.whitelistwithcap)?tierCap:standardCrowdsaleSupply;
 
     let invalidTokenDescription = null;
-    if (!this.pristineTokenInput && !this.isValidToken(this.state.tokensToInvest)) {
+    if (!this.state.pristineTokenInput && !this.isValidToken(this.state.tokensToInvest)) {
       invalidTokenDescription = <p className="error">Number of tokens to buy should be positive</p>;
     }
 
