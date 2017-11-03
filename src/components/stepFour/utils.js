@@ -169,7 +169,6 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
     if (!tokenContract) return noContractAlert();
 
     let map = {};
-
     let addrs = [], inTokens = [], inPercentageUnit = [], inPercentageDecimals = [];
 
     if (token.reservedTokensInput.addr && token.reservedTokensInput.dim && token.reservedTokensInput.val) {
@@ -215,7 +214,7 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
     console.log("inPercentageUnit: " + inPercentageUnit)
     console.log("inPercentageDecimals: " + inPercentageDecimals)
 
-    let method = tokenContract.methods.setReservedTokensListMultiple(addrs, inTokens, inPercentage).send({gasPrice: GAS_PRICE})
+    let method = tokenContract.methods.setReservedTokensListMultiple(addrs, inTokens, inPercentageUnit, inPercentageDecimals).send({gasPrice: GAS_PRICE})
     sendTXToContract(web3, method, cb);
   });
 }
