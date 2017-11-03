@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import '../../assets/stylesheets/application.css';
+import { getWeb3, getNetworkVersion } from '../../utils/blockchainHelpers'
 import { Link } from 'react-router-dom'
 
 export class Home extends Component {

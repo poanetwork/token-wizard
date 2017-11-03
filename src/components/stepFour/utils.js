@@ -1,29 +1,10 @@
-import { attachToContract, checkTxMined } from '../../utils/blockchainHelpers'
+import { attachToContract, checkTxMined, sendTXToContract } from '../../utils/blockchainHelpers'
 import { noContractAlert } from '../../utils/alerts'
+import { toFixed } from '../../utils/utils'
+import { GAS_PRICE } from '../../utils/constants'
+import { tokenStore, tierStore, contractStore } from '../../stores'
 
-/*function setTransferAgent(web3, abi, addr, targetAddr, cb) {
-  console.log("###setTransferAgent:###");
-  attachToContract(web3, abi, addr, function(err, tokenContract) {
-    console.log("attach to token contract");
-    if (err) {
-      console.log(err)
-      return cb();
-    }
-    if (!tokenContract) return noContractAlert();
-
-    tokenContract.setTransferAgent.sendTransaction(targetAddr, true, function(err, result) {
-      if (err) {
-        console.log(err)
-        return cb();
-      }
-
-      console.log("setTransferAgent function transaction: " + result);
-      cb();
-    });
-  });
-}*/
-
-function setLastCrowdsale(web3, abi, addr, lastCrowdsale, cb) {
+function setLastCrowdsale(web3, abi, addr, lastCrowdsale, gasLimit, cb) {
   console.log("###setLastCrowdsale for Pricing Strategy:###");
   attachToContract(web3, abi, addr, function(err, pricingStrategyContract) {
     console.log("attach to pricingStrategy contract");
@@ -33,28 +14,13 @@ function setLastCrowdsale(web3, abi, addr, lastCrowdsale, cb) {
     }
     if (!pricingStrategyContract) return noContractAlert();
 
-    pricingStrategyContract.setLastCrowdsale.sendTransaction(lastCrowdsale, {gasPrice: 21000000000}, function(err, txHash) {
-      if (err) {
-        console.log(err)
-        return cb();
-      }
-
-      checkTxMined(web3, txHash, function txMinedCallback(receipt) {
-        if (receipt) {
-          if (receipt.blockNumber) {
-            console.log("setLastCrowdsale function transaction: " + txHash);
-            return cb();
-          }
-        } else {
-          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
-        }
-      })
-    });
+    let method = pricingStrategyContract.methods.setLastCrowdsale(lastCrowdsale).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
+    sendTXToContract(web3, method, cb);
   });
 }
 
 //for mintable token
-function setMintAgent(web3, abi, addr, acc, cb) {
+function setMintAgent(web3, abi, addr, acc, gasLimit, cb) {
   console.log("###setMintAgent:###");
   attachToContract(web3, abi, addr, function(err, tokenContract) {
     console.log("attach to token contract");
@@ -64,23 +30,8 @@ function setMintAgent(web3, abi, addr, acc, cb) {
     }
     if (!tokenContract) return noContractAlert();
 
-    tokenContract.setMintAgent.sendTransaction(acc, true, {gasPrice: 21000000000}, function(err, txHash) {
-      if (err) {
-        console.log(err)
-        return cb();
-      }
-
-      checkTxMined(web3, txHash, function txMinedCallback(receipt) {
-        if (receipt) {
-          if (receipt.blockNumber) {
-            console.log("setMintAgent function transaction: " + txHash);
-            return cb();
-          }
-        } else {
-          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
-        }
-      })
-    });
+    let method = tokenContract.methods.setMintAgent(acc, true).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
+    sendTXToContract(web3, method, cb);
   });
 }
 
@@ -141,8 +92,8 @@ function addWhiteList(round, web3, tierStore, token, abi, addr, cb) {
       if (!whitelist[i].deleted) {
         addrs.push(whitelist[i].addr);
         statuses.push(true);
-        minCaps.push(whitelist[i].min*10**token.decimals);
-        maxCaps.push(whitelist[i].max*10**token.decimals);
+        minCaps.push(whitelist[i].min*10**token.decimals?toFixed((whitelist[i].min*10**token.decimals).toString()):0);
+        maxCaps.push(whitelist[i].max*10**token.decimals?toFixed((whitelist[i].max*10**token.decimals).toString()):0);
       }
     }
 
@@ -155,23 +106,8 @@ function addWhiteList(round, web3, tierStore, token, abi, addr, cb) {
     console.log("maxCaps:");
     console.log(maxCaps);
 
-    crowdsaleContract.setEarlyParicipantsWhitelist.sendTransaction(addrs, statuses, minCaps, maxCaps, {gasPrice: 21000000000}, function(err, txHash) {
-      if (err) {
-        console.log(err)
-        return cb();
-      }
-
-      checkTxMined(web3, txHash, function txMinedCallback(receipt) {
-        if (receipt) {
-          if (receipt.blockNumber) {
-            console.log("setEarlyParicipantsWhitelist function transaction: " + txHash);
-            return cb();
-          }
-        } else {
-          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
-        }
-      })
-    });
+    let method = crowdsaleContract.methods.setEarlyParicipantsWhitelist(addrs, statuses, minCaps, maxCaps).send({gasPrice: GAS_PRICE})
+    sendTXToContract(web3, method, cb)
   });
 }
 
@@ -188,27 +124,12 @@ function updateJoinedCrowdsales(web3, abi, addr, joinedCntrctAddrs, cb) {
     console.log("input: ");
     console.log(joinedCntrctAddrs);
 
-    crowdsaleContract.updateJoinedCrowdsalesMultiple.sendTransaction(joinedCntrctAddrs, {gasPrice: 21000000000}, function(err, txHash) {
-      if (err) {
-        console.log(err)
-        return cb();
-      }
-
-      checkTxMined(web3, txHash, function txMinedCallback(receipt) {
-        if (receipt) {
-          if (receipt.blockNumber) {
-            console.log("updateJoinedCrowdsales function transaction: " + txHash);
-            return cb();
-          }
-        } else {
-          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
-        }
-      })
-    });
+    let method = crowdsaleContract.methods.updateJoinedCrowdsalesMultiple(joinedCntrctAddrs).send({gasPrice: GAS_PRICE})
+    sendTXToContract(web3, method, cb);
   });
 }
 
-function setFinalizeAgent(web3, abi, addr, finalizeAgentAddr, cb) {
+function setFinalizeAgent(web3, abi, addr, finalizeAgentAddr, gasLimit, cb) {
   console.log("###setFinalizeAgent:###");
   attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
     console.log("attach to crowdsale contract");
@@ -218,27 +139,12 @@ function setFinalizeAgent(web3, abi, addr, finalizeAgentAddr, cb) {
     }
     if (!crowdsaleContract) return noContractAlert();
 
-    crowdsaleContract.setFinalizeAgent.sendTransaction(finalizeAgentAddr, {gasPrice: 21000000000}, function(err, txHash) {
-      if (err) {
-        console.log(err)
-        return cb();
-      }
-
-      checkTxMined(web3, txHash, function txMinedCallback(receipt) {
-        if (receipt) {
-          if (receipt.blockNumber) {
-            console.log("setFinalizeAgent function transaction: " + txHash);
-            return cb();
-          }
-        } else {
-          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
-        }
-      })
-    });
+    let method = crowdsaleContract.methods.setFinalizeAgent(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
+    sendTXToContract(web3, method, cb);
   });
 }
 
-function setReleaseAgent(web3, abi, addr, finalizeAgentAddr, cb) {
+function setReleaseAgent(web3, abi, addr, finalizeAgentAddr, gasLimit, cb) {
   console.log("###setReleaseAgent:###");
   attachToContract(web3, abi, addr, function(err, tokenContract) {
     console.log("attach to token contract");
@@ -248,23 +154,8 @@ function setReleaseAgent(web3, abi, addr, finalizeAgentAddr, cb) {
     }
     if (!tokenContract) return noContractAlert();
 
-    tokenContract.setReleaseAgent.sendTransaction(finalizeAgentAddr, {gasPrice: 21000000000}, function(err, txHash) {
-      if (err) {
-        console.log(err)
-        return cb();
-      }
-
-      checkTxMined(web3, txHash, function txMinedCallback(receipt) {
-        if (receipt) {
-          if (receipt.blockNumber) {
-            console.log("setReleaseAgent function transaction: " + txHash);
-            return cb();
-          }
-        } else {
-          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
-        }
-      })
-    });
+    let method = tokenContract.methods.setReleaseAgent(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
+    sendTXToContract(web3, method, cb);
   });
 }
 
@@ -312,8 +203,8 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
     let keys = Object.keys(map);
     for (let i = 0; i < keys.length; i++) {
       addrs.push(keys[i]);
-      inTokens.push(map[keys[i]].inTokens);
-      inPercentage.push(map[keys[i]].inPercentage);
+      inTokens.push(map[keys[i]].inTokens?toFixed(map[keys[i]].inTokens.toString()):0);
+      inPercentage.push(map[keys[i]].inPercentage?map[keys[i]].inPercentage:0);
     }
 
     if (addrs.length === 0 && inTokens.length === 0 && inPercentage.length === 0) return cb();
@@ -323,27 +214,12 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
     console.log("inTokens: " + inTokens);
     console.log("inPercentage: " + inPercentage);
 
-    tokenContract.setReservedTokensListMultiple.sendTransaction(addrs, inTokens, inPercentage, {gasPrice: 21000000000}, function(err, txHash) {
-      if (err) {
-        console.log(err)
-        return cb();
-      }
-
-      checkTxMined(web3, txHash, function txMinedCallback(receipt) {
-        if (receipt) {
-          if (receipt.blockNumber) {
-            console.log("setReservedTokensListMultiple function transaction: " + txHash);
-            return cb();
-          }
-        } else {
-          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
-        }
-      })
-    });
+    let method = tokenContract.methods.setReservedTokensListMultiple(addrs, inTokens, inPercentage).send({gasPrice: GAS_PRICE})
+    sendTXToContract(web3, method, cb);
   });
 }
 
-export function transferOwnership(web3, abi, addr, finalizeAgentAddr, cb) {
+export function transferOwnership(web3, abi, addr, finalizeAgentAddr, gasLimit, cb) {
   console.log("###transferOwnership:###");
   attachToContract(web3, abi, addr, function(err, tokenContract) {
     console.log("attach to token contract");
@@ -353,137 +229,122 @@ export function transferOwnership(web3, abi, addr, finalizeAgentAddr, cb) {
     }
     if (!tokenContract) return noContractAlert();
 
-    tokenContract.transferOwnership.sendTransaction(finalizeAgentAddr, {gasPrice: 21000000000}, function(err, txHash) {
-      if (err) {
-        console.log(err)
-        return cb();
-      }
-
-      checkTxMined(web3, txHash, function txMinedCallback(receipt) {
-        if (receipt) {
-          if (receipt.blockNumber) {
-            console.log("transferOwnership function transaction: " + txHash);
-            return cb();
-          }
-        } else {
-          setTimeout(checkTxMined(web3, txHash, txMinedCallback), 1000);
-        }
-      })
-    });
+    let method = tokenContract.methods.transferOwnership(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
+    sendTXToContract(web3, method, cb);
   });
 }
 
-export function setLastCrowdsaleRecursive (i, web3, abi, pricingStrategyAddrs, lastCrowdsale, cb) {
-  setLastCrowdsale(web3, abi, pricingStrategyAddrs[i], lastCrowdsale, () => {
+export function setLastCrowdsaleRecursive (i, web3, abi, pricingStrategyAddrs, lastCrowdsale, gasLimit, cb) {
+  setLastCrowdsale(web3, abi, pricingStrategyAddrs[i], lastCrowdsale, gasLimit, (err) => {
     i++;
     if (i < pricingStrategyAddrs.length) {
-      setLastCrowdsaleRecursive(i, web3, abi, pricingStrategyAddrs, lastCrowdsale, cb);
+      setLastCrowdsaleRecursive(i, web3, abi, pricingStrategyAddrs, lastCrowdsale, gasLimit, cb);
     } else {
-      cb();
+      cb(err);
     }
   })
 }
 
-export function  setMintAgentRecursive (i, web3, abi, addr, crowdsaleAddrs, cb) {
-  setMintAgent(web3, abi, addr, crowdsaleAddrs[i], () => {
+export function  setMintAgentRecursive (i, web3, abi, addr, crowdsaleAddrs, gasLimit, cb) {
+  setMintAgent(web3, abi, addr, crowdsaleAddrs[i], gasLimit, (err) => {
     i++;
     if (i < crowdsaleAddrs.length) {
-      setMintAgentRecursive(i, web3, abi, addr, crowdsaleAddrs, cb);
+      setMintAgentRecursive(i, web3, abi, addr, crowdsaleAddrs, gasLimit, cb);
     } else {
-      cb();
+      cb(err);
     }
   })
 }
 
 export function updateJoinedCrowdsalesRecursive (i, web3, abi, addrs, cb) {
   if (addrs.length === 0) return cb();
-  updateJoinedCrowdsales(web3, abi, addrs[i], addrs, () => {
+  updateJoinedCrowdsales(web3, abi, addrs[i], addrs, (err) => {
     i++;
     if (i < addrs.length) {
       updateJoinedCrowdsalesRecursive(i, web3, abi, addrs, cb);
     } else {
-      cb();
+      cb(err);
     }
   })
 }
 
 export function addWhiteListRecursive (i, web3, tierStore, token, abi, crowdsaleAddrs, cb) {
-  addWhiteList(i, web3, tierStore, token, abi, crowdsaleAddrs[i], () => {
+  addWhiteList(i, web3, tierStore, token, abi, crowdsaleAddrs[i], (err) => {
     i++;
     if (i < crowdsaleAddrs.length) {
       addWhiteListRecursive(i, web3, tierStore, token, abi, crowdsaleAddrs, cb);
     } else {
-      cb();
+      cb(err);
     }
   })
 }
 
-export function setFinalizeAgentRecursive (i, web3, abi, addrs, finalizeAgentAddrs, cb) {
-  setFinalizeAgent(web3, abi, addrs[i], finalizeAgentAddrs[i], () => {
+export function setFinalizeAgentRecursive (i, web3, abi, addrs, finalizeAgentAddrs, gasLimit, cb) {
+  setFinalizeAgent(web3, abi, addrs[i], finalizeAgentAddrs[i], gasLimit, (err) => {
     i++;
     if (i < finalizeAgentAddrs.length) {
-      setFinalizeAgentRecursive(i, web3, abi, addrs, finalizeAgentAddrs, cb);
+      setFinalizeAgentRecursive(i, web3, abi, addrs, finalizeAgentAddrs, gasLimit, cb);
     } else {
-      cb();
+      cb(err);
     }
   })
 }
            
-export function setReleaseAgentRecursive (i, web3, abi, addr, finalizeAgentAddrs, cb) {
-  setReleaseAgent(web3, abi, addr, finalizeAgentAddrs[i], () => {
+export function setReleaseAgentRecursive (i, web3, abi, addr, finalizeAgentAddrs, gasLimit, cb) {
+  setReleaseAgent(web3, abi, addr, finalizeAgentAddrs[i], gasLimit, (err) => {
     i++;
     if (i < finalizeAgentAddrs.length) {
-      setReleaseAgentRecursive(i, web3, abi, addr, finalizeAgentAddrs, cb);
+      setReleaseAgentRecursive(i, web3, abi, addr, finalizeAgentAddrs, gasLimit, cb);
     } else {
-      cb();
+      cb(err);
     }
   })
 }
 
-export const handleTokenForFile = (content, docData, state) => {
+export const handleTokenForFile = (content, docData) => {
     const title = content.value
-    const fileContent = title + state.token[content.field]
+    const fileContent = title + tokenStore[content.field]
     docData.data += fileContent + '\n\n' 
 }
 
-export const handleCrowdsaleForFile = (content, docData, state) => {
+export const handleCrowdsaleForFile = (content, docData) => {
     const title = content.value
-    const fileContent = title + state.crowdsale[0][content.field]
+    const fileContent = title + tierStore.tiers[0][content.field]
     docData.data += fileContent + '\n\n'
 }
 
-export const handlePricingStrategyForFile = (content, docData, state) => {
+export const handlePricingStrategyForFile = (content, docData) => {
     const title = content.value
-    const fileContent = title + state.pricingStrategy[0][content.field]
+    const fileContent = title + tierStore.tiers[0][content.field]
     docData.data += fileContent + '\n\n'
 }
 
-export const handleFinalizeAgentForFile = (content, docData, state) => {
+export const handleFinalizeAgentForFile = (content, docData) => {
     const title = content.value
-    const fileContent = title + state.finalizeAgent[0][content.field]
+    const fileContent = title + contractStore[0][content.field]
     docData.data += fileContent + '\n\n'
 }
 
-export const handleContractsForFile = (content, docData, state) => {
+export const handleContractsForFile = (content, docData) => {
     const title = content.value
     if(content.field !== 'src' && content.field !== 'abi' && content.field !== 'addr') {
         let fileBody
-        if ( Object.prototype.toString.call( state.contracts[content.child][content.field] ) === '[object Array]' ) {
-          for (let i = 0; i < state.contracts[content.child][content.field].length; i++) {
-            fileBody = state.contracts[content.child][content.field][i]
+        if ( Object.prototype.toString.call( contractStore[content.child][content.field] ) === '[object Array]' ) {
+          for (let i = 0; i < contractStore[content.child][content.field].length; i++) {
+            fileBody = contractStore[content.child][content.field][i]
 
             if (!fileBody) return
-            let fileContent = title + " for " + state.crowdsale[i].tier + ":**** \n \n" + fileBody
+            let fileContent = title + " for " + tierStore.tiers[i].tier + ":**** \n \n" + fileBody
             docData.data += fileContent + '\n\n'
           }
         } else {
-          fileBody = state.contracts[content.child][content.field]
+          fileBody = contractStore[content.child][content.field]
           if (!fileBody) return
           let fileContent = title + ":**** \n \n" + fileBody
           docData.data += fileContent + '\n\n'
         }
     } else {
-        addSrcToFile(content, docData, state)
+        addSrcToFile(content, docData)
     }
 }
 
@@ -496,14 +357,14 @@ export const handleConstantForFile = (content, docData) => {
 const addSrcToFile = (content, docData, state) => {
     const title = content.value
 
-    if ( Object.prototype.toString.call( state.contracts[content.child][content.field] ) === '[object Array]'  && content.field !== 'abi') {
-      for (let i = 0; i < state.contracts[content.child][content.field].length; i++) {
-        const body = state.contracts[content.child][content.field][i]
-        const text = title + " for " + state.crowdsale[i].tier + ": " + body
+    if ( Object.prototype.toString.call( contractStore[content.child][content.field] ) === '[object Array]'  && content.field !== 'abi') {
+      for (let i = 0; i < contractStore[content.child][content.field].length; i++) {
+        const body = contractStore[content.child][content.field][i]
+        const text = title + " for " + tierStore.tiers[i].tier + ": " + body
         docData.data += text + '\n\n'
       }
     } else {
-      const body = content.field === 'abi' ? JSON.stringify(state.contracts[content.child][content.field]) : state.contracts[content.child][content.field]
+      const body = content.field === 'abi' ? JSON.stringify(contractStore[content.child][content.field]) : contractStore[content.child][content.field]
       const text = title + body
       docData.data += text + '\n\n'
     }

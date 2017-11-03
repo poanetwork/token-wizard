@@ -7,6 +7,7 @@ import { InputField } from '../Common/InputField'
 import { ReservedTokensInputBlock } from '../Common/ReservedTokensInputBlock'
 import { NAVIGATION_STEPS, VALIDATION_MESSAGES, TEXT_FIELDS } from '../../utils/constants'
 import { inject, observer } from 'mobx-react';
+import { noDeploymentOnMainnetAlert } from '../../utils/alerts'
 const { TOKEN_SETUP } = NAVIGATION_STEPS
 const { NAME, TICKER, DECIMALS } = TEXT_FIELDS
 
@@ -22,33 +23,6 @@ export class stepTwo extends Component {
     console.log('error',  this.props.tokenStore, this.props.tokenStore.validToken, this.props.tokenStore.isTokenValid)
     this.props.tokenStore.invalidateToken();
   }
-  
-  //depreciated
-  /*setBlockTimes = (key, property, targetTime) => {
-    let newState = { ...this.state }
-    calculateFutureBlock(targetTime, this.state.blockTimeGeneration, (targetBlock) => {
-      if (property === "startTime") {
-        newState.crowdsale[key].startBlock = targetBlock;
-        console.log("startBlock: " + newState.crowdsale[key].startBlock);
-      } else if (property === "endTime") {
-        newState.crowdsale[key].endBlock = targetBlock;
-        console.log("endBlock: " + newState.crowdsale[key].endBlock);
-      }
-      this.setState(newState);
-    });
-  }*/
-
-  /*getNewParent (property, parent, key, value) {
-    if( Object.prototype.toString.call( {...this.state[`${parent}`]} ) === '[object Array]' ) {
-      let newParent = { ...this.state[`${parent}`][key] }
-      newParent[property][key] = value
-      return newParent
-    } else {
-      let newParent = { ...this.state[`${parent}`] }
-      newParent[property] = value
-      return newParent
-    }
-  }*/
 
   updateTokenStore = (event, property) => {
     const value = event.target.value;

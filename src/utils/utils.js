@@ -1,4 +1,4 @@
-import { VALIDATION_TYPES } from './constants'
+import { VALIDATION_TYPES, TRUNC_TO_DECIMALS } from './constants'
 import { contractStore, tokenStore, tierStore, web3Store } from '../stores'
 const { VALID, EMPTY, INVALID } = VALIDATION_TYPES
 
@@ -177,43 +177,6 @@ export function getWhiteListWithCapCrowdsaleAssets(cb) {
     });
 }
 
-export function getStandardCrowdsaleAssets(cb) {
-    const contractName = "CrowdsaleStandard";
-    var derivativesLength = 4;
-    var derivativesIterator = 0;
-    setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", function(_bin) {
-      derivativesIterator++;
-      contractStore.setContractProperty('crowdsale', 'bin', _bin);
-
-      if (derivativesIterator === derivativesLength) {
-        cb(contractStore);
-      }
-    });
-    setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", function(_abi) {
-      derivativesIterator++;
-      contractStore.setContractProperty('crowdsale', 'abi', JSON.parse(_abi));
-      if (derivativesIterator === derivativesLength) {
-        cb(contractStore);
-      }
-    });
-    setFlatFileContentToState("./contracts/" + contractName + "Token_flat.bin", function(_bin) {
-      derivativesIterator++;
-      contractStore.setContractProperty('token', 'abi', _bin);
-      
-      if (derivativesIterator === derivativesLength) {
-        cb(contractStore);
-      }
-    });
-    setFlatFileContentToState("./contracts/" + contractName + "Token_flat.abi", function(_abi) {
-      derivativesIterator++;
-      contractStore.setContractProperty('token', 'abi', JSON.parse(_abi));
-      
-      if (derivativesIterator === derivativesLength) {
-        cb(contractStore);
-      }
-    });
-}
-
 function readSolFile(path, cb) {
     var rawFile = new XMLHttpRequest();
     rawFile.open("GET", path, true);
@@ -258,13 +221,13 @@ export const getconstructorParams = (abiConstructor, vals, crowdsaleNum) => {
                     params.vals.push(tierStore.tiers[crowdsaleNum].startBlock);
                 } break;
                 case "_start": {
-                    params.vals.push(new Date(tierStore.tiers[crowdsaleNum].startTime).getTime()/1000);
+                    params.vals.push(toFixed(new Date(tierStore.tiers[crowdsaleNum].startTime).getTime()/1000).toString());
                 } break;
                 case "_endBlock": {
                     params.vals.push(tierStore.tiers[crowdsaleNum].endBlock);
                 } break;
                 case "_end": {
-                    params.vals.push(new Date(tierStore.tiers[crowdsaleNum].endTime).getTime()/1000);
+                    params.vals.push(toFixed(new Date(tierStore.tiers[crowdsaleNum].endTime).getTime()/1000).toString());
                 } break;
                 case "_rate": {
                     params.vals.push(tierStore.tiers[crowdsaleNum].rate);
@@ -334,8 +297,9 @@ export const getconstructorParams = (abiConstructor, vals, crowdsaleNum) => {
                 case "_oneTokenInWei": {
                   //params.vals.push(state.pricingStrategy[crowdsaleNum].rate);
                   //params.vals.push(state.web3.toWei(1/state.pricingStrategy[crowdsaleNum].rate/10**tokenStore.decimals, "ether"));
-                  params.vals.push(web3Store.web3.toWei(1/tierStore.tiers[crowdsaleNum].rate, "ether"));
-                } break;
+                  let oneTokenInETHRaw = 1/tierStore.tiers[crowdsaleNum].rate
+                  let oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, oneTokenInETHRaw)
+                  params.vals.push(web3Store.web3.utils.toWei(oneTokenInETH, "ether"));                } break;
                 case "_isUpdatable": {
                   params.vals.push(tierStore.tiers[crowdsaleNum].updatable?tierStore.tiers[crowdsaleNum].updatable=="on"?true:false:false);
                 } break;
@@ -349,6 +313,28 @@ export const getconstructorParams = (abiConstructor, vals, crowdsaleNum) => {
         }
     }
     return params;
+}
+
+export const floorToDecimals = (n, input) => Math.floor10(input, n)
+
+const decimalAdjust = (type, inputNumber, exp) => {
+    if (typeof exp === 'undefined' || +exp === 0) {
+      return Math[type](inputNumber);
+    }
+    inputNumber = +inputNumber;
+    exp = +exp;
+    let checkForNaN = isNaN(inputNumber) || !(typeof exp === 'number' && exp % 1 === 0);
+    if (checkForNaN) {
+      return NaN;
+    }
+    inputNumber = inputNumber.toString().split('e');
+    inputNumber = Math[type](+(inputNumber[0] + 'e' + (inputNumber[1] ? (+inputNumber[1] - exp) : -exp)));
+    inputNumber = inputNumber.toString().split('e');
+    return +(inputNumber[0] + 'e' + (inputNumber[1] ? (+inputNumber[1] + exp) : exp));
+}
+
+if (!Math.floor10) {
+  Math.floor10 = (value, exp) => decimalAdjust('floor', value, exp)
 }
 
 const getTimeAsNumber = (time) => new Date(time).getTime()

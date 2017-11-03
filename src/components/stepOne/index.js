@@ -1,12 +1,14 @@
 import React from 'react'
 import '../../assets/stylesheets/application.css';
-import { checkWeb3 } from '../../utils/blockchainHelpers';
+import { checkWeb3, getWeb3, getNetworkVersion } from '../../utils/blockchainHelpers'
 import { Link } from 'react-router-dom';
 import { setFlatFileContentToState } from '../../utils/utils';
 import { StepNavigation } from '../Common/StepNavigation';
 import { NAVIGATION_STEPS, CONTRACT_TYPES } from '../../utils/constants';
 import { inject, observer } from 'mobx-react';
+import { noDeploymentOnMainnetAlert } from '../../utils/alerts'
 const { CROWDSALE_CONTRACT } = NAVIGATION_STEPS;
+
 
 @inject('contractStore', 'web3Store') @observer
 export class stepOne extends React.Component {

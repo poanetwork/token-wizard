@@ -1,12 +1,12 @@
 import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
-import { getWeb3, checkTxMined, attachToContract, checkNetWorkByID } from '../../utils/blockchainHelpers'
-import { getCrowdsaleData, getCurrentRate, initializeAccumulativeData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively, getJoinedTiers } from '../crowdsale/utils'
-import { getQueryVariable, getURLParam, getStandardCrowdsaleAssets, getWhiteListWithCapCrowdsaleAssets } from '../../utils/utils'
+import { checkTxMined, attachToContract, checkNetWorkByID, sendTXToContract } from '../../utils/blockchainHelpers'
+import { getCrowdsaleData, getCurrentRate, initializeAccumulativeData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively, getJoinedTiers, getContractStoreProperty } from '../crowdsale/utils'
+import { getQueryVariable, getURLParam, getWhiteListWithCapCrowdsaleAssets } from '../../utils/utils'
 import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert, invalidCrowdsaleAddrAlert } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
 import { ICOConfig } from '../Common/config'
-import { CONTRACT_TYPES } from '../../utils/constants'
+import { CONTRACT_TYPES, GAS_PRICE } from '../../utils/constants'
 import { observer, inject } from 'mobx-react' 
 
 @inject('contractStore', 'crowdsalePageStore', 'web3Store', 'tierStore', 'tokenStore', 'generalStore', 'investStore')
@@ -42,12 +42,6 @@ import { observer, inject } from 'mobx-react'
     this.setState({ timeInterval });
 
     switch (contractType) {
-      case CONTRACT_TYPES.standard: {
-        getStandardCrowdsaleAssets((_newState) => {
-          this.setState(_newState);
-          this.extractContractsData(web3);
-        });
-      } break;
       case CONTRACT_TYPES.whitelistwithcap: {
         getWhiteListWithCapCrowdsaleAssets((_newState) => {
           this.setState(_newState);
@@ -61,10 +55,10 @@ import { observer, inject } from 'mobx-react'
 
   extractContractsData(web3) {
     const { contractStore, crowdsalePageStore } = this.props
-    let state = this.state;
+    let state = { ...this.state };
 
     const crowdsaleAddr = ICOConfig.crowdsaleContractURL?ICOConfig.crowdsaleContractURL:getURLParam("addr");
-    if (!web3.isAddress(crowdsaleAddr)) {
+    if (!web3.utils.isAddress(crowdsaleAddr)) {
       state.loading = false;
       this.setState(state);
       return invalidCrowdsaleAddrAlert();
@@ -81,43 +75,44 @@ import { observer, inject } from 'mobx-react'
       }
       contractStore.setContractProperty('crowdsale', 'addr', _crowdsaleAddrs);
 
-      if (web3.eth.accounts.length === 0) {
-        let state = this.state;
-        state.loading = false;
-        this.setState(state);
-        return
-      };
+      web3.eth.getAccounts().then((accounts) => {
+        if (accounts.length === 0) {
+          let state = this.state;
+          state.loading = false;
+          this.setState(state);
+          return
+        };
 
-      state.curAddr = web3.eth.accounts[0];
-      state.web3 = web3;
-      this.setState(state);
-
-      if (!contractStore.crowdsale.addr) {
-        let state = this.state;
-        state.loading = false;
+        state.curAddr = accounts[0];
+        state.web3 = web3;
         this.setState(state);
-        return
-      };
-      findCurrentContractRecursively(0, this, web3, null, (crowdsaleContract) => {
-        if (!crowdsaleContract) {
+
+        if (!contractStore.crowdsale.addr) {
+          let state = this.state;
           state.loading = false;
           return this.setState(state);
-        }
-        getCrowdsaleData(web3, this, crowdsaleContract, () => { 
-          initializeAccumulativeData(() => {
-            getAccumulativeCrowdsaleData(web3, this, () => {
+        };
+        findCurrentContractRecursively(0, this, web3, null, (crowdsaleContract) => {
+          if (!crowdsaleContract) {
+            state.loading = false;
+            return this.setState(state);
+          }
+          getCrowdsaleData(web3, this, crowdsaleContract, () => { 
+            initializeAccumulativeData(() => {
+              getAccumulativeCrowdsaleData(web3, this, () => {
+              });
             });
           });
-        });
-        getCrowdsaleTargetDates(web3, this, () => {
-          console.log(crowdsalePageStore);
-          if (crowdsalePageStore.endDate) {
-            let state = this.state;
-            state.seconds = (crowdsalePageStore.endDate - new Date().getTime())/1000;
-            this.setState(state);
-          }
+          getCrowdsaleTargetDates(web3, this, () => {
+            console.log(crowdsalePageStore);
+            if (crowdsalePageStore.endDate) {
+              let state = this.state;
+              state.seconds = (crowdsalePageStore.endDate - new Date().getTime())/1000;
+              this.setState(state);
+            }
+          })
         })
-      })
+      });
     });
   }
 
@@ -144,48 +139,13 @@ import { observer, inject } from 'mobx-react'
     console.log('contractStore.contractType', contractStore.contractType)
     
     switch (contractStore.contractType) {
-      case CONTRACT_TYPES.standard: {
-        web3.eth.getBlockNumber((err, curBlock) => {
-          if (err) return console.log(err);
-          this.investToTokensForStandardCrowdsale(web3, curBlock)
-        });
-      } break;
       case CONTRACT_TYPES.whitelistwithcap: {
         console.log('CONTRACT_TYPES.whitelistwithcap', CONTRACT_TYPES.whitelistwithcap)
-        this.investToTokensForWhitelistedCrowdsale(web3)
+        this.investToTokensForWhitelistedCrowdsale(web3, web3.eth.accounts)
       } break;
       default:
         break;
     }
-  }
-
-  investToTokensForStandardCrowdsale(web3, curBlock) {
-    const { crowdsalePageStore, investStore, contractStore } = this.props
-    if (parseInt(crowdsalePageStore.startBlock, 10) > parseInt(curBlock, 10)) {
-      return investmentDisabledAlert(parseInt(crowdsalePageStore.startBlock, 10), curBlock);
-    }
-
-    let weiToSend = web3.toWei(investStore.tokensToInvest/crowdsalePageStore.rate, "ether");
-    let opts = {
-      from: web3.eth.accounts[0],
-      value: weiToSend
-    };
-
-    attachToContract(web3, contractStore.crowdsale.abi, contractStore.crowdsale.addr[0], (err, crowdsaleContract) => {
-      console.log("attach to crowdsale contract");
-      if (err) return console.log(err);
-      if (!crowdsaleContract) return noContractAlert();
-
-      console.log(crowdsaleContract);
-      console.log(web3.eth.defaultAccount);
-
-      crowdsaleContract.buySampleTokens.sendTransaction(web3.eth.accounts[0], opts, (err, txHash) => {
-        if (err) return console.log(err);
-        
-        console.log("tx hash: " + txHash);
-        successfulInvestmentAlert(investStore.tokensToInvest);
-      });
-    });
   }
 
   investToTokensForWhitelistedCrowdsale(web3) {
@@ -205,14 +165,16 @@ import { observer, inject } from 'mobx-react'
         state.loading = false;
         return this.setState(state);
       }
+      console.log(web3)
       getCurrentRate(web3, this, crowdsaleContract, () => { 
-        this.investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, web3);
+        console.log(web3)
+        this.investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, web3, web3.eth.accounts);
       });
     })
   }
 
-  investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, web3) {
-    const { contractStore, tokenStore, crowdsalePageStore, investStore } = this.props 
+  investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, web3, accounts) {
+    const { contractStore, tokenStore, crowdsalePageStore, investStore } = this.props
     let nextTiers = [];
     console.log(contractStore.crowdsale);
     for (let i = tierNum + 1; i < contractStore.crowdsale.addr.length; i++) {
@@ -230,13 +192,21 @@ import { observer, inject } from 'mobx-react'
 
     let weiToSend = parseInt(tokensToInvest*rate, 10);
     console.log("weiToSend: " + weiToSend);
+
     let opts = {
-      from: web3.eth.accounts[0],
+      from: accounts[0],
       value: weiToSend,
-      gasPrice: 21000000000
+      gasPrice: GAS_PRICE
     };
     console.log(opts);
-    crowdsaleContract.buy.sendTransaction(opts, (err, txHash) => {
+    sendTXToContract(web3, crowdsaleContract.methods.buy().send(opts), (err) => {
+      let state = this.state;
+      state.loading = false;
+      this.setState(state);
+      successfulInvestmentAlert(this.state.tokensToInvest);
+    });
+
+    /*crowdsaleContract.methods.buy().send(opts, (err, txHash) => {
       if (err) {
         let state = this.state;
         state.loading = false;
@@ -245,22 +215,26 @@ import { observer, inject } from 'mobx-react'
       }
       
       console.log("txHash: " + txHash);
-      let $this = this;
-      checkTxMined(web3, txHash, function txMinedCallback(receipt) {
-        if (receipt) {
-          if (receipt.blockNumber) {
-            let state = $this.state;
-            state.loading = false;
-            $this.setState(state);
-            successfulInvestmentAlert(investStore.tokensToInvest);
-          }
-        } else {
-          setTimeout(() => {
-            checkTxMined(web3, txHash, txMinedCallback);
-          }, 500);
-        }
-      })
-    });
+      console.log(web3)
+      checkTxMined(web3, txHash, (receipt) => this.txMinedCallback(web3, txHash, receipt))
+    });*/
+  }
+
+  txMinedCallback(web3, txHash, receipt) {
+    console.log(web3);
+    if (receipt) {
+      if (receipt.blockNumber) {
+        let state = this.state;
+        state.loading = false;
+        this.setState(state);
+        successfulInvestmentAlert(this.state.tokensToInvest);
+      }
+    } else {
+      console.log(web3)
+      setTimeout(() => {
+        checkTxMined(web3, txHash, (receipt) => this.txMinedCallback(web3, txHash, receipt))
+      }, 500);
+    }
   }
 
   tokensToInvestOnChange(event) {
@@ -310,6 +284,8 @@ import { observer, inject } from 'mobx-react'
     const maxCapBeforeDecimals = crowdsalePageStore.maximumSellableTokens/10**tokenDecimals;
     const tokenAmountOf = crowdsalePageStore.tokenAmountOf;
     const ethRaised = crowdsalePageStore.ethRaised;
+    const tokenAddress = getContractStoreProperty('token', 'addr')
+    const crowdsaleAddress = getContractStoreProperty('crowdsale', 'addr') && getContractStoreProperty('crowdsale', 'addr')[0]
 
     //balance: tiers, standard
     const investorBalanceTiers = (tokenAmountOf?((tokenAmountOf/10**tokenDecimals)/*.toFixed(tokenDecimals)*/).toString():"0");
@@ -349,11 +325,11 @@ import { observer, inject } from 'mobx-react'
               <p className="hashes-description">Current Account</p>
             </div>
             <div className="hashes-i">
-              <p className="hashes-title">{contractStore.token.addr}</p>
+              <p className="hashes-title">{tokenAddress}</p>
               <p className="hashes-description">Token Address</p>
             </div>
             <div className="hashes-i">
-              <p className="hashes-title">{contractStore.crowdsale.addr[0]}</p>
+              <p className="hashes-title">{crowdsaleAddress}</p>
               <p className="hashes-description">Crowdsale Contract Address</p>
             </div>
             <div className="hashes-i hidden">
