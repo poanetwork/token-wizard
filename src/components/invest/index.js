@@ -13,6 +13,7 @@ import QRCode from 'qrcode.react';
 export class Invest extends React.Component {
   constructor(props) {
       super(props);
+      this.pristineTokenInput = true;
       window.scrollTo(0, 0);
       if (this.tokensToInvestOnChange.bind) this.tokensToInvestOnChange = this.tokensToInvestOnChange.bind(this);
       if (this.investToTokens.bind) this.investToTokens = this.investToTokens.bind(this);
@@ -21,6 +22,7 @@ export class Invest extends React.Component {
       state.loading = true;
       state.pristineTokenInput = true;
       state.investThrough = 'metamask'
+      state.web3Available = false;
       state.crowdsaleAddress = ICOConfig.crowdsaleContractURL || getURLParam("addr")
       this.state = state;
   }
@@ -30,9 +32,9 @@ export class Invest extends React.Component {
     setTimeout(() => {
      getWeb3((web3) => {
       if (!web3) {
-        let state = this.state;
-        state.loading = false;
-        this.setState(state);
+        this.setState({
+          loading: false
+        });
         return
       };
 
@@ -40,6 +42,8 @@ export class Invest extends React.Component {
       const contractType = this.state.contractTypes.whitelistwithcap;// getQueryVariable("contractType");
       checkNetWorkByID(web3, networkID);
       newState.contractType = contractType;
+      newState.web3Available = true;
+      newState.investThrough = 'metamask';
 
       const timeInterval = setInterval(() => this.setState({ seconds: this.state.seconds - 1}), 1000);
       this.setState({ timeInterval });
@@ -96,7 +100,7 @@ export class Invest extends React.Component {
             state.loading = false;
             return this.setState(state);
           }
-          getCrowdsaleData(web3, this, crowdsaleContract, () => { 
+          getCrowdsaleData(web3, this, crowdsaleContract, () => {
             initializeAccumulativeData(this, () => {
               getAccumulativeCrowdsaleData(web3, this, () => {
               });
@@ -164,7 +168,7 @@ export class Invest extends React.Component {
         return this.setState(state);
       }
       console.log(web3)
-      getCurrentRate(web3, this, crowdsaleContract, () => { 
+      getCurrentRate(web3, this, crowdsaleContract, () => {
         console.log(web3)
         this.investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, web3, accounts);
       });
@@ -210,7 +214,7 @@ export class Invest extends React.Component {
         this.setState(state);
         return console.log(err);
       }
-      
+
       console.log("txHash: " + txHash);
       console.log(web3)
       checkTxMined(web3, txHash, (receipt) => this.txMinedCallback(web3, txHash, receipt))
@@ -248,7 +252,7 @@ export class Invest extends React.Component {
 
   renderPieTracker () {
     return <div style={{marginLeft: '-20px', marginTop: '-20px'}}>
-      <ReactCountdownClock 
+      <ReactCountdownClock
         seconds={this.state.seconds}
         color="#733EAB"
         alpha={0.9}
@@ -273,7 +277,7 @@ export class Invest extends React.Component {
     var hoursLeft   = Math.floor((seconds) - (days*86400));
     var hours       = Math.floor(hoursLeft/3600);
     var minutesLeft = Math.floor((hoursLeft) - (hours*3600));
-    var minutes     = Math.floor(minutesLeft/60); 
+    var minutes     = Math.floor(minutesLeft/60);
     return { days, hours, minutes}
   }
 
@@ -293,7 +297,7 @@ export class Invest extends React.Component {
             <a href="" onClick={e => e.preventDefault()} className="payment-process-copy">Copy Address</a>
           </CopyToClipboard>
 
-          <div className="payment-process-loader">Waiting for payment</div>
+          {/* <div className="payment-process-loader">Waiting for payment</div> */}
           <div className="payment-process-notation">
             <p className="payment-process-notation-title">Important</p>
             <p className="payment-process-notation-description">
@@ -315,7 +319,7 @@ export class Invest extends React.Component {
     )
   }
 
-  render(state){
+  render(state) {
     const { seconds } = this.state
     const { days, hours, minutes } = this.getTimeStamps(seconds)
 
@@ -403,7 +407,7 @@ export class Invest extends React.Component {
             <p className="balance-title">{investorBalance} {tokenTicker}</p>
             <p className="balance-description">Balance</p>
             <p className="description">
-              Your balance in tokens. 
+              Your balance in tokens.
             </p>
           </div>
           <form className="invest-form" onSubmit={this.investToTokens}>
@@ -414,14 +418,18 @@ export class Invest extends React.Component {
               {invalidTokenDescription}
             </div>
             <div className="invest-through-container">
-              <select className="invest-through" onChange={(e) => this.setState({ investThrough: e.target.value })}>
-                <option value="metamask">Metamask</option>
+              <select value={this.state.investThrough} className="invest-through" onChange={(e) => this.setState({ investThrough: e.target.value })}>
+                <option disabled={!this.state.web3Available} value="metamask">Metamask {!this.state.web3Available ? ' (not available)' : null}</option>
                 <option value="qr">QR</option>
               </select>
-              <a className="button button_fill" onClick={this.investToTokens}>Invest</a>
+              {
+                this.state.investThrough === 'metamask'
+                  ? <a className="button button_fill" onClick={this.investToTokens}>Invest</a>
+                  : null
+              }
             </div>
             <p className="description">
-            Think twice before investment in ICOs. Tokens will be deposited on a wallet you used to buy tokens.
+              Think twice before investment in ICOs. Tokens will be deposited on a wallet you used to buy tokens.
             </p>
           </form>
           {
@@ -433,5 +441,3 @@ export class Invest extends React.Component {
     </div>
   }
 }
- 
-
