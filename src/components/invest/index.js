@@ -294,7 +294,7 @@ export class Invest extends React.Component {
           <div className="payment-process-notation">
             <p className="payment-process-notation-title">Important</p>
             <p className="payment-process-notation-description">
-              Send ethers to the crowdsale address with a MethodID: 0xf2fde38b
+              Send ethers to the crowdsale address with a MethodID: 0xa6f2ae3a
             </p>
           </div>
         </div>
