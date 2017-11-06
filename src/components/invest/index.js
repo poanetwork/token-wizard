@@ -6,7 +6,7 @@ import { getQueryVariable, getURLParam, getWhiteListWithCapCrowdsaleAssets } fro
 import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert, invalidCrowdsaleAddrAlert } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
 import { ICOConfig } from '../Common/config'
-import { defaultState, GAS_PRICE } from '../../utils/constants'
+import { defaultState, GAS_PRICE, INVESTMENT_OPTIONS } from '../../utils/constants'
 import InvestThroughQR from './InvestThroughQR'
 
 export class Invest extends React.Component {
@@ -19,7 +19,7 @@ export class Invest extends React.Component {
       state.seconds = 0;
       state.loading = true;
       state.pristineTokenInput = true;
-      state.investThrough = 'metamask'
+      state.investThrough = INVESTMENT_OPTIONS.metamask
       state.crowdsaleAddress = ICOConfig.crowdsaleContractURL || getURLParam("addr")
       this.state = state;
   }
@@ -376,8 +376,8 @@ export class Invest extends React.Component {
             </div>
             <div className="invest-through-container">
               <select className="invest-through" onChange={(e) => this.setState({ investThrough: e.target.value })}>
-                <option value="metamask">Metamask</option>
-                <option value="qr">QR</option>
+                <option value={INVESTMENT_OPTIONS.metamask}>Metamask</option>
+                <option value={INVESTMENT_OPTIONS.qr}>QR</option>
               </select>
               <a className="button button_fill" onClick={this.investToTokens}>Invest</a>
             </div>
@@ -386,7 +386,7 @@ export class Invest extends React.Component {
             </p>
           </form>
           {
-            this.state.investThrough === 'qr' ?
+            this.state.investThrough === INVESTMENT_OPTIONS.qr ?
               <InvestThroughQR crowdsaleAddress={this.state.crowdsaleAddress} /> :
               null
           }
