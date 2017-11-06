@@ -8,6 +8,7 @@ import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDi
 import { Loader } from '../Common/Loader'
 import { ICOConfig } from '../Common/config'
 import { defaultState, GAS_PRICE } from '../../utils/constants'
+import { alertOptions } from './constants'
 
 export class Invest extends React.Component {
   constructor(props) {
@@ -20,11 +21,6 @@ export class Invest extends React.Component {
       state.loading = true;
       state.pristineTokenInput = true;
       this.state = state;
-
-      this.alertOptions = {
-        offset: '80px 14',
-        position: 'top right'
-      };
   }
 
   componentDidMount () {
@@ -398,7 +394,7 @@ export class Invest extends React.Component {
         </div>
       </div>
       <Loader show={this.state.loading}></Loader>
-      <AlertContainer ref={a => this.msg = a} {...this.alertOptions} />
+      <AlertContainer ref={a => this.msg = a} {...alertOptions} />
     </div>
   }
 }
