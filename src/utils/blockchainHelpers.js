@@ -38,7 +38,8 @@ export function getWeb3(cb) {
 	if (typeof web3 === 'undefined') {
     // no web3, use fallback
     console.error("Please use a web3 browser");
-    if (process.env.NODE_ENV === 'development') {
+    const devEnvironment = process.env.NODE_ENV === 'development';
+    if (devEnvironment) {
       web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
     }
 
@@ -46,7 +47,7 @@ export function getWeb3(cb) {
   } else {
     // window.web3 == web3 most of the time. Don't override the provided,
     // web3, just wrap it in your Web3.
-    var myWeb3 = new Web3(web3.currentProvider); 
+    var myWeb3 = new Web3(web3.currentProvider);
 
     //checkNetworkVersion(myWeb3, function(isOraclesNetwork) {
     cb(myWeb3, false);
