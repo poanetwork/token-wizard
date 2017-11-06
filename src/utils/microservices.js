@@ -28,5 +28,7 @@ function getABIencoded(web3, types, vals, cb) {
 	console.log(vals);
 
 	let encoded = web3.eth.abi.encodeParameters(types, vals);
-	cb(encoded.toString("hex"));
+	let ABIencodedRaw = encoded.toString("hex")
+ 	let ABIencoded = ABIencodedRaw.indexOf("0x") > -1 ? ABIencodedRaw.substr(2) : ABIencodedRaw
+ 	cb(ABIencoded);
 }
