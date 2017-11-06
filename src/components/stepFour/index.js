@@ -1,7 +1,18 @@
 import React from 'react'
 import '../../assets/stylesheets/application.css';
 import { deployContract, getWeb3, checkWeb3, getNetworkVersion } from '../../utils/blockchainHelpers'
-import { setLastCrowdsaleRecursive, addWhiteListRecursive, setFinalizeAgentRecursive, setMintAgentRecursive, setReleaseAgentRecursive, updateJoinedCrowdsalesRecursive, transferOwnership, setReservedTokensListMultiple, setLastCrowdsale } from './utils'
+import {
+  setLastCrowdsaleRecursive,
+  addWhiteListRecursive,
+  getDownloadName,
+  setFinalizeAgentRecursive,
+  setMintAgentRecursive,
+  setReleaseAgentRecursive,
+  updateJoinedCrowdsalesRecursive,
+  transferOwnership,
+  setReservedTokensListMultiple,
+  setLastCrowdsale
+} from './utils'
 import {download, handleContractsForFile, handleTokenForFile, handleCrowdsaleForFile, handlePricingStrategyForFile, handleFinalizeAgentForFile, handleConstantForFile, scrollToBottom } from './utils'
 import { noMetaMaskAlert, noContractDataAlert } from '../../utils/alerts'
 import { defaultState, FILE_CONTENTS, DOWNLOAD_NAME, DOWNLOAD_TYPE } from '../../utils/constants'
@@ -148,8 +159,10 @@ export class stepFour extends stepTwo {
     FILE_CONTENTS.forEach(content => {
       this.handleContentByParent(content, docData)
     })
-    console.log('docDAta', docData.data)
-    download(docData.data, DOWNLOAD_NAME, DOWNLOAD_TYPE)
+    console.debug('docDAta', docData.data)
+    const tokenAddr = this.state.contracts ? this.state.contracts.token.addr : '';
+    return getDownloadName(tokenAddr)
+      .then(downloadName => download(docData.data, downloadName, DOWNLOAD_TYPE));
   }
 
   deploySafeMathLibrary = () => {
@@ -301,7 +314,7 @@ export class stepFour extends stepTwo {
   deployCrowdsale = () => {
     console.log("***Deploy crowdsale contract***");
     getWeb3((web3) => {
-      getNetworkVersion(web3, (_networkID) => {
+      getNetworkVersion(web3).then((_networkID) => {
         console.log('web3', web3)
         web3.eth.getAccounts().then((accounts) => {
           if (accounts.length === 0) {

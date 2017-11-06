@@ -66,7 +66,7 @@ export function checkNetWorkByID(web3, _networkIdFromGET) {
   });
 }
 
-function getNetWorkNameById(_id) {
+export function getNetWorkNameById(_id) {
   console.log(_id);
   switch (parseInt(_id, 10)) {
     case 1: {
@@ -93,10 +93,11 @@ function getNetWorkNameById(_id) {
   }
 }
 
-export function getNetworkVersion(web3, cb) {
-  web3.eth.net.getId().then((netId) => {
-    cb(netId);
-  });
+export function getNetworkVersion(web3) {
+  if (web3.eth.net && web3.eth.net.getId) {
+    return web3.eth.net.getId();
+  }
+  return Promise.resolve(null);
 }
 
 export function setExistingContractParams(abi, addr, $this) {

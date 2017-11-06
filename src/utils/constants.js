@@ -175,5 +175,5 @@ export const FILE_CONTENTS = [
 	{ field: 'abiConstructor', value: '****Finalize agent contract ABI encoded constructor arguments', parent: 'contracts', child: 'finalizeAgent', x: 10, y: 10 }
 ]
 
-export const DOWNLOAD_NAME = 'contractInfo'
+export const DOWNLOAD_NAME = 'icowizard'
 export const DOWNLOAD_TYPE = 'text/plain'
