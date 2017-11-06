@@ -15,6 +15,7 @@ import { Loader } from '../Common/Loader'
 import { NAVIGATION_STEPS, TRUNC_TO_DECIMALS } from '../../utils/constants'
 import { copy } from '../../utils/copy';
 import AlertContainer from 'react-alert'
+import { alertOptions } from './constants'
 const { PUBLISH } = NAVIGATION_STEPS
 
 export class stepFour extends stepTwo {
@@ -22,7 +23,6 @@ export class stepFour extends stepTwo {
     super(props);
     let oldState = getOldState(props, defaultState)
     this.state = Object.assign({}, oldState)
-    this.alertOptions = { time: 10000, position: 'top right' }
     console.log('oldState oldState oldState', oldState)
   }
 
@@ -499,7 +499,7 @@ export class stepFour extends stepTwo {
                           if (err) return this.hideLoader();
                           this.hideLoader();
                           this.downloadCrowdsaleInfo();
-                          this.showToaster({ message: 'A file with contracts and metadata downloaded on your computer' })
+                          this.showToaster({ message: 'A file with contracts and metadata downloaded on your computer' })   
                           //this.goToCrowdsalePage();
                         });
                       });
@@ -778,7 +778,7 @@ export class stepFour extends stepTwo {
           <a onClick={this.goToCrowdsalePage} className="button button_fill">Continue</a>
         </div>
         <Loader show={this.state.loading}></Loader>
-        <AlertContainer ref={a => this.msg = a} {...this.alertOptions} />
+        <AlertContainer ref={a => this.msg = a} {...alertOptions} />
       </section>
     )}
 }

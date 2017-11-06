@@ -1,0 +1,1 @@
+export const alertOptions = { time: 10000, position: 'top right' }
