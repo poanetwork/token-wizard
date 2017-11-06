@@ -15,7 +15,7 @@ import { Loader } from '../Common/Loader'
 import { NAVIGATION_STEPS, TRUNC_TO_DECIMALS } from '../../utils/constants'
 import { copy } from '../../utils/copy';
 import AlertContainer from 'react-alert'
-import { alertOptions } from './constants'
+import { alertOptions, fileDownloadedToasterMsg } from './constants'
 const { PUBLISH } = NAVIGATION_STEPS
 
 export class stepFour extends stepTwo {
@@ -499,7 +499,7 @@ export class stepFour extends stepTwo {
                           if (err) return this.hideLoader();
                           this.hideLoader();
                           this.downloadCrowdsaleInfo();
-                          this.showToaster({ message: 'A file with contracts and metadata downloaded on your computer' })   
+                          this.showToaster({ message: fileDownloadedToasterMsg })   
                           //this.goToCrowdsalePage();
                         });
                       });
