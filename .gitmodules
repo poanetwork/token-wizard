@@ -1,7 +1,7 @@
 [submodule "submodules/oracles-token-market-net-ico"]
 	path = submodules/oracles-token-market-net-ico
 	url = https://github.com/oraclesorg/ico
-	branch = stage
+	branch = master
 [submodule "submodules/oracles-combine-solidity"]
 	path = submodules/oracles-combine-solidity
 	url = https://github.com/oraclesorg/oracles-combine-solidity
