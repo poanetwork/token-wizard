@@ -187,7 +187,7 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
         let val = token.reservedTokens[i].val
         let addr = token.reservedTokens[i].addr
         let obj = map[addr]?map[addr]:{}
-        if (token.reservedTokens[i].dim === "tokens") 
+        if (token.reservedTokens[i].dim === "tokens")
           obj.inTokens = val * 10**token.decimals
         else {
           obj.inPercentageDecimals = countDecimals(val)
@@ -289,7 +289,7 @@ export function setFinalizeAgentRecursive (i, web3, abi, addrs, finalizeAgentAdd
     }
   })
 }
-           
+
 export function setReleaseAgentRecursive (i, web3, abi, addr, finalizeAgentAddrs, gasLimit, cb) {
   setReleaseAgent(web3, abi, addr, finalizeAgentAddrs[i], gasLimit, (err) => {
     i++;
@@ -304,7 +304,7 @@ export function setReleaseAgentRecursive (i, web3, abi, addr, finalizeAgentAddrs
 export const handleTokenForFile = (content, docData, state) => {
     const title = content.value
     const fileContent = title + state.token[content.field]
-    docData.data += fileContent + '\n\n' 
+    docData.data += fileContent + '\n\n'
 }
 
 export const handleCrowdsaleForFile = (content, docData, state) => {
@@ -383,8 +383,8 @@ export const download = (data, filename, type) => {
         a.click();
         setTimeout(function() {
             document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);  
-        }, 0); 
+            window.URL.revokeObjectURL(url);
+        }, 0);
     }
 }
 

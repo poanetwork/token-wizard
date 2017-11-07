@@ -12,17 +12,6 @@ export class CrowdsaleBlock extends React.Component {
 
   constructor(props) {
     super(props);
-    //props.onChange.bind(this);
-    //let oldState = getOldState(props, defaultState)
-    //this.state = Object.assign({}, oldState)
-    //let state = props.state
-    //state.crowdsale[props.num].tier = "Tier " + (this.props.num + 1)
-    //state.crowdsale[props.num].updatable = "off"
-    //state.crowdsale[props.num].startTime = state.crowdsale[props.num - 1].endTime;
-    //state.crowdsale[props.num].endTime = defaultCompanyEndDate(state.crowdsale[props.num].startTime);
-    //this.setState(newState);
-    //this.setState(state);
-    //console.log('333 validations', state.validations)
   }
 
   componentDidMount() {
@@ -50,49 +39,49 @@ export class CrowdsaleBlock extends React.Component {
     return (<div key={num.toString()} style={{"marginTop": "40px"}} className="steps-content container">
         <div className="hidden">
           <div className='input-block-container'>
-          <InputField 
-            side='left' 
-            type='text' 
-            title={CROWDSALE_SETUP_NAME} 
+          <InputField
+            side='left'
+            type='text'
+            title={CROWDSALE_SETUP_NAME}
             value={crowdsale[num].tier}
-            valid={validations[num].tier} 
-            errorMessage={VALIDATION_MESSAGES.TIER} 
+            valid={validations[num].tier}
+            errorMessage={VALIDATION_MESSAGES.TIER}
             onBlur={() => handleInputBlur('crowdsale', 'tier', num)}
             onChange={(e) => onChange(e, 'crowdsale', num, 'tier')}
             description={`Name of a tier, e.g. PrePreIco, PreICO, ICO with bonus A, ICO with bonus B, etc. We simplified that and will increment a number after each tier.`}
           />
-          <InputField 
-            side='right' 
-            type='number' 
-            title={RATE} 
-            value={pricingStrategy[num].rate} 
-            valid={validations[num].rate} 
-            errorMessage={VALIDATION_MESSAGES.RATE} 
+          <InputField
+            side='right'
+            type='number'
+            title={RATE}
+            value={pricingStrategy[num].rate}
+            valid={validations[num].rate}
+            errorMessage={VALIDATION_MESSAGES.RATE}
             onBlur={() => handleInputBlur('pricingStrategy', 'rate', num)}
             onChange={(e) => onChange(e, 'pricingStrategy', num, 'rate')}
             description={`Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens`}
           />
           </div>
           <div className='input-block-container'>
-          <InputField 
-            side='left' 
-            type='datetime-local' 
-            title={START_TIME} 
-            value={crowdsale[num].startTimeTemp} 
-            valid={validations[num].startTime} 
-            errorMessage={VALIDATION_MESSAGES.START_TIME} 
+          <InputField
+            side='left'
+            type='datetime-local'
+            title={START_TIME}
+            value={crowdsale[num].startTimeTemp}
+            valid={validations[num].startTime}
+            errorMessage={VALIDATION_MESSAGES.START_TIME}
             onBlur={() => handleInputBlur('crowdsale', 'startTime', num)}
             defaultValue={this.props.state.crowdsale[this.props.num - 1].endTime}
             onChange={(e) => onChange(e, 'crowdsale', num, 'startTime')}
             description={`Date and time when the tier starts. Can't be in the past from the current moment.`}
           />
-          <InputField 
-            side='right' 
-            type='datetime-local' 
-            title={END_TIME} 
-            value={crowdsale[num].endTimeTemp} 
-            valid={validations[num].endTime} 
-            errorMessage={VALIDATION_MESSAGES.END_TIME} 
+          <InputField
+            side='right'
+            type='datetime-local'
+            title={END_TIME}
+            value={crowdsale[num].endTimeTemp}
+            valid={validations[num].endTime}
+            errorMessage={VALIDATION_MESSAGES.END_TIME}
             onBlur={() => handleInputBlur('crowdsale', 'endTime', num)}
             defaultValue={defaultCompanyEndDate(this.props.state.crowdsale[this.props.num - 1].endTime)}
             onChange={(e) => onChange(e, 'crowdsale', num, 'endTime')}
@@ -100,19 +89,19 @@ export class CrowdsaleBlock extends React.Component {
           />
           </div>
           <div className='input-block-container'>
-          <InputField 
-            side='left' 
-            type='number' 
-            title={SUPPLY} 
-            value={crowdsale[num].supply} 
-            valid={validations[num].supply} 
+          <InputField
+            side='left'
+            type='number'
+            title={SUPPLY}
+            value={crowdsale[num].supply}
+            valid={validations[num].supply}
             errorMessage={VALIDATION_MESSAGES.SUPPLY}
-            onBlur={() => handleInputBlur('crowdsale', 'supply', num)} 
+            onBlur={() => handleInputBlur('crowdsale', 'supply', num)}
             onChange={(e) => onChange(e, 'crowdsale', num, 'supply')}
             description={`How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers`}
           />
-          <RadioInputField 
-            side='right' 
+          <RadioInputField
+            side='right'
             title={ALLOWMODIFYING}
             items={["on", "off"]}
             vals={["on", "off"]}
