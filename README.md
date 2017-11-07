@@ -1,9 +1,11 @@
-![ICO Wizard DApp](https://forum.oracles.org//uploads/default/original/1X/0883f34b870fac19914d7b5e43e4f815dbe5c267.png)
+![ICO Wizard DApp](https://forum.oracles.org/uploads/default/original/1X/4defd4c248825a9216a247ab3c5cb1f613d7e5ef.png)
 
 # ICO Wizard DApp
 
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/hyperium/hyper/master/LICENSE)
 [![Build Status](https://travis-ci.org/oraclesorg/ico-wizard.svg?branch=master)](https://travis-ci.org/oraclesorg/ico-wizard)
+[![Waffle.io - Columns and their card count](https://badge.waffle.io/oraclesorg/ico-wizard.svg?columns=all)](http://waffle.io/oraclesorg/ico-wizard)
+[![Join the chat at https://gitter.im/oraclesorg/ico-wizard](https://badges.gitter.im/oraclesorg/ico-wizard.svg)](https://gitter.im/oraclesorg/ico-wizard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 _Attention_!
 
@@ -18,7 +20,6 @@ Please, read instruction before you'll start to create crowdsales using ICO Wiza
     + [Run local version for development](#run-local-version-for-development)
     + [ICO configuration](#ico-configuration)
     + [Tests](#tests)
-    + [Investment with transaction from MetaMask](#investment-with-transaction-from-metamask)
   * [Deploying of crowdsale to Mainnet](#deploying-of-crowdsale-to-mainnet)
     + [Time](#time)
     + [Price](#price)
@@ -29,7 +30,6 @@ Please, read instruction before you'll start to create crowdsales using ICO Wiza
   * [Support](#support)
   * [Notable Contributors](#notable-contributors)
   * [Disclaimer](#disclaimer)
-  * [Bridge testing](#bridge-testing)
 
 
 ## Introduction
@@ -156,14 +156,14 @@ Test scripts are added to Travis CI and executed at every pull request.
 If you want to start it by yourself, simply run the command `npm test` from the root directory. 
 It will start testrpc at port 8545, Truffle will compile, deploy contracts to it and Truffle will execute tests. 
 
-*Note:* Kill testrpc after tests will executed: 
+*Note:* Kill testrpc after tests will be executed: 
 ```
 sudo kill `sudo lsof -t -i:8545`.
 ```
 
-Currently available tests cover the following scenario:
+Currently, available tests cover the following scenario:
 
-The updatable, whitelisted one tier crowdsale contract with one address in white list and reserved tokens for the same address (both: in absolute values and in percentage)
+The updatable, whitelisted one tier crowdsale contract with one address in whitelist and reserved tokens for the same address (both: in absolute values and in percentage)
 
 Checklist of contracts' testing:
 
@@ -220,50 +220,49 @@ Contract: CrowdsaleTokenExt
 
 The one-tier crowdsale contract takes ~24 minutes in total.
 
-Estimates for each contracts:
+Estimates for each contract:
 
 
-SafeMathLib : 02:00
+* SafeMathLib : 02:00
 
-Token: 04:15
+* Token: 04:15
 
-Pricing strategy: 01:32
+* Pricing strategy: 01:32
 
-Crowdsale: 04:52
+* Crowdsale: 04:52
 
-Finalize agent: 01:52
+* Finalize agent: 01:52
 
 
 Estimates for each methods invocation:
 
+* setLastCrowdsale for Pricing Strategy: 00:58
 
-setLastCrowdsale for Pricing Strategy: 00:58
+* updateJoinedCrowdsales: 02:00
 
-updateJoinedCrowdsales: 02:00
+* setMintAgent: 01:30
 
-setMintAgent: 01:30
+* setMintAgent: 02:10
 
-setMintAgent: 02:10
+* setFinalizeAgent: 01:20
 
-setFinalizeAgent: 01:20
+* setReleaseAgent: 00:53
 
-setReleaseAgent: 00:53
-
-transferOwnership: 00:40
+* transferOwnership: 00:40
 
 ### Price
 
 Attention!
 
-Deploying to the Mainnet is expensive. For a contract with one tier the price is 0.16 ETH.
+Deploying to the Mainnet is expensive. For a contract with one tier, the price is 0.16 ETH.
 
-With the price of 1 ETH of $300.0 USD the price of one deployment will be $48.0 USD.
+With the price of 1 ETH of $300.0 USD, the price of one deployment will be $48.0 USD.
 
 
 
 ## How to verify ICO Wizard contracts in Etherscan
 
-**Important!:** All information required for verification of ICO Wizard contracts located in a text file. You must download it on the Step 4 of ICO Wizard. There is **no** way to get it later and you'll need to repeat wizard for the new set of conracts to get the file.
+**Important!:** All information required for verification of ICO Wizard contracts located in a text file. You must download it on Step 4 of ICO Wizard. There is **no** way to get it later and you'll need to repeat wizard for the new set of contracts to get the file.
 
 ### Crowdsale contract verification:
 
@@ -282,7 +281,7 @@ With the price of 1 ETH of $300.0 USD the price of one deployment will be $48.0 
 
    2.6. **Constructor Arguments ABI-encoded (For contracts that accept constructor parameters)** is *Crowdsale contract ABI encoded constructor arguments for [Tier name]*
 
-3. For **Contract Library Address (For contracts that use libraries, supports up to 5 libraries)** By default we use only one library.
+3. For **Contract Library Address (For contracts that use libraries, supports up to 5 libraries)** By default, we use only one library.
 
 **Library_1 Name** type `:` and then the value of *SafeMathlLib library name* header from the file. Default value: `:SafeMathLibExt`.
 
@@ -309,11 +308,15 @@ We created ICO Wizard for a crowdsale of [Oracles Network](https://oracles.org/)
 
 ## Contributors guide
 
-Issues which are looking for a handsome contributors are marked as _LookingForContributor_ label in [Issues](https://github.com/oraclesorg/ico-wizard/issues?q=is%3Aissue+is%3Aopen+label%3ALookingForContributor)  section of the GitHub 
+Issues which are looking for a handsome contributors are marked as _LookingForContributor_ label in [Issues](https://github.com/oraclesorg/ico-wizard/issues?q=is%3Aissue+is%3Aopen+label%3ALookingForContributor)  section of the GitHub.
+
+Take a look at our [PR Policy](https://github.com/oraclesorg/ico-wizard/wiki/Pull-Request-Policy).
 
 ## Support 
 
 You can get support on [Telegram](https://t.me/oraclesnetwork).
+
+Need more info? [Go Wiki](https://github.com/oraclesorg/ico-wizard/wiki).
 
 ## Notable Contributors
 

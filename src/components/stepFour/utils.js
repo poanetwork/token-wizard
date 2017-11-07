@@ -215,7 +215,7 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
     console.log("inPercentageDecimals: " + inPercentageDecimals)
 
     let method = tokenContract.methods.setReservedTokensListMultiple(addrs, inTokens, inPercentageUnit, inPercentageDecimals).send({gasPrice: GAS_PRICE})
-    sendTXToContract(web3, method, cb);
+    sendTXToContract(web3, method, cb)
   });
 }
 

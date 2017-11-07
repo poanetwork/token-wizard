@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
+import AlertContainer from 'react-alert'
 import { getWeb3, checkTxMined, attachToContract, checkNetWorkByID, sendTXToContract } from '../../utils/blockchainHelpers'
 import { getCrowdsaleData, getCurrentRate, initializeAccumulativeData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively, getJoinedTiers } from '../crowdsale/utils'
 import { getQueryVariable, getURLParam, getWhiteListWithCapCrowdsaleAssets } from '../../utils/utils'
@@ -7,6 +8,7 @@ import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDi
 import { Loader } from '../Common/Loader'
 import { ICOConfig } from '../Common/config'
 import { defaultState, GAS_PRICE } from '../../utils/constants'
+import { alertOptions } from './constants'
 
 export class Invest extends React.Component {
   constructor(props) {
@@ -18,6 +20,7 @@ export class Invest extends React.Component {
       var state = defaultState;
       state.seconds = 0;
       state.loading = true;
+      state.pristineTokenInput = true;
       this.state = state;
   }
 
@@ -115,7 +118,7 @@ export class Invest extends React.Component {
     event.preventDefault();
 
     if (!this.isValidToken(this.state.tokensToInvest)) {
-      this.pristineTokenInput = false;
+      this.setState({ pristineTokenInput: false });
       return;
     }
 
@@ -192,11 +195,17 @@ export class Invest extends React.Component {
       gasPrice: GAS_PRICE
     };
     console.log(opts);
-    sendTXToContract(web3, crowdsaleContract.methods.buy().send(opts), (err) => {
-      let state = this.state;
-      state.loading = false;
-      this.setState(state);
-      successfulInvestmentAlert(this.state.tokensToInvest);
+
+    sendTXToContract(web3, crowdsaleContract.methods.buy().send(opts), err => {
+      this.setState({ loading: false });
+
+      if (!err) {
+        successfulInvestmentAlert(this.state.tokensToInvest);  
+      } else {
+        const type = 'error';
+        const message =  'User Rejected Transaction';
+        this.showToaster({type, message});
+      }
     });
 
     /*crowdsaleContract.methods.buy().send(opts, (err, txHash) => {
@@ -231,7 +240,7 @@ export class Invest extends React.Component {
   }
 
   tokensToInvestOnChange(event) {
-    this.pristineTokenInput = false;
+    this.setState({ pristineTokenInput: false });
 
     let state = this.state;
     state["tokensToInvest"] = event.target.value;
@@ -273,6 +282,14 @@ export class Invest extends React.Component {
     return { days, hours, minutes}
   }
 
+  showToaster = ({type = 'info', message = ''}) => {
+    if (!message) {
+      return
+    }
+
+    this.msg[type](message);
+  }
+
   render(state){
     const { seconds } = this.state
     const { days, hours, minutes } = this.getTimeStamps(seconds)
@@ -296,7 +313,7 @@ export class Invest extends React.Component {
     const totalSupply = (this.state.contractType === this.state.contractTypes.whitelistwithcap)?tierCap:standardCrowdsaleSupply;
 
     let invalidTokenDescription = null;
-    if (!this.pristineTokenInput && !this.isValidToken(this.state.tokensToInvest)) {
+    if (!this.state.pristineTokenInput && !this.isValidToken(this.state.tokensToInvest)) {
       invalidTokenDescription = <p className="error">Number of tokens to buy should be positive</p>;
     }
 
@@ -378,6 +395,7 @@ export class Invest extends React.Component {
         </div>
       </div>
       <Loader show={this.state.loading}></Loader>
+      <AlertContainer ref={a => this.msg = a} {...alertOptions} />
     </div>
   }
 }
