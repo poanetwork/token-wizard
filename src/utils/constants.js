@@ -179,6 +179,6 @@ export const DOWNLOAD_NAME = 'contractInfo'
 export const DOWNLOAD_TYPE = 'text/plain'
 
 export const INVESTMENT_OPTIONS = {
-  metamask: 'metamask',
-  qr: 'qr'
+  METAMASK: 'metamask',
+  QR: 'qr'
 }
