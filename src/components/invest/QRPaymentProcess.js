@@ -1,7 +1,7 @@
 import React from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
-export default ({ crowdsaleAddress }) => {
+const QRPaymentProcess = ({ crowdsaleAddress }) => {
   return (
     <div>
       <div className="payment-process">
@@ -37,3 +37,4 @@ export default ({ crowdsaleAddress }) => {
   )
 }
 
+export default QRPaymentProcess;

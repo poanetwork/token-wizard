@@ -8,7 +8,7 @@ import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDi
 import { Loader } from '../Common/Loader'
 import { ICOConfig } from '../Common/config'
 import { defaultState, GAS_PRICE, INVESTMENT_OPTIONS } from '../../utils/constants'
-import InvestThroughQR from './InvestThroughQR'
+import QRPaymentProcess from './QRPaymentProcess'
 import { alertOptions } from './constants'
 
 export class Invest extends React.Component {
@@ -403,7 +403,7 @@ export class Invest extends React.Component {
           </form>
           {
             this.state.investThrough === INVESTMENT_OPTIONS.qr ?
-              <InvestThroughQR crowdsaleAddress={this.state.crowdsaleAddress} /> :
+              <QRPaymentProcess crowdsaleAddress={this.state.crowdsaleAddress} /> :
               null
           }
         </div>
