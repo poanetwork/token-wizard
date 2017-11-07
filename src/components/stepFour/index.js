@@ -25,6 +25,8 @@ import { DisplayTextArea } from '../Common/DisplayTextArea'
 import { Loader } from '../Common/Loader'
 import { NAVIGATION_STEPS, TRUNC_TO_DECIMALS } from '../../utils/constants'
 import { copy } from '../../utils/copy';
+import AlertContainer from 'react-alert'
+import { alertOptions, fileDownloadedToasterMsg } from './constants'
 const { PUBLISH } = NAVIGATION_STEPS
 
 export class stepFour extends stepTwo {
@@ -489,7 +491,6 @@ export class stepFour extends stepTwo {
       let web3 = this.state.web3;
       let contracts = this.state.contracts;
       console.log(contracts);
-      this.downloadCrowdsaleInfo();
 
       this.setState(() => {
         setLastCrowdsaleRecursive(0, web3, contracts.pricingStrategy.abi, contracts.pricingStrategy.addr, contracts.crowdsale.addr.slice(-1)[0], 142982, (err) => {
@@ -510,6 +511,9 @@ export class stepFour extends stepTwo {
                         transferOwnership(web3, this.state.contracts.token.abi, contracts.token.addr, this.state.crowdsale[0].walletAddress, 46699, (err) => {
                           if (err) return this.hideLoader();
                           this.hideLoader();
+
+                          this.downloadCrowdsaleInfo();
+                          this.showToaster({ message: fileDownloadedToasterMsg })   
                           //this.goToCrowdsalePage();
                         });
                       });
@@ -545,6 +549,14 @@ export class stepFour extends stepTwo {
     //url += `&contractType=` + this.state.contractType
     let newHistory = isValidContract ? url : crowdsalePage
     this.props.history.push(newHistory);
+  }
+
+  showToaster = ({type = 'info', message = ''}) => {
+    if (!message) {
+      return
+    }
+
+    this.msg[type](message);
   }
 
   render() {
@@ -780,6 +792,7 @@ export class stepFour extends stepTwo {
           <a onClick={this.goToCrowdsalePage} className="button button_fill">Continue</a>
         </div>
         <Loader show={this.state.loading}></Loader>
+        <AlertContainer ref={a => this.msg = a} {...alertOptions} />
       </section>
     )}
 }
