@@ -403,7 +403,15 @@ export function getDownloadName (tokenAddress) {
   return new Promise((resolve, reject) => {
     getWeb3((web3) => {
       const whenNetworkName = getNetworkVersion(web3)
-        .then(getNetWorkNameById)
+        .then((networkId) => {
+          let networkName = getNetWorkNameById(networkId);
+
+          if (networkName === 'Unknown') {
+            networkName = String(networkId);
+          }
+
+          return networkName;
+        })
         .then((networkName) =>  `${DOWNLOAD_NAME}_${networkName}_${tokenAddress}.txt`);
 
       resolve(whenNetworkName);
