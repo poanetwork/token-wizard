@@ -11,6 +11,7 @@ import { TOAST, defaultState, GAS_PRICE } from '../../utils/constants'
 export class Invest extends React.Component {
   constructor(props) {
       super(props);
+      this.pristineTokenInput = true;
       window.scrollTo(0, 0);
       if (this.tokensToInvestOnChange.bind) this.tokensToInvestOnChange = this.tokensToInvestOnChange.bind(this);
       if (this.investToTokens.bind) this.investToTokens = this.investToTokens.bind(this);

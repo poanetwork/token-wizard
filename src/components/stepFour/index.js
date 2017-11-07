@@ -450,9 +450,12 @@ export class stepFour extends stepTwo {
         this.deployFinalizeAgentRecursive(i, crowdsales, web3, abiNull, binNull, abiLast, binLast, state)
       })
     } else {
-      abi = abiLast;
+      /*abi = abiLast;
       bin = binLast;
-      paramsFinalizeAgent = this.getFinalizeAgentParams(this.state.web3, i)
+      paramsFinalizeAgent = this.getFinalizeAgentParams(this.state.web3, i)*/
+      abi = abiNull;
+      bin = binNull;
+      paramsFinalizeAgent = this.getNullFinalizeAgentParams(this.state.web3, i)
       console.log(paramsFinalizeAgent);
       deployContract(i, web3, abi, bin, paramsFinalizeAgent, state, this.handleDeployedFinalizeAgent)
     }
