@@ -20,7 +20,7 @@ export class Invest extends React.Component {
       state.seconds = 0;
       state.loading = true;
       state.pristineTokenInput = true;
-      state.investThrough = INVESTMENT_OPTIONS.metamask
+      state.investThrough = INVESTMENT_OPTIONS.METAMASK
       state.crowdsaleAddress = ICOConfig.crowdsaleContractURL || getURLParam("addr")
       this.state = state;
   }
@@ -381,8 +381,8 @@ export class Invest extends React.Component {
             </div>
             <div className="invest-through-container">
               <select className="invest-through" onChange={(e) => this.setState({ investThrough: e.target.value })}>
-                <option value={INVESTMENT_OPTIONS.metamask}>Metamask</option>
-                <option value={INVESTMENT_OPTIONS.qr}>QR</option>
+                <option value={INVESTMENT_OPTIONS.METAMASK}>Metamask</option>
+                <option value={INVESTMENT_OPTIONS.QR}>QR</option>
               </select>
               <a className="button button_fill" onClick={this.investToTokens}>Contribute now</a>
             </div>
@@ -391,7 +391,7 @@ export class Invest extends React.Component {
             </p>
           </form>
           {
-            this.state.investThrough === INVESTMENT_OPTIONS.qr ?
+            this.state.investThrough === INVESTMENT_OPTIONS.QR ?
               <QRPaymentProcess crowdsaleAddress={this.state.crowdsaleAddress} /> :
               null
           }
