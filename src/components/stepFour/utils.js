@@ -399,7 +399,7 @@ export function getDownloadName (tokenAddress) {
 
           return networkName;
         })
-        .then((networkName) =>  `${DOWNLOAD_NAME}_${networkName}_${tokenAddress}.txt`);
+        .then((networkName) => `${DOWNLOAD_NAME}_${networkName}_${tokenAddress}`);
 
       resolve(whenNetworkName);
     });

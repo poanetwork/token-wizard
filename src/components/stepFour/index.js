@@ -10,12 +10,11 @@ import {
   setReleaseAgentRecursive,
   updateJoinedCrowdsalesRecursive,
   transferOwnership,
-  setReservedTokensListMultiple,
-  setLastCrowdsale
+  setReservedTokensListMultiple
 } from './utils'
 import { download, handleContractsForFile, handleConstantForFile, handlerForFile, scrollToBottom } from './utils'
 import { noMetaMaskAlert, noContractDataAlert } from '../../utils/alerts'
-import { defaultState, FILE_CONTENTS, DOWNLOAD_NAME, DOWNLOAD_TYPE, TOAST } from '../../utils/constants'
+import { defaultState, FILE_CONTENTS, DOWNLOAD_TYPE, TOAST } from '../../utils/constants'
 import { getOldState, toFixed, floorToDecimals, toast } from '../../utils/utils'
 import { getEncodedABIClientSide } from '../../utils/microservices'
 import { stepTwo } from '../stepTwo'
