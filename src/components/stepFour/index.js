@@ -2,7 +2,7 @@ import React from 'react'
 import '../../assets/stylesheets/application.css';
 import { deployContract, getWeb3, checkWeb3, getNetworkVersion } from '../../utils/blockchainHelpers'
 import { setLastCrowdsaleRecursive, addWhiteListRecursive, setFinalizeAgentRecursive, setMintAgentRecursive, setReleaseAgentRecursive, updateJoinedCrowdsalesRecursive, transferOwnership, setReservedTokensListMultiple, setLastCrowdsale } from './utils'
-import {download, handleContractsForFile, handleTokenForFile, handleCrowdsaleForFile, handlePricingStrategyForFile, handleFinalizeAgentForFile, handleConstantForFile, scrollToBottom } from './utils'
+import { download, handleContractsForFile, handleConstantForFile, handlerForFile, scrollToBottom } from './utils'
 import { noMetaMaskAlert, noContractDataAlert } from '../../utils/alerts'
 import { defaultState, FILE_CONTENTS, DOWNLOAD_NAME, DOWNLOAD_TYPE, TOAST } from '../../utils/constants'
 import { getOldState, toFixed, floorToDecimals, toast } from '../../utils/utils'
@@ -14,6 +14,7 @@ import { DisplayTextArea } from '../Common/DisplayTextArea'
 import { Loader } from '../Common/Loader'
 import { NAVIGATION_STEPS, TRUNC_TO_DECIMALS } from '../../utils/constants'
 import { copy } from '../../utils/copy';
+import JSZip from 'jszip'
 const { PUBLISH } = NAVIGATION_STEPS
 
 export class stepFour extends stepTwo {
@@ -131,30 +132,59 @@ export class stepFour extends stepTwo {
     });
   }*/
 
-  handleContentByParent(content, docData) {
-    switch(content.parent) {
-      case 'token':
-        return handleTokenForFile(content, docData, this.state)
+  handleContentByParent(content, index = 0) {
+    const { parent } = content
+
+    switch (parent) {
       case 'crowdsale':
-        return handleCrowdsaleForFile(content, docData, this.state)
-      case 'contracts':
-        return handleContractsForFile(content, docData, this.state)
       case 'pricingStrategy':
-        return handlePricingStrategyForFile(content, docData, this.state)
       case 'finalizeAgent':
-        return handleFinalizeAgentForFile(content, docData, this.state)
+        return handlerForFile(content, this.state[parent][0])
+      case 'token':
+        return handlerForFile(content, this.state[parent])
+      case 'contracts':
+        return handleContractsForFile(content, this.state, index)
       case 'none':
-        return handleConstantForFile(content, docData)
+        return handleConstantForFile(content)
     }
   }
 
-  downloadCrowdsaleInfo() {
-    var docData = { data: '' }
-    FILE_CONTENTS.forEach(content => {
-      this.handleContentByParent(content, docData)
+  downloadCrowdsaleInfo = () => {
+    const zip = new JSZip()
+    const commonHeader = FILE_CONTENTS.common.map(content => this.handleContentByParent(content))
+    const contractsKeys = FILE_CONTENTS.files.order
+    const NEW_LINE = '\n\n'
+    const orderNumber = order => order.toString().padStart(3, '0');
+    let prefix = 1
+    
+    contractsKeys.forEach(key => {
+      if (this.state.contracts.hasOwnProperty(key)) {
+        const { txt, sol, name } = FILE_CONTENTS.files[key]
+        const { abiConstructor } = this.state.contracts[key]
+        
+        const tiersCount = Array.isArray(abiConstructor) ? abiConstructor.length : 1
+        
+        for (let tier = 0; tier < tiersCount; tier++) {
+          const suffix = tiersCount > 1 ? `_${tier + 1}` : ''
+          const solFilename = `${orderNumber(prefix++)}_${name}${suffix}`
+          const txtFilename = `${orderNumber(prefix++)}_${name}${suffix}`
+          
+          zip.file(
+            `${solFilename}.sol`,
+            this.handleContentByParent(sol)
+          )
+          zip.file(
+            `${txtFilename}.txt`,
+            commonHeader.concat(txt.map(content => this.handleContentByParent(content, tier))).join(NEW_LINE)
+          )
+        }
+      }
     })
-    console.log('docDAta', docData.data)
-    download(docData.data, DOWNLOAD_NAME, DOWNLOAD_TYPE)
+    
+    zip.generateAsync({ type: DOWNLOAD_TYPE.blob })
+      .then(content => {
+        download({ zip: content, filename: DOWNLOAD_NAME })
+      })
   }
 
   deploySafeMathLibrary = () => {
