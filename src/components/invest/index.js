@@ -308,6 +308,10 @@ export class Invest extends React.Component {
       invalidTokenDescription = <p className="error">Number of tokens to buy should be positive</p>;
     }
 
+    const QRPaymentProcessElement = this.state.investThrough === INVESTMENT_OPTIONS.QR ?
+      <QRPaymentProcess crowdsaleAddress={this.state.crowdsaleAddress} /> :
+      null;
+
     return <div className="invest container">
       <div className="invest-table">
         <div className="invest-table-cell invest-table-cell_left">
@@ -390,11 +394,7 @@ export class Invest extends React.Component {
             Think twice before investment in ICOs. Tokens will be deposited on a wallet you used to buy tokens.
             </p>
           </form>
-          {
-            this.state.investThrough === INVESTMENT_OPTIONS.QR ?
-              <QRPaymentProcess crowdsaleAddress={this.state.crowdsaleAddress} /> :
-              null
-          }
+          { QRPaymentProcessElement }
         </div>
       </div>
       <Loader show={this.state.loading}></Loader>
