@@ -4,8 +4,8 @@ import { deployContract, getWeb3, checkWeb3, getNetworkVersion } from '../../uti
 import { setLastCrowdsaleRecursive, addWhiteListRecursive, setFinalizeAgentRecursive, setMintAgentRecursive, setReleaseAgentRecursive, updateJoinedCrowdsalesRecursive, transferOwnership, setReservedTokensListMultiple, setLastCrowdsale } from './utils'
 import {download, handleContractsForFile, handleTokenForFile, handleCrowdsaleForFile, handlePricingStrategyForFile, handleFinalizeAgentForFile, handleConstantForFile, scrollToBottom } from './utils'
 import { noMetaMaskAlert, noContractDataAlert } from '../../utils/alerts'
-import { defaultState, FILE_CONTENTS, DOWNLOAD_NAME, DOWNLOAD_TYPE } from '../../utils/constants'
-import { getOldState, toFixed, floorToDecimals } from '../../utils/utils'
+import { defaultState, FILE_CONTENTS, DOWNLOAD_NAME, DOWNLOAD_TYPE, TOAST } from '../../utils/constants'
+import { getOldState, toFixed, floorToDecimals, toast } from '../../utils/utils'
 import { getEncodedABIClientSide } from '../../utils/microservices'
 import { stepTwo } from '../stepTwo'
 import { StepNavigation } from '../Common/StepNavigation'
@@ -14,15 +14,13 @@ import { DisplayTextArea } from '../Common/DisplayTextArea'
 import { Loader } from '../Common/Loader'
 import { NAVIGATION_STEPS, TRUNC_TO_DECIMALS } from '../../utils/constants'
 import { copy } from '../../utils/copy';
-import AlertContainer from 'react-alert'
-import { alertOptions, fileDownloadedToasterMsg } from './constants'
 const { PUBLISH } = NAVIGATION_STEPS
 
 export class stepFour extends stepTwo {
   constructor(props) {
     super(props);
     let oldState = getOldState(props, defaultState)
-    this.state = Object.assign({}, oldState)
+    this.state = Object.assign({ contractDownloaded: false }, oldState)
     console.log('oldState oldState oldState', oldState)
   }
 
@@ -81,6 +79,11 @@ export class stepFour extends stepTwo {
     let newState = { ...this.state }
     newState.loading = false;
     this.setState(newState);
+  }
+
+  contractDownloadSuccess = options => {
+    this.setState({ contractDownloaded: true })
+    toast.showToaster({ message: TOAST.MESSAGE.CONTRACT_DOWNLOAD_SUCCESS, options })
   }
 
   /*testM() {
@@ -498,9 +501,6 @@ export class stepFour extends stepTwo {
                         transferOwnership(web3, this.state.contracts.token.abi, contracts.token.addr, this.state.crowdsale[0].walletAddress, 46699, (err) => {
                           if (err) return this.hideLoader();
                           this.hideLoader();
-
-                          this.downloadCrowdsaleInfo();
-                          this.showToaster({ message: fileDownloadedToasterMsg })   
                           //this.goToCrowdsalePage();
                         });
                       });
@@ -513,6 +513,11 @@ export class stepFour extends stepTwo {
         });
       });
     });
+  }
+
+  downloadContractButton = () => {
+    this.downloadCrowdsaleInfo();
+    this.contractDownloadSuccess({ offset: 14 })
   }
 
   goToCrowdsalePage = () => {
@@ -535,15 +540,13 @@ export class stepFour extends stepTwo {
     //uncomment, if more then one contractType will appear
     //url += `&contractType=` + this.state.contractType
     let newHistory = isValidContract ? url : crowdsalePage
-    this.props.history.push(newHistory);
-  }
 
-  showToaster = ({type = 'info', message = ''}) => {
-    if (!message) {
-      return
+    if (!this.state.contractDownloaded) {
+      this.downloadCrowdsaleInfo()
+      setTimeout(this.contractDownloadSuccess, 450)
     }
 
-    this.msg[type](message);
+    this.props.history.push(newHistory)
   }
 
   render() {
@@ -775,11 +778,10 @@ export class stepFour extends stepTwo {
           </div>
         </div>
         <div className="button-container">
-          <div onClick={() => this.downloadCrowdsaleInfo()} className="button button_fill_secondary">Download File</div>
+          <div onClick={this.downloadContractButton} className="button button_fill_secondary">Download File</div>
           <a onClick={this.goToCrowdsalePage} className="button button_fill">Continue</a>
         </div>
         <Loader show={this.state.loading}></Loader>
-        <AlertContainer ref={a => this.msg = a} {...alertOptions} />
       </section>
     )}
 }
