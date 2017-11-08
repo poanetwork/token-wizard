@@ -1,7 +1,7 @@
 import Web3 from 'web3';
 import { incorrectNetworkAlert, noMetaMaskAlert, invalidNetworkIDAlert } from './alerts'
 import { getEncodedABIClientSide } from './microservices'
-import { GAS_PRICE } from './constants'
+import { GAS_PRICE, CHAINS } from './constants'
 
 // instantiate new web3 instance
 const web3 = new Web3();
@@ -63,7 +63,9 @@ export function checkNetWorkByID(web3, _networkIdFromGET) {
   }
   web3.eth.net.getId().then((_networkIdFromNetwork) => {
     let networkNameFromGET = getNetWorkNameById(_networkIdFromGET);
+    networkNameFromGET = networkNameFromGET ? networkNameFromGET : CHAINS.UNKNOWN;
     let networkNameFromNetwork = getNetWorkNameById(_networkIdFromNetwork);
+    networkNameFromNetwork = networkNameFromNetwork? networkNameFromNetwork : CHAINS.UNKNOWN;
     if (networkNameFromGET !== networkNameFromNetwork) {
       console.log(networkNameFromGET +"!="+ networkNameFromNetwork);
       incorrectNetworkAlert(networkNameFromGET, networkNameFromNetwork);
@@ -75,25 +77,25 @@ export function getNetWorkNameById(_id) {
   console.log(_id);
   switch (parseInt(_id, 10)) {
     case 1: {
-      return "Mainnet";
+      return CHAINS.MAINNET;
     } break;
     case 2: {
-      return "Morden";
+      return CHAINS.MORDEN;
     } break;
     case 3: {
-      return "Ropsten";
+      return CHAINS.ROPSTEN;
     } break;
     case 4: {
-      return "Rinkeby";
+      return CHAINS.RINKEBY;
     } break;
     case 42: {
-      return "Kovan";
+      return CHAINS.KOVAN;
     } break;
      case 12648430: {
-       return "Oracles dev test";
+       return CHAINS.ORACLES;
     }  break;
     default: {
-      return "Unknown";
+      return null;
     } break;
   }
 }

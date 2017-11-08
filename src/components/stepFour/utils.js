@@ -406,7 +406,7 @@ export function getDownloadName (tokenAddress) {
         .then((networkId) => {
           let networkName = getNetWorkNameById(networkId);
 
-          if (networkName === 'Unknown') {
+          if (!networkName) {
             networkName = String(networkId);
           }
 

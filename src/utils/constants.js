@@ -44,6 +44,16 @@ export const TRUNC_TO_DECIMALS = {
 }
 
 export const GAS_PRICE = 5000000000
+export const UNKNOWN = "Unknown"
+export const CHAINS = {
+	UNKNOWN: 'Unknown',
+	MAINNET: 'Mainnet',
+	MORDEN: 'Morden',
+	ROPSTEN: 'Ropsten',
+	RINKEBY: 'Rinkeby',
+	KOVAN: 'Kovan',
+	ORACLES: 'Oracles dev test'
+}
 
 export const NAVIGATION_STEPS = {
 	CROWDSALE_CONTRACT: 'Crowdsale Contract',
