@@ -1,7 +1,18 @@
 import React from 'react'
 import '../../assets/stylesheets/application.css';
 import { deployContract, getWeb3, checkWeb3, getNetworkVersion } from '../../utils/blockchainHelpers'
-import { setLastCrowdsaleRecursive, addWhiteListRecursive, setFinalizeAgentRecursive, setMintAgentRecursive, setReleaseAgentRecursive, updateJoinedCrowdsalesRecursive, transferOwnership, setReservedTokensListMultiple, setLastCrowdsale } from './utils'
+import {
+  setLastCrowdsaleRecursive,
+  addWhiteListRecursive,
+  getDownloadName,
+  setFinalizeAgentRecursive,
+  setMintAgentRecursive,
+  setReleaseAgentRecursive,
+  updateJoinedCrowdsalesRecursive,
+  transferOwnership,
+  setReservedTokensListMultiple,
+  setLastCrowdsale
+} from './utils'
 import { download, handleContractsForFile, handleConstantForFile, handlerForFile, scrollToBottom } from './utils'
 import { noMetaMaskAlert, noContractDataAlert } from '../../utils/alerts'
 import { defaultState, FILE_CONTENTS, DOWNLOAD_NAME, DOWNLOAD_TYPE, TOAST } from '../../utils/constants'
@@ -180,10 +191,13 @@ export class stepFour extends stepTwo {
         }
       }
     })
-    
+
     zip.generateAsync({ type: DOWNLOAD_TYPE.blob })
       .then(content => {
-        download({ zip: content, filename: DOWNLOAD_NAME })
+        const tokenAddr = this.state.contracts ? this.state.contracts.token.addr : '';
+
+        getDownloadName(tokenAddr)
+          .then(downloadName => download({ zip: content, filename: downloadName }))
       })
   }
 
@@ -336,7 +350,7 @@ export class stepFour extends stepTwo {
   deployCrowdsale = () => {
     console.log("***Deploy crowdsale contract***");
     getWeb3((web3) => {
-      getNetworkVersion(web3, (_networkID) => {
+      getNetworkVersion(web3).then((_networkID) => {
         console.log('web3', web3)
         web3.eth.getAccounts().then((accounts) => {
           if (accounts.length === 0) {
@@ -480,12 +494,9 @@ export class stepFour extends stepTwo {
         this.deployFinalizeAgentRecursive(i, crowdsales, web3, abiNull, binNull, abiLast, binLast, state)
       })
     } else {
-      /*abi = abiLast;
+      abi = abiLast;
       bin = binLast;
-      paramsFinalizeAgent = this.getFinalizeAgentParams(this.state.web3, i)*/
-      abi = abiNull;
-      bin = binNull;
-      paramsFinalizeAgent = this.getNullFinalizeAgentParams(this.state.web3, i)
+      paramsFinalizeAgent = this.getFinalizeAgentParams(this.state.web3, i)
       console.log(paramsFinalizeAgent);
       deployContract(i, web3, abi, bin, paramsFinalizeAgent, state, this.handleDeployedFinalizeAgent)
     }
@@ -520,7 +531,7 @@ export class stepFour extends stepTwo {
           if (err) return this.hideLoader();
           setReservedTokensListMultiple(web3, contracts.token.abi, contracts.token.addr, this.state.token, (err) => {
             if (err) return this.hideLoader();
-            updateJoinedCrowdsalesRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, 212103, (err) => {
+            updateJoinedCrowdsalesRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, 293146, (err) => {
               if (err) return this.hideLoader();
               setMintAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.crowdsale.addr, 68425, (err) => {
                 if (err) return this.hideLoader();

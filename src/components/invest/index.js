@@ -11,7 +11,6 @@ import { TOAST, defaultState, GAS_PRICE } from '../../utils/constants'
 export class Invest extends React.Component {
   constructor(props) {
       super(props);
-      this.pristineTokenInput = true;
       window.scrollTo(0, 0);
       if (this.tokensToInvestOnChange.bind) this.tokensToInvestOnChange = this.tokensToInvestOnChange.bind(this);
       if (this.investToTokens.bind) this.investToTokens = this.investToTokens.bind(this);
@@ -375,7 +374,7 @@ export class Invest extends React.Component {
               <div className="invest-form-label">TOKENS</div>
               {invalidTokenDescription}
             </div>
-            <a className="button button_fill" onClick={this.investToTokens}>Invest now</a>
+            <a className="button button_fill" onClick={this.investToTokens}>Contribute now</a>
             <p className="description">
             Think twice before investment in ICOs. Tokens will be deposited on a wallet you used to buy tokens.
             </p>

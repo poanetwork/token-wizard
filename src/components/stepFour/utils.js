@@ -1,7 +1,14 @@
-import { attachToContract, checkTxMined, sendTXToContract } from '../../utils/blockchainHelpers'
+import {
+  attachToContract,
+  checkTxMined,
+  getWeb3,
+  getNetworkVersion,
+  getNetWorkNameById,
+  sendTXToContract
+} from '../../utils/blockchainHelpers'
 import { noContractAlert } from '../../utils/alerts'
 import { toFixed } from '../../utils/utils'
-import { GAS_PRICE } from '../../utils/constants'
+import { GAS_PRICE, DOWNLOAD_NAME } from '../../utils/constants'
 
 function setLastCrowdsale(web3, abi, addr, lastCrowdsale, gasLimit, cb) {
   console.log("###setLastCrowdsale for Pricing Strategy:###");
@@ -377,6 +384,26 @@ export const download = ({ data = {}, filename = '', type = '', zip = '' }) => {
 
 export function scrollToBottom() {
   window.scrollTo(0,document.body.scrollHeight);
+}
+
+export function getDownloadName (tokenAddress) {
+  return new Promise((resolve, reject) => {
+    getWeb3((web3) => {
+      const whenNetworkName = getNetworkVersion(web3)
+        .then((networkId) => {
+          let networkName = getNetWorkNameById(networkId);
+
+          if (!networkName) {
+            networkName = String(networkId);
+          }
+
+          return networkName;
+        })
+        .then((networkName) =>  `${DOWNLOAD_NAME}_${networkName}_${tokenAddress}.txt`);
+
+      resolve(whenNetworkName);
+    });
+  });
 }
 
 var countDecimals = function (inputFloat) {
