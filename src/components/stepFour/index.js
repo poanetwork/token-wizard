@@ -487,7 +487,7 @@ export class stepFour extends stepTwo {
           if (err) return this.hideLoader();
           setReservedTokensListMultiple(web3, contracts.token.abi, contracts.token.addr, this.state.token, (err) => {
             if (err) return this.hideLoader();
-            updateJoinedCrowdsalesRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, 212103, (err) => {
+            updateJoinedCrowdsalesRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, 293146, (err) => {
               if (err) return this.hideLoader();
               setMintAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.crowdsale.addr, 68425, (err) => {
                 if (err) return this.hideLoader();
