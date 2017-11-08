@@ -1,13 +1,12 @@
 import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
-import AlertContainer from 'react-alert'
 import { getWeb3, checkTxMined, attachToContract, checkNetWorkByID, sendTXToContract } from '../../utils/blockchainHelpers'
 import { getCrowdsaleData, getCurrentRate, initializeAccumulativeData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively, getJoinedTiers } from '../crowdsale/utils'
-import { getQueryVariable, getURLParam, getWhiteListWithCapCrowdsaleAssets } from '../../utils/utils'
+import { getQueryVariable, getURLParam, getWhiteListWithCapCrowdsaleAssets, toast } from '../../utils/utils'
 import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert, invalidCrowdsaleAddrAlert } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
 import { ICOConfig } from '../Common/config'
-import { defaultState, GAS_PRICE, INVESTMENT_OPTIONS } from '../../utils/constants'
+import { TOAST, defaultState, GAS_PRICE, INVESTMENT_OPTIONS } from '../../utils/constants'
 import QRPaymentProcess from './QRPaymentProcess'
 import { alertOptions } from './constants'
 
@@ -204,9 +203,7 @@ export class Invest extends React.Component {
       if (!err) {
         successfulInvestmentAlert(this.state.tokensToInvest);  
       } else {
-        const type = 'error';
-        const message =  'User Rejected Transaction';
-        this.showToaster({type, message});
+        toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.USER_REJECTED_TRANSACTION })
       }
     });
 
@@ -282,14 +279,6 @@ export class Invest extends React.Component {
     var minutesLeft = Math.floor((hoursLeft) - (hours*3600));
     var minutes     = Math.floor(minutesLeft/60); 
     return { days, hours, minutes}
-  }
-
-  showToaster = ({type = 'info', message = ''}) => {
-    if (!message) {
-      return
-    }
-
-    this.msg[type](message);
   }
 
   render(state){
@@ -409,7 +398,6 @@ export class Invest extends React.Component {
         </div>
       </div>
       <Loader show={this.state.loading}></Loader>
-      <AlertContainer ref={a => this.msg = a} {...alertOptions} />
     </div>
   }
 }

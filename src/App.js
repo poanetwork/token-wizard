@@ -6,6 +6,9 @@ import {
   BrowserRouter as Router,
   Route
 } from 'react-router-dom'
+import AlertContainer from 'react-alert'
+import { TOAST } from './utils/constants'
+import { toast } from './utils/utils'
 
 class App extends Component {
   render() {
@@ -22,6 +25,7 @@ class App extends Component {
           <Route path="/3" component={stepThree}/>
           <Route path="/4" component={stepFour}/>
           <Footer/>
+          <AlertContainer ref={a => toast.msg = a} {...TOAST.DEFAULT_OPTIONS} />
         </div>
       </Router>
     )

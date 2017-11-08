@@ -1,4 +1,4 @@
-import { VALIDATION_TYPES, TRUNC_TO_DECIMALS } from './constants'
+import { VALIDATION_TYPES, TRUNC_TO_DECIMALS, TOAST } from './constants'
 const { VALID, EMPTY, INVALID } = VALIDATION_TYPES
 
 export function getQueryVariable(variable) {
@@ -282,7 +282,7 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
                   //params.vals.push(state.pricingStrategy[crowdsaleNum].rate);
                   //params.vals.push(state.web3.toWei(1/state.pricingStrategy[crowdsaleNum].rate/10**state.token.decimals, "ether"));
                   
-                  let oneTokenInETHRaw = 1/state.pricingStrategy[crowdsaleNum].rate
+                  let oneTokenInETHRaw = toFixed(1/state.pricingStrategy[crowdsaleNum].rate).toString()
                   let oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, oneTokenInETHRaw)
                   params.vals.push(state.web3.utils.toWei(oneTokenInETH, "ether"));
                 } break;
@@ -295,7 +295,9 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
     return params;
 }
 
-export const floorToDecimals = (n, input) => Math.floor10(input, n)
+export const floorToDecimals = (n, input) => {
+  return toFixed(Math.floor10(input, n)).toString()
+}
 
 const decimalAdjust = (type, inputNumber, exp) => {
     if (typeof exp === 'undefined' || +exp === 0) {
@@ -456,4 +458,15 @@ export function defaultCompanyEndDate(startDate) {
     let endDate = new Date(startDate).setDate(new Date(startDate).getDate() + 4);
     endDate = new Date(endDate).setUTCHours(0);
     return new Date(endDate).toISOString().split(".")[0];
+}
+
+export const toast = {
+  msg: {},
+  showToaster: function ({ type = TOAST.TYPE.INFO, message = '', options = {} }) {
+    if (!message) {
+      return
+    }
+
+    this.msg[ type ](message, options)
+  }
 }

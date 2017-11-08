@@ -182,3 +182,19 @@ export const INVESTMENT_OPTIONS = {
   METAMASK: 'metamask',
   QR: 'qr'
 }
+export const TOAST = {
+	TYPE: {
+		ERROR: 'error',
+		INFO: 'info',
+		SUCCESS: 'warning'
+	},
+	MESSAGE: {
+		USER_REJECTED_TRANSACTION: 'User Rejected Transaction',
+		CONTRACT_DOWNLOAD_FAILED: 'Contract Download failed',
+		CONTRACT_DOWNLOAD_SUCCESS: 'A file with contracts and metadata downloaded on your computer'},
+	DEFAULT_OPTIONS: {
+		position: 'top right',
+		offset: '80px 14',
+		time: 10000
+	}
+}
