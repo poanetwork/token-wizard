@@ -374,7 +374,7 @@ export class Invest extends React.Component {
               <div className="invest-form-label">TOKENS</div>
               {invalidTokenDescription}
             </div>
-            <a className="button button_fill" onClick={this.investToTokens}>Invest now</a>
+            <a className="button button_fill" onClick={this.investToTokens}>Contribute now</a>
             <p className="description">
             Think twice before investment in ICOs. Tokens will be deposited on a wallet you used to buy tokens.
             </p>
