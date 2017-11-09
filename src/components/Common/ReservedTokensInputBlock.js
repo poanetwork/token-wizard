@@ -11,10 +11,7 @@ export class ReservedTokensInputBlock extends React.Component {
 
     constructor(props) {
         super(props);
-        //let oldState = getOldState(props, defaultState)
-        //console.log('oldState', oldState)
-        //this.state = Object.assign({}, defaultState, oldState, initialStepTwoValues, intitialStepTwoValidations )
-    
+
         let oldState = getOldState(props, defaultState)
         this.state = Object.assign({}, oldState)
     }
@@ -45,7 +42,7 @@ export class ReservedTokensInputBlock extends React.Component {
         });
         this.setState(state, function() {
             state.token.reservedTokensElements.push(
-                <ReservedTokensItem 
+                <ReservedTokensItem
                     key={num.toString()}
                     num={num}
                     addr={addr}
@@ -73,18 +70,18 @@ export class ReservedTokensInputBlock extends React.Component {
             <div className="reserved-tokens-container">
                 <div className="reserved-tokens-input-container">
                     <div className="reserved-tokens-input-container-inner">
-                      <InputField 
+                      <InputField
                         ref={reservedTokensInputAddr => this.reservedTokensInputAddr = reservedTokensInputAddr}
-                        side='reserved-tokens-input-property reserved-tokens-input-property-left' 
-                        type='text' 
-                        title={ADDRESS} 
+                        side='reserved-tokens-input-property reserved-tokens-input-property-left'
+                        type='text'
+                        title={ADDRESS}
                         value={token.reservedTokensInput.addr}
                         onChange={(e) => onChange(e, 'token', 0, 'reservedtokens_addr')}
                         description={`Address where to send reserved tokens.`}
                       />
-                      <RadioInputField 
-                        side='reserved-tokens-input-property reserved-tokens-input-property-middle' 
-                        title={DIMENSION} 
+                      <RadioInputField
+                        side='reserved-tokens-input-property reserved-tokens-input-property-middle'
+                        title={DIMENSION}
                         items={["tokens", "percentage"]}
                         vals={["tokens", "percentage"]}
                         defaultValue={token.reservedTokensInput.dim}
@@ -92,11 +89,11 @@ export class ReservedTokensInputBlock extends React.Component {
                         onChange={(e) => onChange(e, 'token', 0, 'reservedtokens_dim')}
                         description={`Fixed amount or % of crowdsaled tokens. Will be deposited to the account after fintalization of the crowdsale. `}
                       />
-                      <InputField 
+                      <InputField
                         ref={reservedTokensInputVal => this.reservedTokensInputVal = reservedTokensInputVal}
                         side='reserved-tokens-input-property reserved-tokens-input-property-right'
-                        type='number' 
-                        title={VALUE} 
+                        type='number'
+                        title={VALUE}
                         value={token.reservedTokensInput.val}
                         onChange={(e) => onChange(e, 'token', 0, 'reservedtokens_val')}
                         description={`Value in tokens or percents. Don't forget to press + button for each reserved token.`}

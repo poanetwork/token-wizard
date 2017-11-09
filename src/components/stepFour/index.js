@@ -44,15 +44,15 @@ export class stepFour extends stepTwo {
         if (!this.state.contracts.safeMathLib) {
           this.hideLoader();
           return noContractDataAlert();
-        } 
+        }
 
         let state = { ...this.state }
         state.loading = true;
         this.setState(state);
         let abiToken = this.state.contracts && this.state.contracts.token && this.state.contracts.token.abi || []
-        
+
         let abiPricingStrategy = this.state.contracts && this.state.contracts.pricingStrategy && this.state.contracts.pricingStrategy.abi || []
-        
+
         setTimeout(() => {
            getWeb3((web3) => {
             state.web3 = web3;
@@ -96,52 +96,7 @@ export class stepFour extends stepTwo {
     this.setState({ contractDownloaded: true })
     toast.showToaster({ message: TOAST.MESSAGE.CONTRACT_DOWNLOAD_SUCCESS, options })
   }
-
-  /*testM() {
-    let state = this.state;
-    //mainnet
-    //state.contracts.finalizeAgent.addr[0] = "0x9ee173a3e54014c6b89e5d5e01d06b269315a6e9"
-    //state.contracts.crowdsale.addr[0] = "0x1c6d46dedd61ef982f0938e73975404b8de6d739"
-    //state.contracts.pricingStrategy.addr[0] = "0xf188df9b40f5a5598a1d7088021a679312e62d03"
-    //state.contracts.token.addr = "0x13462c0292f3007ee6d0aaf600dbe1db2ebcf4be"
-    //testnet
-    state.contracts.finalizeAgent.addr[0] = "0x24430ab3a5564034b2c878746223f4148cae1471"
-    state.contracts.crowdsale.addr[0] = "0x050007744327a34a00c472951faebcdea1f8560e"
-    state.contracts.pricingStrategy.addr[0] = "0x85704d886ba65b233dd589300509e40136a5bd68"
-    state.contracts.token.addr = "0x12f05ca69f6244bf5aa48eecd3f5c516821a5326"
-    this.setState(() => {
-      let web3 = this.state.web3;
-      let contracts = this.state.contracts;
-      setLastCrowdsaleRecursive(0, web3, contracts.pricingStrategy.abi, contracts.pricingStrategy.addr, contracts.crowdsale.addr.slice(-1)[0], 42982, (err) => {
-        if (err) return this.hideLoader();
-        setReservedTokensListMultiple(web3, contracts.token.abi, contracts.token.addr, this.state.token, (err) => {
-          if (err) return this.hideLoader();
-          updateJoinedCrowdsalesRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, (err) => {
-            if (err) return this.hideLoader();
-            setMintAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.crowdsale.addr, 68425, (err) => {
-              if (err) return this.hideLoader();
-              setMintAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.finalizeAgent.addr, 68425, (err) => {
-                if (err) return this.hideLoader();
-                addWhiteListRecursive(0, web3, this.state.crowdsale, this.state.token, contracts.crowdsale.abi, contracts.crowdsale.addr, (err) => {
-                  if (err) return this.hideLoader();
-                  setFinalizeAgentRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, contracts.finalizeAgent.addr, 68622, (err) => {
-                    if (err) return this.hideLoader();
-                    setReleaseAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.finalizeAgent.addr, 65905, (err) => {
-                      transferOwnership(web3, this.state.contracts.token.abi, contracts.token.addr, this.state.crowdsale[0].walletAddress, 46699, (err) => {
-                        if (err) return this.hideLoader();
-                        //this.goToCrowdsalePage();
-                      });
-                    });
-                  });
-                });
-              });
-            });
-          });
-        });
-      });
-    });
-  }*/
-
+  
   handleContentByParent(content, docData) {
     switch(content.parent) {
       case 'token':
@@ -335,7 +290,7 @@ export class stepFour extends stepTwo {
           let binCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.bin || ''
           let abiCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.abi || []
           let crowdsales = this.state.crowdsale;
-          
+
           this.deployCrowdsaleRecursive(0, crowdsales, binCrowdsale, abiCrowdsale)
         });
        });
@@ -345,10 +300,6 @@ export class stepFour extends stepTwo {
   deployCrowdsaleRecursive = (i, crowdsales, binCrowdsale, abiCrowdsale) => {
     let paramsCrowdsale;
     switch (this.state.contractType) {
-      //depreciated
-      /*case this.state.contractTypes.standard: {
-        paramsCrowdsale = this.getStandardCrowdSaleParams(this.state.web3)
-      } break;*/
       case this.state.contractTypes.whitelistwithcap: {
         paramsCrowdsale = this.getCrowdSaleParams(this.state.web3, i)
       } break;
@@ -377,9 +328,9 @@ export class stepFour extends stepTwo {
     return [
       this.state.contracts.token.addr,
       this.state.contracts.pricingStrategy.addr[i],
-      this.state.crowdsale[0].walletAddress, //this.state.contracts.multisig.addr,
-      toFixed(parseInt(Date.parse(this.state.crowdsale[i].startTime)/1000, 10).toString()), 
-      toFixed(parseInt(Date.parse(this.state.crowdsale[i].endTime)/1000, 10).toString()), 
+      this.state.crowdsale[0].walletAddress,
+      toFixed(parseInt(Date.parse(this.state.crowdsale[i].startTime)/1000, 10).toString()),
+      toFixed(parseInt(Date.parse(this.state.crowdsale[i].endTime)/1000, 10).toString()),
       toFixed("0"),
       toFixed(parseInt(this.state.crowdsale[i].supply, 10)*10**parseInt(this.state.token.decimals, 10)).toString(),
       this.state.crowdsale[i].updatable?this.state.crowdsale[i].updatable=="on"?true:false:false,
@@ -393,7 +344,7 @@ export class stepFour extends stepTwo {
     }
     let newState = { ...this.state }
     newState.contracts.crowdsale.addr.push(crowdsaleAddr);
-    this.setState(newState, this.calculateABIEncodedArgumentsForFinalizeAgentContractDeployment);    
+    this.setState(newState, this.calculateABIEncodedArgumentsForFinalizeAgentContractDeployment);
   }
 
   calculateABIEncodedArgumentsForFinalizeAgentContractDeployment = () => {
@@ -430,7 +381,7 @@ export class stepFour extends stepTwo {
 
       let binFinalizeAgent = contracts && contracts.finalizeAgent && contracts.finalizeAgent.bin || ''
       let abiFinalizeAgent = contracts && contracts.finalizeAgent && contracts.finalizeAgent.abi || []
-      
+
       let crowdsales;
       if (this.state.tokenIsAlreadyCreated) {
         let curTierAddr = [ contracts.crowdsale.addr.slice(-1)[0] ];
@@ -439,7 +390,7 @@ export class stepFour extends stepTwo {
       }
       else
         crowdsales = this.state.contracts.crowdsale.addr;
-      this.deployFinalizeAgentRecursive(0, crowdsales, this.state.web3, abiNullFinalizeAgent, binNullFinalizeAgent, abiFinalizeAgent, binFinalizeAgent, this.state) 
+      this.deployFinalizeAgentRecursive(0, crowdsales, this.state.web3, abiNullFinalizeAgent, binNullFinalizeAgent, abiFinalizeAgent, binFinalizeAgent, this.state)
     })
   }
 
@@ -514,7 +465,6 @@ export class stepFour extends stepTwo {
                         transferOwnership(web3, this.state.contracts.token.abi, contracts.token.addr, this.state.crowdsale[0].walletAddress, 46699, (err) => {
                           if (err) return this.hideLoader();
                           this.hideLoader();
-                          //this.goToCrowdsalePage();
                         });
                       });
                     });
@@ -545,13 +495,7 @@ export class stepFour extends stepTwo {
     const isValidContract = contracts && contracts.crowdsale && contracts.crowdsale.addr
     let url;
     url = crowdsalePage + `?addr=` + contracts.crowdsale.addr[0]
-    //crowdsale contracts relations are in the blockchain
-    /*for (let i = 1; i < contracts.crowdsale.addr.length; i++) {
-      url += `&addr=` + contracts.crowdsale.addr[i]
-    }*/
     url += `&networkID=` + contracts.crowdsale.networkID
-    //uncomment, if more then one contractType will appear
-    //url += `&contractType=` + this.state.contractType
     let newHistory = isValidContract ? url : crowdsalePage
 
     if (!this.state.contractDownloaded) {
@@ -565,48 +509,48 @@ export class stepFour extends stepTwo {
   render() {
     let crowdsaleSetups = [];
     for (let i = 0; i < this.state.crowdsale.length; i++) {
-      let capBlock = <DisplayField 
-        side='left' 
-        title={'Max cap'} 
+      let capBlock = <DisplayField
+        side='left'
+        title={'Max cap'}
         value={this.state.crowdsale[i].supply?this.state.crowdsale[i].supply:""}
         description="How many tokens will be sold on this tier."
       />
-      let updatableBlock = <DisplayField 
-        side='right' 
-        title={'Allow modifying'} 
-        value={this.state.crowdsale[i].updatable?this.state.crowdsale[i].updatable:"off"} 
+      let updatableBlock = <DisplayField
+        side='right'
+        title={'Allow modifying'}
+        value={this.state.crowdsale[i].updatable?this.state.crowdsale[i].updatable:"off"}
         description="Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing."
       />
-          
+
       crowdsaleSetups.push(<div key={i.toString()}><div className="publish-title-container">
           <p className="publish-title" data-step={3+i}>Crowdsale Setup {this.state.crowdsale[i].tier}</p>
         </div>
         <div className="hidden">
           <div className="hidden">
-            <DisplayField 
-              side='left' 
-              title={'Start time'} 
-              value={this.state.crowdsale[i].startTime?this.state.crowdsale[i].startTime.split("T").join(" "):""} 
+            <DisplayField
+              side='left'
+              title={'Start time'}
+              value={this.state.crowdsale[i].startTime?this.state.crowdsale[i].startTime.split("T").join(" "):""}
               description="Date and time when the tier starts."
             />
-            <DisplayField 
-              side='right' 
-              title={'End time'} 
-              value={this.state.crowdsale[i].endTime?this.state.crowdsale[i].endTime.split("T").join(" "):""} 
+            <DisplayField
+              side='right'
+              title={'End time'}
+              value={this.state.crowdsale[i].endTime?this.state.crowdsale[i].endTime.split("T").join(" "):""}
               description="Date and time when the tier ends."
             />
           </div>
           <div className="hidden">
-            <DisplayField 
-              side='left' 
-              title={'Wallet address'} 
-              value={this.state.crowdsale[i].walletAddress?this.state.crowdsale[i].walletAddress:""} 
+            <DisplayField
+              side='left'
+              title={'Wallet address'}
+              value={this.state.crowdsale[i].walletAddress?this.state.crowdsale[i].walletAddress:""}
               description="Where the money goes after investors transactions."
             />
-            <DisplayField 
-              side='right' 
-              title={'RATE'} 
-              value={this.state.pricingStrategy[i].rate?this.state.pricingStrategy[i].rate:0 + " ETH"} 
+            <DisplayField
+              side='right'
+              title={'RATE'}
+              value={this.state.pricingStrategy[i].rate?this.state.pricingStrategy[i].rate:0 + " ETH"}
               description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens."
             />
           </div>
@@ -651,10 +595,10 @@ export class stepFour extends stepTwo {
       <p className="publish-title" data-step={2 + this.state.crowdsale.length + 2}>Global Limits</p>
     </div>
     <div className="hidden">
-      <DisplayField 
-        side='left' 
-        title='Min Cap' 
-        value={this.state.token.globalmincap} 
+      <DisplayField
+        side='left'
+        title='Min Cap'
+        value={this.state.token.globalmincap}
         description="Min Cap for all onvestors"
       /></div>
     </div>;
@@ -707,7 +651,7 @@ export class stepFour extends stepTwo {
             <div className="step-icons step-icons_publish"></div>
             <p className="title">Publish</p>
             <p className="description">
-            On this step we provide you artifacts about your token and crowdsale contracts. They are useful to verify contracts source code on <a href="https://etherscan.io/verifyContract">Etherscan</a> 
+            On this step we provide you artifacts about your token and crowdsale contracts. They are useful to verify contracts source code on <a href="https://etherscan.io/verifyContract">Etherscan</a>
             </p>
           </div>
           <div className="hidden">
@@ -725,24 +669,24 @@ export class stepFour extends stepTwo {
             </div>
             <div className="hidden">
               <div className="hidden">
-                <DisplayField 
-                  side='left' 
-                  title='Name' 
-                  value={this.state.token.name?this.state.token.name:""} 
+                <DisplayField
+                  side='left'
+                  title='Name'
+                  value={this.state.token.name?this.state.token.name:""}
                   description="The name of your token. Will be used by Etherscan and other token browsers."
                 />
-                <DisplayField 
-                  side='right' 
-                  title='Ticker' 
-                  value={this.state.token.ticker?this.state.token.ticker:""} 
+                <DisplayField
+                  side='right'
+                  title='Ticker'
+                  value={this.state.token.ticker?this.state.token.ticker:""}
                   description="The three letter ticker for your token."
                 />
               </div>
               <div className="hidden">
-                <DisplayField 
-                  side='left' 
-                  title='DECIMALS' 
-                  value={this.state.token.decimals?this.state.token.decimals.toString():""} 
+                <DisplayField
+                  side='left'
+                  title='DECIMALS'
+                  value={this.state.token.decimals?this.state.token.decimals.toString():""}
                   description="The decimals of your token."
                 />
               </div>
@@ -752,22 +696,22 @@ export class stepFour extends stepTwo {
               <p className="publish-title" data-step={2 + this.state.crowdsale.length + 1}>Crowdsale Setup</p>
             </div>
             <div className="hidden">
-              <DisplayField 
-                side='left' 
-                title='Compiler Version' 
-                value={this.state.compilerVersion} 
+              <DisplayField
+                side='left'
+                title='Compiler Version'
+                value={this.state.compilerVersion}
                 description="Compiler Version"
               />
-              <DisplayField 
-                side='right' 
-                title='Contract name' 
-                value={this.state.contractName} 
+              <DisplayField
+                side='right'
+                title='Contract name'
+                value={this.state.contractName}
                 description="Crowdsale contract name"
               />
-              <DisplayField 
-                side='left' 
-                title='Optimized' 
-                value={this.state.optimized.toString()} 
+              <DisplayField
+                side='left'
+                title='Optimized'
+                value={this.state.optimized.toString()}
                 description="Optimization in compiling"
               />
             </div>

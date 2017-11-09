@@ -49,9 +49,7 @@ export function getWeb3(cb) {
     // web3, just wrap it in your Web3.
     var myWeb3 = new Web3(web3.currentProvider);
 
-    //checkNetworkVersion(myWeb3, function(isOraclesNetwork) {
     cb(myWeb3, false);
-    //});
   }
   return myWeb3;
 }
@@ -146,7 +144,7 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
     let binFull = bin + ABIencoded.substr(2);
     web3.eth.getAccounts().then(function(accounts) {
       web3.eth.estimateGas({
-        from: accounts[0], 
+        from: accounts[0],
         data: binFull
       }, function(err, estimatedGas) {
         if (err) console.log('errrrrrrrrrrrrrrrrr', err);
@@ -172,12 +170,11 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
         let isMined = false;
 
         contractInstance.deploy(deployOpts).send(sendOpts)
-        //contractInstance.new(...totalParams)
-        .on('error', function(error) { 
+        .on('error', function(error) {
           console.log(error);
-          return cb(error, null); 
+          return cb(error, null);
         })
-        .on('transactionHash', function(transactionHash){ 
+        .on('transactionHash', function(transactionHash){
           console.log("contract deployment transaction: " + transactionHash);
 
           checkTxMined(web3, transactionHash, function txMinedCallback(receipt) {
@@ -203,20 +200,7 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
             }
           })
         })
-        /*.on('receipt', function(receipt){
-          if (errorArised) {
-           console.log(receipt.contractAddress) // contains the new contract address
-           cb(null, receipt.contractAddress);
-          }
-        })*/
-        .on('confirmation', function(confirmationNumber, receipt){ 
-          //console.log(confirmationNumber, receipt); 
-          /*if (errorArised) {
-           console.log(receipt.contractAddress) // contains the new contract address
-           cb(null, receipt.contractAddress);
-          }*/
-
-        })
+        .on('confirmation', function(confirmationNumber, receipt) { })
         .then(function(newContractInstance){
           if (!isMined) {
             console.log("Contract deployment is mined from Promise");
@@ -233,12 +217,11 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
 export function sendTXToContract(web3, method, cb) {
   let isMined = false;
   method
-  //contractInstance.new(...totalParams)
-  .on('error', function(error) { 
+  .on('error', function(error) {
     console.log(error);
-    return cb(error); 
+    return cb(error);
   })
-  .on('transactionHash', function(transactionHash){ 
+  .on('transactionHash', function(transactionHash){
     console.log("contract method transaction: " + transactionHash);
 
     checkTxMined(web3, transactionHash, function txMinedCallback(receipt) {
@@ -264,9 +247,7 @@ export function sendTXToContract(web3, method, cb) {
       }
     })
   })
-  /*.on('receipt', function(receipt){
-  })*/
-  .on('confirmation', function(confirmationNumber, receipt){ 
+  .on('confirmation', function(confirmationNumber, receipt){
   })
   .then(function(result){
     if (!isMined) {
@@ -290,14 +271,11 @@ export function attachToContract(web3, abi, addr, cb) {
   web3.eth.getAccounts().then((accounts) => {
     web3.eth.defaultAccount = accounts[0];
 		console.log("web3.eth.defaultAccount:" + web3.eth.defaultAccount);
-		
+
 		let contractInstance = new web3.eth.Contract(abi, addr, {
       from: web3.eth.defaultAccount
     });
 
-    //console.log(contractInstance);
-    //console.log(contractInstance.options);
-		
 		if (cb) cb(null, contractInstance);
   });
 }
