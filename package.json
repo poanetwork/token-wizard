@@ -20,7 +20,7 @@
     "gulp-uglifycss": "^1.0.6",
     "gulp-util": "^3.0.8",
     "markdown-toc": "^1.2.0",
-    "react-scripts": "1.0.10",
+    "react-scripts": "1.0.11",
     "truffle": "^3.4.9"
   },
   "dependencies": {
@@ -28,6 +28,7 @@
     "immutability-helper": "^2.5.0",
     "install": "^0.10.1",
     "jquery": "^3.2.1",
+    "jszip": "^3.1.4",
     "mobx": "^3.3.0",
     "mobx-react": "^4.3.3",
     "npm": "^5.3.0",
@@ -59,6 +60,7 @@
     "startWin": "cd submodules/oracles-web3-1.0 && npm install && cd ../../ && npm install submodules/oracles-web3-1.0/packages/web3 && npm run generateFlatSoliditySafeMathLibContractWin && npm run generateFlatSolidityCrowdsaleNullFinalizeAgentContractWin && npm run generateFlatSolidityCrowdsaleFinalizeAgentContractWin && npm run generateFlatSolidityCrowdsaleContractWin && npm run generateFlatSolidityCrowdsaleTokenContractWin && npm run generateFlatSolidityCrowdsalePricingStrategyContractWin && npm run compileSafeMathLibExtContractWin && npm run compileCrowdsaleNullFinalizeAgentContractWin && npm run compileCrowdsaleFinalizeAgentContractWin && npm run compileCrowdsaleContractWin && npm run compileCrowdsaleTokenContractWin && npm run compileCrowdsalePricingStrategyContractWin && react-scripts start",
     "build": "git submodule update --init --recursive --remote && cd submodules/oracles-combine-solidity && npm install && cd ../../ && npm install && cd submodules/oracles-web3-1.0 && npm install && cd ../../ && npm install submodules/oracles-web3-1.0/packages/web3 && npm run generateFlatSoliditySafeMathLibContract && npm run generateFlatSolidityCrowdsaleNullFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleContract && npm run generateFlatSolidityCrowdsaleTokenContract && npm run generateFlatSolidityCrowdsalePricingStrategyContract && npm run compileSafeMathLibExtContract && npm run compileCrowdsaleNullFinalizeAgentContract && npm run compileCrowdsaleFinalizeAgentContract && npm run compileCrowdsaleContract && npm run compileCrowdsaleTokenContract && npm run compileCrowdsalePricingStrategyContract && react-scripts build && cp ./build/index.html ./build/invest.html && cp ./build/index.html ./build/crowdsale.html",
     "test": "bash ./start_testrpc.sh && cd ./submodules/oracles-token-market-net-ico/ && npm install && node_modules/.bin/truffle migrate --network testrpc && node_modules/.bin/truffle test --network testrpc",
+    "test:dapp": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "generateFlatSoliditySafeMathLibContract": "node $npm_package_config_combine_solidity_script $npm_package_config_tokenmarketnet_path/$npm_package_config_safe_math_lib_contract_name.sol $npm_package_config_contract_folder SafeMathLibExt",
     "generateFlatSolidityCrowdsaleContract": "node $npm_package_config_combine_solidity_script $npm_package_config_tokenmarketnet_path/$npm_package_config_crowdsale_contract_name.sol $npm_package_config_contract_folder CrowdsaleWhiteListWithCap",

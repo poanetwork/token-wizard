@@ -3,10 +3,8 @@ export const defaultState = {
 		token: {}, 
 		crowdsale: {addr:[], abiConstructor:[]},
 		pricingStrategy: {addr:[], abiConstructor:[]},
-		multisig: {},
-		nullFinalizeAgent: {addr:[]},
-		finalizeAgent: {addr:[]},
-		tokenTransferProxy: {}
+		nullFinalizeAgent: {addr:[], abiConstructor:[]},
+		finalizeAgent: {addr:[], abiConstructor:[]}
 	}, 
 	token: {
 		name: '',
@@ -43,6 +41,16 @@ export const TRUNC_TO_DECIMALS = {
 }
 
 export const GAS_PRICE = 5000000000
+export const UNKNOWN = "Unknown"
+export const CHAINS = {
+	UNKNOWN: 'Unknown',
+	MAINNET: 'Mainnet',
+	MORDEN: 'Morden',
+	ROPSTEN: 'Ropsten',
+	RINKEBY: 'Rinkeby',
+	KOVAN: 'Kovan',
+	ORACLES: 'Oracles dev test'
+}
 
 export const NAVIGATION_STEPS = {
 	CROWDSALE_CONTRACT: 'Crowdsale Contract',
@@ -133,45 +141,187 @@ export const initialStepThreeValues = {
 	}]
 }
 
-export const FILE_CONTENTS = [
-	{ field: 'name', value: 'Token name: ', parent: 'token', x: 10, y: 10 },
-	{ field: 'ticker', value: 'Token ticker: ', parent: 'token', x: 10, y: 10 },
-	{ field: 'decimals', value: 'Token decimals: ', parent: 'token', x: 10, y: 10 },
-	{ field: 'walletAddress', value: 'Multisig wallet address: ', parent: 'crowdsale', x: 10, y: 10 },
-	{ value: '*****************************', parent: 'none', fileValue: '', x: 10, y: 10 },
-	{ field: 'rate', value: 'Crowdsale rate: ', parent: 'pricingStrategy', x: 10, y: 10 },
-	{ field: 'startTime', value: 'Crowdsale start time: ', parent: 'crowdsale', x: 10, y: 10 },
-    { field: 'endTime', value: 'Crowdsale end time: ', parent: 'crowdsale', x: 10, y: 10 },
-	{ value: 'Compiler Version: ', parent: 'none', fileValue: '0.4.11', x: 10, y: 10 },
-	{ value: 'Is optimization enabled?: ', parent: 'none', fileValue: 'true', x: 10, y: 10 },
-	{ value: '*****************************', parent: 'none', fileValue: '', x: 10, y: 10 },
-	{ value: 'SafeMathLib library name: ', parent: 'none', fileValue: 'SafeMathLibExt', x: 10, y: 10 },
-	{ field: 'addr', value: 'SafeMathLib library address: ', parent: 'contracts', child: 'safeMathLib', x: 10, y: 10 },
-	{ value: 'Crowdsale contract name: ', parent: 'none', fileValue: 'MintedTokenCappedCrowdsaleExt', x: 10, y: 10 },
-	{ field: 'addr', value: 'Crowdsale contract address', parent: 'contracts', child: 'crowdsale', x: 10, y: 10 },
-	{ value: 'Token contract name: ', parent: 'none', fileValue: 'CrowdsaleTokenExt', x: 10, y: 10 },
-	{ field: 'addr', value: 'Token contract address: ', parent: 'contracts', child: 'token', x: 10, y: 10 },
-	{ value: 'Pricing strategy contract name: ', parent: 'none', fileValue: 'FlatPricingExt', x: 10, y: 10 },
-	{ field: 'addr', value: 'Pricing strategy contract address', parent: 'contracts', child: 'pricingStrategy', x: 10, y: 10 },
-	{ value: 'Null finalize agent contract name: ', parent: 'none', fileValue: 'NullFinalizeAgentExt', x: 10, y: 10 },
-	{ value: 'Finalize agent contract name: ', parent: 'none', fileValue: 'ReservedTokensFinalizeAgent', x: 10, y: 10 },
-	{ field: 'addr', value: 'Finalize agent contract address', parent: 'contracts', child: 'finalizeAgent', x: 10, y: 10 },
-	{ value: '*****************************', parent: 'none', fileValue: '', x: 10, y: 10 },
-	{ field: 'src', value: '****SafeMathLib contract source:**** \n \n', parent: 'contracts', child: 'safeMathLib', x: 10, y: 10 },
-	{ field: 'abi', value: '****SafeMathLib contract ABI:**** \n \n', parent: 'contracts', child: 'safeMathLib', x: 10, y: 10 },
-	{ field: 'src', value: '****Crowdsale contract source:**** \n \n', parent: 'contracts', child: 'crowdsale', x: 10, y: 10 },
-	{ field: 'abi', value: '****Crowdsale contract ABI:**** \n \n', parent: 'contracts', child: 'crowdsale', x: 10, y: 10 },
-	{ field: 'abiConstructor', value: '****Crowdsale contract ABI encoded constructor arguments', parent: 'contracts', child: 'crowdsale', x: 10, y: 10 },
-	{ field: 'src', value: '****Token contract source:**** \n \n', parent: 'contracts', child: 'token', x: 10, y: 10 },
-	{ field: 'abi', value: '****Token contract ABI:**** \n \n', parent: 'contracts', child: 'token', x: 10, y: 10 },
-	{ field: 'abiConstructor', value: '****Token contract ABI encoded constructor arguments', parent: 'contracts', child: 'token', x: 10, y: 10 },
-	{ field: 'src', value: '****Pricing strategy contract source:**** \n \n', parent: 'contracts', child: 'pricingStrategy', x: 10, y: 10 },
-	{ field: 'abi', value: '****Pricing strategy contract ABI:**** \n \n', parent: 'contracts', child: 'pricingStrategy', x: 10, y: 10 },
-	{ field: 'abiConstructor', value: '****Pricing strategy contract ABI encoded constructor arguments', parent: 'contracts', child: 'pricingStrategy', x: 10, y: 10 },
-	{ field: 'src', value: '****Finalize agent contract source:**** \n \n', parent: 'contracts', child: 'finalizeAgent', x: 10, y: 10 },
-	{ field: 'abi', value: '****Finalize agent contract ABI:**** \n \n', parent: 'contracts', child: 'finalizeAgent', x: 10, y: 10 },
-	{ field: 'abiConstructor', value: '****Finalize agent contract ABI encoded constructor arguments', parent: 'contracts', child: 'finalizeAgent', x: 10, y: 10 }
-]
+export const FILE_CONTENTS = {
+  common: [
+    { field: 'name', value: 'Token name: ', parent: 'token' },
+    { field: 'ticker', value: 'Token ticker: ', parent: 'token' },
+    { field: 'decimals', value: 'Token decimals: ', parent: 'token' },
+    { field: 'walletAddress', value: 'Multisig wallet address: ', parent: 'crowdsale' },
+    { value: '*****************************', parent: 'none', fileValue: '' },
+    { field: 'rate', value: 'Crowdsale rate: ', parent: 'pricingStrategy' },
+    { field: 'startTime', value: 'Crowdsale start time: ', parent: 'crowdsale' },
+    { field: 'endTime', value: 'Crowdsale end time: ', parent: 'crowdsale' },
+    { value: 'Compiler Version: ', parent: 'none', fileValue: '0.4.11' },
+    { value: 'Is optimization enabled?: ', parent: 'none', fileValue: 'true' },
+    { value: '*****************************', parent: 'none', fileValue: '' }
+  ],
+  files: {
+    order: [
+      'safeMathLib',
+      'token',
+      'pricingStrategy',
+      'crowdsale',
+      'nullFinalizeAgent',
+      'finalizeAgent'
+    ],
+    safeMathLib: {
+      name: 'SafeMathLibExt',
+      txt: [
+        { value: 'SafeMathLib library name: ', parent: 'none', fileValue: 'SafeMathLibExt' },
+        { field: 'addr', value: 'SafeMathLib library address: ', parent: 'contracts', child: 'safeMathLib' },
+        { value: '*****************************', parent: 'none', fileValue: '' },
+        { field: 'abi', value: '****SafeMathLib contract ABI:**** \n\n', parent: 'contracts', child: 'safeMathLib' }
+      ],
+      sol: {
+        field: 'src',
+        value: '****SafeMathLib contract source:**** \n\n',
+        parent: 'contracts',
+        child: 'safeMathLib'
+      }
 
-export const DOWNLOAD_NAME = 'contractInfo'
-export const DOWNLOAD_TYPE = 'text/plain'
+    },
+    token: {
+      name: 'CrowdsaleTokenExt',
+      txt: [
+        { value: 'Token contract name: ', parent: 'none', fileValue: 'CrowdsaleTokenExt' },
+        { field: 'addr', value: 'Token contract address: ', parent: 'contracts', child: 'token' },
+        { value: '*****************************', parent: 'none', fileValue: '' },
+        { field: 'abi', value: '****Token contract ABI:**** \n\n', parent: 'contracts', child: 'token' },
+        {
+          field: 'abiConstructor',
+          value: '****Token contract ABI encoded constructor arguments',
+          parent: 'contracts',
+          child: 'token'
+        }
+      ],
+      sol: { field: 'src', value: '****Token contract source:**** \n\n', parent: 'contracts', child: 'token' }
+
+    },
+    pricingStrategy: {
+      name: 'FlatPricingExt',
+      txt: [
+        { value: 'Pricing strategy contract name: ', parent: 'none', fileValue: 'FlatPricingExt' },
+        { field: 'addr', value: 'Pricing strategy contract address', parent: 'contracts', child: 'pricingStrategy' },
+        { value: '*****************************', parent: 'none', fileValue: '' },
+        {
+          field: 'abi',
+          value: '****Pricing strategy contract ABI:**** \n\n',
+          parent: 'contracts',
+          child: 'pricingStrategy'
+        },
+        {
+          field: 'abiConstructor',
+          value: '****Pricing strategy contract ABI encoded constructor arguments',
+          parent: 'contracts',
+          child: 'pricingStrategy'
+        }
+      ],
+      sol: {
+        field: 'src',
+        value: '****Pricing strategy contract source:**** \n\n',
+        parent: 'contracts',
+        child: 'pricingStrategy'
+      }
+
+    },
+    crowdsale: {
+      name: 'MintedTokenCappedCrowdsaleExt',
+      txt: [
+        { value: 'Crowdsale contract name: ', parent: 'none', fileValue: 'MintedTokenCappedCrowdsaleExt' },
+        { field: 'addr', value: 'Crowdsale contract address', parent: 'contracts', child: 'crowdsale' },
+        { value: '*****************************', parent: 'none', fileValue: '' },
+        { field: 'abi', value: '****Crowdsale contract ABI:**** \n\n', parent: 'contracts', child: 'crowdsale' },
+        {
+          field: 'abiConstructor',
+          value: '****Crowdsale contract ABI encoded constructor arguments',
+          parent: 'contracts',
+          child: 'crowdsale'
+        }
+      ],
+      sol: { field: 'src', value: '****Crowdsale contract source:**** \n\n', parent: 'contracts', child: 'crowdsale' }
+
+    },
+    nullFinalizeAgent: {
+      name: 'NullFinalizeAgentExt',
+      txt: [
+        { value: 'Null finalize agent contract name: ', parent: 'none', fileValue: 'NullFinalizeAgentExt' },
+        {
+          field: 'addr',
+          value: 'Null finalize agent contract address',
+          parent: 'contracts',
+          child: 'finalizeAgent'
+        },
+        { value: '*****************************', parent: 'none', fileValue: '' },
+        {
+          field: 'abi',
+          value: '****Null Finalize agent contract ABI:**** \n\n',
+          parent: 'contracts',
+          child: 'nullFinalizeAgent'
+        },
+        {
+          field: 'abiConstructor',
+          value: '****Null Finalize agent contract ABI encoded constructor arguments',
+          parent: 'contracts',
+          child: 'finalizeAgent'
+        }
+      ],
+      sol: {
+        field: 'src',
+        value: '****Null Finalize agent contract source:**** \n\n',
+        parent: 'contracts',
+        child: 'nullFinalizeAgent'
+      }
+
+    },
+    finalizeAgent: {
+      name: 'ReservedTokensFinalizeAgent',
+      txt: [
+        { value: 'Finalize agent contract name: ', parent: 'none', fileValue: 'ReservedTokensFinalizeAgent' },
+        { field: 'addr', value: 'Finalize agent contract address', parent: 'contracts', child: 'finalizeAgent' },
+        { value: '*****************************', parent: 'none', fileValue: '' },
+        {
+          field: 'abi',
+          value: '****Finalize agent contract ABI:**** \n\n',
+          parent: 'contracts',
+          child: 'finalizeAgent'
+        },
+        {
+          field: 'abiConstructor',
+          value: '****Finalize agent contract ABI encoded constructor arguments',
+          parent: 'contracts',
+          child: 'finalizeAgent'
+        }
+      ],
+      sol: {
+        field: 'src',
+        value: '****Finalize agent contract source:**** \n\n',
+        parent: 'contracts',
+        child: 'finalizeAgent'
+      }
+
+    }
+  }
+}
+
+export const DOWNLOAD_NAME = 'icowizard'
+export const DOWNLOAD_TYPE = {
+  text: 'text/plain',
+  blob: 'blob'
+}
+
+export const TOAST = {
+	TYPE: {
+		ERROR: 'error',
+		INFO: 'info',
+		SUCCESS: 'warning'
+	},
+	MESSAGE: {
+		USER_REJECTED_TRANSACTION: 'User Rejected Transaction',
+		CONTRACT_DOWNLOAD_FAILED: 'Contract Download failed',
+		CONTRACT_DOWNLOAD_SUCCESS: 'A file with contracts and metadata downloaded on your computer'},
+	DEFAULT_OPTIONS: {
+		position: 'top right',
+		offset: '80px 14',
+		time: 10000
+	}
+}
