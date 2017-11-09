@@ -3,10 +3,8 @@ export const defaultState = {
 		token: {}, 
 		crowdsale: {addr:[], abiConstructor:[]},
 		pricingStrategy: {addr:[], abiConstructor:[]},
-		multisig: {},
-		nullFinalizeAgent: {addr:[]},
-		finalizeAgent: {addr:[]},
-		tokenTransferProxy: {}
+		nullFinalizeAgent: {addr:[], abiConstructor:[]},
+		finalizeAgent: {addr:[], abiConstructor:[]}
 	}, 
 	token: {
 		name: '',
@@ -253,7 +251,7 @@ export const FILE_CONTENTS = {
           field: 'addr',
           value: 'Null finalize agent contract address',
           parent: 'contracts',
-          child: 'nullFinalizeAgent'
+          child: 'finalizeAgent'
         },
         { value: '*****************************', parent: 'none', fileValue: '' },
         {
@@ -266,7 +264,7 @@ export const FILE_CONTENTS = {
           field: 'abiConstructor',
           value: '****Null Finalize agent contract ABI encoded constructor arguments',
           parent: 'contracts',
-          child: 'nullFinalizeAgent'
+          child: 'finalizeAgent'
         }
       ],
       sol: {

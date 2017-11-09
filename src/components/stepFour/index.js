@@ -430,10 +430,16 @@ export class stepFour extends stepTwo {
     let newState = { ...this.state }
     console.log(newState);
 
-    let abiFinalizeAgent = this.state.contracts && this.state.contracts.finalizeAgent && this.state.contracts.finalizeAgent.abi || []
+    let abiNullFinalizeAgent = this.state.contracts && this.state.contracts.nullFinalizeAgent && this.state.contracts.nullFinalizeAgent.abi || []
+    let abiLastFinalizeAgent = this.state.contracts && this.state.contracts.finalizeAgent && this.state.contracts.finalizeAgent.abi || []
     let counter = 0;
 
     for (let i = 0; i < this.state.pricingStrategy.length; i++) {
+      let abiFinalizeAgent
+      if (i < this.state.pricingStrategy.length - 1)
+        abiFinalizeAgent = abiNullFinalizeAgent
+      else
+        abiFinalizeAgent = abiLastFinalizeAgent
       getEncodedABIClientSide(this.state.web3, abiFinalizeAgent, this.state, [], i, (ABIencoded) => {
         counter++;
         let cntrct = "finalizeAgent";
