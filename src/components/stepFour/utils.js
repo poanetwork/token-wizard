@@ -309,7 +309,14 @@ export function setReleaseAgentRecursive (i, web3, abi, addr, finalizeAgentAddrs
 }
 
 export const handlerForFile = (content, type) => {
-  return `${content.value}${type[content.field]}`
+  let suffix = ''
+  let checkIfTime = content.field == "startTime" || content.field == "endTime"
+  if (checkIfTime) {
+    let timezoneOffset = (new Date()).getTimezoneOffset()/60
+    let operator = timezoneOffset > 0 ? "-" : "+"
+    suffix = " (GMT " + operator + " " +  Math.abs(timezoneOffset) + ")"
+  }
+  return `${content.value}${type[content.field]}` + suffix
 }
 
 export const handleConstantForFile = content => {
@@ -326,7 +333,7 @@ export const handleContractsForFile = (content, state, index) => {
     let fileBody
 
     if (Array.isArray(contractField)) {
-        fileBody = contractField[index]
+      fileBody = contractField[index]
 
       if (!!fileBody) {
           fileContent = title + ' for ' + state.crowdsale[index].tier + ':**** \n\n' + fileBody
