@@ -164,9 +164,9 @@ export const FILE_CONTENTS = {
       'safeMathLib',
       'token',
       'pricingStrategy',
+      'crowdsale',
       'nullFinalizeAgent',
-      'finalizeAgent',
-      'crowdsale'
+      'finalizeAgent'
     ],
     safeMathLib: {
       name: 'SafeMathLibExt',
