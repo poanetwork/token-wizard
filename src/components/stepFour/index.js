@@ -10,12 +10,11 @@ import {
   setReleaseAgentRecursive,
   updateJoinedCrowdsalesRecursive,
   transferOwnership,
-  setReservedTokensListMultiple,
-  setLastCrowdsale
+  setReservedTokensListMultiple
 } from './utils'
-import {download, handleContractsForFile, handleTokenForFile, handleCrowdsaleForFile, handlePricingStrategyForFile, handleFinalizeAgentForFile, handleConstantForFile, scrollToBottom } from './utils'
+import { download, handleContractsForFile, handleConstantForFile, handlerForFile, scrollToBottom } from './utils'
 import { noMetaMaskAlert, noContractDataAlert } from '../../utils/alerts'
-import { defaultState, FILE_CONTENTS, DOWNLOAD_NAME, DOWNLOAD_TYPE, TOAST } from '../../utils/constants'
+import { defaultState, FILE_CONTENTS, DOWNLOAD_TYPE, TOAST } from '../../utils/constants'
 import { getOldState, toFixed, floorToDecimals, toast } from '../../utils/utils'
 import { getEncodedABIClientSide } from '../../utils/microservices'
 import { stepTwo } from '../stepTwo'
@@ -25,6 +24,7 @@ import { DisplayTextArea } from '../Common/DisplayTextArea'
 import { Loader } from '../Common/Loader'
 import { NAVIGATION_STEPS, TRUNC_TO_DECIMALS } from '../../utils/constants'
 import { copy } from '../../utils/copy';
+import JSZip from 'jszip'
 const { PUBLISH } = NAVIGATION_STEPS
 
 export class stepFour extends stepTwo {
@@ -96,33 +96,69 @@ export class stepFour extends stepTwo {
     this.setState({ contractDownloaded: true })
     toast.showToaster({ message: TOAST.MESSAGE.CONTRACT_DOWNLOAD_SUCCESS, options })
   }
-  
-  handleContentByParent(content, docData) {
-    switch(content.parent) {
-      case 'token':
-        return handleTokenForFile(content, docData, this.state)
+
+  handleContentByParent(content, index = 0) {
+    const { parent } = content
+
+    switch (parent) {
       case 'crowdsale':
-        return handleCrowdsaleForFile(content, docData, this.state)
-      case 'contracts':
-        return handleContractsForFile(content, docData, this.state)
       case 'pricingStrategy':
-        return handlePricingStrategyForFile(content, docData, this.state)
       case 'finalizeAgent':
-        return handleFinalizeAgentForFile(content, docData, this.state)
+        return handlerForFile(content, this.state[parent][0])
+      case 'token':
+        return handlerForFile(content, this.state[parent])
+      case 'contracts':
+        return handleContractsForFile(content, this.state, index)
       case 'none':
-        return handleConstantForFile(content, docData)
+        return handleConstantForFile(content)
     }
   }
 
-  downloadCrowdsaleInfo() {
-    var docData = { data: '' }
-    FILE_CONTENTS.forEach(content => {
-      this.handleContentByParent(content, docData)
+  downloadCrowdsaleInfo = () => {
+    const zip = new JSZip()
+    const commonHeader = FILE_CONTENTS.common.map(content => this.handleContentByParent(content))
+    const { files } = FILE_CONTENTS
+    const [NULL_FINALIZE_AGENT, FINALIZE_AGENT] = ['nullFinalizeAgent', 'finalizeAgent']
+    const tiersCount = Array.isArray(this.state.crowdsale) ? this.state.crowdsale.length : 1
+    const contractsKeys = tiersCount === 1 ? files.order.filter(c => c !== NULL_FINALIZE_AGENT) : files.order;
+    const orderNumber = order => order.toString().padStart(3, '0');
+    let prefix = 1
+
+    contractsKeys.forEach(key => {
+      if (this.state.contracts.hasOwnProperty(key)) {
+        const { txt, sol, name } = files[key]
+        const { abiConstructor } = this.state.contracts[key]
+        let tiersCountPerContract = Array.isArray(abiConstructor) ? abiConstructor.length : 1
+
+        if (tiersCount > 1 && [NULL_FINALIZE_AGENT, FINALIZE_AGENT].includes(key)) {
+          tiersCountPerContract = NULL_FINALIZE_AGENT === key ? tiersCount - 1 : 1
+        }
+
+        for (let tier = 0; tier < tiersCountPerContract; tier++) {
+          const suffix = tiersCountPerContract > 1 ? `_${tier + 1}` : ''
+          const solFilename = `${orderNumber(prefix++)}_${name}${suffix}`
+          const txtFilename = `${orderNumber(prefix++)}_${name}${suffix}`
+          const tierNumber = FINALIZE_AGENT === key ? tiersCount - 1 : tier
+
+          zip.file(
+            `${solFilename}.sol`,
+            this.handleContentByParent(sol)
+          )
+          zip.file(
+            `${txtFilename}.txt`,
+            commonHeader.concat(txt.map(content => this.handleContentByParent(content, tierNumber))).join('\n\n')
+          )
+        }
+      }
     })
-    console.debug('docDAta', docData.data)
-    const tokenAddr = this.state.contracts ? this.state.contracts.token.addr : '';
-    return getDownloadName(tokenAddr)
-      .then(downloadName => download(docData.data, downloadName, DOWNLOAD_TYPE));
+
+    zip.generateAsync({ type: DOWNLOAD_TYPE.blob })
+      .then(content => {
+        const tokenAddr = this.state.contracts ? this.state.contracts.token.addr : '';
+
+        getDownloadName(tokenAddr)
+          .then(downloadName => download({ zip: content, filename: downloadName }))
+      })
   }
 
   deploySafeMathLibrary = () => {
@@ -351,10 +387,16 @@ export class stepFour extends stepTwo {
     let newState = { ...this.state }
     console.log(newState);
 
-    let abiFinalizeAgent = this.state.contracts && this.state.contracts.finalizeAgent && this.state.contracts.finalizeAgent.abi || []
+    let abiNullFinalizeAgent = this.state.contracts && this.state.contracts.nullFinalizeAgent && this.state.contracts.nullFinalizeAgent.abi || []
+    let abiLastFinalizeAgent = this.state.contracts && this.state.contracts.finalizeAgent && this.state.contracts.finalizeAgent.abi || []
     let counter = 0;
 
     for (let i = 0; i < this.state.pricingStrategy.length; i++) {
+      let abiFinalizeAgent
+      if (i < this.state.pricingStrategy.length - 1)
+        abiFinalizeAgent = abiNullFinalizeAgent
+      else
+        abiFinalizeAgent = abiLastFinalizeAgent
       getEncodedABIClientSide(this.state.web3, abiFinalizeAgent, this.state, [], i, (ABIencoded) => {
         counter++;
         let cntrct = "finalizeAgent";
