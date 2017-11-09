@@ -185,23 +185,6 @@ export const FILE_CONTENTS = {
 
     },
     token: {
-      name: 'MintedTokenCappedCrowdsaleExt',
-      txt: [
-        { value: 'Crowdsale contract name: ', parent: 'none', fileValue: 'MintedTokenCappedCrowdsaleExt' },
-        { field: 'addr', value: 'Crowdsale contract address', parent: 'contracts', child: 'crowdsale' },
-        { value: '*****************************', parent: 'none', fileValue: '' },
-        { field: 'abi', value: '****Crowdsale contract ABI:**** \n\n', parent: 'contracts', child: 'crowdsale' },
-        {
-          field: 'abiConstructor',
-          value: '****Crowdsale contract ABI encoded constructor arguments',
-          parent: 'contracts',
-          child: 'crowdsale'
-        }
-      ],
-      sol: { field: 'src', value: '****Crowdsale contract source:**** \n\n', parent: 'contracts', child: 'crowdsale' }
-
-    },
-    crowdsale: {
       name: 'CrowdsaleTokenExt',
       txt: [
         { value: 'Token contract name: ', parent: 'none', fileValue: 'CrowdsaleTokenExt' },
@@ -243,6 +226,23 @@ export const FILE_CONTENTS = {
         parent: 'contracts',
         child: 'pricingStrategy'
       }
+
+    },
+    crowdsale: {
+      name: 'MintedTokenCappedCrowdsaleExt',
+      txt: [
+        { value: 'Crowdsale contract name: ', parent: 'none', fileValue: 'MintedTokenCappedCrowdsaleExt' },
+        { field: 'addr', value: 'Crowdsale contract address', parent: 'contracts', child: 'crowdsale' },
+        { value: '*****************************', parent: 'none', fileValue: '' },
+        { field: 'abi', value: '****Crowdsale contract ABI:**** \n\n', parent: 'contracts', child: 'crowdsale' },
+        {
+          field: 'abiConstructor',
+          value: '****Crowdsale contract ABI encoded constructor arguments',
+          parent: 'contracts',
+          child: 'crowdsale'
+        }
+      ],
+      sol: { field: 'src', value: '****Crowdsale contract source:**** \n\n', parent: 'contracts', child: 'crowdsale' }
 
     },
     nullFinalizeAgent: {
