@@ -44,6 +44,16 @@ export const TRUNC_TO_DECIMALS = {
 }
 
 export const GAS_PRICE = 5000000000
+export const UNKNOWN = "Unknown"
+export const CHAINS = {
+	UNKNOWN: 'Unknown',
+	MAINNET: 'Mainnet',
+	MORDEN: 'Morden',
+	ROPSTEN: 'Ropsten',
+	RINKEBY: 'Rinkeby',
+	KOVAN: 'Kovan',
+	ORACLES: 'Oracles dev test'
+}
 
 export const NAVIGATION_STEPS = {
 	CROWDSALE_CONTRACT: 'Crowdsale Contract',
@@ -175,7 +185,7 @@ export const FILE_CONTENTS = [
 	{ field: 'abiConstructor', value: '****Finalize agent contract ABI encoded constructor arguments', parent: 'contracts', child: 'finalizeAgent', x: 10, y: 10 }
 ]
 
-export const DOWNLOAD_NAME = 'contractInfo'
+export const DOWNLOAD_NAME = 'icowizard'
 export const DOWNLOAD_TYPE = 'text/plain'
 
 export const TOAST = {
