@@ -1,11 +1,22 @@
 import React from 'react'
 import '../../assets/stylesheets/application.css';
 import { deployContract, getWeb3, checkWeb3, getNetworkVersion } from '../../utils/blockchainHelpers'
-import { setLastCrowdsaleRecursive, addWhiteListRecursive, setFinalizeAgentRecursive, setMintAgentRecursive, setReleaseAgentRecursive, updateJoinedCrowdsalesRecursive, transferOwnership, setReservedTokensListMultiple, setLastCrowdsale } from './utils'
+import {
+  setLastCrowdsaleRecursive,
+  addWhiteListRecursive,
+  getDownloadName,
+  setFinalizeAgentRecursive,
+  setMintAgentRecursive,
+  setReleaseAgentRecursive,
+  updateJoinedCrowdsalesRecursive,
+  transferOwnership,
+  setReservedTokensListMultiple,
+  setLastCrowdsale
+} from './utils'
 import {download, handleContractsForFile, handleTokenForFile, handleCrowdsaleForFile, handlePricingStrategyForFile, handleFinalizeAgentForFile, handleConstantForFile, scrollToBottom } from './utils'
 import { noMetaMaskAlert, noContractDataAlert } from '../../utils/alerts'
-import { defaultState, FILE_CONTENTS, DOWNLOAD_NAME, DOWNLOAD_TYPE } from '../../utils/constants'
-import { getOldState, toFixed, floorToDecimals } from '../../utils/utils'
+import { defaultState, FILE_CONTENTS, DOWNLOAD_NAME, DOWNLOAD_TYPE, TOAST } from '../../utils/constants'
+import { getOldState, toFixed, floorToDecimals, toast } from '../../utils/utils'
 import { getEncodedABIClientSide } from '../../utils/microservices'
 import { stepTwo } from '../stepTwo'
 import { StepNavigation } from '../Common/StepNavigation'
@@ -14,15 +25,13 @@ import { DisplayTextArea } from '../Common/DisplayTextArea'
 import { Loader } from '../Common/Loader'
 import { NAVIGATION_STEPS, TRUNC_TO_DECIMALS } from '../../utils/constants'
 import { copy } from '../../utils/copy';
-import AlertContainer from 'react-alert'
-import { alertOptions, fileDownloadedToasterMsg } from './constants'
 const { PUBLISH } = NAVIGATION_STEPS
 
 export class stepFour extends stepTwo {
   constructor(props) {
     super(props);
     let oldState = getOldState(props, defaultState)
-    this.state = Object.assign({}, oldState)
+    this.state = Object.assign({ contractDownloaded: false }, oldState)
     console.log('oldState oldState oldState', oldState)
   }
 
@@ -81,6 +90,11 @@ export class stepFour extends stepTwo {
     let newState = { ...this.state }
     newState.loading = false;
     this.setState(newState);
+  }
+
+  contractDownloadSuccess = options => {
+    this.setState({ contractDownloaded: true })
+    toast.showToaster({ message: TOAST.MESSAGE.CONTRACT_DOWNLOAD_SUCCESS, options })
   }
 
   /*testM() {
@@ -150,8 +164,10 @@ export class stepFour extends stepTwo {
     FILE_CONTENTS.forEach(content => {
       this.handleContentByParent(content, docData)
     })
-    console.log('docDAta', docData.data)
-    download(docData.data, DOWNLOAD_NAME, DOWNLOAD_TYPE)
+    console.debug('docDAta', docData.data)
+    const tokenAddr = this.state.contracts ? this.state.contracts.token.addr : '';
+    return getDownloadName(tokenAddr)
+      .then(downloadName => download(docData.data, downloadName, DOWNLOAD_TYPE));
   }
 
   deploySafeMathLibrary = () => {
@@ -303,7 +319,7 @@ export class stepFour extends stepTwo {
   deployCrowdsale = () => {
     console.log("***Deploy crowdsale contract***");
     getWeb3((web3) => {
-      getNetworkVersion(web3, (_networkID) => {
+      getNetworkVersion(web3).then((_networkID) => {
         console.log('web3', web3)
         web3.eth.getAccounts().then((accounts) => {
           if (accounts.length === 0) {
@@ -447,12 +463,9 @@ export class stepFour extends stepTwo {
         this.deployFinalizeAgentRecursive(i, crowdsales, web3, abiNull, binNull, abiLast, binLast, state)
       })
     } else {
-      /*abi = abiLast;
+      abi = abiLast;
       bin = binLast;
-      paramsFinalizeAgent = this.getFinalizeAgentParams(this.state.web3, i)*/
-      abi = abiNull;
-      bin = binNull;
-      paramsFinalizeAgent = this.getNullFinalizeAgentParams(this.state.web3, i)
+      paramsFinalizeAgent = this.getFinalizeAgentParams(this.state.web3, i)
       console.log(paramsFinalizeAgent);
       deployContract(i, web3, abi, bin, paramsFinalizeAgent, state, this.handleDeployedFinalizeAgent)
     }
@@ -487,7 +500,7 @@ export class stepFour extends stepTwo {
           if (err) return this.hideLoader();
           setReservedTokensListMultiple(web3, contracts.token.abi, contracts.token.addr, this.state.token, (err) => {
             if (err) return this.hideLoader();
-            updateJoinedCrowdsalesRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, 212103, (err) => {
+            updateJoinedCrowdsalesRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, 293146, (err) => {
               if (err) return this.hideLoader();
               setMintAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.crowdsale.addr, 68425, (err) => {
                 if (err) return this.hideLoader();
@@ -501,9 +514,6 @@ export class stepFour extends stepTwo {
                         transferOwnership(web3, this.state.contracts.token.abi, contracts.token.addr, this.state.crowdsale[0].walletAddress, 46699, (err) => {
                           if (err) return this.hideLoader();
                           this.hideLoader();
-
-                          this.downloadCrowdsaleInfo();
-                          this.showToaster({ message: fileDownloadedToasterMsg })   
                           //this.goToCrowdsalePage();
                         });
                       });
@@ -516,6 +526,11 @@ export class stepFour extends stepTwo {
         });
       });
     });
+  }
+
+  downloadContractButton = () => {
+    this.downloadCrowdsaleInfo();
+    this.contractDownloadSuccess({ offset: 14 })
   }
 
   goToCrowdsalePage = () => {
@@ -538,15 +553,13 @@ export class stepFour extends stepTwo {
     //uncomment, if more then one contractType will appear
     //url += `&contractType=` + this.state.contractType
     let newHistory = isValidContract ? url : crowdsalePage
-    this.props.history.push(newHistory);
-  }
 
-  showToaster = ({type = 'info', message = ''}) => {
-    if (!message) {
-      return
+    if (!this.state.contractDownloaded) {
+      this.downloadCrowdsaleInfo()
+      setTimeout(this.contractDownloadSuccess, 450)
     }
 
-    this.msg[type](message);
+    this.props.history.push(newHistory)
   }
 
   render() {
@@ -778,11 +791,10 @@ export class stepFour extends stepTwo {
           </div>
         </div>
         <div className="button-container">
-          <div onClick={() => this.downloadCrowdsaleInfo()} className="button button_fill_secondary">Download File</div>
+          <div onClick={this.downloadContractButton} className="button button_fill_secondary">Download File</div>
           <a onClick={this.goToCrowdsalePage} className="button button_fill">Continue</a>
         </div>
         <Loader show={this.state.loading}></Loader>
-        <AlertContainer ref={a => this.msg = a} {...alertOptions} />
       </section>
     )}
 }
