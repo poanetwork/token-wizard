@@ -72,7 +72,6 @@ export function checkNetWorkByID(web3, _networkIdFromGET) {
 }
 
 export function getNetWorkNameById(_id) {
-  console.log(_id);
   switch (parseInt(_id, 10)) {
     case 1: {
       return CHAINS.MAINNET;
