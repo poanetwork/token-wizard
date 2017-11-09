@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { checkWeb3, getWeb3, getNetworkVersion } from '../../utils/blockchainHelpers'
 import { getOldState, stepsAreValid, validateValue, allFieldsAreValid } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
-import { InputField } from '../Common/InputField'
+import InputField from '../Common/InputField'
 import { ReservedTokensInputBlock } from '../Common/ReservedTokensInputBlock'
 import { NAVIGATION_STEPS, VALIDATION_MESSAGES, VALIDATION_TYPES, defaultState, TEXT_FIELDS, intitialStepTwoValidations } from '../../utils/constants'
 import { noDeploymentOnMainnetAlert } from '../../utils/alerts'
@@ -16,9 +16,7 @@ export class stepTwo extends React.Component {
   constructor(props) {
     super(props);
     window.scrollTo(0, 0);
-    console.log('props', props)
     let oldState = getOldState(props, defaultState)
-    console.log('oldState', oldState)
     this.state = Object.assign({}, defaultState, oldState, intitialStepTwoValidations )
   }
 
@@ -38,14 +36,11 @@ export class stepTwo extends React.Component {
 
   changeState = (event, parent, key, property) => {
     let value = event.target.value
-    console.log("parent: " + parent, "key: " + key, "property: " + property, "value: " + value);
     let newState = { ...this.state }
-    console.log(newState);
     if (property === "startTime" || property === "endTime") {
       let targetTime = new Date(value);
       let targetTimeTemp = targetTime.setHours(targetTime.getHours() - targetTime.getTimezoneOffset()/60);
       if (property === "startTime") {
-        console.log("property == startTime");
         if (targetTimeTemp)
           newState.crowdsale[key].startTime = new Date(targetTimeTemp).toISOString().split(".")[0];
         else
@@ -66,7 +61,6 @@ export class stepTwo extends React.Component {
       let prop = property.split("_")[1];
       newState.crowdsale[key][`whiteListInput`][prop] = value
     } else if (property.indexOf("reservedtokens_") === 0) {
-      console.log(newState);
       let prop = property.split("_")[1];
       newState.token[`reservedTokensInput`][prop] = value
     } else {
@@ -84,7 +78,6 @@ export class stepTwo extends React.Component {
         newState[`validations`][property] = validateValue(value, property, newState)
       }
     }
-    console.log('newState', newState)
     this.setState(newState)
   }
 
@@ -153,7 +146,6 @@ export class stepTwo extends React.Component {
 
   render() {
     const { token, validations } = this.state
-    console.log('step 2', this.state)
     return (
     	<section className="steps steps_crowdsale-contract" ref="two">
         <StepNavigation activeStep={TOKEN_SETUP}/>

@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "clipboard": "^1.7.1",
+    "immutability-helper": "^2.5.0",
     "install": "^0.10.1",
     "jquery": "^3.2.1",
     "mobx": "^3.3.0",

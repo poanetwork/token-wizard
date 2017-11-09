@@ -1,49 +1,39 @@
-import React from 'react'
+import React from 'react';
 import '../../assets/stylesheets/application.css';
-import { VALIDATION_TYPES } from '../../utils/constants'
-const { INVALID } = VALIDATION_TYPES
+import {VALIDATION_TYPES} from '../../utils/constants';
 
-export class InputField extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
+const {INVALID} = VALIDATION_TYPES;
 
-	clearVal = () => {
-		let state = {...this.state}
-		state.val = ""
-		this.setState(state)
-	}
+const InputField = props => {
+  const errorStyle = {
+    color: 'red',
+    fontWeight: 'bold',
+    fontSize: '12px',
+    width: '100%',
+    height: '10px',
+  };
 
-	onChange = (e) => {
-		let state = {...this.state}
-		state.val = e.target.value;
-		this.setState(state);
-		this.props.onChange(e);
-	}
+  const error = props.valid === INVALID ? props.errorMessage : '';
 
-	componentDidMount() {
-		let state = {...this.state}
-		state.val = this.props.value;
-		this.setState(state);
-	}
+  const errorMessageElement = (error && !props.pristine) ?
+    <p style={errorStyle}>{error}</p> :
+    null
 
-	render() {
-		const errorStyle={
-			color: 'red',
-			fontWeight: 'bold',
-			fontSize: '12px',
-			width: '100%',
-			height: '10px'
-		}
-		const error = this.props.valid === INVALID ? this.props.errorMessage : ''
-		return (<div className={this.props.side}>
-			<label className="label">{this.props.title}</label>
-			<input ref={this.props.ref} disabled={this.props.disabled} type={this.props.type} className="input" onBlur={this.props.onBlur} value={this.state.val} defaultValue={this.props.defaultValue} onChange={this.onChange}/>
-			<p className="description">
-				{this.props.description}
-			</p>
-			<p style={errorStyle}>{error}</p>
-		</div>)
-	}
-}
+  return (
+    <div className={props.side}>
+      <label className="label">{props.title}</label>
+      <input
+        disabled={props.disabled}
+        type={props.type}
+        className="input"
+        onBlur={props.onBlur}
+        value={props.value || ''}
+        onChange={e => props.onChange(e)}
+      />
+      <p className="description">{props.description}</p>
+      { errorMessageElement }
+    </div>
+  );
+};
+
+export default InputField;
