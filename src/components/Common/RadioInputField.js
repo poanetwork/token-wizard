@@ -5,7 +5,7 @@ export class RadioInputField extends React.Component {
 	constructor(props) {
         super(props);
         this.state = {
-        	"checked1": props.defaultValue===this.props.vals[0]?true:false, 
+        	"checked1": props.defaultValue===this.props.vals[0]?true:false,
         	"checked2": props.defaultValue===this.props.vals[0]?false:true
         }
     }
@@ -13,7 +13,7 @@ export class RadioInputField extends React.Component {
     onChange(e) {
     	console.log(e.target);
     	this.setState({
-    		"checked1": e.target.value===this.props.vals[0]?true:false, 
+    		"checked1": e.target.value===this.props.vals[0]?true:false,
     		"checked2": e.target.value===this.props.vals[0]?false:true});
     	this.props.onChange(e);
     }
@@ -23,9 +23,9 @@ export class RadioInputField extends React.Component {
 		<label className="label">{this.props.title}</label>
 		<div className="radios-inline">
             <label className="radio-inline">
-              <input 
-                type="radio" 
-                checked={this.state.checked1}            
+              <input
+                type="radio"
+                checked={this.state.checked1}
                 name={this.props.name}
                 onChange={this.onChange.bind(this)}
                 value={this.props.vals[0]}
@@ -33,9 +33,9 @@ export class RadioInputField extends React.Component {
               <span className="title">{this.props.items[0]}</span>
             </label>
             <label className="radio-inline">
-              <input 
-                type="radio" 
-                checked={this.state.checked2}    
+              <input
+                type="radio"
+                checked={this.state.checked2}
                 name={this.props.name}
                 onChange={this.onChange.bind(this)}
                 value={this.props.vals[1]}
@@ -43,15 +43,6 @@ export class RadioInputField extends React.Component {
               <span className="title">{this.props.items[1]}</span>
             </label>
           </div>
-		{/*<div className="reserved-tokens-radio-container">
-			<div className="reserved-tokens-radio-container-item">
-				<input disabled={this.props.disabled} type='radio' name={this.props.name} className="input-radio" checked={this.state.checked1} value={this.props.vals[0]} onChange={this.onChange.bind(this)}/> {this.props.items[0]}
-				<span class="radio"></span>
-			</div>
-			<div className="reserved-tokens-radio-container-item">
-				<input disabled={this.props.disabled} type='radio' name={this.props.name} className="input-radio" checked={this.state.checked2} value={this.props.vals[1]} onChange={this.onChange.bind(this)}/> {this.props.items[1]}
-			</div>
-		</div>*/}
 		<p className="description">
 			{this.props.description}
 		</p>

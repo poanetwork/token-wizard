@@ -37,7 +37,7 @@ export class Invest extends React.Component {
       };
 
       const networkID = ICOConfig.networkID?ICOConfig.networkID:getQueryVariable("networkID");
-      const contractType = this.state.contractTypes.whitelistwithcap;// getQueryVariable("contractType");
+      const contractType = this.state.contractTypes.whitelistwithcap;
       checkNetWorkByID(web3, networkID);
       newState.contractType = contractType;
 
@@ -96,7 +96,7 @@ export class Invest extends React.Component {
             state.loading = false;
             return this.setState(state);
           }
-          getCrowdsaleData(web3, this, crowdsaleContract, () => { 
+          getCrowdsaleData(web3, this, crowdsaleContract, () => {
             initializeAccumulativeData(this, () => {
               getAccumulativeCrowdsaleData(web3, this, () => {
               });
@@ -164,7 +164,7 @@ export class Invest extends React.Component {
         return this.setState(state);
       }
       console.log(web3)
-      getCurrentRate(web3, this, crowdsaleContract, () => { 
+      getCurrentRate(web3, this, crowdsaleContract, () => {
         console.log(web3)
         this.investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, web3, accounts);
       });
@@ -201,24 +201,11 @@ export class Invest extends React.Component {
       this.setState({ loading: false });
 
       if (!err) {
-        successfulInvestmentAlert(this.state.tokensToInvest);  
+        successfulInvestmentAlert(this.state.tokensToInvest);
       } else {
         toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.USER_REJECTED_TRANSACTION })
       }
     });
-
-    /*crowdsaleContract.methods.buy().send(opts, (err, txHash) => {
-      if (err) {
-        let state = this.state;
-        state.loading = false;
-        this.setState(state);
-        return console.log(err);
-      }
-      
-      console.log("txHash: " + txHash);
-      console.log(web3)
-      checkTxMined(web3, txHash, (receipt) => this.txMinedCallback(web3, txHash, receipt))
-    });*/
   }
 
   txMinedCallback(web3, txHash, receipt) {
@@ -252,7 +239,7 @@ export class Invest extends React.Component {
 
   renderPieTracker () {
     return <div style={{marginLeft: '-20px', marginTop: '-20px'}}>
-      <ReactCountdownClock 
+      <ReactCountdownClock
         seconds={this.state.seconds}
         color="#733EAB"
         alpha={0.9}
@@ -277,7 +264,7 @@ export class Invest extends React.Component {
     var hoursLeft   = Math.floor((seconds) - (days*86400));
     var hours       = Math.floor(hoursLeft/3600);
     var minutesLeft = Math.floor((hoursLeft) - (hours*3600));
-    var minutes     = Math.floor(minutesLeft/60); 
+    var minutes     = Math.floor(minutesLeft/60);
     return { days, hours, minutes}
   }
 
@@ -294,13 +281,13 @@ export class Invest extends React.Component {
     const ethRaised = this.state.crowdsale.ethRaised;
 
     //balance: tiers, standard
-    const investorBalanceTiers = (tokenAmountOf?((tokenAmountOf/10**tokenDecimals)/*.toFixed(tokenDecimals)*/).toString():"0");
-    const investorBalanceStandard = (ethRaised?(ethRaised/*.toFixed(tokenDecimals)*//rate).toString():"0");
+    const investorBalanceTiers = (tokenAmountOf?((tokenAmountOf/10**tokenDecimals)).toString():"0");
+    const investorBalanceStandard = (ethRaised?(ethRaised/rate).toString():"0");
     const investorBalance = (this.state.contractType === this.state.contractTypes.whitelistwithcap)?investorBalanceTiers:investorBalanceStandard;
 
     //total supply: tiers, standard
-    const tierCap = !isNaN(maxCapBeforeDecimals)?(maxCapBeforeDecimals/*.toFixed(tokenDecimals)*/).toString():"0";
-    const standardCrowdsaleSupply = !isNaN(this.state.crowdsale.supply)?(this.state.crowdsale.supply/*.toFixed(tokenDecimals)*/).toString():"0";
+    const tierCap = !isNaN(maxCapBeforeDecimals)?(maxCapBeforeDecimals).toString():"0";
+    const standardCrowdsaleSupply = !isNaN(this.state.crowdsale.supply)?(this.state.crowdsale.supply).toString():"0";
     const totalSupply = (this.state.contractType === this.state.contractTypes.whitelistwithcap)?tierCap:standardCrowdsaleSupply;
 
     let invalidTokenDescription = null;
@@ -373,7 +360,7 @@ export class Invest extends React.Component {
             <p className="balance-title">{investorBalance} {tokenTicker}</p>
             <p className="balance-description">Balance</p>
             <p className="description">
-              Your balance in tokens. 
+              Your balance in tokens.
             </p>
           </div>
           <form className="invest-form" onSubmit={this.investToTokens}>
@@ -401,4 +388,3 @@ export class Invest extends React.Component {
     </div>
   }
 }
-

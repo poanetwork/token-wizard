@@ -30,9 +30,7 @@ export class stepThree extends stepTwo {
     oldState.crowdsale[0].tier = "Tier 1"
     oldState.crowdsale[0].updatable = "off"
     oldState.crowdsale[0].whitelistdisabled = "yes"
-    //this.state = Object.assign({}, oldState, {validations: { ...oldState.validations, startTime: VALID, endTime: VALID, walletAddress: VALID, supply: EMPTY, rate: EMPTY } } )
     this.state = Object.assign({}, oldState, intitialStepThreeValidations )
-    //console.log('this.state', this.state)
   }
 
   addCrowdsale() {
@@ -42,8 +40,8 @@ export class stepThree extends stepTwo {
       tier: "Tier " + (num + 1),
       supply: 0,
       updatable: "off",
-      whitelist:[], 
-      whiteListElements: [], 
+      whitelist:[],
+      whiteListElements: [],
       whiteListInput:{}
     });
     newState.validations.push({
@@ -53,8 +51,6 @@ export class stepThree extends stepTwo {
       supply: EMPTY,
       rate: EMPTY
     });
-    //newState.crowdsale[num].startTime = newState.crowdsale[num - 1].endTime;
-    //newState.crowdsale[num].endTime = defaultCompanyEndDate(newState.crowdsale[num].startTime);
     newState.pricingStrategy.push({rate: 0});
     this.setState(newState, () => this.addCrowdsaleBlock(num));
   }
@@ -89,12 +85,10 @@ export class stepThree extends stepTwo {
     return <div>
     <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Tier</div>
     <div onClick={() => warningOnMainnetAlert(this.state.crowdsale.length, () => this.gotoDeploymentStage())} className="button button_fill"> Continue</div>
-    {/*<Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}><a className="button button_fill">Continue</a></Link>*/}
     </div>
   }
 
   renderLinkComponent () {
-    //console.log(`stepsAreValid(this.state.validations) || allFieldsAreValid('crowdsale', this.state)`, stepsAreValid(this.state.validations), allFieldsAreValid('crowdsale', this.state))
     if(stepsAreValid(this.state.validations) || (allFieldsAreValid('crowdsale', this.state) && allFieldsAreValid('pricingStrategy', this.state))){
       return this.renderLink()
     }
@@ -112,15 +106,6 @@ export class stepThree extends stepTwo {
     checkWeb3(this.state.web3);
     setTimeout( () => {
       getWeb3((web3) => {
-
-        //emergency alert
-        /*getNetworkVersion(web3, (_networkID) => {
-          console.log(_networkID);
-          if (_networkID == 1) {
-            return noDeploymentOnMainnetAlert();
-          }
-        })*/
-
         web3.eth.getAccounts().then((accounts) => {
           console.log('timeout state', this.state)
           let newState = {...this.state}
@@ -143,13 +128,13 @@ export class stepThree extends stepTwo {
         <p className="title">Global limits</p>
       </div>
       <div className='input-block-container'>
-        <InputField 
-          side='left' 
-          type='number' 
-          title={MINCAP} 
-          value={token.globalmincap} 
-          valid={validations.globalmincap} 
-          errorMessage={VALIDATION_MESSAGES.MINCAP} 
+        <InputField
+          side='left'
+          type='number'
+          title={MINCAP}
+          value={token.globalmincap}
+          valid={validations.globalmincap}
+          errorMessage={VALIDATION_MESSAGES.MINCAP}
           onBlur={() => this.handleInputBlur('token', 'globalmincap')}
           onChange={(e) => this.changeState(e, 'token', 0, 'globalmincap')}
           description={`Minimum amount tokens to buy. Not a mininal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.`}
@@ -174,81 +159,81 @@ export class stepThree extends stepTwo {
             </div>
             <div className="hidden">
               <div className='input-block-container'>
-              <InputField 
-                side='left' 
-                type='text' 
-                title={CROWDSALE_SETUP_NAME} 
+              <InputField
+                side='left'
+                type='text'
+                title={CROWDSALE_SETUP_NAME}
                 value={crowdsale[0].tier}
-                valid={validations[0].tier} 
-                errorMessage={VALIDATION_MESSAGES.TIER} 
+                valid={validations[0].tier}
+                errorMessage={VALIDATION_MESSAGES.TIER}
                 onBlur={() => this.handleInputBlur('crowdsale', 'tier', 0)}
                 onChange={(e) => this.changeState(e, 'crowdsale', 0, 'tier')}
                 description={`Name of a tier, e.g. PrePreIco, PreICO, ICO with bonus A, ICO with bonus B, etc. We simplified that and will increment a number after each tier.`}
               />
-              <InputFieldExt 
-                side='right' 
-                type='text' 
-                title={WALLET_ADDRESS} 
-                value={crowdsale[0].walletAddress} 
-                valid={validations[0].walletAddress} 
-                errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS} 
+              <InputFieldExt
+                side='right'
+                type='text'
+                title={WALLET_ADDRESS}
+                value={crowdsale[0].walletAddress}
+                valid={validations[0].walletAddress}
+                errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS}
                 onBlur={() => this.handleInputBlur('crowdsale', 'walletAddress', 0)}
                 onChange={(e) => this.changeState(e, 'crowdsale', 0, 'walletAddress')}
                 description={`Where the money goes after investors transactions. Immediately after each transaction. We recommend to setup a multisig wallet with hardware based signers.`}
               />
               </div>
               <div className='input-block-container'>
-              <InputFieldExt 
-                side='left' 
-                type='datetime-local' 
-                title={START_TIME} 
-                value={crowdsale[0].startTime} 
-                valid={validations[0].startTime} 
-                errorMessage={VALIDATION_MESSAGES.START_TIME} 
+              <InputFieldExt
+                side='left'
+                type='datetime-local'
+                title={START_TIME}
+                value={crowdsale[0].startTime}
+                valid={validations[0].startTime}
+                errorMessage={VALIDATION_MESSAGES.START_TIME}
                 onBlur={() => this.handleInputBlur('crowdsale', 'startTime', 0)}
                 onChange={(e) => this.changeState(e, 'crowdsale', 0, 'startTime')}
                 description={`Date and time when the tier starts. Can't be in the past from the current moment.`}
               />
-              <InputFieldExt 
-                side='right' 
-                type='datetime-local' 
-                title={END_TIME} 
-                value={crowdsale[0].endTime} 
-                valid={validations[0].endTime} 
-                errorMessage={VALIDATION_MESSAGES.END_TIME} 
+              <InputFieldExt
+                side='right'
+                type='datetime-local'
+                title={END_TIME}
+                value={crowdsale[0].endTime}
+                valid={validations[0].endTime}
+                errorMessage={VALIDATION_MESSAGES.END_TIME}
                 onBlur={() => this.handleInputBlur('crowdsale', 'endTime', 0)}
                 onChange={(e) => this.changeState(e, 'crowdsale', 0, 'endTime')}
                 description={`Date and time when the tier ends. Can be only in the future.`}
               />
               </div>
               <div className='input-block-container'>
-              <InputField 
-                side='left' 
-                type='number' 
-                title={RATE} 
-                value={pricingStrategy[0].rate} 
-                valid={validations[0].rate} 
-                errorMessage={VALIDATION_MESSAGES.RATE} 
+              <InputField
+                side='left'
+                type='number'
+                title={RATE}
+                value={pricingStrategy[0].rate}
+                valid={validations[0].rate}
+                errorMessage={VALIDATION_MESSAGES.RATE}
                 onBlur={() => this.handleInputBlur('pricingStrategy', 'rate', 0)}
                 onChange={(e) => this.changeState(e, 'pricingStrategy', 0, 'rate')}
                 description={`Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens`}
               />
-              <InputField 
-                side='right' 
-                type='number' 
-                title={SUPPLY} 
-                value={crowdsale[0].supply} 
-                valid={validations[0].supply} 
-                errorMessage={VALIDATION_MESSAGES.SUPPLY} 
+              <InputField
+                side='right'
+                type='number'
+                title={SUPPLY}
+                value={crowdsale[0].supply}
+                valid={validations[0].supply}
+                errorMessage={VALIDATION_MESSAGES.SUPPLY}
                 onBlur={() => this.handleInputBlur('crowdsale', 'supply', 0)}
                 onChange={(e) => this.changeState(e, 'crowdsale', 0, 'supply')}
                 description={`How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers`}
               />
               </div>
               <div className='input-block-container'>
-              <RadioInputField 
-                  side='left' 
-                  title={ALLOWMODIFYING} 
+              <RadioInputField
+                  side='left'
+                  title={ALLOWMODIFYING}
                   items={["on", "off"]}
                   vals={["on", "off"]}
                   state={this.state}
@@ -258,9 +243,9 @@ export class stepThree extends stepTwo {
                   onChange={(e) => this.changeState(e, 'crowdsale', 0, 'updatable')}
                   description={`Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing.`}
               />
-              <RadioInputField 
-                  side='right' 
-                  title={DISABLEWHITELISTING} 
+              <RadioInputField
+                  side='right'
+                  title={DISABLEWHITELISTING}
                   items={["yes", "no"]}
                   vals={["yes", "no"]}
                   state={this.state}

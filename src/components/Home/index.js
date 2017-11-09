@@ -11,20 +11,6 @@ export class Home extends Component {
     this.state = defaultState
   }
 
-  componentDidMount() {
-    //emergency alert
-    /*setTimeout(() => {
-      getWeb3((web3) => {
-        getNetworkVersion(web3, (_networkID) => {
-          console.log(_networkID);
-          if (_networkID == 1) {
-            return noDeploymentOnMainnetAlert();
-          }
-        })
-      })
-    }, 500);*/
-  }
-
   render() {
     return (
       <div>

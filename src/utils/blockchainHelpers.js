@@ -1,7 +1,7 @@
 import Web3 from 'web3';
 import { incorrectNetworkAlert, noMetaMaskAlert, invalidNetworkIDAlert } from './alerts'
 import { getEncodedABIClientSide } from './microservices'
-import { GAS_PRICE } from './constants'
+import { GAS_PRICE, CHAINS } from './constants'
 
 // instantiate new web3 instance
 const web3 = new Web3();
@@ -49,9 +49,7 @@ export function getWeb3(cb) {
     // web3, just wrap it in your Web3.
     var myWeb3 = new Web3(web3.currentProvider);
 
-    //checkNetworkVersion(myWeb3, function(isOraclesNetwork) {
     cb(myWeb3, false);
-    //});
   }
   return myWeb3;
 }
@@ -63,7 +61,9 @@ export function checkNetWorkByID(web3, _networkIdFromGET) {
   }
   web3.eth.net.getId().then((_networkIdFromNetwork) => {
     let networkNameFromGET = getNetWorkNameById(_networkIdFromGET);
+    networkNameFromGET = networkNameFromGET ? networkNameFromGET : CHAINS.UNKNOWN;
     let networkNameFromNetwork = getNetWorkNameById(_networkIdFromNetwork);
+    networkNameFromNetwork = networkNameFromNetwork? networkNameFromNetwork : CHAINS.UNKNOWN;
     if (networkNameFromGET !== networkNameFromNetwork) {
       console.log(networkNameFromGET +"!="+ networkNameFromNetwork);
       incorrectNetworkAlert(networkNameFromGET, networkNameFromNetwork);
@@ -71,37 +71,37 @@ export function checkNetWorkByID(web3, _networkIdFromGET) {
   });
 }
 
-function getNetWorkNameById(_id) {
-  console.log(_id);
+export function getNetWorkNameById(_id) {
   switch (parseInt(_id, 10)) {
     case 1: {
-      return "Mainnet";
+      return CHAINS.MAINNET;
     } break;
     case 2: {
-      return "Morden";
+      return CHAINS.MORDEN;
     } break;
     case 3: {
-      return "Ropsten";
+      return CHAINS.ROPSTEN;
     } break;
     case 4: {
-      return "Rinkeby";
+      return CHAINS.RINKEBY;
     } break;
     case 42: {
-      return "Kovan";
+      return CHAINS.KOVAN;
     } break;
      case 12648430: {
-       return "Oracles dev test";
+       return CHAINS.ORACLES;
     }  break;
     default: {
-      return "Unknown";
+      return null;
     } break;
   }
 }
 
-export function getNetworkVersion(web3, cb) {
-  web3.eth.net.getId().then((netId) => {
-    cb(netId);
-  });
+export function getNetworkVersion(web3) {
+  if (web3.eth.net && web3.eth.net.getId) {
+    return web3.eth.net.getId();
+  }
+  return Promise.resolve(null);
 }
 
 export function setExistingContractParams(abi, addr, $this) {
@@ -143,7 +143,7 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
     let binFull = bin + ABIencoded.substr(2);
     web3.eth.getAccounts().then(function(accounts) {
       web3.eth.estimateGas({
-        from: accounts[0], 
+        from: accounts[0],
         data: binFull
       }, function(err, estimatedGas) {
         if (err) console.log('errrrrrrrrrrrrrrrrr', err);
@@ -169,12 +169,11 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
         let isMined = false;
 
         contractInstance.deploy(deployOpts).send(sendOpts)
-        //contractInstance.new(...totalParams)
-        .on('error', function(error) { 
+        .on('error', function(error) {
           console.log(error);
-          return cb(error, null); 
+          return cb(error, null);
         })
-        .on('transactionHash', function(transactionHash){ 
+        .on('transactionHash', function(transactionHash){
           console.log("contract deployment transaction: " + transactionHash);
 
           checkTxMined(web3, transactionHash, function txMinedCallback(receipt) {
@@ -200,20 +199,7 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
             }
           })
         })
-        /*.on('receipt', function(receipt){
-          if (errorArised) {
-           console.log(receipt.contractAddress) // contains the new contract address
-           cb(null, receipt.contractAddress);
-          }
-        })*/
-        .on('confirmation', function(confirmationNumber, receipt){ 
-          //console.log(confirmationNumber, receipt); 
-          /*if (errorArised) {
-           console.log(receipt.contractAddress) // contains the new contract address
-           cb(null, receipt.contractAddress);
-          }*/
-
-        })
+        .on('confirmation', function(confirmationNumber, receipt) { })
         .then(function(newContractInstance){
           if (!isMined) {
             console.log("Contract deployment is mined from Promise");
@@ -230,12 +216,11 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
 export function sendTXToContract(web3, method, cb) {
   let isMined = false;
   method
-  //contractInstance.new(...totalParams)
-  .on('error', function(error) { 
+  .on('error', function(error) {
     console.log(error);
-    return cb(error); 
+    return cb(error);
   })
-  .on('transactionHash', function(transactionHash){ 
+  .on('transactionHash', function(transactionHash){
     console.log("contract method transaction: " + transactionHash);
 
     checkTxMined(web3, transactionHash, function txMinedCallback(receipt) {
@@ -261,9 +246,7 @@ export function sendTXToContract(web3, method, cb) {
       }
     })
   })
-  /*.on('receipt', function(receipt){
-  })*/
-  .on('confirmation', function(confirmationNumber, receipt){ 
+  .on('confirmation', function(confirmationNumber, receipt){
   })
   .then(function(result){
     if (!isMined) {
@@ -287,14 +270,11 @@ export function attachToContract(web3, abi, addr, cb) {
   web3.eth.getAccounts().then((accounts) => {
     web3.eth.defaultAccount = accounts[0];
 		console.log("web3.eth.defaultAccount:" + web3.eth.defaultAccount);
-		
+
 		let contractInstance = new web3.eth.Contract(abi, addr, {
       from: web3.eth.defaultAccount
     });
 
-    //console.log(contractInstance);
-    //console.log(contractInstance.options);
-		
 		if (cb) cb(null, contractInstance);
   });
 }
