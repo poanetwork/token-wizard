@@ -336,10 +336,6 @@ export class stepFour extends stepTwo {
   deployCrowdsaleRecursive = (i, crowdsales, binCrowdsale, abiCrowdsale) => {
     let paramsCrowdsale;
     switch (this.state.contractType) {
-      //depreciated
-      /*case this.state.contractTypes.standard: {
-        paramsCrowdsale = this.getStandardCrowdSaleParams(this.state.web3)
-      } break;*/
       case this.state.contractTypes.whitelistwithcap: {
         paramsCrowdsale = this.getCrowdSaleParams(this.state.web3, i)
       } break;
@@ -368,7 +364,7 @@ export class stepFour extends stepTwo {
     return [
       this.state.contracts.token.addr,
       this.state.contracts.pricingStrategy.addr[i],
-      this.state.crowdsale[0].walletAddress, //this.state.contracts.multisig.addr,
+      this.state.crowdsale[0].walletAddress,
       toFixed(parseInt(Date.parse(this.state.crowdsale[i].startTime)/1000, 10).toString()),
       toFixed(parseInt(Date.parse(this.state.crowdsale[i].endTime)/1000, 10).toString()),
       toFixed("0"),
@@ -511,7 +507,6 @@ export class stepFour extends stepTwo {
                         transferOwnership(web3, this.state.contracts.token.abi, contracts.token.addr, this.state.crowdsale[0].walletAddress, 46699, (err) => {
                           if (err) return this.hideLoader();
                           this.hideLoader();
-                          //this.goToCrowdsalePage();
                         });
                       });
                     });
@@ -542,13 +537,7 @@ export class stepFour extends stepTwo {
     const isValidContract = contracts && contracts.crowdsale && contracts.crowdsale.addr
     let url;
     url = crowdsalePage + `?addr=` + contracts.crowdsale.addr[0]
-    //crowdsale contracts relations are in the blockchain
-    /*for (let i = 1; i < contracts.crowdsale.addr.length; i++) {
-      url += `&addr=` + contracts.crowdsale.addr[i]
-    }*/
     url += `&networkID=` + contracts.crowdsale.networkID
-    //uncomment, if more then one contractType will appear
-    //url += `&contractType=` + this.state.contractType
     let newHistory = isValidContract ? url : crowdsalePage
 
     if (!this.state.contractDownloaded) {

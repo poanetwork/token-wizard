@@ -61,17 +61,17 @@ export function findCurrentContractRecursively(i, $this, web3, firstCrowdsaleCon
       return cb(crowdsaleContract, i);
     crowdsaleContract.methods.startsAt().call(function(err, startDate) {
       if (err) return console.log(err);
-      
+
       startDate = startDate*1000;
       console.log("startDate: " + startDate);
       crowdsaleContract.methods.endsAt().call(function(err, endDate) {
         if (err) return console.log(err);
-        
+
         endDate = endDate*1000;
         console.log("endDate: " + endDate);
-        
+
         let curDate = new Date().getTime();
-        console.log("curDate: " + curDate); 
+        console.log("curDate: " + curDate);
         if (curDate < endDate && curDate >= startDate) {
           cb(crowdsaleContract, i);
         } else {
@@ -97,8 +97,8 @@ export function getCrowdsaleTargetDates(web3, $this, cb) {
         propsCount++;
         crowdsaleContract.methods.startBlock().call(function(err, startBlock) {
           cbCount++;
-          if (err) return console.log(err); 
-                     
+          if (err) return console.log(err);
+
           console.log("startBlock: " + startBlock);
           if (!state.crowdsale.startBlock || state.crowdsale.startBlock > startBlock)
             state.crowdsale.startBlock = startBlock;
@@ -114,7 +114,7 @@ export function getCrowdsaleTargetDates(web3, $this, cb) {
         crowdsaleContract.methods.startsAt().call(function(err, startDate) {
           cbCount++;
           if (err) return console.log(err);
-          
+
           console.log("startDate: " + startDate*1000);
           if (!state.crowdsale.startDate || state.crowdsale.startDate > startDate*1000)
             state.crowdsale.startDate = startDate*1000;
@@ -130,18 +130,18 @@ export function getCrowdsaleTargetDates(web3, $this, cb) {
         crowdsaleContract.methods.endBlock().call(function(err, endBlock) {
           cbCount++;
           if (err) return console.log(err);
-                     
+
           console.log("endBlock: " + endBlock);
           if (!state.crowdsale.endBlock || state.crowdsale.endBlock < endBlock)
             state.crowdsale.endBlock = endBlock;
           web3.eth.getBlockNumber(function(err, curBlock) {
             if (err) return console.log(err);
-         
+
             console.log("curBlock: " + curBlock);
             var blocksDiff = parseInt($this.state.crowdsale.endBlock, 10) - parseInt(curBlock, 10);
             console.log("blocksDiff: " + blocksDiff);
             var blocksDiffInSec = blocksDiff * state.blockTimeGeneration;
-            console.log("blocksDiffInSec: " + blocksDiffInSec); 
+            console.log("blocksDiffInSec: " + blocksDiffInSec);
             state.seconds = blocksDiffInSec;
             if (propsCount === cbCount) {
               state.loading = false;
@@ -156,7 +156,7 @@ export function getCrowdsaleTargetDates(web3, $this, cb) {
         crowdsaleContract.methods.endsAt().call(function(err, endDate) {
           cbCount++;
           if (err) return console.log(err);
-          
+
           console.log("endDate: " + endDate*1000);
           if (!state.crowdsale.endDate || state.crowdsale.endDate < endDate*1000)
             state.crowdsale.endDate = endDate*1000;
@@ -195,13 +195,13 @@ export function getAccumulativeCrowdsaleData(web3, $this, cb) {
       crowdsaleContract.methods.weiRaised().call(function(err, weiRaised) {
         cbCount++;
         if (err) return console.log(err);
-        
+
         console.log("weiRaised: " + web3.utils.fromWei(parseInt(weiRaised, 10), "ether"));
         let state = $this.state;
         if (state.crowdsale.weiRaised)
-          state.crowdsale.weiRaised += parseInt(weiRaised, 10);//parseFloat(web3.utils.fromWei(parseInt(weiRaised, 10), "ether"));
+          state.crowdsale.weiRaised += parseInt(weiRaised, 10);
         else
-          state.crowdsale.weiRaised = parseInt(weiRaised, 10);//parseFloat(web3.utils.fromWei(parseInt(weiRaised, 10), "ether"));
+          state.crowdsale.weiRaised = parseInt(weiRaised, 10);
 
         state.crowdsale.ethRaised = parseFloat(web3.utils.fromWei(parseInt(state.crowdsale.weiRaised, 10), "ether"));
 
@@ -216,7 +216,7 @@ export function getAccumulativeCrowdsaleData(web3, $this, cb) {
         crowdsaleContract.methods.tokensSold().call(function(err, tokensSold) {
           cbCount++;
           if (err) return console.log(err);
-          
+
           console.log("tokensSold: " + tokensSold);
           let state = $this.state;
           if (state.crowdsale.tokensSold)
@@ -236,7 +236,7 @@ export function getAccumulativeCrowdsaleData(web3, $this, cb) {
         crowdsaleContract.methods.maximumSellableTokens().call(function(err, maximumSellableTokens) {
           cbCount++;
           if (err) return console.log(err);
-          
+
           console.log("maximumSellableTokens: " + maximumSellableTokens);
           let state = $this.state;
           if (state.crowdsale.maximumSellableTokens)
@@ -263,7 +263,7 @@ export function getAccumulativeCrowdsaleData(web3, $this, cb) {
         getInvestors.call(function(err, investors) {
           cbCount++;
           if (err) return console.log(err);
-          
+
           console.log("investors: " + investors);
           let state = $this.state;
           if (state.crowdsale.investors)
@@ -283,7 +283,7 @@ export function getAccumulativeCrowdsaleData(web3, $this, cb) {
 function setMaximumSellableTokensInEth(web3, crowdsaleContract, maximumSellableTokens, $this) {
   crowdsaleContract.methods.pricingStrategy().call(function(err, pricingStrategyAddr) {
     if (err) return console.log(err);
-    
+
     console.log("pricingStrategy: " + pricingStrategyAddr);
     attachToContract(web3, $this.state.contracts.pricingStrategy.abi, pricingStrategyAddr, function(err, pricingStrategyContract) {
       console.log("attach to pricing strategy contract");
@@ -292,7 +292,7 @@ function setMaximumSellableTokensInEth(web3, crowdsaleContract, maximumSellableT
 
       pricingStrategyContract.methods.oneTokenInWei().call(function(err, oneTokenInWei) {
         if (err) console.log(err);
-        
+
         console.log("pricing strategy oneTokenInWei: " + oneTokenInWei);
         let state = $this.state;
         if (state.crowdsale.maximumSellableTokensInWei)
@@ -310,7 +310,7 @@ export function getCurrentRate(web3, $this, crowdsaleContract, cb) {
 
   crowdsaleContract.methods.pricingStrategy().call(function(err, pricingStrategyAddr) {
     if (err) return console.log(err);
-    
+
     console.log("pricingStrategy: " + pricingStrategyAddr);
     let state = $this.state;
     state.contracts.pricingStrategy.addr = pricingStrategyAddr;
@@ -329,29 +329,12 @@ export function getCrowdsaleData(web3, $this, crowdsaleContract, cb) {
   let propsCount = 0;
   let cbCount = 0;
 
-  //depreciated: it was for standard type of contract (governed by open-zeppelin-solidity)
-  /*if (crowdsaleContract.rate) {
-    propsCount++;
-    crowdsaleContrac.methods.rate().call(function(err, rate) {
-      cbCount++;
-      if (err) return console.log(err);
-      
-      console.log("rate: " + web3.utils.fromWei(parseInt(rate, 10), "ether"));
-      let state = $this.state;
-      state.pricingStrategy.rate = web3.utils.fromWei(parseInt(rate, 10), "ether");
-      if (propsCount === cbCount) {
-        state.loading = false;
-        $this.setState(state, cb);
-      }
-    });
-  }*/
-
   if (crowdsaleContract.methods.supply) {
     propsCount++;
     crowdsaleContract.methods.supply().call(function(err, supply) {
       cbCount++;
       if (err) return console.log(err);
-      
+
       console.log("supply: " + supply);
       let state = $this.state;
       state.crowdsale.supply = supply;
@@ -366,7 +349,7 @@ export function getCrowdsaleData(web3, $this, crowdsaleContract, cb) {
   crowdsaleContract.methods.token().call(function(err, tokenAddr) {
     cbCount++;
     if (err) return console.log(err);
-    
+
     console.log("token: " + tokenAddr);
     let state = $this.state;
     state.contracts.token.addr = tokenAddr;
@@ -385,7 +368,7 @@ export function getCrowdsaleData(web3, $this, crowdsaleContract, cb) {
       crowdsaleContract.methods.pricingStrategy().call(function(err, pricingStrategyAddr) {
         cbCount++;
         if (err) return console.log(err);
-        
+
         console.log("pricingStrategy: " + pricingStrategyAddr);
         let state = $this.state;
         state.contracts.pricingStrategy.addr = pricingStrategyAddr;
@@ -432,7 +415,7 @@ function getTokenData(web3, $this, cb) {
           tokenContract.methods.name().call(function(err, name) {
             cbCount++;
             if (err) return console.log(err);
-            
+
             console.log("token name: " + name);
             let state = $this.state;
             state.token.name = name;
@@ -458,7 +441,7 @@ function getTokenData(web3, $this, cb) {
             tokenContract.methods.balanceOf(accounts[0]).call(function(err, balanceOf) {
               cbCount++;
               if (err) return console.log(err);
-              
+
               console.log("balanceOf: " + balanceOf);
               let state = $this.state;
               if (state.crowdsale.tokenAmountOf)
@@ -509,10 +492,10 @@ export function getPricingStrategyData(web3, $this, cb) {
 
     pricingStrategyContract.methods.oneTokenInWei().call(function(err, rate) {
       if (err) console.log(err);
-      
+
       console.log("pricing strategy rate: " + rate);
       let state = $this.state;
-      state.pricingStrategy.rate = parseInt(rate, 10);//web3.utils.fromWei(parseInt(rate, 10), "ether");
+      state.pricingStrategy.rate = parseInt(rate, 10);
       $this.setState(state, cb);
     });
   });
