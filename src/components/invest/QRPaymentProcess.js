@@ -6,7 +6,6 @@ const QRPaymentProcess = ({ crowdsaleAddress }) => {
     <div>
       <div className="payment-process">
         { /* <img src="https://lh6.ggpht.com/ufwUy4SGVTqCs8fcp6Ajxfpae0bNImN1Rq2cXUjWI7jlmNMCsXgQE5C3yUEzBu5Gadkz=w300" className="payment-process-qr"/> */}
-        <p className="payment-process-description">Send up to 15 ETH to this address</p>
         <p className="payment-process-hash">
           { crowdsaleAddress }
         </p>
