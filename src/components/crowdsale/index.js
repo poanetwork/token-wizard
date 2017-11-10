@@ -90,11 +90,11 @@ export class Crowdsale extends React.Component {
   	}
 
   	getFullCrowdsaleData(web3, crowdsaleContract) {
-  		getCrowdsaleData(web3, this, crowdsaleContract, () => { 
+  		getCrowdsaleData(web3, this, crowdsaleContract, () => {
 	    	initializeAccumulativeData(this, () => {
 	    		getAccumulativeCrowdsaleData(web3, this, () => {
 	        	});
-	      	}); 
+	      	});
 	    });
   	}
 
@@ -103,17 +103,12 @@ export class Crowdsale extends React.Component {
   		if (!ICOConfig.crowdsaleContractURL || !ICOConfig.networkID) {
   			if (this.state.contracts.crowdsale.addr) {
 	  			queryStr = "?addr=" + this.state.contracts.crowdsale.addr[0];
-	  			/*for (let i = 1; i < this.state.contracts.crowdsale.addr.length; i++) {
-			      queryStr += `&addr=` + this.state.contracts.crowdsale.addr[i]
-			    }*/
 	  			if (this.state.networkID)
 	  				queryStr += "&networkID=" + this.state.networkID;
-	  			//uncomment, if more then one contractType will appear
-	  			/*if (this.state.contractType)
-	  				queryStr += "&contractType=" + this.state.contractType;*/
 	  		}
   		}
-        this.props.history.push('/invest' + queryStr);
+
+      this.props.history.push('/invest' + queryStr);
   	}
 
 	render() {
@@ -126,29 +121,29 @@ export class Crowdsale extends React.Component {
 	    const ethRaised = this.state.crowdsale.ethRaised;
 
 		//tokens claimed: tiers, standard
-		const tokensClaimedStandard = rate?(this.state.crowdsale.ethRaised/rate/*.toFixed(tokenDecimals)*/):0;
+		const tokensClaimedStandard = rate?(this.state.crowdsale.ethRaised/rate):0;
 		const tokensClaimedTiers = rate?(this.state.crowdsale.tokensSold/10**tokenDecimals):0;
 	    const tokensClaimed = (this.state.contractType === this.state.contractTypes.whitelistwithcap)?tokensClaimedTiers:tokensClaimedStandard;
-	    	    
+
 
 	    //price: tiers, standard
 	    const tokensPerETHStandard = !isNaN(rate)?rate:0;
 	    const tokensPerETHTiers = !isNaN(1/rate)?1/this.state.web3.utils.fromWei(toFixed(rate).toString(), "ether"):0;
 	    const tokensPerETH = (this.state.contractType === this.state.contractTypes.whitelistwithcap)?tokensPerETHTiers:tokensPerETHStandard;
-	    
+
 	    //total supply: tiers, standard
-	    const tierCap = maxCapBeforeDecimals?(maxCapBeforeDecimals/*.toFixed(tokenDecimals)*/).toString():0;
-	    const standardCrowdsaleSupply = !isNaN(this.state.crowdsale.supply)?(this.state.crowdsale.supply/*.toFixed(tokenDecimals)*/).toString():0;
+	    const tierCap = maxCapBeforeDecimals?(maxCapBeforeDecimals).toString():0;
+	    const standardCrowdsaleSupply = !isNaN(this.state.crowdsale.supply)?(this.state.crowdsale.supply).toString():0;
     	const totalSupply = (this.state.contractType === this.state.contractTypes.whitelistwithcap)?tierCap:standardCrowdsaleSupply;
 
 	    //goal in ETH
 	    const goalInETHStandard = (totalSupply/rate).toExponential();
 	    let goalInETHTiers = this.state.crowdsale.maximumSellableTokensInWei?(this.state.web3.utils.fromWei(toFixed(this.state.crowdsale.maximumSellableTokensInWei).toString(), "ether").toString()):0;
 	    goalInETHTiers = 1.0 / 100 * Math.floor(100 * goalInETHTiers)
-	    const goalInETH = (this.state.contractType === this.state.contractTypes.whitelistwithcap)?goalInETHTiers:goalInETHStandard;	    
+	    const goalInETH = (this.state.contractType === this.state.contractTypes.whitelistwithcap)?goalInETHTiers:goalInETHStandard;
 
 	    const tokensClaimedRatio = goalInETH?(ethRaised/goalInETH)*100:"0";
-	    
+
 	    return (
 		<section className="steps steps_crowdsale-page">
 			<StepNavigation activeStep={CROWDSALE_PAGE} />
@@ -236,8 +231,6 @@ export class Crowdsale extends React.Component {
 				</div>
 			</div>
 			<div className="button-container">
-				{/*<Link to={{ pathname: this.state.contracts.crowdsale.addr?('/invest' + ('?crowdsale=' + this.state.contracts.crowdsale.addr):""):'/invest' }}><a href="#" className="button button_fill">Invest</a></Link>*/}
-				{/*<Link className="button button_fill_secondary" to={{ pathname: '/3', query: { state: this.state, changeState: this.changeState } }}>Add crowdsale</Link>*/}
 				<a onClick={this.goToInvestPage} className="button button_fill">Invest</a>
 			</div>
 			<Loader show={this.state.loading}></Loader>

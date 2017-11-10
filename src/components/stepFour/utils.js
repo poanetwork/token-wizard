@@ -194,7 +194,7 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
         let val = token.reservedTokens[i].val
         let addr = token.reservedTokens[i].addr
         let obj = map[addr]?map[addr]:{}
-        if (token.reservedTokens[i].dim === "tokens") 
+        if (token.reservedTokens[i].dim === "tokens")
           obj.inTokens = val * 10**token.decimals
         else {
           obj.inPercentageDecimals = countDecimals(val)
@@ -296,7 +296,7 @@ export function setFinalizeAgentRecursive (i, web3, abi, addrs, finalizeAgentAdd
     }
   })
 }
-           
+
 export function setReleaseAgentRecursive (i, web3, abi, addr, finalizeAgentAddrs, gasLimit, cb) {
   setReleaseAgent(web3, abi, addr, finalizeAgentAddrs[i], gasLimit, (err) => {
     i++;
@@ -309,14 +309,16 @@ export function setReleaseAgentRecursive (i, web3, abi, addr, finalizeAgentAddrs
 }
 
 export const handlerForFile = (content, type) => {
+  const checkIfTime = content.field === "startTime" || content.field === "endTime"
   let suffix = ''
-  let checkIfTime = content.field == "startTime" || content.field == "endTime"
+
   if (checkIfTime) {
-    let timezoneOffset = (new Date()).getTimezoneOffset()/60
-    let operator = timezoneOffset > 0 ? "-" : "+"
-    suffix = " (GMT " + operator + " " +  Math.abs(timezoneOffset) + ")"
+    let timezoneOffset = (new Date()).getTimezoneOffset() / 60
+    let operator = timezoneOffset > 0 ? '-' : '+'
+    suffix = ` (GMT ${operator} ${Math.abs(timezoneOffset)})`
   }
-  return `${content.value}${type[content.field]}` + suffix
+
+  return `${content.value}${type[content.field]}${suffix}`
 }
 
 export const handleConstantForFile = content => {
