@@ -34,6 +34,10 @@ export class stepThree extends React.Component{
     tierStore.setTierProperty( "yes", 'whitelistdisabled', 0)
   }
 
+  showErrorMessages = (parent) => {
+    this.props.tierStore.invalidateToken();
+  }
+
   addCrowdsale() {
     const { crowdsaleBlockListStore, tierStore } = this.props
     let num = crowdsaleBlockListStore.blockList.length + 1;
@@ -126,7 +130,7 @@ export class stepThree extends React.Component{
     console.log('not valid')
     return <div>
       <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Tier</div>
-      <div className="button button_fill"> Continue</div>
+      <div onClick={this.showErrorMessages.bind(this)} className="button button_fill"> Continue</div>
     </div>
   }
 
