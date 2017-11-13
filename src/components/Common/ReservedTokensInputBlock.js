@@ -77,6 +77,7 @@ export class ReservedTokensInputBlock extends React.Component {
             }
         })
 
+        this.props.onTokensChange(state.token.reservedTokens)
         this.setState(state);
     }
 
@@ -140,12 +141,12 @@ export class ReservedTokensInputBlock extends React.Component {
             }
         })
 
+        this.props.onTokensChange(newState.token.reservedTokens)
         this.setState(newState)
     }
 
     render() {
         let { token } = this.state
-        let { onChange } = this.props
 
         const reservedTokensElements = this.state.token.reservedTokens
             .map((token, index) => {

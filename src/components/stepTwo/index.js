@@ -1,15 +1,14 @@
 import React from 'react'
 import '../../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
-import { checkWeb3, getWeb3, getNetworkVersion } from '../../utils/blockchainHelpers'
+import { checkWeb3 } from '../../utils/blockchainHelpers'
 import { getOldState, stepsAreValid, validateValue, allFieldsAreValid } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import InputField from '../Common/InputField'
 import { ReservedTokensInputBlock } from '../Common/ReservedTokensInputBlock'
-import { NAVIGATION_STEPS, VALIDATION_MESSAGES, VALIDATION_TYPES, defaultState, TEXT_FIELDS, intitialStepTwoValidations } from '../../utils/constants'
-import { noDeploymentOnMainnetAlert } from '../../utils/alerts'
+import { NAVIGATION_STEPS, VALIDATION_MESSAGES, defaultState, TEXT_FIELDS, intitialStepTwoValidations } from '../../utils/constants'
+import update from 'immutability-helper'
 const { TOKEN_SETUP } = NAVIGATION_STEPS
-const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
 const { NAME, TICKER, DECIMALS } = TEXT_FIELDS
 
 export class stepTwo extends React.Component {
@@ -102,6 +101,16 @@ export class stepTwo extends React.Component {
     this.setState(newState)
   }
 
+  updateReservedTokens = tokens => {
+    const state = update(this.state, {
+      token: {
+        reservedTokens: { $set: tokens }
+      }
+    })
+
+    this.setState(state)
+  }
+
   renderLink () {
     return <Link className="button button_fill" to={{ pathname: '/3', query: { state: this.state, changeState: this.changeState } }}>Continue</Link>
   }
@@ -115,11 +124,12 @@ export class stepTwo extends React.Component {
     if( Object.prototype.toString.call( newState[parent] ) === '[object Array]' ) {
       if (newState[parent].length > 0) {
         for (let i = 0; i < newState[parent].length; i++) {
-          Object.keys(newState[parent][i]).map(property => {
+          const properties = Object.keys(newState[parent][i])
+          for (let property of properties) {
             values.push(newState[parent][i][property])
             properties.push(property);
             inds.push(i);
-          })
+          }
         }
       }
     } else {
@@ -147,7 +157,7 @@ export class stepTwo extends React.Component {
   render() {
     const { token, validations } = this.state
     return (
-    	<section className="steps steps_crowdsale-contract" ref="two">
+      <section className="steps steps_crowdsale-contract" ref="two">
         <StepNavigation activeStep={TOKEN_SETUP}/>
         <div className="steps-content container">
           <div className="about-step">
@@ -194,6 +204,7 @@ export class stepTwo extends React.Component {
           <ReservedTokensInputBlock
             state={this.state}
             onChange={(e, cntrct, num, prop) => this.changeState(e, 'token', 0, prop)}
+            onTokensChange={this.updateReservedTokens}
           ></ReservedTokensInputBlock>
         </div>
         <div className="button-container">
