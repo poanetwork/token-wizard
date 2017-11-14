@@ -6,7 +6,7 @@ import { stepTwo } from '../stepTwo'
 import { defaultCompanyStartDate } from './utils'
 import { getOldState, stepsAreValid, allFieldsAreValid, defaultCompanyEndDate } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
-import { InputField } from '../Common/InputField'
+import InputField from '../Common/InputField'
 import { InputFieldExt } from '../Common/InputFieldExt'
 import { RadioInputField } from '../Common/RadioInputField'
 import { CrowdsaleBlock } from '../Common/CrowdsaleBlock'
@@ -56,10 +56,8 @@ export class stepThree extends stepTwo {
   }
 
   gotoDeploymentStage() {
-    console.log("###gotoDeploymentStage###");
     let state = this.state;
     state.redirect = true;
-    console.log(state);
     this.setState(state);
   }
 
@@ -81,7 +79,6 @@ export class stepThree extends stepTwo {
       return <Redirect to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}><a className="button button_fill">Continue</a></Redirect>
     }
 
-    console.log('render link four')
     return <div>
     <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Tier</div>
     <div onClick={() => warningOnMainnetAlert(this.state.crowdsale.length, () => this.gotoDeploymentStage())} className="button button_fill"> Continue</div>
@@ -93,7 +90,6 @@ export class stepThree extends stepTwo {
       return this.renderLink()
     }
 
-    console.log('not valid')
     return <div>
       <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Tier</div>
       <div onClick={() => {
@@ -107,7 +103,6 @@ export class stepThree extends stepTwo {
     setTimeout( () => {
       getWeb3((web3) => {
         web3.eth.getAccounts().then((accounts) => {
-          console.log('timeout state', this.state)
           let newState = {...this.state}
           newState.crowdsale[0].walletAddress = accounts[0];
           newState.crowdsale[0].startTime = defaultCompanyStartDate();
@@ -123,7 +118,6 @@ export class stepThree extends stepTwo {
     let { token } = this.state
     let { crowdsale } = this.state
     let { pricingStrategy } = this.state
-    console.log('this.state.contractType', this.state.contractType)
     let globalSettingsBlock = <div><div className="section-title">
         <p className="title">Global limits</p>
       </div>
