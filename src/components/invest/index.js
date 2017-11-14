@@ -375,7 +375,7 @@ export class Invest extends React.Component {
                 <option value={INVESTMENT_OPTIONS.METAMASK}>Metamask</option>
                 <option value={INVESTMENT_OPTIONS.QR}>QR</option>
               </select>
-              <a className="button button_fill" onClick={this.investToTokens}>Contribute now</a>
+              <a className="button button_fill" onClick={this.investToTokens}>Contribute</a>
             </div>
             <p className="description">
             Think twice before investment in ICOs. Tokens will be deposited on a wallet you used to buy tokens.
