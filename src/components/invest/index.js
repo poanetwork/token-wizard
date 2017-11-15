@@ -1,18 +1,18 @@
 import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
-import { getWeb3, checkTxMined, attachToContract, checkNetWorkByID, sendTXToContract } from '../../utils/blockchainHelpers'
+import { getWeb3, checkTxMined, checkNetWorkByID, sendTXToContract } from '../../utils/blockchainHelpers'
 import { getCrowdsaleData, getCurrentRate, initializeAccumulativeData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively, getJoinedTiers } from '../crowdsale/utils'
 import { getQueryVariable, getURLParam, getWhiteListWithCapCrowdsaleAssets, toast } from '../../utils/utils'
-import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert, invalidCrowdsaleAddrAlert } from '../../utils/alerts'
+import { noMetaMaskAlert, investmentDisabledAlertInTime, successfulInvestmentAlert, invalidCrowdsaleAddrAlert } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
 import { ICOConfig } from '../Common/config'
 import { TOAST, defaultState, GAS_PRICE, INVESTMENT_OPTIONS } from '../../utils/constants'
 import QRPaymentProcess from './QRPaymentProcess'
-import { alertOptions } from './constants'
 
 export class Invest extends React.Component {
   constructor(props) {
       super(props);
+      this.pristineTokenInput = true;
       window.scrollTo(0, 0);
       if (this.tokensToInvestOnChange.bind) this.tokensToInvestOnChange = this.tokensToInvestOnChange.bind(this);
       if (this.investToTokens.bind) this.investToTokens = this.investToTokens.bind(this);
@@ -20,7 +20,8 @@ export class Invest extends React.Component {
       state.seconds = 0;
       state.loading = true;
       state.pristineTokenInput = true;
-      state.investThrough = INVESTMENT_OPTIONS.METAMASK
+      state.web3Available = false;
+      state.investThrough = INVESTMENT_OPTIONS.QR
       state.crowdsaleAddress = ICOConfig.crowdsaleContractURL || getURLParam("addr")
       this.state = state;
   }
@@ -30,9 +31,9 @@ export class Invest extends React.Component {
     setTimeout(() => {
      getWeb3((web3) => {
       if (!web3) {
-        let state = this.state;
-        state.loading = false;
-        this.setState(state);
+        this.setState({
+          loading: false
+        });
         return
       };
 
@@ -40,6 +41,8 @@ export class Invest extends React.Component {
       const contractType = this.state.contractTypes.whitelistwithcap;
       checkNetWorkByID(web3, networkID);
       newState.contractType = contractType;
+      newState.web3Available = true;
+      newState.investThrough = INVESTMENT_OPTIONS.METAMASK;
 
       const timeInterval = setInterval(() => this.setState({ seconds: this.state.seconds - 1}), 1000);
       this.setState({ timeInterval });
@@ -371,14 +374,18 @@ export class Invest extends React.Component {
               {invalidTokenDescription}
             </div>
             <div className="invest-through-container">
-              <select className="invest-through" onChange={(e) => this.setState({ investThrough: e.target.value })}>
-                <option value={INVESTMENT_OPTIONS.METAMASK}>Metamask</option>
+              <select value={this.state.investThrough} className="invest-through" onChange={(e) => this.setState({ investThrough: e.target.value })}>
+                <option disabled={!this.state.web3Available} value={INVESTMENT_OPTIONS.METAMASK}>Metamask {!this.state.web3Available ? ' (not available)' : null}</option>
                 <option value={INVESTMENT_OPTIONS.QR}>QR</option>
               </select>
-              <a className="button button_fill" onClick={this.investToTokens}>Contribute</a>
+              {
+                this.state.investThrough === INVESTMENT_OPTIONS.METAMASK
+                  ? <a className="button button_fill" onClick={this.investToTokens}>Contribute</a>
+                  : null
+              }
             </div>
             <p className="description">
-            Think twice before investment in ICOs. Tokens will be deposited on a wallet you used to buy tokens.
+              Think twice before investment in ICOs. Tokens will be deposited on a wallet you used to buy tokens.
             </p>
           </form>
           { QRPaymentProcessElement }
