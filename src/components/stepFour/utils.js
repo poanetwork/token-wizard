@@ -1,7 +1,14 @@
-import { attachToContract, checkTxMined, sendTXToContract } from '../../utils/blockchainHelpers'
+import {
+  attachToContract,
+  checkTxMined,
+  getWeb3,
+  getNetworkVersion,
+  getNetWorkNameById,
+  sendTXToContract
+} from '../../utils/blockchainHelpers'
 import { noContractAlert } from '../../utils/alerts'
 import { toFixed } from '../../utils/utils'
-import { GAS_PRICE } from '../../utils/constants'
+import { GAS_PRICE, DOWNLOAD_NAME } from '../../utils/constants'
 
 function setLastCrowdsale(web3, abi, addr, lastCrowdsale, gasLimit, cb) {
   console.log("###setLastCrowdsale for Pricing Strategy:###");
@@ -169,10 +176,7 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
     if (!tokenContract) return noContractAlert();
 
     let map = {};
-
-    let addrs = [];
-    let inTokens = [];
-    let inPercentage = [];
+    let addrs = [], inTokens = [], inPercentageUnit = [], inPercentageDecimals = [];
 
     if (token.reservedTokensInput.addr && token.reservedTokensInput.dim && token.reservedTokensInput.val) {
       token.reservedTokens.push({
@@ -187,34 +191,38 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
 
     for (let i = 0; i < token.reservedTokens.length; i++) {
       if (!token.reservedTokens[i].deleted) {
-        let val = token.reservedTokens[i].val;
-        let addr = token.reservedTokens[i].addr;
-        let obj = map[addr]?map[addr]:{};
-        if (token.reservedTokens[i].dim === "tokens") obj.inTokens = val*10**token.decimals
-        else obj.inPercentage = val;
-        map[addr] = obj;
-        //addrs.push(token.reservedTokens[i].addr);
-        //dims.push(token.reservedTokens[i].dim == "tokens"?true:false);
-        //vals.push(token.reservedTokens[i].dim == "tokens"?token.reservedTokens[i].val*10**token.decimals:token.reservedTokens[i].val);
+        let val = token.reservedTokens[i].val
+        let addr = token.reservedTokens[i].addr
+        let obj = map[addr]?map[addr]:{}
+        if (token.reservedTokens[i].dim === "tokens")
+          obj.inTokens = val * 10**token.decimals
+        else {
+          obj.inPercentageDecimals = countDecimals(val)
+          obj.inPercentageUnit = val * 10**obj.inPercentageDecimals
+        }
+        map[addr] = obj
       }
     }
 
     let keys = Object.keys(map);
     for (let i = 0; i < keys.length; i++) {
-      addrs.push(keys[i]);
-      inTokens.push(map[keys[i]].inTokens?toFixed(map[keys[i]].inTokens.toString()):0);
-      inPercentage.push(map[keys[i]].inPercentage?map[keys[i]].inPercentage:0);
+      let key = keys[i]
+      let obj = map[key]
+      addrs.push(key)
+      inTokens.push(obj.inTokens?toFixed(obj.inTokens.toString()):0)
+      inPercentageUnit.push(obj.inPercentageUnit?obj.inPercentageUnit:0)
+      inPercentageDecimals.push(obj.inPercentageDecimals?obj.inPercentageDecimals:0)
     }
 
-    if (addrs.length === 0 && inTokens.length === 0 && inPercentage.length === 0) return cb();
+    if (addrs.length === 0 && inTokens.length === 0 && inPercentageUnit.length === 0 && inPercentageDecimals.length === 0) return cb()
 
-    console.log("input: ");
-    console.log("addrs: " + addrs);
-    console.log("inTokens: " + inTokens);
-    console.log("inPercentage: " + inPercentage);
+    console.log("addrs: " + addrs)
+    console.log("inTokens: " + inTokens)
+    console.log("inPercentageUnit: " + inPercentageUnit)
+    console.log("inPercentageDecimals: " + inPercentageDecimals)
 
-    let method = tokenContract.methods.setReservedTokensListMultiple(addrs, inTokens, inPercentage).send({gasPrice: GAS_PRICE})
-    sendTXToContract(web3, method, cb);
+    let method = tokenContract.methods.setReservedTokensListMultiple(addrs, inTokens, inPercentageUnit, inPercentageDecimals).send({gasPrice: GAS_PRICE})
+    sendTXToContract(web3, method, cb)
   });
 }
 
@@ -288,7 +296,7 @@ export function setFinalizeAgentRecursive (i, web3, abi, addrs, finalizeAgentAdd
     }
   })
 }
-           
+
 export function setReleaseAgentRecursive (i, web3, abi, addr, finalizeAgentAddrs, gasLimit, cb) {
   setReleaseAgent(web3, abi, addr, finalizeAgentAddrs[i], gasLimit, (err) => {
     i++;
@@ -300,93 +308,114 @@ export function setReleaseAgentRecursive (i, web3, abi, addr, finalizeAgentAddrs
   })
 }
 
-export const handleTokenForFile = (content, docData, state) => {
-    const title = content.value
-    const fileContent = title + state.token[content.field]
-    docData.data += fileContent + '\n\n' 
+export const handlerForFile = (content, type) => {
+  const checkIfTime = content.field === "startTime" || content.field === "endTime"
+  let suffix = ''
+
+  if (checkIfTime) {
+    let timezoneOffset = (new Date()).getTimezoneOffset() / 60
+    let operator = timezoneOffset > 0 ? '-' : '+'
+    suffix = ` (GMT ${operator} ${Math.abs(timezoneOffset)})`
+  }
+
+  return `${content.value}${type[content.field]}${suffix}`
 }
 
-export const handleCrowdsaleForFile = (content, docData, state) => {
-    const title = content.value
-    const fileContent = title + state.crowdsale[0][content.field]
-    docData.data += fileContent + '\n\n'
+export const handleConstantForFile = content => {
+  return `${content.value}${content.fileValue}`
 }
 
-export const handlePricingStrategyForFile = (content, docData, state) => {
-    const title = content.value
-    const fileContent = title + state.pricingStrategy[0][content.field]
-    docData.data += fileContent + '\n\n'
-}
+export const handleContractsForFile = (content, state, index) => {
+  const title = content.value
+  const { field } = content
+  let fileContent = ''
 
-export const handleFinalizeAgentForFile = (content, docData, state) => {
-    const title = content.value
-    const fileContent = title + state.finalizeAgent[0][content.field]
-    docData.data += fileContent + '\n\n'
-}
+  if (field !== 'src' && field !== 'abi' && field !== 'addr') {
+    const contractField = state.contracts[content.child][field]
+    let fileBody
 
-export const handleContractsForFile = (content, docData, state) => {
-    const title = content.value
-    if(content.field !== 'src' && content.field !== 'abi' && content.field !== 'addr') {
-        let fileBody
-        if ( Object.prototype.toString.call( state.contracts[content.child][content.field] ) === '[object Array]' ) {
-          for (let i = 0; i < state.contracts[content.child][content.field].length; i++) {
-            fileBody = state.contracts[content.child][content.field][i]
+    if (Array.isArray(contractField)) {
+      fileBody = contractField[index]
 
-            if (!fileBody) return
-            let fileContent = title + " for " + state.crowdsale[i].tier + ":**** \n \n" + fileBody
-            docData.data += fileContent + '\n\n'
-          }
-        } else {
-          fileBody = state.contracts[content.child][content.field]
-          if (!fileBody) return
-          let fileContent = title + ":**** \n \n" + fileBody
-          docData.data += fileContent + '\n\n'
-        }
-    } else {
-        addSrcToFile(content, docData, state)
-    }
-}
-
-export const handleConstantForFile = (content, docData) => {
-    const title = content.value
-    const fileContent = title + content.fileValue
-    docData.data += fileContent + '\n\n'
-}
-
-const addSrcToFile = (content, docData, state) => {
-    const title = content.value
-
-    if ( Object.prototype.toString.call( state.contracts[content.child][content.field] ) === '[object Array]'  && content.field !== 'abi') {
-      for (let i = 0; i < state.contracts[content.child][content.field].length; i++) {
-        const body = state.contracts[content.child][content.field][i]
-        const text = title + " for " + state.crowdsale[i].tier + ": " + body
-        docData.data += text + '\n\n'
+      if (!!fileBody) {
+          fileContent = title + ' for ' + state.crowdsale[index].tier + ':**** \n\n' + fileBody
       }
-    } else {
-      const body = content.field === 'abi' ? JSON.stringify(state.contracts[content.child][content.field]) : state.contracts[content.child][content.field]
-      const text = title + body
-      docData.data += text + '\n\n'
+    } else if (!!contractField) {
+      fileContent = title + ':**** \n\n' + contractField
     }
+  } else {
+    fileContent = addSrcToFile(content, state, index)
+  }
+
+  return fileContent
 }
 
-export const download = (data, filename, type) => {
-    var file = new Blob([data], {type: type});
-    if (window.navigator.msSaveOrOpenBlob) // IE10+
-        window.navigator.msSaveOrOpenBlob(file, filename);
-    else { // Others
-        var a = document.createElement("a"),
-                url = URL.createObjectURL(file);
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(function() {
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);  
-        }, 0); 
+const addSrcToFile = (content, state, index) => {
+  const title = content.value
+  const { field } = content
+  const contractField = state.contracts[content.child][field]
+  let fileContent = ''
+
+  if (Array.isArray(contractField) && field !== 'abi') {
+      fileContent = title + ' for ' + state.crowdsale[index].tier + ': ' + contractField[index]
+  } else {
+    if (field !== 'src') {
+      const body = field === 'abi' ? JSON.stringify(contractField) : contractField
+      fileContent = title + body
+    } else {
+      fileContent = contractField
     }
+  }
+
+  return fileContent
+}
+
+export const download = ({ data = {}, filename = '', type = '', zip = '' }) => {
+  let file = !zip ? new Blob([data], { type: type }) : zip
+
+  if (window.navigator.msSaveOrOpenBlob) { // IE10+
+    window.navigator.msSaveOrOpenBlob(file, filename)
+  } else { // Others
+    let a = document.createElement('a')
+    let url = URL.createObjectURL(file)
+
+    a.href = url
+    a.download = filename
+    document.body.appendChild(a)
+    a.click()
+
+    setTimeout(function () {
+      document.body.removeChild(a)
+      window.URL.revokeObjectURL(url)
+    }, 0)
+  }
 }
 
 export function scrollToBottom() {
   window.scrollTo(0,document.body.scrollHeight);
+}
+
+export function getDownloadName (tokenAddress) {
+  return new Promise((resolve, reject) => {
+    getWeb3((web3) => {
+      const whenNetworkName = getNetworkVersion(web3)
+        .then((networkId) => {
+          let networkName = getNetWorkNameById(networkId);
+
+          if (!networkName) {
+            networkName = String(networkId);
+          }
+
+          return networkName;
+        })
+        .then((networkName) => `${DOWNLOAD_NAME}_${networkName}_${tokenAddress}`);
+
+      resolve(whenNetworkName);
+    });
+  });
+}
+
+var countDecimals = function (inputFloat) {
+  if(Math.floor(inputFloat) === parseFloat(inputFloat)) return 0;
+  return inputFloat.toString().split(".")[1].length || 0;
 }

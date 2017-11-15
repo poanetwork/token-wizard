@@ -1,9 +1,10 @@
 import React from 'react'
 import '../../assets/stylesheets/application.css';
-import { InputField } from './InputField'
+import InputField from './InputField'
 import { TEXT_FIELDS, defaultState } from '../../utils/constants'
 import { WhitelistItem } from './WhitelistItem'
 import { getOldState } from '../../utils/utils'
+import update from 'immutability-helper'
 const { ADDRESS, MIN, MAX } = TEXT_FIELDS
 
 export class WhitelistInputBlock extends React.Component {
@@ -53,14 +54,25 @@ export class WhitelistInputBlock extends React.Component {
 
     clearWhiteListInputs = () => {
         const { num } = this.props
-        let state = this.state
-        state.crowdsale[num].whiteListInput.addr = ""
-        state.crowdsale[num].whiteListInput.min = ""
-        state.crowdsale[num].whiteListInput.max = ""
-        this.setState(state)
-        this.whiteListInputAddr.clearVal()
-        this.whiteListInputMin.clearVal()
-        this.whiteListInputMax.clearVal()
+        const newCrowdsale = update(this.state.crowdsale[num], {
+            whiteListInput: {
+                $merge: {
+                    addr: '',
+                    min: '',
+                    max: ''
+                }
+            }
+        })
+
+        const newState = update(this.state, {
+            crowdsale: {
+                [num]: {
+                    $set: newCrowdsale
+                }
+            }
+        })
+
+        this.setState(newState)
     }
 
     render() {
@@ -71,7 +83,6 @@ export class WhitelistInputBlock extends React.Component {
                 <div className="white-list-input-container">
                     <div className="white-list-input-container-inner">
                       <InputField 
-                        ref={whiteListInputAddr => this.whiteListInputAddr = whiteListInputAddr}
                         side='white-list-input-property white-list-input-property-left' 
                         type='text' 
                         title={ADDRESS} 
@@ -80,7 +91,6 @@ export class WhitelistInputBlock extends React.Component {
                         description={`Address of a whitelisted account. Whitelists are inherited. E.g., if an account whitelisted on Tier 1 and didn't buy max cap on Tier 1, he can buy on Tier 2, and following tiers.`}
                       />
                       <InputField 
-                        ref={whiteListInputMin => this.whiteListInputMin = whiteListInputMin}
                         side='white-list-input-property white-list-input-property-middle' 
                         type='number' 
                         title={MIN} 
@@ -89,7 +99,6 @@ export class WhitelistInputBlock extends React.Component {
                         description={`Minimum amount tokens to buy. Not a mininal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.`}
                       />
                       <InputField 
-                        ref={whiteListInputMax => this.whiteListInputMax = whiteListInputMax}
                         side='white-list-input-property white-list-input-property-right'
                         type='number' 
                         title={MAX} 

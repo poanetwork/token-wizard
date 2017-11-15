@@ -1,4 +1,4 @@
-import { VALIDATION_TYPES, TRUNC_TO_DECIMALS } from './constants'
+import { VALIDATION_TYPES, TRUNC_TO_DECIMALS, TOAST } from './constants'
 const { VALID, EMPTY, INVALID } = VALIDATION_TYPES
 
 export function getQueryVariable(variable) {
@@ -33,7 +33,7 @@ export function getURLParam(key,target){
     }
 
     if (!values.length) {
-      return null;   
+      return null;
     } else {
       return values.length == 1 ? values[0] : values;
     }
@@ -106,40 +106,6 @@ export function getWhiteListWithCapCrowdsaleAssets(state, cb) {
         cb(state);
       }
     });
-    /*const tokenTransferProxyContractName = "TokenTransferProxy";
-    setFlatFileContentToState("./contracts/" + tokenTransferProxyContractName + "_flat.bin", function(_bin) {
-      derivativesIterator++;
-      state.contracts.tokenTransferProxy.bin = _bin;
-
-      if (derivativesIterator === derivativesLength) {
-        cb(state);
-      }
-    });
-    setFlatFileContentToState("./contracts/" + tokenTransferProxyContractName + "_flat.abi", function(_abi) {
-      derivativesIterator++;
-      state.contracts.tokenTransferProxy.abi = JSON.parse(_abi);
-
-      if (derivativesIterator === derivativesLength) {
-        cb(state);
-      }
-    });
-    const multisigContractName = "MultiSig";
-    setFlatFileContentToState("./contracts/" + multisigContractName + "_flat.bin", function(_bin) {
-      derivativesIterator++;
-      state.contracts.multisig.bin = _bin;
-
-      if (derivativesIterator === derivativesLength) {
-        cb(state);
-      }
-    });
-    setFlatFileContentToState("./contracts/" + multisigContractName + "_flat.abi", function(_abi) {
-      derivativesIterator++;
-      state.contracts.multisig.abi = JSON.parse(_abi);
-
-      if (derivativesIterator === derivativesLength) {
-        cb(state);
-      }
-    });*/
     const finalizeAgentContractName = "FinalizeAgent";
     setFlatFileContentToState("./contracts/" + finalizeAgentContractName + "_flat.bin", function(_bin) {
       derivativesIterator++;
@@ -206,7 +172,6 @@ export const findConstructor = (abi) => {
 }
 
 export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) => {
-    //console.log(abiConstructor, state, vals, crowdsaleNum);
     let params = {"types": [], "vals": []};
     if (!abiConstructor) return params;
     for (let j = 0; j < abiConstructor.length; j++) {
@@ -279,10 +244,7 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
                   params.vals.push(1)
                 } break;
                 case "_oneTokenInWei": {
-                  //params.vals.push(state.pricingStrategy[crowdsaleNum].rate);
-                  //params.vals.push(state.web3.toWei(1/state.pricingStrategy[crowdsaleNum].rate/10**state.token.decimals, "ether"));
-                  
-                  let oneTokenInETHRaw = 1/state.pricingStrategy[crowdsaleNum].rate
+                  let oneTokenInETHRaw = toFixed(1/state.pricingStrategy[crowdsaleNum].rate).toString()
                   let oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, oneTokenInETHRaw)
                   params.vals.push(state.web3.utils.toWei(oneTokenInETH, "ether"));
                 } break;
@@ -295,7 +257,9 @@ export const getconstructorParams = (abiConstructor, state, vals, crowdsaleNum) 
     return params;
 }
 
-export const floorToDecimals = (n, input) => Math.floor10(input, n)
+export const floorToDecimals = (n, input) => {
+  return toFixed(Math.floor10(input, n)).toString()
+}
 
 const decimalAdjust = (type, inputNumber, exp) => {
     if (typeof exp === 'undefined' || +exp === 0) {
@@ -339,7 +303,7 @@ const validateDecimals = (decimals) => isNaN(Number(decimals)) === false && deci
 
 const validateTicker = (ticker) => typeof ticker === 'string' && ticker.length < 4 && ticker.length > 0
 
-const validateTime = (time) => getTimeAsNumber(time) > Date.now() 
+const validateTime = (time) => getTimeAsNumber(time) > Date.now()
 
 const validateRate = (rate) => isNaN(Number(rate)) === false && Number(rate) > 0
 
@@ -368,13 +332,10 @@ const isNotWhiteListTierObject = (value) => !(typeof value === 'object' && value
 
 // still thinks that we do not have an array... we do
 export const validateValue = (value, property) => {
-  //console.log("'" + property + "'");
-  //console.log("'" + value + "'");
     if (!isNaN(property)
       || property === 'reservedTokensInput'
       || property === 'reservedTokens'
       || property === 'reservedTokensElements') return VALID;
-    //console.log('value of : ' + value + ' and property of : ' + property, Array.isArray(value), JSON.stringify(value))
     let validationFunction, valueIsValid;
     if(isNotWhiteListTierObject(value)) {
       validationFunction = inputFieldValidators[property]
@@ -385,7 +346,6 @@ export const validateValue = (value, property) => {
       if (validationFunction)
         valueIsValid = validationFunction(value[property])
     }
-    //console.log("valueIsValid: " + valueIsValid);
     return  valueIsValid === true ? VALID : INVALID
 }
 
@@ -407,15 +367,12 @@ export const allFieldsAreValid = (parent, state) => {
     } else {
       properties = Object.keys(newState[parent])
     }
-    //console.log(newState);
-    //console.log(properties);
-    //console.log(properties.filter(property => property !== 'startBlock' && property !== 'endBlock' && property !== 'updatable' && property.toLowerCase().indexOf("whitelist") == -1 ));
     let iterator = 0
-    let validationValues = properties/*.filter(property => property !== 'startBlock' && property !== 'endBlock' && property !== 'updatable' && property.toLowerCase().indexOf("whitelist") == -1 )*/.map(property => {
+    let validationValues = properties.map(property => {
         if (property === 'startBlock' || property === 'endBlock' || property === 'updatable' || property.toLowerCase().indexOf("whitelist") > -1) {
           iterator++
           return VALID
-        } 
+        }
         let value
         if( Object.prototype.toString.call( newState[parent] ) === '[object Array]' ) {
           if (newState[parent].length > 0)
@@ -423,14 +380,11 @@ export const allFieldsAreValid = (parent, state) => {
         } else {
           value = newState[parent][property]
         }
-        //console.log("value: " + value, "property: " + property, "iterator: " + iterator);
         iterator++
         if (parent == "token" && property == "supply") return VALID
         return validateValue(value, property)
     })
-    //console.log(validationValues);
-    //console.log(values);
-    
+
     return validationValues.find(value => value === INVALID) === undefined
 }
 
@@ -456,4 +410,15 @@ export function defaultCompanyEndDate(startDate) {
     let endDate = new Date(startDate).setDate(new Date(startDate).getDate() + 4);
     endDate = new Date(endDate).setUTCHours(0);
     return new Date(endDate).toISOString().split(".")[0];
+}
+
+export const toast = {
+  msg: {},
+  showToaster: function ({ type = TOAST.TYPE.INFO, message = '', options = {} }) {
+    if (!message) {
+      return
+    }
+
+    this.msg[ type ](message, options)
+  }
 }

@@ -1,14 +1,13 @@
 import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
-import { getWeb3, checkTxMined, attachToContract, checkNetWorkByID, sendTXToContract } from '../../utils/blockchainHelpers'
+import { getWeb3, checkTxMined, checkNetWorkByID, sendTXToContract } from '../../utils/blockchainHelpers'
 import { getCrowdsaleData, getCurrentRate, initializeAccumulativeData, getAccumulativeCrowdsaleData, getCrowdsaleTargetDates, findCurrentContractRecursively, getJoinedTiers } from '../crowdsale/utils'
-import { getQueryVariable, getURLParam, getWhiteListWithCapCrowdsaleAssets } from '../../utils/utils'
-import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert, invalidCrowdsaleAddrAlert } from '../../utils/alerts'
+import { getQueryVariable, getURLParam, getWhiteListWithCapCrowdsaleAssets, toast } from '../../utils/utils'
+import { noMetaMaskAlert, investmentDisabledAlertInTime, successfulInvestmentAlert, invalidCrowdsaleAddrAlert } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
 import { ICOConfig } from '../Common/config'
-import { defaultState, GAS_PRICE } from '../../utils/constants'
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import QRCode from 'qrcode.react';
+import { TOAST, defaultState, GAS_PRICE, INVESTMENT_OPTIONS } from '../../utils/constants'
+import QRPaymentProcess from './QRPaymentProcess'
 
 export class Invest extends React.Component {
   constructor(props) {
@@ -21,8 +20,8 @@ export class Invest extends React.Component {
       state.seconds = 0;
       state.loading = true;
       state.pristineTokenInput = true;
-      state.investThrough = 'metamask'
       state.web3Available = false;
+      state.investThrough = INVESTMENT_OPTIONS.QR
       state.crowdsaleAddress = ICOConfig.crowdsaleContractURL || getURLParam("addr")
       this.state = state;
   }
@@ -39,11 +38,11 @@ export class Invest extends React.Component {
       };
 
       const networkID = ICOConfig.networkID?ICOConfig.networkID:getQueryVariable("networkID");
-      const contractType = this.state.contractTypes.whitelistwithcap;// getQueryVariable("contractType");
+      const contractType = this.state.contractTypes.whitelistwithcap;
       checkNetWorkByID(web3, networkID);
       newState.contractType = contractType;
       newState.web3Available = true;
-      newState.investThrough = 'metamask';
+      newState.investThrough = INVESTMENT_OPTIONS.METAMASK;
 
       const timeInterval = setInterval(() => this.setState({ seconds: this.state.seconds - 1}), 1000);
       this.setState({ timeInterval });
@@ -200,25 +199,16 @@ export class Invest extends React.Component {
       gasPrice: GAS_PRICE
     };
     console.log(opts);
-    sendTXToContract(web3, crowdsaleContract.methods.buy().send(opts), (err) => {
-      let state = this.state;
-      state.loading = false;
-      this.setState(state);
-      successfulInvestmentAlert(this.state.tokensToInvest);
-    });
 
-    /*crowdsaleContract.methods.buy().send(opts, (err, txHash) => {
-      if (err) {
-        let state = this.state;
-        state.loading = false;
-        this.setState(state);
-        return console.log(err);
+    sendTXToContract(web3, crowdsaleContract.methods.buy().send(opts), err => {
+      this.setState({ loading: false });
+
+      if (!err) {
+        successfulInvestmentAlert(this.state.tokensToInvest);
+      } else {
+        toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.USER_REJECTED_TRANSACTION })
       }
-
-      console.log("txHash: " + txHash);
-      console.log(web3)
-      checkTxMined(web3, txHash, (receipt) => this.txMinedCallback(web3, txHash, receipt))
-    });*/
+    });
   }
 
   txMinedCallback(web3, txHash, receipt) {
@@ -281,45 +271,7 @@ export class Invest extends React.Component {
     return { days, hours, minutes}
   }
 
-  renderInvestThroughQR() {
-    return (
-      <div>
-        <div className="payment-process">
-          <div className="payment-process-qr">
-            <QRCode value={this.state.crowdsaleAddress}></QRCode>
-          </div>
-          <p className="payment-process-description">Send up to 15 ETH to this address</p>
-          <p className="payment-process-hash">
-            { this.state.crowdsaleAddress }
-          </p>
-
-          <CopyToClipboard text={this.state.crowdsaleAddress}>
-            <a href="" onClick={e => e.preventDefault()} className="payment-process-copy">Copy Address</a>
-          </CopyToClipboard>
-
-          {/* <div className="payment-process-loader">Waiting for payment</div> */}
-          <div className="payment-process-notation">
-            <p className="payment-process-notation-title">Important</p>
-            <p className="payment-process-notation-description">
-              Send ethers to the crowdsale address with a MethodID: 0xa6f2ae3a
-            </p>
-          </div>
-        </div>
-        { /* <div className="payment-process">
-          <div className="payment-process-success"></div>
-          <p className="payment-process-description">
-            Your Project tokens were sent to
-          </p>
-          <p className="payment-process-hash">
-            0x6b0770d930bB22990c83fBBfcba6faB129AD7E385
-          </p>
-          <a href="#" className="payment-process-see">See it on the blockchain</a>
-        </div> */ }
-      </div>
-    )
-  }
-
-  render(state) {
+  render(state){
     const { seconds } = this.state
     const { days, hours, minutes } = this.getTimeStamps(seconds)
 
@@ -332,19 +284,23 @@ export class Invest extends React.Component {
     const ethRaised = this.state.crowdsale.ethRaised;
 
     //balance: tiers, standard
-    const investorBalanceTiers = (tokenAmountOf?((tokenAmountOf/10**tokenDecimals)/*.toFixed(tokenDecimals)*/).toString():"0");
-    const investorBalanceStandard = (ethRaised?(ethRaised/*.toFixed(tokenDecimals)*//rate).toString():"0");
+    const investorBalanceTiers = (tokenAmountOf?((tokenAmountOf/10**tokenDecimals)).toString():"0");
+    const investorBalanceStandard = (ethRaised?(ethRaised/rate).toString():"0");
     const investorBalance = (this.state.contractType === this.state.contractTypes.whitelistwithcap)?investorBalanceTiers:investorBalanceStandard;
 
     //total supply: tiers, standard
-    const tierCap = !isNaN(maxCapBeforeDecimals)?(maxCapBeforeDecimals/*.toFixed(tokenDecimals)*/).toString():"0";
-    const standardCrowdsaleSupply = !isNaN(this.state.crowdsale.supply)?(this.state.crowdsale.supply/*.toFixed(tokenDecimals)*/).toString():"0";
+    const tierCap = !isNaN(maxCapBeforeDecimals)?(maxCapBeforeDecimals).toString():"0";
+    const standardCrowdsaleSupply = !isNaN(this.state.crowdsale.supply)?(this.state.crowdsale.supply).toString():"0";
     const totalSupply = (this.state.contractType === this.state.contractTypes.whitelistwithcap)?tierCap:standardCrowdsaleSupply;
 
     let invalidTokenDescription = null;
     if (!this.state.pristineTokenInput && !this.isValidToken(this.state.tokensToInvest)) {
       invalidTokenDescription = <p className="error">Number of tokens to buy should be positive</p>;
     }
+
+    const QRPaymentProcessElement = this.state.investThrough === INVESTMENT_OPTIONS.QR ?
+      <QRPaymentProcess crowdsaleAddress={this.state.crowdsaleAddress} /> :
+      null;
 
     return <div className="invest container">
       <div className="invest-table">
@@ -419,11 +375,11 @@ export class Invest extends React.Component {
             </div>
             <div className="invest-through-container">
               <select value={this.state.investThrough} className="invest-through" onChange={(e) => this.setState({ investThrough: e.target.value })}>
-                <option disabled={!this.state.web3Available} value="metamask">Metamask {!this.state.web3Available ? ' (not available)' : null}</option>
-                <option value="qr">QR</option>
+                <option disabled={!this.state.web3Available} value={INVESTMENT_OPTIONS.METAMASK}>Metamask {!this.state.web3Available ? ' (not available)' : null}</option>
+                <option value={INVESTMENT_OPTIONS.QR}>QR</option>
               </select>
               {
-                this.state.investThrough === 'metamask'
+                this.state.investThrough === INVESTMENT_OPTIONS.METAMASK
                   ? <a className="button button_fill" onClick={this.investToTokens}>Invest</a>
                   : null
               }
@@ -432,9 +388,7 @@ export class Invest extends React.Component {
               Think twice before investment in ICOs. Tokens will be deposited on a wallet you used to buy tokens.
             </p>
           </form>
-          {
-            this.state.investThrough === 'qr' ? this.renderInvestThroughQR() : null
-          }
+          { QRPaymentProcessElement }
         </div>
       </div>
       <Loader show={this.state.loading}></Loader>

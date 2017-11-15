@@ -24,14 +24,11 @@ export class stepOne extends React.Component {
     this.getCrowdsaleAsset("CrowdsaleWhiteListWithCapToken", "token", state)
     this.getCrowdsaleAsset("CrowdsaleWhiteListWithCapPricingStrategy", "pricingStrategy", state)
     this.getCrowdsaleAsset("CrowdsaleWhiteListWithCapPricingStrategy", "pricingStrategy", state)
-    //this.getCrowdsaleAsset("TokenTransferProxy", "tokenTransferProxy", state)
-    //this.getCrowdsaleAsset("MultiSig", "multisig", state)
     this.getCrowdsaleAsset("FinalizeAgent", "finalizeAgent", state)
-    this.getCrowdsaleAsset("NullFinalizeAgent", "nullFinalizeAgent", state)  
+    this.getCrowdsaleAsset("NullFinalizeAgent", "nullFinalizeAgent", state)
   }
 
   getCrowdsaleAsset(contractName, stateProp, state) {
-    console.log(contractName, stateProp, state);
     let src, bin, abi;
     let assetsCount = 3;
     let assetsIterator = 0;
@@ -63,8 +60,6 @@ export class stepOne extends React.Component {
   }
 
   addContractsToState (src, bin, abi, contract, state) {
-    //let newState = Object.assign({}, state)
-    console.log('state', state)
     state.contracts[contract] = {
       src,
       bin,
@@ -78,25 +73,12 @@ export class stepOne extends React.Component {
   contractTypeSelected(e) {
     let newState = { ...this.state }
     newState.contractType = e.currentTarget.id;
-    console.log(e.currentTarget.id);
     this.getWhiteListWithCapCrowdsaleAssets(newState);
   }
 
   componentDidMount() {
     checkWeb3(this.state.web3);
 
-    //emergency alert
-    /*setTimeout(() => {
-      getWeb3((web3) => {
-        getNetworkVersion(web3, (_networkID) => {
-          console.log(_networkID);
-          if (_networkID == 1) {
-            return noDeploymentOnMainnetAlert();
-          }
-        })
-      })
-    }, 500);*/
-    
     let newState = { ...this.state }
 
     newState.contractType = this.state.contractTypes.whitelistwithcap
@@ -112,40 +94,27 @@ export class stepOne extends React.Component {
             <div className="step-icons step-icons_crowdsale-contract"></div>
             <p className="title">Crowdsale Contract</p>
             <p className="description">
-              Select a strategy for your crowdsale contract. 
+              Select a strategy for your crowdsale contract.
             </p>
           </div>
           <div className="radios">
-            {/*<label className="radio">
-              <input 
-                type="radio" 
-                checked={this.state.contractType === this.state.contractTypes.standard}            
-                name="contract-type"
-                id={this.state.contractTypes.standard}
-                onChange={(e) => this.contractTypeSelected(e)}
-              />
-              <span className="title">Standard</span>
-              <span className="description">
-                Basic crowdsale strategy with one tier. Good for educational use. 
-              </span>
-            </label>*/}
             <label className="radio">
-              <input 
-                type="radio" 
-                checked={this.state.contractType === this.state.contractTypes.whitelistwithcap}    
+              <input
+                type="radio"
+                checked={this.state.contractType === this.state.contractTypes.whitelistwithcap}
                 name="contract-type"
                 id={this.state.contractTypes.whitelistwithcap}
                 onChange={(e) => this.contractTypeSelected(e)}
               />
               <span className="title">Whitelist with Cap</span>
               <span className="description">
-                Modern crowdsale strategy with multiple tiers, whitelists, and limits. Recommended for every crowdsale. 
+                Modern crowdsale strategy with multiple tiers, whitelists, and limits. Recommended for every crowdsale.
               </span>
             </label>
           </div>
         </div>
         <div className="button-container">
-          <Link to={{ pathname: '/2', query: { state: this.state } }}><a className="button button_fill">Continue</a></Link>
+          <Link to={{ pathname: '/2', query: { state: this.state } }}><span className="button button_fill">Continue</span></Link>
         </div>
       </section>
     )}
