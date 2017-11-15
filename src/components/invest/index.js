@@ -6,7 +6,9 @@ import { getQueryVariable, getURLParam, getWhiteListWithCapCrowdsaleAssets, toas
 import { noMetaMaskAlert, noContractAlert, investmentDisabledAlert, investmentDisabledAlertInTime, successfulInvestmentAlert, invalidCrowdsaleAddrAlert } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
 import { ICOConfig } from '../Common/config'
-import { TOAST, defaultState, GAS_PRICE } from '../../utils/constants'
+import { TOAST, defaultState, GAS_PRICE, INVESTMENT_OPTIONS } from '../../utils/constants'
+import QRPaymentProcess from './QRPaymentProcess'
+import { alertOptions } from './constants'
 
 export class Invest extends React.Component {
   constructor(props) {
@@ -18,6 +20,8 @@ export class Invest extends React.Component {
       state.seconds = 0;
       state.loading = true;
       state.pristineTokenInput = true;
+      state.investThrough = INVESTMENT_OPTIONS.METAMASK
+      state.crowdsaleAddress = ICOConfig.crowdsaleContractURL || getURLParam("addr")
       this.state = state;
   }
 
@@ -291,6 +295,10 @@ export class Invest extends React.Component {
       invalidTokenDescription = <p className="error">Number of tokens to buy should be positive</p>;
     }
 
+    const QRPaymentProcessElement = this.state.investThrough === INVESTMENT_OPTIONS.QR ?
+      <QRPaymentProcess crowdsaleAddress={this.state.crowdsaleAddress} /> :
+      null;
+
     return <div className="invest container">
       <div className="invest-table">
         <div className="invest-table-cell invest-table-cell_left">
@@ -343,7 +351,8 @@ export class Invest extends React.Component {
           </div>
           <p className="invest-title">Invest page</p>
           <p className="invest-description">
-            Here you can invest in the crowdsale campaign. At the moment, you need MetaMask client to invest into the crowdsale. If you don't have MetaMask, you can send ethers to the crowdsale address with a MethodID: 0xa6f2ae3a. Sample <a href="https://kovan.etherscan.io/tx/0x42073576a160206e61b4d9b70b436359b8d220f8b88c7c272c77023513c62c3d">transaction</a>.
+            {"Here you can invest in the crowdsale campaign. At the momemnt, you need Metamask client to invest into the crowdsale. If you don't have Metamask, you can send ethers to the crowdsale address with a MethodID: 0xa6f2ae3a. Sample "}
+            <a href="https://kovan.etherscan.io/tx/0x42073576a160206e61b4d9b70b436359b8d220f8b88c7c272c77023513c62c3d">transaction</a>.
           </p>
         </div>
         <div className="invest-table-cell invest-table-cell_right">
@@ -361,11 +370,18 @@ export class Invest extends React.Component {
               <div className="invest-form-label">TOKENS</div>
               {invalidTokenDescription}
             </div>
-            <a className="button button_fill" onClick={this.investToTokens}>Contribute now</a>
+            <div className="invest-through-container">
+              <select className="invest-through" onChange={(e) => this.setState({ investThrough: e.target.value })}>
+                <option value={INVESTMENT_OPTIONS.METAMASK}>Metamask</option>
+                <option value={INVESTMENT_OPTIONS.QR}>QR</option>
+              </select>
+              <a className="button button_fill" onClick={this.investToTokens}>Contribute</a>
+            </div>
             <p className="description">
             Think twice before investment in ICOs. Tokens will be deposited on a wallet you used to buy tokens.
             </p>
           </form>
+          { QRPaymentProcessElement }
         </div>
       </div>
       <Loader show={this.state.loading}></Loader>

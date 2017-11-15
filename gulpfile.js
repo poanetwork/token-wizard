@@ -12,7 +12,6 @@ const concat = require("gulp-concat");
 const uglify = require("gulp-uglify");
 const gutil = require("gulp-util");
 
-
 gulp.task("javascript", function() {
   return gulp.src("assets/javascripts/application/*.js")
     .pipe(addsrc("assets/javascripts/vendor/index.js"))
@@ -36,5 +35,5 @@ gulp.task("sass", function() {
 });
 
 gulp.task("watch", function() {
-  gulp.watch("assets/javascripts/application/*.js", ["javascript"]);
+  gulp.watch("src/assets/stylesheets/**/*.scss", ["sass"]);
 });

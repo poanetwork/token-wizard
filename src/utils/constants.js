@@ -309,6 +309,10 @@ export const DOWNLOAD_TYPE = {
   blob: 'blob'
 }
 
+export const INVESTMENT_OPTIONS = {
+  METAMASK: 'metamask',
+  QR: 'qr'
+}
 export const TOAST = {
 	TYPE: {
 		ERROR: 'error',

@@ -57,7 +57,7 @@
 
   .hashes {
     position: relative;
-    margin-top: 30px;
+    min-height: 240px;
     padding-left: 260px;
 
     &-i {
@@ -97,6 +97,30 @@
     color: #8197a2;
     line-height: 20px;
     font-size: 12px;
+  }
+
+  &-through {
+    @include image-2x('../images/select@2x.png', 8px, 5px);
+    appearance: none;
+    float: left;
+    /*width: 147px;*/
+    height: 36px;
+    outline: none;
+    padding: 0 28px 0 10px;
+    box-sizing: border-box;
+    border: 1px solid #eee;
+    border-radius: 3px;
+    background-image: url(../images/select.png);
+    background-repeat: no-repeat;
+    background-position: center right 10px;
+    background-color: #fff;
+    color: #8197a2;
+    font-size: 12px;
+
+    &-container {
+      overflow: hidden;
+      margin-bottom: 30px;
+    }
   }
 
   &-form {
@@ -147,7 +171,7 @@
     }
 
     .button {
-      margin-bottom: 30px;
+      float: right;
     }
   }
 
