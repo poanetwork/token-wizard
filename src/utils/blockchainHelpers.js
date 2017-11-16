@@ -213,49 +213,17 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
   });
 }
 
-export function sendTXToContract(web3, method, cb) {
-  let isMined = false;
+export function sendTXToContract(method, cb) {
   method
-  .on('error', function(error) {
-    console.log(error);
-    return cb(error);
-  })
-  .on('transactionHash', function(transactionHash){
-    console.log("contract method transaction: " + transactionHash);
-
-    checkTxMined(web3, transactionHash, function txMinedCallback(receipt) {
-      if (isMined) return;
-
-      if (receipt) {
-        if (receipt.blockNumber) {
-          console.log("Sending tx to contract is mined from polling of tx receipt");
-          isMined = true;
-          console.log(receipt) // instance with the new contract address
-          return cb();
-        } else {
-          console.log("Still mining... Polling of transaction once more");
-          setTimeout(function() {
-            checkTxMined(web3, transactionHash, txMinedCallback)
-          }, 5000);
-        }
-      } else {
-        console.log("Still mining... Polling of transaction once more");
-        setTimeout(function() {
-          checkTxMined(web3, transactionHash, txMinedCallback)
-        }, 5000);
+    .on('receipt', receipt => {
+      if (0 !== receipt.status) {
+        return cb()
       }
+      return cb({ message: 0 })
     })
-  })
-  .on('confirmation', function(confirmationNumber, receipt){
-  })
-  .then(function(result){
-    if (!isMined) {
-      console.log("Sending tx to contract is mined from Promise");
-      isMined = true;
-      console.log(result) // instance with the new contract address
-      cb();
-    }
-  });
+    .on('error', error => {
+      return cb(error)
+    })
 }
 
 export function checkTxMined(web3, txhash, cb) {
