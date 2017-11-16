@@ -24,7 +24,7 @@ class ContractStore {
   @action setContractType = (contractType) => {
     this.contractType = contractType;
   }
-  
+
   @action setContractProperty = (contractName, property, value) => {
     let newContract = Object.assign({}, this[contractName])
     newContract[property] = value

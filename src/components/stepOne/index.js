@@ -18,20 +18,17 @@ export class stepOne extends React.Component {
     this.getCrowdsaleAsset("CrowdsaleStandardToken", "token")
   }
 
-  getWhiteListWithCapCrowdsaleAssets() {
+  getWhiteListWithCapCrowdsaleAssets () {
     this.getCrowdsaleAsset("SafeMathLibExt", "safeMathLib")
     this.getCrowdsaleAsset("CrowdsaleWhiteListWithCap", "crowdsale")
     this.getCrowdsaleAsset("CrowdsaleWhiteListWithCapToken", "token")
     this.getCrowdsaleAsset("CrowdsaleWhiteListWithCapPricingStrategy", "pricingStrategy")
     this.getCrowdsaleAsset("CrowdsaleWhiteListWithCapPricingStrategy", "pricingStrategy")
-    //this.getCrowdsaleAsset("TokenTransferProxy", "tokenTransferProxy")
-    //this.getCrowdsaleAsset("MultiSig", "multisig")
     this.getCrowdsaleAsset("FinalizeAgent", "finalizeAgent")
-    this.getCrowdsaleAsset("NullFinalizeAgent", "nullFinalizeAgent")  
+    this.getCrowdsaleAsset("NullFinalizeAgent", "nullFinalizeAgent")
   }
 
   getCrowdsaleAsset(contractName, stateProp) {
-    console.log(contractName, stateProp);
     let src, bin, abi;
     let assetsCount = 3;
     let assetsIterator = 0;
@@ -74,17 +71,7 @@ export class stepOne extends React.Component {
 
   contractTypeSelected(e) {
     this.props.contractStore.setContractType(e.currentTarget.id);
-    console.log(e.currentTarget.id);
-    switch (e.currentTarget.id) {
-      case CONTRACT_TYPES.standard: 
-        this.getStandardCrowdsaleAssets();
-        break;
-      case CONTRACT_TYPES.whitelistwithcap: 
-        this.getWhiteListWithCapCrowdsaleAssets();
-         break;
-      default:
-        break;
-    }
+    this.getWhiteListWithCapCrowdsaleAssets();
   }
 
   componentDidMount() {
@@ -94,7 +81,7 @@ export class stepOne extends React.Component {
       case CONTRACT_TYPES.standard:
         this.getStandardCrowdsaleAssets();
         break;
-      case CONTRACT_TYPES.whitelistwithcap: 
+      case CONTRACT_TYPES.whitelistwithcap:
         this.getWhiteListWithCapCrowdsaleAssets();
         break;
       default:
@@ -104,48 +91,35 @@ export class stepOne extends React.Component {
 
   render() {
     return (
-    	 <section className="steps steps_crowdsale-contract">
+       <section className="steps steps_crowdsale-contract">
        <StepNavigation activeStep={CROWDSALE_CONTRACT}/>
         <div className="steps-content container">
           <div className="about-step">
             <div className="step-icons step-icons_crowdsale-contract"></div>
             <p className="title">Crowdsale Contract</p>
             <p className="description">
-              Select a strategy for your crowdsale contract. 
+              Select a strategy for your crowdsale contract.
             </p>
           </div>
           <div className="radios">
-            {/*<label className="radio">
-              <input 
-                type="radio" 
-                checked={this.state.contractType === this.state.contractTypes.standard}            
-                name="contract-type"
-                id={this.state.contractTypes.standard}
-                onChange={(e) => this.contractTypeSelected(e)}
-              />
-              <span className="title">Standard</span>
-              <span className="description">
-                Basic crowdsale strategy with one tier. Good for educational use. 
-              </span>
-            </label>*/}
             <label className="radio">
-              <input 
-                type="radio" 
-                checked={this.props.contractStore.contractType === CONTRACT_TYPES.whitelistwithcap}    
+              <input
+                type="radio"
+                checked={this.props.contractStore.contractType === CONTRACT_TYPES.whitelistwithcap}
                 name="contract-type"
                 id={CONTRACT_TYPES.whitelistwithcap}
                 onChange={(e) => this.contractTypeSelected(e)}
               />
               <span className="title">Whitelist with Cap</span>
               <span className="description">
-                Modern crowdsale strategy with multiple tiers, whitelists, and limits. Recommended for every crowdsale. 
+                Modern crowdsale strategy with multiple tiers, whitelists, and limits. Recommended for every crowdsale.
               </span>
             </label>
           </div>
         </div>
         <div className="button-container">
           <Link to='/2'>
-            <a className="button button_fill">Continue</a>
+            <span className="button button_fill">Continue</span>
           </Link>
         </div>
       </section>

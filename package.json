@@ -2,6 +2,9 @@
   "name": "ico_wizard",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "8.9.0"
+  },
   "devDependencies": {
     "ethereumjs-testrpc": "^4.1.3",
     "gulp": "^3.9.1",
@@ -48,9 +51,11 @@
     "file-loader": "0.11.2",
     "fs-extra": "3.0.1",
     "html-webpack-plugin": "2.29.0",
+    "immutability-helper": "^2.5.0",
     "install": "^0.10.1",
     "jest": "20.0.4",
     "jquery": "^3.2.1",
+    "jszip": "^3.1.4",
     "mobx": "^3.3.0",
     "mobx-react": "^4.3.3",
     "npm": "^5.3.0",
@@ -60,7 +65,10 @@
     "postcss-flexbugs-fixes": "3.0.0",
     "postcss-loader": "2.0.6",
     "promise": "7.1.1",
+    "qrcode.react": "^0.7.2",
     "react": "^15.6.1",
+    "react-alert": "^2.4.0",
+    "react-copy-to-clipboard": "^5.0.1",
     "react-countdown-clock": "^2.0.0",
     "react-dev-utils": "^3.0.2",
     "react-dom": "^15.6.1",
@@ -91,10 +99,11 @@
     "safe_math_lib_contract_name": "SafeMathLibExt"
   },
   "scripts": {
-    "start": "git submodule update --init --recursive --remote submodules/oracles-token-market-net-ico && git submodule update --init --recursive --remote submodules/oracles-combine-solidity && npm install && git submodule update --init --recursive --remote submodules/oracles-web3-1.0 && cd submodules/oracles-web3-1.0 && npm install && cd ../../ && npm install submodules/oracles-web3-1.0/packages/web3 && npm run generateFlatSoliditySafeMathLibContract && npm run generateFlatSolidityCrowdsaleNullFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleContract && npm run generateFlatSolidityCrowdsaleTokenContract && npm run generateFlatSolidityCrowdsalePricingStrategyContract && npm run compileSafeMathLibExtContract && npm run compileCrowdsaleNullFinalizeAgentContract && npm run compileCrowdsaleFinalizeAgentContract && npm run compileCrowdsaleContract && npm run compileCrowdsaleTokenContract && npm run compileCrowdsalePricingStrategyContract && node scripts/start.js",
-    "startWin": "git submodule update --init --recursive --remote submodules/oracles-token-market-net-ico && git submodule update --init --recursive --remote submodules/oracles-combine-solidity && npm install && git submodule update --init --recursive --remote submodules/oracles-web3-1.0 && cd submodules/oracles-web3-1.0 && npm install && cd ../../ && npm install submodules/oracles-web3-1.0/packages/web3 && npm run generateFlatSoliditySafeMathLibContractWin && npm run generateFlatSolidityCrowdsaleNullFinalizeAgentContractWin && npm run generateFlatSolidityCrowdsaleFinalizeAgentContractWin && npm run generateFlatSolidityCrowdsaleContractWin && npm run generateFlatSolidityCrowdsaleTokenContractWin && npm run generateFlatSolidityCrowdsalePricingStrategyContractWin && npm run compileSafeMathLibExtContractWin && npm run compileCrowdsaleNullFinalizeAgentContractWin && npm run compileCrowdsaleFinalizeAgentContractWin && npm run compileCrowdsaleContractWin && npm run compileCrowdsaleTokenContractWin && npm run compileCrowdsalePricingStrategyContractWin && node scripts/start.js",
-    "build": "git submodule update --init --recursive --remote submodules/oracles-token-market-net-ico && git submodule update --init --recursive --remote submodules/oracles-combine-solidity && npm install && git submodule update --init --recursive --remote submodules/oracles-web3-1.0 && cd submodules/oracles-web3-1.0 && npm install && cd ../../ && npm install submodules/oracles-web3-1.0/packages/web3 && npm run generateFlatSoliditySafeMathLibContract && npm run generateFlatSolidityCrowdsaleNullFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleContract && npm run generateFlatSolidityCrowdsaleTokenContract && npm run generateFlatSolidityCrowdsalePricingStrategyContract && npm run compileSafeMathLibExtContract && npm run compileCrowdsaleNullFinalizeAgentContract && npm run compileCrowdsaleFinalizeAgentContract && npm run compileCrowdsaleContract && npm run compileCrowdsaleTokenContract && npm run compileCrowdsalePricingStrategyContract && node scripts/build.js",
+    "start": "cd submodules/oracles-web3-1.0 && npm install && cd ../../ && npm install submodules/oracles-web3-1.0/packages/web3 && npm run generateFlatSoliditySafeMathLibContract && npm run generateFlatSolidityCrowdsaleNullFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleContract && npm run generateFlatSolidityCrowdsaleTokenContract && npm run generateFlatSolidityCrowdsalePricingStrategyContract && npm run compileSafeMathLibExtContract && npm run compileCrowdsaleNullFinalizeAgentContract && npm run compileCrowdsaleFinalizeAgentContract && npm run compileCrowdsaleContract && npm run compileCrowdsaleTokenContract && npm run compileCrowdsalePricingStrategyContract && node scripts/start.js",
+    "startWin": "cd submodules/oracles-web3-1.0 && npm install && cd ../../ && npm install submodules/oracles-web3-1.0/packages/web3 && npm run generateFlatSoliditySafeMathLibContractWin && npm run generateFlatSolidityCrowdsaleNullFinalizeAgentContractWin && npm run generateFlatSolidityCrowdsaleFinalizeAgentContractWin && npm run generateFlatSolidityCrowdsaleContractWin && npm run generateFlatSolidityCrowdsaleTokenContractWin && npm run generateFlatSolidityCrowdsalePricingStrategyContractWin && npm run compileSafeMathLibExtContractWin && npm run compileCrowdsaleNullFinalizeAgentContractWin && npm run compileCrowdsaleFinalizeAgentContractWin && npm run compileCrowdsaleContractWin && npm run compileCrowdsaleTokenContractWin && npm run compileCrowdsalePricingStrategyContractWin && node scripts/start.js",
+    "build": "git submodule update --init --recursive --remote && cd submodules/oracles-combine-solidity && npm install && cd ../../ && npm install && cd submodules/oracles-web3-1.0 && npm install && cd ../../ && npm install submodules/oracles-web3-1.0/packages/web3 && npm run generateFlatSoliditySafeMathLibContract && npm run generateFlatSolidityCrowdsaleNullFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleContract && npm run generateFlatSolidityCrowdsaleTokenContract && npm run generateFlatSolidityCrowdsalePricingStrategyContract && npm run compileSafeMathLibExtContract && npm run compileCrowdsaleNullFinalizeAgentContract && npm run compileCrowdsaleFinalizeAgentContract && npm run compileCrowdsaleContract && npm run compileCrowdsaleTokenContract && npm run compileCrowdsalePricingStrategyContract && node scripts/build.js && cp ./build/index.html ./build/invest.html && cp ./build/index.html ./build/crowdsale.html",
     "test": "bash ./start_testrpc.sh && cd ./submodules/oracles-token-market-net-ico/ && npm install && node_modules/.bin/truffle migrate --network testrpc && node_modules/.bin/truffle test --network testrpc",
+    "test:dapp": "jest --env=jsdom",
     "generateFlatSoliditySafeMathLibContract": "node $npm_package_config_combine_solidity_script $npm_package_config_tokenmarketnet_path/$npm_package_config_safe_math_lib_contract_name.sol $npm_package_config_contract_folder SafeMathLibExt",
     "generateFlatSolidityCrowdsaleContract": "node $npm_package_config_combine_solidity_script $npm_package_config_tokenmarketnet_path/$npm_package_config_crowdsale_contract_name.sol $npm_package_config_contract_folder CrowdsaleWhiteListWithCap",
     "generateFlatSolidityCrowdsaleTokenContract": "node $npm_package_config_combine_solidity_script $npm_package_config_tokenmarketnet_path/$npm_package_config_crowdsale_token_contract_name.sol $npm_package_config_contract_folder CrowdsaleWhiteListWithCapToken",

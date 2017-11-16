@@ -1,21 +1,20 @@
 import React from 'react'
 import '../../assets/stylesheets/application.css';
-import { Link, Redirect } from 'react-router-dom'
-import { getWeb3, checkWeb3, setExistingContractParams, getNetworkVersion } from '../../utils/blockchainHelpers'
-import { stepTwo } from '../stepTwo'
+import { Link } from 'react-router-dom'
+import { setExistingContractParams } from '../../utils/blockchainHelpers'
 import { defaultCompanyStartDate } from './utils'
 import { defaultCompanyEndDate } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
-import { InputField } from '../Common/InputField'
+import InputField from '../Common/InputField'
 import { InputFieldExt } from '../Common/InputFieldExt'
 import { RadioInputField } from '../Common/RadioInputField'
 import { CrowdsaleBlock } from '../Common/CrowdsaleBlock'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
 import { NAVIGATION_STEPS, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS, CONTRACT_TYPES } from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
-import { noDeploymentOnMainnetAlert, warningOnMainnetAlert } from '../../utils/alerts'
+import { warningOnMainnetAlert } from '../../utils/alerts'
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
-const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
+const { EMPTY, VALID } = VALIDATION_TYPES
 const { START_TIME, END_TIME, MINCAP, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME, ALLOWMODIFYING, DISABLEWHITELISTING } = TEXT_FIELDS
 
 @inject('contractStore', 'crowdsaleBlockListStore', 'pricingStrategyStore', 'web3Store', 'tierStore') @observer
@@ -46,8 +45,8 @@ export class stepThree extends React.Component{
       supply: 0,
       rate: 0,
       updatable: "off",
-      whitelist:[], 
-      whiteListElements: [], 
+      whitelist:[],
+      whiteListElements: [],
       whiteListInput:{}
     }
 
@@ -87,11 +86,9 @@ export class stepThree extends React.Component{
   }
 
   gotoDeploymentStage() {
-    console.log("###gotoDeploymentStage###");
-    let state = this.state;
-    state.redirect = true;
-    console.log(state);
-    this.setState(state);
+    this.setState({
+      redirect: true
+    });
   }
 
   addCrowdsaleBlock(num) {
@@ -127,7 +124,6 @@ export class stepThree extends React.Component{
       return this.renderLink()
     }
 
-    console.log('not valid')
     return <div>
       <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Tier</div>
       <div onClick={this.showErrorMessages.bind(this)} className="button button_fill"> Continue</div>
@@ -148,13 +144,13 @@ export class stepThree extends React.Component{
         <p className="title">Global limits</p>
       </div>
       <div className='input-block-container'>
-        <InputField 
-          side='left' 
-          type='number' 
-          title={MINCAP} 
-          value={tierStore.globalMinCap} 
-          valid={VALID} 
-          errorMessage={VALIDATION_MESSAGES.MINCAP} 
+        <InputField
+          side='left'
+          type='number'
+          title={MINCAP}
+          value={tierStore.globalMinCap}
+          valid={VALID}
+          errorMessage={VALIDATION_MESSAGES.MINCAP}
           onChange={(e) => tierStore.setGlobalMinCap(e.target.value)}
           description={`Minimum amount tokens to buy. Not a mininal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.`}
         />
@@ -165,64 +161,64 @@ export class stepThree extends React.Component{
           <StepNavigation activeStep={CROWDSALE_SETUP}/>
           <div className="steps-content container">
             <div className="about-step">
-                <div className="step-icons step-icons_crowdsale-setup"></div>  
+                <div className="step-icons step-icons_crowdsale-setup"></div>
               <p className="title">Crowdsale setup</p>
               <p className="description">
-                The most important and exciting part of the crowdsale process. Here you can define parameters of your crowdsale campaign. 
+                The most important and exciting part of the crowdsale process. Here you can define parameters of your crowdsale campaign.
               </p>
             </div>
             <div className="hidden">
               <div>
-              <InputField 
-                side='left' 
-                type='datetime-local' 
-                title={START_TIME} 
-                value={tierStore.tiers[0].startTime} 
-                valid={tierStore.validTiers[0].startTime} 
-                errorMessage={VALIDATION_MESSAGES.START_TIME} 
+              <InputField
+                side='left'
+                type='datetime-local'
+                title={START_TIME}
+                value={tierStore.tiers[0].startTime}
+                valid={tierStore.validTiers[0].startTime}
+                errorMessage={VALIDATION_MESSAGES.START_TIME}
                 onChange={(e) => this.updateTierStore(e, 'startTime', 0)}
                 description={`Date and time when the tier starts. Can't be in the past from the current moment.`}
               />
-              <InputField 
-                side='right' 
-                type='datetime-local' 
-                title={END_TIME} 
-                value={tierStore.tiers[0].endTime} 
-                valid={tierStore.validTiers[0].endTime} 
-                errorMessage={VALIDATION_MESSAGES.END_TIME} 
+              <InputField
+                side='right'
+                type='datetime-local'
+                title={END_TIME}
+                value={tierStore.tiers[0].endTime}
+                valid={tierStore.validTiers[0].endTime}
+                errorMessage={VALIDATION_MESSAGES.END_TIME}
                 onChange={(e) => this.updateTierStore(e, 'endTime', 0)}
                 description={`Date and time when the tier ends. Can be only in the future.`}
               />
               </div>
               <div>
-              <InputField 
-                side='left' 
-                type='text' 
-                title={WALLET_ADDRESS} 
-                value={tierStore.tiers[0].walletAddress} 
-                valid={tierStore.validTiers[0].walletAddress} 
+              <InputField
+                side='left'
+                type='text'
+                title={WALLET_ADDRESS}
+                value={tierStore.tiers[0].walletAddress}
+                valid={tierStore.validTiers[0].walletAddress}
                 errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS}
                 onChange={(e) => this.updateTierStore(e, 'walletAddress', 0)}
                 description={`Address where the money goes immediately after each successful transactions. We recommend to setup a multisig wallet with hardware based signers.`}
               />
-              <InputField 
-                side='right' 
-                type='number' 
-                title={SUPPLY} 
-                value={tierStore.tiers[0].supply} 
-                valid={tierStore.validTiers[0].supply} 
+              <InputField
+                side='right'
+                type='number'
+                title={SUPPLY}
+                value={tierStore.tiers[0].supply}
+                valid={tierStore.validTiers[0].supply}
                 errorMessage={VALIDATION_MESSAGES.SUPPLY}
                 onChange={(e) => this.updateTierStore(e, 'supply', 0)}
                 description={`How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers`}
               />
               </div>
-              <InputField 
-                side='left' 
-                type='number' 
-                title={RATE} 
-                value={pricingStrategyStore.strategies[0].rate} 
-                valid={true} 
-                errorMessage={VALIDATION_MESSAGES.RATE} 
+              <InputField
+                side='left'
+                type='number'
+                title={RATE}
+                value={pricingStrategyStore.strategies[0].rate}
+                valid={true}
+                errorMessage={VALIDATION_MESSAGES.RATE}
                 onChange={(e) => this.updatePricingStrategyStore(e, 'rate', 0)}
                 description={`Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens`}
               />
@@ -253,75 +249,75 @@ export class stepThree extends React.Component{
             </div>
             <div className="hidden">
               <div className='input-block-container'>
-              <InputField 
-                side='left' 
-                type='text' 
-                title={CROWDSALE_SETUP_NAME} 
+              <InputField
+                side='left'
+                type='text'
+                title={CROWDSALE_SETUP_NAME}
                 value={tierStore.tiers[0].name}
-                valid={tierStore.validTiers[0].name} 
-                errorMessage={VALIDATION_MESSAGES.TIER} 
+                valid={tierStore.validTiers[0].name}
+                errorMessage={VALIDATION_MESSAGES.TIER}
                 onChange={(e) => this.updateTierStore(e, 'name', 0)}
                 description={`Name of a tier, e.g. PrePreIco, PreICO, ICO with bonus A, ICO with bonus B, etc. We simplified that and will increment a number after each tier.`}
               />
-              <InputFieldExt 
-                side='right' 
-                type='text' 
-                title={WALLET_ADDRESS} 
-                value={tierStore.tiers[0].walletAddress} 
-                valid={tierStore.validTiers[0].walletAddress} 
-                errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS} 
+              <InputFieldExt
+                side='right'
+                type='text'
+                title={WALLET_ADDRESS}
+                value={tierStore.tiers[0].walletAddress}
+                valid={tierStore.validTiers[0].walletAddress}
+                errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS}
                 onChange={(e) => this.updateTierStore(e, 'walletAddress', 0)}
                 description={`Where the money goes after investors transactions. Immediately after each transaction. We recommend to setup a multisig wallet with hardware based signers.`}
               />
               </div>
               <div className='input-block-container'>
-              <InputFieldExt 
-                side='left' 
-                type='datetime-local' 
-                title={START_TIME} 
-                value={tierStore.tiers[0].startTime} 
-                valid={tierStore.validTiers[0].startTime} 
-                errorMessage={VALIDATION_MESSAGES.START_TIME} 
+              <InputFieldExt
+                side='left'
+                type='datetime-local'
+                title={START_TIME}
+                value={tierStore.tiers[0].startTime}
+                valid={tierStore.validTiers[0].startTime}
+                errorMessage={VALIDATION_MESSAGES.START_TIME}
                 onChange={(e) => this.updateTierStore(e, 'startTime', 0)}
                 description={`Date and time when the tier starts. Can't be in the past from the current moment.`}
               />
-              <InputFieldExt 
-                side='right' 
-                type='datetime-local' 
-                title={END_TIME} 
-                value={tierStore.tiers[0].endTime} 
-                valid={tierStore.validTiers[0].endTime} 
-                errorMessage={VALIDATION_MESSAGES.END_TIME} 
+              <InputFieldExt
+                side='right'
+                type='datetime-local'
+                title={END_TIME}
+                value={tierStore.tiers[0].endTime}
+                valid={tierStore.validTiers[0].endTime}
+                errorMessage={VALIDATION_MESSAGES.END_TIME}
                 onChange={(e) => this.updateTierStore(e, 'endTime', 0)}
                 description={`Date and time when the tier ends. Can be only in the future.`}
               />
               </div>
               <div className='input-block-container'>
-              <InputField 
-                side='left' 
-                type='number' 
-                title={RATE} 
-                value={tierStore.tiers[0].rate} 
-                valid={tierStore.validTiers[0].rate} 
-                errorMessage={VALIDATION_MESSAGES.RATE} 
+              <InputField
+                side='left'
+                type='number'
+                title={RATE}
+                value={tierStore.tiers[0].rate}
+                valid={tierStore.validTiers[0].rate}
+                errorMessage={VALIDATION_MESSAGES.RATE}
                 onChange={(e) => this.updateTierStore(e, 'rate', 0)}
                 description={`Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens`}
               />
-              <InputField 
-                side='right' 
-                type='number' 
-                title={SUPPLY} 
-                value={tierStore.tiers[0].supply} 
-                valid={tierStore.validTiers[0].supply} 
-                errorMessage={VALIDATION_MESSAGES.SUPPLY} 
+              <InputField
+                side='right'
+                type='number'
+                title={SUPPLY}
+                value={tierStore.tiers[0].supply}
+                valid={tierStore.validTiers[0].supply}
+                errorMessage={VALIDATION_MESSAGES.SUPPLY}
                 onChange={(e) => this.updateTierStore(e, 'supply', 0)}
                 description={`How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers`}
               />
               </div>
               <div className='input-block-container'>
-              <RadioInputField 
-                  side='left' 
-                  title={ALLOWMODIFYING} 
+              <RadioInputField
+                  side='left'
+                  title={ALLOWMODIFYING}
                   items={["on", "off"]}
                   vals={["on", "off"]}
                   state={this.state}
@@ -331,9 +327,9 @@ export class stepThree extends React.Component{
                   onChange={(e) => this.updateTierStore(e, 'updatable', 0)}
                   description={`Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing.`}
               />
-              <RadioInputField 
-                  side='right' 
-                  title={DISABLEWHITELISTING} 
+              <RadioInputField
+                  side='right'
+                  title={DISABLEWHITELISTING}
                   items={["yes", "no"]}
                   vals={["yes", "no"]}
                   state={this.state}

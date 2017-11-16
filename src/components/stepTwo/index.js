@@ -3,24 +3,20 @@ import '../../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
 import { checkWeb3 } from '../../utils/blockchainHelpers'
 import { StepNavigation } from '../Common/StepNavigation'
-import { InputField } from '../Common/InputField'
+import InputField from '../Common/InputField'
 import { ReservedTokensInputBlock } from '../Common/ReservedTokensInputBlock'
 import { NAVIGATION_STEPS, VALIDATION_MESSAGES, TEXT_FIELDS } from '../../utils/constants'
 import { inject, observer } from 'mobx-react';
-import { noDeploymentOnMainnetAlert } from '../../utils/alerts'
 const { TOKEN_SETUP } = NAVIGATION_STEPS
 const { NAME, TICKER, DECIMALS } = TEXT_FIELDS
 
 @inject('tokenStore', 'web3Store', 'tierCrowdsaleListStore') @observer
 export class stepTwo extends Component {
-
   componentDidMount() {
     checkWeb3(this.props.web3Store.web3);
   }
 
   showErrorMessages = (parent) => {
-
-    console.log('error',  this.props.tokenStore, this.props.tokenStore.validToken, this.props.tokenStore.isTokenValid)
     this.props.tokenStore.invalidateToken();
   }
 
@@ -50,33 +46,33 @@ export class stepTwo extends Component {
             <div className="step-icons step-icons_token-setup"></div>
             <p className="title">Token setup</p>
             <p className="description">
-              Configure properties of your token. Created token contract will be ERC-20 compatible. 
+              Configure properties of your token. Created token contract will be ERC-20 compatible.
             </p>
           </div>
           <div className="hidden">
-            <InputField side='left' type='text' 
-              errorMessage={VALIDATION_MESSAGES.NAME} 
-              valid={this.props.tokenStore.validToken['name']} 
-              title={NAME} 
-              value={this.props.tokenStore.name} 
+            <InputField side='left' type='text'
+              errorMessage={VALIDATION_MESSAGES.NAME}
+              valid={this.props.tokenStore.validToken['name']}
+              title={NAME}
+              value={this.props.tokenStore.name}
               onChange={(e) => this.updateTokenStore(e, 'name')}
               description={`The name of your token. Will be used by Etherscan and other token browsers. Be afraid of trademarks.`}
             />
-            <InputField 
-              side='right' type='text' 
-              errorMessage={VALIDATION_MESSAGES.TICKER} 
-              valid={this.props.tokenStore.validToken['ticker']} 
-              title={TICKER} 
-              value={this.props.tokenStore.ticker} 
+            <InputField
+              side='right' type='text'
+              errorMessage={VALIDATION_MESSAGES.TICKER}
+              valid={this.props.tokenStore.validToken['ticker']}
+              title={TICKER}
+              value={this.props.tokenStore.ticker}
               onChange={(e) => this.updateTokenStore(e, 'ticker')}
               description={`The three letter ticker for your token. There are 17,576 combinations for 26 english letters. Be hurry. `}
             />
-            <InputField 
+            <InputField
               side='left' type='number'
-              errorMessage={VALIDATION_MESSAGES.DECIMALS} 
-              valid={this.props.tokenStore.validToken['decimals']} 
+              errorMessage={VALIDATION_MESSAGES.DECIMALS}
+              valid={this.props.tokenStore.validToken['decimals']}
               title={DECIMALS}
-              value={this.props.tokenStore.decimals} 
+              value={this.props.tokenStore.decimals}
               onChange={(e) => this.updateTokenStore(e, 'decimals')} // changeInputField
               description={`Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous).`}
             />
