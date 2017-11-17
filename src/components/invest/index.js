@@ -76,7 +76,7 @@ import QRPaymentProcess from './QRPaymentProcess'
       } else {
         _crowdsaleAddrs = joinedCrowdsales;
       }
-      contractStore.crowdsale.addr = _crowdsaleAddrs;
+      contractStore.setContractProperty('crowdsale', 'addr', _crowdsaleAddrs)
 
       web3.eth.getAccounts().then((accounts) => {
         if (accounts.length === 0) {
