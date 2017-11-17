@@ -3,7 +3,7 @@ import { observable, action } from 'mobx';
 class ReservedTokenStore {
 
   @observable tokens;
-  
+
   constructor(tokens = []) {
     this.tokens = tokens;
   }
@@ -11,13 +11,13 @@ class ReservedTokenStore {
   @action addToken = (token) => {
     this.tokens.push(token);
   }
-  
+
   @action setTokenProperty = (index, property, value) => {
     let newToken = {...this.tokens[index]};
     newToken[property] = value;
     this.tokens[index] = newToken;
   }
-  
+
   @action removeToken = (index) => {
     this.tokens.splice(index,1);
   }

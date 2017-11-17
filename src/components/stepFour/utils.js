@@ -9,7 +9,7 @@ import {
 import { noContractAlert } from '../../utils/alerts'
 import { toFixed } from '../../utils/utils'
 import { GAS_PRICE, DOWNLOAD_NAME } from '../../utils/constants'
-import { tokenStore, tierStore, contractStore } from '../../stores'
+import { tierStore, contractStore } from '../../stores'
 
 function setLastCrowdsale(web3, abi, addr, lastCrowdsale, gasLimit, cb) {
   console.log("###setLastCrowdsale for Pricing Strategy:###");
@@ -163,7 +163,7 @@ function setReleaseAgent(web3, abi, addr, finalizeAgentAddr, gasLimit, cb) {
   });
 }
 
-export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
+export function setReservedTokensListMultiple(web3, abi, addr, token, reservedTokenStore, cb) {
   console.log("###setReservedTokensListMultiple:###");
   attachToContract(web3, abi, addr, function(err, tokenContract) {
     console.log("attach to token contract");
@@ -179,23 +179,14 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
     let inPercentageUnit = []
     let inPercentageDecimals = [];
 
-    if (token.reservedTokensInput.addr && token.reservedTokensInput.dim && token.reservedTokensInput.val) {
-      token.reservedTokens.push({
-          "addr": token.reservedTokensInput.addr,
-          "dim": token.reservedTokensInput.dim,
-          "val": token.reservedTokensInput.val
-      });
-    }
+    const reservedTokens = reservedTokenStore.tokens
 
-    console.log("token.reservedTokens: ");
-    console.log(token.reservedTokens);
-
-    for (let i = 0; i < token.reservedTokens.length; i++) {
-      if (!token.reservedTokens[i].deleted) {
-        let val = token.reservedTokens[i].val
-        let addr = token.reservedTokens[i].addr
+    for (let i = 0; i < reservedTokens.length; i++) {
+      if (!reservedTokens[i].deleted) {
+        let val = reservedTokens[i].val
+        let addr = reservedTokens[i].addr
         let obj = map[addr]?map[addr]:{}
-        if (token.reservedTokens[i].dim === "tokens") {
+        if (reservedTokens[i].dim === "tokens") {
           obj.inTokens = val * 10**token.decimals
         } else {
           obj.inPercentageDecimals = countDecimals(val)

@@ -29,6 +29,21 @@ export class ReservedTokensInputBlock extends React.Component {
     updateReservedTokenInput = (event, property) => {
         const value = event.target.value;
         this.props.reservedTokenInputStore.setProperty(property, value);
+
+        if (property === 'addr') {
+            const address = value;
+            const validAddress = Web3.utils.isAddress(address) ?  VALID : INVALID
+            this.setState(update(this.state, {
+                validation: {
+                    address: {
+                        $set: {
+                            valid: validAddress,
+                            pristine: false
+                        }
+                    }
+                }
+            }))
+        }
     }
 
     addReservedTokensItem = () => {
@@ -68,31 +83,6 @@ export class ReservedTokensInputBlock extends React.Component {
         this.props.reservedTokenStore.removeToken(index);
     }
 
-    handleReservedTokensInputAddrChange = (e) => {
-        this.props.onChange(e, 'token', 0, 'reservedtokens_addr')
-
-        const address = e.target.value
-        const validAddress = Web3.utils.isAddress(address) ?  VALID : INVALID
-
-        this.setState(update(this.state, {
-            validation: {
-                address: {
-                    $set: {
-                        valid: validAddress,
-                        pristine: false
-                    }
-                }
-            },
-            token: {
-                reservedTokensInput: {
-                    addr: {
-                        $set: address
-                    }
-                }
-            }
-        }))
-    }
-
     handleReservedTokensInputDimChange = (e) => {
         this.props.onChange(e, 'token', 0, 'reservedtokens_dim')
         this.setState(update(this.state, {
@@ -120,8 +110,6 @@ export class ReservedTokensInputBlock extends React.Component {
     }
 
     render() {
-        let { token } = this.state
-
         const reservedTokensElements = this.props.reservedTokenStore.tokens
             .map((token, index) => {
                 return (

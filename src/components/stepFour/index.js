@@ -19,7 +19,7 @@ import JSZip from 'jszip'
 const { PUBLISH } = NAVIGATION_STEPS
 
 
-@inject('contractStore', 'web3Store', 'tierStore', 'tokenStore')
+@inject('contractStore', 'reservedTokenStore', 'tierStore', 'tokenStore', 'web3Store')
 @observer export class stepFour extends stepTwo {
   constructor(props) {
     super(props);
@@ -475,7 +475,7 @@ const { PUBLISH } = NAVIGATION_STEPS
   }
 
   handleDeployedFinalizeAgent = (err, finalizeAgentAddr) => {
-    const { contractStore, web3Store, tierStore, tokenStore } = this.props
+    const { contractStore, reservedTokenStore, tierStore, tokenStore, web3Store } = this.props
     const web3 = web3Store.web3
     let newState = { ...this.state }
     if (err) {
@@ -490,7 +490,7 @@ const { PUBLISH } = NAVIGATION_STEPS
 
     setLastCrowdsaleRecursive(0, web3, pricingStrategyABI, contractStore.pricingStrategy.addr, contractStore.crowdsale.addr.slice(-1)[0], 142982, (err) => {
       if (err) return this.hideLoader();
-      setReservedTokensListMultiple(web3, tokenABI, contractStore.token.addr, tokenStore, (err) => {
+      setReservedTokensListMultiple(web3, tokenABI, contractStore.token.addr, tokenStore, reservedTokenStore, (err) => {
         if (err) return this.hideLoader();
         updateJoinedCrowdsalesRecursive(0, web3, crowdsaleABI, contractStore.crowdsale.addr, 293146, (err) => {
           if (err) return this.hideLoader();
