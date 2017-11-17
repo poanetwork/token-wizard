@@ -28,8 +28,6 @@ import QRPaymentProcess from './QRPaymentProcess'
   }
 
   componentDidMount () {
-    let newState = { ...this.state }
-
     const { web3Store, contractStore } = this.props
     const web3 = web3Store.web3
 
@@ -44,13 +42,15 @@ import QRPaymentProcess from './QRPaymentProcess'
     const contractType = CONTRACT_TYPES.whitelistwithcap;
     checkNetWorkByID(web3, networkID);
     contractStore.setContractType(contractType);
-    newState.web3Available = true;
-    newState.investThrough = INVESTMENT_OPTIONS.METAMASK;
 
     const timeInterval = setInterval(() => this.setState({ seconds: this.state.seconds - 1}), 1000);
-    this.setState({ timeInterval });
+    this.setState({
+      timeInterval,
+      web3Available: true,
+      investThrough: INVESTMENT_OPTIONS.METAMASK
+    });
 
-    getWhiteListWithCapCrowdsaleAssets(newState, (_newState) => {
+    getWhiteListWithCapCrowdsaleAssets((_newState) => {
       this.setState(_newState);
       this.extractContractsData(web3);
     });
@@ -120,9 +120,10 @@ import QRPaymentProcess from './QRPaymentProcess'
   }
 
   investToTokens(event) {
+    const { investStore } = this.props
     event.preventDefault();
 
-    if (!this.isValidToken(this.state.tokensToInvest)) {
+    if (!this.isValidToken(investStore.tokensToInvest)) {
       this.setState({ pristineTokenInput: false });
       return;
     }
@@ -207,7 +208,7 @@ import QRPaymentProcess from './QRPaymentProcess'
       this.setState({ loading: false });
 
       if (!err) {
-        successfulInvestmentAlert(this.state.tokensToInvest);
+        successfulInvestmentAlert(investStore.tokensToInvest);
       } else {
         toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.USER_REJECTED_TRANSACTION })
       }
@@ -215,13 +216,14 @@ import QRPaymentProcess from './QRPaymentProcess'
   }
 
   txMinedCallback(web3, txHash, receipt) {
+    const { investStore } = this.props
     console.log(web3);
     if (receipt) {
       if (receipt.blockNumber) {
         let state = this.state;
         state.loading = false;
         this.setState(state);
-        successfulInvestmentAlert(this.state.tokensToInvest);
+        successfulInvestmentAlert(investStore.tokensToInvest);
       }
     } else {
       console.log(web3)
@@ -298,7 +300,7 @@ import QRPaymentProcess from './QRPaymentProcess'
     const totalSupply = (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap)?tierCap:standardCrowdsaleSupply;
 
     let invalidTokenDescription = null;
-    if (!this.state.pristineTokenInput && !this.isValidToken(this.state.tokensToInvest)) {
+    if (!this.state.pristineTokenInput && !this.isValidToken(investStore.tokensToInvest)) {
       invalidTokenDescription = <p className="error">Number of tokens to buy should be positive</p>;
     }
 
@@ -338,7 +340,7 @@ import QRPaymentProcess from './QRPaymentProcess'
               <p className="hashes-description">Token Address</p>
             </div>
             <div className="hashes-i">
-              <p className="hashes-title">{contractStore.crowdsale.addr[0]}</p>
+              <p className="hashes-title">{contractStore.crowdsale && contractStore.crowdsale.addr && contractStore.crowdsale.addr[0]}</p>
               <p className="hashes-description">Crowdsale Contract Address</p>
             </div>
             <div className="hashes-i hidden">
