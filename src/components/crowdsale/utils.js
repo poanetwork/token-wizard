@@ -246,7 +246,7 @@ export function getAccumulativeCrowdsaleData(web3, $this, cb) {
             crowdsalePageStore.setProperty('maximumSellableTokens', maxSellableTokens + parseInt(toFixed(maximumSellableTokens), 10));
           else
             crowdsalePageStore.setProperty('maximumSellableTokens', parseInt(toFixed(maximumSellableTokens), 10));
-          
+
           //calc maximumSellableTokens in Eth
           setMaximumSellableTokensInEth(web3, crowdsaleContract, maximumSellableTokens);
 
@@ -350,7 +350,7 @@ export function getCrowdsaleData(web3, $this, crowdsaleContract, cb) {
 
     console.log("token: " + tokenAddr);
     let state = $this.state;
-    contractStore.setContractProperty('token', 'addr', tokenAddr) 
+    contractStore.setContractProperty('token', 'addr', tokenAddr)
     if (propsCount === cbCount) {
       state.loading = false;
       $this.setState(state, cb);
@@ -369,7 +369,7 @@ export function getCrowdsaleData(web3, $this, crowdsaleContract, cb) {
 
         console.log("pricingStrategy: " + pricingStrategyAddr);
         let state = $this.state;
-        contractStore.setContractProperty('pricingStrategy', 'addr', pricingStrategyAddr) 
+        contractStore.setContractProperty('pricingStrategy', 'addr', pricingStrategyAddr)
         if (propsCount === cbCount) {
           state.loading = false;
           $this.setState(state, cb);
@@ -395,168 +395,171 @@ function getTokenData($this, cb) {
     state.loading = false;
     $this.setState(state, cb);
     return;
-  } else {
-    if (web3.eth.accounts.length === 0) {
+  }
+
+  web3.eth.getAccounts().then((accounts) => {
+    if (accounts.length === 0) {
       let state = $this.state;
       state.loading = false;
       $this.setState(state, cb);
       return;
     }
-  };
-  let propsCount = 0;
-  let cbCount = 0;
-  let tokenObj = JSON.parse(JSON.stringify(contractStore.token))
-  console.log('tokenObj', tokenObj)
-  attachToContract(web3, tokenObj.abi, tokenObj.addr, function(err, tokenContract) {
-    console.log("attach to token contract");
-    if (err) return console.log(err);
-    if (!tokenContract) return noContractAlert();
 
-    propsCount++;
-    tokenContract.methods.name().call(function(err, name) {
-      cbCount++;
+    let propsCount = 0;
+    let cbCount = 0;
+    let tokenObj = JSON.parse(JSON.stringify(contractStore.token))
+    console.log('tokenObj', tokenObj)
+    attachToContract(web3, tokenObj.abi, tokenObj.addr, function(err, tokenContract) {
+      console.log("attach to token contract");
       if (err) return console.log(err);
-      
-      console.log("token name: " + name);
-      let state = $this.state;
-      tokenStore.setProperty('name', name);
-      if (propsCount === cbCount) {
-        state.loading = false;
-        $this.setState(state, cb);
-      }
-    });
-    propsCount++;
-    tokenContract.methods.symbol().call(function(err, ticker) {
-      cbCount++;
-      if (err) console.log(err);
-      console.log("token ticker: " + ticker);
-      let state = $this.state;
-      tokenStore.setProperty('ticker', ticker)
-      if (propsCount === cbCount) {
-        state.loading = false;
-        $this.setState(state, cb);
-      }
-    });
-    if (tokenContract.methods.balanceOf) {
+      if (!tokenContract) return noContractAlert();
+
       propsCount++;
-      tokenContract.methods.balanceOf.call(web3.eth.accounts[0], function(err, balanceOf) {
+      tokenContract.methods.name().call(function(err, name) {
         cbCount++;
         if (err) return console.log(err);
-        
-        console.log("balanceOf: " + balanceOf);
+
+        console.log("token name: " + name);
         let state = $this.state;
-        if (crowdsalePageStore.tokenAmountOf)
-          crowdsalePageStore.setProperty('tokenAmountOf', crowdsalePageStore.tokenAmountOf + parseInt(balanceOf, 10));
-        else
-          crowdsalePageStore.setProperty('tokenAmountOf', parseInt(balanceOf, 10));
+        tokenStore.setProperty('name', name);
         if (propsCount === cbCount) {
           state.loading = false;
           $this.setState(state, cb);
         }
       });
-    }
-    propsCount++;
-    tokenContract.methods.decimals().call(function(err, decimals) {
-      cbCount++;
-      if (err) console.log(err);
-      console.log("token decimals: " + decimals);
-      let state = $this.state;
-      tokenStore.setProperty('decimals', decimals);
-      if (propsCount === cbCount) {
-        state.loading = false;
-        $this.setState(state, cb);
-      }
-    });
-    propsCount++;
-    tokenContract.methods.totalSupply().call(function(err, supply) {
-      cbCount++;
-      if (err) console.log(err);
-      let state = $this.state;
-      console.log("token supply: " + supply);
-      tokenStore.setProperty('supply', supply);
-      if (propsCount === cbCount) {
-        state.loading = false;
-        $this.setState(state, cb);
-        return;
-      } else {
-        let propsCount = 0;
-        let cbCount = 0;
-        attachToContract(web3, contractStore.token.abi, contractStore.token.addr, function(err, tokenContract) {
-          console.log("attach to token contract");
+      propsCount++;
+      tokenContract.methods.symbol().call(function(err, ticker) {
+        cbCount++;
+        if (err) console.log(err);
+        console.log("token ticker: " + ticker);
+        let state = $this.state;
+        tokenStore.setProperty('ticker', ticker)
+        if (propsCount === cbCount) {
+          state.loading = false;
+          $this.setState(state, cb);
+        }
+      });
+      if (tokenContract.methods.balanceOf) {
+        propsCount++;
+        tokenContract.methods.balanceOf.call(accounts[0], function(err, balanceOf) {
+          cbCount++;
           if (err) return console.log(err);
-          if (!tokenContract) return noContractAlert();
 
-          propsCount++;
-          tokenContract.methods.name().call(function(err, name) {
-            cbCount++;
+          console.log("balanceOf: " + balanceOf);
+          let state = $this.state;
+          if (crowdsalePageStore.tokenAmountOf)
+            crowdsalePageStore.setProperty('tokenAmountOf', crowdsalePageStore.tokenAmountOf + parseInt(balanceOf, 10));
+          else
+            crowdsalePageStore.setProperty('tokenAmountOf', parseInt(balanceOf, 10));
+          if (propsCount === cbCount) {
+            state.loading = false;
+            $this.setState(state, cb);
+          }
+        });
+      }
+      propsCount++;
+      tokenContract.methods.decimals().call(function(err, decimals) {
+        cbCount++;
+        if (err) console.log(err);
+        console.log("token decimals: " + decimals);
+        let state = $this.state;
+        tokenStore.setProperty('decimals', decimals);
+        if (propsCount === cbCount) {
+          state.loading = false;
+          $this.setState(state, cb);
+        }
+      });
+      propsCount++;
+      tokenContract.methods.totalSupply().call(function(err, supply) {
+        cbCount++;
+        if (err) console.log(err);
+        let state = $this.state;
+        console.log("token supply: " + supply);
+        tokenStore.setProperty('supply', supply);
+        if (propsCount === cbCount) {
+          state.loading = false;
+          $this.setState(state, cb);
+          return;
+        } else {
+          let propsCount = 0;
+          let cbCount = 0;
+          attachToContract(web3, contractStore.token.abi, contractStore.token.addr, function(err, tokenContract) {
+            console.log("attach to token contract");
             if (err) return console.log(err);
+            if (!tokenContract) return noContractAlert();
 
-            console.log("token name: " + name);
-            let state = $this.state;
-            tokenStore.setProperty('name', name);
-            if (propsCount === cbCount) {
-              state.loading = false;
-              $this.setState(state, cb);
-            }
-          });
-          propsCount++;
-          tokenContract.methods.symbol().call(function(err, ticker) {
-            cbCount++;
-            if (err) console.log(err);
-            console.log("token ticker: " + ticker);
-            let state = $this.state;
-            tokenStore.setProperty('ticker', ticker);
-            if (propsCount === cbCount) {
-              state.loading = false;
-              $this.setState(state, cb);
-            }
-          });
-          if (tokenContract.methods.balanceOf) {
             propsCount++;
-            tokenContract.methods.balanceOf(web3.eth.accounts[0]).call(function(err, balanceOf) {
+            tokenContract.methods.name().call(function(err, name) {
               cbCount++;
               if (err) return console.log(err);
 
-              console.log("balanceOf: " + balanceOf);
+              console.log("token name: " + name);
               let state = $this.state;
-              if (crowdsalePageStore.tokenAmountOf)
-                crowdsalePageStore.setProperty('tokenAmountOf', crowdsalePageStore.tokenAmountOf + parseInt(balanceOf, 10));
-              else
-                crowdsalePageStore.setProperty('tokenAmountOf', parseInt(balanceOf, 10));
+              tokenStore.setProperty('name', name);
               if (propsCount === cbCount) {
                 state.loading = false;
                 $this.setState(state, cb);
               }
             });
-          }
-          propsCount++;
-          tokenContract.methods.decimals().call(function(err, decimals) {
-            cbCount++;
-            if (err) console.log(err);
-            console.log("token decimals: " + decimals);
-            let state = $this.state;
-            tokenStore.setProperty('decimals', decimals);
-            if (propsCount === cbCount) {
-              state.loading = false;
-              $this.setState(state, cb);
+            propsCount++;
+            tokenContract.methods.symbol().call(function(err, ticker) {
+              cbCount++;
+              if (err) console.log(err);
+              console.log("token ticker: " + ticker);
+              let state = $this.state;
+              tokenStore.setProperty('ticker', ticker);
+              if (propsCount === cbCount) {
+                state.loading = false;
+                $this.setState(state, cb);
+              }
+            });
+            if (tokenContract.methods.balanceOf) {
+              propsCount++;
+              tokenContract.methods.balanceOf(accounts[0]).call(function(err, balanceOf) {
+                cbCount++;
+                if (err) return console.log(err);
+
+                console.log("balanceOf: " + balanceOf);
+                let state = $this.state;
+                if (crowdsalePageStore.tokenAmountOf)
+                  crowdsalePageStore.setProperty('tokenAmountOf', crowdsalePageStore.tokenAmountOf + parseInt(balanceOf, 10));
+                else
+                  crowdsalePageStore.setProperty('tokenAmountOf', parseInt(balanceOf, 10));
+                if (propsCount === cbCount) {
+                  state.loading = false;
+                  $this.setState(state, cb);
+                }
+              });
             }
+            propsCount++;
+            tokenContract.methods.decimals().call(function(err, decimals) {
+              cbCount++;
+              if (err) console.log(err);
+              console.log("token decimals: " + decimals);
+              let state = $this.state;
+              tokenStore.setProperty('decimals', decimals);
+              if (propsCount === cbCount) {
+                state.loading = false;
+                $this.setState(state, cb);
+              }
+            });
+            propsCount++;
+            tokenContract.methods.totalSupply().call(function(err, supply) {
+              cbCount++;
+              if (err) console.log(err);
+              let state = $this.state;
+              console.log("token supply: " + supply);
+              tokenStore.setProperty('supply', supply);
+              if (propsCount === cbCount) {
+                state.loading = false;
+                $this.setState(state, cb);
+              }
+            });
           });
-          propsCount++;
-          tokenContract.methods.totalSupply().call(function(err, supply) {
-            cbCount++;
-            if (err) console.log(err);
-            let state = $this.state;
-            console.log("token supply: " + supply);
-            tokenStore.setProperty('supply', supply);
-            if (propsCount === cbCount) {
-              state.loading = false;
-              $this.setState(state, cb);
-            }
-          });
-        });
-      }
-    })
-  });
+        }
+      })
+    });
+  })
 }
 
 export function getPricingStrategyData(web3, cb) {
