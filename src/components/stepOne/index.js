@@ -29,6 +29,7 @@ export class stepOne extends React.Component {
   }
 
   getCrowdsaleAsset(contractName, stateProp, state) {
+    console.log(contractName, stateProp, state);
     let src, bin, abi;
     let assetsCount = 3;
     let assetsIterator = 0;
@@ -60,6 +61,7 @@ export class stepOne extends React.Component {
   }
 
   addContractsToState (src, bin, abi, contract, state) {
+    console.log('state', state)
     state.contracts[contract] = {
       src,
       bin,
@@ -73,6 +75,7 @@ export class stepOne extends React.Component {
   contractTypeSelected(e) {
     let newState = { ...this.state }
     newState.contractType = e.currentTarget.id;
+    console.log(e.currentTarget.id);
     this.getWhiteListWithCapCrowdsaleAssets(newState);
   }
 
@@ -114,7 +117,7 @@ export class stepOne extends React.Component {
           </div>
         </div>
         <div className="button-container">
-          <Link to={{ pathname: '/2', query: { state: this.state } }}><span className="button button_fill">Continue</span></Link>
+          <Link to={{ pathname: '/2', query: { state: this.state } }}><a className="button button_fill">Continue</a></Link>
         </div>
       </section>
     )}
