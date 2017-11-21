@@ -7,7 +7,9 @@ class ReservedTokenInputStore {
   @observable val;
 
   constructor() {
+    this.addr = '';
     this.dim = 'tokens';
+    this.val = '';
   }
 
   @action setProperty = (property, value) => {
