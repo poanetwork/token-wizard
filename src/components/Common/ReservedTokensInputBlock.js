@@ -1,6 +1,6 @@
 import React from 'react'
 import '../../assets/stylesheets/application.css';
-import InputField from './InputField'
+import { InputField } from './InputField'
 import { RadioInputField } from './RadioInputField'
 import { TEXT_FIELDS } from '../../utils/constants'
 import ReservedTokensItem from './ReservedTokensItem'

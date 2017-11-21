@@ -3,7 +3,7 @@ import '../../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
 import { checkWeb3 } from '../../utils/blockchainHelpers'
 import { StepNavigation } from '../Common/StepNavigation'
-import InputField from '../Common/InputField'
+import { InputField } from '../Common/InputField'
 import { ReservedTokensInputBlock } from '../Common/ReservedTokensInputBlock'
 import { NAVIGATION_STEPS, VALIDATION_MESSAGES, TEXT_FIELDS } from '../../utils/constants'
 import { inject, observer } from 'mobx-react';
