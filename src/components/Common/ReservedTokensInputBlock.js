@@ -1,68 +1,27 @@
 import React from 'react'
-import Web3 from 'web3'
 import '../../assets/stylesheets/application.css';
 import InputField from './InputField'
 import { RadioInputField } from './RadioInputField'
-import { TEXT_FIELDS, VALIDATION_TYPES } from '../../utils/constants'
+import { TEXT_FIELDS } from '../../utils/constants'
 import ReservedTokensItem from './ReservedTokensItem'
 import update from 'immutability-helper'
 import { inject, observer } from 'mobx-react';
 
 const { ADDRESS, DIMENSION, VALUE } = TEXT_FIELDS
-const {INVALID, VALID} = VALIDATION_TYPES;
 
 @inject('reservedTokenStore', 'reservedTokenInputStore', 'reservedTokenElementStore') @observer
 export class ReservedTokensInputBlock extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            validation: {
-                address: {
-                    valid: INVALID,
-                    pristine: true
-                }
-            }
-        }
-    }
-
     updateReservedTokenInput = (event, property) => {
         const value = event.target.value;
         this.props.reservedTokenInputStore.setProperty(property, value);
-
-        if (property === 'addr') {
-            const address = value;
-            const validAddress = Web3.utils.isAddress(address) ?  VALID : INVALID
-            this.setState(update(this.state, {
-                validation: {
-                    address: {
-                        $set: {
-                            valid: validAddress,
-                            pristine: false
-                        }
-                    }
-                }
-            }))
-        }
     }
 
     addReservedTokensItem = () => {
-        if (this.state.validation.address.valid === INVALID) {
-            this.setState(update(this.state, {
-                validation: {
-                    address: {
-                        pristine: { $set: false }
-                    }
-                }
-            }))
-            return;
-        }
-
         const addr = this.props.reservedTokenInputStore.addr.toString();
         const dim = this.props.reservedTokenInputStore.dim.toString();
         const val = this.props.reservedTokenInputStore.val.toString();
 
-        if (!dim || !val) {
+        if (!addr || !dim || !val) {
             return
         }
 
@@ -133,9 +92,6 @@ export class ReservedTokensInputBlock extends React.Component {
                         type='text'
                         title={ADDRESS}
                         value={this.props.reservedTokenInputStore.addr}
-                        pristine={this.state.validation.address.pristine}
-                        valid={this.state.validation.address.valid}
-                        errorMessage="The inserted address is invalid"
                         onChange={(e) => this.updateReservedTokenInput(e, 'addr')}
                         description={`Address where to send reserved tokens.`}
                       />

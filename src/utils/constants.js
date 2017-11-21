@@ -14,6 +14,7 @@ export const defaultState = {
     supply: 0,
     decimals: '',
     reservedTokens: [],
+    reservedTokensElements: [],
     reservedTokensInput: {dim: "tokens"}
   },
   crowdsale: [{
@@ -134,6 +135,7 @@ export const initialStepTwoValues = {
     ticker: '',
     decimals: '',
     reservedTokens: [],
+    reservedTokensElements: [],
     reservedTokensInput: {dim: "tokens"}
   }
 }
