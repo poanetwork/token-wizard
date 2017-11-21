@@ -200,7 +200,7 @@ export class Invest extends React.Component {
     };
     console.log(opts);
 
-    sendTXToContract(crowdsaleContract.methods.buy().send(opts), err => {
+    sendTXToContract(web3, crowdsaleContract.methods.buy().send(opts), err => {
       this.setState({ loading: false });
 
       if (!err) {
