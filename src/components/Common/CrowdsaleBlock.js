@@ -2,7 +2,7 @@ import React from 'react'
 import '../../assets/stylesheets/application.css';
 import { WhitelistInputBlock } from './WhitelistInputBlock'
 import { defaultCompanyEndDate } from '../../utils/utils'
-import InputField from './InputField'
+import { InputField } from './InputField'
 import { RadioInputField } from './RadioInputField'
 import { VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS } from '../../utils/constants'
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
