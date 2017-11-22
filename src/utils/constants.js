@@ -340,9 +340,10 @@ export const TOAST = {
     SUCCESS: 'warning'
   },
   MESSAGE: {
-    USER_REJECTED_TRANSACTION: 'User Rejected Transaction',
+		TRANSACTION_FAILED: 'Transaction has failed, please retry',
     CONTRACT_DOWNLOAD_FAILED: 'Contract Download failed',
-    CONTRACT_DOWNLOAD_SUCCESS: 'A file with contracts and metadata downloaded on your computer'},
+    CONTRACT_DOWNLOAD_SUCCESS: 'A file with contracts and metadata downloaded on your computer'
+  },
   DEFAULT_OPTIONS: {
     position: 'top right',
     offset: '80px 14',

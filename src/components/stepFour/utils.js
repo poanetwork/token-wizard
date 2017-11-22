@@ -22,7 +22,7 @@ function setLastCrowdsale(web3, abi, addr, lastCrowdsale, gasLimit, cb) {
     if (!pricingStrategyContract) return noContractAlert();
 
     let method = pricingStrategyContract.methods.setLastCrowdsale(lastCrowdsale).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
-    sendTXToContract(web3, method, cb);
+    sendTXToContract(web3, method, cb)
   });
 }
 
@@ -38,7 +38,7 @@ function setMintAgent(web3, abi, addr, acc, gasLimit, cb) {
     if (!tokenContract) return noContractAlert();
 
     let method = tokenContract.methods.setMintAgent(acc, true).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
-    sendTXToContract(web3, method, cb);
+    sendTXToContract(web3, method, cb)
   });
 }
 
@@ -129,7 +129,7 @@ function updateJoinedCrowdsales(web3, abi, addr, joinedCntrctAddrs, gasLimit, cb
     console.log(joinedCntrctAddrs);
 
     let method = crowdsaleContract.methods.updateJoinedCrowdsalesMultiple(joinedCntrctAddrs).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
-    sendTXToContract(web3, method, cb);
+    sendTXToContract(web3, method, cb)
   });
 }
 
@@ -144,7 +144,7 @@ function setFinalizeAgent(web3, abi, addr, finalizeAgentAddr, gasLimit, cb) {
     if (!crowdsaleContract) return noContractAlert();
 
     let method = crowdsaleContract.methods.setFinalizeAgent(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
-    sendTXToContract(web3, method, cb);
+    sendTXToContract(web3, method, cb)
   });
 }
 
@@ -159,7 +159,7 @@ function setReleaseAgent(web3, abi, addr, finalizeAgentAddr, gasLimit, cb) {
     if (!tokenContract) return noContractAlert();
 
     let method = tokenContract.methods.setReleaseAgent(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
-    sendTXToContract(web3, method, cb);
+    sendTXToContract(web3, method, cb)
   });
 }
 
@@ -224,7 +224,7 @@ export function transferOwnership(web3, abi, addr, finalizeAgentAddr, gasLimit, 
     if (!tokenContract) return noContractAlert();
 
     let method = tokenContract.methods.transferOwnership(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
-    sendTXToContract(web3, method, cb);
+    sendTXToContract(web3, method, cb)
   });
 }
 
