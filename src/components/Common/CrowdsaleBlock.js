@@ -12,14 +12,13 @@ const { START_TIME, END_TIME, RATE, SUPPLY, CROWDSALE_SETUP_NAME, ALLOWMODIFYING
 @inject('tierStore')
 @observer
 export class CrowdsaleBlock extends React.Component {
-  componentDidMount () {
+  componentWillMount() {
     const { tierStore, num } = this.props
     const startTime = tierStore.tiers[num - 1].endTime
-    const endTime = defaultCompanyEndDate(tierStore.tiers[num-1].startTime)
+    const endTime = defaultCompanyEndDate(tierStore.tiers[num - 1].endTime)
     tierStore.setTierProperty(startTime, 'startTime', num)
     tierStore.setTierProperty(endTime, 'endTime', num)
   }
-
   changeState = (event, parent, key, property) => {
     if (property.indexOf("whitelist_") === 0) {
       const { tierStore } = this.props
@@ -81,7 +80,7 @@ export class CrowdsaleBlock extends React.Component {
             value={tierStore.tiers[num].startTimeTemp}
             valid={tierStore.validTiers[num].startTime}
             errorMessage={VALIDATION_MESSAGES.START_TIME}
-            defaultValue={tierStore.tiers[num - 1].startTime}
+            defaultValue={tierStore.tiers[num].startTime}
             onChange={(e) => this.updateTierStore(e, 'startTime')}
             description={`Date and time when the tier starts. Can't be in the past from the current moment.`}
           />
@@ -92,7 +91,7 @@ export class CrowdsaleBlock extends React.Component {
             value={tierStore.tiers[num].endTimeTemp}
             valid={tierStore.validTiers[num].endTime}
             errorMessage={VALIDATION_MESSAGES.END_TIME}
-            defaultValue={defaultCompanyEndDate(tierStore.tiers[num-1].endTime)}
+            defaultValue={tierStore.tiers[num].endTime}
             onChange={(e) => this.updateTierStore(e, 'endTime')}
             description={`Date and time when the tier ends. Can be only in the future.`}
           />
