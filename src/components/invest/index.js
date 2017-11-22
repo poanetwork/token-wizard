@@ -208,7 +208,7 @@ import QRPaymentProcess from './QRPaymentProcess'
       this.setState({ loading: false });
 
       if (!err) {
-        successfulInvestmentAlert(this.state.tokensToInvest)
+        successfulInvestmentAlert(investStore.tokensToInvest)
       } else {
         toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED })
       }
