@@ -204,9 +204,9 @@ export class Invest extends React.Component {
       this.setState({ loading: false });
 
       if (!err) {
-        successfulInvestmentAlert(this.state.tokensToInvest);
+        successfulInvestmentAlert(this.state.tokensToInvest)
       } else {
-        toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.USER_REJECTED_TRANSACTION })
+        toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED })
       }
     });
   }

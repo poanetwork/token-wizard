@@ -214,48 +214,51 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
 }
 
 export function sendTXToContract(web3, method, cb) {
-  let isMined = false;
+  let isMined = false
+
   method
-  .on('error', function(error) {
-    console.log(error);
-    return cb(error);
-  })
-  .on('transactionHash', function(transactionHash){
-    console.log("contract method transaction: " + transactionHash);
+    .on('error', error => {
+      return cb(error)
+    })
+    .on('transactionHash', transactionHash => {
+      console.log("contract method transaction: " + transactionHash);
 
-    checkTxMined(web3, transactionHash, function txMinedCallback(receipt) {
-      if (isMined) return;
+      // This additional polling of tx receipt was made, because users had problems on mainnet: wizard hanged on random
+      // transaction, because there wasn't response from it, no receipt. Especially, if you switch between tabs when
+      // wizard works.
+      // https://github.com/oraclesorg/ico-wizard/pull/364/files/c86c3e8482ef078e0cb46b8bebf57a9187f32181#r152277434
+      checkTxMined(web3, transactionHash, function txMinedCallback(receipt) {
+        if (isMined) return
 
-      if (receipt) {
-        if (receipt.blockNumber) {
-          console.log("Sending tx to contract is mined from polling of tx receipt");
-          isMined = true;
-          console.log(receipt) // instance with the new contract address
-          return cb();
+        if (receipt) {
+          if (receipt.blockNumber) {
+            console.log("Sending tx to contract is mined from polling of tx receipt");
+            isMined = true
+            return cb()
+          } else {
+            console.log("Still mining... Polling of transaction once more");
+            setTimeout(() => {
+              checkTxMined(web3, transactionHash, txMinedCallback)
+            }, 5000)
+          }
         } else {
           console.log("Still mining... Polling of transaction once more");
-          setTimeout(function() {
+          setTimeout(() => {
             checkTxMined(web3, transactionHash, txMinedCallback)
-          }, 5000);
+          }, 5000)
         }
-      } else {
-        console.log("Still mining... Polling of transaction once more");
-        setTimeout(function() {
-          checkTxMined(web3, transactionHash, txMinedCallback)
-        }, 5000);
-      }
+      })
     })
-  })
-  .on('confirmation', function(confirmationNumber, receipt){
-  })
-  .then(function(result){
-    if (!isMined) {
-      console.log("Sending tx to contract is mined from Promise");
-      isMined = true;
-      console.log(result) // instance with the new contract address
-      cb();
-    }
-  });
+    .on('receipt', receipt => {
+      if (isMined) return
+      isMined = true
+
+      if (0 !== receipt.status) {
+        return cb()
+      }
+
+      return cb({ message: 0 })
+    })
 }
 
 export function checkTxMined(web3, txhash, cb) {
