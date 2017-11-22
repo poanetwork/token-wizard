@@ -169,7 +169,7 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
           gas: estimatedGas,
           gasPrice: GAS_PRICE
         };
-        
+
         let isMined = false;
 
         contractInstance.deploy(deployOpts).send(sendOpts)
@@ -238,7 +238,12 @@ export function sendTXToContract(web3, method, cb) {
           if (receipt.blockNumber) {
             console.log("Sending tx to contract is mined from polling of tx receipt");
             isMined = true
-            return cb()
+
+            if (0 !== +receipt.status) {
+              return cb()
+            }
+
+            return cb({ message: 0 })
           } else {
             console.log("Still mining... Polling of transaction once more");
             setTimeout(() => {
@@ -257,7 +262,7 @@ export function sendTXToContract(web3, method, cb) {
       if (isMined) return
       isMined = true
 
-      if (0 !== receipt.status) {
+      if (0 !== +receipt.status) {
         return cb()
       }
 
