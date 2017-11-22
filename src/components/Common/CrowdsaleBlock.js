@@ -9,22 +9,26 @@ import { VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS } from '../../utils/
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
 const { START_TIME, END_TIME, RATE, SUPPLY, CROWDSALE_SETUP_NAME, ALLOWMODIFYING } = TEXT_FIELDS
 
-@inject ('tierStore')
-@observer export class CrowdsaleBlock extends React.Component {
-  constructor(props) {
-    super(props);
-
-    props.tierStore.setTierProperty("Tier " + props.num, 'name', props.num)
-    props.tierStore.setTierProperty( "off", 'updatable', props.num)
-    props.tierStore.setTierProperty( "yes", 'whitelistdisabled', 0)
-  }
-
-  componentDidMount() {
+@inject('tierStore')
+@observer
+export class CrowdsaleBlock extends React.Component {
+  componentDidMount () {
     const { tierStore, num } = this.props
     const startTime = tierStore.tiers[num - 1].endTime
     const endTime = defaultCompanyEndDate(tierStore.tiers[num-1].startTime)
     tierStore.setTierProperty(startTime, 'startTime', num)
     tierStore.setTierProperty(endTime, 'endTime', num)
+  }
+
+  changeState = (event, parent, key, property) => {
+    if (property.indexOf("whitelist_") === 0) {
+      const { tierStore } = this.props
+      const whitelistInputProps = { ...tierStore.tiers[key].whitelistInput }
+      const prop = property.split("_")[1]
+
+      whitelistInputProps[prop] = event.target.value
+      tierStore.setTierProperty(whitelistInputProps, 'whitelistInput', key)
+    }
   }
 
   updateTierStore = (event, property) => {
@@ -35,14 +39,14 @@ const { START_TIME, END_TIME, RATE, SUPPLY, CROWDSALE_SETUP_NAME, ALLOWMODIFYING
   }
 
   render() {
-    let { num, onChange, tierStore } = this.props
+    let { num, tierStore } = this.props
     let whitelistInputBlock = <div>
       <div className="section-title">
           <p className="title">Whitelist</p>
         </div>
         <WhitelistInputBlock
           num = {num}
-          onChange={(e, prop) => onChange(e, prop)}
+          onChange={(e, cntrct, num, prop) => this.changeState(e, cntrct, num, prop)}
         ></WhitelistInputBlock>
     </div>
     return (<div key={num.toString()} style={{"marginTop": "40px"}} className="steps-content container">

@@ -23,8 +23,8 @@ export const defaultState = {
     walletAddress: '',
     supply: '',
     whitelist: [],
-    whiteListElements: [],
-    whiteListInput: {}
+    whitelistElements: [],
+    whitelistInput: {}
   }],
   pricingStrategy: [{rate: ''}],
   blockTimeGeneration: 17,
@@ -45,8 +45,8 @@ export const defaultTiers = [{
   walletAddress: '',
   supply: '',
   whitelist: [],
-  whiteListElements: [],
-  whiteListInput: {}
+  whitelistElements: [],
+  whitelistInput: {}
 }]
 
 export const CONTRACT_TYPES = {

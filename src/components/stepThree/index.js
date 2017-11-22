@@ -37,6 +37,17 @@ export class stepThree extends React.Component{
     this.props.tierStore.invalidateToken();
   }
 
+  changeState = (event, parent, key, property) => {
+    if (property.indexOf("whitelist_") === 0) {
+      const { tierStore } = this.props
+      const whitelistInputProps = { ...tierStore.tiers[key].whitelistInput }
+      const prop = property.split("_")[1]
+
+      whitelistInputProps[prop] = event.target.value
+      tierStore.setTierProperty(whitelistInputProps, 'whitelistInput', key)
+    }
+  }
+
   addCrowdsale() {
     const { crowdsaleBlockListStore, tierStore } = this.props
     let num = crowdsaleBlockListStore.blockList.length + 1;
@@ -46,8 +57,8 @@ export class stepThree extends React.Component{
       rate: 0,
       updatable: "off",
       whitelist:[],
-      whiteListElements: [],
-      whiteListInput:{}
+      whitelistElements: [],
+      whitelistInput: {}
     }
 
     const newTierValidations = {
@@ -98,13 +109,13 @@ export class stepThree extends React.Component{
   }
 
   renderStandardLink () {
-    return <Link to={{ pathname: '/4', query: { changeState: this.changeState } }}><a className="button button_fill">Continue</a></Link>
+    return <Link to={{ pathname: '/4', query: { changeState: this.changeState } }} className="button button_fill">Continue</Link>
   }
 
   renderLink () {
     return <div>
       <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Tier</div>
-      <Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}><a className="button button_fill">Continue</a></Link>
+      <Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }} className="button button_fill">Continue</Link>
     </div>
   }
 
@@ -152,7 +163,7 @@ export class stepThree extends React.Component{
           valid={VALID}
           errorMessage={VALIDATION_MESSAGES.MINCAP}
           onChange={(e) => tierStore.setGlobalMinCap(e.target.value)}
-          description={`Minimum amount tokens to buy. Not a mininal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.`}
+          description={`Minimum amount tokens to buy. Not a minimal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.`}
         />
       </div></div>
     if ( contractStore.contractType === CONTRACT_TYPES.standard) {

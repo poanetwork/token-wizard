@@ -20,7 +20,7 @@ class TierStore {
 			updatable: "VALIDATED"
 		}]
 	}
-	
+
 	@action setGlobalMinCap = (minCap) => {
 		this.globalmincap = minCap
 	}
@@ -34,7 +34,7 @@ class TierStore {
   @action addTierValidations = (validations) => {
     this.validTiers.push(validations)
   }
-  
+
   @action setTierProperty = (value, property, index) => {
     console.log('value, property, index', value, property, index)
     let newTier = {...this.tiers[index]}
@@ -43,7 +43,7 @@ class TierStore {
     console.log('this.tiers[index]', this.tiers[index])
     this.tiers[index] = newTier;
   }
-  
+
   @action removeTier = (index) => {
     this.tiers.splice(index,1)
   }
@@ -59,10 +59,10 @@ class TierStore {
         return
         case 'walletAddress':
         this.validTiers[index][property] = validateAddress(this.tiers[index][property]) ? VALID : INVALID
-        return	
+        return
       case 'supply':
         this.validTiers[index][property] = validateSupply(this.tiers[index][property]) ? VALID : INVALID
-        return	
+        return
       case 'rate':
         this.validTiers[index][property] = validateRate(this.tiers[index][property]) ? VALID : INVALID
         return
@@ -77,7 +77,7 @@ class TierStore {
     if (!this.validTiers) {
       return;
     }
-    
+
     const isValid = this.validTiers.every((tier, index) => Object.keys(tier).every((key) => {
       console.log('key', key, this.validTiers[index][key])
       if (this.validTiers[index][key] === VALID) {
@@ -101,6 +101,12 @@ class TierStore {
         }
       });
     });
+  }
+
+  @action removeWhiteListItem = (whitelistNum, crowdsaleNum) => {
+    let whitelist = this.tiers[crowdsaleNum].whitelist.slice()
+    whitelist[whitelistNum].deleted = true
+    this.setTierProperty(whitelist, 'whitelist', crowdsaleNum)
   }
 }
 

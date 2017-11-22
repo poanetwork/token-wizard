@@ -59,19 +59,19 @@ function addWhiteList(round, web3, tierStore, token, abi, addr, cb) {
       }
     }
 
-    if (tierStore.tiers[i].whiteListInput.addr && tierStore.tiers[i].whiteListInput.min && tierStore.tiers[i].whiteListInput.max) {
+    if (tierStore.tiers[i].whitelistInput.addr && tierStore.tiers[i].whitelistInput.min && tierStore.tiers[i].whitelistInput.max) {
       let itemIsAdded = false;
       for (let k = 0; k < whitelist.length; k++) {
-        if (whitelist[k].addr == tierStore.tiers[i].whiteListInput.addr) {
+        if (whitelist[k].addr == tierStore.tiers[i].whitelistInput.addr) {
           itemIsAdded = true;
           break;
         }
       }
       if (!itemIsAdded) {
         whitelist.push({
-          "addr": tierStore.tiers[i].whiteListInput.addr,
-          "min": tierStore.tiers[i].whiteListInput.min,
-          "max": tierStore.tiers[i].whiteListInput.max
+          "addr": tierStore.tiers[i].whitelistInput.addr,
+          "min": tierStore.tiers[i].whitelistInput.min,
+          "max": tierStore.tiers[i].whitelistInput.max
         });
       }
     }
