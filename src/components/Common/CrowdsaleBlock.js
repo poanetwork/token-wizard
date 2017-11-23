@@ -58,7 +58,7 @@ export class CrowdsaleBlock extends React.Component {
             value={tierStore.tiers[num].tier}
             valid={tierStore.validTiers[num].tier}
             errorMessage={VALIDATION_MESSAGES.TIER}
-            onChange={(e) => this.updateTierStore(e, 'name')}
+            onChange={(e) => this.updateTierStore(e, 'tier')}
             description={`Name of a tier, e.g. PrePreIco, PreICO, ICO with bonus A, ICO with bonus B, etc. We simplified that and will increment a number after each tier.`}
           />
           <InputField
@@ -68,7 +68,7 @@ export class CrowdsaleBlock extends React.Component {
             value={tierStore.tiers[num].rate}
             valid={tierStore.validTiers[num].rate}
             errorMessage={VALIDATION_MESSAGES.RATE}
-            onChange={(e) => this.updateTierStore(e,'rate')}
+            onChange={(e) => this.updateTierStore(e, 'rate')}
             description={`Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens`}
           />
           </div>

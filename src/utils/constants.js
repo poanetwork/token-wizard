@@ -163,14 +163,14 @@ export const initialStepThreeValues = {
 
 export const FILE_CONTENTS = {
   common: [
-    { field: 'name', value: 'Token name: ', parent: 'token' },
-    { field: 'ticker', value: 'Token ticker: ', parent: 'token' },
-    { field: 'decimals', value: 'Token decimals: ', parent: 'token' },
-    { field: 'walletAddress', value: 'Multisig wallet address: ', parent: 'crowdsale' },
+    { field: 'name', value: 'Token name: ', parent: 'tokenStore' },
+    { field: 'ticker', value: 'Token ticker: ', parent: 'tokenStore' },
+    { field: 'decimals', value: 'Token decimals: ', parent: 'tokenStore' },
+    { field: 'walletAddress', value: 'Multisig wallet address: ', parent: 'tierStore' },
     { value: '*****************************', parent: 'none', fileValue: '' },
-    { field: 'rate', value: 'Crowdsale rate: ', parent: 'pricingStrategy' },
-    { field: 'startTime', value: 'Crowdsale start time: ', parent: 'crowdsale' },
-    { field: 'endTime', value: 'Crowdsale end time: ', parent: 'crowdsale' },
+    { field: 'rate', value: 'Crowdsale rate: ', parent: 'tierStore' },
+    { field: 'startTime', value: 'Crowdsale start time: ', parent: 'tierStore' },
+    { field: 'endTime', value: 'Crowdsale end time: ', parent: 'tierStore' },
     { value: 'Compiler Version: ', parent: 'none', fileValue: '0.4.11' },
     { value: 'Is optimization enabled?: ', parent: 'none', fileValue: 'true' },
     { value: '*****************************', parent: 'none', fileValue: '' }

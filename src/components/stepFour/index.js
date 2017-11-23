@@ -15,6 +15,7 @@ import { Loader } from '../Common/Loader'
 import { NAVIGATION_STEPS, TRUNC_TO_DECIMALS } from '../../utils/constants'
 import { copy } from '../../utils/copy';
 import { observer, inject } from 'mobx-react'
+import { isObservableArray } from 'mobx'
 import JSZip from 'jszip'
 const { PUBLISH } = NAVIGATION_STEPS
 
@@ -101,10 +102,12 @@ const { PUBLISH } = NAVIGATION_STEPS
       case 'pricingStrategy':
       case 'finalizeAgent':
         return handlerForFile(content, this.props.contractStore[parent])
-      case 'token':
-        return handlerForFile(content, this.props.contractStore[parent])
+      case 'tierStore':
+        return handlerForFile(content, this.props[parent].tiers[index])
+      case 'tokenStore':
+        return handlerForFile(content, this.props[parent])
       case 'contracts':
-        return handleContractsForFile(content, this.props.contractStore, index)
+        return handleContractsForFile(content, index, this.props.contractStore, this.props.tierStore)
       case 'none':
         return handleConstantForFile(content)
     }
@@ -115,7 +118,7 @@ const { PUBLISH } = NAVIGATION_STEPS
     const commonHeader = FILE_CONTENTS.common.map(content => this.handleContentByParent(content))
     const { files } = FILE_CONTENTS
     const [NULL_FINALIZE_AGENT, FINALIZE_AGENT] = ['nullFinalizeAgent', 'finalizeAgent']
-    const tiersCount = Array.isArray(this.state.crowdsale) ? this.state.crowdsale.length : 1
+    const tiersCount = isObservableArray(this.props.tierStore.tiers) ? this.props.tierStore.tiers.length : 1
     const contractsKeys = tiersCount === 1 ? files.order.filter(c => c !== NULL_FINALIZE_AGENT) : files.order;
     const orderNumber = order => order.toString().padStart(3, '0');
     let prefix = 1
@@ -124,7 +127,7 @@ const { PUBLISH } = NAVIGATION_STEPS
       if (this.props.contractStore.hasOwnProperty(key)) {
         const { txt, sol, name } = files[key]
         const { abiConstructor } = this.props.contractStore[key]
-        let tiersCountPerContract = Array.isArray(abiConstructor) ? abiConstructor.length : 1
+        let tiersCountPerContract = isObservableArray(abiConstructor) ? abiConstructor.length : 1
 
         if (tiersCount > 1 && [NULL_FINALIZE_AGENT, FINALIZE_AGENT].includes(key)) {
           tiersCountPerContract = NULL_FINALIZE_AGENT === key ? tiersCount - 1 : 1

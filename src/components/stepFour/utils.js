@@ -10,6 +10,7 @@ import { noContractAlert } from '../../utils/alerts'
 import { toFixed } from '../../utils/utils'
 import { GAS_PRICE, DOWNLOAD_NAME } from '../../utils/constants'
 import { tierStore, contractStore } from '../../stores'
+import { isObservableArray } from 'mobx'
 
 function setLastCrowdsale(web3, abi, addr, lastCrowdsale, gasLimit, cb) {
   console.log("###setLastCrowdsale for Pricing Strategy:###");
@@ -312,7 +313,7 @@ export const handleConstantForFile = content => {
   return `${content.value}${content.fileValue}`
 }
 
-export const handleContractsForFile = (content, index) => {
+export const handleContractsForFile = (content, index, contractStore, tierStore) => {
   const title = content.value
   const { field } = content
   let fileContent = ''
@@ -321,7 +322,7 @@ export const handleContractsForFile = (content, index) => {
     const contractField = contractStore[content.child][field]
     let fileBody
 
-    if (Array.isArray(contractField)) {
+    if (isObservableArray(contractField)) {
       fileBody = contractField[index]
 
       if (!!fileBody) {
@@ -331,19 +332,19 @@ export const handleContractsForFile = (content, index) => {
       fileContent = title + ':**** \n\n' + contractField
     }
   } else {
-    fileContent = addSrcToFile(content, index)
+    fileContent = addSrcToFile(content, index, contractStore, tierStore)
   }
 
   return fileContent
 }
 
-const addSrcToFile = (content, index) => {
+const addSrcToFile = (content, index, contractStore, tierStore) => {
   const title = content.value
   const { field } = content
   const contractField = contractStore[content.child][field]
   let fileContent = ''
 
-  if (Array.isArray(contractField) && field !== 'abi') {
+  if (isObservableArray(contractField) && field !== 'abi') {
       fileContent = title + ' for ' + tierStore.tiers[index].tier + ': ' + contractField[index]
   } else {
     if (field !== 'src') {

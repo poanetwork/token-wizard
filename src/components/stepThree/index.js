@@ -28,7 +28,7 @@ export class stepThree extends React.Component{
       setExistingContractParams(contractStore.abi, contractStore.addr[0], contractStore.setContractProperty);
     }
     crowdsaleBlockListStore.emptyList()
-    tierStore.setTierProperty("Tier 1", 'name', 0)
+    tierStore.setTierProperty("Tier 1", 'tier', 0)
     tierStore.setTierProperty( "off", 'updatable', 0)
     tierStore.setTierProperty( "yes", 'whitelistdisabled', 0)
   }
@@ -264,10 +264,10 @@ export class stepThree extends React.Component{
                 side='left'
                 type='text'
                 title={CROWDSALE_SETUP_NAME}
-                value={tierStore.tiers[0].name}
-                valid={tierStore.validTiers[0].name}
+                value={tierStore.tiers[0].tier}
+                valid={tierStore.validTiers[0].tier}
                 errorMessage={VALIDATION_MESSAGES.TIER}
-                onChange={(e) => this.updateTierStore(e, 'name', 0)}
+                onChange={(e) => this.updateTierStore(e, 'tier', 0)}
                 description={`Name of a tier, e.g. PrePreIco, PreICO, ICO with bonus A, ICO with bonus B, etc. We simplified that and will increment a number after each tier.`}
               />
               <InputFieldExt
