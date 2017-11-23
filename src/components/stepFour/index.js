@@ -339,7 +339,7 @@ const { PUBLISH } = NAVIGATION_STEPS
         break;
     }
     console.log(paramsCrowdsale);
-    if (i < crowdsales.length - 1) {
+    if (i < crowdsales.tiers.length - 1) {
       deployContract(i, web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, this.state, (err, crowdsaleAddr) => {
         i++;
         if (err) {
