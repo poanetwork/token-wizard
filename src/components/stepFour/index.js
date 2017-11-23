@@ -103,6 +103,7 @@ const { PUBLISH } = NAVIGATION_STEPS
       case 'finalizeAgent':
         return handlerForFile(content, this.props.contractStore[parent])
       case 'tierStore':
+        index = 'walletAddress' === content.field ? 0 : index
         return handlerForFile(content, this.props[parent].tiers[index])
       case 'tokenStore':
         return handlerForFile(content, this.props[parent])
@@ -115,7 +116,6 @@ const { PUBLISH } = NAVIGATION_STEPS
 
   downloadCrowdsaleInfo = () => {
     const zip = new JSZip()
-    const commonHeader = FILE_CONTENTS.common.map(content => this.handleContentByParent(content))
     const { files } = FILE_CONTENTS
     const [NULL_FINALIZE_AGENT, FINALIZE_AGENT] = ['nullFinalizeAgent', 'finalizeAgent']
     const tiersCount = isObservableArray(this.props.tierStore.tiers) ? this.props.tierStore.tiers.length : 1
@@ -138,6 +138,7 @@ const { PUBLISH } = NAVIGATION_STEPS
           const solFilename = `${orderNumber(prefix++)}_${name}${suffix}`
           const txtFilename = `${orderNumber(prefix++)}_${name}${suffix}`
           const tierNumber = FINALIZE_AGENT === key ? tiersCount - 1 : tier
+          const commonHeader = FILE_CONTENTS.common.map(content => this.handleContentByParent(content, tierNumber))
 
           zip.file(
             `${solFilename}.sol`,
