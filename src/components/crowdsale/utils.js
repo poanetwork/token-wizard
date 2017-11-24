@@ -270,10 +270,13 @@ export function getAccumulativeCrowdsaleData(web3, $this, cb) {
           console.log("investors: " + investors);
           let state = $this.state;
           const oldInvestors = crowdsalePageStore.investors
+          const investorsCount = parseInt(investors, 10)
+
           if (oldInvestors)
-            crowdsalePageStore.setProperty('investors', oldInvestors + parseInt(investors, 10));
+            crowdsalePageStore.setProperty('investors', oldInvestors + investorsCount);
           else
-            crowdsalePageStore.setProperty('investors', oldInvestors);
+            crowdsalePageStore.setProperty('investors', investorsCount);
+
           if (propsCount === cbCount) {
             state.loading = false;
             $this.setState(state, cb);
