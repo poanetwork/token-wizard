@@ -287,7 +287,6 @@ import QRPaymentProcess from './QRPaymentProcess'
     const tokenAmountOf = crowdsalePageStore.tokenAmountOf;
     const ethRaised = crowdsalePageStore.ethRaised;
     const tokenAddress = getContractStoreProperty('token', 'addr')
-    const crowdsaleAddress = getContractStoreProperty('crowdsale', 'addr') && getContractStoreProperty('crowdsale', 'addr')[0]
 
     //balance: tiers, standard
     const investorBalanceTiers = (tokenAmountOf?((tokenAmountOf/10**tokenDecimals)).toString():"0");
@@ -332,11 +331,11 @@ import QRPaymentProcess from './QRPaymentProcess'
           </div>
           <div className="hashes">
             <div className="hashes-i">
-              <p className="hashes-title">{tokenAddress}</p>
+              <p className="hashes-title">{this.state.curAddr}</p>
               <p className="hashes-description">Current Account</p>
             </div>
             <div className="hashes-i">
-              <p className="hashes-title">{crowdsaleAddress}</p>
+              <p className="hashes-title">{tokenAddress}</p>
               <p className="hashes-description">Token Address</p>
             </div>
             <div className="hashes-i">
