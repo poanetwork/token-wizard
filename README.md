@@ -303,7 +303,8 @@ You can find values to verify each contract in the downloaded file. For steps **
 
 ## Projects built on ICO Wizard
 
-None! Send PR if you are the first.
+BlockArray - www.blockarray.com | Supply Chain & Logistics Solutions using Hyperledger Fabric, Sawtooth, and Ethereum (and soon Oracles).
+
 We created ICO Wizard for a crowdsale of [Oracles Network](https://oracles.org/).
 
 ## Contributors guide
