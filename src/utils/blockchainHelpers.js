@@ -241,6 +241,8 @@ export function sendTXToContract(web3, method, cb) {
 
             if (0 !== +receipt.status) {
               return cb()
+            } else if (receipt.status === null) {
+              return cb()
             }
 
             return cb({ message: 0 })
@@ -263,6 +265,8 @@ export function sendTXToContract(web3, method, cb) {
       isMined = true
 
       if (0 !== +receipt.status) {
+        return cb()
+      } else if (receipt.status === null) {
         return cb()
       }
 
