@@ -3,6 +3,7 @@ import { observable, action } from 'mobx';
 class CrowdsalePageStore {
 
 	@observable maximumSellableTokens;
+	@observable maximumSellableTokensInWei;
 	@observable investors;
 	@observable ethRaised;
 	@observable weiRaised;
