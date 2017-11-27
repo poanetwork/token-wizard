@@ -89,10 +89,6 @@ CI will deploy the staging branch to [https://wizard-stage.oracles.org](https://
 
 If a fix pushed without approvers it should have "Emergency" in title, e.g., "Emergency: (Fix) price of 1 token in wei > 18 decimals"
 
-## Contributors guide
-
-Issues which are looking for a handsome contributors are marked as _LookingForContributor_ label in [Issues](https://github.com/oraclesorg/ico-wizard/issues?q=is%3Aissue+is%3Aopen+label%3ALookingForContributor)  section of the GitHub.
-
 ### Notable Contributors
 
 Brought to you by [Oracles Network](https://oracles.org/team) team.
