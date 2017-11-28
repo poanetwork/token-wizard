@@ -49,46 +49,6 @@ If you are having any issues while using the ICO Wizard DApp, please create a "N
 
 Join the Oracles.org Forum at [https://forum.oracles.org/](https://forum.oracles.org/)
 
-## ICO Wizard Pull Request (PR) Policy
-
-Rationale: The project is moving forward. Our users start ICOs with real value on the platform. I'd like to introduce a pull request policy. 
-
-### General rules 
-
-Each PR should have:
-
-- (Mandatory) Description
-  - a human-readable description of changes
-  - a human-readable description of the purpose of the PR
-- (Mandatory) What is it: (Fix), (Feature), or (Refactor) in Title, e.g., "(Fix) price of 1 token in Wei > 18 decimals"
-- (Recommended) Each PR should have one commit message and therefore should only contain one specific fix or feature. Otherwise, multiple PRs should be made
-- (Optional) Any additional concerns or comments 
-
-Merge policy:
-- Fix can be merged to master by approval of 1 approver
-- Feature/Refactor can be merged by approval of min 2 approvers
-
-Current approvers:
-- Franco Victorio
-- Viktor Baranov
-- Igor Barinov
-
-Inactive approvers:
-- Stephan Zharkov 
-- Jeff Christian
-
-_Inactive approvers used to be approvers but not active currently._
-
-
-_Important_. Each of the required approvers cannot have authored or submitted the PR.
-
-### Emergency fixes
-
-Emergency fixes without approval should be deployed to the `stage` branch.
-CI will deploy the staging branch to [https://wizard-stage.oracles.org](https://wizard-stage.oracles.org) automatically.
-
-If a fix pushed without approvers it should have "Emergency" in title, e.g., "Emergency: (Fix) price of 1 token in wei > 18 decimals"
-
 ## Disclaimer
 
 The software is in Beta stage. 
