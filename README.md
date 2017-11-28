@@ -89,16 +89,6 @@ CI will deploy the staging branch to [https://wizard-stage.oracles.org](https://
 
 If a fix pushed without approvers it should have "Emergency" in title, e.g., "Emergency: (Fix) price of 1 token in wei > 18 decimals"
 
-### Notable Contributors
-
-Brought to you by [Oracles Network](https://oracles.org/team) team.
-
-We appreciate contributors from the community:
-
-- Jeff Christian
-- Roman Storm
-- Stephen Arsenault
-
 ## Disclaimer
 
 The software is in Beta stage. 
