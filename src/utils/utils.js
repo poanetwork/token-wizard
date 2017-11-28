@@ -40,10 +40,8 @@ export function getURLParam(key,target){
   }
 }
 
-export function setFlatFileContentToState(file, cb) {
-  readSolFile(file, function(content) {
-    cb(content);
-  });
+export function setFlatFileContentToState(file) {
+  return readSolFile(file)
 }
 
 export function getWhiteListWithCapCrowdsaleAssets(cb) {
@@ -142,21 +140,20 @@ export function getWhiteListWithCapCrowdsaleAssets(cb) {
   });
 }
 
-function readSolFile(path, cb) {
-  var rawFile = new XMLHttpRequest();
-  rawFile.open("GET", path, true);
-  rawFile.onreadystatechange = function ()
-  {
-    if(rawFile.readyState === 4)
-    {
-      if(rawFile.status === 200 || rawFile.status === 0)
-      {
-        var allText = rawFile.responseText;
-        cb(allText);
+function readSolFile(path) {
+  return new Promise((resolve, reject) => {
+    const rawFile = new XMLHttpRequest()
+
+    rawFile.addEventListener('error', reject)
+    rawFile.open('GET', path, true)
+    rawFile.onreadystatechange = function () {
+      if (rawFile.readyState === 4 && (rawFile.status === 200 || rawFile.status === 0)) {
+        let allText = rawFile.responseText
+        resolve(allText)
       }
     }
-  };
-  rawFile.send(null);
+    rawFile.send(null)
+  })
 }
 
 export const findConstructor = (abi) => {
