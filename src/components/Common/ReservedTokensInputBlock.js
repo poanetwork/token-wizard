@@ -26,8 +26,6 @@ export class ReservedTokensInputBlock extends React.Component {
         }
 
         this.props.reservedTokenInputStore.clearInput();
-        this.reservedTokensInputAddr.clearVal();
-        this.reservedTokensInputVal.clearVal();
 
         let newToken = {
             'addr': addr,
@@ -90,7 +88,6 @@ export class ReservedTokensInputBlock extends React.Component {
                 <div className="reserved-tokens-input-container">
                     <div className="reserved-tokens-input-container-inner">
                       <InputField
-                        ref={reservedTokensInputAddr => this.reservedTokensInputAddr = reservedTokensInputAddr}
                         side='reserved-tokens-input-property reserved-tokens-input-property-left'
                         type='text'
                         title={ADDRESS}
@@ -109,7 +106,6 @@ export class ReservedTokensInputBlock extends React.Component {
                         description={`Fixed amount or % of crowdsaled tokens. Will be deposited to the account after fintalization of the crowdsale. `}
                       />
                       <InputField
-                        ref={reservedTokensInputVal => this.reservedTokensInputVal = reservedTokensInputVal}
                         side='reserved-tokens-input-property reserved-tokens-input-property-right'
                         type='number'
                         title={VALUE}
