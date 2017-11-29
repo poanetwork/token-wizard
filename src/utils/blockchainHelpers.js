@@ -2,9 +2,11 @@ import Web3 from 'web3';
 import { incorrectNetworkAlert, noMetaMaskAlert, invalidNetworkIDAlert } from './alerts'
 import { getEncodedABIClientSide } from './microservices'
 import { GAS_PRICE, CHAINS } from './constants'
+import { web3Store } from '../stores'
+import { toJSON, isObservable, toJS } from 'mobx'
 
 // instantiate new web3 instance
-const web3 = new Web3();
+const web3 = web3Store.web3
 
 // get current provider
 export function getCurrentProvider() {
@@ -104,8 +106,7 @@ export function getNetworkVersion(web3) {
   return Promise.resolve(null);
 }
 
-export function setExistingContractParams(abi, addr, $this) {
-  let state = $this.state;
+export function setExistingContractParams(abi, addr, setContractProperty) {
   setTimeout(function() {
     getWeb3((web3) => {
       attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
@@ -115,22 +116,22 @@ export function setExistingContractParams(abi, addr, $this) {
         crowdsaleContract.token.call(function(err, tokenAddr) {
           cbCount++;
           console.log("tokenAddr: " + tokenAddr);
-          state.contracts.token.addr = tokenAddr;
-
-          if (propsCount === cbCount) {
-            $this.setState(state);
-          }
+          // state.contracts.token.addr = tokenAddr;
+          setContractProperty('token', 'addr', tokenAddr)
+          // if (propsCount === cbCount) {
+          //   $this.setState(state);
+          // }
         });
 
         propsCount++;
         crowdsaleContract.multisigWallet.call(function(err, multisigWalletAddr) {
           cbCount++;
           console.log("multisigWalletAddr: " + multisigWalletAddr);
-          state.contracts.multisig.addr = multisigWalletAddr;
-
-          if (propsCount === cbCount) {
-            $this.setState(state);
-          }
+          // state.contracts.multisig.addr = multisigWalletAddr;
+          setContractProperty('multisig', 'addr', multisigWalletAddr)
+          // if (propsCount === cbCount) {
+          //   $this.setState(state);
+          // }
         });
       });
     })
@@ -138,7 +139,9 @@ export function setExistingContractParams(abi, addr, $this) {
 }
 
 export function deployContract(i, web3, abi, bin, params, state, cb) {
-  getEncodedABIClientSide(web3, abi, state, params, i, (ABIencoded) => {
+  abi = abi.slice()
+  //console.log('web3.eth.accounts[0]', web3.eth.accounts[0], 'bin', bin)
+  getEncodedABIClientSide(web3, abi, params, i, (ABIencoded) => {
     console.log(ABIencoded);
     let binFull = bin + ABIencoded.substr(2);
     web3.eth.getAccounts().then(function(accounts) {
@@ -152,12 +155,13 @@ export function deployContract(i, web3, abi, bin, params, state, cb) {
         if (!estimatedGas) estimatedGas = estimatedGasMax;
         if (estimatedGas > estimatedGasMax) estimatedGas = estimatedGasMax;
         else estimatedGas += 100000;
-
-        let contractInstance = new web3.eth.Contract(abi);
+        console.log('abi', abi)
+        const objAbi = JSON.parse(JSON.stringify(abi))
+        let contractInstance = new web3.eth.Contract(objAbi);
 
         let deployOpts = {
           data: "0x" + bin,
-          arguments: params
+          arguments: params,
         };
 
         let sendOpts = {
@@ -234,7 +238,14 @@ export function sendTXToContract(web3, method, cb) {
           if (receipt.blockNumber) {
             console.log("Sending tx to contract is mined from polling of tx receipt");
             isMined = true
-            return cb()
+
+            if (0 !== +receipt.status) {
+              return cb()
+            } else if (receipt.status === null) {
+              return cb()
+            }
+
+            return cb({ message: 0 })
           } else {
             console.log("Still mining... Polling of transaction once more");
             setTimeout(() => {
@@ -253,7 +264,9 @@ export function sendTXToContract(web3, method, cb) {
       if (isMined) return
       isMined = true
 
-      if (0 !== receipt.status) {
+      if (0 !== +receipt.status) {
+        return cb()
+      } else if (receipt.status === null) {
         return cb()
       }
 
@@ -274,7 +287,8 @@ export function attachToContract(web3, abi, addr, cb) {
     web3.eth.defaultAccount = accounts[0];
 		console.log("web3.eth.defaultAccount:" + web3.eth.defaultAccount);
 
-		let contractInstance = new web3.eth.Contract(abi, addr, {
+		const objAbi = JSON.parse(JSON.stringify(abi))
+		let contractInstance = new web3.eth.Contract(objAbi, addr, {
       from: web3.eth.defaultAccount
     });
 

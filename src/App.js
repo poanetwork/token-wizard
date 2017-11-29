@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './assets/stylesheets/application.css';
 import { Header, Footer, Home, stepOne, stepTwo, stepThree, stepFour, Crowdsale, Invest } from './components/index'
 import { getQueryVariable } from './utils/utils'
@@ -10,6 +10,10 @@ import AlertContainer from 'react-alert'
 import { TOAST } from './utils/constants'
 import { toast } from './utils/utils'
 
+const myDiv = () => ( <div> my div</div>)
+
+
+console.log('stepThree', stepThree, 'stepTwo', stepTwo)
 class App extends Component {
   render() {
     var crowdsaleAddr = getQueryVariable("addr");

@@ -1,159 +1,43 @@
-import React from 'react'
+import React, { Component } from 'react'
 import '../../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
-import { checkWeb3, getWeb3, getNetworkVersion } from '../../utils/blockchainHelpers'
-import { getOldState, stepsAreValid, validateValue, allFieldsAreValid } from '../../utils/utils'
+import { checkWeb3 } from '../../utils/blockchainHelpers'
 import { StepNavigation } from '../Common/StepNavigation'
 import { InputField } from '../Common/InputField'
 import { ReservedTokensInputBlock } from '../Common/ReservedTokensInputBlock'
-import { NAVIGATION_STEPS, VALIDATION_MESSAGES, VALIDATION_TYPES, defaultState, TEXT_FIELDS, intitialStepTwoValidations } from '../../utils/constants'
-import { noDeploymentOnMainnetAlert } from '../../utils/alerts'
+import { NAVIGATION_STEPS, VALIDATION_MESSAGES, TEXT_FIELDS } from '../../utils/constants'
+import { inject, observer } from 'mobx-react';
 const { TOKEN_SETUP } = NAVIGATION_STEPS
-const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
 const { NAME, TICKER, DECIMALS } = TEXT_FIELDS
 
-export class stepTwo extends React.Component {
-  constructor(props) {
-    super(props);
-    window.scrollTo(0, 0);
-    console.log('props', props)
-    let oldState = getOldState(props, defaultState)
-    console.log('oldState', oldState)
-    this.state = Object.assign({}, defaultState, oldState, intitialStepTwoValidations )
-  }
-
+@inject('tokenStore', 'web3Store', 'tierCrowdsaleListStore') @observer
+export class stepTwo extends Component {
   componentDidMount() {
-    checkWeb3(this.state.web3);
-  }
-
-  getNewParent (property, parent, value) {
-    let newParent = { ...this.state[`${parent}`] }
-    newParent[property] = value
-    return newParent
+    checkWeb3(this.props.web3Store.web3);
   }
 
   showErrorMessages = (parent) => {
-    this.validateAllFields(parent)
+    this.props.tokenStore.invalidateToken();
   }
 
-  changeState = (event, parent, key, property) => {
-    let value = event.target.value
-    console.log("parent: " + parent, "key: " + key, "property: " + property, "value: " + value);
-    let newState = { ...this.state }
-    console.log(newState);
-    if (property === "startTime" || property === "endTime") {
-      let targetTime = new Date(value);
-      let targetTimeTemp = targetTime.setHours(targetTime.getHours() - targetTime.getTimezoneOffset()/60);
-      if (property === "startTime") {
-        console.log("property == startTime");
-        if (targetTimeTemp)
-          newState.crowdsale[key].startTime = new Date(targetTimeTemp).toISOString().split(".")[0];
-        else
-          newState.crowdsale[key].startTime = null;
-      } else if (property === "endTime") {
-        if (targetTimeTemp)
-          newState.crowdsale[key].endTime = new Date(targetTimeTemp).toISOString().split(".")[0];
-        else
-          newState.crowdsale[key].endTime = null
-        if (newState.crowdsale[key + 1]) {
-          newState.crowdsale[key + 1].startTime = newState.crowdsale[key].endTime;
-          let newEndDate = new Date(newState.crowdsale[key].endTime);
-          newEndDate = newEndDate.setDate(new Date(newState.crowdsale[key].endTime).getDate() + 4);;
-          newState.crowdsale[key + 1].endTime = new Date(newEndDate).toISOString().split(".")[0];
-        }
-      }
-    } else if (property.indexOf("whitelist_") === 0) {
-      let prop = property.split("_")[1];
-      newState.crowdsale[key][`whiteListInput`][prop] = value
-    } else if (property.indexOf("reservedtokens_") === 0) {
-      console.log(newState);
-      let prop = property.split("_")[1];
-      newState.token[`reservedTokensInput`][prop] = value
-    } else {
-      if( Object.prototype.toString.call( newState[parent] ) === '[object Array]' ) {
-        newState[parent][key][property] = value;
-      } else {
-        newState[parent][property] = value;
-      }
-    }
-    if (property.indexOf("whitelist") === -1 && property.indexOf("reservedtokens") === -1) {
-
-      if ( Object.prototype.toString.call( newState[`validations`] ) === '[object Array]' ) {
-        newState[`validations`][key][property] = validateValue(value, property, newState)
-      } else {
-        newState[`validations`][property] = validateValue(value, property, newState)
-      }
-    }
-    console.log('newState', newState)
-    this.setState(newState)
-  }
-
-  handleInputBlur (parent, property, key) {
-    let newState = { ...this.state }
-    let value
-    if (property === 'rate') {
-      value = newState[parent][key][property]
-    } else {
-      value = key === undefined ? newState[parent][property] : newState[parent][key][property]
-    }
-
-    if ( Object.prototype.toString.call( newState[`validations`] ) === '[object Array]' ) {
-      if (!key) {
-        newState[`validations`][property] = validateValue(value, property, newState)
-      } else {
-        newState[`validations`][key][property] = validateValue(value, property, newState)
-      }
-    } else {
-      newState[`validations`][property] = validateValue(value, property, newState)
-    }
-    this.setState(newState)
+  updateTokenStore = (event, property) => {
+    const value = event.target.value;
+    this.props.tokenStore.setProperty(property, value);
+    this.props.tokenStore.validateTokens(property);
   }
 
   renderLink () {
-    return <Link className="button button_fill" to={{ pathname: '/3', query: { state: this.state, changeState: this.changeState } }}>Continue</Link>
+    return <Link className="button button_fill" to='/3'>Continue</Link>
   }
 
-  validateAllFields (parent ) {
-    let newState = { ...this.state }
-
-    let properties = []
-    let values = []
-    let inds = []
-    if( Object.prototype.toString.call( newState[parent] ) === '[object Array]' ) {
-      if (newState[parent].length > 0) {
-        for (let i = 0; i < newState[parent].length; i++) {
-          Object.keys(newState[parent][i]).map(property => {
-            values.push(newState[parent][i][property])
-            properties.push(property);
-            inds.push(i);
-          })
-        }
-      }
-    } else {
-      properties = Object.keys(newState[parent])
-      values = Object.values(newState[parent])
-    }
-
-    properties.forEach((property, index) => {
-      if ( Object.prototype.toString.call( newState[`validations`] ) === '[object Array]' ) {
-        newState[`validations`][inds[index]][property] = validateValue(values[index], property)
-      } else {
-        newState[`validations`][property] = validateValue(values[index], property)
-      }
-    })
-    this.setState(newState)
-  }
-
-  renderLinkComponent () {
-    if(stepsAreValid(this.state.validations) || allFieldsAreValid('token', this.state)){
-      return this.renderLink()
+  renderLinkComponent = () => {
+    if(this.props.tokenStore.isTokenValid) {
+      return this.renderLink();
     }
     return <div onClick={this.showErrorMessages.bind(this, 'token')} className="button button_fill"> Continue</div>
   }
 
   render() {
-    const { token, validations } = this.state
-    console.log('step 2', this.state)
     return (
     	<section className="steps steps_crowdsale-contract" ref="two">
         <StepNavigation activeStep={TOKEN_SETUP}/>
@@ -168,41 +52,35 @@ export class stepTwo extends React.Component {
           <div className="hidden">
             <InputField side='left' type='text'
               errorMessage={VALIDATION_MESSAGES.NAME}
-              valid={validations.name}
+              valid={this.props.tokenStore.validToken['name']}
               title={NAME}
-              value={token.name}
-              onBlur={() => this.handleInputBlur('token', 'name')}
-              onChange={(e) => this.changeState(e, 'token', 0, 'name')}
+              value={this.props.tokenStore.name}
+              onChange={(e) => this.updateTokenStore(e, 'name')}
               description={`The name of your token. Will be used by Etherscan and other token browsers. Be afraid of trademarks.`}
             />
             <InputField
               side='right' type='text'
               errorMessage={VALIDATION_MESSAGES.TICKER}
-              valid={validations.ticker}
+              valid={this.props.tokenStore.validToken['ticker']}
               title={TICKER}
-              value={token.ticker}
-              onBlur={() => this.handleInputBlur('token', 'ticker')}
-              onChange={(e) => this.changeState(e, 'token', 0, 'ticker')}
+              value={this.props.tokenStore.ticker}
+              onChange={(e) => this.updateTokenStore(e, 'ticker')}
               description={`The three letter ticker for your token. There are 17,576 combinations for 26 english letters. Be hurry. `}
             />
             <InputField
               side='left' type='number'
               errorMessage={VALIDATION_MESSAGES.DECIMALS}
-              valid={validations.decimals}
+              valid={this.props.tokenStore.validToken['decimals']}
               title={DECIMALS}
-              value={token.decimals}
-              onBlur={() => this.handleInputBlur('token', 'decimals')}
-              onChange={(e) => this.changeState(e, 'token', 0, 'decimals')}
+              value={this.props.tokenStore.decimals}
+              onChange={(e) => this.updateTokenStore(e, 'decimals')} // changeInputField
               description={`Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous).`}
             />
           </div>
           <div className="reserved-tokens-title">
             <p className="title">Reserved tokens</p>
           </div>
-          <ReservedTokensInputBlock
-            state={this.state}
-            onChange={(e, cntrct, num, prop) => this.changeState(e, 'token', 0, prop)}
-          ></ReservedTokensInputBlock>
+          <ReservedTokensInputBlock />
         </div>
         <div className="button-container">
           {this.renderLinkComponent()}

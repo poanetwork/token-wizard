@@ -1,6 +1,6 @@
-import { observable, computed, action } from 'mobx';
+import { observable, action } from 'mobx';
 
-class stepTwoValidations {
+class StepTwoValidationStore {
 
   @observable name;
 	@observable ticker;
@@ -18,7 +18,7 @@ class stepTwoValidations {
 
 }
 
-const stepTwoValidations = new StepTwoValidations();
+const stepTwoValidationStore = new StepTwoValidationStore();
 
-export default stepTwoValidations;
-export { StepTwoValidations };
+export default stepTwoValidationStore;
+export { StepTwoValidationStore };

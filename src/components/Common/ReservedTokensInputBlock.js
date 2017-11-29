@@ -2,70 +2,89 @@ import React from 'react'
 import '../../assets/stylesheets/application.css';
 import { InputField } from './InputField'
 import { RadioInputField } from './RadioInputField'
-import { TEXT_FIELDS, defaultState } from '../../utils/constants'
-import { ReservedTokensItem } from './ReservedTokensItem'
-import { getOldState } from '../../utils/utils'
+import { TEXT_FIELDS } from '../../utils/constants'
+import ReservedTokensItem from './ReservedTokensItem'
+import update from 'immutability-helper'
+import { inject, observer } from 'mobx-react';
+
 const { ADDRESS, DIMENSION, VALUE } = TEXT_FIELDS
 
+@inject('reservedTokenStore', 'reservedTokenInputStore', 'reservedTokenElementStore') @observer
 export class ReservedTokensInputBlock extends React.Component {
-
-    constructor(props) {
-        super(props);
-
-        let oldState = getOldState(props, defaultState)
-        this.state = Object.assign({}, oldState)
+    updateReservedTokenInput = (event, property) => {
+        const value = event.target.value;
+        this.props.reservedTokenInputStore.setProperty(property, value);
     }
 
-    addReservedTokensItem = (addr, dim, val) => {
-        console.log(addr, dim, val);
-        if (!addr || !dim || !val) return;
+    addReservedTokensItem = () => {
+        const addr = this.props.reservedTokenInputStore.addr.toString();
+        const dim = this.props.reservedTokenInputStore.dim.toString();
+        const val = this.props.reservedTokenInputStore.val.toString();
 
-        this.clearReservedTokenInputs()
-
-        let isAdded = false;
-        for (let i = 0; i < this.state.token.reservedTokens.length; i++) {
-            let item = this.state.token.reservedTokens[i];
-            if (item.addr === addr && item.dim === dim && !item.deleted) {
-                isAdded = true;
-                break;
-            }
+        if (!addr || !dim || !val) {
+            return
         }
 
-        if (isAdded) return;
+        this.props.reservedTokenInputStore.clearInput();
+        this.reservedTokensInputAddr.clearVal();
+        this.reservedTokensInputVal.clearVal();
 
-        let state = this.state
-        let num = state.token.reservedTokensElements.length;
-        state.token.reservedTokens.push({
-            addr,
-            dim,
-            val
-        });
-        this.setState(state, function() {
-            state.token.reservedTokensElements.push(
-                <ReservedTokensItem
-                    key={num.toString()}
-                    num={num}
-                    addr={addr}
-                    dim={dim}
-                    val={val}>
-                </ReservedTokensItem>
-            );
-            this.setState(state);
-        });
+        let newToken = {
+            'addr': addr,
+            'dim': dim,
+            'val': val
+        };
+
+        if (!this.props.reservedTokenStore.findToken(newToken)) {
+            this.props.reservedTokenStore.addToken(newToken);
+        }
     }
 
-    clearReservedTokenInputs = () => {
-        let state = this.state
-        state.token.reservedTokensInput.addr = ""
-        state.token.reservedTokensInput.val = ""
-        this.setState(state)
-        this.reservedTokensInputAddr.clearVal()
-        this.reservedTokensInputVal.clearVal()
+    removeReservedToken = (index) => {
+        this.props.reservedTokenStore.removeToken(index);
+    }
+
+    handleReservedTokensInputDimChange = (e) => {
+        this.props.onChange(e, 'token', 0, 'reservedtokens_dim')
+        this.setState(update(this.state, {
+            token: {
+                reservedTokensInput: {
+                    dim: {
+                        $set: e.target.value
+                    }
+                }
+            }
+        }))
+    }
+
+    handleReservedTokensInputValChange = (e) => {
+        this.props.onChange(e, 'token', 0, 'reservedtokens_val')
+        this.setState(update(this.state, {
+            token: {
+                reservedTokensInput: {
+                    val: {
+                        $set: e.target.value
+                    }
+                }
+            }
+        }))
     }
 
     render() {
-        let { token } = this.state
-        let { onChange } = this.props
+        const reservedTokensElements = this.props.reservedTokenStore.tokens
+            .map((token, index) => {
+                return (
+                    <ReservedTokensItem
+                        key={index.toString()}
+                        num={index}
+                        addr={token.addr}
+                        dim={token.dim}
+                        val={token.val}
+                        onRemove={(index) => this.removeReservedToken(index)}>
+                    </ReservedTokensItem>
+                )
+            })
+
         return (
             <div className="reserved-tokens-container">
                 <div className="reserved-tokens-input-container">
@@ -75,8 +94,8 @@ export class ReservedTokensInputBlock extends React.Component {
                         side='reserved-tokens-input-property reserved-tokens-input-property-left'
                         type='text'
                         title={ADDRESS}
-                        value={token.reservedTokensInput.addr}
-                        onChange={(e) => onChange(e, 'token', 0, 'reservedtokens_addr')}
+                        value={this.props.reservedTokenInputStore.addr}
+                        onChange={(e) => this.updateReservedTokenInput(e, 'addr')}
                         description={`Address where to send reserved tokens.`}
                       />
                       <RadioInputField
@@ -84,9 +103,9 @@ export class ReservedTokensInputBlock extends React.Component {
                         title={DIMENSION}
                         items={["tokens", "percentage"]}
                         vals={["tokens", "percentage"]}
-                        defaultValue={token.reservedTokensInput.dim}
+                        defaultValue={this.props.reservedTokenInputStore.dim}
                         name={'reserved-tokens-dim'}
-                        onChange={(e) => onChange(e, 'token', 0, 'reservedtokens_dim')}
+                        onChange={(e) => this.updateReservedTokenInput(e, 'dim')}
                         description={`Fixed amount or % of crowdsaled tokens. Will be deposited to the account after fintalization of the crowdsale. `}
                       />
                       <InputField
@@ -94,17 +113,18 @@ export class ReservedTokensInputBlock extends React.Component {
                         side='reserved-tokens-input-property reserved-tokens-input-property-right'
                         type='number'
                         title={VALUE}
-                        value={token.reservedTokensInput.val}
-                        onChange={(e) => onChange(e, 'token', 0, 'reservedtokens_val')}
+                        value={this.props.reservedTokenInputStore.val}
+                        onChange={(e) => this.updateReservedTokenInput(e, 'val')}
                         description={`Value in tokens or percents. Don't forget to press + button for each reserved token.`}
                       />
                     </div>
                     <div className="plus-button-container">
-                        <div onClick={(e) => this.addReservedTokensItem(token.reservedTokensInput.addr, token.reservedTokensInput.dim, token.reservedTokensInput.val)} className="button button_fill button_fill_plus">
+                        <div onClick={(e) => this.addReservedTokensItem()} className="button button_fill button_fill_plus">
                         </div>
                     </div>
                 </div>
-                {token.reservedTokensElements}
-            </div>)
+                {reservedTokensElements}
+            </div>
+        )
     }
 }

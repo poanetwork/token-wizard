@@ -39,7 +39,7 @@ export class InputField extends React.Component {
 		const error = this.props.valid === INVALID ? this.props.errorMessage : ''
 		return (<div className={this.props.side}>
 			<label className="label">{this.props.title}</label>
-			<input ref={this.props.ref} disabled={this.props.disabled} type={this.props.type} className="input" onBlur={this.props.onBlur} value={this.state.val} defaultValue={this.props.defaultValue} onChange={this.onChange}/>
+			<input disabled={this.props.disabled} type={this.props.type} className="input" onBlur={this.props.onBlur} value={this.state.val} defaultValue={this.props.defaultValue} onChange={this.onChange}/>
 			<p className="description">
 				{this.props.description}
 			</p>

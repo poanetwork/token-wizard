@@ -1,21 +1,11 @@
 import React from 'react'
 import '../../assets/stylesheets/application.css';
 import { deployContract, getWeb3, checkWeb3, getNetworkVersion } from '../../utils/blockchainHelpers'
-import {
-  setLastCrowdsaleRecursive,
-  addWhiteListRecursive,
-  getDownloadName,
-  setFinalizeAgentRecursive,
-  setMintAgentRecursive,
-  setReleaseAgentRecursive,
-  updateJoinedCrowdsalesRecursive,
-  transferOwnership,
-  setReservedTokensListMultiple
-} from './utils'
-import { download, handleContractsForFile, handleConstantForFile, handlerForFile, scrollToBottom } from './utils'
+import { setLastCrowdsaleRecursive, addWhiteListRecursive, setFinalizeAgentRecursive, setMintAgentRecursive, setReleaseAgentRecursive, updateJoinedCrowdsalesRecursive, transferOwnership, setReservedTokensListMultiple, setLastCrowdsale } from './utils'
+import {download, getDownloadName, handleContractsForFile, handlerForFile, handleCrowdsaleForFile, handlePricingStrategyForFile, handleFinalizeAgentForFile, handleConstantForFile, scrollToBottom } from './utils'
 import { noMetaMaskAlert, noContractDataAlert } from '../../utils/alerts'
-import { defaultState, FILE_CONTENTS, DOWNLOAD_TYPE, TOAST } from '../../utils/constants'
-import { getOldState, toFixed, floorToDecimals, toast } from '../../utils/utils'
+import { FILE_CONTENTS, DOWNLOAD_NAME, DOWNLOAD_TYPE, CONTRACT_TYPES, TOAST } from '../../utils/constants'
+import { toFixed, floorToDecimals, toast } from '../../utils/utils'
 import { getEncodedABIClientSide } from '../../utils/microservices'
 import { stepTwo } from '../stepTwo'
 import { StepNavigation } from '../Common/StepNavigation'
@@ -24,62 +14,74 @@ import { DisplayTextArea } from '../Common/DisplayTextArea'
 import { Loader } from '../Common/Loader'
 import { NAVIGATION_STEPS, TRUNC_TO_DECIMALS } from '../../utils/constants'
 import { copy } from '../../utils/copy';
+import { observer, inject } from 'mobx-react'
+import { isObservableArray } from 'mobx'
 import JSZip from 'jszip'
 const { PUBLISH } = NAVIGATION_STEPS
 
-export class stepFour extends stepTwo {
+
+@inject('contractStore', 'reservedTokenStore', 'tierStore', 'tokenStore', 'web3Store')
+@observer export class stepFour extends stepTwo {
   constructor(props) {
     super(props);
-    let oldState = getOldState(props, defaultState)
-    this.state = Object.assign({ contractDownloaded: false }, oldState)
-    console.log('oldState oldState oldState', oldState)
+    this.state = {
+      contractDownloaded: false,
+      loading: false
+    }
+  }
+
+  contractDownloadSuccess = options => {
+    this.setState({ contractDownloaded: true })
+    toast.showToaster({ message: TOAST.MESSAGE.CONTRACT_DOWNLOAD_SUCCESS, options })
   }
 
   componentDidMount() {
+    const { contractStore, web3Store, tierStore } = this.props
+    const web3 = web3Store.web3
     scrollToBottom();
     copy('copy');
-    checkWeb3(this.state.web3);
-    switch (this.state.contractType) {
-      case this.state.contractTypes.whitelistwithcap: {
-        if (!this.state.contracts.safeMathLib) {
+    checkWeb3(web3);
+    switch (this.props.contractStore.contractType) {
+      case CONTRACT_TYPES.whitelistwithcap: {
+        if (!contractStore.safeMathLib) {
           this.hideLoader();
           return noContractDataAlert();
         }
 
-        let state = { ...this.state }
-        state.loading = true;
-        this.setState(state);
-        let abiToken = this.state.contracts && this.state.contracts.token && this.state.contracts.token.abi || []
-
-        let abiPricingStrategy = this.state.contracts && this.state.contracts.pricingStrategy && this.state.contracts.pricingStrategy.abi || []
+        let newState = { ...this.state }
+        newState.loading = true;
+        this.setState(newState);
+        let abiToken = contractStore && contractStore.token && contractStore.token.abi || []
+        let addrToken = contractStore && contractStore.token && contractStore.token.addr || null
+        let abiPricingStrategy = contractStore && contractStore.pricingStrategy && contractStore.pricingStrategy.abi || []
 
         setTimeout(() => {
-           getWeb3((web3) => {
-            state.web3 = web3;
-            this.setState(state);
-            let counter = 0;
-            getEncodedABIClientSide(web3, abiToken, state, [], 0, (ABIencoded) => {
+          const web3 = web3Store.web3;
+          let counter = 0;
+          if (!addrToken) {
+            getEncodedABIClientSide(web3, abiToken, [], 0, (ABIencoded) => {
               counter++;
               let cntrct = "token";
-              state.contracts[cntrct].abiConstructor = ABIencoded;
+              contractStore.setContractProperty(cntrct, 'abiConstructor', ABIencoded)
               console.log(cntrct + " ABI encoded params constructor:");
               console.log(ABIencoded);
-              if (counter == (this.state.pricingStrategy.length + 1))
-                this.setState(state, this.deploySafeMathLibrary());
+              if (counter == (tierStore.tiers.length + 1))
+                this.deploySafeMathLibrary();
             });
-            for (let i = 0; i < this.state.pricingStrategy.length; i++) {
-              getEncodedABIClientSide(web3, abiPricingStrategy, state, [], i, (ABIencoded) => {
-                counter++;
-                let cntrct = "pricingStrategy";
-                state.contracts[cntrct].abiConstructor.push(ABIencoded);
-                console.log(cntrct + " ABI encoded params constructor:");
-                console.log(ABIencoded);
-                if (counter == (this.state.pricingStrategy.length + 1))
-                  this.setState(state, this.deploySafeMathLibrary());
-              });
-            }
-          });
-        }, 500);
+          }
+          for (let i = 0; i < tierStore.tiers.length; i++) {
+            getEncodedABIClientSide(web3, abiPricingStrategy, [], i, (ABIencoded) => {
+              counter++;
+              let cntrct = "pricingStrategy";
+              const newContract = contractStore[cntrct].abiConstructor.concat(ABIencoded)
+              contractStore.setContractProperty(cntrct, 'abiConstructor', newContract);
+              console.log(cntrct + " ABI encoded params constructor:");
+              console.log(ABIencoded);
+              if (counter == (tierStore.tiers.length + 1))
+                this.deploySafeMathLibrary();
+            });
+          }
+        });
       } break;
       default:
         break;
@@ -92,11 +94,6 @@ export class stepFour extends stepTwo {
     this.setState(newState);
   }
 
-  contractDownloadSuccess = options => {
-    this.setState({ contractDownloaded: true })
-    toast.showToaster({ message: TOAST.MESSAGE.CONTRACT_DOWNLOAD_SUCCESS, options })
-  }
-
   handleContentByParent(content, index = 0) {
     const { parent } = content
 
@@ -104,11 +101,14 @@ export class stepFour extends stepTwo {
       case 'crowdsale':
       case 'pricingStrategy':
       case 'finalizeAgent':
-        return handlerForFile(content, this.state[parent][0])
-      case 'token':
-        return handlerForFile(content, this.state[parent])
+        return handlerForFile(content, this.props.contractStore[parent])
+      case 'tierStore':
+        index = 'walletAddress' === content.field ? 0 : index
+        return handlerForFile(content, this.props[parent].tiers[index])
+      case 'tokenStore':
+        return handlerForFile(content, this.props[parent])
       case 'contracts':
-        return handleContractsForFile(content, this.state, index)
+        return handleContractsForFile(content, index, this.props.contractStore, this.props.tierStore)
       case 'none':
         return handleConstantForFile(content)
     }
@@ -116,19 +116,18 @@ export class stepFour extends stepTwo {
 
   downloadCrowdsaleInfo = () => {
     const zip = new JSZip()
-    const commonHeader = FILE_CONTENTS.common.map(content => this.handleContentByParent(content))
     const { files } = FILE_CONTENTS
     const [NULL_FINALIZE_AGENT, FINALIZE_AGENT] = ['nullFinalizeAgent', 'finalizeAgent']
-    const tiersCount = Array.isArray(this.state.crowdsale) ? this.state.crowdsale.length : 1
+    const tiersCount = isObservableArray(this.props.tierStore.tiers) ? this.props.tierStore.tiers.length : 1
     const contractsKeys = tiersCount === 1 ? files.order.filter(c => c !== NULL_FINALIZE_AGENT) : files.order;
     const orderNumber = order => order.toString().padStart(3, '0');
     let prefix = 1
 
     contractsKeys.forEach(key => {
-      if (this.state.contracts.hasOwnProperty(key)) {
+      if (this.props.contractStore.hasOwnProperty(key)) {
         const { txt, sol, name } = files[key]
-        const { abiConstructor } = this.state.contracts[key]
-        let tiersCountPerContract = Array.isArray(abiConstructor) ? abiConstructor.length : 1
+        const { abiConstructor } = this.props.contractStore[key]
+        let tiersCountPerContract = isObservableArray(abiConstructor) ? abiConstructor.length : 1
 
         if (tiersCount > 1 && [NULL_FINALIZE_AGENT, FINALIZE_AGENT].includes(key)) {
           tiersCountPerContract = NULL_FINALIZE_AGENT === key ? tiersCount - 1 : 1
@@ -139,6 +138,7 @@ export class stepFour extends stepTwo {
           const solFilename = `${orderNumber(prefix++)}_${name}${suffix}`
           const txtFilename = `${orderNumber(prefix++)}_${name}${suffix}`
           const tierNumber = FINALIZE_AGENT === key ? tiersCount - 1 : tier
+          const commonHeader = FILE_CONTENTS.common.map(content => this.handleContentByParent(content, tierNumber))
 
           zip.file(
             `${solFilename}.sol`,
@@ -154,7 +154,7 @@ export class stepFour extends stepTwo {
 
     zip.generateAsync({ type: DOWNLOAD_TYPE.blob })
       .then(content => {
-        const tokenAddr = this.state.contracts ? this.state.contracts.token.addr : '';
+        const tokenAddr = this.props.contractStore ? this.props.contractStore.token.addr : '';
 
         getDownloadName(tokenAddr)
           .then(downloadName => download({ zip: content, filename: downloadName }))
@@ -162,62 +162,58 @@ export class stepFour extends stepTwo {
   }
 
   deploySafeMathLibrary = () => {
+    const { web3Store, contractStore } = this.props
+    const web3 = web3Store.web3
     console.log("***Deploy safeMathLib contract***");
-    if (!this.state.web3) {
+    if (!web3 || web3.eth.accounts.length === 0) {
       this.hideLoader();
       return noMetaMaskAlert();
     }
-    this.state.web3.eth.getAccounts().then((accounts) => {
-      if (accounts.length === 0) {
-        this.hideLoader();
-        return noMetaMaskAlert();
-      }
-      var contracts = this.state.contracts;
-      var binSafeMathLib = contracts && contracts.safeMathLib && contracts.safeMathLib.bin || ''
-      var abiSafeMathLib = contracts && contracts.safeMathLib && contracts.safeMathLib.abi || []
-      var safeMathLib = this.state.safeMathLib;
-      deployContract(0, this.state.web3, abiSafeMathLib, binSafeMathLib, [], this.state, this.handleDeployedSafeMathLibrary)
-    });
+    var contracts = contractStore;
+    var binSafeMathLib = contracts.safeMathLib.bin || ''
+    var abiSafeMathLib = contracts.safeMathLib.abi || []
+    var safeMathLib = contractStore.safeMathLib;
+    deployContract(0, web3, abiSafeMathLib, binSafeMathLib, [], this.state, this.handleDeployedSafeMathLibrary)
   }
 
   handleDeployedSafeMathLibrary = (err, safeMathLibAddr) => {
+    const { contractStore } = this.props
     console.log("safeMathLibAddr: " + safeMathLibAddr);
     if (err) {
       return this.hideLoader();
     }
-    let newState = { ...this.state }
-    newState.contracts.safeMathLib.addr = safeMathLibAddr;
-    let contracts = newState.contracts;
-    let keys = Object.keys(contracts);
+    contractStore.setContractProperty('safeMathLib', 'addr', safeMathLibAddr)
+    let keys = Object.keys(contractStore).filter(key => contractStore[key] !== undefined);
     for(let i=0;i<keys.length;i++){
         let key = keys[i];
-        if (contracts[key].bin)
-          contracts[key].bin = window.reaplaceAll("__:SafeMathLibExt_______________________", safeMathLibAddr.substr(2), contracts[key].bin);
+        if (contractStore[key].bin){
+          const newBin = window.reaplaceAll("__:SafeMathLibExt_______________________", safeMathLibAddr.substr(2), contractStore[key].bin);
+          contractStore.setContractProperty(key, 'bin', newBin)
+
+        }
     }
-    newState.contracts = contracts;
-    this.setState(newState, () => {
-      this.deployToken();
-    });
+    this.deployToken();
   }
 
   deployToken = () => {
+    const { web3Store, contractStore, tokenStore } = this.props
+    const web3 = web3Store.web3
     console.log("***Deploy token contract***");
-    this.state.web3.eth.getAccounts().then((accounts) => {
-      if (accounts.length === 0) {
-        this.hideLoader();
-        return noMetaMaskAlert();
-      }
-      var contracts = this.state.contracts;
-      var binToken = contracts && contracts.token && contracts.token.bin || ''
-      var abiToken = contracts && contracts.token && contracts.token.abi || []
-      var token = this.state.token;
-      var paramsToken = this.getTokenParams(this.state.web3, token)
-      console.log(paramsToken);
-      deployContract(0, this.state.web3, abiToken, binToken, paramsToken, this.state, this.handleDeployedToken)
-    });
+    if (web3.eth.accounts.length === 0) {
+      this.hideLoader();
+      return noMetaMaskAlert();
+    }
+    var contracts = contractStore
+    var binToken = contracts && contracts.token && contracts.token.bin || ''
+    var abiToken = contracts && contracts.token && contracts.token.abi || []
+    var token = tokenStore;
+    var paramsToken = this.getTokenParams(web3, token)
+    console.log(paramsToken);
+    deployContract(0, web3, abiToken, binToken, paramsToken, this.state, this.handleDeployedToken)
   }
 
   getTokenParams = (web3, token) => {
+    const { tierStore } = this.props
     console.log(token);
     return [
       token.name,
@@ -225,224 +221,229 @@ export class stepFour extends stepTwo {
       parseInt(token.supply, 10),
       parseInt(token.decimals, 10),
       true,
-      this.state.crowdsale[0].whitelistdisabled === "yes"?this.state.token.globalmincap?toFixed(this.state.token.globalmincap*10**this.state.token.decimals).toString():0:0
+      tierStore.tiers[0].whitelistdisabled === "yes"?token.globalmincap?toFixed(token.globalmincap*10**token.decimals).toString():0:0
     ]
   }
 
   handleDeployedToken = (err, tokenAddr) => {
+    const { contractStore } = this.props
     if (err) {
       return this.hideLoader();
     }
-    let newState = { ...this.state }
-    newState.contracts.token.addr = tokenAddr;
+    contractStore.setContractProperty('token', 'addr', tokenAddr)
     this.deployPricingStrategy();
   }
 
   deployPricingStrategy = () => {
+    const { web3Store, contractStore, tierStore } = this.props
+    const web3 = web3Store.web3
     console.log("***Deploy pricing strategy contract***");
-    this.state.web3.eth.getAccounts().then((accounts) => {
-      if (accounts.length === 0) {
-        this.hideLoader();
-        return noMetaMaskAlert();
-      }
-      let contracts = this.state.contracts;
-      let binPricingStrategy = contracts && contracts.pricingStrategy && contracts.pricingStrategy.bin || ''
-      let abiPricingStrategy = contracts && contracts.pricingStrategy && contracts.pricingStrategy.abi || []
-      let pricingStrategies = this.state.pricingStrategy;
-      this.deployPricingStrategyRecursive(0, pricingStrategies, binPricingStrategy, abiPricingStrategy)
-    });
+    if (web3.eth.accounts.length === 0) {
+      return this.hideLoader();
+      return noMetaMaskAlert();
+    }
+    let contracts = contractStore;
+    let binPricingStrategy = contracts && contracts.pricingStrategy && contracts.pricingStrategy.bin || ''
+    let abiPricingStrategy = contracts && contracts.pricingStrategy && contracts.pricingStrategy.abi || []
+    let pricingStrategies = tierStore.tiers
+    this.deployPricingStrategyRecursive(0, pricingStrategies, binPricingStrategy, abiPricingStrategy)
   }
 
   deployPricingStrategyRecursive = (i, pricingStrategies, binPricingStrategy, abiPricingStrategy) => {
-    var paramsPricingStrategy = this.getPricingStrategyParams(this.state.web3, pricingStrategies[i], i, this.state.token)
-    console.log("getPricingStrategyParams:");
-    console.log(paramsPricingStrategy);
+    const { web3Store, contractStore, tokenStore } = this.props
+    const web3 = web3Store.web3
+    var paramsPricingStrategy = this.getPricingStrategyParams(pricingStrategies[i], i, tokenStore)
     if (i < pricingStrategies.length - 1) {
-      deployContract(i, this.state.web3, abiPricingStrategy, binPricingStrategy, paramsPricingStrategy, this.state, (err, pricingStrategyAddr) => {
+      deployContract(i, web3, abiPricingStrategy, binPricingStrategy, paramsPricingStrategy, this.state, (err, pricingStrategyAddr) => {
         i++;
         if (err) {
-          return this.hideLoader();
+          this.hideLoader();
         }
-        let newState = { ...this.state }
-        newState.contracts.pricingStrategy.addr.push(pricingStrategyAddr);
-        this.setState(newState);
+        const newPricingStrategy = contractStore.pricingStrategy.addr.concat(pricingStrategyAddr)
+        contractStore.setContractProperty('pricingStrategy', 'addr', newPricingStrategy)
         this.deployPricingStrategyRecursive(i, pricingStrategies, binPricingStrategy, abiPricingStrategy);
       })
     } else {
-      deployContract(i, this.state.web3, abiPricingStrategy, binPricingStrategy, paramsPricingStrategy, this.state, this.handleDeployedPricingStrategy)
+      deployContract(i, web3, abiPricingStrategy, binPricingStrategy, paramsPricingStrategy, this.state, this.handleDeployedPricingStrategy)
     }
   }
 
   //FlatPricing
-  getPricingStrategyParams = (web3, pricingStrategy, i, token) => {
-    console.log(pricingStrategy);
+  getPricingStrategyParams = (pricingStrategy, i, token) => {
+    const { tierStore, web3Store } = this.props
+    console.log('web3Store', web3Store.web3, web3Store.web3.utils.toWei)
     let oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, 1/pricingStrategy.rate)
     return [
-      web3.utils.toWei(oneTokenInETH, "ether"),
-      this.state.crowdsale[i].updatable?this.state.crowdsale[i].updatable=="on"?true:false:false
+      web3Store.web3.utils.toWei(oneTokenInETH, "ether"),
+      tierStore.tiers[i].updatable?tierStore.tiers[i].updatable=="on"?true:false:false
     ]
   }
 
   handleDeployedPricingStrategy = (err, pricingStrategyAddr) => {
+    const { contractStore, tierStore, web3Store } = this.props
+    const web3 = web3Store.web3
     if (err) {
       return this.hideLoader();
     }
-    let newState = { ...this.state }
-    newState.contracts.pricingStrategy.addr.push(pricingStrategyAddr);
-    this.setState(newState);
-    let abiCrowdsale = this.state.contracts && this.state.contracts.crowdsale && this.state.contracts.crowdsale.abi || []
+    const newPricingStrategy = contractStore.pricingStrategy.addr.concat(pricingStrategyAddr)
+    contractStore.setContractProperty('pricingStrategy', 'addr', newPricingStrategy)
+    //newState.loading = false;
+    let abiCrowdsale = contractStore && contractStore.crowdsale && contractStore.crowdsale.abi || []
     let counter = 0;
-    for (let i = 0; i < this.state.crowdsale.length; i++) {
-      getEncodedABIClientSide(this.state.web3, abiCrowdsale, newState, [], i, (ABIencoded) => {
+    for (let i = 0; i < tierStore.tiers.length; i++) {
+      getEncodedABIClientSide(web3, abiCrowdsale, [], i, (ABIencoded) => {
         counter++;
         let cntrct = "crowdsale";
-        let state = { ...this.state }
-        state.contracts[cntrct].abiConstructor.push(ABIencoded);
+        const newContract = contractStore[cntrct].abiConstructor.concat(ABIencoded)
+        contractStore.setContractProperty(cntrct, 'abiConstructor', newContract)
         console.log(cntrct + " ABI encoded params constructor:");
         console.log(ABIencoded);
-        this.setState(state);
-        if (counter == this.state.crowdsale.length)
+        if (counter == tierStore.tiers.length)
           this.deployCrowdsale();
       });
     }
   }
 
   deployCrowdsale = () => {
+    const { web3Store, contractStore, tierStore } = this.props
+    const web3 = web3Store.web3
     console.log("***Deploy crowdsale contract***");
-    getWeb3((web3) => {
-      getNetworkVersion(web3).then((_networkID) => {
-        console.log('web3', web3)
-        web3.eth.getAccounts().then((accounts) => {
-          if (accounts.length === 0) {
-            this.hideLoader();
-            return noMetaMaskAlert();
-          }
-          let newState = { ...this.state }
-          newState.contracts.crowdsale.networkID = _networkID;
-          newState.web3 = web3
-          newState.loading = true;
-          this.setState(newState);
-          let contracts = this.state.contracts;
-          let binCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.bin || ''
-          let abiCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.abi || []
-          let crowdsales = this.state.crowdsale;
+    getNetworkVersion(web3).then((_networkID) => {
+      console.log('web3', web3)
+      if (web3.eth.accounts.length === 0) {
+        this.hideLoader();
+        return noMetaMaskAlert();
+      }
+      let newState = { ...this.state }
+      newState.loading = true;
+      this.setState(newState);
+      contractStore.setContractProperty('crowdsale', 'networkID', _networkID)
+      let contracts = contractStore;
+      let binCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.bin || ''
+      let abiCrowdsale = contracts && contracts.crowdsale && contracts.crowdsale.abi || []
+      let crowdsales = tierStore;
 
-          this.deployCrowdsaleRecursive(0, crowdsales, binCrowdsale, abiCrowdsale)
-        });
-       });
+      this.deployCrowdsaleRecursive(0, crowdsales, binCrowdsale, abiCrowdsale)
     });
   }
 
   deployCrowdsaleRecursive = (i, crowdsales, binCrowdsale, abiCrowdsale) => {
+    const { contractStore, web3Store } = this.props
+    const web3 = web3Store.web3
     let paramsCrowdsale;
-    switch (this.state.contractType) {
-      case this.state.contractTypes.whitelistwithcap: {
-        paramsCrowdsale = this.getCrowdSaleParams(this.state.web3, i)
-      } break;
+    switch (contractStore.contractType) {
+      case CONTRACT_TYPES.whitelistwithcap:
+        paramsCrowdsale = this.getCrowdSaleParams(web3, i)
+       break;
       default:
         break;
     }
     console.log(paramsCrowdsale);
-    if (i < crowdsales.length - 1) {
-      deployContract(i, this.state.web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, this.state, (err, crowdsaleAddr) => {
+    if (i < crowdsales.tiers.length - 1) {
+      deployContract(i, web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, this.state, (err, crowdsaleAddr) => {
         i++;
         if (err) {
           return this.hideLoader();
         }
-        let newState = { ...this.state }
-        newState.contracts.crowdsale.addr.push(crowdsaleAddr);
-        this.setState(newState);
+        const newAddr = contractStore.crowdsale.addr.concat(crowdsaleAddr);
+        contractStore.setContractProperty('crowdsale', 'addr', newAddr)
         this.deployCrowdsaleRecursive(i, crowdsales, binCrowdsale, abiCrowdsale);
       })
     } else {
-      deployContract(i, this.state.web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, this.state, this.handleDeployedCrowdsaleContract)
+      deployContract(i, web3, abiCrowdsale, binCrowdsale, paramsCrowdsale, this.state, this.handleDeployedCrowdsaleContract)
     }
   }
 
   //MintedTokenCappedCrowdsale
   getCrowdSaleParams = (web3, i) => {
+    const { contractStore, tierStore, tokenStore } = this.props
     return [
-      this.state.contracts.token.addr,
-      this.state.contracts.pricingStrategy.addr[i],
-      this.state.crowdsale[0].walletAddress,
-      toFixed(parseInt(Date.parse(this.state.crowdsale[i].startTime)/1000, 10).toString()),
-      toFixed(parseInt(Date.parse(this.state.crowdsale[i].endTime)/1000, 10).toString()),
+      contractStore.token.addr,
+      contractStore.pricingStrategy.addr[i],
+      tierStore.tiers[0].walletAddress,
+      toFixed(parseInt(Date.parse(tierStore.tiers[i].startTime)/1000, 10).toString()),
+      toFixed(parseInt(Date.parse(tierStore.tiers[i].endTime)/1000, 10).toString()),
       toFixed("0"),
-      toFixed(parseInt(this.state.crowdsale[i].supply, 10)*10**parseInt(this.state.token.decimals, 10)).toString(),
-      this.state.crowdsale[i].updatable?this.state.crowdsale[i].updatable=="on"?true:false:false,
-      this.state.crowdsale[0].whitelistdisabled?this.state.crowdsale[0].whitelistdisabled=="yes"?false:true:false
+      toFixed(parseInt(tierStore.tiers[i].supply, 10)*10**parseInt(tokenStore.decimals, 10)).toString(),
+      tierStore.tiers[i].updatable?tierStore.tiers[i].updatable=="on"?true:false:false,
+      tierStore.tiers[0].whitelistdisabled?tierStore.tiers[0].whitelistdisabled=="yes"?false:true:false
     ]
   }
 
   handleDeployedCrowdsaleContract = (err, crowdsaleAddr) => {
+    const { contractStore } = this.props
     if (err) {
       return this.hideLoader();
     }
-    let newState = { ...this.state }
-    newState.contracts.crowdsale.addr.push(crowdsaleAddr);
-    this.setState(newState, this.calculateABIEncodedArgumentsForFinalizeAgentContractDeployment);
+    const newAddr = contractStore.crowdsale.addr.concat(crowdsaleAddr);
+    contractStore.setContractProperty('crowdsale', 'addr', newAddr)
+    this.calculateABIEncodedArgumentsForFinalizeAgentContractDeployment();
   }
 
   calculateABIEncodedArgumentsForFinalizeAgentContractDeployment = () => {
+    const { web3Store, contractStore, tierStore } = this.props
+    const web3 = web3Store.web3
     let newState = { ...this.state }
     console.log(newState);
 
-    let abiNullFinalizeAgent = this.state.contracts && this.state.contracts.nullFinalizeAgent && this.state.contracts.nullFinalizeAgent.abi || []
-    let abiLastFinalizeAgent = this.state.contracts && this.state.contracts.finalizeAgent && this.state.contracts.finalizeAgent.abi || []
+    let abiNullFinalizeAgent = contractStore.nullFinalizeAgent && contractStore.nullFinalizeAgent.abi || []
+    let abiLastFinalizeAgent = contractStore.finalizeAgent && contractStore.finalizeAgent.abi || []
     let counter = 0;
 
-    for (let i = 0; i < this.state.pricingStrategy.length; i++) {
+    for (let i = 0; i < tierStore.tiers.length; i++) {
       let abiFinalizeAgent
-      if (i < this.state.pricingStrategy.length - 1)
+      if (i < tierStore.tiers.length - 1) {
         abiFinalizeAgent = abiNullFinalizeAgent
-      else
+      } else {
         abiFinalizeAgent = abiLastFinalizeAgent
-      getEncodedABIClientSide(this.state.web3, abiFinalizeAgent, this.state, [], i, (ABIencoded) => {
+      }
+
+      getEncodedABIClientSide(web3, abiFinalizeAgent, [], i, (ABIencoded) => {
         counter++;
         let cntrct = "finalizeAgent";
-        newState.contracts[cntrct].abiConstructor.push(ABIencoded);
+        const newAbi = contractStore[cntrct].abiConstructor.concat(ABIencoded);
+        contractStore.setContractProperty(cntrct, 'abiConstructor', newAbi)
         console.log(cntrct + " ABI encoded params constructor:");
         console.log(ABIencoded);
-        if (counter == (this.state.pricingStrategy.length)) {
-          this.setState(newState, this.deployFinalizeAgent);
+        if (counter == (tierStore.tiers.length)) {
+          this.deployFinalizeAgent();
         }
       });
     }
   }
 
   deployFinalizeAgent = () => {
+    const { web3Store, contractStore } = this.props
+    const web3 = web3Store.web3
     console.log("***Deploy finalize agent contract***");
-    this.state.web3.eth.getAccounts().then((accounts) => {
-      if (accounts.length === 0) {
-        this.hideLoader();
-        return noMetaMaskAlert();
-      }
-      let contracts = this.state.contracts;
-      let binNullFinalizeAgent = contracts && contracts.nullFinalizeAgent && contracts.nullFinalizeAgent.bin || ''
-      let abiNullFinalizeAgent = contracts && contracts.nullFinalizeAgent && contracts.nullFinalizeAgent.abi || []
+    if (web3.eth.accounts.length === 0) {
+      this.hideLoader();
+      return noMetaMaskAlert();
+    }
+    let binNullFinalizeAgent = contractStore && contractStore.nullFinalizeAgent && contractStore.nullFinalizeAgent.bin || ''
+    let abiNullFinalizeAgent = contractStore && contractStore.nullFinalizeAgent && contractStore.nullFinalizeAgent.abi || []
 
-      let binFinalizeAgent = contracts && contracts.finalizeAgent && contracts.finalizeAgent.bin || ''
-      let abiFinalizeAgent = contracts && contracts.finalizeAgent && contracts.finalizeAgent.abi || []
+    let binFinalizeAgent = contractStore && contractStore.finalizeAgent && contractStore.finalizeAgent.bin || ''
+    let abiFinalizeAgent = contractStore && contractStore.finalizeAgent && contractStore.finalizeAgent.abi || []
 
-      let crowdsales;
-      if (this.state.tokenIsAlreadyCreated) {
-        let curTierAddr = [ contracts.crowdsale.addr.slice(-1)[0] ];
-        let prevTierAddr = [ contracts.crowdsale.addr.slice(-2)[0] ];
-        crowdsales = [prevTierAddr, curTierAddr];
-      }
-      else
-        crowdsales = this.state.contracts.crowdsale.addr;
-      this.deployFinalizeAgentRecursive(0, crowdsales, this.state.web3, abiNullFinalizeAgent, binNullFinalizeAgent, abiFinalizeAgent, binFinalizeAgent, this.state)
-    })
+    let crowdsales;
+    if (this.state.tokenStoreIsAlreadyCreated) {
+      let curTierAddr = [ contractStore.crowdsale.addr.slice(-1)[0] ];
+      let prevTierAddr = [ contractStore.crowdsale.addr.slice(-2)[0] ];
+      crowdsales = [prevTierAddr, curTierAddr];
+    }
+    else
+      crowdsales = contractStore.crowdsale.addr;
+    this.deployFinalizeAgentRecursive(0, crowdsales, web3, abiNullFinalizeAgent, binNullFinalizeAgent, abiFinalizeAgent, binFinalizeAgent, this.state)
   }
 
   deployFinalizeAgentRecursive = (i, crowdsales, web3, abiNull, binNull, abiLast, binLast, state) => {
+    const { contractStore } = this.props
     let abi, bin, paramsFinalizeAgent;
-
     if (i < crowdsales.length - 1) {
       abi = abiNull;
       bin = binNull;
-      paramsFinalizeAgent = this.getNullFinalizeAgentParams(this.state.web3, i)
+      paramsFinalizeAgent = this.getNullFinalizeAgentParams(web3, i)
 
       console.log(paramsFinalizeAgent);
       deployContract(i, web3, abi, bin, paramsFinalizeAgent, state, (err, finalizeAgentAddr) => {
@@ -450,15 +451,14 @@ export class stepFour extends stepTwo {
         if (err) {
           return this.hideLoader();
         }
-        let newState = { ...this.state }
-        newState.contracts.finalizeAgent.addr.push(finalizeAgentAddr);
-        this.setState(newState);
+        const newAddr = contractStore.finalizeAgent.addr.concat(finalizeAgentAddr);
+        contractStore.setContractProperty('finalizeAgent', 'addr', newAddr)
         this.deployFinalizeAgentRecursive(i, crowdsales, web3, abiNull, binNull, abiLast, binLast, state)
       })
     } else {
       abi = abiLast;
       bin = binLast;
-      paramsFinalizeAgent = this.getFinalizeAgentParams(this.state.web3, i)
+      paramsFinalizeAgent = this.getFinalizeAgentParams(web3, i)
       console.log(paramsFinalizeAgent);
       deployContract(i, web3, abi, bin, paramsFinalizeAgent, state, this.handleDeployedFinalizeAgent)
     }
@@ -466,49 +466,50 @@ export class stepFour extends stepTwo {
 
   getNullFinalizeAgentParams = (web3, i) => {
     return [
-      this.state.contracts.crowdsale.addr[i]
+      this.props.contractStore.crowdsale.addr[i]
     ]
   }
 
   getFinalizeAgentParams = (web3, i) => {
+    const { contractStore } = this.props
     return [
-      this.state.contracts.token.addr,
-      this.state.contracts.crowdsale.addr[i]
+      contractStore.token.addr,
+      contractStore.crowdsale.addr[i]
     ]
   }
 
   handleDeployedFinalizeAgent = (err, finalizeAgentAddr) => {
+    const { contractStore, reservedTokenStore, tierStore, tokenStore, web3Store } = this.props
+    const web3 = web3Store.web3
+    let newState = { ...this.state }
     if (err) {
       return this.hideLoader();
     }
-    let newState = { ...this.state }
-    newState.contracts.finalizeAgent.addr.push(finalizeAgentAddr);
-    this.setState(newState, () => {
-      let web3 = this.state.web3;
-      let contracts = this.state.contracts;
-      console.log(contracts);
+    const newAddr = contractStore.finalizeAgent.addr.concat(finalizeAgentAddr);
+    contractStore.setContractProperty('finalizeAgent', 'addr', newAddr)
 
-      this.setState(() => {
-        setLastCrowdsaleRecursive(0, web3, contracts.pricingStrategy.abi, contracts.pricingStrategy.addr, contracts.crowdsale.addr.slice(-1)[0], 142982, (err) => {
+    let tokenABI = JSON.parse(JSON.stringify(contractStore.token.abi))
+    let pricingStrategyABI = JSON.parse(JSON.stringify(contractStore.pricingStrategy.abi))
+    let crowdsaleABI = JSON.parse(JSON.stringify(contractStore.crowdsale.abi))
+
+    setLastCrowdsaleRecursive(0, web3, pricingStrategyABI, contractStore.pricingStrategy.addr, contractStore.crowdsale.addr.slice(-1)[0], 142982, (err) => {
+      if (err) return this.hideLoader();
+      setReservedTokensListMultiple(web3, tokenABI, contractStore.token.addr, tokenStore, reservedTokenStore, (err) => {
+        if (err) return this.hideLoader();
+        updateJoinedCrowdsalesRecursive(0, web3, crowdsaleABI, contractStore.crowdsale.addr, 293146, (err) => {
           if (err) return this.hideLoader();
-          setReservedTokensListMultiple(web3, contracts.token.abi, contracts.token.addr, this.state.token, (err) => {
+          setMintAgentRecursive(0, web3, tokenABI, contractStore.token.addr, contractStore.crowdsale.addr, 68425, (err) => {
             if (err) return this.hideLoader();
-            updateJoinedCrowdsalesRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, 293146, (err) => {
+            setMintAgentRecursive(0, web3, tokenABI, contractStore.token.addr, contractStore.finalizeAgent.addr, 68425, (err) => {
               if (err) return this.hideLoader();
-              setMintAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.crowdsale.addr, 68425, (err) => {
+              addWhiteListRecursive(0, web3, tierStore, tokenStore, crowdsaleABI, contractStore.crowdsale.addr, (err) => {
                 if (err) return this.hideLoader();
-                setMintAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.finalizeAgent.addr, 68425, (err) => {
+                setFinalizeAgentRecursive(0, web3, crowdsaleABI, contractStore.crowdsale.addr, contractStore.finalizeAgent.addr, 68622, (err) => {
                   if (err) return this.hideLoader();
-                  addWhiteListRecursive(0, web3, this.state.crowdsale, this.state.token, contracts.crowdsale.abi, contracts.crowdsale.addr, (err) => {
+                  setReleaseAgentRecursive(0, web3, tokenABI, contractStore.token.addr, contractStore.finalizeAgent.addr, 65905, (err) => {
                     if (err) return this.hideLoader();
-                    setFinalizeAgentRecursive(0, web3, contracts.crowdsale.abi, contracts.crowdsale.addr, contracts.finalizeAgent.addr, 68622, (err) => {
-                      if (err) return this.hideLoader();
-                      setReleaseAgentRecursive(0, web3, contracts.token.abi, contracts.token.addr, contracts.finalizeAgent.addr, 65905, (err) => {
-                        transferOwnership(web3, this.state.contracts.token.abi, contracts.token.addr, this.state.crowdsale[0].walletAddress, 46699, (err) => {
-                          if (err) return this.hideLoader();
-                          this.hideLoader();
-                        });
-                      });
+                    transferOwnership(web3, tokenABI, contractStore.token.addr, tierStore.tiers[0].walletAddress, 46699, (err) => {
+                      this.hideLoader();
                     });
                   });
                 });
@@ -526,59 +527,61 @@ export class stepFour extends stepTwo {
   }
 
   goToCrowdsalePage = () => {
-    const {contracts} = this.state
-    if (!contracts.crowdsale.addr) {
+    const { contractStore } = this.props
+    if (!contractStore.crowdsale.addr) {
       return noContractDataAlert();
     }
-    if (contracts.crowdsale.addr.length === 0) {
+    if (contractStore.crowdsale.addr.length === 0) {
       return noContractDataAlert();
     }
     let crowdsalePage = "/crowdsale";
-    const isValidContract = contracts && contracts.crowdsale && contracts.crowdsale.addr
+    const isValidContract = contractStore && contractStore.crowdsale && contractStore.crowdsale.addr
+
     let url;
-    url = crowdsalePage + `?addr=` + contracts.crowdsale.addr[0]
-    url += `&networkID=` + contracts.crowdsale.networkID
-    let newHistory = isValidContract ? url : crowdsalePage
+    url = crowdsalePage + `?addr=` + contractStore.crowdsale.addr[0]
+    url += `&networkID=` + contractStore.crowdsale.networkID
 
     if (!this.state.contractDownloaded) {
       this.downloadCrowdsaleInfo()
       setTimeout(this.contractDownloadSuccess, 450)
     }
 
-    this.props.history.push(newHistory)
+    let newHistory = isValidContract ? url : crowdsalePage
+    this.props.history.push(newHistory);
   }
 
   render() {
+    const { tierStore, contractStore, tokenStore } = this.props
     let crowdsaleSetups = [];
-    for (let i = 0; i < this.state.crowdsale.length; i++) {
+    for (let i = 0; i < tierStore.tiers.length; i++) {
       let capBlock = <DisplayField
         side='left'
         title={'Max cap'}
-        value={this.state.crowdsale[i].supply?this.state.crowdsale[i].supply:""}
+        value={tierStore.tiers[i].supply?tierStore.tiers[i].supply:""}
         description="How many tokens will be sold on this tier."
       />
       let updatableBlock = <DisplayField
         side='right'
         title={'Allow modifying'}
-        value={this.state.crowdsale[i].updatable?this.state.crowdsale[i].updatable:"off"}
+        value={tierStore.tiers[i].updatable?tierStore.tiers[i].updatable:"off"}
         description="Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing."
       />
 
       crowdsaleSetups.push(<div key={i.toString()}><div className="publish-title-container">
-          <p className="publish-title" data-step={3+i}>Crowdsale Setup {this.state.crowdsale[i].tier}</p>
+          <p className="publish-title" data-step={3+i}>Crowdsale Setup {tierStore.tiers[i].tier}</p>
         </div>
         <div className="hidden">
           <div className="hidden">
             <DisplayField
               side='left'
               title={'Start time'}
-              value={this.state.crowdsale[i].startTime?this.state.crowdsale[i].startTime.split("T").join(" "):""}
+              value={tierStore.tiers[i].startTime?tierStore.tiers[i].startTime.split("T").join(" "):""}
               description="Date and time when the tier starts."
             />
             <DisplayField
               side='right'
               title={'End time'}
-              value={this.state.crowdsale[i].endTime?this.state.crowdsale[i].endTime.split("T").join(" "):""}
+              value={tierStore.tiers[i].endTime?tierStore.tiers[i].endTime.split("T").join(" "):""}
               description="Date and time when the tier ends."
             />
           </div>
@@ -586,102 +589,102 @@ export class stepFour extends stepTwo {
             <DisplayField
               side='left'
               title={'Wallet address'}
-              value={this.state.crowdsale[i].walletAddress?this.state.crowdsale[i].walletAddress:""}
+              value={tierStore.tiers[i].walletAddress?tierStore.tiers[i].walletAddress:""}
               description="Where the money goes after investors transactions."
             />
             <DisplayField
               side='right'
               title={'RATE'}
-              value={this.state.pricingStrategy[i].rate?this.state.pricingStrategy[i].rate:0 + " ETH"}
+              value={tierStore.tiers[i].rate?tierStore.tiers[i].rate:0 + " ETH"}
               description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens."
             />
           </div>
-          {this.state.contractType===this.state.contractTypes.whitelistwithcap?capBlock:""}
-          {this.state.contractType===this.state.contractTypes.whitelistwithcap?updatableBlock:""}
+          {contractStore.contractType===CONTRACT_TYPES.whitelistwithcap?capBlock:""}
+          {contractStore.contractType===CONTRACT_TYPES.whitelistwithcap?updatableBlock:""}
         </div></div>);
     }
     let ABIEncodedOutputsCrowdsale = [];
-    for (let i = 0; i < this.state.crowdsale.length; i++) {
+    for (let i = 0; i < tierStore.tiers.length; i++) {
       ABIEncodedOutputsCrowdsale.push(
         <DisplayTextArea
           key={i.toString()}
-          label={"Constructor Arguments for " + (this.state.crowdsale[i].tier?this.state.crowdsale[i].tier : "contract") + " (ABI-encoded and appended to the ByteCode above)"}
-          value={this.state.contracts?this.state.contracts.crowdsale?this.state.contracts.crowdsale.abiConstructor?this.state.contracts.crowdsale.abiConstructor[i]:"":"":""}
+          label={"Constructor Arguments for " + (tierStore.tiers[i].tier?tierStore.tiers[i].tier : "contract") + " (ABI-encoded and appended to the ByteCode above)"}
+          value={contractStore?contractStore.crowdsale?contractStore.crowdsale.abiConstructor?contractStore.crowdsale.abiConstructor[i]:"":"":""}
           description="Encoded ABI"
         />
       );
     }
     let ABIEncodedOutputsPricingStrategy = [];
-    for (let i = 0; i < this.state.pricingStrategy.length; i++) {
+    for (let i = 0; i < tierStore.tiers.length; i++) {
       ABIEncodedOutputsPricingStrategy.push(
         <DisplayTextArea
           key={i.toString()}
-          label={"Constructor Arguments for " + (this.state.crowdsale[i].tier?this.state.crowdsale[i].tier : "") + " Pricing Strategy Contract (ABI-encoded and appended to the ByteCode above)"}
-          value={this.state.contracts?this.state.contracts.pricingStrategy?this.state.contracts.pricingStrategy.abiConstructor?this.state.contracts.pricingStrategy.abiConstructor[i]:"":"":""}
+          label={"Constructor Arguments for " + (tierStore.tiers[i].tier?tierStore.tiers[i].tier : "") + " Pricing Strategy Contract (ABI-encoded and appended to the ByteCode above)"}
+          value={contractStore?contractStore.pricingStrategy?contractStore.pricingStrategy.abiConstructor?contractStore.pricingStrategy.abiConstructor[i]:"":"":""}
           description="Contructor arguments for pricing strategy contract"
         />
       );
     }
     let ABIEncodedOutputsFinalizeAgent = [];
-    for (let i = 0; i < this.state.crowdsale.length; i++) {
+    for (let i = 0; i < tierStore.tiers.length; i++) {
       ABIEncodedOutputsFinalizeAgent.push(
         <DisplayTextArea
           key={i.toString()}
-          label={"Constructor Arguments for " + (this.state.crowdsale[i].tier?this.state.crowdsale[i].tier : "") + " Finalize Agent Contract (ABI-encoded and appended to the ByteCode above)"}
-          value={this.state.contracts?this.state.contracts.finalizeAgent?this.state.contracts.finalizeAgent.abiConstructor?this.state.contracts.finalizeAgent.abiConstructor[i]:"":"":""}
+          label={"Constructor Arguments for " + (tierStore.tiers[i].tier?tierStore.tiers[i].tier : "") + " Finalize Agent Contract (ABI-encoded and appended to the ByteCode above)"}
+          value={contractStore?contractStore.finalizeAgent?contractStore.finalizeAgent.abiConstructor?contractStore.finalizeAgent.abiConstructor[i]:"":"":""}
           description="Contructor arguments for finalize agent contract"
         />
       );
     }
     let globalLimitsBlock = <div><div className="publish-title-container">
-      <p className="publish-title" data-step={2 + this.state.crowdsale.length + 2}>Global Limits</p>
+      <p className="publish-title" data-step={2 + tierStore.tiers.length + 2}>Global Limits</p>
     </div>
     <div className="hidden">
       <DisplayField
         side='left'
         title='Min Cap'
-        value={this.state.token.globalmincap}
+        value={tokenStore.globalmincap}
         description="Min Cap for all onvestors"
       /></div>
     </div>;
     let tokenBlock = <div>
       <DisplayTextArea
         label={"Token Contract Source Code"}
-        value={this.state.contracts?this.state.contracts.token?this.state.contracts.token.src:"":""}
+        value={contractStore?contractStore.token?contractStore.token.src:"":""}
         description="Token Contract Source Code"
       />
       <DisplayTextArea
         label={"Token Contract ABI"}
-        value={this.state.contracts?this.state.contracts.token?JSON.stringify(this.state.contracts.token.abi):"":""}
+        value={contractStore?contractStore.token?JSON.stringify(contractStore.token.abi):"":""}
         description="Token Contract ABI"
       />
        <DisplayTextArea
         label={"Token Constructor Arguments (ABI-encoded and appended to the ByteCode above)"}
-        value={this.state.contracts?this.state.contracts.token?this.state.contracts.token.abiConstructor?this.state.contracts.token.abiConstructor:"":"":""}
+        value={contractStore?contractStore.token?contractStore.token.abiConstructor?contractStore.token.abiConstructor:"":"":""}
         description="Token Constructor Arguments"
       />
     </div>;
     let pricingStrategyBlock = <div>
       <DisplayTextArea
         label={"Pricing Strategy Contract Source Code"}
-        value={this.state.contracts?this.state.contracts.pricingStrategy?this.state.contracts.pricingStrategy.src:"":""}
+        value={contractStore?contractStore.pricingStrategy?contractStore.pricingStrategy.src:"":""}
         description="Pricing Strategy Contract Source Code"
       />
       <DisplayTextArea
         label={"Pricing Strategy Contract ABI"}
-        value={this.state.contracts?this.state.contracts.pricingStrategy?JSON.stringify(this.state.contracts.pricingStrategy.abi):"":""}
+        value={contractStore?contractStore.pricingStrategy?JSON.stringify(contractStore.pricingStrategy.abi):"":""}
         description="Pricing Strategy Contract ABI"
       />
     </div>;
     let finalizeAgentBlock = <div>
       <DisplayTextArea
         label={"Finalize Agent Contract Source Code"}
-        value={this.state.contracts?this.state.contracts.finalizeAgent?this.state.contracts.finalizeAgent.src:"":""}
+        value={contractStore?contractStore.finalizeAgent?contractStore.finalizeAgent.src:"":""}
         description="Finalize Agent Contract Source Code"
       />
       <DisplayTextArea
         label={"Finalize Agent Contract ABI"}
-        value={this.state.contracts?this.state.contracts.finalizeAgent?JSON.stringify(this.state.contracts.finalizeAgent.abi):"":""}
+        value={contractStore?contractStore.finalizeAgent?JSON.stringify(contractStore.finalizeAgent.abi):"":""}
         description="Finalize Agent Contract ABI"
       />
     </div>;
@@ -701,7 +704,7 @@ export class stepFour extends stepTwo {
               <div className="publish-title-container">
                 <p className="publish-title" data-step="1">Crowdsale Contract</p>
               </div>
-              <p className="label">{this.state.contractType===this.state.contractTypes.standard?"Standard":"Whitelist with cap"}</p>
+              <p className="label">{contractStore.contractType===CONTRACT_TYPES.standard?"Standard":"Whitelist with cap"}</p>
               <p className="description">
               Crowdsale Contract
               </p>
@@ -714,13 +717,13 @@ export class stepFour extends stepTwo {
                 <DisplayField
                   side='left'
                   title='Name'
-                  value={this.state.token.name?this.state.token.name:""}
+                  value={tokenStore.name?tokenStore.name:""}
                   description="The name of your token. Will be used by Etherscan and other token browsers."
                 />
                 <DisplayField
                   side='right'
                   title='Ticker'
-                  value={this.state.token.ticker?this.state.token.ticker:""}
+                  value={tokenStore.ticker?tokenStore.ticker:""}
                   description="The three letter ticker for your token."
                 />
               </div>
@@ -728,36 +731,36 @@ export class stepFour extends stepTwo {
                 <DisplayField
                   side='left'
                   title='DECIMALS'
-                  value={this.state.token.decimals?this.state.token.decimals.toString():""}
+                  value={tokenStore.decimals?tokenStore.decimals.toString():""}
                   description="The decimals of your token."
                 />
               </div>
             </div>
             {crowdsaleSetups}
             <div className="publish-title-container">
-              <p className="publish-title" data-step={2 + this.state.crowdsale.length + 1}>Crowdsale Setup</p>
+              <p className="publish-title" data-step={2 + tierStore.tiers.length + 1}>Crowdsale Setup</p>
             </div>
             <div className="hidden">
               <DisplayField
                 side='left'
                 title='Compiler Version'
-                value={this.state.compilerVersion}
+                value={'0.4.11'}
                 description="Compiler Version"
               />
               <DisplayField
                 side='right'
                 title='Contract name'
-                value={this.state.contractName}
+                value={'MintedTokenCappedCrowdsaleExt'}
                 description="Crowdsale contract name"
               />
               <DisplayField
                 side='left'
                 title='Optimized'
-                value={this.state.optimized.toString()}
+                value={true.toString()}
                 description="Optimization in compiling"
               />
             </div>
-            {this.state.crowdsale[0].whitelistdisabled === "yes"?globalLimitsBlock:""}
+            {tierStore.tiers[0].whitelistdisabled === "yes"?globalLimitsBlock:""}
             {tokenBlock}
             {pricingStrategyBlock}
             {ABIEncodedOutputsPricingStrategy}
@@ -765,12 +768,12 @@ export class stepFour extends stepTwo {
             {ABIEncodedOutputsFinalizeAgent}
             <DisplayTextArea
               label={"Crowdsale Contract Source Code"}
-              value={this.state.contracts?this.state.contracts.crowdsale?this.state.contracts.crowdsale.src:"":""}
+              value={contractStore?contractStore.crowdsale?contractStore.crowdsale.src:"":""}
               description="Crowdsale Contract Source Code"
             />
             <DisplayTextArea
               label={"Crowdsale Contract ABI"}
-              value={this.state.contracts?this.state.contracts.crowdsale?JSON.stringify(this.state.contracts.crowdsale.abi):"":""}
+              value={contractStore?contractStore.crowdsale?JSON.stringify(contractStore.crowdsale.abi):"":""}
               description="Crowdsale Contract ABI"
             />
             {ABIEncodedOutputsCrowdsale}

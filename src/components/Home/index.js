@@ -2,15 +2,8 @@ import React, { Component } from 'react';
 import '../../assets/stylesheets/application.css';
 import { getWeb3, getNetworkVersion } from '../../utils/blockchainHelpers'
 import { Link } from 'react-router-dom'
-import { defaultState } from '../../utils/constants'
-import { noDeploymentOnMainnetAlert } from '../../utils/alerts'
 
 export class Home extends Component {
-  constructor(props) {
-    super(props);
-    this.state = defaultState
-  }
-
   render() {
     return (
       <div>
@@ -23,7 +16,7 @@ export class Home extends Component {
               <br/>Smart contracts based on <a href="https://github.com/TokenMarketNet/ico">TokenMarket</a> contracts. 
               </p>
               <div className="buttons">
-                <Link to={{ pathname: '/1', query: { state: this.state } }}><a className="button button_fill">New crowdsale</a></Link>
+                <Link to='/1'><a className="button button_fill">New crowdsale</a></Link>
               </div>
             </div>
           </div>

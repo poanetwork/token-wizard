@@ -9,6 +9,8 @@ import {
 import { noContractAlert } from '../../utils/alerts'
 import { toFixed } from '../../utils/utils'
 import { GAS_PRICE, DOWNLOAD_NAME } from '../../utils/constants'
+import { tierStore, contractStore } from '../../stores'
+import { isObservableArray } from 'mobx'
 
 function setLastCrowdsale(web3, abi, addr, lastCrowdsale, gasLimit, cb) {
   console.log("###setLastCrowdsale for Pricing Strategy:###");
@@ -41,39 +43,36 @@ function setMintAgent(web3, abi, addr, acc, gasLimit, cb) {
   });
 }
 
-function addWhiteList(round, web3, crowdsale, token, abi, addr, cb) {
+function addWhiteList(round, web3, tierStore, token, abi, addr, cb) {
   console.log("###whitelist:###");
   let whitelist = [];
   for (let i = 0; i <= round; i++) {
-    console.log(crowdsale[i]);
-    console.log(crowdsale[i].whitelist);
-
-    for (let j = 0; j < crowdsale[i].whitelist.length; j++) {
+    for (let j = 0; j < tierStore.tiers[i].whitelist.length; j++) {
       let itemIsAdded = false;
       for (let k = 0; k < whitelist.length; k++) {
-        if (whitelist[k].addr == crowdsale[i].whitelist[j].addr) {
+        if (whitelist[k].addr == tierStore.tiers[i].whitelist[j].addr) {
           itemIsAdded = true;
           break;
         }
       }
       if (!itemIsAdded) {
-        whitelist.push.apply(whitelist, crowdsale[i].whitelist);
+        whitelist.push.apply(whitelist, tierStore.tiers[i].whitelist);
       }
     }
 
-    if (crowdsale[i].whiteListInput.addr && crowdsale[i].whiteListInput.min && crowdsale[i].whiteListInput.max) {
+    if (tierStore.tiers[i].whitelistInput.addr && tierStore.tiers[i].whitelistInput.min && tierStore.tiers[i].whitelistInput.max) {
       let itemIsAdded = false;
       for (let k = 0; k < whitelist.length; k++) {
-        if (whitelist[k].addr == crowdsale[i].whiteListInput.addr) {
+        if (whitelist[k].addr == tierStore.tiers[i].whitelistInput.addr) {
           itemIsAdded = true;
           break;
         }
       }
       if (!itemIsAdded) {
         whitelist.push({
-          "addr": crowdsale[i].whiteListInput.addr,
-          "min": crowdsale[i].whiteListInput.min,
-          "max": crowdsale[i].whiteListInput.max
+          "addr": tierStore.tiers[i].whitelistInput.addr,
+          "min": tierStore.tiers[i].whitelistInput.min,
+          "max": tierStore.tiers[i].whitelistInput.max
         });
       }
     }
@@ -165,7 +164,7 @@ function setReleaseAgent(web3, abi, addr, finalizeAgentAddr, gasLimit, cb) {
   });
 }
 
-export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
+export function setReservedTokensListMultiple(web3, abi, addr, token, reservedTokenStore, cb) {
   console.log("###setReservedTokensListMultiple:###");
   attachToContract(web3, abi, addr, function(err, tokenContract) {
     console.log("attach to token contract");
@@ -176,27 +175,21 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
     if (!tokenContract) return noContractAlert();
 
     let map = {};
-    let addrs = [], inTokens = [], inPercentageUnit = [], inPercentageDecimals = [];
+    let addrs = []
+    let inTokens = []
+    let inPercentageUnit = []
+    let inPercentageDecimals = [];
 
-    if (token.reservedTokensInput.addr && token.reservedTokensInput.dim && token.reservedTokensInput.val) {
-      token.reservedTokens.push({
-          "addr": token.reservedTokensInput.addr,
-          "dim": token.reservedTokensInput.dim,
-          "val": token.reservedTokensInput.val
-      });
-    }
+    const reservedTokens = reservedTokenStore.tokens
 
-    console.log("token.reservedTokens: ");
-    console.log(token.reservedTokens);
-
-    for (let i = 0; i < token.reservedTokens.length; i++) {
-      if (!token.reservedTokens[i].deleted) {
-        let val = token.reservedTokens[i].val
-        let addr = token.reservedTokens[i].addr
+    for (let i = 0; i < reservedTokens.length; i++) {
+      if (!reservedTokens[i].deleted) {
+        let val = reservedTokens[i].val
+        let addr = reservedTokens[i].addr
         let obj = map[addr]?map[addr]:{}
-        if (token.reservedTokens[i].dim === "tokens")
+        if (reservedTokens[i].dim === "tokens") {
           obj.inTokens = val * 10**token.decimals
-        else {
+        } else {
           obj.inPercentageDecimals = countDecimals(val)
           obj.inPercentageUnit = val * 10**obj.inPercentageDecimals
         }
@@ -215,11 +208,6 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
     }
 
     if (addrs.length === 0 && inTokens.length === 0 && inPercentageUnit.length === 0 && inPercentageDecimals.length === 0) return cb()
-
-    console.log("addrs: " + addrs)
-    console.log("inTokens: " + inTokens)
-    console.log("inPercentageUnit: " + inPercentageUnit)
-    console.log("inPercentageDecimals: " + inPercentageDecimals)
 
     let method = tokenContract.methods.setReservedTokensListMultiple(addrs, inTokens, inPercentageUnit, inPercentageDecimals).send({gasPrice: GAS_PRICE})
     sendTXToContract(web3, method, cb)
@@ -275,11 +263,11 @@ export function updateJoinedCrowdsalesRecursive (i, web3, abi, addrs, gasLimit, 
   })
 }
 
-export function addWhiteListRecursive (i, web3, crowdsale, token, abi, crowdsaleAddrs, cb) {
-  addWhiteList(i, web3, crowdsale, token, abi, crowdsaleAddrs[i], (err) => {
+export function addWhiteListRecursive (i, web3, tierStore, token, abi, crowdsaleAddrs, cb) {
+  addWhiteList(i, web3, tierStore, token, abi, crowdsaleAddrs[i], (err) => {
     i++;
     if (i < crowdsaleAddrs.length) {
-      addWhiteListRecursive(i, web3, crowdsale, token, abi, crowdsaleAddrs, cb);
+      addWhiteListRecursive(i, web3, tierStore, token, abi, crowdsaleAddrs, cb);
     } else {
       cb(err);
     }
@@ -325,39 +313,39 @@ export const handleConstantForFile = content => {
   return `${content.value}${content.fileValue}`
 }
 
-export const handleContractsForFile = (content, state, index) => {
+export const handleContractsForFile = (content, index, contractStore, tierStore) => {
   const title = content.value
   const { field } = content
   let fileContent = ''
 
   if (field !== 'src' && field !== 'abi' && field !== 'addr') {
-    const contractField = state.contracts[content.child][field]
+    const contractField = contractStore[content.child][field]
     let fileBody
 
-    if (Array.isArray(contractField)) {
+    if (isObservableArray(contractField)) {
       fileBody = contractField[index]
 
       if (!!fileBody) {
-          fileContent = title + ' for ' + state.crowdsale[index].tier + ':**** \n\n' + fileBody
+          fileContent = title + ' for ' + tierStore.tiers[index].tier + ':**** \n\n' + fileBody
       }
     } else if (!!contractField) {
       fileContent = title + ':**** \n\n' + contractField
     }
   } else {
-    fileContent = addSrcToFile(content, state, index)
+    fileContent = addSrcToFile(content, index, contractStore, tierStore)
   }
 
   return fileContent
 }
 
-const addSrcToFile = (content, state, index) => {
+const addSrcToFile = (content, index, contractStore, tierStore) => {
   const title = content.value
   const { field } = content
-  const contractField = state.contracts[content.child][field]
+  const contractField = contractStore[content.child][field]
   let fileContent = ''
 
-  if (Array.isArray(contractField) && field !== 'abi') {
-      fileContent = title + ' for ' + state.crowdsale[index].tier + ': ' + contractField[index]
+  if (isObservableArray(contractField) && field !== 'abi') {
+      fileContent = title + ' for ' + tierStore.tiers[index].tier + ': ' + contractField[index]
   } else {
     if (field !== 'src') {
       const body = field === 'abi' ? JSON.stringify(contractField) : contractField
