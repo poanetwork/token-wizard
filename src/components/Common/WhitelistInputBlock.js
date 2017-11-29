@@ -1,11 +1,14 @@
 import React from 'react'
+import Web3 from 'web3';
+import update from 'immutability-helper';
 import '../../assets/stylesheets/application.css';
 import { InputField } from './InputField'
-import { TEXT_FIELDS, defaultState } from '../../utils/constants'
+import { TEXT_FIELDS, defaultState, VALIDATION_TYPES } from '../../utils/constants'
 import { WhitelistItem } from './WhitelistItem'
 import { getOldState } from '../../utils/utils'
 import { inject, observer } from 'mobx-react'
 const { ADDRESS, MIN, MAX } = TEXT_FIELDS
+const {VALID, INVALID} = VALIDATION_TYPES;
 
 @inject('tierStore')
 @observer
@@ -13,7 +16,14 @@ export class WhitelistInputBlock extends React.Component {
   constructor (props) {
     super(props)
     let oldState = getOldState(props, defaultState)
-    this.state = Object.assign({}, oldState)
+    this.state = Object.assign({}, oldState, {
+      validation: {
+        address: {
+          pristine: true,
+          valid: INVALID
+        }
+      }
+    })
   }
 
   addWhitelistItem = () => {
@@ -22,7 +32,28 @@ export class WhitelistInputBlock extends React.Component {
     const tier = tierStore.tiers[crowdsaleNum]
     const { addr, min, max } = tier.whitelistInput
 
-    if (!addr || !min || !max) return
+    this.setState(update(this.state, {
+      validation: {
+        address: {
+          pristine: { $set: false }
+        }
+      }
+    }))
+
+    if (!addr || !min || !max ||  this.state.validation.address.valid === INVALID) {
+      return
+    }
+
+    this.setState(update(this.state, {
+      validation: {
+        address: {
+          $set: {
+            pristine: true,
+            valid: INVALID
+          }
+        }
+      }
+    }))
 
     this.clearWhiteListInputs()
 
@@ -51,6 +82,26 @@ export class WhitelistInputBlock extends React.Component {
     this.props.tierStore.setTierProperty(whitelistInput, 'whitelistInput', this.props.num)
   }
 
+  handleAddressChange = e => {
+    this.props.onChange(e, 'crowdsale', this.props.num, 'whitelist_addr')
+
+    const address = e.target.value
+    const isAddressValid = Web3.utils.isAddress(address) ? VALID : INVALID;
+
+    const newState = update(this.state, {
+      validation: {
+        address: {
+          $set: {
+            pristine: false,
+            valid: isAddressValid
+          },
+        },
+      },
+    });
+
+    this.setState(newState)
+  }
+
   render () {
     const { num } = this.props
     const { whitelistInput, whitelistElements } = this.props.tierStore.tiers[num]
@@ -64,8 +115,11 @@ export class WhitelistInputBlock extends React.Component {
               type='text'
               title={ADDRESS}
               value={whitelistInput && whitelistInput.addr}
-              onChange={e => this.props.onChange(e, 'crowdsale', num, 'whitelist_addr')}
+              onChange={e => this.handleAddressChange(e)}
               description={`Address of a whitelisted account. Whitelists are inherited. E.g., if an account whitelisted on Tier 1 and didn't buy max cap on Tier 1, he can buy on Tier 2, and following tiers.`}
+              pristine={this.state.validation.address.pristine}
+              valid={this.state.validation.address.valid}
+              errorMessage="The inserted address is invalid"
             />
             <InputField
               side='white-list-input-property white-list-input-property-middle'

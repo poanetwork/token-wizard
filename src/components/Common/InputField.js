@@ -26,7 +26,7 @@ export const InputField = props => {
         onChange={props.onChange}
       />
       <p className="description">{props.description}</p>
-      <p style={errorStyle}>{error}</p>
+      { props.pristine ? null : <p style={errorStyle}>{error}</p> }
     </div>
   );
 };
