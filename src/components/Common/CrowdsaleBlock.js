@@ -77,10 +77,9 @@ export class CrowdsaleBlock extends React.Component {
             side='left'
             type='datetime-local'
             title={START_TIME}
-            value={tierStore.tiers[num].startTimeTemp}
+            value={tierStore.tiers[num].startTime}
             valid={tierStore.validTiers[num].startTime}
             errorMessage={VALIDATION_MESSAGES.START_TIME}
-            defaultValue={tierStore.tiers[num].startTime}
             onChange={(e) => this.updateTierStore(e, 'startTime')}
             description={`Date and time when the tier starts. Can't be in the past from the current moment.`}
           />
@@ -88,10 +87,9 @@ export class CrowdsaleBlock extends React.Component {
             side='right'
             type='datetime-local'
             title={END_TIME}
-            value={tierStore.tiers[num].endTimeTemp}
+            value={tierStore.tiers[num].endTime}
             valid={tierStore.validTiers[num].endTime}
             errorMessage={VALIDATION_MESSAGES.END_TIME}
-            defaultValue={tierStore.tiers[num].endTime}
             onChange={(e) => this.updateTierStore(e, 'endTime')}
             description={`Date and time when the tier ends. Can be only in the future.`}
           />
