@@ -6,7 +6,6 @@ import { defaultCompanyStartDate } from './utils'
 import { defaultCompanyEndDate } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { InputField } from '../Common/InputField'
-import { InputFieldExt } from '../Common/InputFieldExt'
 import { RadioInputField } from '../Common/RadioInputField'
 import { CrowdsaleBlock } from '../Common/CrowdsaleBlock'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
@@ -270,7 +269,7 @@ export class stepThree extends React.Component{
                 onChange={(e) => this.updateTierStore(e, 'tier', 0)}
                 description={`Name of a tier, e.g. PrePreIco, PreICO, ICO with bonus A, ICO with bonus B, etc. We simplified that and will increment a number after each tier.`}
               />
-              <InputFieldExt
+              <InputField
                 side='right'
                 type='text'
                 title={WALLET_ADDRESS}
@@ -282,7 +281,7 @@ export class stepThree extends React.Component{
               />
               </div>
               <div className='input-block-container'>
-              <InputFieldExt
+              <InputField
                 side='left'
                 type='datetime-local'
                 title={START_TIME}
@@ -292,7 +291,7 @@ export class stepThree extends React.Component{
                 onChange={(e) => this.updateTierStore(e, 'startTime', 0)}
                 description={`Date and time when the tier starts. Can't be in the past from the current moment.`}
               />
-              <InputFieldExt
+              <InputField
                 side='right'
                 type='datetime-local'
                 title={END_TIME}
