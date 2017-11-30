@@ -138,140 +138,153 @@ export function setExistingContractParams(abi, addr, setContractProperty) {
   });
 }
 
-export function deployContract(i, web3, abi, bin, params, state, cb) {
-  abi = abi.slice()
-  //console.log('web3.eth.accounts[0]', web3.eth.accounts[0], 'bin', bin)
-  getEncodedABIClientSide(web3, abi, params, i, (ABIencoded) => {
-    console.log(ABIencoded);
-    let binFull = bin + ABIencoded.substr(2);
-    web3.eth.getAccounts().then(function(accounts) {
-      web3.eth.estimateGas({
-        from: accounts[0],
-        data: binFull
-      }, function(err, estimatedGas) {
-        if (err) console.log('errrrrrrrrrrrrrrrrr', err);
-        console.log('gas is estimated', estimatedGas, 'err', err)
-        let estimatedGasMax = 3716260;
-        if (!estimatedGas) estimatedGas = estimatedGasMax;
-        if (estimatedGas > estimatedGasMax) estimatedGas = estimatedGasMax;
-        else estimatedGas += 100000;
-        console.log('abi', abi)
-        const objAbi = JSON.parse(JSON.stringify(abi))
-        let contractInstance = new web3.eth.Contract(objAbi);
+export function deployContract(i, web3, abi, bin, params) {
+  return new Promise((resolve, reject) => {
+    const abiContent = abi.slice()
 
-        let deployOpts = {
-          data: "0x" + bin,
-          arguments: params,
-        };
+    getEncodedABIClientSide(web3, abiContent, params, i)
+      .then(ABIEncoded => {
+        let binFull = bin + ABIEncoded.substr(2)
 
-        let sendOpts = {
-          from: accounts[0],
-          gas: estimatedGas,
-          gasPrice: GAS_PRICE
-        };
+        console.log(ABIEncoded)
 
-        let isMined = false;
+        web3.eth.getAccounts()
+          .then(accounts => {
+            web3.eth.estimateGas({
+              from: accounts[0],
+              data: binFull
+            }, (err, estimatedGas) => {
+              if (err) console.log('errrrrrrrrrrrrrrrrr', err)
+              console.log('gas is estimated', estimatedGas, 'err', err)
 
-        contractInstance.deploy(deployOpts).send(sendOpts)
-        .on('error', function(error) {
-          console.log(error);
-          return cb(error, null);
-        })
-        .on('transactionHash', function(transactionHash){
-          console.log("contract deployment transaction: " + transactionHash);
+              const estimatedGasMax = 3716260
 
-          checkTxMined(web3, transactionHash, function txMinedCallback(receipt) {
-            if (isMined) return;
-
-            if (receipt) {
-              if (receipt.blockNumber) {
-                console.log("Contract deployment is mined from polling of tx receipt");
-                isMined = true;
-                console.log(receipt.contractAddress) // instance with the new contract address
-                return cb(null, receipt.contractAddress);
+              if (!estimatedGas || estimatedGas > estimatedGasMax) {
+                estimatedGas = estimatedGasMax
               } else {
-                console.log("Still mining... Polling of transaction once more");
-                setTimeout(function() {
-                  checkTxMined(web3, transactionHash, txMinedCallback)
-                }, 5000);
+                estimatedGas += 100000
               }
-            } else {
-              console.log("Still mining... Polling of transaction once more");
-              setTimeout(function() {
-                checkTxMined(web3, transactionHash, txMinedCallback)
-              }, 5000);
-            }
+
+              console.log('abi', abi)
+
+              const objAbi = JSON.parse(JSON.stringify(abi))
+              let contractInstance = new web3.eth.Contract(objAbi)
+
+              let deployOpts = {
+                data: '0x' + bin,
+                arguments: params
+              }
+
+              let sendOpts = {
+                from: accounts[0],
+                gas: estimatedGas,
+                gasPrice: GAS_PRICE
+              }
+
+              let isMined = false
+
+              contractInstance.deploy(deployOpts).send(sendOpts)
+                .on('error', error => {
+                  console.log(error)
+
+                  reject(error)
+                })
+                .on('transactionHash', transactionHash => {
+                  console.log('contract deployment transaction: ' + transactionHash)
+
+                  checkTxMined(web3, transactionHash, function txMinedCallback (receipt) {
+                    if (isMined) return
+
+                    if (receipt) {
+                      if (receipt.blockNumber) {
+                        console.log('Contract deployment is mined from polling of tx receipt')
+                        console.log(receipt.contractAddress) // instance with the new contract address
+
+                        isMined = true
+                        resolve(receipt.contractAddress)
+                      } else {
+                        console.log('Still mining... Polling of transaction once more')
+
+                        setTimeout(() => {
+                          checkTxMined(web3, transactionHash, txMinedCallback)
+                        }, 5000)
+                      }
+                    } else {
+                      console.log('Still mining... Polling of transaction once more')
+
+                      setTimeout(() => {
+                        checkTxMined(web3, transactionHash, txMinedCallback)
+                      }, 5000)
+                    }
+                  })
+                })
+                .then(newContractInstance => {
+                  if (!isMined) {
+                    console.log('Contract deployment is mined from Promise')
+                    console.log(newContractInstance.options.address) // instance with the new contract address
+
+                    isMined = true
+                    resolve(newContractInstance.options.address)
+                  }
+                })
+            })
           })
-        })
-        .on('confirmation', function(confirmationNumber, receipt) { })
-        .then(function(newContractInstance){
-          if (!isMined) {
-            console.log("Contract deployment is mined from Promise");
-            isMined = true;
-            console.log(newContractInstance.options.address) // instance with the new contract address
-            cb(null, newContractInstance.options.address);
-          }
-        });
-      });
-    });
-  });
+      })
+  })
 }
 
-export function sendTXToContract(web3, method, cb) {
-  let isMined = false
+export function sendTXToContract(web3, method) {
+  return new Promise((resolve, reject) => {
+    let isMined = false
 
-  method
-    .on('error', error => {
-      return cb(error)
-    })
-    .on('transactionHash', transactionHash => {
-      console.log("contract method transaction: " + transactionHash);
+    method
+      .on('error', reject)
+      .on('transactionHash', transactionHash => {
+        console.log("contract method transaction: " + transactionHash);
 
-      // This additional polling of tx receipt was made, because users had problems on mainnet: wizard hanged on random
-      // transaction, because there wasn't response from it, no receipt. Especially, if you switch between tabs when
-      // wizard works.
-      // https://github.com/oraclesorg/ico-wizard/pull/364/files/c86c3e8482ef078e0cb46b8bebf57a9187f32181#r152277434
-      checkTxMined(web3, transactionHash, function txMinedCallback(receipt) {
-        if (isMined) return
+        // This additional polling of tx receipt was made, because users had problems on mainnet: wizard hanged on random
+        // transaction, because there wasn't response from it, no receipt. Especially, if you switch between tabs when
+        // wizard works.
+        // https://github.com/oraclesorg/ico-wizard/pull/364/files/c86c3e8482ef078e0cb46b8bebf57a9187f32181#r152277434
+        checkTxMined(web3, transactionHash, function txMinedCallback(receipt) {
+          if (isMined) return
 
-        if (receipt) {
-          if (receipt.blockNumber) {
-            console.log("Sending tx to contract is mined from polling of tx receipt");
-            isMined = true
+          if (receipt) {
+            if (receipt.blockNumber) {
+              console.log("Sending tx to contract is mined from polling of tx receipt");
+              isMined = true
 
-            if (0 !== +receipt.status) {
-              return cb()
-            } else if (receipt.status === null) {
-              return cb()
+              if (0 !== +receipt.status || null === receipt.status) {
+                resolve()
+              } else {
+                reject({ message: 0 })
+              }
+
+            } else {
+              console.log("Still mining... Polling of transaction once more");
+              setTimeout(() => {
+                checkTxMined(web3, transactionHash, txMinedCallback)
+              }, 5000)
             }
-
-            return cb({ message: 0 })
           } else {
             console.log("Still mining... Polling of transaction once more");
             setTimeout(() => {
               checkTxMined(web3, transactionHash, txMinedCallback)
             }, 5000)
           }
+        })
+      })
+      .on('receipt', receipt => {
+        if (isMined) return
+        isMined = true
+
+        if (0 !== +receipt.status || null === receipt.status) {
+          resolve()
         } else {
-          console.log("Still mining... Polling of transaction once more");
-          setTimeout(() => {
-            checkTxMined(web3, transactionHash, txMinedCallback)
-          }, 5000)
+          reject({ message: 0 })
         }
       })
-    })
-    .on('receipt', receipt => {
-      if (isMined) return
-      isMined = true
-
-      if (0 !== +receipt.status) {
-        return cb()
-      } else if (receipt.status === null) {
-        return cb()
-      }
-
-      return cb({ message: 0 })
-    })
+  })
 }
 
 export function checkTxMined(web3, txhash, cb) {
@@ -282,18 +295,19 @@ export function checkTxMined(web3, txhash, cb) {
   });
 }
 
-export function attachToContract(web3, abi, addr, cb) {
-  web3.eth.getAccounts().then((accounts) => {
-    web3.eth.defaultAccount = accounts[0];
-		console.log("web3.eth.defaultAccount:" + web3.eth.defaultAccount);
+export function attachToContract(web3, abi, addr) {
+  return new Promise(resolve => {
+    web3.eth.getAccounts()
+      .then(accounts => {
+        web3.eth.defaultAccount = accounts[0]
+        console.log('web3.eth.defaultAccount:' + web3.eth.defaultAccount)
 
-		const objAbi = JSON.parse(JSON.stringify(abi))
-		let contractInstance = new web3.eth.Contract(objAbi, addr, {
-      from: web3.eth.defaultAccount
-    });
+        const objAbi = JSON.parse(JSON.stringify(abi))
+        const contractInstance = new web3.eth.Contract(objAbi, addr, { from: web3.eth.defaultAccount })
 
-		if (cb) cb(null, contractInstance);
-  });
+        resolve(contractInstance)
+      })
+  })
 }
 
 // export web3 object instance
