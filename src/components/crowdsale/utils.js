@@ -327,18 +327,35 @@ function setMaximumSellableTokensInEth(web3, crowdsaleContract, maximumSellableT
   });
 }
 
-export function getCurrentRate(web3, $this, crowdsaleContract, cb) {
-  if (!crowdsaleContract) return noContractAlert();
+export function getCurrentRate(web3, crowdsaleContract) {
+return new Promise((resolve, reject) => {
+    if (!crowdsaleContract) {
+      noContractAlert()
+      reject('no contract')
+      return
+    }
 
-  crowdsaleContract.methods.pricingStrategy().call(function(err, pricingStrategyAddr) {
-    if (err) return console.log(err);
+    crowdsaleContract.methods.pricingStrategy().call((err, pricingStrategyAddr) => {
+      if (err) {
+        console.log(err)
+        reject(err)
+        return
+      }
 
-    console.log("pricingStrategy: " + pricingStrategyAddr);
-    contractStore.setContractProperty('pricingStrategy', 'addr', pricingStrategyAddr)
-    if (!pricingStrategyAddr || pricingStrategyAddr === "0x") return;
-    getPricingStrategyData(web3, () => { cb() });
-  });
-}
+      console.log('pricingStrategy:', pricingStrategyAddr)
+      contractStore.setContractProperty('pricingStrategy', 'addr', pricingStrategyAddr)
+
+      if (!pricingStrategyAddr || pricingStrategyAddr === "0x") {
+        reject('no pricingStrategy address')
+        return
+      }
+
+      getPricingStrategyData(web3)
+        .then(resolve)
+        .catch(reject)
+    });
+  }
+)}
 
 export function getCrowdsaleData (web3, crowdsaleContract) {
   return new Promise((resolve, reject) => {
