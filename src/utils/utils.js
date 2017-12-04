@@ -327,6 +327,8 @@ export const validateTime = (time) => getTimeAsNumber(time) > Date.now()
 
 export const validateLaterTime = (laterTime, previousTime) => getTimeAsNumber(laterTime) > getTimeAsNumber(previousTime)
 
+export const validateLaterOrEqualTime = (laterTime, previousTime) => getTimeAsNumber(laterTime) >= getTimeAsNumber(previousTime)
+
 export const validateRate = (rate) => isNaN(Number(rate)) === false && Number(rate) > 0
 
 export const validateAddress = (address) => {
