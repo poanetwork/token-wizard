@@ -114,8 +114,29 @@ export class stepThree extends React.Component{
   renderLink () {
     return <div>
       <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Tier</div>
-      <Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }} className="button button_fill">Continue</Link>
+      <Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}
+            onClick={e => this.beforeNavigate(e)}
+            className="button button_fill"
+      >Continue</Link>
     </div>
+  }
+
+  beforeNavigate = e => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    const { tierStore } = this.props
+
+    for (let index = 0; index < tierStore.tiers.length; index++) {
+      tierStore.validateTiers('endTime', index)
+      tierStore.validateTiers('startTime', index)
+    }
+
+    if (tierStore.areTiersValid) {
+      this.props.history.push('/4')
+    } else {
+      this.showErrorMessages(e)
+    }
   }
 
   renderStandardLinkComponent () {
