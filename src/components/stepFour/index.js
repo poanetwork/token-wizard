@@ -100,10 +100,10 @@ const { PUBLISH } = NAVIGATION_STEPS
         .then(() => this.deploySafeMathLibrary())
         .then(() => this.deployToken())
         .then(() => this.deployPricingStrategy())
-        .then(this.deployCrowdsale.bind(this))
+        .then(() => this.deployCrowdsale())
         .then(() => this.calculateABIEncodedArgumentsForFinalizeAgentContractDeployment())
         .then(() => this.deployFinalizeAgent())
-        .catch(this.handleError.bind(this))
+        .catch(error => this.handleError(error))
     }
   }
 
@@ -332,45 +332,47 @@ const { PUBLISH } = NAVIGATION_STEPS
           console.log('crowdsale ABI encoded params constructor:', ABIEncoded)
         })
     }, Promise.resolve())
-      .then(() => getNetworkVersion(web3))
   }
 
-  deployCrowdsale = (networkID) => {
+  deployCrowdsale = () => {
+    return Promise.resolve()
+      .then(() => getNetworkVersion(this.props.web3Store.web3))
+      .then((networkID) => {
+        const { web3Store, contractStore, tierStore } = this.props
+        const { web3 } = web3Store
 
-    const { web3Store, contractStore, tierStore } = this.props
-    const { web3 } = web3Store
+        console.log('***Deploy crowdsale contract***')
+        console.log('web3', web3)
 
-    console.log('***Deploy crowdsale contract***')
-    console.log('web3', web3)
+        if (web3.eth.accounts.length === 0) {
+          noMetaMaskAlert()
+          return Promise.reject('no MetaMask')
+        }
 
-    if (web3.eth.accounts.length === 0) {
-      noMetaMaskAlert()
-      return Promise.reject('no MetaMask')
-    }
+        contractStore.setContractProperty('crowdsale', 'networkID', networkID)
+        const binCrowdsale = contractStore.crowdsale && contractStore.crowdsale.bin || ''
+        const abiCrowdsale = contractStore.crowdsale && contractStore.crowdsale.abi || []
 
-    contractStore.setContractProperty('crowdsale', 'networkID', networkID)
-    const binCrowdsale = contractStore.crowdsale && contractStore.crowdsale.bin || ''
-    const abiCrowdsale = contractStore.crowdsale && contractStore.crowdsale.abi || []
+        return tierStore.tiers.reduce((promise, tier, index) => {
+          console.log('***Deploy crowdsale contract***', index)
 
-    return tierStore.tiers.reduce((promise, tier, index) => {
-      console.log('***Deploy crowdsale contract***', index)
+          let paramsCrowdsale
 
-      let paramsCrowdsale
+          if (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap) {
+            paramsCrowdsale = this.getCrowdSaleParams(web3, index)
+          }
 
-      if (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap) {
-        paramsCrowdsale = this.getCrowdSaleParams(web3, index)
-      }
+          return promise
+            .then(() => deployContract(index, web3, abiCrowdsale, binCrowdsale, paramsCrowdsale))
+            .then(crowdsaleAddr => {
+              console.log('***Deploy crowdsale contract***', crowdsaleAddr)
 
-      return promise
-        .then(() => deployContract(index, web3, abiCrowdsale, binCrowdsale, paramsCrowdsale))
-        .then(crowdsaleAddr => {
-          console.log('***Deploy crowdsale contract***', crowdsaleAddr)
+              const newAddr = contractStore.crowdsale.addr.concat(crowdsaleAddr)
+              contractStore.setContractProperty('crowdsale', 'addr', newAddr)
+            })
 
-          const newAddr = contractStore.crowdsale.addr.concat(crowdsaleAddr)
-          contractStore.setContractProperty('crowdsale', 'addr', newAddr)
-        })
-
-    }, Promise.resolve())
+        }, Promise.resolve())
+      })
   }
 
   //MintedTokenCappedCrowdsale
