@@ -150,17 +150,6 @@ export class stepThree extends React.Component{
     </div>
   }
 
-  renderLinkComponent () {
-    if(this.props.tierStore.areTiersValid){
-      return this.renderLink()
-    }
-
-    return <div>
-      <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Tier</div>
-      <div onClick={this.showErrorMessages.bind(this)} className="button button_fill"> Continue</div>
-    </div>
-  }
-
     componentDidMount () {
       const { tierStore, web3Store } = this.props
       const { curAddress } = web3Store
@@ -377,7 +366,7 @@ export class stepThree extends React.Component{
           </div>
           <div>{crowdsaleBlockListStore.blockList}</div>
           <div className="button-container">
-            {this.renderLinkComponent()}
+            {this.renderLink()}
           </div>
         </section>
       )
