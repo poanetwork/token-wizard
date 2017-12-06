@@ -79,7 +79,7 @@ export class CrowdsaleBlock extends React.Component {
             title={START_TIME}
             value={tierStore.tiers[num].startTime}
             valid={tierStore.validTiers[num].startTime}
-            errorMessage={VALIDATION_MESSAGES.START_TIME}
+            errorMessage={VALIDATION_MESSAGES.MULTIPLE_TIERS_START_TIME}
             onChange={(e) => this.updateTierStore(e, 'startTime')}
             description={`Date and time when the tier starts. Can't be in the past from the current moment.`}
           />
