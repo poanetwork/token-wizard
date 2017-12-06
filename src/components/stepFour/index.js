@@ -72,9 +72,9 @@ const { PUBLISH } = NAVIGATION_STEPS
       }
 
       const { token, pricingStrategy } = contractStore
-      const abiToken = token && token.abi || []
-      const addrToken = token && token.addr || null
-      const abiPricingStrategy = pricingStrategy && pricingStrategy.abi || []
+      const abiToken = (token && token.abi) || []
+      const addrToken = (token && token.addr) || null
+      const abiPricingStrategy = (pricingStrategy && pricingStrategy.abi) || []
 
       const tokenABIConstructor = Promise.resolve(addrToken)
         .then(addrToken => {
@@ -134,6 +134,8 @@ const { PUBLISH } = NAVIGATION_STEPS
         return handleContractsForFile(content, index, this.props.contractStore, this.props.tierStore)
       case 'none':
         return handleConstantForFile(content)
+      default:
+        // do nothing
     }
   }
 
@@ -238,8 +240,8 @@ const { PUBLISH } = NAVIGATION_STEPS
       return Promise.reject('no MetaMask')
     }
 
-    const binToken = contractStore && contractStore.token && contractStore.token.bin || ''
-    const abiToken = contractStore && contractStore.token && contractStore.token.abi || []
+    const binToken = (contractStore && contractStore.token && contractStore.token.bin) || ''
+    const abiToken = (contractStore && contractStore.token && contractStore.token.abi) || []
     const paramsToken = this.getTokenParams(tokenStore)
 
     console.log(paramsToken);
@@ -283,8 +285,8 @@ const { PUBLISH } = NAVIGATION_STEPS
     }
 
     const pricingStrategies = tierStore.tiers
-    const binPricingStrategy = contractStore && contractStore.pricingStrategy && contractStore.pricingStrategy.bin || ''
-    const abiPricingStrategy = contractStore && contractStore.pricingStrategy && contractStore.pricingStrategy.abi || []
+    const binPricingStrategy = (contractStore && contractStore.pricingStrategy && contractStore.pricingStrategy.bin) || ''
+    const abiPricingStrategy = (contractStore && contractStore.pricingStrategy && contractStore.pricingStrategy.abi) || []
 
     return pricingStrategies.reduce((promise, pricingStrategy, index) => {
       const paramsPricingStrategy = this.getPricingStrategyParams(pricingStrategy)
@@ -321,7 +323,7 @@ const { PUBLISH } = NAVIGATION_STEPS
     const { contractStore, tierStore, web3Store } = this.props
     const { web3 } = web3Store
 
-    const abiCrowdsale = contractStore && contractStore.crowdsale && contractStore.crowdsale.abi || []
+    const abiCrowdsale = (contractStore && contractStore.crowdsale && contractStore.crowdsale.abi) || []
 
     return tierStore.tiers.reduce((promise, tier, index) => {
       return promise
@@ -350,8 +352,8 @@ const { PUBLISH } = NAVIGATION_STEPS
         }
 
         contractStore.setContractProperty('crowdsale', 'networkID', networkID)
-        const binCrowdsale = contractStore.crowdsale && contractStore.crowdsale.bin || ''
-        const abiCrowdsale = contractStore.crowdsale && contractStore.crowdsale.abi || []
+        const binCrowdsale = (contractStore.crowdsale && contractStore.crowdsale.bin) || ''
+        const abiCrowdsale = (contractStore.crowdsale && contractStore.crowdsale.abi) || []
 
         return tierStore.tiers.reduce((promise, tier, index) => {
           console.log('***Deploy crowdsale contract***', index)
@@ -399,11 +401,11 @@ const { PUBLISH } = NAVIGATION_STEPS
     const { web3Store, contractStore, tierStore } = this.props
     const { web3 } = web3Store
     const tiersMaxIndex = tierStore.tiers.length - 1
-    let abiFinalizeAgent = contractStore.nullFinalizeAgent && contractStore.nullFinalizeAgent.abi || []
+    let abiFinalizeAgent = (contractStore.nullFinalizeAgent && contractStore.nullFinalizeAgent.abi) || []
 
     return Promise.all(tierStore.tiers.map((tier, index) => {
       if (index === tiersMaxIndex) {
-        abiFinalizeAgent = contractStore.finalizeAgent && contractStore.finalizeAgent.abi || []
+        abiFinalizeAgent = (contractStore.finalizeAgent && contractStore.finalizeAgent.abi) || []
       }
 
       return getEncodedABIClientSide(web3, abiFinalizeAgent, [], index)
@@ -426,11 +428,11 @@ const { PUBLISH } = NAVIGATION_STEPS
       return Promise.reject('no MetaMask')
     }
 
-    let binNullFinalizeAgent = contractStore && contractStore.nullFinalizeAgent && contractStore.nullFinalizeAgent.bin || ''
-    let abiNullFinalizeAgent = contractStore && contractStore.nullFinalizeAgent && contractStore.nullFinalizeAgent.abi || []
+    let binNullFinalizeAgent = (contractStore && contractStore.nullFinalizeAgent && contractStore.nullFinalizeAgent.bin) || ''
+    let abiNullFinalizeAgent = (contractStore && contractStore.nullFinalizeAgent && contractStore.nullFinalizeAgent.abi) || []
 
-    let binFinalizeAgent = contractStore && contractStore.finalizeAgent && contractStore.finalizeAgent.bin || ''
-    let abiFinalizeAgent = contractStore && contractStore.finalizeAgent && contractStore.finalizeAgent.abi || []
+    let binFinalizeAgent = (contractStore && contractStore.finalizeAgent && contractStore.finalizeAgent.bin) || ''
+    let abiFinalizeAgent = (contractStore && contractStore.finalizeAgent && contractStore.finalizeAgent.abi) || []
 
     let crowdsales
 

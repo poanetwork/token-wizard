@@ -11,6 +11,6 @@ useStrict(true);
 ReactDOM.render(
   <Provider { ...stores }>
     <App />
-  </Provider>, 
+  </Provider>,
 document.getElementById('root'));
 registerServiceWorker();

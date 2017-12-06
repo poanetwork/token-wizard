@@ -3,9 +3,9 @@ import { observable, action } from 'mobx';
 class GeneralStore {
 
   @observable networkId;
-  
+
   @action setProperty = (property, value) => {
-		this[property] = value
+    this[property] = value
   }
 
 }

@@ -3,14 +3,13 @@ import { incorrectNetworkAlert, noMetaMaskAlert, invalidNetworkIDAlert } from '.
 import { getEncodedABIClientSide } from './microservices'
 import { GAS_PRICE, CHAINS } from './constants'
 import { web3Store } from '../stores'
-import { toJSON, isObservable, toJS } from 'mobx'
 
 // instantiate new web3 instance
 const web3 = web3Store.web3
 
 // get current provider
 export function getCurrentProvider() {
-	console.log(web3.currentProvider);
+  console.log(web3.currentProvider);
   return web3.currentProvider;
 }
 
@@ -37,7 +36,7 @@ export function checkWeb3(web3) {
 
 export function getWeb3(cb) {
   var web3 = window.web3;
-	if (typeof web3 === 'undefined') {
+  if (typeof web3 === 'undefined') {
     // no web3, use fallback
     console.error("Please use a web3 browser");
     const devEnvironment = process.env.NODE_ENV === 'development';
@@ -75,27 +74,20 @@ export function checkNetWorkByID(web3, _networkIdFromGET) {
 
 export function getNetWorkNameById(_id) {
   switch (parseInt(_id, 10)) {
-    case 1: {
+    case 1:
       return CHAINS.MAINNET;
-    } break;
-    case 2: {
+    case 2:
       return CHAINS.MORDEN;
-    } break;
-    case 3: {
+    case 3:
       return CHAINS.ROPSTEN;
-    } break;
-    case 4: {
+    case 4:
       return CHAINS.RINKEBY;
-    } break;
-    case 42: {
+    case 42:
       return CHAINS.KOVAN;
-    } break;
-     case 12648430: {
-       return CHAINS.ORACLES;
-    }  break;
-    default: {
+    case 12648430:
+      return CHAINS.ORACLES;
+    default:
       return null;
-    } break;
   }
 }
 
@@ -110,28 +102,14 @@ export function setExistingContractParams(abi, addr, setContractProperty) {
   setTimeout(function() {
     getWeb3((web3) => {
       attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
-        let propsCount = 0;
-        let cbCount = 0;
-        propsCount++;
         crowdsaleContract.token.call(function(err, tokenAddr) {
-          cbCount++;
           console.log("tokenAddr: " + tokenAddr);
-          // state.contracts.token.addr = tokenAddr;
           setContractProperty('token', 'addr', tokenAddr)
-          // if (propsCount === cbCount) {
-          //   $this.setState(state);
-          // }
         });
 
-        propsCount++;
         crowdsaleContract.multisigWallet.call(function(err, multisigWalletAddr) {
-          cbCount++;
           console.log("multisigWalletAddr: " + multisigWalletAddr);
-          // state.contracts.multisig.addr = multisigWalletAddr;
           setContractProperty('multisig', 'addr', multisigWalletAddr)
-          // if (propsCount === cbCount) {
-          //   $this.setState(state);
-          // }
         });
       });
     })

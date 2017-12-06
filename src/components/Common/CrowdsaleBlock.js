@@ -5,8 +5,7 @@ import { defaultCompanyEndDate } from '../../utils/utils'
 import { InputField } from './InputField'
 import { RadioInputField } from './RadioInputField'
 import { inject, observer } from 'mobx-react'
-import { VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS } from '../../utils/constants'
-const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
+import { VALIDATION_MESSAGES, TEXT_FIELDS } from '../../utils/constants'
 const { START_TIME, END_TIME, RATE, SUPPLY, CROWDSALE_SETUP_NAME, ALLOWMODIFYING } = TEXT_FIELDS
 
 @inject('tierStore')

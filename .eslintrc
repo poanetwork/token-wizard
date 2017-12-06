@@ -1,0 +1,10 @@
+{
+  "extends": "react-app",
+  "rules": {
+    "indent": ["error", 2, {
+      "SwitchCase": 1
+    }],
+    "no-mixed-spaces-and-tabs": "error",
+    "no-trailing-spaces": "error"
+  }
+}
