@@ -40,123 +40,58 @@ export function getURLParam(key,target){
   }
 }
 
-export function setFlatFileContentToState(file, cb) {
-  readSolFile(file, function(content) {
-    cb(content);
-  });
+export function setFlatFileContentToState(file) {
+  return readSolFile(file)
 }
 
-export function getWhiteListWithCapCrowdsaleAssets(cb) {
-  const contractName = "CrowdsaleWhiteListWithCap";
-  let derivativesLength = 11;
-  let derivativesIterator = 0;
-  setFlatFileContentToState("./contracts/" + contractName + "_flat.sol", function(_src) {
-    derivativesIterator++;
-    contractStore.setContractProperty('crowdsale', 'src', _src);
+export function getWhiteListWithCapCrowdsaleAssets() {
+  return new Promise((resolve, reject) => {
+    const contractsRoute = './contracts/'
+    const crowdsaleFilename = 'CrowdsaleWhiteListWithCap'
+    const binAbi = ['bin', 'abi']
 
-    if (derivativesIterator === derivativesLength) {
-      cb(contractStore);
-    }
-  });
-  setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", function(_bin) {
-    derivativesIterator++;
-    contractStore.setContractProperty('crowdsale', 'bin', _bin);
+    const crowdsaleFiles = ['sol', ...binAbi].map(ext => `${contractsRoute}${crowdsaleFilename}_flat.${ext}`)
+    const tokenFiles = binAbi.map(ext => `${contractsRoute}${crowdsaleFilename}Token_flat.${ext}`)
+    const pricingFiles = binAbi.map(ext => `${contractsRoute}${crowdsaleFilename}PricingStrategy_flat.${ext}`)
+    const finalizeFiles = binAbi.map(ext => `${contractsRoute}FinalizeAgent_flat.${ext}`)
+    const nullFiles = binAbi.map(ext => `${contractsRoute}NullFinalizeAgent_flat.${ext}`)
 
-    if (derivativesIterator === derivativesLength) {
-      cb(contractStore);
-    }
-  });
-  setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", function(_abi) {
-    derivativesIterator++;
-    contractStore.setContractProperty('crowdsale', 'abi', JSON.parse(_abi));
+    const states = crowdsaleFiles.concat(tokenFiles, pricingFiles, finalizeFiles, nullFiles)
+      .map(setFlatFileContentToState)
 
-    if (derivativesIterator === derivativesLength) {
-      cb(contractStore);
-    }
-  });
-  setFlatFileContentToState("./contracts/" + contractName + "Token_flat.bin", function(_bin) {
-    derivativesIterator++;
-    contractStore.setContractProperty('token', 'bin', _bin);
-
-    if (derivativesIterator === derivativesLength) {
-      cb(contractStore);
-    }
-  });
-  setFlatFileContentToState("./contracts/" + contractName + "Token_flat.abi", function(_abi) {
-    derivativesIterator++;
-    contractStore.setContractProperty('token', 'abi', JSON.parse(_abi));
-
-    if (derivativesIterator === derivativesLength) {
-      cb(contractStore);
-    }
-  });
-  setFlatFileContentToState("./contracts/" + contractName + "PricingStrategy_flat.bin", function(_bin) {
-    derivativesIterator++;
-    contractStore.setContractProperty('pricingStrategy', 'bin', _bin);
-
-    if (derivativesIterator === derivativesLength) {
-      cb(contractStore);
-    }
-  });
-  setFlatFileContentToState("./contracts/" + contractName + "PricingStrategy_flat.abi", function(_abi) {
-    derivativesIterator++;
-    contractStore.setContractProperty('pricingStrategy', 'abi', JSON.parse(_abi));
-
-    if (derivativesIterator === derivativesLength) {
-      cb(contractStore);
-    }
-  });
-  const finalizeAgentContractName = "FinalizeAgent";
-  setFlatFileContentToState("./contracts/" + finalizeAgentContractName + "_flat.bin", function(_bin) {
-    derivativesIterator++;
-    contractStore.setContractProperty('finalizeAgent', 'bin', _bin);
-
-    if (derivativesIterator === derivativesLength) {
-      cb(contractStore);
-    }
-  });
-  setFlatFileContentToState("./contracts/" + finalizeAgentContractName + "_flat.abi", function(_abi) {
-    derivativesIterator++;
-    contractStore.setContractProperty('finalizeAgent', 'abi', JSON.parse(_abi));
-
-    if (derivativesIterator === derivativesLength) {
-      cb(contractStore);
-    }
-  });
-  const nullFinalizeAgentContractName = "NullFinalizeAgent";
-  setFlatFileContentToState("./contracts/" + nullFinalizeAgentContractName + "_flat.bin", function(_bin) {
-    derivativesIterator++;
-    contractStore.setContractProperty('nullFinalizeAgent', 'bin', _bin);
-
-    if (derivativesIterator === derivativesLength) {
-      cb(contractStore);
-    }
-  });
-  setFlatFileContentToState("./contracts/" + nullFinalizeAgentContractName + "_flat.abi", function(_abi) {
-    derivativesIterator++;
-    contractStore.setContractProperty('nullFinalizeAgent', 'abi', JSON.parse(_abi));
-
-    if (derivativesIterator === derivativesLength) {
-      cb(contractStore);
-    }
-  });
+    Promise.all(states)
+      .then(state => {
+        contractStore.setContractProperty('crowdsale', 'src', state[0])
+        contractStore.setContractProperty('crowdsale', 'bin', state[1])
+        contractStore.setContractProperty('crowdsale', 'abi', JSON.parse(state[2]))
+        contractStore.setContractProperty('token', 'bin', state[3])
+        contractStore.setContractProperty('token', 'abi', JSON.parse(state[4]))
+        contractStore.setContractProperty('pricingStrategy', 'bin', state[5])
+        contractStore.setContractProperty('pricingStrategy', 'abi', JSON.parse(state[6]))
+        contractStore.setContractProperty('finalizeAgent', 'bin', state[7])
+        contractStore.setContractProperty('finalizeAgent', 'abi', JSON.parse(state[8]))
+        contractStore.setContractProperty('nullFinalizeAgent', 'bin', state[9])
+        contractStore.setContractProperty('nullFinalizeAgent', 'abi', JSON.parse(state[10]))
+        resolve(contractStore)
+      })
+      .catch(reject)
+  })
 }
 
-function readSolFile(path, cb) {
-  var rawFile = new XMLHttpRequest();
-  rawFile.open("GET", path, true);
-  rawFile.onreadystatechange = function ()
-  {
-    if(rawFile.readyState === 4)
-    {
-      if(rawFile.status === 200 || rawFile.status === 0)
-      {
-        var allText = rawFile.responseText;
-        cb(allText);
+function readSolFile(path) {
+  return new Promise((resolve, reject) => {
+    const rawFile = new XMLHttpRequest()
+
+    rawFile.addEventListener('error', reject)
+    rawFile.open('GET', path, true)
+    rawFile.onreadystatechange = function () {
+      if (rawFile.readyState === 4 && (rawFile.status === 200 || rawFile.status === 0)) {
+        let allText = rawFile.responseText
+        resolve(allText)
       }
     }
-  };
-  rawFile.send(null);
+    rawFile.send(null)
+  })
 }
 
 export const findConstructor = (abi) => {
@@ -324,6 +259,10 @@ export const validateDecimals = (decimals) => isNaN(Number(decimals)) === false 
 export const validateTicker = (ticker) => typeof ticker === 'string' && ticker.length < 4 && ticker.length > 0
 
 export const validateTime = (time) => getTimeAsNumber(time) > Date.now()
+
+export const validateLaterTime = (laterTime, previousTime) => getTimeAsNumber(laterTime) > getTimeAsNumber(previousTime)
+
+export const validateLaterOrEqualTime = (laterTime, previousTime) => getTimeAsNumber(laterTime) >= getTimeAsNumber(previousTime)
 
 export const validateRate = (rate) => isNaN(Number(rate)) === false && Number(rate) > 0
 

@@ -29,34 +29,13 @@ export class stepOne extends React.Component {
   }
 
   getCrowdsaleAsset(contractName, stateProp) {
-    let src, bin, abi;
-    let assetsCount = 3;
-    let assetsIterator = 0;
+    const src = setFlatFileContentToState(`./contracts/${contractName}_flat.sol`)
+    const bin = setFlatFileContentToState(`./contracts/${contractName}_flat.bin`)
+    const abi = setFlatFileContentToState(`./contracts/${contractName}_flat.abi`)
 
-    setFlatFileContentToState("./contracts/" + contractName + "_flat.sol", (_content) => {
-      src = _content;
-      assetsIterator++;
-
-      if (assetsIterator === assetsCount) {
-        this.addContractsToState(src, bin, abi, stateProp);
-      }
-    });
-    setFlatFileContentToState("./contracts/" + contractName + "_flat.bin", (_bin) => {
-      bin = _bin;
-      assetsIterator++;
-
-      if (assetsIterator === assetsCount) {
-        this.addContractsToState(src, bin, abi, stateProp);
-      }
-    });
-    setFlatFileContentToState("./contracts/" + contractName + "_flat.abi", (_abi) => {
-      abi = _abi;
-      assetsIterator++;
-
-      if (assetsIterator === assetsCount) {
-        this.addContractsToState(src, bin, abi, stateProp);
-      }
-    });
+    Promise.all([src, bin, abi])
+      .then(result => this.addContractsToState(...result, stateProp))
+      .catch(console.error)
   }
 
   addContractsToState(src, bin, abi, contract) {

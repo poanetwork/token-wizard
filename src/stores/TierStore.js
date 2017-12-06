@@ -1,6 +1,6 @@
 import { observable, action, computed } from 'mobx';
 import { VALIDATION_TYPES, defaultTiers } from '../utils/constants'
-import { validateName, validateTime, validateSupply, validateRate, validateAddress } from '../utils/utils'
+import { validateName, validateTime, validateSupply, validateRate, validateAddress, validateLaterTime, validateLaterOrEqualTime } from '../utils/utils'
 const { VALID, INVALID, EMPTY } = VALIDATION_TYPES
 class TierStore {
 
@@ -67,8 +67,14 @@ class TierStore {
         this.validTiers[index][property] = validateRate(this.tiers[index][property]) ? VALID : INVALID
         return
       case 'startTime':
-      case 'endTime':
+        if (index > 0) {
+          this.validTiers[index][property] = validateLaterOrEqualTime(this.tiers[index][property], this.tiers[index - 1].endTime) ? VALID : INVALID
+          return
+        }
         this.validTiers[index][property] = validateTime(this.tiers[index][property]) ? VALID: INVALID
+        return
+      case 'endTime':
+        this.validTiers[index][property] = validateLaterTime(this.tiers[index][property], this.tiers[index].startTime) ? VALID : INVALID
         return
     }
   }

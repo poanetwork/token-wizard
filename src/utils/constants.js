@@ -102,6 +102,7 @@ export const VALIDATION_MESSAGES = {
   WALLET_ADDRESS: 'Please enter a valid address',
   START_TIME: 'Please enter a valid date later than now',
   END_TIME: 'Please enter a valid date later than start time',
+  MULTIPLE_TIERS_START_TIME: 'Please enter a valid date not less than the end time of the previous tier',
   RATE: 'Please enter a valid number greater than 0'
 }
 

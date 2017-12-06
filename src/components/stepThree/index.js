@@ -114,8 +114,29 @@ export class stepThree extends React.Component{
   renderLink () {
     return <div>
       <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Tier</div>
-      <Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }} className="button button_fill">Continue</Link>
+      <Link to={{ pathname: '/4', query: { state: this.state, changeState: this.changeState } }}
+            onClick={e => this.beforeNavigate(e)}
+            className="button button_fill"
+      >Continue</Link>
     </div>
+  }
+
+  beforeNavigate = e => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    const { tierStore } = this.props
+
+    for (let index = 0; index < tierStore.tiers.length; index++) {
+      tierStore.validateTiers('endTime', index)
+      tierStore.validateTiers('startTime', index)
+    }
+
+    if (tierStore.areTiersValid) {
+      this.props.history.push('/4')
+    } else {
+      this.showErrorMessages(e)
+    }
   }
 
   renderStandardLinkComponent () {
@@ -126,17 +147,6 @@ export class stepThree extends React.Component{
     return <div>
     <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Tier</div>
     <div onClick={() => warningOnMainnetAlert(this.state.crowdsale.length, () => this.gotoDeploymentStage())} className="button button_fill"> Continue</div>
-    </div>
-  }
-
-  renderLinkComponent () {
-    if(this.props.tierStore.areTiersValid){
-      return this.renderLink()
-    }
-
-    return <div>
-      <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary"> Add Tier</div>
-      <div onClick={this.showErrorMessages.bind(this)} className="button button_fill"> Continue</div>
     </div>
   }
 
@@ -408,7 +418,7 @@ export class stepThree extends React.Component{
           </div>
           <div>{crowdsaleBlockListStore.blockList}</div>
           <div className="button-container">
-            {this.renderLinkComponent()}
+            {this.renderLink()}
           </div>
         </section>
       )
