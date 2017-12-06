@@ -212,7 +212,7 @@ export class stepThree extends React.Component{
   render() {
     const { contractStore, pricingStrategyStore, crowdsaleBlockListStore, tierStore } = this.props
     let globalSettingsBlock = <div><div className="section-title">
-        <p className="title">Global limits</p>
+        <p className="title">Global settings</p>
       </div>
       <div className='input-block-container'>
         <InputField
