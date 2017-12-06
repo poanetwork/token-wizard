@@ -1,98 +1,107 @@
 import React from 'react'
-import '../../assets/stylesheets/application.css';
-import { getWeb3, checkWeb3, checkNetWorkByID } from '../../utils/blockchainHelpers'
-import { getCrowdsaleData, initializeAccumulativeData, getAccumulativeCrowdsaleData, findCurrentContractRecursively, getJoinedTiers, getContractStoreProperty } from './utils'
+import '../../assets/stylesheets/application.css'
+import { checkNetWorkByID, checkWeb3 } from '../../utils/blockchainHelpers'
+import {
+  findCurrentContractRecursively,
+  getAccumulativeCrowdsaleData,
+  getContractStoreProperty,
+  getCrowdsaleData,
+  getJoinedTiers,
+  initializeAccumulativeData
+} from './utils'
 import { getQueryVariable, getURLParam, getWhiteListWithCapCrowdsaleAssets, toFixed } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
-import { NAVIGATION_STEPS, CONTRACT_TYPES } from '../../utils/constants'
+import { CONTRACT_TYPES, NAVIGATION_STEPS } from '../../utils/constants'
 import { invalidCrowdsaleAddrAlert } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
 import { ICOConfig } from '../Common/config'
-import { observer, inject } from 'mobx-react'
+import { inject, observer } from 'mobx-react'
+
 const { CROWDSALE_PAGE } = NAVIGATION_STEPS
 
 @inject('contractStore', 'crowdsalePageStore', 'web3Store', 'tierStore', 'tokenStore', 'generalStore')
-@observer export class Crowdsale extends React.Component {
-  constructor(){
-    super()
-    this.state = { loading: true}
+@observer
+export class Crowdsale extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = { loading: true }
   }
 
-  componentWillMount () {
-    const { web3Store } = this.props
-    const web3 = web3Store.web3
-    checkWeb3(web3);
-    let newState = { ...this.state }
-    newState.loading = true;
-    newState.tokenIsAlreadyCreated = true;
-    this.setState(newState);
-    const networkID = ICOConfig.networkID?ICOConfig.networkID:getQueryVariable("networkID");
-    const contractType = CONTRACT_TYPES.whitelistwithcap;//getQueryVariable("contractType");
+  componentDidMount () {
+    const { web3 } = this.props.web3Store
+
+    checkWeb3(web3)
+
+    this.setState({ tokenIsAlreadyCreated: true })
+
+    const networkID = ICOConfig.networkID ? ICOConfig.networkID : getQueryVariable('networkID')
+    const contractType = CONTRACT_TYPES.whitelistwithcap//getQueryVariable("contractType");
+
     this.getCrowdsale(web3, networkID, contractType)
   }
 
-  getCrowdsale (web3, networkID, contractType) {
+  getCrowdsale = (web3, networkID, contractType) => {
     const { contractStore, generalStore } = this.props
+
     if (!web3) {
-      let state = { ...this.state };
-      state.loading = false;
-      this.setState(state);
+      this.setState({ loading: false })
       return
-    };
+    }
+
     checkNetWorkByID(web3, networkID);
     generalStore.setProperty('networkID', networkID);
     contractStore.setContractType(contractType);
 
-    switch (contractType) {
-      case CONTRACT_TYPES.whitelistwithcap: {
-        getWhiteListWithCapCrowdsaleAssets(this.extractContractsData.bind(this))
-      } break;
-      default:
-        break;
+    if (contractType === CONTRACT_TYPES.whitelistwithcap) {
+      getWhiteListWithCapCrowdsaleAssets()
+        .then(() => this.extractContractsData())
+        .catch(console.log)
     }
   }
 
-  extractContractsData() {
+  extractContractsData = () => {
     const { contractStore, web3Store } = this.props
-    const web3 = web3Store.web3
-    const crowdsaleAddr = ICOConfig.crowdsaleContractURL?ICOConfig.crowdsaleContractURL:getURLParam("addr");
-    if (!web3.utils.isAddress(crowdsaleAddr)) {
-      let state = this.state;
-      state.loading = false;
-      this.setState(state);
-      return invalidCrowdsaleAddrAlert();
-    }
-    getJoinedTiers(web3, contractStore.crowdsale.abi, crowdsaleAddr, [], (joinedCrowdsales) => {
-      console.log("joinedCrowdsales: ");
-      console.log(joinedCrowdsales);
+    const { web3 } = web3Store
+    const crowdsaleAddr = ICOConfig.crowdsaleContractURL ? ICOConfig.crowdsaleContractURL : getURLParam('addr')
 
-      let _crowdsaleAddrs;
-      if ( typeof joinedCrowdsales === 'string' ) {
-        _crowdsaleAddrs = [ joinedCrowdsales ];
-      } else {
-        _crowdsaleAddrs = joinedCrowdsales;
+    if (!web3.utils.isAddress(crowdsaleAddr)) {
+      this.setState({ loading: false })
+      return invalidCrowdsaleAddrAlert()
+    }
+
+    getJoinedTiers(web3, contractStore.crowdsale.abi, crowdsaleAddr, [], (joinedCrowdsales) => {
+      console.log('joinedCrowdsales:', joinedCrowdsales)
+
+      const _crowdsaleAddrs = typeof joinedCrowdsales === 'string' ? [joinedCrowdsales] : joinedCrowdsales
+      contractStore.setContractProperty('crowdsale', 'addr', _crowdsaleAddrs)
+
+      if (!contractStore.crowdsale.addr) {
+        return
       }
-      var state = { ...this.state };
-      contractStore.setContractProperty('crowdsale', 'addr', _crowdsaleAddrs )
-        if (!contractStore.crowdsale.addr) {
-          return;
-        }
+
       findCurrentContractRecursively(0, this, web3, null, (crowdsaleContract) => {
         if (!crowdsaleContract) {
-          state.loading = false;
-          return this.setState(state);
+          return this.setState({ loading: false })
         }
-        this.getFullCrowdsaleData(web3, crowdsaleContract)
+
+        this.getFullCrowdsaleData(crowdsaleContract)
       })
     });
   }
 
-  getFullCrowdsaleData(web3, crowdsaleContract) {
-    getCrowdsaleData(web3, this, crowdsaleContract, () => {
-      initializeAccumulativeData(() => {
-        getAccumulativeCrowdsaleData(web3, this, () => {});
-      });
-    });
+  getFullCrowdsaleData (crowdsaleContract) {
+    const { web3 } = this.props.web3Store
+
+    getCrowdsaleData(web3, crowdsaleContract)
+      .then(() => initializeAccumulativeData())
+      .then(() => {
+          this.setState({ loading: false })
+          getAccumulativeCrowdsaleData.call(this, web3, () => {})
+      })
+      .catch(err => {
+        this.setState({ loading: false })
+        console.log(err)
+      })
   }
 
   goToInvestPage = () => {
@@ -112,7 +121,7 @@ const { CROWDSALE_PAGE } = NAVIGATION_STEPS
 
   render() {
     const { web3Store, contractStore, tokenStore, crowdsalePageStore } = this.props
-    const web3 = web3Store.web3
+    const { web3 } = web3Store
     const tokenAddr = getContractStoreProperty('token','addr')
     const tempCrowdsaleAddr = getContractStoreProperty('crowdsale','addr')
     const crowdsaleAddr = tempCrowdsaleAddr === 'string'? tempCrowdsaleAddr : tempCrowdsaleAddr[0]
