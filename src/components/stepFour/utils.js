@@ -8,8 +8,8 @@ import {
 } from '../../utils/blockchainHelpers'
 import { noContractAlert } from '../../utils/alerts'
 import { toFixed } from '../../utils/utils'
-import { GAS_PRICE, DOWNLOAD_NAME } from '../../utils/constants'
-import { tierStore, contractStore } from '../../stores'
+import { DOWNLOAD_NAME } from '../../utils/constants'
+import { generalStore, tierStore, contractStore } from '../../stores'
 import { isObservableArray } from 'mobx'
 
 function setLastCrowdsale(web3, abi, addr, lastCrowdsale, gasLimit, cb) {
@@ -22,7 +22,7 @@ function setLastCrowdsale(web3, abi, addr, lastCrowdsale, gasLimit, cb) {
     }
     if (!pricingStrategyContract) return noContractAlert();
 
-    let method = pricingStrategyContract.methods.setLastCrowdsale(lastCrowdsale).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
+    let method = pricingStrategyContract.methods.setLastCrowdsale(lastCrowdsale).send({gasLimit: gasLimit, gasPrice: generalStore.gasPrice})
     sendTXToContract(web3, method, cb)
   });
 }
@@ -38,7 +38,7 @@ function setMintAgent(web3, abi, addr, acc, gasLimit, cb) {
     }
     if (!tokenContract) return noContractAlert();
 
-    let method = tokenContract.methods.setMintAgent(acc, true).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
+    let method = tokenContract.methods.setMintAgent(acc, true).send({gasLimit: gasLimit, gasPrice: generalStore.gasPrice})
     sendTXToContract(web3, method, cb)
   });
 }
@@ -111,7 +111,7 @@ function addWhiteList(round, web3, tierStore, token, abi, addr, cb) {
     console.log("maxCaps:");
     console.log(maxCaps);
 
-    let method = crowdsaleContract.methods.setEarlyParicipantsWhitelist(addrs, statuses, minCaps, maxCaps).send({gasPrice: GAS_PRICE})
+    let method = crowdsaleContract.methods.setEarlyParicipantsWhitelist(addrs, statuses, minCaps, maxCaps).send({gasPrice: generalStore.gasPrice})
     sendTXToContract(web3, method, cb)
   });
 }
@@ -129,7 +129,7 @@ function updateJoinedCrowdsales(web3, abi, addr, joinedCntrctAddrs, gasLimit, cb
     console.log("input: ");
     console.log(joinedCntrctAddrs);
 
-    let method = crowdsaleContract.methods.updateJoinedCrowdsalesMultiple(joinedCntrctAddrs).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
+    let method = crowdsaleContract.methods.updateJoinedCrowdsalesMultiple(joinedCntrctAddrs).send({gasLimit: gasLimit, gasPrice: generalStore.gasPrice})
     sendTXToContract(web3, method, cb)
   });
 }
@@ -144,7 +144,7 @@ function setFinalizeAgent(web3, abi, addr, finalizeAgentAddr, gasLimit, cb) {
     }
     if (!crowdsaleContract) return noContractAlert();
 
-    let method = crowdsaleContract.methods.setFinalizeAgent(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
+    let method = crowdsaleContract.methods.setFinalizeAgent(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: generalStore.gasPrice})
     sendTXToContract(web3, method, cb)
   });
 }
@@ -159,7 +159,7 @@ function setReleaseAgent(web3, abi, addr, finalizeAgentAddr, gasLimit, cb) {
     }
     if (!tokenContract) return noContractAlert();
 
-    let method = tokenContract.methods.setReleaseAgent(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
+    let method = tokenContract.methods.setReleaseAgent(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: generalStore.gasPrice})
     sendTXToContract(web3, method, cb)
   });
 }
@@ -209,7 +209,7 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, reservedTo
 
     if (addrs.length === 0 && inTokens.length === 0 && inPercentageUnit.length === 0 && inPercentageDecimals.length === 0) return cb()
 
-    let method = tokenContract.methods.setReservedTokensListMultiple(addrs, inTokens, inPercentageUnit, inPercentageDecimals).send({gasPrice: GAS_PRICE})
+    let method = tokenContract.methods.setReservedTokensListMultiple(addrs, inTokens, inPercentageUnit, inPercentageDecimals).send({gasPrice: generalStore.gasPrice})
     sendTXToContract(web3, method, cb)
   });
 }
@@ -224,7 +224,7 @@ export function transferOwnership(web3, abi, addr, finalizeAgentAddr, gasLimit, 
     }
     if (!tokenContract) return noContractAlert();
 
-    let method = tokenContract.methods.transferOwnership(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
+    let method = tokenContract.methods.transferOwnership(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: generalStore.gasPrice})
     sendTXToContract(web3, method, cb)
   });
 }

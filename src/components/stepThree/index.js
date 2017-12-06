@@ -9,14 +9,14 @@ import { InputField } from '../Common/InputField'
 import { RadioInputField } from '../Common/RadioInputField'
 import { CrowdsaleBlock } from '../Common/CrowdsaleBlock'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
-import { NAVIGATION_STEPS, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS, CONTRACT_TYPES } from '../../utils/constants'
+import { NAVIGATION_STEPS, VALIDATION_MESSAGES, VALIDATION_TYPES, TEXT_FIELDS, CONTRACT_TYPES, GAS_PRICE } from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
 import { warningOnMainnetAlert } from '../../utils/alerts'
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 const { EMPTY, VALID } = VALIDATION_TYPES
 const { START_TIME, END_TIME, MINCAP, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME, ALLOWMODIFYING, DISABLEWHITELISTING } = TEXT_FIELDS
 
-@inject('contractStore', 'crowdsaleBlockListStore', 'pricingStrategyStore', 'web3Store', 'tierStore') @observer
+@inject('contractStore', 'crowdsaleBlockListStore', 'pricingStrategyStore', 'web3Store', 'tierStore', 'generalStore') @observer
 export class stepThree extends React.Component{
   constructor(props) {
     super(props);
@@ -148,6 +148,57 @@ export class stepThree extends React.Component{
       tierStore.setTierProperty(defaultCompanyEndDate(tierStore.tiers[0].startTime), 'endTime', 0)
     }
 
+  renderGasPriceInput() {
+    const generalStore = this.props.generalStore
+    const gasPrice = generalStore.gasPrice
+
+    return (
+      <div className='right'>
+        <label className='label'>Gas Price</label>
+        <div className='radios-inline'>
+          <label className='radio-inline'>
+            <input
+              type='radio'
+              checked={gasPrice === GAS_PRICE.SLOW.PRICE}
+              name='gas-price-option-slow'
+              onChange={() => generalStore.setGasPrice(GAS_PRICE.SLOW.PRICE)}
+              value='slow'
+            />
+            <span className="title">{GAS_PRICE.SLOW.DESCRIPTION}</span>
+          </label>
+        </div>
+        <div className='radios-inline'>
+          <label className='radio-inline'>
+            <input
+              type='radio'
+              checked={gasPrice === GAS_PRICE.NORMAL.PRICE}
+              name='gas-price-option-normal'
+              onChange={() => generalStore.setGasPrice(GAS_PRICE.NORMAL.PRICE)}
+              value='slow'
+            />
+            <span className="title">{GAS_PRICE.NORMAL.DESCRIPTION}</span>
+          </label>
+        </div>
+        <div className='radios-inline'>
+          <label className='radio-inline'>
+            <input
+              type='radio'
+              checked={gasPrice === GAS_PRICE.FAST.PRICE}
+              name='gas-price-option-fast'
+              onChange={() => generalStore.setGasPrice(GAS_PRICE.FAST.PRICE)}
+              value='slow'
+            />
+            <span className="title">{GAS_PRICE.FAST.DESCRIPTION}</span>
+          </label>
+        </div>
+
+        <p className="description">
+          Slow is cheap, fast is expensive
+        </p>
+      </div>
+    )
+  }
+
   render() {
     const { contractStore, pricingStrategyStore, crowdsaleBlockListStore, tierStore } = this.props
     let globalSettingsBlock = <div><div className="section-title">
@@ -164,6 +215,7 @@ export class stepThree extends React.Component{
           onChange={(e) => tierStore.setGlobalMinCap(e.target.value)}
           description={`Minimum amount tokens to buy. Not a minimal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.`}
         />
+        { this.renderGasPriceInput() }
       </div></div>
     if ( contractStore.contractType === CONTRACT_TYPES.standard) {
       return (

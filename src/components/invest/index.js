@@ -6,7 +6,7 @@ import { getQueryVariable, getURLParam, getWhiteListWithCapCrowdsaleAssets, toas
 import { noMetaMaskAlert, investmentDisabledAlertInTime, successfulInvestmentAlert, invalidCrowdsaleAddrAlert } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
 import { ICOConfig } from '../Common/config'
-import { CONTRACT_TYPES, TOAST, GAS_PRICE, INVESTMENT_OPTIONS } from '../../utils/constants'
+import { CONTRACT_TYPES, TOAST, INVESTMENT_OPTIONS } from '../../utils/constants'
 import { observer, inject } from 'mobx-react'
 import QRPaymentProcess from './QRPaymentProcess'
 
@@ -178,7 +178,7 @@ import QRPaymentProcess from './QRPaymentProcess'
   }
 
   investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, web3, accounts) {
-    const { contractStore, tokenStore, crowdsalePageStore, investStore } = this.props
+    const { contractStore, generalStore, tokenStore, crowdsalePageStore, investStore } = this.props
 
     let nextTiers = [];
     for (let i = tierNum + 1; i < contractStore.crowdsale.addr.length; i++) {
@@ -200,7 +200,7 @@ import QRPaymentProcess from './QRPaymentProcess'
     let opts = {
       from: accounts[0],
       value: weiToSend,
-      gasPrice: GAS_PRICE
+      gasPrice: generalStore.gasPrice
     };
     console.log(opts);
 
