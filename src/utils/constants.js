@@ -119,13 +119,13 @@ export const VALIDATION_TYPES = {
   EMPTY: 'EMPTY',
   INVALID: 'INVALID'
 }
-const { VALID, EMPTY, INVALID } = VALIDATION_TYPES
+const { VALID, EMPTY } = VALIDATION_TYPES
 
 export const intitialStepTwoValidations = {
   validations: {
-      name: EMPTY,
-      decimals: EMPTY,
-      ticker: EMPTY
+    name: EMPTY,
+    decimals: EMPTY,
+    ticker: EMPTY
   }
 }
 
@@ -143,22 +143,22 @@ export const initialStepTwoValues = {
 
 export const intitialStepThreeValidations = {
   validations: [{
-      tier: VALID,
-      startTime: VALID,
-      endTime: VALID,
-      walletAddress: EMPTY,
-      supply: VALID,
-      rate: EMPTY
+    tier: VALID,
+    startTime: VALID,
+    endTime: VALID,
+    walletAddress: EMPTY,
+    supply: VALID,
+    rate: EMPTY
   }]
 }
 
 export const initialStepThreeValues = {
   crowdsale: [{
-      tier: '',
-      startTime: '',
-      endTime: '',
-      walletAddress: '',
-      supply: ''
+    tier: '',
+    startTime: '',
+    endTime: '',
+    walletAddress: '',
+    supply: ''
   }]
 }
 
@@ -341,7 +341,7 @@ export const TOAST = {
     SUCCESS: 'warning'
   },
   MESSAGE: {
-		TRANSACTION_FAILED: 'Transaction has failed, please retry',
+    TRANSACTION_FAILED: 'Transaction has failed, please retry',
     CONTRACT_DOWNLOAD_FAILED: 'Contract Download failed',
     CONTRACT_DOWNLOAD_SUCCESS: 'A file with contracts and metadata downloaded on your computer'
   },

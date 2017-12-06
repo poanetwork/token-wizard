@@ -101,86 +101,86 @@ export function getCrowdsaleTargetDates(web3, $this, cb) {
   for (let i = 0; i < contractStore.crowdsale.addr.length; i++) {
     let crowdsaleAddr = contractStore.crowdsale.addr[i];
     attachToContract(web3, contractStore.crowdsale.abi, crowdsaleAddr)
-      .then(crowdsaleContract => {
-      console.log("attach to crowdsale contract");
+      .then(crowdsaleContract => { // eslint-disable-line no-loop-func
+        console.log("attach to crowdsale contract");
 
-      if (!crowdsaleContract) return noContractAlert();
+        if (!crowdsaleContract) return noContractAlert();
 
-      if (crowdsaleContract.methods.startBlock) {
-        propsCount++;
-        crowdsaleContract.methods.startBlock().call((err, startBlock) => {
-          cbCount++;
-          if (err) return console.log(err);
-
-          console.log("startBlock: " + startBlock);
-          if (!crowdsalePageStore.startBlock || crowdsalePageStore.startBlock > startBlock)
-            crowdsalePageStore.setProperty('startBlock', startBlock);
-          if (propsCount === cbCount) {
-            state.loading = false;
-            $this.setState(state, cb);
-          }
-        });
-      }
-
-      if (crowdsaleContract.methods.startsAt) {
-        propsCount++;
-        crowdsaleContract.methods.startsAt().call((err, startDate) => {
-          cbCount++;
-          if (err) return console.log(err);
-
-          console.log("startDate: " + startDate*1000);
-          if (!crowdsalePageStore.startDate || crowdsalePageStore.startDate > startDate*1000)
-            crowdsalePageStore.startDate = startDate*1000;
-          if (propsCount === cbCount) {
-            state.loading = false;
-            $this.setState(state, cb);
-          }
-        });
-      }
-
-      if (crowdsaleContract.methods.endBlock) {
-        propsCount++;
-        crowdsaleContract.methods.endBlock().call((err, endBlock) => {
-          cbCount++;
-          if (err) return console.log(err);
-
-          console.log("endBlock: " + endBlock);
-          if (!crowdsalePageStore.endBlock || crowdsalePageStore.endBlock < endBlock)
-            crowdsalePageStore.endBlock = endBlock;
-          web3.eth.getBlockNumber((err, curBlock) => {
+        if (crowdsaleContract.methods.startBlock) {
+          propsCount++;
+          crowdsaleContract.methods.startBlock().call((err, startBlock) => {
+            cbCount++;
             if (err) return console.log(err);
 
-            console.log("curBlock: " + curBlock);
-            var blocksDiff = parseInt($this.crowdsalePageStore.endBlock, 10) - parseInt(curBlock, 10);
-            console.log("blocksDiff: " + blocksDiff);
-            var blocksDiffInSec = blocksDiff * state.blockTimeGeneration;
-            console.log("blocksDiffInSec: " + blocksDiffInSec);
-            state.seconds = blocksDiffInSec;
+            console.log("startBlock: " + startBlock);
+            if (!crowdsalePageStore.startBlock || crowdsalePageStore.startBlock > startBlock)
+              crowdsalePageStore.setProperty('startBlock', startBlock);
             if (propsCount === cbCount) {
               state.loading = false;
               $this.setState(state, cb);
             }
-           });
-        });
-      }
+          });
+        }
 
-      if (crowdsaleContract.methods.endsAt) {
-        propsCount++;
-        crowdsaleContract.methods.endsAt().call((err, endDate) => {
-          cbCount++;
-          if (err) return console.log(err);
+        if (crowdsaleContract.methods.startsAt) {
+          propsCount++;
+          crowdsaleContract.methods.startsAt().call((err, startDate) => {
+            cbCount++;
+            if (err) return console.log(err);
 
-          console.log("endDate: " + endDate*1000);
-          if (!crowdsalePageStore.endDate || crowdsalePageStore.endDate < endDate*1000)
-            crowdsalePageStore.endDate = endDate*1000;
-          console.log("curDate: " + new Date().getTime());
-          if (propsCount === cbCount) {
-            state.loading = false;
-            $this.setState(state, cb);
-          }
-      });
-      }
-    })
+            console.log("startDate: " + startDate*1000);
+            if (!crowdsalePageStore.startDate || crowdsalePageStore.startDate > startDate*1000)
+              crowdsalePageStore.startDate = startDate*1000;
+            if (propsCount === cbCount) {
+              state.loading = false;
+              $this.setState(state, cb);
+            }
+          });
+        }
+
+        if (crowdsaleContract.methods.endBlock) {
+          propsCount++;
+          crowdsaleContract.methods.endBlock().call((err, endBlock) => {
+            cbCount++;
+            if (err) return console.log(err);
+
+            console.log("endBlock: " + endBlock);
+            if (!crowdsalePageStore.endBlock || crowdsalePageStore.endBlock < endBlock)
+              crowdsalePageStore.endBlock = endBlock;
+            web3.eth.getBlockNumber((err, curBlock) => {
+              if (err) return console.log(err);
+
+              console.log("curBlock: " + curBlock);
+              var blocksDiff = parseInt($this.crowdsalePageStore.endBlock, 10) - parseInt(curBlock, 10);
+              console.log("blocksDiff: " + blocksDiff);
+              var blocksDiffInSec = blocksDiff * state.blockTimeGeneration;
+              console.log("blocksDiffInSec: " + blocksDiffInSec);
+              state.seconds = blocksDiffInSec;
+              if (propsCount === cbCount) {
+                state.loading = false;
+                $this.setState(state, cb);
+              }
+            });
+          });
+        }
+
+        if (crowdsaleContract.methods.endsAt) {
+          propsCount++;
+          crowdsaleContract.methods.endsAt().call((err, endDate) => {
+            cbCount++;
+            if (err) return console.log(err);
+
+            console.log("endDate: " + endDate*1000);
+            if (!crowdsalePageStore.endDate || crowdsalePageStore.endDate < endDate*1000)
+              crowdsalePageStore.endDate = endDate*1000;
+            console.log("curDate: " + new Date().getTime());
+            if (propsCount === cbCount) {
+              state.loading = false;
+              $this.setState(state, cb);
+            }
+          });
+        }
+      })
       .catch(console.log)
   }
 }
@@ -202,7 +202,7 @@ export function getAccumulativeCrowdsaleData(web3, cb) {
     let crowdsaleAddr = contractStore.crowdsale.addr[i];
 
     attachToContract(web3, contractStore.crowdsale.abi, crowdsaleAddr)
-      .then(crowdsaleContract => {
+      .then(crowdsaleContract => { // eslint-disable-line no-loop-func
         console.log('attach to crowdsale contract')
 
         if (!crowdsaleContract) return noContractAlert()
@@ -282,23 +282,24 @@ export function getAccumulativeCrowdsaleData(web3, cb) {
             cbCount++
             if (err) return console.log(err)
 
-          console.log("investors: " + investors);
-          let state = this.state;
-          const oldInvestors = crowdsalePageStore.investors
-          const investorsCount = parseInt(investors, 10)
+            console.log("investors: " + investors);
+            let state = this.state;
+            const oldInvestors = crowdsalePageStore.investors
+            const investorsCount = parseInt(investors, 10)
 
-          if (oldInvestors)
-            crowdsalePageStore.setProperty('investors', oldInvestors + investorsCount);
-          else
-            crowdsalePageStore.setProperty('investors', investorsCount);
+            if (oldInvestors)
+              crowdsalePageStore.setProperty('investors', oldInvestors + investorsCount);
+            else
+              crowdsalePageStore.setProperty('investors', investorsCount);
 
-          if (propsCount === cbCount) {
-            state.loading = false;
-            this.setState(state, cb);
-          }
-        });
-      }
-    }).catch(console.log)
+            if (propsCount === cbCount) {
+              state.loading = false;
+              this.setState(state, cb);
+            }
+          });
+        }
+      })
+      .catch(console.log)
   }
 }
 
@@ -328,7 +329,7 @@ function setMaximumSellableTokensInEth(web3, crowdsaleContract, maximumSellableT
 }
 
 export function getCurrentRate(web3, crowdsaleContract) {
-return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     if (!crowdsaleContract) {
       noContractAlert()
       reject('no contract')
@@ -440,7 +441,7 @@ export function getCrowdsaleData (web3, crowdsaleContract) {
 
             getPricingStrategyData(web3)
               .then(() => {
-              cbCount++
+                cbCount++
                 if (propsCount === cbCount) {
                   resolve()
                 }
@@ -455,220 +456,219 @@ export function getCrowdsaleData (web3, crowdsaleContract) {
 
 function getTokenData () {
   return new Promise((resolve, reject) => {
-      const { web3 } = web3Store
+    const { web3 } = web3Store
 
-      if (!web3) {
-        resolve('no MetaMask')
+    if (!web3) {
+      resolve('no MetaMask')
+      return
+    }
+
+    web3.eth.getAccounts().then(accounts => {
+      if (accounts.length === 0) {
+        resolve('no accounts')
         return
       }
 
-      web3.eth.getAccounts().then(accounts => {
-        if (accounts.length === 0) {
-          resolve('no accounts')
-          return
-        }
+      let propsCount = 0
+      let cbCount = 0
+      let tokenObj = toJS(contractStore.token)
+      console.log('tokenObj', tokenObj)
 
-        let propsCount = 0
-        let cbCount = 0
-        let tokenObj = toJS(contractStore.token)
-        console.log('tokenObj', tokenObj)
+      attachToContract(web3, tokenObj.abi, tokenObj.addr)
+        .then(tokenContract => {
+          console.log('attach to token contract')
 
-        attachToContract(web3, tokenObj.abi, tokenObj.addr)
-          .then(tokenContract => {
-            console.log('attach to token contract')
+          if (!tokenContract) {
+            noContractAlert()
+            reject('no contract')
+            return
+          }
 
-            if (!tokenContract) {
-              noContractAlert()
-              reject('no contract')
-              return
+          propsCount++
+          tokenContract.methods.name().call((err, name) => {
+            cbCount++
+
+            if (err) {
+              return console.log(err)
             }
 
+            console.log('token name:', name)
+            tokenStore.setProperty('name', name)
+
+            if (propsCount === cbCount) {
+              resolve()
+            }
+          })
+
+          propsCount++
+          tokenContract.methods.symbol().call((err, ticker) => {
+            cbCount++
+
+            if (err) {
+              console.log(err)
+            }
+
+            console.log('token ticker: ' + ticker)
+            tokenStore.setProperty('ticker', ticker)
+
+            if (propsCount === cbCount) {
+              resolve()
+            }
+          })
+
+          if (tokenContract.methods.balanceOf) {
             propsCount++
-            tokenContract.methods.name().call((err, name) => {
+            tokenContract.methods.balanceOf.call(accounts[0], (err, balanceOf) => {
               cbCount++
 
               if (err) {
                 return console.log(err)
               }
 
-              console.log('token name:', name)
-              tokenStore.setProperty('name', name)
+              console.log('balanceOf: ' + balanceOf)
+              const tokenAmountOf = crowdsalePageStore.tokenAmountOf ? crowdsalePageStore.tokenAmountOf : 0
+              crowdsalePageStore.setProperty('tokenAmountOf', tokenAmountOf + parseInt(balanceOf, 10))
 
               if (propsCount === cbCount) {
                 resolve()
               }
             })
+          }
 
-            propsCount++
-            tokenContract.methods.symbol().call((err, ticker) => {
-              cbCount++
+          propsCount++
+          tokenContract.methods.decimals().call((err, decimals) => {
+            cbCount++
 
-              if (err) {
-                console.log(err)
-              }
-
-              console.log('token ticker: ' + ticker)
-              tokenStore.setProperty('ticker', ticker)
-
-              if (propsCount === cbCount) {
-                resolve()
-              }
-            })
-
-            if (tokenContract.methods.balanceOf) {
-              propsCount++
-              tokenContract.methods.balanceOf.call(accounts[0], (err, balanceOf) => {
-                cbCount++
-
-                if (err) {
-                  return console.log(err)
-                }
-
-                console.log('balanceOf: ' + balanceOf)
-                const tokenAmountOf = crowdsalePageStore.tokenAmountOf ? crowdsalePageStore.tokenAmountOf : 0
-                crowdsalePageStore.setProperty('tokenAmountOf', tokenAmountOf + parseInt(balanceOf, 10))
-
-                if (propsCount === cbCount) {
-                  resolve()
-                }
-              })
+            if (err) {
+              console.log(err)
             }
 
-            propsCount++
-            tokenContract.methods.decimals().call((err, decimals) => {
-              cbCount++
+            console.log('token decimals:', decimals)
+            tokenStore.setProperty('decimals', decimals)
 
-              if (err) {
-                console.log(err)
-              }
+            if (propsCount === cbCount) {
+              resolve()
+            }
+          })
 
-              console.log('token decimals:', decimals)
-              tokenStore.setProperty('decimals', decimals)
+          propsCount++
+          tokenContract.methods.totalSupply().call((err, supply) => {
+            cbCount++
 
-              if (propsCount === cbCount) {
-                resolve()
-              }
-            })
+            if (err) {
+              console.log(err)
+            }
 
-            propsCount++
-            tokenContract.methods.totalSupply().call((err, supply) => {
-              cbCount++
+            console.log('token supply:', supply)
+            tokenStore.setProperty('supply', supply)
 
-              if (err) {
-                console.log(err)
-              }
+            if (propsCount === cbCount) {
+              resolve()
 
-              console.log('token supply:', supply)
-              tokenStore.setProperty('supply', supply)
+            } else {
+              let propsCount = 0
+              let cbCount = 0
 
-              if (propsCount === cbCount) {
-                resolve()
+              attachToContract(web3, contractStore.token.abi, contractStore.token.addr)
+                .then(tokenContract => {
+                  console.log('attach to token contract')
 
-              } else {
-                let propsCount = 0
-                let cbCount = 0
+                  if (!tokenContract) {
+                    noContractAlert()
+                    reject('no contract')
+                    return
+                  }
 
-                attachToContract(web3, contractStore.token.abi, contractStore.token.addr)
-                  .then(tokenContract => {
-                    console.log('attach to token contract')
+                  propsCount++
+                  tokenContract.methods.name().call((err, name) => {
+                    cbCount++
 
-                    if (!tokenContract) {
-                      noContractAlert()
-                      reject('no contract')
-                      return
+                    if (err) {
+                      return console.log(err)
                     }
 
+                    console.log('token name:', name)
+                    tokenStore.setProperty('name', name)
+
+                    if (propsCount === cbCount) {
+                      resolve()
+                    }
+                  })
+
+                  propsCount++
+                  tokenContract.methods.symbol().call((err, ticker) => {
+                    cbCount++
+
+                    if (err) {
+                      console.log(err)
+                    }
+
+                    console.log('token ticker:', ticker)
+                    tokenStore.setProperty('ticker', ticker)
+
+                    if (propsCount === cbCount) {
+                      resolve()
+                    }
+                  })
+
+                  if (tokenContract.methods.balanceOf) {
                     propsCount++
-                    tokenContract.methods.name().call((err, name) => {
+                    tokenContract.methods.balanceOf(accounts[0]).call((err, balanceOf) => {
                       cbCount++
 
                       if (err) {
                         return console.log(err)
                       }
 
-                      console.log('token name:', name)
-                      tokenStore.setProperty('name', name)
+                      console.log('balanceOf:', balanceOf)
+                      const tokenAmountOf = crowdsalePageStore.tokenAmountOf ? crowdsalePageStore.tokenAmountOf : 0
+                      crowdsalePageStore.setProperty('tokenAmountOf', tokenAmountOf + parseInt(balanceOf, 10))
 
                       if (propsCount === cbCount) {
                         resolve()
                       }
                     })
+                  }
 
-                    propsCount++
-                    tokenContract.methods.symbol().call((err, ticker) => {
-                      cbCount++
+                  propsCount++
+                  tokenContract.methods.decimals().call((err, decimals) => {
+                    cbCount++
 
-                      if (err) {
-                        console.log(err)
-                      }
-
-                      console.log('token ticker:', ticker)
-                      tokenStore.setProperty('ticker', ticker)
-
-                      if (propsCount === cbCount) {
-                        resolve()
-                      }
-                    })
-
-                    if (tokenContract.methods.balanceOf) {
-                      propsCount++
-                      tokenContract.methods.balanceOf(accounts[0]).call((err, balanceOf) => {
-                        cbCount++
-
-                        if (err) {
-                          return console.log(err)
-                        }
-
-                        console.log('balanceOf:', balanceOf)
-                        const tokenAmountOf = crowdsalePageStore.tokenAmountOf ? crowdsalePageStore.tokenAmountOf : 0
-                        crowdsalePageStore.setProperty('tokenAmountOf', tokenAmountOf + parseInt(balanceOf, 10))
-
-                        if (propsCount === cbCount) {
-                          resolve()
-                        }
-                      })
+                    if (err) {
+                      console.log(err)
                     }
 
-                    propsCount++
-                    tokenContract.methods.decimals().call((err, decimals) => {
-                      cbCount++
+                    console.log('token decimals:', decimals)
+                    tokenStore.setProperty('decimals', decimals)
 
-                      if (err) {
-                        console.log(err)
-                      }
-
-                      console.log('token decimals:', decimals)
-                      tokenStore.setProperty('decimals', decimals)
-
-                      if (propsCount === cbCount) {
-                        resolve()
-                      }
-                    })
-
-                    propsCount++
-                    tokenContract.methods.totalSupply().call((err, supply) => {
-                      cbCount++
-
-                      if (err) {
-                        console.log(err)
-                      }
-
-                      console.log('token supply:', supply)
-                      tokenStore.setProperty('supply', supply)
-
-                      if (propsCount === cbCount) {
-                        resolve()
-                      }
-                    })
+                    if (propsCount === cbCount) {
+                      resolve()
+                    }
                   })
-                  .catch(reject)
-              }
-            })
+
+                  propsCount++
+                  tokenContract.methods.totalSupply().call((err, supply) => {
+                    cbCount++
+
+                    if (err) {
+                      console.log(err)
+                    }
+
+                    console.log('token supply:', supply)
+                    tokenStore.setProperty('supply', supply)
+
+                    if (propsCount === cbCount) {
+                      resolve()
+                    }
+                  })
+                })
+                .catch(reject)
+            }
           })
-          .catch(reject)
-      })
-    }
-  )
+        })
+        .catch(reject)
+    })
+  })
 }
 
 export function getPricingStrategyData (web3) {

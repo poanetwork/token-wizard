@@ -8,8 +8,7 @@ import {
   getCrowdsaleData,
   getCrowdsaleTargetDates,
   getCurrentRate,
-  getJoinedTiers,
-  initializeAccumulativeData
+  getJoinedTiers
 } from '../crowdsale/utils'
 import { getQueryVariable, getURLParam, getWhiteListWithCapCrowdsaleAssets, toast } from '../../utils/utils'
 import {
@@ -28,17 +27,17 @@ import QRPaymentProcess from './QRPaymentProcess'
 @observer
 export class Invest extends React.Component {
   constructor(props) {
-      super(props);
-      window.scrollTo(0, 0);
+    super(props);
+    window.scrollTo(0, 0);
 
-      this.state = {
-        seconds: 0,
-        loading: true,
-        pristineTokenInput: true,
-        web3Available: false,
-        investThrough: INVESTMENT_OPTIONS.QR,
-        crowdsaleAddress: ICOConfig.crowdsaleContractURL || getURLParam("addr")
-      }
+    this.state = {
+      seconds: 0,
+      loading: true,
+      pristineTokenInput: true,
+      web3Available: false,
+      investThrough: INVESTMENT_OPTIONS.QR,
+      crowdsaleAddress: ICOConfig.crowdsaleContractURL || getURLParam("addr")
+    }
   }
 
   componentDidMount () {
@@ -66,7 +65,7 @@ export class Invest extends React.Component {
       .then(_newState => {
         this.setState(_newState)
         this.extractContractsData(web3)
-    })
+      })
   }
 
   extractContractsData(web3) {

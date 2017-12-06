@@ -27,7 +27,7 @@ class TokenStore {
   @action setProperty = (property, value) => {
     this[property] = value;
   }
-  
+
   @action validateTokens = (property) => {
     if (property === 'name') {
       this.validToken[property] = validateName(this.name) ? VALID : INVALID;
@@ -49,13 +49,13 @@ class TokenStore {
       }
     });
   }
-  
-  // Getters 
+
+  // Getters
   @computed get isTokenValid() {
     if (!this.validToken) {
       return;
     }
-    
+
     const validKeys = Object.keys(this.validToken).filter((key) => {
       if (this.validToken[key] === VALID) {
         return true;

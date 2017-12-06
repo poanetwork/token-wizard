@@ -349,7 +349,7 @@ export const handleContractsForFile = (content, index, contractStore, tierStore)
       fileBody = contractField[index]
 
       if (!!fileBody) {
-          fileContent = title + ' for ' + tierStore.tiers[index].tier + ':**** \n\n' + fileBody
+        fileContent = title + ' for ' + tierStore.tiers[index].tier + ':**** \n\n' + fileBody
       }
     } else if (!!contractField) {
       fileContent = title + ':**** \n\n' + contractField
@@ -368,7 +368,7 @@ const addSrcToFile = (content, index, contractStore, tierStore) => {
   let fileContent = ''
 
   if (isObservableArray(contractField) && field !== 'abi') {
-      fileContent = title + ' for ' + tierStore.tiers[index].tier + ': ' + contractField[index]
+    fileContent = title + ' for ' + tierStore.tiers[index].tier + ': ' + contractField[index]
   } else {
     if (field !== 'src') {
       const body = field === 'abi' ? JSON.stringify(contractField) : contractField
