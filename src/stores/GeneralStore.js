@@ -5,6 +5,7 @@ class GeneralStore {
 
   @observable networkId;
   @observable gasPrice = GAS_PRICE.FAST.PRICE;
+  @observable globalMinCap;
 
   @action setProperty = (property, value) => {
     this[property] = value
@@ -12,6 +13,10 @@ class GeneralStore {
 
   @action setGasPrice = (gasPrice) => {
     this.gasPrice = gasPrice
+  }
+
+  @action setGlobalMinCap = (minCap) => {
+    this.globalmincap = minCap
   }
 }
 

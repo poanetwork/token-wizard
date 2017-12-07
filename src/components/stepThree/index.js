@@ -216,7 +216,7 @@ export class stepThree extends React.Component {
   }
 
   render() {
-    const { contractStore, crowdsaleBlockListStore, tierStore } = this.props;
+    const { contractStore, crowdsaleBlockListStore, generalStore, tierStore } = this.props;
     let globalSettingsBlock = (
       <div>
         <div className="section-title">
@@ -227,10 +227,10 @@ export class stepThree extends React.Component {
             side="left"
             type="number"
             title={MINCAP}
-            value={tierStore.globalMinCap}
+            value={generalStore.globalMinCap}
             valid={VALID}
             errorMessage={VALIDATION_MESSAGES.MINCAP}
-            onChange={e => tierStore.setGlobalMinCap(e.target.value)}
+            onChange={e => generalStore.setGlobalMinCap(e.target.value)}
             description={`Minimum amount tokens to buy. Not a minimal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.`}
           />
           {this.renderGasPriceInput()}
