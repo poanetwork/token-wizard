@@ -127,7 +127,8 @@
     "compileCrowdsaleTokenContractWin": "node ./scripts/compileContract.js %npm_package_config_contract_folder%/CrowdsaleWhiteListWithCapToken_flat.sol %npm_package_config_contract_folder% %npm_package_config_extension_path% false %npm_package_config_crowdsale_token_contract_name% CrowdsaleWhiteListWithCapToken",
     "compileCrowdsalePricingStrategyContractWin": "node ./scripts/compileContract.js %npm_package_config_contract_folder%/CrowdsaleWhiteListWithCapPricingStrategy_flat.sol %npm_package_config_contract_folder% %npm_package_config_extension_path% false %npm_package_config_crowdsale_pricing_strategy_contract_name% CrowdsaleWhiteListWithCapPricingStrategy",
     "compileCrowdsaleNullFinalizeAgentContractWin": "node ./scripts/compileContract.js %npm_package_config_contract_folder%/NullFinalizeAgent_flat.sol %npm_package_config_contract_folder% %npm_package_config_extension_path% false %npm_package_config_null_finalize_agent_contract_name% NullFinalizeAgent",
-    "compileCrowdsaleFinalizeAgentContractWin": "node ./scripts/compileContract.js %npm_package_config_contract_folder%/FinalizeAgent_flat.sol %npm_package_config_contract_folder% %npm_package_config_extension_path% false %npm_package_config_finalize_agent_contract_name% FinalizeAgent"
+    "compileCrowdsaleFinalizeAgentContractWin": "node ./scripts/compileContract.js %npm_package_config_contract_folder%/FinalizeAgent_flat.sol %npm_package_config_contract_folder% %npm_package_config_extension_path% false %npm_package_config_finalize_agent_contract_name% FinalizeAgent",
+    "lint": "eslint src"
   },
   "jest": {
     "collectCoverageFrom": [

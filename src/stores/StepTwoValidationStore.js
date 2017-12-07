@@ -3,18 +3,18 @@ import { observable, action } from 'mobx';
 class StepTwoValidationStore {
 
   @observable name;
-	@observable ticker;
-	@observable decimals;
+  @observable ticker;
+  @observable decimals;
 
-	constructor() {
-		this.name = 'EMPTY'
-		this.ticker = 'EMPTY'
-		this.decimals = 'EMPTY'
-	}
+  constructor() {
+    this.name = 'EMPTY'
+    this.ticker = 'EMPTY'
+    this.decimals = 'EMPTY'
+  }
 
-	@action property = (property, value) => {
-		this[property] = value
-	}
+  @action property = (property, value) => {
+    this[property] = value
+  }
 
 }
 

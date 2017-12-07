@@ -7,7 +7,7 @@ class GeneralStore {
   @observable gasPrice = GAS_PRICE.FAST.PRICE;
 
   @action setProperty = (property, value) => {
-		this[property] = value
+    this[property] = value
   }
 
   @action setGasPrice = (gasPrice) => {

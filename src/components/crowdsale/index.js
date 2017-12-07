@@ -95,8 +95,8 @@ export class Crowdsale extends React.Component {
     getCrowdsaleData(web3, crowdsaleContract)
       .then(() => initializeAccumulativeData())
       .then(() => {
-          this.setState({ loading: false })
-          getAccumulativeCrowdsaleData.call(this, web3, () => {})
+        this.setState({ loading: false })
+        getAccumulativeCrowdsaleData.call(this, web3, () => {})
       })
       .catch(err => {
         this.setState({ loading: false })

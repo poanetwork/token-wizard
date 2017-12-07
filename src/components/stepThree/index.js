@@ -150,13 +150,13 @@ export class stepThree extends React.Component{
     </div>
   }
 
-    componentDidMount () {
-      const { tierStore, web3Store } = this.props
-      const { curAddress } = web3Store
-      tierStore.setTierProperty(curAddress, 'walletAddress', 0)
-      tierStore.setTierProperty(defaultCompanyStartDate(), 'startTime', 0)
-      tierStore.setTierProperty(defaultCompanyEndDate(tierStore.tiers[0].startTime), 'endTime', 0)
-    }
+  componentDidMount () {
+    const { tierStore, web3Store } = this.props
+    const { curAddress } = web3Store
+    tierStore.setTierProperty(curAddress, 'walletAddress', 0)
+    tierStore.setTierProperty(defaultCompanyStartDate(), 'startTime', 0)
+    tierStore.setTierProperty(defaultCompanyEndDate(tierStore.tiers[0].startTime), 'endTime', 0)
+  }
 
   renderGasPriceInput() {
     const generalStore = this.props.generalStore

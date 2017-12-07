@@ -1,6 +1,6 @@
 import { VALIDATION_TYPES, TRUNC_TO_DECIMALS, TOAST } from './constants'
 import { contractStore, tokenStore, tierStore, web3Store } from '../stores'
-const { VALID, EMPTY, INVALID } = VALIDATION_TYPES
+const { VALID, INVALID } = VALIDATION_TYPES
 
 export function getQueryVariable(variable) {
   var query = window.location.search.substring(1);
@@ -19,7 +19,7 @@ export function getURLParam(key,target){
     target = window.location.href;
   }
 
-  key = key.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+  key = key.replace(/[[]/, "\\[").replace(/[\]]/, "\\]");
 
   var pattern = key + '=([^&#]+)';
   var o_reg = new RegExp(pattern,'ig');
@@ -36,7 +36,7 @@ export function getURLParam(key,target){
   if (!values.length) {
     return null;
   } else {
-    return values.length == 1 ? values[0] : values;
+    return values.length === 1 ? values[0] : values;
   }
 }
 
@@ -116,96 +116,97 @@ export const getconstructorParams = (abiConstructor, vals, crowdsaleNum) => {
       params.vals.push(vals[j]);
     } else {
       switch(inp.name) {
-        case "_startBlock": {
+        case "_startBlock":
           params.vals.push(tierStore.tiers[crowdsaleNum].startBlock);
-        } break;
-        case "_start": {
+          break;
+        case "_start":
           params.vals.push(toFixed(new Date(tierStore.tiers[crowdsaleNum].startTime).getTime()/1000).toString());
-        } break;
-        case "_endBlock": {
+          break;
+        case "_endBlock":
           params.vals.push(tierStore.tiers[crowdsaleNum].endBlock);
-        } break;
-        case "_end": {
+          break;
+        case "_end":
           params.vals.push(toFixed(new Date(tierStore.tiers[crowdsaleNum].endTime).getTime()/1000).toString());
-        } break;
-        case "_rate": {
+          break;
+        case "_rate":
           params.vals.push(tierStore.tiers[crowdsaleNum].rate);
-        } break;
+          break;
         case "_wallet":
-        case "_beneficiary": {
+        case "_beneficiary":
           params.vals.push(tierStore.tiers[crowdsaleNum].walletAddress);
-        } break;
-        case "_multisigWallet": {
+          break;
+        case "_multisigWallet":
           //params.vals.push(contractStore.multisig.addr);
           params.vals.push(tierStore.tiers[0].walletAddress);
-        } break;
-        case "_pricingStrategy": {
+          break;
+        case "_pricingStrategy":
           params.vals.push(contractStore.pricingStrategy.addr[crowdsaleNum]);
-        } break;
-        case "_token": {
+          break;
+        case "_token":
           params.vals.push(contractStore.token.addr);
-        } break;
-        case "_crowdsale": {
+          break;
+        case "_crowdsale":
           params.vals.push(contractStore.crowdsale.addr[crowdsaleNum]);
-        } break;
-        case "_crowdsaleSupply": {
+          break;
+        case "_crowdsaleSupply":
           params.vals.push(tierStore.tiers[crowdsaleNum].supply);
-        } break;
-        case "_name": {
+          break;
+        case "_name":
           params.vals.push(tokenStore.name);
-        } break;
-        case "_symbol": {
+          break;
+        case "_symbol":
           params.vals.push(tokenStore.ticker);
-        } break;
-        case "_decimals": {
+          break;
+        case "_decimals":
           params.vals.push(tokenStore.decimals);
-        } break;
-        case "_globalMinCap": {
+          break;
+        case "_globalMinCap":
           params.vals.push(tierStore.tiers[0].whitelistdisabled === "yes"?tokenStore.globalmincap?toFixed(tokenStore.globalmincap*10**tokenStore.decimals).toString():0:0);
-        } break;
+          break;
         case "_tokenSupply":
-        case "_initialSupply": {
+        case "_initialSupply":
           params.vals.push(tokenStore.supply);
-        } break;
-        case "_maximumSellableTokens": {
+          break;
+        case "_maximumSellableTokens":
           params.vals.push(toFixed(tierStore.tiers[crowdsaleNum].supply*10**tokenStore.decimals).toString());
-        } break;
-        case "_minimumFundingGoal": {
+          break;
+        case "_minimumFundingGoal":
           params.vals.push(0);
-        } break;
-        case "_mintable": {
+          break;
+        case "_mintable":
           params.vals.push(true);
-        } break;
-        case "_tranches": {
+          break;
+        case "_tranches":
           params.vals.push(tierStore.tiers[crowdsaleNum].tranches);
-        } break;
-        case "_secondsTimeLocked": {
+          break;
+        case "_secondsTimeLocked":
           params.vals.push(1)
-        } break;
-        case "_tokenTransferProxy": {
+          break;
+        case "_tokenTransferProxy":
           params.vals.push(contractStore.tokenTransferProxy.addr)
-        } break;
-        case "_required": {
+          break;
+        case "_required":
           params.vals.push(1)
-        } break;
-        case "_owners": {
+          break;
+        case "_owners":
           let owners = [];
           owners.push(tierStore.tiers[crowdsaleNum].walletAddress);
           params.vals.push(owners)
-        } break;
-        case "_oneTokenInWei": {
+          break;
+        case "_oneTokenInWei":
           let oneTokenInETHRaw = toFixed(1/tierStore.tiers[crowdsaleNum].rate).toString()
           let oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, oneTokenInETHRaw)
-          params.vals.push(web3Store.web3.utils.toWei(oneTokenInETH, "ether"));                } break;
-        case "_isUpdatable": {
-          params.vals.push(tierStore.tiers[crowdsaleNum].updatable?tierStore.tiers[crowdsaleNum].updatable=="on"?true:false:false);
-        } break;
-        case "_isWhiteListed": {
-          params.vals.push(tierStore.tiers[0].whitelistdisabled?tierStore.tiers[0].whitelistdisabled=="yes"?false:true:false);
-        } break;
-        default: {
+          params.vals.push(web3Store.web3.utils.toWei(oneTokenInETH, "ether"));
+          break;
+        case "_isUpdatable":
+          params.vals.push(tierStore.tiers[crowdsaleNum].updatable?tierStore.tiers[crowdsaleNum].updatable==="on"?true:false:false);
+          break;
+        case "_isWhiteListed":
+          params.vals.push(tierStore.tiers[0].whitelistdisabled?tierStore.tiers[0].whitelistdisabled==="yes"?false:true:false);
+          break;
+        default:
           params.vals.push("");
-        } break;
+          break;
       }
     }
   }
@@ -238,13 +239,15 @@ if (!Math.floor10) {
 
 const getTimeAsNumber = (time) => new Date(time).getTime()
 
-export const getOldState = (props, defaultState) => props && props.location && props.location.query && props.location.query.state || defaultState
+export const getOldState = (props, defaultState) => (props && props.location && props.location.query && props.location.query.state) || defaultState
 
 export const getStepClass = (step, activeStep) => step === activeStep ? "step-navigation step-navigation_active" : "step-navigation"
 
 export const stepsAreValid = (steps) => {
   let newSteps = Object.assign({}, steps)
-  newSteps[0] !== undefined ? delete newSteps[0] : ''
+  if (newSteps[0] !== undefined) {
+    delete newSteps[0]
+  }
   return Object.values(newSteps).length > 3 && Object.values(newSteps).every(step => step === VALID)
 }
 
@@ -285,8 +288,6 @@ const inputFieldValidators = {
   rate: validateRate
 }
 
-const inputFieldIsUnsubmitted = (currentValidation, newValidation) => currentValidation === EMPTY
-
 const isNotWhiteListTierObject = (value) => !(typeof value === 'object' && value.hasOwnProperty('whitelist') === true && value.hasOwnProperty('tier') === true)
 
 // still thinks that we do not have an array... we do
@@ -317,7 +318,7 @@ export const allFieldsAreValid = (parent, state) => {
   if( Object.prototype.toString.call( newState[parent] ) === '[object Array]' ) {
     if (newState[parent].length > 0) {
       for (let i = 0; i < newState[parent].length; i++) {
-        Object.keys(newState[parent][i]).map(property => {
+        Object.keys(newState[parent][i]).forEach(property => { // eslint-disable-line no-loop-func
           values.push(newState[parent][i][property])
           properties.push(property);
         })
@@ -340,7 +341,7 @@ export const allFieldsAreValid = (parent, state) => {
       value = newState[parent][property]
     }
     iterator++
-    if (parent == "token" && property == "supply") return VALID
+    if (parent === "token" && property === "supply") return VALID
     return validateValue(value, property)
   })
 
@@ -349,13 +350,13 @@ export const allFieldsAreValid = (parent, state) => {
 
 export function toFixed(x) {
   if (Math.abs(x) < 1.0) {
-    var e = parseInt(x.toString().split('e-')[1]);
+    let e = parseInt(x.toString().split('e-')[1], 10);
     if (e) {
       x *= Math.pow(10,e-1);
       x = '0.' + (new Array(e)).join('0') + x.toString().substring(2);
     }
   } else {
-    var e = parseInt(x.toString().split('+')[1]);
+    let e = parseInt(x.toString().split('+')[1], 10);
     if (e > 20) {
       e -= 20;
       x /= Math.pow(10,e);

@@ -39,7 +39,7 @@ export class stepTwo extends Component {
 
   render() {
     return (
-    	<section className="steps steps_crowdsale-contract" ref="two">
+      <section className="steps steps_crowdsale-contract" ref="two">
         <StepNavigation activeStep={TOKEN_SETUP}/>
         <div className="steps-content container">
           <div className="about-step">
@@ -86,5 +86,5 @@ export class stepTwo extends Component {
           {this.renderLinkComponent()}
         </div>
       </section>
-  )}
+    )}
 }
