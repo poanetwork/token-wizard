@@ -215,6 +215,11 @@ export class stepThree extends React.Component {
     );
   }
 
+  updateWhitelistDisabled = (e) => {
+    this.props.generalStore.setGlobalMinCap('')
+    this.updateTierStore(e, "whitelistdisabled", 0)
+  }
+
   render() {
     const { contractStore, crowdsaleBlockListStore, generalStore, tierStore } = this.props;
     let globalSettingsBlock = (
@@ -225,7 +230,21 @@ export class stepThree extends React.Component {
         <div className="input-block-container">
           <InputField
             side="left"
+            type="text"
+            title={WALLET_ADDRESS}
+            value={tierStore.tiers[0].walletAddress}
+            valid={tierStore.validTiers[0].walletAddress}
+            errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS}
+            onChange={e => this.updateTierStore(e, "walletAddress", 0)}
+            description={`Where the money goes after investors transactions. Immediately after each transaction. We recommend to setup a multisig wallet with hardware based signers.`}
+          />
+          {this.renderGasPriceInput()}
+        </div>
+        <div className="input-block-container">
+          <InputField
+            side="left"
             type="number"
+            disabled={tierStore.tiers[0].whitelistdisabled === "no"}
             title={MINCAP}
             value={generalStore.globalMinCap}
             valid={VALID}
@@ -233,7 +252,18 @@ export class stepThree extends React.Component {
             onChange={e => generalStore.setGlobalMinCap(e.target.value)}
             description={`Minimum amount tokens to buy. Not a minimal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.`}
           />
-          {this.renderGasPriceInput()}
+          <RadioInputField
+            side="right"
+            title={DISABLEWHITELISTING}
+            items={["yes", "no"]}
+            vals={["yes", "no"]}
+            state={this.state}
+            num={0}
+            defaultValue={tierStore.tiers[0].whitelistdisabled}
+            name="crowdsale-whitelistdisabled-0"
+            onChange={e => this.updateWhitelistDisabled(e)}
+            description={`Disables whitelistings. Anyone can buy on the tier.`}
+          />
         </div>
       </div>
     );
@@ -258,6 +288,11 @@ export class stepThree extends React.Component {
                 crowdsale campaign.
               </p>
             </div>
+            {globalSettingsBlock}
+          </div>
+
+          {/* First tier */}
+          <div style={{ marginTop: "40px" }} className="steps-content container">
             <div className="hidden">
               <div className="input-block-container">
                 <InputField
@@ -270,15 +305,17 @@ export class stepThree extends React.Component {
                   onChange={e => this.updateTierStore(e, "tier", 0)}
                   description={`Name of a tier, e.g. PrePreIco, PreICO, ICO with bonus A, ICO with bonus B, etc. We simplified that and will increment a number after each tier.`}
                 />
-                <InputField
+                <RadioInputField
                   side="right"
-                  type="text"
-                  title={WALLET_ADDRESS}
-                  value={tierStore.tiers[0].walletAddress}
-                  valid={tierStore.validTiers[0].walletAddress}
-                  errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS}
-                  onChange={e => this.updateTierStore(e, "walletAddress", 0)}
-                  description={`Where the money goes after investors transactions. Immediately after each transaction. We recommend to setup a multisig wallet with hardware based signers.`}
+                  title={ALLOWMODIFYING}
+                  items={["on", "off"]}
+                  vals={["on", "off"]}
+                  state={this.state}
+                  num={0}
+                  defaultValue={tierStore.tiers[0].updatable}
+                  name="crowdsale-updatable-0"
+                  onChange={e => this.updateTierStore(e, "updatable", 0)}
+                  description={`Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing.`}
                 />
               </div>
               <div className="input-block-container">
@@ -325,37 +362,13 @@ export class stepThree extends React.Component {
                   description={`How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers`}
                 />
               </div>
-              <div className="input-block-container">
-                <RadioInputField
-                  side="left"
-                  title={ALLOWMODIFYING}
-                  items={["on", "off"]}
-                  vals={["on", "off"]}
-                  state={this.state}
-                  num={0}
-                  defaultValue={tierStore.tiers[0].updatable}
-                  name="crowdsale-updatable-0"
-                  onChange={e => this.updateTierStore(e, "updatable", 0)}
-                  description={`Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing.`}
-                />
-                <RadioInputField
-                  side="right"
-                  title={DISABLEWHITELISTING}
-                  items={["yes", "no"]}
-                  vals={["yes", "no"]}
-                  state={this.state}
-                  num={0}
-                  defaultValue={tierStore.tiers[0].whitelistdisabled}
-                  name="crowdsale-whitelistdisabled-0"
-                  onChange={e => this.updateTierStore(e, "whitelistdisabled", 0)}
-                  description={`Disables whitelistings. Anyone can buy on the tier.`}
-                />
-              </div>
-              {tierStore.tiers[0].whitelistdisabled === "no" ? "" : globalSettingsBlock}
             </div>
             {tierStore.tiers[0].whitelistdisabled === "yes" ? "" : whitelistInputBlock}
           </div>
+
+          {/* Other tiers */}
           <div>{crowdsaleBlockListStore.blockList}</div>
+
           <div className="button-container">{this.renderLink()}</div>
         </section>
       );

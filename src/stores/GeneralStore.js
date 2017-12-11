@@ -16,7 +16,7 @@ class GeneralStore {
   }
 
   @action setGlobalMinCap = (minCap) => {
-    this.globalmincap = minCap
+    this.globalMinCap = minCap
   }
 }
 

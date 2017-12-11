@@ -60,15 +60,16 @@ export class CrowdsaleBlock extends React.Component {
               onChange={e => this.updateTierStore(e, "tier")}
               description={`Name of a tier, e.g. PrePreIco, PreICO, ICO with bonus A, ICO with bonus B, etc. We simplified that and will increment a number after each tier.`}
             />
-            <InputField
+            <RadioInputField
               side="right"
-              type="number"
-              title={RATE}
-              value={tierStore.tiers[num].rate}
-              valid={tierStore.validTiers[num].rate}
-              errorMessage={VALIDATION_MESSAGES.RATE}
-              onChange={e => this.updateTierStore(e, "rate")}
-              description={`Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens`}
+              title={ALLOWMODIFYING}
+              items={["on", "off"]}
+              vals={["on", "off"]}
+              num={num}
+              defaultValue={this.props.tierStore.tiers[num].updatable}
+              name={"crowdsale-updatable-" + num}
+              onChange={e => this.updateTierStore(e, "updatable")}
+              description={`Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing.`}
             />
           </div>
           <div className="input-block-container">
@@ -97,23 +98,22 @@ export class CrowdsaleBlock extends React.Component {
             <InputField
               side="left"
               type="number"
+              title={RATE}
+              value={tierStore.tiers[num].rate}
+              valid={tierStore.validTiers[num].rate}
+              errorMessage={VALIDATION_MESSAGES.RATE}
+              onChange={e => this.updateTierStore(e, "rate")}
+              description={`Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens`}
+            />
+            <InputField
+              side="right"
+              type="number"
               title={SUPPLY}
               value={tierStore.tiers[num].supply}
               valid={tierStore.validTiers[num].supply}
               errorMessage={VALIDATION_MESSAGES.SUPPLY}
               onChange={e => this.updateTierStore(e, "supply")}
               description={`How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers`}
-            />
-            <RadioInputField
-              side="right"
-              title={ALLOWMODIFYING}
-              items={["on", "off"]}
-              vals={["on", "off"]}
-              num={num}
-              defaultValue={this.props.tierStore.tiers[num].updatable}
-              name={"crowdsale-updatable-" + num}
-              onChange={e => this.updateTierStore(e, "updatable")}
-              description={`Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing.`}
             />
           </div>
         </div>
