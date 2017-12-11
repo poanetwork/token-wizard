@@ -2,13 +2,13 @@ import {
   attachToContract,
   getNetWorkNameById,
   getNetworkVersion,
-  getWeb3,
   sendTXToContract
 } from '../../utils/blockchainHelpers'
 import { noContractAlert } from '../../utils/alerts'
 import { toFixed } from '../../utils/utils'
 import { GAS_PRICE, DOWNLOAD_NAME } from '../../utils/constants'
 import { isObservableArray } from 'mobx'
+import { web3Store } from '../../stores'
 
 function setLastCrowdsale(web3, abi, addr, lastCrowdsale, gasLimit) {
   console.log('###setLastCrowdsale for Pricing Strategy:###')
@@ -408,7 +408,7 @@ export function scrollToBottom() {
 
 export function getDownloadName (tokenAddress) {
   return new Promise((resolve, reject) => {
-    getWeb3((web3) => {
+    web3Store.getWeb3((web3) => {
       const whenNetworkName = getNetworkVersion(web3)
         .then((networkId) => {
           let networkName = getNetWorkNameById(networkId);
