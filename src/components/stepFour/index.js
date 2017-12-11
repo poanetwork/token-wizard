@@ -255,8 +255,8 @@ const { PUBLISH } = NAVIGATION_STEPS
 
     let minCap = 0
 
-    if (this.props.tierStore.tiers[0].whitelistdisabled === 'yes' && token.globalmincap) {
-      minCap = toFixed(token.globalmincap * 10 ** token.decimals).toString()
+    if (this.props.tierStore.tiers[0].whitelistdisabled === 'yes' && this.props.tierStore.globalMinCap) {
+      minCap = toFixed(this.props.tierStore.globalMinCap * 10 ** token.decimals).toString()
     }
 
     return [
@@ -631,8 +631,8 @@ const { PUBLISH } = NAVIGATION_STEPS
       <DisplayField
         side='left'
         title='Min Cap'
-        value={tokenStore.globalmincap}
-        description="Min Cap for all onvestors"
+        value={tierStore.globalMinCap}
+        description="Min Cap for all investors"
       /></div>
     </div>;
     let tokenBlock = <div>
