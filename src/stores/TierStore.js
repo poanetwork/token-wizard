@@ -22,7 +22,7 @@ class TierStore {
   }
 
   @action setGlobalMinCap = (minCap) => {
-    this.globalmincap = minCap
+    this.globalMinCap = minCap
   }
 
   @action addTier = (tier) => {
