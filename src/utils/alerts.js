@@ -46,7 +46,9 @@ export function successfulInvestmentAlert(tokensToInvest) {
     html: "Congrats! You've successfully bought " + tokensToInvest + " tokens!",
     type: "success"
   }).then(function(result) {
-    result.value && window.location.reload();
+    if (result.value) {
+      window.location.reload();
+    }
   });
 }
 
