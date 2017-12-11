@@ -94,6 +94,8 @@ export function warningOnMainnetAlert(tiersCount, cb) {
     confirmButtonText: 'Yes, I am sure!',
     cancelButtonText: "No, cancel it!",
   }).then(function(result) {
-    result.value && cb();
+    if (result.value) {
+      cb()
+    }
   });
 }
