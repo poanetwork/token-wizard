@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import '../../assets/stylesheets/application.css'
 import { inject, observer } from 'mobx-react'
-import { Link } from 'react-router-dom'
 
 @inject('crowdsaleStore')
 @observer
