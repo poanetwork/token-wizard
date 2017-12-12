@@ -6,6 +6,7 @@ class TierStore {
 
   @observable tiers;
   @observable validTiers;
+  @observable globalMinCap;
 
   constructor(tiers = defaultTiers) {
     this.tiers = tiers;
