@@ -1,0 +1,43 @@
+.crowdsale-modal {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .modal {
+    background: white;
+    width: 45%;
+    min-width: 830px;
+    padding: 30px 20px 20px;
+    border-radius: 10px;
+    position: relative;
+
+    .title {
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .description {
+      margin-bottom: 25px;
+      color: #8197a2;
+      line-height: 24px;
+      font-size: 13px;
+    }
+
+    .close-button {
+      font-size: 25px;
+      font-family: monospace;
+      color: white;
+      position: absolute;
+      top: -35px;
+      right: -35px;
+      z-index: 400000;
+      padding: 15px;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}
