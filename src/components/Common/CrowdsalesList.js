@@ -42,7 +42,7 @@ export default class CrowdsalesList extends Component {
                 <div className="text">{crowdsale.contractAddress}</div>
                 <div className="sm-text">{crowdsale.extraData.tokenName}</div>
                 <div className="sm-text">{crowdsale.extraData.ticker}</div>
-                <div className="sm-text">{crowdsale.extraData.startTime.split('T').join(' ')}</div>
+                <div className="sm-text">{crowdsale.extraData.creationDate.split('T').join(' ')}</div>
               </div>
             ))}
           </div>
