@@ -61,16 +61,24 @@ export const TRUNC_TO_DECIMALS = {
 
 export const GAS_PRICE = {
   SLOW: {
+    ID: 'slow',
     PRICE: 5000000000,
     DESCRIPTION: 'Slow and Cheap (5 Gwei)'
   },
   NORMAL: {
+    ID: 'normal',
     PRICE: 10000000000,
     DESCRIPTION: 'Normal (10 Gwei)'
   },
   FAST: {
+    ID: 'fast',
     PRICE: 15000000000,
     DESCRIPTION: 'Fast and Expensive (15 Gwei)'
+  },
+  CUSTOM: {
+    ID: 'custom',
+    PRICE: 0,
+    DESCRIPTION: 'Custom'
   }
 }
 export const UNKNOWN = "Unknown"

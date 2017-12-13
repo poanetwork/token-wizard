@@ -47,6 +47,10 @@ export class stepThree extends React.Component {
     tierStore.setTierProperty("Tier 1", "tier", 0);
     tierStore.setTierProperty("off", "updatable", 0);
     tierStore.setTierProperty("yes", "whitelistdisabled", 0);
+
+    this.state = {
+      gasPriceSelected: GAS_PRICE.FAST.ID,
+    }
   }
 
   showErrorMessages = parent => {
@@ -166,9 +170,22 @@ export class stepThree extends React.Component {
     tierStore.setTierProperty(defaultCompanyEndDate(tierStore.tiers[0].startTime), "endTime", 0);
   }
 
+  setGasPrice({ ID, PRICE }) {
+    this.setState({
+      gasPriceSelected: ID
+    })
+
+    // Don't modify the price when choosing custom
+    if (ID !== GAS_PRICE.CUSTOM.ID) {
+      this.props.generalStore.setGasPrice(PRICE)
+    }
+  }
+
   renderGasPriceInput() {
-    const generalStore = this.props.generalStore;
-    const gasPrice = generalStore.gasPrice;
+    const { generalStore } = this.props
+
+    const gweiToWei = x => x * 1000000000
+    const weiToGwei = x => x / 1000000000
 
     return (
       <div className="right">
@@ -177,9 +194,9 @@ export class stepThree extends React.Component {
           <label className="radio-inline">
             <input
               type="radio"
-              checked={gasPrice === GAS_PRICE.SLOW.PRICE}
+              checked={this.state.gasPriceSelected === GAS_PRICE.SLOW.ID}
               name="gas-price-option-slow"
-              onChange={() => generalStore.setGasPrice(GAS_PRICE.SLOW.PRICE)}
+              onChange={() => this.setGasPrice(GAS_PRICE.SLOW)}
               value="slow"
             />
             <span className="title">{GAS_PRICE.SLOW.DESCRIPTION}</span>
@@ -189,9 +206,9 @@ export class stepThree extends React.Component {
           <label className="radio-inline">
             <input
               type="radio"
-              checked={gasPrice === GAS_PRICE.NORMAL.PRICE}
+              checked={this.state.gasPriceSelected === GAS_PRICE.NORMAL.ID}
               name="gas-price-option-normal"
-              onChange={() => generalStore.setGasPrice(GAS_PRICE.NORMAL.PRICE)}
+              onChange={() => this.setGasPrice(GAS_PRICE.NORMAL)}
               value="slow"
             />
             <span className="title">{GAS_PRICE.NORMAL.DESCRIPTION}</span>
@@ -201,14 +218,38 @@ export class stepThree extends React.Component {
           <label className="radio-inline">
             <input
               type="radio"
-              checked={gasPrice === GAS_PRICE.FAST.PRICE}
+              checked={this.state.gasPriceSelected === GAS_PRICE.FAST.ID}
               name="gas-price-option-fast"
-              onChange={() => generalStore.setGasPrice(GAS_PRICE.FAST.PRICE)}
+              onChange={() => this.setGasPrice(GAS_PRICE.FAST)}
               value="slow"
             />
             <span className="title">{GAS_PRICE.FAST.DESCRIPTION}</span>
           </label>
         </div>
+        <div className="radios-inline">
+          <label className="radio-inline">
+            <input
+              type="radio"
+              checked={this.state.gasPriceSelected === GAS_PRICE.CUSTOM.ID}
+              name="gas-price-option-fast"
+              onChange={() => this.setGasPrice(GAS_PRICE.CUSTOM)}
+              value="slow"
+            />
+            <span className="title">{GAS_PRICE.CUSTOM.DESCRIPTION}</span>
+          </label>
+        </div>
+
+        {
+          this.state.gasPriceSelected === GAS_PRICE.CUSTOM.ID ?
+            <input
+              className="input"
+              style={{ display: 'inline-block' }}
+              type="number"
+              value={weiToGwei(generalStore.gasPrice)}
+              onChange={(e) => generalStore.setGasPrice(gweiToWei(e.target.value))}
+            /> :
+            null
+        }
 
         <p className="description">Slow is cheap, fast is expensive</p>
       </div>
