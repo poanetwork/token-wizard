@@ -296,9 +296,10 @@ export function  setMintAgentRecursive (web3, abi, addr, crowdsaleAddrs, gasLimi
 }
 
 export function updateJoinedCrowdsalesRecursive (web3, abi, addrs, gasLimit) {
-  return addrs.reduce((promise, addr) => {
-    return promise.then(() => updateJoinedCrowdsales(web3, abi, addr, addrs, gasLimit))
-  }, Promise.resolve())
+  return addrs.reduce((promise, addr) =>
+    promise.then(() => updateJoinedCrowdsales(web3, abi, addr, addrs, gasLimit)),
+    Promise.resolve()
+  )
 }
 
 export function addWhiteListRecursive (web3, tierStore, token, abi, crowdsaleAddrs) {

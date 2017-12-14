@@ -1,6 +1,9 @@
 import { observable, action, computed } from 'mobx';
 import { VALIDATION_TYPES, defaultTiers } from '../utils/constants'
-import { validateName, validateTime, validateSupply, validateRate, validateAddress, validateLaterTime, validateLaterOrEqualTime } from '../utils/utils'
+import {
+  validateName, validateTime, validateSupply, validateRate, validateAddress, validateLaterTime,
+  validateLaterOrEqualTime, validateTier
+} from '../utils/utils'
 const { VALID, INVALID } = VALIDATION_TYPES
 class TierStore {
 
@@ -47,10 +50,17 @@ class TierStore {
     this.tiers = []
   }
 
+  @action emptyTierValidationsList = () => {
+    this.validTiers = []
+  }
+
   @action validateTiers = (property, index) => {
     switch (property){
       case 'name':
         this.validTiers[index][property] = validateName(this.tiers[index][property]) ? VALID : INVALID
+        return
+      case 'tier':
+        this.validTiers[index][property] = validateTier(this.tiers[index][property]) ? VALID : INVALID
         return
       case 'walletAddress':
         this.validTiers[index][property] = validateAddress(this.tiers[index][property]) ? VALID : INVALID

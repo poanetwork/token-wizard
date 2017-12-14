@@ -14,38 +14,40 @@ class CrowdsaleStore {
           walletAddress: '0x005364854d51a0a12cb3cb9a402ef8b30702a565',
           tiers: [
             {
-              tier: 'Tier 1',
+              updatable: true,
+              name: 'Tier 1',
               startTime: '2017-10-28T12:00',
               endTime: '2017-11-28T12:00',
               rate: 100,
               supply: 500000,
               whitelist: [
                 {
-                  address: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+                  addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
                   min: 10000,
                   max: 1000000
                 },
                 {
-                  address: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
+                  addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
                   min: 8000,
                   max: 4000000
                 }
               ]
             },
             {
-              tier: 'Tier 2',
+              updatable: false,
+              name: 'Tier 2',
               startTime: '2017-12-23T10:00',
               endTime: '2018-01-23T10:00',
               rate: 120,
               supply: 100000,
               whitelist: [
                 {
-                  address: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+                  addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
                   min: 6000,
                   max: 800000
                 },
                 {
-                  address: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
+                  addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
                   min: 8000,
                   max: 2000000
                 }
@@ -63,38 +65,40 @@ class CrowdsaleStore {
           walletAddress: '0x005364854d51a0a12cb3cb9a402ef8b30702a565',
           tiers: [
             {
-              tier: 'Tier 1',
+              updatable: true,
+              name: 'Tier 1',
               startTime: '2017-10-28T12:00',
               endTime: '2017-11-28T12:00',
               rate: 100,
               supply: 500000,
               whitelist: [
                 {
-                  address: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+                  addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
                   min: 10000,
                   max: 1000000
                 },
                 {
-                  address: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
+                  addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
                   min: 8000,
                   max: 4000000
                 }
               ]
             },
             {
-              tier: 'Tier 2',
+              updatable: false,
+              name: 'Tier 2',
               startTime: '2017-12-23T10:00',
               endTime: '2018-01-23T10:00',
               rate: 120,
               supply: 100000,
               whitelist: [
                 {
-                  address: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+                  addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
                   min: 6000,
                   max: 800000
                 },
                 {
-                  address: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
+                  addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
                   min: 8000,
                   max: 2000000
                 }
@@ -112,38 +116,40 @@ class CrowdsaleStore {
           walletAddress: '0x005364854d51a0a12cb3cb9a402ef8b30702a565',
           tiers: [
             {
-              tier: 'Tier 1',
+              updatable: true,
+              name: 'Tier 1',
               startTime: '2017-10-28T12:00',
               endTime: '2017-11-28T12:00',
               rate: 100,
               supply: 500000,
               whitelist: [
                 {
-                  address: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+                  addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
                   min: 10000,
                   max: 1000000
                 },
                 {
-                  address: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
+                  addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
                   min: 8000,
                   max: 4000000
                 }
               ]
             },
             {
-              tier: 'Tier 2',
+              updatable: false,
+              name: 'Tier 2',
               startTime: '2017-12-23T10:00',
               endTime: '2018-01-23T10:00',
               rate: 120,
               supply: 100000,
               whitelist: [
                 {
-                  address: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+                  addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
                   min: 6000,
                   max: 800000
                 },
                 {
-                  address: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
+                  addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
                   min: 8000,
                   max: 2000000
                 }
@@ -161,38 +167,40 @@ class CrowdsaleStore {
           walletAddress: '0x005364854d51a0a12cb3cb9a402ef8b30702a565',
           tiers: [
             {
-              tier: 'Tier 1',
+              updatable: true,
+              name: 'Tier 1',
               startTime: '2017-10-28T12:00',
               endTime: '2017-11-28T12:00',
               rate: 100,
               supply: 500000,
               whitelist: [
                 {
-                  address: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+                  addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
                   min: 10000,
                   max: 1000000
                 },
                 {
-                  address: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
+                  addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
                   min: 8000,
                   max: 4000000
                 }
               ]
             },
             {
-              tier: 'Tier 2',
+              updatable: false,
+              name: 'Tier 2',
               startTime: '2017-12-23T10:00',
               endTime: '2018-01-23T10:00',
               rate: 120,
               supply: 100000,
               whitelist: [
                 {
-                  address: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+                  addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
                   min: 6000,
                   max: 800000
                 },
                 {
-                  address: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
+                  addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
                   min: 8000,
                   max: 2000000
                 }
@@ -210,38 +218,40 @@ class CrowdsaleStore {
           walletAddress: '0x005364854d51a0a12cb3cb9a402ef8b30702a565',
           tiers: [
             {
-              tier: 'Tier 1',
+              updatable: true,
+              name: 'Tier 1',
               startTime: '2017-10-28T12:00',
               endTime: '2017-11-28T12:00',
               rate: 100,
               supply: 500000,
               whitelist: [
                 {
-                  address: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+                  addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
                   min: 10000,
                   max: 1000000
                 },
                 {
-                  address: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
+                  addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
                   min: 8000,
                   max: 4000000
                 }
               ]
             },
             {
-              tier: 'Tier 2',
+              updatable: false,
+              name: 'Tier 2',
               startTime: '2017-12-23T10:00',
               endTime: '2018-01-23T10:00',
               rate: 120,
               supply: 100000,
               whitelist: [
                 {
-                  address: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+                  addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
                   min: 6000,
                   max: 800000
                 },
                 {
-                  address: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
+                  addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
                   min: 8000,
                   max: 2000000
                 }
@@ -259,38 +269,40 @@ class CrowdsaleStore {
           walletAddress: '0x005364854d51a0a12cb3cb9a402ef8b30702a565',
           tiers: [
             {
-              tier: 'Tier 1',
+              updatable: true,
+              name: 'Tier 1',
               startTime: '2017-10-28T12:00',
               endTime: '2017-11-28T12:00',
               rate: 100,
               supply: 500000,
               whitelist: [
                 {
-                  address: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+                  addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
                   min: 10000,
                   max: 1000000
                 },
                 {
-                  address: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
+                  addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
                   min: 8000,
                   max: 4000000
                 }
               ]
             },
             {
-              tier: 'Tier 2',
+              updatable: false,
+              name: 'Tier 2',
               startTime: '2017-12-23T10:00',
               endTime: '2018-01-23T10:00',
               rate: 120,
               supply: 100000,
               whitelist: [
                 {
-                  address: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+                  addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
                   min: 6000,
                   max: 800000
                 },
                 {
-                  address: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
+                  addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
                   min: 8000,
                   max: 2000000
                 }
@@ -308,38 +320,40 @@ class CrowdsaleStore {
           walletAddress: '0x005364854d51a0a12cb3cb9a402ef8b30702a565',
           tiers: [
             {
-              tier: 'Tier 1',
+              updatable: true,
+              name: 'Tier 1',
               startTime: '2017-10-28T12:00',
               endTime: '2017-11-28T12:00',
               rate: 100,
               supply: 500000,
               whitelist: [
                 {
-                  address: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+                  addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
                   min: 10000,
                   max: 1000000
                 },
                 {
-                  address: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
+                  addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
                   min: 8000,
                   max: 4000000
                 }
               ]
             },
             {
-              tier: 'Tier 2',
+              updatable: false,
+              name: 'Tier 2',
               startTime: '2017-12-23T10:00',
               endTime: '2018-01-23T10:00',
               rate: 120,
               supply: 100000,
               whitelist: [
                 {
-                  address: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+                  addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
                   min: 6000,
                   max: 800000
                 },
                 {
-                  address: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
+                  addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
                   min: 8000,
                   max: 2000000
                 }
@@ -355,40 +369,43 @@ class CrowdsaleStore {
           tokenName: 'MyToken',
           ticker: 'MTK',
           walletAddress: '0x005364854d51a0a12cb3cb9a402ef8b30702a565',
+          isWhitelisted: true,
           tiers: [
             {
-              tier: 'Tier 1',
+              updatable: true,
+              name: 'Tier 1',
               startTime: '2017-10-28T12:00',
               endTime: '2017-11-28T12:00',
               rate: 100,
               supply: 500000,
               whitelist: [
                 {
-                  address: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+                  addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
                   min: 10000,
                   max: 1000000
                 },
                 {
-                  address: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
+                  addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
                   min: 8000,
                   max: 4000000
                 }
               ]
             },
             {
-              tier: 'Tier 2',
+              updatable: false,
+              name: 'Tier 2',
               startTime: '2017-12-23T10:00',
               endTime: '2018-01-23T10:00',
               rate: 120,
               supply: 100000,
               whitelist: [
                 {
-                  address: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+                  addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
                   min: 6000,
                   max: 800000
                 },
                 {
-                  address: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
+                  addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
                   min: 8000,
                   max: 2000000
                 }
