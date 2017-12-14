@@ -7,8 +7,9 @@ import {
 } from '../../utils/blockchainHelpers'
 import { noContractAlert } from '../../utils/alerts'
 import { toFixed } from '../../utils/utils'
-import { GAS_PRICE, DOWNLOAD_NAME } from '../../utils/constants'
+import { DOWNLOAD_NAME } from '../../utils/constants'
 import { isObservableArray } from 'mobx'
+import { generalStore } from '../../stores'
 
 function setLastCrowdsale(web3, abi, addr, lastCrowdsale, gasLimit) {
   console.log('###setLastCrowdsale for Pricing Strategy:###')
@@ -24,7 +25,7 @@ function setLastCrowdsale(web3, abi, addr, lastCrowdsale, gasLimit) {
 
       const method = pricingStrategyContract.methods.setLastCrowdsale(lastCrowdsale).send({
         gasLimit: gasLimit,
-        gasPrice: GAS_PRICE
+        gasPrice: generalStore.gasPrice
       })
 
       return sendTXToContract(web3, method)
@@ -46,7 +47,7 @@ function setMintAgent (web3, abi, addr, acc, gasLimit) {
 
       const method = tokenContract.methods.setMintAgent(acc, true).send({
         gasLimit: gasLimit,
-        gasPrice: GAS_PRICE
+        gasPrice: generalStore.gasPrice
       })
 
       return sendTXToContract(web3, method)
@@ -130,7 +131,7 @@ function addWhiteList (round, web3, tierStore, token, abi, addr) {
       console.log('maxCaps:', maxCaps)
 
       const method = crowdsaleContract.methods.setEarlyParicipantsWhitelist(addrs, statuses, minCaps, maxCaps).send({
-        gasPrice: GAS_PRICE
+        gasPrice: generalStore.gasPrice
       })
 
       return sendTXToContract(web3, method)
@@ -153,7 +154,7 @@ function updateJoinedCrowdsales(web3, abi, addr, joinedContractAddresses, gasLim
 
       let method = crowdsaleContract.methods.updateJoinedCrowdsalesMultiple(joinedContractAddresses).send({
         gasLimit: gasLimit,
-        gasPrice: GAS_PRICE
+        gasPrice: generalStore.gasPrice
       })
 
       return sendTXToContract(web3, method)
@@ -174,7 +175,7 @@ function setFinalizeAgent (web3, abi, addr, finalizeAgentAddr, gasLimit) {
 
       const method = crowdsaleContract.methods.setFinalizeAgent(finalizeAgentAddr).send({
         gasLimit: gasLimit,
-        gasPrice: GAS_PRICE
+        gasPrice: generalStore.gasPrice
       })
 
       return sendTXToContract(web3, method)
@@ -195,7 +196,7 @@ function setReleaseAgent (web3, abi, addr, finalizeAgentAddr, gasLimit) {
 
       const method = tokenContract.methods.setReleaseAgent(finalizeAgentAddr).send({
         gasLimit: gasLimit,
-        gasPrice: GAS_PRICE
+        gasPrice: generalStore.gasPrice
       })
 
       return sendTXToContract(web3, method)
@@ -256,7 +257,7 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, reservedTo
 
       let method = tokenContract.methods
         .setReservedTokensListMultiple(addrs, inTokens, inPercentageUnit, inPercentageDecimals)
-        .send({gasPrice: GAS_PRICE})
+        .send({gasPrice: generalStore.gasPrice})
 
       return sendTXToContract(web3, method)
     })
@@ -276,7 +277,7 @@ export function transferOwnership (web3, abi, addr, finalizeAgentAddr, gasLimit)
 
       const method = tokenContract.methods.transferOwnership(finalizeAgentAddr).send({
         gasLimit: gasLimit,
-        gasPrice: GAS_PRICE
+        gasPrice: generalStore.gasPrice
       })
 
       return sendTXToContract(web3, method)

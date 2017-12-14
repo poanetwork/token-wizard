@@ -59,7 +59,28 @@ export const TRUNC_TO_DECIMALS = {
   DECIMALS18: -18
 }
 
-export const GAS_PRICE = 5000000000
+export const GAS_PRICE = {
+  SLOW: {
+    ID: 'slow',
+    PRICE: 5000000000,
+    DESCRIPTION: 'Slow and Cheap (5 Gwei)'
+  },
+  NORMAL: {
+    ID: 'normal',
+    PRICE: 10000000000,
+    DESCRIPTION: 'Normal (10 Gwei)'
+  },
+  FAST: {
+    ID: 'fast',
+    PRICE: 15000000000,
+    DESCRIPTION: 'Fast and Expensive (15 Gwei)'
+  },
+  CUSTOM: {
+    ID: 'custom',
+    PRICE: 0,
+    DESCRIPTION: 'Custom'
+  }
+}
 export const UNKNOWN = "Unknown"
 export const CHAINS = {
   UNKNOWN: 'Unknown',
@@ -111,7 +132,8 @@ export const TEXT_FIELDS = {
   VALUE: 'Value',
   MAX_CAP: 'Max cap',
   ALLOWMODIFYING: 'Allow modifying',
-  DISABLEWHITELISTING: 'Disable whitelisting'
+  DISABLEWHITELISTING: 'Disable whitelisting',
+  GAS_PRICE: 'Gas Price'
 }
 
 export const VALIDATION_TYPES = {

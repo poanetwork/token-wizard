@@ -87,4 +87,8 @@
   &:focus {
     border-color: #08b3f2;
   }
+
+  &:disabled {
+    background: #f2f2f2; 
+  }
 }
