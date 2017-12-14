@@ -27,8 +27,6 @@ class TierStore {
 
   @action addTier = (tier) => {
     this.tiers.push(tier)
-    console.log('tier', tier)
-    console.log('this.tiers', this.tiers)
   }
 
   @action addTierValidations = (validations) => {
@@ -36,11 +34,8 @@ class TierStore {
   }
 
   @action setTierProperty = (value, property, index) => {
-    console.log('value, property, index', value, property, index)
     let newTier = {...this.tiers[index]}
     newTier[property] = value
-    console.log('newTier[property]', newTier[property])
-    console.log('this.tiers[index]', this.tiers[index])
     this.tiers[index] = newTier;
   }
 
