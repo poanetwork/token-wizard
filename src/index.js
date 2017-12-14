@@ -7,7 +7,6 @@ import { Provider } from 'mobx-react';
 import * as stores from './stores';
 useStrict(true);
 
-
 ReactDOM.render(
   <Provider { ...stores }>
     <App />

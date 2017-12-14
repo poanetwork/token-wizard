@@ -101,6 +101,7 @@ const { PUBLISH } = NAVIGATION_STEPS
         .then(() => this.deployToken())
         .then(() => this.deployPricingStrategy())
         .then(() => this.deployCrowdsale())
+        .then(() => this.registerCrowdsaleAddress(web3))
         .then(() => this.calculateABIEncodedArgumentsForFinalizeAgentContractDeployment())
         .then(() => this.deployFinalizeAgent())
         .catch(error => this.handleError(error))
@@ -374,6 +375,26 @@ const { PUBLISH } = NAVIGATION_STEPS
             })
 
         }, Promise.resolve())
+      })
+  }
+
+  registerCrowdsaleAddress = (web3) => {
+    const toJS = x => JSON.parse(JSON.stringify(x))
+
+    const registryAbi = this.props.contractStore.registry.abi
+    const registryAddress = this.props.contractStore.registry.addr
+    const registry = new web3.eth.Contract(toJS(registryAbi), registryAddress)
+
+    return Promise.resolve()
+      .then(() => web3.eth.getAccounts())
+      .then((accounts) => accounts[0])
+      .then((account) => {
+        const crowdsaleAddress = this.props.contractStore.crowdsale.addr[0]
+        return registry.methods
+          .add('crowdsale', crowdsaleAddress, '{}')
+          .send({
+            from: account
+          })
       })
   }
 

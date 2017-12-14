@@ -25,6 +25,11 @@ export class stepOne extends React.Component {
     this.getCrowdsaleAsset("CrowdsaleWhiteListWithCapPricingStrategy", "pricingStrategy")
     this.getCrowdsaleAsset("FinalizeAgent", "finalizeAgent")
     this.getCrowdsaleAsset("NullFinalizeAgent", "nullFinalizeAgent")
+    this.getCrowdsaleAsset("Registry", "registry")
+      .then(() => {
+        const contractStore = this.props.contractStore
+        this.props.contractStore.setContractProperty('registry', 'addr', process.env['REACT_APP_REGISTRY_CONTRACT_ADDRESS'])
+      })
   }
 
   getCrowdsaleAsset(contractName, stateProp) {
@@ -32,7 +37,7 @@ export class stepOne extends React.Component {
     const bin = setFlatFileContentToState(`./contracts/${contractName}_flat.bin`)
     const abi = setFlatFileContentToState(`./contracts/${contractName}_flat.abi`)
 
-    Promise.all([src, bin, abi])
+    return Promise.all([src, bin, abi])
       .then(result => this.addContractsToState(...result, stateProp))
       .catch(console.error)
   }
