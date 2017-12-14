@@ -19,7 +19,7 @@ import {
 } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
 import { ICOConfig } from '../Common/config'
-import { CONTRACT_TYPES, GAS_PRICE, INVESTMENT_OPTIONS, TOAST } from '../../utils/constants'
+import { CONTRACT_TYPES, INVESTMENT_OPTIONS, TOAST } from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
 import QRPaymentProcess from './QRPaymentProcess'
 
@@ -181,7 +181,7 @@ export class Invest extends React.Component {
   }
 
   investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, web3, accounts) {
-    const { contractStore, tokenStore, crowdsalePageStore, investStore } = this.props
+    const { contractStore, tokenStore, crowdsalePageStore, investStore, generalStore } = this.props
 
     let nextTiers = []
     for (let i = tierNum + 1; i < contractStore.crowdsale.addr.length; i++) {
@@ -205,7 +205,7 @@ export class Invest extends React.Component {
     const opts = {
       from: accounts[0],
       value: weiToSend,
-      gasPrice: GAS_PRICE
+      gasPrice: generalStore.gasPrice
     }
     console.log(opts)
 
