@@ -26,10 +26,6 @@ export class stepOne extends React.Component {
     this.getCrowdsaleAsset("FinalizeAgent", "finalizeAgent")
     this.getCrowdsaleAsset("NullFinalizeAgent", "nullFinalizeAgent")
     this.getCrowdsaleAsset("Registry", "registry")
-      .then(() => {
-        const contractStore = this.props.contractStore
-        this.props.contractStore.setContractProperty('registry', 'addr', process.env['REACT_APP_REGISTRY_CONTRACT_ADDRESS'])
-      })
   }
 
   getCrowdsaleAsset(contractName, stateProp) {

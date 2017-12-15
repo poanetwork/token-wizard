@@ -288,5 +288,33 @@ export function attachToContract(web3, abi, addr) {
   })
 }
 
+export function registerCrowdsaleAddress(web3, contractStore) {
+  const toJS = x => JSON.parse(JSON.stringify(x))
+
+  const registryAbi = contractStore.registry.abi
+  const crowdsaleAddress = contractStore.crowdsale.addr[0]
+
+  const whenRegistryAddress = web3.eth.net.getId()
+    .then((networkId) => {
+      const registryAddressMap = JSON.parse(process.env['REACT_APP_REGISTRY_ADDRESS'] || '{}')
+      const registryAddress = registryAddressMap[networkId]
+
+      return registryAddress
+    })
+
+  const whenAccount = web3.eth.getAccounts()
+    .then((accounts) => accounts[0])
+
+  return Promise.all([whenRegistryAddress, whenAccount])
+    .then(([registryAddress, account]) => {
+      const registry = new web3.eth.Contract(toJS(registryAbi), registryAddress)
+      return registry.methods
+        .add('crowdsale', crowdsaleAddress, '{}')
+        .send({
+          from: account
+        })
+    })
+}
+
 // export web3 object instance
 export default web3;
