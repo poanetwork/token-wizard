@@ -7,6 +7,7 @@
   },
   "devDependencies": {
     "ethereumjs-testrpc": "^4.1.3",
+    "ganache-cli": "^6.0.3",
     "gulp": "^3.9.1",
     "gulp-add-src": "^0.2.0",
     "gulp-autoprefixer": "^3.1.1",
@@ -134,7 +135,8 @@
     "compileCrowdsalePricingStrategyContractWin": "node ./scripts/compileContract.js %npm_package_config_contract_folder%/CrowdsaleWhiteListWithCapPricingStrategy_flat.sol %npm_package_config_contract_folder% %npm_package_config_extension_path% false %npm_package_config_crowdsale_pricing_strategy_contract_name% CrowdsaleWhiteListWithCapPricingStrategy",
     "compileCrowdsaleNullFinalizeAgentContractWin": "node ./scripts/compileContract.js %npm_package_config_contract_folder%/NullFinalizeAgent_flat.sol %npm_package_config_contract_folder% %npm_package_config_extension_path% false %npm_package_config_null_finalize_agent_contract_name% NullFinalizeAgent",
     "compileCrowdsaleFinalizeAgentContractWin": "node ./scripts/compileContract.js %npm_package_config_contract_folder%/FinalizeAgent_flat.sol %npm_package_config_contract_folder% %npm_package_config_extension_path% false %npm_package_config_finalize_agent_contract_name% FinalizeAgent",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "ganache": "ganache-cli -d -i 12648430"
   },
   "jest": {
     "collectCoverageFrom": [
