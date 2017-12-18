@@ -309,7 +309,7 @@ export function registerCrowdsaleAddress(web3, contractStore) {
     .then(([registryAddress, account]) => {
       const registry = new web3.eth.Contract(toJS(registryAbi), registryAddress)
       return registry.methods
-        .add('crowdsale', crowdsaleAddress, '{}')
+        .add(crowdsaleAddress)
         .send({
           from: account
         })
