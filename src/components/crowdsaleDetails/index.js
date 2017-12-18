@@ -1,17 +1,26 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
 import { Link } from 'react-router-dom'
-import { TEXT_FIELDS, VALIDATION_MESSAGES, VALIDATION_TYPES } from '../../utils/constants'
+import { CONTRACT_TYPES, TEXT_FIELDS, TOAST, VALIDATION_MESSAGES, VALIDATION_TYPES } from '../../utils/constants'
 import { InputField } from '../Common/InputField'
 import '../../assets/stylesheets/application.css'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
-import { warningOnFinalizeCrowdsale } from '../../utils/alerts'
-import { getNetworkVersion } from '../../utils/blockchainHelpers'
+import { invalidCrowdsaleAddrAlert, warningOnFinalizeCrowdsale } from '../../utils/alerts'
+import { checkNetWorkByID, getNetworkVersion, sendTXToContract } from '../../utils/blockchainHelpers'
+import { getWhiteListWithCapCrowdsaleAssets, toast } from '../../utils/utils'
+import {
+  findCurrentContractRecursively,
+  getAccumulativeCrowdsaleData,
+  getCrowdsaleData,
+  getCurrentRate,
+  getJoinedTiers
+} from '../crowdsale/utils'
+import { Loader } from '../Common/Loader'
 
 const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME } = TEXT_FIELDS
-const { VALID, EMPTY, INVALID } = VALIDATION_TYPES
+const { VALID } = VALIDATION_TYPES
 
-@inject('crowdsaleStore', 'web3Store', 'tierStore')
+@inject('crowdsaleStore', 'web3Store', 'tierStore', 'contractStore', 'crowdsalePageStore', 'generalStore')
 @observer
 export class crowdsaleDetails extends Component {
   constructor (props) {
@@ -19,6 +28,7 @@ export class crowdsaleDetails extends Component {
     window.scrollTo(0, 0)
     this.state = {
       crowdsale: undefined,
+      finalized: false,
       formPristine: true,
       networkID: null,
       loading: true
@@ -26,18 +36,19 @@ export class crowdsaleDetails extends Component {
   }
 
   componentWillMount () {
-    const { crowdsaleStore, web3Store, tierStore, match } = this.props
+    const { crowdsaleStore, web3Store, tierStore, contractStore, match } = this.props
+    const { web3 } = web3Store
     const crowdsale = crowdsaleStore.crowdsales.find(crowdsale => crowdsale.contractAddress === match.params.addr)
     const { extraData } = crowdsale
 
     this.setState({
-      crowdsale,
-      loading: false
+      crowdsale
     })
 
     extraData.tiers.forEach((tier, crowdsaleNum) => {
       const whitelistElements = tier.whitelist.map((item, whitelistNum) => {
         return {
+          alreadyDeployed: true,
           ...item,
           whitelistNum,
           crowdsaleNum
@@ -72,18 +83,109 @@ export class crowdsaleDetails extends Component {
       tierStore.addTierValidations(newTierValidations)
     })
 
-    getNetworkVersion(web3Store.web3).then(networkID => this.setState({ networkID }))
+    // networkID
+    getNetworkVersion(web3).then(networkID => {
+      checkNetWorkByID(web3, networkID)
+      this.setState({ networkID })
+    })
+
+    // contract
+    const contractType = CONTRACT_TYPES.whitelistwithcap
+    contractStore.setContractType(contractType)
+    getWhiteListWithCapCrowdsaleAssets()
+      .then(this.extractContractsData)
+  }
+
+  extractContractsData = () => {
+    const { contractStore, web3Store } = this.props
+    const { contractAddress } = this.state.crowdsale
+    const { web3 } = web3Store
+
+    if (!web3.utils.isAddress(contractAddress)) {
+      this.hideLoader()
+      return invalidCrowdsaleAddrAlert()
+    }
+
+    getJoinedTiers(web3, contractStore.crowdsale.abi, contractAddress, [], joinedCrowdsales => {
+      console.log('joinedCrowdsales:', joinedCrowdsales)
+
+      const crowdsaleAddrs = typeof joinedCrowdsales === 'string' ? [joinedCrowdsales] : joinedCrowdsales
+      contractStore.setContractProperty('crowdsale', 'addr', crowdsaleAddrs)
+
+      web3.eth.getAccounts().then(accounts => {
+        if (accounts.length === 0 || !contractStore.crowdsale.addr) {
+          this.hideLoader()
+          return
+        }
+
+        findCurrentContractRecursively(0, this, web3, null, crowdsaleContract => {
+          if (!crowdsaleContract) {
+            this.hideLoader()
+            return
+          }
+
+          getCrowdsaleData(web3, crowdsaleContract)
+            .then(() => getAccumulativeCrowdsaleData.call(this, web3, () => {}))
+            .catch(console.log)
+            .then(() => {
+              crowdsaleContract.methods.finalized().call((err, isFinalized) => {
+                this.setState({ finalized: isFinalized })
+                this.hideLoader()
+              })
+            })
+        })
+      })
+    })
+  }
+
+  hideLoader = () => {
+    this.setState({ loading: false })
+  }
+
+  isLastContract = (crowdsaleContract) => {
+    const { contractStore } = this.props
+    const crowdsalesAddresses = contractStore.crowdsale.addr
+    return crowdsalesAddresses[crowdsalesAddresses.length - 1] === crowdsaleContract._address
   }
 
   finalizeCrowdsale = () => {
-    warningOnFinalizeCrowdsale()
-      .then(result => {
-        console.log(result)
+    if (!this.state.finalized) {
+      const { web3 } = this.props.web3Store
 
-        if (result.value) {
-          // finalize
-        }
-      })
+      warningOnFinalizeCrowdsale()
+        .then(result => {
+          console.log(result)
+
+          if (result.value) {
+            findCurrentContractRecursively(0, this, web3, null, crowdsaleContract => {
+              if (!crowdsaleContract) {
+                this.hideLoader()
+                return
+              }
+
+              this.setState({ loading: true })
+
+              if (!this.isLastContract(crowdsaleContract)) {
+                this.hideLoader()
+                toast.showToaster({ type: TOAST.TYPE.ERROR, message: 'Crowdsale is still active' })
+
+              } else {
+                getCurrentRate(web3, crowdsaleContract)
+                  .then(() => sendTXToContract(web3, crowdsaleContract.methods.finalize().send({
+                    gasLimit: 650000,
+                    gasPrice: this.props.generalStore.gasPrice
+                  })))
+                  .catch(err => toast.showToaster({
+                    type: TOAST.TYPE.ERROR,
+                    message: TOAST.MESSAGE.TRANSACTION_FAILED
+                  }))
+                  .then(() => this.hideLoader())
+              }
+            })
+
+          }
+        })
+    }
   }
 
   saveCrowdsale = e => {
@@ -114,17 +216,28 @@ export class crowdsaleDetails extends Component {
       this.setState({ formPristine: false })
   }
 
-  renderWhitelistInputBlock = (whitelist, index) => {
+  renderWhitelistInputBlock = (tier, index) => {
     return (
       <div onClick={this.clickedWhiteListInputBlock}>
         <div className="section-title">
           <p className="title">Whitelist</p>
         </div>
-        <WhitelistInputBlock
-          key={index.toString()}
-          num={index}
-          onChange={(e, contract, num, prop) => this.changeState(e, contract, num, prop)}
-        />
+        {tier.updatable
+          ? <WhitelistInputBlock
+            key={index.toString()}
+            num={index}
+            onChange={(e, contract, num, prop) => this.changeState(e, contract, num, prop)}
+          />
+          : tier.whitelist.map(item => (
+            <div className={'white-list-item-container'} key={item.addr}>
+              <div className="white-list-item-container-inner">
+                <span className="white-list-item white-list-item-left">{item.addr}</span>
+                <span className="white-list-item white-list-item-middle">{item.min}</span>
+                <span className="white-list-item white-list-item-right">{item.max}</span>
+              </div>
+            </div>
+          ))
+        }
       </div>
     )
   }
@@ -166,7 +279,7 @@ export class crowdsaleDetails extends Component {
       padding: '0 15px'
     }
 
-    const { crowdsale, formPristine, networkID } = this.state
+    const { crowdsale, finalized, formPristine, networkID } = this.state
 
     const aboutBlock = (
       <div className="about-step">
@@ -190,7 +303,7 @@ export class crowdsaleDetails extends Component {
               You can make it only after the end of the last tier. After finalization, it's not possible to update
               tiers, buy tokens. All tokens will be movable, reserved tokens will be issued.</p>
             <Link to='#' onClick={() => this.finalizeCrowdsale()}>
-              <span className="button button_fill">Finalize Crowdsale</span>
+              <span className={`button button_${finalized ? 'disabled' : 'fill'}`}>Finalize Crowdsale</span>
             </Link>
           </div>
         </div>
@@ -270,7 +383,7 @@ export class crowdsaleDetails extends Component {
                   />
                 </div>
               </div>
-              {this.renderWhitelistInputBlock(tier.whitelist, index)}
+              {this.renderWhitelistInputBlock(tier, index)}
             </div>
           </div>
         ))}
@@ -281,6 +394,7 @@ export class crowdsaleDetails extends Component {
             </Link>
           </div>
         </div>
+        <Loader show={this.state.loading}/>
       </section>
     )
   }
