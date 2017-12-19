@@ -6,7 +6,7 @@ class CrowdsaleStore {
   constructor (crowdsales = []) {
     this.crowdsales = crowdsales.concat([
       {
-        contractAddress: '0xb592244aa6477eBDDc14475aaeF921cdDcC0170f',
+        contractAddress: '0xFfec8Cd7CDBfeD2A94Ee2CA84698F6cd3CaB8391',
         extraData: {
           creationDate: '2017-09-28T17:05',
           tokenName: 'MyToken',

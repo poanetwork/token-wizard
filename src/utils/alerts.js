@@ -113,3 +113,11 @@ export function warningOnFinalizeCrowdsale() {
     reverseButtons: true
   })
 }
+
+export function successfulFinalizeAlert() {
+  sweetAlert2({
+    title: "Success",
+    html: "Congrats! You've successfully finalized the Crowdsale!",
+    type: "success"
+  })
+}

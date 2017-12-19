@@ -365,7 +365,8 @@ export const TOAST = {
   MESSAGE: {
     TRANSACTION_FAILED: 'Transaction has failed, please retry',
     CONTRACT_DOWNLOAD_FAILED: 'Contract Download failed',
-    CONTRACT_DOWNLOAD_SUCCESS: 'A file with contracts and metadata downloaded on your computer'
+    CONTRACT_DOWNLOAD_SUCCESS: 'A file with contracts and metadata downloaded on your computer',
+    FINALIZE_FAIL: 'Was not able to finalize Crowdsale. Please be sure that Crowdsale has ended already'
   },
   DEFAULT_OPTIONS: {
     position: 'top right',
