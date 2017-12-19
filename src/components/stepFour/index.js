@@ -311,6 +311,7 @@ const { PUBLISH } = NAVIGATION_STEPS
     const { web3Store } = this.props
     const oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, 1 / pricingStrategy.rate)
 
+    debugger
     console.log('web3Store', web3Store.web3, web3Store.web3.utils.toWei)
 
     return [

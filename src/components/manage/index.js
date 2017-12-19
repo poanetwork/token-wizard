@@ -7,7 +7,7 @@ import '../../assets/stylesheets/application.css'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
 import { invalidCrowdsaleAddrAlert, successfulFinalizeAlert, warningOnFinalizeCrowdsale } from '../../utils/alerts'
 import { checkNetWorkByID, getNetworkVersion, sendTXToContract } from '../../utils/blockchainHelpers'
-import { getWhiteListWithCapCrowdsaleAssets, toast } from '../../utils/utils'
+import { getWhiteListWithCapCrowdsaleAssets, toast, toFixed } from '../../utils/utils'
 import {
   findCurrentContractRecursively,
   getAccumulativeCrowdsaleData,
@@ -20,7 +20,7 @@ import { Loader } from '../Common/Loader'
 const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME } = TEXT_FIELDS
 const { VALID } = VALIDATION_TYPES
 
-@inject('crowdsaleStore', 'web3Store', 'tierStore', 'contractStore', 'crowdsalePageStore', 'generalStore')
+@inject('crowdsaleStore', 'web3Store', 'tierStore', 'contractStore', 'crowdsalePageStore', 'generalStore', 'tokenStore')
 @observer
 export class Manage extends Component {
   constructor (props) {
@@ -150,13 +150,11 @@ export class Manage extends Component {
 
   finalizeCrowdsale = () => {
     if (!this.state.finalized) {
-      const { web3 } = this.props.web3Store
-
       warningOnFinalizeCrowdsale()
         .then(result => {
-          console.log(result)
-
           if (result.value) {
+            const { web3 } = this.props.web3Store
+
             findCurrentContractRecursively(0, this, web3, null, crowdsaleContract => {
               if (!crowdsaleContract) {
                 this.hideLoader()
@@ -170,19 +168,18 @@ export class Manage extends Component {
                 toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.FINALIZE_FAIL })
 
               } else {
+                const finalizeMethod = crowdsaleContract.methods.finalize().send({
+                  gasLimit: 650000,
+                  gasPrice: this.props.generalStore.gasPrice
+                })
+
                 getCurrentRate(web3, crowdsaleContract)
-                  .then(() => sendTXToContract(web3, crowdsaleContract.methods.finalize().send({
-                    gasLimit: 650000,
-                    gasPrice: this.props.generalStore.gasPrice
-                  })))
+                  .then(() => sendTXToContract(web3, finalizeMethod))
                   .then(() => {
                     successfulFinalizeAlert()
                     this.setState({ finalized: true })
                   })
-                  .catch(err => toast.showToaster({
-                    type: TOAST.TYPE.ERROR,
-                    message: TOAST.MESSAGE.FINALIZE_FAIL
-                  }))
+                  .catch(err => toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.FINALIZE_FAIL }))
                   .then(this.hideLoader)
               }
             })
@@ -205,43 +202,46 @@ export class Manage extends Component {
   }
 
   changeState = (event, parent, key, property) => {
-    if (property.indexOf('whitelist_') === 0) {
-      const { tierStore } = this.props
-      const whitelistInputProps = { ...tierStore.tiers[key].whitelistInput }
-      const prop = property.split('_')[1]
-
-      whitelistInputProps[prop] = event.target.value
-      tierStore.setTierProperty(whitelistInputProps, 'whitelistInput', key)
-    }
+    const { tierStore } = this.props
+    const whitelistInputProps = { ...tierStore.tiers[key].whitelistInput }
+    const prop = property.split('_')[1]
+    whitelistInputProps[prop] = event.target.value
+    tierStore.setTierProperty(whitelistInputProps, 'whitelistInput', key)
   }
 
   clickedWhiteListInputBlock = e => {
-    if (e.target.classList.contains('button_fill_plus'))
+    if (e.target.classList.contains('button_fill_plus')) {
       this.setState({ formPristine: false })
+    }
+  }
+
+  readOnlyWhitelistedAddresses = tier => {
+    return tier.whitelist.map(item => (
+      <div className={'white-list-item-container'} key={item.addr}>
+        <div className="white-list-item-container-inner">
+          <span className="white-list-item white-list-item-left">{item.addr}</span>
+          <span className="white-list-item white-list-item-middle">{item.min}</span>
+          <span className="white-list-item white-list-item-right">{item.max}</span>
+        </div>
+      </div>
+    ))
   }
 
   renderWhitelistInputBlock = (tier, index) => {
+    const whitelistInputBlock = (
+      <WhitelistInputBlock
+        key={index.toString()}
+        num={index}
+        onChange={(e, contract, num, prop) => this.changeState(e, contract, num, prop)}
+      />
+    )
+
     return (
       <div onClick={this.clickedWhiteListInputBlock}>
         <div className="section-title">
           <p className="title">Whitelist</p>
         </div>
-        {tier.updatable && ! this.state.finalized
-          ? <WhitelistInputBlock
-            key={index.toString()}
-            num={index}
-            onChange={(e, contract, num, prop) => this.changeState(e, contract, num, prop)}
-          />
-          : tier.whitelist.map(item => (
-            <div className={'white-list-item-container'} key={item.addr}>
-              <div className="white-list-item-container-inner">
-                <span className="white-list-item white-list-item-left">{item.addr}</span>
-                <span className="white-list-item white-list-item-middle">{item.min}</span>
-                <span className="white-list-item white-list-item-right">{item.max}</span>
-              </div>
-            </div>
-          ))
-        }
+        {tier.updatable && !this.state.finalized ? whitelistInputBlock : this.readOnlyWhitelistedAddresses(tier)}
       </div>
     )
   }
@@ -284,6 +284,21 @@ export class Manage extends Component {
     }
 
     const { crowdsale, finalized, formPristine, networkID } = this.state
+    const { crowdsalePageStore, contractStore, web3Store, tokenStore } = this.props
+    const { web3 } = web3Store
+
+    //price: tiers, standard
+    const rate = crowdsalePageStore.rate
+    const tokensPerETHStandard = !isNaN(rate) ? rate : 0
+    const tokensPerETHTiers = !isNaN(1 / rate) ? 1 / web3.utils.fromWei(toFixed(rate).toString(), 'ether') : 0
+    const tokensPerETH = (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap) ? tokensPerETHTiers : tokensPerETHStandard
+
+    //total supply: tiers, standard
+    const tokenDecimals = !isNaN(tokenStore.decimals) ? tokenStore.decimals : 0
+    const maxCapBeforeDecimals = crowdsalePageStore.maximumSellableTokens / 10 ** tokenDecimals
+    const tierCap = maxCapBeforeDecimals ? (maxCapBeforeDecimals).toString() : 0
+    const standardCrowdsaleSupply = !isNaN(crowdsalePageStore.supply) ? (crowdsalePageStore.supply).toString() : 0
+    const totalSupply = (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap) ? tierCap : standardCrowdsaleSupply
 
     const aboutBlock = (
       <div className="about-step">
@@ -296,6 +311,18 @@ export class Manage extends Component {
         >Crowdsale page</Link>
       </div>
     )
+
+    const saveButton = !finalized
+      ? (
+        <div className="steps">
+          <div className="button-container">
+            <Link to='/2' onClick={e => this.saveCrowdsale(e)}>
+              <span className={`button button_${!formPristine ? 'fill' : 'disabled'}`} style={noArrow}>Save</span>
+            </Link>
+          </div>
+        </div>
+      )
+      : null
 
     return (
       <section style={sectionContainer}>
@@ -325,7 +352,8 @@ export class Manage extends Component {
                     // valid={crowdsale.validTiers[0].tier}
                     errorMessage={VALIDATION_MESSAGES.TIER}
                     onChange={(e) => this.updateTierStore(e, 'tier', index)}
-                    description={`Name of a tier, e.g. PrePreIco, PreICO, ICO with bonus A, ICO with bonus B, etc. We simplified that and will increment a number after each tier.`}
+                    description="Name of a tier, e.g. PrePreIco, PreICO, ICO with bonus A, ICO with bonus B, etc. We
+                     simplified that and will increment a number after each tier."
                     disabled
                   />
                   <InputField
@@ -334,7 +362,8 @@ export class Manage extends Component {
                     title={WALLET_ADDRESS}
                     value={crowdsale.extraData.walletAddress}
                     onChange={(e) => this.updateTierStore(e, 'walletAddress', index)}
-                    description={`Where the money goes after investors transactions. Immediately after each transaction. We recommend to setup a multisig wallet with hardware based signers.`}
+                    description="Where the money goes after investors transactions. Immediately after each transaction.
+                     We recommend to setup a multisig wallet with hardware based signers."
                     disabled
                   />
                 </div>
@@ -347,7 +376,7 @@ export class Manage extends Component {
                     // valid={crowdsale.validTiers[0].startTime}
                     errorMessage={VALIDATION_MESSAGES.START_TIME}
                     onChange={(e) => this.updateTierStore(e, 'startTime', index)}
-                    description={`Date and time when the tier starts. Can't be in the past from the current moment.`}
+                    description="Date and time when the tier starts. Can't be in the past from the current moment."
                     disabled={!tier.updatable || finalized}
                   />
                   <InputField
@@ -358,7 +387,7 @@ export class Manage extends Component {
                     // valid={crowdsale.validTiers[0].endTime}
                     errorMessage={VALIDATION_MESSAGES.END_TIME}
                     onChange={(e) => this.updateTierStore(e, 'endTime', index)}
-                    description={`Date and time when the tier ends. Can be only in the future.`}
+                    description="Date and time when the tier ends. Can be only in the future."
                     disabled={!tier.updatable || finalized}
                   />
                 </div>
@@ -367,22 +396,23 @@ export class Manage extends Component {
                     side='left'
                     type='number'
                     title={RATE}
-                    value={tier.rate}
+                    value={tokensPerETH}
                     // valid={crowdsale.validTiers[0].rate}
                     errorMessage={VALIDATION_MESSAGES.RATE}
                     onChange={(e) => this.updateTierStore(e, 'rate', index)}
-                    description={`Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens`}
+                    description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens"
                     disabled={!tier.updatable || finalized}
                   />
                   <InputField
                     side='right'
                     type='number'
                     title={SUPPLY}
-                    value={tier.supply}
+                    value={totalSupply}
                     // valid={crowdsale.validTiers[0].supply}
                     errorMessage={VALIDATION_MESSAGES.SUPPLY}
                     onChange={(e) => this.updateTierStore(e, 'supply', index)}
-                    description={`How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers`}
+                    description="How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of
+                     all tiers"
                     disabled={!tier.updatable || finalized}
                   />
                 </div>
@@ -391,16 +421,7 @@ export class Manage extends Component {
             </div>
           </div>
         ))}
-        {finalized
-          ? null
-          : <div className="steps">
-            <div className="button-container">
-              <Link to='/2' onClick={e => this.saveCrowdsale(e)}>
-                <span className={`button button_${!formPristine ? 'fill' : 'disabled'}`} style={noArrow}>Save</span>
-              </Link>
-            </div>
-          </div>
-        }
+        {saveButton}
         <Loader show={this.state.loading}/>
       </section>
     )
