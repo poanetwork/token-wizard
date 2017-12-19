@@ -16,7 +16,7 @@ export class Home extends Component {
   }
 
   onClick = crowdsaleAddress => {
-    this.props.history.push('/crowdsaleDetails/' + crowdsaleAddress)
+    this.props.history.push('/manage/' + crowdsaleAddress)
   }
 
   renderModal = () => {
