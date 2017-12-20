@@ -194,7 +194,7 @@ export function sendTXToContract(web3, method) {
     let isMined = false
 
     method
-      .on('error', () => {debugger; reject()})
+      .on('error', reject)
       .on('transactionHash', transactionHash => {
         console.log("contract method transaction: " + transactionHash);
 
@@ -206,7 +206,6 @@ export function sendTXToContract(web3, method) {
           if (isMined) return
 
           if (receipt) {
-            debugger
             if (receipt.blockNumber) {
               console.log("Sending tx to contract is mined from polling of tx receipt");
               isMined = true
@@ -232,7 +231,6 @@ export function sendTXToContract(web3, method) {
         })
       })
       .on('receipt', receipt => {
-        debugger
         if (isMined) return
         isMined = true
 
