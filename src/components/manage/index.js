@@ -5,16 +5,11 @@ import { CONTRACT_TYPES, TEXT_FIELDS, TOAST, VALIDATION_MESSAGES, VALIDATION_TYP
 import { InputField } from '../Common/InputField'
 import '../../assets/stylesheets/application.css'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
-import { invalidCrowdsaleAddrAlert, successfulFinalizeAlert, warningOnFinalizeCrowdsale } from '../../utils/alerts'
-import { attachToContract, checkNetWorkByID, getNetworkVersion, sendTXToContract } from '../../utils/blockchainHelpers'
+import { successfulFinalizeAlert, warningOnFinalizeCrowdsale } from '../../utils/alerts'
+import { getNetworkVersion, sendTXToContract } from '../../utils/blockchainHelpers'
 import { getWhiteListWithCapCrowdsaleAssets, toast, toFixed } from '../../utils/utils'
-import {
-  findCurrentContractRecursively,
-  getAccumulativeCrowdsaleData,
-  getCrowdsaleData,
-  getCurrentRate,
-  getJoinedTiers
-} from '../crowdsale/utils'
+import { findCurrentContractRecursively, getCurrentRate, getJoinedTiers } from '../crowdsale/utils'
+import { crowdsaleData, pricingStrategyData, tokenData } from './utils'
 import { Loader } from '../Common/Loader'
 
 const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME } = TEXT_FIELDS
@@ -42,48 +37,6 @@ export class Manage extends Component {
 
     this.setState({ crowdsale })
 
-    // this.setState({
-    //   crowdsale
-    // })
-    //
-    // extraData.tiers.forEach((tier, crowdsaleNum) => {
-    //   const whitelistElements = tier.whitelist.map((item, whitelistNum) => {
-    //     return {
-    //       alreadyDeployed: true,
-    //       ...item,
-    //       whitelistNum,
-    //       crowdsaleNum
-    //     }
-    //   })
-    //   const newTier = {
-    //     ...tier,
-    //     whitelistElements,
-    //     whitelistInput: {
-    //       addr: '',
-    //       min: '',
-    //       max: ''
-    //     }
-    //   }
-    //   const newTierValidations = {
-    //     tier: VALID,
-    //     walletAddress: VALID,
-    //     rate: VALID,
-    //     supply: VALID,
-    //     startTime: VALID,
-    //     endTime: VALID,
-    //     updatable: VALID
-    //   }
-    //
-    //   if (crowdsaleNum === 0) {
-    //     newTier.isWhitelisted = extraData.isWhitelisted
-    //     tierStore.emptyList()
-    //     tierStore.emptyTierValidationsList()
-    //   }
-    //
-    //   tierStore.addTier(newTier)
-    //   tierStore.addTierValidations(newTierValidations)
-    // })
-
     // networkID
     getNetworkVersion(web3)
       .then(networkId => generalStore.setProperty('networkId', networkId))
@@ -93,62 +46,6 @@ export class Manage extends Component {
 
     getWhiteListWithCapCrowdsaleAssets()
       .then(this.extractContractsData)
-  }
-
-  promisifyMethodCall = method => {
-    return new Promise((resolve, reject) => {
-      method.call((err, result) => {
-        if (err) return reject(err)
-        resolve(result)
-      })
-    })
-  }
-
-  formatDate = timestamp => {
-    return new Date(timestamp * 1000).toJSON().split('.')[0]
-  }
-
-  crowdsaleData = crowdsaleAddress => {
-    const { contractStore, web3Store } = this.props
-    const { web3 } = web3Store
-
-    return attachToContract(web3, contractStore.crowdsale.abi, crowdsaleAddress)
-      .then(crowdsaleContract => {
-        const { methods } = crowdsaleContract
-        const whenToken = this.promisifyMethodCall(methods.token())
-        const whenMultisigWallet = this.promisifyMethodCall(methods.multisigWallet())
-        const whenStartsAt = this.promisifyMethodCall(methods.startsAt())
-        const whenEndsAt = this.promisifyMethodCall(methods.endsAt())
-        const whenIsUpdatable = this.promisifyMethodCall(methods.isUpdatable())
-        const whenMaximumSellableTokens = this.promisifyMethodCall(methods.maximumSellableTokens())
-        const whenPricingStrategy = this.promisifyMethodCall(methods.pricingStrategy())
-        const whenIsFinalized = this.promisifyMethodCall(methods.finalized())
-
-        return Promise.all([whenToken, whenMultisigWallet, whenStartsAt, whenEndsAt, whenIsUpdatable, whenMaximumSellableTokens, whenPricingStrategy, whenIsFinalized])
-      })
-  }
-
-  tokenData = tokenAddress => {
-    const { contractStore, web3Store } = this.props
-    const { web3 } = web3Store
-
-    return attachToContract(web3, contractStore.token.abi, tokenAddress)
-      .then(tokenContract => {
-        const { methods } = tokenContract
-        const whenName = this.promisifyMethodCall(methods.name())
-        const whenSymbol = this.promisifyMethodCall(methods.symbol())
-        const whenDecimals = this.promisifyMethodCall(methods.decimals())
-
-        return Promise.all([whenName, whenSymbol, whenDecimals])
-      })
-  }
-
-  pricingStrategyData = pricingStrategyAddress => {
-    const { contractStore, web3Store } = this.props
-    const { web3 } = web3Store
-
-    return attachToContract(web3, contractStore.pricingStrategy.abi, pricingStrategyAddress)
-      .then(pricingStrategyContract => this.promisifyMethodCall(pricingStrategyContract.methods.oneTokenInWei()))
   }
 
   extractContractsData = () => {
@@ -165,86 +62,73 @@ export class Manage extends Component {
           return
         }
 
-        const newTier = {
-          whitelistElements: [],
-          whitelistInput: {
-            addr: '',
-            min: '',
-            max: ''
+        const contracts = contractStore.crowdsale.addr.map((crowdsaleAddress, crowdsaleNum) => {
+          const newTier = {
+            whitelist: [],
+            whitelistElements: [],
+            whitelistInput: {
+              addr: '',
+              min: '',
+              max: ''
+            }
           }
-        }
 
-        contractStore.crowdsale.addr.reduce((promise, crowdsaleAddress, crowdsaleNum) => {
-          return promise.then(() => {
-            this.crowdsaleData(crowdsaleAddress)
-              .then(([token, walletAddress, startsAt, endsAt, updatable, maximumSellableTokens, pricingStrategy, isFinalized]) => {
-                const { maximumSellableTokens: maxSellableTokens } = crowdsaleStore
+          return crowdsaleData(crowdsaleAddress)
+            .then(([token, walletAddress, startsAt, endsAt, updatable, maximumSellableTokens, pricingStrategy, isFinalized]) => {
+              this.setState({ finalized: isFinalized })
 
-                this.setState({ finalized: isFinalized })
+              newTier.walletAddress = walletAddress
+              newTier.startTime = this.formatDate(startsAt)
+              newTier.endTime = this.formatDate(endsAt)
+              newTier.updatable = updatable
 
-                if (maxSellableTokens) {
-                  crowdsaleStore.setProperty('maximumSellableTokens', maxSellableTokens + parseInt(toFixed(maximumSellableTokens), 10))
-                } else {
-                  crowdsaleStore.setProperty('maximumSellableTokens', parseInt(toFixed(maximumSellableTokens), 10))
-                }
+              return Promise.all([pricingStrategy, maximumSellableTokens, tokenData(token)])
+            })
+            .then(([pricingStrategy, maximumSellableTokens, [tokenName, tokenSymbol, decimals]]) => {
+              tokenStore.setProperty('name', tokenName)
+              tokenStore.setProperty('ticker', tokenSymbol)
 
-                newTier.walletAddress = walletAddress
-                newTier.startTime = this.formatDate(startsAt)
-                newTier.endTime = this.formatDate(endsAt)
-                newTier.updatable = updatable
+              //total supply: tiers, standard
+              const tokenDecimals = !isNaN(decimals) ? decimals : 0
+              const maxCapBeforeDecimals = parseInt(toFixed(maximumSellableTokens), 10) / 10 ** tokenDecimals
+              const tierCap = maxCapBeforeDecimals ? maxCapBeforeDecimals.toString() : 0
+              const standardCrowdsaleSupply = !isNaN(crowdsaleStore.supply) ? (crowdsaleStore.supply).toString() : 0
 
-                return Promise.all([pricingStrategy, this.tokenData(token)])
-              })
-              .then(([pricingStrategy, [tokenName, tokenSymbol, tokenDecimals]]) => {
-                tokenStore.setProperty('name', tokenName)
-                tokenStore.setProperty('ticker', tokenSymbol)
-                tokenStore.setProperty('decimals', tokenDecimals)
+              newTier.supply = (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap) ? tierCap : standardCrowdsaleSupply
 
-                return this.pricingStrategyData(pricingStrategy)
-              })
-              .then(rate => {
-                const { maximumSellableTokens } = crowdsaleStore
+              return pricingStrategyData(pricingStrategy)
+            })
+            .then(rate => {
+              //price: tiers, standard
+              const tokensPerETHStandard = !isNaN(rate) ? rate : 0
+              const tokensPerETHTiers = !isNaN(1 / rate) ? 1 / web3.utils.fromWei(toFixed(rate).toString(), 'ether') : 0
+              const tokensPerETH = (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap) ? tokensPerETHTiers : tokensPerETHStandard
 
-                //price: tiers, standard
-                const tokensPerETHStandard = !isNaN(rate) ? rate : 0
-                const tokensPerETHTiers = !isNaN(1 / rate) ? 1 / web3.utils.fromWei(toFixed(rate).toString(), 'ether') : 0
-                const tokensPerETH = (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap) ? tokensPerETHTiers : tokensPerETHStandard
+              const newTierValidations = {
+                tier: VALID,
+                walletAddress: VALID,
+                rate: VALID,
+                supply: VALID,
+                startTime: VALID,
+                endTime: VALID,
+                updatable: VALID
+              }
 
-                //total supply: tiers, standard
-                const tokenDecimals = !isNaN(tokenStore.decimals) ? tokenStore.decimals : 0
-                const maxCapBeforeDecimals = maximumSellableTokens / 10 ** tokenDecimals
-                const tierCap = maxCapBeforeDecimals ? maxCapBeforeDecimals.toString() : 0
-                const standardCrowdsaleSupply = !isNaN(crowdsaleStore.supply) ? (crowdsaleStore.supply).toString() : 0
-                const totalSupply = (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap) ? tierCap : standardCrowdsaleSupply
+              newTier.rate = tokensPerETH
 
-                const newTierValidations = {
-                  tier: VALID,
-                  walletAddress: VALID,
-                  rate: VALID,
-                  supply: VALID,
-                  startTime: VALID,
-                  endTime: VALID,
-                  updatable: VALID
-                }
+              if (crowdsaleNum === 0) {
+                tierStore.emptyList()
+                tierStore.emptyTierValidationsList()
+              }
 
-                newTier.rate = tokensPerETH
-                newTier.supply = totalSupply
+              tierStore.addTier(newTier)
+              tierStore.addTierValidations(newTierValidations)
+            })
+        })
 
-                if (crowdsaleNum === 0) {
-                  tierStore.emptyList()
-                  tierStore.emptyTierValidationsList()
-                }
-
-                tierStore.addTier(newTier)
-                tierStore.addTierValidations(newTierValidations)
-
-              })
-          })
-        }, Promise.resolve())
+        Promise.all(contracts)
           .catch(console.log)
-          .then(() => {
-            this.hideLoader()
-          })
+          .then(this.hideLoader)
       })
     })
   }
@@ -253,7 +137,7 @@ export class Manage extends Component {
     this.setState({ loading: false })
   }
 
-  isLastContract = (crowdsaleContract) => {
+  isLastContract = crowdsaleContract => {
     const { contractStore } = this.props
     const crowdsalesAddresses = contractStore.crowdsale.addr
     return crowdsalesAddresses[crowdsalesAddresses.length - 1] === crowdsaleContract._address
@@ -400,7 +284,7 @@ export class Manage extends Component {
     const aboutBlock = (
       <div className="about-step">
         <div className="step-icons step-icons_crowdsale-setup"/>
-        <p className="title">Crowdsale {tokenStore.name} ({tokenStore.ticker}) Settings</p>
+        <p className="title">{tokenStore.name} ({tokenStore.ticker}) Settings</p>
         <p className="description" style={description}>The most important and exciting part of the crowdsale
           process. Here you can define parameters of your crowdsale campaign.</p>
         <Link to={`/crowdsale/?addr=${crowdsale}&networkID=${generalStore.networkId}`}

@@ -9,7 +9,7 @@ class CrowdsaleStore {
   constructor (crowdsales = []) {
     this.crowdsales = crowdsales.concat([
       '0x254dffcd3277C0b1660F6d42EFbB754edaBAbC2B',
-      '0x254dffcd3277C0b1660F6d42EFbB754edaBAbC2B',
+      '0xC89Ce4735882C9F0f0FE26686c53074E09B0D550',
       '0x005364854d51a0a12cb3cb9a402ef8b30702a567',
       '0x005364854d51a0a12cb3cb9a402ef8b30702a568',
       '0x005364854d51a0a12cb3cb9a402ef8b30702a569',
