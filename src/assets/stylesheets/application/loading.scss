@@ -18,19 +18,19 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 146px;
-  margin: -30px 0 0 -81.5px;
+  width: 206px;
+  margin: -30px 0 0 -111.5px;
   padding-top: 50px;
 
   &:before {
-    /*@include image-2x('../images/loading@2x.png');*/
+    @include image-2x('../images/loading@2x.png');
     content: '';
     position: absolute;
     left: 0;
     top: 0;
-    width: 146px;
+    width: 206px;
     height: 35px;
-    background-image: url(../images/loading.png);
+    background-image: url("../images/loading.png");
     background-position: 0 0;
   }
 
