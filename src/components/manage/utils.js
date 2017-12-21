@@ -111,7 +111,7 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
              isFinalized
            ]) => {
       crowdsaleStore.setSelectedProperty('finalized', isFinalized)
-      crowdsaleStore.setSelectedProperty('updatable', crowdsaleStore.selected.updatable && updatable)
+      crowdsaleStore.setSelectedProperty('updatable', crowdsaleStore.selected.updatable || updatable)
 
       newTier.walletAddress = walletAddress
       newTier.startTime = formatDate(startsAt)
@@ -139,6 +139,8 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
       return pricingStrategyData(pricingStrategyAddress)
     })
     .then(rate => {
+      let initialValues = { updatable: newTier.updatable, index: crowdsaleNum }
+
       //price: tiers, standard
       const tokensPerETHStandard = !isNaN(rate) ? rate : 0
       const tokensPerETHTiers = !isNaN(1 / rate) ? 1 / web3.utils.fromWei(toFixed(rate).toString(), 'ether') : 0
@@ -160,5 +162,15 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
         endTime: VALID,
         updatable: VALID
       })
+
+      if (initialValues.updatable) {
+        initialValues = Object.assign({
+          startTime: newTier.startTime,
+          endTime: newTier.endTime,
+          rate: newTier.rate,
+          supply: newTier.supply
+        }, initialValues)
+      }
+      crowdsaleStore.addInitialTierValues(initialValues)
     })
 }

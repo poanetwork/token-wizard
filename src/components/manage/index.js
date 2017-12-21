@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
 import { Link } from 'react-router-dom'
-import { CONTRACT_TYPES, TEXT_FIELDS, TOAST, VALIDATION_MESSAGES } from '../../utils/constants'
+import { CONTRACT_TYPES, TEXT_FIELDS, TOAST, VALIDATION_MESSAGES, VALIDATION_TYPES } from '../../utils/constants'
 import { InputField } from '../Common/InputField'
 import '../../assets/stylesheets/application.css'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
@@ -13,6 +13,7 @@ import { getTiers, processTier } from './utils'
 import { Loader } from '../Common/Loader'
 
 const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME } = TEXT_FIELDS
+const { VALID } = VALIDATION_TYPES
 
 @inject('crowdsaleStore', 'web3Store', 'tierStore', 'contractStore', 'crowdsalePageStore', 'generalStore', 'tokenStore')
 @observer
@@ -118,7 +119,17 @@ export class Manage extends Component {
     e.stopPropagation()
 
     if (!this.state.formPristine) {
+      const { crowdsaleStore, tierStore } = this.props
       console.log('continue with saving...')
+
+      const updatableTiers = crowdsaleStore.selected.initialTiersValues.slice().filter(tier => tier.updatable)
+      updatableTiers.forEach(tier => {
+        Object.keys(tier).forEach(key => {
+          if (!['index', 'updatable'].includes(key) && tierStore.tiers[tier.index][key] !== tier[key]) {
+            debugger
+          }
+        })
+      })
       return
     }
 
@@ -137,6 +148,7 @@ export class Manage extends Component {
     if (e.target.classList.contains('button_fill_plus')) {
       this.setState({ formPristine: false })
     }
+    console.log(this.props.crowdsaleStore)
   }
 
   whitelistInputBlock = index => {
@@ -192,13 +204,12 @@ export class Manage extends Component {
   }
 
   updateTierStore = (event, property, index) => {
-    const { tierStore, crowdsaleStore } = this.props
+    const { tierStore } = this.props
     const value = event.target.value
 
     tierStore.setTierProperty(value, property, index)
     tierStore.validateTiers(property, index)
 
-    crowdsaleStore.setSelectedProperty(property, value)
     if (this.state.formPristine) {
       this.setState({ formPristine: false })
     }
@@ -259,14 +270,14 @@ export class Manage extends Component {
       </div>
     }
 
-    const tierStartAndEndTime = (tier, validTier, index) => {
+    const tierStartAndEndTime = (tier, index) => {
       return <div className='input-block-container'>
         <InputField
           side='left'
           type='datetime-local'
           title={START_TIME}
           value={tier.startTime}
-          valid={validTier && validTier.startTime}
+          valid={tierStore.validTiers[index] && tierStore.validTiers[index].startTime}
           errorMessage={VALIDATION_MESSAGES.START_TIME}
           onChange={(e) => this.updateTierStore(e, 'startTime', index)}
           description="Date and time when the tier starts. Can't be in the past from the current moment."
@@ -277,7 +288,7 @@ export class Manage extends Component {
           type='datetime-local'
           title={END_TIME}
           value={tier.endTime}
-          valid={validTier && validTier.endTime}
+          valid={tierStore.validTiers[index] && tierStore.validTiers[index].endTime}
           errorMessage={VALIDATION_MESSAGES.END_TIME}
           onChange={(e) => this.updateTierStore(e, 'endTime', index)}
           description="Date and time when the tier ends. Can be only in the future."
@@ -286,14 +297,14 @@ export class Manage extends Component {
       </div>
     }
 
-    const tierRateAndSupply = (tier, validTier, index) => {
+    const tierRateAndSupply = (tier, index) => {
       return <div className='input-block-container'>
         <InputField
           side='left'
           type='number'
           title={RATE}
           value={tier.rate}
-          valid={validTier && validTier.rate}
+          valid={tierStore.validTiers[index] && tierStore.validTiers[index].rate}
           errorMessage={VALIDATION_MESSAGES.RATE}
           onChange={(e) => this.updateTierStore(e, 'rate', index)}
           description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens"
@@ -304,11 +315,10 @@ export class Manage extends Component {
           type='number'
           title={SUPPLY}
           value={tier.supply}
-          valid={validTier && validTier.supply}
+          valid={tierStore.validTiers[index] && tierStore.validTiers[index].supply}
           errorMessage={VALIDATION_MESSAGES.SUPPLY}
           onChange={(e) => this.updateTierStore(e, 'supply', index)}
-          description="How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of
-                     all tiers"
+          description="How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers"
           disabled={!tier.updatable || finalized}
         />
       </div>
@@ -325,8 +335,8 @@ export class Manage extends Component {
               {index === 0 ? aboutTier : null}
               <div className={`hidden ${tierStore.tiers[0].whitelistdisabled !== 'yes' ? 'divisor' : ''}`}>
                 {tierNameAndWallet(tier)}
-                {tierStartAndEndTime(tier, tierStore.validTiers[index], index)}
-                {tierRateAndSupply(tier, tierStore.validTiers[index], index)}
+                {tierStartAndEndTime(tier, index)}
+                {tierRateAndSupply(tier, index)}
               </div>
               {this.renderWhitelistInputBlock(tier, index)}
             </div>
