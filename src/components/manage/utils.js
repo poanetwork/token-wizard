@@ -120,7 +120,7 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
              isFinalized
            ]) => {
       crowdsaleStore.setSelectedProperty('finalized', isFinalized)
-      crowdsaleStore.setSelectedProperty('updatable', crowdsaleStore.selected.updatable && updatable)
+      crowdsaleStore.setSelectedProperty('updatable', crowdsaleStore.selected.updatable || updatable)
 
       newTier.walletAddress = walletAddress
       newTier.startTime = formatDate(startsAt)
