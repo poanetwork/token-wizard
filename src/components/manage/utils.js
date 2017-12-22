@@ -147,18 +147,25 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
 
       if (crowdsaleNum === 0) {
         tierStore.emptyList()
-        tierStore.emptyTierValidationsList()
+        tierStore.addTier(newTier)
+        tierStore.setTierProperty(newTier.tier, 'tier', crowdsaleNum)
+        tierStore.setTierProperty(newTier.walletAddress, 'walletAddress', crowdsaleNum)
+        tierStore.setTierProperty(newTier.rate, 'rate', crowdsaleNum)
+        tierStore.setTierProperty(newTier.supply, 'supply', crowdsaleNum)
+        tierStore.setTierProperty(newTier.startTime, 'startTime', crowdsaleNum)
+        tierStore.setTierProperty(newTier.endTime, 'endTime', crowdsaleNum)
+        tierStore.setTierProperty(newTier.updatable, 'updatable', crowdsaleNum)
+      } else {
+        tierStore.addTier(newTier)
+        tierStore.addTierValidations({
+          tier: VALID,
+          walletAddress: VALID,
+          rate: VALID,
+          supply: VALID,
+          startTime: VALID,
+          endTime: VALID,
+          updatable: VALID
+        })
       }
-
-      tierStore.addTier(newTier)
-      tierStore.addTierValidations({
-        tier: VALID,
-        walletAddress: VALID,
-        rate: VALID,
-        supply: VALID,
-        startTime: VALID,
-        endTime: VALID,
-        updatable: VALID
-      })
     })
 }
