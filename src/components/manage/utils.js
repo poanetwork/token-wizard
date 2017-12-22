@@ -7,7 +7,16 @@ const { VALID } = VALIDATION_TYPES
 const { whitelistwithcap: WHITELIST_WITH_CAP } = CONTRACT_TYPES
 
 const formatDate = timestamp => {
-  return new Date(timestamp * 1000).toJSON().split('.')[0]
+  const ten = i => (i < 10 ? '0' : '') + i
+  const date = new Date(timestamp * 1000)
+  const YYYY = date.getFullYear()
+  const MM = ten(date.getMonth() + 1)
+  const DD = ten(date.getDate())
+  const HH = ten(date.getHours())
+  const II = ten(date.getMinutes())
+  const SS = ten(date.getSeconds())
+
+  return YYYY + '-' + MM + '-' + DD + 'T' + HH + ':' + II + ':' + SS;
 }
 
 const crowdsaleData = crowdsaleAddress => {
