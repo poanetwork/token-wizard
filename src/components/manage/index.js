@@ -9,7 +9,7 @@ import { successfulFinalizeAlert, warningOnFinalizeCrowdsale } from '../../utils
 import { getNetworkVersion, sendTXToContract } from '../../utils/blockchainHelpers'
 import { getWhiteListWithCapCrowdsaleAssets, toast } from '../../utils/utils'
 import { findCurrentContractRecursively, getCurrentRate } from '../crowdsale/utils'
-import { getTiers, processTier } from './utils'
+import { getTiers, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
 
 const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME } = TEXT_FIELDS
@@ -123,10 +123,16 @@ export class Manage extends Component {
       console.log('continue with saving...')
 
       const updatableTiers = crowdsaleStore.selected.initialTiersValues.slice().filter(tier => tier.updatable)
+
       updatableTiers.forEach(tier => {
         Object.keys(tier).forEach(key => {
-          if (!['index', 'updatable'].includes(key) && tierStore.tiers[tier.index][key] !== tier[key]) {
-            debugger
+          const newValue = tierStore.tiers[tier.index][key]
+
+          if (!['index', 'updatable'].includes(key) && newValue !== tier[key]) {
+            updateTierAttribute(key, newValue, tier.addresses)
+              .then(value => {
+                console.log('+++---+++', value)
+              })
           }
         })
       })

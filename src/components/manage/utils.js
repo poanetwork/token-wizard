@@ -1,7 +1,7 @@
-import { attachToContract } from '../../utils/blockchainHelpers'
-import { contractStore, crowdsaleStore, tierStore, tokenStore, web3Store } from '../../stores'
-import { CONTRACT_TYPES, VALIDATION_TYPES } from '../../utils/constants'
-import { toFixed } from '../../utils/utils'
+import { attachToContract, sendTXToContract } from '../../utils/blockchainHelpers'
+import { contractStore, crowdsaleStore, generalStore, tierStore, tokenStore, web3Store } from '../../stores'
+import { CONTRACT_TYPES, TRUNC_TO_DECIMALS, VALIDATION_TYPES } from '../../utils/constants'
+import { floorToDecimals, toFixed } from '../../utils/utils'
 
 const { VALID } = VALIDATION_TYPES
 const { whitelistwithcap: WHITELIST_WITH_CAP } = CONTRACT_TYPES
@@ -16,7 +16,48 @@ const formatDate = timestamp => {
   const II = ten(date.getMinutes())
   const SS = ten(date.getSeconds())
 
-  return YYYY + '-' + MM + '-' + DD + 'T' + HH + ':' + II + ':' + SS;
+  return YYYY + '-' + MM + '-' + DD + 'T' + HH + ':' + II + ':' + SS
+}
+
+export const updateTierAttribute = (attribute, value, addresses) => {
+  const { web3 } = web3Store
+  let methods = {
+    startTime: 'setStartsAt',
+    endTime: 'setEndsAt',
+    supply: 'setMaximumSellableTokens',
+    rate: 'updateRate'
+  }
+  let abi
+  let contractAddress
+
+  if (['startTime', 'endTime', 'supply'].includes(attribute)) {
+    abi = contractStore.crowdsale.abi
+    contractAddress = addresses.crowdsaleAddress
+  }
+
+  if (['rate'].includes(attribute)) {
+    abi = contractStore.pricingStrategy.abi
+    contractAddress = addresses.pricingStrategyAddress
+    const oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, 1 / Number(value))
+    value = web3Store.web3.utils.toWei(oneTokenInETH, 'ether')
+  }
+
+  if (!contractAddress) return Promise.reject('no updatable value')
+
+  return attachToContract(web3, abi, contractAddress)
+    .then(contract => {
+      const method = contract.methods[methods[attribute]]
+
+      return method(value).estimateGas()
+        .then(estimatedGas => {
+          return sendTXToContract(web3, method(value)
+            .send({
+              gasLimit: estimatedGas,
+              gasPrice: generalStore.gasPrice
+            })
+          )
+        })
+    })
 }
 
 const crowdsaleData = crowdsaleAddress => {
@@ -107,6 +148,8 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
     }
   }
 
+  const initialValues = {}
+
   return crowdsaleData(crowdsaleAddress)
     .then(([
              tokenAddress,
@@ -126,6 +169,14 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
       newTier.startTime = formatDate(startsAt)
       newTier.endTime = formatDate(endsAt)
       newTier.updatable = updatable
+
+      initialValues.updatable = newTier.updatable
+      initialValues.index = crowdsaleNum
+      initialValues.addresses = {
+        pricingStrategyAddress,
+        tokenAddress,
+        crowdsaleAddress
+      }
 
       if (crowdsaleNum === 0) {
         newTier.whitelistdisabled = !whitelisted ? 'yes' : 'no'
@@ -148,8 +199,6 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
       return pricingStrategyData(pricingStrategyAddress)
     })
     .then(rate => {
-      let initialValues = { updatable: newTier.updatable, index: crowdsaleNum }
-
       //price: tiers, standard
       const tokensPerETHStandard = !isNaN(rate) ? rate : 0
       const tokensPerETHTiers = !isNaN(1 / rate) ? 1 / web3.utils.fromWei(toFixed(rate).toString(), 'ether') : 0
@@ -180,12 +229,10 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
       }
 
       if (initialValues.updatable) {
-        initialValues = Object.assign({
-          startTime: newTier.startTime,
-          endTime: newTier.endTime,
-          rate: newTier.rate,
-          supply: newTier.supply
-        }, initialValues)
+        initialValues.startTime = newTier.startTime
+        initialValues.endTime = newTier.endTime
+        initialValues.rate = newTier.rate
+        initialValues.supply = newTier.supply
       }
       crowdsaleStore.addInitialTierValues(initialValues)
     })
