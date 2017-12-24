@@ -153,6 +153,7 @@ export class WhitelistInputBlock extends React.Component {
             addr={e.addr}
             min={e.min}
             max={e.max}
+            alreadyDeployed={e.alreadyDeployed}
           />
         )}
       </div>

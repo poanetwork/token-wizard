@@ -11,7 +11,7 @@ export class WhitelistItem extends React.Component {
   }
 
   render () {
-    const { addr, min, max, crowdsaleNum, whitelistNum, tierStore, isLast } = this.props
+    const { addr, min, max, crowdsaleNum, whitelistNum, tierStore, isLast, alreadyDeployed } = this.props
 
     return tierStore.tiers[crowdsaleNum].whitelist[whitelistNum].deleted ? null : (
       <div
@@ -21,9 +21,12 @@ export class WhitelistItem extends React.Component {
           <span className="white-list-item white-list-item-middle">{min}</span>
           <span className="white-list-item white-list-item-right">{max}</span>
         </div>
-        <div className="white-list-item-empty">
-          <a onClick={() => this.removeItem()}><span className="item-remove"/></a>
-        </div>
+        {!alreadyDeployed
+          ? <div className="white-list-item-empty">
+              <a onClick={() => this.removeItem()}><span className="item-remove"/></a>
+            </div>
+          : null
+        }
       </div>
     )
   }
