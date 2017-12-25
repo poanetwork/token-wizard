@@ -29,6 +29,7 @@ __Deploying on POA's Sokol or Main network is much faster then using Ethereum's 
  [Sokol Testnet/faucet](https://faucet-sokol.herokuapp.com/)
 
  POA Sokol Network RPC URL: https://sokol.poa.network
+ 
  POA Main Network RPC URL: https://core.poa.network
 
  For a guide on how to connect to the POA network using MetaMask see [here](https://github.com/oraclesorg/ico-wizard/wiki/Connecting-to-POA-Networks).
