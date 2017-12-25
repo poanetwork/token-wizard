@@ -3,8 +3,8 @@
 # ICO Wizard DApp
 
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/hyperium/hyper/master/LICENSE)
-[![Build Status](https://travis-ci.org/oraclesorg/ico-wizard.svg?branch=master)](https://travis-ci.org/oraclesorg/ico-wizard)
-[![Waffle.io - Columns and their card count](https://badge.waffle.io/oraclesorg/ico-wizard.svg?columns=all)](http://waffle.io/oraclesorg/ico-wizard)
+[![Build Status](https://travis-ci.org/poanetwork/ico-wizard.svg?branch=master)](https://travis-ci.org/poanetwork/ico-wizard)
+[![Waffle.io - Columns and their card count](https://badge.waffle.io/poanetwork/ico-wizard.svg?columns=all)](http://waffle.io/poanetwork/ico-wizard)
 [![Join the chat at https://gitter.im/oraclesorg/ico-wizard](https://badges.gitter.im/oraclesorg/ico-wizard.svg)](https://gitter.im/oraclesorg/ico-wizard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ### **_Attention_!**
@@ -26,26 +26,26 @@ This tool is free to use and open source. Although the tool is free to use, depl
 
 
 ## ICO Wizard DApp Wiki
-- [Introduction](https://github.com/oraclesorg/ico-wizard/wiki/ICO-Wizard-Introduction)
-- [Demo](https://github.com/oraclesorg/ico-wizard/wiki/ICO-Wizard-Demo)
-- [Requirements](https://github.com/oraclesorg/ico-wizard/wiki/ICO-Wizard-Requirements)
-- [Strategy](https://github.com/oraclesorg/ico-wizard/wiki/ICO-Wizard-Strategy)
-- [How to run](https://github.com/oraclesorg/ico-wizard/wiki/ICO-Wizard-How-to-run)
-- [Deployment Time & Gas](https://github.com/oraclesorg/ico-wizard/wiki/ICO-Wizard-Deployment-Stats)
-- [Verifying Smart-Contracts](https://github.com/oraclesorg/ico-wizard/wiki/ICO-Wizard-Verifying-Contracts)
-- [Projects on ICO Wizard](https://github.com/oraclesorg/ico-wizard/wiki/ICO-Wizard-Projects)
-- [Notable Contributors](https://github.com/oraclesorg/ico-wizard/wiki/ICO-Wizard-Notable-Contributors)
-- [Support](https://github.com/oraclesorg/ico-wizard/wiki/ICO-Wizard-Support)
-- [Disclaimer](https://github.com/oraclesorg/ico-wizard/wiki/ICO-Wizard-Disclaimer)
+- [Introduction](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Introduction)
+- [Demo](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Demo)
+- [Requirements](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Requirements)
+- [Strategy](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Strategy)
+- [How to run](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-How-to-run)
+- [Deployment Time & Gas](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Deployment-Stats)
+- [Verifying Smart-Contracts](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Verifying-Contracts)
+- [Projects on ICO Wizard](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Projects)
+- [Notable Contributors](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Notable-Contributors)
+- [Support](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Support)
+- [Disclaimer](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Disclaimer)
 ### Policies
-- [Pull Request Policy](https://github.com/oraclesorg/ico-wizard/wiki/Pull-Request-Policy)
+- [Pull Request Policy](https://github.com/poanetwork/ico-wizard/wiki/Pull-Request-Policy)
 ### Managing your Crowdsale
-- [Methods for Management](https://github.com/oraclesorg/ico-wizard/wiki/ICO-Wizard-Managing-Crowdsale)
+- [Methods for Management](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Managing-Crowdsale)
 
 
 ## Support
 
-If you are having any issues while using the ICO Wizard DApp, please create a "New Issue" on it's [Github Issues section](https://github.com/oraclesorg/ico-wizard/issues). 
+If you are having any issues while using the ICO Wizard DApp, please create a "New Issue" on it's [Github Issues section](https://github.com/poanetwork/ico-wizard/issues). 
 
 Join the Oracles.org Forum at [https://forum.oracles.org/](https://forum.oracles.org/)
 
