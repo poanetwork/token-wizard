@@ -15,6 +15,7 @@ import { Loader } from '../Common/Loader'
 const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME } = TEXT_FIELDS
 
 @inject('crowdsaleStore', 'web3Store', 'tierStore', 'contractStore', 'crowdsalePageStore', 'generalStore', 'tokenStore')
+
 @observer
 export class Manage extends Component {
   constructor (props) {

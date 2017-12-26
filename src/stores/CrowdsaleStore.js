@@ -1,4 +1,4 @@
-import { action, observable } from 'mobx'
+import { observable } from 'mobx'
 
 class CrowdsaleStore {
   @observable crowdsales
