@@ -29,38 +29,24 @@ __Deploying on POA's Sokol or Main network is much faster then using Ethereum's 
  [Sokol Testnet/faucet](https://faucet-sokol.herokuapp.com/)
 
  POA Sokol Network RPC URL: https://sokol.poa.network
- 
+
  POA Main Network RPC URL: https://core.poa.network
 
- For a guide on how to connect to the POA network using MetaMask see [here](https://github.com/oraclesorg/ico-wizard/wiki/Connecting-to-POA-Networks).
+ For a guide on how to connect to the POA network using MetaMask see [here](https://github.com/poanetwork/ico-wizard/wiki/Connecting-to-POA-Networks).
 
 ## ICO Wizard DApp Wiki
-<<<<<<< HEAD
 - [Introduction](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Introduction)
 - [Demo](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Demo)
 - [Requirements](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Requirements)
 - [Strategy](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Strategy)
 - [How to run](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-How-to-run)
+- [Using POA Networks](https://github.com/poanetwork/ico-wizard/wiki/Connecting-to-POA-Networks)
 - [Deployment Time & Gas](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Deployment-Stats)
 - [Verifying Smart-Contracts](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Verifying-Contracts)
 - [Projects on ICO Wizard](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Projects)
 - [Notable Contributors](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Notable-Contributors)
 - [Support](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Support)
 - [Disclaimer](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Disclaimer)
-=======
-- [Introduction](https://github.com/oraclesorg/ico-wizard/wiki/ICO-Wizard-Introduction)
-- [Demo](https://github.com/oraclesorg/ico-wizard/wiki/ICO-Wizard-Demo)
-- [Requirements](https://github.com/oraclesorg/ico-wizard/wiki/ICO-Wizard-Requirements)
-- [Strategy](https://github.com/oraclesorg/ico-wizard/wiki/ICO-Wizard-Strategy)
-- [How to run](https://github.com/oraclesorg/ico-wizard/wiki/ICO-Wizard-How-to-run)
-- [Using POA Networks](https://github.com/oraclesorg/ico-wizard/wiki/Connecting-to-POA-Networks)
-- [Deployment Time & Gas](https://github.com/oraclesorg/ico-wizard/wiki/ICO-Wizard-Deployment-Stats)
-- [Verifying Smart-Contracts](https://github.com/oraclesorg/ico-wizard/wiki/ICO-Wizard-Verifying-Contracts)
-- [Projects on ICO Wizard](https://github.com/oraclesorg/ico-wizard/wiki/ICO-Wizard-Projects)
-- [Notable Contributors](https://github.com/oraclesorg/ico-wizard/wiki/ICO-Wizard-Notable-Contributors)
-- [Support](https://github.com/oraclesorg/ico-wizard/wiki/ICO-Wizard-Support)
-- [Disclaimer](https://github.com/oraclesorg/ico-wizard/wiki/ICO-Wizard-Disclaimer)
->>>>>>> hashguide-POAguide-1
 ### Policies
 - [Pull Request Policy](https://github.com/poanetwork/ico-wizard/wiki/Pull-Request-Policy)
 ### Managing your Crowdsale
@@ -69,16 +55,15 @@ __Deploying on POA's Sokol or Main network is much faster then using Ethereum's 
 
 ## Support
 
-If you are having any issues while using the ICO Wizard DApp, please create a "New Issue" on it's [Github Issues section](https://github.com/poanetwork/ico-wizard/issues). 
+If you are having any issues while using the ICO Wizard DApp, please create a "New Issue" on it's [Github Issues section](https://github.com/poanetwork/ico-wizard/issues).
 
 Join the Oracles.org Forum at [https://forum.oracles.org/](https://forum.oracles.org/)
 
 ## Disclaimer
 
-The software is in Beta stage. 
+The software is in Beta stage.
 ICO Wizard is constantly under active development. The “Beta” labelling implies that while the core features of the software have been implemented, bugs and issues may still remain undiscovered until this phase of testing is complete. As such, ICO Wizard may experience the following issues, but not limited to, during usage:
 
 - lost of tokens/funds from incorrect configuration;
 - unexpected delays;
 - unexpected visual artifacts.
- 
