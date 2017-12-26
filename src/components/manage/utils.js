@@ -14,9 +14,8 @@ const formatDate = timestamp => {
   const DD = ten(date.getDate())
   const HH = ten(date.getHours())
   const II = ten(date.getMinutes())
-  const SS = ten(date.getSeconds())
 
-  return YYYY + '-' + MM + '-' + DD + 'T' + HH + ':' + II + ':' + SS
+  return YYYY + '-' + MM + '-' + DD + 'T' + HH + ':' + II
 }
 
 export const updateTierAttribute = (attribute, value, addresses) => {
@@ -30,12 +29,18 @@ export const updateTierAttribute = (attribute, value, addresses) => {
   let abi
   let contractAddress
 
-  if (['startTime', 'endTime', 'supply'].includes(attribute)) {
+  if (attribute === 'startTime' || attribute === 'endTime' || attribute === 'supply') {
     abi = contractStore.crowdsale.abi
     contractAddress = addresses.crowdsaleAddress
+
+    if (attribute === 'startTime' || attribute === 'endTime') {
+      value = toFixed(parseInt(Date.parse(value) / 1000, 10).toString())
+    } else {
+      value = toFixed(parseInt(value, 10) * 10 ** parseInt(tokenStore.decimals, 10)).toString()
+    }
   }
 
-  if (['rate'].includes(attribute)) {
+  if (attribute === 'rate') {
     abi = contractStore.pricingStrategy.abi
     contractAddress = addresses.pricingStrategyAddress
     const oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, 1 / Number(value))
@@ -187,6 +192,7 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
     .then(([pricingStrategyAddress, maximumSellableTokens, [tokenName, tokenSymbol, decimals]]) => {
       tokenStore.setProperty('name', tokenName)
       tokenStore.setProperty('ticker', tokenSymbol)
+      tokenStore.setProperty('decimals', decimals)
 
       //total supply: tiers, standard
       const tokenDecimals = !isNaN(decimals) ? decimals : 0
@@ -215,6 +221,8 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
         tierStore.setTierProperty(newTier.startTime, 'startTime', crowdsaleNum)
         tierStore.setTierProperty(newTier.endTime, 'endTime', crowdsaleNum)
         tierStore.setTierProperty(newTier.updatable, 'updatable', crowdsaleNum)
+        tierStore.validateTiers('rate', crowdsaleNum)
+        tierStore.validateTiers('supply', crowdsaleNum)
       } else {
         tierStore.addTier(newTier)
         tierStore.addTierValidations({

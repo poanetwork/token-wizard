@@ -120,26 +120,44 @@ export class Manage extends Component {
 
     if (!this.state.formPristine) {
       const { crowdsaleStore, tierStore } = this.props
-      console.log('continue with saving...')
-
       const updatableTiers = crowdsaleStore.selected.initialTiersValues.slice().filter(tier => tier.updatable)
 
-      updatableTiers.forEach(tier => {
-        Object.keys(tier).forEach(key => {
-          const newValue = tierStore.tiers[tier.index][key]
+      if (updatableTiers.length) {
+        const isValidTier = tierStore.individuallyValidTiers
+        console.log(isValidTier)
 
-          if (!['index', 'updatable'].includes(key) && newValue !== tier[key]) {
-            updateTierAttribute(key, newValue, tier.addresses)
-              .then(value => {
-                console.log('+++---+++', value)
-              })
-          }
-        })
-      })
-      return
+        const validTiers = updatableTiers.every(tier => isValidTier[tier.index])
+
+        if (validTiers) {
+          const keys = Object.keys(updatableTiers[0])
+            .filter(key => key !== 'index' && key !== 'updatable' && key !== 'addresses')
+
+          const attributesToUpdate = updatableTiers.reduce((toUpdate, tier) => {
+            keys.forEach(key => {
+              const newValue = tierStore.tiers[tier.index][key]
+              const { addresses } = tier
+
+              if (newValue !== tier[key]) {
+                toUpdate.push({ key, newValue, addresses })
+              }
+            })
+
+            return toUpdate
+          }, [])
+
+          this.showLoader()
+
+          attributesToUpdate.reduce((promise, { key, newValue, addresses }) => {
+            return promise.then(() => updateTierAttribute(key, newValue, addresses))
+          }, Promise.resolve())
+            .catch(err => {
+              console.log(err)
+              toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED })
+            })
+            .then(this.hideLoader)
+        }
+      }
     }
-
-    console.log('nothing to save...')
   }
 
   changeState = (event, parent, key, property) => {
@@ -214,7 +232,12 @@ export class Manage extends Component {
     const value = event.target.value
 
     tierStore.setTierProperty(value, property, index)
-    tierStore.validateTiers(property, index)
+
+    if (property === 'endTime' || property === 'startTime') {
+      tierStore.validateEditedTier(property, index)
+    } else {
+      tierStore.validateTiers(property, index)
+    }
 
     if (this.state.formPristine) {
       this.setState({ formPristine: false })
@@ -284,7 +307,7 @@ export class Manage extends Component {
           title={START_TIME}
           value={tier.startTime}
           valid={tierStore.validTiers[index] && tierStore.validTiers[index].startTime}
-          errorMessage={VALIDATION_MESSAGES.START_TIME}
+          errorMessage={VALIDATION_MESSAGES.EDITED_START_TIME}
           onChange={(e) => this.updateTierStore(e, 'startTime', index)}
           description="Date and time when the tier starts. Can't be in the past from the current moment."
           disabled={!tier.updatable || finalized}
@@ -295,7 +318,7 @@ export class Manage extends Component {
           title={END_TIME}
           value={tier.endTime}
           valid={tierStore.validTiers[index] && tierStore.validTiers[index].endTime}
-          errorMessage={VALIDATION_MESSAGES.END_TIME}
+          errorMessage={VALIDATION_MESSAGES.EDITED_END_TIME}
           onChange={(e) => this.updateTierStore(e, 'endTime', index)}
           description="Date and time when the tier ends. Can be only in the future."
           disabled={!tier.updatable || finalized}
