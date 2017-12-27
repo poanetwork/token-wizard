@@ -109,6 +109,8 @@ class TierStore {
 
         this.validTiers[index][property] = notLaterTime && previousToEndTime && validTime ? VALID : INVALID
         return
+      default:
+        return
     }
   }
 
