@@ -370,7 +370,7 @@ export const TOAST = {
   },
   DEFAULT_OPTIONS: {
     position: 'top right',
-    offset: '80px 14',
+    offset: 80,
     time: 10000
   }
 }
