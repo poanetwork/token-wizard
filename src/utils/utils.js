@@ -41,7 +41,7 @@ export function getURLParam(key,target){
 }
 
 export function setFlatFileContentToState(file) {
-  return readSolFile(file)
+  return fetchFile(file)
 }
 
 export function getWhiteListWithCapCrowdsaleAssets() {
@@ -81,7 +81,7 @@ export function getWhiteListWithCapCrowdsaleAssets() {
   })
 }
 
-export function readSolFile(path) {
+export function fetchFile(path) {
   return new Promise((resolve, reject) => {
     const rawFile = new XMLHttpRequest()
 

@@ -2,7 +2,7 @@ import { incorrectNetworkAlert, noMetaMaskAlert, invalidNetworkIDAlert } from '.
 import { getEncodedABIClientSide } from './microservices'
 import { CHAINS } from './constants'
 import { crowdsaleStore, generalStore, web3Store } from '../stores'
-import { readSolFile } from './utils'
+import { fetchFile } from './utils'
 
 // instantiate new web3 instance
 const web3 = web3Store.web3
@@ -300,7 +300,7 @@ export function registerCrowdsaleAddress(web3, contractStore) {
 }
 
 function getRegistryAbi() {
-  return readSolFile('./contracts/Registry_flat.abi')
+  return fetchFile('./contracts/Registry_flat.abi')
 }
 
 function tap(x) {
