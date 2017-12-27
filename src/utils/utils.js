@@ -81,7 +81,7 @@ export function getWhiteListWithCapCrowdsaleAssets() {
   })
 }
 
-function readSolFile(path) {
+export function readSolFile(path) {
   return new Promise((resolve, reject) => {
     const rawFile = new XMLHttpRequest()
 
