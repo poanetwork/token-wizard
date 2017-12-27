@@ -1,5 +1,5 @@
+import Web3 from 'web3'
 import { observable } from 'mobx';
-import { getWeb3 } from '../utils/blockchainHelpers'
 
 class Web3Store {
 
@@ -8,7 +8,7 @@ class Web3Store {
   @observable accounts
 
   constructor(strategies) {
-    getWeb3((web3) => {
+    this.getWeb3((web3) => {
       if (web3) {
         this.web3 = web3
         web3.eth.getAccounts().then((accounts) => {
@@ -17,6 +17,27 @@ class Web3Store {
         })
       }
     })
+  }
+
+  getWeb3 = cb => {
+    var web3 = window.web3;
+    if (typeof web3 === 'undefined') {
+      // no web3, use fallback
+      console.error("Please use a web3 browser");
+      const devEnvironment = process.env.NODE_ENV === 'development';
+      if (devEnvironment) {
+        web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+      }
+
+      cb(web3, false);
+    } else {
+      // window.web3 == web3 most of the time. Don't override the provided,
+      // web3, just wrap it in your Web3.
+      var myWeb3 = new Web3(web3.currentProvider);
+
+      cb(myWeb3, false);
+    }
+    return myWeb3;
   }
 }
 

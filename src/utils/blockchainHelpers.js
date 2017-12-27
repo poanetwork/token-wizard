@@ -1,4 +1,3 @@
-import Web3 from 'web3';
 import { incorrectNetworkAlert, noMetaMaskAlert, invalidNetworkIDAlert } from './alerts'
 import { getEncodedABIClientSide } from './microservices'
 import { CHAINS } from './constants'
@@ -16,7 +15,7 @@ export function getCurrentProvider() {
 export function checkWeb3(web3) {
   if (!web3) {
     setTimeout(function() {
-      getWeb3((web3) => {
+      web3Store.getWeb3((web3) => {
         if (!web3) return noMetaMaskAlert();
         web3.eth.getAccounts().then((accounts) => {
           if (accounts.length === 0) {
@@ -32,27 +31,6 @@ export function checkWeb3(web3) {
       }
     });
   }
-}
-
-export function getWeb3(cb) {
-  var web3 = window.web3;
-  if (typeof web3 === 'undefined') {
-    // no web3, use fallback
-    console.error("Please use a web3 browser");
-    const devEnvironment = process.env.NODE_ENV === 'development';
-    if (devEnvironment) {
-      web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
-    }
-
-    cb(web3, false);
-  } else {
-    // window.web3 == web3 most of the time. Don't override the provided,
-    // web3, just wrap it in your Web3.
-    var myWeb3 = new Web3(web3.currentProvider);
-
-    cb(myWeb3, false);
-  }
-  return myWeb3;
 }
 
 export function checkNetWorkByID(web3, _networkIdFromGET) {
@@ -100,7 +78,7 @@ export function getNetworkVersion(web3) {
 
 export function setExistingContractParams(abi, addr, setContractProperty) {
   setTimeout(function() {
-    getWeb3((web3) => {
+    web3Store.getWeb3((web3) => {
       attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
         crowdsaleContract.token.call(function(err, tokenAddr) {
           console.log("tokenAddr: " + tokenAddr);

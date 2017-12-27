@@ -13,6 +13,7 @@ import crowdsaleBlockListStore from './CrowdsaleBlockListStore'
 import generalStore from './GeneralStore'
 import crowdsalePageStore from './CrowdsalePageStore'
 import investStore from './InvestStore'
+import crowdsaleStore from './CrowdsaleStore'
 
 export {
     generalStore,
@@ -29,5 +30,6 @@ export {
     tierStore,
     tokenStore,
     web3Store,
-    investStore
+    investStore,
+    crowdsaleStore
 };

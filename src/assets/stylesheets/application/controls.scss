@@ -26,6 +26,15 @@
     }
   }
 
+  &_disabled {
+    background-color: #e6e6e6;
+    color: #9c9c9c;
+
+    &:hover {
+      cursor: default !important;
+    }
+  }
+
   &_fill_secondary {
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAFVBMVEX///////////////////////////9nSIHRAAAABnRSTlMASUrk5udXTd49AAAAOUlEQVR42tXQsQEAIAgDQcAn+4+snRZxAK79KokrIcNBwgYdc0Migwxk8Qsd1TJWDf/KQWobqt+9G4coA99W7as5AAAAAElFTkSuQmCC) !important;
     background-color: #64299D;

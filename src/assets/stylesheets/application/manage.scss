@@ -1,0 +1,35 @@
+.manage {
+  min-height: 600px;
+
+  .warning-logo {
+    color: #642F9C !important;
+    border-color: #642F9C !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+  }
+
+  .steps-content {
+    margin-top: 30px;
+  }
+
+  .description {
+    margin-bottom: 20px;
+  }
+
+  .crowdsale-page-link {
+    color: #08b3f2;
+    text-decoration: none;
+    font-size: 13px;
+  }
+
+  .divisor {
+    margin-bottom: 30px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .no-arrow {
+    background-image: none;
+    padding: 0 15px;
+  }
+}

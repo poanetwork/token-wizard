@@ -1,9 +1,52 @@
 import React, { Component } from 'react';
 import '../../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
+import CrowdsalesList from '../Common/CrowdsalesList'
 
 export class Home extends Component {
-  render() {
+  constructor (props) {
+    super(props)
+    this.state = {
+      showModal: false
+    }
+  }
+
+  chooseContract = () => {
+    this.setState({ showModal: true })
+  }
+
+  onClick = crowdsaleAddress => {
+    this.props.history.push('/manage/' + crowdsaleAddress)
+  }
+
+  renderModal = () => {
+    return (
+      <div className="crowdsale-modal loading-container">
+        <div className='modal'>
+          <p className='title'>Crowdsales List</p>
+          <p className='description'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur cumque dolore
+            doloribus ea earumeligendi eveniet ex expedita itaque laborum maxime mollitia nemo nihil perferendis
+            quibusdam sed sequiullam, vitae!</p>
+          <CrowdsalesList onClick={this.onClick}/>
+          <div className='close-button' onClick={() => this.hideModal()}>X</div>
+        </div>
+      </div>
+    )
+  }
+
+  hideModal = () => {
+    this.setState({ showModal: false })
+  }
+
+  render () {
+    const chooseContract = process.env.NODE_ENV === 'development'
+      ? <div onClick={() => this.chooseContract()} className="button button_outline">Choose Contract</div>
+      : null
+
+    const chooseContractModal = this.state.showModal
+      ? this.renderModal()
+      : null
+
     return (
       <div>
         <section className="home">
@@ -16,6 +59,7 @@ export class Home extends Component {
               </p>
               <div className="buttons">
                 <Link to='/1'><a className="button button_fill">New crowdsale</a></Link>
+                {chooseContract}
               </div>
             </div>
           </div>
@@ -58,6 +102,7 @@ export class Home extends Component {
               </div>
             </div>
           </div>
+          {chooseContractModal}
         </section>
       </div>
     );

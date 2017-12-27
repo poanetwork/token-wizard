@@ -2,14 +2,13 @@ import {
   attachToContract,
   getNetWorkNameById,
   getNetworkVersion,
-  getWeb3,
   sendTXToContract
 } from '../../utils/blockchainHelpers'
 import { noContractAlert } from '../../utils/alerts'
 import { toFixed } from '../../utils/utils'
 import { DOWNLOAD_NAME } from '../../utils/constants'
 import { isObservableArray } from 'mobx'
-import { generalStore } from '../../stores'
+import { web3Store, generalStore } from '../../stores'
 
 function setLastCrowdsale(web3, abi, addr, lastCrowdsale, gasLimit) {
   console.log('###setLastCrowdsale for Pricing Strategy:###')
@@ -297,9 +296,10 @@ export function  setMintAgentRecursive (web3, abi, addr, crowdsaleAddrs, gasLimi
 }
 
 export function updateJoinedCrowdsalesRecursive (web3, abi, addrs, gasLimit) {
-  return addrs.reduce((promise, addr) => {
-    return promise.then(() => updateJoinedCrowdsales(web3, abi, addr, addrs, gasLimit))
-  }, Promise.resolve())
+  return addrs.reduce((promise, addr) =>
+    promise.then(() => updateJoinedCrowdsales(web3, abi, addr, addrs, gasLimit)),
+    Promise.resolve()
+  )
 }
 
 export function addWhiteListRecursive (web3, tierStore, token, abi, crowdsaleAddrs) {
@@ -409,7 +409,7 @@ export function scrollToBottom() {
 
 export function getDownloadName (tokenAddress) {
   return new Promise((resolve, reject) => {
-    getWeb3((web3) => {
+    web3Store.getWeb3((web3) => {
       const whenNetworkName = getNetworkVersion(web3)
         .then((networkId) => {
           let networkName = getNetWorkNameById(networkId);
