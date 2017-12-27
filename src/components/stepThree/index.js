@@ -274,7 +274,7 @@ export class stepThree extends React.Component {
             type="text"
             title={WALLET_ADDRESS}
             value={tierStore.tiers[0].walletAddress}
-            valid={tierStore.validTiers[0].walletAddress}
+            valid={tierStore.validTiers[0] && tierStore.validTiers[0].walletAddress}
             errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS}
             onChange={e => this.updateTierStore(e, "walletAddress", 0)}
             description={`Where the money goes after investors transactions. Immediately after each transaction. We recommend to setup a multisig wallet with hardware based signers.`}
@@ -341,7 +341,7 @@ export class stepThree extends React.Component {
                   type="text"
                   title={CROWDSALE_SETUP_NAME}
                   value={tierStore.tiers[0].tier}
-                  valid={tierStore.validTiers[0].tier}
+                  valid={tierStore.validTiers[0] && tierStore.validTiers[0].tier}
                   errorMessage={VALIDATION_MESSAGES.TIER}
                   onChange={e => this.updateTierStore(e, "tier", 0)}
                   description={`Name of a tier, e.g. PrePreIco, PreICO, ICO with bonus A, ICO with bonus B, etc. We simplified that and will increment a number after each tier.`}
@@ -365,7 +365,7 @@ export class stepThree extends React.Component {
                   type="datetime-local"
                   title={START_TIME}
                   value={tierStore.tiers[0].startTime}
-                  valid={tierStore.validTiers[0].startTime}
+                  valid={tierStore.validTiers[0] && tierStore.validTiers[0].startTime}
                   errorMessage={VALIDATION_MESSAGES.START_TIME}
                   onChange={e => this.updateTierStore(e, "startTime", 0)}
                   description={`Date and time when the tier starts. Can't be in the past from the current moment.`}
@@ -375,7 +375,7 @@ export class stepThree extends React.Component {
                   type="datetime-local"
                   title={END_TIME}
                   value={tierStore.tiers[0].endTime}
-                  valid={tierStore.validTiers[0].endTime}
+                  valid={tierStore.validTiers[0] && tierStore.validTiers[0].endTime}
                   errorMessage={VALIDATION_MESSAGES.END_TIME}
                   onChange={e => this.updateTierStore(e, "endTime", 0)}
                   description={`Date and time when the tier ends. Can be only in the future.`}
@@ -387,7 +387,7 @@ export class stepThree extends React.Component {
                   type="number"
                   title={RATE}
                   value={tierStore.tiers[0].rate}
-                  valid={tierStore.validTiers[0].rate}
+                  valid={tierStore.validTiers[0] && tierStore.validTiers[0].rate}
                   errorMessage={VALIDATION_MESSAGES.RATE}
                   onChange={e => this.updateTierStore(e, "rate", 0)}
                   description={`Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens`}
@@ -397,7 +397,7 @@ export class stepThree extends React.Component {
                   type="number"
                   title={SUPPLY}
                   value={tierStore.tiers[0].supply}
-                  valid={tierStore.validTiers[0].supply}
+                  valid={tierStore.validTiers[0] && tierStore.validTiers[0].supply}
                   errorMessage={VALIDATION_MESSAGES.SUPPLY}
                   onChange={e => this.updateTierStore(e, "supply", 0)}
                   description={`How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers`}
