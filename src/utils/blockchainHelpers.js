@@ -303,15 +303,10 @@ function getRegistryAbi() {
   return fetchFile('./contracts/Registry_flat.abi')
 }
 
-function tap(x) {
-  console.log(x);
-  return x
-}
-
 function getRegistryContract() {
   // Get Registry ABI and address
-  const whenRegistryAbi = getRegistryAbi().then(JSON.parse).then(tap)
-  const whenRegistryAddress = getRegistryAddress().then(tap)
+  const whenRegistryAbi = getRegistryAbi().then(JSON.parse)
+  const whenRegistryAddress = getRegistryAddress()
 
   // Load Registry contract
   return Promise.all([whenRegistryAbi, whenRegistryAddress])
