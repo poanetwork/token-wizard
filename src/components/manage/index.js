@@ -29,7 +29,7 @@ export class Manage extends Component {
 
   componentWillMount () {
     const { crowdsaleStore, web3Store, contractStore, generalStore, match } = this.props
-    const crowdsaleAddress = crowdsaleStore.crowdsales.find(crowdsale => crowdsale === match.params.addr)
+    const crowdsaleAddress = match.params.crowdsaleAddress
 
     crowdsaleStore.setSelectedProperty('address', crowdsaleAddress)
 
