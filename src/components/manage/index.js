@@ -172,7 +172,6 @@ export class Manage extends Component {
     if (e.target.classList.contains('button_fill_plus')) {
       this.setState({ formPristine: false })
     }
-    console.log(this.props.crowdsaleStore)
   }
 
   whitelistInputBlock = index => {
