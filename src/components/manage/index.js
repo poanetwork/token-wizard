@@ -120,7 +120,7 @@ export class Manage extends Component {
 
     if (!this.state.formPristine) {
       const { crowdsaleStore, tierStore } = this.props
-      const updatableTiers = crowdsaleStore.selected.initialTiersValues.slice().filter(tier => tier.updatable)
+      const updatableTiers = crowdsaleStore.selected.initialTiersValues.filter(tier => tier.updatable)
 
       if (updatableTiers.length) {
         const isValidTier = tierStore.individuallyValidTiers
