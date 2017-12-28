@@ -29,9 +29,6 @@ export default class CrowdsalesList extends Component {
         <div className="container-fluid">
           <div className="table-row flex-table-header">
             <div className="text">Address</div>
-            {/*<div className="sm-text">Token Name</div>*/}
-            {/*<div className="sm-text">Ticker</div>*/}
-            {/*<div className="sm-text">Date</div>*/}
           </div>
           <div className="scrollable-content">
             {crowdsaleStore.crowdsales.map((crowdsaleAddress, index) => (
@@ -40,9 +37,6 @@ export default class CrowdsalesList extends Component {
                    onClick={() => this.selectCrowdsale(index, crowdsaleAddress)}
               >
                 <div className="text">{crowdsaleAddress}</div>
-                {/*<div className="sm-text">{crowdsaleAddress.extraData.tokenName}</div>*/}
-                {/*<div className="sm-text">{crowdsaleAddress.extraData.ticker}</div>*/}
-                {/*<div className="sm-text">{crowdsaleAddress.extraData.creationDate.split('T').join(' ')}</div>*/}
               </div>
             ))}
           </div>
