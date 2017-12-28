@@ -86,6 +86,49 @@ class TierStore {
     }
   }
 
+  @action validateEditedTier = (property, index) => {
+    switch (property) {
+      case 'endTime':
+        let lessThanNextStart = true
+        const laterTime = validateLaterTime(this.tiers[index][property], this.tiers[index].startTime)
+
+        if (index < this.tiers.length - 1) {
+          lessThanNextStart = validateLaterOrEqualTime(this.tiers[index + 1].startTime, this.tiers[index][property])
+        }
+
+        this.validTiers[index][property] = lessThanNextStart && laterTime ? VALID : INVALID
+        return
+      case 'startTime':
+        let notLaterTime = true
+        const previousToEndTime = validateLaterTime(this.tiers[index].endTime, this.tiers[index][property])
+        const validTime = validateTime(this.tiers[index][property])
+
+        if (index > 0) {
+          notLaterTime = validateLaterOrEqualTime(this.tiers[index][property], this.tiers[index - 1].endTime)
+        }
+
+        this.validTiers[index][property] = notLaterTime && previousToEndTime && validTime ? VALID : INVALID
+        return
+      default:
+        return
+    }
+  }
+
+  @action validateEditedEndTime = index => {
+    if (this.tiers.length) {
+      if (index < this.tiers.length - 1) {
+        this.validTiers[index].endTime = validateLaterOrEqualTime(this.tiers[index + 1].startTime, this.tiers[index].endTime) ? VALID : INVALID
+      }
+    }
+  }
+
+  @computed
+  get individuallyValidTiers () {
+    if (!this.validTiers) return
+
+    return this.validTiers.map((tier, index) => Object.keys(tier).every(key => this.validTiers[index][key] === VALID))
+  }
+
   @computed get areTiersValid() {
     if (!this.validTiers) {
       return;

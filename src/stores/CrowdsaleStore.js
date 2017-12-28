@@ -10,7 +10,8 @@ class CrowdsaleStore {
   constructor (crowdsales = []) {
     this.crowdsales = crowdsales
     this.selected = {
-      updatable: true
+      updatable: false,
+      initialTiersValues: []
     }
   }
 
@@ -23,9 +24,14 @@ class CrowdsaleStore {
   }
 
   @action setSelectedProperty = (property, value) => {
-    let currentCrowdsale = Object.assign({}, this.selected)
+    const currentCrowdsale = Object.assign({}, this.selected)
+
     currentCrowdsale[property] = value
     this.selected = currentCrowdsale
+  }
+
+  @action addInitialTierValues = (initialValues) => {
+    this.selected.initialTiersValues.push(initialValues)
   }
 }
 

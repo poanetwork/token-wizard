@@ -391,6 +391,7 @@ const { PUBLISH } = NAVIGATION_STEPS
     const whitelistDisabled = initialTier.whitelistdisabled
 
     return [
+      tier.tier,
       contractStore.token.addr,
       contractStore.pricingStrategy.addr[i],
       initialTier.walletAddress,
