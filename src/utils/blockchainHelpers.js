@@ -113,7 +113,7 @@ export function deployContract(i, web3, abi, bin, params) {
             .then(estimatedGas => {
               console.log('gas is estimated', estimatedGas)
 
-              const estimatedGasMax = 3716260
+              const estimatedGasMax = 3816260
 
               if (!estimatedGas || estimatedGas > estimatedGasMax) {
                 estimatedGas = estimatedGasMax
