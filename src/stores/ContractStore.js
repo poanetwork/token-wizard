@@ -11,6 +11,7 @@ class ContractStore {
   @observable finalizeAgent;
   @observable tokenTransferProxy;
   @observable safeMathLib;
+  @observable registry;
   @observable contractType;
 
   constructor() {

@@ -2,17 +2,35 @@ import React, { Component } from 'react';
 import '../../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
 import CrowdsalesList from '../Common/CrowdsalesList'
+import { Loader } from '../Common/Loader'
+import { loadRegistryAddresses } from '../../utils/blockchainHelpers'
 
 export class Home extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      showModal: false
+      showModal: false,
+      loading: false
     }
   }
 
   chooseContract = () => {
-    this.setState({ showModal: true })
+    this.setState({
+      loading: true
+    })
+
+    loadRegistryAddresses()
+      .then(() => {
+        this.setState({
+          loading: false,
+          showModal: true
+        })
+      }, (e) => {
+        console.error('There was a problem loading the crowdsale addresses from the registry', e)
+        this.setState({
+          loading: false
+        })
+      })
   }
 
   onClick = crowdsaleAddress => {
@@ -58,7 +76,7 @@ export class Home extends Component {
               <br/>Smart contracts based on <a href="https://github.com/TokenMarketNet/ico">TokenMarket</a> contracts.
               </p>
               <div className="buttons">
-                <Link to='/1'><a className="button button_fill">New crowdsale</a></Link>
+                <Link to='/1'><span className="button button_fill">New crowdsale</span></Link>
                 {chooseContract}
               </div>
             </div>
@@ -103,6 +121,7 @@ export class Home extends Component {
             </div>
           </div>
           {chooseContractModal}
+          <Loader show={this.state.loading}></Loader>
         </section>
       </div>
     );

@@ -1,7 +1,8 @@
 import { incorrectNetworkAlert, noMetaMaskAlert, invalidNetworkIDAlert } from './alerts'
 import { getEncodedABIClientSide } from './microservices'
 import { CHAINS } from './constants'
-import { generalStore, web3Store } from '../stores'
+import { crowdsaleStore, generalStore, web3Store } from '../stores'
+import { fetchFile } from './utils'
 
 // instantiate new web3 instance
 const web3 = web3Store.web3
@@ -264,6 +265,74 @@ export function attachToContract(web3, abi, addr) {
         resolve(contractInstance)
       })
   })
+}
+
+function getRegistryAddress() {
+  return web3.eth.net.getId()
+    .then((networkId) => {
+      const registryAddressMap = JSON.parse(process.env['REACT_APP_REGISTRY_ADDRESS'] || '{}')
+      const registryAddress = registryAddressMap[networkId]
+
+      return registryAddress
+    })
+}
+
+export function registerCrowdsaleAddress(web3, contractStore) {
+  const toJS = x => JSON.parse(JSON.stringify(x))
+
+  const registryAbi = contractStore.registry.abi
+  const crowdsaleAddress = contractStore.crowdsale.addr[0]
+
+  const whenRegistryAddress = getRegistryAddress()
+
+  const whenAccount = web3.eth.getAccounts()
+    .then((accounts) => accounts[0])
+
+  return Promise.all([whenRegistryAddress, whenAccount])
+    .then(([registryAddress, account]) => {
+      const registry = new web3.eth.Contract(toJS(registryAbi), registryAddress)
+      return registry.methods
+        .add(crowdsaleAddress)
+        .send({
+          from: account
+        })
+    })
+}
+
+function getRegistryAbi() {
+  return fetchFile('./contracts/Registry_flat.abi')
+}
+
+function getRegistryContract() {
+  // Get Registry ABI and address
+  const whenRegistryAbi = getRegistryAbi().then(JSON.parse)
+  const whenRegistryAddress = getRegistryAddress()
+
+  // Load Registry contract
+  return Promise.all([whenRegistryAbi, whenRegistryAddress])
+    .then(([abi, address]) => attachToContract(web3, abi, address))
+}
+
+export function loadRegistryAddresses() {
+  const whenRegistryContract = getRegistryContract()
+  const whenAccount = web3.eth.getAccounts()
+    .then((accounts) => accounts[0])
+
+  return Promise.all([whenRegistryContract, whenAccount])
+    .then(([registry, account]) => {
+      return registry.methods.count(account).call()
+        .then((count) => {
+          const crowdsales = []
+          for (let i = 0; i < +count; i++) {
+            crowdsales.push(registry.methods.deployedContracts(account, i).call())
+          }
+
+          return Promise.all(crowdsales);
+        })
+    })
+    .then((crowdsales) => {
+      crowdsaleStore.setCrowdsales(crowdsales)
+    })
 }
 
 // export web3 object instance
