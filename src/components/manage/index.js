@@ -9,7 +9,7 @@ import { successfulFinalizeAlert, warningOnFinalizeCrowdsale } from '../../utils
 import { getNetworkVersion, sendTXToContract } from '../../utils/blockchainHelpers'
 import { getWhiteListWithCapCrowdsaleAssets, toast } from '../../utils/utils'
 import { findCurrentContractRecursively, getCurrentRate } from '../crowdsale/utils'
-import { getTiers, processTier } from './utils'
+import { getTiers, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
 
 const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME } = TEXT_FIELDS
@@ -119,11 +119,45 @@ export class Manage extends Component {
     e.stopPropagation()
 
     if (!this.state.formPristine) {
-      console.log('continue with saving...')
-      return
-    }
+      const { crowdsaleStore, tierStore } = this.props
+      const updatableTiers = crowdsaleStore.selected.initialTiersValues.filter(tier => tier.updatable)
 
-    console.log('nothing to save...')
+      if (updatableTiers.length) {
+        const isValidTier = tierStore.individuallyValidTiers
+        console.log(isValidTier)
+
+        const validTiers = updatableTiers.every(tier => isValidTier[tier.index])
+
+        if (validTiers) {
+          const keys = Object.keys(updatableTiers[0])
+            .filter(key => key !== 'index' && key !== 'updatable' && key !== 'addresses')
+
+          const attributesToUpdate = updatableTiers.reduce((toUpdate, tier) => {
+            keys.forEach(key => {
+              const newValue = tierStore.tiers[tier.index][key]
+              const { addresses } = tier
+
+              if (newValue !== tier[key]) {
+                toUpdate.push({ key, newValue, addresses })
+              }
+            })
+
+            return toUpdate
+          }, [])
+
+          this.showLoader()
+
+          attributesToUpdate.reduce((promise, { key, newValue, addresses }) => {
+            return promise.then(() => updateTierAttribute(key, newValue, addresses))
+          }, Promise.resolve())
+            .catch(err => {
+              console.log(err)
+              toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED })
+            })
+            .then(this.hideLoader)
+        }
+      }
+    }
   }
 
   changeState = (event, parent, key, property) => {
@@ -193,13 +227,17 @@ export class Manage extends Component {
   }
 
   updateTierStore = (event, property, index) => {
-    const { tierStore, crowdsaleStore } = this.props
+    const { tierStore } = this.props
     const value = event.target.value
 
     tierStore.setTierProperty(value, property, index)
-    tierStore.validateTiers(property, index)
 
-    crowdsaleStore.setSelectedProperty(property, value)
+    if (property === 'endTime' || property === 'startTime') {
+      tierStore.validateEditedTier(property, index)
+    } else {
+      tierStore.validateTiers(property, index)
+    }
+
     if (this.state.formPristine) {
       this.setState({ formPristine: false })
     }
@@ -260,15 +298,15 @@ export class Manage extends Component {
       </div>
     }
 
-    const tierStartAndEndTime = (tier, validTier, index) => {
+    const tierStartAndEndTime = (tier, index) => {
       return <div className='input-block-container'>
         <InputField
           side='left'
           type='datetime-local'
           title={START_TIME}
           value={tier.startTime}
-          valid={validTier && validTier.startTime}
-          errorMessage={VALIDATION_MESSAGES.START_TIME}
+          valid={tierStore.validTiers[index] && tierStore.validTiers[index].startTime}
+          errorMessage={VALIDATION_MESSAGES.EDITED_START_TIME}
           onChange={(e) => this.updateTierStore(e, 'startTime', index)}
           description="Date and time when the tier starts. Can't be in the past from the current moment."
           disabled={!tier.updatable || finalized}
@@ -278,8 +316,8 @@ export class Manage extends Component {
           type='datetime-local'
           title={END_TIME}
           value={tier.endTime}
-          valid={validTier && validTier.endTime}
-          errorMessage={VALIDATION_MESSAGES.END_TIME}
+          valid={tierStore.validTiers[index] && tierStore.validTiers[index].endTime}
+          errorMessage={VALIDATION_MESSAGES.EDITED_END_TIME}
           onChange={(e) => this.updateTierStore(e, 'endTime', index)}
           description="Date and time when the tier ends. Can be only in the future."
           disabled={!tier.updatable || finalized}
@@ -287,14 +325,14 @@ export class Manage extends Component {
       </div>
     }
 
-    const tierRateAndSupply = (tier, validTier, index) => {
+    const tierRateAndSupply = (tier, index) => {
       return <div className='input-block-container'>
         <InputField
           side='left'
           type='number'
           title={RATE}
           value={tier.rate}
-          valid={validTier && validTier.rate}
+          valid={tierStore.validTiers[index] && tierStore.validTiers[index].rate}
           errorMessage={VALIDATION_MESSAGES.RATE}
           onChange={(e) => this.updateTierStore(e, 'rate', index)}
           description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens"
@@ -305,11 +343,10 @@ export class Manage extends Component {
           type='number'
           title={SUPPLY}
           value={tier.supply}
-          valid={validTier && validTier.supply}
+          valid={tierStore.validTiers[index] && tierStore.validTiers[index].supply}
           errorMessage={VALIDATION_MESSAGES.SUPPLY}
           onChange={(e) => this.updateTierStore(e, 'supply', index)}
-          description="How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of
-                     all tiers"
+          description="How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers"
           disabled={!tier.updatable || finalized}
         />
       </div>
@@ -326,8 +363,8 @@ export class Manage extends Component {
               {index === 0 ? aboutTier : null}
               <div className={`hidden ${tierStore.tiers[0].whitelistdisabled !== 'yes' ? 'divisor' : ''}`}>
                 {tierNameAndWallet(tier)}
-                {tierStartAndEndTime(tier, tierStore.validTiers[index], index)}
-                {tierRateAndSupply(tier, tierStore.validTiers[index], index)}
+                {tierStartAndEndTime(tier, index)}
+                {tierRateAndSupply(tier, index)}
               </div>
               {this.renderWhitelistInputBlock(tier, index)}
             </div>

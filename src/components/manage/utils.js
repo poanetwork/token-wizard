@@ -1,7 +1,7 @@
-import { attachToContract } from '../../utils/blockchainHelpers'
-import { contractStore, crowdsaleStore, tierStore, tokenStore, web3Store } from '../../stores'
-import { CONTRACT_TYPES, VALIDATION_TYPES } from '../../utils/constants'
-import { toFixed } from '../../utils/utils'
+import { attachToContract, sendTXToContract } from '../../utils/blockchainHelpers'
+import { contractStore, crowdsaleStore, generalStore, tierStore, tokenStore, web3Store } from '../../stores'
+import { CONTRACT_TYPES, TRUNC_TO_DECIMALS, VALIDATION_TYPES } from '../../utils/constants'
+import { floorToDecimals, toFixed } from '../../utils/utils'
 
 const { VALID } = VALIDATION_TYPES
 const { whitelistwithcap: WHITELIST_WITH_CAP } = CONTRACT_TYPES
@@ -14,9 +14,55 @@ const formatDate = timestamp => {
   const DD = ten(date.getDate())
   const HH = ten(date.getHours())
   const II = ten(date.getMinutes())
-  const SS = ten(date.getSeconds())
 
-  return YYYY + '-' + MM + '-' + DD + 'T' + HH + ':' + II + ':' + SS;
+  return YYYY + '-' + MM + '-' + DD + 'T' + HH + ':' + II
+}
+
+export const updateTierAttribute = (attribute, value, addresses) => {
+  const { web3 } = web3Store
+  let methods = {
+    startTime: 'setStartsAt',
+    endTime: 'setEndsAt',
+    supply: 'setMaximumSellableTokens',
+    rate: 'updateRate'
+  }
+  let abi
+  let contractAddress
+
+  if (attribute === 'startTime' || attribute === 'endTime' || attribute === 'supply') {
+    abi = contractStore.crowdsale.abi
+    contractAddress = addresses.crowdsaleAddress
+
+    if (attribute === 'startTime' || attribute === 'endTime') {
+      value = toFixed(parseInt(Date.parse(value) / 1000, 10).toString())
+    } else {
+      value = toFixed(parseInt(value, 10) * 10 ** parseInt(tokenStore.decimals, 10)).toString()
+    }
+  }
+
+  if (attribute === 'rate') {
+    abi = contractStore.pricingStrategy.abi
+    contractAddress = addresses.pricingStrategyAddress
+    const oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, 1 / Number(value))
+    value = web3Store.web3.utils.toWei(oneTokenInETH, 'ether')
+  }
+
+  if (!contractAddress) return Promise.reject('no updatable value')
+
+  return attachToContract(web3, abi, contractAddress)
+    .then(contract => {
+      const method = contract.methods[methods[attribute]]
+
+      return method(value).estimateGas()
+        .then(estimatedGas => {
+          return sendTXToContract(web3, method(value)
+            .send({
+              gasLimit: estimatedGas,
+              gasPrice: generalStore.gasPrice
+            })
+          )
+        })
+    })
 }
 
 const crowdsaleData = crowdsaleAddress => {
@@ -107,6 +153,8 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
     }
   }
 
+  const initialValues = {}
+
   return crowdsaleData(crowdsaleAddress)
     .then(([
              tokenAddress,
@@ -127,6 +175,14 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
       newTier.endTime = formatDate(endsAt)
       newTier.updatable = updatable
 
+      initialValues.updatable = newTier.updatable
+      initialValues.index = crowdsaleNum
+      initialValues.addresses = {
+        pricingStrategyAddress,
+        tokenAddress,
+        crowdsaleAddress
+      }
+
       if (crowdsaleNum === 0) {
         newTier.whitelistdisabled = !whitelisted ? 'yes' : 'no'
       }
@@ -136,6 +192,7 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
     .then(([pricingStrategyAddress, maximumSellableTokens, [tokenName, tokenSymbol, decimals]]) => {
       tokenStore.setProperty('name', tokenName)
       tokenStore.setProperty('ticker', tokenSymbol)
+      tokenStore.setProperty('decimals', decimals)
 
       //total supply: tiers, standard
       const tokenDecimals = !isNaN(decimals) ? decimals : 0
@@ -164,6 +221,8 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
         tierStore.setTierProperty(newTier.startTime, 'startTime', crowdsaleNum)
         tierStore.setTierProperty(newTier.endTime, 'endTime', crowdsaleNum)
         tierStore.setTierProperty(newTier.updatable, 'updatable', crowdsaleNum)
+        tierStore.validateTiers('rate', crowdsaleNum)
+        tierStore.validateTiers('supply', crowdsaleNum)
       } else {
         tierStore.addTier(newTier)
         tierStore.addTierValidations({
@@ -176,5 +235,13 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
           updatable: VALID
         })
       }
+
+      if (initialValues.updatable) {
+        initialValues.startTime = newTier.startTime
+        initialValues.endTime = newTier.endTime
+        initialValues.rate = newTier.rate
+        initialValues.supply = newTier.supply
+      }
+      crowdsaleStore.addInitialTierValues(initialValues)
     })
 }
