@@ -17,7 +17,7 @@ export default class CrowdsalesList extends Component {
   componentDidMount() {
     this.props.web3Store.web3.eth.getAccounts()
       .then((accounts) => accounts[0])
-      .then((account) => (console.log('account:', account), this.setState({ account })))
+      .then((account) => this.setState({ account }))
   }
 
   selectCrowdsale = (index, contractAddress) => {
