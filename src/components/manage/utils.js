@@ -80,6 +80,7 @@ const crowdsaleData = crowdsaleAddress => {
       const whenMaximumSellableTokens = methods.maximumSellableTokens().call()
       const whenPricingStrategy = methods.pricingStrategy().call()
       const whenIsFinalized = methods.finalized().call()
+      const whenName = methods.name().call()
 
       return Promise.all([
         whenToken,
@@ -90,7 +91,8 @@ const crowdsaleData = crowdsaleAddress => {
         whenIsWhitelisted,
         whenMaximumSellableTokens,
         whenPricingStrategy,
-        whenIsFinalized
+        whenIsFinalized,
+        whenName
       ])
     })
 }
@@ -165,7 +167,8 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
              whitelisted,
              maximumSellableTokens,
              pricingStrategyAddress,
-             isFinalized
+             isFinalized,
+             name
            ]) => {
       crowdsaleStore.setSelectedProperty('finalized', isFinalized)
       crowdsaleStore.setSelectedProperty('updatable', crowdsaleStore.selected.updatable || updatable)
@@ -174,6 +177,7 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
       newTier.startTime = formatDate(startsAt)
       newTier.endTime = formatDate(endsAt)
       newTier.updatable = updatable
+      newTier.name = name
 
       initialValues.updatable = newTier.updatable
       initialValues.index = crowdsaleNum
