@@ -121,3 +121,11 @@ export function successfulFinalizeAlert() {
     type: "success"
   })
 }
+
+export function noGasPriceAvailable() {
+  sweetAlert2({
+    title: "No Gas Price Available",
+    html: "ICO Wizard wasn't able to request current Gas Prices from the blockchain, custom values will be used",
+    type: "warning"
+  })
+}

@@ -118,10 +118,6 @@ const pricingStrategyData = pricingStrategyAddress => {
     .then(pricingStrategyContract => pricingStrategyContract.methods.oneTokenInWei().call())
 }
 
-export const gweiToWei = x => x * 1000000000
-
-export const weiToGwei = x => x / 1000000000
-
 export const getTiers = crowdsaleAddress => {
   const { web3 } = web3Store
 
