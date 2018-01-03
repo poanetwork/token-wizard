@@ -66,7 +66,7 @@ export class Invest extends React.Component {
         this.setState(_newState)
         this.extractContractsData(web3)
         gasPriceStore.updateValues()
-          .then(() => generalStore.setGasPrice(gasPriceStore.fast.price))
+          .then(() => generalStore.setGasPrice(gasPriceStore.slow.price))
           .catch(() => noGasPriceAvailable())
       })
   }

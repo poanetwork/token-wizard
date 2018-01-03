@@ -52,7 +52,7 @@ export class stepThree extends React.Component {
 
     this.state = {
       loading: true,
-      gasPriceSelected: gasPriceStore.fast.id
+      gasPriceSelected: gasPriceStore.slow.id
     }
   }
 
