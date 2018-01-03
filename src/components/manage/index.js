@@ -5,7 +5,7 @@ import { CONTRACT_TYPES, TEXT_FIELDS, TOAST, VALIDATION_MESSAGES } from '../../u
 import { InputField } from '../Common/InputField'
 import '../../assets/stylesheets/application.css'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
-import { successfulFinalizeAlert, warningOnFinalizeCrowdsale } from '../../utils/alerts'
+import { successfulFinalizeAlert, successfulUpdateCrowdsaleAlert, warningOnFinalizeCrowdsale } from '../../utils/alerts'
 import { getNetworkVersion, sendTXToContract } from '../../utils/blockchainHelpers'
 import { getWhiteListWithCapCrowdsaleAssets, toast } from '../../utils/utils'
 import { findCurrentContractRecursively, getCurrentRate } from '../crowdsale/utils'
@@ -150,11 +150,15 @@ export class Manage extends Component {
           attributesToUpdate.reduce((promise, { key, newValue, addresses }) => {
             return promise.then(() => updateTierAttribute(key, newValue, addresses))
           }, Promise.resolve())
+            .then(() => {
+              this.hideLoader()
+              successfulUpdateCrowdsaleAlert()
+            })
             .catch(err => {
               console.log(err)
+              this.hideLoader()
               toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED })
             })
-            .then(this.hideLoader)
         }
       }
     }
