@@ -8,7 +8,7 @@ import {
   getCrowdsaleData,
   getCrowdsaleTargetDates,
   getCurrentRate,
-  getJoinedTiers
+  getJoinedTiers, initializeAccumulativeData
 } from '../crowdsale/utils'
 import { getQueryVariable, getURLParam, getWhiteListWithCapCrowdsaleAssets, toast } from '../../utils/utils'
 import {
@@ -110,6 +110,7 @@ export class Invest extends React.Component {
           }
 
           getCrowdsaleData(web3, crowdsaleContract)
+            .then(() => initializeAccumulativeData())
             .then(() => getAccumulativeCrowdsaleData.call(this, web3, () => Promise.resolve()))
             .then(() => this.setState({ loading: false }))
             .catch(err => {
