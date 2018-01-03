@@ -209,7 +209,13 @@ export class Invest extends React.Component {
     }
     console.log(opts)
 
-    sendTXToContract(web3, crowdsaleContract.methods.buy().send(opts))
+    crowdsaleContract.methods.buy().estimateGas(opts)
+      .then(estimatedGas => {
+        const estimatedGasMax = 362897
+        opts.gasLimit = !estimatedGas || estimatedGas > estimatedGasMax ? estimatedGasMax : estimatedGas + 100000
+
+        return sendTXToContract(web3, crowdsaleContract.methods.buy().send(opts))
+      })
       .then(() => successfulInvestmentAlert(investStore.tokensToInvest))
       .catch(err => toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED }))
       .then(() => this.setState({ loading: false }))
