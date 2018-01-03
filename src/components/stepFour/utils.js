@@ -129,7 +129,7 @@ function addWhiteList (round, web3, tierStore, token, abi, addr) {
       console.log('statuses:', minCaps)
       console.log('maxCaps:', maxCaps)
 
-      const method = crowdsaleContract.methods.setEarlyParicipantsWhitelist(addrs, statuses, minCaps, maxCaps).send({
+      const method = crowdsaleContract.methods.setEarlyParticipantsWhitelist(addrs, statuses, minCaps, maxCaps).send({
         gasPrice: generalStore.gasPrice
       })
 
