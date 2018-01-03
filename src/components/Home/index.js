@@ -42,11 +42,10 @@ export class Home extends Component {
       <div className="crowdsale-modal loading-container">
         <div className='modal'>
           <p className='title'>Crowdsales List</p>
-          <p className='description'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur cumque dolore
-            doloribus ea earumeligendi eveniet ex expedita itaque laborum maxime mollitia nemo nihil perferendis
-            quibusdam sed sequiullam, vitae!</p>
+          <p className='description'>The list of your updatable crowdsales. Choose crowdsale address, click Continue and
+            you'll be able to update the parameters of crowdsale.</p>
           <CrowdsalesList onClick={this.onClick}/>
-          <div className='close-button' onClick={() => this.hideModal()}>X</div>
+          <div className='close-button' onClick={() => this.hideModal()}><i className="icon"/></div>
         </div>
       </div>
     )
