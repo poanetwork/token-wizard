@@ -115,6 +115,8 @@ export class Manage extends Component {
   }
 
   saveCrowdsale = e => {
+    this.showLoader()
+
     e.preventDefault()
     e.stopPropagation()
 
@@ -159,8 +161,14 @@ export class Manage extends Component {
               this.hideLoader()
               toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED })
             })
+        } else {
+          this.hideLoader()
         }
+      } else {
+        this.hideLoader()
       }
+    } else {
+      this.hideLoader()
     }
   }
 
