@@ -63,7 +63,7 @@ export const GAS_PRICE = {
   SLOW: {
     ID: 'slow',
     PRICE: 5000000000,
-    DESCRIPTION: 'Slow and Cheap'
+    DESCRIPTION: 'Safe and Cheap'
   },
   NORMAL: {
     ID: 'normal',
