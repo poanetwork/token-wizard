@@ -134,7 +134,7 @@ export const TEXT_FIELDS = {
   VALUE: 'Value',
   MAX_CAP: 'Max cap',
   ALLOWMODIFYING: 'Allow modifying',
-  DISABLEWHITELISTING: 'Disable whitelisting',
+  ENABLE_WHITELISTING: 'Enable whitelisting',
   GAS_PRICE: 'Gas Price'
 }
 

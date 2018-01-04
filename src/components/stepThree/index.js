@@ -29,7 +29,7 @@ const {
   WALLET_ADDRESS,
   CROWDSALE_SETUP_NAME,
   ALLOWMODIFYING,
-  DISABLEWHITELISTING
+  ENABLE_WHITELISTING
 } = TEXT_FIELDS;
 
 @inject("contractStore", "crowdsaleBlockListStore", "pricingStrategyStore", "web3Store", "tierStore", "generalStore")
@@ -46,7 +46,7 @@ export class stepThree extends React.Component {
     crowdsaleBlockListStore.emptyList();
     tierStore.setTierProperty("Tier 1", "tier", 0);
     tierStore.setTierProperty("off", "updatable", 0);
-    tierStore.setTierProperty("yes", "whitelistdisabled", 0);
+    tierStore.setTierProperty("no", "whitelistEnabled", 0);
 
     this.state = {
       gasPriceSelected: GAS_PRICE.FAST.ID,
@@ -256,9 +256,9 @@ export class stepThree extends React.Component {
     );
   }
 
-  updateWhitelistDisabled = (e) => {
+  updateWhitelistEnabled = (e) => {
     this.props.tierStore.setGlobalMinCap('')
-    this.updateTierStore(e, "whitelistdisabled", 0)
+    this.updateTierStore(e, "whitelistEnabled", 0)
   }
 
   render() {
@@ -285,7 +285,7 @@ export class stepThree extends React.Component {
           <InputField
             side="left"
             type="number"
-            disabled={tierStore.tiers[0].whitelistdisabled === "no"}
+            disabled={tierStore.tiers[0].whitelistEnabled === "yes"}
             title={MINCAP}
             value={tierStore.globalMinCap}
             valid={VALID}
@@ -295,15 +295,15 @@ export class stepThree extends React.Component {
           />
           <RadioInputField
             side="right"
-            title={DISABLEWHITELISTING}
+            title={ENABLE_WHITELISTING}
             items={["yes", "no"]}
             vals={["yes", "no"]}
             state={this.state}
             num={0}
-            defaultValue={tierStore.tiers[0].whitelistdisabled}
-            name="crowdsale-whitelistdisabled-0"
-            onChange={e => this.updateWhitelistDisabled(e)}
-            description={`Disables whitelistings. Anyone can buy on the tier.`}
+            defaultValue={tierStore.tiers[0].whitelistEnabled}
+            name="crowdsale-whitelistEnabled-0"
+            onChange={e => this.updateWhitelistEnabled(e)}
+            description={`Enables whitelisting. Anyone can buy on the tier.`}
           />
         </div>
       </div>
@@ -404,7 +404,7 @@ export class stepThree extends React.Component {
                 />
               </div>
             </div>
-            {tierStore.tiers[0].whitelistdisabled === "yes" ? "" : whitelistInputBlock}
+            {tierStore.tiers[0].whitelistEnabled === "yes" ? whitelistInputBlock : ""}
           </div>
 
           {/* Other tiers */}

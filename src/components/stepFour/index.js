@@ -255,7 +255,7 @@ const { PUBLISH } = NAVIGATION_STEPS
 
     let minCap = 0
 
-    if (this.props.tierStore.tiers[0].whitelistdisabled === 'yes' && this.props.tierStore.globalMinCap) {
+    if (this.props.tierStore.tiers[0].whitelistEnabled !== 'yes' && this.props.tierStore.globalMinCap) {
       minCap = toFixed(this.props.tierStore.globalMinCap * 10 ** token.decimals).toString()
     }
 
@@ -382,7 +382,7 @@ const { PUBLISH } = NAVIGATION_STEPS
     const { contractStore, tierStore, tokenStore } = this.props
     const tier = tierStore.tiers[i]
     const initialTier = tierStore.tiers[0]
-    const whitelistDisabled = initialTier.whitelistdisabled
+    const { whitelistEnabled } = initialTier
 
     return [
       tier.tier,
@@ -394,7 +394,7 @@ const { PUBLISH } = NAVIGATION_STEPS
       toFixed('0'),
       toFixed(parseInt(tier.supply, 10) * 10 ** parseInt(tokenStore.decimals, 10)).toString(),
       tier.updatable ? tier.updatable === 'on' : false,
-      whitelistDisabled ? whitelistDisabled !== 'yes' : false
+      whitelistEnabled ? whitelistEnabled === 'yes' : false
     ]
   }
 
@@ -749,7 +749,7 @@ const { PUBLISH } = NAVIGATION_STEPS
                 description="Optimization in compiling"
               />
             </div>
-            {tierStore.tiers[0].whitelistdisabled === "yes"?globalLimitsBlock:""}
+            {tierStore.tiers[0].whitelistEnabled !== "yes" ? globalLimitsBlock : ""}
             {tokenBlock}
             {pricingStrategyBlock}
             {ABIEncodedOutputsPricingStrategy}
