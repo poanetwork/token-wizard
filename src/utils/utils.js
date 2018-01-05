@@ -260,7 +260,7 @@ export const validateName = (name) => typeof name === 'string' && name.length > 
 
 export const validateSupply = (supply) =>  isNaN(Number(supply)) === false && Number(supply) > 0
 
-export const validateDecimals = (decimals) => isNaN(Number(decimals)) === false && decimals.length > 0
+export const validateDecimals = (decimals) => isNaN(Number(decimals)) === false && Number(decimals) >= 0 && Number(decimals) <= 18
 
 export const validateTicker = (ticker) => typeof ticker === 'string' && ticker.length < 4 && ticker.length > 0
 
