@@ -129,3 +129,15 @@ export function noGasPriceAvailable() {
     type: "warning"
   })
 }
+
+export function successfulUpdateCrowdsaleAlert() {
+  sweetAlert2({
+    title: "Success",
+    html: "Congrats! You've successfully updated the Crowdsale!",
+    type: "success"
+  }).then(function(result) {
+    if (result.value) {
+      window.location.reload();
+    }
+  });
+}

@@ -114,7 +114,7 @@ export const VALIDATION_MESSAGES = {
   NAME: 'Please enter a valid name between 1-30 characters',
   TICKER: 'Please enter a valid Ticker that is less than three characters',
   SUPPLY: 'Please enter a valid number greater than 0',
-  DECIMALS: 'Please enter a number greater than or equal to zero',
+  DECIMALS: 'Please enter a number between zero and 18',
   WALLET_ADDRESS: 'Please enter a valid address',
   START_TIME: 'Please enter a valid date later than now',
   END_TIME: 'Please enter a valid date later than start time',
@@ -380,7 +380,7 @@ export const TOAST = {
   },
   DEFAULT_OPTIONS: {
     position: 'top right',
-    offset: '80px 14',
+    offset: 80,
     time: 10000
   }
 }
