@@ -212,7 +212,7 @@ export class Invest extends React.Component {
 
     crowdsaleContract.methods.buy().estimateGas(opts)
       .then(estimatedGas => {
-        const estimatedGasMax = 362897
+        const estimatedGasMax = 4016260
         opts.gasLimit = !estimatedGas || estimatedGas > estimatedGasMax ? estimatedGasMax : estimatedGas + 100000
 
         return sendTXToContract(web3, crowdsaleContract.methods.buy().send(opts))
