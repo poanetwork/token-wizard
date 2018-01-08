@@ -212,14 +212,16 @@ export function getAccumulativeCrowdsaleData(web3, cb) {
           cbCount++
           if (err) return console.log(err)
 
-          console.log('weiRaised: ' + web3.utils.fromWei(parseInt(weiRaised, 10), 'ether'))
           let state = this.state
-          const oldWeiRaised = crowdsalePageStore.weiRaised
+
+          let newWeiRaised
           if (crowdsalePageStore.weiRaised)
-            crowdsalePageStore.setProperty('weiRaised', oldWeiRaised + parseInt(weiRaised, 10))//parseFloat(web3.fromWei(parseInt(weiRaised, 10), "ether"));
+            newWeiRaised = crowdsalePageStore.weiRaised + parseInt(weiRaised, 10);
           else
-            crowdsalePageStore.setProperty('weiRaised', parseInt(weiRaised, 10))//parseFloat(web3.fromWei(parseInt(weiRaised, 10), "ether"));
-          crowdsalePageStore.setProperty('ethRaised', parseFloat(web3.utils.fromWei(parseInt(crowdsalePageStore.weiRaised, 10), 'ether')))
+            newWeiRaised = parseInt(weiRaised, 10);
+
+          crowdsalePageStore.setProperty('weiRaised', newWeiRaised)
+          crowdsalePageStore.setProperty('ethRaised', parseFloat(web3.utils.fromWei(toFixed(crowdsalePageStore.weiRaised).toString(), 'ether')))
 
           if (propsCount === cbCount) {
             state.loading = false
