@@ -63,22 +63,30 @@ export const GAS_PRICE = {
   SLOW: {
     ID: 'slow',
     PRICE: 5000000000,
-    DESCRIPTION: 'Slow and Cheap (5 Gwei)'
+    DESCRIPTION: 'Safe and Cheap'
   },
   NORMAL: {
     ID: 'normal',
     PRICE: 10000000000,
-    DESCRIPTION: 'Normal (10 Gwei)'
+    DESCRIPTION: 'Normal'
   },
   FAST: {
     ID: 'fast',
     PRICE: 15000000000,
-    DESCRIPTION: 'Fast and Expensive (15 Gwei)'
+    DESCRIPTION: 'Fast and Expensive'
+  },
+  INSTANT: {
+    ID: 'instant',
+    PRICE: 45000000000,
+    DESCRIPTION: 'Instantaneous and Expensive'
   },
   CUSTOM: {
     ID: 'custom',
     PRICE: 0,
     DESCRIPTION: 'Custom'
+  },
+  API: {
+    URL: 'https://gasprice.poa.network'
   }
 }
 export const UNKNOWN = "Unknown"

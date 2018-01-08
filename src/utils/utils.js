@@ -385,3 +385,7 @@ export const toast = {
     this.msg[ type ](message, options)
   }
 }
+
+export const gweiToWei = x => x * 1000000000
+
+export const weiToGwei = x => x / 1000000000
