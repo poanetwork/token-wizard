@@ -8,5 +8,5 @@
 	branch = master
 [submodule "submodules/oracles-web3-1.0"]
 	path = submodules/oracles-web3-1.0
-	url = https://github.com/poanetwork/web3.js
+	url = https://github.com/oraclesorg/web3.js
 	branch = 1.0
