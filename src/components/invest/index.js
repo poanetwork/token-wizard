@@ -8,7 +8,8 @@ import {
   getCrowdsaleData,
   getCrowdsaleTargetDates,
   getCurrentRate,
-  getJoinedTiers, initializeAccumulativeData
+  getJoinedTiers,
+  initializeAccumulativeData
 } from '../crowdsale/utils'
 import { getQueryVariable, getURLParam, getWhiteListWithCapCrowdsaleAssets, toast } from '../../utils/utils'
 import {
@@ -106,8 +107,8 @@ export class Invest extends React.Component {
             return
           }
 
-          getCrowdsaleData(web3, crowdsaleContract)
-            .then(() => initializeAccumulativeData())
+          initializeAccumulativeData()
+            .then(() => getCrowdsaleData(web3, crowdsaleContract))
             .then(() => getAccumulativeCrowdsaleData.call(this, web3, () => Promise.resolve()))
             .then(() => this.setState({ loading: false }))
             .catch(err => {
@@ -210,7 +211,13 @@ export class Invest extends React.Component {
     }
     console.log(opts)
 
-    sendTXToContract(web3, crowdsaleContract.methods.buy().send(opts))
+    crowdsaleContract.methods.buy().estimateGas(opts)
+      .then(estimatedGas => {
+        const estimatedGasMax = 4016260
+        opts.gasLimit = !estimatedGas || estimatedGas > estimatedGasMax ? estimatedGasMax : estimatedGas + 100000
+
+        return sendTXToContract(web3, crowdsaleContract.methods.buy().send(opts))
+      })
       .then(() => successfulInvestmentAlert(investStore.tokensToInvest))
       .catch(err => toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED }))
       .then(() => this.setState({ loading: false }))
