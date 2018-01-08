@@ -7,6 +7,7 @@
   },
   "devDependencies": {
     "ethereumjs-testrpc": "^4.1.3",
+    "ganache-cli": "^6.0.3",
     "gulp": "^3.9.1",
     "gulp-add-src": "^0.2.0",
     "gulp-autoprefixer": "^3.1.1",
@@ -22,7 +23,9 @@
     "gulp-util": "^3.0.8",
     "markdown-toc": "^1.2.0",
     "mobx-react-devtools": "^4.2.15",
-    "truffle": "^3.4.9"
+    "shelljs": "^0.7.8",
+    "truffle": "^3.4.9",
+    "yargs": "^10.0.3"
   },
   "dependencies": {
     "autoprefixer": "7.1.1",
@@ -96,12 +99,17 @@
     "crowdsale_contract_name": "MintedTokenCappedCrowdsaleExt",
     "crowdsale_token_contract_name": "CrowdsaleTokenExt",
     "crowdsale_pricing_strategy_contract_name": "FlatPricingExt",
-    "safe_math_lib_contract_name": "SafeMathLibExt"
+    "safe_math_lib_contract_name": "SafeMathLibExt",
+    "registry_contract_name": "Registry"
   },
   "scripts": {
-    "start": "cd submodules/oracles-web3-1.0 && npm install && cd ../../ && npm install submodules/oracles-web3-1.0/packages/web3 && npm run generateFlatSoliditySafeMathLibContract && npm run generateFlatSolidityCrowdsaleNullFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleContract && npm run generateFlatSolidityCrowdsaleTokenContract && npm run generateFlatSolidityCrowdsalePricingStrategyContract && npm run compileSafeMathLibExtContract && npm run compileCrowdsaleNullFinalizeAgentContract && npm run compileCrowdsaleFinalizeAgentContract && npm run compileCrowdsaleContract && npm run compileCrowdsaleTokenContract && npm run compileCrowdsalePricingStrategyContract && node scripts/start.js",
-    "startWin": "cd submodules/oracles-web3-1.0 && npm install && cd ../../ && npm install submodules/oracles-web3-1.0/packages/web3 && npm run generateFlatSoliditySafeMathLibContractWin && npm run generateFlatSolidityCrowdsaleNullFinalizeAgentContractWin && npm run generateFlatSolidityCrowdsaleFinalizeAgentContractWin && npm run generateFlatSolidityCrowdsaleContractWin && npm run generateFlatSolidityCrowdsaleTokenContractWin && npm run generateFlatSolidityCrowdsalePricingStrategyContractWin && npm run compileSafeMathLibExtContractWin && npm run compileCrowdsaleNullFinalizeAgentContractWin && npm run compileCrowdsaleFinalizeAgentContractWin && npm run compileCrowdsaleContractWin && npm run compileCrowdsaleTokenContractWin && npm run compileCrowdsalePricingStrategyContractWin && node scripts/start.js",
-    "build": "git submodule update --init --recursive --remote && cd submodules/oracles-combine-solidity && npm install && cd ../../ && npm install && cd submodules/oracles-web3-1.0 && npm install && cd ../../ && npm install submodules/oracles-web3-1.0/packages/web3 && npm run generateFlatSoliditySafeMathLibContract && npm run generateFlatSolidityCrowdsaleNullFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleContract && npm run generateFlatSolidityCrowdsaleTokenContract && npm run generateFlatSolidityCrowdsalePricingStrategyContract && npm run compileSafeMathLibExtContract && npm run compileCrowdsaleNullFinalizeAgentContract && npm run compileCrowdsaleFinalizeAgentContract && npm run compileCrowdsaleContract && npm run compileCrowdsaleTokenContract && npm run compileCrowdsalePricingStrategyContract && node scripts/build.js && cp ./build/index.html ./build/invest.html && cp ./build/index.html ./build/crowdsale.html",
+    "installWeb3": "cd submodules/oracles-web3-1.0 && npm install && cd ../../ && npm install submodules/oracles-web3-1.0/packages/web3",
+    "start": "npm run installWeb3 && npm run generateFlatSoliditySafeMathLibContract && npm run generateFlatSolidityCrowdsaleNullFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleContract && npm run generateFlatSolidityCrowdsaleTokenContract && npm run generateFlatSolidityCrowdsalePricingStrategyContract && npm run generateFlatSolidityRegistryContract && npm run compileSafeMathLibExtContract && npm run compileCrowdsaleNullFinalizeAgentContract && npm run compileCrowdsaleFinalizeAgentContract && npm run compileCrowdsaleContract && npm run compileCrowdsaleTokenContract && npm run compileCrowdsalePricingStrategyContract && npm run compileRegistryContract && node scripts/start.js",
+    "dev": "npm run installWeb3 && npm run generateFlatSolidityRegistryContract && npm run compileRegistryContract && npm run deployRegistry && npm start",
+    "dev:fast": "npm run installWeb3 && npm run generateFlatSolidityRegistryContract && npm run compileRegistryContract && npm run deployRegistry && node scripts/start.js",
+    "deployRegistry": "node scripts/deployRegistry.js",
+    "startWin": "npm run installWeb3 && npm run generateFlatSoliditySafeMathLibContractWin && npm run generateFlatSolidityCrowdsaleNullFinalizeAgentContractWin && npm run generateFlatSolidityCrowdsaleFinalizeAgentContractWin && npm run generateFlatSolidityCrowdsaleContractWin && npm run generateFlatSolidityCrowdsaleTokenContractWin && npm run generateFlatSolidityCrowdsalePricingStrategyContractWin && npm run compileSafeMathLibExtContractWin && npm run compileCrowdsaleNullFinalizeAgentContractWin && npm run compileCrowdsaleFinalizeAgentContractWin && npm run compileCrowdsaleContractWin && npm run compileCrowdsaleTokenContractWin && npm run compileCrowdsalePricingStrategyContractWin && node scripts/start.js",
+    "build": "git submodule update --init --recursive --remote && cd submodules/oracles-combine-solidity && npm install && cd ../../ && npm install && cd submodules/oracles-web3-1.0 && npm install && cd ../../ && npm install submodules/oracles-web3-1.0/packages/web3 && npm run generateFlatSoliditySafeMathLibContract && npm run generateFlatSolidityCrowdsaleNullFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleContract && npm run generateFlatSolidityCrowdsaleTokenContract && npm run generateFlatSolidityCrowdsalePricingStrategyContract && npm run generateFlatSolidityRegistryContract && npm run compileSafeMathLibExtContract && npm run compileCrowdsaleNullFinalizeAgentContract && npm run compileCrowdsaleFinalizeAgentContract && npm run compileCrowdsaleContract && npm run compileCrowdsaleTokenContract && npm run compileCrowdsalePricingStrategyContract && npm run compileRegistryContract && node scripts/build.js && cp ./build/index.html ./build/invest.html && cp ./build/index.html ./build/crowdsale.html",
     "test": "bash ./start_testrpc.sh && cd ./submodules/oracles-token-market-net-ico/ && npm install && node_modules/.bin/truffle migrate --network testrpc && node_modules/.bin/truffle test --network testrpc",
     "test:dapp": "jest --env=jsdom",
     "generateFlatSoliditySafeMathLibContract": "node $npm_package_config_combine_solidity_script $npm_package_config_tokenmarketnet_path/$npm_package_config_safe_math_lib_contract_name.sol $npm_package_config_contract_folder SafeMathLibExt",
@@ -110,11 +118,13 @@
     "generateFlatSolidityCrowdsalePricingStrategyContract": "node $npm_package_config_combine_solidity_script $npm_package_config_tokenmarketnet_path/$npm_package_config_crowdsale_pricing_strategy_contract_name.sol $npm_package_config_contract_folder CrowdsaleWhiteListWithCapPricingStrategy",
     "generateFlatSolidityCrowdsaleNullFinalizeAgentContract": "node $npm_package_config_combine_solidity_script $npm_package_config_tokenmarketnet_path/$npm_package_config_null_finalize_agent_contract_name.sol $npm_package_config_contract_folder NullFinalizeAgent",
     "generateFlatSolidityCrowdsaleFinalizeAgentContract": "node $npm_package_config_combine_solidity_script $npm_package_config_tokenmarketnet_path/$npm_package_config_finalize_agent_contract_name.sol $npm_package_config_contract_folder FinalizeAgent",
+    "generateFlatSolidityRegistryContract": "node $npm_package_config_combine_solidity_script $npm_package_config_tokenmarketnet_path/$npm_package_config_registry_contract_name.sol $npm_package_config_contract_folder Registry",
     "compileSafeMathLibExtContract": "node ./scripts/compileContract.js $npm_package_config_contract_folder/SafeMathLibExt_flat.sol $npm_package_config_contract_folder $npm_package_config_extension_path false $npm_package_config_safe_math_lib_contract_name SafeMathLibExt",
     "compileCrowdsaleContract": "node ./scripts/compileContract.js $npm_package_config_contract_folder/CrowdsaleWhiteListWithCap_flat.sol $npm_package_config_contract_folder $npm_package_config_extension_path false $npm_package_config_crowdsale_contract_name CrowdsaleWhiteListWithCap",
     "compileCrowdsaleTokenContract": "node ./scripts/compileContract.js $npm_package_config_contract_folder/CrowdsaleWhiteListWithCapToken_flat.sol $npm_package_config_contract_folder $npm_package_config_extension_path false $npm_package_config_crowdsale_token_contract_name CrowdsaleWhiteListWithCapToken",
     "compileCrowdsalePricingStrategyContract": "node ./scripts/compileContract.js $npm_package_config_contract_folder/CrowdsaleWhiteListWithCapPricingStrategy_flat.sol $npm_package_config_contract_folder $npm_package_config_extension_path false $npm_package_config_crowdsale_pricing_strategy_contract_name CrowdsaleWhiteListWithCapPricingStrategy",
     "compileCrowdsaleNullFinalizeAgentContract": "node ./scripts/compileContract.js $npm_package_config_contract_folder/NullFinalizeAgent_flat.sol $npm_package_config_contract_folder $npm_package_config_extension_path false $npm_package_config_null_finalize_agent_contract_name NullFinalizeAgent",
+    "compileRegistryContract": "node ./scripts/compileContract.js $npm_package_config_contract_folder/Registry_flat.sol $npm_package_config_contract_folder $npm_package_config_extension_path false $npm_package_config_registry_contract_name Registry",
     "compileCrowdsaleFinalizeAgentContract": "node ./scripts/compileContract.js $npm_package_config_contract_folder/FinalizeAgent_flat.sol $npm_package_config_contract_folder $npm_package_config_extension_path false $npm_package_config_finalize_agent_contract_name FinalizeAgent",
     "generateFlatSoliditySafeMathLibContractWin": "node %npm_package_config_combine_solidity_script% %npm_package_config_tokenmarketnet_path%/%npm_package_config_safe_math_lib_contract_name%.sol %npm_package_config_contract_folder% SafeMathLibExt",
     "generateFlatSolidityCrowdsaleContractWin": "node %npm_package_config_combine_solidity_script% %npm_package_config_tokenmarketnet_path%/%npm_package_config_crowdsale_contract_name%.sol %npm_package_config_contract_folder% CrowdsaleWhiteListWithCap",
@@ -128,7 +138,8 @@
     "compileCrowdsalePricingStrategyContractWin": "node ./scripts/compileContract.js %npm_package_config_contract_folder%/CrowdsaleWhiteListWithCapPricingStrategy_flat.sol %npm_package_config_contract_folder% %npm_package_config_extension_path% false %npm_package_config_crowdsale_pricing_strategy_contract_name% CrowdsaleWhiteListWithCapPricingStrategy",
     "compileCrowdsaleNullFinalizeAgentContractWin": "node ./scripts/compileContract.js %npm_package_config_contract_folder%/NullFinalizeAgent_flat.sol %npm_package_config_contract_folder% %npm_package_config_extension_path% false %npm_package_config_null_finalize_agent_contract_name% NullFinalizeAgent",
     "compileCrowdsaleFinalizeAgentContractWin": "node ./scripts/compileContract.js %npm_package_config_contract_folder%/FinalizeAgent_flat.sol %npm_package_config_contract_folder% %npm_package_config_extension_path% false %npm_package_config_finalize_agent_contract_name% FinalizeAgent",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "ganache": "ganache-cli -d -i 12648430"
   },
   "jest": {
     "collectCoverageFrom": [

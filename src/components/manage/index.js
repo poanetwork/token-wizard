@@ -5,7 +5,7 @@ import { CONTRACT_TYPES, TEXT_FIELDS, TOAST, VALIDATION_MESSAGES } from '../../u
 import { InputField } from '../Common/InputField'
 import '../../assets/stylesheets/application.css'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
-import { successfulFinalizeAlert, warningOnFinalizeCrowdsale } from '../../utils/alerts'
+import { successfulFinalizeAlert, successfulUpdateCrowdsaleAlert, warningOnFinalizeCrowdsale } from '../../utils/alerts'
 import { getNetworkVersion, sendTXToContract } from '../../utils/blockchainHelpers'
 import { getWhiteListWithCapCrowdsaleAssets, toast } from '../../utils/utils'
 import { findCurrentContractRecursively, getCurrentRate } from '../crowdsale/utils'
@@ -29,7 +29,7 @@ export class Manage extends Component {
 
   componentWillMount () {
     const { crowdsaleStore, web3Store, contractStore, generalStore, match } = this.props
-    const crowdsaleAddress = crowdsaleStore.crowdsales.find(crowdsale => crowdsale === match.params.addr)
+    const crowdsaleAddress = match.params.crowdsaleAddress
 
     crowdsaleStore.setSelectedProperty('address', crowdsaleAddress)
 
@@ -115,6 +115,8 @@ export class Manage extends Component {
   }
 
   saveCrowdsale = e => {
+    this.showLoader()
+
     e.preventDefault()
     e.stopPropagation()
 
@@ -150,13 +152,23 @@ export class Manage extends Component {
           attributesToUpdate.reduce((promise, { key, newValue, addresses }) => {
             return promise.then(() => updateTierAttribute(key, newValue, addresses))
           }, Promise.resolve())
+            .then(() => {
+              this.hideLoader()
+              successfulUpdateCrowdsaleAlert()
+            })
             .catch(err => {
               console.log(err)
+              this.hideLoader()
               toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED })
             })
-            .then(this.hideLoader)
+        } else {
+          this.hideLoader()
         }
+      } else {
+        this.hideLoader()
       }
+    } else {
+      this.hideLoader()
     }
   }
 

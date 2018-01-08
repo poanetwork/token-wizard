@@ -41,7 +41,7 @@ export function getURLParam(key,target){
 }
 
 export function setFlatFileContentToState(file) {
-  return readSolFile(file)
+  return fetchFile(file)
 }
 
 export function getWhiteListWithCapCrowdsaleAssets() {
@@ -55,8 +55,9 @@ export function getWhiteListWithCapCrowdsaleAssets() {
     const pricingFiles = binAbi.map(ext => `${contractsRoute}${crowdsaleFilename}PricingStrategy_flat.${ext}`)
     const finalizeFiles = binAbi.map(ext => `${contractsRoute}FinalizeAgent_flat.${ext}`)
     const nullFiles = binAbi.map(ext => `${contractsRoute}NullFinalizeAgent_flat.${ext}`)
+    const registryFiles = binAbi.map(ext => `${contractsRoute}Registry_flat.${ext}`)
 
-    const states = crowdsaleFiles.concat(tokenFiles, pricingFiles, finalizeFiles, nullFiles)
+    const states = crowdsaleFiles.concat(tokenFiles, pricingFiles, finalizeFiles, nullFiles, registryFiles)
       .map(setFlatFileContentToState)
 
     Promise.all(states)
@@ -72,13 +73,15 @@ export function getWhiteListWithCapCrowdsaleAssets() {
         contractStore.setContractProperty('finalizeAgent', 'abi', JSON.parse(state[8]))
         contractStore.setContractProperty('nullFinalizeAgent', 'bin', state[9])
         contractStore.setContractProperty('nullFinalizeAgent', 'abi', JSON.parse(state[10]))
+        contractStore.setContractProperty('registry', 'bin', state[11])
+        contractStore.setContractProperty('registry', 'abi', JSON.parse(state[12]))
         resolve(contractStore)
       })
       .catch(reject)
   })
 }
 
-function readSolFile(path) {
+export function fetchFile(path) {
   return new Promise((resolve, reject) => {
     const rawFile = new XMLHttpRequest()
 
@@ -257,7 +260,7 @@ export const validateName = (name) => typeof name === 'string' && name.length > 
 
 export const validateSupply = (supply) =>  isNaN(Number(supply)) === false && Number(supply) > 0
 
-export const validateDecimals = (decimals) => isNaN(Number(decimals)) === false && decimals.length > 0
+export const validateDecimals = (decimals) => isNaN(Number(decimals)) === false && Number(decimals) >= 0 && Number(decimals) <= 18
 
 export const validateTicker = (ticker) => typeof ticker === 'string' && ticker.length < 4 && ticker.length > 0
 
