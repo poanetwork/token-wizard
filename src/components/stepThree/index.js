@@ -1,7 +1,7 @@
 import React from "react";
 import "../../assets/stylesheets/application.css";
 import { Link } from "react-router-dom";
-import { setExistingContractParams } from "../../utils/blockchainHelpers";
+import { setExistingContractParams, getNetworkVersion } from "../../utils/blockchainHelpers";
 import { defaultCompanyStartDate } from "./utils";
 import { defaultCompanyEndDate, gweiToWei, weiToGwei } from "../../utils/utils";
 import { StepNavigation } from "../Common/StepNavigation";
@@ -9,6 +9,7 @@ import { InputField } from "../Common/InputField";
 import { RadioInputField } from "../Common/RadioInputField";
 import { CrowdsaleBlock } from "./CrowdsaleBlock";
 import { WhitelistInputBlock } from "../Common/WhitelistInputBlock";
+import { web3Store } from '../../stores'
 import {
   NAVIGATION_STEPS,
   VALIDATION_MESSAGES,
@@ -18,7 +19,7 @@ import {
 } from "../../utils/constants";
 import { inject, observer } from "mobx-react";
 import { Loader } from '../Common/Loader'
-import { noGasPriceAvailable } from '../../utils/alerts'
+import { noGasPriceAvailable, mainnetIsOnMaintenance } from '../../utils/alerts'
 
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS;
 const { EMPTY, VALID } = VALIDATION_TYPES;
@@ -159,7 +160,15 @@ export class stepThree extends React.Component {
     }
 
     if (tierStore.areTiersValid) {
-      this.props.history.push("/4");
+      web3Store.getWeb3((web3) => {
+        getNetworkVersion(web3Store.web3)
+          .then((networkId) => {
+            if (networkId == 1)
+              mainnetIsOnMaintenance();
+            else
+              this.props.history.push("/4");
+          })
+      });
     } else {
       this.showErrorMessages(e);
     }

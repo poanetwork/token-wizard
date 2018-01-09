@@ -141,3 +141,11 @@ export function successfulUpdateCrowdsaleAlert() {
     }
   });
 }
+
+export function mainnetIsOnMaintenance() {
+  sweetAlert2({
+    title: "Warning",
+    html: "ICO Wizard on Mainnet is down for maintenance. For updates, please check <a href='https://gitter.im/poanetwork/ico-wizard'>our gitter</a>",
+    type: "warning"
+  });
+}
