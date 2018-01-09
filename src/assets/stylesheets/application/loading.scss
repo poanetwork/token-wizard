@@ -44,6 +44,37 @@
     background-color: fade-out(#231d73, 0.2);
   }
 
+  &-text-container {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 206px;
+    margin: -30px 0 0 -111.5px;
+    padding-top: 45px;
+  }
+
+  &-text {
+    color: white;
+    font-weight: bold;
+    text-align: justify;
+    word-spacing: 2px;
+    width: 100%;
+    font-size: 14.2px;
+  }
+
+  &-progress {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 206px;
+    margin: -30px 0 0 -111.5px;
+    padding-top: 70px;
+  }
+
   &-i {
     animation-duration: 2s;
     animation-fill-mode: forwards;
