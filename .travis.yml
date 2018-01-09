@@ -1,9 +1,12 @@
 language: node_js
 node_js:
-  - "node"
+  - "8"
 
 install:
   - npm install
 
 after-script:
   - sudo kill `sudo lsof -t -i:8545`
+
+after_success:
+  - bash <(curl -s https://copilot.blackducksoftware.com/ci/travis/scripts/upload)

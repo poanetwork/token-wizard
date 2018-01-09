@@ -1,392 +1,433 @@
-import { attachToContract, checkTxMined, sendTXToContract } from '../../utils/blockchainHelpers'
+import {
+  attachToContract,
+  getNetWorkNameById,
+  getNetworkVersion,
+  sendTXToContract
+} from '../../utils/blockchainHelpers'
 import { noContractAlert } from '../../utils/alerts'
 import { toFixed } from '../../utils/utils'
-import { GAS_PRICE } from '../../utils/constants'
+import { DOWNLOAD_NAME } from '../../utils/constants'
+import { isObservableArray } from 'mobx'
+import { web3Store, generalStore } from '../../stores'
 
-function setLastCrowdsale(web3, abi, addr, lastCrowdsale, gasLimit, cb) {
-  console.log("###setLastCrowdsale for Pricing Strategy:###");
-  attachToContract(web3, abi, addr, function(err, pricingStrategyContract) {
-    console.log("attach to pricingStrategy contract");
-    if (err) {
-      console.log(err)
-      return cb();
-    }
-    if (!pricingStrategyContract) return noContractAlert();
+function setLastCrowdsale(web3, abi, addr, lastCrowdsale, gasLimit) {
+  console.log('###setLastCrowdsale for Pricing Strategy:###')
 
-    let method = pricingStrategyContract.methods.setLastCrowdsale(lastCrowdsale).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
-    sendTXToContract(web3, method, cb);
-  });
+  return attachToContract(web3, abi, addr)
+    .then(pricingStrategyContract => {
+      console.log('attach to pricingStrategy contract')
+
+      if (!pricingStrategyContract) {
+        noContractAlert()
+        return Promise.reject('No contract available')
+      }
+
+      const method = pricingStrategyContract.methods.setLastCrowdsale(lastCrowdsale).send({
+        gasLimit: gasLimit,
+        gasPrice: generalStore.gasPrice
+      })
+
+      return sendTXToContract(web3, method)
+    })
 }
 
 //for mintable token
-function setMintAgent(web3, abi, addr, acc, gasLimit, cb) {
-  console.log("###setMintAgent:###");
-  attachToContract(web3, abi, addr, function(err, tokenContract) {
-    console.log("attach to token contract");
-    if (err) {
-      console.log(err)
-      return cb();
-    }
-    if (!tokenContract) return noContractAlert();
+function setMintAgent (web3, abi, addr, acc, gasLimit) {
+  console.log('###setMintAgent:###')
 
-    let method = tokenContract.methods.setMintAgent(acc, true).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
-    sendTXToContract(web3, method, cb);
-  });
+  return attachToContract(web3, abi, addr)
+    .then(tokenContract => {
+      console.log('attach to token contract')
+
+      if (!tokenContract) {
+        noContractAlert()
+        return Promise.reject('No contract available')
+      }
+
+      const method = tokenContract.methods.setMintAgent(acc, true).send({
+        gasLimit: gasLimit,
+        gasPrice: generalStore.gasPrice
+      })
+
+      return sendTXToContract(web3, method)
+    })
 }
 
-function addWhiteList(round, web3, crowdsale, token, abi, addr, cb) {
-  console.log("###whitelist:###");
-  let whitelist = [];
-  for (let i = 0; i <= round; i++) {
-    console.log(crowdsale[i]);
-    console.log(crowdsale[i].whitelist);
+function addWhiteList (round, web3, tierStore, token, abi, addr) {
+  console.log('###whitelist:###')
+  let whitelist = []
 
-    for (let j = 0; j < crowdsale[i].whitelist.length; j++) {
-      let itemIsAdded = false;
+  for (let i = 0; i <= round; i++) {
+    const tier = tierStore.tiers[i]
+    const whitelistInput = tier.whitelistInput
+
+    for (let j = 0; j < tier.whitelist.length; j++) {
+      let itemIsAdded = false
+
       for (let k = 0; k < whitelist.length; k++) {
-        if (whitelist[k].addr == crowdsale[i].whitelist[j].addr) {
-          itemIsAdded = true;
-          break;
+        if (whitelist[k].addr === tier.whitelist[j].addr) {
+          itemIsAdded = true
+          break
         }
       }
+
       if (!itemIsAdded) {
-        whitelist.push.apply(whitelist, crowdsale[i].whitelist);
+        whitelist.push.apply(whitelist, tier.whitelist)
       }
     }
 
-    if (crowdsale[i].whiteListInput.addr && crowdsale[i].whiteListInput.min && crowdsale[i].whiteListInput.max) {
-      let itemIsAdded = false;
+    if (whitelistInput.addr && whitelistInput.min && whitelistInput.max) {
+      let itemIsAdded = false
+
       for (let k = 0; k < whitelist.length; k++) {
-        if (whitelist[k].addr == crowdsale[i].whiteListInput.addr) {
-          itemIsAdded = true;
-          break;
+        if (whitelist[k].addr === whitelistInput.addr) {
+          itemIsAdded = true
+          break
         }
       }
+
       if (!itemIsAdded) {
         whitelist.push({
-          "addr": crowdsale[i].whiteListInput.addr,
-          "min": crowdsale[i].whiteListInput.min,
-          "max": crowdsale[i].whiteListInput.max
-        });
+          'addr': whitelistInput.addr,
+          'min': whitelistInput.min,
+          'max': whitelistInput.max
+        })
       }
     }
   }
-  console.log("whitelist: ");
-  console.log(whitelist);
+
+  console.log('whitelist:', whitelist)
 
   if (whitelist.length === 0) {
-    return cb();
+    return Promise.resolve()
   }
-  attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
-    console.log("attach to crowdsale contract");
-    if (err) return console.log(err);
-    if (!crowdsaleContract) return noContractAlert();
 
-    let addrs = [];
-    let statuses = [];
-    let minCaps = [];
-    let maxCaps = [];
+  return attachToContract(web3, abi, addr)
+    .then(crowdsaleContract => {
+      console.log('attach to crowdsale contract')
 
-    for (let i = 0; i < whitelist.length; i++) {
-      if (!whitelist[i].deleted) {
-        addrs.push(whitelist[i].addr);
-        statuses.push(true);
-        minCaps.push(whitelist[i].min*10**token.decimals?toFixed((whitelist[i].min*10**token.decimals).toString()):0);
-        maxCaps.push(whitelist[i].max*10**token.decimals?toFixed((whitelist[i].max*10**token.decimals).toString()):0);
+      if (!crowdsaleContract) {
+        noContractAlert()
+        return Promise.reject('No contract available')
       }
-    }
 
-    console.log("addrs:");
-    console.log(addrs);
-    console.log("statuses:");
-    console.log(statuses);
-    console.log("minCaps:");
-    console.log(minCaps);
-    console.log("maxCaps:");
-    console.log(maxCaps);
+      let addrs = []
+      let statuses = []
+      let minCaps = []
+      let maxCaps = []
 
-    let method = crowdsaleContract.methods.setEarlyParicipantsWhitelist(addrs, statuses, minCaps, maxCaps).send({gasPrice: GAS_PRICE})
-    sendTXToContract(web3, method, cb)
-  });
-}
-
-function updateJoinedCrowdsales(web3, abi, addr, joinedCntrctAddrs, cb) {
-  console.log("###updateJoinedCrowdsales:###");
-  attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
-    console.log("attach to crowdsale contract");
-    if (err) {
-      console.log(err)
-      return cb();
-    }
-    if (!crowdsaleContract) return noContractAlert();
-
-    console.log("input: ");
-    console.log(joinedCntrctAddrs);
-
-    let method = crowdsaleContract.methods.updateJoinedCrowdsalesMultiple(joinedCntrctAddrs).send({gasPrice: GAS_PRICE})
-    sendTXToContract(web3, method, cb);
-  });
-}
-
-function setFinalizeAgent(web3, abi, addr, finalizeAgentAddr, gasLimit, cb) {
-  console.log("###setFinalizeAgent:###");
-  attachToContract(web3, abi, addr, function(err, crowdsaleContract) {
-    console.log("attach to crowdsale contract");
-    if (err) {
-      console.log(err)
-      return cb();
-    }
-    if (!crowdsaleContract) return noContractAlert();
-
-    let method = crowdsaleContract.methods.setFinalizeAgent(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
-    sendTXToContract(web3, method, cb);
-  });
-}
-
-function setReleaseAgent(web3, abi, addr, finalizeAgentAddr, gasLimit, cb) {
-  console.log("###setReleaseAgent:###");
-  attachToContract(web3, abi, addr, function(err, tokenContract) {
-    console.log("attach to token contract");
-    if (err) {
-      console.log(err)
-      return cb();
-    }
-    if (!tokenContract) return noContractAlert();
-
-    let method = tokenContract.methods.setReleaseAgent(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
-    sendTXToContract(web3, method, cb);
-  });
-}
-
-export function setReservedTokensListMultiple(web3, abi, addr, token, cb) {
-  console.log("###setReservedTokensListMultiple:###");
-  attachToContract(web3, abi, addr, function(err, tokenContract) {
-    console.log("attach to token contract");
-    if (err) {
-      console.log(err)
-      return cb();
-    }
-    if (!tokenContract) return noContractAlert();
-
-    let map = {};
-
-    let addrs = [];
-    let inTokens = [];
-    let inPercentage = [];
-
-    if (token.reservedTokensInput.addr && token.reservedTokensInput.dim && token.reservedTokensInput.val) {
-      token.reservedTokens.push({
-          "addr": token.reservedTokensInput.addr,
-          "dim": token.reservedTokensInput.dim,
-          "val": token.reservedTokensInput.val
-      });
-    }
-
-    console.log("token.reservedTokens: ");
-    console.log(token.reservedTokens);
-
-    for (let i = 0; i < token.reservedTokens.length; i++) {
-      if (!token.reservedTokens[i].deleted) {
-        let val = token.reservedTokens[i].val;
-        let addr = token.reservedTokens[i].addr;
-        let obj = map[addr]?map[addr]:{};
-        if (token.reservedTokens[i].dim === "tokens") obj.inTokens = val*10**token.decimals
-        else obj.inPercentage = val;
-        map[addr] = obj;
-        //addrs.push(token.reservedTokens[i].addr);
-        //dims.push(token.reservedTokens[i].dim == "tokens"?true:false);
-        //vals.push(token.reservedTokens[i].dim == "tokens"?token.reservedTokens[i].val*10**token.decimals:token.reservedTokens[i].val);
-      }
-    }
-
-    let keys = Object.keys(map);
-    for (let i = 0; i < keys.length; i++) {
-      addrs.push(keys[i]);
-      inTokens.push(map[keys[i]].inTokens?toFixed(map[keys[i]].inTokens.toString()):0);
-      inPercentage.push(map[keys[i]].inPercentage?map[keys[i]].inPercentage:0);
-    }
-
-    if (addrs.length === 0 && inTokens.length === 0 && inPercentage.length === 0) return cb();
-
-    console.log("input: ");
-    console.log("addrs: " + addrs);
-    console.log("inTokens: " + inTokens);
-    console.log("inPercentage: " + inPercentage);
-
-    let method = tokenContract.methods.setReservedTokensListMultiple(addrs, inTokens, inPercentage).send({gasPrice: GAS_PRICE})
-    sendTXToContract(web3, method, cb);
-  });
-}
-
-export function transferOwnership(web3, abi, addr, finalizeAgentAddr, gasLimit, cb) {
-  console.log("###transferOwnership:###");
-  attachToContract(web3, abi, addr, function(err, tokenContract) {
-    console.log("attach to token contract");
-    if (err) {
-      console.log(err)
-      return cb();
-    }
-    if (!tokenContract) return noContractAlert();
-
-    let method = tokenContract.methods.transferOwnership(finalizeAgentAddr).send({gasLimit: gasLimit, gasPrice: GAS_PRICE})
-    sendTXToContract(web3, method, cb);
-  });
-}
-
-export function setLastCrowdsaleRecursive (i, web3, abi, pricingStrategyAddrs, lastCrowdsale, gasLimit, cb) {
-  setLastCrowdsale(web3, abi, pricingStrategyAddrs[i], lastCrowdsale, gasLimit, (err) => {
-    i++;
-    if (i < pricingStrategyAddrs.length) {
-      setLastCrowdsaleRecursive(i, web3, abi, pricingStrategyAddrs, lastCrowdsale, gasLimit, cb);
-    } else {
-      cb(err);
-    }
-  })
-}
-
-export function  setMintAgentRecursive (i, web3, abi, addr, crowdsaleAddrs, gasLimit, cb) {
-  setMintAgent(web3, abi, addr, crowdsaleAddrs[i], gasLimit, (err) => {
-    i++;
-    if (i < crowdsaleAddrs.length) {
-      setMintAgentRecursive(i, web3, abi, addr, crowdsaleAddrs, gasLimit, cb);
-    } else {
-      cb(err);
-    }
-  })
-}
-
-export function updateJoinedCrowdsalesRecursive (i, web3, abi, addrs, cb) {
-  if (addrs.length === 0) return cb();
-  updateJoinedCrowdsales(web3, abi, addrs[i], addrs, (err) => {
-    i++;
-    if (i < addrs.length) {
-      updateJoinedCrowdsalesRecursive(i, web3, abi, addrs, cb);
-    } else {
-      cb(err);
-    }
-  })
-}
-
-export function addWhiteListRecursive (i, web3, crowdsale, token, abi, crowdsaleAddrs, cb) {
-  addWhiteList(i, web3, crowdsale, token, abi, crowdsaleAddrs[i], (err) => {
-    i++;
-    if (i < crowdsaleAddrs.length) {
-      addWhiteListRecursive(i, web3, crowdsale, token, abi, crowdsaleAddrs, cb);
-    } else {
-      cb(err);
-    }
-  })
-}
-
-export function setFinalizeAgentRecursive (i, web3, abi, addrs, finalizeAgentAddrs, gasLimit, cb) {
-  setFinalizeAgent(web3, abi, addrs[i], finalizeAgentAddrs[i], gasLimit, (err) => {
-    i++;
-    if (i < finalizeAgentAddrs.length) {
-      setFinalizeAgentRecursive(i, web3, abi, addrs, finalizeAgentAddrs, gasLimit, cb);
-    } else {
-      cb(err);
-    }
-  })
-}
-           
-export function setReleaseAgentRecursive (i, web3, abi, addr, finalizeAgentAddrs, gasLimit, cb) {
-  setReleaseAgent(web3, abi, addr, finalizeAgentAddrs[i], gasLimit, (err) => {
-    i++;
-    if (i < finalizeAgentAddrs.length) {
-      setReleaseAgentRecursive(i, web3, abi, addr, finalizeAgentAddrs, gasLimit, cb);
-    } else {
-      cb(err);
-    }
-  })
-}
-
-export const handleTokenForFile = (content, docData, state) => {
-    const title = content.value
-    const fileContent = title + state.token[content.field]
-    docData.data += fileContent + '\n\n' 
-}
-
-export const handleCrowdsaleForFile = (content, docData, state) => {
-    const title = content.value
-    const fileContent = title + state.crowdsale[0][content.field]
-    docData.data += fileContent + '\n\n'
-}
-
-export const handlePricingStrategyForFile = (content, docData, state) => {
-    const title = content.value
-    const fileContent = title + state.pricingStrategy[0][content.field]
-    docData.data += fileContent + '\n\n'
-}
-
-export const handleFinalizeAgentForFile = (content, docData, state) => {
-    const title = content.value
-    const fileContent = title + state.finalizeAgent[0][content.field]
-    docData.data += fileContent + '\n\n'
-}
-
-export const handleContractsForFile = (content, docData, state) => {
-    const title = content.value
-    if(content.field !== 'src' && content.field !== 'abi' && content.field !== 'addr') {
-        let fileBody
-        if ( Object.prototype.toString.call( state.contracts[content.child][content.field] ) === '[object Array]' ) {
-          for (let i = 0; i < state.contracts[content.child][content.field].length; i++) {
-            fileBody = state.contracts[content.child][content.field][i]
-
-            if (!fileBody) return
-            let fileContent = title + " for " + state.crowdsale[i].tier + ":**** \n \n" + fileBody
-            docData.data += fileContent + '\n\n'
-          }
-        } else {
-          fileBody = state.contracts[content.child][content.field]
-          if (!fileBody) return
-          let fileContent = title + ":**** \n \n" + fileBody
-          docData.data += fileContent + '\n\n'
+      for (let i = 0; i < whitelist.length; i++) {
+        if (!whitelist[i].deleted) {
+          addrs.push(whitelist[i].addr)
+          statuses.push(true)
+          minCaps.push(whitelist[i].min * 10 ** token.decimals ? toFixed((whitelist[i].min * 10 ** token.decimals).toString()) : 0)
+          maxCaps.push(whitelist[i].max * 10 ** token.decimals ? toFixed((whitelist[i].max * 10 ** token.decimals).toString()) : 0)
         }
-    } else {
-        addSrcToFile(content, docData, state)
-    }
-}
-
-export const handleConstantForFile = (content, docData) => {
-    const title = content.value
-    const fileContent = title + content.fileValue
-    docData.data += fileContent + '\n\n'
-}
-
-const addSrcToFile = (content, docData, state) => {
-    const title = content.value
-
-    if ( Object.prototype.toString.call( state.contracts[content.child][content.field] ) === '[object Array]'  && content.field !== 'abi') {
-      for (let i = 0; i < state.contracts[content.child][content.field].length; i++) {
-        const body = state.contracts[content.child][content.field][i]
-        const text = title + " for " + state.crowdsale[i].tier + ": " + body
-        docData.data += text + '\n\n'
       }
-    } else {
-      const body = content.field === 'abi' ? JSON.stringify(state.contracts[content.child][content.field]) : state.contracts[content.child][content.field]
-      const text = title + body
-      docData.data += text + '\n\n'
-    }
+
+      console.log('addrs:', addrs)
+      console.log('statuses:', minCaps)
+      console.log('maxCaps:', maxCaps)
+
+      const method = crowdsaleContract.methods.setEarlyParticipantsWhitelist(addrs, statuses, minCaps, maxCaps).send({
+        gasPrice: generalStore.gasPrice
+      })
+
+      return sendTXToContract(web3, method)
+    })
 }
 
-export const download = (data, filename, type) => {
-    var file = new Blob([data], {type: type});
-    if (window.navigator.msSaveOrOpenBlob) // IE10+
-        window.navigator.msSaveOrOpenBlob(file, filename);
-    else { // Others
-        var a = document.createElement("a"),
-                url = URL.createObjectURL(file);
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(function() {
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);  
-        }, 0); 
+function updateJoinedCrowdsales(web3, abi, addr, joinedContractAddresses, gasLimit) {
+  console.log('###updateJoinedCrowdsales:###')
+
+  return attachToContract(web3, abi, addr)
+    .then(crowdsaleContract => {
+      console.log('attach to crowdsale contract')
+
+      if (!crowdsaleContract) {
+        noContractAlert()
+        return Promise.reject('no contract available')
+      }
+
+      console.log('input:', joinedContractAddresses)
+
+      let method = crowdsaleContract.methods.updateJoinedCrowdsalesMultiple(joinedContractAddresses).send({
+        gasLimit: gasLimit,
+        gasPrice: generalStore.gasPrice
+      })
+
+      return sendTXToContract(web3, method)
+    })
+}
+
+function setFinalizeAgent (web3, abi, addr, finalizeAgentAddr, gasLimit) {
+  console.log('###setFinalizeAgent:###')
+
+  return attachToContract(web3, abi, addr)
+    .then(crowdsaleContract => {
+      console.log('attach to crowdsale contract')
+
+      if (!crowdsaleContract) {
+        noContractAlert()
+        return Promise.reject('No contract available')
+      }
+
+      const method = crowdsaleContract.methods.setFinalizeAgent(finalizeAgentAddr).send({
+        gasLimit: gasLimit,
+        gasPrice: generalStore.gasPrice
+      })
+
+      return sendTXToContract(web3, method)
+    })
+}
+
+function setReleaseAgent (web3, abi, addr, finalizeAgentAddr, gasLimit) {
+  console.log('###setReleaseAgent:###')
+
+  return attachToContract(web3, abi, addr)
+    .then(tokenContract => {
+      console.log('attach to token contract')
+
+      if (!tokenContract) {
+        noContractAlert()
+        return Promise.reject('No contract available')
+      }
+
+      const method = tokenContract.methods.setReleaseAgent(finalizeAgentAddr).send({
+        gasLimit: gasLimit,
+        gasPrice: generalStore.gasPrice
+      })
+
+      return sendTXToContract(web3, method)
+    })
+}
+
+export function setReservedTokensListMultiple(web3, abi, addr, token, reservedTokenStore) {
+  console.log("###setReservedTokensListMultiple:###");
+
+  return attachToContract(web3, abi, addr)
+    .then(tokenContract => {
+      console.log("attach to token contract");
+
+      if (!tokenContract) {
+        noContractAlert()
+        return Promise.reject('no contract available')
+      }
+
+      let map = {};
+      let addrs = []
+      let inTokens = []
+      let inPercentageUnit = []
+      let inPercentageDecimals = [];
+
+      const reservedTokens = reservedTokenStore.tokens
+
+      for (let i = 0; i < reservedTokens.length; i++) {
+        if (!reservedTokens[i].deleted) {
+          const val = reservedTokens[i].val
+          const addr = reservedTokens[i].addr
+          const obj = map[addr] ? map[addr] : {}
+
+          if (reservedTokens[i].dim === 'tokens') {
+            obj.inTokens = val * 10 ** token.decimals
+          } else {
+            obj.inPercentageDecimals = countDecimals(val)
+            obj.inPercentageUnit = val * 10 ** obj.inPercentageDecimals
+          }
+          map[addr] = obj
+        }
+      }
+
+      let keys = Object.keys(map);
+
+      for (let i = 0; i < keys.length; i++) {
+        let key = keys[i]
+        let obj = map[key]
+
+        addrs.push(key)
+        inTokens.push(obj.inTokens ? toFixed(obj.inTokens.toString()) : 0)
+        inPercentageUnit.push(obj.inPercentageUnit ? obj.inPercentageUnit : 0)
+        inPercentageDecimals.push(obj.inPercentageDecimals ? obj.inPercentageDecimals : 0)
+      }
+
+      if (addrs.length === 0 && inTokens.length === 0 && inPercentageUnit.length === 0) {
+        if (inPercentageDecimals.length === 0) return Promise.resolve()
+      }
+
+      let method = tokenContract.methods
+        .setReservedTokensListMultiple(addrs, inTokens, inPercentageUnit, inPercentageDecimals)
+        .send({gasPrice: generalStore.gasPrice})
+
+      return sendTXToContract(web3, method)
+    })
+}
+
+export function transferOwnership (web3, abi, addr, finalizeAgentAddr, gasLimit) {
+  console.log('###transferOwnership:###')
+
+  return attachToContract(web3, abi, addr)
+    .then(tokenContract => {
+      console.log('attach to token contract')
+
+      if (!tokenContract) {
+        noContractAlert()
+        return Promise.reject('No contract available')
+      }
+
+      const method = tokenContract.methods.transferOwnership(finalizeAgentAddr).send({
+        gasLimit: gasLimit,
+        gasPrice: generalStore.gasPrice
+      })
+
+      return sendTXToContract(web3, method)
+    })
+}
+
+export function setLastCrowdsaleRecursive (web3, abi, pricingStrategyAddrs, lastCrowdsale, gasLimit) {
+  return pricingStrategyAddrs.reduce((promise, pricingStrategyAddr) => {
+    return promise.then(() => setLastCrowdsale(web3, abi, pricingStrategyAddr, lastCrowdsale, gasLimit))
+  }, Promise.resolve())
+}
+
+export function  setMintAgentRecursive (web3, abi, addr, crowdsaleAddrs, gasLimit) {
+  return crowdsaleAddrs.reduce((promise, crowdsaleAddr) => {
+    return promise.then(() => setMintAgent(web3, abi, addr, crowdsaleAddr, gasLimit))
+  }, Promise.resolve())
+}
+
+export function updateJoinedCrowdsalesRecursive (web3, abi, addrs, gasLimit) {
+  return addrs.reduce((promise, addr) =>
+    promise.then(() => updateJoinedCrowdsales(web3, abi, addr, addrs, gasLimit)),
+    Promise.resolve()
+  )
+}
+
+export function addWhiteListRecursive (web3, tierStore, token, abi, crowdsaleAddrs) {
+  return crowdsaleAddrs.reduce((promise, crowdsaleAddr, index) => {
+    return promise.then(() => addWhiteList(index, web3, tierStore, token, abi, crowdsaleAddr))
+  }, Promise.resolve())
+}
+
+export function setFinalizeAgentRecursive (web3, abi, addrs, finalizeAgentAddrs, gasLimit) {
+  return finalizeAgentAddrs.reduce((promise, finalizeAgentAddr, index) => {
+    return promise.then(() => setFinalizeAgent(web3, abi, addrs[index], finalizeAgentAddr, gasLimit))
+  }, Promise.resolve())
+}
+
+export function setReleaseAgentRecursive (web3, abi, addr, finalizeAgentAddrs, gasLimit) {
+  return finalizeAgentAddrs.reduce((promise, finalizeAgentAddr) => {
+    return promise.then(() => setReleaseAgent(web3, abi, addr, finalizeAgentAddr, gasLimit))
+  }, Promise.resolve())
+}
+
+export const handlerForFile = (content, type) => {
+  const checkIfTime = content.field === "startTime" || content.field === "endTime"
+  let suffix = ''
+
+  if (checkIfTime) {
+    let timezoneOffset = (new Date()).getTimezoneOffset() / 60
+    let operator = timezoneOffset > 0 ? '-' : '+'
+    suffix = ` (GMT ${operator} ${Math.abs(timezoneOffset)})`
+  }
+
+  return `${content.value}${type[content.field]}${suffix}`
+}
+
+export const handleConstantForFile = content => {
+  return `${content.value}${content.fileValue}`
+}
+
+export const handleContractsForFile = (content, index, contractStore, tierStore) => {
+  const title = content.value
+  const { field } = content
+  let fileContent = ''
+
+  if (field !== 'src' && field !== 'abi' && field !== 'addr') {
+    const contractField = contractStore[content.child][field]
+    let fileBody
+
+    if (isObservableArray(contractField)) {
+      fileBody = contractField[index]
+
+      if (!!fileBody) {
+        fileContent = title + ' for ' + tierStore.tiers[index].tier + ':**** \n\n' + fileBody
+      }
+    } else if (!!contractField) {
+      fileContent = title + ':**** \n\n' + contractField
     }
+  } else {
+    fileContent = addSrcToFile(content, index, contractStore, tierStore)
+  }
+
+  return fileContent
+}
+
+const addSrcToFile = (content, index, contractStore, tierStore) => {
+  const title = content.value
+  const { field } = content
+  const contractField = contractStore[content.child][field]
+  let fileContent = ''
+
+  if (isObservableArray(contractField) && field !== 'abi') {
+    fileContent = title + ' for ' + tierStore.tiers[index].tier + ': ' + contractField[index]
+  } else {
+    if (field !== 'src') {
+      const body = field === 'abi' ? JSON.stringify(contractField) : contractField
+      fileContent = title + body
+    } else {
+      fileContent = contractField
+    }
+  }
+
+  return fileContent
+}
+
+export const download = ({ data = {}, filename = '', type = '', zip = '' }) => {
+  let file = !zip ? new Blob([data], { type: type }) : zip
+
+  if (window.navigator.msSaveOrOpenBlob) { // IE10+
+    window.navigator.msSaveOrOpenBlob(file, filename)
+  } else { // Others
+    let a = document.createElement('a')
+    let url = URL.createObjectURL(file)
+
+    a.href = url
+    a.download = filename
+    document.body.appendChild(a)
+    a.click()
+
+    setTimeout(function () {
+      document.body.removeChild(a)
+      window.URL.revokeObjectURL(url)
+    }, 0)
+  }
 }
 
 export function scrollToBottom() {
   window.scrollTo(0,document.body.scrollHeight);
+}
+
+export function getDownloadName (tokenAddress) {
+  return new Promise((resolve, reject) => {
+    web3Store.getWeb3((web3) => {
+      const whenNetworkName = getNetworkVersion(web3)
+        .then((networkId) => {
+          let networkName = getNetWorkNameById(networkId);
+
+          if (!networkName) {
+            networkName = String(networkId);
+          }
+
+          return networkName;
+        })
+        .then((networkName) => `${DOWNLOAD_NAME}_${networkName}_${tokenAddress}`);
+
+      resolve(whenNetworkName);
+    });
+  });
+}
+
+var countDecimals = function (inputFloat) {
+  if(Math.floor(inputFloat) === parseFloat(inputFloat)) return 0;
+  return inputFloat.toString().split(".")[1].length || 0;
 }

@@ -1,0 +1,48 @@
+.crowdsale-modal {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .modal {
+    background: white;
+    width: 45%;
+    min-width: 830px;
+    padding: 30px 20px 20px;
+    border-radius: 10px;
+    position: relative;
+
+    .title {
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .description {
+      margin-bottom: 25px;
+      color: #8197a2;
+      line-height: 24px;
+      font-size: 13px;
+    }
+
+    .close-button {
+      i {
+        &.icon {
+          &:before {
+            content: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4gEDETQvtZKRngAAAaJJREFUSMetlcFOwkAURV9NXLjURUNwBbToTlJ04ULDJ7jSjd+hbvkEl3yC/2L8CRODBklMQAwJHhdO8VHeQFu5SdN0+jq3b+6dOyIiAgRAD2i6ZymD9DvgBLjXLwLgmV98AlFZEjdfAkzdfE/pYI9FTIBWSYJzltEVoOk6yBKFBQn2DYIPoJoWRG5ijbFr3auR0qADzDLf94HKvNBdLYNoBMSWGRTBsdHBEKiZPweErgMNrxmAthI5xQDYy+OO0TozeER+Aeq5vA7Eno5CJfK3IXIll/3VWjcM142BW4PgT+QiO9ddRwZRFu9ekQsQWmbQBLuyCQA3HpKrTRFUjY2mNQr/m6ZnhsgYrmutSoZVBIlHg0uPvRuFjgkXFVOfyM4Mlr3jvPukY3TQB2qZOsveIyDJE9ezPDvZadAwlm7ZDEoDXxZV1mgX+7JuwQwekQdAfdUaq2RIjI4mQKQP/alxHuyVSIaJ4brDLRG5FpFtVf8qIu0gCIZFSIIgeBORUxH5UsM7InKR/sVj4bj2L1+kXPeQLejOD/3yEZTeD4C7dPwHuOyCT59BxPUAAAAASUVORK5CYII=');
+          }
+        }
+      }
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      z-index: 400000;
+      padding: 15px;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}

@@ -1,31 +1,69 @@
 import React, { Component } from 'react';
 import '../../assets/stylesheets/application.css';
-import { getWeb3, getNetworkVersion } from '../../utils/blockchainHelpers'
 import { Link } from 'react-router-dom'
-import { defaultState } from '../../utils/constants'
-import { noDeploymentOnMainnetAlert } from '../../utils/alerts'
+import CrowdsalesList from '../Common/CrowdsalesList'
+import { Loader } from '../Common/Loader'
+import { loadRegistryAddresses } from '../../utils/blockchainHelpers'
 
 export class Home extends Component {
-  constructor(props) {
-    super(props);
-    this.state = defaultState
+  constructor (props) {
+    super(props)
+    this.state = {
+      showModal: false,
+      loading: false
+    }
   }
 
-  componentDidMount() {
-    //emergency alert
-    /*setTimeout(() => {
-      getWeb3((web3) => {
-        getNetworkVersion(web3, (_networkID) => {
-          console.log(_networkID);
-          if (_networkID == 1) {
-            return noDeploymentOnMainnetAlert();
-          }
+  chooseContract = () => {
+    this.setState({
+      loading: true
+    })
+
+    loadRegistryAddresses()
+      .then(() => {
+        this.setState({
+          loading: false,
+          showModal: true
+        })
+      }, (e) => {
+        console.error('There was a problem loading the crowdsale addresses from the registry', e)
+        this.setState({
+          loading: false
         })
       })
-    }, 500);*/
   }
 
-  render() {
+  onClick = crowdsaleAddress => {
+    this.props.history.push('/manage/' + crowdsaleAddress)
+  }
+
+  renderModal = () => {
+    return (
+      <div className="crowdsale-modal loading-container">
+        <div className='modal'>
+          <p className='title'>Crowdsales List</p>
+          <p className='description'>The list of your updatable crowdsales. Choose crowdsale address, click Continue and
+            you'll be able to update the parameters of crowdsale.</p>
+          <CrowdsalesList onClick={this.onClick}/>
+          <div className='close-button' onClick={() => this.hideModal()}><i className="icon"/></div>
+        </div>
+      </div>
+    )
+  }
+
+  hideModal = () => {
+    this.setState({ showModal: false })
+  }
+
+  render () {
+    const chooseContract = process.env.NODE_ENV === 'development'
+      ? <div onClick={() => this.chooseContract()} className="button button_outline">Choose Contract</div>
+      : null
+
+    const chooseContractModal = this.state.showModal
+      ? this.renderModal()
+      : null
+
     return (
       <div>
         <section className="home">
@@ -33,11 +71,12 @@ export class Home extends Component {
             <div className="container">
               <h1 className="title">Welcome to ICO Wizard</h1>
               <p className="description">
-              ICO Wizard is a client side tool to create token and crowdsale contracts in five steps. It helps you to publish contracts on the Ethereum network, verify them in Etherscan, create a crowdsale page with stats. For participants, the wizard creates a page to invest into the campaign. 
-              <br/>Smart contracts based on <a href="https://github.com/TokenMarketNet/ico">TokenMarket</a> contracts. 
+              ICO Wizard is a client side tool to create token and crowdsale contracts in five steps. It helps you to publish contracts on the Ethereum network, verify them in Etherscan, create a crowdsale page with stats. For participants, the wizard creates a page to invest into the campaign.
+              <br/>Smart contracts based on <a href="https://github.com/TokenMarketNet/ico">TokenMarket</a> contracts.
               </p>
               <div className="buttons">
-                <Link to={{ pathname: '/1', query: { state: this.state } }}><a className="button button_fill">New crowdsale</a></Link>
+                <Link to='/1'><span className="button button_fill">New crowdsale</span></Link>
+                {chooseContract}
               </div>
             </div>
           </div>
@@ -80,6 +119,8 @@ export class Home extends Component {
               </div>
             </div>
           </div>
+          {chooseContractModal}
+          <Loader show={this.state.loading}></Loader>
         </section>
       </div>
     );
