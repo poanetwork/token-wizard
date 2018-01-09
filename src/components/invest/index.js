@@ -14,7 +14,7 @@ import {
 import { getQueryVariable, getURLParam, getWhiteListWithCapCrowdsaleAssets, toast } from '../../utils/utils'
 import {
   invalidCrowdsaleAddrAlert,
-  investmentDisabledAlertInTime,
+  investmentDisabledAlertInTime, noGasPriceAvailable,
   noMetaMaskAlert,
   successfulInvestmentAlert
 } from '../../utils/alerts'
@@ -24,7 +24,7 @@ import { CONTRACT_TYPES, INVESTMENT_OPTIONS, TOAST } from '../../utils/constants
 import { inject, observer } from 'mobx-react'
 import QRPaymentProcess from './QRPaymentProcess'
 
-@inject('contractStore', 'crowdsalePageStore', 'web3Store', 'tierStore', 'tokenStore', 'generalStore', 'investStore')
+@inject('contractStore', 'crowdsalePageStore', 'web3Store', 'tierStore', 'tokenStore', 'generalStore', 'investStore', 'gasPriceStore', 'generalStore')
 @observer
 export class Invest extends React.Component {
   constructor(props) {
@@ -42,7 +42,7 @@ export class Invest extends React.Component {
   }
 
   componentDidMount () {
-    const { web3Store, contractStore } = this.props
+    const { web3Store, contractStore, gasPriceStore, generalStore } = this.props
     const { web3 } = web3Store
 
     if (!web3) {
@@ -66,6 +66,9 @@ export class Invest extends React.Component {
       .then(_newState => {
         this.setState(_newState)
         this.extractContractsData(web3)
+        gasPriceStore.updateValues()
+          .then(() => generalStore.setGasPrice(gasPriceStore.slow.price))
+          .catch(() => noGasPriceAvailable())
       })
   }
 
