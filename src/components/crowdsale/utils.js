@@ -691,7 +691,7 @@ export function getPricingStrategyData (web3) {
           }
 
           console.log('pricing strategy rate:', rate)
-          crowdsalePageStore.setProperty('rate', parseInt(rate, 10))//web3.fromWei(parseInt(rate, 10), "ether");
+          crowdsalePageStore.setProperty('rate', parseInt(rate, 10))
           resolve()
         })
       })

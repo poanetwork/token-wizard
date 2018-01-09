@@ -386,6 +386,6 @@ export const toast = {
   }
 }
 
-export const gweiToWei = x => x * 1000000000
+export const gweiToWei = x => parseInt(x * 1000000000, 10)
 
 export const weiToGwei = x => x / 1000000000
