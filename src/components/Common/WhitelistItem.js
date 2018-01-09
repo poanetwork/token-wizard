@@ -21,12 +21,12 @@ export class WhitelistItem extends React.Component {
           <span className="white-list-item white-list-item-middle">{min}</span>
           <span className="white-list-item white-list-item-right">{max}</span>
         </div>
-        {!alreadyDeployed
-          ? <div className="white-list-item-empty">
-              <a onClick={() => this.removeItem()}><span className="item-remove"/></a>
-            </div>
-          : null
-        }
+        <div className="white-list-item-empty">
+          {!alreadyDeployed
+            ? <a onClick={() => this.removeItem()}><span className="item-remove"/></a>
+            : null
+          }
+        </div>
       </div>
     )
   }
