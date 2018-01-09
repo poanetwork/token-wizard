@@ -21,11 +21,14 @@ const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME
 export class Manage extends Component {
   constructor (props) {
     super(props)
-    window.scrollTo(0, 0)
     this.state = {
       formPristine: true,
       loading: true
     }
+  }
+
+  componentDidMount () {
+    setTimeout(() => window.scrollTo(0, 0), 500)
   }
 
   componentWillMount () {
@@ -41,6 +44,13 @@ export class Manage extends Component {
     contractStore.setContractType(CONTRACT_TYPES.whitelistwithcap)
 
     getWhiteListWithCapCrowdsaleAssets().then(this.extractContractData)
+  }
+
+  componentWillUnmount () {
+    const { tierStore, tokenStore, crowdsaleStore } = this.props
+    tierStore.reset()
+    tokenStore.reset()
+    crowdsaleStore.reset()
   }
 
   extractContractData = () => {
