@@ -1,5 +1,5 @@
 import { incorrectNetworkAlert, noMetaMaskAlert, invalidNetworkIDAlert } from './alerts'
-import { getEncodedABIClientSide } from './microservices'
+//import { getEncodedABIClientSide } from './microservices'
 import { CHAINS } from './constants'
 import { crowdsaleStore, generalStore, web3Store } from '../stores'
 import { fetchFile } from './utils'
@@ -104,19 +104,16 @@ export const deployContract = (i, web3, abi, bin, params) => {
     arguments: params
   }
 
-  const abiContent = abi.slice()
-
-  return getEncodedABIClientSide(web3, abiContent, params, i)
-    .then(ABIEncoded => {
-      let binFull = bin + ABIEncoded.substr(2)
-
-      return web3.eth.getAccounts()
-        .then(accounts => deployContractInner(accounts, abi, binFull, deployOpts))
-    })
+  return web3.eth.getAccounts()
+    .then(accounts => deployContractInner(accounts, abi, deployOpts))
 }
 
-const deployContractInner = (accounts, abi, binFull, deployOpts) => {
-  return web3.eth.estimateGas({ from: accounts[0], data: binFull })
+const deployContractInner = (accounts, abi, deployOpts) => {
+  const estimatedGasMax = 4016260
+  console.log('abi', abi)
+  const objAbi = JSON.parse(JSON.stringify(abi))
+  let contractInstance = new web3.eth.Contract(objAbi)
+  return contractInstance.deploy(deployOpts).estimateGas({gas: estimatedGasMax})
   .then(
     estimatedGas => estimatedGas,
     err => console.log('errrrrrrrrrrrrrrrrr', err)
@@ -124,7 +121,6 @@ const deployContractInner = (accounts, abi, binFull, deployOpts) => {
   .then(estimatedGas => {
     console.log('gas is estimated', estimatedGas)
 
-    const estimatedGasMax = 4016260
     if (!estimatedGas || estimatedGas > estimatedGasMax) {
       estimatedGas = estimatedGasMax
     } else {
@@ -137,10 +133,6 @@ const deployContractInner = (accounts, abi, binFull, deployOpts) => {
       gasPrice: generalStore.gasPrice
     }
 
-    console.log('abi', abi)
-
-    const objAbi = JSON.parse(JSON.stringify(abi))
-    let contractInstance = new web3.eth.Contract(objAbi)
     const method = contractInstance.deploy(deployOpts).send(sendOpts)
 
     return new Promise((resolve, reject) => sendTX(resolve, reject, method, DEPLOY_CONTRACT))
@@ -201,7 +193,7 @@ let sendTX = (resolve, reject, method, type) => {
 
 const sendTXResponse = (receipt, type, resolve, reject) => {
   if (0 !== +receipt.status || null === receipt.status) {
-    if (type == DEPLOY_CONTRACT)
+    if (type === DEPLOY_CONTRACT)
       resolve(receipt.contractAddress)
     else
       resolve()
