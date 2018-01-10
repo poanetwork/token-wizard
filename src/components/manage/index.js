@@ -28,13 +28,13 @@ export class Manage extends Component {
   }
 
   componentWillMount () {
-    const { crowdsaleStore, web3Store, contractStore, generalStore, match } = this.props
+    const { crowdsaleStore, contractStore, generalStore, match } = this.props
     const crowdsaleAddress = match.params.crowdsaleAddress
 
     crowdsaleStore.setSelectedProperty('address', crowdsaleAddress)
 
     // networkID
-    getNetworkVersion(web3Store.web3).then(networkId => generalStore.setProperty('networkId', networkId))
+    getNetworkVersion().then(networkId => generalStore.setProperty('networkId', networkId))
 
     // contractType
     contractStore.setContractType(CONTRACT_TYPES.whitelistwithcap)
@@ -78,14 +78,13 @@ export class Manage extends Component {
   }
 
   finalizeCrowdsale = () => {
-    const { crowdsaleStore, web3Store } = this.props
-    const { web3 } = web3Store
+    const { crowdsaleStore } = this.props
 
     if (!crowdsaleStore.selected.finalized) {
       warningOnFinalizeCrowdsale()
         .then(result => {
           if (result.value) {
-            findCurrentContractRecursively(0, this, web3, null, crowdsaleContract => {
+            findCurrentContractRecursively(0, this, null, crowdsaleContract => {
               this.showLoader()
 
               if (!this.isLastContract(crowdsaleContract)) {
@@ -98,8 +97,8 @@ export class Manage extends Component {
                   gasPrice: this.props.generalStore.gasPrice
                 })
 
-                getCurrentRate(web3, crowdsaleContract)
-                  .then(() => sendTXToContract(web3, finalizeMethod))
+                getCurrentRate(crowdsaleContract)
+                  .then(() => sendTXToContract(finalizeMethod))
                   .then(() => {
                     successfulFinalizeAlert()
                     crowdsaleStore.setSelectedProperty('finalized', true)

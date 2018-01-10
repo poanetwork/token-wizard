@@ -19,7 +19,6 @@ const formatDate = timestamp => {
 }
 
 export const updateTierAttribute = (attribute, value, addresses) => {
-  const { web3 } = web3Store
   let methods = {
     startTime: 'setStartsAt',
     endTime: 'setEndsAt',
@@ -49,13 +48,13 @@ export const updateTierAttribute = (attribute, value, addresses) => {
 
   if (!contractAddress) return Promise.reject('no updatable value')
 
-  return attachToContract(web3, abi, contractAddress)
+  return attachToContract(abi, contractAddress)
     .then(contract => {
       const method = contract.methods[methods[attribute]]
 
       return method(value).estimateGas()
         .then(estimatedGas => {
-          return sendTXToContract(web3, method(value)
+          return sendTXToContract(method(value)
             .send({
               gasLimit: estimatedGas,
               gasPrice: generalStore.gasPrice
@@ -66,9 +65,7 @@ export const updateTierAttribute = (attribute, value, addresses) => {
 }
 
 const crowdsaleData = crowdsaleAddress => {
-  const { web3 } = web3Store
-
-  return attachToContract(web3, contractStore.crowdsale.abi, crowdsaleAddress)
+  return attachToContract(contractStore.crowdsale.abi, crowdsaleAddress)
     .then(crowdsaleContract => {
       const { methods } = crowdsaleContract
       const whenToken = methods.token().call()
@@ -98,9 +95,7 @@ const crowdsaleData = crowdsaleAddress => {
 }
 
 const tokenData = tokenAddress => {
-  const { web3 } = web3Store
-
-  return attachToContract(web3, contractStore.token.abi, tokenAddress)
+  return attachToContract(contractStore.token.abi, tokenAddress)
     .then(tokenContract => {
       const { methods } = tokenContract
       const whenName = methods.name().call()
@@ -112,16 +107,12 @@ const tokenData = tokenAddress => {
 }
 
 const pricingStrategyData = pricingStrategyAddress => {
-  const { web3 } = web3Store
-
-  return attachToContract(web3, contractStore.pricingStrategy.abi, pricingStrategyAddress)
+  return attachToContract(contractStore.pricingStrategy.abi, pricingStrategyAddress)
     .then(pricingStrategyContract => pricingStrategyContract.methods.oneTokenInWei().call())
 }
 
 export const getTiers = crowdsaleAddress => {
-  const { web3 } = web3Store
-
-  return attachToContract(web3, contractStore.crowdsale.abi, crowdsaleAddress)
+  return attachToContract(contractStore.crowdsale.abi, crowdsaleAddress)
     .then(crowdsaleContract => {
       const { methods } = crowdsaleContract
 

@@ -99,6 +99,7 @@ export function fetchFile(path) {
 
 export const findConstructor = (abi) => {
   let abiConstructor
+
   abi.forEach(abiObj => {
     if (abiObj.type === "constructor") {
       console.log(abiObj);
@@ -106,6 +107,7 @@ export const findConstructor = (abi) => {
       abiConstructor = abiObj.inputs;
     }
   })
+
   return abiConstructor
 }
 

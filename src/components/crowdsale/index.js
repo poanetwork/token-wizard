@@ -28,27 +28,26 @@ export class Crowdsale extends React.Component {
   }
 
   componentDidMount () {
-    const { web3 } = this.props.web3Store
-
-    checkWeb3(web3)
+    checkWeb3()
 
     this.setState({ tokenIsAlreadyCreated: true })
 
     const networkID = ICOConfig.networkID ? ICOConfig.networkID : getQueryVariable('networkID')
     const contractType = CONTRACT_TYPES.whitelistwithcap//getQueryVariable("contractType");
 
-    this.getCrowdsale(web3, networkID, contractType)
+    this.getCrowdsale(networkID, contractType)
   }
 
-  getCrowdsale = (web3, networkID, contractType) => {
-    const { contractStore, generalStore } = this.props
+  getCrowdsale = (networkID, contractType) => {
+    const { contractStore, generalStore, web3Store } = this.props
+    const { web3 } = web3Store
 
     if (!web3) {
       this.setState({ loading: false })
       return
     }
 
-    checkNetWorkByID(web3, networkID);
+    checkNetWorkByID(networkID);
     generalStore.setProperty('networkID', networkID);
     contractStore.setContractType(contractType);
 
@@ -69,7 +68,7 @@ export class Crowdsale extends React.Component {
       return invalidCrowdsaleAddrAlert()
     }
 
-    getJoinedTiers(web3, contractStore.crowdsale.abi, crowdsaleAddr, [], (joinedCrowdsales) => {
+    getJoinedTiers(contractStore.crowdsale.abi, crowdsaleAddr, [], (joinedCrowdsales) => {
       console.log('joinedCrowdsales:', joinedCrowdsales)
 
       const _crowdsaleAddrs = typeof joinedCrowdsales === 'string' ? [joinedCrowdsales] : joinedCrowdsales
@@ -79,7 +78,7 @@ export class Crowdsale extends React.Component {
         return
       }
 
-      findCurrentContractRecursively(0, this, web3, null, (crowdsaleContract) => {
+      findCurrentContractRecursively(0, this, null, (crowdsaleContract) => {
         if (!crowdsaleContract) {
           return this.setState({ loading: false })
         }
@@ -90,13 +89,11 @@ export class Crowdsale extends React.Component {
   }
 
   getFullCrowdsaleData (crowdsaleContract) {
-    const { web3 } = this.props.web3Store
-
-    getCrowdsaleData(web3, crowdsaleContract)
+    getCrowdsaleData(crowdsaleContract)
       .then(() => initializeAccumulativeData())
       .then(() => {
         this.setState({ loading: false })
-        getAccumulativeCrowdsaleData.call(this, web3, () => {})
+        getAccumulativeCrowdsaleData.call(this, () => {})
       })
       .catch(err => {
         this.setState({ loading: false })
