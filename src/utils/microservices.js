@@ -1,13 +1,13 @@
 import { findConstructor, getconstructorParams, toFixed } from '../utils/utils'
 
-export function getEncodedABIClientSide (web3, abi, vals, crowdsaleNum) {
+export const getEncodedABIClientSide = (web3, abi, vals, crowdsaleNum) => {
   const abiConstructor = findConstructor(abi)
   let params = getconstructorParams(abiConstructor, vals, crowdsaleNum)
 
   return getABIEncoded(web3, params.types, params.vals)
 }
 
-function getABIEncoded (web3, types, vals) {
+const getABIEncoded = (web3, types, vals) => {
   return new Promise((resolve, reject) => {
     if (vals) {
       for (let i = 0; i < vals.length; i++) {

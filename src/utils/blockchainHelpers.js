@@ -7,6 +7,9 @@ import { fetchFile } from './utils'
 // instantiate new web3 instance
 const web3 = web3Store.web3
 
+const DEPLOY_CONTRACT = 1;
+const CALL_METHOD = 2;
+
 // get current provider
 export function getCurrentProvider() {
   console.log(web3.currentProvider);
@@ -95,161 +98,132 @@ export function setExistingContractParams(abi, addr, setContractProperty) {
   });
 }
 
-export function deployContract(i, web3, abi, bin, params) {
+export const deployContract = (i, web3, abi, bin, params) => {
+  const deployOpts = {
+    data: '0x' + bin,
+    arguments: params
+  }
+
   const abiContent = abi.slice()
 
   return getEncodedABIClientSide(web3, abiContent, params, i)
     .then(ABIEncoded => {
       let binFull = bin + ABIEncoded.substr(2)
 
-      console.log(ABIEncoded)
-
       return web3.eth.getAccounts()
-        .then(accounts => {
-          return web3.eth.estimateGas({ from: accounts[0], data: binFull })
-            .then(
-              estimatedGas => estimatedGas,
-              err => console.log('errrrrrrrrrrrrrrrrr', err)
-            )
-            .then(estimatedGas => {
-              console.log('gas is estimated', estimatedGas)
-
-              const estimatedGasMax = 4016260
-
-              if (!estimatedGas || estimatedGas > estimatedGasMax) {
-                estimatedGas = estimatedGasMax
-              } else {
-                estimatedGas += 100000
-              }
-
-              console.log('abi', abi)
-
-              const objAbi = JSON.parse(JSON.stringify(abi))
-              let contractInstance = new web3.eth.Contract(objAbi)
-
-              let deployOpts = {
-                data: '0x' + bin,
-                arguments: params
-              }
-
-              let sendOpts = {
-                from: accounts[0],
-                gas: estimatedGas,
-                gasPrice: generalStore.gasPrice
-              }
-
-              let isMined = false
-
-              return new Promise((resolve, reject) => {
-                contractInstance.deploy(deployOpts).send(sendOpts)
-                  .on('error', error => {
-                    console.log(error)
-                    reject(error)
-                  })
-                  .on('transactionHash', transactionHash => {
-                    console.log('contract deployment transaction: ' + transactionHash)
-
-                    checkTxMined(web3, transactionHash, function txMinedCallback (receipt) {
-                      if (isMined) return
-
-                      if (receipt) {
-                        if (receipt.blockNumber) {
-                          console.log('Contract deployment is mined from polling of tx receipt')
-                          console.log(receipt.contractAddress) // instance with the new contract address
-
-                          isMined = true
-                          resolve(receipt.contractAddress)
-                        } else {
-                          console.log('Still mining... Polling of transaction once more')
-
-                          setTimeout(() => {
-                            checkTxMined(web3, transactionHash, txMinedCallback)
-                          }, 5000)
-                        }
-                      } else {
-                        console.log('Still mining... Polling of transaction once more')
-
-                        setTimeout(() => {
-                          checkTxMined(web3, transactionHash, txMinedCallback)
-                        }, 5000)
-                      }
-                    })
-                  })
-                  .then(newContractInstance => {
-                    if (!isMined) {
-                      console.log('Contract deployment is mined from Promise')
-                      console.log(newContractInstance.options.address) // instance with the new contract address
-
-                      isMined = true
-                      resolve(newContractInstance.options.address)
-                    }
-                  })
-              })
-            })
-        })
+        .then(accounts => deployContractInner(accounts, abi, binFull, deployOpts))
     })
 }
 
-export function sendTXToContract(web3, method) {
-  return new Promise((resolve, reject) => {
-    let isMined = false
+const deployContractInner = (accounts, abi, binFull, deployOpts) => {
+  return web3.eth.estimateGas({ from: accounts[0], data: binFull })
+  .then(
+    estimatedGas => estimatedGas,
+    err => console.log('errrrrrrrrrrrrrrrrr', err)
+  )
+  .then(estimatedGas => {
+    console.log('gas is estimated', estimatedGas)
 
-    method
-      .on('error', reject)
-      .on('transactionHash', transactionHash => {
-        console.log("contract method transaction: " + transactionHash);
+    const estimatedGasMax = 4016260
+    if (!estimatedGas || estimatedGas > estimatedGasMax) {
+      estimatedGas = estimatedGasMax
+    } else {
+      estimatedGas += 100000
+    }
 
-        // This additional polling of tx receipt was made, because users had problems on mainnet: wizard hanged on random
-        // transaction, because there wasn't response from it, no receipt. Especially, if you switch between tabs when
-        // wizard works.
-        // https://github.com/oraclesorg/ico-wizard/pull/364/files/c86c3e8482ef078e0cb46b8bebf57a9187f32181#r152277434
-        checkTxMined(web3, transactionHash, function txMinedCallback(receipt) {
-          if (isMined) return
+    let sendOpts = {
+      from: accounts[0],
+      gas: estimatedGas,
+      gasPrice: generalStore.gasPrice
+    }
 
-          if (receipt) {
-            if (receipt.blockNumber) {
-              console.log("Sending tx to contract is mined from polling of tx receipt");
-              isMined = true
+    console.log('abi', abi)
 
-              if (0 !== +receipt.status || null === receipt.status) {
-                resolve()
-              } else {
-                reject({ message: 0 })
-              }
+    const objAbi = JSON.parse(JSON.stringify(abi))
+    let contractInstance = new web3.eth.Contract(objAbi)
+    const method = contractInstance.deploy(deployOpts).send(sendOpts)
 
-            } else {
-              console.log("Still mining... Polling of transaction once more");
-              setTimeout(() => {
-                checkTxMined(web3, transactionHash, txMinedCallback)
-              }, 5000)
-            }
-          } else {
-            console.log("Still mining... Polling of transaction once more");
-            setTimeout(() => {
-              checkTxMined(web3, transactionHash, txMinedCallback)
-            }, 5000)
-          }
-        })
-      })
-      .on('receipt', receipt => {
-        if (isMined) return
-        isMined = true
-
-        if (0 !== +receipt.status || null === receipt.status) {
-          resolve()
-        } else {
-          reject({ message: 0 })
-        }
-      })
+    return new Promise((resolve, reject) => sendTX(resolve, reject, method, DEPLOY_CONTRACT))
   })
 }
 
-export function checkTxMined(web3, txhash, cb) {
-  web3.eth.getTransactionReceipt(txhash, function(err, receipt) {
+export function sendTXToContract(web3, method) {
+  return new Promise((resolve, reject) => sendTX(resolve, reject, method, CALL_METHOD))
+}
+
+let sendTX = (resolve, reject, method, type) => {
+  let isMined = false
+  let txHash
+
+  method
+  .on('error', reject)
+  // This additional polling of tx receipt was made, because users had problems on mainnet: wizard hanged on random
+  // transaction, because there wasn't response from it, no receipt. Especially, if you switch between tabs when
+  // wizard works.
+  // https://github.com/oraclesorg/ico-wizard/pull/364/files/c86c3e8482ef078e0cb46b8bebf57a9187f32181#r152277434
+  .on('transactionHash', _txHash => checkTxMined(_txHash, function pollingReceiptCheck(receipt) {
+    txHash = _txHash
+    if (isMined) return
+    const typeDisplayName = getTypeOfTxDisplayName(type);
+
+    if (receipt) {
+      if (receipt.blockNumber) {
+        console.log(`${typeDisplayName} ${txHash} is mined from polling of tx receipt`);
+        isMined = true
+        sendTXResponse(receipt, type, resolve, reject)
+      } else {
+        repeatPolling()
+      }
+    } else {
+      repeatPolling()
+    }
+
+    function repeatPolling() {
+      console.log(`${typeDisplayName} ${txHash} is still pending. Polling of transaction once more`);
+      setTimeout(() => {
+        checkTxMined(txHash, pollingReceiptCheck)
+      }, 5000)
+    }
+  }))
+  .on('receipt', receipt => {
+    if (isMined) return
+    const typeDisplayName = getTypeOfTxDisplayName(type);
+    console.log(`${typeDisplayName} ${txHash} is mined from Promise`);
+    isMined = true
+    sendTXResponse(receipt, type, resolve, reject)
+  })
+}
+
+const sendTXResponse = (receipt, type, resolve, reject) => {
+  if (0 !== +receipt.status || null === receipt.status) {
+    if (type == DEPLOY_CONTRACT)
+      resolve(receipt.contractAddress)
+    else
+      resolve()
+  } else {
+    reject({ message: 0 })
+  }
+}
+
+export const checkTxMined = (txhash, _pollingReceiptCheck) => {
+  web3.eth.getTransactionReceipt(txhash, (err, receipt) => {
     if (receipt)
       console.log(receipt);
-    cb(receipt);
+    _pollingReceiptCheck(receipt);
   });
+}
+
+const getTypeOfTxDisplayName = (type) => {
+  const deployContractTypeDisplayName = "Contract deployment transaction"
+  const callMethodTypeDisplayName = "Contract method transaction"
+  switch(type) {
+    case DEPLOY_CONTRACT:
+      return deployContractTypeDisplayName
+    case CALL_METHOD:
+      return callMethodTypeDisplayName
+    default:
+      return deployContractTypeDisplayName
+  }
 }
 
 export function attachToContract(web3, abi, addr) {

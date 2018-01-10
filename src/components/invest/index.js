@@ -226,10 +226,8 @@ export class Invest extends React.Component {
       .then(() => this.setState({ loading: false }))
   }
 
-  txMinedCallback(web3, txHash, receipt) {
+  txMinedCallback(txHash, receipt) {
     const { investStore } = this.props
-
-    console.log(web3)
 
     if (receipt) {
       if (receipt.blockNumber) {
@@ -237,10 +235,8 @@ export class Invest extends React.Component {
         successfulInvestmentAlert(investStore.tokensToInvest)
       }
     } else {
-      console.log(web3)
-
       setTimeout(() => {
-        checkTxMined(web3, txHash, receipt => this.txMinedCallback(web3, txHash, receipt))
+        checkTxMined(txHash, receipt => this.txMinedCallback(txHash, receipt))
       }, 500)
     }
   }
