@@ -160,7 +160,10 @@ export class stepThree extends React.Component {
     }
 
     if (tierStore.areTiersValid) {
-      web3Store.getWeb3((web3) => {
+      this.props.history.push("/4");
+
+      //if mainnet is on maintenance
+      /*web3Store.getWeb3((web3) => {
         getNetworkVersion(web3Store.web3)
           .then((networkId) => {
             if (networkId == 1)
@@ -168,7 +171,7 @@ export class stepThree extends React.Component {
             else
               this.props.history.push("/4");
           })
-      });
+      });*/
     } else {
       this.showErrorMessages(e);
     }
