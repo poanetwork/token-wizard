@@ -156,7 +156,12 @@ let sendTX = (resolve, reject, method, type) => {
   let txHash
 
   method
-  .on('error', reject)
+  .on('error', error => {
+    console.log(error)
+    // https://github.com/poanetwork/ico-wizard/issues/472
+    if (!error.message.includes("Failed to check for transaction receipt"))
+      reject(error)
+  })
   // This additional polling of tx receipt was made, because users had problems on mainnet: wizard hanged on random
   // transaction, because there wasn't response from it, no receipt. Especially, if you switch between tabs when
   // wizard works.
