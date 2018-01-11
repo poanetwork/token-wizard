@@ -160,7 +160,8 @@ let sendTX = (method, type) => {
       // https://github.com/oraclesorg/ico-wizard/pull/364/files/c86c3e8482ef078e0cb46b8bebf57a9187f32181#r152277434
       .on('transactionHash', _txHash => checkTxMined(_txHash, function pollingReceiptCheck (err, receipt) {
         if (isMined) return
-        if (err) return reject(err)
+        //https://github.com/poanetwork/ico-wizard/issues/480
+        if (err && !err.message.includes('Failed to fetch')) return reject(err)
 
         txHash = _txHash
         const typeDisplayName = getTypeOfTxDisplayName(type)
@@ -269,8 +270,7 @@ export function registerCrowdsaleAddress (contractStore) {
         .add(crowdsaleAddress)
         .estimateGas(opts)
         .then(estimatedGas => {
-          const estimatedGasMax = 4016260
-          opts.gasLimit = !estimatedGas || estimatedGas > estimatedGasMax ? estimatedGasMax : estimatedGas + 100000
+          opts.gasLimit = 100000
 
           return registry.methods
             .add(crowdsaleAddress)
