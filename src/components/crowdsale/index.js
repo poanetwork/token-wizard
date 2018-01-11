@@ -121,35 +121,35 @@ export class Crowdsale extends React.Component {
     const { web3 } = web3Store
     const tokenAddr = getContractStoreProperty('token','addr')
     const tempCrowdsaleAddr = getContractStoreProperty('crowdsale','addr')
-    const crowdsaleAddr = tempCrowdsaleAddr === 'string'? tempCrowdsaleAddr : tempCrowdsaleAddr[0]
-    const tokenDecimals = !isNaN(tokenStore.decimals)?tokenStore.decimals:0;
+    const crowdsaleAddr = tempCrowdsaleAddr === 'string' ? tempCrowdsaleAddr : tempCrowdsaleAddr[0]
+    const tokenDecimals = !isNaN(tokenStore.decimals) ? tokenStore.decimals : 0;
     const rate = crowdsalePageStore.rate; //for tiers: 1 token in wei, for standard: 1/? 1 token in eth
-    const maxCapBeforeDecimals = crowdsalePageStore.maximumSellableTokens/10**tokenDecimals;
-    const investorsCount = crowdsalePageStore.investors?crowdsalePageStore.investors.toString():0;
+    const maxCapBeforeDecimals = crowdsalePageStore.maximumSellableTokens / 10**tokenDecimals;
+    const investorsCount = crowdsalePageStore.investors ? crowdsalePageStore.investors.toString() : 0;
     const ethRaised = crowdsalePageStore.ethRaised;
 
     //tokens claimed: tiers, standard
-    const tokensClaimedStandard = rate?(crowdsalePageStore.ethRaised/rate):0;
-    const tokensClaimedTiers = rate?(crowdsalePageStore.tokensSold/10**tokenDecimals):0;
-    const tokensClaimed = (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap)?tokensClaimedTiers:tokensClaimedStandard;
+    const tokensClaimedStandard = rate ? (crowdsalePageStore.ethRaised / rate) : 0;
+    const tokensClaimedTiers = rate ? (crowdsalePageStore.tokensSold / 10**tokenDecimals) : 0;
+    const tokensClaimed = (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap) ? tokensClaimedTiers : tokensClaimedStandard;
 
     //price: tiers, standard
-    const tokensPerETHStandard = !isNaN(rate)?rate:0;
-    const tokensPerETHTiers = !isNaN(1/rate)?1/web3.utils.fromWei(toFixed(rate).toString(), "ether"):0;
-    const tokensPerETH = (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap)?tokensPerETHTiers:tokensPerETHStandard;
+    const tokensPerETHStandard = !isNaN(rate) ? rate : 0;
+    const tokensPerETHTiers = !isNaN(1 / rate) ? 1 / web3.utils.fromWei(toFixed(rate).toString(), "ether") : 0;
+    const tokensPerETH = (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap) ? tokensPerETHTiers : tokensPerETHStandard;
 
     //total supply: tiers, standard
-    const tierCap = maxCapBeforeDecimals?(maxCapBeforeDecimals).toString():0;
-    const standardCrowdsaleSupply = !isNaN(crowdsalePageStore.supply)?(crowdsalePageStore.supply).toString():0;
-    const totalSupply = (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap)?tierCap:standardCrowdsaleSupply;
+    const tierCap = maxCapBeforeDecimals ? (maxCapBeforeDecimals).toString() : 0;
+    const standardCrowdsaleSupply = !isNaN(crowdsalePageStore.supply) ? (crowdsalePageStore.supply).toString() : 0;
+    const totalSupply = (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap) ? tierCap : standardCrowdsaleSupply;
 
     //goal in ETH
-    const goalInETHStandard = (totalSupply/rate).toExponential();
-    let goalInETHTiers = crowdsalePageStore.maximumSellableTokensInWei?(web3.utils.fromWei(toFixed(crowdsalePageStore.maximumSellableTokensInWei).toString(), "ether").toString()):0;
+    const goalInETHStandard = (totalSupply / rate).toExponential();
+    let goalInETHTiers = crowdsalePageStore.maximumSellableTokensInWei ? (web3.utils.fromWei(toFixed(crowdsalePageStore.maximumSellableTokensInWei).toString(), "ether").toString()) : 0;
     goalInETHTiers = 1.0 / 100 * Math.floor(100 * goalInETHTiers)
-    const goalInETH = (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap)?goalInETHTiers:goalInETHStandard;
+    const goalInETH = (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap) ? goalInETHTiers : goalInETHStandard;
 
-    const tokensClaimedRatio = goalInETH?(ethRaised/goalInETH)*100:"0";
+    const tokensClaimedRatio = goalInETH ? (ethRaised / goalInETH) * 100 : "0";
 
     return this.state.loading ? <Loader show={this.state.loading}></Loader> :
     (

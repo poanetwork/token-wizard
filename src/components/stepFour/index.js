@@ -546,13 +546,13 @@ const { PUBLISH } = NAVIGATION_STEPS
       let capBlock = <DisplayField
         side='left'
         title={'Max cap'}
-        value={tierStore.tiers[i].supply?tierStore.tiers[i].supply:""}
+        value={tierStore.tiers[i].supply ? tierStore.tiers[i].supply : ""}
         description="How many tokens will be sold on this tier."
       />
       let updatableBlock = <DisplayField
         side='right'
         title={'Allow modifying'}
-        value={tierStore.tiers[i].updatable?tierStore.tiers[i].updatable:"off"}
+        value={tierStore.tiers[i].updatable ? tierStore.tiers[i].updatable : "off"}
         description="Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing."
       />
 
@@ -564,13 +564,13 @@ const { PUBLISH } = NAVIGATION_STEPS
             <DisplayField
               side='left'
               title={'Start time'}
-              value={tierStore.tiers[i].startTime?tierStore.tiers[i].startTime.split("T").join(" "):""}
+              value={tierStore.tiers[i].startTime ? tierStore.tiers[i].startTime.split("T").join(" ") : ""}
               description="Date and time when the tier starts."
             />
             <DisplayField
               side='right'
               title={'End time'}
-              value={tierStore.tiers[i].endTime?tierStore.tiers[i].endTime.split("T").join(" "):""}
+              value={tierStore.tiers[i].endTime ? tierStore.tiers[i].endTime.split("T").join(" ") : ""}
               description="Date and time when the tier ends."
             />
           </div>
@@ -578,7 +578,7 @@ const { PUBLISH } = NAVIGATION_STEPS
             <DisplayField
               side='left'
               title={'Wallet address'}
-              value={tierStore.tiers[i].walletAddress?tierStore.tiers[i].walletAddress:""}
+              value={tierStore.tiers[i].walletAddress ? tierStore.tiers[i].walletAddress : ""}
               description="Where the money goes after investors transactions."
             />
             <DisplayField
@@ -588,8 +588,8 @@ const { PUBLISH } = NAVIGATION_STEPS
               description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens."
             />
           </div>
-          {contractStore.contractType===CONTRACT_TYPES.whitelistwithcap?capBlock:""}
-          {contractStore.contractType===CONTRACT_TYPES.whitelistwithcap?updatableBlock:""}
+          {contractStore.contractType===CONTRACT_TYPES.whitelistwithcap ? capBlock : ""}
+          {contractStore.contractType===CONTRACT_TYPES.whitelistwithcap ? updatableBlock : ""}
         </div></div>);
     }
     let ABIEncodedOutputsCrowdsale = [];
@@ -597,8 +597,8 @@ const { PUBLISH } = NAVIGATION_STEPS
       ABIEncodedOutputsCrowdsale.push(
         <DisplayTextArea
           key={i.toString()}
-          label={"Constructor Arguments for " + (tierStore.tiers[i].tier?tierStore.tiers[i].tier : "contract") + " (ABI-encoded and appended to the ByteCode above)"}
-          value={contractStore?contractStore.crowdsale?contractStore.crowdsale.abiConstructor?contractStore.crowdsale.abiConstructor[i]:"":"":""}
+          label={"Constructor Arguments for " + (tierStore.tiers[i].tier ? tierStore.tiers[i].tier : "contract") + " (ABI-encoded and appended to the ByteCode above)"}
+          value={contractStore ? contractStore.crowdsale ? contractStore.crowdsale.abiConstructor ? contractStore.crowdsale.abiConstructor[i] : "" : "" : ""}
           description="Encoded ABI"
         />
       );
@@ -608,8 +608,8 @@ const { PUBLISH } = NAVIGATION_STEPS
       ABIEncodedOutputsPricingStrategy.push(
         <DisplayTextArea
           key={i.toString()}
-          label={"Constructor Arguments for " + (tierStore.tiers[i].tier?tierStore.tiers[i].tier : "") + " Pricing Strategy Contract (ABI-encoded and appended to the ByteCode above)"}
-          value={contractStore?contractStore.pricingStrategy?contractStore.pricingStrategy.abiConstructor?contractStore.pricingStrategy.abiConstructor[i]:"":"":""}
+          label={"Constructor Arguments for " + (tierStore.tiers[i].tier ? tierStore.tiers[i].tier : "") + " Pricing Strategy Contract (ABI-encoded and appended to the ByteCode above)"}
+          value={contractStore ? contractStore.pricingStrategy ? contractStore.pricingStrategy.abiConstructor ? contractStore.pricingStrategy.abiConstructor[i] : "" : "" : ""}
           description="Contructor arguments for pricing strategy contract"
         />
       );
@@ -619,8 +619,8 @@ const { PUBLISH } = NAVIGATION_STEPS
       ABIEncodedOutputsFinalizeAgent.push(
         <DisplayTextArea
           key={i.toString()}
-          label={"Constructor Arguments for " + (tierStore.tiers[i].tier?tierStore.tiers[i].tier : "") + " Finalize Agent Contract (ABI-encoded and appended to the ByteCode above)"}
-          value={contractStore?contractStore.finalizeAgent?contractStore.finalizeAgent.abiConstructor?contractStore.finalizeAgent.abiConstructor[i]:"":"":""}
+          label={"Constructor Arguments for " + (tierStore.tiers[i].tier ? tierStore.tiers[i].tier : "") + " Finalize Agent Contract (ABI-encoded and appended to the ByteCode above)"}
+          value={contractStore ? contractStore.finalizeAgent ? contractStore.finalizeAgent.abiConstructor ? contractStore.finalizeAgent.abiConstructor[i] : "" : "" : ""}
           description="Contructor arguments for finalize agent contract"
         />
       );
@@ -639,41 +639,41 @@ const { PUBLISH } = NAVIGATION_STEPS
     let tokenBlock = <div>
       <DisplayTextArea
         label={"Token Contract Source Code"}
-        value={contractStore?contractStore.token?contractStore.token.src:"":""}
+        value={contractStore ? contractStore.token ? contractStore.token.src : "" : ""}
         description="Token Contract Source Code"
       />
       <DisplayTextArea
         label={"Token Contract ABI"}
-        value={contractStore?contractStore.token?JSON.stringify(contractStore.token.abi):"":""}
+        value={contractStore ? contractStore.token ? JSON.stringify(contractStore.token.abi) : "" : ""}
         description="Token Contract ABI"
       />
        <DisplayTextArea
         label={"Token Constructor Arguments (ABI-encoded and appended to the ByteCode above)"}
-        value={contractStore?contractStore.token?contractStore.token.abiConstructor?contractStore.token.abiConstructor:"":"":""}
+        value={contractStore ? contractStore.token ? contractStore.token.abiConstructor?contractStore.token.abiConstructor : "" : "" : ""}
         description="Token Constructor Arguments"
       />
     </div>;
     let pricingStrategyBlock = <div>
       <DisplayTextArea
         label={"Pricing Strategy Contract Source Code"}
-        value={contractStore?contractStore.pricingStrategy?contractStore.pricingStrategy.src:"":""}
+        value={contractStore ? contractStore.pricingStrategy ? contractStore.pricingStrategy.src : "" : ""}
         description="Pricing Strategy Contract Source Code"
       />
       <DisplayTextArea
         label={"Pricing Strategy Contract ABI"}
-        value={contractStore?contractStore.pricingStrategy?JSON.stringify(contractStore.pricingStrategy.abi):"":""}
+        value={contractStore ? contractStore.pricingStrategy ? JSON.stringify(contractStore.pricingStrategy.abi) : "" : ""}
         description="Pricing Strategy Contract ABI"
       />
     </div>;
     let finalizeAgentBlock = <div>
       <DisplayTextArea
         label={"Finalize Agent Contract Source Code"}
-        value={contractStore?contractStore.finalizeAgent?contractStore.finalizeAgent.src:"":""}
+        value={contractStore ? contractStore.finalizeAgent ? contractStore.finalizeAgent.src : "" : ""}
         description="Finalize Agent Contract Source Code"
       />
       <DisplayTextArea
         label={"Finalize Agent Contract ABI"}
-        value={contractStore?contractStore.finalizeAgent?JSON.stringify(contractStore.finalizeAgent.abi):"":""}
+        value={contractStore ? contractStore.finalizeAgent?JSON.stringify(contractStore.finalizeAgent.abi) : "" : ""}
         description="Finalize Agent Contract ABI"
       />
     </div>;
@@ -693,7 +693,7 @@ const { PUBLISH } = NAVIGATION_STEPS
               <div className="publish-title-container">
                 <p className="publish-title" data-step="1">Crowdsale Contract</p>
               </div>
-              <p className="label">{contractStore.contractType===CONTRACT_TYPES.standard?"Standard":"Whitelist with cap"}</p>
+              <p className="label">{contractStore.contractType===CONTRACT_TYPES.standard ? "Standard" : "Whitelist with cap"}</p>
               <p className="description">
               Crowdsale Contract
               </p>
@@ -706,13 +706,13 @@ const { PUBLISH } = NAVIGATION_STEPS
                 <DisplayField
                   side='left'
                   title='Name'
-                  value={tokenStore.name?tokenStore.name:""}
+                  value={tokenStore.name ? tokenStore.name : ""}
                   description="The name of your token. Will be used by Etherscan and other token browsers."
                 />
                 <DisplayField
                   side='right'
                   title='Ticker'
-                  value={tokenStore.ticker?tokenStore.ticker:""}
+                  value={tokenStore.ticker ? tokenStore.ticker : ""}
                   description="The three letter ticker for your token."
                 />
               </div>
@@ -720,7 +720,7 @@ const { PUBLISH } = NAVIGATION_STEPS
                 <DisplayField
                   side='left'
                   title='DECIMALS'
-                  value={tokenStore.decimals?tokenStore.decimals.toString():""}
+                  value={tokenStore.decimals ? tokenStore.decimals.toString() : ""}
                   description="The decimals of your token."
                 />
               </div>
@@ -749,7 +749,7 @@ const { PUBLISH } = NAVIGATION_STEPS
                 description="Optimization in compiling"
               />
             </div>
-            {tierStore.tiers[0].whitelistdisabled === "yes"?globalLimitsBlock:""}
+            {tierStore.tiers[0].whitelistdisabled === "yes" ? globalLimitsBlock : ""}
             {tokenBlock}
             {pricingStrategyBlock}
             {ABIEncodedOutputsPricingStrategy}
@@ -757,12 +757,12 @@ const { PUBLISH } = NAVIGATION_STEPS
             {ABIEncodedOutputsFinalizeAgent}
             <DisplayTextArea
               label={"Crowdsale Contract Source Code"}
-              value={contractStore?contractStore.crowdsale?contractStore.crowdsale.src:"":""}
+              value={contractStore ? contractStore.crowdsale ? contractStore.crowdsale.src : "" : ""}
               description="Crowdsale Contract Source Code"
             />
             <DisplayTextArea
               label={"Crowdsale Contract ABI"}
-              value={contractStore?contractStore.crowdsale?JSON.stringify(contractStore.crowdsale.abi):"":""}
+              value={contractStore ? contractStore.crowdsale ? JSON.stringify(contractStore.crowdsale.abi) : "" : ""}
               description="Crowdsale Contract ABI"
             />
             {ABIEncodedOutputsCrowdsale}

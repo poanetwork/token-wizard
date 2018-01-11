@@ -131,9 +131,9 @@ export function getCrowdsaleTargetDates($this, cb) {
             cbCount++;
             if (err) return console.log(err);
 
-            console.log("startDate: " + startDate*1000);
-            if (!crowdsalePageStore.startDate || crowdsalePageStore.startDate > startDate*1000)
-              crowdsalePageStore.startDate = startDate*1000;
+            console.log("startDate: " + startDate * 1000);
+            if (!crowdsalePageStore.startDate || crowdsalePageStore.startDate > startDate * 1000)
+              crowdsalePageStore.startDate = startDate * 1000;
             if (propsCount === cbCount) {
               state.loading = false;
               $this.setState(state, cb);
@@ -177,9 +177,9 @@ export function getCrowdsaleTargetDates($this, cb) {
             cbCount++;
             if (err) return console.log(err);
 
-            console.log("endDate: " + endDate*1000);
+            console.log("endDate: " + endDate * 1000);
 
-            if (!crowdsalePageStore.endDate || crowdsalePageStore.endDate < endDate*1000) crowdsalePageStore.endDate = endDate*1000;
+            if (!crowdsalePageStore.endDate || crowdsalePageStore.endDate < endDate * 1000) crowdsalePageStore.endDate = endDate * 1000;
 
             console.log("curDate: " + new Date().getTime());
 

@@ -262,7 +262,6 @@ export function registerCrowdsaleAddress (contractStore) {
 
   return Promise.all([whenRegistryAddress, whenAccount])
     .then(([registryAddress, account]) => {
-      debugger
       const registry = new web3.eth.Contract(toJS(registryAbi), registryAddress)
       const opts = { from: account }
 
