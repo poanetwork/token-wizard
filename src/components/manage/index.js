@@ -23,7 +23,8 @@ export class Manage extends Component {
     window.scrollTo(0, 0)
     this.state = {
       formPristine: true,
-      loading: true
+      loading: true,
+      canFinalize: false
     }
   }
 
@@ -59,6 +60,8 @@ export class Manage extends Component {
           return promise.then(() => processTier(addr, index))
         }, Promise.resolve())
       })
+      .then(this.findCurrentContract)
+      .then(this.canFinalize)
       .catch(console.log)
       .then(this.hideLoader)
   }
@@ -72,43 +75,76 @@ export class Manage extends Component {
   }
 
   isLastContract = crowdsaleContract => {
+    if (!crowdsaleContract) return false
+
     const { contractStore } = this.props
     const crowdsalesAddresses = contractStore.crowdsale.addr
     return crowdsalesAddresses[crowdsalesAddresses.length - 1] === crowdsaleContract._address
+  }
+
+  findCurrentContract = () => {
+    const { web3 } = this.props.web3Store
+
+    return new Promise((resolve, reject) => {
+      findCurrentContractRecursively(0, this, web3, null, crowdsaleContract => {
+        this.setState({ crowdsaleContract })
+        if (crowdsaleContract === null) return reject(crowdsaleContract)
+        resolve(crowdsaleContract)
+      })
+    })
+  }
+
+  canFinalize = () => {
+    const { crowdsaleContract } = this.state
+
+    return new Promise((resolve, reject) => {
+      if (!this.isLastContract(crowdsaleContract)) {
+        this.setState({ canFinalize: false })
+        reject(this.state.canFinalize)
+
+      } else {
+        crowdsaleContract.methods.finalize()
+          .call({
+            gasLimit: 650000,
+            gasPrice: this.props.generalStore.gasPrice
+          })
+          .then(() => {
+            this.setState({ canFinalize: true })
+            resolve(this.state.canFinalize)
+          })
+          .catch(() => {
+            this.setState({ canFinalize: false })
+            reject(this.state.canFinalize)
+          })
+      }
+    })
   }
 
   finalizeCrowdsale = () => {
     const { crowdsaleStore, web3Store } = this.props
     const { web3 } = web3Store
 
-    if (!crowdsaleStore.selected.finalized) {
+    if (!crowdsaleStore.selected.finalized && this.state.canFinalize) {
       warningOnFinalizeCrowdsale()
         .then(result => {
           if (result.value) {
-            findCurrentContractRecursively(0, this, web3, null, crowdsaleContract => {
-              this.showLoader()
+            this.showLoader()
 
-              if (!this.isLastContract(crowdsaleContract)) {
-                this.hideLoader()
-                toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.FINALIZE_FAIL })
-
-              } else {
-                const finalizeMethod = crowdsaleContract.methods.finalize().send({
-                  gasLimit: 650000,
-                  gasPrice: this.props.generalStore.gasPrice
-                })
-
-                getCurrentRate(web3, crowdsaleContract)
-                  .then(() => sendTXToContract(web3, finalizeMethod))
-                  .then(() => {
-                    successfulFinalizeAlert()
-                    crowdsaleStore.setSelectedProperty('finalized', true)
-                  })
-                  .catch(err => toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.FINALIZE_FAIL }))
-                  .then(this.hideLoader)
-              }
+            const { crowdsaleContract } = this.state
+            const finalizeMethod = crowdsaleContract.methods.finalize().send({
+              gasLimit: 650000,
+              gasPrice: this.props.generalStore.gasPrice
             })
 
+            getCurrentRate(web3, crowdsaleContract)
+              .then(() => sendTXToContract(web3, finalizeMethod))
+              .then(() => {
+                successfulFinalizeAlert()
+                crowdsaleStore.setSelectedProperty('finalized', true)
+                this.setState({ canFinalize: false })
+              })
+              .catch(() => toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.FINALIZE_FAIL }))
+              .then(this.hideLoader)
           }
         })
     }
@@ -256,7 +292,7 @@ export class Manage extends Component {
   }
 
   render () {
-    const { formPristine } = this.state
+    const { formPristine, canFinalize } = this.state
     const { generalStore, tierStore, tokenStore, crowdsaleStore } = this.props
     const { address: crowdsaleAddress, finalized, updatable } = crowdsaleStore.selected
 
@@ -268,7 +304,7 @@ export class Manage extends Component {
           You can make it only after the end of the last tier. After finalization, it's not possible to update
           tiers, buy tokens. All tokens will be movable, reserved tokens will be issued.</p>
         <Link to='#' onClick={() => this.finalizeCrowdsale()}>
-          <span className={`button button_${finalized ? 'disabled' : 'fill'}`}>Finalize Crowdsale</span>
+          <span className={`button button_${finalized || !canFinalize ? 'disabled' : 'fill'}`}>Finalize Crowdsale</span>
         </Link>
       </div>
     )
