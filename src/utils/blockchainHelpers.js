@@ -152,7 +152,11 @@ let sendTX = (method, type) => {
       .on('error', error => {
         console.error(error)
         // https://github.com/poanetwork/ico-wizard/issues/472
-        if (!error.message.includes('Failed to check for transaction receipt') && !error.message.includes('Failed to fetch')) reject(error)
+        if (
+          !error.message.includes('Failed to check for transaction receipt')
+          && !error.message.includes('Failed to fetch')
+          && !error.message.includes('Unexpected end of JSON input')
+        ) reject(error)
       })
       // This additional polling of tx receipt was made, because users had problems on mainnet: wizard hanged on random
       // transaction, because there wasn't response from it, no receipt. Especially, if you switch between tabs when
@@ -161,7 +165,12 @@ let sendTX = (method, type) => {
       .on('transactionHash', _txHash => checkTxMined(_txHash, function pollingReceiptCheck (err, receipt) {
         if (isMined) return
         //https://github.com/poanetwork/ico-wizard/issues/480
-        if (err && !err.message.includes('Failed to fetch')) return reject(err)
+        if (
+          err
+          && !err.message.includes('Failed to check for transaction receipt')
+          && !err.message.includes('Failed to fetch')
+          && !err.message.includes('Unexpected end of JSON input')
+        ) return reject(err)
 
         txHash = _txHash
         const typeDisplayName = getTypeOfTxDisplayName(type)
