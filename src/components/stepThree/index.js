@@ -1,7 +1,7 @@
 import React from "react";
 import "../../assets/stylesheets/application.css";
 import { Link } from "react-router-dom";
-import { setExistingContractParams, getNetworkVersion } from "../../utils/blockchainHelpers";
+import { setExistingContractParams, getNetworkVersion, getNetWorkNameById } from "../../utils/blockchainHelpers";
 import { defaultCompanyStartDate } from "./utils";
 import { defaultCompanyEndDate, gweiToWei, weiToGwei } from "../../utils/utils";
 import { StepNavigation } from "../Common/StepNavigation";
@@ -14,7 +14,8 @@ import {
   VALIDATION_MESSAGES,
   VALIDATION_TYPES,
   TEXT_FIELDS,
-  CONTRACT_TYPES
+  CONTRACT_TYPES,
+  CHAINS
 } from "../../utils/constants";
 import { inject, observer } from "mobx-react";
 import { Loader } from '../Common/Loader'
@@ -155,9 +156,9 @@ export class stepThree extends React.Component {
     }
 
     if (tierStore.areTiersValid) {
-      getNetworkVersion(web3Store.web3)
+      getNetworkVersion()
         .then(networkID => {
-          if (getNetWorkNameById(networkID) === CHAINS.ORACLES) {
+          if (getNetWorkNameById(networkID) === CHAINS.MAINNET) {
             const { generalStore, reservedTokenStore } = this.props
             const reserved = !!reservedTokenStore.tokens.length
             const whitelisted = tierStore.tiers[0].whitelistdisabled === 'no'
