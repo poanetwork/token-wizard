@@ -9,7 +9,6 @@ import { InputField } from "../Common/InputField";
 import { RadioInputField } from "../Common/RadioInputField";
 import { CrowdsaleBlock } from "./CrowdsaleBlock";
 import { WhitelistInputBlock } from "../Common/WhitelistInputBlock";
-import { web3Store } from '../../stores'
 import {
   NAVIGATION_STEPS,
   VALIDATION_MESSAGES,

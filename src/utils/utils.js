@@ -99,6 +99,7 @@ export function fetchFile(path) {
 
 export const findConstructor = (abi) => {
   let abiConstructor
+
   abi.forEach(abiObj => {
     if (abiObj.type === "constructor") {
       console.log(abiObj);
@@ -106,6 +107,7 @@ export const findConstructor = (abi) => {
       abiConstructor = abiObj.inputs;
     }
   })
+
   return abiConstructor
 }
 
@@ -123,13 +125,13 @@ export const getconstructorParams = (abiConstructor, vals, crowdsaleNum) => {
           params.vals.push(tierStore.tiers[crowdsaleNum].startBlock);
           break;
         case "_start":
-          params.vals.push(toFixed(new Date(tierStore.tiers[crowdsaleNum].startTime).getTime()/1000).toString());
+          params.vals.push(toFixed(new Date(tierStore.tiers[crowdsaleNum].startTime).getTime() / 1000).toString());
           break;
         case "_endBlock":
           params.vals.push(tierStore.tiers[crowdsaleNum].endBlock);
           break;
         case "_end":
-          params.vals.push(toFixed(new Date(tierStore.tiers[crowdsaleNum].endTime).getTime()/1000).toString());
+          params.vals.push(toFixed(new Date(tierStore.tiers[crowdsaleNum].endTime).getTime() / 1000).toString());
           break;
         case "_rate":
           params.vals.push(tierStore.tiers[crowdsaleNum].rate);
@@ -164,14 +166,14 @@ export const getconstructorParams = (abiConstructor, vals, crowdsaleNum) => {
           params.vals.push(tokenStore.decimals);
           break;
         case "_globalMinCap":
-          params.vals.push(tierStore.tiers[0].whitelistdisabled === "yes"?tokenStore.globalmincap?toFixed(tokenStore.globalmincap*10**tokenStore.decimals).toString():0:0);
+          params.vals.push(tierStore.tiers[0].whitelistdisabled === "yes" ? tokenStore.globalmincap ? toFixed(tokenStore.globalmincap * 10**tokenStore.decimals).toString() : 0 : 0);
           break;
         case "_tokenSupply":
         case "_initialSupply":
           params.vals.push(tokenStore.supply);
           break;
         case "_maximumSellableTokens":
-          params.vals.push(toFixed(tierStore.tiers[crowdsaleNum].supply*10**tokenStore.decimals).toString());
+          params.vals.push(toFixed(tierStore.tiers[crowdsaleNum].supply * 10**tokenStore.decimals).toString());
           break;
         case "_minimumFundingGoal":
           params.vals.push(0);
@@ -197,15 +199,15 @@ export const getconstructorParams = (abiConstructor, vals, crowdsaleNum) => {
           params.vals.push(owners)
           break;
         case "_oneTokenInWei":
-          let oneTokenInETHRaw = toFixed(1/tierStore.tiers[crowdsaleNum].rate).toString()
+          let oneTokenInETHRaw = toFixed(1 / tierStore.tiers[crowdsaleNum].rate).toString()
           let oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, oneTokenInETHRaw)
           params.vals.push(web3Store.web3.utils.toWei(oneTokenInETH, "ether"));
           break;
         case "_isUpdatable":
-          params.vals.push(tierStore.tiers[crowdsaleNum].updatable?tierStore.tiers[crowdsaleNum].updatable==="on"?true:false:false);
+          params.vals.push(tierStore.tiers[crowdsaleNum].updatable ? tierStore.tiers[crowdsaleNum].updatable==="on" ? true : false : false);
           break;
         case "_isWhiteListed":
-          params.vals.push(tierStore.tiers[0].whitelistdisabled?tierStore.tiers[0].whitelistdisabled==="yes"?false:true:false);
+          params.vals.push(tierStore.tiers[0].whitelistdisabled ? tierStore.tiers[0].whitelistdisabled==="yes" ? false : true : false);
           break;
         default:
           params.vals.push("");

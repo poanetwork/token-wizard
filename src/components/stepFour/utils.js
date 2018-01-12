@@ -8,12 +8,12 @@ import { noContractAlert } from '../../utils/alerts'
 import { toFixed } from '../../utils/utils'
 import { DOWNLOAD_NAME } from '../../utils/constants'
 import { isObservableArray } from 'mobx'
-import { web3Store, generalStore } from '../../stores'
+import { generalStore } from '../../stores'
 
-function setLastCrowdsale(web3, abi, addr, lastCrowdsale, gasLimit) {
+function setLastCrowdsale (abi, addr, lastCrowdsale, gasLimit) {
   console.log('###setLastCrowdsale for Pricing Strategy:###')
 
-  return attachToContract(web3, abi, addr)
+  return attachToContract(abi, addr)
     .then(pricingStrategyContract => {
       console.log('attach to pricingStrategy contract')
 
@@ -27,15 +27,15 @@ function setLastCrowdsale(web3, abi, addr, lastCrowdsale, gasLimit) {
         gasPrice: generalStore.gasPrice
       })
 
-      return sendTXToContract(web3, method)
+      return sendTXToContract(method)
     })
 }
 
 //for mintable token
-function setMintAgent (web3, abi, addr, acc, gasLimit) {
+function setMintAgent (abi, addr, acc, gasLimit) {
   console.log('###setMintAgent:###')
 
-  return attachToContract(web3, abi, addr)
+  return attachToContract(abi, addr)
     .then(tokenContract => {
       console.log('attach to token contract')
 
@@ -49,11 +49,11 @@ function setMintAgent (web3, abi, addr, acc, gasLimit) {
         gasPrice: generalStore.gasPrice
       })
 
-      return sendTXToContract(web3, method)
+      return sendTXToContract(method)
     })
 }
 
-function addWhiteList (round, web3, tierStore, token, abi, addr) {
+function addWhiteList (round, tierStore, token, abi, addr) {
   console.log('###whitelist:###')
   let whitelist = []
 
@@ -102,7 +102,7 @@ function addWhiteList (round, web3, tierStore, token, abi, addr) {
     return Promise.resolve()
   }
 
-  return attachToContract(web3, abi, addr)
+  return attachToContract(abi, addr)
     .then(crowdsaleContract => {
       console.log('attach to crowdsale contract')
 
@@ -133,14 +133,14 @@ function addWhiteList (round, web3, tierStore, token, abi, addr) {
         gasPrice: generalStore.gasPrice
       })
 
-      return sendTXToContract(web3, method)
+      return sendTXToContract(method)
     })
 }
 
-function updateJoinedCrowdsales(web3, abi, addr, joinedContractAddresses, gasLimit) {
+function updateJoinedCrowdsales (abi, addr, joinedContractAddresses, gasLimit) {
   console.log('###updateJoinedCrowdsales:###')
 
-  return attachToContract(web3, abi, addr)
+  return attachToContract(abi, addr)
     .then(crowdsaleContract => {
       console.log('attach to crowdsale contract')
 
@@ -156,14 +156,14 @@ function updateJoinedCrowdsales(web3, abi, addr, joinedContractAddresses, gasLim
         gasPrice: generalStore.gasPrice
       })
 
-      return sendTXToContract(web3, method)
+      return sendTXToContract(method)
     })
 }
 
-function setFinalizeAgent (web3, abi, addr, finalizeAgentAddr, gasLimit) {
+function setFinalizeAgent (abi, addr, finalizeAgentAddr, gasLimit) {
   console.log('###setFinalizeAgent:###')
 
-  return attachToContract(web3, abi, addr)
+  return attachToContract(abi, addr)
     .then(crowdsaleContract => {
       console.log('attach to crowdsale contract')
 
@@ -177,14 +177,14 @@ function setFinalizeAgent (web3, abi, addr, finalizeAgentAddr, gasLimit) {
         gasPrice: generalStore.gasPrice
       })
 
-      return sendTXToContract(web3, method)
+      return sendTXToContract(method)
     })
 }
 
-function setReleaseAgent (web3, abi, addr, finalizeAgentAddr, gasLimit) {
+function setReleaseAgent (abi, addr, finalizeAgentAddr, gasLimit) {
   console.log('###setReleaseAgent:###')
 
-  return attachToContract(web3, abi, addr)
+  return attachToContract(abi, addr)
     .then(tokenContract => {
       console.log('attach to token contract')
 
@@ -198,27 +198,27 @@ function setReleaseAgent (web3, abi, addr, finalizeAgentAddr, gasLimit) {
         gasPrice: generalStore.gasPrice
       })
 
-      return sendTXToContract(web3, method)
+      return sendTXToContract(method)
     })
 }
 
-export function setReservedTokensListMultiple(web3, abi, addr, token, reservedTokenStore) {
-  console.log("###setReservedTokensListMultiple:###");
+export function setReservedTokensListMultiple (abi, addr, token, reservedTokenStore) {
+  console.log('###setReservedTokensListMultiple:###')
 
-  return attachToContract(web3, abi, addr)
+  return attachToContract(abi, addr)
     .then(tokenContract => {
-      console.log("attach to token contract");
+      console.log('attach to token contract')
 
       if (!tokenContract) {
         noContractAlert()
         return Promise.reject('no contract available')
       }
 
-      let map = {};
+      let map = {}
       let addrs = []
       let inTokens = []
       let inPercentageUnit = []
-      let inPercentageDecimals = [];
+      let inPercentageDecimals = []
 
       const reservedTokens = reservedTokenStore.tokens
 
@@ -238,7 +238,7 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, reservedTo
         }
       }
 
-      let keys = Object.keys(map);
+      let keys = Object.keys(map)
 
       for (let i = 0; i < keys.length; i++) {
         let key = keys[i]
@@ -256,16 +256,16 @@ export function setReservedTokensListMultiple(web3, abi, addr, token, reservedTo
 
       let method = tokenContract.methods
         .setReservedTokensListMultiple(addrs, inTokens, inPercentageUnit, inPercentageDecimals)
-        .send({gasPrice: generalStore.gasPrice})
+        .send({ gasPrice: generalStore.gasPrice })
 
-      return sendTXToContract(web3, method)
+      return sendTXToContract(method)
     })
 }
 
-export function transferOwnership (web3, abi, addr, finalizeAgentAddr, gasLimit) {
+export function transferOwnership (abi, addr, finalizeAgentAddr, gasLimit) {
   console.log('###transferOwnership:###')
 
-  return attachToContract(web3, abi, addr)
+  return attachToContract(abi, addr)
     .then(tokenContract => {
       console.log('attach to token contract')
 
@@ -279,49 +279,49 @@ export function transferOwnership (web3, abi, addr, finalizeAgentAddr, gasLimit)
         gasPrice: generalStore.gasPrice
       })
 
-      return sendTXToContract(web3, method)
+      return sendTXToContract(method)
     })
 }
 
-export function setLastCrowdsaleRecursive (web3, abi, pricingStrategyAddrs, lastCrowdsale, gasLimit) {
+export function setLastCrowdsaleRecursive (abi, pricingStrategyAddrs, lastCrowdsale, gasLimit) {
   return pricingStrategyAddrs.reduce((promise, pricingStrategyAddr) => {
-    return promise.then(() => setLastCrowdsale(web3, abi, pricingStrategyAddr, lastCrowdsale, gasLimit))
+    return promise.then(() => setLastCrowdsale(abi, pricingStrategyAddr, lastCrowdsale, gasLimit))
   }, Promise.resolve())
 }
 
-export function  setMintAgentRecursive (web3, abi, addr, crowdsaleAddrs, gasLimit) {
+export function setMintAgentRecursive (abi, addr, crowdsaleAddrs, gasLimit) {
   return crowdsaleAddrs.reduce((promise, crowdsaleAddr) => {
-    return promise.then(() => setMintAgent(web3, abi, addr, crowdsaleAddr, gasLimit))
+    return promise.then(() => setMintAgent(abi, addr, crowdsaleAddr, gasLimit))
   }, Promise.resolve())
 }
 
-export function updateJoinedCrowdsalesRecursive (web3, abi, addrs, gasLimit) {
+export function updateJoinedCrowdsalesRecursive (abi, addrs, gasLimit) {
   return addrs.reduce((promise, addr) =>
-    promise.then(() => updateJoinedCrowdsales(web3, abi, addr, addrs, gasLimit)),
+      promise.then(() => updateJoinedCrowdsales(abi, addr, addrs, gasLimit)),
     Promise.resolve()
   )
 }
 
-export function addWhiteListRecursive (web3, tierStore, token, abi, crowdsaleAddrs) {
+export function addWhiteListRecursive (tierStore, token, abi, crowdsaleAddrs) {
   return crowdsaleAddrs.reduce((promise, crowdsaleAddr, index) => {
-    return promise.then(() => addWhiteList(index, web3, tierStore, token, abi, crowdsaleAddr))
+    return promise.then(() => addWhiteList(index, tierStore, token, abi, crowdsaleAddr))
   }, Promise.resolve())
 }
 
-export function setFinalizeAgentRecursive (web3, abi, addrs, finalizeAgentAddrs, gasLimit) {
+export function setFinalizeAgentRecursive (abi, addrs, finalizeAgentAddrs, gasLimit) {
   return finalizeAgentAddrs.reduce((promise, finalizeAgentAddr, index) => {
-    return promise.then(() => setFinalizeAgent(web3, abi, addrs[index], finalizeAgentAddr, gasLimit))
+    return promise.then(() => setFinalizeAgent(abi, addrs[index], finalizeAgentAddr, gasLimit))
   }, Promise.resolve())
 }
 
-export function setReleaseAgentRecursive (web3, abi, addr, finalizeAgentAddrs, gasLimit) {
+export function setReleaseAgentRecursive (abi, addr, finalizeAgentAddrs, gasLimit) {
   return finalizeAgentAddrs.reduce((promise, finalizeAgentAddr) => {
-    return promise.then(() => setReleaseAgent(web3, abi, addr, finalizeAgentAddr, gasLimit))
+    return promise.then(() => setReleaseAgent(abi, addr, finalizeAgentAddr, gasLimit))
   }, Promise.resolve())
 }
 
 export const handlerForFile = (content, type) => {
-  const checkIfTime = content.field === "startTime" || content.field === "endTime"
+  const checkIfTime = content.field === 'startTime' || content.field === 'endTime'
   let suffix = ''
 
   if (checkIfTime) {
@@ -403,31 +403,29 @@ export const download = ({ data = {}, filename = '', type = '', zip = '' }) => {
   }
 }
 
-export function scrollToBottom() {
-  window.scrollTo(0,document.body.scrollHeight);
+export function scrollToBottom () {
+  window.scrollTo(0, document.body.scrollHeight)
 }
 
 export function getDownloadName (tokenAddress) {
-  return new Promise((resolve, reject) => {
-    web3Store.getWeb3((web3) => {
-      const whenNetworkName = getNetworkVersion(web3)
-        .then((networkId) => {
-          let networkName = getNetWorkNameById(networkId);
+  return new Promise(resolve => {
+    const whenNetworkName = getNetworkVersion()
+      .then((networkId) => {
+        let networkName = getNetWorkNameById(networkId)
 
-          if (!networkName) {
-            networkName = String(networkId);
-          }
+        if (!networkName) {
+          networkName = String(networkId)
+        }
 
-          return networkName;
-        })
-        .then((networkName) => `${DOWNLOAD_NAME}_${networkName}_${tokenAddress}`);
+        return networkName
+      })
+      .then((networkName) => `${DOWNLOAD_NAME}_${networkName}_${tokenAddress}`)
 
-      resolve(whenNetworkName);
-    });
-  });
+    resolve(whenNetworkName)
+  })
 }
 
 var countDecimals = function (inputFloat) {
-  if(Math.floor(inputFloat) === parseFloat(inputFloat)) return 0;
-  return inputFloat.toString().split(".")[1].length || 0;
+  if (Math.floor(inputFloat) === parseFloat(inputFloat)) return 0
+  return inputFloat.toString().split('.')[1].length || 0
 }

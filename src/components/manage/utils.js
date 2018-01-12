@@ -19,56 +19,105 @@ const formatDate = timestamp => {
 }
 
 export const updateTierAttribute = (attribute, value, addresses) => {
-  const { web3 } = web3Store
+  const { decimals } = tokenStore
   let methods = {
     startTime: 'setStartsAt',
     endTime: 'setEndsAt',
     supply: 'setMaximumSellableTokens',
-    rate: 'updateRate'
+    rate: 'updateRate',
+    whitelist: 'setEarlyParticipantsWhitelist'
   }
   let abi
-  let contractAddress
+  let contractAddresses
 
-  if (attribute === 'startTime' || attribute === 'endTime' || attribute === 'supply') {
+  if (attribute === 'startTime' || attribute === 'endTime' || attribute === 'supply' || attribute === 'whitelist') {
     abi = contractStore.crowdsale.abi
-    contractAddress = addresses.crowdsaleAddress
+    contractAddresses = [addresses.crowdsaleAddress]
 
     if (attribute === 'startTime' || attribute === 'endTime') {
-      value = toFixed(parseInt(Date.parse(value) / 1000, 10).toString())
+      value = [toFixed(parseInt(Date.parse(value) / 1000, 10).toString())]
+    } else if (attribute === 'supply') {
+      value = [toFixed(parseInt(value, 10) * 10 ** parseInt(tokenStore.decimals, 10)).toString()]
     } else {
-      value = toFixed(parseInt(value, 10) * 10 ** parseInt(tokenStore.decimals, 10)).toString()
+      // whitelist
+      value = value.reduce((toAdd, whitelist) => {
+        toAdd[0].push(whitelist.addr)
+        toAdd[1].push(true)
+        toAdd[2].push(whitelist.min * 10 ** decimals ? toFixed((whitelist.min * 10 ** decimals).toString()) : 0)
+        toAdd[3].push(whitelist.max * 10 ** decimals ? toFixed((whitelist.max * 10 ** decimals).toString()) : 0)
+        return toAdd
+      }, [[], [], [], []])
     }
   }
 
   if (attribute === 'rate') {
     abi = contractStore.pricingStrategy.abi
-    contractAddress = addresses.pricingStrategyAddress
+    contractAddresses = [addresses.pricingStrategyAddress]
     const oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, 1 / Number(value))
-    value = web3Store.web3.utils.toWei(oneTokenInETH, 'ether')
+    value = [web3Store.web3.utils.toWei(oneTokenInETH, 'ether')]
   }
 
-  if (!contractAddress) return Promise.reject('no updatable value')
+  if (!contractAddresses) return Promise.reject('no updatable value')
 
-  return attachToContract(web3, abi, contractAddress)
-    .then(contract => {
-      const method = contract.methods[methods[attribute]]
+  if (attribute === 'whitelist') {
+    const totalTiers = tierStore.tiers.length
+    const currentTierIndex = crowdsaleStore.selected.initialTiersValues
+      .findIndex(tier => tier.addresses.crowdsaleAddress === addresses.crowdsaleAddress)
 
-      return method(value).estimateGas()
-        .then(estimatedGas => {
-          return sendTXToContract(web3, method(value)
-            .send({
-              gasLimit: estimatedGas,
-              gasPrice: generalStore.gasPrice
+    if (currentTierIndex <= totalTiers - 1) {
+      contractAddresses = crowdsaleStore.selected.initialTiersValues
+        .slice(currentTierIndex)
+        .map(tier => tier.addresses.crowdsaleAddress)
+    }
+  }
+
+  return contractAddresses.reduce((promise, contractAddress) => {
+    return promise.then(() => {
+      return attachToContract(abi, contractAddress)
+        .then(contract => {
+          const method = contract.methods[methods[attribute]]
+
+          return method(...value).estimateGas()
+            .then(estimatedGas => {
+              return sendTXToContract(method(...value)
+                .send({
+                  gasLimit: estimatedGas,
+                  gasPrice: generalStore.gasPrice
+                })
+              )
             })
-          )
         })
     })
+  }, Promise.resolve())
+}
+
+const extractWhitelistInformation = (isWhitelisted, crowdsaleMethods) => {
+  let whitelistedAccounts = []
+  const whenWhitelistedAddresses = []
+
+  if (isWhitelisted && crowdsaleMethods.whitelistedParticipantsLength) {
+    return crowdsaleMethods.whitelistedParticipantsLength().call()
+      .then(participantsCount => {
+        for (let participantIndex = 0; participantIndex < participantsCount; participantIndex++) {
+          whenWhitelistedAddresses.push(crowdsaleMethods.whitelistedParticipants(participantIndex).call())
+        }
+
+        return Promise.all(whenWhitelistedAddresses)
+      })
+      .then(whitelistedAddresses => {
+        const whenAccountData = whitelistedAddresses
+          .map(address => crowdsaleMethods.earlyParticipantWhitelist(address).call())
+
+        return Promise.all(whenAccountData)
+          .then(accountData => [isWhitelisted, whitelistedAddresses, accountData])
+      })
+  }
+
+  return Promise.resolve([isWhitelisted, whenWhitelistedAddresses, whitelistedAccounts])
 }
 
 const crowdsaleData = crowdsaleAddress => {
-  const { web3 } = web3Store
-
-  return attachToContract(web3, contractStore.crowdsale.abi, crowdsaleAddress)
+  return attachToContract(contractStore.crowdsale.abi, crowdsaleAddress)
     .then(crowdsaleContract => {
       const { methods } = crowdsaleContract
       const whenToken = methods.token().call()
@@ -82,25 +131,39 @@ const crowdsaleData = crowdsaleAddress => {
       const whenIsFinalized = methods.finalized().call()
       const whenName = methods.name().call()
 
-      return Promise.all([
-        whenToken,
-        whenMultisigWallet,
-        whenStartsAt,
-        whenEndsAt,
-        whenIsUpdatable,
-        whenIsWhitelisted,
-        whenMaximumSellableTokens,
-        whenPricingStrategy,
-        whenIsFinalized,
-        whenName
-      ])
+      return whenIsWhitelisted
+        .then(isWhitelisted => extractWhitelistInformation(isWhitelisted, methods))
+        .then(([whitelisted, whitelistedAddresses, accountData]) => {
+          const whitelistedAccounts = accountData.map((data, index) => {
+            return {
+              addr: whitelistedAddresses[index],
+              min: data.minCap,
+              max: data.maxCap
+            }
+          })
+
+          return Promise.all([whitelisted, whitelistedAccounts])
+        })
+        .then(([isWhitelisted, whitelistAccounts]) => {
+          return Promise.all([
+            whenToken,
+            whenMultisigWallet,
+            whenStartsAt,
+            whenEndsAt,
+            whenIsUpdatable,
+            isWhitelisted,
+            whenMaximumSellableTokens,
+            whenPricingStrategy,
+            whenIsFinalized,
+            whenName,
+            whitelistAccounts
+          ])
+        })
     })
 }
 
 const tokenData = tokenAddress => {
-  const { web3 } = web3Store
-
-  return attachToContract(web3, contractStore.token.abi, tokenAddress)
+  return attachToContract(contractStore.token.abi, tokenAddress)
     .then(tokenContract => {
       const { methods } = tokenContract
       const whenName = methods.name().call()
@@ -112,16 +175,12 @@ const tokenData = tokenAddress => {
 }
 
 const pricingStrategyData = pricingStrategyAddress => {
-  const { web3 } = web3Store
-
-  return attachToContract(web3, contractStore.pricingStrategy.abi, pricingStrategyAddress)
+  return attachToContract(contractStore.pricingStrategy.abi, pricingStrategyAddress)
     .then(pricingStrategyContract => pricingStrategyContract.methods.oneTokenInWei().call())
 }
 
 export const getTiers = crowdsaleAddress => {
-  const { web3 } = web3Store
-
-  return attachToContract(web3, contractStore.crowdsale.abi, crowdsaleAddress)
+  return attachToContract(contractStore.crowdsale.abi, crowdsaleAddress)
     .then(crowdsaleContract => {
       const { methods } = crowdsaleContract
 
@@ -160,11 +219,12 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
              startsAt,
              endsAt,
              updatable,
-             whitelisted,
+             isWhitelisted,
              maximumSellableTokens,
              pricingStrategyAddress,
              isFinalized,
-             name
+             name,
+             whitelistAccounts
            ]) => {
       crowdsaleStore.setSelectedProperty('finalized', isFinalized)
       crowdsaleStore.setSelectedProperty('updatable', crowdsaleStore.selected.updatable || updatable)
@@ -184,12 +244,12 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
       }
 
       if (crowdsaleNum === 0) {
-        newTier.whitelistdisabled = !whitelisted ? 'yes' : 'no'
+        newTier.whitelistdisabled = !isWhitelisted ? 'yes' : 'no'
       }
 
-      return Promise.all([pricingStrategyAddress, maximumSellableTokens, tokenData(tokenAddress)])
+      return Promise.all([pricingStrategyAddress, maximumSellableTokens, whitelistAccounts, tokenData(tokenAddress)])
     })
-    .then(([pricingStrategyAddress, maximumSellableTokens, [tokenName, tokenSymbol, decimals]]) => {
+    .then(([pricingStrategyAddress, maximumSellableTokens, whitelistAccounts, [tokenName, tokenSymbol, decimals]]) => {
       tokenStore.setProperty('name', tokenName)
       tokenStore.setProperty('ticker', tokenSymbol)
       tokenStore.setProperty('decimals', decimals)
@@ -202,9 +262,12 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
 
       newTier.supply = (contractStore.contractType === WHITELIST_WITH_CAP) ? tierCap : standardCrowdsaleSupply
 
-      return pricingStrategyData(pricingStrategyAddress)
+      return Promise.all([whitelistAccounts, pricingStrategyData(pricingStrategyAddress)])
     })
-    .then(rate => {
+    .then(([whitelistAccounts, rate]) => {
+      const { decimals } = tokenStore
+      const tokenDecimals = !isNaN(decimals) ? decimals : 0
+
       //price: tiers, standard
       const tokensPerETHStandard = !isNaN(rate) ? rate : 0
       const tokensPerETHTiers = !isNaN(1 / rate) ? 1 / web3.utils.fromWei(toFixed(rate).toString(), 'ether') : 0
@@ -236,11 +299,27 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
         })
       }
 
+      const whitelist = newTier.whitelist.slice()
+      const whitelistElements = newTier.whitelistElements.slice()
+
+      whitelistAccounts.forEach(({ addr, min, max }, whitelistNum) => {
+        min = parseInt(toFixed(min), 10) / 10 ** tokenDecimals
+        max = parseInt(toFixed(max), 10) / 10 ** tokenDecimals
+
+        whitelistElements.push({ addr, min, max, whitelistNum, crowdsaleNum, alreadyDeployed: true })
+        whitelist.push({ addr, min, max })
+      })
+
+      tierStore.setTierProperty(whitelistElements, 'whitelistElements', crowdsaleNum)
+      tierStore.setTierProperty(whitelist, 'whitelist', crowdsaleNum)
+
       if (initialValues.updatable) {
         initialValues.startTime = newTier.startTime
         initialValues.endTime = newTier.endTime
         initialValues.rate = newTier.rate
         initialValues.supply = newTier.supply
+        initialValues.whitelist = whitelist
+        initialValues.whitelistElements = whitelistElements
       }
       crowdsaleStore.addInitialTierValues(initialValues)
     })

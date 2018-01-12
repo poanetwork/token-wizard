@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
+import { isObservableArray } from 'mobx'
 import { Link } from 'react-router-dom'
 import { CONTRACT_TYPES, TEXT_FIELDS, TOAST, VALIDATION_MESSAGES } from '../../utils/constants'
 import { InputField } from '../Common/InputField'
@@ -20,26 +21,36 @@ const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME
 export class Manage extends Component {
   constructor (props) {
     super(props)
-    window.scrollTo(0, 0)
     this.state = {
       formPristine: true,
       loading: true
     }
   }
 
+  componentDidMount () {
+    setTimeout(() => window.scrollTo(0, 0), 500)
+  }
+
   componentWillMount () {
-    const { crowdsaleStore, web3Store, contractStore, generalStore, match } = this.props
+    const { crowdsaleStore, contractStore, generalStore, match } = this.props
     const crowdsaleAddress = match.params.crowdsaleAddress
 
     crowdsaleStore.setSelectedProperty('address', crowdsaleAddress)
 
     // networkID
-    getNetworkVersion(web3Store.web3).then(networkId => generalStore.setProperty('networkId', networkId))
+    getNetworkVersion().then(networkId => generalStore.setProperty('networkId', networkId))
 
     // contractType
     contractStore.setContractType(CONTRACT_TYPES.whitelistwithcap)
 
     getWhiteListWithCapCrowdsaleAssets().then(this.extractContractData)
+  }
+
+  componentWillUnmount () {
+    const { tierStore, tokenStore, crowdsaleStore } = this.props
+    tierStore.reset()
+    tokenStore.reset()
+    crowdsaleStore.reset()
   }
 
   extractContractData = () => {
@@ -71,24 +82,23 @@ export class Manage extends Component {
     this.setState({ loading: true })
   }
 
-  isLastContract = crowdsaleContract => {
+  isLastTier = crowdsaleContract => {
     const { contractStore } = this.props
     const crowdsalesAddresses = contractStore.crowdsale.addr
     return crowdsalesAddresses[crowdsalesAddresses.length - 1] === crowdsaleContract._address
   }
 
   finalizeCrowdsale = () => {
-    const { crowdsaleStore, web3Store } = this.props
-    const { web3 } = web3Store
+    const { crowdsaleStore } = this.props
 
     if (!crowdsaleStore.selected.finalized) {
       warningOnFinalizeCrowdsale()
         .then(result => {
           if (result.value) {
-            findCurrentContractRecursively(0, this, web3, null, crowdsaleContract => {
+            findCurrentContractRecursively(0, this, null, crowdsaleContract => {
               this.showLoader()
 
-              if (!this.isLastContract(crowdsaleContract)) {
+              if (!this.isLastTier(crowdsaleContract)) {
                 this.hideLoader()
                 toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.FINALIZE_FAIL })
 
@@ -98,8 +108,8 @@ export class Manage extends Component {
                   gasPrice: this.props.generalStore.gasPrice
                 })
 
-                getCurrentRate(web3, crowdsaleContract)
-                  .then(() => sendTXToContract(web3, finalizeMethod))
+                getCurrentRate(crowdsaleContract)
+                  .then(() => sendTXToContract(finalizeMethod))
                   .then(() => {
                     successfulFinalizeAlert()
                     crowdsaleStore.setSelectedProperty('finalized', true)
@@ -132,14 +142,23 @@ export class Manage extends Component {
 
         if (validTiers) {
           const keys = Object.keys(updatableTiers[0])
-            .filter(key => key !== 'index' && key !== 'updatable' && key !== 'addresses')
+            .filter(key => key !== 'index' && key !== 'updatable' && key !== 'addresses' && key !== 'whitelistElements')
 
           const attributesToUpdate = updatableTiers.reduce((toUpdate, tier) => {
             keys.forEach(key => {
-              const newValue = tierStore.tiers[tier.index][key]
               const { addresses } = tier
+              let newValue = tierStore.tiers[tier.index][key]
 
-              if (newValue !== tier[key]) {
+              if (isObservableArray(newValue)) {
+                if (newValue.length > tier[key].length) {
+                  newValue = newValue.slice(tier[key].length).filter(whitelist => !whitelist.deleted)
+
+                  if (newValue.length) {
+                    toUpdate.push({ key, newValue, addresses })
+                  }
+                }
+
+              } else if (newValue !== tier[key]) {
                 toUpdate.push({ key, newValue, addresses })
               }
             })
@@ -265,8 +284,8 @@ export class Manage extends Component {
         <div className="swal2-icon swal2-info warning-logo">!</div>
         <p className="title">Finalize Crowdsale</p>
         <p className="description">Finalize - Finalization is the last step of the crowdsale.
-          You can make it only after the end of the last tier. After finalization, it's not possible to update
-          tiers, buy tokens. All tokens will be movable, reserved tokens will be issued.</p>
+          You can make it only after the end of the last tier. After finalization, it's not possible to update tiers,
+          buy tokens. All tokens will be movable, reserved tokens will be issued.</p>
         <Link to='#' onClick={() => this.finalizeCrowdsale()}>
           <span className={`button button_${finalized ? 'disabled' : 'fill'}`}>Finalize Crowdsale</span>
         </Link>
@@ -277,8 +296,8 @@ export class Manage extends Component {
       <div className="about-step">
         <div className="step-icons step-icons_crowdsale-setup"/>
         <p className="title">{tokenStore.name} ({tokenStore.ticker}) Settings</p>
-        <p className="description">The most important and exciting part of the crowdsale
-          process. Here you can define parameters of your crowdsale campaign.</p>
+        <p className="description">The most important and exciting part of the crowdsale process. Here you can define
+          parameters of your crowdsale campaign.</p>
         <Link to={`/crowdsale/?addr=${crowdsaleAddress}&networkID=${generalStore.networkId}`}
               className="crowdsale-page-link"
         >Crowdsale page</Link>
@@ -319,7 +338,7 @@ export class Manage extends Component {
           value={tier.startTime}
           valid={tierStore.validTiers[index] && tierStore.validTiers[index].startTime}
           errorMessage={VALIDATION_MESSAGES.EDITED_START_TIME}
-          onChange={(e) => this.updateTierStore(e, 'startTime', index)}
+          onChange={e => this.updateTierStore(e, 'startTime', index)}
           description="Date and time when the tier starts. Can't be in the past from the current moment."
           disabled={!tier.updatable || finalized}
         />
@@ -330,7 +349,7 @@ export class Manage extends Component {
           value={tier.endTime}
           valid={tierStore.validTiers[index] && tierStore.validTiers[index].endTime}
           errorMessage={VALIDATION_MESSAGES.EDITED_END_TIME}
-          onChange={(e) => this.updateTierStore(e, 'endTime', index)}
+          onChange={e => this.updateTierStore(e, 'endTime', index)}
           description="Date and time when the tier ends. Can be only in the future."
           disabled={!tier.updatable || finalized}
         />
@@ -346,7 +365,7 @@ export class Manage extends Component {
           value={tier.rate}
           valid={tierStore.validTiers[index] && tierStore.validTiers[index].rate}
           errorMessage={VALIDATION_MESSAGES.RATE}
-          onChange={(e) => this.updateTierStore(e, 'rate', index)}
+          onChange={e => this.updateTierStore(e, 'rate', index)}
           description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens"
           disabled={!tier.updatable || finalized}
         />
@@ -357,7 +376,7 @@ export class Manage extends Component {
           value={tier.supply}
           valid={tierStore.validTiers[index] && tierStore.validTiers[index].supply}
           errorMessage={VALIDATION_MESSAGES.SUPPLY}
-          onChange={(e) => this.updateTierStore(e, 'supply', index)}
+          onChange={e => this.updateTierStore(e, 'supply', index)}
           description="How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers"
           disabled={!tier.updatable || finalized}
         />
@@ -378,7 +397,7 @@ export class Manage extends Component {
                 {tierStartAndEndTime(tier, index)}
                 {tierRateAndSupply(tier, index)}
               </div>
-              {this.renderWhitelistInputBlock(tier, index)}
+              {tier.whitelist.length ? this.renderWhitelistInputBlock(tier, index) : null}
             </div>
           </div>
         ))}
