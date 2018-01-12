@@ -86,23 +86,14 @@ export function noDeploymentOnMainnetAlert() {
   });
 }
 
-export function warningOnMainnetAlert(tiersCount, priceSelected, reserved, whitelisted, cb) {
+export function warningOnMainnetAlert(tiersCount, priceSelected, reservedCount, whitelistCount, cb) {
   const { GAS_REQUIRED, TX_REQUIRED } = DEPLOYMENT_VALUES
-  let gasRequired = GAS_REQUIRED.DEFAULT.DEFAULT
-  let txRequired  = TX_REQUIRED.DEFAULT.DEFAULT
 
-  if (whitelisted) {
-    if (reserved) {
-      gasRequired = GAS_REQUIRED.WHITELIST.WITH_RESERVED_TOKEN
-      txRequired = TX_REQUIRED.WHITELIST.WITH_RESERVED_TOKEN
-    } else {
-      gasRequired = GAS_REQUIRED.WHITELIST.DEFAULT
-      txRequired = TX_REQUIRED.WHITELIST.DEFAULT
-    }
-  } else if (reserved) {
-    gasRequired = GAS_REQUIRED.DEFAULT.WITH_RESERVED_TOKEN
-    txRequired = TX_REQUIRED.DEFAULT.WITH_RESERVED_TOKEN
-  }
+  let gasRequired = GAS_REQUIRED.DEFAULT + GAS_REQUIRED.WHITELIST * whitelistCount + GAS_REQUIRED.RESERVED_TOKEN * reservedCount
+
+  let txRequired  = TX_REQUIRED.DEFAULT
+  if (whitelistCount) txRequired += TX_REQUIRED.WHITELIST
+  if (reservedCount) txRequired += TX_REQUIRED.RESERVED_TOKEN
 
   const n = 100 //fraction to round
   const deployCostInEth = weiToGwei(gasRequired * weiToGwei(priceSelected))

@@ -160,12 +160,20 @@ export class stepThree extends React.Component {
         .then(networkID => {
           if (getNetWorkNameById(networkID) === CHAINS.MAINNET) {
             const { generalStore, reservedTokenStore } = this.props
-            const reserved = !!reservedTokenStore.tokens.length
-            const whitelisted = tierStore.tiers[0].whitelistdisabled === 'no'
+
             const tiersCount = tierStore.tiers.length
             const priceSelected = generalStore.gasPrice
+            const reservedCount = reservedTokenStore.tokens.length
+            let whitelistCount = 0
 
-            return warningOnMainnetAlert(tiersCount, priceSelected, reserved, whitelisted, this.goToDeploymentStage)
+            if (tierStore.tiers[0].whitelistdisabled === 'no') {
+              whitelistCount = tierStore.tiers.reduce((total, tier) => {
+                total += tier.whitelist.filter(address => !address.deleted).length
+                return total
+              }, 0)
+            }
+
+            return warningOnMainnetAlert(tiersCount, priceSelected, reservedCount, whitelistCount, this.goToDeploymentStage)
           }
           this.goToDeploymentStage()
         })
