@@ -2,17 +2,35 @@ import React, { Component } from 'react';
 import '../../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
 import CrowdsalesList from '../Common/CrowdsalesList'
+import { Loader } from '../Common/Loader'
+import { loadRegistryAddresses } from '../../utils/blockchainHelpers'
 
 export class Home extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      showModal: false
+      showModal: false,
+      loading: false
     }
   }
 
   chooseContract = () => {
-    this.setState({ showModal: true })
+    this.setState({
+      loading: true
+    })
+
+    loadRegistryAddresses()
+      .then(() => {
+        this.setState({
+          loading: false,
+          showModal: true
+        })
+      }, (e) => {
+        console.error('There was a problem loading the crowdsale addresses from the registry', e)
+        this.setState({
+          loading: false
+        })
+      })
   }
 
   onClick = crowdsaleAddress => {
@@ -24,11 +42,10 @@ export class Home extends Component {
       <div className="crowdsale-modal loading-container">
         <div className='modal'>
           <p className='title'>Crowdsales List</p>
-          <p className='description'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur cumque dolore
-            doloribus ea earumeligendi eveniet ex expedita itaque laborum maxime mollitia nemo nihil perferendis
-            quibusdam sed sequiullam, vitae!</p>
+          <p className='description'>The list of your updatable crowdsales. Choose crowdsale address, click Continue and
+            you'll be able to update the parameters of crowdsale.</p>
           <CrowdsalesList onClick={this.onClick}/>
-          <div className='close-button' onClick={() => this.hideModal()}>X</div>
+          <div className='close-button' onClick={() => this.hideModal()}><i className="icon"/></div>
         </div>
       </div>
     )
@@ -39,10 +56,6 @@ export class Home extends Component {
   }
 
   render () {
-    const chooseContract = process.env.NODE_ENV === 'development'
-      ? <div onClick={() => this.chooseContract()} className="button button_outline">Choose Contract</div>
-      : null
-
     const chooseContractModal = this.state.showModal
       ? this.renderModal()
       : null
@@ -58,8 +71,8 @@ export class Home extends Component {
               <br/>Smart contracts based on <a href="https://github.com/TokenMarketNet/ico">TokenMarket</a> contracts.
               </p>
               <div className="buttons">
-                <Link to='/1'><a className="button button_fill">New crowdsale</a></Link>
-                {chooseContract}
+                <Link to='/1'><span className="button button_fill">New crowdsale</span></Link>
+                <div onClick={() => this.chooseContract()} className="button button_outline">Choose Contract</div>
               </div>
             </div>
           </div>
@@ -103,6 +116,7 @@ export class Home extends Component {
             </div>
           </div>
           {chooseContractModal}
+          <Loader show={this.state.loading}></Loader>
         </section>
       </div>
     );

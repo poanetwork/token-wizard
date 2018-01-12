@@ -63,22 +63,30 @@ export const GAS_PRICE = {
   SLOW: {
     ID: 'slow',
     PRICE: 5000000000,
-    DESCRIPTION: 'Slow and Cheap (5 Gwei)'
+    DESCRIPTION: 'Safe and Cheap'
   },
   NORMAL: {
     ID: 'normal',
     PRICE: 10000000000,
-    DESCRIPTION: 'Normal (10 Gwei)'
+    DESCRIPTION: 'Normal'
   },
   FAST: {
     ID: 'fast',
     PRICE: 15000000000,
-    DESCRIPTION: 'Fast and Expensive (15 Gwei)'
+    DESCRIPTION: 'Fast and Expensive'
+  },
+  INSTANT: {
+    ID: 'instant',
+    PRICE: 45000000000,
+    DESCRIPTION: 'Instantaneous and Expensive'
   },
   CUSTOM: {
     ID: 'custom',
     PRICE: 0,
     DESCRIPTION: 'Custom'
+  },
+  API: {
+    URL: 'https://gasprice.poa.network'
   }
 }
 export const UNKNOWN = "Unknown"
@@ -106,7 +114,7 @@ export const VALIDATION_MESSAGES = {
   NAME: 'Please enter a valid name between 1-30 characters',
   TICKER: 'Please enter a valid Ticker that is less than three characters',
   SUPPLY: 'Please enter a valid number greater than 0',
-  DECIMALS: 'Please enter a number greater than or equal to zero',
+  DECIMALS: 'Please enter a number between zero and 18',
   WALLET_ADDRESS: 'Please enter a valid address',
   START_TIME: 'Please enter a valid date later than now',
   END_TIME: 'Please enter a valid date later than start time',
@@ -372,7 +380,7 @@ export const TOAST = {
   },
   DEFAULT_OPTIONS: {
     position: 'top right',
-    offset: '80px 14',
+    offset: 80,
     time: 10000
   }
 }

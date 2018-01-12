@@ -121,3 +121,31 @@ export function successfulFinalizeAlert() {
     type: "success"
   })
 }
+
+export function noGasPriceAvailable() {
+  sweetAlert2({
+    title: "No Gas Price Available",
+    html: "ICO Wizard wasn't able to request current Gas Prices from the blockchain, custom values will be used",
+    type: "warning"
+  })
+}
+
+export function successfulUpdateCrowdsaleAlert() {
+  sweetAlert2({
+    title: "Success",
+    html: "Congrats! You've successfully updated the Crowdsale!",
+    type: "success"
+  }).then(function(result) {
+    if (result.value) {
+      window.location.reload();
+    }
+  });
+}
+
+export function mainnetIsOnMaintenance() {
+  sweetAlert2({
+    title: "Warning",
+    html: "ICO Wizard on Mainnet is down for maintenance. For updates, please check <a href='https://gitter.im/poanetwork/ico-wizard'>our gitter</a>",
+    type: "warning"
+  });
+}

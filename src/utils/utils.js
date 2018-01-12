@@ -41,7 +41,7 @@ export function getURLParam(key,target){
 }
 
 export function setFlatFileContentToState(file) {
-  return readSolFile(file)
+  return fetchFile(file)
 }
 
 export function getWhiteListWithCapCrowdsaleAssets() {
@@ -55,8 +55,9 @@ export function getWhiteListWithCapCrowdsaleAssets() {
     const pricingFiles = binAbi.map(ext => `${contractsRoute}${crowdsaleFilename}PricingStrategy_flat.${ext}`)
     const finalizeFiles = binAbi.map(ext => `${contractsRoute}FinalizeAgent_flat.${ext}`)
     const nullFiles = binAbi.map(ext => `${contractsRoute}NullFinalizeAgent_flat.${ext}`)
+    const registryFiles = binAbi.map(ext => `${contractsRoute}Registry_flat.${ext}`)
 
-    const states = crowdsaleFiles.concat(tokenFiles, pricingFiles, finalizeFiles, nullFiles)
+    const states = crowdsaleFiles.concat(tokenFiles, pricingFiles, finalizeFiles, nullFiles, registryFiles)
       .map(setFlatFileContentToState)
 
     Promise.all(states)
@@ -72,13 +73,15 @@ export function getWhiteListWithCapCrowdsaleAssets() {
         contractStore.setContractProperty('finalizeAgent', 'abi', JSON.parse(state[8]))
         contractStore.setContractProperty('nullFinalizeAgent', 'bin', state[9])
         contractStore.setContractProperty('nullFinalizeAgent', 'abi', JSON.parse(state[10]))
+        contractStore.setContractProperty('registry', 'bin', state[11])
+        contractStore.setContractProperty('registry', 'abi', JSON.parse(state[12]))
         resolve(contractStore)
       })
       .catch(reject)
   })
 }
 
-function readSolFile(path) {
+export function fetchFile(path) {
   return new Promise((resolve, reject) => {
     const rawFile = new XMLHttpRequest()
 
@@ -96,6 +99,7 @@ function readSolFile(path) {
 
 export const findConstructor = (abi) => {
   let abiConstructor
+
   abi.forEach(abiObj => {
     if (abiObj.type === "constructor") {
       console.log(abiObj);
@@ -103,6 +107,7 @@ export const findConstructor = (abi) => {
       abiConstructor = abiObj.inputs;
     }
   })
+
   return abiConstructor
 }
 
@@ -120,13 +125,13 @@ export const getconstructorParams = (abiConstructor, vals, crowdsaleNum) => {
           params.vals.push(tierStore.tiers[crowdsaleNum].startBlock);
           break;
         case "_start":
-          params.vals.push(toFixed(new Date(tierStore.tiers[crowdsaleNum].startTime).getTime()/1000).toString());
+          params.vals.push(toFixed(new Date(tierStore.tiers[crowdsaleNum].startTime).getTime() / 1000).toString());
           break;
         case "_endBlock":
           params.vals.push(tierStore.tiers[crowdsaleNum].endBlock);
           break;
         case "_end":
-          params.vals.push(toFixed(new Date(tierStore.tiers[crowdsaleNum].endTime).getTime()/1000).toString());
+          params.vals.push(toFixed(new Date(tierStore.tiers[crowdsaleNum].endTime).getTime() / 1000).toString());
           break;
         case "_rate":
           params.vals.push(tierStore.tiers[crowdsaleNum].rate);
@@ -168,7 +173,7 @@ export const getconstructorParams = (abiConstructor, vals, crowdsaleNum) => {
           params.vals.push(tokenStore.supply);
           break;
         case "_maximumSellableTokens":
-          params.vals.push(toFixed(tierStore.tiers[crowdsaleNum].supply*10**tokenStore.decimals).toString());
+          params.vals.push(toFixed(tierStore.tiers[crowdsaleNum].supply * 10**tokenStore.decimals).toString());
           break;
         case "_minimumFundingGoal":
           params.vals.push(0);
@@ -194,12 +199,12 @@ export const getconstructorParams = (abiConstructor, vals, crowdsaleNum) => {
           params.vals.push(owners)
           break;
         case "_oneTokenInWei":
-          let oneTokenInETHRaw = toFixed(1/tierStore.tiers[crowdsaleNum].rate).toString()
+          let oneTokenInETHRaw = toFixed(1 / tierStore.tiers[crowdsaleNum].rate).toString()
           let oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, oneTokenInETHRaw)
           params.vals.push(web3Store.web3.utils.toWei(oneTokenInETH, "ether"));
           break;
         case "_isUpdatable":
-          params.vals.push(tierStore.tiers[crowdsaleNum].updatable?tierStore.tiers[crowdsaleNum].updatable==="on"?true:false:false);
+          params.vals.push(tierStore.tiers[crowdsaleNum].updatable ? tierStore.tiers[crowdsaleNum].updatable==="on" ? true : false : false);
           break;
         case "_isWhiteListed":
           params.vals.push(tierStore.tiers[0].whitelistEnabled ? tierStore.tiers[0].whitelistEnabled === "yes" : false)
@@ -257,7 +262,7 @@ export const validateName = (name) => typeof name === 'string' && name.length > 
 
 export const validateSupply = (supply) =>  isNaN(Number(supply)) === false && Number(supply) > 0
 
-export const validateDecimals = (decimals) => isNaN(Number(decimals)) === false && decimals.length > 0
+export const validateDecimals = (decimals) => isNaN(Number(decimals)) === false && Number(decimals) >= 0 && Number(decimals) <= 18
 
 export const validateTicker = (ticker) => typeof ticker === 'string' && ticker.length < 4 && ticker.length > 0
 
@@ -382,3 +387,7 @@ export const toast = {
     this.msg[ type ](message, options)
   }
 }
+
+export const gweiToWei = x => parseInt(x * 1000000000, 10)
+
+export const weiToGwei = x => x / 1000000000
