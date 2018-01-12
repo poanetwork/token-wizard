@@ -7,8 +7,12 @@ class CrowdsaleStore {
   @observable supply
   @observable selected
 
-  constructor (crowdsales = []) {
-    this.crowdsales = crowdsales
+  constructor () {
+    this.reset()
+  }
+
+  @action reset = () => {
+    this.crowdsales = []
     this.selected = {
       updatable: false,
       initialTiersValues: []

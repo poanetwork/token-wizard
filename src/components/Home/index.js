@@ -56,10 +56,6 @@ export class Home extends Component {
   }
 
   render () {
-    const chooseContract = process.env.NODE_ENV === 'development'
-      ? <div onClick={() => this.chooseContract()} className="button button_outline">Choose Contract</div>
-      : null
-
     const chooseContractModal = this.state.showModal
       ? this.renderModal()
       : null
@@ -76,7 +72,7 @@ export class Home extends Component {
               </p>
               <div className="buttons">
                 <Link to='/1'><span className="button button_fill">New crowdsale</span></Link>
-                {chooseContract}
+                <div onClick={() => this.chooseContract()} className="button button_outline">Choose Contract</div>
               </div>
             </div>
           </div>

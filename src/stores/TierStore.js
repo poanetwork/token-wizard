@@ -11,8 +11,12 @@ class TierStore {
   @observable validTiers;
   @observable globalMinCap;
 
-  constructor(tiers = defaultTiers) {
-    this.tiers = tiers;
+  constructor() {
+    this.reset()
+  }
+
+  @action reset = () => {
+    this.tiers = defaultTiers.slice()
     this.validTiers = [{
       name: 'VALIDATED',
       walletAddress: 'VALIDATED',

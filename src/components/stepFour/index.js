@@ -1,7 +1,6 @@
 import React from 'react'
 import '../../assets/stylesheets/application.css'
 import {
-  checkWeb3,
   deployContract,
   getNetworkVersion,
   registerCrowdsaleAddress
@@ -61,12 +60,10 @@ const { PUBLISH } = NAVIGATION_STEPS
   }
 
   componentDidMount() {
-    const { contractStore, web3Store, tierStore } = this.props
-    const { web3 } = web3Store
+    const { contractStore, tierStore } = this.props
 
     scrollToBottom();
     copy('copy');
-    checkWeb3(web3);
 
     if (contractStore && contractStore.contractType === CONTRACT_TYPES.whitelistwithcap) {
       this.setState({ loading: true })
@@ -84,7 +81,7 @@ const { PUBLISH } = NAVIGATION_STEPS
       const tokenABIConstructor = Promise.resolve(addrToken)
         .then(addrToken => {
           if (!addrToken) {
-            return getEncodedABIClientSide(web3, abiToken, [], 0)
+            return getEncodedABIClientSide(abiToken, [], 0)
               .then(ABIEncoded => {
                 contractStore.setContractProperty('token', 'abiConstructor', ABIEncoded)
                 console.log('token ABI Encoded params constructor:', ABIEncoded)
@@ -93,7 +90,7 @@ const { PUBLISH } = NAVIGATION_STEPS
         })
 
       const tiers = tierStore.tiers.map((value, index) => {
-        return getEncodedABIClientSide(web3, abiPricingStrategy, [], index)
+        return getEncodedABIClientSide(abiPricingStrategy, [], index)
           .then(ABIEncoded => {
             const newContract = contractStore.pricingStrategy.abiConstructor.concat(ABIEncoded)
             contractStore.setContractProperty('pricingStrategy', 'abiConstructor', newContract)
@@ -106,7 +103,7 @@ const { PUBLISH } = NAVIGATION_STEPS
         .then(() => this.deployToken())
         .then(() => this.deployPricingStrategy())
         .then(() => this.deployCrowdsale())
-        .then(() => registerCrowdsaleAddress(web3, this.props.contractStore))
+        .then(() => registerCrowdsaleAddress(this.props.contractStore))
         .then(() => this.calculateABIEncodedArgumentsForFinalizeAgentContractDeployment())
         .then(() => this.deployFinalizeAgent())
         .catch(error => this.handleError(error))
@@ -207,14 +204,14 @@ const { PUBLISH } = NAVIGATION_STEPS
     const binSafeMathLib = safeMathLib.bin || ''
     const abiSafeMathLib = safeMathLib.abi || []
 
-    return deployContract(0, web3, abiSafeMathLib, binSafeMathLib, [])
+    return deployContract(0, abiSafeMathLib, binSafeMathLib, [])
       .then(safeMathLibAddr => this.handleDeployedSafeMathLibrary(safeMathLibAddr))
   }
 
   handleDeployedSafeMathLibrary = safeMathLibAddr => {
     return new Promise((resolve, reject) => {
       const { contractStore } = this.props
-      console.log('safeMathLibAddr: ' + safeMathLibAddr)
+      console.log('safeMathLibAddr:', safeMathLibAddr)
 
       contractStore.setContractProperty('safeMathLib', 'addr', safeMathLibAddr)
 
@@ -252,7 +249,7 @@ const { PUBLISH } = NAVIGATION_STEPS
 
     console.log(paramsToken);
 
-    return deployContract(0, web3, abiToken, binToken, paramsToken)
+    return deployContract(0, abiToken, binToken, paramsToken)
       .then(tokenAddr => this.handleDeployedToken(tokenAddr))
   }
 
@@ -300,7 +297,7 @@ const { PUBLISH } = NAVIGATION_STEPS
       console.log('***Deploy pricing strategy contract***', index)
 
       return promise
-        .then(() => deployContract(index, web3, abiPricingStrategy, binPricingStrategy, paramsPricingStrategy))
+        .then(() => deployContract(index, abiPricingStrategy, binPricingStrategy, paramsPricingStrategy))
         .then(pricingStrategyAddr => {
           console.log('***Deploy pricing strategy contract***', pricingStrategyAddr)
 
@@ -314,26 +311,24 @@ const { PUBLISH } = NAVIGATION_STEPS
 
   //FlatPricing
   getPricingStrategyParams = pricingStrategy => {
-    const { web3Store } = this.props
+    const { web3 } = this.props.web3Store
     const oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, 1 / pricingStrategy.rate)
 
-    console.log('web3Store', web3Store.web3, web3Store.web3.utils.toWei)
+    console.log('web3Store', web3, web3.utils.toWei)
 
     return [
-      web3Store.web3.utils.toWei(oneTokenInETH, 'ether'),
+      web3.utils.toWei(oneTokenInETH, 'ether'),
       pricingStrategy.updatable ? pricingStrategy.updatable === 'on' : false
     ]
   }
 
   handleDeployedPricingStrategy = () => {
-    const { contractStore, tierStore, web3Store } = this.props
-    const { web3 } = web3Store
-
+    const { contractStore, tierStore } = this.props
     const abiCrowdsale = (contractStore && contractStore.crowdsale && contractStore.crowdsale.abi) || []
 
     return tierStore.tiers.reduce((promise, tier, index) => {
       return promise
-        .then(() => getEncodedABIClientSide(web3, abiCrowdsale, [], index))
+        .then(() => getEncodedABIClientSide(abiCrowdsale, [], index))
         .then(ABIEncoded => {
           const newContract = contractStore.crowdsale.abiConstructor.concat(ABIEncoded)
           contractStore.setContractProperty('crowdsale', 'abiConstructor', newContract)
@@ -344,7 +339,7 @@ const { PUBLISH } = NAVIGATION_STEPS
 
   deployCrowdsale = () => {
     return Promise.resolve()
-      .then(() => getNetworkVersion(this.props.web3Store.web3))
+      .then(getNetworkVersion)
       .then((networkID) => {
         const { web3Store, contractStore, tierStore } = this.props
         const { web3 } = web3Store
@@ -367,11 +362,11 @@ const { PUBLISH } = NAVIGATION_STEPS
           let paramsCrowdsale
 
           if (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap) {
-            paramsCrowdsale = this.getCrowdSaleParams(web3, index)
+            paramsCrowdsale = this.getCrowdSaleParams(index)
           }
 
           return promise
-            .then(() => deployContract(index, web3, abiCrowdsale, binCrowdsale, paramsCrowdsale))
+            .then(() => deployContract(index, abiCrowdsale, binCrowdsale, paramsCrowdsale))
             .then(crowdsaleAddr => {
               console.log('***Deploy crowdsale contract***', crowdsaleAddr)
 
@@ -384,16 +379,16 @@ const { PUBLISH } = NAVIGATION_STEPS
   }
 
   //MintedTokenCappedCrowdsale
-  getCrowdSaleParams = (web3, i) => {
+  getCrowdSaleParams = index => {
     const { contractStore, tierStore, tokenStore } = this.props
-    const tier = tierStore.tiers[i]
+    const tier = tierStore.tiers[index]
     const initialTier = tierStore.tiers[0]
     const whitelistDisabled = initialTier.whitelistdisabled
 
     return [
       tier.tier,
       contractStore.token.addr,
-      contractStore.pricingStrategy.addr[i],
+      contractStore.pricingStrategy.addr[index],
       initialTier.walletAddress,
       toFixed(parseInt(Date.parse(tier.startTime) / 1000, 10).toString()),
       toFixed(parseInt(Date.parse(tier.endTime) / 1000, 10).toString()),
@@ -405,8 +400,7 @@ const { PUBLISH } = NAVIGATION_STEPS
   }
 
   calculateABIEncodedArgumentsForFinalizeAgentContractDeployment = () => {
-    const { web3Store, contractStore, tierStore } = this.props
-    const { web3 } = web3Store
+    const { contractStore, tierStore } = this.props
     const tiersMaxIndex = tierStore.tiers.length - 1
     let abiFinalizeAgent = (contractStore.nullFinalizeAgent && contractStore.nullFinalizeAgent.abi) || []
 
@@ -415,7 +409,7 @@ const { PUBLISH } = NAVIGATION_STEPS
         abiFinalizeAgent = (contractStore.finalizeAgent && contractStore.finalizeAgent.abi) || []
       }
 
-      return getEncodedABIClientSide(web3, abiFinalizeAgent, [], index)
+      return getEncodedABIClientSide(abiFinalizeAgent, [], index)
         .then(ABIEncoded => {
           const newAbi = contractStore.finalizeAgent.abiConstructor.concat(ABIEncoded)
           contractStore.setContractProperty('finalizeAgent', 'abiConstructor', newAbi)
@@ -457,17 +451,17 @@ const { PUBLISH } = NAVIGATION_STEPS
       let abi, bin, paramsFinalizeAgent
 
       if (index === crowdsalesMaxIndex) {
-        paramsFinalizeAgent = this.getFinalizeAgentParams(web3, index)
+        paramsFinalizeAgent = this.getFinalizeAgentParams(index)
         abi = abiFinalizeAgent
         bin = binFinalizeAgent
       } else {
         abi = abiNullFinalizeAgent
         bin = binNullFinalizeAgent
-        paramsFinalizeAgent = this.getNullFinalizeAgentParams(web3, index)
+        paramsFinalizeAgent = this.getNullFinalizeAgentParams(index)
       }
 
       return promise
-        .then(() => deployContract(index, web3, abi, bin, paramsFinalizeAgent))
+        .then(() => deployContract(index, abi, bin, paramsFinalizeAgent))
         .then(finalizeAgentAddr => {
           console.log('***Deploy finalize agent contract***', finalizeAgentAddr)
 
@@ -478,24 +472,24 @@ const { PUBLISH } = NAVIGATION_STEPS
       .then(() => this.handleDeployedFinalizeAgent())
   }
 
-  getNullFinalizeAgentParams = (web3, i) => {
+  getNullFinalizeAgentParams = index => {
     return [
-      this.props.contractStore.crowdsale.addr[i]
+      this.props.contractStore.crowdsale.addr[index]
     ]
   }
 
-  getFinalizeAgentParams = (web3, i) => {
+  getFinalizeAgentParams = index => {
     const { contractStore } = this.props
+
     return [
       contractStore.token.addr,
-      contractStore.crowdsale.addr[i]
+      contractStore.crowdsale.addr[index]
     ]
   }
 
   handleDeployedFinalizeAgent = () => {
-    const { contractStore, reservedTokenStore, tierStore, tokenStore, web3Store } = this.props
+    const { contractStore, reservedTokenStore, tierStore, tokenStore } = this.props
     const { pricingStrategy, crowdsale, token } = contractStore
-    const { web3 } = web3Store
 
     const tokenABI = token.abi.slice()
     const pricingStrategyABI = pricingStrategy.abi.slice()
@@ -505,15 +499,15 @@ const { PUBLISH } = NAVIGATION_STEPS
     const tokenAddr = token.addr
     const crowdsaleAddr = crowdsale.addr
 
-    setLastCrowdsaleRecursive(web3, pricingStrategyABI, pricingStrategy.addr, crowdsaleAddr.slice(-1)[0], 142982)
-      .then(() => setReservedTokensListMultiple(web3, tokenABI, tokenAddr, tokenStore, reservedTokenStore))
-      .then(() => updateJoinedCrowdsalesRecursive(web3, crowdsaleABI, crowdsaleAddr, 293146))
-      .then(() => setMintAgentRecursive(web3, tokenABI, tokenAddr, crowdsaleAddr, 68425))
-      .then(() => setMintAgentRecursive(web3, tokenABI, tokenAddr, currFinalizeAgentAddr, 68425))
-      .then(() => addWhiteListRecursive(web3, tierStore, tokenStore, crowdsaleABI, crowdsaleAddr))
-      .then(() => setFinalizeAgentRecursive(web3, crowdsaleABI, crowdsaleAddr, currFinalizeAgentAddr, 68622))
-      .then(() => setReleaseAgentRecursive(web3, tokenABI, tokenAddr, currFinalizeAgentAddr, 65905))
-      .then(() => transferOwnership(web3, tokenABI, tokenAddr, tierStore.tiers[0].walletAddress, 46699))
+    setLastCrowdsaleRecursive(pricingStrategyABI, pricingStrategy.addr, crowdsaleAddr.slice(-1)[0], 142982)
+      .then(() => setReservedTokensListMultiple(tokenABI, tokenAddr, tokenStore, reservedTokenStore))
+      .then(() => updateJoinedCrowdsalesRecursive(crowdsaleABI, crowdsaleAddr, 293146))
+      .then(() => setMintAgentRecursive(tokenABI, tokenAddr, crowdsaleAddr, 68425))
+      .then(() => setMintAgentRecursive(tokenABI, tokenAddr, currFinalizeAgentAddr, 68425))
+      .then(() => addWhiteListRecursive(tierStore, tokenStore, crowdsaleABI, crowdsaleAddr))
+      .then(() => setFinalizeAgentRecursive(crowdsaleABI, crowdsaleAddr, currFinalizeAgentAddr, 68622))
+      .then(() => setReleaseAgentRecursive(tokenABI, tokenAddr, currFinalizeAgentAddr, 65905))
+      .then(() => transferOwnership(tokenABI, tokenAddr, tierStore.tiers[0].walletAddress, 46699))
       .then(() => this.hideLoader())
       .catch(this.handleError.bind(this))
   }
@@ -552,13 +546,13 @@ const { PUBLISH } = NAVIGATION_STEPS
       let capBlock = <DisplayField
         side='left'
         title={'Max cap'}
-        value={tierStore.tiers[i].supply?tierStore.tiers[i].supply:""}
+        value={tierStore.tiers[i].supply ? tierStore.tiers[i].supply : ""}
         description="How many tokens will be sold on this tier."
       />
       let updatableBlock = <DisplayField
         side='right'
         title={'Allow modifying'}
-        value={tierStore.tiers[i].updatable?tierStore.tiers[i].updatable:"off"}
+        value={tierStore.tiers[i].updatable ? tierStore.tiers[i].updatable : "off"}
         description="Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing."
       />
 
@@ -570,13 +564,13 @@ const { PUBLISH } = NAVIGATION_STEPS
             <DisplayField
               side='left'
               title={'Start time'}
-              value={tierStore.tiers[i].startTime?tierStore.tiers[i].startTime.split("T").join(" "):""}
+              value={tierStore.tiers[i].startTime ? tierStore.tiers[i].startTime.split("T").join(" ") : ""}
               description="Date and time when the tier starts."
             />
             <DisplayField
               side='right'
               title={'End time'}
-              value={tierStore.tiers[i].endTime?tierStore.tiers[i].endTime.split("T").join(" "):""}
+              value={tierStore.tiers[i].endTime ? tierStore.tiers[i].endTime.split("T").join(" ") : ""}
               description="Date and time when the tier ends."
             />
           </div>
@@ -584,7 +578,7 @@ const { PUBLISH } = NAVIGATION_STEPS
             <DisplayField
               side='left'
               title={'Wallet address'}
-              value={tierStore.tiers[i].walletAddress?tierStore.tiers[i].walletAddress:""}
+              value={tierStore.tiers[i].walletAddress ? tierStore.tiers[i].walletAddress : ""}
               description="Where the money goes after investors transactions."
             />
             <DisplayField
@@ -594,8 +588,8 @@ const { PUBLISH } = NAVIGATION_STEPS
               description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens."
             />
           </div>
-          {contractStore.contractType===CONTRACT_TYPES.whitelistwithcap?capBlock:""}
-          {contractStore.contractType===CONTRACT_TYPES.whitelistwithcap?updatableBlock:""}
+          {contractStore.contractType===CONTRACT_TYPES.whitelistwithcap ? capBlock : ""}
+          {contractStore.contractType===CONTRACT_TYPES.whitelistwithcap ? updatableBlock : ""}
         </div></div>);
     }
     let ABIEncodedOutputsCrowdsale = [];
@@ -603,8 +597,8 @@ const { PUBLISH } = NAVIGATION_STEPS
       ABIEncodedOutputsCrowdsale.push(
         <DisplayTextArea
           key={i.toString()}
-          label={"Constructor Arguments for " + (tierStore.tiers[i].tier?tierStore.tiers[i].tier : "contract") + " (ABI-encoded and appended to the ByteCode above)"}
-          value={contractStore?contractStore.crowdsale?contractStore.crowdsale.abiConstructor?contractStore.crowdsale.abiConstructor[i]:"":"":""}
+          label={"Constructor Arguments for " + (tierStore.tiers[i].tier ? tierStore.tiers[i].tier : "contract") + " (ABI-encoded and appended to the ByteCode above)"}
+          value={contractStore ? contractStore.crowdsale ? contractStore.crowdsale.abiConstructor ? contractStore.crowdsale.abiConstructor[i] : "" : "" : ""}
           description="Encoded ABI"
         />
       );
@@ -614,8 +608,8 @@ const { PUBLISH } = NAVIGATION_STEPS
       ABIEncodedOutputsPricingStrategy.push(
         <DisplayTextArea
           key={i.toString()}
-          label={"Constructor Arguments for " + (tierStore.tiers[i].tier?tierStore.tiers[i].tier : "") + " Pricing Strategy Contract (ABI-encoded and appended to the ByteCode above)"}
-          value={contractStore?contractStore.pricingStrategy?contractStore.pricingStrategy.abiConstructor?contractStore.pricingStrategy.abiConstructor[i]:"":"":""}
+          label={"Constructor Arguments for " + (tierStore.tiers[i].tier ? tierStore.tiers[i].tier : "") + " Pricing Strategy Contract (ABI-encoded and appended to the ByteCode above)"}
+          value={contractStore ? contractStore.pricingStrategy ? contractStore.pricingStrategy.abiConstructor ? contractStore.pricingStrategy.abiConstructor[i] : "" : "" : ""}
           description="Contructor arguments for pricing strategy contract"
         />
       );
@@ -625,8 +619,8 @@ const { PUBLISH } = NAVIGATION_STEPS
       ABIEncodedOutputsFinalizeAgent.push(
         <DisplayTextArea
           key={i.toString()}
-          label={"Constructor Arguments for " + (tierStore.tiers[i].tier?tierStore.tiers[i].tier : "") + " Finalize Agent Contract (ABI-encoded and appended to the ByteCode above)"}
-          value={contractStore?contractStore.finalizeAgent?contractStore.finalizeAgent.abiConstructor?contractStore.finalizeAgent.abiConstructor[i]:"":"":""}
+          label={"Constructor Arguments for " + (tierStore.tiers[i].tier ? tierStore.tiers[i].tier : "") + " Finalize Agent Contract (ABI-encoded and appended to the ByteCode above)"}
+          value={contractStore ? contractStore.finalizeAgent ? contractStore.finalizeAgent.abiConstructor ? contractStore.finalizeAgent.abiConstructor[i] : "" : "" : ""}
           description="Contructor arguments for finalize agent contract"
         />
       );
@@ -645,41 +639,41 @@ const { PUBLISH } = NAVIGATION_STEPS
     let tokenBlock = <div>
       <DisplayTextArea
         label={"Token Contract Source Code"}
-        value={contractStore?contractStore.token?contractStore.token.src:"":""}
+        value={contractStore ? contractStore.token ? contractStore.token.src : "" : ""}
         description="Token Contract Source Code"
       />
       <DisplayTextArea
         label={"Token Contract ABI"}
-        value={contractStore?contractStore.token?JSON.stringify(contractStore.token.abi):"":""}
+        value={contractStore ? contractStore.token ? JSON.stringify(contractStore.token.abi) : "" : ""}
         description="Token Contract ABI"
       />
        <DisplayTextArea
         label={"Token Constructor Arguments (ABI-encoded and appended to the ByteCode above)"}
-        value={contractStore?contractStore.token?contractStore.token.abiConstructor?contractStore.token.abiConstructor:"":"":""}
+        value={contractStore ? contractStore.token ? contractStore.token.abiConstructor?contractStore.token.abiConstructor : "" : "" : ""}
         description="Token Constructor Arguments"
       />
     </div>;
     let pricingStrategyBlock = <div>
       <DisplayTextArea
         label={"Pricing Strategy Contract Source Code"}
-        value={contractStore?contractStore.pricingStrategy?contractStore.pricingStrategy.src:"":""}
+        value={contractStore ? contractStore.pricingStrategy ? contractStore.pricingStrategy.src : "" : ""}
         description="Pricing Strategy Contract Source Code"
       />
       <DisplayTextArea
         label={"Pricing Strategy Contract ABI"}
-        value={contractStore?contractStore.pricingStrategy?JSON.stringify(contractStore.pricingStrategy.abi):"":""}
+        value={contractStore ? contractStore.pricingStrategy ? JSON.stringify(contractStore.pricingStrategy.abi) : "" : ""}
         description="Pricing Strategy Contract ABI"
       />
     </div>;
     let finalizeAgentBlock = <div>
       <DisplayTextArea
         label={"Finalize Agent Contract Source Code"}
-        value={contractStore?contractStore.finalizeAgent?contractStore.finalizeAgent.src:"":""}
+        value={contractStore ? contractStore.finalizeAgent ? contractStore.finalizeAgent.src : "" : ""}
         description="Finalize Agent Contract Source Code"
       />
       <DisplayTextArea
         label={"Finalize Agent Contract ABI"}
-        value={contractStore?contractStore.finalizeAgent?JSON.stringify(contractStore.finalizeAgent.abi):"":""}
+        value={contractStore ? contractStore.finalizeAgent?JSON.stringify(contractStore.finalizeAgent.abi) : "" : ""}
         description="Finalize Agent Contract ABI"
       />
     </div>;
@@ -699,7 +693,7 @@ const { PUBLISH } = NAVIGATION_STEPS
               <div className="publish-title-container">
                 <p className="publish-title" data-step="1">Crowdsale Contract</p>
               </div>
-              <p className="label">{contractStore.contractType===CONTRACT_TYPES.standard?"Standard":"Whitelist with cap"}</p>
+              <p className="label">{contractStore.contractType===CONTRACT_TYPES.standard ? "Standard" : "Whitelist with cap"}</p>
               <p className="description">
               Crowdsale Contract
               </p>
@@ -712,13 +706,13 @@ const { PUBLISH } = NAVIGATION_STEPS
                 <DisplayField
                   side='left'
                   title='Name'
-                  value={tokenStore.name?tokenStore.name:""}
+                  value={tokenStore.name ? tokenStore.name : ""}
                   description="The name of your token. Will be used by Etherscan and other token browsers."
                 />
                 <DisplayField
                   side='right'
                   title='Ticker'
-                  value={tokenStore.ticker?tokenStore.ticker:""}
+                  value={tokenStore.ticker ? tokenStore.ticker : ""}
                   description="The three letter ticker for your token."
                 />
               </div>
@@ -726,7 +720,7 @@ const { PUBLISH } = NAVIGATION_STEPS
                 <DisplayField
                   side='left'
                   title='DECIMALS'
-                  value={tokenStore.decimals?tokenStore.decimals.toString():""}
+                  value={tokenStore.decimals ? tokenStore.decimals.toString() : ""}
                   description="The decimals of your token."
                 />
               </div>
@@ -755,7 +749,7 @@ const { PUBLISH } = NAVIGATION_STEPS
                 description="Optimization in compiling"
               />
             </div>
-            {tierStore.tiers[0].whitelistdisabled === "yes"?globalLimitsBlock:""}
+            {tierStore.tiers[0].whitelistdisabled === "yes" ? globalLimitsBlock : ""}
             {tokenBlock}
             {pricingStrategyBlock}
             {ABIEncodedOutputsPricingStrategy}
@@ -763,12 +757,12 @@ const { PUBLISH } = NAVIGATION_STEPS
             {ABIEncodedOutputsFinalizeAgent}
             <DisplayTextArea
               label={"Crowdsale Contract Source Code"}
-              value={contractStore?contractStore.crowdsale?contractStore.crowdsale.src:"":""}
+              value={contractStore ? contractStore.crowdsale ? contractStore.crowdsale.src : "" : ""}
               description="Crowdsale Contract Source Code"
             />
             <DisplayTextArea
               label={"Crowdsale Contract ABI"}
-              value={contractStore?contractStore.crowdsale?JSON.stringify(contractStore.crowdsale.abi):"":""}
+              value={contractStore ? contractStore.crowdsale ? JSON.stringify(contractStore.crowdsale.abi) : "" : ""}
               description="Crowdsale Contract ABI"
             />
             {ABIEncodedOutputsCrowdsale}

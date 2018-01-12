@@ -5,7 +5,7 @@
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/hyperium/hyper/master/LICENSE)
 [![Build Status](https://travis-ci.org/poanetwork/ico-wizard.svg?branch=master)](https://travis-ci.org/poanetwork/ico-wizard)
 [![Waffle.io - Columns and their card count](https://badge.waffle.io/poanetwork/ico-wizard.svg?columns=all)](http://waffle.io/poanetwork/ico-wizard)
-[![Join the chat at https://gitter.im/oraclesorg/ico-wizard](https://badges.gitter.im/oraclesorg/ico-wizard.svg)](https://gitter.im/oraclesorg/ico-wizard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/poanetwork/ico-wizard](https://badges.gitter.im/poanetwork/ico-wizard.svg)](https://gitter.im/poanetwork/ico-wizard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ### **_Attention_!**
 #### __Please, read the wiki or watch demo before you start to create crowdsales using ICO Wizard. Consider deploying on the Mainnet after testing on Kovan testnet or POA's Sokol testnet.__

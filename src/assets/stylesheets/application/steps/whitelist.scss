@@ -3,11 +3,11 @@
     margin-bottom: 40px;
   }
   &-input-property {
-    width: 33%;
     &-left {
       display: table-cell;
       vertical-align: top;
       padding-right: 5px;
+      width: 42%;
     }
 
     &-middle {
@@ -15,15 +15,17 @@
       vertical-align: top;
       padding-left: 5px;
       padding-right: 5px;
+      width: 29%;
     }
 
     &-right {
       display: table-cell;
       vertical-align: top;
       padding-left: 5px;
+      width: 29%;
     }
   }
-  
+
   &-input-container {
     margin-bottom: 20px;
     display: table;
@@ -33,19 +35,21 @@
     display: table-cell;
     height: 60px;
     line-height: 60px;
-    width: 33%;
 
     &-left {
       padding-right: 5px;
+      width: 42%;
     }
 
     &-middle {
       padding-left: 5px;
       padding-right: 5px;
+      width: 29%;
     }
 
     &-right {
       padding-left: 5px;
+      width: 29%;
     }
 
     &-empty {
