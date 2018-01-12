@@ -28,8 +28,8 @@ import QRPaymentProcess from './QRPaymentProcess'
 @observer
 export class Invest extends React.Component {
   constructor(props) {
-    super(props);
-    window.scrollTo(0, 0);
+    super(props)
+    window.scrollTo(0, 0)
 
     this.state = {
       seconds: 0,
@@ -37,7 +37,7 @@ export class Invest extends React.Component {
       pristineTokenInput: true,
       web3Available: false,
       investThrough: INVESTMENT_OPTIONS.QR,
-      crowdsaleAddress: ICOConfig.crowdsaleContractURL || getURLParam("addr")
+      crowdsaleAddress: ICOConfig.crowdsaleContractURL || getURLParam('addr')
     }
   }
 
@@ -52,28 +52,29 @@ export class Invest extends React.Component {
 
     const networkID = ICOConfig.networkID ? ICOConfig.networkID : getQueryVariable('networkID')
     const contractType = CONTRACT_TYPES.whitelistwithcap
-    checkNetWorkByID(web3, networkID)
+    checkNetWorkByID(networkID)
     contractStore.setContractType(contractType)
 
-    const timeInterval = setInterval(() => this.setState({ seconds: this.state.seconds - 1 }), 1000);
+    const timeInterval = setInterval(() => this.setState({ seconds: this.state.seconds - 1 }), 1000)
     this.setState({
       timeInterval,
       web3Available: true,
       investThrough: INVESTMENT_OPTIONS.METAMASK
-    });
+    })
 
     getWhiteListWithCapCrowdsaleAssets()
       .then(_newState => {
         this.setState(_newState)
-        this.extractContractsData(web3)
+        this.extractContractsData()
         gasPriceStore.updateValues()
           .then(() => generalStore.setGasPrice(gasPriceStore.slow.price))
           .catch(() => noGasPriceAvailable())
       })
   }
 
-  extractContractsData(web3) {
-    const { contractStore, crowdsalePageStore } = this.props
+  extractContractsData() {
+    const { contractStore, crowdsalePageStore, web3Store } = this.props
+    const { web3 } = web3Store
 
     const crowdsaleAddr = ICOConfig.crowdsaleContractURL ? ICOConfig.crowdsaleContractURL : getURLParam('addr')
 
@@ -82,7 +83,7 @@ export class Invest extends React.Component {
       return invalidCrowdsaleAddrAlert()
     }
 
-    getJoinedTiers(web3, contractStore.crowdsale.abi, crowdsaleAddr, [], joinedCrowdsales => {
+    getJoinedTiers(contractStore.crowdsale.abi, crowdsaleAddr, [], joinedCrowdsales => {
       console.log('joinedCrowdsales:', joinedCrowdsales)
 
       const crowdsaleAddrs = typeof joinedCrowdsales === 'string' ? [joinedCrowdsales] : joinedCrowdsales
@@ -104,22 +105,22 @@ export class Invest extends React.Component {
           return
         }
 
-        findCurrentContractRecursively(0, this, web3, null, crowdsaleContract => {
+        findCurrentContractRecursively(0, this, null, crowdsaleContract => {
           if (!crowdsaleContract) {
             this.setState({ loading: false })
             return
           }
 
           initializeAccumulativeData()
-            .then(() => getCrowdsaleData(web3, crowdsaleContract))
-            .then(() => getAccumulativeCrowdsaleData.call(this, web3, () => Promise.resolve()))
+            .then(() => getCrowdsaleData(crowdsaleContract))
+            .then(() => getAccumulativeCrowdsaleData.call(this, () => Promise.resolve()))
             .then(() => this.setState({ loading: false }))
             .catch(err => {
               this.setState({ loading: false })
               console.log(err)
             })
 
-          getCrowdsaleTargetDates(web3, this, () => {
+          getCrowdsaleTargetDates(this, () => {
             if (crowdsalePageStore.endDate) {
               this.setState({
                 seconds: (crowdsalePageStore.endDate - new Date().getTime()) / 1000
@@ -157,35 +158,31 @@ export class Invest extends React.Component {
       return noMetaMaskAlert()
     }
 
-    this.investToTokensForWhitelistedCrowdsale(web3)
+    this.investToTokensForWhitelistedCrowdsale()
   }
 
-  investToTokensForWhitelistedCrowdsale(web3) {
-    const { crowdsalePageStore } = this.props
+  investToTokensForWhitelistedCrowdsale() {
+    const { crowdsalePageStore, web3Store } = this.props
+    const { web3 } = web3Store
 
     if (crowdsalePageStore.startDate > (new Date()).getTime()) {
       this.setState({ loading: false })
       return investmentDisabledAlertInTime(crowdsalePageStore.startDate)
     }
 
-    findCurrentContractRecursively(0, this, web3, null, (crowdsaleContract, tierNum) => {
+    findCurrentContractRecursively(0, this, null, (crowdsaleContract, tierNum) => {
       if (!crowdsaleContract) {
         this.setState({ loading: false })
         return
       }
 
-      console.log(web3)
-
-      getCurrentRate(web3, crowdsaleContract)
-        .then(() => {
-          console.log(web3)
-          this.investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, web3, web3.eth.accounts)
-        })
+      getCurrentRate(crowdsaleContract)
+        .then(() => this.investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, web3.eth.accounts))
         .catch(console.log)
     })
   }
 
-  investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, web3, accounts) {
+  investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, accounts) {
     const { contractStore, tokenStore, crowdsalePageStore, investStore, generalStore } = this.props
 
     let nextTiers = []
@@ -219,17 +216,15 @@ export class Invest extends React.Component {
         const estimatedGasMax = 4016260
         opts.gasLimit = !estimatedGas || estimatedGas > estimatedGasMax ? estimatedGasMax : estimatedGas + 100000
 
-        return sendTXToContract(web3, crowdsaleContract.methods.buy().send(opts))
+        return sendTXToContract(crowdsaleContract.methods.buy().send(opts))
       })
       .then(() => successfulInvestmentAlert(investStore.tokensToInvest))
       .catch(err => toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED }))
       .then(() => this.setState({ loading: false }))
   }
 
-  txMinedCallback(web3, txHash, receipt) {
+  txMinedCallback(txHash, receipt) {
     const { investStore } = this.props
-
-    console.log(web3)
 
     if (receipt) {
       if (receipt.blockNumber) {
@@ -237,10 +232,8 @@ export class Invest extends React.Component {
         successfulInvestmentAlert(investStore.tokensToInvest)
       }
     } else {
-      console.log(web3)
-
       setTimeout(() => {
-        checkTxMined(web3, txHash, receipt => this.txMinedCallback(web3, txHash, receipt))
+        checkTxMined(txHash, receipt => this.txMinedCallback(txHash, receipt))
       }, 500)
     }
   }
@@ -251,7 +244,7 @@ export class Invest extends React.Component {
   }
 
   isValidToken(token) {
-    return +token > 0;
+    return +token > 0
   }
 
   renderPieTracker () {
@@ -377,7 +370,7 @@ export class Invest extends React.Component {
           </div>
           <p className="invest-title">Invest page</p>
           <p className="invest-description">
-            {"Here you can invest in the crowdsale campaign. At the moment, you need Metamask client to invest into the crowdsale. If you don't have Metamask, you can send ethers to the crowdsale address with a MethodID: 0xa6f2ae3a. Sample "}
+            {'Here you can invest in the crowdsale campaign. At the moment, you need Metamask client to invest into the crowdsale. If you don\'t have Metamask, you can send ethers to the crowdsale address with a MethodID: 0xa6f2ae3a. Sample '}
             <a href="https://kovan.etherscan.io/tx/0x42073576a160206e61b4d9b70b436359b8d220f8b88c7c272c77023513c62c3d">transaction</a>.
           </p>
         </div>
