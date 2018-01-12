@@ -59,6 +59,20 @@ export const TRUNC_TO_DECIMALS = {
   DECIMALS18: -18
 }
 
+export const DEPLOYMENT_VALUES = {
+  GAS_REQUIRED: {
+    DEFAULT: 8044737,
+    WHITELIST: 96040,
+    RESERVED_TOKEN: 42220
+
+  },
+  TX_REQUIRED: {
+    DEFAULT: 13,
+    WHITELIST: 1,
+    RESERVED_TOKEN: 1
+  }
+}
+
 export const GAS_PRICE = {
   SLOW: {
     ID: 'slow',
