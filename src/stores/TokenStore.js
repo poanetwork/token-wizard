@@ -14,12 +14,19 @@ class TokenStore {
   @observable reservedTokens;
 
   constructor() {
+    this.reset()
+  }
+
+  @action reset = () => {
+    this.name = undefined
+    this.ticker = undefined
+    this.supply = 0
+    this.decimals = undefined
     this.validToken = {
       'name': EMPTY,
       'ticker': EMPTY,
       'decimals': EMPTY
-    };
-    this.supply = 0
+    }
     this.reservedTokensInput = {}
     this.reservedTokens = []
   }
