@@ -6,8 +6,8 @@ import { contractStore, crowdsalePageStore, tokenStore, web3Store } from '../../
 import { findCurrentContractRecursively as findCurrentContractRecursively2 } from './utils'
 import { toJS } from 'mobx'
 
-export function getJoinedTiers(web3, abi, addr, joinedCrowdsales, cb) {
-  attachToContract(web3, abi, addr)
+export function getJoinedTiers(abi, addr, joinedCrowdsales, cb) {
+  attachToContract(abi, addr)
     .then(crowdsaleContract => {
       console.log('attach to crowdsale contract')
 
@@ -47,15 +47,16 @@ function getJoinedTiersRecursively(i, crowdsaleContract, joinedCrowdsales, joine
   })
 }
 
-export function findCurrentContractRecursively(i, $this, web3, firstCrowdsaleContract, cb) {
+export function findCurrentContractRecursively(i, $this, firstCrowdsaleContract, cb) {
   console.log(contractStore.crowdsale.addr);
   let crowdsaleAddr = contractStore.crowdsale.addr[i];
+  const { web3 } = web3Store
 
   if (i === contractStore.crowdsale.addr.length) return cb(firstCrowdsaleContract, i);
   if (!crowdsaleAddr) return cb(null);
   if (!web3.utils.isAddress(crowdsaleAddr)) return cb(null);
 
-  attachToContract(web3, contractStore.crowdsale.abi, crowdsaleAddr)
+  attachToContract(contractStore.crowdsale.abi, crowdsaleAddr)
     .then(crowdsaleContract => {
       console.log('attach to crowdsale contract')
 
@@ -67,8 +68,8 @@ export function findCurrentContractRecursively(i, $this, web3, firstCrowdsaleCon
 
       console.log(contractStore.crowdsale.contractType)
 
-      if (contractStore.crowdsale.contractType === CONTRACT_TYPES.standard)
-        return cb(crowdsaleContract, i)
+      if (contractStore.crowdsale.contractType === CONTRACT_TYPES.standard) return cb(crowdsaleContract, i)
+
       crowdsaleContract.methods.startsAt().call(function (err, startDate) {
         if (err) return console.log(err)
 
@@ -86,7 +87,7 @@ export function findCurrentContractRecursively(i, $this, web3, firstCrowdsaleCon
             cb(crowdsaleContract, i)
           } else {
             i++
-            findCurrentContractRecursively2(i, $this, web3, firstCrowdsaleContract, cb)
+            findCurrentContractRecursively2(i, $this, firstCrowdsaleContract, cb)
           }
         })
       })
@@ -94,13 +95,15 @@ export function findCurrentContractRecursively(i, $this, web3, firstCrowdsaleCon
     .catch(err => console.log(err))
 }
 
-export function getCrowdsaleTargetDates(web3, $this, cb) {
+export function getCrowdsaleTargetDates($this, cb) {
   let propsCount = 0;
   let cbCount = 0;
   let state = $this.state;
+  const { web3 } = web3Store
+
   for (let i = 0; i < contractStore.crowdsale.addr.length; i++) {
     let crowdsaleAddr = contractStore.crowdsale.addr[i];
-    attachToContract(web3, contractStore.crowdsale.abi, crowdsaleAddr)
+    attachToContract(contractStore.crowdsale.abi, crowdsaleAddr)
       .then(crowdsaleContract => { // eslint-disable-line no-loop-func
         console.log("attach to crowdsale contract");
 
@@ -128,9 +131,9 @@ export function getCrowdsaleTargetDates(web3, $this, cb) {
             cbCount++;
             if (err) return console.log(err);
 
-            console.log("startDate: " + startDate*1000);
-            if (!crowdsalePageStore.startDate || crowdsalePageStore.startDate > startDate*1000)
-              crowdsalePageStore.startDate = startDate*1000;
+            console.log("startDate: " + startDate * 1000);
+            if (!crowdsalePageStore.startDate || crowdsalePageStore.startDate > startDate * 1000)
+              crowdsalePageStore.startDate = startDate * 1000;
             if (propsCount === cbCount) {
               state.loading = false;
               $this.setState(state, cb);
@@ -145,17 +148,21 @@ export function getCrowdsaleTargetDates(web3, $this, cb) {
             if (err) return console.log(err);
 
             console.log("endBlock: " + endBlock);
-            if (!crowdsalePageStore.endBlock || crowdsalePageStore.endBlock < endBlock)
-              crowdsalePageStore.endBlock = endBlock;
+
+            if (!crowdsalePageStore.endBlock || crowdsalePageStore.endBlock < endBlock) crowdsalePageStore.endBlock = endBlock;
+
             web3.eth.getBlockNumber((err, curBlock) => {
               if (err) return console.log(err);
 
               console.log("curBlock: " + curBlock);
-              var blocksDiff = parseInt($this.crowdsalePageStore.endBlock, 10) - parseInt(curBlock, 10);
+              let blocksDiff = parseInt($this.crowdsalePageStore.endBlock, 10) - parseInt(curBlock, 10);
+
               console.log("blocksDiff: " + blocksDiff);
-              var blocksDiffInSec = blocksDiff * state.blockTimeGeneration;
+              let blocksDiffInSec = blocksDiff * state.blockTimeGeneration;
+
               console.log("blocksDiffInSec: " + blocksDiffInSec);
               state.seconds = blocksDiffInSec;
+
               if (propsCount === cbCount) {
                 state.loading = false;
                 $this.setState(state, cb);
@@ -170,10 +177,12 @@ export function getCrowdsaleTargetDates(web3, $this, cb) {
             cbCount++;
             if (err) return console.log(err);
 
-            console.log("endDate: " + endDate*1000);
-            if (!crowdsalePageStore.endDate || crowdsalePageStore.endDate < endDate*1000)
-              crowdsalePageStore.endDate = endDate*1000;
+            console.log("endDate: " + endDate * 1000);
+
+            if (!crowdsalePageStore.endDate || crowdsalePageStore.endDate < endDate * 1000) crowdsalePageStore.endDate = endDate * 1000;
+
             console.log("curDate: " + new Date().getTime());
+
             if (propsCount === cbCount) {
               state.loading = false;
               $this.setState(state, cb);
@@ -193,15 +202,17 @@ export function initializeAccumulativeData() {
   return Promise.resolve()
 }
 
-export function getAccumulativeCrowdsaleData(web3, cb) {
+export function getAccumulativeCrowdsaleData(cb) {
   let propsCount = 0;
   let cbCount = 0;
+  const { web3 } = web3Store
+
   console.log("contractStore.crowdsale.addr.length: " + contractStore.crowdsale.addr.length);
 
   for (let i = 0; i < contractStore.crowdsale.addr.length; i++) {
     let crowdsaleAddr = contractStore.crowdsale.addr[i];
 
-    attachToContract(web3, contractStore.crowdsale.abi, crowdsaleAddr)
+    attachToContract(contractStore.crowdsale.abi, crowdsaleAddr)
       .then(crowdsaleContract => { // eslint-disable-line no-loop-func
         console.log('attach to crowdsale contract')
 
@@ -265,7 +276,7 @@ export function getAccumulativeCrowdsaleData(web3, cb) {
               crowdsalePageStore.setProperty('maximumSellableTokens', parseInt(toFixed(maximumSellableTokens), 10))
 
             //calc maximumSellableTokens in Eth
-            setMaximumSellableTokensInEth(web3, crowdsaleContract, maximumSellableTokens)
+            setMaximumSellableTokensInEth(crowdsaleContract, maximumSellableTokens)
 
             if (propsCount === cbCount) {
               state.loading = false
@@ -305,12 +316,12 @@ export function getAccumulativeCrowdsaleData(web3, cb) {
   }
 }
 
-function setMaximumSellableTokensInEth(web3, crowdsaleContract, maximumSellableTokens) {
+function setMaximumSellableTokensInEth(crowdsaleContract, maximumSellableTokens) {
   crowdsaleContract.methods.pricingStrategy().call((err, pricingStrategyAddr) => {
     if (err) return console.log(err);
 
     console.log("pricingStrategy: " + pricingStrategyAddr);
-    attachToContract(web3, contractStore.pricingStrategy.abi, pricingStrategyAddr)
+    attachToContract(contractStore.pricingStrategy.abi, pricingStrategyAddr)
       .then(pricingStrategyContract => {
         console.log('attach to pricing strategy contract')
 
@@ -330,7 +341,7 @@ function setMaximumSellableTokensInEth(web3, crowdsaleContract, maximumSellableT
   });
 }
 
-export function getCurrentRate(web3, crowdsaleContract) {
+export function getCurrentRate(crowdsaleContract) {
   return new Promise((resolve, reject) => {
     if (!crowdsaleContract) {
       noContractAlert()
@@ -353,14 +364,14 @@ export function getCurrentRate(web3, crowdsaleContract) {
         return
       }
 
-      getPricingStrategyData(web3)
+      getPricingStrategyData()
         .then(resolve)
         .catch(reject)
     });
   }
 )}
 
-export function getCrowdsaleData (web3, crowdsaleContract) {
+export function getCrowdsaleData (crowdsaleContract) {
   return new Promise((resolve, reject) => {
     if (!crowdsaleContract) {
       noContractAlert()
@@ -441,7 +452,7 @@ export function getCrowdsaleData (web3, crowdsaleContract) {
               return
             }
 
-            getPricingStrategyData(web3)
+            getPricingStrategyData()
               .then(() => {
                 cbCount++
                 if (propsCount === cbCount) {
@@ -476,7 +487,7 @@ function getTokenData () {
       let tokenObj = toJS(contractStore.token)
       console.log('tokenObj', tokenObj)
 
-      attachToContract(web3, tokenObj.abi, tokenObj.addr)
+      attachToContract(tokenObj.abi, tokenObj.addr)
         .then(tokenContract => {
           console.log('attach to token contract')
 
@@ -571,7 +582,7 @@ function getTokenData () {
               let propsCount = 0
               let cbCount = 0
 
-              attachToContract(web3, contractStore.token.abi, contractStore.token.addr)
+              attachToContract(contractStore.token.abi, contractStore.token.addr)
                 .then(tokenContract => {
                   console.log('attach to token contract')
 
@@ -673,9 +684,9 @@ function getTokenData () {
   })
 }
 
-export function getPricingStrategyData (web3) {
+export function getPricingStrategyData () {
   return new Promise((resolve, reject) => {
-    attachToContract(web3, contractStore.pricingStrategy.abi, contractStore.pricingStrategy.addr)
+    attachToContract(contractStore.pricingStrategy.abi, contractStore.pricingStrategy.addr)
       .then(pricingStrategyContract => {
         console.log('attach to pricing strategy contract')
 
