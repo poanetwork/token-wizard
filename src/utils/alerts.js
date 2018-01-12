@@ -1,4 +1,6 @@
 import sweetAlert2 from 'sweetalert2';
+import { weiToGwei } from './utils'
+import { DEPLOYMENT_VALUES } from './constants'
 
 export function noMetaMaskAlert() {
   sweetAlert2({
@@ -84,13 +86,35 @@ export function noDeploymentOnMainnetAlert() {
   });
 }
 
-export function warningOnMainnetAlert(tiersCount, cb) {
-  let n = 100 //fraction to round
-  let estimatedCost = 1.0 / n * Math.ceil(n * tiersCount * 0.16)
-  let estimatedTxsCount = tiersCount * 12
+export function warningOnMainnetAlert(tiersCount, priceSelected, reserved, whitelisted, cb) {
+  const { GAS_REQUIRED, TX_REQUIRED } = DEPLOYMENT_VALUES
+  let gasRequired = GAS_REQUIRED.DEFAULT.DEFAULT
+  let txRequired  = TX_REQUIRED.DEFAULT.DEFAULT
+
+  if (whitelisted) {
+    if (reserved) {
+      gasRequired = GAS_REQUIRED.WHITELIST.WITH_RESERVED_TOKEN
+      txRequired = TX_REQUIRED.WHITELIST.WITH_RESERVED_TOKEN
+    } else {
+      gasRequired = GAS_REQUIRED.WHITELIST.DEFAULT
+      txRequired = TX_REQUIRED.WHITELIST.DEFAULT
+    }
+  } else if (reserved) {
+    gasRequired = GAS_REQUIRED.DEFAULT.WITH_RESERVED_TOKEN
+    txRequired = TX_REQUIRED.DEFAULT.WITH_RESERVED_TOKEN
+  }
+
+  const n = 100 //fraction to round
+  const deployCostInEth = weiToGwei(gasRequired * weiToGwei(priceSelected))
+  const estimatedCost = 1.0 / n * Math.ceil(n * tiersCount * deployCostInEth)
+  const estimatedTxsCount = tiersCount * txRequired
+
   sweetAlert2({
     title: "Warning",
-    html: "You are about to sign " + estimatedTxsCount + " TXs. You will see an individual Metamask windows for each of it. Please don't open two or more instances of Wizard in one browser. ICO Wizard will create " + tiersCount + "-tier(s) crowdsale for you. The total cost will be around " + estimatedCost + " ETH. Are you sure you want to proceed?",
+    html: `You are about to sign ${estimatedTxsCount} TXs. You will see an individual Metamask windows for each of it.
+     Please don't open two or more instances of Wizard in one browser. ICO Wizard will create ${tiersCount}-tier(s) 
+     crowdsale for you. The total cost will be around ${estimatedCost.toFixed(2)} ETH. Are you sure you want to 
+     proceed?`,
     type: "warning",
     showCancelButton: true,
     confirmButtonText: 'Yes, I am sure!',
