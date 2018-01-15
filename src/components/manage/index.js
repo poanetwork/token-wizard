@@ -15,7 +15,7 @@ import { Loader } from '../Common/Loader'
 
 const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME } = TEXT_FIELDS
 
-@inject('crowdsaleStore', 'web3Store', 'tierStore', 'contractStore', 'crowdsalePageStore', 'generalStore', 'tokenStore')
+@inject('crowdsaleStore', 'web3Store', 'tierStore', 'contractStore', 'crowdsalePageStore', 'generalStore', 'tokenStore', 'gasPriceStore')
 
 @observer
 export class Manage extends Component {
@@ -105,6 +105,8 @@ export class Manage extends Component {
 
   canFinalize = () => {
     const { crowdsaleContract } = this.state
+    const { web3Store, gasPriceStore } = this.props
+    const { web3 } = web3Store
 
     return new Promise((resolve, reject) => {
       if (!this.isLastTier(crowdsaleContract)) {
@@ -112,11 +114,14 @@ export class Manage extends Component {
         reject(this.state.canFinalize)
 
       } else {
-        crowdsaleContract.methods.finalize()
-          .call({
-            gasLimit: 650000,
-            gasPrice: this.props.generalStore.gasPrice
-          })
+        web3.eth.estimateGas({
+          from: web3Store.curAddress,
+          to: crowdsaleContract._address,
+          data: '0x4bb278f3', // finalize signature
+          gas: web3.utils.toHex(650000),
+          gasPrice: web3.utils.toHex(gasPriceStore.slow.price),
+          value: web3.utils.toHex(0)
+        })
           .then(() => {
             this.setState({ canFinalize: true })
             resolve(this.state.canFinalize)
