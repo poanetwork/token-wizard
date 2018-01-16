@@ -84,6 +84,7 @@
     "sw-precache-webpack-plugin": "0.11.3",
     "sweetalert2": "^7.0.9",
     "url-loader": "0.5.9",
+    "web3": "file:submodules/oracles-web3-1.0/packages/web3",
     "webpack": "^2.6.1",
     "webpack-dev-server": "2.5.0",
     "webpack-manifest-plugin": "1.1.0",
