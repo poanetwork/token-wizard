@@ -177,7 +177,8 @@ export class Invest extends React.Component {
       }
 
       getCurrentRate(crowdsaleContract)
-        .then(() => this.investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, web3.eth.accounts))
+        .then(() => web3.eth.getAccounts())
+        .then((accounts) => this.investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, accounts))
         .catch(console.log)
     })
   }
