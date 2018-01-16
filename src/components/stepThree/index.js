@@ -321,7 +321,7 @@ export class stepThree extends React.Component {
             defaultValue={tierStore.tiers[0].whitelistEnabled}
             name="crowdsale-whitelistEnabled-0"
             onChange={e => this.updateWhitelistEnabled(e)}
-            description={`Enables whitelisting. If disabled, anyone can buy on the tier.`}
+            description={`Enables whitelisting. If disabled, anyone can participate in the crowdsale.`}
           />
         </div>
       </div>
