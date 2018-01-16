@@ -244,7 +244,7 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
       }
 
       if (crowdsaleNum === 0) {
-        newTier.whitelistEnabled = whitelisted ? 'yes' : 'no'
+        newTier.whitelistEnabled = isWhitelisted ? 'yes' : 'no'
       }
 
       return Promise.all([pricingStrategyAddress, maximumSellableTokens, whitelistAccounts, tokenData(tokenAddress)])
