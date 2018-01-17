@@ -1,4 +1,4 @@
-.crowdsale-table {
+.flex-table {
   .container-fluid {
     position: relative;
     width: 100%;
@@ -64,7 +64,8 @@
 
   .scrollable-content {
     border: 1px solid lightgray;
-    height: 185px;
+    min-height: 185px;
+    max-height: 600px;
     overflow-x: hidden;
     overflow-y: auto;
     &::-webkit-scrollbar {

@@ -62,7 +62,7 @@ export default class CrowdsalesList extends Component {
     )
 
     return (
-      <div className="crowdsale-table">
+      <div className="flex-table">
         { crowdsaleStore.crowdsales.length ? crowdsalesList : noCrowdsalesMsg }
       </div>
     )
