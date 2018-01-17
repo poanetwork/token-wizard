@@ -8,7 +8,7 @@ import { noContractAlert } from '../../utils/alerts'
 import { toFixed } from '../../utils/utils'
 import { DOWNLOAD_NAME } from '../../utils/constants'
 import { isObservableArray } from 'mobx'
-import { generalStore } from '../../stores'
+import { generalStore, deploymentStore } from '../../stores'
 
 function setLastCrowdsale (abi, addr, lastCrowdsale, gasLimit) {
   console.log('###setLastCrowdsale for Pricing Strategy:###')
@@ -259,6 +259,7 @@ export function setReservedTokensListMultiple (abi, addr, token, reservedTokenSt
         .send({ gasPrice: generalStore.gasPrice })
 
       return sendTXToContract(method)
+        .then(() => deploymentStore.setAsSuccessful('setReservedTokens'))
     })
 }
 
@@ -280,43 +281,55 @@ export function transferOwnership (abi, addr, finalizeAgentAddr, gasLimit) {
       })
 
       return sendTXToContract(method)
+        .then(() => deploymentStore.setAsSuccessful('transferOwnership'))
     })
 }
 
 export function setLastCrowdsaleRecursive (abi, pricingStrategyAddrs, lastCrowdsale, gasLimit) {
   return pricingStrategyAddrs.reduce((promise, pricingStrategyAddr) => {
-    return promise.then(() => setLastCrowdsale(abi, pricingStrategyAddr, lastCrowdsale, gasLimit))
+    return promise
+      .then(() => setLastCrowdsale(abi, pricingStrategyAddr, lastCrowdsale, gasLimit))
+      .then(() => deploymentStore.setAsSuccessful('lastCrowdsale'))
   }, Promise.resolve())
 }
 
-export function setMintAgentRecursive (abi, addr, crowdsaleAddrs, gasLimit) {
+export function setMintAgentRecursive (abi, addr, crowdsaleAddrs, gasLimit, txName) {
   return crowdsaleAddrs.reduce((promise, crowdsaleAddr) => {
-    return promise.then(() => setMintAgent(abi, addr, crowdsaleAddr, gasLimit))
+    return promise
+      .then(() => setMintAgent(abi, addr, crowdsaleAddr, gasLimit))
+      .then(() => deploymentStore.setAsSuccessful(txName))
   }, Promise.resolve())
 }
 
 export function updateJoinedCrowdsalesRecursive (abi, addrs, gasLimit) {
-  return addrs.reduce((promise, addr) =>
-      promise.then(() => updateJoinedCrowdsales(abi, addr, addrs, gasLimit)),
-    Promise.resolve()
-  )
+  return addrs.reduce((promise, addr) => {
+    return promise
+      .then(() => updateJoinedCrowdsales(abi, addr, addrs, gasLimit))
+      .then(() => deploymentStore.setAsSuccessful('updateJoinedCrowdsales'))
+  }, Promise.resolve())
 }
 
 export function addWhiteListRecursive (tierStore, token, abi, crowdsaleAddrs) {
   return crowdsaleAddrs.reduce((promise, crowdsaleAddr, index) => {
-    return promise.then(() => addWhiteList(index, tierStore, token, abi, crowdsaleAddr))
+    return promise
+      .then(() => addWhiteList(index, tierStore, token, abi, crowdsaleAddr))
+      .then(() => deploymentStore.setAsSuccessful('whitelist'))
   }, Promise.resolve())
 }
 
 export function setFinalizeAgentRecursive (abi, addrs, finalizeAgentAddrs, gasLimit) {
   return finalizeAgentAddrs.reduce((promise, finalizeAgentAddr, index) => {
-    return promise.then(() => setFinalizeAgent(abi, addrs[index], finalizeAgentAddr, gasLimit))
+    return promise
+      .then(() => setFinalizeAgent(abi, addrs[index], finalizeAgentAddr, gasLimit))
+      .then(() => deploymentStore.setAsSuccessful('setFinalizeAgent'))
   }, Promise.resolve())
 }
 
 export function setReleaseAgentRecursive (abi, addr, finalizeAgentAddrs, gasLimit) {
   return finalizeAgentAddrs.reduce((promise, finalizeAgentAddr) => {
-    return promise.then(() => setReleaseAgent(abi, addr, finalizeAgentAddr, gasLimit))
+    return promise
+      .then(() => setReleaseAgent(abi, addr, finalizeAgentAddr, gasLimit))
+      .then(() => deploymentStore.setAsSuccessful('setReleaseAgent'))
   }, Promise.resolve())
 }
 
