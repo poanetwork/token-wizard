@@ -240,7 +240,7 @@ export class Manage extends Component {
   renderWhitelistInputBlock = (tier, index) => {
     const { crowdsaleStore, tierStore } = this.props
 
-    if (tierStore.tiers[0].whitelistdisabled === 'yes') {
+    if (tierStore.tiers[0].whitelistEnabled !== 'yes') {
       return null
     }
 
@@ -392,7 +392,7 @@ export class Manage extends Component {
           <div className="steps" key={index.toString()}>
             <div className="steps-content container">
               {index === 0 ? aboutTier : null}
-              <div className={`hidden ${tierStore.tiers[0].whitelistdisabled !== 'yes' ? 'divisor' : ''}`}>
+              <div className={`hidden ${tierStore.tiers[0].whitelistEnabled === 'yes' ? 'divisor' : ''}`}>
                 {tierNameAndWallet(tier)}
                 {tierStartAndEndTime(tier, index)}
                 {tierRateAndSupply(tier, index)}
