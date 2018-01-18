@@ -26,10 +26,10 @@ describe('blockchainHelpers', () => {
       expect(getNetWorkNameById(12648430)).toEqual('Oracles dev test');
     });
 
-    it('should return Unknown for unknown network ids', () => {
-      expect(getNetWorkNameById(5)).toEqual('Unknown');
-      expect(getNetWorkNameById(43)).toEqual('Unknown');
-      expect(getNetWorkNameById(1000)).toEqual('Unknown');
+    it('should return null for unknown network ids', () => {
+      expect(getNetWorkNameById(5)).toEqual(null);
+      expect(getNetWorkNameById(43)).toEqual(null);
+      expect(getNetWorkNameById(1000)).toEqual(null);
     })
   })
 })

@@ -174,7 +174,8 @@
       "js",
       "json",
       "web.jsx",
-      "jsx"
+      "jsx",
+      "node"
     ]
   },
   "babel": {
