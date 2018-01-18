@@ -65,7 +65,7 @@ export class stepTwo extends Component {
               title={TICKER}
               value={this.props.tokenStore.ticker}
               onChange={(e) => this.updateTokenStore(e, 'ticker')}
-              description={`${DESCRIPTION.TOKEN_TICKER} There are 17,576 combinations for 26 english letters. Be hurry. `}
+              description={`${DESCRIPTION.TOKEN_TICKER} There are 11,881,376 combinations for 26 english letters. Be hurry. `}
             />
             <InputField
               side='left' type='number'
