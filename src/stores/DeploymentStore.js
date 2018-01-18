@@ -60,6 +60,8 @@ class DeploymentStore {
   }
 
   logTxMap = () => {
+    if (process.env.NODE_ENV !== 'development') return
+
     const table = []
 
     this.txMap.forEach((txStatus, txName) => {
