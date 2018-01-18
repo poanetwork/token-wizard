@@ -28,7 +28,8 @@ import {
   FILE_CONTENTS,
   NAVIGATION_STEPS,
   TOAST,
-  TRUNC_TO_DECIMALS
+  TRUNC_TO_DECIMALS,
+  DESCRIPTION
 } from '../../utils/constants'
 import { floorToDecimals, toast, toFixed } from '../../utils/utils'
 import { getEncodedABIClientSide } from '../../utils/microservices'
@@ -713,7 +714,7 @@ const { PUBLISH } = NAVIGATION_STEPS
                   side='right'
                   title='Ticker'
                   value={tokenStore.ticker ? tokenStore.ticker : ""}
-                  description="The three letter ticker for your token."
+                  description={DESCRIPTION.TOKEN_TICKER}
                 />
               </div>
               <div className="hidden">
