@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { observer, inject } from 'mobx-react'
 import '../../assets/stylesheets/application.css'
+import { TX_STEP_DESCRIPTION } from '../../utils/constants'
 
 @inject('tierStore')
 @observer
@@ -40,8 +41,8 @@ export class TxProgressStatus extends Component {
             <div className="scrollable-content">
               {tableContent.map(tx =>
                 tx.txStatus.length
-                  ? <div className="table-row">
-                    <div className="text">{tx.txName}</div>
+                  ? <div className="table-row datagrid">
+                    <div className="text">{TX_STEP_DESCRIPTION[tx.txName]}</div>
                     {tiers.map((value, index) => (
                       <div className="sm-text">
                         {tx.txStatus[index] === true

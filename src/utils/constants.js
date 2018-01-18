@@ -398,3 +398,21 @@ export const TOAST = {
     time: 10000
   }
 }
+
+export const TX_STEP_DESCRIPTION = {
+  safeMathLibrary: "Deploy SafeMathLibrary Contract",
+  token: "Deploy Token Contract",
+  pricingStrategy: "Deploy Pricing Strategy Contract",
+  crowdsale: "Deploy Crowdsale Contract",
+  registerCrowdsaleAddress: "Associate Crowdsale address to current account",
+  finalizeAgent: "Deploy Finalize Agent Contract",
+  lastCrowdsale: "Register last Tier address",
+  setReservedTokens: "Register addresses for Reserved Tokens",
+  updateJoinedCrowdsales: "Register Crowdsales addresses",
+  setMintAgentCrowdsale: "Allow Crowdsale Contract to Mint Tokens",
+  setMintAgentFinalizeAgent: "Allow Finalize Agent Contract to Mint Token",
+  whitelist: "Register whitelisted addresses",
+  setFinalizeAgent: "Register Finalize Agent Contract addresses",
+  setReleaseAgent: "Register Token release addresses",
+  transferOwnership: "Transfer ownership to wallet address"
+}
