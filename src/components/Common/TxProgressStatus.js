@@ -18,8 +18,8 @@ export class TxProgressStatus extends Component {
     const { txMap } = this.props
     const table = []
 
-    txMap.forEach((txStatus, txName) => {
-      table.push({ txName, txStatus })
+    txMap.forEach((status, name) => {
+      table.push({ name, status })
     })
 
     return table
@@ -40,14 +40,14 @@ export class TxProgressStatus extends Component {
             </div>
             <div className="scrollable-content">
               {tableContent.map(tx =>
-                tx.txStatus.length
-                  ? <div className="table-row datagrid" key={tx.txName}>
-                    <div className="text">{TX_STEP_DESCRIPTION[tx.txName]}</div>
+                tx.status.length
+                  ? <div className="table-row datagrid" key={tx.name}>
+                    <div className="text">{TX_STEP_DESCRIPTION[tx.name]}</div>
                     {tiers.map((value, index) => (
                       <div className="sm-text" key={index.toString()}>
-                        {tx.txStatus[index] === true
+                        {tx.status[index] === true
                           ? <i className="material-icons">check</i>
-                          : tx.txStatus[index] === false
+                          : tx.status[index] === false
                             ? <i className="material-icons">access_time</i>
                             : ''
                         }
