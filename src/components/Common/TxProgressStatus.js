@@ -36,15 +36,15 @@ export class TxProgressStatus extends Component {
           <div className="container-fluid">
             <div className="table-row flex-table-header">
               <div className="text">Tx Name</div>
-              {tiers.map((value, index) => <div className="sm-text">Tier {index + 1}</div>)}
+              {tiers.map((value, index) => <div className="sm-text" key={index.toString()}>Tier {index + 1}</div>)}
             </div>
             <div className="scrollable-content">
               {tableContent.map(tx =>
                 tx.txStatus.length
-                  ? <div className="table-row datagrid">
+                  ? <div className="table-row datagrid" key={tx.txName}>
                     <div className="text">{TX_STEP_DESCRIPTION[tx.txName]}</div>
                     {tiers.map((value, index) => (
-                      <div className="sm-text">
+                      <div className="sm-text" key={index.toString()}>
                         {tx.txStatus[index] === true
                           ? <i className="material-icons">check</i>
                           : tx.txStatus[index] === false
