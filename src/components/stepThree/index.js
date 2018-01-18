@@ -373,6 +373,7 @@ export class stepThree extends React.Component {
                   extraClassName="right"
                   title={ALLOWMODIFYING}
                   items={[{ label: 'on', value: 'on' }, { label: 'off', value: 'off' }]}
+                  defaultValue="off"
                   onChange={e => this.updateTierStore(e, "updatable", 0)}
                   description={`Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing.`}
                 />
