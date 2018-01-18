@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should render the component 1`] = `
+<div
+  className={undefined}
+>
+  <label
+    className="label"
+  >
+    Some Title
+  </label>
+  <div
+    className="radios-inline"
+  >
+    <label
+      className="radio-inline"
+    >
+      <input
+        checked={true}
+        onChange={[Function]}
+        type="radio"
+        value="item-1"
+      />
+      <span
+        className="title"
+      >
+        Item 1
+      </span>
+    </label>
+    <label
+      className="radio-inline"
+    >
+      <input
+        checked={false}
+        onChange={[Function]}
+        type="radio"
+        value="item-2"
+      />
+      <span
+        className="title"
+      >
+        Item 2
+      </span>
+    </label>
+  </div>
+  <p
+    className="description"
+  >
+    Some Description
+  </p>
+</div>
+`;
