@@ -1,5 +1,5 @@
 import { incorrectNetworkAlert, noMetaMaskAlert, invalidNetworkIDAlert } from './alerts'
-import { CHAINS } from './constants'
+import { CHAINS, MAX_GAS_PRICE } from './constants'
 import { crowdsaleStore, generalStore, web3Store } from '../stores'
 import { fetchFile } from './utils'
 
@@ -72,8 +72,7 @@ export function getNetWorkNameById (_id) {
 }
 
 export const calculateGasLimit = (estimatedGas = 0) => {
-  const estimatedGasMax = 4016260
-  return !estimatedGas || estimatedGas > estimatedGasMax ? estimatedGasMax : estimatedGas + 100000
+  return !estimatedGas || estimatedGas > MAX_GAS_PRICE ? MAX_GAS_PRICE : estimatedGas + 100000
 }
 
 export function getNetworkVersion () {
@@ -125,7 +124,7 @@ const deployContractInner = (accounts, abi, deployOpts) => {
   const contractInstance = new web3.eth.Contract(objAbi)
   const deploy = contractInstance.deploy(deployOpts)
 
-  return deploy.estimateGas({ gas: calculateGasLimit() })
+  return deploy.estimateGas({ gas: MAX_GAS_PRICE })
     .then(
       estimatedGas => estimatedGas,
       err => console.log('errrrrrrrrrrrrrrrrr', err)
