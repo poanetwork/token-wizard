@@ -102,7 +102,7 @@
     "registry_contract_name": "Registry"
   },
   "scripts": {
-    "installWeb3": "cd submodules/oracles-web3-1.0 && npm install && cd ../../ && npm install submodules/oracles-web3-1.0/packages/web3",
+    "installWeb3": "cd submodules/oracles-web3-1.0 && npm install && cd ../../ && npm install --no-save submodules/oracles-web3-1.0/packages/web3",
     "start": "npm run installWeb3 && npm run generateFlatSoliditySafeMathLibContract && npm run generateFlatSolidityCrowdsaleNullFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleContract && npm run generateFlatSolidityCrowdsaleTokenContract && npm run generateFlatSolidityCrowdsalePricingStrategyContract && npm run generateFlatSolidityRegistryContract && npm run compileSafeMathLibExtContract && npm run compileCrowdsaleNullFinalizeAgentContract && npm run compileCrowdsaleFinalizeAgentContract && npm run compileCrowdsaleContract && npm run compileCrowdsaleTokenContract && npm run compileCrowdsalePricingStrategyContract && npm run compileRegistryContract && node scripts/start.js",
     "dev": "npm run installWeb3 && npm run generateFlatSolidityRegistryContract && npm run compileRegistryContract && npm run deployRegistry && npm start",
     "dev:fast": "npm run installWeb3 && npm run generateFlatSolidityRegistryContract && npm run compileRegistryContract && npm run deployRegistry && node scripts/start.js",
