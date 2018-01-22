@@ -166,7 +166,7 @@ export const getconstructorParams = (abiConstructor, vals, crowdsaleNum) => {
           params.vals.push(tokenStore.decimals);
           break;
         case "_globalMinCap":
-          params.vals.push(tierStore.tiers[0].whitelistdisabled === "yes" ? tokenStore.globalmincap ? toFixed(tokenStore.globalmincap * 10**tokenStore.decimals).toString() : 0 : 0);
+          params.vals.push(tierStore.tiers[0].whitelistEnabled !== 'yes' ? tokenStore.globalmincap ? toFixed(tokenStore.globalmincap * 10 ** tokenStore.decimals).toString() : 0 : 0)
           break;
         case "_tokenSupply":
         case "_initialSupply":
@@ -207,7 +207,7 @@ export const getconstructorParams = (abiConstructor, vals, crowdsaleNum) => {
           params.vals.push(tierStore.tiers[crowdsaleNum].updatable ? tierStore.tiers[crowdsaleNum].updatable==="on" ? true : false : false);
           break;
         case "_isWhiteListed":
-          params.vals.push(tierStore.tiers[0].whitelistdisabled ? tierStore.tiers[0].whitelistdisabled==="yes" ? false : true : false);
+          params.vals.push(tierStore.tiers[0].whitelistEnabled ? tierStore.tiers[0].whitelistEnabled === "yes" : false)
           break;
         default:
           params.vals.push("");
@@ -264,7 +264,7 @@ export const validateSupply = (supply) =>  isNaN(Number(supply)) === false && Nu
 
 export const validateDecimals = (decimals) => isNaN(Number(decimals)) === false && Number(decimals) >= 0 && Number(decimals) <= 18
 
-export const validateTicker = (ticker) => typeof ticker === 'string' && ticker.length < 4 && ticker.length > 0
+export const validateTicker = (ticker) => typeof ticker === 'string' && ticker.length <= 5 && ticker.length > 0
 
 export const validateTime = (time) => getTimeAsNumber(time) > Date.now()
 

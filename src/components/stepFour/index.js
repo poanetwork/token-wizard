@@ -28,7 +28,8 @@ import {
   FILE_CONTENTS,
   NAVIGATION_STEPS,
   TOAST,
-  TRUNC_TO_DECIMALS
+  TRUNC_TO_DECIMALS,
+  DESCRIPTION
 } from '../../utils/constants'
 import { floorToDecimals, toast, toFixed } from '../../utils/utils'
 import { getEncodedABIClientSide } from '../../utils/microservices'
@@ -258,7 +259,7 @@ const { PUBLISH } = NAVIGATION_STEPS
 
     let minCap = 0
 
-    if (this.props.tierStore.tiers[0].whitelistdisabled === 'yes' && this.props.tierStore.globalMinCap) {
+    if (this.props.tierStore.tiers[0].whitelistEnabled !== 'yes' && this.props.tierStore.globalMinCap) {
       minCap = toFixed(this.props.tierStore.globalMinCap * 10 ** token.decimals).toString()
     }
 
@@ -383,7 +384,7 @@ const { PUBLISH } = NAVIGATION_STEPS
     const { contractStore, tierStore, tokenStore } = this.props
     const tier = tierStore.tiers[index]
     const initialTier = tierStore.tiers[0]
-    const whitelistDisabled = initialTier.whitelistdisabled
+    const { whitelistEnabled } = initialTier
 
     return [
       tier.tier,
@@ -395,7 +396,7 @@ const { PUBLISH } = NAVIGATION_STEPS
       toFixed('0'),
       toFixed(parseInt(tier.supply, 10) * 10 ** parseInt(tokenStore.decimals, 10)).toString(),
       tier.updatable ? tier.updatable === 'on' : false,
-      whitelistDisabled ? whitelistDisabled !== 'yes' : false
+      whitelistEnabled ? whitelistEnabled === 'yes' : false
     ]
   }
 
@@ -499,15 +500,15 @@ const { PUBLISH } = NAVIGATION_STEPS
     const tokenAddr = token.addr
     const crowdsaleAddr = crowdsale.addr
 
-    setLastCrowdsaleRecursive(pricingStrategyABI, pricingStrategy.addr, crowdsaleAddr.slice(-1)[0], 142982)
+    setLastCrowdsaleRecursive(pricingStrategyABI, pricingStrategy.addr, crowdsaleAddr.slice(-1)[0])
       .then(() => setReservedTokensListMultiple(tokenABI, tokenAddr, tokenStore, reservedTokenStore))
-      .then(() => updateJoinedCrowdsalesRecursive(crowdsaleABI, crowdsaleAddr, 293146))
-      .then(() => setMintAgentRecursive(tokenABI, tokenAddr, crowdsaleAddr, 68425))
-      .then(() => setMintAgentRecursive(tokenABI, tokenAddr, currFinalizeAgentAddr, 68425))
+      .then(() => updateJoinedCrowdsalesRecursive(crowdsaleABI, crowdsaleAddr))
+      .then(() => setMintAgentRecursive(tokenABI, tokenAddr, crowdsaleAddr))
+      .then(() => setMintAgentRecursive(tokenABI, tokenAddr, currFinalizeAgentAddr))
       .then(() => addWhiteListRecursive(tierStore, tokenStore, crowdsaleABI, crowdsaleAddr))
-      .then(() => setFinalizeAgentRecursive(crowdsaleABI, crowdsaleAddr, currFinalizeAgentAddr, 68622))
-      .then(() => setReleaseAgentRecursive(tokenABI, tokenAddr, currFinalizeAgentAddr, 65905))
-      .then(() => transferOwnership(tokenABI, tokenAddr, tierStore.tiers[0].walletAddress, 46699))
+      .then(() => setFinalizeAgentRecursive(crowdsaleABI, crowdsaleAddr, currFinalizeAgentAddr))
+      .then(() => setReleaseAgentRecursive(tokenABI, tokenAddr, currFinalizeAgentAddr))
+      .then(() => transferOwnership(tokenABI, tokenAddr, tierStore.tiers[0].walletAddress))
       .then(() => this.hideLoader())
       .catch(this.handleError.bind(this))
   }
@@ -713,7 +714,7 @@ const { PUBLISH } = NAVIGATION_STEPS
                   side='right'
                   title='Ticker'
                   value={tokenStore.ticker ? tokenStore.ticker : ""}
-                  description="The three letter ticker for your token."
+                  description={DESCRIPTION.TOKEN_TICKER}
                 />
               </div>
               <div className="hidden">
@@ -749,7 +750,7 @@ const { PUBLISH } = NAVIGATION_STEPS
                 description="Optimization in compiling"
               />
             </div>
-            {tierStore.tiers[0].whitelistdisabled === "yes" ? globalLimitsBlock : ""}
+            {tierStore.tiers[0].whitelistEnabled !== "yes" ? globalLimitsBlock : ""}
             {tokenBlock}
             {pricingStrategyBlock}
             {ABIEncodedOutputsPricingStrategy}

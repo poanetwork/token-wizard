@@ -1,7 +1,7 @@
 import React from "react";
 import "../../assets/stylesheets/application.css";
 import { Link } from "react-router-dom";
-import { setExistingContractParams } from "../../utils/blockchainHelpers";
+import { setExistingContractParams, getNetworkVersion, getNetWorkNameById } from "../../utils/blockchainHelpers";
 import { defaultCompanyStartDate } from "./utils";
 import { defaultCompanyEndDate, gweiToWei, weiToGwei } from "../../utils/utils";
 import { StepNavigation } from "../Common/StepNavigation";
@@ -14,11 +14,12 @@ import {
   VALIDATION_MESSAGES,
   VALIDATION_TYPES,
   TEXT_FIELDS,
-  CONTRACT_TYPES
+  CONTRACT_TYPES,
+  CHAINS
 } from "../../utils/constants";
 import { inject, observer } from "mobx-react";
 import { Loader } from '../Common/Loader'
-import { noGasPriceAvailable } from '../../utils/alerts'
+import { noGasPriceAvailable, warningOnMainnetAlert, mainnetIsOnMaintenance } from '../../utils/alerts'
 
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS;
 const { EMPTY, VALID } = VALIDATION_TYPES;
@@ -31,10 +32,10 @@ const {
   WALLET_ADDRESS,
   CROWDSALE_SETUP_NAME,
   ALLOWMODIFYING,
-  DISABLEWHITELISTING
+  ENABLE_WHITELISTING
 } = TEXT_FIELDS;
 
-@inject("contractStore", "crowdsaleBlockListStore", "pricingStrategyStore", "web3Store", "tierStore", "generalStore", "gasPriceStore")
+@inject("contractStore", "crowdsaleBlockListStore", "pricingStrategyStore", "web3Store", "tierStore", "generalStore", "gasPriceStore", "reservedTokenStore")
 @observer
 export class stepThree extends React.Component {
   constructor(props) {
@@ -48,7 +49,7 @@ export class stepThree extends React.Component {
     crowdsaleBlockListStore.emptyList();
     tierStore.setTierProperty("Tier 1", "tier", 0);
     tierStore.setTierProperty("off", "updatable", 0);
-    tierStore.setTierProperty("yes", "whitelistdisabled", 0);
+    tierStore.setTierProperty("no", "whitelistEnabled", 0);
 
     this.state = {
       loading: true,
@@ -94,8 +95,6 @@ export class stepThree extends React.Component {
 
     tierStore.addTier(newTier);
     tierStore.addTierValidations(newTierValidations);
-    //newState.crowdsale[num].startTime = newState.crowdsale[num - 1].endTime;
-    //newState.crowdsale[num].endTime = defaultCompanyEndDate(newState.crowdsale[num].startTime);
     this.addCrowdsaleBlock(num);
   }
 
@@ -119,10 +118,8 @@ export class stepThree extends React.Component {
     pricingStrategyStore.setStrategyProperty(value, property, index);
   };
 
-  gotoDeploymentStage() {
-    this.setState({
-      redirect: true
-    });
+  goToDeploymentStage = () => {
+    this.props.history.push('/4')
   }
 
   addCrowdsaleBlock(num) {
@@ -159,18 +156,32 @@ export class stepThree extends React.Component {
     }
 
     if (tierStore.areTiersValid) {
-      this.props.history.push("/4");
+      getNetworkVersion()
+        .then(networkID => {
+          if (getNetWorkNameById(networkID) === CHAINS.MAINNET) {
+            const { generalStore, reservedTokenStore } = this.props
 
-      //if mainnet is on maintenance
-      /*web3Store.getWeb3((web3) => {
-        getNetworkVersion(web3Store.web3)
-          .then((networkId) => {
-            if (networkId == 1)
-              mainnetIsOnMaintenance();
-            else
-              this.props.history.push("/4");
-          })
-      });*/
+            const tiersCount = tierStore.tiers.length
+            const priceSelected = generalStore.gasPrice
+            const reservedCount = reservedTokenStore.tokens.length
+            let whitelistCount = 0
+
+            if (tierStore.tiers[0].whitelistdisabled === 'no') {
+              whitelistCount = tierStore.tiers.reduce((total, tier) => {
+                total += tier.whitelist.filter(address => !address.deleted).length
+                return total
+              }, 0)
+            }
+
+            //return warningOnMainnetAlert(tiersCount, priceSelected, reservedCount, whitelistCount, this.goToDeploymentStage)
+            return mainnetIsOnMaintenance()
+          }
+          this.goToDeploymentStage()
+        })
+        .catch(error => {
+          console.error(error)
+          this.showErrorMessages(e)
+        })
     } else {
       this.showErrorMessages(e);
     }
@@ -184,11 +195,9 @@ export class stepThree extends React.Component {
     tierStore.setTierProperty(defaultCompanyEndDate(tierStore.tiers[0].startTime), "endTime", 0);
 
     gasPriceStore.updateValues()
+      .then(() => this.setGasPrice(gasPriceStore.slow))
+      .catch(() => noGasPriceAvailable())
       .then(() => this.setState({ loading: false }))
-      .catch(() => {
-        this.setState({ loading: false })
-        noGasPriceAvailable()
-      })
   }
 
   setGasPrice({ id, price }) {
@@ -274,9 +283,9 @@ export class stepThree extends React.Component {
     );
   }
 
-  updateWhitelistDisabled = (e) => {
+  updateWhitelistEnabled = (e) => {
     this.props.tierStore.setGlobalMinCap('')
-    this.updateTierStore(e, "whitelistdisabled", 0)
+    this.updateTierStore(e, "whitelistEnabled", 0)
   }
 
   render() {
@@ -303,7 +312,7 @@ export class stepThree extends React.Component {
           <InputField
             side="left"
             type="number"
-            disabled={tierStore.tiers[0].whitelistdisabled === "no"}
+            disabled={tierStore.tiers[0].whitelistEnabled === "yes"}
             title={MINCAP}
             value={tierStore.globalMinCap}
             valid={VALID}
@@ -313,15 +322,15 @@ export class stepThree extends React.Component {
           />
           <RadioInputField
             side="right"
-            title={DISABLEWHITELISTING}
+            title={ENABLE_WHITELISTING}
             items={["yes", "no"]}
             vals={["yes", "no"]}
             state={this.state}
             num={0}
-            defaultValue={tierStore.tiers[0].whitelistdisabled}
-            name="crowdsale-whitelistdisabled-0"
-            onChange={e => this.updateWhitelistDisabled(e)}
-            description={`Disables whitelistings. Anyone can buy on the tier.`}
+            defaultValue={tierStore.tiers[0].whitelistEnabled}
+            name="crowdsale-whitelistEnabled-0"
+            onChange={e => this.updateWhitelistEnabled(e)}
+            description={`Enables whitelisting. If disabled, anyone can participate in the crowdsale.`}
           />
         </div>
       </div>
@@ -422,7 +431,7 @@ export class stepThree extends React.Component {
                 />
               </div>
             </div>
-            {tierStore.tiers[0].whitelistdisabled === "yes" ? "" : whitelistInputBlock}
+            {tierStore.tiers[0].whitelistEnabled === "yes" ? whitelistInputBlock : ""}
           </div>
 
           {/* Other tiers */}

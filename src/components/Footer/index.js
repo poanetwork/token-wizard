@@ -1,11 +1,12 @@
 import React from 'react'
 import '../../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom'
+import moment from "moment";
 
 export const Footer = () => (
   <footer className="footer">
     <div className="container">
-      <p className="rights">2017 POA Network. All rights reserved.</p>
+      <p className="rights">{moment().format("YYYY")} POA Network. All rights reserved.</p>
       <Link className="logo" to='/'></Link>
       <div className="socials">
         <a href="https://twitter.com/oraclesorg" className="social social_twitter">Twitter</a>

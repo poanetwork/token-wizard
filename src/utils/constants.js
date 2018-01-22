@@ -59,6 +59,22 @@ export const TRUNC_TO_DECIMALS = {
   DECIMALS18: -18
 }
 
+export const DEPLOYMENT_VALUES = {
+  GAS_REQUIRED: {
+    DEFAULT: 8044737,
+    WHITELIST: 96040,
+    RESERVED_TOKEN: 42220
+
+  },
+  TX_REQUIRED: {
+    DEFAULT: 13,
+    WHITELIST: 1,
+    RESERVED_TOKEN: 1
+  }
+}
+
+export const MAX_GAS_PRICE = 4016260
+
 export const GAS_PRICE = {
   SLOW: {
     ID: 'slow',
@@ -112,7 +128,7 @@ export const NAVIGATION_STEPS = {
 export const VALIDATION_MESSAGES = {
   TIER: 'Please enter a valid tier name between 1-30 characters',
   NAME: 'Please enter a valid name between 1-30 characters',
-  TICKER: 'Please enter a valid Ticker that is less than three characters',
+  TICKER: 'Please enter a valid Ticker that is less or equal than five characters',
   SUPPLY: 'Please enter a valid number greater than 0',
   DECIMALS: 'Please enter a number between zero and 18',
   WALLET_ADDRESS: 'Please enter a valid address',
@@ -122,6 +138,11 @@ export const VALIDATION_MESSAGES = {
   EDITED_END_TIME: 'Please enter a valid date later than start time and previous than start time of next tier',
   EDITED_START_TIME: 'Please enter a valid date later than now, less than end time and later than the end time of the previous tier',
   RATE: 'Please enter a valid number greater than 0'
+}
+
+//descriptions of input fields
+export const DESCRIPTION = {
+  TOKEN_TICKER: 'The five letter ticker for your token.'
 }
 
 export const TEXT_FIELDS = {
@@ -142,7 +163,7 @@ export const TEXT_FIELDS = {
   VALUE: 'Value',
   MAX_CAP: 'Max cap',
   ALLOWMODIFYING: 'Allow modifying',
-  DISABLEWHITELISTING: 'Disable whitelisting',
+  ENABLE_WHITELISTING: 'Enable whitelisting',
   GAS_PRICE: 'Gas Price'
 }
 

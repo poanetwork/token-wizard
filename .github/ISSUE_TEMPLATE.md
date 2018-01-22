@@ -14,10 +14,10 @@ If you are reporting a problem with ICO Wizard, please include the following inf
 
 ### Do you see errors in the dev console? If yes, please include a screenshot
 
-(To open the dev console in Google Chrome, press F12, or go to `View -> Developer -> Developer Tools`, and open the Console tab)
+To open the dev console in Google Chrome, press F12, or go to `View -> Developer -> Developer Tools`, and open the Console tab
+
+If you see errors, please right click on them and "Save as..". Zip saved file and attach it to the Issue.
 
 *Your answer*
 
 ---
-
-

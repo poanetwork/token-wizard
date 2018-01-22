@@ -5,7 +5,7 @@ import { checkWeb3 } from '../../utils/blockchainHelpers'
 import { StepNavigation } from '../Common/StepNavigation'
 import { InputField } from '../Common/InputField'
 import { ReservedTokensInputBlock } from '../Common/ReservedTokensInputBlock'
-import { NAVIGATION_STEPS, VALIDATION_MESSAGES, TEXT_FIELDS } from '../../utils/constants'
+import { NAVIGATION_STEPS, VALIDATION_MESSAGES, TEXT_FIELDS, DESCRIPTION } from '../../utils/constants'
 import { inject, observer } from 'mobx-react';
 const { TOKEN_SETUP } = NAVIGATION_STEPS
 const { NAME, TICKER, DECIMALS } = TEXT_FIELDS
@@ -65,7 +65,7 @@ export class stepTwo extends Component {
               title={TICKER}
               value={this.props.tokenStore.ticker}
               onChange={(e) => this.updateTokenStore(e, 'ticker')}
-              description={`The three letter ticker for your token. There are 17,576 combinations for 26 english letters. Be hurry. `}
+              description={`${DESCRIPTION.TOKEN_TICKER} There are 11,881,376 combinations for 26 english letters. Be hurry. `}
             />
             <InputField
               side='left' type='number'

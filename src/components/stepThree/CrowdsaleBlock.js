@@ -117,7 +117,7 @@ export class CrowdsaleBlock extends React.Component {
             />
           </div>
         </div>
-        {tierStore.tiers[0].whitelistdisabled === "yes" ? "" : whitelistInputBlock}
+        {tierStore.tiers[0].whitelistEnabled === "yes" ? whitelistInputBlock : ""}
       </div>
     );
   }
