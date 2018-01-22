@@ -360,7 +360,7 @@ export class stepThree extends React.Component {
             <div className="hidden">
               <div className="input-block-container">
                 <InputField
-                  extraClassName="left"
+                  side="left"
                   type="text"
                   title={CROWDSALE_SETUP_NAME}
                   value={tierStore.tiers[0].tier}
