@@ -500,15 +500,15 @@ const { PUBLISH } = NAVIGATION_STEPS
     const tokenAddr = token.addr
     const crowdsaleAddr = crowdsale.addr
 
-    setLastCrowdsaleRecursive(pricingStrategyABI, pricingStrategy.addr, crowdsaleAddr.slice(-1)[0], 142982)
+    setLastCrowdsaleRecursive(pricingStrategyABI, pricingStrategy.addr, crowdsaleAddr.slice(-1)[0])
       .then(() => setReservedTokensListMultiple(tokenABI, tokenAddr, tokenStore, reservedTokenStore))
-      .then(() => updateJoinedCrowdsalesRecursive(crowdsaleABI, crowdsaleAddr, 293146))
-      .then(() => setMintAgentRecursive(tokenABI, tokenAddr, crowdsaleAddr, 68425))
-      .then(() => setMintAgentRecursive(tokenABI, tokenAddr, currFinalizeAgentAddr, 68425))
+      .then(() => updateJoinedCrowdsalesRecursive(crowdsaleABI, crowdsaleAddr))
+      .then(() => setMintAgentRecursive(tokenABI, tokenAddr, crowdsaleAddr))
+      .then(() => setMintAgentRecursive(tokenABI, tokenAddr, currFinalizeAgentAddr))
       .then(() => addWhiteListRecursive(tierStore, tokenStore, crowdsaleABI, crowdsaleAddr))
-      .then(() => setFinalizeAgentRecursive(crowdsaleABI, crowdsaleAddr, currFinalizeAgentAddr, 68622))
-      .then(() => setReleaseAgentRecursive(tokenABI, tokenAddr, currFinalizeAgentAddr, 65905))
-      .then(() => transferOwnership(tokenABI, tokenAddr, tierStore.tiers[0].walletAddress, 46699))
+      .then(() => setFinalizeAgentRecursive(crowdsaleABI, crowdsaleAddr, currFinalizeAgentAddr))
+      .then(() => setReleaseAgentRecursive(tokenABI, tokenAddr, currFinalizeAgentAddr))
+      .then(() => transferOwnership(tokenABI, tokenAddr, tierStore.tiers[0].walletAddress))
       .then(() => this.hideLoader())
       .catch(this.handleError.bind(this))
   }
