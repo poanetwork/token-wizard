@@ -326,14 +326,10 @@ export class stepThree extends React.Component {
             description={`Minimum amount tokens to buy. Not a minimal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.`}
           />
           <RadioInputField
-            side="right"
+            extraClassName="right"
             title={ENABLE_WHITELISTING}
-            items={["yes", "no"]}
-            vals={["yes", "no"]}
-            state={this.state}
-            num={0}
+            items={[{ label: 'yes', value: 'yes' }, { label: 'no', value: 'no' }]}
             defaultValue={tierStore.tiers[0].whitelistEnabled}
-            name="crowdsale-whitelistEnabled-0"
             onChange={e => this.updateWhitelistEnabled(e)}
             description={`Enables whitelisting. If disabled, anyone can participate in the crowdsale.`}
           />
@@ -379,14 +375,10 @@ export class stepThree extends React.Component {
                   description={`Name of a tier, e.g. PrePreIco, PreICO, ICO with bonus A, ICO with bonus B, etc. We simplified that and will increment a number after each tier.`}
                 />
                 <RadioInputField
-                  side="right"
+                  extraClassName="right"
                   title={ALLOWMODIFYING}
-                  items={["on", "off"]}
-                  vals={["on", "off"]}
-                  state={this.state}
-                  num={0}
-                  defaultValue={tierStore.tiers[0].updatable}
-                  name="crowdsale-updatable-0"
+                  items={[{ label: 'on', value: 'on' }, { label: 'off', value: 'off' }]}
+                  defaultValue="off"
                   onChange={e => this.updateTierStore(e, "updatable", 0)}
                   description={`Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing.`}
                 />
