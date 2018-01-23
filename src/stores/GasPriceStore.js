@@ -9,8 +9,8 @@ class GasPriceStore {
   @observable fast
   @observable instant
   @observable custom
-  @observable blockNumber
-  @observable blockTime
+  @observable block_number
+  @observable block_time
   @observable health
 
   constructor () {
