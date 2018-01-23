@@ -19,7 +19,7 @@ import {
 } from "../../utils/constants";
 import { inject, observer } from "mobx-react";
 import { Loader } from '../Common/Loader'
-import { noGasPriceAvailable, warningOnMainnetAlert, mainnetIsOnMaintenance } from '../../utils/alerts'
+import { noGasPriceAvailable, warningOnMainnetAlert } from '../../utils/alerts'
 
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS;
 const { EMPTY, VALID } = VALIDATION_TYPES;
@@ -173,8 +173,7 @@ export class stepThree extends React.Component {
               }, 0)
             }
 
-            //return warningOnMainnetAlert(tiersCount, priceSelected, reservedCount, whitelistCount, this.goToDeploymentStage)
-            return mainnetIsOnMaintenance()
+            return warningOnMainnetAlert(tiersCount, priceSelected, reservedCount, whitelistCount, this.goToDeploymentStage)
           }
           this.goToDeploymentStage()
         })
