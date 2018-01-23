@@ -11,7 +11,7 @@ const {VALID, INVALID} = VALIDATION_TYPES;
 
 const {ADDRESS, DIMENSION, VALUE} = TEXT_FIELDS;
 
-@inject('reservedTokenStore', 'reservedTokenInputStore', 'reservedTokenElementStore') @observer
+@inject('reservedTokenStore', 'reservedTokenInputStore') @observer
 export class ReservedTokensInputBlock extends React.Component {
   constructor(props) {
     super(props);
