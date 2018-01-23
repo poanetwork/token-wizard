@@ -1,7 +1,6 @@
 import contractStore from './ContractStore';
 import pricingStrategyStore from './PricingStrategyStore';
 import reservedTokenStore from './ReservedTokenStore';
-import reservedTokenInputStore from './ReservedTokenInputStore';
 import stepThreeValidationStore from './StepThreeValidationStore';
 import stepTwoValidationStore from './StepTwoValidationStore';
 import tierStore from './TierStore';
@@ -23,7 +22,6 @@ export {
     contractStore,
     pricingStrategyStore,
     reservedTokenStore,
-    reservedTokenInputStore,
     stepThreeValidationStore,
     stepTwoValidationStore,
     tierStore,

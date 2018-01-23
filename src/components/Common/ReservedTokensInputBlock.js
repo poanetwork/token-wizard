@@ -11,12 +11,15 @@ const {VALID, INVALID} = VALIDATION_TYPES;
 
 const {ADDRESS, DIMENSION, VALUE} = TEXT_FIELDS;
 
-@inject('reservedTokenStore', 'reservedTokenInputStore') @observer
+@inject('reservedTokenStore') @observer
 export class ReservedTokensInputBlock extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      addr: '',
+      dim: 'tokens',
+      val: '',
       validation: {
         address: {
           pristine: true,
@@ -26,15 +29,23 @@ export class ReservedTokensInputBlock extends React.Component {
     }
   }
 
+  clearInput() {
+    this.setState({
+      addr: '',
+      dim: 'tokens',
+      val: ''
+    })
+  }
+
   updateReservedTokenInput = (event, property) => {
     const value = event.target.value;
-    this.props.reservedTokenInputStore.setProperty(property, value);
+    this.setState({
+      [property]: value
+    });
   };
 
   addReservedTokensItem = () => {
-    const addr = this.props.reservedTokenInputStore.addr.toString();
-    const dim = this.props.reservedTokenInputStore.dim.toString();
-    const val = this.props.reservedTokenInputStore.val.toString();
+    const { addr, dim, val } = this.state
 
     this.setState(update(this.state, {
       validation: {
@@ -59,7 +70,7 @@ export class ReservedTokensInputBlock extends React.Component {
       }
     }))
 
-    this.props.reservedTokenInputStore.clearInput();
+    this.clearInput();
 
     let newToken = {
       addr: addr,
@@ -107,8 +118,6 @@ export class ReservedTokensInputBlock extends React.Component {
   };
 
   handleAddressChange = e => {
-    this.updateReservedTokenInput(e, 'addr')
-
     const address = e.target.value
     const isAddressValid = Web3.utils.isAddress(address) ? VALID : INVALID;
 
@@ -122,6 +131,7 @@ export class ReservedTokensInputBlock extends React.Component {
         },
       },
     });
+    newState.addr = address
 
     this.setState(newState)
   }
@@ -148,7 +158,7 @@ export class ReservedTokensInputBlock extends React.Component {
               side="reserved-tokens-input-property reserved-tokens-input-property-left"
               type="text"
               title={ADDRESS}
-              value={this.props.reservedTokenInputStore.addr}
+              value={this.state.addr}
               onChange={e => this.handleAddressChange(e)}
               description={`Address where to send reserved tokens.`}
               pristine={this.state.validation.address.pristine}
@@ -166,7 +176,7 @@ export class ReservedTokensInputBlock extends React.Component {
               side="reserved-tokens-input-property reserved-tokens-input-property-right"
               type="number"
               title={VALUE}
-              value={this.props.reservedTokenInputStore.val}
+              value={this.state.val}
               onChange={e => this.updateReservedTokenInput(e, 'val')}
               description={`Value in tokens or percents. Don't forget to press + button for each reserved token.`}
             />
