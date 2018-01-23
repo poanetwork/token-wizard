@@ -1,6 +1,7 @@
 import { action, observable } from 'mobx'
 import { GAS_PRICE } from '../utils/constants'
 import { gweiToWei, weiToGwei } from '../utils/utils'
+import { gasPriceValues } from '../utils/api'
 
 class GasPriceStore {
   @observable slow
@@ -63,8 +64,7 @@ class GasPriceStore {
   }
 
   @action updateValues = () => {
-    return fetch(GAS_PRICE.API.URL)
-      .then(response => response.json())
+    return gasPriceValues()
       .then(oracle => {
         for (let key in oracle) {
           if (oracle.hasOwnProperty(key)) {
