@@ -79,6 +79,9 @@ class GasPriceStore {
         this.setProperty('standard', weiToGwei(GAS_PRICE.NORMAL.PRICE))
         this.setProperty('instant', weiToGwei(GAS_PRICE.INSTANT.PRICE))
         this.setProperty('custom', weiToGwei(GAS_PRICE.CUSTOM.PRICE))
+        this.setProperty('block_number', undefined)
+        this.setProperty('block_time', undefined)
+        this.setProperty('health', undefined)
 
         return Promise.reject(error)
       })
