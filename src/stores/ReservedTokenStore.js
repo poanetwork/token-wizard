@@ -9,7 +9,7 @@ class ReservedTokenStore {
   }
 
   @action addToken = (token) => {
-    const currentToken = this.tokens.find(t => t.addr === token.addr)
+    const currentToken = this.tokens.find(t => t.addr === token.addr && t.dim == token.dim)
 
     if (currentToken) {
       const index = this.tokens.indexOf(currentToken)
