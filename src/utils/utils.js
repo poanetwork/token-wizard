@@ -45,40 +45,37 @@ export function setFlatFileContentToState(file) {
 }
 
 export function getWhiteListWithCapCrowdsaleAssets() {
-  return new Promise((resolve, reject) => {
-    const contractsRoute = './contracts/'
-    const crowdsaleFilename = 'CrowdsaleWhiteListWithCap'
-    const binAbi = ['bin', 'abi']
+  const contractsRoute = './contracts/'
+  const crowdsaleFilename = 'CrowdsaleWhiteListWithCap'
+  const binAbi = ['bin', 'abi']
 
-    const crowdsaleFiles = ['sol', ...binAbi].map(ext => `${contractsRoute}${crowdsaleFilename}_flat.${ext}`)
-    const tokenFiles = binAbi.map(ext => `${contractsRoute}${crowdsaleFilename}Token_flat.${ext}`)
-    const pricingFiles = binAbi.map(ext => `${contractsRoute}${crowdsaleFilename}PricingStrategy_flat.${ext}`)
-    const finalizeFiles = binAbi.map(ext => `${contractsRoute}FinalizeAgent_flat.${ext}`)
-    const nullFiles = binAbi.map(ext => `${contractsRoute}NullFinalizeAgent_flat.${ext}`)
-    const registryFiles = binAbi.map(ext => `${contractsRoute}Registry_flat.${ext}`)
+  const crowdsaleFiles = ['sol', ...binAbi].map(ext => `${contractsRoute}${crowdsaleFilename}_flat.${ext}`)
+  const tokenFiles = binAbi.map(ext => `${contractsRoute}${crowdsaleFilename}Token_flat.${ext}`)
+  const pricingFiles = binAbi.map(ext => `${contractsRoute}${crowdsaleFilename}PricingStrategy_flat.${ext}`)
+  const finalizeFiles = binAbi.map(ext => `${contractsRoute}FinalizeAgent_flat.${ext}`)
+  const nullFiles = binAbi.map(ext => `${contractsRoute}NullFinalizeAgent_flat.${ext}`)
+  const registryFiles = binAbi.map(ext => `${contractsRoute}Registry_flat.${ext}`)
 
-    const states = crowdsaleFiles.concat(tokenFiles, pricingFiles, finalizeFiles, nullFiles, registryFiles)
-      .map(setFlatFileContentToState)
+  const states = crowdsaleFiles.concat(tokenFiles, pricingFiles, finalizeFiles, nullFiles, registryFiles)
+    .map(setFlatFileContentToState)
 
-    Promise.all(states)
-      .then(state => {
-        contractStore.setContractProperty('crowdsale', 'src', state[0])
-        contractStore.setContractProperty('crowdsale', 'bin', state[1])
-        contractStore.setContractProperty('crowdsale', 'abi', JSON.parse(state[2]))
-        contractStore.setContractProperty('token', 'bin', state[3])
-        contractStore.setContractProperty('token', 'abi', JSON.parse(state[4]))
-        contractStore.setContractProperty('pricingStrategy', 'bin', state[5])
-        contractStore.setContractProperty('pricingStrategy', 'abi', JSON.parse(state[6]))
-        contractStore.setContractProperty('finalizeAgent', 'bin', state[7])
-        contractStore.setContractProperty('finalizeAgent', 'abi', JSON.parse(state[8]))
-        contractStore.setContractProperty('nullFinalizeAgent', 'bin', state[9])
-        contractStore.setContractProperty('nullFinalizeAgent', 'abi', JSON.parse(state[10]))
-        contractStore.setContractProperty('registry', 'bin', state[11])
-        contractStore.setContractProperty('registry', 'abi', JSON.parse(state[12]))
-        resolve(contractStore)
-      })
-      .catch(reject)
-  })
+  return Promise.all(states)
+    .then(state => {
+      contractStore.setContractProperty('crowdsale', 'src', state[0])
+      contractStore.setContractProperty('crowdsale', 'bin', state[1])
+      contractStore.setContractProperty('crowdsale', 'abi', JSON.parse(state[2]))
+      contractStore.setContractProperty('token', 'bin', state[3])
+      contractStore.setContractProperty('token', 'abi', JSON.parse(state[4]))
+      contractStore.setContractProperty('pricingStrategy', 'bin', state[5])
+      contractStore.setContractProperty('pricingStrategy', 'abi', JSON.parse(state[6]))
+      contractStore.setContractProperty('finalizeAgent', 'bin', state[7])
+      contractStore.setContractProperty('finalizeAgent', 'abi', JSON.parse(state[8]))
+      contractStore.setContractProperty('nullFinalizeAgent', 'bin', state[9])
+      contractStore.setContractProperty('nullFinalizeAgent', 'abi', JSON.parse(state[10]))
+      contractStore.setContractProperty('registry', 'bin', state[11])
+      contractStore.setContractProperty('registry', 'abi', JSON.parse(state[12]))
+      return contractStore
+    })
 }
 
 export function fetchFile(path) {
