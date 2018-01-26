@@ -328,8 +328,10 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
 const setCurrentContract = (contract, index) => {
   const currentDate = new Date().getTime()
   const { startDate, endDate } = contract
+  const isActive = startDate <= currentDate && currentDate <= endDate
+  const isFirstTier = index === 0
 
-  if (index === 0 && currentDate < startDate || startDate <= currentDate && currentDate <= endDate) {
+  if (isActive || (isFirstTier && currentDate < startDate)) {
     contract.current = true
   }
 
