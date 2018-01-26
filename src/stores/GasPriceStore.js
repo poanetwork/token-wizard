@@ -63,8 +63,8 @@ class GasPriceStore {
     }
   }
 
-  @action updateValues = () => {
-    return gasPriceValues()
+  @action updateValues = (param) => {
+    return gasPriceValues(param)
       .then(oracle => {
         for (let key in oracle) {
           if (oracle.hasOwnProperty(key)) {
@@ -73,18 +73,7 @@ class GasPriceStore {
         }
         return Promise.resolve()
       })
-      .catch(error => {
-        this.setProperty('slow', weiToGwei(GAS_PRICE.SLOW.PRICE))
-        this.setProperty('fast', weiToGwei(GAS_PRICE.FAST.PRICE))
-        this.setProperty('standard', weiToGwei(GAS_PRICE.NORMAL.PRICE))
-        this.setProperty('instant', weiToGwei(GAS_PRICE.INSTANT.PRICE))
-        this.setProperty('custom', weiToGwei(GAS_PRICE.CUSTOM.PRICE))
-        this.setProperty('block_number', undefined)
-        this.setProperty('block_time', undefined)
-        this.setProperty('health', undefined)
-
-        return Promise.reject(error)
-      })
+      .catch(error => Promise.reject(error))
   }
 }
 

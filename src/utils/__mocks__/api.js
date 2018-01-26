@@ -1,8 +1,10 @@
-const fs = require('fs')
-
-export const gasPriceValues = () => new Promise((resolve, reject) => {
-  fs.readFile('src/utils/__mocks__/gasPrice.json', 'utf-8', (err, data) => {
-    if (err) reject(err)
-    resolve(JSON.parse(data))
+export const gasPriceValues = (endpoint = 'gasPrice') => {
+  return new Promise((resolve, reject) => {
+    try {
+      const data = require(`./${endpoint}`)
+      resolve(data)
+    } catch (e) {
+      reject('no data')
+    }
   })
-})
+}
