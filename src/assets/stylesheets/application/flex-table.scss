@@ -1,4 +1,4 @@
-.crowdsale-table {
+.flex-table {
   .container-fluid {
     position: relative;
     width: 100%;
@@ -20,10 +20,6 @@
 
   .sm-text, .text {
     flex-grow: 2;
-    -webkit-flex-grow: 2;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
     padding-right: 0;
   }
 
@@ -48,6 +44,8 @@
     border-collapse: collapse;
     padding-bottom: 15px;
     padding-top: 15px;
+    align-items: center;
+
     &.flex-table-header {
       padding-top: 8px;
       padding-bottom: 8px;
@@ -57,14 +55,25 @@
       background-color: #08b3f2;
       color: #fff;
     }
-    &:hover {
-      cursor: pointer;
+    &.clickable {
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    &.datagrid {
+      padding-bottom: 5px;
+      padding-top: 5px;
+
+      &:nth-child(even) {
+        background-color: #e8e8e8;
+      }
     }
   }
 
   .scrollable-content {
     border: 1px solid lightgray;
-    height: 185px;
+    min-height: 185px;
+    max-height: 600px;
     overflow-x: hidden;
     overflow-y: auto;
     &::-webkit-scrollbar {

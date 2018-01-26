@@ -15,6 +15,7 @@ import crowdsalePageStore from './CrowdsalePageStore'
 import investStore from './InvestStore'
 import crowdsaleStore from './CrowdsaleStore'
 import gasPriceStore from './GasPriceStore'
+import deploymentStore from './DeploymentStore'
 
 export {
     generalStore,
@@ -33,5 +34,6 @@ export {
     web3Store,
     investStore,
     crowdsaleStore,
-    gasPriceStore
+    gasPriceStore,
+    deploymentStore
 };
