@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import CrowdsalesList from '../Common/CrowdsalesList'
 import { Loader } from '../Common/Loader'
 import { loadRegistryAddresses } from '../../utils/blockchainHelpers'
+import { ModalContainer } from '../Common/ModalContainer'
 
 export class Home extends Component {
   constructor (props) {
@@ -37,29 +38,11 @@ export class Home extends Component {
     this.props.history.push('/manage/' + crowdsaleAddress)
   }
 
-  renderModal = () => {
-    return (
-      <div className="crowdsale-modal loading-container">
-        <div className='modal'>
-          <p className='title'>Crowdsales List</p>
-          <p className='description'>The list of your updatable crowdsales. Choose crowdsale address, click Continue and
-            you'll be able to update the parameters of crowdsale.</p>
-          <CrowdsalesList onClick={this.onClick}/>
-          <div className='close-button' onClick={() => this.hideModal()}><i className="icon"/></div>
-        </div>
-      </div>
-    )
-  }
-
   hideModal = () => {
     this.setState({ showModal: false })
   }
 
   render () {
-    const chooseContractModal = this.state.showModal
-      ? this.renderModal()
-      : null
-
     return (
       <div>
         <section className="home">
@@ -115,7 +98,15 @@ export class Home extends Component {
               </div>
             </div>
           </div>
-          {chooseContractModal}
+          <ModalContainer
+            title={'Crowdsale List'}
+            description={`The list of your updatable crowdsales. Choose crowdsale address, click Continue and you'll be
+           able to update the parameters of crowdsale.`}
+            hideModal={this.hideModal}
+            showModal={this.state.showModal}
+          >
+            <CrowdsalesList onClick={this.onClick}/>
+          </ModalContainer>
           <Loader show={this.state.loading}></Loader>
         </section>
       </div>

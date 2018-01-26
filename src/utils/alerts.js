@@ -157,6 +157,14 @@ export function successfulUpdateCrowdsaleAlert() {
   });
 }
 
+export function successfulDeployment() {
+  sweetAlert2({
+    title: "Success",
+    html: "Transactions signed successfully!",
+    type: "success"
+  })
+}
+
 export function mainnetIsOnMaintenance() {
   sweetAlert2({
     title: "Warning",

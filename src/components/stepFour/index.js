@@ -21,7 +21,7 @@ import {
   transferOwnership,
   updateJoinedCrowdsalesRecursive
 } from './utils'
-import { noContractDataAlert, noMetaMaskAlert } from '../../utils/alerts'
+import { noContractDataAlert, noMetaMaskAlert, successfulDeployment } from '../../utils/alerts'
 import {
   CONTRACT_TYPES,
   DOWNLOAD_TYPE,
@@ -37,6 +37,8 @@ import { StepNavigation } from '../Common/StepNavigation'
 import { DisplayField } from '../Common/DisplayField'
 import { DisplayTextArea } from '../Common/DisplayTextArea'
 import { Loader } from '../Common/Loader'
+import { TxProgressStatus } from '../Common/TxProgressStatus'
+import { ModalContainer } from '../Common/ModalContainer'
 import { copy } from '../../utils/copy'
 import { inject, observer } from 'mobx-react'
 import { isObservableArray } from 'mobx'
@@ -44,14 +46,14 @@ import JSZip from 'jszip'
 
 const { PUBLISH } = NAVIGATION_STEPS
 
-
-@inject('contractStore', 'reservedTokenStore', 'tierStore', 'tokenStore', 'web3Store')
+@inject('contractStore', 'reservedTokenStore', 'tierStore', 'tokenStore', 'web3Store', 'deploymentStore')
 @observer export class stepFour extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       contractDownloaded: false,
-      loading: false
+      loading: false,
+      showModal: false
     }
   }
 
@@ -67,12 +69,11 @@ const { PUBLISH } = NAVIGATION_STEPS
     copy('copy');
 
     if (contractStore && contractStore.contractType === CONTRACT_TYPES.whitelistwithcap) {
-      this.setState({ loading: true })
-
       if (!contractStore.safeMathLib) {
-        this.hideLoader()
         return noContractDataAlert()
       }
+
+      this.setState({ showModal: true })
 
       const { token, pricingStrategy } = contractStore
       const abiToken = (token && token.abi) || []
@@ -104,7 +105,7 @@ const { PUBLISH } = NAVIGATION_STEPS
         .then(() => this.deployToken())
         .then(() => this.deployPricingStrategy())
         .then(() => this.deployCrowdsale())
-        .then(() => registerCrowdsaleAddress(this.props.contractStore))
+        .then(() => registerCrowdsaleAddress())
         .then(() => this.calculateABIEncodedArgumentsForFinalizeAgentContractDeployment())
         .then(() => this.deployFinalizeAgent())
         .catch(error => this.handleError(error))
@@ -113,12 +114,23 @@ const { PUBLISH } = NAVIGATION_STEPS
 
   handleError = (error) => {
     this.hideLoader()
+    this.hideModal()
     console.error(error)
     toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED })
+    this.props.deploymentStore.setTxFailed()
   }
 
   hideLoader() {
     this.setState({ loading: false })
+  }
+
+  hideModal() {
+    this.setState({ showModal: false })
+  }
+
+  userHideModal = () => {
+    this.hideModal()
+    if (!this.props.deploymentStore.deploymentHasFinished) this.setState({ loading: true })
   }
 
   handleContentByParent(content, index = 0) {
@@ -211,7 +223,7 @@ const { PUBLISH } = NAVIGATION_STEPS
 
   handleDeployedSafeMathLibrary = safeMathLibAddr => {
     return new Promise((resolve, reject) => {
-      const { contractStore } = this.props
+      const { contractStore, deploymentStore } = this.props
       console.log('safeMathLibAddr:', safeMathLibAddr)
 
       contractStore.setContractProperty('safeMathLib', 'addr', safeMathLibAddr)
@@ -226,6 +238,7 @@ const { PUBLISH } = NAVIGATION_STEPS
               contractStore.setContractProperty(key, 'bin', newBin)
             }
           })
+        deploymentStore.setAsSuccessful('safeMathLibrary')
         resolve()
       } catch (e) {
         reject(e)
@@ -274,11 +287,17 @@ const { PUBLISH } = NAVIGATION_STEPS
   }
 
   handleDeployedToken = tokenAddr => {
-    return Promise.resolve().then(() => this.props.contractStore.setContractProperty('token', 'addr', tokenAddr))
+    const { contractStore, deploymentStore } = this.props
+
+    return Promise.resolve()
+      .then(() => {
+        contractStore.setContractProperty('token', 'addr', tokenAddr)
+        deploymentStore.setAsSuccessful('token')
+      })
   }
 
   deployPricingStrategy = () => {
-    const { web3Store, contractStore, tierStore } = this.props
+    const { web3Store, contractStore, tierStore, deploymentStore } = this.props
     const { web3 } = web3Store
 
     console.log('***Deploy pricing strategy contract***')
@@ -305,6 +324,7 @@ const { PUBLISH } = NAVIGATION_STEPS
           const newPricingStrategy = contractStore.pricingStrategy.addr.concat(pricingStrategyAddr)
           contractStore.setContractProperty('pricingStrategy', 'addr', newPricingStrategy)
         })
+        .then(() => deploymentStore.setAsSuccessful('pricingStrategy'))
 
     }, Promise.resolve())
       .then(() => this.handleDeployedPricingStrategy())
@@ -342,7 +362,7 @@ const { PUBLISH } = NAVIGATION_STEPS
     return Promise.resolve()
       .then(getNetworkVersion)
       .then((networkID) => {
-        const { web3Store, contractStore, tierStore } = this.props
+        const { web3Store, contractStore, tierStore, deploymentStore } = this.props
         const { web3 } = web3Store
 
         console.log('***Deploy crowdsale contract***')
@@ -374,6 +394,7 @@ const { PUBLISH } = NAVIGATION_STEPS
               const newAddr = contractStore.crowdsale.addr.concat(crowdsaleAddr)
               contractStore.setContractProperty('crowdsale', 'addr', newAddr)
             })
+            .then(() => deploymentStore.setAsSuccessful('crowdsale'))
 
         }, Promise.resolve())
       })
@@ -420,7 +441,7 @@ const { PUBLISH } = NAVIGATION_STEPS
   }
 
   deployFinalizeAgent = () => {
-    const { web3Store, contractStore } = this.props
+    const { web3Store, contractStore, deploymentStore } = this.props
     const { web3 } = web3Store
 
     console.log("***Deploy finalize agent contract***");
@@ -436,16 +457,7 @@ const { PUBLISH } = NAVIGATION_STEPS
     let binFinalizeAgent = (contractStore && contractStore.finalizeAgent && contractStore.finalizeAgent.bin) || ''
     let abiFinalizeAgent = (contractStore && contractStore.finalizeAgent && contractStore.finalizeAgent.abi) || []
 
-    let crowdsales
-
-    if (this.state.tokenStoreIsAlreadyCreated) {
-      let curTierAddr = [contractStore.crowdsale.addr.slice(-1)[0]]
-      let prevTierAddr = [contractStore.crowdsale.addr.slice(-2)[0]]
-      crowdsales = [prevTierAddr, curTierAddr]
-    } else {
-      crowdsales = contractStore.crowdsale.addr
-    }
-
+    const crowdsales = contractStore.crowdsale.addr
     const crowdsalesMaxIndex = crowdsales.length - 1
 
     return crowdsales.reduce((promise, crowdsale, index) => {
@@ -469,6 +481,7 @@ const { PUBLISH } = NAVIGATION_STEPS
           const newAddr = contractStore.finalizeAgent.addr.concat(finalizeAgentAddr)
           contractStore.setContractProperty('finalizeAgent', 'addr', newAddr)
         })
+        .then(() => deploymentStore.setAsSuccessful('finalizeAgent'))
     }, Promise.resolve())
       .then(() => this.handleDeployedFinalizeAgent())
   }
@@ -503,14 +516,17 @@ const { PUBLISH } = NAVIGATION_STEPS
     setLastCrowdsaleRecursive(pricingStrategyABI, pricingStrategy.addr, crowdsaleAddr.slice(-1)[0])
       .then(() => setReservedTokensListMultiple(tokenABI, tokenAddr, tokenStore, reservedTokenStore))
       .then(() => updateJoinedCrowdsalesRecursive(crowdsaleABI, crowdsaleAddr))
-      .then(() => setMintAgentRecursive(tokenABI, tokenAddr, crowdsaleAddr))
-      .then(() => setMintAgentRecursive(tokenABI, tokenAddr, currFinalizeAgentAddr))
+      .then(() => setMintAgentRecursive(tokenABI, tokenAddr, crowdsaleAddr, 'setMintAgentCrowdsale'))
+      .then(() => setMintAgentRecursive(tokenABI, tokenAddr, currFinalizeAgentAddr, 'setMintAgentFinalizeAgent'))
       .then(() => addWhiteListRecursive(tierStore, tokenStore, crowdsaleABI, crowdsaleAddr))
       .then(() => setFinalizeAgentRecursive(crowdsaleABI, crowdsaleAddr, currFinalizeAgentAddr))
       .then(() => setReleaseAgentRecursive(tokenABI, tokenAddr, currFinalizeAgentAddr))
       .then(() => transferOwnership(tokenABI, tokenAddr, tierStore.tiers[0].walletAddress))
-      .then(() => this.hideLoader())
-      .catch(this.handleError.bind(this))
+      .then(() => {
+        this.hideModal()
+        successfulDeployment()
+      })
+      .catch(error => this.handleError(error))
   }
 
   downloadContractButton = () => {
@@ -541,7 +557,8 @@ const { PUBLISH } = NAVIGATION_STEPS
   }
 
   render() {
-    const { tierStore, contractStore, tokenStore } = this.props
+    const { tierStore, contractStore, tokenStore, deploymentStore } = this.props
+    const { txMap } = deploymentStore
     let crowdsaleSetups = [];
     for (let i = 0; i < tierStore.tiers.length; i++) {
       let capBlock = <DisplayField
@@ -773,7 +790,14 @@ const { PUBLISH } = NAVIGATION_STEPS
           <div onClick={this.downloadContractButton} className="button button_fill_secondary">Download File</div>
           <a onClick={this.goToCrowdsalePage} className="button button_fill">Continue</a>
         </div>
-        <Loader show={this.state.loading}></Loader>
+        <ModalContainer
+          title={'Tx Status'}
+          hideModal={this.userHideModal}
+          showModal={this.state.showModal}
+        >
+          <TxProgressStatus txMap={txMap}/>
+        </ModalContainer>
+        <Loader show={this.state.loading}/>
       </section>
     )}
 }
