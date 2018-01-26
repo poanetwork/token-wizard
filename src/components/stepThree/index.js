@@ -324,7 +324,7 @@ export class stepThree extends React.Component {
             extraClassName="right"
             title={ENABLE_WHITELISTING}
             items={[{ label: 'yes', value: 'yes' }, { label: 'no', value: 'no' }]}
-            defaultValue={tierStore.tiers[0].whitelistEnabled}
+            selectedItem={tierStore.tiers[0].whitelistEnabled}
             onChange={e => this.updateWhitelistEnabled(e)}
             description={`Enables whitelisting. If disabled, anyone can participate in the crowdsale.`}
           />
@@ -373,7 +373,7 @@ export class stepThree extends React.Component {
                   extraClassName="right"
                   title={ALLOWMODIFYING}
                   items={[{ label: 'on', value: 'on' }, { label: 'off', value: 'off' }]}
-                  defaultValue="off"
+                  selectedItem={this.props.tierStore.tiers[0].updatable}
                   onChange={e => this.updateTierStore(e, "updatable", 0)}
                   description={`Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing.`}
                 />

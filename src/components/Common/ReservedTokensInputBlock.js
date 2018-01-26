@@ -169,6 +169,7 @@ export class ReservedTokensInputBlock extends React.Component {
               extraClassName="reserved-tokens-input-property reserved-tokens-input-property-middle"
               title={DIMENSION}
               items={[{ label: 'tokens', value: 'tokens' }, { label: 'percentage', value: 'percentage' }]}
+              selectedItem={this.state.dim}
               onChange={e => this.updateReservedTokenInput(e, 'dim')}
               description={`Fixed amount or % of crowdsaled tokens. Will be deposited to the account after fintalization of the crowdsale. `}
             />
