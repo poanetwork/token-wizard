@@ -11,6 +11,7 @@ test('Should render the component', () => {
     <RadioInputField
       title="Some Title"
       items={[{ label: 'Item 1', value: 'item-1' }, { label: 'Item 2', value: 'item-2' }]}
+      selectedItem="item-1"
       onChange={() => {}}
       description="Some Description"
     />
@@ -25,6 +26,7 @@ test('Should render two inputs and check the first one', () => {
     <RadioInputField
       title="Some Title"
       items={[{ label: 'Item 1', value: 'item-1' }, { label: 'Item 2', value: 'item-2' }]}
+      selectedItem="item-1"
       onChange={() => {}}
       description="Some Description"
     />
@@ -47,6 +49,7 @@ test('The onChange callback is called when an item is selected', () => {
     <RadioInputField
       title="Some Title"
       items={[{ label: 'Item 1', value: 'item-1' }, { label: 'Item 2', value: 'item-2' }]}
+      selectedItem="item-1"
       onChange={onChangeCallback}
       description="Some Description"
     />
@@ -57,20 +60,35 @@ test('The onChange callback is called when an item is selected', () => {
   expect(onChangeCallback).toBeCalled()
 })
 
-test('Should accept a defaultValue prop', () => {
-  const items = [{ label: 'Item 1', value: 'item-1' }, { label: 'Item 2', value: 'item-2' }]
+test('Should change the selected item when `selectedItem` changes', () => {
+  const onChangeCallback = jest.fn()
+
   const wrapper = mount(
     <RadioInputField
       title="Some Title"
-      items={items}
-      defaultValue={items[1].value}
-      onChange={() => {}}
+      items={[{ label: 'Item 1', value: 'item-1' }, { label: 'Item 2', value: 'item-2' }]}
+      selectedItem="item-1"
+      onChange={onChangeCallback}
       description="Some Description"
     />
   );
 
-  const firstInput = wrapper.find('input[type="radio"]').at(0)
-  const secondInput = wrapper.find('input[type="radio"]').at(1)
+  let inputs = wrapper.find('input[type="radio"]')
+  expect(inputs.length).toBe(2)
+
+  let firstInput = inputs.at(0)
+  let secondInput = inputs.at(1)
+
+  expect(firstInput.prop('checked')).toBe(true)
+  expect(secondInput.prop('checked')).toBe(false)
+
+  wrapper.setProps({ selectedItem: 'item-2' })
+
+  inputs = wrapper.find('input[type="radio"]')
+  expect(inputs.length).toBe(2)
+
+  firstInput = inputs.at(0)
+  secondInput = inputs.at(1)
 
   expect(firstInput.prop('checked')).toBe(false)
   expect(secondInput.prop('checked')).toBe(true)
