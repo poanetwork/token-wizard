@@ -35,7 +35,7 @@ const {
   ENABLE_WHITELISTING
 } = TEXT_FIELDS;
 
-@inject("contractStore", "crowdsaleBlockListStore", "pricingStrategyStore", "web3Store", "tierStore", "generalStore", "gasPriceStore", "reservedTokenStore")
+@inject("contractStore", "crowdsaleBlockListStore", "pricingStrategyStore", "web3Store", "tierStore", "generalStore", "gasPriceStore", "reservedTokenStore", "deploymentStore")
 @observer
 export class stepThree extends React.Component {
   constructor(props) {
@@ -156,17 +156,22 @@ export class stepThree extends React.Component {
     }
 
     if (tierStore.areTiersValid) {
+      const { reservedTokenStore, deploymentStore } = this.props
+      const tiersCount = tierStore.tiers.length
+      const reservedCount = reservedTokenStore.tokens.length
+      const hasWhitelist = tierStore.tiers[0].whitelistEnabled === 'yes'
+
+      deploymentStore.initialize(!!reservedCount, hasWhitelist, tiersCount)
+
       getNetworkVersion()
         .then(networkID => {
           if (getNetWorkNameById(networkID) === CHAINS.MAINNET) {
-            const { generalStore, reservedTokenStore } = this.props
-
-            const tiersCount = tierStore.tiers.length
+            const { generalStore } = this.props
             const priceSelected = generalStore.gasPrice
-            const reservedCount = reservedTokenStore.tokens.length
+
             let whitelistCount = 0
 
-            if (tierStore.tiers[0].whitelistdisabled === 'no') {
+            if (hasWhitelist) {
               whitelistCount = tierStore.tiers.reduce((total, tier) => {
                 total += tier.whitelist.filter(address => !address.deleted).length
                 return total
@@ -324,7 +329,7 @@ export class stepThree extends React.Component {
             extraClassName="right"
             title={ENABLE_WHITELISTING}
             items={[{ label: 'yes', value: 'yes' }, { label: 'no', value: 'no' }]}
-            defaultValue={tierStore.tiers[0].whitelistEnabled}
+            selectedItem={tierStore.tiers[0].whitelistEnabled}
             onChange={e => this.updateWhitelistEnabled(e)}
             description={`Enables whitelisting. If disabled, anyone can participate in the crowdsale.`}
           />
@@ -373,7 +378,7 @@ export class stepThree extends React.Component {
                   extraClassName="right"
                   title={ALLOWMODIFYING}
                   items={[{ label: 'on', value: 'on' }, { label: 'off', value: 'off' }]}
-                  defaultValue="off"
+                  selectedItem={this.props.tierStore.tiers[0].updatable}
                   onChange={e => this.updateTierStore(e, "updatable", 0)}
                   description={`Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing.`}
                 />

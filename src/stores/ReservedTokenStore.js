@@ -9,7 +9,14 @@ class ReservedTokenStore {
   }
 
   @action addToken = (token) => {
-    this.tokens.push(token);
+    const currentToken = this.tokens.find(t => t.addr === token.addr && t.dim == token.dim)
+
+    if (currentToken) {
+      const index = this.tokens.indexOf(currentToken)
+      this.tokens[index] = token
+    } else {
+      this.tokens.push(token);
+    }
   }
 
   @action setTokenProperty = (index, property, value) => {

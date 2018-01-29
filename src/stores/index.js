@@ -1,8 +1,6 @@
 import contractStore from './ContractStore';
 import pricingStrategyStore from './PricingStrategyStore';
 import reservedTokenStore from './ReservedTokenStore';
-import reservedTokenInputStore from './ReservedTokenInputStore';
-import reservedTokenElementStore from './ReservedTokenElementStore';
 import stepThreeValidationStore from './StepThreeValidationStore';
 import stepTwoValidationStore from './StepTwoValidationStore';
 import tierStore from './TierStore';
@@ -15,6 +13,7 @@ import crowdsalePageStore from './CrowdsalePageStore'
 import investStore from './InvestStore'
 import crowdsaleStore from './CrowdsaleStore'
 import gasPriceStore from './GasPriceStore'
+import deploymentStore from './DeploymentStore'
 
 export {
     generalStore,
@@ -24,8 +23,6 @@ export {
     contractStore,
     pricingStrategyStore,
     reservedTokenStore,
-    reservedTokenInputStore,
-    reservedTokenElementStore,
     stepThreeValidationStore,
     stepTwoValidationStore,
     tierStore,
@@ -33,5 +30,6 @@ export {
     web3Store,
     investStore,
     crowdsaleStore,
-    gasPriceStore
+    gasPriceStore,
+    deploymentStore
 };
