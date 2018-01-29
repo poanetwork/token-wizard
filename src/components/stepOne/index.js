@@ -114,7 +114,7 @@ export class stepOne extends React.Component {
           console.error('Error downloading contracts', e)
           toast.showToaster({
             type: TOAST.TYPE.ERROR,
-            message: 'The contracts could not be downloaded'
+            message: 'The contracts could not be downloaded.Please try to refresh the page. If the problem persists, try again later.'
           })
           this.setState({
             contractsDownloaded: DOWNLOAD_STATUS.FAILURE
