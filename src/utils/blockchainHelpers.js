@@ -106,14 +106,13 @@ export function setExistingContractParams (abi, addr, setContractProperty) {
     })
 }
 
-export const deployContract = (i, abi, bin, params) => {
-  const { web3 } = web3Store
+export const deployContract = (abi, bin, params) => {
   const deployOpts = {
     data: '0x' + bin,
     arguments: params
   }
 
-  return web3.eth.getAccounts()
+  return web3Store.web3.eth.getAccounts()
     .then(accounts => deployContractInner(accounts, abi, deployOpts))
 }
 
@@ -261,27 +260,31 @@ function getRegistryAddress () {
 }
 
 export function registerCrowdsaleAddress () {
-  const { web3 } = web3Store
-  const toJS = x => JSON.parse(JSON.stringify(x))
+  return [
+    () => {
+      const { web3 } = web3Store
+      const toJS = x => JSON.parse(JSON.stringify(x))
 
-  const registryAbi = contractStore.registry.abi
-  const crowdsaleAddress = contractStore.crowdsale.addr[0]
+      const registryAbi = contractStore.registry.abi
+      const crowdsaleAddress = contractStore.crowdsale.addr[0]
 
-  const whenRegistryAddress = getRegistryAddress()
+      const whenRegistryAddress = getRegistryAddress()
 
-  const whenAccount = web3.eth.getAccounts()
-    .then((accounts) => accounts[0])
+      const whenAccount = web3.eth.getAccounts()
+        .then((accounts) => accounts[0])
 
-  return Promise.all([whenRegistryAddress, whenAccount])
-    .then(([registryAddress, account]) => {
-      const registry = new web3.eth.Contract(toJS(registryAbi), registryAddress)
-      const opts = { from: account, gasLimit: 100000 }
+      return Promise.all([whenRegistryAddress, whenAccount])
+        .then(([registryAddress, account]) => {
+          const registry = new web3.eth.Contract(toJS(registryAbi), registryAddress)
+          const opts = { from: account, gasLimit: 100000 }
 
-      return registry.methods
-        .add(crowdsaleAddress)
-        .send(opts)
-    })
-    .then(() => deploymentStore.setAsSuccessful('registerCrowdsaleAddress'))
+          return registry.methods
+            .add(crowdsaleAddress)
+            .send(opts)
+        })
+        .then(() => deploymentStore.setAsSuccessful('registerCrowdsaleAddress'))
+    }
+  ]
 }
 
 function getRegistryAbi () {
