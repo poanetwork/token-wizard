@@ -258,7 +258,6 @@ export const deployFinalizeAgent = () => {
   })
 }
 
-let lc = false
 export const setLastCrowdsale = () => {
   return tierStore.tiers.map((tier, index) => {
     return () => {
@@ -276,7 +275,6 @@ export const setLastCrowdsale = () => {
           return method.estimateGas(opts)
             .then(estimatedGas => {
               opts.gasLimit = calculateGasLimit(estimatedGas)
-              if (process.env.NODE_ENV === 'development' && !lc) {opts.gasLimit = 1000; lc = true;}
               return sendTXToContract(method.send(opts))
             })
         })
