@@ -1,43 +1,10 @@
 import { VALIDATION_TYPES, TRUNC_TO_DECIMALS, TOAST } from './constants'
 import { contractStore, tokenStore, tierStore, web3Store } from '../stores'
+import queryString from 'query-string'
 const { VALID, INVALID } = VALIDATION_TYPES
 
 export function getQueryVariable(variable) {
-  var query = window.location.search.substring(1);
-  var vars = query.split('&');
-  for (var i = 0; i < vars.length; i++) {
-    var pair = vars[i].split('=');
-    if (decodeURIComponent(pair[0]) === variable) {
-      return decodeURIComponent(pair[1]);
-    }
-  }
-}
-
-export function getURLParam(key,target){
-  var values = [];
-  if(!target) {
-    target = window.location.href;
-  }
-
-  key = key.replace(/[[]/, "\\[").replace(/[\]]/, "\\]");
-
-  var pattern = key + '=([^&#]+)';
-  var o_reg = new RegExp(pattern,'ig');
-  while (true) {
-    var matches = o_reg.exec(target);
-    if(matches && matches[1]) {
-      values.push(matches[1]);
-    }
-    else {
-      break;
-    }
-  }
-
-  if (!values.length) {
-    return null;
-  } else {
-    return values.length === 1 ? values[0] : values;
-  }
+  return queryString.parse(window.location.search)[variable]
 }
 
 export function setFlatFileContentToState(file) {

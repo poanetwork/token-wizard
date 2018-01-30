@@ -11,7 +11,7 @@ import {
   getJoinedTiers,
   initializeAccumulativeData
 } from '../crowdsale/utils'
-import { getQueryVariable, getURLParam, getWhiteListWithCapCrowdsaleAssets, toast } from '../../utils/utils'
+import { getQueryVariable, getWhiteListWithCapCrowdsaleAssets, toast } from '../../utils/utils'
 import {
   invalidCrowdsaleAddrAlert,
   investmentDisabledAlertInTime, noGasPriceAvailable,
@@ -37,7 +37,7 @@ export class Invest extends React.Component {
       pristineTokenInput: true,
       web3Available: false,
       investThrough: INVESTMENT_OPTIONS.QR,
-      crowdsaleAddress: ICOConfig.crowdsaleContractURL || getURLParam('addr')
+      crowdsaleAddress: ICOConfig.crowdsaleContractURL || getQueryVariable('addr')
     }
   }
 
@@ -76,7 +76,7 @@ export class Invest extends React.Component {
     const { contractStore, crowdsalePageStore, web3Store } = this.props
     const { web3 } = web3Store
 
-    const crowdsaleAddr = ICOConfig.crowdsaleContractURL ? ICOConfig.crowdsaleContractURL : getURLParam('addr')
+    const crowdsaleAddr = ICOConfig.crowdsaleContractURL ? ICOConfig.crowdsaleContractURL : getQueryVariable('addr')
 
     if (!web3.utils.isAddress(crowdsaleAddr)) {
       this.setState({ loading: false })

@@ -9,7 +9,7 @@ import {
   getJoinedTiers,
   initializeAccumulativeData
 } from './utils'
-import { getQueryVariable, getURLParam, getWhiteListWithCapCrowdsaleAssets, toFixed } from '../../utils/utils'
+import { getQueryVariable, getWhiteListWithCapCrowdsaleAssets, toFixed } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { CONTRACT_TYPES, NAVIGATION_STEPS } from '../../utils/constants'
 import { invalidCrowdsaleAddrAlert } from '../../utils/alerts'
@@ -61,7 +61,7 @@ export class Crowdsale extends React.Component {
   extractContractsData = () => {
     const { contractStore, web3Store } = this.props
     const { web3 } = web3Store
-    const crowdsaleAddr = ICOConfig.crowdsaleContractURL ? ICOConfig.crowdsaleContractURL : getURLParam('addr')
+    const crowdsaleAddr = ICOConfig.crowdsaleContractURL ? ICOConfig.crowdsaleContractURL : getQueryVariable('addr')
 
     if (!web3.utils.isAddress(crowdsaleAddr)) {
       this.setState({ loading: false })
