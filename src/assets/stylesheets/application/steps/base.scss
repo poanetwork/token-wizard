@@ -80,5 +80,12 @@
     background-repeat: no-repeat;
     background-position: left 10px center;
     cursor: pointer;
+
+    &.no_image {
+      padding-left: 15px;
+      background-image: none;
+      background-position: 0 0;
+      background-size: auto;
+    }
   }
 }
