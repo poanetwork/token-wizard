@@ -25,7 +25,7 @@ export const updateTierAttribute = (attribute, value, addresses) => {
     endTime: 'setEndsAt',
     supply: 'setMaximumSellableTokens',
     rate: 'updateRate',
-    whitelist: 'setEarlyParticipantsWhitelist'
+    whitelist: 'setEarlyParticipantWhitelistMultiple'
   }
   let abi
   let contractAddresses
@@ -51,8 +51,8 @@ export const updateTierAttribute = (attribute, value, addresses) => {
   }
 
   if (attribute === 'rate') {
-    abi = contractStore.pricingStrategy.abi
-    contractAddresses = [addresses.pricingStrategyAddress]
+    abi = contractStore.crowdsale.abi
+    contractAddresses = [addresses.crowdsaleAddress]
     const oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, 1 / Number(value))
     value = [web3Store.web3.utils.toWei(oneTokenInETH, 'ether')]
   }

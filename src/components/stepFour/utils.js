@@ -11,8 +11,8 @@ import { DOWNLOAD_NAME } from '../../utils/constants'
 import { isObservableArray } from 'mobx'
 import { generalStore, deploymentStore } from '../../stores'
 
-function setLastCrowdsale (abi, addr, lastCrowdsale) {
-  console.log('###setLastCrowdsale for Pricing Strategy:###')
+function setTier (abi, addr, tier) {
+  console.log('###setTier for Pricing Strategy:###')
 
   return attachToContract(abi, addr)
     .then(pricingStrategyContract => {
@@ -24,7 +24,7 @@ function setLastCrowdsale (abi, addr, lastCrowdsale) {
       }
 
       const opts = { gasPrice: generalStore.gasPrice }
-      const method = pricingStrategyContract.methods.setLastCrowdsale(lastCrowdsale)
+      const method = pricingStrategyContract.methods.setTier(tier)
 
       return method.estimateGas(opts)
         .then(estimatedGas => {
@@ -135,7 +135,7 @@ function addWhiteList (round, tierStore, token, abi, addr) {
       console.log('maxCaps:', maxCaps)
 
       const opts = { gasPrice: generalStore.gasPrice }
-      const method = crowdsaleContract.methods.setEarlyParticipantsWhitelist(addrs, statuses, minCaps, maxCaps)
+      const method = crowdsaleContract.methods.setEarlyParticipantWhitelistMultiple(addrs, statuses, minCaps, maxCaps)
 
       return method.estimateGas(opts)
         .then(estimatedGas => {
@@ -305,11 +305,11 @@ export function transferOwnership (abi, addr, finalizeAgentAddr) {
     })
 }
 
-export function setLastCrowdsaleRecursive (abi, pricingStrategyAddrs, lastCrowdsale) {
-  return pricingStrategyAddrs.reduce((promise, pricingStrategyAddr) => {
+export function setTierRecursive (abi, pricingStrategyAddrs, tiers) {
+  return pricingStrategyAddrs.reduce((promise, pricingStrategyAddr, index) => {
     return promise
-      .then(() => setLastCrowdsale(abi, pricingStrategyAddr, lastCrowdsale))
-      .then(() => deploymentStore.setAsSuccessful('lastCrowdsale'))
+      .then(() => setTier(abi, pricingStrategyAddr, tiers[index]))
+      .then(() => deploymentStore.setAsSuccessful('tier'))
   }, Promise.resolve())
 }
 
