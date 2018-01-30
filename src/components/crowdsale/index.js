@@ -149,8 +149,7 @@ export class Crowdsale extends React.Component {
 
     const tokensClaimedRatio = goalInETH ? (ethRaised / goalInETH) * 100 : "0";
 
-    return this.state.loading ? <Loader show={this.state.loading}></Loader> :
-    (
+    return (
       <section className="steps steps_crowdsale-page">
         <StepNavigation activeStep={CROWDSALE_PAGE} />
         <div className="steps-content container">
