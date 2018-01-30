@@ -2,7 +2,7 @@ import { action, computed, observable } from 'mobx'
 
 class DeploymentStore {
   @observable txMap = new Map()
-  @observable deploymentFailure = false
+  @observable deploymentStep
 
   @action initialize = (hasReservedToken, hasWhitelist, tiersCount) => {
     const listOfTx = [
@@ -43,7 +43,6 @@ class DeploymentStore {
   }
 
   @action setAsSuccessful = (txName) => {
-    this.deploymentFailure = false
     const txStatus = this.txMap.get(txName)
     const toBeUpdated = txStatus.findIndex(isSuccess => !isSuccess)
 
@@ -55,8 +54,8 @@ class DeploymentStore {
     this.logTxMap()
   }
 
-  @action setTxFailed = () => {
-    this.deploymentFailure = true
+  @action setDeploymentStep = (index) => {
+    this.deploymentStep = index
   }
 
   logTxMap = () => {
