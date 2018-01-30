@@ -76,7 +76,7 @@ export class Crowdsale extends React.Component {
         return
       }
 
-      findCurrentContractRecursively(0, this, null, (crowdsaleContract) => {
+      findCurrentContractRecursively(0, null, (crowdsaleContract) => {
         if (!crowdsaleContract) {
           return this.setState({ loading: false })
         }

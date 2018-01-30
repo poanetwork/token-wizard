@@ -3,7 +3,6 @@ import { noContractAlert } from '../../utils/alerts'
 import { toFixed } from '../../utils/utils'
 import { CONTRACT_TYPES } from '../../utils/constants'
 import { contractStore, crowdsalePageStore, tokenStore, web3Store } from '../../stores'
-import { findCurrentContractRecursively as findCurrentContractRecursively2 } from './utils'
 import { toJS } from 'mobx'
 
 export function getJoinedTiers(abi, addr, joinedCrowdsales, cb) {
@@ -47,7 +46,7 @@ function getJoinedTiersRecursively(i, crowdsaleContract, joinedCrowdsales, joine
   })
 }
 
-export function findCurrentContractRecursively(i, $this, firstCrowdsaleContract, cb) {
+export function findCurrentContractRecursively(i, firstCrowdsaleContract, cb) {
   console.log(contractStore.crowdsale.addr);
   let crowdsaleAddr = contractStore.crowdsale.addr[i];
   const { web3 } = web3Store
@@ -87,7 +86,7 @@ export function findCurrentContractRecursively(i, $this, firstCrowdsaleContract,
             cb(crowdsaleContract, i)
           } else {
             i++
-            findCurrentContractRecursively2(i, $this, firstCrowdsaleContract, cb)
+            findCurrentContractRecursively(i, firstCrowdsaleContract, cb)
           }
         })
       })
