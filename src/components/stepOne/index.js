@@ -2,30 +2,65 @@ import React from 'react'
 import '../../assets/stylesheets/application.css';
 import { checkWeb3 } from '../../utils/blockchainHelpers'
 import { Link } from 'react-router-dom';
-import { setFlatFileContentToState } from '../../utils/utils';
+import { setFlatFileContentToState, toast } from '../../utils/utils';
 import { StepNavigation } from '../Common/StepNavigation';
-import { NAVIGATION_STEPS, CONTRACT_TYPES } from '../../utils/constants';
+import { NAVIGATION_STEPS, CONTRACT_TYPES, TOAST } from '../../utils/constants';
 import { inject, observer } from 'mobx-react';
 const { CROWDSALE_CONTRACT } = NAVIGATION_STEPS;
 
+const DOWNLOAD_STATUS = {
+  PENDING: 'pending',
+  SUCCESS: 'success',
+  FAILURE: 'failure'
+}
+
+const ContinueButton = ({downloadStatus}) => {
+  const success = downloadStatus === DOWNLOAD_STATUS.SUCCESS
+
+  if (success) {
+    return (
+      <Link to="/2">
+        <span className="button button_fill">Continue</span>
+      </Link>
+    );
+  } else {
+    return (
+      <Link to="/2" onClick={e => e.preventDefault()}>
+        <span className="button button_disabled button_fill">Continue</span>
+      </Link>
+    );
+  }
+};
 
 @inject('contractStore', 'web3Store') @observer
 export class stepOne extends React.Component {
 
+  constructor() {
+    super()
+
+    this.state = {
+      contractsDownloaded: DOWNLOAD_STATUS.PENDING
+    }
+  }
+
   getStandardCrowdsaleAssets() {
-    this.getCrowdsaleAsset("CrowdsaleStandard", "crowdsale")
-    this.getCrowdsaleAsset("CrowdsaleStandardToken", "token")
+    return Promise.all([
+      this.getCrowdsaleAsset("CrowdsaleStandard", "crowdsale"),
+      this.getCrowdsaleAsset("CrowdsaleStandardToken", "token")
+    ])
   }
 
   getWhiteListWithCapCrowdsaleAssets () {
-    this.getCrowdsaleAsset("SafeMathLibExt", "safeMathLib")
-    this.getCrowdsaleAsset("CrowdsaleWhiteListWithCap", "crowdsale")
-    this.getCrowdsaleAsset("CrowdsaleWhiteListWithCapToken", "token")
-    this.getCrowdsaleAsset("CrowdsaleWhiteListWithCapPricingStrategy", "pricingStrategy")
-    this.getCrowdsaleAsset("CrowdsaleWhiteListWithCapPricingStrategy", "pricingStrategy")
-    this.getCrowdsaleAsset("FinalizeAgent", "finalizeAgent")
-    this.getCrowdsaleAsset("NullFinalizeAgent", "nullFinalizeAgent")
-    this.getCrowdsaleAsset("Registry", "registry")
+    return Promise.all([
+      this.getCrowdsaleAsset("SafeMathLibExt", "safeMathLib"),
+      this.getCrowdsaleAsset("CrowdsaleWhiteListWithCap", "crowdsale"),
+      this.getCrowdsaleAsset("CrowdsaleWhiteListWithCapToken", "token"),
+      this.getCrowdsaleAsset("CrowdsaleWhiteListWithCapPricingStrategy", "pricingStrategy"),
+      this.getCrowdsaleAsset("CrowdsaleWhiteListWithCapPricingStrategy", "pricingStrategy"),
+      this.getCrowdsaleAsset("FinalizeAgent", "finalizeAgent"),
+      this.getCrowdsaleAsset("NullFinalizeAgent", "nullFinalizeAgent"),
+      this.getCrowdsaleAsset("Registry", "registry")
+    ])
   }
 
   getCrowdsaleAsset(contractName, stateProp) {
@@ -35,7 +70,6 @@ export class stepOne extends React.Component {
 
     return Promise.all([src, bin, abi])
       .then(result => this.addContractsToState(...result, stateProp))
-      .catch(console.error)
   }
 
   addContractsToState(src, bin, abi, contract) {
@@ -56,16 +90,37 @@ export class stepOne extends React.Component {
   componentDidMount() {
     checkWeb3(this.props.web3Store.web3);
 
+    let downloadContracts = null
+
     switch (this.props.contractStore.contractType) {
       case CONTRACT_TYPES.standard:
-        this.getStandardCrowdsaleAssets();
+        downloadContracts = this.getStandardCrowdsaleAssets();
         break;
       case CONTRACT_TYPES.whitelistwithcap:
-        this.getWhiteListWithCapCrowdsaleAssets();
-        break;
+        downloadContracts = this.getWhiteListWithCapCrowdsaleAssets();
+        break
       default:
-        break;
+        break
     }
+
+    downloadContracts
+      .then(
+        () => {
+          this.setState({
+            contractsDownloaded: DOWNLOAD_STATUS.SUCCESS
+          })
+        },
+        (e) => {
+          console.error('Error downloading contracts', e)
+          toast.showToaster({
+            type: TOAST.TYPE.ERROR,
+            message: 'The contracts could not be downloaded.Please try to refresh the page. If the problem persists, try again later.'
+          })
+          this.setState({
+            contractsDownloaded: DOWNLOAD_STATUS.FAILURE
+          })
+        }
+      )
   }
 
   render() {
@@ -97,9 +152,7 @@ export class stepOne extends React.Component {
           </div>
         </div>
         <div className="button-container">
-          <Link to='/2'>
-            <span className="button button_fill">Continue</span>
-          </Link>
+          <ContinueButton downloadStatus={this.state.contractsDownloaded} />
         </div>
       </section>
     )
