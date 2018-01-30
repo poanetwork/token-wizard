@@ -30,8 +30,6 @@ export class Crowdsale extends React.Component {
   componentDidMount () {
     checkWeb3()
 
-    this.setState({ tokenIsAlreadyCreated: true })
-
     const networkID = ICOConfig.networkID ? ICOConfig.networkID : getQueryVariable('networkID')
     const contractType = CONTRACT_TYPES.whitelistwithcap//getQueryVariable("contractType");
 
