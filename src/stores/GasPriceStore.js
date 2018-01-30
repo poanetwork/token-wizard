@@ -73,7 +73,6 @@ class GasPriceStore {
         }
         return Promise.resolve()
       })
-      .catch(error => Promise.reject(error))
   }
 }
 
