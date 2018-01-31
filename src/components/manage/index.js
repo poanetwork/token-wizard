@@ -208,17 +208,18 @@ export class Manage extends Component {
               .then(reservedTokensDestinationsLen => {
 
                 let batchesLen
-                let batchesInt = Number(reservedTokensDestinationsLen / addressesPerBatch)
-                if (reservedTokensDestinationsLen % addressesPerBatch > 0)
+                let batchesInt = parseInt(reservedTokensDestinationsLen / addressesPerBatch, 10)
+                if (reservedTokensDestinationsLen % addressesPerBatch > 0) {
                   batchesLen = batchesInt + 1
-                else
+                } else {
                   batchesLen = batchesInt
+                }
 
                 const distributeMethod = crowdsaleContract.methods.distributeReservedTokens(addressesPerBatch)
                 let opts = {
                   gasPrice: this.props.generalStore.gasPrice
                 }
-                let batches = new Array(batchesLen);
+                let batches = Array.from(Array(batchesLen).keys());
                 this.distributeReservedTokensRecursive(batches, distributeMethod, opts)
                 .then(() => {
                   successfulDistributeAlert()
@@ -439,7 +440,7 @@ export class Manage extends Component {
           <p className="title">Distribute reserved tokens</p>
           <p className="description">Reserved tokens distribution is the last step of the crowdsale before finalization.
             You can make it only after the end of the last tier. If you reserved more then 100 addresses for your crowdsale, the distribution will be executed in batches with 100 reserved addresses per batch. Amount of batches is equal to amount of transactions</p>
-          <Link to='#' onClick={() => this.distributeReservedTokens(1)}>
+          <Link to='#' onClick={() => this.distributeReservedTokens(100)}>
             <span className={`button button_${!canDistribute ? 'disabled' : 'fill'}`}>Distribute tokens</span>
           </Link>
         </div>
