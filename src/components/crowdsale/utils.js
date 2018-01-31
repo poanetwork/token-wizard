@@ -194,10 +194,13 @@ export function getCrowdsaleTargetDates($this, cb) {
 }
 
 export function initializeAccumulativeData() {
-  crowdsalePageStore.setProperty('weiRaised', 0)
-  crowdsalePageStore.setProperty('tokenAmountOf', 0)
   crowdsalePageStore.setProperty('maximumSellableTokens', 0)
+  crowdsalePageStore.setProperty('maximumSellableTokensInWei', 0)
   crowdsalePageStore.setProperty('investors', 0)
+  crowdsalePageStore.setProperty('ethRaised', 0)
+  crowdsalePageStore.setProperty('weiRaised', 0)
+  crowdsalePageStore.setProperty('tokensSold', 0)
+  crowdsalePageStore.setProperty('tokenAmountOf', 0)
   return Promise.resolve()
 }
 
