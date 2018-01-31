@@ -105,7 +105,7 @@ export class Invest extends React.Component {
           return
         }
 
-        findCurrentContractRecursively(0, this, null, crowdsaleContract => {
+        findCurrentContractRecursively(0, null, crowdsaleContract => {
           if (!crowdsaleContract) {
             this.setState({ loading: false })
             return
@@ -113,7 +113,7 @@ export class Invest extends React.Component {
 
           initializeAccumulativeData()
             .then(() => getCrowdsaleData(crowdsaleContract))
-            .then(() => getAccumulativeCrowdsaleData.call(this, () => Promise.resolve()))
+            .then(() => getAccumulativeCrowdsaleData())
             .then(() => this.setState({ loading: false }))
             .catch(err => {
               this.setState({ loading: false })
@@ -170,7 +170,7 @@ export class Invest extends React.Component {
       return investmentDisabledAlertInTime(crowdsalePageStore.startDate)
     }
 
-    findCurrentContractRecursively(0, this, null, (crowdsaleContract, tierNum) => {
+    findCurrentContractRecursively(0, null, (crowdsaleContract, tierNum) => {
       if (!crowdsaleContract) {
         this.setState({ loading: false })
         return
