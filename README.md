@@ -35,22 +35,22 @@ __Deploying on POA's Sokol or Main network is much faster then using Ethereum's 
  For a guide on how to connect to the POA network using MetaMask see [here](https://github.com/poanetwork/ico-wizard/wiki/Connecting-to-POA-Networks).
 
 ## Token Wizard DApp Wiki
-- [Introduction](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Introduction)
-- [Demo](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Demo)
-- [Requirements](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Requirements)
-- [Strategy](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Strategy)
-- [How to run](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-How-to-run)
+- [Introduction](https://github.com/poanetwork/ico-wizard/wiki/Token-Wizard-Introduction)
+- [Demo](https://github.com/poanetwork/ico-wizard/wiki/Token-Wizard-Demo)
+- [Requirements](https://github.com/poanetwork/ico-wizard/wiki/Token-Wizard-Requirements)
+- [Strategy](https://github.com/poanetwork/ico-wizard/wiki/Token-Wizard-Strategy)
+- [How to run](https://github.com/poanetwork/ico-wizard/wiki/Token-Wizard-How-to-run)
 - [Using POA Networks](https://github.com/poanetwork/ico-wizard/wiki/Connecting-to-POA-Networks)
-- [Deployment Time & Gas](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Deployment-Stats)
-- [Verifying Smart-Contracts](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Verifying-Contracts)
-- [Projects on Token Wizard](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Projects)
-- [Notable Contributors](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Notable-Contributors)
-- [Support](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Support)
-- [Disclaimer](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Disclaimer)
+- [Deployment Time & Gas](https://github.com/poanetwork/ico-wizard/wiki/Token-Wizard-Deployment-Stats)
+- [Verifying Smart-Contracts](https://github.com/poanetwork/ico-wizard/wiki/Token-Wizard-Verifying-Contracts)
+- [Projects on Token Wizard](https://github.com/poanetwork/ico-wizard/wiki/Token-Wizard-Projects)
+- [Notable Contributors](https://github.com/poanetwork/ico-wizard/wiki/Token-Wizard-Notable-Contributors)
+- [Support](https://github.com/poanetwork/ico-wizard/wiki/Token-Wizard-Support)
+- [Disclaimer](https://github.com/poanetwork/ico-wizard/wiki/Token-Wizard-Disclaimer)
 ### Policies
 - [Pull Request Policy](https://github.com/poanetwork/ico-wizard/wiki/Pull-Request-Policy)
 ### Managing your Crowdsale
-- [Methods for Management](https://github.com/poanetwork/ico-wizard/wiki/ICO-Wizard-Managing-Crowdsale)
+- [Methods for Management](https://github.com/poanetwork/ico-wizard/wiki/Token-Wizard-Managing-Crowdsale)
 
 
 ## Support
