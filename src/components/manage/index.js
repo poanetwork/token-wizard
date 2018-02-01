@@ -203,17 +203,11 @@ export class Manage extends Component {
           crowdsaleContract.methods.token().call()
           .then(token => {
             attachToContract(contractStore.token.abi, token)
-            .then(tokenContract => { // eslint-disable-line no-loop-func
+            .then(tokenContract => {
               tokenContract.methods.reservedTokensDestinationsLen().call()
               .then(reservedTokensDestinationsLen => {
 
-                let batchesLen
-                let batchesInt = parseInt(reservedTokensDestinationsLen / addressesPerBatch, 10)
-                if (reservedTokensDestinationsLen % addressesPerBatch > 0) {
-                  batchesLen = batchesInt + 1
-                } else {
-                  batchesLen = batchesInt
-                }
+                const batchesLen = Math.ceil(reservedTokensDestinationsLen / addressesPerBatch)
 
                 const distributeMethod = crowdsaleContract.methods.distributeReservedTokens(addressesPerBatch)
                 let opts = {
