@@ -163,7 +163,7 @@ let sendTX = (method, type) => {
       // This additional polling of tx receipt was made, because users had problems on mainnet: wizard hanged on random
       // transaction, because there wasn't response from it, no receipt. Especially, if you switch between tabs when
       // wizard works.
-      // https://github.com/oraclesorg/ico-wizard/pull/364/files/c86c3e8482ef078e0cb46b8bebf57a9187f32181#r152277434
+      // https://github.com/poanetwork/ico-wizard/pull/364/files/c86c3e8482ef078e0cb46b8bebf57a9187f32181#r152277434
       .on('transactionHash', _txHash => checkTxMined(_txHash, function pollingReceiptCheck (err, receipt) {
         if (isMined) return
         //https://github.com/poanetwork/ico-wizard/issues/480
@@ -250,7 +250,7 @@ export function attachToContract (abi, addr) {
     })
 }
 
-function getRegistryAddress () {
+export function getRegistryAddress () {
   const { web3 } = web3Store
 
   return web3.eth.net.getId()
@@ -258,30 +258,6 @@ function getRegistryAddress () {
       const registryAddressMap = JSON.parse(process.env['REACT_APP_REGISTRY_ADDRESS'] || '{}')
       return registryAddressMap[networkId]
     })
-}
-
-export function registerCrowdsaleAddress () {
-  const { web3 } = web3Store
-  const toJS = x => JSON.parse(JSON.stringify(x))
-
-  const registryAbi = contractStore.registry.abi
-  const crowdsaleAddress = contractStore.crowdsale.addr[0]
-
-  const whenRegistryAddress = getRegistryAddress()
-
-  const whenAccount = web3.eth.getAccounts()
-    .then((accounts) => accounts[0])
-
-  return Promise.all([whenRegistryAddress, whenAccount])
-    .then(([registryAddress, account]) => {
-      const registry = new web3.eth.Contract(toJS(registryAbi), registryAddress)
-      const opts = { from: account, gasLimit: 100000 }
-
-      return registry.methods
-        .add(crowdsaleAddress)
-        .send(opts)
-    })
-    .then(() => deploymentStore.setAsSuccessful('registerCrowdsaleAddress'))
 }
 
 function getRegistryAbi () {
