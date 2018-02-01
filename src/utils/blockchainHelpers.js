@@ -163,7 +163,7 @@ let sendTX = (method, type) => {
       // This additional polling of tx receipt was made, because users had problems on mainnet: wizard hanged on random
       // transaction, because there wasn't response from it, no receipt. Especially, if you switch between tabs when
       // wizard works.
-      // https://github.com/oraclesorg/ico-wizard/pull/364/files/c86c3e8482ef078e0cb46b8bebf57a9187f32181#r152277434
+      // https://github.com/poanetwork/ico-wizard/pull/364/files/c86c3e8482ef078e0cb46b8bebf57a9187f32181#r152277434
       .on('transactionHash', _txHash => checkTxMined(_txHash, function pollingReceiptCheck (err, receipt) {
         if (isMined) return
         //https://github.com/poanetwork/ico-wizard/issues/480

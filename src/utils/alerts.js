@@ -5,7 +5,7 @@ import { DEPLOYMENT_VALUES } from './constants'
 export function noMetaMaskAlert() {
   sweetAlert2({
     title: "Warning",
-    html: "You don't have Metamask installed. Check Token Wizard GitHub for <a href='https://github.com/oraclesorg/ico-wizard' target='blank'>the instruction</a>.",
+    html: "You don't have Metamask installed. Check Token Wizard GitHub for <a href='https://github.com/poanetwork/ico-wizard' target='blank'>the instruction</a>.",
     type: "warning"
   });
 }
@@ -81,7 +81,7 @@ export function incorrectNetworkAlert(correctNetworkName, incorrectNetworkName) 
 export function noDeploymentOnMainnetAlert() {
   sweetAlert2({
     title: "Warning",
-    html: "Wizard is under maintenance on Ethereum Mainnet. Please come back later or use Kovan/Rinkeby/Oracles. Follow <a href='https://twitter.com/oraclesorg'>https://twitter.com/oraclesorg</a> for status.",
+    html: "Wizard is under maintenance on Ethereum Mainnet. Please come back later or use Kovan/Rinkeby/POA. Follow <a href='https://twitter.com/poanetwork'>https://twitter.com/poanetwork</a> for status.",
     type: "warning"
   });
 }
