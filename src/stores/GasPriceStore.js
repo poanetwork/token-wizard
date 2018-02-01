@@ -1,6 +1,7 @@
 import { action, observable } from 'mobx'
 import { GAS_PRICE } from '../utils/constants'
 import { gweiToWei, weiToGwei } from '../utils/utils'
+import { gasPriceValues } from '../utils/api'
 
 class GasPriceStore {
   @observable slow
@@ -8,8 +9,8 @@ class GasPriceStore {
   @observable fast
   @observable instant
   @observable custom
-  @observable blockNumber
-  @observable blockTime
+  @observable block_number
+  @observable block_time
   @observable health
 
   constructor () {
@@ -62,9 +63,8 @@ class GasPriceStore {
     }
   }
 
-  @action updateValues = () => {
-    return fetch(GAS_PRICE.API.URL)
-      .then(response => response.json())
+  @action updateValues = (param) => {
+    return gasPriceValues(param)
       .then(oracle => {
         for (let key in oracle) {
           if (oracle.hasOwnProperty(key)) {
@@ -72,15 +72,6 @@ class GasPriceStore {
           }
         }
         return Promise.resolve()
-      })
-      .catch(error => {
-        this.setProperty('slow', weiToGwei(GAS_PRICE.SLOW.PRICE))
-        this.setProperty('fast', weiToGwei(GAS_PRICE.FAST.PRICE))
-        this.setProperty('standard', weiToGwei(GAS_PRICE.NORMAL.PRICE))
-        this.setProperty('instant', weiToGwei(GAS_PRICE.INSTANT.PRICE))
-        this.setProperty('custom', weiToGwei(GAS_PRICE.CUSTOM.PRICE))
-
-        return Promise.reject(error)
       })
   }
 }

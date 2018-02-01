@@ -6,10 +6,9 @@ import { CONTRACT_TYPES, TEXT_FIELDS, TOAST, VALIDATION_MESSAGES } from '../../u
 import { InputField } from '../Common/InputField'
 import '../../assets/stylesheets/application.css'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
-import { successfulFinalizeAlert, successfulUpdateCrowdsaleAlert, warningOnFinalizeCrowdsale } from '../../utils/alerts'
-import { getNetworkVersion, sendTXToContract } from '../../utils/blockchainHelpers'
+import { successfulFinalizeAlert, successfulDistributeAlert, successfulUpdateCrowdsaleAlert, warningOnFinalizeCrowdsale } from '../../utils/alerts'
+import { getNetworkVersion, sendTXToContract, attachToContract, calculateGasLimit } from '../../utils/blockchainHelpers'
 import { getWhiteListWithCapCrowdsaleAssets, toast } from '../../utils/utils'
-import { getCurrentRate } from '../crowdsale/utils'
 import { contractsInfo, getTiers, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
 
@@ -32,7 +31,9 @@ export class Manage extends Component {
     this.state = {
       formPristine: true,
       loading: true,
-      canFinalize: false
+      canFinalize: false,
+      canDistribute: false,
+      shouldDistribute: false
     }
   }
 
@@ -95,6 +96,8 @@ export class Manage extends Component {
   updateCrowdsaleStatus = () => {
     return contractsInfo()
       .then(this.setCrowdsaleInfo)
+      .then(this.shouldDistribute)
+      .then(this.canDistribute)
       .then(this.canFinalize)
   }
 
@@ -105,34 +108,138 @@ export class Manage extends Component {
     })
   }
 
-  canFinalize = () => {
-    const { web3Store, gasPriceStore } = this.props
-    const { web3 } = web3Store
+  shouldDistribute = () => {
+    const { contractStore, match } = this.props
 
     return new Promise(resolve => {
-      if (!this.state.crowdsaleHasEnded) {
+      attachToContract(contractStore.crowdsale.abi, match.params.crowdsaleAddress)
+      .then(crowdsaleContract => { // eslint-disable-line no-loop-func
+        console.log('attach to crowdsale contract')
+
+        if (!crowdsaleContract) return Promise.reject('No contract available')
+
+        crowdsaleContract.methods.token().call()
+        .then(tokenAddress => attachToContract(contractStore.token.abi, tokenAddress))
+        .then(tokenContract => tokenContract.methods.reservedTokensDestinationsLen().call())
+        .then((reservedTokensDestinationsLen) => {
+          if (reservedTokensDestinationsLen > 0)
+            this.setState({ shouldDistribute: true })
+          else
+            this.setState({ shouldDistribute: false })
+          resolve(this.state.shouldDistribute)
+        })
+        .catch(() => {
+          this.setState({ shouldDistribute: false })
+          resolve(this.state.shouldDistribute)
+        })
+      })
+    })
+  }
+
+  canDistribute = () => {
+    const { contractStore, match } = this.props
+
+    return new Promise(resolve => {
+      attachToContract(contractStore.crowdsale.abi, match.params.crowdsaleAddress)
+        .then(crowdsaleContract => { // eslint-disable-line no-loop-func
+          console.log('attach to crowdsale contract')
+
+          if (!crowdsaleContract) return Promise.reject('No contract available')
+
+          crowdsaleContract.methods.canDistributeReservedTokens().call((err, canDistributeReservedTokens) => {
+            return canDistributeReservedTokens;
+          }).then((canDistributeReservedTokens) => {
+            console.log("#canDistributeReservedTokens:", canDistributeReservedTokens);
+            this.setState({ canDistribute: canDistributeReservedTokens })
+            resolve(this.state.canDistribute)
+          })
+          .catch(() => {
+            this.setState({ canDistribute: false })
+            resolve(this.state.canDistribute)
+          })
+        })
+    })
+  }
+
+
+  canFinalize = () => {
+    const { contractStore, match } = this.props
+
+    return new Promise(resolve => {
+      if ((!this.state.crowdsaleHasEnded) || (this.state.shouldDistribute && this.state.canDistribute)) {
         this.setState({ canFinalize: false })
         resolve(this.state.canFinalize)
 
       } else {
-        web3.eth.estimateGas({
-          from: web3Store.curAddress,
-          to: this.state.lastContract._address,
-          data: '0x4bb278f3', // finalize signature
-          gas: web3.utils.toHex(650000),
-          gasPrice: web3.utils.toHex(gasPriceStore.slow.price),
-          value: web3.utils.toHex(0)
-        })
-          .then(() => {
-            this.setState({ canFinalize: true })
-            resolve(this.state.canFinalize)
-          })
-          .catch(() => {
-            this.setState({ canFinalize: false })
-            resolve(this.state.canFinalize)
+        attachToContract(contractStore.crowdsale.abi, match.params.crowdsaleAddress)
+          .then(crowdsaleContract => { // eslint-disable-line no-loop-func
+            console.log('attach to crowdsale contract')
+
+            if (!crowdsaleContract) return Promise.reject('No contract available')
+            crowdsaleContract.methods.finalized().call((err, finalized) => {
+              return finalized;
+            }).then((finalized) => {
+              this.setState({ canFinalize: !finalized })
+              resolve(this.state.canFinalize)
+            })
+            .catch(() => {
+              this.setState({ canFinalize: false })
+              resolve(this.state.canFinalize)
+            })
           })
       }
     })
+  }
+
+  distributeReservedTokens = (addressesPerBatch) => {
+    this.updateCrowdsaleStatus()
+      .then(() => {
+        const { crowdsaleStore, contractStore } = this.props
+
+        if (!crowdsaleStore.selected.distributed && this.state.canDistribute) {
+          this.showLoader()
+
+          const crowdsaleContract = this.state.lastContract
+          crowdsaleContract.methods.token().call()
+          .then(token => {
+            attachToContract(contractStore.token.abi, token)
+            .then(tokenContract => {
+              tokenContract.methods.reservedTokensDestinationsLen().call()
+              .then(reservedTokensDestinationsLen => {
+
+                const batchesLen = Math.ceil(reservedTokensDestinationsLen / addressesPerBatch)
+
+                const distributeMethod = crowdsaleContract.methods.distributeReservedTokens(addressesPerBatch)
+                let opts = {
+                  gasPrice: this.props.generalStore.gasPrice
+                }
+                let batches = Array.from(Array(batchesLen).keys());
+                this.distributeReservedTokensRecursive(batches, distributeMethod, opts)
+                .then(() => {
+                  successfulDistributeAlert()
+                  crowdsaleStore.setSelectedProperty('distributed', true)
+                  this.setState({ canDistribute: false, canFinalize: true })
+                })
+                .catch(() => toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.DISTRIBUTE_FAIL }))
+                .then(this.hideLoader)
+              })
+            })
+          })
+        }
+      })
+      .catch(console.error)
+  }
+
+  distributeReservedTokensRecursive = (batches, distributeMethod, opts) => {
+    return batches.reduce((promise) => {
+      return promise
+        .then(() => distributeMethod.estimateGas(opts)
+          .then(estimatedGas => {
+            opts.gasLimit = calculateGasLimit(estimatedGas)
+            return sendTXToContract(distributeMethod.send(opts))
+          })
+        )
+    }, Promise.resolve())
   }
 
   finalizeCrowdsale = () => {
@@ -147,13 +254,15 @@ export class Manage extends Component {
                 this.showLoader()
 
                 const crowdsaleContract = this.state.lastContract
-                const finalizeMethod = crowdsaleContract.methods.finalize().send({
-                  gasLimit: 650000,
+                const finalizeMethod = crowdsaleContract.methods.finalize()
+                let opts = {
                   gasPrice: this.props.generalStore.gasPrice
-                })
+                }
 
-                getCurrentRate(crowdsaleContract)
-                  .then(() => sendTXToContract(finalizeMethod))
+                finalizeMethod.estimateGas(opts)
+                .then(estimatedGas => {
+                  opts.gasLimit = calculateGasLimit(estimatedGas)
+                  sendTXToContract(finalizeMethod.send(opts))
                   .then(() => {
                     successfulFinalizeAlert()
                     crowdsaleStore.setSelectedProperty('finalized', true)
@@ -161,6 +270,7 @@ export class Manage extends Component {
                   })
                   .catch(() => toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.FINALIZE_FAIL }))
                   .then(this.hideLoader)
+                })
               }
             })
         }
@@ -313,9 +423,23 @@ export class Manage extends Component {
   }
 
   render () {
-    const { formPristine, canFinalize, crowdsaleHasEnded } = this.state
+    const { formPristine, canFinalize, shouldDistribute, canDistribute, crowdsaleHasEnded } = this.state
     const { generalStore, tierStore, tokenStore, crowdsaleStore } = this.props
     const { address: crowdsaleAddress, finalized, updatable } = crowdsaleStore.selected
+
+    const distributeTokensStep = (
+      <div className="steps-content container">
+        <div className="about-step">
+          <div className="swal2-icon swal2-info warning-logo">!</div>
+          <p className="title">Distribute reserved tokens</p>
+          <p className="description">Reserved tokens distribution is the last step of the crowdsale before finalization.
+            You can make it only after the end of the last tier. If you reserved more then 100 addresses for your crowdsale, the distribution will be executed in batches with 100 reserved addresses per batch. Amount of batches is equal to amount of transactions</p>
+          <Link to='#' onClick={() => this.distributeReservedTokens(100)}>
+            <span className={`button button_${!canDistribute ? 'disabled' : 'fill'}`}>Distribute tokens</span>
+          </Link>
+        </div>
+      </div>
+    )
 
     const aboutStep = (
       <div className="about-step">
@@ -424,6 +548,7 @@ export class Manage extends Component {
 
     return (
       <section className="manage">
+        {shouldDistribute ? distributeTokensStep : null}
         <div className="steps-content container">
           {aboutStep}
         </div>

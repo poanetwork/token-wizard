@@ -137,6 +137,14 @@ export function successfulFinalizeAlert() {
   })
 }
 
+export function successfulDistributeAlert() {
+  sweetAlert2({
+    title: "Success",
+    html: "Congrats! You've successfully distributed reserved tokens!",
+    type: "success"
+  })
+}
+
 export function noGasPriceAvailable() {
   sweetAlert2({
     title: "No Gas Price Available",

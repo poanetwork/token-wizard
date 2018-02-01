@@ -3,7 +3,6 @@ import { noContractAlert } from '../../utils/alerts'
 import { toFixed } from '../../utils/utils'
 import { CONTRACT_TYPES } from '../../utils/constants'
 import { contractStore, crowdsalePageStore, tokenStore, web3Store } from '../../stores'
-import { findCurrentContractRecursively as findCurrentContractRecursively2 } from './utils'
 import { toJS } from 'mobx'
 
 export function getJoinedTiers(abi, addr, joinedCrowdsales, cb) {
@@ -47,7 +46,7 @@ function getJoinedTiersRecursively(i, crowdsaleContract, joinedCrowdsales, joine
   })
 }
 
-export function findCurrentContractRecursively(i, $this, firstCrowdsaleContract, cb) {
+export function findCurrentContractRecursively(i, firstCrowdsaleContract, cb) {
   console.log(contractStore.crowdsale.addr);
   let crowdsaleAddr = contractStore.crowdsale.addr[i];
   const { web3 } = web3Store
@@ -87,7 +86,7 @@ export function findCurrentContractRecursively(i, $this, firstCrowdsaleContract,
             cb(crowdsaleContract, i)
           } else {
             i++
-            findCurrentContractRecursively2(i, $this, firstCrowdsaleContract, cb)
+            findCurrentContractRecursively(i, firstCrowdsaleContract, cb)
           }
         })
       })
@@ -195,150 +194,91 @@ export function getCrowdsaleTargetDates($this, cb) {
 }
 
 export function initializeAccumulativeData() {
-  crowdsalePageStore.setProperty('weiRaised', 0)
-  crowdsalePageStore.setProperty('tokenAmountOf', 0)
   crowdsalePageStore.setProperty('maximumSellableTokens', 0)
+  crowdsalePageStore.setProperty('maximumSellableTokensInWei', 0)
   crowdsalePageStore.setProperty('investors', 0)
+  crowdsalePageStore.setProperty('ethRaised', 0)
+  crowdsalePageStore.setProperty('weiRaised', 0)
+  crowdsalePageStore.setProperty('tokensSold', 0)
+  crowdsalePageStore.setProperty('tokenAmountOf', 0)
   return Promise.resolve()
 }
 
-export function getAccumulativeCrowdsaleData(cb) {
-  let propsCount = 0;
-  let cbCount = 0;
+export function getAccumulativeCrowdsaleData() {
   const { web3 } = web3Store
 
-  console.log("contractStore.crowdsale.addr.length: " + contractStore.crowdsale.addr.length);
+  let promises = contractStore.crowdsale.addr
+    .map(crowdsaleAddr => {
+      return attachToContract(contractStore.crowdsale.abi, crowdsaleAddr)
+        .then(crowdsaleContract => { // eslint-disable-line no-loop-func
+          if (!crowdsaleContract) return noContractAlert()
 
-  for (let i = 0; i < contractStore.crowdsale.addr.length; i++) {
-    let crowdsaleAddr = contractStore.crowdsale.addr[i];
+          let getWeiRaised = crowdsaleContract.methods.weiRaised().call().then((weiRaised) => {
+            let newWeiRaised
+            if (crowdsalePageStore.weiRaised) {
+              newWeiRaised = crowdsalePageStore.weiRaised + parseInt(weiRaised, 10);
+            } else {
+              newWeiRaised = parseInt(weiRaised, 10);
+            }
 
-    attachToContract(contractStore.crowdsale.abi, crowdsaleAddr)
-      .then(crowdsaleContract => { // eslint-disable-line no-loop-func
-        console.log('attach to crowdsale contract')
+            crowdsalePageStore.setProperty('weiRaised', newWeiRaised)
+            crowdsalePageStore.setProperty('ethRaised', parseFloat(web3.utils.fromWei(toFixed(crowdsalePageStore.weiRaised).toString(), 'ether')))
+          })
 
-        if (!crowdsaleContract) return noContractAlert()
-
-        propsCount++
-        crowdsaleContract.methods.weiRaised().call((err, weiRaised) => {
-          cbCount++
-          if (err) return console.log(err)
-
-          let state = this.state
-
-          let newWeiRaised
-          if (crowdsalePageStore.weiRaised)
-            newWeiRaised = crowdsalePageStore.weiRaised + parseInt(weiRaised, 10);
-          else
-            newWeiRaised = parseInt(weiRaised, 10);
-
-          crowdsalePageStore.setProperty('weiRaised', newWeiRaised)
-          crowdsalePageStore.setProperty('ethRaised', parseFloat(web3.utils.fromWei(toFixed(crowdsalePageStore.weiRaised).toString(), 'ether')))
-
-          if (propsCount === cbCount) {
-            state.loading = false
-            this.setState(state, cb)
-          }
-        })
-
-        if (crowdsaleContract.methods.tokensSold) {
-          propsCount++
-          crowdsaleContract.methods.tokensSold().call((err, tokensSold) => {
-            cbCount++
-            if (err) return console.log(err)
-
-            console.log('tokensSold: ' + tokensSold)
-            let state = { ...this.state }
-            if (crowdsalePageStore.tokensSold)
+          let getTokensSold = crowdsaleContract.methods.tokensSold().call().then((tokensSold) => {
+            if (crowdsalePageStore.tokensSold) {
               crowdsalePageStore.setProperty('tokensSold', crowdsalePageStore.tokensSold + parseInt(tokensSold, 10))
-            else
+            } else {
               crowdsalePageStore.setProperty('tokensSold', parseInt(tokensSold, 10))
-
-            if (propsCount === cbCount) {
-              state.loading = false
-              this.setState(state, cb)
             }
           })
-        }
 
-
-        if (crowdsaleContract.methods.maximumSellableTokens) {
-          propsCount++
-          crowdsaleContract.methods.maximumSellableTokens().call((err, maximumSellableTokens) => {
-            cbCount++
-            if (err) return console.log(err)
-
-            console.log('maximumSellableTokens: ' + maximumSellableTokens)
-            let state = this.state
+          let getMaximumSellableTokens = crowdsaleContract.methods.maximumSellableTokens().call().then((maximumSellableTokens) => {
             const maxSellableTokens = crowdsalePageStore.maximumSellableTokens
-            if (maxSellableTokens)
+            if (maxSellableTokens) {
               crowdsalePageStore.setProperty('maximumSellableTokens', maxSellableTokens + parseInt(toFixed(maximumSellableTokens), 10))
-            else
+            } else {
               crowdsalePageStore.setProperty('maximumSellableTokens', parseInt(toFixed(maximumSellableTokens), 10))
+            }
 
             //calc maximumSellableTokens in Eth
-            setMaximumSellableTokensInEth(crowdsaleContract, maximumSellableTokens)
-
-            if (propsCount === cbCount) {
-              state.loading = false
-              this.setState(state, cb)
-            }
+            return setMaximumSellableTokensInEth(crowdsaleContract, maximumSellableTokens)
           })
-        }
 
-        let getInvestors
-        if (crowdsaleContract.methods.investorCount) getInvestors = crowdsaleContract.methods.investorCount()
-        else if (crowdsaleContract.methods.investors) getInvestors = crowdsaleContract.methods.investors()
-
-        if (getInvestors) {
-          propsCount++
-          getInvestors.call((err, investors) => {
-            cbCount++
-            if (err) return console.log(err)
-
-            console.log("investors: " + investors);
-            let state = this.state;
+          let getInvestors = crowdsaleContract.methods.investorCount().call().then((investors) => {
             const oldInvestors = crowdsalePageStore.investors
             const investorsCount = parseInt(investors, 10)
 
-            if (oldInvestors)
+            if (oldInvestors) {
               crowdsalePageStore.setProperty('investors', oldInvestors + investorsCount);
-            else
+            } else {
               crowdsalePageStore.setProperty('investors', investorsCount);
-
-            if (propsCount === cbCount) {
-              state.loading = false;
-              this.setState(state, cb);
             }
           });
-        }
-      })
-      .catch(console.log)
-  }
+
+          return Promise.all([getWeiRaised, getTokensSold, getMaximumSellableTokens, getInvestors])
+        })
+    })
+
+  return Promise.all(promises)
 }
 
 function setMaximumSellableTokensInEth(crowdsaleContract, maximumSellableTokens) {
-  crowdsaleContract.methods.pricingStrategy().call((err, pricingStrategyAddr) => {
-    if (err) return console.log(err);
+  return crowdsaleContract.methods.pricingStrategy().call()
+    .then((pricingStrategyAddr) => {
+      return attachToContract(contractStore.pricingStrategy.abi, pricingStrategyAddr)
+    })
+    .then(pricingStrategyContract => {
+      if (!pricingStrategyContract) return noContractAlert()
 
-    console.log("pricingStrategy: " + pricingStrategyAddr);
-    attachToContract(contractStore.pricingStrategy.abi, pricingStrategyAddr)
-      .then(pricingStrategyContract => {
-        console.log('attach to pricing strategy contract')
-
-        if (!pricingStrategyContract) return noContractAlert()
-
-        pricingStrategyContract.methods.oneTokenInWei().call((err, oneTokenInWei) => {
-          if (err) console.log(err)
-
-          console.log('pricing strategy oneTokenInWei: ' + oneTokenInWei)
-          if (crowdsalePageStore.maximumSellableTokensInWei)
-            crowdsalePageStore.setProperty('maximumSellableTokensInWei', crowdsalePageStore.maximumSellableTokensInWei + parseInt(oneTokenInWei, 10) * maximumSellableTokens / 10 ** tokenStore.decimals)
-          else
-            crowdsalePageStore.setProperty('maximumSellableTokensInWei', parseInt(oneTokenInWei, 10) * maximumSellableTokens / 10 ** tokenStore.decimals)
-        })
+      return pricingStrategyContract.methods.oneTokenInWei().call().then((oneTokenInWei) => {
+        if (crowdsalePageStore.maximumSellableTokensInWei) {
+          crowdsalePageStore.setProperty('maximumSellableTokensInWei', crowdsalePageStore.maximumSellableTokensInWei + parseInt(oneTokenInWei, 10) * maximumSellableTokens / 10 ** tokenStore.decimals)
+        } else {
+          crowdsalePageStore.setProperty('maximumSellableTokensInWei', parseInt(oneTokenInWei, 10) * maximumSellableTokens / 10 ** tokenStore.decimals)
+        }
       })
-      .catch(console.log)
-  });
+    })
 }
 
 export function getCurrentRate(crowdsaleContract) {
