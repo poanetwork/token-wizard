@@ -1,4 +1,4 @@
-If you are reporting a problem with ICO Wizard, please include the following information:
+If you are reporting a problem with Token Wizard, please include the following information:
 
 ### Which network did you use? (Mainnet, Kovan, Rinkeby, etc.)
 
