@@ -14,7 +14,7 @@ import {
   handlerForFile,
   scrollToBottom,
   setFinalizeAgentRecursive,
-  setLastCrowdsaleRecursive,
+  setTierRecursive,
   setMintAgentRecursive,
   setReleaseAgentRecursive,
   setReservedTokensListMultiple,
@@ -338,8 +338,7 @@ const { PUBLISH } = NAVIGATION_STEPS
     console.log('web3Store', web3, web3.utils.toWei)
 
     return [
-      web3.utils.toWei(oneTokenInETH, 'ether'),
-      pricingStrategy.updatable ? pricingStrategy.updatable === 'on' : false
+      web3.utils.toWei(oneTokenInETH, 'ether')
     ]
   }
 
@@ -513,7 +512,7 @@ const { PUBLISH } = NAVIGATION_STEPS
     const tokenAddr = token.addr
     const crowdsaleAddr = crowdsale.addr
 
-    setLastCrowdsaleRecursive(pricingStrategyABI, pricingStrategy.addr, crowdsaleAddr.slice(-1)[0])
+    setTierRecursive(pricingStrategyABI, pricingStrategy.addr, crowdsaleAddr)
       .then(() => setReservedTokensListMultiple(tokenABI, tokenAddr, tokenStore, reservedTokenStore))
       .then(() => updateJoinedCrowdsalesRecursive(crowdsaleABI, crowdsaleAddr))
       .then(() => setMintAgentRecursive(tokenABI, tokenAddr, crowdsaleAddr, 'setMintAgentCrowdsale'))

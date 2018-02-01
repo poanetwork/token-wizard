@@ -397,7 +397,8 @@ export const TOAST = {
     TRANSACTION_FAILED: 'Transaction has failed, please retry',
     CONTRACT_DOWNLOAD_FAILED: 'Contract Download failed',
     CONTRACT_DOWNLOAD_SUCCESS: 'A file with contracts and metadata downloaded on your computer',
-    FINALIZE_FAIL: 'Was not able to finalize Crowdsale. Please be sure that Crowdsale has ended already'
+    FINALIZE_FAIL: 'Was not able to finalize Crowdsale. Please be sure that Crowdsale has ended already',
+    DISTRIBUTE_FAIL: 'Was not able to distribute reserved tokens'
   },
   DEFAULT_OPTIONS: {
     position: 'top right',
@@ -413,7 +414,7 @@ export const TX_STEP_DESCRIPTION = {
   crowdsale: "Deploy Crowdsale Contract",
   registerCrowdsaleAddress: "Associate Crowdsale address to current account",
   finalizeAgent: "Deploy Finalize Agent Contract",
-  lastCrowdsale: "Register last Tier address",
+  tier: "Register tier address for Pricing strategy",
   setReservedTokens: "Register addresses for Reserved Tokens",
   updateJoinedCrowdsales: "Register Crowdsales addresses",
   setMintAgentCrowdsale: "Allow Crowdsale Contract to Mint Tokens",

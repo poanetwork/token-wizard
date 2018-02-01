@@ -12,7 +12,7 @@ class DeploymentStore {
       { name: 'crowdsale', dependsOnTiers: true, required: true },
       { name: 'registerCrowdsaleAddress', dependsOnTiers: false, required: true },
       { name: 'finalizeAgent', dependsOnTiers: true, required: true },
-      { name: 'lastCrowdsale', dependsOnTiers: true, required: true },
+      { name: 'tier', dependsOnTiers: true, required: true },
       { name: 'setReservedTokens', dependsOnTiers: false, required: hasReservedToken },
       { name: 'updateJoinedCrowdsales', dependsOnTiers: true, required: true },
       { name: 'setMintAgentCrowdsale', dependsOnTiers: true, required: true },
