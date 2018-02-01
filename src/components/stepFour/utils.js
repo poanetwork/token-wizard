@@ -53,7 +53,7 @@ export const buildDeploymentSteps = () => {
     crowdsale: deployCrowdsale,
     registerCrowdsaleAddress: registerCrowdsaleAddress,
     finalizeAgent: deployFinalizeAgent,
-    lastCrowdsale: setLastCrowdsale,
+    tier: setTier,
     setReservedTokens: setReservedTokensListMultiple,
     updateJoinedCrowdsales: updateJoinedCrowdsales,
     setMintAgentCrowdsale: setMintAgentForCrowdsale,
@@ -72,7 +72,6 @@ export const buildDeploymentSteps = () => {
     }
   })
 
-  console.log('hola')
   return list
 }
 
@@ -141,8 +140,7 @@ const getPricingStrategyParams = tier => {
   const oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, 1 / tier.rate)
 
   return [
-    web3Store.web3.utils.toWei(oneTokenInETH, 'ether'),
-    tier.updatable === 'on'
+    web3Store.web3.utils.toWei(oneTokenInETH, 'ether')
   ]
 }
 
@@ -258,19 +256,21 @@ export const deployFinalizeAgent = () => {
   })
 }
 
-export const setLastCrowdsale = () => {
+export const setTier = () => {
   return tierStore.tiers.map((tier, index) => {
     return () => {
-      const addr = contractStore.pricingStrategy.addr[index]
-      const abi = contractStore.pricingStrategy.abi.slice()
-      const lastCrowdsale = contractStore.crowdsale.addr.slice(-1)[0]
+      console.log('###setTier for Pricing Strategy:###')
 
-      return attachToContract(abi, addr)
+      const pricingStrategyAddr = contractStore.pricingStrategy.addr[index]
+      const pricingStrategyABI = contractStore.pricingStrategy.abi.slice()
+      const tierAddr = contractStore.crowdsale.addr[index]
+
+      return attachToContract(pricingStrategyABI, pricingStrategyAddr)
         .then(pricingStrategyContract => {
           console.log('attach to pricingStrategy contract')
 
           const opts = { gasPrice: generalStore.gasPrice }
-          const method = pricingStrategyContract.methods.setLastCrowdsale(lastCrowdsale)
+          const method = pricingStrategyContract.methods.setTier(tierAddr)
 
           return method.estimateGas(opts)
             .then(estimatedGas => {
@@ -278,7 +278,7 @@ export const setLastCrowdsale = () => {
               return sendTXToContract(method.send(opts))
             })
         })
-        .then(() => deploymentStore.setAsSuccessful('lastCrowdsale'))
+        .then(() => deploymentStore.setAsSuccessful('tier'))
     }
   })
 
@@ -431,7 +431,7 @@ export const addWhitelist = () => {
           console.log('maxCaps:', maxCaps)
 
           const opts = { gasPrice: generalStore.gasPrice }
-          const method = crowdsaleContract.methods.setEarlyParticipantsWhitelist(addrs, statuses, minCaps, maxCaps)
+          const method = crowdsaleContract.methods.setEarlyParticipantWhitelistMultiple(addrs, statuses, minCaps, maxCaps)
 
           return method.estimateGas(opts)
             .then(estimatedGas => {
