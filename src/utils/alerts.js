@@ -5,7 +5,7 @@ import { DEPLOYMENT_VALUES } from './constants'
 export function noMetaMaskAlert() {
   sweetAlert2({
     title: "Warning",
-    html: "You don't have Metamask installed. Check ICO Wizard GitHub for <a href='https://github.com/oraclesorg/ico-wizard' target='blank'>the instruction</a>.",
+    html: "You don't have Metamask installed. Check Token Wizard GitHub for <a href='https://github.com/poanetwork/ico-wizard' target='blank'>the instruction</a>.",
     type: "warning"
   });
 }
@@ -13,7 +13,7 @@ export function noMetaMaskAlert() {
 export function noContractDataAlert() {
   sweetAlert2({
     title: "Warning",
-    html: "The crowdsale data is empty. There is nothing to deploy. Please, start ICO Wizard from the beginning.",
+    html: "The crowdsale data is empty. There is nothing to deploy. Please, start Token Wizard from the beginning.",
     type: "warning"
   });
 }
@@ -73,7 +73,7 @@ export function investmentDisabledAlertInTime(startTime) {
 export function incorrectNetworkAlert(correctNetworkName, incorrectNetworkName) {
   sweetAlert2({
     title: "Warning",
-    html: "Crowdsale contract is from <b>" + correctNetworkName + " network</b>. But you are connected to <b>" + incorrectNetworkName + " network</b>. Please, change connection in MetaMask/Oracles plugin.",
+    html: "Crowdsale contract is from <b>" + correctNetworkName + " network</b>. But you are connected to <b>" + incorrectNetworkName + " network</b>. Please, change connection in MetaMask plugin.",
     type: "warning"
   });
 }
@@ -81,7 +81,7 @@ export function incorrectNetworkAlert(correctNetworkName, incorrectNetworkName) 
 export function noDeploymentOnMainnetAlert() {
   sweetAlert2({
     title: "Warning",
-    html: "Wizard is under maintenance on Ethereum Mainnet. Please come back later or use Kovan/Rinkeby/Oracles. Follow <a href='https://twitter.com/oraclesorg'>https://twitter.com/oraclesorg</a> for status.",
+    html: "Wizard is under maintenance on Ethereum Mainnet. Please come back later or use Kovan/Rinkeby/POA. Follow <a href='https://twitter.com/poanetwork'>https://twitter.com/poanetwork</a> for status.",
     type: "warning"
   });
 }
@@ -103,7 +103,7 @@ export function warningOnMainnetAlert(tiersCount, priceSelected, reservedCount, 
   sweetAlert2({
     title: "Warning",
     html: `You are about to sign ${estimatedTxsCount} TXs. You will see an individual Metamask windows for each of it.
-     Please don't open two or more instances of Wizard in one browser. ICO Wizard will create ${tiersCount}-tier(s) 
+     Please don't open two or more instances of Wizard in one browser. Token Wizard will create ${tiersCount}-tier(s) 
      crowdsale for you. The total cost will be around ${estimatedCost.toFixed(2)} ETH. Are you sure you want to 
      proceed?`,
     type: "warning",
@@ -148,7 +148,7 @@ export function successfulDistributeAlert() {
 export function noGasPriceAvailable() {
   sweetAlert2({
     title: "No Gas Price Available",
-    html: "ICO Wizard wasn't able to request current Gas Prices from the blockchain, custom values will be used",
+    html: "Token Wizard wasn't able to request current Gas Prices from the blockchain, custom values will be used",
     type: "warning"
   })
 }
@@ -176,7 +176,7 @@ export function successfulDeployment() {
 export function mainnetIsOnMaintenance() {
   sweetAlert2({
     title: "Warning",
-    html: "ICO Wizard on Mainnet is down for maintenance. For updates, please check <a href='https://gitter.im/poanetwork/ico-wizard'>our gitter</a>",
+    html: "Token Wizard on Mainnet is down for maintenance. For updates, please check <a href='https://gitter.im/poanetwork/ico-wizard'>our gitter</a>",
     type: "warning"
   });
 }
