@@ -9,7 +9,7 @@ import {
   getJoinedTiers,
   initializeAccumulativeData
 } from './utils'
-import { getQueryVariable, getURLParam, getWhiteListWithCapCrowdsaleAssets, toFixed } from '../../utils/utils'
+import { getQueryVariable, getWhiteListWithCapCrowdsaleAssets, toFixed } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { CONTRACT_TYPES, NAVIGATION_STEPS } from '../../utils/constants'
 import { invalidCrowdsaleAddrAlert } from '../../utils/alerts'
@@ -29,8 +29,6 @@ export class Crowdsale extends React.Component {
 
   componentDidMount () {
     checkWeb3()
-
-    this.setState({ tokenIsAlreadyCreated: true })
 
     const networkID = ICOConfig.networkID ? ICOConfig.networkID : getQueryVariable('networkID')
     const contractType = CONTRACT_TYPES.whitelistwithcap//getQueryVariable("contractType");
@@ -61,7 +59,7 @@ export class Crowdsale extends React.Component {
   extractContractsData = () => {
     const { contractStore, web3Store } = this.props
     const { web3 } = web3Store
-    const crowdsaleAddr = ICOConfig.crowdsaleContractURL ? ICOConfig.crowdsaleContractURL : getURLParam('addr')
+    const crowdsaleAddr = ICOConfig.crowdsaleContractURL ? ICOConfig.crowdsaleContractURL : getQueryVariable('addr')
 
     if (!web3.utils.isAddress(crowdsaleAddr)) {
       this.setState({ loading: false })
@@ -78,7 +76,7 @@ export class Crowdsale extends React.Component {
         return
       }
 
-      findCurrentContractRecursively(0, this, null, (crowdsaleContract) => {
+      findCurrentContractRecursively(0, null, (crowdsaleContract) => {
         if (!crowdsaleContract) {
           return this.setState({ loading: false })
         }
@@ -92,8 +90,10 @@ export class Crowdsale extends React.Component {
     getCrowdsaleData(crowdsaleContract)
       .then(() => initializeAccumulativeData())
       .then(() => {
+        return getAccumulativeCrowdsaleData()
+      })
+      .then(() => {
         this.setState({ loading: false })
-        getAccumulativeCrowdsaleData.call(this, () => {})
       })
       .catch(err => {
         this.setState({ loading: false })
@@ -151,8 +151,7 @@ export class Crowdsale extends React.Component {
 
     const tokensClaimedRatio = goalInETH ? (ethRaised / goalInETH) * 100 : "0";
 
-    return this.state.loading ? <Loader show={this.state.loading}></Loader> :
-    (
+    return (
       <section className="steps steps_crowdsale-page">
         <StepNavigation activeStep={CROWDSALE_PAGE} />
         <div className="steps-content container">
