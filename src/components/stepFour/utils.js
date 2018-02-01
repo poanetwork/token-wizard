@@ -1,15 +1,25 @@
 import {
-  calculateGasLimit,
   attachToContract,
+  calculateGasLimit,
+  deployContract,
   getNetWorkNameById,
   getNetworkVersion,
-  sendTXToContract, deployContract, registerCrowdsaleAddress
+  getRegistryAddress,
+  sendTXToContract
 } from '../../utils/blockchainHelpers'
 import { noContractAlert, noContractDataAlert } from '../../utils/alerts'
 import { floorToDecimals, toFixed } from '../../utils/utils'
 import { CONTRACT_TYPES, DOWNLOAD_NAME, TRUNC_TO_DECIMALS } from '../../utils/constants'
 import { isObservableArray } from 'mobx'
-import { generalStore, deploymentStore, contractStore, tierStore, tokenStore, reservedTokenStore, web3Store } from '../../stores'
+import {
+  contractStore,
+  deploymentStore,
+  generalStore,
+  reservedTokenStore,
+  tierStore,
+  tokenStore,
+  web3Store
+} from '../../stores'
 import { getEncodedABIClientSide } from '../../utils/microservices'
 
 export const setupContractDeployment = () => {
@@ -207,6 +217,38 @@ export const deployCrowdsale = () => {
         .then(() => deploymentStore.setAsSuccessful('crowdsale'))
     }
   })
+}
+
+function registerCrowdsaleAddress () {
+  return [
+    () => {
+      const { web3 } = web3Store
+      const toJS = x => JSON.parse(JSON.stringify(x))
+
+      const registryAbi = contractStore.registry.abi
+      const crowdsaleAddress = contractStore.crowdsale.addr[0]
+
+      const whenRegistryAddress = getRegistryAddress()
+
+      const whenAccount = web3.eth.getAccounts()
+        .then((accounts) => accounts[0])
+
+      return Promise.all([whenRegistryAddress, whenAccount])
+        .then(([registryAddress, account]) => {
+          const registry = new web3.eth.Contract(toJS(registryAbi), registryAddress)
+
+          const opts = { gasPrice: generalStore.gasPrice, from: account }
+          const method = registry.methods.add(crowdsaleAddress)
+
+          return method.estimateGas(opts)
+            .then(estimatedGas => {
+              opts.gasLimit = calculateGasLimit(estimatedGas)
+              return sendTXToContract(method.send(opts))
+            })
+        })
+        .then(() => deploymentStore.setAsSuccessful('registerCrowdsaleAddress'))
+    }
+  ]
 }
 
 const getNullFinalizeAgentParams = index => {
