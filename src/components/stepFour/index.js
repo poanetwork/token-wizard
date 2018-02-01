@@ -2,8 +2,7 @@ import React from 'react'
 import '../../assets/stylesheets/application.css'
 import {
   deployContract,
-  getNetworkVersion,
-  registerCrowdsaleAddress
+  getNetworkVersion
 } from '../../utils/blockchainHelpers'
 import {
   addWhiteListRecursive,
@@ -19,7 +18,8 @@ import {
   setReleaseAgentRecursive,
   setReservedTokensListMultiple,
   transferOwnership,
-  updateJoinedCrowdsalesRecursive
+  updateJoinedCrowdsalesRecursive,
+  registerCrowdsaleAddress
 } from './utils'
 import { noContractDataAlert, noMetaMaskAlert, successfulDeployment } from '../../utils/alerts'
 import {

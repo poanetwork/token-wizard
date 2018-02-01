@@ -3,13 +3,14 @@ import {
   attachToContract,
   getNetWorkNameById,
   getNetworkVersion,
-  sendTXToContract
+  sendTXToContract,
+  getRegistryAddress
 } from '../../utils/blockchainHelpers'
 import { noContractAlert } from '../../utils/alerts'
 import { toFixed } from '../../utils/utils'
 import { DOWNLOAD_NAME } from '../../utils/constants'
 import { isObservableArray } from 'mobx'
-import { generalStore, deploymentStore } from '../../stores'
+import { generalStore, deploymentStore, contractStore, web3Store } from '../../stores'
 
 function setTier (abi, addr, tier) {
   console.log('###setTier for Pricing Strategy:###')
@@ -303,6 +304,37 @@ export function transferOwnership (abi, addr, finalizeAgentAddr) {
         })
         .then(() => deploymentStore.setAsSuccessful('transferOwnership'))
     })
+}
+
+export function registerCrowdsaleAddress () {
+  console.log('###registerCrowdsaleAddress:###')
+  const { web3 } = web3Store
+  const toJS = x => JSON.parse(JSON.stringify(x))
+
+  const registryAbi = contractStore.registry.abi
+  const crowdsaleAddress = contractStore.crowdsale.addr[0]
+
+  const whenRegistryAddress = getRegistryAddress()
+
+  const whenAccount = web3.eth.getAccounts()
+    .then((accounts) => accounts[0])
+
+  return Promise.all([whenRegistryAddress, whenAccount])
+    .then(([registryAddress, account]) => {
+      const registry = new web3.eth.Contract(toJS(registryAbi), registryAddress)
+
+
+      const opts = { gasPrice: generalStore.gasPrice, from: account }
+      const method = registry.methods.add(crowdsaleAddress)
+
+      return method.estimateGas(opts)
+        .then(estimatedGas => {
+          opts.gasLimit = calculateGasLimit(estimatedGas)
+          return sendTXToContract(method.send(opts))
+        })
+    })
+
+    .then(() => deploymentStore.setAsSuccessful('registerCrowdsaleAddress'))
 }
 
 export function setTierRecursive (abi, pricingStrategyAddrs, tiers) {
