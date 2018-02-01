@@ -65,8 +65,10 @@ export function getNetWorkNameById (_id) {
       return CHAINS.RINKEBY
     case 42:
       return CHAINS.KOVAN
-    case 12648430:
-      return CHAINS.ORACLES
+    case 77:
+      return CHAINS.SOKOL
+    case 99:
+      return CHAINS.CORE
     default:
       return null
   }
