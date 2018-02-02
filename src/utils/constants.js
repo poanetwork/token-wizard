@@ -113,7 +113,8 @@ export const CHAINS = {
   ROPSTEN: 'Ropsten',
   RINKEBY: 'Rinkeby',
   KOVAN: 'Kovan',
-  ORACLES: 'Oracles dev test'
+  SOKOL: 'Sokol',
+  CORE: 'Core_POA'
 }
 
 export const NAVIGATION_STEPS = {
