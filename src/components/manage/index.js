@@ -220,7 +220,10 @@ export class Manage extends Component {
                   crowdsaleStore.setSelectedProperty('distributed', true)
                   this.setState({ canDistribute: false, canFinalize: true })
                 })
-                .catch(() => toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.DISTRIBUTE_FAIL }))
+                .catch((err) => {
+                  console.log(err)
+                  toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.DISTRIBUTE_FAIL })
+                })
                 .then(this.hideLoader)
               })
             })
@@ -268,9 +271,17 @@ export class Manage extends Component {
                     crowdsaleStore.setSelectedProperty('finalized', true)
                     this.setState({ canFinalize: false })
                   })
-                  .catch(() => toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.FINALIZE_FAIL }))
+                  .catch((err) => {
+                    console.log(err)
+                    toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.FINALIZE_FAIL })
+                  })
                   .then(this.hideLoader)
                 })
+                .catch((err) => {
+                  console.log(err)
+                  toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.FINALIZE_FAIL })
+                })
+                .then(this.hideLoader)
               }
             })
         }

@@ -1,8 +1,7 @@
 import { incorrectNetworkAlert, noMetaMaskAlert, invalidNetworkIDAlert } from './alerts'
 import { CHAINS, MAX_GAS_PRICE } from './constants'
-import { crowdsaleStore, generalStore, web3Store, contractStore } from '../stores'
+import { crowdsaleStore, generalStore, web3Store } from '../stores'
 import { fetchFile } from './utils'
-import deploymentStore from '../stores/DeploymentStore'
 
 const DEPLOY_CONTRACT = 1
 const CALL_METHOD = 2
@@ -155,7 +154,7 @@ let sendTX = (method, type) => {
     method
       .on('error', error => {
         console.error(error)
-        // https://github.com/poanetwork/ico-wizard/issues/472
+        // https://github.com/poanetwork/token-wizard/issues/472
         if (
           !error.message.includes('Failed to check for transaction receipt')
           && !error.message.includes('Failed to fetch')
@@ -165,10 +164,10 @@ let sendTX = (method, type) => {
       // This additional polling of tx receipt was made, because users had problems on mainnet: wizard hanged on random
       // transaction, because there wasn't response from it, no receipt. Especially, if you switch between tabs when
       // wizard works.
-      // https://github.com/poanetwork/ico-wizard/pull/364/files/c86c3e8482ef078e0cb46b8bebf57a9187f32181#r152277434
+      // https://github.com/poanetwork/token-wizard/pull/364/files/c86c3e8482ef078e0cb46b8bebf57a9187f32181#r152277434
       .on('transactionHash', _txHash => checkTxMined(_txHash, function pollingReceiptCheck (err, receipt) {
         if (isMined) return
-        //https://github.com/poanetwork/ico-wizard/issues/480
+        //https://github.com/poanetwork/token-wizard/issues/480
         if (
           err
           && !err.message.includes('Failed to check for transaction receipt')

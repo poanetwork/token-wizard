@@ -16,7 +16,7 @@ fs.readFile(inputFilePath, "utf8", function(err, content) {
 		return console.log(err.message);
 	}
 
-	content = "// Created using Token Wizard https://github.com/poanetwork/ico-wizard by POA Network \n" + content;
+	content = "// Created using Token Wizard https://github.com/poanetwork/token-wizard by POA Network \n" + content;
 	if (!isExtended) return compileContract(content);
 
 	addExtendedCode(extensionFilePath, content, function(err, contentUpdated) {

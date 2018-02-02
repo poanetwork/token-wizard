@@ -4,7 +4,7 @@
 
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/hyperium/hyper/master/LICENSE)
 [![Build Status](https://travis-ci.org/poanetwork/ico-wizard.svg?branch=master)](https://travis-ci.org/poanetwork/ico-wizard)
-[![Waffle.io - Columns and their card count](https://badge.waffle.io/poanetwork/ico-wizard.svg?columns=all)](http://waffle.io/poanetwork/ico-wizard)
+[![Waffle.io - Columns and their card count](https://badge.waffle.io/poanetwork/token-wizard.svg?columns=all)](http://waffle.io/poanetwork/ico-wizard)
 [![Join the chat at https://gitter.im/poanetwork/ico-wizard](https://badges.gitter.im/poanetwork/ico-wizard.svg)](https://gitter.im/poanetwork/ico-wizard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ### **_Attention_!**
@@ -32,30 +32,30 @@ __Deploying on POA's Sokol or Main network is much faster then using Ethereum's 
 
  POA Main Network RPC URL: https://core.poa.network
 
- For a guide on how to connect to the POA network using MetaMask see [here](https://github.com/poanetwork/ico-wizard/wiki/Connecting-to-POA-Networks).
+ For a guide on how to connect to the POA network using MetaMask see [here](https://github.com/poanetwork/token-wizard/wiki/Connecting-to-POA-Networks).
 
 ## Token Wizard DApp Wiki
-- [Introduction](https://github.com/poanetwork/ico-wizard/wiki/Token-Wizard-Introduction)
-- [Demo](https://github.com/poanetwork/ico-wizard/wiki/Token-Wizard-Demo)
-- [Requirements](https://github.com/poanetwork/ico-wizard/wiki/Token-Wizard-Requirements)
-- [Strategy](https://github.com/poanetwork/ico-wizard/wiki/Token-Wizard-Strategy)
-- [How to run](https://github.com/poanetwork/ico-wizard/wiki/Token-Wizard-How-to-run)
-- [Using POA Networks](https://github.com/poanetwork/ico-wizard/wiki/Connecting-to-POA-Networks)
-- [Deployment Time & Gas](https://github.com/poanetwork/ico-wizard/wiki/Token-Wizard-Deployment-Stats)
-- [Verifying Smart-Contracts](https://github.com/poanetwork/ico-wizard/wiki/Token-Wizard-Verifying-Contracts)
-- [Projects on Token Wizard](https://github.com/poanetwork/ico-wizard/wiki/Token-Wizard-Projects)
-- [Notable Contributors](https://github.com/poanetwork/ico-wizard/wiki/Token-Wizard-Notable-Contributors)
-- [Support](https://github.com/poanetwork/ico-wizard/wiki/Token-Wizard-Support)
-- [Disclaimer](https://github.com/poanetwork/ico-wizard/wiki/Token-Wizard-Disclaimer)
+- [Introduction](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Introduction)
+- [Demo](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Demo)
+- [Requirements](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Requirements)
+- [Strategy](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Strategy)
+- [How to run](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-How-to-run)
+- [Using POA Networks](https://github.com/poanetwork/token-wizard/wiki/Connecting-to-POA-Networks)
+- [Deployment Time & Gas](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Deployment-Stats)
+- [Verifying Smart-Contracts](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Verifying-Contracts)
+- [Projects on Token Wizard](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Projects)
+- [Notable Contributors](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Notable-Contributors)
+- [Support](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Support)
+- [Disclaimer](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Disclaimer)
 ### Policies
-- [Pull Request Policy](https://github.com/poanetwork/ico-wizard/wiki/Pull-Request-Policy)
+- [Pull Request Policy](https://github.com/poanetwork/token-wizard/wiki/Pull-Request-Policy)
 ### Managing your Crowdsale
-- [Methods for Management](https://github.com/poanetwork/ico-wizard/wiki/Token-Wizard-Managing-Crowdsale)
+- [Methods for Management](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Managing-Crowdsale)
 
 
 ## Support
 
-If you are having any issues while using the Token Wizard DApp, please create a "New Issue" on it's [Github Issues section](https://github.com/poanetwork/ico-wizard/issues).
+If you are having any issues while using the Token Wizard DApp, please create a "New Issue" on it's [Github Issues section](https://github.com/poanetwork/token-wizard/issues).
 
 Join the Poa Network Forum at [https://forum.poa.network/](https://forum.poa.network/)
 

@@ -5,7 +5,7 @@ import { DEPLOYMENT_VALUES } from './constants'
 export function noMetaMaskAlert() {
   sweetAlert2({
     title: "Warning",
-    html: "You don't have Metamask installed. Check Token Wizard GitHub for <a href='https://github.com/poanetwork/ico-wizard' target='blank'>the instruction</a>.",
+    html: "You don't have Metamask installed. Check Token Wizard GitHub for <a href='https://github.com/poanetwork/token-wizard' target='blank'>the instruction</a>.",
     type: "warning"
   });
 }
@@ -176,7 +176,7 @@ export function successfulDeployment() {
 export function mainnetIsOnMaintenance() {
   sweetAlert2({
     title: "Warning",
-    html: "Token Wizard on Mainnet is down for maintenance. For updates, please check <a href='https://gitter.im/poanetwork/ico-wizard'>our gitter</a>",
+    html: "Token Wizard on Mainnet is down for maintenance. For updates, please check <a href='https://gitter.im/poanetwork/token-wizard'>our gitter</a>",
     type: "warning"
   });
 }
