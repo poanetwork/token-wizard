@@ -6,7 +6,9 @@
 const executeSequentially = (list) => {
   return list.reduce((promise, fn, index) => {
     return promise.then(() => {
-      return fn().catch((err) => Promise.reject([err, index]))
+      return Promise.resolve()
+        .then(() => fn())
+        .catch((err) => Promise.reject([err, index]))
     })
   }, Promise.resolve())
 

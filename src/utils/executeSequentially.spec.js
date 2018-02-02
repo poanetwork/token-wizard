@@ -57,8 +57,6 @@ describe('executeSequentially', () => {
 
   it('should return index of the function that failed (last function fails)', () => {
     // given
-    let finished = 0
-
     const list = [
       buildMockFunction(0),
       buildMockFunction(0),
@@ -75,8 +73,6 @@ describe('executeSequentially', () => {
     function buildMockFunction (timeout, shouldFail) {
       return jest.fn(() => new Promise((resolve, reject) => {
         setTimeout(() => {
-          finished++
-
           if (shouldFail) {
             reject()
           } else {
@@ -88,10 +84,8 @@ describe('executeSequentially', () => {
     }
   })
 
-  it('should return index of the function that failed (first function fails)', () => {
+  it('should return index of the function that failed (first function rejects)', () => {
     // given
-    let finished = 0
-
     const list = [
       buildMockFunction(0, true),
       buildMockFunction(0),
@@ -108,8 +102,6 @@ describe('executeSequentially', () => {
     function buildMockFunction (timeout, shouldFail) {
       return jest.fn(() => new Promise((resolve, reject) => {
         setTimeout(() => {
-          finished++
-
           if (shouldFail) {
             reject()
           } else {
@@ -118,6 +110,28 @@ describe('executeSequentially', () => {
 
         }, timeout)
       }))
+    }
+  })
+
+  it('should return index of the function that failed (first function throws)', () => {
+    // given
+    const list = [
+      buildMockFunction(0, true),
+      buildMockFunction(0),
+      buildMockFunction(0)
+    ]
+
+    // when
+    return executeSequentially(list)
+      .then(
+        () => { throw new Error('should not resolve') },
+        ([err, index]) => { expect(index).toBe(0) }
+      )
+
+    function buildMockFunction (timeout, shouldFail) {
+      return jest.fn(() => {
+        throw new Error()
+      })
     }
   })
 
