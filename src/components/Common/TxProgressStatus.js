@@ -3,7 +3,7 @@ import { observer, inject } from 'mobx-react'
 import '../../assets/stylesheets/application.css'
 import { TX_STEP_DESCRIPTION } from '../../utils/constants'
 
-@inject('tierStore')
+@inject('tierStore', 'deploymentStore')
 @observer
 export class TxProgressStatus extends Component {
   constructor (props) {
@@ -26,7 +26,7 @@ export class TxProgressStatus extends Component {
   }
 
   render () {
-    const { tierStore } = this.props
+    const { tierStore, deploymentStore } = this.props
     const tiers = new Array(tierStore.tiers.length).fill(true)
     const tableContent = this.txStatuses()
 
@@ -57,6 +57,14 @@ export class TxProgressStatus extends Component {
                   : null
               )}
             </div>
+          </div>
+          <div className="steps">
+            {process.env.NODE_ENV === 'development' && !deploymentStore.deploymentHasFinished
+              ? !deploymentStore.deploymentStep
+                ? <a onClick={this.props.deployCrowdsale} className="no_image button button_fill">Deploy!</a>
+                : <a onClick={this.props.deployCrowdsale} className="no_image button button_fill">Resume deploy...</a>
+              : null
+            }
           </div>
         </div>
         : null
