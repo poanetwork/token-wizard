@@ -85,17 +85,21 @@ export class stepFour extends React.Component {
       .catch(this.handleError)
   }
 
-  handleError = (err) => {
-    console.error(err)
-    if (!this.props.deploymentStore.deploymentHasFinished) {
+  handleError = ([err, failedAt]) => {
+    const { deploymentStore } = this.props
+
+    if (!deploymentStore.deploymentHasFinished) {
       toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED, options: {time: 1000} })
-      this.props.deploymentStore.setDeploymentStep(err[1])
+      const deploymentStepsOffset = deploymentStore.deploymentStep || 0
+      deploymentStore.setDeploymentStep(deploymentStepsOffset + failedAt)
 
     } else {
       this.hideLoader()
       this.hideModal()
       toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED })
     }
+
+    console.error([failedAt, err])
   }
 
   hideLoader() {
