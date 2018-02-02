@@ -1,6 +1,6 @@
 {
-  "name": "ico_wizard",
-  "version": "0.2.0",
+  "name": "token_wizard",
+  "version": "1.0.0",
   "private": true,
   "engines": {
     "node": "8.9.0"
@@ -94,9 +94,9 @@
   "config": {
     "contract_folder": "./public/contracts",
     "combine_solidity_script": "submodules/solidity-flattener/index.js",
-    "extension_path": "./scripts/OraclesExtendedCrowdSale.sol",
+    "extension_path": "./scripts/POAExtendedCrowdSale.sol",
     "zeppelin_path": "node_modules/zeppelin-solidity/contracts/crowdsale/",
-    "tokenmarketnet_path": "submodules/oracles-token-market-net-ico/contracts/",
+    "tokenmarketnet_path": "submodules/poa-token-market-net-ico/contracts/",
     "null_finalize_agent_contract_name": "NullFinalizeAgentExt",
     "finalize_agent_contract_name": "ReservedTokensFinalizeAgent",
     "crowdsale_contract_name": "MintedTokenCappedCrowdsaleExt",
@@ -106,14 +106,14 @@
     "registry_contract_name": "Registry"
   },
   "scripts": {
-    "installWeb3": "cd submodules/oracles-web3-1.0 && npm install && cd ../../ && npm install --no-save submodules/oracles-web3-1.0/packages/web3",
+    "installWeb3": "cd submodules/poa-web3-1.0 && npm install && cd ../../ && npm install --no-save submodules/poa-web3-1.0/packages/web3",
     "start": "npm run installWeb3 && npm run generateContracts && npm run compileContracts && node scripts/start.js",
     "dev": "npm run installWeb3 && npm run generateFlatSolidityRegistryContract && npm run compileRegistryContract && npm run deployRegistry && npm start",
     "dev:fast": "npm run installWeb3 && npm run generateFlatSolidityRegistryContract && npm run compileRegistryContract && npm run deployRegistry && node scripts/start.js",
     "deployRegistry": "node scripts/deployRegistry.js",
     "startWin": "npm run installWeb3 && npm run generateFlatSoliditySafeMathLibContractWin && npm run generateFlatSolidityCrowdsaleNullFinalizeAgentContractWin && npm run generateFlatSolidityCrowdsaleFinalizeAgentContractWin && npm run generateFlatSolidityCrowdsaleContractWin && npm run generateFlatSolidityCrowdsaleTokenContractWin && npm run generateFlatSolidityCrowdsalePricingStrategyContractWin && npm run compileSafeMathLibExtContractWin && npm run compileCrowdsaleNullFinalizeAgentContractWin && npm run compileCrowdsaleFinalizeAgentContractWin && npm run compileCrowdsaleContractWin && npm run compileCrowdsaleTokenContractWin && npm run compileCrowdsalePricingStrategyContractWin && node scripts/start.js",
-    "build": "git submodule update --init --recursive --remote && cd submodules/solidity-flattener && npm install && cd ../../ && npm install && cd submodules/oracles-web3-1.0 && npm install && cd ../../ && npm install --no-save submodules/oracles-web3-1.0/packages/web3 && npm run generateContracts && npm run compileContracts && node scripts/build.js && cp ./build/index.html ./build/invest.html && cp ./build/index.html ./build/crowdsale.html && cp ./build/index.html ./build/manage.html",
-    "test": "bash ./start_testrpc.sh && cd ./submodules/oracles-token-market-net-ico/ && npm install && node_modules/.bin/truffle migrate --network testrpc && node_modules/.bin/truffle test --network testrpc",
+    "build": "git submodule update --init --recursive --remote && cd submodules/solidity-flattener && npm install && cd ../../ && npm install && cd submodules/poa-web3-1.0 && npm install && cd ../../ && npm install --no-save submodules/poa-web3-1.0/packages/web3 && npm run generateContracts && npm run compileContracts && node scripts/build.js && cp ./build/index.html ./build/invest.html && cp ./build/index.html ./build/crowdsale.html && cp ./build/index.html ./build/manage.html",
+    "test": "bash ./start_testrpc.sh && cd ./submodules/poa-token-market-net-ico/ && npm install && node_modules/.bin/truffle migrate --network testrpc && node_modules/.bin/truffle test --network testrpc",
     "test:dapp": "jest --env=jsdom",
     "generateContracts": "npm run generateFlatSoliditySafeMathLibContract && npm run generateFlatSolidityCrowdsaleNullFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleContract && npm run generateFlatSolidityCrowdsaleTokenContract && npm run generateFlatSolidityCrowdsalePricingStrategyContract && npm run generateFlatSolidityRegistryContract",
     "generateFlatSoliditySafeMathLibContract": "node $npm_package_config_combine_solidity_script $npm_package_config_tokenmarketnet_path/$npm_package_config_safe_math_lib_contract_name.sol $npm_package_config_contract_folder SafeMathLibExt",
