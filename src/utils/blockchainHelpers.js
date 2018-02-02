@@ -1,8 +1,7 @@
 import { incorrectNetworkAlert, noMetaMaskAlert, invalidNetworkIDAlert } from './alerts'
 import { CHAINS, MAX_GAS_PRICE } from './constants'
-import { crowdsaleStore, generalStore, web3Store, contractStore } from '../stores'
+import { crowdsaleStore, generalStore, web3Store } from '../stores'
 import { fetchFile } from './utils'
-import deploymentStore from '../stores/DeploymentStore'
 
 const DEPLOY_CONTRACT = 1
 const CALL_METHOD = 2
