@@ -161,61 +161,23 @@ export class Manage extends Component {
     })
   }
 
-
   canFinalize = () => {
     const { contractStore } = this.props
+    const lastCrowdsaleAddress = contractStore.crowdsale.addr.slice(-1)[0]
 
-    return new Promise((resolve, reject) => {
-      if ((!this.state.crowdsaleHasEnded) || (this.state.shouldDistribute && this.state.canDistribute)) {
-        this.setState({ canFinalize: false })
-        resolve(this.state.canFinalize)
+    return attachToContract(contractStore.crowdsale.abi, lastCrowdsaleAddress)
+      .then(crowdsaleContract => crowdsaleContract.methods.isCrowdsaleFull().call())
+      .then(
+        (isCrowdsaleFull) => {
+          const { crowdsaleHasEnded, shouldDistribute, canDistribute } = this.state
+          const wasDistributed = shouldDistribute && !canDistribute
 
-      } else {
-        const lastCrowdsaleAddress = contractStore.crowdsale.addr.slice(-1)[0]
-
-        attachToContract(contractStore.crowdsale.abi, lastCrowdsaleAddress)
-          .then(crowdsaleContract => {
-            const whenTokenContract = crowdsaleContract.methods.token().call()
-              .then(tokenAddress => attachToContract(contractStore.token.abi, tokenAddress))
-
-            return Promise.all([crowdsaleContract, whenTokenContract])
-              .then(([crowdsaleContract, tokenContract]) => {
-                if (!crowdsaleContract) {
-                  reject('No contract available')
-                } else {
-                  Promise.all([
-                    crowdsaleContract.methods.finalized().call(),
-                    crowdsaleContract.methods.isCrowdsaleFull().call(),
-                    crowdsaleContract.methods.areReservedTokensDistributed().call(),
-                    tokenContract.methods.reservedTokensDestinationsLen().call()
-                  ])
-                    .then(([finalized, isCrowdsaleFull, areTokensDistributed, reservedTokensLen]) => {
-                      let _canFinalize
-
-                      if (isCrowdsaleFull && !finalized) {
-                        // If all the tokens were sold and the crowdsale is not already finalized,
-                        // it can be finalized if there are no tokens to distribute, or if they were already distributed
-                        _canFinalize = parseInt(reservedTokensLen, 10) === 0 || areTokensDistributed
-                      } else {
-                        _canFinalize = false
-                      }
-
-                      this.setState({ canFinalize: _canFinalize })
-                      resolve(this.state.canFinalize)
-                    })
-                    .catch(() => {
-                      this.setState({ canFinalize: false })
-                      resolve(this.state.canFinalize)
-                    })
-                }
-              })
-              .catch(() => {
-                this.setState({ canFinalize: false })
-                resolve(this.state.canFinalize)
-              })
+          this.setState({
+            canFinalize: (crowdsaleHasEnded || isCrowdsaleFull) && (wasDistributed || !shouldDistribute)
           })
-      }
-    })
+        },
+        () => this.setState({ canFinalize: false })
+      )
   }
 
   distributeReservedTokens = (addressesPerBatch) => {
