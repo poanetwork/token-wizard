@@ -3,7 +3,7 @@
 # Token Wizard DApp
 
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/hyperium/hyper/master/LICENSE)
-[![Build Status](https://travis-ci.org/poanetwork/ico-wizard.svg?branch=master)](https://travis-ci.org/poanetwork/ico-wizard)
+[![Build Status](https://travis-ci.org/poanetwork/token-wizard.svg?branch=master)](https://travis-ci.org/poanetwork/token-wizard)
 [![Waffle.io - Columns and their card count](https://badge.waffle.io/poanetwork/token-wizard.svg?columns=all)](http://waffle.io/poanetwork/ico-wizard)
 [![Join the chat at https://gitter.im/poanetwork/ico-wizard](https://badges.gitter.im/poanetwork/ico-wizard.svg)](https://gitter.im/poanetwork/ico-wizard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
