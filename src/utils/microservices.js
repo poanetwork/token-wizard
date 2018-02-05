@@ -1,9 +1,9 @@
 import { findConstructor, getconstructorParams, toFixed } from '../utils/utils'
 import { web3Store } from '../stores'
 
-export const getEncodedABIClientSide = (abi, vals, crowdsaleNum) => {
+export const getEncodedABIClientSide = (abi, vals, crowdsaleNum, isCrowdsale) => {
   const abiConstructor = findConstructor(abi)
-  let params = getconstructorParams(abiConstructor, vals, crowdsaleNum)
+  let params = getconstructorParams(abiConstructor, vals, crowdsaleNum, isCrowdsale)
 
   return getABIEncoded(params.types, params.vals)
 }
