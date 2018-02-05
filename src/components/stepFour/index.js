@@ -348,7 +348,7 @@ const { PUBLISH } = NAVIGATION_STEPS
 
     return tierStore.tiers.reduce((promise, tier, index) => {
       return promise
-        .then(() => getEncodedABIClientSide(abiCrowdsale, [], index))
+        .then(() => getEncodedABIClientSide(abiCrowdsale, [], index, true))
         .then(ABIEncoded => {
           const newContract = contractStore.crowdsale.abiConstructor.concat(ABIEncoded)
           contractStore.setContractProperty('crowdsale', 'abiConstructor', newContract)

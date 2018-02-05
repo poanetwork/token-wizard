@@ -75,9 +75,10 @@ export const findConstructor = (abi) => {
   return abiConstructor
 }
 
-export const getconstructorParams = (abiConstructor, vals, crowdsaleNum) => {
+export const getconstructorParams = (abiConstructor, vals, crowdsaleNum, isCrowdsale) => {
   let params = {"types": [], "vals": []};
   if (!abiConstructor) return params;
+
   for (let j = 0; j < abiConstructor.length; j++) {
     let inp = abiConstructor[j];
     params.types.push(inp.type);
@@ -85,24 +86,14 @@ export const getconstructorParams = (abiConstructor, vals, crowdsaleNum) => {
       params.vals.push(vals[j]);
     } else {
       switch(inp.name) {
-        case "_startBlock":
-          params.vals.push(tierStore.tiers[crowdsaleNum].startBlock);
-          break;
         case "_start":
           params.vals.push(toFixed(new Date(tierStore.tiers[crowdsaleNum].startTime).getTime() / 1000).toString());
-          break;
-        case "_endBlock":
-          params.vals.push(tierStore.tiers[crowdsaleNum].endBlock);
           break;
         case "_end":
           params.vals.push(toFixed(new Date(tierStore.tiers[crowdsaleNum].endTime).getTime() / 1000).toString());
           break;
         case "_rate":
           params.vals.push(tierStore.tiers[crowdsaleNum].rate);
-          break;
-        case "_wallet":
-        case "_beneficiary":
-          params.vals.push(tierStore.tiers[crowdsaleNum].walletAddress);
           break;
         case "_multisigWallet":
           //params.vals.push(contractStore.multisig.addr);
@@ -117,12 +108,13 @@ export const getconstructorParams = (abiConstructor, vals, crowdsaleNum) => {
         case "_crowdsale":
           params.vals.push(contractStore.crowdsale.addr[crowdsaleNum]);
           break;
-        case "_crowdsaleSupply":
-          params.vals.push(tierStore.tiers[crowdsaleNum].supply);
-          break;
-        case "_name":
-          params.vals.push(tokenStore.name);
-          break;
+        case "_name": {
+          if (isCrowdsale) {
+            params.vals.push(tierStore.tiers[crowdsaleNum].tier);
+          } else {
+            params.vals.push(tokenStore.name);
+          }
+        } break;
         case "_symbol":
           params.vals.push(tokenStore.ticker);
           break;
@@ -132,7 +124,6 @@ export const getconstructorParams = (abiConstructor, vals, crowdsaleNum) => {
         case "_globalMinCap":
           params.vals.push(tierStore.tiers[0].whitelistEnabled !== 'yes' ? tokenStore.globalmincap ? toFixed(tokenStore.globalmincap * 10 ** tokenStore.decimals).toString() : 0 : 0)
           break;
-        case "_tokenSupply":
         case "_initialSupply":
           params.vals.push(tokenStore.supply);
           break;
@@ -144,23 +135,6 @@ export const getconstructorParams = (abiConstructor, vals, crowdsaleNum) => {
           break;
         case "_mintable":
           params.vals.push(true);
-          break;
-        case "_tranches":
-          params.vals.push(tierStore.tiers[crowdsaleNum].tranches);
-          break;
-        case "_secondsTimeLocked":
-          params.vals.push(1)
-          break;
-        case "_tokenTransferProxy":
-          params.vals.push(contractStore.tokenTransferProxy.addr)
-          break;
-        case "_required":
-          params.vals.push(1)
-          break;
-        case "_owners":
-          let owners = [];
-          owners.push(tierStore.tiers[crowdsaleNum].walletAddress);
-          params.vals.push(owners)
           break;
         case "_oneTokenInWei":
           let oneTokenInETHRaw = toFixed(1 / tierStore.tiers[crowdsaleNum].rate).toString()
