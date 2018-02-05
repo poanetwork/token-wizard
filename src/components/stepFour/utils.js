@@ -166,7 +166,7 @@ export const deployPricingStrategy = () => {
       return deployContract(abiPricingStrategy, binPricingStrategy, paramsPricingStrategy)
         .then(pricingStrategyAddr => contractStore.pricingStrategy.addr.concat(pricingStrategyAddr))
         .then(newPricingStrategy => contractStore.setContractProperty('pricingStrategy', 'addr', newPricingStrategy))
-        .then(() => getEncodedABIClientSide(abiCrowdsale, [], index))
+        .then(() => getEncodedABIClientSide(abiCrowdsale, [], index, isCrowdsale))
         .then(ABIEncoded => contractStore.crowdsale.abiConstructor.concat(ABIEncoded))
         .then(newContract => contractStore.setContractProperty('crowdsale', 'abiConstructor', newContract))
         .then(() => deploymentStore.setAsSuccessful('pricingStrategy'))
