@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 
 export class PreventRefresh extends Component {
   onUnload = (e) => {
-    e.returnValue = "You'll loose current deployment, are you sure?"
+    e.returnValue = "You'll lose current deployment, are you sure?"
   }
 
   componentDidMount () {
