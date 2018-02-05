@@ -165,52 +165,27 @@ export class Manage extends Component {
   canFinalize = () => {
     const { contractStore, match } = this.props
 
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       if ((!this.state.crowdsaleHasEnded) || (this.state.shouldDistribute && this.state.canDistribute)) {
         this.setState({ canFinalize: false })
         resolve(this.state.canFinalize)
 
       } else {
         attachToContract(contractStore.crowdsale.abi, match.params.crowdsaleAddress)
-          .then(crowdsaleContract => {
-            const whenTokenContract = crowdsaleContract.methods.token().call()
-              .then(tokenAddress => attachToContract(contractStore.token.abi, tokenAddress))
+          .then(crowdsaleContract => { // eslint-disable-line no-loop-func
+            console.log('attach to crowdsale contract')
 
-            return Promise.all([crowdsaleContract, whenTokenContract])
-              .then(([crowdsaleContract, tokenContract]) => {
-                if (!crowdsaleContract) {
-                  reject('No contract available')
-                } else {
-                  Promise.all([
-                    crowdsaleContract.methods.finalized().call(),
-                    crowdsaleContract.methods.isMinimumGoalReached().call(),
-                    crowdsaleContract.methods.areReservedTokensDistributed().call(),
-                    tokenContract.methods.reservedTokensDestinationsLen().call()
-                  ])
-                    .then(([finalized, minimumGoalReached, areTokensDistributed, reservedTokensLen]) => {
-                      let _canFinalize
-
-                      if (minimumGoalReached && !finalized) {
-                        // If the minimum gowal was reached and the crowdsale is not already finalized,
-                        // it can be finalized if there are no tokens to distribute, or if they were already distributed
-                        _canFinalize = parseInt(reservedTokensLen, 10) === 0 || areTokensDistributed
-                      } else {
-                        _canFinalize = false
-                      }
-
-                      this.setState({ canFinalize: _canFinalize })
-                      resolve(this.state.canFinalize)
-                    })
-                    .catch(() => {
-                      this.setState({ canFinalize: false })
-                      resolve(this.state.canFinalize)
-                    })
-                }
-              })
-              .catch(() => {
-                this.setState({ canFinalize: false })
-                resolve(this.state.canFinalize)
-              })
+            if (!crowdsaleContract) return Promise.reject('No contract available')
+            crowdsaleContract.methods.finalized().call((err, finalized) => {
+              return finalized;
+            }).then((finalized) => {
+              this.setState({ canFinalize: !finalized })
+              resolve(this.state.canFinalize)
+            })
+            .catch(() => {
+              this.setState({ canFinalize: false })
+              resolve(this.state.canFinalize)
+            })
           })
       }
     })
@@ -243,7 +218,7 @@ export class Manage extends Component {
                 .then(() => {
                   successfulDistributeAlert()
                   crowdsaleStore.setSelectedProperty('distributed', true)
-                  return this.updateCrowdsaleStatus()
+                  this.setState({ canDistribute: false, canFinalize: true })
                 })
                 .catch((err) => {
                   console.log(err)
