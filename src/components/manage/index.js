@@ -180,7 +180,6 @@ export class Manage extends Component {
               .then(([crowdsaleContract, tokenContract]) => {
                 if (!crowdsaleContract) {
                   reject('No contract available')
-
                 } else {
                   Promise.all([
                     crowdsaleContract.methods.finalized().call(),
@@ -191,8 +190,10 @@ export class Manage extends Component {
                     .then(([finalized, minimumGoalReached, areTokensDistributed, reservedTokensLen]) => {
                       let _canFinalize
 
-                      if (!finalized && minimumGoalReached) {
-                        _canFinalize = parseInt(reservedTokensLen) === 0 || areTokensDistributed
+                      if (minimumGoalReached && !finalized) {
+                        // If the minimum gowal was reached and the crowdsale is not already finalized,
+                        // it can be finalized if there are no tokens to distribute, or if they were already distributed
+                        _canFinalize = parseInt(reservedTokensLen, 10) === 0 || areTokensDistributed
                       } else {
                         _canFinalize = false
                       }
