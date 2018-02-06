@@ -23,7 +23,6 @@ import { toast } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { DisplayField } from '../Common/DisplayField'
 import { DisplayTextArea } from '../Common/DisplayTextArea'
-import { Loader } from '../Common/Loader'
 import { TxProgressStatus } from '../Common/TxProgressStatus'
 import { ModalContainer } from '../Common/ModalContainer'
 import { copy } from '../../utils/copy'
@@ -42,7 +41,6 @@ export class stepFour extends React.Component {
     super(props)
     this.state = {
       contractDownloaded: false,
-      loading: false,
       showModal: false
     }
   }
@@ -82,7 +80,6 @@ export class stepFour extends React.Component {
 
     executeSequentially(deploymentSteps)
       .then(() => this.hideModal())
-      .then(() => this.hideLoader())
       .then(() => successfulDeployment())
       .catch(this.handleError)
   }
@@ -96,16 +93,11 @@ export class stepFour extends React.Component {
       deploymentStore.setDeploymentStep(deploymentStepsOffset + failedAt)
 
     } else {
-      this.hideLoader()
       this.hideModal()
       toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED })
     }
 
     console.error([failedAt, err])
-  }
-
-  hideLoader() {
-    this.setState({ loading: false })
   }
 
   hideModal() {
@@ -114,7 +106,6 @@ export class stepFour extends React.Component {
 
   userHideModal = () => {
     this.hideModal()
-    if (!this.props.deploymentStore.deploymentHasFinished) this.setState({ loading: true })
   }
 
   handleContentByParent(content, index = 0) {
@@ -466,7 +457,6 @@ export class stepFour extends React.Component {
         >
           <TxProgressStatus txMap={deploymentStore.txMap} deployCrowdsale={this.deployCrowdsale} />
         </ModalContainer>
-        <Loader show={this.state.loading}/>
         <PreventRefresh/>
       </section>
     )}
