@@ -161,34 +161,23 @@ export class Manage extends Component {
     })
   }
 
-
   canFinalize = () => {
-    const { contractStore, match } = this.props
+    const { contractStore } = this.props
+    const lastCrowdsaleAddress = contractStore.crowdsale.addr.slice(-1)[0]
 
-    return new Promise(resolve => {
-      if ((!this.state.crowdsaleHasEnded) || (this.state.shouldDistribute && this.state.canDistribute)) {
-        this.setState({ canFinalize: false })
-        resolve(this.state.canFinalize)
+    return attachToContract(contractStore.crowdsale.abi, lastCrowdsaleAddress)
+      .then(crowdsaleContract => crowdsaleContract.methods.isCrowdsaleFull().call())
+      .then(
+        (isCrowdsaleFull) => {
+          const { crowdsaleHasEnded, shouldDistribute, canDistribute } = this.state
+          const wasDistributed = shouldDistribute && !canDistribute
 
-      } else {
-        attachToContract(contractStore.crowdsale.abi, match.params.crowdsaleAddress)
-          .then(crowdsaleContract => { // eslint-disable-line no-loop-func
-            console.log('attach to crowdsale contract')
-
-            if (!crowdsaleContract) return Promise.reject('No contract available')
-            crowdsaleContract.methods.finalized().call((err, finalized) => {
-              return finalized;
-            }).then((finalized) => {
-              this.setState({ canFinalize: !finalized })
-              resolve(this.state.canFinalize)
-            })
-            .catch(() => {
-              this.setState({ canFinalize: false })
-              resolve(this.state.canFinalize)
-            })
+          this.setState({
+            canFinalize: (crowdsaleHasEnded || isCrowdsaleFull) && (wasDistributed || !shouldDistribute)
           })
-      }
-    })
+        },
+        () => this.setState({ canFinalize: false })
+      )
   }
 
   distributeReservedTokens = (addressesPerBatch) => {
@@ -218,7 +207,7 @@ export class Manage extends Component {
                 .then(() => {
                   successfulDistributeAlert()
                   crowdsaleStore.setSelectedProperty('distributed', true)
-                  this.setState({ canDistribute: false, canFinalize: true })
+                  return this.updateCrowdsaleStatus()
                 })
                 .catch((err) => {
                   console.log(err)
