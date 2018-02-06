@@ -23,7 +23,6 @@ import { toast } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { DisplayField } from '../Common/DisplayField'
 import { DisplayTextArea } from '../Common/DisplayTextArea'
-import { Loader } from '../Common/Loader'
 import { TxProgressStatus } from '../Common/TxProgressStatus'
 import { ModalContainer } from '../Common/ModalContainer'
 import { copy } from '../../utils/copy'
@@ -42,8 +41,7 @@ export class stepFour extends React.Component {
     super(props)
     this.state = {
       contractDownloaded: false,
-      loading: false,
-      showModal: false
+      modal: false
     }
   }
 
@@ -55,7 +53,7 @@ export class stepFour extends React.Component {
   componentDidMount () {
     scrollToBottom()
     copy('copy')
-    this.setState({ showModal: true })
+    this.showModal()
 
     if (process.env.NODE_ENV !== 'development') this.deployCrowdsale()
   }
@@ -95,7 +93,6 @@ export class stepFour extends React.Component {
       deploymentStore.setDeploymentStep(deploymentStepsOffset + failedAt)
 
     } else {
-      this.hideLoader()
       this.hideModal()
       toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED })
     }
@@ -103,17 +100,12 @@ export class stepFour extends React.Component {
     console.error([failedAt, err])
   }
 
-  hideLoader() {
-    this.setState({ loading: false })
+  hideModal = () => {
+    this.setState({ modal: false })
   }
 
-  hideModal() {
-    this.setState({ showModal: false })
-  }
-
-  userHideModal = () => {
-    this.hideModal()
-    if (!this.props.deploymentStore.deploymentHasFinished) this.setState({ loading: true })
+  showModal = () => {
+    this.setState({ modal: true })
   }
 
   handleContentByParent(content, index = 0) {
@@ -460,12 +452,10 @@ export class stepFour extends React.Component {
         </div>
         <ModalContainer
           title={'Tx Status'}
-          hideModal={this.userHideModal}
-          showModal={this.state.showModal}
+          showModal={this.state.modal}
         >
           <TxProgressStatus txMap={deploymentStore.txMap} deployCrowdsale={this.deployCrowdsale} />
         </ModalContainer>
-        <Loader show={this.state.loading}/>
         <PreventRefresh/>
       </section>
     )}
