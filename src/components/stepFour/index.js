@@ -82,6 +82,7 @@ export class stepFour extends React.Component {
 
     executeSequentially(deploymentSteps)
       .then(() => this.hideModal())
+      .then(() => this.hideLoader())
       .then(() => successfulDeployment())
       .catch(this.handleError)
   }
