@@ -104,10 +104,6 @@ export class stepFour extends React.Component {
     this.setState({ showModal: false })
   }
 
-  userHideModal = () => {
-    this.hideModal()
-  }
-
   handleContentByParent(content, index = 0) {
     const { parent } = content
 
@@ -452,7 +448,6 @@ export class stepFour extends React.Component {
         </div>
         <ModalContainer
           title={'Tx Status'}
-          hideModal={this.userHideModal}
           showModal={this.state.showModal}
         >
           <TxProgressStatus txMap={deploymentStore.txMap} deployCrowdsale={this.deployCrowdsale} />
