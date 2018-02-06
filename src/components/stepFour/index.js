@@ -31,6 +31,7 @@ import { inject, observer } from 'mobx-react'
 import { isObservableArray } from 'mobx'
 import JSZip from 'jszip'
 import executeSequentially from '../../utils/executeSequentially'
+import { PreventRefresh } from '../Common/PreventRefresh'
 
 const { PUBLISH } = NAVIGATION_STEPS
 
@@ -465,6 +466,7 @@ export class stepFour extends React.Component {
           <TxProgressStatus txMap={deploymentStore.txMap} deployCrowdsale={this.deployCrowdsale} />
         </ModalContainer>
         <Loader show={this.state.loading}/>
+        <PreventRefresh/>
       </section>
     )}
 }
