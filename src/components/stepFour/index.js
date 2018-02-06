@@ -41,7 +41,7 @@ export class stepFour extends React.Component {
     super(props)
     this.state = {
       contractDownloaded: false,
-      showModal: false
+      modal: false
     }
   }
 
@@ -53,7 +53,7 @@ export class stepFour extends React.Component {
   componentDidMount () {
     scrollToBottom()
     copy('copy')
-    this.setState({ showModal: true })
+    this.showModal()
 
     if (process.env.NODE_ENV !== 'development') this.deployCrowdsale()
   }
@@ -100,8 +100,12 @@ export class stepFour extends React.Component {
     console.error([failedAt, err])
   }
 
-  hideModal() {
-    this.setState({ showModal: false })
+  hideModal = () => {
+    this.setState({ modal: false })
+  }
+
+  showModal = () => {
+    this.setState({ modal: true })
   }
 
   handleContentByParent(content, index = 0) {
@@ -448,7 +452,7 @@ export class stepFour extends React.Component {
         </div>
         <ModalContainer
           title={'Tx Status'}
-          showModal={this.state.showModal}
+          showModal={this.state.modal}
         >
           <TxProgressStatus txMap={deploymentStore.txMap} deployCrowdsale={this.deployCrowdsale} />
         </ModalContainer>
