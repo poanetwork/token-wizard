@@ -230,7 +230,7 @@ export class stepThree extends React.Component {
               onChange={() => this.setGasPrice(gasPriceStore.slow)}
               value="slow"
             />
-            <span className="title">{gasPriceStore.slow.description()}</span>
+            <span className="title">{gasPriceStore.slowDescription}</span>
           </label>
         </div>
         <div className="radios-inline">
@@ -242,7 +242,7 @@ export class stepThree extends React.Component {
               onChange={() => this.setGasPrice(gasPriceStore.standard)}
               value="slow"
             />
-            <span className="title">{gasPriceStore.standard.description()}</span>
+            <span className="title">{gasPriceStore.standardDescription}</span>
           </label>
         </div>
         <div className="radios-inline">
@@ -254,7 +254,7 @@ export class stepThree extends React.Component {
               onChange={() => this.setGasPrice(gasPriceStore.fast)}
               value="slow"
             />
-            <span className="title">{gasPriceStore.fast.description()}</span>
+            <span className="title">{gasPriceStore.fastDescription}</span>
           </label>
         </div>
         <div className="radios-inline">
@@ -266,7 +266,7 @@ export class stepThree extends React.Component {
               onChange={() => this.setGasPrice(gasPriceStore.custom)}
               value="slow"
             />
-            <span className="title">{gasPriceStore.custom.description()}</span>
+            <span className="title">{gasPriceStore.customDescription}</span>
           </label>
         </div>
 

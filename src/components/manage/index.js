@@ -19,7 +19,6 @@ const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME
   'web3Store',
   'tierStore',
   'contractStore',
-  'crowdsalePageStore',
   'generalStore',
   'tokenStore',
   'gasPriceStore'

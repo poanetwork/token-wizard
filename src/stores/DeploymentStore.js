@@ -1,8 +1,21 @@
 import { action, computed, observable } from 'mobx'
+import autosave from './autosave'
 
 class DeploymentStore {
   @observable txMap = new Map()
   @observable deploymentStep
+
+  constructor() {
+    autosave(this, 'DeploymentStore', (store) => {
+      const txMap = new Map()
+      Object.keys(store.txMap).forEach(key => {
+        txMap.set(key, store.txMap[key])
+      })
+      store.txMap = txMap
+
+      return store
+    })
+  }
 
   @action initialize = (hasReservedToken, hasWhitelist, tiersCount) => {
     const listOfTx = [

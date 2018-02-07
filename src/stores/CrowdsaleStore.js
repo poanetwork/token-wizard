@@ -1,4 +1,5 @@
 import { action, observable } from 'mobx'
+import autosave from './autosave'
 
 class CrowdsaleStore {
   @observable crowdsales
@@ -8,7 +9,7 @@ class CrowdsaleStore {
   @observable selected
 
   constructor () {
-    this.reset()
+    autosave(this, 'CrowdsaleStore')
   }
 
   @action reset = () => {
