@@ -3,7 +3,7 @@ import autosave from './autosave'
 
 class DeploymentStore {
   @observable txMap = new Map()
-  @observable deploymentStep
+  @observable deploymentStep = null
 
   constructor() {
     autosave(this, 'DeploymentStore', (store) => {
@@ -69,6 +69,10 @@ class DeploymentStore {
 
   @action setDeploymentStep = (index) => {
     this.deploymentStep = index
+  }
+
+  @action resetDeploymentStep = () => {
+    this.deploymentStep = null
   }
 
   logTxMap = () => {
