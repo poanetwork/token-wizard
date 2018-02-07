@@ -9,6 +9,7 @@ class CrowdsaleStore {
   @observable selected
 
   constructor () {
+    this.reset()
     autosave(this, 'CrowdsaleStore')
   }
 
