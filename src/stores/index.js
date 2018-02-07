@@ -16,6 +16,11 @@ import CrowdsaleStore from './CrowdsaleStore'
 import GasPriceStore from './GasPriceStore'
 import DeploymentStore from './DeploymentStore'
 
+// Clear local storage if there is no incomplete deployment
+if (storage.has('DeploymentStore') && storage.get('DeploymentStore').deploymentStep === null) {
+  localStorage.clear()
+}
+
 const generalStore = new GeneralStore()
 const crowdsalePageStore = new CrowdsalePageStore()
 const tierCrowdsaleListStore = new TierCrowdsaleListStore()
