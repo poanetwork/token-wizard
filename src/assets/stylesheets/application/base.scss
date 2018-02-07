@@ -97,3 +97,9 @@ body {
   font-size: 20px;
   font-weight: bold;
 }
+
+@media (max-height: $iframe-height) {
+  body {
+    padding-top: 0;
+  }
+}

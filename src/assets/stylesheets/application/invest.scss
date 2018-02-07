@@ -204,4 +204,29 @@
       }
     }
   }
+
+  @media (max-height: $iframe-height) {
+    .qr-selected {
+      .balance {
+        &-description {
+          margin-bottom: 0;
+        }
+      }
+      .description {
+        display: none;
+      }
+      .invest-form {
+        padding-bottom: 0;
+        &-label {
+          display: none;
+        }
+        &-input-container {
+          display: none;
+        }
+      }
+      .payment-process {
+        padding-top: 5px;
+      }
+    }
+  }
 }

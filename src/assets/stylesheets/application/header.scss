@@ -15,3 +15,12 @@
   	background-position: 0 -25px;
   }
 }
+
+@media (max-height: $iframe-height) {
+  .header {
+    position: relative;
+    top: 0;
+    height: auto;
+    padding: 1px 0 21px;
+  }
+}
