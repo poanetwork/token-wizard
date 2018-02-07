@@ -76,7 +76,4 @@ class TokenStore {
   }
 }
 
-const tokenStore = new TokenStore();
-
-export default tokenStore;
-export { TokenStore };
+export default TokenStore;

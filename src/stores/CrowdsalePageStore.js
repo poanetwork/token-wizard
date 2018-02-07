@@ -18,7 +18,4 @@ class CrowdsalePageStore {
   }
 }
 
-const crowdsalePageStore = new CrowdsalePageStore();
-
-export default crowdsalePageStore;
-export { CrowdsalePageStore };
+export default CrowdsalePageStore;

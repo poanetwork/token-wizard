@@ -43,7 +43,4 @@ class ReservedTokenStore {
   }
 }
 
-const reservedTokenStore = new ReservedTokenStore();
-
-export default reservedTokenStore;
-export { ReservedTokenStore };
+export default ReservedTokenStore;

@@ -91,7 +91,4 @@ class GasPriceStore {
   }
 }
 
-const gasPriceStore = new GasPriceStore()
-
-export default gasPriceStore
-export { GasPriceStore }
+export default GasPriceStore

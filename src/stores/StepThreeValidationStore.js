@@ -27,7 +27,4 @@ class StepThreeValidationStore {
   }
 }
 
-const stepThreeValidationStore = new StepThreeValidationStore();
-
-export default stepThreeValidationStore;
-export { StepThreeValidationStore };
+export default StepThreeValidationStore;

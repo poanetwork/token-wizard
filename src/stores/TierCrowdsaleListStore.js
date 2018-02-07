@@ -26,7 +26,4 @@ class TierCrowdsaleListStore {
   }
 }
 
-const tierCrowdsaleListStore = new TierCrowdsaleListStore();
-
-export default tierCrowdsaleListStore;
-export { TierCrowdsaleListStore };
+export default TierCrowdsaleListStore;

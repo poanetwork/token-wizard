@@ -20,7 +20,4 @@ class GeneralStore {
   }
 }
 
-const generalStore = new GeneralStore();
-
-export default generalStore;
-export { GeneralStore };
+export default GeneralStore;

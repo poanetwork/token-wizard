@@ -30,7 +30,4 @@ class CrowdsaleBlockListStore {
   }
 }
 
-const crowdsaleBlockListStore = new CrowdsaleBlockListStore();
-
-export default crowdsaleBlockListStore;
-export { CrowdsaleBlockListStore };
+export default CrowdsaleBlockListStore;

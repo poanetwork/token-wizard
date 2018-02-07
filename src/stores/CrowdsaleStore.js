@@ -41,7 +41,4 @@ class CrowdsaleStore {
   }
 }
 
-const crowdsaleStore = new CrowdsaleStore()
-
-export default crowdsaleStore
-export { CrowdsaleStore }
+export default CrowdsaleStore

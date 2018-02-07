@@ -102,7 +102,4 @@ class DeploymentStore {
   }
 }
 
-const deploymentStore = new DeploymentStore()
-
-export default deploymentStore
-export { DeploymentStore }
+export default DeploymentStore
