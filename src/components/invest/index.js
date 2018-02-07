@@ -23,6 +23,7 @@ import { CrowdsaleConfig } from '../Common/config'
 import { CONTRACT_TYPES, INVESTMENT_OPTIONS, TOAST } from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
 import QRPaymentProcess from './QRPaymentProcess'
+import classNames from 'classnames'
 
 @inject('contractStore', 'crowdsalePageStore', 'web3Store', 'tierStore', 'tokenStore', 'generalStore', 'investStore', 'gasPriceStore', 'generalStore')
 @observer
@@ -319,6 +320,10 @@ export class Invest extends React.Component {
       <a className="button button_fill" onClick={this.investToTokens}>Contribute</a> :
       null
 
+    const rightColumnClasses = classNames('invest-table-cell', 'invest-table-cell_right', {
+      'qr-selected': investThrough === INVESTMENT_OPTIONS.QR
+    })
+
     return <div className="invest container">
       <div className="invest-table">
         <div className="invest-table-cell invest-table-cell_left">
@@ -375,7 +380,7 @@ export class Invest extends React.Component {
             <a href="https://kovan.etherscan.io/tx/0x42073576a160206e61b4d9b70b436359b8d220f8b88c7c272c77023513c62c3d">transaction</a> on Kovan network.
           </p>
         </div>
-        <div className={`invest-table-cell invest-table-cell_right${investThrough === INVESTMENT_OPTIONS.QR ? ' qr-selected': ''}`}>
+        <div className={rightColumnClasses}>
           <div className="balance">
             <p className="balance-title">{investorBalance} {tokenTicker}</p>
             <p className="balance-description">Balance</p>
