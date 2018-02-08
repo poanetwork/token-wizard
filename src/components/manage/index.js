@@ -6,7 +6,13 @@ import { CONTRACT_TYPES, TEXT_FIELDS, TOAST, VALIDATION_MESSAGES } from '../../u
 import { InputField } from '../Common/InputField'
 import '../../assets/stylesheets/application.css'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
-import { successfulFinalizeAlert, successfulDistributeAlert, successfulUpdateCrowdsaleAlert, warningOnFinalizeCrowdsale } from '../../utils/alerts'
+import {
+  successfulFinalizeAlert,
+  successfulDistributeAlert,
+  successfulUpdateCrowdsaleAlert,
+  warningOnFinalizeCrowdsale,
+  notTheOwner
+} from '../../utils/alerts'
 import { getNetworkVersion, sendTXToContract, attachToContract, calculateGasLimit } from '../../utils/blockchainHelpers'
 import { getWhiteListWithCapCrowdsaleAssets, toast } from '../../utils/utils'
 import { contractsInfo, getTiers, processTier, updateTierAttribute } from './utils'
@@ -33,7 +39,8 @@ export class Manage extends Component {
       loading: true,
       canFinalize: false,
       canDistribute: false,
-      shouldDistribute: false
+      shouldDistribute: false,
+      ownerCurrentUser: true
     }
   }
 
@@ -61,6 +68,24 @@ export class Manage extends Component {
     tierStore.reset()
     tokenStore.reset()
     crowdsaleStore.reset()
+  }
+
+  checkOwner = () => {
+    const { contractStore, web3Store } = this.props
+
+    return attachToContract(contractStore.crowdsale.abi, contractStore.crowdsale.addr[0])
+      .then(crowdsaleContract => {
+        const whenOwner = crowdsaleContract.methods.owner().call()
+        const whenAccounts = web3Store.web3.eth.getAccounts()
+
+        return Promise.all([whenOwner, whenAccounts])
+      })
+      .then(([ownerAccount, accounts]) => this.setState({ ownerCurrentUser: accounts[0] === ownerAccount }))
+      .then(() => {
+        if (!this.state.ownerCurrentUser) {
+          notTheOwner()
+        }
+      })
   }
 
   extractContractData = () => {
@@ -99,6 +124,7 @@ export class Manage extends Component {
       .then(this.shouldDistribute)
       .then(this.canDistribute)
       .then(this.canFinalize)
+      .then(this.checkOwner)
   }
 
   setCrowdsaleInfo = contracts => {
@@ -397,7 +423,7 @@ export class Manage extends Component {
         <div className="section-title">
           <p className="title">Whitelist</p>
         </div>
-        {tier.updatable && !crowdsaleStore.selected.finalized && !this.state.crowdsaleHasEnded
+        {tier.updatable && !crowdsaleStore.selected.finalized && !this.state.crowdsaleHasEnded && this.state.ownerCurrentUser
           ? this.whitelistInputBlock(index)
           : this.readOnlyWhitelistedAddresses(tier)
         }
@@ -423,7 +449,7 @@ export class Manage extends Component {
   }
 
   render () {
-    const { formPristine, canFinalize, shouldDistribute, canDistribute, crowdsaleHasEnded } = this.state
+    const { formPristine, canFinalize, shouldDistribute, canDistribute, crowdsaleHasEnded, ownerCurrentUser } = this.state
     const { generalStore, tierStore, tokenStore, crowdsaleStore } = this.props
     const { address: crowdsaleAddress, finalized, updatable } = crowdsaleStore.selected
 
@@ -435,7 +461,7 @@ export class Manage extends Component {
           <p className="description">Reserved tokens distribution is the last step of the crowdsale before finalization.
             You can make it only after the end of the last tier. If you reserved more then 100 addresses for your crowdsale, the distribution will be executed in batches with 100 reserved addresses per batch. Amount of batches is equal to amount of transactions</p>
           <Link to='#' onClick={() => this.distributeReservedTokens(100)}>
-            <span className={`button button_${!canDistribute ? 'disabled' : 'fill'}`}>Distribute tokens</span>
+            <span className={`button button_${!ownerCurrentUser || !canDistribute ? 'disabled' : 'fill'}`}>Distribute tokens</span>
           </Link>
         </div>
       </div>
@@ -449,7 +475,7 @@ export class Manage extends Component {
           You can make it only after the end of the last tier. After finalization, it's not possible to update tiers,
           buy tokens. All tokens will be movable, reserved tokens will be issued.</p>
         <Link to='#' onClick={() => this.finalizeCrowdsale()}>
-          <span className={`button button_${finalized || !canFinalize ? 'disabled' : 'fill'}`}>Finalize Crowdsale</span>
+          <span className={`button button_${!ownerCurrentUser || finalized || !canFinalize ? 'disabled' : 'fill'}`}>Finalize Crowdsale</span>
         </Link>
       </div>
     )
@@ -469,7 +495,7 @@ export class Manage extends Component {
     const saveButton = (
       <Link to='/2' onClick={e => this.saveCrowdsale(e)}>
         <span
-          className={`no-arrow button button_${!formPristine && !crowdsaleHasEnded ? 'fill' : 'disabled'}`}>Save</span>
+          className={`no-arrow button button_${ownerCurrentUser && !formPristine && !crowdsaleHasEnded ? 'fill' : 'disabled'}`}>Save</span>
       </Link>
     )
 
@@ -493,6 +519,8 @@ export class Manage extends Component {
     }
 
     const tierStartAndEndTime = (tier, index) => {
+      const disabled = !this.state.ownerCurrentUser || !tier.updatable || crowdsaleHasEnded
+
       return <div className='input-block-container'>
         <InputField
           side='left'
@@ -503,7 +531,7 @@ export class Manage extends Component {
           errorMessage={VALIDATION_MESSAGES.EDITED_START_TIME}
           onChange={e => this.updateTierStore(e, 'startTime', index)}
           description="Date and time when the tier starts. Can't be in the past from the current moment."
-          disabled={!tier.updatable || crowdsaleHasEnded}
+          disabled={disabled}
         />
         <InputField
           side='right'
@@ -514,12 +542,14 @@ export class Manage extends Component {
           errorMessage={VALIDATION_MESSAGES.EDITED_END_TIME}
           onChange={e => this.updateTierStore(e, 'endTime', index)}
           description="Date and time when the tier ends. Can be only in the future."
-          disabled={!tier.updatable || crowdsaleHasEnded}
+          disabled={disabled}
         />
       </div>
     }
 
     const tierRateAndSupply = (tier, index) => {
+      const disabled = !this.state.ownerCurrentUser || !tier.updatable || crowdsaleHasEnded
+
       return <div className='input-block-container'>
         <InputField
           side='left'
@@ -530,7 +560,7 @@ export class Manage extends Component {
           errorMessage={VALIDATION_MESSAGES.RATE}
           onChange={e => this.updateTierStore(e, 'rate', index)}
           description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens"
-          disabled={!tier.updatable || crowdsaleHasEnded}
+          disabled={disabled}
         />
         <InputField
           side='right'
@@ -541,7 +571,7 @@ export class Manage extends Component {
           errorMessage={VALIDATION_MESSAGES.SUPPLY}
           onChange={e => this.updateTierStore(e, 'supply', index)}
           description="How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers"
-          disabled={!tier.updatable || crowdsaleHasEnded}
+          disabled={disabled}
         />
       </div>
     }
