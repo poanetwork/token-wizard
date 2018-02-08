@@ -5,7 +5,7 @@ import { defaultCompanyEndDate } from "../../utils/utils";
 import { InputField } from "../Common/InputField";
 import { RadioInputField } from "../Common/RadioInputField";
 import { inject, observer } from "mobx-react";
-import { VALIDATION_MESSAGES, TEXT_FIELDS } from "../../utils/constants";
+import { VALIDATION_MESSAGES, TEXT_FIELDS, DESCRIPTION } from "../../utils/constants";
 const { START_TIME, END_TIME, RATE, SUPPLY, CROWDSALE_SETUP_NAME, ALLOWMODIFYING } = TEXT_FIELDS;
 
 @inject("tierStore")
@@ -58,7 +58,7 @@ export class CrowdsaleBlock extends React.Component {
               valid={tierStore.validTiers[num].tier}
               errorMessage={VALIDATION_MESSAGES.TIER}
               onChange={e => this.updateTierStore(e, "tier")}
-              description={`Name of a tier, e.g. PrePreIco, PreICO, ICO with bonus A, ICO with bonus B, etc. We simplified that and will increment a number after each tier.`}
+              description={DESCRIPTION.CROWDSALE_SETUP_NAME}
             />
             <RadioInputField
               extraClassName="right"
@@ -66,7 +66,7 @@ export class CrowdsaleBlock extends React.Component {
               items={[{ label: 'on', value: 'on' }, { label: 'off', value: 'off' }]}
               selectedItem={this.props.tierStore.tiers[this.props.num].updatable}
               onChange={e => this.updateTierStore(e, "updatable")}
-              description={`Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing.`}
+              description={DESCRIPTION.ALLOW_MODIFYING}
             />
           </div>
           <div className="input-block-container">
@@ -78,7 +78,7 @@ export class CrowdsaleBlock extends React.Component {
               valid={tierStore.validTiers[num].startTime}
               errorMessage={VALIDATION_MESSAGES.MULTIPLE_TIERS_START_TIME}
               onChange={e => this.updateTierStore(e, "startTime")}
-              description={`Date and time when the tier starts. Can't be in the past from the current moment.`}
+              description={DESCRIPTION.START_TIME}
             />
             <InputField
               side="right"
@@ -88,7 +88,7 @@ export class CrowdsaleBlock extends React.Component {
               valid={tierStore.validTiers[num].endTime}
               errorMessage={VALIDATION_MESSAGES.END_TIME}
               onChange={e => this.updateTierStore(e, "endTime")}
-              description={`Date and time when the tier ends. Can be only in the future.`}
+              description={DESCRIPTION.END_TIME}
             />
           </div>
           <div className="input-block-container">
@@ -100,7 +100,7 @@ export class CrowdsaleBlock extends React.Component {
               valid={tierStore.validTiers[num].rate}
               errorMessage={VALIDATION_MESSAGES.RATE}
               onChange={e => this.updateTierStore(e, "rate")}
-              description={`Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens`}
+              description={DESCRIPTION.RATE}
             />
             <InputField
               side="right"
@@ -110,7 +110,7 @@ export class CrowdsaleBlock extends React.Component {
               valid={tierStore.validTiers[num].supply}
               errorMessage={VALIDATION_MESSAGES.SUPPLY}
               onChange={e => this.updateTierStore(e, "supply")}
-              description={`How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers`}
+              description={DESCRIPTION.SUPPLY}
             />
           </div>
         </div>

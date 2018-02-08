@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
 import { isObservableArray } from 'mobx'
 import { Link } from 'react-router-dom'
-import { CONTRACT_TYPES, TEXT_FIELDS, TOAST, VALIDATION_MESSAGES } from '../../utils/constants'
+import { CONTRACT_TYPES, TEXT_FIELDS, TOAST, VALIDATION_MESSAGES, DESCRIPTION } from '../../utils/constants'
 import { InputField } from '../Common/InputField'
 import '../../assets/stylesheets/application.css'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
@@ -530,7 +530,7 @@ export class Manage extends Component {
           valid={tierStore.validTiers[index] && tierStore.validTiers[index].startTime}
           errorMessage={VALIDATION_MESSAGES.EDITED_START_TIME}
           onChange={e => this.updateTierStore(e, 'startTime', index)}
-          description="Date and time when the tier starts. Can't be in the past from the current moment."
+          description={DESCRIPTION.START_TIME}
           disabled={disabled}
         />
         <InputField
@@ -541,7 +541,7 @@ export class Manage extends Component {
           valid={tierStore.validTiers[index] && tierStore.validTiers[index].endTime}
           errorMessage={VALIDATION_MESSAGES.EDITED_END_TIME}
           onChange={e => this.updateTierStore(e, 'endTime', index)}
-          description="Date and time when the tier ends. Can be only in the future."
+          description={DESCRIPTION.END_TIME}
           disabled={disabled}
         />
       </div>
@@ -559,7 +559,7 @@ export class Manage extends Component {
           valid={tierStore.validTiers[index] && tierStore.validTiers[index].rate}
           errorMessage={VALIDATION_MESSAGES.RATE}
           onChange={e => this.updateTierStore(e, 'rate', index)}
-          description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens"
+          description={DESCRIPTION.RATE}
           disabled={disabled}
         />
         <InputField
@@ -570,7 +570,7 @@ export class Manage extends Component {
           valid={tierStore.validTiers[index] && tierStore.validTiers[index].supply}
           errorMessage={VALIDATION_MESSAGES.SUPPLY}
           onChange={e => this.updateTierStore(e, 'supply', index)}
-          description="How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers"
+          description={DESCRIPTION.SUPPLY}
           disabled={disabled}
         />
       </div>
