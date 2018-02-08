@@ -596,7 +596,7 @@ export class Manage extends Component {
                 {tierStartAndEndTime(tier, index)}
                 {tierRateAndSupply(tier, index)}
               </div>
-              {tier.whitelist.length ? this.renderWhitelistInputBlock(tier, index) : null}
+              {this.renderWhitelistInputBlock(tier, index)}
             </div>
           </div>
         ))}

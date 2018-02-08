@@ -12,8 +12,9 @@ export class WhitelistItem extends React.Component {
 
   render () {
     const { addr, min, max, crowdsaleNum, whitelistNum, tierStore, isLast, alreadyDeployed } = this.props
+    const whitelist = tierStore.tiers[crowdsaleNum].whitelist[whitelistNum]
 
-    return tierStore.tiers[crowdsaleNum].whitelist[whitelistNum].deleted ? null : (
+    return whitelist && whitelist.deleted ? null : (
       <div
         className={isLast ? 'white-list-item-container white-list-item-container-last' : 'white-list-item-container'}>
         <div className="white-list-item-container-inner">
