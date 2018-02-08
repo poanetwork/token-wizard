@@ -9,7 +9,4 @@ class InvestStore {
   }
 }
 
-const investStore = new InvestStore();
-
-export default investStore;
-export { InvestStore };
+export default InvestStore;

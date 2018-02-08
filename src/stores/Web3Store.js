@@ -41,7 +41,4 @@ class Web3Store {
   }
 }
 
-const web3Store = new Web3Store();
-
-export default web3Store;
-export { Web3Store };
+export default Web3Store;

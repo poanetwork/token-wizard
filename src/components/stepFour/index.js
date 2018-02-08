@@ -61,7 +61,7 @@ export class stepFour extends React.Component {
   deployCrowdsale = () => {
     const { contractStore, deploymentStore } = this.props
     const isWhitelistWithCap = contractStore.contractType === CONTRACT_TYPES.whitelistwithcap
-    const firstRun = deploymentStore.deploymentStep === undefined
+    const firstRun = deploymentStore.deploymentStep === null
 
     if (isWhitelistWithCap) {
       if (firstRun) {
@@ -200,7 +200,7 @@ export class stepFour extends React.Component {
 
     const newHistory = isValidContract ? url : crowdsalePage
 
-    localStorage.clear()
+    this.props.deploymentStore.resetDeploymentStep()
 
     this.props.history.push(newHistory)
   }

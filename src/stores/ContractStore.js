@@ -36,7 +36,4 @@ class ContractStore {
   }
 }
 
-const contractStore = new ContractStore();
-
-export default contractStore;
-export { ContractStore };
+export default ContractStore;

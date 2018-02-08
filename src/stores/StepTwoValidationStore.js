@@ -20,7 +20,4 @@ class StepTwoValidationStore {
   }
 }
 
-const stepTwoValidationStore = new StepTwoValidationStore();
-
-export default stepTwoValidationStore;
-export { StepTwoValidationStore };
+export default StepTwoValidationStore;
