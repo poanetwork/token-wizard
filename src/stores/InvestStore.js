@@ -7,7 +7,6 @@ class InvestStore {
   @action setProperty = (property, value) => {
     this[property] = value
   }
-
 }
 
 const investStore = new InvestStore();

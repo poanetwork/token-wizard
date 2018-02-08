@@ -4,7 +4,9 @@ import {
   validateName, validateTime, validateSupply, validateRate, validateAddress, validateLaterTime,
   validateLaterOrEqualTime, validateTier
 } from '../utils/utils'
+import autosave from './autosave'
 const { VALID, INVALID } = VALIDATION_TYPES
+
 class TierStore {
 
   @observable tiers;
@@ -13,6 +15,7 @@ class TierStore {
 
   constructor() {
     this.reset()
+    autosave(this, 'TierStore')
   }
 
   @action reset = () => {
@@ -62,29 +65,29 @@ class TierStore {
     switch (property){
       case 'name':
         this.validTiers[index][property] = validateName(this.tiers[index][property]) ? VALID : INVALID
-        return
+        break
       case 'tier':
         this.validTiers[index][property] = validateTier(this.tiers[index][property]) ? VALID : INVALID
-        return
+        break
       case 'walletAddress':
         this.validTiers[index][property] = validateAddress(this.tiers[index][property]) ? VALID : INVALID
-        return
+        break
       case 'supply':
         this.validTiers[index][property] = validateSupply(this.tiers[index][property]) ? VALID : INVALID
-        return
+        break
       case 'rate':
         this.validTiers[index][property] = validateRate(this.tiers[index][property]) ? VALID : INVALID
-        return
+        break
       case 'startTime':
         if (index > 0) {
           this.validTiers[index][property] = validateLaterOrEqualTime(this.tiers[index][property], this.tiers[index - 1].endTime) ? VALID : INVALID
-          return
+        } else {
+          this.validTiers[index][property] = validateTime(this.tiers[index][property]) ? VALID: INVALID
         }
-        this.validTiers[index][property] = validateTime(this.tiers[index][property]) ? VALID: INVALID
-        return
+        break
       case 'endTime':
         this.validTiers[index][property] = validateLaterTime(this.tiers[index][property], this.tiers[index].startTime) ? VALID : INVALID
-        return
+        break
       default:
         // do nothing
     }
@@ -101,7 +104,7 @@ class TierStore {
         }
 
         this.validTiers[index][property] = lessThanNextStart && laterTime ? VALID : INVALID
-        return
+        break
       case 'startTime':
         let notLaterTime = true
         const previousToEndTime = validateLaterTime(this.tiers[index].endTime, this.tiers[index][property])
@@ -112,9 +115,9 @@ class TierStore {
         }
 
         this.validTiers[index][property] = notLaterTime && previousToEndTime && validTime ? VALID : INVALID
-        return
+        break
       default:
-        return
+        // Nothing
     }
   }
 

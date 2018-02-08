@@ -178,7 +178,9 @@ export function getCrowdsaleTargetDates($this, cb) {
 
             console.log("endDate: " + endDate * 1000);
 
-            if (!crowdsalePageStore.endDate || crowdsalePageStore.endDate < endDate * 1000) crowdsalePageStore.endDate = endDate * 1000;
+            if (!crowdsalePageStore.endDate || crowdsalePageStore.endDate < endDate * 1000) {
+              crowdsalePageStore.setProperty('endDate', endDate * 1000)
+            }
 
             console.log("curDate: " + new Date().getTime());
 

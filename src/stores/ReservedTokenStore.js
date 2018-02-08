@@ -1,4 +1,5 @@
 import { observable, action } from 'mobx';
+import autosave from './autosave'
 
 class ReservedTokenStore {
 
@@ -6,10 +7,12 @@ class ReservedTokenStore {
 
   constructor(tokens = []) {
     this.tokens = tokens;
+
+    autosave(this, 'ReservedTokenStore')
   }
 
   @action addToken = (token) => {
-    const currentToken = this.tokens.find(t => t.addr === token.addr && t.dim == token.dim)
+    const currentToken = this.tokens.find(t => t.addr === token.addr && t.dim === token.dim)
 
     if (currentToken) {
       const index = this.tokens.indexOf(currentToken)

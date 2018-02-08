@@ -199,6 +199,9 @@ export class stepFour extends React.Component {
     }
 
     const newHistory = isValidContract ? url : crowdsalePage
+
+    localStorage.clear()
+
     this.props.history.push(newHistory)
   }
 
