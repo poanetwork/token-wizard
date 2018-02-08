@@ -17,7 +17,6 @@ import { getNetworkVersion, sendTXToContract, attachToContract, calculateGasLimi
 import { getWhiteListWithCapCrowdsaleAssets, toast } from '../../utils/utils'
 import { contractsInfo, getTiers, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
-import web3Store from '../../stores/Web3Store'
 
 const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME } = TEXT_FIELDS
 
