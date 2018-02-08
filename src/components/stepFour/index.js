@@ -76,9 +76,11 @@ export class stepFour extends React.Component {
   resumeContractDeployment = () => {
     const { deploymentStore } = this.props
     const startAt = deploymentStore.deploymentStep ? deploymentStore.deploymentStep : 0
-    const deploymentSteps = buildDeploymentSteps().slice(startAt)
+    const deploymentSteps = buildDeploymentSteps()
 
-    executeSequentially(deploymentSteps)
+    executeSequentially(deploymentSteps, startAt, (index) => {
+      deploymentStore.setDeploymentStep(index)
+    })
       .then(() => this.hideModal())
       .then(() => successfulDeployment())
       .catch(this.handleError)
@@ -89,8 +91,7 @@ export class stepFour extends React.Component {
 
     if (!deploymentStore.deploymentHasFinished) {
       toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED, options: {time: 1000} })
-      const deploymentStepsOffset = deploymentStore.deploymentStep || 0
-      deploymentStore.setDeploymentStep(deploymentStepsOffset + failedAt)
+      deploymentStore.setDeploymentStep(failedAt)
 
     } else {
       this.hideModal()
