@@ -422,6 +422,11 @@ export class Manage extends Component {
     }
   }
 
+  tierHasStarted = (index) => {
+    const initialTiersValue = this.props.crowdsaleStore.selected.initialTiersValues[index]
+    return initialTiersValue ? Date.now() > new Date(initialTiersValue.startTime).getTime() : true
+  }
+
   render () {
     const { formPristine, canFinalize, shouldDistribute, canDistribute, crowdsaleHasEnded } = this.state
     const { generalStore, tierStore, tokenStore, crowdsaleStore } = this.props
@@ -493,6 +498,8 @@ export class Manage extends Component {
     }
 
     const tierStartAndEndTime = (tier, index) => {
+      const disabled = !tier.updatable || this.tierHasStarted(index) || crowdsaleHasEnded
+
       return <div className='input-block-container'>
         <InputField
           side='left'
@@ -503,7 +510,7 @@ export class Manage extends Component {
           errorMessage={VALIDATION_MESSAGES.EDITED_START_TIME}
           onChange={e => this.updateTierStore(e, 'startTime', index)}
           description="Date and time when the tier starts. Can't be in the past from the current moment."
-          disabled={!tier.updatable || crowdsaleHasEnded}
+          disabled={disabled}
         />
         <InputField
           side='right'
@@ -514,12 +521,14 @@ export class Manage extends Component {
           errorMessage={VALIDATION_MESSAGES.EDITED_END_TIME}
           onChange={e => this.updateTierStore(e, 'endTime', index)}
           description="Date and time when the tier ends. Can be only in the future."
-          disabled={!tier.updatable || crowdsaleHasEnded}
+          disabled={disabled}
         />
       </div>
     }
 
     const tierRateAndSupply = (tier, index) => {
+      const disabled = !tier.updatable || this.tierHasStarted(index) || crowdsaleHasEnded
+
       return <div className='input-block-container'>
         <InputField
           side='left'
@@ -530,7 +539,7 @@ export class Manage extends Component {
           errorMessage={VALIDATION_MESSAGES.RATE}
           onChange={e => this.updateTierStore(e, 'rate', index)}
           description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens"
-          disabled={!tier.updatable || crowdsaleHasEnded}
+          disabled={disabled}
         />
         <InputField
           side='right'
@@ -541,7 +550,7 @@ export class Manage extends Component {
           errorMessage={VALIDATION_MESSAGES.SUPPLY}
           onChange={e => this.updateTierStore(e, 'supply', index)}
           description="How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers"
-          disabled={!tier.updatable || crowdsaleHasEnded}
+          disabled={disabled}
         />
       </div>
     }
