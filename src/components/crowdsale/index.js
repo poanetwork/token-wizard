@@ -14,7 +14,7 @@ import { StepNavigation } from '../Common/StepNavigation'
 import { CONTRACT_TYPES, NAVIGATION_STEPS } from '../../utils/constants'
 import { invalidCrowdsaleAddrAlert } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
-import { ICOConfig } from '../Common/config'
+import { CrowdsaleConfig } from '../Common/config'
 import { inject, observer } from 'mobx-react'
 
 const { CROWDSALE_PAGE } = NAVIGATION_STEPS
@@ -30,7 +30,7 @@ export class Crowdsale extends React.Component {
   componentDidMount () {
     checkWeb3()
 
-    const networkID = ICOConfig.networkID ? ICOConfig.networkID : getQueryVariable('networkID')
+    const networkID = CrowdsaleConfig.networkID ? CrowdsaleConfig.networkID : getQueryVariable('networkID')
     const contractType = CONTRACT_TYPES.whitelistwithcap//getQueryVariable("contractType");
 
     this.getCrowdsale(networkID, contractType)
@@ -59,7 +59,7 @@ export class Crowdsale extends React.Component {
   extractContractsData = () => {
     const { contractStore, web3Store } = this.props
     const { web3 } = web3Store
-    const crowdsaleAddr = ICOConfig.crowdsaleContractURL ? ICOConfig.crowdsaleContractURL : getQueryVariable('addr')
+    const crowdsaleAddr = CrowdsaleConfig.crowdsaleContractURL ? CrowdsaleConfig.crowdsaleContractURL : getQueryVariable('addr')
 
     if (!web3.utils.isAddress(crowdsaleAddr)) {
       this.setState({ loading: false })
@@ -104,7 +104,7 @@ export class Crowdsale extends React.Component {
   goToInvestPage = () => {
     const { contractStore, generalStore } = this.props
     let queryStr = "";
-    if (!ICOConfig.crowdsaleContractURL || !ICOConfig.networkID) {
+    if (!CrowdsaleConfig.crowdsaleContractURL || !CrowdsaleConfig.networkID) {
       if (contractStore.crowdsale.addr) {
         queryStr = "?addr=" + contractStore.crowdsale.addr[0];
         if (generalStore.networkID) {

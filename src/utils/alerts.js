@@ -180,3 +180,11 @@ export function mainnetIsOnMaintenance() {
     type: "warning"
   });
 }
+
+export function notTheOwner() {
+  sweetAlert2({
+    title: "Not The Owner",
+    html: "Current user is not the owner of the Crowdsale, thus you won't be able to modify it",
+    type: "warning"
+  })
+}
