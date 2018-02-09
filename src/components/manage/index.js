@@ -423,14 +423,12 @@ export class Manage extends Component {
       return null
     }
 
-    const tierHasEnded = new Date(tier.endTime).getTime() <= Date.now()
-
     return (
       <div onClick={this.clickedWhiteListInputBlock}>
         <div className="section-title">
           <p className="title">Whitelist</p>
         </div>
-        {tier.updatable && !crowdsaleStore.selected.finalized && !tierHasEnded && this.state.ownerCurrentUser
+        {tier.updatable && !crowdsaleStore.selected.finalized && !this.tierHasEnded(tier) && this.state.ownerCurrentUser
           ? this.whitelistInputBlock(index)
           : this.readOnlyWhitelistedAddresses(tier)
         }
@@ -454,6 +452,8 @@ export class Manage extends Component {
       this.setState({ formPristine: false })
     }
   }
+
+  tierHasEnded = (tier) => new Date(tier.endTime).getTime() <= Date.now()
 
   render () {
     const { formPristine, canFinalize, shouldDistribute, canDistribute, crowdsaleHasEnded, ownerCurrentUser } = this.state
@@ -526,8 +526,7 @@ export class Manage extends Component {
     }
 
     const tierStartAndEndTime = (tier, index) => {
-      const tierHasEnded = new Date(tier.endTime).getTime() <= Date.now()
-      const disabled = !this.state.ownerCurrentUser || !tier.updatable || tierHasEnded
+      const disabled = !this.state.ownerCurrentUser || !tier.updatable || this.tierHasEnded(tier)
 
       return <div className='input-block-container'>
         <InputField
@@ -556,8 +555,7 @@ export class Manage extends Component {
     }
 
     const tierRateAndSupply = (tier, index) => {
-      const tierHasEnded = new Date(tier.endTime).getTime() <= Date.now()
-      const disabled = !this.state.ownerCurrentUser || !tier.updatable || tierHasEnded
+      const disabled = !this.state.ownerCurrentUser || !tier.updatable || this.tierHasEnded(tier)
 
       return <div className='input-block-container'>
         <InputField
