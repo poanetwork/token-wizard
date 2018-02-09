@@ -454,8 +454,9 @@ export class Manage extends Component {
   }
 
   tierHasStarted = (index) => {
-    const initialTiersValue = this.props.crowdsaleStore.selected.initialTiersValues[index]
-    return initialTiersValue ? Date.now() > new Date(initialTiersValue.startTime).getTime() : true
+    const initialTierValues = this.props.crowdsaleStore.selected.initialTiersValues[index]
+    return initialTierValues ? Date.now() > new Date(initialTierValues.startTime).getTime() : true
+  }
 
   tierHasEnded = (index) => {
     const initialTierValues = this.props.crowdsaleStore.selected.initialTiersValues[index]
@@ -533,7 +534,7 @@ export class Manage extends Component {
     }
 
     const tierStartAndEndTime = (tier, index) => {
-      const disabled = !this.state.ownerCurrentUser || !tier.updatable || this.tierHasStarted(index) || this.tierHasEnded(index)
+      const disabled = !this.state.ownerCurrentUser || !tier.updatable || this.tierHasEnded(index)
 
       return <div className='input-block-container'>
         <InputField
@@ -545,7 +546,7 @@ export class Manage extends Component {
           errorMessage={VALIDATION_MESSAGES.EDITED_START_TIME}
           onChange={e => this.updateTierStore(e, 'startTime', index)}
           description={DESCRIPTION.START_TIME}
-          disabled={disabled}
+          disabled={disabled || this.tierHasStarted(index)}
         />
         <InputField
           side='right'
@@ -562,7 +563,7 @@ export class Manage extends Component {
     }
 
     const tierRateAndSupply = (tier, index) => {
-      const disabled = !this.state.ownerCurrentUser || !tier.updatable || this.tierHasStarted(index) || this.tierHasEnded(index)
+      const disabled = !this.state.ownerCurrentUser || !tier.updatable || this.tierHasEnded(index) || this.tierHasStarted(index)
 
       return <div className='input-block-container'>
         <InputField
