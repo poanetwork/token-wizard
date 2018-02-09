@@ -15,7 +15,8 @@ import {
   VALIDATION_TYPES,
   TEXT_FIELDS,
   CONTRACT_TYPES,
-  CHAINS
+  CHAINS,
+  DESCRIPTION
 } from "../../utils/constants";
 import { inject, observer } from "mobx-react";
 import { Loader } from '../Common/Loader'
@@ -371,7 +372,7 @@ export class stepThree extends React.Component {
                   valid={tierStore.validTiers[0] && tierStore.validTiers[0].tier}
                   errorMessage={VALIDATION_MESSAGES.TIER}
                   onChange={e => this.updateTierStore(e, "tier", 0)}
-                  description={`Name of a tier, e.g. PrePreIco, PreICO, ICO with bonus A, ICO with bonus B, etc. We simplified that and will increment a number after each tier.`}
+                  description={DESCRIPTION.CROWDSALE_SETUP_NAME}
                 />
                 <RadioInputField
                   extraClassName="right"
@@ -379,7 +380,7 @@ export class stepThree extends React.Component {
                   items={[{ label: 'on', value: 'on' }, { label: 'off', value: 'off' }]}
                   selectedItem={this.props.tierStore.tiers[0].updatable}
                   onChange={e => this.updateTierStore(e, "updatable", 0)}
-                  description={`Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing.`}
+                  description={DESCRIPTION.ALLOW_MODIFYING}
                 />
               </div>
               <div className="input-block-container">
@@ -391,7 +392,7 @@ export class stepThree extends React.Component {
                   valid={tierStore.validTiers[0] && tierStore.validTiers[0].startTime}
                   errorMessage={VALIDATION_MESSAGES.START_TIME}
                   onChange={e => this.updateTierStore(e, "startTime", 0)}
-                  description={`Date and time when the tier starts. Can't be in the past from the current moment.`}
+                  description={DESCRIPTION.START_TIME}
                 />
                 <InputField
                   side="right"
@@ -401,7 +402,7 @@ export class stepThree extends React.Component {
                   valid={tierStore.validTiers[0] && tierStore.validTiers[0].endTime}
                   errorMessage={VALIDATION_MESSAGES.END_TIME}
                   onChange={e => this.updateTierStore(e, "endTime", 0)}
-                  description={`Date and time when the tier ends. Can be only in the future.`}
+                  description={DESCRIPTION.END_TIME}
                 />
               </div>
               <div className="input-block-container">
@@ -413,7 +414,7 @@ export class stepThree extends React.Component {
                   valid={tierStore.validTiers[0] && tierStore.validTiers[0].rate}
                   errorMessage={VALIDATION_MESSAGES.RATE}
                   onChange={e => this.updateTierStore(e, "rate", 0)}
-                  description={`Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens`}
+                  description={DESCRIPTION.RATE}
                 />
                 <InputField
                   side="right"
@@ -423,7 +424,7 @@ export class stepThree extends React.Component {
                   valid={tierStore.validTiers[0] && tierStore.validTiers[0].supply}
                   errorMessage={VALIDATION_MESSAGES.SUPPLY}
                   onChange={e => this.updateTierStore(e, "supply", 0)}
-                  description={`How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers`}
+                  description={DESCRIPTION.SUPPLY}
                 />
               </div>
             </div>

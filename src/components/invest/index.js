@@ -403,7 +403,7 @@ export class Invest extends React.Component {
               { ContributeButton }
             </div>
             <p className="description">
-              Think twice before investment in ICOs. Tokens will be deposited on a wallet you used to buy tokens.
+              Think twice before contributing to Crowdsales. Tokens will be deposited on a wallet you used to buy tokens.
             </p>
           </form>
           { QRPaymentProcessElement }
