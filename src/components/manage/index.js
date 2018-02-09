@@ -428,7 +428,7 @@ export class Manage extends Component {
         <div className="section-title">
           <p className="title">Whitelist</p>
         </div>
-        {tier.updatable && !crowdsaleStore.selected.finalized && !this.tierHasEnded(tier) && this.state.ownerCurrentUser
+        {tier.updatable && !crowdsaleStore.selected.finalized && !this.tierHasEnded(index) && this.state.ownerCurrentUser
           ? this.whitelistInputBlock(index)
           : this.readOnlyWhitelistedAddresses(tier)
         }
@@ -453,7 +453,10 @@ export class Manage extends Component {
     }
   }
 
-  tierHasEnded = (tier) => new Date(tier.endTime).getTime() <= Date.now()
+  tierHasEnded = (index) => {
+    const initialTierValues = this.props.crowdsaleStore.selected.initialTiersValues[index]
+    return initialTierValues && new Date(initialTierValues.endTime).getTime() <= Date.now()
+  }
 
   render () {
     const { formPristine, canFinalize, shouldDistribute, canDistribute, crowdsaleHasEnded, ownerCurrentUser } = this.state
@@ -526,7 +529,7 @@ export class Manage extends Component {
     }
 
     const tierStartAndEndTime = (tier, index) => {
-      const disabled = !this.state.ownerCurrentUser || !tier.updatable || this.tierHasEnded(tier)
+      const disabled = !this.state.ownerCurrentUser || !tier.updatable || this.tierHasEnded(index)
 
       return <div className='input-block-container'>
         <InputField
@@ -555,7 +558,7 @@ export class Manage extends Component {
     }
 
     const tierRateAndSupply = (tier, index) => {
-      const disabled = !this.state.ownerCurrentUser || !tier.updatable || this.tierHasEnded(tier)
+      const disabled = !this.state.ownerCurrentUser || !tier.updatable || this.tierHasEnded(index)
 
       return <div className='input-block-container'>
         <InputField
