@@ -53,7 +53,9 @@ export class stepFour extends React.Component {
   componentDidMount () {
     scrollToBottom()
     copy('copy')
-    this.showModal()
+    if (!this.props.deploymentStore.deploymentHasFinished) {
+      this.showModal()
+    }
 
     if (process.env.NODE_ENV !== 'development') this.deployCrowdsale()
   }
