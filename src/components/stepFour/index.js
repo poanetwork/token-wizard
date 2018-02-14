@@ -41,7 +41,8 @@ export class stepFour extends React.Component {
     super(props)
     this.state = {
       contractDownloaded: false,
-      modal: false
+      modal: false,
+      transactionFailed: false
     }
   }
 
@@ -91,16 +92,30 @@ export class stepFour extends React.Component {
   handleError = ([err, failedAt]) => {
     const { deploymentStore } = this.props
 
+    this.setState({
+      transactionFailed: true
+    })
+
     if (!deploymentStore.deploymentHasFinished) {
       toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED, options: {time: 1000} })
       deploymentStore.setDeploymentStep(failedAt)
-
     } else {
       this.hideModal()
       toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED })
     }
 
     console.error([failedAt, err])
+  }
+
+  skipTransaction = () => {
+    const { deploymentStore } = this.props
+
+    this.setState({
+      transactionFailed: false
+    })
+
+    deploymentStore.setDeploymentStep(deploymentStore.deploymentStep + 1)
+    this.resumeContractDeployment()
   }
 
   hideModal = () => {
@@ -460,7 +475,11 @@ export class stepFour extends React.Component {
           title={'Tx Status'}
           showModal={this.state.modal}
         >
-          <TxProgressStatus txMap={deploymentStore.txMap} deployCrowdsale={this.deployCrowdsale} />
+          <TxProgressStatus
+            txMap={deploymentStore.txMap}
+            deployCrowdsale={this.deployCrowdsale}
+            onSkip={this.state.transactionFailed ? this.skipTransaction : null}
+          />
         </ModalContainer>
         <PreventRefresh/>
       </section>
