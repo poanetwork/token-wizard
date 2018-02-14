@@ -54,7 +54,7 @@ export class stepFour extends React.Component {
   componentDidMount () {
     scrollToBottom()
     copy('copy')
-    if (!this.props.deploymentStore.deploymentHasFinished) {
+    if (!this.props.deploymentStore.hasEnded) {
       this.showModal()
     }
 
@@ -84,8 +84,13 @@ export class stepFour extends React.Component {
     executeSequentially(deploymentSteps, startAt, (index) => {
       deploymentStore.setDeploymentStep(index)
     })
-      .then(() => this.hideModal())
-      .then(() => successfulDeployment())
+      .then(() => {
+        this.hideModal()
+
+        deploymentStore.setHasEnded(true)
+
+        return successfulDeployment()
+      })
       .catch(this.handleError)
   }
 
