@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
+import { cancellingIncompleteDeploy } from '../utils/alerts'
 
 class CheckIncompleteDeploy extends Component {
   cancel() {
-    localStorage.clear()
-    window.location.reload()
+    return cancellingIncompleteDeploy()
+      .then(result => {
+        if (result.value) {
+          localStorage.clear()
+          window.location.reload()
+        }
+      })
   }
 
   render() {
