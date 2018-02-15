@@ -5,7 +5,14 @@ node_js:
 install:
   - npm install
 
-after-script:
+before_script:
+  - npm run installWeb3
+
+script:
+  - npm test
+  - npm run coveralls
+
+after_script:
   - sudo kill `sudo lsof -t -i:8545`
 
 after_success:
