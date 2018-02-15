@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {isAddress} from 'web3-utils'
+import Web3 from 'web3'
 import '../../assets/stylesheets/application.css'
 import { InputField } from './InputField'
 import { RadioInputField } from './RadioInputField'
@@ -94,7 +94,7 @@ export class ReservedTokensInputBlock extends Component {
   }
 
   handleAddressChange = address => {
-    const isAddressValid = isAddress(address) ? VALID : INVALID
+    const isAddressValid = Web3.utils.isAddress(address) ? VALID : INVALID
 
     const newState = update(this.state, {
       validation: {
