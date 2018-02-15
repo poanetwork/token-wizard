@@ -7,10 +7,12 @@ import { InputField } from '../Common/InputField'
 import { ReservedTokensInputBlock } from '../Common/ReservedTokensInputBlock'
 import { NAVIGATION_STEPS, VALIDATION_MESSAGES, TEXT_FIELDS, DESCRIPTION } from '../../utils/constants'
 import { inject, observer } from 'mobx-react';
+import reservedTokenStore from '../../stores/ReservedTokenStore'
+
 const { TOKEN_SETUP } = NAVIGATION_STEPS
 const { NAME, TICKER, DECIMALS } = TEXT_FIELDS
 
-@inject('tokenStore', 'web3Store', 'tierCrowdsaleListStore') @observer
+@inject('tokenStore', 'web3Store', 'tierCrowdsaleListStore', 'reservedTokenStore') @observer
 export class stepTwo extends Component {
   componentDidMount() {
     checkWeb3(this.props.web3Store.web3);
@@ -37,13 +39,21 @@ export class stepTwo extends Component {
     return <div onClick={this.showErrorMessages.bind(this, 'token')} className="button button_fill"> Continue</div>
   }
 
-  render() {
+  removeReservedToken = index => {
+    this.props.reservedTokenStore.removeToken(index)
+  }
+
+  addReservedTokensItem = newToken => {
+    this.props.reservedTokenStore.addToken(newToken)
+  }
+
+  render () {
     return (
       <section className="steps steps_crowdsale-contract" ref="two">
         <StepNavigation activeStep={TOKEN_SETUP}/>
         <div className="steps-content container">
           <div className="about-step">
-            <div className="step-icons step-icons_token-setup"></div>
+            <div className="step-icons step-icons_token-setup"/>
             <p className="title">Token setup</p>
             <p className="description">
               Configure properties of your token. Created token contract will be ERC-20 compatible.
@@ -80,7 +90,11 @@ export class stepTwo extends Component {
           <div className="reserved-tokens-title">
             <p className="title">Reserved tokens</p>
           </div>
-          <ReservedTokensInputBlock />
+          <ReservedTokensInputBlock
+            tokens={reservedTokenStore.tokens}
+            addReservedTokensItem={this.addReservedTokensItem}
+            removeReservedToken={this.removeReservedToken}
+          />
         </div>
         <div className="button-container">
           {this.renderLinkComponent()}
