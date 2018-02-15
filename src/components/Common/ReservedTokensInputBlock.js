@@ -6,10 +6,12 @@ import { RadioInputField } from './RadioInputField'
 import { TEXT_FIELDS, VALIDATION_TYPES } from '../../utils/constants'
 import update from 'immutability-helper'
 import ReservedTokensItem from './ReservedTokensItem'
+import { observer } from 'mobx-react';
 
 const { VALID, INVALID } = VALIDATION_TYPES
 const { ADDRESS, DIMENSION, VALUE } = TEXT_FIELDS
 
+@observer
 export class ReservedTokensInputBlock extends Component {
   constructor (props) {
     super(props)

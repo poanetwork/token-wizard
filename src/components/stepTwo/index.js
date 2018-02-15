@@ -7,7 +7,6 @@ import { InputField } from '../Common/InputField'
 import { ReservedTokensInputBlock } from '../Common/ReservedTokensInputBlock'
 import { NAVIGATION_STEPS, VALIDATION_MESSAGES, TEXT_FIELDS, DESCRIPTION } from '../../utils/constants'
 import { inject, observer } from 'mobx-react';
-import reservedTokenStore from '../../stores/ReservedTokenStore'
 
 const { TOKEN_SETUP } = NAVIGATION_STEPS
 const { NAME, TICKER, DECIMALS } = TEXT_FIELDS
@@ -91,7 +90,7 @@ export class stepTwo extends Component {
             <p className="title">Reserved tokens</p>
           </div>
           <ReservedTokensInputBlock
-            tokens={reservedTokenStore.tokens}
+            tokens={this.props.reservedTokenStore.tokens}
             addReservedTokensItem={this.addReservedTokensItem}
             removeReservedToken={this.removeReservedToken}
           />
