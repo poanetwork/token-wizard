@@ -9,9 +9,10 @@
   corePOA: 99
 }
 
-export const ICOConfig = {
+export const CrowdsaleConfig = {
   crowdsaleContractURL: '0x338f47C1AA1DBdB56DfEA17cc376C0b21f4fbDa2',
-  networkID: networks.sokolPOA
+  networkID: networks.sokolPOA,
+  showHeaderAndFooterInIframe: true
 };*/
 
-export const ICOConfig = {};
+export const CrowdsaleConfig = {};

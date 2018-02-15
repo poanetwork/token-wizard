@@ -1,6 +1,9 @@
 import { VALIDATION_TYPES, TRUNC_TO_DECIMALS, TOAST } from './constants'
 import { contractStore, tokenStore, tierStore, web3Store } from '../stores'
 import queryString from 'query-string'
+import { CrowdsaleConfig } from '../components/Common/config'
+
+
 const { VALID, INVALID } = VALIDATION_TYPES
 
 export function getQueryVariable(variable) {
@@ -329,3 +332,8 @@ export const toast = {
 export const gweiToWei = x => parseInt(x * 1000000000, 10)
 
 export const weiToGwei = x => x / 1000000000
+
+export const displayHeaderAndFooterInIframe = () => {
+  const insideAnIframe = window.self !== window.top
+  return insideAnIframe ? CrowdsaleConfig.showHeaderAndFooterInIframe : true
+}

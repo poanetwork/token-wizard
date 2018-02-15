@@ -244,7 +244,7 @@ export class stepFour extends React.Component {
           side='right'
           title={'Allow modifying'}
           value={tier.updatable ? tier.updatable : 'off'}
-          description="Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing."
+          description={DESCRIPTION.ALLOW_MODIFYING}
         />
       )
 
@@ -279,7 +279,7 @@ export class stepFour extends React.Component {
                 side='right'
                 title={'RATE'}
                 value={tier.rate ? tier.rate : 0 + ' ETH'}
-                description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens."
+                description={DESCRIPTION.RATE}
               />
             </div>
             {contractStore.contractType === CONTRACT_TYPES.whitelistwithcap ? capBlock : ''}
