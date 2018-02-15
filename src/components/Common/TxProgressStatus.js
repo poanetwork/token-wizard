@@ -65,6 +65,10 @@ export class TxProgressStatus extends Component {
                 : <a onClick={this.props.deployCrowdsale} className="no_image button button_fill">Resume deploy...</a>
               : null
             }
+            {this.props.onSkip
+              ? <a onClick={this.props.onSkip} className="no_image button button_fill">Skip transaction</a>
+              : null
+            }
           </div>
         </div>
         : null
