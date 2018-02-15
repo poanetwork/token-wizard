@@ -6,6 +6,7 @@
     "node": "8.9.0"
   },
   "devDependencies": {
+    "coveralls": "^3.0.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-15": "^1.0.5",
     "ethereumjs-testrpc": "^4.1.3",
