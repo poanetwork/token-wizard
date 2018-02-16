@@ -103,8 +103,8 @@ export function warningOnMainnetAlert(tiersCount, priceSelected, reservedCount, 
   sweetAlert2({
     title: "Warning",
     html: `You are about to sign ${estimatedTxsCount} TXs. You will see an individual Metamask windows for each of it.
-     Please don't open two or more instances of Wizard in one browser. Token Wizard will create ${tiersCount}-tier(s) 
-     crowdsale for you. The total cost will be around ${estimatedCost.toFixed(2)} ETH. Are you sure you want to 
+     Please don't open two or more instances of Wizard in one browser. Token Wizard will create ${tiersCount}-tier(s)
+     crowdsale for you. The total cost will be around ${estimatedCost.toFixed(2)} ETH. Are you sure you want to
      proceed?`,
     type: "warning",
     showCancelButton: true,
@@ -194,6 +194,18 @@ export function cancellingIncompleteDeploy() {
   return sweetAlert2({
     title: "Cancel crowdsale deploy",
     html: "Are you sure you want to cancel the deployment of the crowdsale? This action cannot be undone.",
+    type: "warning",
+    showCancelButton: true,
+    cancelButtonText: "No",
+    confirmButtonText: "Yes",
+    reverseButtons: true
+  })
+}
+
+export function skippingTransaction() {
+  return sweetAlert2({
+    title: "Skip transaction",
+    html: "Are you sure you want to skip the transaction? This can leave the whole crowdsale in an invalid state, only do this if you are sure of what you are doing.",
     type: "warning",
     showCancelButton: true,
     cancelButtonText: "No",

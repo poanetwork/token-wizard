@@ -10,7 +10,7 @@ import {
   scrollToBottom,
   setupContractDeployment
 } from './utils'
-import { noContractDataAlert, successfulDeployment } from '../../utils/alerts'
+import { noContractDataAlert, successfulDeployment, skippingTransaction } from '../../utils/alerts'
 import {
   CONTRACT_TYPES,
   DESCRIPTION,
@@ -115,12 +115,22 @@ export class stepFour extends React.Component {
   skipTransaction = () => {
     const { deploymentStore } = this.props
 
-    this.setState({
-      transactionFailed: false
-    })
+    this.hideModal() // hide modal, otherwise the warning doesn't show up
+    return skippingTransaction()
+      .then(result => {
+        if (result.value) {
+          this.setState({
+            transactionFailed: false
+          })
 
-    deploymentStore.setDeploymentStep(deploymentStore.deploymentStep + 1)
-    this.resumeContractDeployment()
+          deploymentStore.setDeploymentStep(deploymentStore.deploymentStep + 1)
+          this.resumeContractDeployment()
+        }
+      })
+      .then( // finally
+        () => this.showModal(),
+        () => this.showModal()
+      )
   }
 
   hideModal = () => {
