@@ -16,10 +16,6 @@ class CrowdsalePageStore {
   @action setProperty = (property, value) => {
     this[property] = value
   }
-
 }
 
-const crowdsalePageStore = new CrowdsalePageStore();
-
-export default crowdsalePageStore;
-export { CrowdsalePageStore };
+export default CrowdsalePageStore;

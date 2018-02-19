@@ -1,4 +1,5 @@
 import { observable, action } from 'mobx';
+import autosave from './autosave'
 
 class CrowdsaleBlockListStore {
 
@@ -6,6 +7,8 @@ class CrowdsaleBlockListStore {
 
   constructor(blockList = []) {
     this.blockList = blockList;
+
+    autosave(this, 'CrowdsaleBlockListStore')
   }
 
   @action addCrowdsaleItem = (crowdsaleBlock) => {
@@ -25,10 +28,6 @@ class CrowdsaleBlockListStore {
   @action emptyList = () => {
     this.blockList = []
   }
-
 }
 
-const crowdsaleBlockListStore = new CrowdsaleBlockListStore();
-
-export default crowdsaleBlockListStore;
-export { CrowdsaleBlockListStore };
+export default CrowdsaleBlockListStore;

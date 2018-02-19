@@ -1,4 +1,5 @@
 import { observable, action } from 'mobx';
+import autosave from './autosave'
 
 class PricingStrategyStore {
 
@@ -6,6 +7,8 @@ class PricingStrategyStore {
 
   constructor(strategies = []) {
     this.strategies = strategies;
+
+    autosave(this, 'PricingStrategyStore')
   }
 
   @action addStrategy = (strategy) => {
@@ -21,10 +24,6 @@ class PricingStrategyStore {
   @action removeStrategy = (index) => {
     this.strategies.splice(index,1)
   }
-
 }
 
-const pricingStrategyStore = new PricingStrategyStore();
-
-export default pricingStrategyStore;
-export { PricingStrategyStore };
+export default PricingStrategyStore;

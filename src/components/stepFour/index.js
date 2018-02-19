@@ -10,7 +10,7 @@ import {
   scrollToBottom,
   setupContractDeployment
 } from './utils'
-import { noContractDataAlert, successfulDeployment } from '../../utils/alerts'
+import { noContractDataAlert, successfulDeployment, skippingTransaction } from '../../utils/alerts'
 import {
   CONTRACT_TYPES,
   DESCRIPTION,
@@ -41,7 +41,8 @@ export class stepFour extends React.Component {
     super(props)
     this.state = {
       contractDownloaded: false,
-      modal: false
+      modal: false,
+      transactionFailed: false
     }
   }
 
@@ -53,7 +54,9 @@ export class stepFour extends React.Component {
   componentDidMount () {
     scrollToBottom()
     copy('copy')
-    this.showModal()
+    if (!this.props.deploymentStore.hasEnded) {
+      this.showModal()
+    }
 
     if (process.env.NODE_ENV !== 'development') this.deployCrowdsale()
   }
@@ -61,7 +64,7 @@ export class stepFour extends React.Component {
   deployCrowdsale = () => {
     const { contractStore, deploymentStore } = this.props
     const isWhitelistWithCap = contractStore.contractType === CONTRACT_TYPES.whitelistwithcap
-    const firstRun = deploymentStore.deploymentStep === undefined
+    const firstRun = deploymentStore.deploymentStep === null
 
     if (isWhitelistWithCap) {
       if (firstRun) {
@@ -76,28 +79,58 @@ export class stepFour extends React.Component {
   resumeContractDeployment = () => {
     const { deploymentStore } = this.props
     const startAt = deploymentStore.deploymentStep ? deploymentStore.deploymentStep : 0
-    const deploymentSteps = buildDeploymentSteps().slice(startAt)
+    const deploymentSteps = buildDeploymentSteps()
 
-    executeSequentially(deploymentSteps)
-      .then(() => this.hideModal())
-      .then(() => successfulDeployment())
+    executeSequentially(deploymentSteps, startAt, (index) => {
+      deploymentStore.setDeploymentStep(index)
+    })
+      .then(() => {
+        this.hideModal()
+
+        deploymentStore.setHasEnded(true)
+
+        return successfulDeployment()
+      })
       .catch(this.handleError)
   }
 
   handleError = ([err, failedAt]) => {
     const { deploymentStore } = this.props
 
+    this.setState({
+      transactionFailed: true
+    })
+
     if (!deploymentStore.deploymentHasFinished) {
       toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED, options: {time: 1000} })
-      const deploymentStepsOffset = deploymentStore.deploymentStep || 0
-      deploymentStore.setDeploymentStep(deploymentStepsOffset + failedAt)
-
+      deploymentStore.setDeploymentStep(failedAt)
     } else {
       this.hideModal()
       toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED })
     }
 
     console.error([failedAt, err])
+  }
+
+  skipTransaction = () => {
+    const { deploymentStore } = this.props
+
+    this.hideModal() // hide modal, otherwise the warning doesn't show up
+    return skippingTransaction()
+      .then(result => {
+        if (result.value) {
+          this.setState({
+            transactionFailed: false
+          })
+
+          deploymentStore.setDeploymentStep(deploymentStore.deploymentStep + 1)
+          this.resumeContractDeployment()
+        }
+      })
+      .then( // finally
+        () => this.showModal(),
+        () => this.showModal()
+      )
   }
 
   hideModal = () => {
@@ -199,6 +232,9 @@ export class stepFour extends React.Component {
     }
 
     const newHistory = isValidContract ? url : crowdsalePage
+
+    this.props.deploymentStore.resetDeploymentStep()
+
     this.props.history.push(newHistory)
   }
 
@@ -454,7 +490,11 @@ export class stepFour extends React.Component {
           title={'Tx Status'}
           showModal={this.state.modal}
         >
-          <TxProgressStatus txMap={deploymentStore.txMap} deployCrowdsale={this.deployCrowdsale} />
+          <TxProgressStatus
+            txMap={deploymentStore.txMap}
+            deployCrowdsale={this.deployCrowdsale}
+            onSkip={this.state.transactionFailed ? this.skipTransaction : null}
+          />
         </ModalContainer>
         <PreventRefresh/>
       </section>

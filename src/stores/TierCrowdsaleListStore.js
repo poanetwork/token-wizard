@@ -1,4 +1,5 @@
 import { observable, action } from 'mobx';
+import autosave from './autosave'
 
 class TierCrowdsaleListStore {
 
@@ -6,6 +7,8 @@ class TierCrowdsaleListStore {
 
   constructor(crowdsaleList = []) {
     this.crowdsaleList = crowdsaleList;
+
+    autosave(this, 'TierCrowdsaleListStore')
   }
 
   @action addCrowdsaleItem = (crowdsaleItem) => {
@@ -21,10 +24,6 @@ class TierCrowdsaleListStore {
   @action removeCrowdsaleItem = (index) => {
     this.crowdsaleList.splice(index,1)
   }
-
 }
 
-const tierCrowdsaleListStore = new TierCrowdsaleListStore();
-
-export default tierCrowdsaleListStore;
-export { TierCrowdsaleListStore };
+export default TierCrowdsaleListStore;

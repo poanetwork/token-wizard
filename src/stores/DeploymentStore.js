@@ -1,8 +1,22 @@
 import { action, computed, observable } from 'mobx'
+import autosave from './autosave'
 
 class DeploymentStore {
   @observable txMap = new Map()
-  @observable deploymentStep
+  @observable deploymentStep = null
+  @observable hasEnded = false
+
+  constructor() {
+    autosave(this, 'DeploymentStore', (store) => {
+      const txMap = new Map()
+      Object.keys(store.txMap).forEach(key => {
+        txMap.set(key, store.txMap[key])
+      })
+      store.txMap = txMap
+
+      return store
+    })
+  }
 
   @action initialize = (hasReservedToken, hasWhitelist, tiersCount) => {
     const listOfTx = [
@@ -58,6 +72,14 @@ class DeploymentStore {
     this.deploymentStep = index
   }
 
+  @action resetDeploymentStep = () => {
+    this.deploymentStep = null
+  }
+
+  @action setHasEnded(value) {
+    this.hasEnded = value
+  }
+
   logTxMap = () => {
     if (process.env.NODE_ENV !== 'development') return
 
@@ -85,7 +107,4 @@ class DeploymentStore {
   }
 }
 
-const deploymentStore = new DeploymentStore()
-
-export default deploymentStore
-export { DeploymentStore }
+export default DeploymentStore

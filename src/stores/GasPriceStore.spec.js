@@ -15,27 +15,22 @@ describe('GasPriceStore', () => {
     expect(gas.slow).toBeDefined()
     expect(gas.slow.id).toEqual(GAS_PRICE.SLOW.ID)
     expect(gas.slow.price).toEqual(GAS_PRICE.SLOW.PRICE)
-    expect(gas.slow.description).toBeDefined()
 
     expect(gas.standard).toBeDefined()
     expect(gas.standard.id).toEqual(GAS_PRICE.NORMAL.ID)
     expect(gas.standard.price).toEqual(GAS_PRICE.NORMAL.PRICE)
-    expect(gas.standard.description).toBeDefined()
 
     expect(gas.fast).toBeDefined()
     expect(gas.fast.id).toEqual(GAS_PRICE.FAST.ID)
     expect(gas.fast.price).toEqual(GAS_PRICE.FAST.PRICE)
-    expect(gas.fast.description).toBeDefined()
 
     expect(gas.instant).toBeDefined()
     expect(gas.instant.id).toEqual(GAS_PRICE.INSTANT.ID)
     expect(gas.instant.price).toEqual(GAS_PRICE.INSTANT.PRICE)
-    expect(gas.instant.description).toBeDefined()
 
     expect(gas.custom).toBeDefined()
     expect(gas.custom.id).toEqual(GAS_PRICE.CUSTOM.ID)
     expect(gas.custom.price).toEqual(GAS_PRICE.CUSTOM.PRICE)
-    expect(gas.custom.description).toBeDefined()
 
     expect(gas.block_number).toBeUndefined()
     expect(gas.block_time).toBeUndefined()

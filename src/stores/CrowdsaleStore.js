@@ -1,4 +1,5 @@
 import { action, observable } from 'mobx'
+import autosave from './autosave'
 
 class CrowdsaleStore {
   @observable crowdsales
@@ -9,6 +10,7 @@ class CrowdsaleStore {
 
   constructor () {
     this.reset()
+    autosave(this, 'CrowdsaleStore')
   }
 
   @action reset = () => {
@@ -39,7 +41,4 @@ class CrowdsaleStore {
   }
 }
 
-const crowdsaleStore = new CrowdsaleStore()
-
-export default crowdsaleStore
-export { CrowdsaleStore }
+export default CrowdsaleStore

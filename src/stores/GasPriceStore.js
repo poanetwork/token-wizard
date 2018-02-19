@@ -1,7 +1,8 @@
-import { action, observable } from 'mobx'
+import { action, computed, observable } from 'mobx'
 import { GAS_PRICE } from '../utils/constants'
 import { gweiToWei, weiToGwei } from '../utils/utils'
 import { gasPriceValues } from '../utils/api'
+import autosave from './autosave'
 
 class GasPriceStore {
   @observable slow
@@ -18,39 +19,28 @@ class GasPriceStore {
       id: GAS_PRICE.SLOW.ID,
       price: GAS_PRICE.SLOW.PRICE,
     }
-    this.slow.description = function () {
-      return `${GAS_PRICE.SLOW.DESCRIPTION} (${weiToGwei(this.price)} GWei)`
-    }
 
     this.standard = {
       id: GAS_PRICE.NORMAL.ID,
       price: GAS_PRICE.NORMAL.PRICE,
-    }
-    this.standard.description = function () {
-      return `${GAS_PRICE.NORMAL.DESCRIPTION} (${weiToGwei(this.price)} GWei)`
     }
 
     this.fast = {
       id: GAS_PRICE.FAST.ID,
       price: GAS_PRICE.FAST.PRICE,
     }
-    this.fast.description = function () {
-      return `${GAS_PRICE.FAST.DESCRIPTION} (${weiToGwei(this.price)} GWei)`
-    }
 
     this.instant = {
       id: GAS_PRICE.INSTANT.ID,
       price: GAS_PRICE.INSTANT.PRICE,
     }
-    this.instant.description = function () {
-      return `${GAS_PRICE.INSTANT.DESCRIPTION} (${weiToGwei(this.price)} GWei)`
-    }
 
     this.custom = {
       id: GAS_PRICE.CUSTOM.ID,
-      price: GAS_PRICE.CUSTOM.PRICE,
-      description: () => GAS_PRICE.CUSTOM.DESCRIPTION
+      price: GAS_PRICE.CUSTOM.PRICE
     }
+
+    autosave(this, 'GasPriceStore')
   }
 
   @action setProperty = (property, value) => {
@@ -74,9 +64,31 @@ class GasPriceStore {
         return Promise.resolve()
       })
   }
+
+  @computed
+  get slowDescription () {
+    return `${GAS_PRICE.SLOW.DESCRIPTION} (${weiToGwei(this.slow.price)} GWei)`
+  }
+
+  @computed
+  get standardDescription () {
+    return `${GAS_PRICE.NORMAL.DESCRIPTION} (${weiToGwei(this.standard.price)} GWei)`
+  }
+
+  @computed
+  get fastDescription () {
+    return `${GAS_PRICE.FAST.DESCRIPTION} (${weiToGwei(this.fast.price)} GWei)`
+  }
+
+  @computed
+  get instantDescription () {
+    return `${GAS_PRICE.INSTANT.DESCRIPTION} (${weiToGwei(this.instant.price)} GWei)`
+  }
+
+  @computed
+  get customDescription () {
+    return GAS_PRICE.CUSTOM.DESCRIPTION
+  }
 }
 
-const gasPriceStore = new GasPriceStore()
-
-export default gasPriceStore
-export { GasPriceStore }
+export default GasPriceStore

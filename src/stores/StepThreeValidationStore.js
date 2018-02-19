@@ -1,4 +1,5 @@
 import { observable, action } from 'mobx';
+import autosave from './autosave'
 
 class StepThreeValidationStore {
 
@@ -13,6 +14,8 @@ class StepThreeValidationStore {
     this[0].startTime = 'VALIDATED'
     this[0].endTime = 'VALIDATED'
     this[0].updatable = "VALIDATED"
+
+    autosave(this, 'StepThreeValidationStore')
   }
 
   @action changeProperty = (index, property, value) => {
@@ -22,11 +25,6 @@ class StepThreeValidationStore {
   @action addValidationItem = (item) => {
     this.validationsList.push(item)
   }
-
-
 }
 
-const stepThreeValidationStore = new StepThreeValidationStore();
-
-export default stepThreeValidationStore;
-export { StepThreeValidationStore };
+export default StepThreeValidationStore;

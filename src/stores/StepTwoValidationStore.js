@@ -1,4 +1,5 @@
 import { observable, action } from 'mobx';
+import autosave from './autosave'
 
 class StepTwoValidationStore {
 
@@ -10,15 +11,13 @@ class StepTwoValidationStore {
     this.name = 'EMPTY'
     this.ticker = 'EMPTY'
     this.decimals = 'EMPTY'
+
+    autosave(this, 'StepTwoValidationStore')
   }
 
   @action property = (property, value) => {
     this[property] = value
   }
-
 }
 
-const stepTwoValidationStore = new StepTwoValidationStore();
-
-export default stepTwoValidationStore;
-export { StepTwoValidationStore };
+export default StepTwoValidationStore;

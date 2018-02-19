@@ -111,13 +111,13 @@ export const getconstructorParams = (abiConstructor, vals, crowdsaleNum, isCrowd
         case "_crowdsale":
           params.vals.push(contractStore.crowdsale.addr[crowdsaleNum]);
           break;
-        case "_name": {
+        case "_name":
           if (isCrowdsale) {
             params.vals.push(tierStore.tiers[crowdsaleNum].tier);
           } else {
             params.vals.push(tokenStore.name);
           }
-        } break;
+          break;
         case "_symbol":
           params.vals.push(tokenStore.ticker);
           break;
