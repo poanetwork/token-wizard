@@ -85,8 +85,8 @@ export class stepTwo extends Component {
               side="left"
               title={DECIMALS}
               description="Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous)."
-              min="0"
-              max="18"
+              min={0}
+              max={18}
               errorMessage={VALIDATION_MESSAGES.DECIMALS}
               onValueUpdate={this.updateDecimalsStore}
             />
