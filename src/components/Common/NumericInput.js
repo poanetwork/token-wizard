@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { InputField } from './InputField'
 import { VALIDATION_TYPES } from '../../utils/constants'
-import update from 'immutability-helper'
 import { observer } from 'mobx-react'
 import { countDecimalPlaces } from '../../utils/utils'
 
@@ -14,12 +13,8 @@ export class NumericInput extends Component {
 
     this.state = {
       value: '',
-      validation: {
-        value: {
-          pristine: true,
-          valid: INVALID
-        }
-      }
+      pristine: true,
+      valid: INVALID
     }
   }
 
@@ -56,21 +51,11 @@ export class NumericInput extends Component {
     }
 
     const newValue = value === '' ? '' : parseFloat(value)
-    const newState = update(this.state, {
-      validation: {
-        $set: {
-          value: {
-            pristine: false,
-            valid: isValid ? VALID : INVALID
-          }
-        }
-      }
-    })
-    newState.value = newValue
-
-    this.setState(newState, () => {
-      this.props.onValueUpdate(newValue)
-    })
+    this.setState({
+      pristine: false,
+      valid: isValid ? VALID : INVALID,
+      value: newValue
+    }, () => this.props.onValueUpdate(newValue))
   }
 
   render () {
@@ -79,8 +64,8 @@ export class NumericInput extends Component {
         side={this.props.side}
         type='number'
         errorMessage={this.props.errorMessage}
-        valid={this.state.validation.value.valid}
-        pristine={this.state.validation.value.pristine}
+        valid={this.state.valid}
+        pristine={this.state.pristine}
         value={this.state.value}
         title={this.props.title}
         onKeyPress={e => this.onKeyPress(e)}

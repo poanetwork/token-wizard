@@ -5,7 +5,15 @@ import renderer from 'react-test-renderer'
 import Adapter from 'enzyme-adapter-react-15'
 import { configure, mount, shallow } from 'enzyme'
 
-const { VALID, INVALID } = VALIDATION_TYPES
+const COMPONENT_STATE = {
+  VALUE: 'value',
+  PRISTINE: 'pristine',
+  VALID: 'valid'
+}
+const INPUT_EVENT = {
+  KEYPRESS: 'keypress',
+  CHANGE: 'change'
+}
 
 let mock
 let keypressMock
@@ -50,18 +58,18 @@ describe('NumericInput', () => {
     mock.target.value = '4'
     const expectedInvalidValue = parseFloat(mock.target.value)
 
-    input.simulate('change', mock)
-    expect(wrapper.state('value')).toBe(expectedInvalidValue)
-    expect(wrapper.state('validation').value.pristine).toBeFalsy()
-    expect(wrapper.state('validation').value.valid).toBe(INVALID)
+    input.simulate(INPUT_EVENT.CHANGE, mock)
+    expect(wrapper.state(COMPONENT_STATE.VALUE)).toBe(expectedInvalidValue)
+    expect(wrapper.state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
+    expect(wrapper.state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.INVALID)
 
     mock.target.value = '8'
     const expectedValidValue = parseFloat(mock.target.value)
 
-    input.simulate('change', mock)
-    expect(wrapper.state('value')).toBe(expectedValidValue)
-    expect(wrapper.state('validation').value.pristine).toBeFalsy()
-    expect(wrapper.state('validation').value.valid).toBe(VALID)
+    input.simulate(INPUT_EVENT.CHANGE, mock)
+    expect(wrapper.state(COMPONENT_STATE.VALUE)).toBe(expectedValidValue)
+    expect(wrapper.state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
+    expect(wrapper.state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.VALID)
   })
 
   it('Should validate max', () => {
@@ -72,28 +80,28 @@ describe('NumericInput', () => {
     mock.target.value = '20'
     const expectedInvalidValue = parseFloat(mock.target.value)
 
-    input.simulate('change', mock)
-    expect(wrapper.state('value')).toBe(expectedInvalidValue)
-    expect(wrapper.state('validation').value.pristine).toBeFalsy()
-    expect(wrapper.state('validation').value.valid).toBe(INVALID)
+    input.simulate(INPUT_EVENT.CHANGE, mock)
+    expect(wrapper.state(COMPONENT_STATE.VALUE)).toBe(expectedInvalidValue)
+    expect(wrapper.state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
+    expect(wrapper.state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.INVALID)
 
     mock.target.value = '10'
     const expectedValidValue = parseFloat(mock.target.value)
 
-    input.simulate('change', mock)
-    expect(wrapper.state('value')).toBe(expectedValidValue)
-    expect(wrapper.state('validation').value.pristine).toBeFalsy()
-    expect(wrapper.state('validation').value.valid).toBe(VALID)
+    input.simulate(INPUT_EVENT.CHANGE, mock)
+    expect(wrapper.state(COMPONENT_STATE.VALUE)).toBe(expectedValidValue)
+    expect(wrapper.state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
+    expect(wrapper.state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.VALID)
   })
 
   it('Should consider empty string as valid', () => {
     const wrapper = mount(React.createElement(NumericInput, numericInputComponent))
     const input = wrapper.find('input').at(0)
 
-    input.simulate('change', mock)
+    input.simulate(INPUT_EVENT.CHANGE, mock)
     expect(numericInputComponent.onValueUpdate).toHaveBeenCalled()
-    expect(wrapper.state('validation').value.valid).toBe(VALID)
-    expect(wrapper.state('validation').value.pristine).toBeFalsy()
+    expect(wrapper.state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.VALID)
+    expect(wrapper.state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
   })
 
   it('Should call onValueUpdate callback on successful update', () => {
@@ -103,10 +111,10 @@ describe('NumericInput', () => {
     mock.target.value = '10'
     const expectedValue = parseFloat(mock.target.value)
 
-    input.simulate('change', mock)
-    expect(wrapper.state('value')).toBe(expectedValue)
-    expect(wrapper.state('validation').value.pristine).toBeFalsy()
-    expect(wrapper.state('validation').value.valid).toBe(VALID)
+    input.simulate(INPUT_EVENT.CHANGE, mock)
+    expect(wrapper.state(COMPONENT_STATE.VALUE)).toBe(expectedValue)
+    expect(wrapper.state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
+    expect(wrapper.state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.VALID)
 
     expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
     expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith(expectedValue)
@@ -120,14 +128,14 @@ describe('NumericInput', () => {
       const input = wrapper.find('input').at(0)
 
       mock.target.value = '1.12345'
-      input.simulate('change', mock)
-      expect(wrapper.state('validation').value.pristine).toBeFalsy()
-      expect(wrapper.state('validation').value.valid).toBe(INVALID)
+      input.simulate(INPUT_EVENT.CHANGE, mock)
+      expect(wrapper.state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
+      expect(wrapper.state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.INVALID)
 
       mock.target.value = '1.1234'
-      input.simulate('change', mock)
-      expect(wrapper.state('validation').value.pristine).toBeFalsy()
-      expect(wrapper.state('validation').value.valid).toBe(VALID)
+      input.simulate(INPUT_EVENT.CHANGE, mock)
+      expect(wrapper.state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
+      expect(wrapper.state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.VALID)
     })
 
     it ('Should validate minDecimals', () => {
@@ -137,14 +145,14 @@ describe('NumericInput', () => {
       const input = wrapper.find('input').at(0)
 
       mock.target.value = '1.1'
-      input.simulate('change', mock)
-      expect(wrapper.state('validation').value.pristine).toBeFalsy()
-      expect(wrapper.state('validation').value.valid).toBe(INVALID)
+      input.simulate(INPUT_EVENT.CHANGE, mock)
+      expect(wrapper.state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
+      expect(wrapper.state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.INVALID)
 
       mock.target.value = '1.1234'
-      input.simulate('change', mock)
-      expect(wrapper.state('validation').value.pristine).toBeFalsy()
-      expect(wrapper.state('validation').value.valid).toBe(VALID)
+      input.simulate(INPUT_EVENT.CHANGE, mock)
+      expect(wrapper.state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
+      expect(wrapper.state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.VALID)
     })
 
     it ('Should validate minDecimals and maxDecimals', () => {
@@ -155,35 +163,35 @@ describe('NumericInput', () => {
       const input = wrapper.find('input').at(0)
 
       mock.target.value = '1.1'
-      input.simulate('change', mock)
-      expect(wrapper.state('validation').value.pristine).toBeFalsy()
-      expect(wrapper.state('validation').value.valid).toBe(INVALID)
+      input.simulate(INPUT_EVENT.CHANGE, mock)
+      expect(wrapper.state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
+      expect(wrapper.state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.INVALID)
 
       mock.target.value = '1.12345'
-      input.simulate('change', mock)
-      expect(wrapper.state('validation').value.pristine).toBeFalsy()
-      expect(wrapper.state('validation').value.valid).toBe(INVALID)
+      input.simulate(INPUT_EVENT.CHANGE, mock)
+      expect(wrapper.state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
+      expect(wrapper.state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.INVALID)
 
       mock.target.value = '1.12'
-      input.simulate('change', mock)
-      expect(wrapper.state('validation').value.pristine).toBeFalsy()
-      expect(wrapper.state('validation').value.valid).toBe(VALID)
+      input.simulate(INPUT_EVENT.CHANGE, mock)
+      expect(wrapper.state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
+      expect(wrapper.state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.VALID)
 
       mock.target.value = '1.123'
-      input.simulate('change', mock)
-      expect(wrapper.state('validation').value.pristine).toBeFalsy()
-      expect(wrapper.state('validation').value.valid).toBe(VALID)
+      input.simulate(INPUT_EVENT.CHANGE, mock)
+      expect(wrapper.state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
+      expect(wrapper.state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.VALID)
     })
 
     it('Should reject float with dot notation', () => {
       const wrapper = mount(React.createElement(NumericInput, numericInputComponent))
       const input = wrapper.find('input').at(0)
 
-      input.simulate('keypress', keypressMock)
+      input.simulate(INPUT_EVENT.KEYPRESS, keypressMock)
       expect(keypressMock.preventDefault).toHaveBeenCalledTimes(0)
 
       keypressMock.key = '.'
-      input.simulate('keypress', keypressMock)
+      input.simulate(INPUT_EVENT.KEYPRESS, keypressMock)
       expect(keypressMock.preventDefault).toHaveBeenCalled()
     })
 
@@ -192,11 +200,11 @@ describe('NumericInput', () => {
       const wrapper = mount(React.createElement(NumericInput, numericInputComponent))
       const input = wrapper.find('input').at(0)
 
-      input.simulate('keypress', keypressMock)
+      input.simulate(INPUT_EVENT.KEYPRESS, keypressMock)
       expect(keypressMock.preventDefault).toHaveBeenCalledTimes(0)
 
       keypressMock.key = '.'
-      input.simulate('keypress', keypressMock)
+      input.simulate(INPUT_EVENT.KEYPRESS, keypressMock)
       expect(keypressMock.preventDefault).toHaveBeenCalledTimes(0)
     })
 
@@ -204,11 +212,11 @@ describe('NumericInput', () => {
       const wrapper = mount(React.createElement(NumericInput, numericInputComponent))
       const input = wrapper.find('input').at(0)
 
-      input.simulate('keypress', keypressMock)
+      input.simulate(INPUT_EVENT.KEYPRESS, keypressMock)
       expect(keypressMock.preventDefault).toHaveBeenCalledTimes(0)
 
       keypressMock.key = 'e'
-      input.simulate('keypress', keypressMock)
+      input.simulate(INPUT_EVENT.KEYPRESS, keypressMock)
       expect(keypressMock.preventDefault).toHaveBeenCalled()
     })
 
@@ -217,11 +225,11 @@ describe('NumericInput', () => {
       const wrapper = mount(React.createElement(NumericInput, numericInputComponent))
       const input = wrapper.find('input').at(0)
 
-      input.simulate('keypress', keypressMock)
+      input.simulate(INPUT_EVENT.KEYPRESS, keypressMock)
       expect(keypressMock.preventDefault).toHaveBeenCalledTimes(0)
 
       keypressMock.key = 'e'
-      input.simulate('keypress', keypressMock)
+      input.simulate(INPUT_EVENT.KEYPRESS, keypressMock)
       expect(keypressMock.preventDefault).toHaveBeenCalledTimes(0)
     })
 
