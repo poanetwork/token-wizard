@@ -6,6 +6,7 @@ describe('countDecimalPlaces', () => {
     expect(countDecimalPlaces('1.12')).toBe(2)
     expect(countDecimalPlaces('1.')).toBe(0)
     expect(countDecimalPlaces('1')).toBe(0)
+    expect(countDecimalPlaces('.123')).toBe(3)
   })
 
   it('Should count decimals with scientific notation', () => {

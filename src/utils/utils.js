@@ -339,6 +339,17 @@ export const displayHeaderAndFooterInIframe = () => {
 }
 
 export const countDecimalPlaces = num => {
+  /*
+    (?:
+      \.
+      (\d+)  First captured group: decimals after the point but before the e
+    )?
+    (?:
+      [eE]
+      ([+-]?\d+)  Second captured group: exponent used to adjust the count
+    )?
+    $
+  */
   const match = ('' + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/)
 
   if (!match) return 0
