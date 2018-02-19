@@ -352,7 +352,7 @@ export const countDecimalPlaces = num => {
   */
   const match = ('' + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/)
 
-  if (!match) return 0
+  if (!match[0] && !match[1] && !match[2]) return 0
 
   const digitsAfterDecimal = match[1] ? match[1].length : 0
   const adjust = match[2] ? +match[2] : 0
