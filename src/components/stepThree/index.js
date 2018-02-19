@@ -21,6 +21,7 @@ import {
 import { inject, observer } from "mobx-react";
 import { Loader } from '../Common/Loader'
 import { noGasPriceAvailable, warningOnMainnetAlert } from '../../utils/alerts'
+import { NumericInput } from '../Common/NumericInput'
 
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS;
 const { EMPTY, VALID } = VALIDATION_TYPES;
@@ -314,16 +315,14 @@ export class stepThree extends React.Component {
           {this.renderGasPriceInput()}
         </div>
         <div className="input-block-container">
-          <InputField
+          <NumericInput
             side="left"
-            type="number"
-            disabled={tierStore.tiers[0].whitelistEnabled === "yes"}
             title={MINCAP}
-            value={tierStore.globalMinCap}
-            valid={VALID}
+            description="Minimum amount tokens to buy. Not a minimal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy."
+            disabled={tierStore.tiers[0].whitelistEnabled === "yes"}
+            min={0}
             errorMessage={VALIDATION_MESSAGES.MINCAP}
-            onChange={e => tierStore.setGlobalMinCap(e.target.value)}
-            description={`Minimum amount tokens to buy. Not a minimal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.`}
+            onValueUpdate={tierStore.setGlobalMinCap}
           />
           <RadioInputField
             extraClassName="right"
