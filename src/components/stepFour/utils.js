@@ -8,7 +8,7 @@ import {
   sendTXToContract
 } from '../../utils/blockchainHelpers'
 import { noContractAlert, noContractDataAlert } from '../../utils/alerts'
-import { floorToDecimals, toFixed } from '../../utils/utils'
+import { countDecimalPlaces, floorToDecimals, toFixed } from '../../utils/utils'
 import { CONTRACT_TYPES, DOWNLOAD_NAME, TRUNC_TO_DECIMALS } from '../../utils/constants'
 import { isObservableArray } from 'mobx'
 import {
@@ -617,7 +617,7 @@ export const setReservedTokensListMultiple = () => {
             if (reservedTokens[i].dim === 'tokens') {
               obj.inTokens = val * 10 ** tokenStore.decimals
             } else {
-              obj.inPercentageDecimals = countDecimals(val)
+              obj.inPercentageDecimals = countDecimalPlaces(val)
               obj.inPercentageUnit = val * 10 ** obj.inPercentageDecimals
             }
             map[addr] = obj
@@ -787,9 +787,4 @@ export function getDownloadName (tokenAddress) {
 
     resolve(whenNetworkName)
   })
-}
-
-var countDecimals = function (inputFloat) {
-  if (Math.floor(inputFloat) === parseFloat(inputFloat)) return 0
-  return inputFloat.toString().split('.')[1].length || 0
 }
