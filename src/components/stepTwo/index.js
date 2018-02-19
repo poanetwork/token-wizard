@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { checkWeb3 } from '../../utils/blockchainHelpers'
 import { StepNavigation } from '../Common/StepNavigation'
 import { InputField } from '../Common/InputField'
+import { NumericInput } from '../Common/NumericInput'
 import { ReservedTokensInputBlock } from '../Common/ReservedTokensInputBlock'
 import { NAVIGATION_STEPS, VALIDATION_MESSAGES, TEXT_FIELDS, DESCRIPTION } from '../../utils/constants'
 import { inject, observer } from 'mobx-react';
@@ -25,6 +26,10 @@ export class stepTwo extends Component {
     const value = event.target.value;
     this.props.tokenStore.setProperty(property, value);
     this.props.tokenStore.validateTokens(property);
+  }
+
+  updateDecimalsStore = value => {
+    this.updateTokenStore({ target: { value } }, 'decimals')
   }
 
   renderLink () {
@@ -76,14 +81,14 @@ export class stepTwo extends Component {
               onChange={(e) => this.updateTokenStore(e, 'ticker')}
               description={`${DESCRIPTION.TOKEN_TICKER} There are 11,881,376 combinations for 26 english letters. Be hurry. `}
             />
-            <InputField
-              side='left' type='number'
-              errorMessage={VALIDATION_MESSAGES.DECIMALS}
-              valid={this.props.tokenStore.validToken['decimals']}
+            <NumericInput
+              side="left"
               title={DECIMALS}
-              value={this.props.tokenStore.decimals}
-              onChange={(e) => this.updateTokenStore(e, 'decimals')} // changeInputField
-              description={`Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous).`}
+              description="Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous)."
+              min="0"
+              max="18"
+              errorMessage={VALIDATION_MESSAGES.DECIMALS}
+              onValueUpdate={this.updateDecimalsStore}
             />
           </div>
           <div className="reserved-tokens-title">

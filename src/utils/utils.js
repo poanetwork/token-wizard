@@ -203,7 +203,7 @@ export const validateName = (name) => typeof name === 'string' && name.length > 
 
 export const validateSupply = (supply) =>  isNaN(Number(supply)) === false && Number(supply) > 0
 
-export const validateDecimals = (decimals) => isNaN(Number(decimals)) === false && Number(decimals) >= 0 && Number(decimals) <= 18
+export const validateDecimals = (decimals) => /^$|^([0-9]|[1][0-8])$/.test(decimals)
 
 export const validateTicker = (ticker) => typeof ticker === 'string' && ticker.length <= 5 && ticker.length > 0
 
@@ -337,3 +337,26 @@ export const displayHeaderAndFooterInIframe = () => {
   const insideAnIframe = window.self !== window.top
   return insideAnIframe ? CrowdsaleConfig.showHeaderAndFooterInIframe : true
 }
+
+export const countDecimalPlaces = num => {
+  /*
+    (?:
+      \.
+      (\d+)  First captured group: decimals after the point but before the e
+    )?
+    (?:
+      [eE]
+      ([+-]?\d+)  Second captured group: exponent used to adjust the count
+    )?
+    $
+  */
+  const match = ('' + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/)
+
+  if (!match[0] && !match[1] && !match[2]) return 0
+
+  const digitsAfterDecimal = match[1] ? match[1].length : 0
+  const adjust = match[2] ? +match[2] : 0
+
+  return Math.max(0, digitsAfterDecimal - adjust)
+}
+
