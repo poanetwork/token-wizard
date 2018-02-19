@@ -86,6 +86,16 @@ describe('NumericInput', () => {
     expect(wrapper.state('validation').value.valid).toBe(VALID)
   })
 
+  it('Should consider empty string as valid', () => {
+    const wrapper = mount(React.createElement(NumericInput, numericInputComponent))
+    const input = wrapper.find('input').at(0)
+
+    input.simulate('change', mock)
+    expect(numericInputComponent.onValueUpdate).toHaveBeenCalled()
+    expect(wrapper.state('validation').value.valid).toBe(VALID)
+    expect(wrapper.state('validation').value.pristine).toBeFalsy()
+  })
+
   it('Should call onValueUpdate callback on successful update', () => {
     const wrapper = mount(React.createElement(NumericInput, numericInputComponent))
     const input = wrapper.find('input').at(0)
@@ -103,6 +113,68 @@ describe('NumericInput', () => {
   })
 
   describe('float numbers', () => {
+    it ('Should validate maxDecimals', () => {
+      numericInputComponent.acceptFloat = true
+      numericInputComponent.maxDecimals = '4'
+      const wrapper = mount(React.createElement(NumericInput, numericInputComponent))
+      const input = wrapper.find('input').at(0)
+
+      mock.target.value = '1.12345'
+      input.simulate('change', mock)
+      expect(wrapper.state('validation').value.pristine).toBeFalsy()
+      expect(wrapper.state('validation').value.valid).toBe(INVALID)
+
+      mock.target.value = '1.1234'
+      input.simulate('change', mock)
+      expect(wrapper.state('validation').value.pristine).toBeFalsy()
+      expect(wrapper.state('validation').value.valid).toBe(VALID)
+    })
+
+    it ('Should validate minDecimals', () => {
+      numericInputComponent.acceptFloat = true
+      numericInputComponent.minDecimals = '2'
+      const wrapper = mount(React.createElement(NumericInput, numericInputComponent))
+      const input = wrapper.find('input').at(0)
+
+      mock.target.value = '1.1'
+      input.simulate('change', mock)
+      expect(wrapper.state('validation').value.pristine).toBeFalsy()
+      expect(wrapper.state('validation').value.valid).toBe(INVALID)
+
+      mock.target.value = '1.1234'
+      input.simulate('change', mock)
+      expect(wrapper.state('validation').value.pristine).toBeFalsy()
+      expect(wrapper.state('validation').value.valid).toBe(VALID)
+    })
+
+    it ('Should validate minDecimals and maxDecimals', () => {
+      numericInputComponent.acceptFloat = true
+      numericInputComponent.maxDecimals = '4'
+      numericInputComponent.minDecimals = '2'
+      const wrapper = mount(React.createElement(NumericInput, numericInputComponent))
+      const input = wrapper.find('input').at(0)
+
+      mock.target.value = '1.1'
+      input.simulate('change', mock)
+      expect(wrapper.state('validation').value.pristine).toBeFalsy()
+      expect(wrapper.state('validation').value.valid).toBe(INVALID)
+
+      mock.target.value = '1.12345'
+      input.simulate('change', mock)
+      expect(wrapper.state('validation').value.pristine).toBeFalsy()
+      expect(wrapper.state('validation').value.valid).toBe(INVALID)
+
+      mock.target.value = '1.12'
+      input.simulate('change', mock)
+      expect(wrapper.state('validation').value.pristine).toBeFalsy()
+      expect(wrapper.state('validation').value.valid).toBe(VALID)
+
+      mock.target.value = '1.123'
+      input.simulate('change', mock)
+      expect(wrapper.state('validation').value.pristine).toBeFalsy()
+      expect(wrapper.state('validation').value.valid).toBe(VALID)
+    })
+
     it('Should reject float with dot notation', () => {
       const wrapper = mount(React.createElement(NumericInput, numericInputComponent))
       const input = wrapper.find('input').at(0)
