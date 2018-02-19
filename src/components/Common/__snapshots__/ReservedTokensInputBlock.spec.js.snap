@@ -23,6 +23,7 @@ exports[`ReservedTokensInputBlock Should render the component 1`] = `
           disabled={undefined}
           onBlur={undefined}
           onChange={[Function]}
+          onKeyPress={undefined}
           type="text"
           value=""
         />
@@ -93,6 +94,7 @@ exports[`ReservedTokensInputBlock Should render the component 1`] = `
           disabled={undefined}
           onBlur={undefined}
           onChange={[Function]}
+          onKeyPress={undefined}
           type="number"
           value=""
         />
