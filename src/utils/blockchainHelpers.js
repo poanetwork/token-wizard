@@ -152,6 +152,7 @@ let sendTX = (method, type) => {
   return new Promise((resolve, reject) => {
     method
       .on('error', error => {
+        if (isMined) return
         console.error(error)
         // https://github.com/poanetwork/token-wizard/issues/472
         if (
