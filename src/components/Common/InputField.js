@@ -23,6 +23,7 @@ export const InputField = props => {
         className="input"
         onBlur={props.onBlur}
         value={props.value}
+        style={props.style}
         onChange={props.onChange}
         onKeyPress={props.onKeyPress}
         onPaste={props.onPaste}
