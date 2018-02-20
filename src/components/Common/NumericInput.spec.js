@@ -3,7 +3,7 @@ import { NumericInput } from './NumericInput'
 import { TEXT_FIELDS, VALIDATION_MESSAGES, VALIDATION_TYPES } from '../../utils/constants'
 import renderer from 'react-test-renderer'
 import Adapter from 'enzyme-adapter-react-15'
-import { configure, mount, shallow } from 'enzyme'
+import { configure, mount } from 'enzyme'
 
 const COMPONENT_STATE = {
   VALUE: 'value',
