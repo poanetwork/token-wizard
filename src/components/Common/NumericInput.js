@@ -25,7 +25,10 @@ export class NumericInput extends Component {
 
   onKeyPress = e => {
     if (!this.props.acceptFloat) {
-      if (isNaN(parseInt(e.key, 10))) e.preventDefault()
+      const firstCharacterIsMinus = e.key === '-' && this.state.value === ''
+      const acceptsNegativeValues = this.props.min < 0 || this.props.max < 0
+
+      if (!(firstCharacterIsMinus && acceptsNegativeValues) && isNaN(parseInt(e.key, 10))) e.preventDefault()
     }
   }
 
