@@ -11,7 +11,7 @@ class TierStore {
 
   @observable tiers;
   @observable validTiers;
-  @observable globalMinCap;
+  @observable globalMinCap = '';
 
   constructor() {
     this.reset()
@@ -141,7 +141,8 @@ class TierStore {
       return;
     }
 
-    const isValid = validateMinCap(this.globalMinCap) && this.validTiers
+    const newVar = this.globalMinCap && validateMinCap(this.globalMinCap)
+    const isValid = newVar && this.validTiers
       .every((tier, index) => {
         return Object.keys(tier)
           .every((key) => {
