@@ -217,6 +217,10 @@ export class stepThree extends React.Component {
     }
   }
 
+  updateGasPrice = value => {
+    this.props.generalStore.setGasPrice(gweiToWei(value))
+  }
+
   renderGasPriceInput() {
     const { generalStore, gasPriceStore } = this.props
 
@@ -274,12 +278,14 @@ export class stepThree extends React.Component {
 
         {
           this.state.gasPriceSelected === gasPriceStore.custom.id ?
-            <input
-              className="input"
+            <NumericInput
               style={{ display: 'inline-block' }}
-              type="number"
+              min={0.1}
+              maxDecimals={9}
+              acceptFloat={true}
               value={weiToGwei(generalStore.gasPrice)}
-              onChange={(e) => generalStore.setGasPrice(gweiToWei(e.target.value))}
+              errorMessage="Please enter a number greater than 0"
+              onValueUpdate={this.updateGasPrice}
             /> :
             null
         }
