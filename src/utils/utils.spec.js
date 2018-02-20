@@ -1,4 +1,4 @@
-import { countDecimalPlaces } from './utils'
+import { countDecimalPlaces, validateMinCap } from './utils'
 
 describe('countDecimalPlaces', () => {
   [
@@ -29,6 +29,33 @@ describe('countDecimalPlaces', () => {
   ].forEach(testCase => {
     it(`Should count decimals for ${testCase.value}`, () => {
       expect(countDecimalPlaces(testCase.value)).toBe(testCase.expected)
+    })
+  })
+})
+
+describe('validateMinCap', () => {
+  [
+    { value: '', expected: true },
+    { value: '0', expected: true },
+    { value: '00', expected: true },
+    { value: '1', expected: true },
+    { value: '001', expected: true },
+    { value: '150', expected: true },
+    { value: '999', expected: true },
+    { value: '-10', expected: false },
+    { value: .123, expected: false },
+    { value: '1.12', expected: false },
+    { value: '1.', expected: false },
+    { value: '1e10', expected: false },
+    { value: '+1', expected: false },
+    { value: null, expected: false },
+    { value: false, expected: false },
+    { value: undefined, expected: false }
+  ].forEach(testCase => {
+    const action = testCase.expected ? 'pass' : 'fail'
+
+    it(`Should ${action} for '${testCase.value}'`, () => {
+      expect(validateMinCap(testCase.value)).toBe(testCase.expected)
     })
   })
 })
