@@ -1,4 +1,4 @@
-import { GasPriceStore } from './GasPriceStore'
+import GasPriceStore  from './GasPriceStore'
 import { GAS_PRICE } from '../utils/constants'
 import { gweiToWei } from '../utils/utils'
 
@@ -8,7 +8,7 @@ describe('GasPriceStore', () => {
   let gas
 
   beforeEach(() => {
-    gas = new GasPriceStore
+    gas = new GasPriceStore()
   })
 
   it('should instantiates store properly', () => {

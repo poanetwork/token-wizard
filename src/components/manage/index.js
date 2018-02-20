@@ -14,7 +14,8 @@ import {
   notTheOwner
 } from '../../utils/alerts'
 import { getNetworkVersion, sendTXToContract, attachToContract, calculateGasLimit } from '../../utils/blockchainHelpers'
-import { getWhiteListWithCapCrowdsaleAssets, toast } from '../../utils/utils'
+import { toast } from '../../utils/utils'
+import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
 import { getTiers, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
 
