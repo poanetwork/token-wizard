@@ -25,6 +25,7 @@ exports[`ReservedTokensInputBlock Should render the component 1`] = `
           onChange={[Function]}
           onKeyPress={undefined}
           onPaste={undefined}
+          style={undefined}
           type="text"
           value=""
         />
@@ -97,6 +98,7 @@ exports[`ReservedTokensInputBlock Should render the component 1`] = `
           onChange={[Function]}
           onKeyPress={undefined}
           onPaste={undefined}
+          style={undefined}
           type="number"
           value=""
         />
