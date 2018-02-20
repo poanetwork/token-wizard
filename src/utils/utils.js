@@ -98,7 +98,7 @@ export const validateLaterOrEqualTime = (laterTime, previousTime) => getTimeAsNu
 
 export const validateRate = (rate) => isNaN(Number(rate)) === false && Number(rate) > 0
 
-export const validateMinCap = minCap => !isNaN(Number(minCap)) && Number(minCap) > 0
+export const validateMinCap = minCap => /^$|^([0-9]+)$/.test(minCap)
 
 export const validateAddress = (address) => {
   if(!address || address.length !== 42 ) {
