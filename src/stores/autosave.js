@@ -1,4 +1,4 @@
-import mobx from 'mobx';
+import * as mobx from 'mobx';
 import storage from 'store2'
 
 export default function autosave(store, storageKey, deserialize = x => x) {
