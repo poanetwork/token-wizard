@@ -3,7 +3,7 @@ import { NumericInput } from './NumericInput'
 import { TEXT_FIELDS, VALIDATION_MESSAGES, VALIDATION_TYPES } from '../../utils/constants'
 import renderer from 'react-test-renderer'
 import Adapter from 'enzyme-adapter-react-15'
-import { configure, mount, shallow } from 'enzyme'
+import { configure, mount } from 'enzyme'
 
 const COMPONENT_STATE = {
   VALUE: 'value',
@@ -12,11 +12,13 @@ const COMPONENT_STATE = {
 }
 const INPUT_EVENT = {
   KEYPRESS: 'keypress',
-  CHANGE: 'change'
+  CHANGE: 'change',
+  PASTE: 'paste'
 }
 
 let mock
 let keypressMock
+let pasteMock
 let numericInputComponent
 
 configure({ adapter: new Adapter() })
@@ -25,6 +27,13 @@ beforeEach(() => {
   mock = { target: { value: '' } }
 
   keypressMock = { key: '1', preventDefault: jest.fn() }
+
+  pasteMock = {
+    preventDefault: jest.fn(),
+    clipboardData: {
+      getData: () => 'e123e123'
+    }
+  }
 
   numericInputComponent = {
     side: 'left',
@@ -102,6 +111,24 @@ describe('NumericInput', () => {
     expect(numericInputComponent.onValueUpdate).toHaveBeenCalled()
     expect(wrapper.state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.VALID)
     expect(wrapper.state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
+  })
+
+  it('Should prevent pasting invalid value', () => {
+    const wrapper = mount(React.createElement(NumericInput, numericInputComponent))
+    const input = wrapper.find('input').at(0)
+
+    input.simulate(INPUT_EVENT.PASTE, pasteMock)
+    expect(pasteMock.preventDefault).toHaveBeenCalled()
+  })
+
+  it('Should allow pasting valid value', () => {
+    const wrapper = mount(React.createElement(NumericInput, numericInputComponent))
+    const input = wrapper.find('input').at(0)
+
+    pasteMock.clipboardData.getData = () => '12'
+
+    input.simulate(INPUT_EVENT.PASTE, pasteMock)
+    expect(pasteMock.preventDefault).toHaveBeenCalledTimes(0)
   })
 
   it('Should call onValueUpdate callback on successful update', () => {
