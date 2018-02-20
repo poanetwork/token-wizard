@@ -25,6 +25,7 @@ export const InputField = props => {
         value={props.value}
         onChange={props.onChange}
         onKeyPress={props.onKeyPress}
+        onPaste={props.onPaste}
       />
       <p className="description">{props.description}</p>
       { props.pristine ? null : <p style={errorStyle}>{error}</p> }

@@ -18,6 +18,11 @@ export class NumericInput extends Component {
     }
   }
 
+  onPaste = e => {
+    if (isNaN(parseFloat(e.clipboardData.getData('text/plain'))))
+      e.preventDefault()
+  }
+
   onKeyPress = e => {
     if (!this.props.acceptFloat) {
       if (isNaN(parseInt(e.key, 10))) e.preventDefault()
@@ -38,8 +43,7 @@ export class NumericInput extends Component {
       }
     }
 
-    if (this.props.min !== undefined) {
-      console.log(this.props.min, value)
+    if (isValid && this.props.min !== undefined) {
       isValid = isValid && value >= this.props.min
     }
 
@@ -74,6 +78,7 @@ export class NumericInput extends Component {
         title={this.props.title}
         onKeyPress={e => this.onKeyPress(e)}
         onChange={e => this.onChange(e)}
+        onPaste={e => this.onPaste(e)}
         description={this.props.description}
       />
     )
