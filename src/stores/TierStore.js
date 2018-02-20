@@ -2,7 +2,7 @@ import { observable, action, computed } from 'mobx';
 import { VALIDATION_TYPES, defaultTiers } from '../utils/constants'
 import {
   validateName, validateTime, validateSupply, validateRate, validateAddress, validateLaterTime,
-  validateLaterOrEqualTime, validateTier
+  validateLaterOrEqualTime, validateTier, validateMinCap
 } from '../utils/utils'
 import autosave from './autosave'
 const { VALID, INVALID } = VALIDATION_TYPES
@@ -141,15 +141,17 @@ class TierStore {
       return;
     }
 
-    const isValid = this.validTiers.every((tier, index) => Object.keys(tier).every((key) => {
-      console.log('key', key, this.validTiers[index][key])
-      if (this.validTiers[index][key] === VALID) {
-        return true;
-      } else {
-        return false;
-      }
-    }))
+    const isValid = validateMinCap(this.globalMinCap) && this.validTiers
+      .every((tier, index) => {
+        return Object.keys(tier)
+          .every((key) => {
+            console.log('key', key, this.validTiers[index][key])
+            return this.validTiers[index][key] === VALID
+          })
+      })
+
     console.log('isValid', isValid)
+
     return isValid
   }
 
