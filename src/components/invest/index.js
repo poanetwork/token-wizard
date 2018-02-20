@@ -11,7 +11,8 @@ import {
   getJoinedTiers,
   initializeAccumulativeData
 } from '../crowdsale/utils'
-import { getQueryVariable, getWhiteListWithCapCrowdsaleAssets, toast } from '../../utils/utils'
+import { getQueryVariable, toast } from '../../utils/utils'
+import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
 import {
   invalidCrowdsaleAddrAlert,
   investmentDisabledAlertInTime, noGasPriceAvailable,

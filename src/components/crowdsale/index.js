@@ -9,7 +9,8 @@ import {
   getJoinedTiers,
   initializeAccumulativeData
 } from './utils'
-import { getQueryVariable, getWhiteListWithCapCrowdsaleAssets, toFixed } from '../../utils/utils'
+import { getQueryVariable, toFixed } from '../../utils/utils'
+import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { CONTRACT_TYPES, NAVIGATION_STEPS } from '../../utils/constants'
 import { invalidCrowdsaleAddrAlert } from '../../utils/alerts'
