@@ -30,7 +30,7 @@ export class NumericInput extends Component {
   }
 
   onChange = e => {
-    let value = this.props.acceptFloat ? parseFloat(e.target.value) : parseInt(e.target.value)
+    let value = this.props.acceptFloat ? parseFloat(e.target.value) : parseInt(e.target.value, 10)
     let isValid = true
 
     if (this.props.acceptFloat) {
