@@ -79,6 +79,7 @@ export class NumericInput extends Component {
         pristine={this.state.pristine}
         value={this.state.value}
         title={this.props.title}
+        style={this.props.style}
         onKeyPress={e => this.onKeyPress(e)}
         onChange={e => this.onChange(e)}
         onPaste={e => this.onPaste(e)}
