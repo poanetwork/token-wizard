@@ -1,10 +1,17 @@
 {
   "extends": "react-app",
+  "plugins": [
+    "dependencies"
+  ],
   "rules": {
     "indent": ["error", 2, {
       "SwitchCase": 1
     }],
     "no-mixed-spaces-and-tabs": "error",
-    "no-trailing-spaces": "error"
+    "no-trailing-spaces": "error",
+    "dependencies/no-cycles": "error",
+    "dependencies/no-unresolved": ["error", {
+      "ignore": ["web3"]
+    }]
   }
 }

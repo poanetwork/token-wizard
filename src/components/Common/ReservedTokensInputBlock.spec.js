@@ -3,7 +3,7 @@ import { ReservedTokensInputBlock } from './ReservedTokensInputBlock'
 import { VALIDATION_TYPES } from '../../utils/constants'
 import renderer from 'react-test-renderer'
 import Adapter from 'enzyme-adapter-react-15'
-import { configure, mount, shallow } from 'enzyme'
+import { configure, mount } from 'enzyme'
 
 const { VALID, INVALID } = VALIDATION_TYPES
 let tokenList
@@ -75,7 +75,7 @@ describe('ReservedTokensInputBlock', () => {
     const wrongAddressEvent = { target: { value: '0x123' } }
     const validAddressEvent = { target: { value: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1' } }
 
-    const handleAddressChange = spyOn(wrapper.instance(), 'handleAddressChange')
+    const handleAddressChange = jest.spyOn(wrapper.instance(), 'handleAddressChange')
 
     wrapper.update()
 
@@ -108,8 +108,8 @@ describe('ReservedTokensInputBlock', () => {
     const valueEventZero = { target: { value: '0' } }
     const valueEventNegative = { target: { value: '-10' } }
 
-    const handleValueChange = spyOn(wrapper.instance(), 'handleValueChange')
-    const updateReservedTokenInput = spyOn(wrapper.instance(), 'updateReservedTokenInput')
+    const handleValueChange = jest.spyOn(wrapper.instance(), 'handleValueChange')
+    const updateReservedTokenInput = jest.spyOn(wrapper.instance(), 'updateReservedTokenInput')
 
     wrapper.update()
 
@@ -148,8 +148,8 @@ describe('ReservedTokensInputBlock', () => {
     const valueEventZero = { target: { value: '0' } }
     const valueEventNegative = { target: { value: '-10' } }
 
-    const handleValueChange = spyOn(wrapper.instance(), 'handleValueChange')
-    const updateReservedTokenInput = spyOn(wrapper.instance(), 'updateReservedTokenInput')
+    const handleValueChange = jest.spyOn(wrapper.instance(), 'handleValueChange')
+    const updateReservedTokenInput = jest.spyOn(wrapper.instance(), 'updateReservedTokenInput')
 
     wrapper.update()
 
@@ -187,8 +187,8 @@ describe('ReservedTokensInputBlock', () => {
     )
     const valueEvent = { target: { value: '150' } }
 
-    const handleValueChange = spyOn(wrapper.instance(), 'handleValueChange')
-    const updateReservedTokenInput = spyOn(wrapper.instance(), 'updateReservedTokenInput')
+    const handleValueChange = jest.spyOn(wrapper.instance(), 'handleValueChange')
+    const updateReservedTokenInput = jest.spyOn(wrapper.instance(), 'updateReservedTokenInput')
 
     wrapper.update()
 
@@ -219,8 +219,8 @@ describe('ReservedTokensInputBlock', () => {
     const valueEventSmall = { target: { value: '75' } }
     const valueEventBig = { target: { value: '180' } }
 
-    const handleValueChange = spyOn(wrapper.instance(), 'handleValueChange')
-    const updateReservedTokenInput = spyOn(wrapper.instance(), 'updateReservedTokenInput')
+    const handleValueChange = jest.spyOn(wrapper.instance(), 'handleValueChange')
+    const updateReservedTokenInput = jest.spyOn(wrapper.instance(), 'updateReservedTokenInput')
 
     wrapper.update()
 
@@ -264,8 +264,8 @@ describe('ReservedTokensInputBlock', () => {
     const addressEvent = { target: { value: newToken.addr } }
     const valueEvent = { target: { value: newToken.val } }
 
-    const handleAddressChange = spyOn(wrapper.instance(), 'handleAddressChange')
-    const handleValueChange = spyOn(wrapper.instance(), 'handleValueChange')
+    const handleAddressChange = jest.spyOn(wrapper.instance(), 'handleAddressChange')
+    const handleValueChange = jest.spyOn(wrapper.instance(), 'handleValueChange')
 
     wrapper.update()
 
@@ -322,8 +322,8 @@ describe('ReservedTokensInputBlock', () => {
     const addressEvent = { target: { value: newToken.addr } }
     const valueEvent = { target: { value: newToken.val } }
 
-    const handleAddressChange = spyOn(wrapper.instance(), 'handleAddressChange')
-    const handleValueChange = spyOn(wrapper.instance(), 'handleValueChange')
+    const handleAddressChange = jest.spyOn(wrapper.instance(), 'handleAddressChange')
+    const handleValueChange = jest.spyOn(wrapper.instance(), 'handleValueChange')
 
     wrapper.update()
 
