@@ -9,6 +9,9 @@
     }],
     "no-mixed-spaces-and-tabs": "error",
     "no-trailing-spaces": "error",
-    "dependencies/no-cycles": "error"
+    "dependencies/no-cycles": "error",
+    "dependencies/no-unresolved": ["error", {
+      "ignore": ["web3"]
+    }]
   }
 }
