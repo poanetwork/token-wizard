@@ -6,7 +6,7 @@
 [![Build Status](https://travis-ci.org/poanetwork/token-wizard.svg?branch=master)](https://travis-ci.org/poanetwork/token-wizard)
 [![Waffle.io - Columns and their card count](https://badge.waffle.io/poanetwork/token-wizard.svg?columns=all)](http://waffle.io/poanetwork/ico-wizard)
 [![Join the chat at https://gitter.im/poanetwork/ico-wizard](https://badges.gitter.im/poanetwork/ico-wizard.svg)](https://gitter.im/poanetwork/ico-wizard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Coverage Status](https://coveralls.io/repos/github/poanetwork/token-wizard/badge.svg?branch=add-coveralls)](https://coveralls.io/github/poanetwork/token-wizard?branch=add-coveralls)
+[![Coverage Status](https://coveralls.io/repos/github/poanetwork/token-wizard/badge.svg?branch=master)](https://coveralls.io/github/poanetwork/token-wizard?branch=master)
 
 ### **_Attention_!**
 #### __Please, read the wiki or watch demo before you start to create crowdsales using Token Wizard. Consider deploying on the Mainnet after testing on Kovan testnet or POA's Sokol testnet.__
