@@ -1,37 +1,34 @@
 import { countDecimalPlaces } from './utils'
 
 describe('countDecimalPlaces', () => {
-  it('Should count decimals with dot notation', () => {
-    expect(countDecimalPlaces('1.123')).toBe(3)
-    expect(countDecimalPlaces('1.12')).toBe(2)
-    expect(countDecimalPlaces('1.')).toBe(0)
-    expect(countDecimalPlaces('1')).toBe(0)
-    expect(countDecimalPlaces('.123')).toBe(3)
-  })
-
-  it('Should count decimals with scientific notation', () => {
-    expect(countDecimalPlaces('1e-3')).toBe(3)
-    expect(countDecimalPlaces('1e-2')).toBe(2)
-    expect(countDecimalPlaces('1.2e-2')).toBe(3)
-    expect(countDecimalPlaces('1.e-2')).toBe(2)
-    expect(countDecimalPlaces('1.23123e2')).toBe(3)
-    expect(countDecimalPlaces('123.123e+2')).toBe(1)
-    expect(countDecimalPlaces('.2e-2')).toBe(3)
-  })
-
-  it('Should return zero when parameter is an integer', () => {
-    expect(countDecimalPlaces('1')).toBe(0)
-    expect(countDecimalPlaces('123')).toBe(0)
-    expect(countDecimalPlaces('0')).toBe(0)
-    expect(countDecimalPlaces('-123')).toBe(0)
-  })
-
-  it('Should return zero when parameter is not a valid number', () => {
-    expect(countDecimalPlaces('abc')).toBe(0)
-    expect(countDecimalPlaces('e')).toBe(0)
-    expect(countDecimalPlaces('')).toBe(0)
-    expect(countDecimalPlaces(null)).toBe(0)
-    expect(countDecimalPlaces(false)).toBe(0)
-    expect(countDecimalPlaces(undefined)).toBe(0)
+  [
+    { value: '1.123', expected: 3 },
+    { value: '1.12', expected: 2 },
+    { value: '1.', expected: 0 },
+    { value: '1', expected: 0 },
+    { value: '.123', expected: 3 },
+    { value: .123, expected: 3 },
+    { value: '1e-3', expected: 3 },
+    { value: '1e-2', expected: 2 },
+    { value: '1.2e-2', expected: 3 },
+    { value: '1.e-2', expected: 2 },
+    { value: '1.23123e2', expected: 3 },
+    { value: '123.123e+2', expected: 1 },
+    { value: 123.123e+2, expected: 1 },
+    { value: '.2e-2', expected: 3 },
+    { value: '1', expected: 0 },
+    { value: '123', expected: 0 },
+    { value: '0', expected: 0 },
+    { value: '-123', expected: 0 },
+    { value: 'abc', expected: 0 },
+    { value: 'e', expected: 0 },
+    { value: '', expected: 0 },
+    { value: null, expected: 0 },
+    { value: false, expected: 0 },
+    { value: undefined, expected: 0 }
+  ].forEach(testCase => {
+    it(`Should count decimals for ${testCase.value}`, () => {
+      expect(countDecimalPlaces(testCase.value)).toBe(testCase.expected)
+    })
   })
 })

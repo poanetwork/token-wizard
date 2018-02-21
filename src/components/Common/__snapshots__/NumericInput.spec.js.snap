@@ -15,6 +15,7 @@ exports[`NumericInput Should render the component 1`] = `
     onBlur={undefined}
     onChange={[Function]}
     onKeyPress={[Function]}
+    onPaste={[Function]}
     type="number"
     value=""
   />
