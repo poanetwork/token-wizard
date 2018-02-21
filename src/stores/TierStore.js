@@ -141,8 +141,7 @@ class TierStore {
       return;
     }
 
-    const newVar = this.globalMinCap && validateMinCap(this.globalMinCap)
-    const isValid = newVar && this.validTiers
+    const isValid = validateMinCap(this.globalMinCap) && this.validTiers
       .every((tier, index) => {
         return Object.keys(tier)
           .every((key) => {
