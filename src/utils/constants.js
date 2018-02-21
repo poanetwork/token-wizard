@@ -138,7 +138,8 @@ export const VALIDATION_MESSAGES = {
   MULTIPLE_TIERS_START_TIME: 'Please enter a valid date not less than the end time of the previous tier',
   EDITED_END_TIME: 'Please enter a valid date later than start time and previous than start time of next tier',
   EDITED_START_TIME: 'Please enter a valid date later than now, less than end time and later than the end time of the previous tier',
-  RATE: 'Please enter a valid number greater than 0'
+  RATE: 'Please enter a valid number greater than 0',
+  MINCAP: 'Please enter a valid number greater than 0'
 }
 
 //descriptions of input fields
