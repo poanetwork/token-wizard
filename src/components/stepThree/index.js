@@ -284,7 +284,7 @@ export class stepThree extends React.Component {
               maxDecimals={9}
               acceptFloat={true}
               value={weiToGwei(generalStore.gasPrice)}
-              errorMessage="Please enter a number greater than 0"
+              errorMessage="Gas Price must be greater than 0.1 with up to 9 decimals"
               onValueUpdate={this.updateGasPrice}
             /> :
             null
