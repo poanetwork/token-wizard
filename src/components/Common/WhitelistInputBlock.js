@@ -3,9 +3,8 @@ import Web3 from 'web3';
 import update from 'immutability-helper';
 import '../../assets/stylesheets/application.css';
 import { InputField } from './InputField'
-import { TEXT_FIELDS, defaultState, VALIDATION_TYPES } from '../../utils/constants'
+import { TEXT_FIELDS, VALIDATION_TYPES } from '../../utils/constants'
 import { WhitelistItem } from './WhitelistItem'
-import { getOldState } from '../../utils/utils'
 import { inject, observer } from 'mobx-react'
 const { ADDRESS, MIN, MAX } = TEXT_FIELDS
 const {VALID, INVALID} = VALIDATION_TYPES;
@@ -15,15 +14,14 @@ const {VALID, INVALID} = VALIDATION_TYPES;
 export class WhitelistInputBlock extends React.Component {
   constructor (props) {
     super(props)
-    let oldState = getOldState(props, defaultState)
-    this.state = Object.assign({}, oldState, {
+    this.state = {
       validation: {
         address: {
           pristine: true,
           valid: INVALID
         }
       }
-    })
+    }
   }
 
   addWhitelistItem = () => {
