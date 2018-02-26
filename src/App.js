@@ -6,7 +6,8 @@ import IncompleteDeploy from './components/IncompleteDeploy'
 import { getQueryVariable } from './utils/utils'
 import {
   BrowserRouter as Router,
-  Route
+  Route,
+  Switch
 } from 'react-router-dom'
 import AlertContainer from 'react-alert'
 import { TOAST } from './utils/constants'
@@ -24,23 +25,27 @@ class App extends Component {
         <div>
           <Header/>
 
-          {
-            deploymentStore.deploymentStep !== null ? (
-              <IncompleteDeploy />
-            ) : (
-              <div>
-                <Route exact path="/" component={crowdsaleAddr?Crowdsale:Home}/>
-                <Route exact path="/crowdsale" component={Crowdsale}/>
-                <Route exact path="/invest" component={Invest}/>
-                <Route exact path="/manage/:crowdsaleAddress" component={Manage}/>
-                <Route path="/1" component={stepOne}/>
-                <Route path="/2" component={stepTwo}/>
-                <Route path="/3" component={stepThree}/>
-              </div>
-            )
-          }
+          <Switch>
+            {/* The route to /4 must be first for the incomplete deploy redirect to work */}
+            <Route path="/4" component={stepFour}/>
 
-          <Route path="/4" component={stepFour}/>
+            {
+              deploymentStore.deploymentStep !== null ? (
+                <IncompleteDeploy />
+              ) : (
+                <div>
+                  <Route exact path="/" component={crowdsaleAddr ? Crowdsale : Home}/>
+                  <Route exact path="/crowdsale" component={Crowdsale}/>
+                  <Route exact path="/invest" component={Invest}/>
+                  <Route exact path="/manage/:crowdsaleAddress" component={Manage}/>
+                  <Route path="/1" component={stepOne}/>
+                  <Route path="/2" component={stepTwo}/>
+                  <Route path="/3" component={stepThree}/>
+                </div>
+              )
+            }
+          </Switch>
+
           <Footer/>
           <AlertContainer ref={a => toast.msg = a} {...TOAST.DEFAULT_OPTIONS} />
         </div>
