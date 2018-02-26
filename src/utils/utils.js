@@ -76,7 +76,7 @@ export const validateName = (name) => typeof name === 'string' && name.length > 
 
 export const validateSupply = (supply) =>  isNaN(Number(supply)) === false && Number(supply) > 0
 
-export const validateTicker = (ticker) => typeof ticker === 'string' && ticker.length <= 5 && ticker.length > 0
+export const validateTicker = (ticker) => /^[a-z0-9]{1,5}$/i.test(ticker)
 
 export const validateTime = (time) => getTimeAsNumber(time) > Date.now()
 
@@ -87,8 +87,6 @@ export const validateLaterOrEqualTime = (laterTime, previousTime) => getTimeAsNu
 export const validateRate = (rate) => isNaN(Number(rate)) === false && Number(rate) > 0
 
 export const validateAddress = (address) => !(!address || address.length !== 42)
-
-export const validateMinCap = minCap => /^$|^([0-9]+)$/.test(minCap)
 
 export function toFixed(x) {
   if (Math.abs(x) < 1.0) {

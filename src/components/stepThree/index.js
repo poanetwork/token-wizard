@@ -38,7 +38,7 @@ const {
   ENABLE_WHITELISTING
 } = TEXT_FIELDS;
 
-@inject("contractStore", "crowdsaleBlockListStore", "pricingStrategyStore", "web3Store", "tierStore", "generalStore", "gasPriceStore", "reservedTokenStore", "deploymentStore")
+@inject("contractStore", "crowdsaleBlockListStore", "pricingStrategyStore", "web3Store", "tierStore", "generalStore", "gasPriceStore", "reservedTokenStore", "deploymentStore", "tokenStore")
 @observer
 export class stepThree extends React.Component {
   constructor(props) {
@@ -57,8 +57,13 @@ export class stepThree extends React.Component {
     this.state = {
       loading: true,
       gasPriceSelected: gasPriceStore.slow.id,
+      minCap: '',
       validation: {
         gasPrice: {
+          pristine: true,
+          valid: INVALID
+        },
+        minCap: {
           pristine: true,
           valid: INVALID
         }
@@ -230,6 +235,23 @@ export class stepThree extends React.Component {
     this.props.generalStore.setGasPrice(gweiToWei(value))
   }
 
+  updateMinCap = ({ value, pristine, valid }) => {
+    const newState = update(this.state, {
+      validation: {
+        minCap: {
+          $set: {
+            pristine: pristine,
+            valid: valid
+          }
+        }
+      }
+    })
+    newState.minCap = value
+
+    this.setState(newState)
+    this.props.tierStore.setGlobalMinCap(value)
+  }
+
   renderGasPriceInput() {
     const { generalStore, gasPriceStore } = this.props
 
@@ -337,9 +359,14 @@ export class stepThree extends React.Component {
             title={MINCAP}
             description="Minimum amount tokens to buy. Not a minimal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy."
             disabled={tierStore.tiers[0].whitelistEnabled === "yes"}
-            min={0}
+            min={this.props.tokenStore.decimals ? Number(`1e-${this.props.tokenStore.decimals}`) : 1}
+            acceptFloat={!!this.props.tokenStore.decimals}
+            maxDecimals={this.props.tokenStore.decimals}
+            value={this.state.minCap}
+            pristine={this.state.validation.minCap.pristine}
+            valid={this.state.validation.minCap.valid}
             errorMessage={VALIDATION_MESSAGES.MINCAP}
-            onValueUpdate={tierStore.setGlobalMinCap}
+            onValueUpdate={this.updateMinCap}
           />
           <RadioInputField
             extraClassName="right"
