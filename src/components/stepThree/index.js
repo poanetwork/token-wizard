@@ -22,9 +22,10 @@ import { inject, observer } from "mobx-react";
 import { Loader } from '../Common/Loader'
 import { noGasPriceAvailable, warningOnMainnetAlert } from '../../utils/alerts'
 import { NumericInput } from '../Common/NumericInput'
+import update from 'immutability-helper'
 
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS;
-const { EMPTY, VALID } = VALIDATION_TYPES;
+const { EMPTY, VALID, INVALID } = VALIDATION_TYPES;
 const {
   START_TIME,
   END_TIME,
@@ -55,7 +56,13 @@ export class stepThree extends React.Component {
 
     this.state = {
       loading: true,
-      gasPriceSelected: gasPriceStore.slow.id
+      gasPriceSelected: gasPriceStore.slow.id,
+      validation: {
+        gasPrice: {
+          pristine: true,
+          valid: INVALID
+        }
+      }
     }
   }
 
@@ -100,24 +107,11 @@ export class stepThree extends React.Component {
     this.addCrowdsaleBlock(num);
   }
 
-  updateCrowdsaleBlockListStore = (event, property, index) => {
-    const { crowdsaleBlockListStore } = this.props;
-    const value = event.target.value;
-    crowdsaleBlockListStore.setCrowdsaleBlockProperty(value, property, index);
-    crowdsaleBlockListStore.validateCrowdsaleListBlockProperty(property, index);
-  };
-
   updateTierStore = (event, property, index) => {
     const { tierStore } = this.props;
     const value = event.target.value;
     tierStore.setTierProperty(value, property, index);
     tierStore.validateTiers(property, index);
-  };
-
-  updatePricingStrategyStore = (event, index, property) => {
-    const { pricingStrategyStore } = this.props;
-    const value = event.target.value;
-    pricingStrategyStore.setStrategyProperty(value, property, index);
   };
 
   goToDeploymentStage = () => {
@@ -150,14 +144,17 @@ export class stepThree extends React.Component {
     e.preventDefault();
     e.stopPropagation();
 
-    const { tierStore } = this.props;
+    const { tierStore, gasPriceStore } = this.props;
+    const gasPriceIsValid = gasPriceStore.custom.id === this.state.gasPriceSelected && this.state.validation.gasPrice.valid === VALID
+
+    console.log('gasPriceIsValid', gasPriceIsValid)
 
     for (let index = 0; index < tierStore.tiers.length; index++) {
       tierStore.validateTiers("endTime", index);
       tierStore.validateTiers("startTime", index);
     }
 
-    if (tierStore.areTiersValid) {
+    if (tierStore.areTiersValid && gasPriceIsValid) {
       const { reservedTokenStore, deploymentStore } = this.props
       const tiersCount = tierStore.tiers.length
       const reservedCount = reservedTokenStore.tokens.length
@@ -217,7 +214,19 @@ export class stepThree extends React.Component {
     }
   }
 
-  updateGasPrice = value => {
+  updateGasPrice = ({value, pristine, valid}) => {
+    const newState = update(this.state, {
+      validation: {
+        gasPrice: {
+          $set: {
+            pristine: pristine,
+            valid: valid
+          }
+        }
+      }
+    })
+
+    this.setState(newState)
     this.props.generalStore.setGasPrice(gweiToWei(value))
   }
 
@@ -284,6 +293,8 @@ export class stepThree extends React.Component {
               maxDecimals={9}
               acceptFloat={true}
               value={weiToGwei(generalStore.gasPrice)}
+              pristine={this.state.validation.gasPrice.pristine}
+              valid={this.state.validation.gasPrice.valid}
               errorMessage="Gas Price must be greater than 0.1 with up to 9 decimals"
               onValueUpdate={this.updateGasPrice}
             /> :
