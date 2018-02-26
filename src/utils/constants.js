@@ -4,8 +4,7 @@ export const defaultTiers = [{
   walletAddress: '',
   supply: '',
   whitelist: [],
-  whitelistElements: [],
-  whitelistInput: {}
+  whitelistElements: []
 }]
 
 export const CONTRACT_TYPES = {

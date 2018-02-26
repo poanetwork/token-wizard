@@ -18,16 +18,6 @@ export class CrowdsaleBlock extends React.Component {
     tierStore.setTierProperty(startTime, "startTime", num);
     tierStore.setTierProperty(endTime, "endTime", num);
   }
-  changeState = (event, parent, key, property) => {
-    if (property.indexOf("whitelist_") === 0) {
-      const { tierStore } = this.props;
-      const whitelistInputProps = { ...tierStore.tiers[key].whitelistInput };
-      const prop = property.split("_")[1];
-
-      whitelistInputProps[prop] = event.target.value;
-      tierStore.setTierProperty(whitelistInputProps, "whitelistInput", key);
-    }
-  };
 
   updateTierStore = (event, property) => {
     const { tierStore, num } = this.props;
@@ -43,7 +33,7 @@ export class CrowdsaleBlock extends React.Component {
         <div className="section-title">
           <p className="title">Whitelist</p>
         </div>
-        <WhitelistInputBlock num={num} onChange={(e, cntrct, num, prop) => this.changeState(e, cntrct, num, prop)} />
+        <WhitelistInputBlock num={num} />
       </div>
     );
     return (
