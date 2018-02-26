@@ -21,6 +21,7 @@ import {
 import { inject, observer } from "mobx-react";
 import { Loader } from '../Common/Loader'
 import { noGasPriceAvailable, warningOnMainnetAlert } from '../../utils/alerts'
+import { NumericInput } from '../Common/NumericInput'
 
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS;
 const { EMPTY, VALID } = VALIDATION_TYPES;
@@ -216,6 +217,10 @@ export class stepThree extends React.Component {
     }
   }
 
+  updateGasPrice = value => {
+    this.props.generalStore.setGasPrice(gweiToWei(value))
+  }
+
   renderGasPriceInput() {
     const { generalStore, gasPriceStore } = this.props
 
@@ -273,12 +278,14 @@ export class stepThree extends React.Component {
 
         {
           this.state.gasPriceSelected === gasPriceStore.custom.id ?
-            <input
-              className="input"
+            <NumericInput
               style={{ display: 'inline-block' }}
-              type="number"
+              min={0.1}
+              maxDecimals={9}
+              acceptFloat={true}
               value={weiToGwei(generalStore.gasPrice)}
-              onChange={(e) => generalStore.setGasPrice(gweiToWei(e.target.value))}
+              errorMessage="Gas Price must be greater than 0.1 with up to 9 decimals"
+              onValueUpdate={this.updateGasPrice}
             /> :
             null
         }
@@ -314,16 +321,14 @@ export class stepThree extends React.Component {
           {this.renderGasPriceInput()}
         </div>
         <div className="input-block-container">
-          <InputField
+          <NumericInput
             side="left"
-            type="number"
-            disabled={tierStore.tiers[0].whitelistEnabled === "yes"}
             title={MINCAP}
-            value={tierStore.globalMinCap}
-            valid={VALID}
+            description="Minimum amount tokens to buy. Not a minimal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy."
+            disabled={tierStore.tiers[0].whitelistEnabled === "yes"}
+            min={0}
             errorMessage={VALIDATION_MESSAGES.MINCAP}
-            onChange={e => tierStore.setGlobalMinCap(e.target.value)}
-            description={`Minimum amount tokens to buy. Not a minimal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.`}
+            onValueUpdate={tierStore.setGlobalMinCap}
           />
           <RadioInputField
             extraClassName="right"

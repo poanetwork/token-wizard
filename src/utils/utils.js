@@ -88,6 +88,8 @@ export const validateRate = (rate) => isNaN(Number(rate)) === false && Number(ra
 
 export const validateAddress = (address) => !(!address || address.length !== 42)
 
+export const validateMinCap = minCap => /^$|^([0-9]+)$/.test(minCap)
+
 export function toFixed(x) {
   if (Math.abs(x) < 1.0) {
     let e = parseInt(x.toString().split('e-')[1], 10);
