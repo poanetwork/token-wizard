@@ -44,6 +44,11 @@ export class stepTwo extends Component {
 
   showErrorMessages = (parent) => {
     this.props.tokenStore.invalidateToken();
+    this.updateDecimalsStore({
+      value: this.state.decimals,
+      pristine: false,
+      valid: this.state.validation.decimals.valid
+    })
   }
 
   updateTokenStore = (event, property) => {
@@ -57,6 +62,7 @@ export class stepTwo extends Component {
       validation: {
         decimals: {
           $set: {
+            disabled: this.state.validation.decimals.disabled,
             pristine: pristine,
             valid: valid
           },
@@ -75,7 +81,7 @@ export class stepTwo extends Component {
 
   disableDecimals = () => {
     if (this.state.decimals === '') {
-      this.updateDecimalsStore({ value: 0, pristine: false, valid: true })
+      this.updateDecimalsStore({ value: 0, pristine: false, valid: VALID })
     }
 
     this.setState({ validation: { decimals: { disabled: true } } })
