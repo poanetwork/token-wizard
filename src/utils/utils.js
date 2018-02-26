@@ -1,8 +1,6 @@
-import { VALIDATION_TYPES, TOAST } from './constants'
+import { TOAST } from './constants'
 import queryString from 'query-string'
 import { CrowdsaleConfig } from '../components/Common/config'
-
-const { VALID, INVALID } = VALIDATION_TYPES
 
 export function getQueryVariable(variable) {
   return queryString.parse(window.location.search)[variable]
@@ -72,21 +70,11 @@ export const getOldState = (props, defaultState) => (props && props.location && 
 
 export const getStepClass = (step, activeStep) => step === activeStep ? "step-navigation step-navigation_active" : "step-navigation"
 
-export const stepsAreValid = (steps) => {
-  let newSteps = Object.assign({}, steps)
-  if (newSteps[0] !== undefined) {
-    delete newSteps[0]
-  }
-  return Object.values(newSteps).length > 3 && Object.values(newSteps).every(step => step === VALID)
-}
-
 export const validateTier = (tier) => typeof tier === 'string' && tier.length > 0 && tier.length < 30
 
 export const validateName = (name) => typeof name === 'string' && name.length > 0 && name.length < 30
 
 export const validateSupply = (supply) =>  isNaN(Number(supply)) === false && Number(supply) > 0
-
-export const validateDecimals = (decimals) => /^$|^([0-9]|[1][0-8])$/.test(decimals)
 
 export const validateTicker = (ticker) => typeof ticker === 'string' && ticker.length <= 5 && ticker.length > 0
 
@@ -98,84 +86,7 @@ export const validateLaterOrEqualTime = (laterTime, previousTime) => getTimeAsNu
 
 export const validateRate = (rate) => isNaN(Number(rate)) === false && Number(rate) > 0
 
-export const validateAddress = (address) => {
-  if(!address || address.length !== 42 ) {
-    return false
-  }
-  return true
-}
-
-const inputFieldValidators = {
-  tier: validateTier,
-  name: validateName,
-  ticker: validateTicker,
-  decimals: validateDecimals,
-  supply: validateSupply,
-  startTime: validateTime,
-  endTime: validateTime,
-  walletAddress: validateAddress,
-  rate: validateRate
-}
-
-const isNotWhiteListTierObject = (value) => !(typeof value === 'object' && value.hasOwnProperty('whitelist') === true && value.hasOwnProperty('tier') === true)
-
-// still thinks that we do not have an array... we do
-export const validateValue = (value, property) => {
-  if (!isNaN(property)
-    || property === 'reservedTokensInput'
-    || property === 'reservedTokens'
-    || property === 'reservedTokensElements') return VALID;
-  let validationFunction, valueIsValid;
-  if(isNotWhiteListTierObject(value)) {
-    validationFunction = inputFieldValidators[property]
-    if (validationFunction)
-      valueIsValid = validationFunction(value)
-  } else if (inputFieldValidators[property]){
-    validationFunction = inputFieldValidators[property]
-    if (validationFunction)
-      valueIsValid = validationFunction(value[property])
-  }
-  return  valueIsValid === true ? VALID : INVALID
-}
-
-export const getNewValue = (value, property) => property === "startTime" || property === "endTime" ? getTimeAsNumber(value) : value
-
-export const allFieldsAreValid = (parent, state) => {
-  let newState = { ...state }
-  let properties = []
-  let values = []
-  if( Object.prototype.toString.call( newState[parent] ) === '[object Array]' ) {
-    if (newState[parent].length > 0) {
-      for (let i = 0; i < newState[parent].length; i++) {
-        Object.keys(newState[parent][i]).forEach(property => { // eslint-disable-line no-loop-func
-          values.push(newState[parent][i][property])
-          properties.push(property);
-        })
-      }
-    }
-  } else {
-    properties = Object.keys(newState[parent])
-  }
-  let iterator = 0
-  let validationValues = properties.map(property => {
-    if (property === 'startBlock' || property === 'endBlock' || property === 'updatable' || property.toLowerCase().indexOf("whitelist") > -1) {
-      iterator++
-      return VALID
-    }
-    let value
-    if( Object.prototype.toString.call( newState[parent] ) === '[object Array]' ) {
-      if (newState[parent].length > 0)
-        value = values[iterator]
-    } else {
-      value = newState[parent][property]
-    }
-    iterator++
-    if (parent === "token" && property === "supply") return VALID
-    return validateValue(value, property)
-  })
-
-  return validationValues.find(value => value === INVALID) === undefined
-}
+export const validateAddress = (address) => !(!address || address.length !== 42)
 
 export function toFixed(x) {
   if (Math.abs(x) < 1.0) {
