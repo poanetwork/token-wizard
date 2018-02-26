@@ -7,6 +7,7 @@ import { TEXT_FIELDS, VALIDATION_TYPES } from '../../utils/constants'
 import update from 'immutability-helper'
 import ReservedTokensItem from './ReservedTokensItem'
 import { observer } from 'mobx-react';
+import { NumericInput } from './NumericInput'
 
 const { VALID, INVALID } = VALIDATION_TYPES
 const { ADDRESS, DIMENSION, VALUE } = TEXT_FIELDS
@@ -113,15 +114,13 @@ export class ReservedTokensInputBlock extends Component {
     this.setState(newState)
   }
 
-  handleValueChange = value => {
-    const isValueValid = value > 0 ? VALID : INVALID
-
+  handleValueChange = ({ value, pristine, valid }) => {
     const newState = update(this.state, {
       validation: {
         value: {
           $set: {
-            pristine: false,
-            valid: isValueValid
+            pristine: pristine,
+            valid: valid
           }
         }
       }
@@ -144,6 +143,25 @@ export class ReservedTokensInputBlock extends Component {
         />
       )
     })
+
+    let valueInputParams = null
+
+    if (this.state.dim === 'tokens') {
+      valueInputParams = {
+        min: !this.props.decimals ? 0 : Number(`1e-${this.props.decimals}`),
+        maxDecimals: !this.props.decimals ? 0 : this.props.decimals,
+        errorMessage: 'Value must be positive and decimals should not exceed the amount of decimals specified',
+        description: 'Value in tokens. Don\'t forget to click + button for each reserved token.'
+      }
+    } else if (this.state.dim === 'percentage') {
+      valueInputParams = {
+        min: Number.MIN_VALUE,
+        errorMessage: 'Value must be positive',
+        description: 'Value in percentage. Don\'t forget to click + button for each reserved token.'
+      }
+    } else {
+      console.error(`unrecognized dimension '${this.state.dim}'`)
+    }
 
     return (
       <div className="reserved-tokens-container">
@@ -169,16 +187,15 @@ export class ReservedTokensInputBlock extends Component {
               description="Fixed amount or % of crowdsaled tokens. Will be deposited to the account after finalization
                of the crowdsale."
             />
-            <InputField
+            <NumericInput
               side="reserved-tokens-input-property reserved-tokens-input-property-right"
-              type="number"
               title={VALUE}
               value={this.state.val}
-              onChange={e => this.handleValueChange(e.target.value)}
-              description="Value in tokens or percents. Don't forget to press + button for each reserved token."
               pristine={this.state.validation.value.pristine}
               valid={this.state.validation.value.valid}
-              errorMessage="Value must be positive"
+              acceptFloat={true}
+              onValueUpdate={this.handleValueChange}
+              {...valueInputParams}
             />
           </div>
           <div className="plus-button-container">
