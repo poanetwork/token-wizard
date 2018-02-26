@@ -168,7 +168,26 @@ class TierStore {
     });
   }
 
-  @action removeWhiteListItem = (whitelistNum, crowdsaleNum) => {
+  @action addWhitelistItem = ({ addr, min, max }, crowdsaleNum) => {
+    const tier = this.tiers[crowdsaleNum]
+
+    const whitelist = tier.whitelist.slice()
+
+    const isAdded = whitelist.find(item => item.addr === addr && !item.deleted)
+
+    if (isAdded) return
+
+    const whitelistElements = tier.whitelistElements.slice()
+    const whitelistNum = whitelistElements.length
+
+    whitelistElements.push({ addr, min, max, whitelistNum, crowdsaleNum })
+    whitelist.push({ addr, min, max })
+
+    this.setTierProperty(whitelistElements, 'whitelistElements', crowdsaleNum)
+    this.setTierProperty(whitelist, 'whitelist', crowdsaleNum)
+  }
+
+  @action removeWhitelistItem = (whitelistNum, crowdsaleNum) => {
     let whitelist = this.tiers[crowdsaleNum].whitelist.slice()
     whitelist[whitelistNum].deleted = true
     this.setTierProperty(whitelist, 'whitelist', crowdsaleNum)

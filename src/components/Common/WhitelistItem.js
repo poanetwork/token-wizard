@@ -7,7 +7,7 @@ import { inject, observer } from 'mobx-react'
 export class WhitelistItem extends React.Component {
   removeItem () {
     const { tierStore, crowdsaleNum, whitelistNum } = this.props
-    tierStore.removeWhiteListItem(whitelistNum, crowdsaleNum)
+    tierStore.removeWhitelistItem(whitelistNum, crowdsaleNum)
   }
 
   render () {

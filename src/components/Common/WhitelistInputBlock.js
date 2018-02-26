@@ -30,7 +30,6 @@ export class WhitelistInputBlock extends React.Component {
   addWhitelistItem = () => {
     const { tierStore } = this.props
     const crowdsaleNum = this.props.num
-    const tier = tierStore.tiers[crowdsaleNum]
     const { addr, min, max } = this.state
 
     this.setState(update(this.state, {
@@ -45,41 +44,19 @@ export class WhitelistInputBlock extends React.Component {
       return
     }
 
-    this.setState(update(this.state, {
-      validation: {
-        address: {
-          $set: {
-            pristine: true,
-            valid: INVALID
-          }
-        }
-      }
-    }))
-
-    this.clearWhiteListInputs()
-
-    const whitelist = tier.whitelist.slice()
-
-    const isAdded = whitelist.find(item => item.addr === addr && !item.deleted)
-
-    if (isAdded) return
-
-    const whitelistElements = tier.whitelistElements.slice()
-    const whitelistNum = whitelistElements.length
-
-    whitelistElements.push({ addr, min, max, whitelistNum, crowdsaleNum })
-    whitelist.push({ addr, min, max })
-
-    tierStore.setTierProperty(whitelistElements, 'whitelistElements', crowdsaleNum)
-    tierStore.setTierProperty(whitelist, 'whitelist', crowdsaleNum)
-  }
-
-  clearWhiteListInputs = () => {
     this.setState({
       addr: '',
       min: '',
-      max: ''
+      max: '',
+      validation: {
+        address: {
+          pristine: true,
+          valid: INVALID
+        }
+      }
     })
+
+    tierStore.addWhitelistItem({ addr, min, max }, crowdsaleNum)
   }
 
   handleAddressChange = address => {
