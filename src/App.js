@@ -33,7 +33,7 @@ class App extends Component {
               deploymentStore.deploymentStep !== null ? (
                 <IncompleteDeploy />
               ) : (
-                <div>
+                <Switch>
                   <Route exact path="/" component={crowdsaleAddr ? Crowdsale : Home}/>
                   <Route exact path="/crowdsale" component={Crowdsale}/>
                   <Route exact path="/invest" component={Invest}/>
@@ -41,7 +41,7 @@ class App extends Component {
                   <Route path="/1" component={stepOne}/>
                   <Route path="/2" component={stepTwo}/>
                   <Route path="/3" component={stepThree}/>
-                </div>
+                </Switch>
               )
             }
           </Switch>
