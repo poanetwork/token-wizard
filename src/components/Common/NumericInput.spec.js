@@ -85,14 +85,6 @@ describe('NumericInput', () => {
       input().simulate(INPUT_EVENT.CHANGE, changeMock)
       expect(numericInputComponent.onValueUpdate).toHaveBeenCalled()
     })
-    it('Should reject "-" symbol if it is not the first character', () => {
-      numericInputComponent.min = -10
-      numericInputComponent.value = 5
-      keypressMock.key = '-'
-
-      input().simulate(INPUT_EVENT.KEYPRESS, keypressMock)
-      expect(keypressMock.preventDefault).toHaveBeenCalled()
-    })
 
     describe('min', () => {
       it('Should accept "-" symbol if min is negative', () => {
@@ -112,14 +104,6 @@ describe('NumericInput', () => {
       })
       it('Should reject "-" symbol if min is not negative', () => {
         numericInputComponent.min = 0
-        keypressMock.key = '-'
-
-        input().simulate(INPUT_EVENT.KEYPRESS, keypressMock)
-        expect(keypressMock.preventDefault).toHaveBeenCalled()
-      })
-      it('Should reject "-" symbol if min is not negative and accepts floating numbers', () => {
-        numericInputComponent.min = 0
-        numericInputComponent.acceptFloat = true
         keypressMock.key = '-'
 
         input().simulate(INPUT_EVENT.KEYPRESS, keypressMock)
@@ -145,14 +129,6 @@ describe('NumericInput', () => {
       })
       it('Should reject "-" symbol if max is not negative', () => {
         numericInputComponent.max = 10
-        keypressMock.key = '-'
-
-        input().simulate(INPUT_EVENT.KEYPRESS, keypressMock)
-        expect(keypressMock.preventDefault).toHaveBeenCalled()
-      })
-      it('Should reject "-" symbol if max is not negative and accepts floating numbers', () => {
-        numericInputComponent.max = 0
-        numericInputComponent.acceptFloat = true
         keypressMock.key = '-'
 
         input().simulate(INPUT_EVENT.KEYPRESS, keypressMock)
