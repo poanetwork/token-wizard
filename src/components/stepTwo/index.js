@@ -84,11 +84,11 @@ export class stepTwo extends Component {
       this.updateDecimalsStore({ value: 0, pristine: false, valid: VALID })
     }
 
-    this.setState({ validation: { decimals: { disabled: true } } })
+    this.setState(update(this.state, { validation: { decimals: { disabled: { $set: true } } } }))
   }
 
   enableDecimals = () => {
-    this.setState({ validation: { decimals: { disabled: false } } })
+    this.setState(update(this.state, { validation: { decimals: { disabled: { $set: false } } } }))
   }
 
   renderLink () {
