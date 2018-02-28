@@ -28,10 +28,13 @@ export class NumericInput extends Component {
     const { min, max, acceptFloat } = this.props
     const allowsNegative = min < 0 || max < 0
 
-    if (!acceptFloat && !allowsNegative) {
-      if (isNaN(parseInt(e.key, 10))) {
-        e.preventDefault()
-      }
+    if ((e.key === 'e' || e.key === '.' || e.key === '+') && !acceptFloat) {
+      e.preventDefault()
+    }
+
+    // '-' symbol is required for scientific notation and negative values
+    if (e.key === '-' && !allowsNegative && !acceptFloat) {
+      e.preventDefault()
     }
   }
 
