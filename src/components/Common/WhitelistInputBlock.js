@@ -1,6 +1,8 @@
 import React from 'react'
 import Web3 from 'web3';
 import update from 'immutability-helper';
+import Dropzone from 'react-dropzone';
+import Papa from 'papaparse'
 import '../../assets/stylesheets/application.css';
 import { InputField } from './InputField'
 import { TEXT_FIELDS, VALIDATION_TYPES } from '../../utils/constants'
@@ -77,12 +79,44 @@ export class WhitelistInputBlock extends React.Component {
     this.setState(newState)
   }
 
+  onDrop = (acceptedFiles, rejectedFiles) => {
+    acceptedFiles.forEach(file => {
+      Papa.parse(file, {
+        skipEmptyLines: true,
+        complete: results => {
+          results.data.forEach(([addr, min, max]) => {
+            this.props.tierStore.addWhitelistItem({ addr, min, max }, this.props.num)
+          })
+        }
+      })
+    })
+  }
+
+
   render () {
     const { num } = this.props
     const { whitelistElements } = this.props.tierStore.tiers[num]
 
+    const dropzoneStyle = {
+      position: 'relative',
+      marginTop: '-15px',
+      marginBottom: '15px'
+    }
+    const uploadCSVStyle = {
+      textDecoration: 'underline',
+      cursor: 'pointer'
+    }
+
     return (
       <div className="white-list-container">
+        <Dropzone
+          onDrop={this.onDrop}
+          accept=".csv"
+          style={dropzoneStyle}
+        >
+          <span style={uploadCSVStyle}>Upload CSV</span>
+        </Dropzone>
+
         <div className="white-list-input-container">
           <div className="white-list-input-container-inner">
             <InputField
