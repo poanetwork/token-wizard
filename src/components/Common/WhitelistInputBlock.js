@@ -6,6 +6,7 @@ import Papa from 'papaparse'
 import '../../assets/stylesheets/application.css';
 import { InputField } from './InputField'
 import { TEXT_FIELDS, VALIDATION_TYPES } from '../../utils/constants'
+import { validateAddress } from '../../utils/utils'
 import { WhitelistItem } from './WhitelistItem'
 import { inject, observer } from 'mobx-react'
 const { ADDRESS, MIN, MAX } = TEXT_FIELDS
@@ -79,12 +80,21 @@ export class WhitelistInputBlock extends React.Component {
     this.setState(newState)
   }
 
+  isAddress = (address) => validateAddress(address)
+  isNumber = (number) => !isNaN(parseFloat(number))
+
   onDrop = (acceptedFiles, rejectedFiles) => {
     acceptedFiles.forEach(file => {
       Papa.parse(file, {
         skipEmptyLines: true,
         complete: results => {
-          results.data.forEach(([addr, min, max]) => {
+          results.data.forEach((row) => {
+            if (row.length !== 3) return
+
+            const [addr, min, max] = row
+
+            if (!this.isAddress(addr) || !this.isNumber(min) || !this.isNumber(max)) return
+
             this.props.tierStore.addWhitelistItem({ addr, min, max }, this.props.num)
           })
         }
