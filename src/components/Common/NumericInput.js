@@ -13,7 +13,7 @@ export class NumericInput extends Component {
 
     this.state = {
       value: props.value || '',
-      pristine: props.pristine || true,
+      pristine: props.pristine !== undefined ? props.pristine : true,
       valid: props.valid || VALID
     }
   }
