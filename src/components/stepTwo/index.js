@@ -123,6 +123,10 @@ export class stepTwo extends Component {
   }
 
   render () {
+    const decimals = this.state.validation.decimals.valid === VALID && this.state.decimals >= 0
+      ? parseInt(this.state.decimals, 10)
+      : 0
+
     return (
       <section className="steps steps_crowdsale-contract" ref="two">
         <StepNavigation activeStep={TOKEN_SETUP}/>
@@ -171,7 +175,7 @@ export class stepTwo extends Component {
           </div>
           <ReservedTokensInputBlock
             tokens={this.props.reservedTokenStore.tokens}
-            decimals={this.state.validation.decimals.valid === VALID ? this.state.decimals : 0}
+            decimals={decimals}
             addReservedTokensItem={this.addReservedTokensItem}
             removeReservedToken={this.removeReservedToken}
           />
