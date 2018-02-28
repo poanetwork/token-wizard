@@ -135,6 +135,30 @@ describe('NumericInput', () => {
         expect(keypressMock.preventDefault).toHaveBeenCalled()
       })
     })
+
+    it('Should prevent "." if no float is allowed', () => {
+      numericInputComponent.value = '10'
+      keypressMock.key = '.'
+
+      input().simulate(INPUT_EVENT.KEYPRESS, keypressMock)
+      expect(keypressMock.preventDefault).toHaveBeenCalledTimes(1)
+    })
+
+    it('Should prevent "+" if no float is allowed', () => {
+      numericInputComponent.value = '10'
+      keypressMock.key = '+'
+
+      input().simulate(INPUT_EVENT.KEYPRESS, keypressMock)
+      expect(keypressMock.preventDefault).toHaveBeenCalledTimes(1)
+    })
+
+    it('Should prevent "e" if no float is allowed', () => {
+      numericInputComponent.value = '10'
+      keypressMock.key = 'e'
+
+      input().simulate(INPUT_EVENT.KEYPRESS, keypressMock)
+      expect(keypressMock.preventDefault).toHaveBeenCalledTimes(1)
+    })
   })
 
   describe('integer numbers', () => {
