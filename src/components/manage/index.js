@@ -127,12 +127,12 @@ export class Manage extends Component {
   }
 
   setCrowdsaleInfo = () => {
-    const { contractStore } = this.props
+    const { contractStore, crowdsaleStore } = this.props
     const lastCrowdsaleAddress = contractStore.crowdsale.addr.slice(-1)[0]
 
     return attachToContract(contractStore.crowdsale.abi, lastCrowdsaleAddress)
       .then(crowdsaleContract => crowdsaleContract.methods.endsAt().call())
-      .then(crowdsaleEndTime => this.setState({ crowdsaleHasEnded: crowdsaleEndTime * 1000 <= Date.now() }))
+      .then(crowdsaleEndTime => this.setState({ crowdsaleHasEnded: crowdsaleEndTime * 1000 <= Date.now() || crowdsaleStore.selected.finalized }))
   }
 
   shouldDistribute = () => {
@@ -534,7 +534,7 @@ export class Manage extends Component {
     }
 
     const tierStartAndEndTime = (tier, index) => {
-      const disabled = !this.state.ownerCurrentUser || !tier.updatable || this.tierHasEnded(index)
+      const disabled = !this.state.ownerCurrentUser || !tier.updatable || this.tierHasEnded(index) || finalized
 
       return <div className='input-block-container'>
         <InputField
@@ -563,7 +563,7 @@ export class Manage extends Component {
     }
 
     const tierRateAndSupply = (tier, index) => {
-      const disabled = !this.state.ownerCurrentUser || !tier.updatable || this.tierHasEnded(index) || this.tierHasStarted(index)
+      const disabled = !this.state.ownerCurrentUser || !tier.updatable || this.tierHasEnded(index) || this.tierHasStarted(index) || finalized
 
       return <div className='input-block-container'>
         <InputField
