@@ -150,7 +150,7 @@ export class stepThree extends React.Component {
     e.stopPropagation();
 
     const { tierStore, gasPriceStore } = this.props;
-    const gasPriceIsValid = gasPriceStore.custom.id === this.state.gasPriceSelected && this.state.validation.gasPrice.valid === VALID
+    const gasPriceIsValid = gasPriceStore.custom.id !== this.state.gasPriceSelected || this.state.validation.gasPrice.valid === VALID
 
     console.log('gasPriceIsValid', gasPriceIsValid)
 
