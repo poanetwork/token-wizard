@@ -475,7 +475,9 @@ export class Manage extends Component {
           <div className="swal2-icon swal2-info warning-logo">!</div>
           <p className="title">Distribute reserved tokens</p>
           <p className="description">Reserved tokens distribution is the last step of the crowdsale before finalization.
-            You can make it only after the end of the last tier. If you reserved more then 100 addresses for your crowdsale, the distribution will be executed in batches with 100 reserved addresses per batch. Amount of batches is equal to amount of transactions</p>
+            You can make it after the end of the last tier or if hard cap is reached. If you reserved more then 100
+            addresses for your crowdsale, the distribution will be executed in batches with 100 reserved addresses per
+            batch. Amount of batches is equal to amount of transactions</p>
           <Link to='#' onClick={() => this.distributeReservedTokens(100)}>
             <span className={`button button_${!ownerCurrentUser || !canDistribute ? 'disabled' : 'fill'}`}>Distribute tokens</span>
           </Link>
