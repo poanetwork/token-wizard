@@ -6,364 +6,381 @@ import Adapter from 'enzyme-adapter-react-15'
 import { configure, mount } from 'enzyme'
 
 const { VALID, INVALID } = VALIDATION_TYPES
-let tokenList
-let addCallback
-let removeCallback
-
-beforeEach(() => {
-  tokenList = [
-    {
-      addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
-      dim: 'tokens',
-      value: '120'
-    },
-    {
-      addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
-      dim: 'percentage',
-      value: '105'
-    },
-    {
-      addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
-      dim: 'percentage',
-      value: '100'
-    },
-    {
-      addr: '0x22d491bde2303f2f43325b2108d26f1eaba1e32b',
-      dim: 'tokens',
-      value: '20'
-    }
-  ]
-  addCallback = jest.fn()
-  removeCallback = jest.fn()
-})
 
 configure({ adapter: new Adapter() })
 
 describe('ReservedTokensInputBlock', () => {
-  test('Should render the component', () => {
-    const component = renderer.create(
+  let tokenList
+  let addCallback
+  let removeCallback
+  let decimals
+  let wrapperMemo, wrapper
+  let addressInputMemo, addressInput
+  let valueInputMemo, valueInput
+  let addressStateMemo, addressState
+  let valueStateMemo, valueState
+
+  beforeEach(() => {
+    tokenList = [
+      {
+        addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+        dim: 'tokens',
+        value: '120'
+      },
+      {
+        addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+        dim: 'percentage',
+        value: '105'
+      },
+      {
+        addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
+        dim: 'percentage',
+        value: '100'
+      },
+      {
+        addr: '0x22d491bde2303f2f43325b2108d26f1eaba1e32b',
+        dim: 'tokens',
+        value: '20'
+      }
+    ]
+    addCallback = jest.fn()
+    removeCallback = jest.fn()
+    decimals = 3
+
+    wrapperMemo = undefined
+    wrapper = () => wrapperMemo || (wrapperMemo = mount(
       <ReservedTokensInputBlock
         tokens={tokenList}
+        decimals={decimals}
         addReservedTokensItem={addCallback}
         removeReservedToken={removeCallback}
       />
-    )
-    const tree = component.toJSON()
-    expect(tree).toMatchSnapshot()
+    ))
+
+    addressInputMemo = undefined
+    addressInput = () => addressInputMemo || (addressInputMemo = wrapper().find('input[type="text"]').at(0))
+
+    valueInputMemo = undefined
+    valueInput = () => valueInputMemo || (valueInputMemo = wrapper().find('input[type="number"]').at(0))
+
+    addressStateMemo = undefined
+    addressState = () => addressStateMemo || (addressStateMemo = wrapper().state('validation').address)
+
+    valueStateMemo = undefined
+    valueState = () => valueStateMemo || (valueStateMemo = wrapper().state('validation').value)
   })
 
-  test('Should render all the tokens passed', () => {
-    const wrapper = mount(
-      <ReservedTokensInputBlock
-        tokens={tokenList}
-        addReservedTokensItem={addCallback}
-        removeReservedToken={removeCallback}
-      />
-    )
+  describe('render', () => {
+    let componentMemo, component
+    beforeEach(() => {
+      componentMemo = undefined
+      component = () => componentMemo || (componentMemo = renderer.create(
+        <ReservedTokensInputBlock
+          tokens={tokenList}
+          decimals={decimals}
+          addReservedTokensItem={addCallback}
+          removeReservedToken={removeCallback}
+        />
+      ))
+    })
 
-    expect(wrapper.find('.reserved-tokens-item-container')).toHaveLength(tokenList.length)
+    it('Should render the component for tokens', () => {
+      expect(component().toJSON()).toMatchSnapshot('tokens')
+    })
+
+    it('Should render the component for percentage', () => {
+      wrapper().find('input[type="radio"]').at(1).simulate('change')
+      expect(component().toJSON()).toMatchSnapshot('percentage')
+    })
+
+    it('Should render all the tokens passed', () => {
+      expect(wrapper().find('.reserved-tokens-item-container')).toHaveLength(tokenList.length)
+    })
   })
 
-  test('Should validate the address', () => {
-    const wrapper = mount(
-      <ReservedTokensInputBlock
-        tokens={tokenList}
-        addReservedTokensItem={addCallback}
-        removeReservedToken={removeCallback}
-      />
-    )
-    const wrongAddressEvent = { target: { value: '0x123' } }
-    const validAddressEvent = { target: { value: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1' } }
+  describe('Address field', () => {
+    [
+      { value: '0x123', expected: false },
+      { value: '0x90F8bF6A479f320EAD074411A4B0E7944EA8C9C1', expected: false },
+      { value: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1', expected: true },
+      { value: '0X90f8bf6a479f320ead074411a4b0e7944ea8c9c1', expected: true },
+      { value: '0x90F8BF6A479F320EAD074411A4B0E7944EA8C9C1', expected: true },
+      { value: '0X90F8BF6A479F320EAD074411A4B0E7944EA8C9C1', expected: true },
+    ].forEach(testCase => {
+      const action = testCase.expected ? 'pass' : 'fail'
+      const validity = testCase.expected ? VALID : INVALID
 
-    const handleAddressChange = jest.spyOn(wrapper.instance(), 'handleAddressChange')
+      it(`Should ${action} for '${testCase.value}'`, () => {
+        const handleAddressChange = jest.spyOn(wrapper().instance(), 'handleAddressChange')
 
-    wrapper.update()
+        wrapper().update()
 
-    wrapper.find('input[type="text"]').at(0).simulate('change', wrongAddressEvent)
-    setTimeout(() => {
-      expect(handleAddressChange).toHaveBeenCalledTimes(1)
-      expect(handleAddressChange).toHaveBeenCalledWith(wrongAddressEvent.target.value)
-      expect(wrapper.state('validation').address.pristine).toBeFalsy()
-      expect(wrapper.state('validation').address.valid).toBe(INVALID)
-
-      wrapper.find('input[type="text"]').at(0).simulate('change', validAddressEvent)
-      setTimeout(() => {
+        addressInput().simulate('change', { target: { value: testCase.value } })
         expect(handleAddressChange).toHaveBeenCalledTimes(1)
-        expect(handleAddressChange).toHaveBeenCalledWith(validAddressEvent.target.value)
-        expect(wrapper.state('validation').address.pristine).toBeFalsy()
-        expect(wrapper.state('validation').address.valid).toBe(VALID)
-      }, 10)
-    }, 10)
-
+        expect(handleAddressChange).toHaveBeenCalledWith(testCase.value)
+        expect(addressState().pristine).toBeFalsy()
+        expect(addressState().valid).toBe(validity)
+      })
+    })
   })
 
-  test('Should fail if tokens value is invalid (zero or less)', () => {
-    const wrapper = mount(
-      <ReservedTokensInputBlock
-        tokens={tokenList}
-        addReservedTokensItem={addCallback}
-        removeReservedToken={removeCallback}
-      />
-    )
-    const valueEventZero = { target: { value: '0' } }
-    const valueEventNegative = { target: { value: '-10' } }
+  describe('Dimension selection', () => {
+    it('Should set "tokens" as selected dimension', () => {
+      const updateReservedTokenInput = jest.spyOn(wrapper().instance(), 'updateReservedTokenInput')
 
-    const handleValueChange = jest.spyOn(wrapper.instance(), 'handleValueChange')
-    const updateReservedTokenInput = jest.spyOn(wrapper.instance(), 'updateReservedTokenInput')
+      wrapper().update()
 
-    wrapper.update()
-
-    wrapper.find('input[type="radio"]').at(0).simulate('change')
-    setTimeout(() => {
-      expect(updateReservedTokenInput).toHaveBeenCalledWith(['tokens', 'dim'])
+      wrapper().find('input[type="radio"]').at(0).simulate('change')
+      expect(updateReservedTokenInput).toHaveBeenCalledWith('tokens', 'dim')
       expect(updateReservedTokenInput).toHaveBeenCalledTimes(1)
-      expect(wrapper.state('dim')).toBe('tokens')
+      expect(wrapper().state('dim')).toBe('tokens')
+    })
+    it('Should set "percentage" as selected dimension', () => {
+      const updateReservedTokenInput = jest.spyOn(wrapper().instance(), 'updateReservedTokenInput')
 
-      wrapper.find('input[type="number"]').at(0).simulate('change', valueEventZero)
-      setTimeout(() => {
-        expect(handleValueChange).toHaveBeenCalledWith(valueEventZero.target.value)
-        expect(handleValueChange).toHaveBeenCalledTimes(1)
-        expect(wrapper.state('validation').value.pristine).toBeFalsy()
-        expect(wrapper.state('validation').value.valid).toBe(INVALID)
+      wrapper().update()
 
-        wrapper.find('input[type="number"]').at(0).simulate('change', valueEventNegative)
-        setTimeout(() => {
-          expect(handleValueChange).toHaveBeenCalledWith(valueEventNegative.target.value)
+      wrapper().find('input[type="radio"]').at(1).simulate('change')
+      expect(updateReservedTokenInput).toHaveBeenCalledWith('percentage', 'dim')
+      expect(updateReservedTokenInput).toHaveBeenCalledTimes(1)
+      expect(wrapper().state('dim')).toBe('percentage')
+    })
+    it('Should set "tokens" as selected dimension after selecting percentage', () => {
+      const updateReservedTokenInput = jest.spyOn(wrapper().instance(), 'updateReservedTokenInput')
+
+      wrapper().update()
+
+      wrapper().find('input[type="radio"]').at(1).simulate('change')
+      expect(updateReservedTokenInput).toHaveBeenCalledWith('percentage', 'dim')
+      expect(updateReservedTokenInput).toHaveBeenCalledTimes(1)
+      expect(wrapper().state('dim')).toBe('percentage')
+
+      wrapper().find('input[type="radio"]').at(0).simulate('change')
+      expect(updateReservedTokenInput).toHaveBeenCalledWith('tokens', 'dim')
+      expect(updateReservedTokenInput).toHaveBeenCalledTimes(2)
+      expect(wrapper().state('dim')).toBe('tokens')
+    })
+    it('Should fail if state.dim is not "percentage" or "tokens"', () => {
+      wrapper().setState({dim: 'height'})
+      const radio = wrapper().find('input[type="radio"]')
+      const tokens = radio.at(0)
+      const percentage = radio.at(1)
+
+      expect(tokens.props().checked).toBeFalsy()
+      expect(percentage.props().checked).toBeFalsy()
+    })
+  })
+
+  describe('Value field', () => {
+    describe('tokens', () => {
+      [
+        { value: '0', expected: false },
+        { value: '-10', expected: false },
+        { value: -10, expected: false },
+        { value: 123.1234, expected: false },
+        { value: '10', expected: true },
+        { value: 10, expected: true },
+        { value: '0.1', expected: true },
+        { value: '1e-3', expected: true },
+        { value: '1.3', expected: true },
+      ].forEach(testCase => {
+        const action = testCase.expected ? 'pass' : 'fail'
+        const validity = testCase.expected ? VALID : INVALID
+        const calledWith = {
+          value: testCase.value === '' ? '' : parseFloat(testCase.value),
+          pristine: false,
+          valid: validity
+        }
+
+        it(`Should ${action} for '${testCase.value}' with ${decimals} decimals`, () => {
+          const handleValueChange = jest.spyOn(wrapper().instance(), 'handleValueChange')
+
+          wrapper().update()
+          wrapper().find('input[type="radio"]').at(0).simulate('change')
+          valueInput().simulate('change', { target: { value: testCase.value } })
+
           expect(handleValueChange).toHaveBeenCalledTimes(1)
-          expect(wrapper.state('validation').value.pristine).toBeFalsy()
-          expect(wrapper.state('validation').value.valid).toBe(INVALID)
-        }, 10)
-      }, 10)
-    }, 10)
+          expect(handleValueChange).toHaveBeenCalledWith(calledWith)
+        })
+      })
+    })
+
+    describe('percentage', () => {
+      [
+        { value: '0', expected: false },
+        { value: '-10', expected: false },
+        { value: -10, expected: false },
+        { value: '10', expected: true },
+        { value: 10, expected: true },
+        { value: '0.1', expected: true },
+        { value: '1e-3', expected: true },
+        { value: '1.3', expected: true },
+        { value: 123.1234, expected: true },
+      ].forEach(testCase => {
+        const action = testCase.expected ? 'pass' : 'fail'
+        const validity = testCase.expected ? VALID : INVALID
+        const calledWith = {
+          value: testCase.value === '' ? '' : parseFloat(testCase.value),
+          pristine: false,
+          valid: validity
+        }
+
+        it(`Should ${action} for '${testCase.value}'`, () => {
+          const handleValueChange = jest.spyOn(wrapper().instance(), 'handleValueChange')
+
+          wrapper().update()
+          wrapper().find('input[type="radio"]').at(1).simulate('change')
+          valueInput().simulate('change', { target: { value: testCase.value } })
+
+          expect(handleValueChange).toHaveBeenCalledTimes(2)
+          expect(handleValueChange).toHaveBeenCalledWith({
+            value: '',
+            pristine: true,
+            valid: INVALID
+          })
+          expect(handleValueChange).toHaveBeenCalledWith(calledWith)
+        })
+      })
+    })
   })
 
-  test('Should fail if percentage value is invalid (zero or less)', () => {
-    const wrapper = mount(
-      <ReservedTokensInputBlock
-        tokens={tokenList}
-        addReservedTokensItem={addCallback}
-        removeReservedToken={removeCallback}
-      />
-    )
-    const valueEventZero = { target: { value: '0' } }
-    const valueEventNegative = { target: { value: '-10' } }
+  describe('Callbacks', () => {
+    describe('addReservedTokensItem', () => {
+      [
+        {
+          value: {
+            addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+            dim: 'tokens',
+            val: '120'
+          },
+          expected: true
+        },
+        {
+          value: {
+            addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+            dim: 'tokens',
+            val: '0.001'
+          },
+          expected: true
+        },
+        {
+          value: {
+            addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+            dim: 'tokens',
+            val: ''
+          },
+          expected: false
+        },
+        {
+          value: {
+            addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+            dim: 'tokens',
+            val: '0'
+          },
+          expected: false
+        },
+        {
+          value: {
+            addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+            dim: 'tokens',
+            val: '120.1234'
+          },
+          expected: false
+        },
+        {
+          value: {
+            addr: '',
+            dim: 'tokens',
+            val: '120'
+          },
+          expected: false
+        },
+        {
+          value: {
+            addr: '0x90f8bf6a4',
+            dim: 'tokens',
+            val: '120'
+          },
+          expected: false
+        },
+        {
+          value: {
+            addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c10x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+            dim: 'tokens',
+            val: '120'
+          },
+          expected: false
+        },
+        {
+          value: {
+            addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+            dim: 'percentage',
+            val: '120'
+          },
+          expected: true
+        },
+        {
+          value: {
+            addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+            dim: 'percentage',
+            val: '120.123'
+          },
+          expected: true
+        },
+        {
+          value: {
+            addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+            dim: 'percentage',
+            val: ''
+          },
+          expected: false
+        },
+        {
+          value: {
+            addr: '',
+            dim: 'percentage',
+            val: '120.123'
+          },
+          expected: false
+        },
+        {
+          value: {
+            addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+            dim: 'percentage',
+            val: '0'
+          },
+          expected: false
+        },
+      ].forEach(testCase => {
+        const radioIndex = testCase.value.dim === 'tokens' ? 0 : 1
+        const action = testCase.expected ? 'call' : 'not call'
+        const callTimes = testCase.expected ? 1 : 0
 
-    const handleValueChange = jest.spyOn(wrapper.instance(), 'handleValueChange')
-    const updateReservedTokenInput = jest.spyOn(wrapper.instance(), 'updateReservedTokenInput')
+        it(`Should ${action} addReservedTokensItem callback for: ${JSON.stringify(testCase.value)}`, () => {
+          wrapper().find('input[type="radio"]').at(radioIndex).simulate('change')
 
-    wrapper.update()
+          addressInput().simulate('change', { target: { value: testCase.value.addr } })
+          valueInput().simulate('change', { target: { value: testCase.value.val } })
 
-    wrapper.find('input[type="radio"]').at(1).simulate('change')
-    setTimeout(() => {
-      expect(updateReservedTokenInput).toHaveBeenCalledWith(['percentage', 'dim'])
-      expect(updateReservedTokenInput).toHaveBeenCalledTimes(1)
-      expect(wrapper.state('dim')).toBe('percentage')
+          wrapper().find('.plus-button-container').childAt(0).simulate('click')
 
-      wrapper.find('input[type="number"]').at(0).simulate('change', valueEventZero)
-      setTimeout(() => {
-        expect(handleValueChange).toHaveBeenCalledWith(valueEventZero.target.value)
-        expect(handleValueChange).toHaveBeenCalledTimes(1)
-        expect(wrapper.state('validation').value.pristine).toBeFalsy()
-        expect(wrapper.state('validation').value.valid).toBe(INVALID)
+          const { value } = testCase
+          value.val = testCase.value.val === '' ? '' : parseFloat(testCase.value.val)
 
-        wrapper.find('input[type="number"]').at(0).simulate('change', valueEventNegative)
-        setTimeout(() => {
-          expect(handleValueChange).toHaveBeenCalledWith(valueEventNegative.target.value)
-          expect(handleValueChange).toHaveBeenCalledTimes(1)
-          expect(wrapper.state('validation').value.pristine).toBeFalsy()
-          expect(wrapper.state('validation').value.valid).toBe(INVALID)
-        }, 10)
-      }, 10)
-    }, 10)
-  })
+          if (testCase.expect) {
+            expect(addCallback).toHaveBeenCalledWith(value)
+          }
+          expect(addCallback).toHaveBeenCalledTimes(callTimes)
+        })
 
-  test('Should mark as valid if tokens value is valid (greater than zero)', () => {
-    const wrapper = mount(
-      <ReservedTokensInputBlock
-        tokens={tokenList}
-        addReservedTokensItem={addCallback}
-        removeReservedToken={removeCallback}
-      />
-    )
-    const valueEvent = { target: { value: '150' } }
+      })
+    })
 
-    const handleValueChange = jest.spyOn(wrapper.instance(), 'handleValueChange')
-    const updateReservedTokenInput = jest.spyOn(wrapper.instance(), 'updateReservedTokenInput')
-
-    wrapper.update()
-
-    wrapper.find('input[type="radio"]').at(0).simulate('change')
-    setTimeout(() => {
-      expect(updateReservedTokenInput).toHaveBeenCalledWith(['tokens', 'dim'])
-      expect(updateReservedTokenInput).toHaveBeenCalledTimes(1)
-      expect(wrapper.state('dim')).toBe('tokens')
-
-      wrapper.find('input[type="number"]').at(0).simulate('change', valueEvent)
-      setTimeout(() => {
-        expect(handleValueChange).toHaveBeenCalledWith(valueEvent.target.value)
-        expect(handleValueChange).toHaveBeenCalledTimes(1)
-        expect(wrapper.state('validation').value.pristine).toBeFalsy()
-        expect(wrapper.state('validation').value.valid).toBe(VALID)
-      }, 10)
-    }, 10)
-  })
-
-  test('Should mark as valid if percentage value is valid (greater than zero)', () => {
-    const wrapper = mount(
-      <ReservedTokensInputBlock
-        tokens={tokenList}
-        addReservedTokensItem={addCallback}
-        removeReservedToken={removeCallback}
-      />
-    )
-    const valueEventSmall = { target: { value: '75' } }
-    const valueEventBig = { target: { value: '180' } }
-
-    const handleValueChange = jest.spyOn(wrapper.instance(), 'handleValueChange')
-    const updateReservedTokenInput = jest.spyOn(wrapper.instance(), 'updateReservedTokenInput')
-
-    wrapper.update()
-
-    wrapper.find('input[type="radio"]').at(1).simulate('change')
-    setTimeout(() => {
-      expect(updateReservedTokenInput).toHaveBeenCalledWith(['percentage', 'dim'])
-      expect(updateReservedTokenInput).toHaveBeenCalledTimes(1)
-      expect(wrapper.state('dim')).toBe('percentage')
-
-      wrapper.find('input[type="number"]').at(0).simulate('change', valueEventSmall)
-      setTimeout(() => {
-        expect(handleValueChange).toHaveBeenCalledWith(valueEventSmall.target.value)
-        expect(handleValueChange).toHaveBeenCalledTimes(1)
-        expect(wrapper.state('validation').value.pristine).toBeFalsy()
-        expect(wrapper.state('validation').value.valid).toBe(VALID)
-
-        wrapper.find('input[type="number"]').at(0).simulate('change', valueEventBig)
-        setTimeout(() => {
-          expect(handleValueChange).toHaveBeenCalledWith(valueEventBig.target.value)
-          expect(handleValueChange).toHaveBeenCalledTimes(1)
-          expect(wrapper.state('validation').value.pristine).toBeFalsy()
-          expect(wrapper.state('validation').value.valid).toBe(VALID)
-        }, 10)
-      }, 10)
-    }, 10)
-  })
-
-  test('Should call method to add address', () => {
-    const wrapper = mount(
-      <ReservedTokensInputBlock
-        tokens={tokenList}
-        addReservedTokensItem={addCallback}
-        removeReservedToken={removeCallback}
-      />
-    )
-    const newToken = {
-      addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
-      dim: 'tokens',
-      val: '120'
-    }
-    const addressEvent = { target: { value: newToken.addr } }
-    const valueEvent = { target: { value: newToken.val } }
-
-    const handleAddressChange = jest.spyOn(wrapper.instance(), 'handleAddressChange')
-    const handleValueChange = jest.spyOn(wrapper.instance(), 'handleValueChange')
-
-    wrapper.update()
-
-    wrapper.find('input[type="text"]').at(0).simulate('change', addressEvent)
-    wrapper.find('input[type="number"]').at(0).simulate('change', valueEvent)
-    wrapper.find('.plus-button-container').childAt(0).simulate('click')
-
-    setTimeout(() => {
-      expect(wrapper.state('validation').address.pristine).toBeFalsy()
-      expect(wrapper.state('validation').address.valid).toBe(VALID)
-      expect(wrapper.state('addr')).toBe(newToken.addr)
-      expect(handleAddressChange).toHaveBeenCalledTimes(1)
-      expect(handleAddressChange).toHaveBeenCalledWith(newToken.addr)
-
-      expect(wrapper.state('validation').value.pristine).toBeFalsy()
-      expect(wrapper.state('validation').value.valid).toBe(VALID)
-      expect(wrapper.state('val')).toBe(newToken.val)
-      expect(handleValueChange).toHaveBeenCalledTimes(1)
-      expect(handleValueChange).toHaveBeenCalledWith(newToken.val)
-
-      expect(wrapper.state('dim')).toBe(newToken.dim)
-
-      expect(addCallback).toHaveBeenCalledWith(newToken)
-      expect(addCallback).toHaveBeenCalledTimes(1)
-    }, 10)
-  })
-
-  test('Should call method to remove address', () => {
-    const wrapper = mount(
-      <ReservedTokensInputBlock
-        tokens={tokenList}
-        addReservedTokensItem={addCallback}
-        removeReservedToken={removeCallback}
-      />
-    )
-
-    wrapper.find('.reserved-tokens-item-empty').children('a').at(0).simulate('click')
-    expect(removeCallback).toHaveBeenCalledTimes(1)
-  })
-
-  test('Should reset state after adding a new address', () => {
-    const wrapper = mount(
-      <ReservedTokensInputBlock
-        tokens={tokenList}
-        addReservedTokensItem={addCallback}
-        removeReservedToken={removeCallback}
-      />
-    )
-    const newToken = {
-      addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
-      dim: 'percentage',
-      val: '120'
-    }
-    const addressEvent = { target: { value: newToken.addr } }
-    const valueEvent = { target: { value: newToken.val } }
-
-    const handleAddressChange = jest.spyOn(wrapper.instance(), 'handleAddressChange')
-    const handleValueChange = jest.spyOn(wrapper.instance(), 'handleValueChange')
-
-    wrapper.update()
-
-    expect(wrapper.state('validation').address.pristine).toBeTruthy()
-    expect(wrapper.state('validation').address.valid).toBe(INVALID)
-    expect(wrapper.state('validation').value.pristine).toBeTruthy()
-    expect(wrapper.state('validation').value.valid).toBe(INVALID)
-    expect(wrapper.state('addr')).toBe('')
-    expect(wrapper.state('dim')).toBe('tokens')
-    expect(wrapper.state('val')).toBe('')
-
-    wrapper.find('input[type="text"]').at(0).simulate('change', addressEvent)
-    wrapper.find('input[type="number"]').at(0).simulate('change', valueEvent)
-    wrapper.find('input[type="radio"]').at(1).simulate('change')
-
-    setTimeout(() => {
-      expect(wrapper.state('validation').address.pristine).toBeFalsy()
-      expect(wrapper.state('validation').address.valid).toBe(VALID)
-      expect(wrapper.state('addr')).toBe(newToken.addr)
-      expect(handleAddressChange).toHaveBeenCalledTimes(1)
-      expect(handleAddressChange).toHaveBeenCalledWith(newToken.addr)
-
-      expect(wrapper.state('validation').value.pristine).toBeFalsy()
-      expect(wrapper.state('validation').value.valid).toBe(VALID)
-      expect(wrapper.state('val')).toBe(newToken.val)
-      expect(handleValueChange).toHaveBeenCalledTimes(1)
-      expect(handleValueChange).toHaveBeenCalledWith(newToken.val)
-
-      expect(wrapper.state('dim')).toBe(newToken.dim)
-
-      wrapper.find('.plus-button-container').childAt(0).simulate('click')
-      setTimeout(() => {
-        expect(wrapper.state('validation').address.pristine).toBeTruthy()
-        expect(wrapper.state('validation').address.valid).toBe(INVALID)
-        expect(wrapper.state('validation').value.pristine).toBeTruthy()
-        expect(wrapper.state('validation').value.valid).toBe(INVALID)
-        expect(wrapper.state('addr')).toBe('')
-        expect(wrapper.state('dim')).toBe('tokens')
-        expect(wrapper.state('val')).toBe('')
-      }, 10)
-    }, 10)
+    describe('removeReservedToken', () => {
+      it('Should call removeReservedToken callback', () => {
+        wrapper().find('.reserved-tokens-item-empty').children('a').at(0).simulate('click')
+        expect(removeCallback).toHaveBeenCalledTimes(1)
+      })
+    })
   })
 })
