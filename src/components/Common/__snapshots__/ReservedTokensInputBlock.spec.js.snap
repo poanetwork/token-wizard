@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ReservedTokensInputBlock Should render the component 1`] = `
+exports[`percentage 1`] = `
 <div
   className="reserved-tokens-container"
 >
@@ -34,6 +34,17 @@ exports[`ReservedTokensInputBlock Should render the component 1`] = `
         >
           Address where to send reserved tokens.
         </p>
+        <p
+          style={
+            Object {
+              "color": "red",
+              "fontSize": "12px",
+              "fontWeight": "bold",
+              "height": "10px",
+              "width": "100%",
+            }
+          }
+        />
       </div>
       <div
         className="reserved-tokens-input-property reserved-tokens-input-property-middle"
@@ -96,8 +107,8 @@ exports[`ReservedTokensInputBlock Should render the component 1`] = `
           disabled={undefined}
           onBlur={undefined}
           onChange={[Function]}
-          onKeyPress={undefined}
-          onPaste={undefined}
+          onKeyPress={[Function]}
+          onPaste={[Function]}
           style={undefined}
           type="number"
           value=""
@@ -105,8 +116,290 @@ exports[`ReservedTokensInputBlock Should render the component 1`] = `
         <p
           className="description"
         >
-          Value in tokens or percents. Don't forget to press + button for each reserved token.
+          Value in tokens. Don't forget to click + button for each reserved token.
         </p>
+        <p
+          style={
+            Object {
+              "color": "red",
+              "fontSize": "12px",
+              "fontWeight": "bold",
+              "height": "10px",
+              "width": "100%",
+            }
+          }
+        />
+      </div>
+    </div>
+    <div
+      className="plus-button-container"
+    >
+      <div
+        className="button button_fill button_fill_plus"
+        onClick={[Function]}
+      />
+    </div>
+  </div>
+  <div
+    className="reserved-tokens-item-container"
+  >
+    <div
+      className="reserved-tokens-item-container-inner"
+    >
+      <span
+        className="reserved-tokens-item reserved-tokens-item-left"
+      >
+        0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1
+      </span>
+      <span
+        className="reserved-tokens-item reserved-tokens-item-middle"
+      >
+        tokens
+      </span>
+      <span
+        className="reserved-tokens-item reserved-tokens-item-right"
+      />
+    </div>
+    <div
+      className="reserved-tokens-item-empty"
+    >
+      <a
+        onClick={[Function]}
+      >
+        <span
+          className="item-remove"
+        />
+      </a>
+    </div>
+  </div>
+  <div
+    className="reserved-tokens-item-container"
+  >
+    <div
+      className="reserved-tokens-item-container-inner"
+    >
+      <span
+        className="reserved-tokens-item reserved-tokens-item-left"
+      >
+        0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1
+      </span>
+      <span
+        className="reserved-tokens-item reserved-tokens-item-middle"
+      >
+        percentage
+      </span>
+      <span
+        className="reserved-tokens-item reserved-tokens-item-right"
+      />
+    </div>
+    <div
+      className="reserved-tokens-item-empty"
+    >
+      <a
+        onClick={[Function]}
+      >
+        <span
+          className="item-remove"
+        />
+      </a>
+    </div>
+  </div>
+  <div
+    className="reserved-tokens-item-container"
+  >
+    <div
+      className="reserved-tokens-item-container-inner"
+    >
+      <span
+        className="reserved-tokens-item reserved-tokens-item-left"
+      >
+        0xffcf8fdee72ac11b5c542428b35eef5769c409f0
+      </span>
+      <span
+        className="reserved-tokens-item reserved-tokens-item-middle"
+      >
+        percentage
+      </span>
+      <span
+        className="reserved-tokens-item reserved-tokens-item-right"
+      />
+    </div>
+    <div
+      className="reserved-tokens-item-empty"
+    >
+      <a
+        onClick={[Function]}
+      >
+        <span
+          className="item-remove"
+        />
+      </a>
+    </div>
+  </div>
+  <div
+    className="reserved-tokens-item-container"
+  >
+    <div
+      className="reserved-tokens-item-container-inner"
+    >
+      <span
+        className="reserved-tokens-item reserved-tokens-item-left"
+      >
+        0x22d491bde2303f2f43325b2108d26f1eaba1e32b
+      </span>
+      <span
+        className="reserved-tokens-item reserved-tokens-item-middle"
+      >
+        tokens
+      </span>
+      <span
+        className="reserved-tokens-item reserved-tokens-item-right"
+      />
+    </div>
+    <div
+      className="reserved-tokens-item-empty"
+    >
+      <a
+        onClick={[Function]}
+      >
+        <span
+          className="item-remove"
+        />
+      </a>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`tokens 1`] = `
+<div
+  className="reserved-tokens-container"
+>
+  <div
+    className="reserved-tokens-input-container"
+  >
+    <div
+      className="reserved-tokens-input-container-inner"
+    >
+      <div
+        className="reserved-tokens-input-property reserved-tokens-input-property-left"
+      >
+        <label
+          className="label"
+        >
+          Address
+        </label>
+        <input
+          className="input"
+          disabled={undefined}
+          onBlur={undefined}
+          onChange={[Function]}
+          onKeyPress={undefined}
+          onPaste={undefined}
+          style={undefined}
+          type="text"
+          value=""
+        />
+        <p
+          className="description"
+        >
+          Address where to send reserved tokens.
+        </p>
+        <p
+          style={
+            Object {
+              "color": "red",
+              "fontSize": "12px",
+              "fontWeight": "bold",
+              "height": "10px",
+              "width": "100%",
+            }
+          }
+        />
+      </div>
+      <div
+        className="reserved-tokens-input-property reserved-tokens-input-property-middle"
+      >
+        <label
+          className="label"
+        >
+          Dimension
+        </label>
+        <div
+          className="radios-inline"
+        >
+          <label
+            className="radio-inline"
+          >
+            <input
+              checked={true}
+              onChange={[Function]}
+              type="radio"
+              value="tokens"
+            />
+            <span
+              className="title"
+            >
+              tokens
+            </span>
+          </label>
+          <label
+            className="radio-inline"
+          >
+            <input
+              checked={false}
+              onChange={[Function]}
+              type="radio"
+              value="percentage"
+            />
+            <span
+              className="title"
+            >
+              percentage
+            </span>
+          </label>
+        </div>
+        <p
+          className="description"
+        >
+          Fixed amount or % of crowdsaled tokens. Will be deposited to the account after finalization of the crowdsale.
+        </p>
+      </div>
+      <div
+        className="reserved-tokens-input-property reserved-tokens-input-property-right"
+      >
+        <label
+          className="label"
+        >
+          Value
+        </label>
+        <input
+          className="input"
+          disabled={undefined}
+          onBlur={undefined}
+          onChange={[Function]}
+          onKeyPress={[Function]}
+          onPaste={[Function]}
+          style={undefined}
+          type="number"
+          value=""
+        />
+        <p
+          className="description"
+        >
+          Value in tokens. Don't forget to click + button for each reserved token.
+        </p>
+        <p
+          style={
+            Object {
+              "color": "red",
+              "fontSize": "12px",
+              "fontWeight": "bold",
+              "height": "10px",
+              "width": "100%",
+            }
+          }
+        />
       </div>
     </div>
     <div

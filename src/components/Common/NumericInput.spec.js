@@ -8,28 +8,21 @@ import { configure, mount } from 'enzyme'
 configure({ adapter: new Adapter() })
 
 describe('NumericInput', () => {
-  const COMPONENT_STATE = {
-    VALUE: 'value',
-    PRISTINE: 'pristine',
-    VALID: 'valid'
-  }
   const INPUT_EVENT = {
     KEYPRESS: 'keypress',
     CHANGE: 'change',
     PASTE: 'paste'
   }
 
-  let mock
+  let changeMock
   let keypressMock
   let pasteMock
   let numericInputComponent
-  let wrapperMemo
-  let wrapper
-  let inputMemo
-  let input
+  let wrapperMemo, wrapper
+  let inputMemo, input
 
   beforeEach(() => {
-    mock = { target: { value: '' } }
+    changeMock = { target: { value: '' } }
 
     keypressMock = { key: '1', preventDefault: jest.fn() }
 
@@ -76,38 +69,34 @@ describe('NumericInput', () => {
     expect(pasteMock.preventDefault).toHaveBeenCalledTimes(0)
   })
   it('Should call onValueUpdate callback on successful update', () => {
-    mock.target.value = '10'
+    changeMock.target.value = '10'
 
-    input().simulate(INPUT_EVENT.CHANGE, mock)
-    expect(wrapper().state(COMPONENT_STATE.VALUE)).toBe(parseFloat(mock.target.value))
-    expect(wrapper().state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
-    expect(wrapper().state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.VALID)
+    input().simulate(INPUT_EVENT.CHANGE, changeMock)
     expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
-    expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith(parseFloat(mock.target.value))
+    expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
+      value: 10,
+      pristine: false,
+      valid: VALIDATION_TYPES.VALID
+    })
   })
 
   describe('symbols', () => {
     it('Should consider empty string as valid', () => {
-      input().simulate(INPUT_EVENT.CHANGE, mock)
+      input().simulate(INPUT_EVENT.CHANGE, changeMock)
       expect(numericInputComponent.onValueUpdate).toHaveBeenCalled()
-      expect(wrapper().state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.VALID)
-      expect(wrapper().state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
-    })
-    it('Should reject "-" symbol if it is not the first character', () => {
-      numericInputComponent.min = -10
-      mock.target.value = 5
-      keypressMock.key = '-'
-
-      input().simulate(INPUT_EVENT.CHANGE, mock)
-      expect(wrapper().state(COMPONENT_STATE.VALUE)).toBe(5)
-
-      input().simulate(INPUT_EVENT.KEYPRESS, keypressMock)
-      expect(keypressMock.preventDefault).toHaveBeenCalled()
     })
 
     describe('min', () => {
       it('Should accept "-" symbol if min is negative', () => {
         numericInputComponent.min = -10
+        keypressMock.key = '-'
+
+        input().simulate(INPUT_EVENT.KEYPRESS, keypressMock)
+        expect(keypressMock.preventDefault).toHaveBeenCalledTimes(0)
+      })
+      it('Should accept "-" symbol if min is negative and accepts floating numbers', () => {
+        numericInputComponent.min = -10
+        numericInputComponent.acceptFloat = true
         keypressMock.key = '-'
 
         input().simulate(INPUT_EVENT.KEYPRESS, keypressMock)
@@ -130,6 +119,14 @@ describe('NumericInput', () => {
         input().simulate(INPUT_EVENT.KEYPRESS, keypressMock)
         expect(keypressMock.preventDefault).toHaveBeenCalledTimes(0)
       })
+      it('Should accept "-" symbol if max is negative and accepts floating numbers', () => {
+        numericInputComponent.max = -10
+        numericInputComponent.acceptFloat = true
+        keypressMock.key = '-'
+
+        input().simulate(INPUT_EVENT.KEYPRESS, keypressMock)
+        expect(keypressMock.preventDefault).toHaveBeenCalledTimes(0)
+      })
       it('Should reject "-" symbol if max is not negative', () => {
         numericInputComponent.max = 10
         keypressMock.key = '-'
@@ -138,48 +135,84 @@ describe('NumericInput', () => {
         expect(keypressMock.preventDefault).toHaveBeenCalled()
       })
     })
+
+    it('Should prevent "." if no float is allowed', () => {
+      numericInputComponent.value = '10'
+      keypressMock.key = '.'
+
+      input().simulate(INPUT_EVENT.KEYPRESS, keypressMock)
+      expect(keypressMock.preventDefault).toHaveBeenCalledTimes(1)
+    })
+
+    it('Should prevent "+" if no float is allowed', () => {
+      numericInputComponent.value = '10'
+      keypressMock.key = '+'
+
+      input().simulate(INPUT_EVENT.KEYPRESS, keypressMock)
+      expect(keypressMock.preventDefault).toHaveBeenCalledTimes(1)
+    })
+
+    it('Should prevent "e" if no float is allowed', () => {
+      numericInputComponent.value = '10'
+      keypressMock.key = 'e'
+
+      input().simulate(INPUT_EVENT.KEYPRESS, keypressMock)
+      expect(keypressMock.preventDefault).toHaveBeenCalledTimes(1)
+    })
   })
 
   describe('integer numbers', () => {
     describe('min', () => {
       it('Should fail if value is lesser than min', () => {
         numericInputComponent.min = 5
-        mock.target.value = '4'
+        changeMock.target.value = '4'
 
-        input().simulate(INPUT_EVENT.CHANGE, mock)
-        expect(wrapper().state(COMPONENT_STATE.VALUE)).toBe(parseFloat(mock.target.value))
-        expect(wrapper().state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
-        expect(wrapper().state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.INVALID)
+        input().simulate(INPUT_EVENT.CHANGE, changeMock)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
+          value: 4,
+          pristine: false,
+          valid: VALIDATION_TYPES.INVALID
+        })
       })
       it('Should pass if value is greater than min', () => {
         numericInputComponent.min = 5
-        mock.target.value = '8'
+        changeMock.target.value = '8'
 
-        input().simulate(INPUT_EVENT.CHANGE, mock)
-        expect(wrapper().state(COMPONENT_STATE.VALUE)).toBe(parseFloat(mock.target.value))
-        expect(wrapper().state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
-        expect(wrapper().state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.VALID)
+        input().simulate(INPUT_EVENT.CHANGE, changeMock)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
+          value: 8,
+          pristine: false,
+          valid: VALIDATION_TYPES.VALID
+        })
       })
     })
 
     describe('max', () => {
       it('Should fail if value is greater than max', () => {
         numericInputComponent.max = 15
-        mock.target.value = '20'
+        changeMock.target.value = '20'
 
-        input().simulate(INPUT_EVENT.CHANGE, mock)
-        expect(wrapper().state(COMPONENT_STATE.VALUE)).toBe(parseFloat(mock.target.value))
-        expect(wrapper().state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
-        expect(wrapper().state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.INVALID)
+        input().simulate(INPUT_EVENT.CHANGE, changeMock)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
+          value: 20,
+          pristine: false,
+          valid: VALIDATION_TYPES.INVALID
+        })
       })
       it('Should pass if value is lesser than min', () => {
         numericInputComponent.max = 15
-        mock.target.value = '10'
+        changeMock.target.value = '10'
 
-        input().simulate(INPUT_EVENT.CHANGE, mock)
-        expect(wrapper().state(COMPONENT_STATE.VALUE)).toBe(parseFloat(mock.target.value))
-        expect(wrapper().state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
-        expect(wrapper().state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.VALID)
+        input().simulate(INPUT_EVENT.CHANGE, changeMock)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
+          value: 10,
+          pristine: false,
+          valid: VALIDATION_TYPES.VALID
+        })
       })
     })
   })
@@ -193,89 +226,127 @@ describe('NumericInput', () => {
 
     describe('maxDecimals', () => {
       it('Should fail if value has more decimals', () => {
-        mock.target.value = '1.12345'
+        changeMock.target.value = '1.12345'
 
-        input().simulate(INPUT_EVENT.CHANGE, mock)
-        expect(wrapper().state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
-        expect(wrapper().state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.INVALID)
+        input().simulate(INPUT_EVENT.CHANGE, changeMock)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
+          value: 1.12345,
+          pristine: false,
+          valid: VALIDATION_TYPES.INVALID
+        })
       })
       it('Should pass if value has less decimals', () => {
-        mock.target.value = '1.123'
+        changeMock.target.value = '1.123'
 
-        input().simulate(INPUT_EVENT.CHANGE, mock)
-        expect(wrapper().state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
-        expect(wrapper().state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.VALID)
+        input().simulate(INPUT_EVENT.CHANGE, changeMock)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
+          value: 1.123,
+          pristine: false,
+          valid: VALIDATION_TYPES.VALID
+        })
       })
       it('Should pass if value has same decimals', () => {
-        mock.target.value = '1.1234'
+        changeMock.target.value = '1.1234'
 
-        input().simulate(INPUT_EVENT.CHANGE, mock)
-        expect(wrapper().state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
-        expect(wrapper().state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.VALID)
+        input().simulate(INPUT_EVENT.CHANGE, changeMock)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
+          value: 1.1234,
+          pristine: false,
+          valid: VALIDATION_TYPES.VALID
+        })
       })
     })
 
     describe('minDecimals', () => {
       it('Should fail if value has less decimals', () => {
-        mock.target.value = '1.1'
+        changeMock.target.value = '1.1'
 
-        input().simulate(INPUT_EVENT.CHANGE, mock)
-        expect(wrapper().state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
-        expect(wrapper().state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.INVALID)
+        input().simulate(INPUT_EVENT.CHANGE, changeMock)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
+          value: 1.1,
+          pristine: false,
+          valid: VALIDATION_TYPES.INVALID
+        })
       })
       it('Should pass if value has more decimals', () => {
-        mock.target.value = '1.1234'
+        changeMock.target.value = '1.1234'
 
-        input().simulate(INPUT_EVENT.CHANGE, mock)
-        expect(wrapper().state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
-        expect(wrapper().state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.VALID)
+        input().simulate(INPUT_EVENT.CHANGE, changeMock)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
+          value: 1.1234,
+          pristine: false,
+          valid: VALIDATION_TYPES.VALID
+        })
       })
       it('Should pass if value has same decimals', () => {
-        mock.target.value = '1.12'
+        changeMock.target.value = '1.12'
 
-        input().simulate(INPUT_EVENT.CHANGE, mock)
-        expect(wrapper().state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
-        expect(wrapper().state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.VALID)
+        input().simulate(INPUT_EVENT.CHANGE, changeMock)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
+          value: 1.12,
+          pristine: false,
+          valid: VALIDATION_TYPES.VALID
+        })
       })
     })
 
     describe('range [minDecimals, maxDecimals]', () => {
       it('Should fail for: 1.1, if it is outside the range', () => {
-        mock.target.value = '1.1'
+        changeMock.target.value = '1.1'
 
-        input().simulate(INPUT_EVENT.CHANGE, mock)
-        expect(wrapper().state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
-        expect(wrapper().state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.INVALID)
+        input().simulate(INPUT_EVENT.CHANGE, changeMock)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
+          value: 1.1,
+          pristine: false,
+          valid: VALIDATION_TYPES.INVALID
+        })
       })
       it('Should fail for: 1.12345, if it is outside the range', () => {
-        mock.target.value = '1.12345'
+        changeMock.target.value = '1.12345'
 
-        input().simulate(INPUT_EVENT.CHANGE, mock)
-        expect(wrapper().state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
-        expect(wrapper().state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.INVALID)
+        input().simulate(INPUT_EVENT.CHANGE, changeMock)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
+          value: 1.12345,
+          pristine: false,
+          valid: VALIDATION_TYPES.INVALID
+        })
       })
       it('Should pass for: 1.12, if it is inside the range', () => {
-        mock.target.value = '1.12'
+        changeMock.target.value = '1.12'
 
-        input().simulate(INPUT_EVENT.CHANGE, mock)
-        expect(wrapper().state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
-        expect(wrapper().state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.VALID)
+        input().simulate(INPUT_EVENT.CHANGE, changeMock)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
+          value: 1.12,
+          pristine: false,
+          valid: VALIDATION_TYPES.VALID
+        })
       })
       it('Should pass for: 1.123, if it is inside the range', () => {
-        mock.target.value = '1.123'
+        changeMock.target.value = '1.123'
 
-        input().simulate(INPUT_EVENT.CHANGE, mock)
-        expect(wrapper().state(COMPONENT_STATE.PRISTINE)).toBeFalsy()
-        expect(wrapper().state(COMPONENT_STATE.VALID)).toBe(VALIDATION_TYPES.VALID)
+        input().simulate(INPUT_EVENT.CHANGE, changeMock)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
+        expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
+          value: 1.123,
+          pristine: false,
+          valid: VALIDATION_TYPES.VALID
+        })
       })
     })
 
     describe('dot notation', () => {
       it('Should reject float with dot notation', () => {
         numericInputComponent.acceptFloat = false
-
-        input().simulate(INPUT_EVENT.KEYPRESS, keypressMock)
-        expect(keypressMock.preventDefault).toHaveBeenCalledTimes(0)
+        numericInputComponent.value = 1
 
         keypressMock.key = '.'
 
@@ -283,22 +354,21 @@ describe('NumericInput', () => {
         expect(keypressMock.preventDefault).toHaveBeenCalled()
       })
       it('Should accept float with dot notation', () => {
-        input().simulate(INPUT_EVENT.KEYPRESS, keypressMock)
-        expect(keypressMock.preventDefault).toHaveBeenCalledTimes(0)
+        numericInputComponent.minDecimals = 0
+        numericInputComponent.value = 1
 
         keypressMock.key = '.'
 
         input().simulate(INPUT_EVENT.KEYPRESS, keypressMock)
         expect(keypressMock.preventDefault).toHaveBeenCalledTimes(0)
+        expect()
       })
     })
 
     describe('scientific notation', () => {
       it('Should reject float with scientific notation', () => {
         numericInputComponent.acceptFloat = false
-
-        input().simulate(INPUT_EVENT.KEYPRESS, keypressMock)
-        expect(keypressMock.preventDefault).toHaveBeenCalledTimes(0)
+        numericInputComponent.value = 1
 
         keypressMock.key = 'e'
 
@@ -306,8 +376,7 @@ describe('NumericInput', () => {
         expect(keypressMock.preventDefault).toHaveBeenCalled()
       })
       it('Should accept float with scientific notation', () => {
-        input().simulate(INPUT_EVENT.KEYPRESS, keypressMock)
-        expect(keypressMock.preventDefault).toHaveBeenCalledTimes(0)
+        numericInputComponent.value = 1
 
         keypressMock.key = 'e'
 

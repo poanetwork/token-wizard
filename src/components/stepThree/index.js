@@ -22,9 +22,10 @@ import { inject, observer } from "mobx-react";
 import { Loader } from '../Common/Loader'
 import { noGasPriceAvailable, warningOnMainnetAlert } from '../../utils/alerts'
 import { NumericInput } from '../Common/NumericInput'
+import update from 'immutability-helper'
 
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS;
-const { EMPTY, VALID } = VALIDATION_TYPES;
+const { EMPTY, VALID, INVALID } = VALIDATION_TYPES;
 const {
   START_TIME,
   END_TIME,
@@ -37,7 +38,7 @@ const {
   ENABLE_WHITELISTING
 } = TEXT_FIELDS;
 
-@inject("contractStore", "crowdsaleBlockListStore", "pricingStrategyStore", "web3Store", "tierStore", "generalStore", "gasPriceStore", "reservedTokenStore", "deploymentStore")
+@inject("contractStore", "crowdsaleBlockListStore", "pricingStrategyStore", "web3Store", "tierStore", "generalStore", "gasPriceStore", "reservedTokenStore", "deploymentStore", "tokenStore")
 @observer
 export class stepThree extends React.Component {
   constructor(props) {
@@ -55,7 +56,18 @@ export class stepThree extends React.Component {
 
     this.state = {
       loading: true,
-      gasPriceSelected: gasPriceStore.slow.id
+      gasPriceSelected: gasPriceStore.slow.id,
+      minCap: '',
+      validation: {
+        gasPrice: {
+          pristine: true,
+          valid: INVALID
+        },
+        minCap: {
+          pristine: true,
+          valid: INVALID
+        }
+      }
     }
   }
 
@@ -100,24 +112,11 @@ export class stepThree extends React.Component {
     this.addCrowdsaleBlock(num);
   }
 
-  updateCrowdsaleBlockListStore = (event, property, index) => {
-    const { crowdsaleBlockListStore } = this.props;
-    const value = event.target.value;
-    crowdsaleBlockListStore.setCrowdsaleBlockProperty(value, property, index);
-    crowdsaleBlockListStore.validateCrowdsaleListBlockProperty(property, index);
-  };
-
   updateTierStore = (event, property, index) => {
     const { tierStore } = this.props;
     const value = event.target.value;
     tierStore.setTierProperty(value, property, index);
     tierStore.validateTiers(property, index);
-  };
-
-  updatePricingStrategyStore = (event, index, property) => {
-    const { pricingStrategyStore } = this.props;
-    const value = event.target.value;
-    pricingStrategyStore.setStrategyProperty(value, property, index);
   };
 
   goToDeploymentStage = () => {
@@ -150,14 +149,17 @@ export class stepThree extends React.Component {
     e.preventDefault();
     e.stopPropagation();
 
-    const { tierStore } = this.props;
+    const { tierStore, gasPriceStore } = this.props;
+    const gasPriceIsValid = gasPriceStore.custom.id === this.state.gasPriceSelected && this.state.validation.gasPrice.valid === VALID
+
+    console.log('gasPriceIsValid', gasPriceIsValid)
 
     for (let index = 0; index < tierStore.tiers.length; index++) {
       tierStore.validateTiers("endTime", index);
       tierStore.validateTiers("startTime", index);
     }
 
-    if (tierStore.areTiersValid) {
+    if (tierStore.areTiersValid && gasPriceIsValid) {
       const { reservedTokenStore, deploymentStore } = this.props
       const tiersCount = tierStore.tiers.length
       const reservedCount = reservedTokenStore.tokens.length
@@ -217,8 +219,37 @@ export class stepThree extends React.Component {
     }
   }
 
-  updateGasPrice = value => {
+  updateGasPrice = ({value, pristine, valid}) => {
+    const newState = update(this.state, {
+      validation: {
+        gasPrice: {
+          $set: {
+            pristine: pristine,
+            valid: valid
+          }
+        }
+      }
+    })
+
+    this.setState(newState)
     this.props.generalStore.setGasPrice(gweiToWei(value))
+  }
+
+  updateMinCap = ({ value, pristine, valid }) => {
+    const newState = update(this.state, {
+      validation: {
+        minCap: {
+          $set: {
+            pristine: pristine,
+            valid: valid
+          }
+        }
+      }
+    })
+    newState.minCap = value
+
+    this.setState(newState)
+    this.props.tierStore.setGlobalMinCap(value)
   }
 
   renderGasPriceInput() {
@@ -284,6 +315,8 @@ export class stepThree extends React.Component {
               maxDecimals={9}
               acceptFloat={true}
               value={weiToGwei(generalStore.gasPrice)}
+              pristine={this.state.validation.gasPrice.pristine}
+              valid={this.state.validation.gasPrice.valid}
               errorMessage="Gas Price must be greater than 0.1 with up to 9 decimals"
               onValueUpdate={this.updateGasPrice}
             /> :
@@ -326,9 +359,14 @@ export class stepThree extends React.Component {
             title={MINCAP}
             description="Minimum amount tokens to buy. Not a minimal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy."
             disabled={tierStore.tiers[0].whitelistEnabled === "yes"}
-            min={0}
+            min={this.props.tokenStore.decimals ? Number(`1e-${this.props.tokenStore.decimals}`) : 1}
+            acceptFloat={!!this.props.tokenStore.decimals}
+            maxDecimals={this.props.tokenStore.decimals}
+            value={this.state.minCap}
+            pristine={this.state.validation.minCap.pristine}
+            valid={this.state.validation.minCap.valid}
             errorMessage={VALIDATION_MESSAGES.MINCAP}
-            onValueUpdate={tierStore.setGlobalMinCap}
+            onValueUpdate={this.updateMinCap}
           />
           <RadioInputField
             extraClassName="right"

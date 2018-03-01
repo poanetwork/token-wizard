@@ -1,4 +1,4 @@
-import { countDecimalPlaces, validateDecimals, validateTicker, validateMinCap } from './utils'
+import { countDecimalPlaces, validateTicker } from './utils'
 
 describe('countDecimalPlaces', () => {
   [
@@ -33,27 +33,6 @@ describe('countDecimalPlaces', () => {
   })
 })
 
-describe('validateDecimals', () => {
-  [
-    { value: '', expected: true },
-    { value: '0', expected: true },
-    { value: '9', expected: true },
-    { value: '10', expected: true },
-    { value: '18', expected: true },
-    { value: '19', expected: false },
-    { value: '-1', expected: false },
-    { value: '0.5', expected: false },
-    { value: '3.5', expected: false },
-    { value: '1e10', expected: false }
-  ].forEach(testCase => {
-    const action = testCase.expected ? 'pass' : 'fail'
-
-    it(`Should ${action} for '${testCase.value}'`, () => {
-      expect(validateDecimals(testCase.value)).toBe(testCase.expected)
-    })
-  })
-})
-
 describe('validateTicker', () => {
   [
     {value: '', expected: false},
@@ -73,33 +52,6 @@ describe('validateTicker', () => {
 
     it(`Should ${action} for '${testCase.value}'`, () => {
       expect(validateTicker(testCase.value)).toBe(testCase.expected)
-    })
-  })
-})
-
-describe('validateMinCap', () => {
-  [
-    { value: '', expected: true },
-    { value: '0', expected: true },
-    { value: '00', expected: true },
-    { value: '1', expected: true },
-    { value: '001', expected: true },
-    { value: '150', expected: true },
-    { value: '999', expected: true },
-    { value: '-10', expected: false },
-    { value: .123, expected: false },
-    { value: '1.12', expected: false },
-    { value: '1.', expected: false },
-    { value: '1e10', expected: false },
-    { value: '+1', expected: false },
-    { value: null, expected: false },
-    { value: false, expected: false },
-    { value: undefined, expected: false }
-  ].forEach(testCase => {
-    const action = testCase.expected ? 'pass' : 'fail'
-
-    it(`Should ${action} for '${testCase.value}'`, () => {
-      expect(validateMinCap(testCase.value)).toBe(testCase.expected)
     })
   })
 })
