@@ -127,12 +127,12 @@ export class Manage extends Component {
   }
 
   setCrowdsaleInfo = () => {
-    const { contractStore } = this.props
+    const { contractStore, crowdsaleStore } = this.props
     const lastCrowdsaleAddress = contractStore.crowdsale.addr.slice(-1)[0]
 
     return attachToContract(contractStore.crowdsale.abi, lastCrowdsaleAddress)
       .then(crowdsaleContract => crowdsaleContract.methods.endsAt().call())
-      .then(crowdsaleEndTime => this.setState({ crowdsaleHasEnded: crowdsaleEndTime * 1000 <= Date.now() }))
+      .then(crowdsaleEndTime => this.setState({ crowdsaleHasEnded: crowdsaleEndTime * 1000 <= Date.now() || crowdsaleStore.selected.finalized }))
   }
 
   shouldDistribute = () => {
@@ -467,6 +467,7 @@ export class Manage extends Component {
     const { formPristine, canFinalize, shouldDistribute, canDistribute, crowdsaleHasEnded, ownerCurrentUser } = this.state
     const { generalStore, tierStore, tokenStore, crowdsaleStore } = this.props
     const { address: crowdsaleAddress, finalized, updatable } = crowdsaleStore.selected
+    let disabled = !ownerCurrentUser || canDistribute || canFinalize || finalized
 
     const distributeTokensStep = (
       <div className="steps-content container">
@@ -474,7 +475,9 @@ export class Manage extends Component {
           <div className="swal2-icon swal2-info warning-logo">!</div>
           <p className="title">Distribute reserved tokens</p>
           <p className="description">Reserved tokens distribution is the last step of the crowdsale before finalization.
-            You can make it only after the end of the last tier. If you reserved more then 100 addresses for your crowdsale, the distribution will be executed in batches with 100 reserved addresses per batch. Amount of batches is equal to amount of transactions</p>
+            You can make it after the end of the last tier or if hard cap is reached. If you reserved more then 100
+            addresses for your crowdsale, the distribution will be executed in batches with 100 reserved addresses per
+            batch. Amount of batches is equal to amount of transactions</p>
           <Link to='#' onClick={() => this.distributeReservedTokens(100)}>
             <span className={`button button_${!ownerCurrentUser || !canDistribute ? 'disabled' : 'fill'}`}>Distribute tokens</span>
           </Link>
@@ -521,20 +524,20 @@ export class Manage extends Component {
           type='text'
           title={CROWDSALE_SETUP_NAME}
           value={tier.name}
-          disabled
+          disabled={true}
         />
         <InputField
           side='right'
           type='text'
           title={WALLET_ADDRESS}
           value={tier.walletAddress}
-          disabled
+          disabled={true}
         />
       </div>
     }
 
     const tierStartAndEndTime = (tier, index) => {
-      const disabled = !this.state.ownerCurrentUser || !tier.updatable || this.tierHasEnded(index)
+      disabled = disabled || !tier.updatable || this.tierHasEnded(index)
 
       return <div className='input-block-container'>
         <InputField
@@ -563,7 +566,7 @@ export class Manage extends Component {
     }
 
     const tierRateAndSupply = (tier, index) => {
-      const disabled = !this.state.ownerCurrentUser || !tier.updatable || this.tierHasEnded(index) || this.tierHasStarted(index)
+      disabled = disabled || !tier.updatable || this.tierHasEnded(index) || this.tierHasStarted(index)
 
       return <div className='input-block-container'>
         <InputField
