@@ -1,52 +1,10 @@
-export const defaultState = {
-  contracts: {
-    token: {},
-    crowdsale: {addr:[], abiConstructor:[]},
-    pricingStrategy: {addr:[], abiConstructor:[]},
-    multisig: {},
-    nullFinalizeAgent: {addr:[], abiConstructor:[]},
-    finalizeAgent: {addr:[], abiConstructor:[]},
-    tokenTransferProxy: {}
-  },
-  token: {
-    name: '',
-    ticker: '',
-    supply: 0,
-    decimals: '',
-    reservedTokens: [],
-    reservedTokensElements: [],
-    reservedTokensInput: {dim: "tokens"}
-  },
-  crowdsale: [{
-    startTime: '',
-    endTime: '',
-    walletAddress: '',
-    supply: '',
-    whitelist: [],
-    whitelistElements: [],
-    whitelistInput: {}
-  }],
-  pricingStrategy: [{rate: ''}],
-  blockTimeGeneration: 17,
-  compilerVersion: "0.4.11",
-  optimized: true,
-  contractName: "MintedTokenCappedCrowdsaleExt",
-  contractType: "white-list-with-cap",
-  contractTypes: {
-    standard: "standard",
-    capped: "capped",
-    whitelistwithcap: "white-list-with-cap"
-  }
-}
-
 export const defaultTiers = [{
   startTime: '',
   endTime: '',
   walletAddress: '',
   supply: '',
   whitelist: [],
-  whitelistElements: [],
-  whitelistInput: {}
+  whitelistElements: []
 }]
 
 export const CONTRACT_TYPES = {

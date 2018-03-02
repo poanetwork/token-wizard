@@ -202,12 +202,7 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
 
   const newTier = {
     whitelist: [],
-    whitelistElements: [],
-    whitelistInput: {
-      addr: '',
-      min: '',
-      max: ''
-    }
+    whitelistElements: []
   }
 
   const initialValues = {}

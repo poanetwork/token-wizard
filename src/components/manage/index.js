@@ -370,14 +370,6 @@ export class Manage extends Component {
       })
   }
 
-  changeState = (event, parent, key, property) => {
-    const { tierStore } = this.props
-    const whitelistInputProps = { ...tierStore.tiers[key].whitelistInput }
-    const prop = property.split('_')[1]
-    whitelistInputProps[prop] = event.target.value
-    tierStore.setTierProperty(whitelistInputProps, 'whitelistInput', key)
-  }
-
   clickedWhiteListInputBlock = e => {
     if (e.target.classList.contains('button_fill_plus')) {
       this.setState({ formPristine: false })
@@ -389,7 +381,6 @@ export class Manage extends Component {
       <WhitelistInputBlock
         key={index.toString()}
         num={index}
-        onChange={(e, contract, num, prop) => this.changeState(e, contract, num, prop)}
       />
     )
   }

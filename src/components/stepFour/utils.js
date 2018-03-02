@@ -402,7 +402,6 @@ export const addWhitelist = () => {
 
       for (let i = 0; i <= round; i++) {
         const tier = tierStore.tiers[i]
-        const whitelistInput = tier.whitelistInput
 
         for (let j = 0; j < tier.whitelist.length; j++) {
           let itemIsAdded = false
@@ -416,25 +415,6 @@ export const addWhitelist = () => {
 
           if (!itemIsAdded) {
             whitelist.push.apply(whitelist, tier.whitelist)
-          }
-        }
-
-        if (whitelistInput.addr && whitelistInput.min && whitelistInput.max) {
-          let itemIsAdded = false
-
-          for (let k = 0; k < whitelist.length; k++) {
-            if (whitelist[k].addr === whitelistInput.addr) {
-              itemIsAdded = true
-              break
-            }
-          }
-
-          if (!itemIsAdded) {
-            whitelist.push({
-              'addr': whitelistInput.addr,
-              'min': whitelistInput.min,
-              'max': whitelistInput.max
-            })
           }
         }
       }

@@ -2520,11 +2520,6 @@
 	        "_store": {}
 	      }
 	    ],
-	    "whiteListInput": {
-	      "addr": "",
-	      "min": "",
-	      "max": ""
-	    },
 	    "tier": "Tier 1",
 	    "updatable": "on",
 	    "whitelistdisabled": "no"
@@ -2535,7 +2530,6 @@
 	    "updatable": "on",
 	    "whitelist": [],
 	    "whiteListElements": [],
-	    "whiteListInput": {},
 	    "startTime": "2017-10-03T00:05:00",
 	    "endTime": "2017-10-07T00:05:00"
 	  }

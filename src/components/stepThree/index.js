@@ -75,17 +75,6 @@ export class stepThree extends React.Component {
     this.props.tierStore.invalidateToken();
   };
 
-  changeState = (event, parent, key, property) => {
-    if (property.indexOf("whitelist_") === 0) {
-      const { tierStore } = this.props;
-      const whitelistInputProps = { ...tierStore.tiers[key].whitelistInput };
-      const prop = property.split("_")[1];
-
-      whitelistInputProps[prop] = event.target.value;
-      tierStore.setTierProperty(whitelistInputProps, "whitelistInput", key);
-    }
-  };
-
   addCrowdsale() {
     const { crowdsaleBlockListStore, tierStore } = this.props;
     let num = crowdsaleBlockListStore.blockList.length + 1;
@@ -95,8 +84,7 @@ export class stepThree extends React.Component {
       rate: 0,
       updatable: "off",
       whitelist: [],
-      whitelistElements: [],
-      whitelistInput: {}
+      whitelistElements: []
     };
 
     const newTierValidations = {
@@ -385,7 +373,7 @@ export class stepThree extends React.Component {
           <div className="section-title">
             <p className="title">Whitelist</p>
           </div>
-          <WhitelistInputBlock num={0} onChange={(e, cntrct, num, prop) => this.changeState(e, cntrct, 0, prop)} />
+          <WhitelistInputBlock num={0} />
         </div>
       );
       return (
