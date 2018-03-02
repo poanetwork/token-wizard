@@ -191,6 +191,10 @@ class TierStore {
     whitelist[whitelistNum].deleted = true
     this.setTierProperty(whitelist, 'whitelist', crowdsaleNum)
   }
+
+  @computed get minSupply () {
+    return this.tiers.map(tier => +tier.supply).reduce((a, b) => Math.min(a, b))
+  }
 }
 
 export default TierStore;
