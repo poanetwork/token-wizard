@@ -213,3 +213,10 @@ export function skippingTransaction() {
     reverseButtons: true
   })
 }
+export function whitelistImported(count) {
+  return sweetAlert2({
+    title: 'Addresses imported',
+    html: `${count} addresses were added to the whitelist`,
+    type: 'info'
+  })
+}
