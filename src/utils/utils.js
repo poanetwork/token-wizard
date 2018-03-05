@@ -102,12 +102,6 @@ export function toFixed(x) {
   return x;
 }
 
-export function defaultCompanyEndDate(startDate) {
-  let endDate = new Date(startDate).setDate(new Date(startDate).getDate() + 4);
-  endDate = new Date(endDate).setUTCHours(0);
-  return new Date(endDate).toISOString().split(".")[0];
-}
-
 export const toast = {
   msg: {},
   showToaster: function ({ type = TOAST.TYPE.INFO, message = '', options = {} }) {
