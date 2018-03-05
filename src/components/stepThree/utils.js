@@ -6,8 +6,7 @@ export function defaultCompanyStartDate() {
   return crowdsaleStartDateFormatted;
 }
 
-export function defaultCompanyEndDate(startDate) {
-  let endDate = new Date(startDate).setDate(new Date(startDate).getDate() + 4);
-  endDate = new Date(endDate).setUTCHours(0);
-  return new Date(endDate).toISOString().split(".")[0];
+export const defaultCompanyEndDate = (startDate) => {
+  const crowdsaleEndDate = moment(startDate).add(4, 'days').startOf('day')
+  return crowdsaleEndDate.format('YYYY-MM-DDTHH:mm')
 }
