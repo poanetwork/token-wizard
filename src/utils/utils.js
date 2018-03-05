@@ -82,8 +82,6 @@ export const validateLaterTime = (laterTime, previousTime) => getTimeAsNumber(la
 
 export const validateLaterOrEqualTime = (laterTime, previousTime) => getTimeAsNumber(laterTime) >= getTimeAsNumber(previousTime)
 
-export const validateRate = (rate) => isNaN(Number(rate)) === false && Number(rate) > 0
-
 export const validateAddress = (address) => !(!address || address.length !== 42)
 
 export function toFixed(x) {
