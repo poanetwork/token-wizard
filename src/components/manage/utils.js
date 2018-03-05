@@ -228,7 +228,7 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
       newTier.startTime = formatDate(startsAt)
       newTier.endTime = formatDate(endsAt)
       newTier.updatable = updatable
-      newTier.name = name
+      newTier.tier = name
 
       initialValues.updatable = newTier.updatable
       initialValues.index = crowdsaleNum
