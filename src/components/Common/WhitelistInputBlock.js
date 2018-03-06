@@ -109,24 +109,12 @@ export class WhitelistInputBlock extends React.Component {
 
     const dropzoneStyle = {
       position: 'relative',
-      marginTop: '-15px',
-      marginBottom: '15px'
-    }
-    const uploadCSVStyle = {
-      textDecoration: 'underline',
-      cursor: 'pointer'
+      cursor: 'pointer',
+      textAlign: 'right'
     }
 
     return (
       <div className="white-list-container">
-        <Dropzone
-          onDrop={this.onDrop}
-          accept=".csv"
-          style={dropzoneStyle}
-        >
-          <span style={uploadCSVStyle}>Upload CSV</span>
-        </Dropzone>
-
         <div className="white-list-input-container">
           <div className="white-list-input-container-inner">
             <InputField
@@ -175,6 +163,15 @@ export class WhitelistInputBlock extends React.Component {
             alreadyDeployed={e.alreadyDeployed}
           />
         )}
+        <Dropzone
+          onDrop={this.onDrop}
+          accept=".csv"
+          style={dropzoneStyle}
+        >
+          <i className="fa fa-upload" title="Upload CSV"></i>&nbsp;
+          Upload CSV
+        </Dropzone>
+
       </div>
     )
   }
