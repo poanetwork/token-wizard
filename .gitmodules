@@ -10,3 +10,7 @@
 	path = submodules/poa-token-market-net-ico
 	url = https://github.com/poanetwork/ico
 	branch = wizard
+[submodule "submodules/token-wizard-test-automation"]
+	path = submodules/token-wizard-test-automation
+	url = https://github.com/poanetwork/token-wizard-test-automation
+	branch = master
