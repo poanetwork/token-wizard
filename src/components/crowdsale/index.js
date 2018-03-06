@@ -7,7 +7,8 @@ import {
   getContractStoreProperty,
   getCrowdsaleData,
   getJoinedTiers,
-  initializeAccumulativeData
+  initializeAccumulativeData,
+  toBigNumber
 } from './utils'
 import { getQueryVariable, toFixed } from '../../utils/utils'
 import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
@@ -120,120 +121,108 @@ export class Crowdsale extends React.Component {
   render() {
     const { web3Store, contractStore, tokenStore, crowdsalePageStore } = this.props
     const { web3 } = web3Store
+
+    const isWhitelistWithCap = contractStore.contractType === CONTRACT_TYPES.whitelistwithcap
+
     const tokenAddr = getContractStoreProperty('token','addr')
     const tempCrowdsaleAddr = getContractStoreProperty('crowdsale','addr')
     const crowdsaleAddr = tempCrowdsaleAddr === 'string' ? tempCrowdsaleAddr : tempCrowdsaleAddr[0]
-    const tokenDecimals = !isNaN(tokenStore.decimals) ? tokenStore.decimals : 0;
-    const rate = crowdsalePageStore.rate; //for tiers: 1 token in wei, for standard: 1/? 1 token in eth
-    const maxCapBeforeDecimals = crowdsalePageStore.maximumSellableTokens / 10**tokenDecimals;
-    const investorsCount = crowdsalePageStore.investors ? crowdsalePageStore.investors.toString() : 0;
-    const ethRaised = crowdsalePageStore.ethRaised;
+    const investorsCount = crowdsalePageStore.investors ? crowdsalePageStore.investors.toString() : 0
 
-    //tokens claimed: tiers, standard
-    const tokensClaimedStandard = rate ? (crowdsalePageStore.ethRaised / rate) : 0;
-    const tokensClaimedTiers = rate ? (crowdsalePageStore.tokensSold / 10**tokenDecimals) : 0;
-    const tokensClaimed = (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap) ? tokensClaimedTiers : tokensClaimedStandard;
+    const rate = toBigNumber(crowdsalePageStore.rate) //for tiers: 1 token in wei, for standard: 1/? 1 token in eth
+    const tokenDecimals = toBigNumber(tokenStore.decimals)
+    const maximumSellableTokens = toBigNumber(crowdsalePageStore.maximumSellableTokens)
+    const maximumSellableTokensInWei = toBigNumber(crowdsalePageStore.maximumSellableTokensInWei)
+    const ethRaised = toBigNumber(crowdsalePageStore.ethRaised)
+    const tokensSold = toBigNumber(crowdsalePageStore.tokensSold)
+    const supply = toBigNumber(crowdsalePageStore.supply)
+    const maxCapBeforeDecimals = maximumSellableTokens.div(`1e${tokenDecimals}`)
+
+    // tokens claimed: tiers, standard
+    const tokensClaimedStandard = rate > 0 ? ethRaised.div(rate).toFixed() : '0'
+    const tokensClaimedTiers = tokensSold.div(`1e${tokenDecimals}`).toFixed()
+    const tokensClaimed = isWhitelistWithCap ? tokensClaimedTiers : tokensClaimedStandard
 
     //price: tiers, standard
-    const tokensPerETHStandard = !isNaN(rate) ? rate : 0;
-    const tokensPerETHTiers = !isNaN(1 / rate) ? 1 / web3.utils.fromWei(toFixed(rate).toString(), "ether") : 0;
-    const tokensPerETH = (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap) ? tokensPerETHTiers : tokensPerETHStandard;
+    const rateInETH = toBigNumber(web3.utils.fromWei(rate.toFixed(), 'ether'))
+    const tokensPerETH = isWhitelistWithCap ? rateInETH.pow(-1).toFixed() : rate.toFixed()
 
     //total supply: tiers, standard
-    const tierCap = maxCapBeforeDecimals ? (maxCapBeforeDecimals).toString() : 0;
-    const standardCrowdsaleSupply = !isNaN(crowdsalePageStore.supply) ? (crowdsalePageStore.supply).toString() : 0;
-    const totalSupply = (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap) ? tierCap : standardCrowdsaleSupply;
+    const tierCap = maxCapBeforeDecimals.toFixed()
+    const standardCrowdsaleSupply = supply.toFixed()
+    const totalSupply = isWhitelistWithCap ? tierCap : standardCrowdsaleSupply
 
     //goal in ETH
-    const goalInETHStandard = (totalSupply / rate).toExponential();
-    let goalInETHTiers = crowdsalePageStore.maximumSellableTokensInWei ? (web3.utils.fromWei(toFixed(crowdsalePageStore.maximumSellableTokensInWei).toString(), "ether").toString()) : 0;
-    goalInETHTiers = 1.0 / 100 * Math.floor(100 * goalInETHTiers)
-    const goalInETH = (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap) ? goalInETHTiers : goalInETHStandard;
-
-    const tokensClaimedRatio = goalInETH ? (ethRaised / goalInETH) * 100 : "0";
+    const goalInETHStandard = rate > 0 ? toBigNumber(totalSupply).div(rate).toFixed() : '0'
+    const goalInETHTiers = toBigNumber(web3.utils.fromWei(maximumSellableTokensInWei.toFixed(), 'ether')).toFixed()
+    const goalInETH = isWhitelistWithCap ? goalInETHTiers : goalInETHStandard
+    const tokensClaimedRatio = goalInETH > 0 ? ethRaised.div(goalInETH).times(100).toFixed() : '0'
 
     return (
       <section className="steps steps_crowdsale-page">
-        <StepNavigation activeStep={CROWDSALE_PAGE} />
+        <StepNavigation activeStep={CROWDSALE_PAGE}/>
         <div className="steps-content container">
           <div className="about-step">
-            <div className="step-icons step-icons_crowdsale-page"></div>
+            <div className="step-icons step-icons_crowdsale-page"/>
             <p className="title">Crowdsale Page</p>
-            <p className="description">
-              Page with statistics of crowdsale. Statistics for all tiers combined on the page. Please press Ctrl-D to bookmark the page.
-            </p>
+            <p className="description">Page with statistics of crowdsale. Statistics for all tiers combined on the page.
+              Please press Ctrl-D to bookmark the page.</p>
           </div>
           <div className="total-funds">
             <div className="hidden">
               <div className="left">
-                <p className="total-funds-title">{ethRaised} ETH</p>
-                <p className="total-funds-description">
-                  Total Raised Funds
-                </p>
+                <p className="total-funds-title">{`${ethRaised}`} ETH</p>
+                <p className="total-funds-description">Total Raised Funds</p>
               </div>
               <div className="right">
-                <p className="total-funds-title">{goalInETH} ETH</p>
-                <p className="total-funds-description">
-                  Goal
-                </p>
+                <p className="total-funds-title">{`${goalInETH}`} ETH</p>
+                <p className="total-funds-description">Goal</p>
               </div>
             </div>
           </div>
           <div className="total-funds-chart-container">
-            <div className="total-funds-chart-division"></div>
-            <div className="total-funds-chart-division"></div>
-            <div className="total-funds-chart-division"></div>
-            <div className="total-funds-chart-division"></div>
-            <div className="total-funds-chart-division"></div>
-            <div className="total-funds-chart-division"></div>
-            <div className="total-funds-chart-division"></div>
-            <div className="total-funds-chart-division"></div>
-            <div className="total-funds-chart-division"></div>
+            <div className="total-funds-chart-division"/>
+            <div className="total-funds-chart-division"/>
+            <div className="total-funds-chart-division"/>
+            <div className="total-funds-chart-division"/>
+            <div className="total-funds-chart-division"/>
+            <div className="total-funds-chart-division"/>
+            <div className="total-funds-chart-division"/>
+            <div className="total-funds-chart-division"/>
+            <div className="total-funds-chart-division"/>
             <div className="total-funds-chart">
-              <div className="total-funds-chart-active" style={{width : tokensClaimedRatio + "%"}}></div>
+              <div className="total-funds-chart-active" style={{ width: `${tokensClaimedRatio}%` }}/>
             </div>
           </div>
           <div className="total-funds-statistics">
             <div className="hidden">
-              <div className="left">
+              <div className="left" style={{ width: '42% '}}>
                 <div className="hidden">
                   <div className="left">
-                    <p className="title">{tokensClaimed}</p>
-                    <p className="description">
-                      Tokens Claimed
-                    </p>
+                    <p className="title">{`${tokensClaimed}`}</p>
+                    <p className="description">Tokens Claimed</p>
                   </div>
                   <div className="right">
-                    <p className="title">{investorsCount}</p>
-                    <p className="description">
-                      Contributors
-                    </p>
+                    <p className="title">{`${investorsCount}`}</p>
+                    <p className="description">Contributors</p>
                   </div>
                 </div>
-                <p className="hash">{tokenAddr}</p>
-                <p className="description">
-                  Token Address
-                </p>
+                <p className="hash">{`${tokenAddr}`}</p>
+                <p className="description">Token Address</p>
               </div>
-              <div className="right">
+              <div className="right" style={{ width: '58%' }}>
                 <div className="hidden">
                   <div className="left">
-                    <p className="title">{tokensPerETH}</p>
-                    <p className="description">
-                      Price (Tokens/ETH)
-                    </p>
+                    <p className="title">{`${tokensPerETH}`}</p>
+                    <p className="description">Price (Tokens/ETH)</p>
                   </div>
                   <div className="right">
-                    <p className="title">{totalSupply}</p>
-                    <p className="description">
-                      Total Supply
-                    </p>
+                    <p className="title">{`${totalSupply}`}</p>
+                    <p className="description">Total Supply</p>
                   </div>
                 </div>
-                <p className="hash">{crowdsaleAddr}</p>
-                <p className="description">
-                  Crowdsale Contract Address
-                </p>
+                <p className="hash">{`${crowdsaleAddr}`}</p>
+                <p className="description">Crowdsale Contract Address</p>
               </div>
             </div>
           </div>
@@ -241,7 +230,7 @@ export class Crowdsale extends React.Component {
         <div className="button-container">
           <a onClick={this.goToInvestPage} className="button button_fill">Invest</a>
         </div>
-        <Loader show={this.state.loading}></Loader>
+        <Loader show={this.state.loading} />
       </section>
     )
   }

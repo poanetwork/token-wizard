@@ -4,6 +4,12 @@ import { toFixed } from '../../utils/utils'
 import { CONTRACT_TYPES } from '../../utils/constants'
 import { contractStore, crowdsalePageStore, tokenStore, web3Store } from '../../stores'
 import { toJS } from 'mobx'
+import { BigNumber } from 'bignumber.js'
+
+BigNumber.config({ DECIMAL_PLACES : 18 })
+
+export const toBigNumber = (value) => isNaN(value) || value === '' ? new BigNumber(0) : new BigNumber(value)
+
 
 export function getJoinedTiers(abi, addr, joinedCrowdsales, cb) {
   attachToContract(abi, addr)
@@ -236,12 +242,8 @@ export function getAccumulativeCrowdsaleData() {
           })
 
           let getMaximumSellableTokens = crowdsaleContract.methods.maximumSellableTokens().call().then((maximumSellableTokens) => {
-            const maxSellableTokens = crowdsalePageStore.maximumSellableTokens
-            if (maxSellableTokens) {
-              crowdsalePageStore.setProperty('maximumSellableTokens', maxSellableTokens + parseInt(toFixed(maximumSellableTokens), 10))
-            } else {
-              crowdsalePageStore.setProperty('maximumSellableTokens', parseInt(toFixed(maximumSellableTokens), 10))
-            }
+            const maxSellableTokens = toBigNumber(crowdsalePageStore.maximumSellableTokens)
+            crowdsalePageStore.setProperty('maximumSellableTokens', maxSellableTokens.plus(maximumSellableTokens).toFixed())
 
             //calc maximumSellableTokens in Eth
             return setMaximumSellableTokensInEth(crowdsaleContract, maximumSellableTokens)
@@ -273,13 +275,13 @@ function setMaximumSellableTokensInEth(crowdsaleContract, maximumSellableTokens)
     .then(pricingStrategyContract => {
       if (!pricingStrategyContract) return noContractAlert()
 
-      return pricingStrategyContract.methods.oneTokenInWei().call().then((oneTokenInWei) => {
-        if (crowdsalePageStore.maximumSellableTokensInWei) {
-          crowdsalePageStore.setProperty('maximumSellableTokensInWei', crowdsalePageStore.maximumSellableTokensInWei + parseInt(oneTokenInWei, 10) * maximumSellableTokens / 10 ** tokenStore.decimals)
-        } else {
-          crowdsalePageStore.setProperty('maximumSellableTokensInWei', parseInt(oneTokenInWei, 10) * maximumSellableTokens / 10 ** tokenStore.decimals)
-        }
-      })
+      return pricingStrategyContract.methods.oneTokenInWei().call()
+        .then((oneTokenInWei) => {
+          const currentMaximumSellableTokensInWei = toBigNumber(crowdsalePageStore.maximumSellableTokensInWei)
+          const maximumSellableTokensInWei = toBigNumber(oneTokenInWei).times(maximumSellableTokens).div(`1e${tokenStore.decimals}`).dp(0)
+
+          crowdsalePageStore.setProperty('maximumSellableTokensInWei', currentMaximumSellableTokensInWei.plus(maximumSellableTokensInWei).toFixed())
+        })
     })
 }
 
@@ -644,7 +646,7 @@ export function getPricingStrategyData () {
           }
 
           console.log('pricing strategy rate:', rate)
-          crowdsalePageStore.setProperty('rate', parseInt(rate, 10))
+          crowdsalePageStore.setProperty('rate', rate)
           resolve()
         })
       })
