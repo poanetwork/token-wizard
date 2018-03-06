@@ -186,6 +186,10 @@ class TierStore {
     whitelist[whitelistNum].deleted = true
     this.setTierProperty(whitelist, 'whitelist', crowdsaleNum)
   }
+
+  @computed get maxSupply () {
+    return this.tiers.map(tier => +tier.supply).reduce((a, b) => Math.max(a, b), 0)
+  }
 }
 
 export default TierStore;
