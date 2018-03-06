@@ -458,7 +458,8 @@ export class Manage extends Component {
     const { formPristine, canFinalize, shouldDistribute, canDistribute, crowdsaleHasEnded, ownerCurrentUser } = this.state
     const { generalStore, tierStore, tokenStore, crowdsaleStore } = this.props
     const { address: crowdsaleAddress, finalized, updatable } = crowdsaleStore.selected
-    let disabled = !ownerCurrentUser || canDistribute || canFinalize || finalized
+
+    const canEditTier = ownerCurrentUser && !canDistribute && !canFinalize && !finalized
 
     const distributeTokensStep = (
       <div className="steps-content container">
@@ -528,7 +529,7 @@ export class Manage extends Component {
     }
 
     const tierStartAndEndTime = (tier, index) => {
-      disabled = disabled || !tier.updatable || this.tierHasEnded(index)
+      const disabled = !canEditTier || !tier.updatable || this.tierHasEnded(index)
 
       return <div className='input-block-container'>
         <InputField
@@ -557,7 +558,7 @@ export class Manage extends Component {
     }
 
     const tierRateAndSupply = (tier, index) => {
-      disabled = disabled || !tier.updatable || this.tierHasEnded(index) || this.tierHasStarted(index)
+      const disabled = !canEditTier || !tier.updatable || this.tierHasEnded(index) || this.tierHasStarted(index)
 
       return <div className='input-block-container'>
         <InputField
