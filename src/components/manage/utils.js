@@ -269,30 +269,16 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
 
       newTier.rate = (contractStore.contractType === WHITELIST_WITH_CAP) ? tokensPerETHTiers : tokensPerETHStandard
 
-      if (crowdsaleNum === 0) {
-        tierStore.emptyList()
-        tierStore.addTier(newTier)
-        tierStore.setTierProperty(newTier.tier, 'tier', crowdsaleNum)
-        tierStore.setTierProperty(newTier.walletAddress, 'walletAddress', crowdsaleNum)
-        tierStore.setTierProperty(newTier.rate, 'rate', crowdsaleNum)
-        tierStore.setTierProperty(newTier.supply, 'supply', crowdsaleNum)
-        tierStore.setTierProperty(newTier.startTime, 'startTime', crowdsaleNum)
-        tierStore.setTierProperty(newTier.endTime, 'endTime', crowdsaleNum)
-        tierStore.setTierProperty(newTier.updatable, 'updatable', crowdsaleNum)
-        tierStore.validateTiers('rate', crowdsaleNum)
-        tierStore.validateTiers('supply', crowdsaleNum)
-      } else {
-        tierStore.addTier(newTier)
-        tierStore.addTierValidations({
-          tier: VALID,
-          walletAddress: VALID,
-          rate: VALID,
-          supply: VALID,
-          startTime: VALID,
-          endTime: VALID,
-          updatable: VALID
-        })
-      }
+      tierStore.addTier(newTier)
+      tierStore.addTierValidations({
+        tier: VALID,
+        walletAddress: VALID,
+        rate: VALID,
+        supply: VALID,
+        startTime: VALID,
+        endTime: VALID,
+        updatable: VALID
+      })
 
       const whitelist = newTier.whitelist.slice()
       const whitelistElements = newTier.whitelistElements.slice()
