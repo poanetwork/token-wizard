@@ -192,8 +192,8 @@ class TierStore {
     this.setTierProperty(whitelist, 'whitelist', crowdsaleNum)
   }
 
-  @computed get minSupply () {
-    return this.tiers.map(tier => +tier.supply).reduce((a, b) => Math.min(a, b))
+  @computed get maxSupply () {
+    return this.tiers.map(tier => +tier.supply).reduce((a, b) => Math.max(a, b))
   }
 }
 

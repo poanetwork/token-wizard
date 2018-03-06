@@ -139,7 +139,7 @@ export class stepThree extends React.Component {
 
     const { tierStore, gasPriceStore } = this.props;
     const gasPriceIsValid = gasPriceStore.custom.id !== this.state.gasPriceSelected || this.state.validation.gasPrice.valid === VALID
-    const isMinCapValid = tierStore.globalMinCap <= tierStore.minSupply
+    const isMinCapValid = tierStore.globalMinCap <= tierStore.maxSupply
 
     for (let index = 0; index < tierStore.tiers.length; index++) {
       tierStore.validateTiers("endTime", index);
