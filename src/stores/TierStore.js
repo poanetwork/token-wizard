@@ -2,7 +2,7 @@ import { observable, action, computed } from 'mobx';
 import { VALIDATION_TYPES, defaultTiers } from '../utils/constants'
 import {
   validateName, validateTime, validateSupply, validateRate, validateAddress, validateLaterTime,
-  validateLaterOrEqualTime, validateTier, validateMinCap
+  validateLaterOrEqualTime, validateTier
 } from '../utils/utils'
 import autosave from './autosave'
 const { VALID, INVALID } = VALIDATION_TYPES
@@ -193,7 +193,7 @@ class TierStore {
   }
 
   @computed get maxSupply () {
-    return this.tiers.map(tier => +tier.supply).reduce((a, b) => Math.max(a, b))
+    return this.tiers.map(tier => +tier.supply).reduce((a, b) => Math.max(a, b), 0)
   }
 }
 
