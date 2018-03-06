@@ -130,7 +130,7 @@ export function warningOnFinalizeCrowdsale() {
 }
 
 export function successfulFinalizeAlert() {
-  sweetAlert2({
+  return sweetAlert2({
     title: "Success",
     html: "Congrats! You've successfully finalized the Crowdsale!",
     type: "success"

@@ -293,9 +293,13 @@ export class Manage extends Component {
                     return sendTXToContract(finalizeMethod.send(opts))
                   })
                   .then(() => {
-                    successfulFinalizeAlert()
                     crowdsaleStore.setSelectedProperty('finalized', true)
-                    this.setState({ canFinalize: false })
+                    this.setState({ canFinalize: false }, () => {
+                      successfulFinalizeAlert().then(() => {
+                        this.setState({ loading: true })
+                        setTimeout(() => window.location.reload(), 500)
+                      })
+                    })
                   })
                   .catch((err) => {
                     console.log(err)
