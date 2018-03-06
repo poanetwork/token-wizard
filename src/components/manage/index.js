@@ -446,7 +446,7 @@ export class Manage extends Component {
 
   tierHasStarted = (index) => {
     const initialTierValues = this.props.crowdsaleStore.selected.initialTiersValues[index]
-    return initialTierValues ? Date.now() > new Date(initialTierValues.startTime).getTime() : true
+    return initialTierValues && new Date(initialTierValues.startTime).getTime() < Date.now()
   }
 
   tierHasEnded = (index) => {
