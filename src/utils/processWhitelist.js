@@ -1,6 +1,5 @@
-import { validateAddress } from './utils'
+import Web3 from 'web3'
 
-const isAddress = (address) => validateAddress(address)
 const isNumber = (number) => !isNaN(parseFloat(number))
 
 /**
@@ -18,7 +17,7 @@ export default function (rows, cb) {
 
     const [addr, min, max] = row
 
-    if (!isAddress(addr) || !isNumber(min) || !isNumber(max)) return
+    if (!Web3.utils.isAddress(addr) || !isNumber(min) || !isNumber(max)) return
 
     cb({ addr, min, max })
 
