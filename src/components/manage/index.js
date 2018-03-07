@@ -193,15 +193,24 @@ export class Manage extends Component {
     const lastCrowdsaleAddress = contractStore.crowdsale.addr.slice(-1)[0]
 
     return attachToContract(contractStore.crowdsale.abi, lastCrowdsaleAddress)
-      .then(crowdsaleContract => crowdsaleContract.methods.isCrowdsaleFull().call())
-      .then(
-        (isCrowdsaleFull) => {
-          const { crowdsaleHasEnded, shouldDistribute, canDistribute } = this.state
-          const wasDistributed = shouldDistribute && !canDistribute
+      .then(crowdsaleContract => {
+        const whenIsFinalized = crowdsaleContract.methods.finalized().call()
+        const whenIsCrowdsaleFull = crowdsaleContract.methods.isCrowdsaleFull().call()
 
-          this.setState({
-            canFinalize: (crowdsaleHasEnded || isCrowdsaleFull) && (wasDistributed || !shouldDistribute)
-          })
+        return Promise.all([whenIsFinalized, whenIsCrowdsaleFull])
+      })
+      .then(
+        ([isFinalized, isCrowdsaleFull]) => {
+          if (isFinalized) {
+            this.setState({ canFinalize: false })
+          } else {
+            const { crowdsaleHasEnded, shouldDistribute, canDistribute } = this.state
+            const wasDistributed = shouldDistribute && !canDistribute
+
+            this.setState({
+              canFinalize: (crowdsaleHasEnded || isCrowdsaleFull) && (wasDistributed || !shouldDistribute)
+            })
+          }
         },
         () => this.setState({ canFinalize: false })
       )
@@ -293,9 +302,13 @@ export class Manage extends Component {
                     return sendTXToContract(finalizeMethod.send(opts))
                   })
                   .then(() => {
-                    successfulFinalizeAlert()
                     crowdsaleStore.setSelectedProperty('finalized', true)
-                    this.setState({ canFinalize: false })
+                    this.setState({ canFinalize: false }, () => {
+                      successfulFinalizeAlert().then(() => {
+                        this.setState({ loading: true })
+                        setTimeout(() => window.location.reload(), 500)
+                      })
+                    })
                   })
                   .catch((err) => {
                     console.log(err)
