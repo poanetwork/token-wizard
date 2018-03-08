@@ -168,17 +168,26 @@ class TierStore {
   }
 
   @action addWhitelistItem = ({ addr, min, max }, crowdsaleNum) => {
-    const tier = this.tiers[crowdsaleNum]
+    const { whitelist } = this.tiers[crowdsaleNum]
+    const newItem = { addr, min, max }
+    const _addr = addr.toLowerCase()
+    const isAdded = whitelist.find(item => item.addr.toLowerCase() === _addr)
 
-    const whitelist = tier.whitelist.slice()
+    if (this.deployedContract) {
+      const alreadyDeployedIndex = whitelist.findIndex(item => item.addr.toLowerCase() === _addr && item.alreadyDeployed)
+      const duplicatedIndex = whitelist.findIndex(item => item.addr.toLowerCase() === _addr && !item.alreadyDeployed && item.duplicated)
 
-    const isAdded = whitelist.find(item => item.addr === addr)
+      if (duplicatedIndex > -1) return
 
-    if (isAdded) return
+      if (alreadyDeployedIndex > -1) {
+        whitelist[alreadyDeployedIndex].duplicated = true
+        newItem.duplicated = true
 
-    whitelist.push({ addr, min, max })
+      } else if (isAdded) return
 
-    this.setTierProperty(whitelist, 'whitelist', crowdsaleNum)
+    } else if (isAdded) return
+
+    whitelist.push(newItem)
   }
 
   @action removeWhitelistItem = (address, crowdsaleNum) => {
@@ -191,6 +200,10 @@ class TierStore {
 
   @computed get maxSupply () {
     return this.tiers.map(tier => +tier.supply).reduce((a, b) => Math.max(a, b), 0)
+  }
+
+  @computed get deployedContract () {
+    return this.tiers.some(tier => tier.whitelist.some(item => item.alreadyDeployed))
   }
 }
 
