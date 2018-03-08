@@ -13,13 +13,13 @@ export class WhitelistItem extends React.Component {
   }
 
   render () {
-    const { addr, min, max, stored, duplicated } = this.props
+    const { addr, min, max, stored, duplicated, tierStore } = this.props
 
     return (
       <div className={classNames('white-list-item-container', {
         'duplicated': duplicated && !stored,
         'to-be-removed': duplicated && stored,
-        'no-style': (!duplicated && stored) || (!duplicated && !stored)
+        'no-style': (!duplicated && stored) || (!tierStore.deployedContract && !duplicated && !stored)
       })}>
         <div className="white-list-item-container-inner">
           <span className="white-list-item white-list-item-left">{addr}</span>
