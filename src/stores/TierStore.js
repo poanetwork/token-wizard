@@ -190,11 +190,13 @@ class TierStore {
     whitelist.push(newItem)
   }
 
-  @action removeWhitelistItem = (address, crowdsaleNum) => {
-    const addressIndex = this.tiers[crowdsaleNum].whitelist.findIndex(item => item.addr === address)
+  @action removeWhitelistItem = (whitelistNum, crowdsaleNum) => {
+    const removedItem = this.tiers[crowdsaleNum].whitelist.splice(whitelistNum, 1)[0]
 
-    if (addressIndex > -1) {
-      this.tiers[crowdsaleNum].whitelist.splice(addressIndex, 1)
+    if (this.deployedContract && removedItem.duplicated) {
+      const alreadyDeployedIndex = this.tiers[crowdsaleNum].whitelist.findIndex(item => item.addr === removedItem.addr)
+
+      if (alreadyDeployedIndex > -1) this.tiers[crowdsaleNum].whitelist[alreadyDeployedIndex].duplicated = false
     }
   }
 

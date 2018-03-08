@@ -7,9 +7,9 @@ import ReactTooltip from 'react-tooltip'
 @inject('tierStore')
 @observer
 export class WhitelistItem extends React.Component {
-  removeItem (address) {
-    const { tierStore, crowdsaleNum } = this.props
-    tierStore.removeWhitelistItem(address, crowdsaleNum)
+  removeItem () {
+    const { tierStore, whitelistNum, crowdsaleNum } = this.props
+    tierStore.removeWhitelistItem(whitelistNum, crowdsaleNum)
   }
 
   render () {
@@ -28,7 +28,7 @@ export class WhitelistItem extends React.Component {
         </div>
         <div className="white-list-item-empty">
           {!alreadyDeployed
-            ? <a onClick={() => this.removeItem(addr)}><span className="item-remove"/></a>
+            ? <a onClick={() => this.removeItem()} className="remove"><span className="item-remove"/></a>
             : null
           }
           {duplicated && !alreadyDeployed
