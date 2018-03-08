@@ -410,7 +410,7 @@ export class Manage extends Component {
     }
 
     return tier.whitelist.map(item => (
-      <div className={'white-list-item-container'} key={item.addr}>
+      <div className={'white-list-item-container no-style'} key={item.addr}>
         <div className="white-list-item-container-inner">
           <span className="white-list-item white-list-item-left">{item.addr}</span>
           <span className="white-list-item white-list-item-middle">{item.min}</span>
