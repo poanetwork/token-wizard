@@ -218,6 +218,10 @@ class TierStore {
   @computed get deployedContract () {
     return this.tiers.some(tier => tier.whitelist.some(item => item.stored))
   }
+
+  @computed get modifiedStoredWhitelist () {
+    return this.deployedContract && this.tiers.some(tier => tier.whitelist.some(item => !item.stored))
+  }
 }
 
 export default TierStore;
