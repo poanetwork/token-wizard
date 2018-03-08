@@ -204,7 +204,8 @@ class TierStore {
     const removedItem = this.tiers[crowdsaleNum].whitelist.splice(whitelistNum, 1)[0]
 
     if (this.deployedContract && removedItem.duplicated) {
-      const storedIndex = this.tiers[crowdsaleNum].whitelist.findIndex(item => item.addr === removedItem.addr)
+      const removedAddr = removedItem.addr.toLowerCase()
+      const storedIndex = this.tiers[crowdsaleNum].whitelist.findIndex(item => item.addr.toLowerCase() === removedAddr)
 
       if (storedIndex > -1) this.tiers[crowdsaleNum].whitelist[storedIndex].duplicated = false
     }
