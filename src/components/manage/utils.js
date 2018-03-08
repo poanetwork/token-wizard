@@ -299,7 +299,7 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
         min = parseInt(toFixed(min), 10) / 10 ** tokenDecimals
         max = parseInt(toFixed(max), 10) / 10 ** tokenDecimals
 
-        whitelist.push({ addr, min, max, alreadyDeployed: true })
+        whitelist.push({ addr, min, max, stored: true })
       })
 
       tierStore.setTierProperty(whitelist, 'whitelist', crowdsaleNum)

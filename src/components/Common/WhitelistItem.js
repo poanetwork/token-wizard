@@ -13,13 +13,13 @@ export class WhitelistItem extends React.Component {
   }
 
   render () {
-    const { addr, min, max, alreadyDeployed, duplicated } = this.props
+    const { addr, min, max, stored, duplicated } = this.props
 
     return (
       <div className={classNames('white-list-item-container', {
-        'duplicated': duplicated && !alreadyDeployed,
-        'to-be-removed': duplicated && alreadyDeployed,
-        'no-style': (!duplicated && alreadyDeployed) || (!duplicated && !alreadyDeployed)
+        'duplicated': duplicated && !stored,
+        'to-be-removed': duplicated && stored,
+        'no-style': (!duplicated && stored) || (!duplicated && !stored)
       })}>
         <div className="white-list-item-container-inner">
           <span className="white-list-item white-list-item-left">{addr}</span>
@@ -27,11 +27,11 @@ export class WhitelistItem extends React.Component {
           <span className="white-list-item white-list-item-right">{max}</span>
         </div>
         <div className="white-list-item-empty">
-          {!alreadyDeployed
+          {!stored
             ? <a onClick={() => this.removeItem()} className="remove"><span className="item-remove"/></a>
             : null
           }
-          {duplicated && !alreadyDeployed
+          {duplicated && !stored
             ? <a className="swal2-icon swal2-info warning-logo" data-tip="React-tooltip">!</a>
             : null
           }

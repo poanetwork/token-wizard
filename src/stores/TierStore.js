@@ -174,13 +174,13 @@ class TierStore {
     const isAdded = whitelist.find(item => item.addr.toLowerCase() === _addr)
 
     if (this.deployedContract) {
-      const alreadyDeployedIndex = whitelist.findIndex(item => item.addr.toLowerCase() === _addr && item.alreadyDeployed)
-      const duplicatedIndex = whitelist.findIndex(item => item.addr.toLowerCase() === _addr && !item.alreadyDeployed && item.duplicated)
+      const storedIndex = whitelist.findIndex(item => item.addr.toLowerCase() === _addr && item.stored)
+      const duplicatedIndex = whitelist.findIndex(item => item.addr.toLowerCase() === _addr && !item.stored && item.duplicated)
 
       if (duplicatedIndex > -1) return
 
-      if (alreadyDeployedIndex > -1) {
-        whitelist[alreadyDeployedIndex].duplicated = true
+      if (storedIndex > -1) {
+        whitelist[storedIndex].duplicated = true
         newItem.duplicated = true
 
       } else if (isAdded) return
@@ -194,9 +194,9 @@ class TierStore {
     const removedItem = this.tiers[crowdsaleNum].whitelist.splice(whitelistNum, 1)[0]
 
     if (this.deployedContract && removedItem.duplicated) {
-      const alreadyDeployedIndex = this.tiers[crowdsaleNum].whitelist.findIndex(item => item.addr === removedItem.addr)
+      const storedIndex = this.tiers[crowdsaleNum].whitelist.findIndex(item => item.addr === removedItem.addr)
 
-      if (alreadyDeployedIndex > -1) this.tiers[crowdsaleNum].whitelist[alreadyDeployedIndex].duplicated = false
+      if (storedIndex > -1) this.tiers[crowdsaleNum].whitelist[storedIndex].duplicated = false
     }
   }
 
@@ -205,7 +205,7 @@ class TierStore {
   }
 
   @computed get deployedContract () {
-    return this.tiers.some(tier => tier.whitelist.some(item => item.alreadyDeployed))
+    return this.tiers.some(tier => tier.whitelist.some(item => item.stored))
   }
 }
 
