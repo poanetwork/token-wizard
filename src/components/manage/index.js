@@ -349,11 +349,10 @@ export class Manage extends Component {
                 let newValue = tierStore.tiers[tier.index][key]
 
                 if (isObservableArray(newValue)) {
-                  if (newValue.length > tier[key].length) {
-                    newValue = newValue.slice(tier[key].length)
-                    if (newValue.length) {
-                      toUpdate.push({ key, newValue, addresses })
-                    }
+                  newValue = newValue.filter(item => !item.stored)
+
+                  if (newValue.length) {
+                    toUpdate.push({ key, newValue, addresses })
                   }
 
                 } else if (newValue !== tier[key]) {
