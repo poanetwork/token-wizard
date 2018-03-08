@@ -303,6 +303,7 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
       })
 
       tierStore.setTierProperty(whitelist, 'whitelist', crowdsaleNum)
+      tierStore.sortWhitelist(crowdsaleNum)
 
       if (initialValues.updatable) {
         initialValues.startTime = newTier.startTime

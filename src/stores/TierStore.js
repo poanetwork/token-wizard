@@ -188,6 +188,16 @@ class TierStore {
     } else if (isAdded) return
 
     whitelist.push(newItem)
+    this.sortWhitelist(crowdsaleNum)
+  }
+
+  @action sortWhitelist = (crowdsaleNum) => {
+    this.tiers[crowdsaleNum].whitelist = this.tiers[crowdsaleNum].whitelist.sort((prev, curr) => {
+      const currentAddress = curr.addr.toLowerCase()
+      const previousAddress = prev.addr.toLowerCase()
+
+      return currentAddress > previousAddress ? -1 : currentAddress === previousAddress ? curr.stored ? 1 : -1 : 1
+    })
   }
 
   @action removeWhitelistItem = (whitelistNum, crowdsaleNum) => {
