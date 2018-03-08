@@ -6,6 +6,7 @@ import { StepNavigation } from '../Common/StepNavigation'
 import { InputField } from '../Common/InputField'
 import { NumericInput } from '../Common/NumericInput'
 import { ReservedTokensInputBlock } from '../Common/ReservedTokensInputBlock'
+import { clearingReservedTokens } from '../../utils/alerts'
 import {
   NAVIGATION_STEPS,
   VALIDATION_MESSAGES,
@@ -112,6 +113,17 @@ export class stepTwo extends Component {
     this.props.reservedTokenStore.removeToken(index)
   }
 
+  clearReservedTokens = () => {
+    return clearingReservedTokens()
+      .then(result => {
+        if (result.value) {
+          this.enableDecimals()
+
+          this.props.reservedTokenStore.clearAll()
+        }
+      })
+  }
+
   addReservedTokensItem = newToken => {
     const firstReservedItem = !this.props.reservedTokenStore.tokens.length
 
@@ -178,6 +190,7 @@ export class stepTwo extends Component {
             decimals={decimals}
             addReservedTokensItem={this.addReservedTokensItem}
             removeReservedToken={this.removeReservedToken}
+            clearAll={this.clearReservedTokens}
           />
         </div>
         <div className="button-container">

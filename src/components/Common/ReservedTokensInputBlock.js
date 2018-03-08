@@ -144,6 +144,8 @@ export class ReservedTokensInputBlock extends Component {
       )
     })
 
+    const tokensListEmpty = this.props.tokens.length === 0
+
     let valueInputParams = null
 
     if (this.state.dim === 'tokens') {
@@ -161,6 +163,11 @@ export class ReservedTokensInputBlock extends Component {
       }
     } else {
       console.error(`unrecognized dimension '${this.state.dim}'`)
+    }
+
+    const clearAllStyle = {
+      textAlign: 'right',
+      cursor: 'pointer'
     }
 
     return (
@@ -203,6 +210,13 @@ export class ReservedTokensInputBlock extends Component {
           </div>
         </div>
         {reservedTokensElements}
+        {
+          tokensListEmpty ? null : (
+            <div className="clear-all-tokens" style={clearAllStyle} onClick={this.props.clearAll}>
+              <i className="fa fa-trash"></i>&nbsp;Clear All
+            </div>
+          )
+        }
       </div>
     )
   }

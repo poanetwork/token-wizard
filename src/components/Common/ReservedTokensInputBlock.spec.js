@@ -13,12 +13,12 @@ describe('ReservedTokensInputBlock', () => {
   let tokenList
   let addCallback
   let removeCallback
+  let clearAllCallback
   let decimals
   let wrapperMemo, wrapper
   let addressInputMemo, addressInput
   let valueInputMemo, valueInput
   let addressStateMemo, addressState
-  let valueStateMemo, valueState
 
   beforeEach(() => {
     tokenList = [
@@ -45,6 +45,7 @@ describe('ReservedTokensInputBlock', () => {
     ]
     addCallback = jest.fn()
     removeCallback = jest.fn()
+    clearAllCallback = jest.fn()
     decimals = 3
 
     wrapperMemo = undefined
@@ -54,6 +55,7 @@ describe('ReservedTokensInputBlock', () => {
         decimals={decimals}
         addReservedTokensItem={addCallback}
         removeReservedToken={removeCallback}
+        clearAll={clearAllCallback}
       />
     ))
 
@@ -65,9 +67,6 @@ describe('ReservedTokensInputBlock', () => {
 
     addressStateMemo = undefined
     addressState = () => addressStateMemo || (addressStateMemo = wrapper().state('validation').address)
-
-    valueStateMemo = undefined
-    valueState = () => valueStateMemo || (valueStateMemo = wrapper().state('validation').value)
   })
 
   describe('render', () => {
@@ -380,6 +379,33 @@ describe('ReservedTokensInputBlock', () => {
       it('Should call removeReservedToken callback', () => {
         wrapper().find('.reserved-tokens-item-empty').children('a').at(0).simulate('click')
         expect(removeCallback).toHaveBeenCalledTimes(1)
+      })
+    })
+
+    describe('clearAll', () => {
+      it('Should show the "Clear all" button if there are tokens"', () => {
+        const clearAllButton = wrapper().find('.clear-all-tokens')
+        expect(clearAllButton).toHaveLength(1)
+      })
+
+      it('Should not show the "Clear all" button if there are no tokens"', () => {
+        const element = mount(
+          <ReservedTokensInputBlock
+            tokens={[]}
+            decimals={decimals}
+            addReservedTokensItem={addCallback}
+            removeReservedToken={removeCallback}
+            clearAll={clearAllCallback}
+          />
+        )
+
+        const clearAllButton = element.find('.clear-all-tokens')
+        expect(clearAllButton).toHaveLength(0)
+      })
+
+      it('Should call clearAll callback', () => {
+        wrapper().find('.clear-all-tokens').simulate('click')
+        expect(clearAllCallback).toHaveBeenCalledTimes(1)
       })
     })
   })
