@@ -440,12 +440,10 @@ export const addWhitelist = () => {
           let maxCaps = []
 
           for (let i = 0; i < whitelist.length; i++) {
-            if (!whitelist[i].deleted) {
-              addrs.push(whitelist[i].addr)
-              statuses.push(true)
-              minCaps.push(whitelist[i].min * 10 ** tokenStore.decimals ? toFixed((whitelist[i].min * 10 ** tokenStore.decimals).toString()) : 0)
-              maxCaps.push(whitelist[i].max * 10 ** tokenStore.decimals ? toFixed((whitelist[i].max * 10 ** tokenStore.decimals).toString()) : 0)
-            }
+            addrs.push(whitelist[i].addr)
+            statuses.push(true)
+            minCaps.push(whitelist[i].min * 10 ** tokenStore.decimals ? toFixed((whitelist[i].min * 10 ** tokenStore.decimals).toString()) : 0)
+            maxCaps.push(whitelist[i].max * 10 ** tokenStore.decimals ? toFixed((whitelist[i].max * 10 ** tokenStore.decimals).toString()) : 0)
           }
 
           console.log('addrs:', addrs)

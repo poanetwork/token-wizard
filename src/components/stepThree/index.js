@@ -173,7 +173,7 @@ export class stepThree extends React.Component {
 
             if (hasWhitelist) {
               whitelistCount = tierStore.tiers.reduce((total, tier) => {
-                total += tier.whitelist.filter(address => !address.deleted).length
+                total += tier.whitelist.length
                 return total
               }, 0)
             }

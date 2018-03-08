@@ -348,7 +348,7 @@ export class Manage extends Component {
 
                 if (isObservableArray(newValue)) {
                   if (newValue.length > tier[key].length) {
-                    newValue = newValue.slice(tier[key].length).filter(whitelist => !whitelist.deleted)
+                    newValue = newValue.slice(tier[key].length)
                     if (newValue.length) {
                       toUpdate.push({ key, newValue, addresses })
                     }

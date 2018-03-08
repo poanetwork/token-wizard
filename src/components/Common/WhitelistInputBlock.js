@@ -152,7 +152,7 @@ export class WhitelistInputBlock extends React.Component {
             />
           </div>
         </div>
-        {whitelist.length > 0 && whitelist.filter(item => !item.deleted).map(item =>
+        {whitelist.length > 0 && whitelist.map(item =>
           <WhitelistItem
             key={`${num}-${item.addr}`}
             crowdsaleNum={num}

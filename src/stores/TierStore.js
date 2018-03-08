@@ -172,7 +172,7 @@ class TierStore {
 
     const whitelist = tier.whitelist.slice()
 
-    const isAdded = whitelist.find(item => item.addr === addr && !item.deleted)
+    const isAdded = whitelist.find(item => item.addr === addr)
 
     if (isAdded) return
 
@@ -182,12 +182,10 @@ class TierStore {
   }
 
   @action removeWhitelistItem = (address, crowdsaleNum) => {
-    const whitelist = this.tiers[crowdsaleNum].whitelist.slice()
-    const addressIndex = whitelist.findIndex(item => item.addr === address && !item.deleted)
+    const addressIndex = this.tiers[crowdsaleNum].whitelist.findIndex(item => item.addr === address)
 
     if (addressIndex > -1) {
-      whitelist[addressIndex].deleted = true
-      this.setTierProperty(whitelist, 'whitelist', crowdsaleNum)
+      this.tiers[crowdsaleNum].whitelist.splice(addressIndex, 1)
     }
   }
 
