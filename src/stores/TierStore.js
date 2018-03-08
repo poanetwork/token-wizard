@@ -176,20 +176,19 @@ class TierStore {
 
     if (isAdded) return
 
-    const whitelistElements = tier.whitelistElements.slice()
-    const whitelistNum = whitelistElements.length
-
-    whitelistElements.push({ addr, min, max, whitelistNum, crowdsaleNum })
     whitelist.push({ addr, min, max })
 
-    this.setTierProperty(whitelistElements, 'whitelistElements', crowdsaleNum)
     this.setTierProperty(whitelist, 'whitelist', crowdsaleNum)
   }
 
-  @action removeWhitelistItem = (whitelistNum, crowdsaleNum) => {
-    let whitelist = this.tiers[crowdsaleNum].whitelist.slice()
-    whitelist[whitelistNum].deleted = true
-    this.setTierProperty(whitelist, 'whitelist', crowdsaleNum)
+  @action removeWhitelistItem = (address, crowdsaleNum) => {
+    const whitelist = this.tiers[crowdsaleNum].whitelist.slice()
+    const addressIndex = whitelist.findIndex(item => item.addr === address && !item.deleted)
+
+    if (addressIndex > -1) {
+      whitelist[addressIndex].deleted = true
+      this.setTierProperty(whitelist, 'whitelist', crowdsaleNum)
+    }
   }
 
   @computed get maxSupply () {

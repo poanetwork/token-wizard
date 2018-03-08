@@ -3,8 +3,7 @@ export const defaultTiers = [{
   endTime: '',
   walletAddress: '',
   supply: '',
-  whitelist: [],
-  whitelistElements: []
+  whitelist: []
 }]
 
 export const CONTRACT_TYPES = {

@@ -338,7 +338,7 @@ export class Manage extends Component {
         if (!this.state.formPristine && !this.state.crowdsaleHasEnded && updatableTiers.length && validTiers) {
           const keys = Object
             .keys(updatableTiers[0])
-            .filter(key => key !== 'index' && key !== 'updatable' && key !== 'addresses' && key !== 'whitelistElements')
+            .filter(key => key !== 'index' && key !== 'updatable' && key !== 'addresses')
 
           updatableTiers
             .reduce((toUpdate, tier) => {

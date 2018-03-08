@@ -201,8 +201,7 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
   const { web3 } = web3Store
 
   const newTier = {
-    whitelist: [],
-    whitelistElements: []
+    whitelist: []
   }
 
   const initialValues = {}
@@ -295,17 +294,14 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
       }
 
       const whitelist = newTier.whitelist.slice()
-      const whitelistElements = newTier.whitelistElements.slice()
 
-      whitelistAccounts.forEach(({ addr, min, max }, whitelistNum) => {
+      whitelistAccounts.forEach(({ addr, min, max }) => {
         min = parseInt(toFixed(min), 10) / 10 ** tokenDecimals
         max = parseInt(toFixed(max), 10) / 10 ** tokenDecimals
 
-        whitelistElements.push({ addr, min, max, whitelistNum, crowdsaleNum, alreadyDeployed: true })
-        whitelist.push({ addr, min, max })
+        whitelist.push({ addr, min, max, alreadyDeployed: true })
       })
 
-      tierStore.setTierProperty(whitelistElements, 'whitelistElements', crowdsaleNum)
       tierStore.setTierProperty(whitelist, 'whitelist', crowdsaleNum)
 
       if (initialValues.updatable) {
@@ -314,7 +310,6 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
         initialValues.rate = newTier.rate
         initialValues.supply = newTier.supply
         initialValues.whitelist = whitelist
-        initialValues.whitelistElements = whitelistElements
       }
       crowdsaleStore.addInitialTierValues(initialValues)
     })

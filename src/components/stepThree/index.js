@@ -83,8 +83,7 @@ export class stepThree extends React.Component {
       supply: 0,
       rate: 0,
       updatable: "off",
-      whitelist: [],
-      whitelistElements: []
+      whitelist: []
     };
 
     const newTierValidations = {

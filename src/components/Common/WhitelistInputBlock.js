@@ -104,8 +104,8 @@ export class WhitelistInputBlock extends React.Component {
 
 
   render () {
-    const { num } = this.props
-    const { whitelistElements } = this.props.tierStore.tiers[num]
+    const { num, tierStore } = this.props
+    const { whitelist } = tierStore.tiers[num]
 
     const dropzoneStyle = {
       position: 'relative',
@@ -152,15 +152,11 @@ export class WhitelistInputBlock extends React.Component {
             />
           </div>
         </div>
-        {whitelistElements && whitelistElements.map(e =>
+        {whitelist.length > 0 && whitelist.filter(item => !item.deleted).map(item =>
           <WhitelistItem
-            key={e.whitelistNum.toString()}
-            crowdsaleNum={e.crowdsaleNum}
-            whitelistNum={e.whitelistNum}
-            addr={e.addr}
-            min={e.min}
-            max={e.max}
-            alreadyDeployed={e.alreadyDeployed}
+            key={`${num}-${item.addr}`}
+            crowdsaleNum={num}
+            {...item}
           />
         )}
         <Dropzone
