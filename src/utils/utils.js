@@ -70,7 +70,7 @@ export const getStepClass = (step, activeStep) => step === activeStep ? "step-na
 
 export const validateTier = (tier) => typeof tier === 'string' && tier.length > 0 && tier.length < 30
 
-export const validateName = (name) => typeof name === 'string' && name.length > 0 && name.length < 30
+export const validateName = (name) => typeof name === 'string' && name.length > 0 && name.length <= 30
 
 export const validateSupply = (supply) =>  isNaN(Number(supply)) === false && Number(supply) > 0
 
