@@ -2,13 +2,11 @@ import React from "react";
 import "../../assets/stylesheets/application.css";
 import { Link } from "react-router-dom";
 import { setExistingContractParams, getNetworkVersion, getNetWorkNameById } from "../../utils/blockchainHelpers";
-import { defaultCompanyStartDate } from "./utils";
-import { defaultCompanyEndDate, gweiToWei, weiToGwei } from "../../utils/utils";
+import { gweiToWei, weiToGwei } from "../../utils/utils";
 import { StepNavigation } from "../Common/StepNavigation";
 import { InputField } from "../Common/InputField";
 import { RadioInputField } from "../Common/RadioInputField";
 import { CrowdsaleBlock } from "./CrowdsaleBlock";
-import { WhitelistInputBlock } from "../Common/WhitelistInputBlock";
 import {
   NAVIGATION_STEPS,
   VALIDATION_MESSAGES,
@@ -16,8 +14,9 @@ import {
   TEXT_FIELDS,
   CONTRACT_TYPES,
   CHAINS,
-  DESCRIPTION
-} from "../../utils/constants";
+  defaultTier,
+  defaultTierValidations
+} from '../../utils/constants'
 import { inject, observer } from "mobx-react";
 import { Loader } from '../Common/Loader'
 import { noGasPriceAvailable, warningOnMainnetAlert } from '../../utils/alerts'
@@ -25,34 +24,33 @@ import { NumericInput } from '../Common/NumericInput'
 import update from 'immutability-helper'
 
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS;
-const { EMPTY, VALID, INVALID } = VALIDATION_TYPES;
-const {
-  START_TIME,
-  END_TIME,
-  MINCAP,
-  RATE,
-  SUPPLY,
-  WALLET_ADDRESS,
-  CROWDSALE_SETUP_NAME,
-  ALLOWMODIFYING,
-  ENABLE_WHITELISTING
-} = TEXT_FIELDS;
+const { VALID, INVALID } = VALIDATION_TYPES;
+const { MINCAP, WALLET_ADDRESS, ENABLE_WHITELISTING } = TEXT_FIELDS;
 
-@inject("contractStore", "crowdsaleBlockListStore", "pricingStrategyStore", "web3Store", "tierStore", "generalStore", "gasPriceStore", "reservedTokenStore", "deploymentStore", "tokenStore")
+@inject(
+  "contractStore",
+  "crowdsaleBlockListStore",
+  "web3Store",
+  "tierStore",
+  "generalStore",
+  "gasPriceStore",
+  "reservedTokenStore",
+  "deploymentStore",
+  "tokenStore"
+)
 @observer
 export class stepThree extends React.Component {
   constructor(props) {
     super(props);
-    const { contractStore, crowdsaleBlockListStore, tierStore, gasPriceStore } = props;
-    window.scrollTo(0, 0);
+
+    const { contractStore, crowdsaleBlockListStore, gasPriceStore } = props;
+
     if (contractStore.crowdsale.addr.length > 0) {
       contractStore.setContractProperty("pricingStrategy", "addr", []);
       setExistingContractParams(contractStore.abi, contractStore.addr[0], contractStore.setContractProperty);
     }
-    crowdsaleBlockListStore.emptyList();
-    tierStore.setTierProperty("Tier 1", "tier", 0);
-    tierStore.setTierProperty("off", "updatable", 0);
-    tierStore.setTierProperty("no", "whitelistEnabled", 0);
+
+    crowdsaleBlockListStore.emptyList()
 
     this.state = {
       loading: true,
@@ -71,79 +69,74 @@ export class stepThree extends React.Component {
     }
   }
 
-  showErrorMessages = parent => {
-    this.props.tierStore.invalidateToken();
-  };
+  componentDidMount () {
+    const { gasPriceStore } = this.props
 
-  addCrowdsale() {
-    const { crowdsaleBlockListStore, tierStore } = this.props;
-    let num = crowdsaleBlockListStore.blockList.length + 1;
-    const newTier = {
-      tier: "Tier " + (num + 1),
-      supply: 0,
-      rate: 0,
-      updatable: "off",
-      whitelist: [],
-      whitelistElements: []
-    };
+    gasPriceStore.updateValues()
+      .then(() => this.setGasPrice(gasPriceStore.slow))
+      .catch(() => noGasPriceAvailable())
+      .then(() => {
+        this.addCrowdsale()
+        this.setState({ loading: false })
+        window.scrollTo(0, 0)
+      })
+  }
 
-    const newTierValidations = {
-      tier: VALID,
-      startTime: VALID,
-      endTime: VALID,
-      supply: EMPTY,
-      rate: EMPTY
-    };
+  showErrorMessages = () => {
+    const { tierStore } = this.props
 
-    tierStore.addTier(newTier);
-    tierStore.addTierValidations(newTierValidations);
-    this.addCrowdsaleBlock(num);
+    tierStore.invalidateToken()
   }
 
   updateTierStore = (event, property, index) => {
-    const { tierStore } = this.props;
-    const value = event.target.value;
-    tierStore.setTierProperty(value, property, index);
-    tierStore.validateTiers(property, index);
-  };
+    const { tierStore } = this.props
+    const value = event.target.value
+
+    tierStore.setTierProperty(value, property, index)
+    tierStore.validateTiers(property, index)
+  }
+
+  addCrowdsale() {
+    const { crowdsaleBlockListStore, tierStore, web3Store } = this.props
+    const { curAddress } = web3Store
+
+    const num = crowdsaleBlockListStore.blockList.length
+    const newTier = Object.assign({}, defaultTier)
+    const newTierValidations = Object.assign({}, defaultTierValidations)
+
+    newTier.tier = `Tier ${num + 1}`
+
+    if (num === 0) {
+      newTier.whitelistEnabled = "no"
+      newTier.walletAddress = curAddress
+    }
+
+    tierStore.addTier(newTier)
+    tierStore.addTierValidations(newTierValidations)
+    this.addCrowdsaleBlock(num)
+  }
+
+  addCrowdsaleBlock (num) {
+    const { crowdsaleBlockListStore } = this.props
+
+    crowdsaleBlockListStore.addCrowdsaleItem(<CrowdsaleBlock key={num.toString()} num={num}/>)
+  }
 
   goToDeploymentStage = () => {
     this.props.history.push('/4')
   }
 
-  addCrowdsaleBlock(num) {
-    this.props.crowdsaleBlockListStore.addCrowdsaleItem(<CrowdsaleBlock num={num} />);
-  }
-
-  renderLink() {
-    return (
-      <div>
-        <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary">
-          {" "}
-          Add Tier
-        </div>
-        <Link
-          to={{ pathname: "/4", query: { state: this.state, changeState: this.changeState } }}
-          onClick={e => this.beforeNavigate(e)}
-          className="button button_fill"
-        >
-          Continue
-        </Link>
-      </div>
-    );
-  }
-
   beforeNavigate = e => {
-    e.preventDefault();
-    e.stopPropagation();
+    e.preventDefault()
+    e.stopPropagation()
 
-    const { tierStore, gasPriceStore } = this.props;
+    const { tierStore, gasPriceStore } = this.props
     const gasPriceIsValid = gasPriceStore.custom.id !== this.state.gasPriceSelected || this.state.validation.gasPrice.valid === VALID
     const isMinCapValid = tierStore.globalMinCap <= tierStore.maxSupply
 
     for (let index = 0; index < tierStore.tiers.length; index++) {
-      tierStore.validateTiers("endTime", index);
-      tierStore.validateTiers("startTime", index);
+      tierStore.validateTiers('endTime', index)
+      tierStore.validateTiers('startTime', index)
     }
 
     if (!isMinCapValid) {
@@ -188,21 +181,25 @@ export class stepThree extends React.Component {
           this.showErrorMessages(e)
         })
     } else {
-      this.showErrorMessages(e);
+      this.showErrorMessages(e)
     }
-  };
+  }
 
-  componentDidMount() {
-    const { tierStore, web3Store, gasPriceStore } = this.props;
-    const { curAddress } = web3Store;
-    tierStore.setTierProperty(curAddress, "walletAddress", 0);
-    tierStore.setTierProperty(defaultCompanyStartDate(), "startTime", 0);
-    tierStore.setTierProperty(defaultCompanyEndDate(tierStore.tiers[0].startTime), "endTime", 0);
+  updateMinCap = ({ value, pristine, valid }) => {
+    const newState = update(this.state, {
+      validation: {
+        minCap: {
+          $set: {
+            pristine: pristine,
+            valid: valid
+          }
+        }
+      }
+    })
+    newState.minCap = value
 
-    gasPriceStore.updateValues()
-      .then(() => this.setGasPrice(gasPriceStore.slow))
-      .catch(() => noGasPriceAvailable())
-      .then(() => this.setState({ loading: false }))
+    this.setState(newState)
+    this.props.tierStore.setGlobalMinCap(value)
   }
 
   setGasPrice({ id, price }) {
@@ -230,23 +227,6 @@ export class stepThree extends React.Component {
 
     this.setState(newState)
     this.props.generalStore.setGasPrice(gweiToWei(value))
-  }
-
-  updateMinCap = ({ value, pristine, valid }) => {
-    const newState = update(this.state, {
-      validation: {
-        minCap: {
-          $set: {
-            pristine: pristine,
-            valid: valid
-          }
-        }
-      }
-    })
-    newState.minCap = value
-
-    this.setState(newState)
-    this.props.tierStore.setGlobalMinCap(value)
   }
 
   renderGasPriceInput() {
@@ -332,7 +312,8 @@ export class stepThree extends React.Component {
 
   render() {
     const { contractStore, crowdsaleBlockListStore, tierStore } = this.props;
-    let globalSettingsBlock = (
+
+    const globalSettingsBlock = (
       <div>
         <div className="section-title">
           <p className="title">Global settings</p>
@@ -342,11 +323,12 @@ export class stepThree extends React.Component {
             side="left"
             type="text"
             title={WALLET_ADDRESS}
-            value={tierStore.tiers[0].walletAddress}
+            value={tierStore.tiers[0] && tierStore.tiers[0].walletAddress}
             valid={tierStore.validTiers[0] && tierStore.validTiers[0].walletAddress}
             errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS}
             onChange={e => this.updateTierStore(e, "walletAddress", 0)}
-            description={`Where the money goes after investors transactions. Immediately after each transaction. We recommend to setup a multisig wallet with hardware based signers.`}
+            description="Where the money goes after investors transactions. Immediately after each transaction. We
+             recommend to setup a multisig wallet with hardware based signers."
           />
           {this.renderGasPriceInput()}
         </div>
@@ -354,8 +336,9 @@ export class stepThree extends React.Component {
           <NumericInput
             side="left"
             title={MINCAP}
-            description="Minimum amount tokens to buy. Not a minimal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy."
-            disabled={tierStore.tiers[0].whitelistEnabled === "yes"}
+            description="Minimum amount tokens to buy. Not a minimal size of a transaction. If minCap is 1 and user
+             bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy."
+            disabled={tierStore.tiers[0] && tierStore.tiers[0].whitelistEnabled === "yes"}
             min={this.props.tokenStore.decimals ? Number(`1e-${this.props.tokenStore.decimals}`) : 1}
             acceptFloat={!!this.props.tokenStore.decimals}
             maxDecimals={this.props.tokenStore.decimals}
@@ -369,115 +352,38 @@ export class stepThree extends React.Component {
             extraClassName="right"
             title={ENABLE_WHITELISTING}
             items={[{ label: 'yes', value: 'yes' }, { label: 'no', value: 'no' }]}
-            selectedItem={tierStore.tiers[0].whitelistEnabled}
+            selectedItem={tierStore.tiers[0] && tierStore.tiers[0].whitelistEnabled}
             onChange={e => this.updateWhitelistEnabled(e)}
-            description={`Enables whitelisting. If disabled, anyone can participate in the crowdsale.`}
+            description="Enables whitelisting. If disabled, anyone can participate in the crowdsale."
           />
         </div>
       </div>
-    );
+    )
+
     if (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap) {
-      let whitelistInputBlock = (
-        <div>
-          <div className="section-title">
-            <p className="title">Whitelist</p>
-          </div>
-          <WhitelistInputBlock num={0} />
-        </div>
-      );
       return (
         <section className="steps steps_crowdsale-contract" ref="three">
-          <StepNavigation activeStep={CROWDSALE_SETUP} />
+          <StepNavigation activeStep={CROWDSALE_SETUP}/>
           <div className="steps-content container">
             <div className="about-step">
-              <div className="step-icons step-icons_crowdsale-setup" />
+              <div className="step-icons step-icons_crowdsale-setup"/>
               <p className="title">Crowdsale setup</p>
-              <p className="description">
-                The most important and exciting part of the crowdsale process. Here you can define parameters of your
-                crowdsale campaign.
-              </p>
+              <p className="description">The most important and exciting part of the crowdsale process. Here you can
+                define parameters of your crowdsale campaign.</p>
             </div>
             {globalSettingsBlock}
           </div>
 
-          {/* First tier */}
-          <div style={{ marginTop: "40px" }} className="steps-content container">
-            <div className="hidden">
-              <div className="input-block-container">
-                <InputField
-                  side="left"
-                  type="text"
-                  title={CROWDSALE_SETUP_NAME}
-                  value={tierStore.tiers[0].tier}
-                  valid={tierStore.validTiers[0] && tierStore.validTiers[0].tier}
-                  errorMessage={VALIDATION_MESSAGES.TIER}
-                  onChange={e => this.updateTierStore(e, "tier", 0)}
-                  description={DESCRIPTION.CROWDSALE_SETUP_NAME}
-                />
-                <RadioInputField
-                  extraClassName="right"
-                  title={ALLOWMODIFYING}
-                  items={[{ label: 'on', value: 'on' }, { label: 'off', value: 'off' }]}
-                  selectedItem={this.props.tierStore.tiers[0].updatable}
-                  onChange={e => this.updateTierStore(e, "updatable", 0)}
-                  description={DESCRIPTION.ALLOW_MODIFYING}
-                />
-              </div>
-              <div className="input-block-container">
-                <InputField
-                  side="left"
-                  type="datetime-local"
-                  title={START_TIME}
-                  value={tierStore.tiers[0].startTime}
-                  valid={tierStore.validTiers[0] && tierStore.validTiers[0].startTime}
-                  errorMessage={VALIDATION_MESSAGES.START_TIME}
-                  onChange={e => this.updateTierStore(e, "startTime", 0)}
-                  description={DESCRIPTION.START_TIME}
-                />
-                <InputField
-                  side="right"
-                  type="datetime-local"
-                  title={END_TIME}
-                  value={tierStore.tiers[0].endTime}
-                  valid={tierStore.validTiers[0] && tierStore.validTiers[0].endTime}
-                  errorMessage={VALIDATION_MESSAGES.END_TIME}
-                  onChange={e => this.updateTierStore(e, "endTime", 0)}
-                  description={DESCRIPTION.END_TIME}
-                />
-              </div>
-              <div className="input-block-container">
-                <InputField
-                  side="left"
-                  type="number"
-                  title={RATE}
-                  value={tierStore.tiers[0].rate}
-                  valid={tierStore.validTiers[0] && tierStore.validTiers[0].rate}
-                  errorMessage={VALIDATION_MESSAGES.RATE}
-                  onChange={e => this.updateTierStore(e, "rate", 0)}
-                  description={DESCRIPTION.RATE}
-                />
-                <InputField
-                  side="right"
-                  type="number"
-                  title={SUPPLY}
-                  value={tierStore.tiers[0].supply}
-                  valid={tierStore.validTiers[0] && tierStore.validTiers[0].supply}
-                  errorMessage={VALIDATION_MESSAGES.SUPPLY}
-                  onChange={e => this.updateTierStore(e, "supply", 0)}
-                  description={DESCRIPTION.SUPPLY}
-                />
-              </div>
-            </div>
-            {tierStore.tiers[0].whitelistEnabled === "yes" ? whitelistInputBlock : ""}
-          </div>
-
-          {/* Other tiers */}
           <div>{crowdsaleBlockListStore.blockList}</div>
 
-          <div className="button-container">{this.renderLink()}</div>
+          <div className="button-container">
+            <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary">Add Tier</div>
+            <Link onClick={e => this.beforeNavigate(e)} className="button button_fill" to="/4">Continue</Link>
+          </div>
+
           <Loader show={this.state.loading}/>
         </section>
-      );
+      )
     }
   }
 }
