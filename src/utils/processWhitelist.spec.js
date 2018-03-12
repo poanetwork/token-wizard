@@ -75,8 +75,10 @@ describe('processWhitelist function', () => {
   it('should ignore invalid addresses', () => {
     // Given
     const rows = [
-      ['0x123456789012345678901234567890123456789', '1', '10'],
-      ['0x12345678901234567890123456789012345678901', '1', '10']
+      ['0x123456789012345678901234567890123456789', '1', '10'], // 41 characters
+      ['0x12345678901234567890123456789012345678901', '1', '10'], // 43 characters
+      ['0x90F8bf6A479f320ead074411a4B0e7944Ea8c9CG', '1', '10'], // invalid character
+      ['0x90F8bf6A479f320ead074411a4B0e7944Ea8c9c1', '1', '10'] // invalid checksum
     ]
     const cb = jest.fn()
 
