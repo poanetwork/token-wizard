@@ -193,15 +193,24 @@ export class Manage extends Component {
     const lastCrowdsaleAddress = contractStore.crowdsale.addr.slice(-1)[0]
 
     return attachToContract(contractStore.crowdsale.abi, lastCrowdsaleAddress)
-      .then(crowdsaleContract => crowdsaleContract.methods.isCrowdsaleFull().call())
-      .then(
-        (isCrowdsaleFull) => {
-          const { crowdsaleHasEnded, shouldDistribute, canDistribute } = this.state
-          const wasDistributed = shouldDistribute && !canDistribute
+      .then(crowdsaleContract => {
+        const whenIsFinalized = crowdsaleContract.methods.finalized().call()
+        const whenIsCrowdsaleFull = crowdsaleContract.methods.isCrowdsaleFull().call()
 
-          this.setState({
-            canFinalize: (crowdsaleHasEnded || isCrowdsaleFull) && (wasDistributed || !shouldDistribute)
-          })
+        return Promise.all([whenIsFinalized, whenIsCrowdsaleFull])
+      })
+      .then(
+        ([isFinalized, isCrowdsaleFull]) => {
+          if (isFinalized) {
+            this.setState({ canFinalize: false })
+          } else {
+            const { crowdsaleHasEnded, shouldDistribute, canDistribute } = this.state
+            const wasDistributed = shouldDistribute && !canDistribute
+
+            this.setState({
+              canFinalize: (crowdsaleHasEnded || isCrowdsaleFull) && (wasDistributed || !shouldDistribute)
+            })
+          }
         },
         () => this.setState({ canFinalize: false })
       )
@@ -293,9 +302,13 @@ export class Manage extends Component {
                     return sendTXToContract(finalizeMethod.send(opts))
                   })
                   .then(() => {
-                    successfulFinalizeAlert()
                     crowdsaleStore.setSelectedProperty('finalized', true)
-                    this.setState({ canFinalize: false })
+                    this.setState({ canFinalize: false }, () => {
+                      successfulFinalizeAlert().then(() => {
+                        this.setState({ loading: true })
+                        setTimeout(() => window.location.reload(), 500)
+                      })
+                    })
                   })
                   .catch((err) => {
                     console.log(err)
@@ -446,7 +459,7 @@ export class Manage extends Component {
 
   tierHasStarted = (index) => {
     const initialTierValues = this.props.crowdsaleStore.selected.initialTiersValues[index]
-    return initialTierValues ? Date.now() > new Date(initialTierValues.startTime).getTime() : true
+    return initialTierValues && new Date(initialTierValues.startTime).getTime() < Date.now()
   }
 
   tierHasEnded = (index) => {
@@ -458,7 +471,8 @@ export class Manage extends Component {
     const { formPristine, canFinalize, shouldDistribute, canDistribute, crowdsaleHasEnded, ownerCurrentUser } = this.state
     const { generalStore, tierStore, tokenStore, crowdsaleStore } = this.props
     const { address: crowdsaleAddress, finalized, updatable } = crowdsaleStore.selected
-    let disabled = !ownerCurrentUser || canDistribute || canFinalize || finalized
+
+    const canEditTier = ownerCurrentUser && !canDistribute && !canFinalize && !finalized
 
     const distributeTokensStep = (
       <div className="steps-content container">
@@ -528,7 +542,7 @@ export class Manage extends Component {
     }
 
     const tierStartAndEndTime = (tier, index) => {
-      disabled = disabled || !tier.updatable || this.tierHasEnded(index)
+      const disabled = !canEditTier || !tier.updatable || this.tierHasEnded(index)
 
       return <div className='input-block-container'>
         <InputField
@@ -557,7 +571,7 @@ export class Manage extends Component {
     }
 
     const tierRateAndSupply = (tier, index) => {
-      disabled = disabled || !tier.updatable || this.tierHasEnded(index) || this.tierHasStarted(index)
+      const disabled = !canEditTier || !tier.updatable || this.tierHasEnded(index) || this.tierHasStarted(index)
 
       return <div className='input-block-container'>
         <InputField

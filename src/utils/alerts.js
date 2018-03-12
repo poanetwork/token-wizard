@@ -130,7 +130,7 @@ export function warningOnFinalizeCrowdsale() {
 }
 
 export function successfulFinalizeAlert() {
-  sweetAlert2({
+  return sweetAlert2({
     title: "Success",
     html: "Congrats! You've successfully finalized the Crowdsale!",
     type: "success"
@@ -211,5 +211,12 @@ export function skippingTransaction() {
     cancelButtonText: "No",
     confirmButtonText: "Yes",
     reverseButtons: true
+  })
+}
+export function whitelistImported(count) {
+  return sweetAlert2({
+    title: 'Addresses imported',
+    html: `${count} addresses were added to the whitelist`,
+    type: 'info'
   })
 }
