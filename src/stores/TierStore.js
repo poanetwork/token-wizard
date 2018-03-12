@@ -182,8 +182,7 @@ class TierStore {
       if (storedIndex > -1) {
         whitelist[storedIndex].duplicated = true
         newItem.duplicated = true
-
-      } else if (isAdded) return
+      }
 
     } else if (isAdded) return
 
