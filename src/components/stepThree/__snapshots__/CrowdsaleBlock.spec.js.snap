@@ -1,0 +1,1736 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CrowdsaleBlock Should render the component for the first Tier 1`] = `
+<Provider
+  tierStore={
+    TierStore {
+      "globalMinCap": "",
+      "tiers": Array [
+        Object {
+          "endTime": "2018-03-09T00:00",
+          "rate": "",
+          "startTime": "2018-03-05T11:05",
+          "supply": "",
+          "tier": "Tier 1",
+          "updatable": "off",
+          "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+          "whitelist": Array [],
+          "whitelistElements": Array [],
+          "whitelistEnabled": "no",
+        },
+      ],
+      "validTiers": Array [
+        Object {
+          "endTime": "VALIDATED",
+          "rate": "EMPTY",
+          "startTime": "VALIDATED",
+          "supply": "EMPTY",
+          "tier": "VALIDATED",
+          "updatable": "VALIDATED",
+        },
+      ],
+    }
+  }
+>
+  <inject-CrowdsaleBlock-with-tierStore
+    num={0}
+  >
+    <CrowdsaleBlock
+      num={0}
+      tierStore={
+        TierStore {
+          "globalMinCap": "",
+          "tiers": Array [
+            Object {
+              "endTime": "2018-03-09T00:00",
+              "rate": "",
+              "startTime": "2018-03-05T11:05",
+              "supply": "",
+              "tier": "Tier 1",
+              "updatable": "off",
+              "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+              "whitelist": Array [],
+              "whitelistElements": Array [],
+              "whitelistEnabled": "no",
+            },
+          ],
+          "validTiers": Array [
+            Object {
+              "endTime": "VALIDATED",
+              "rate": "EMPTY",
+              "startTime": "VALIDATED",
+              "supply": "EMPTY",
+              "tier": "VALIDATED",
+              "updatable": "VALIDATED",
+            },
+          ],
+        }
+      }
+    >
+      <div
+        className="steps-content container"
+        style={
+          Object {
+            "marginTop": "40px",
+          }
+        }
+      >
+        <div
+          className="hidden"
+        >
+          <div
+            className="input-block-container"
+          >
+            <InputField
+              description="Name of a tier, e.g. PrePreCrowdsale, PreCrowdsale, Crowdsale with bonus A, Crowdsale with bonus B, etc. We simplified that and will increment a number after each tier."
+              errorMessage="Please enter a valid tier name between 1-30 characters"
+              onChange={[Function]}
+              side="left"
+              title="Crowdsale setup name"
+              type="text"
+              valid="VALIDATED"
+              value="Tier 1"
+            >
+              <div
+                className="left"
+              >
+                <label
+                  className="label"
+                >
+                  Crowdsale setup name
+                </label>
+                <input
+                  className="input"
+                  onChange={[Function]}
+                  type="text"
+                  value="Tier 1"
+                />
+                <p
+                  className="description"
+                >
+                  Name of a tier, e.g. PrePreCrowdsale, PreCrowdsale, Crowdsale with bonus A, Crowdsale with bonus B, etc. We simplified that and will increment a number after each tier.
+                </p>
+                <p
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "10px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </div>
+            </InputField>
+            <RadioInputField
+              description="Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing."
+              extraClassName="right"
+              items={
+                Array [
+                  Object {
+                    "label": "on",
+                    "value": "on",
+                  },
+                  Object {
+                    "label": "off",
+                    "value": "off",
+                  },
+                ]
+              }
+              onChange={[Function]}
+              selectedItem="off"
+              title="Allow modifying"
+            >
+              <div
+                className="right"
+              >
+                <label
+                  className="label"
+                >
+                  Allow modifying
+                </label>
+                <div
+                  className="radios-inline"
+                >
+                  <label
+                    className="radio-inline"
+                    key="0"
+                  >
+                    <input
+                      checked={false}
+                      onChange={[Function]}
+                      type="radio"
+                      value="on"
+                    />
+                    <span
+                      className="title"
+                    >
+                      on
+                    </span>
+                  </label>
+                  <label
+                    className="radio-inline"
+                    key="1"
+                  >
+                    <input
+                      checked={true}
+                      onChange={[Function]}
+                      type="radio"
+                      value="off"
+                    />
+                    <span
+                      className="title"
+                    >
+                      off
+                    </span>
+                  </label>
+                </div>
+                <p
+                  className="description"
+                >
+                  Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing.
+                </p>
+              </div>
+            </RadioInputField>
+          </div>
+          <div
+            className="input-block-container"
+          >
+            <InputField
+              description="Date and time when the tier starts. Can't be in the past from the current moment."
+              errorMessage="Please enter a valid date not less than the end time of the previous tier"
+              onChange={[Function]}
+              side="left"
+              title="Start Time"
+              type="datetime-local"
+              valid="VALIDATED"
+              value="2018-03-05T11:05"
+            >
+              <div
+                className="left"
+              >
+                <label
+                  className="label"
+                >
+                  Start Time
+                </label>
+                <input
+                  className="input"
+                  onChange={[Function]}
+                  type="datetime-local"
+                  value="2018-03-05T11:05"
+                />
+                <p
+                  className="description"
+                >
+                  Date and time when the tier starts. Can't be in the past from the current moment.
+                </p>
+                <p
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "10px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </div>
+            </InputField>
+            <InputField
+              description="Date and time when the tier ends. Can be only in the future."
+              errorMessage="Please enter a valid date later than start time"
+              onChange={[Function]}
+              side="right"
+              title="End Time"
+              type="datetime-local"
+              valid="VALIDATED"
+              value="2018-03-09T00:00"
+            >
+              <div
+                className="right"
+              >
+                <label
+                  className="label"
+                >
+                  End Time
+                </label>
+                <input
+                  className="input"
+                  onChange={[Function]}
+                  type="datetime-local"
+                  value="2018-03-09T00:00"
+                />
+                <p
+                  className="description"
+                >
+                  Date and time when the tier ends. Can be only in the future.
+                </p>
+                <p
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "10px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </div>
+            </InputField>
+          </div>
+          <div
+            className="input-block-container"
+          >
+            <BigNumberInput
+              description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens"
+              errorMessage="Please enter a valid number greater than 0"
+              max={1000000000000000000}
+              min={1}
+              onChange={[Function]}
+              pristine={true}
+              side="left"
+              title="Rate"
+              valid="INVALID"
+              value=""
+            >
+              <InputField
+                description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens"
+                errorMessage="Please enter a valid number greater than 0"
+                onChange={[Function]}
+                onKeyPress={[Function]}
+                onPaste={[Function]}
+                pristine={true}
+                side="left"
+                title="Rate"
+                type="text"
+                valid="INVALID"
+                value=""
+              >
+                <div
+                  className="left"
+                >
+                  <label
+                    className="label"
+                  >
+                    Rate
+                  </label>
+                  <input
+                    className="input"
+                    onChange={[Function]}
+                    onKeyPress={[Function]}
+                    onPaste={[Function]}
+                    type="text"
+                    value=""
+                  />
+                  <p
+                    className="description"
+                  >
+                    Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
+                  </p>
+                  <p
+                    style={
+                      Object {
+                        "color": "red",
+                        "fontSize": "12px",
+                        "fontWeight": "bold",
+                        "height": "10px",
+                        "width": "100%",
+                      }
+                    }
+                  />
+                </div>
+              </InputField>
+            </BigNumberInput>
+            <InputField
+              description="How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers"
+              errorMessage="Please enter a valid number greater than 0"
+              onChange={[Function]}
+              side="right"
+              title="Supply"
+              type="number"
+              valid="EMPTY"
+              value=""
+            >
+              <div
+                className="right"
+              >
+                <label
+                  className="label"
+                >
+                  Supply
+                </label>
+                <input
+                  className="input"
+                  onChange={[Function]}
+                  type="number"
+                  value=""
+                />
+                <p
+                  className="description"
+                >
+                  How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
+                </p>
+                <p
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "10px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </div>
+            </InputField>
+          </div>
+        </div>
+      </div>
+    </CrowdsaleBlock>
+  </inject-CrowdsaleBlock-with-tierStore>
+</Provider>
+`;
+
+exports[`CrowdsaleBlock Should render the component for the second Tier 1`] = `
+<Provider
+  tierStore={
+    TierStore {
+      "globalMinCap": "",
+      "tiers": Array [
+        Object {
+          "endTime": "2018-03-09T00:00",
+          "rate": "",
+          "startTime": "2018-03-05T11:05",
+          "supply": "",
+          "tier": "Tier 1",
+          "updatable": "off",
+          "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+          "whitelist": Array [],
+          "whitelistElements": Array [],
+          "whitelistEnabled": "no",
+        },
+        Object {
+          "endTime": "2018-03-13T00:00",
+          "rate": "",
+          "startTime": "2018-03-09T00:00",
+          "supply": "",
+          "tier": "Tier 1",
+          "updatable": "off",
+          "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+          "whitelist": Array [],
+          "whitelistElements": Array [],
+          "whitelistEnabled": "no",
+        },
+        Object {
+          "endTime": "",
+          "rate": "",
+          "startTime": "",
+          "supply": "",
+          "tier": "Tier 2",
+          "updatable": "off",
+          "whitelist": Array [],
+          "whitelistElements": Array [],
+        },
+      ],
+      "validTiers": Array [
+        Object {
+          "endTime": "VALIDATED",
+          "rate": "EMPTY",
+          "startTime": "VALIDATED",
+          "supply": "EMPTY",
+          "tier": "VALIDATED",
+          "updatable": "VALIDATED",
+        },
+        Object {
+          "endTime": "VALIDATED",
+          "rate": "EMPTY",
+          "startTime": "VALIDATED",
+          "supply": "EMPTY",
+          "tier": "VALIDATED",
+          "updatable": "VALIDATED",
+        },
+        Object {
+          "endTime": "VALIDATED",
+          "rate": "EMPTY",
+          "startTime": "VALIDATED",
+          "supply": "EMPTY",
+          "tier": "VALIDATED",
+          "updatable": "VALIDATED",
+        },
+      ],
+    }
+  }
+>
+  <inject-CrowdsaleBlock-with-tierStore
+    num={1}
+  >
+    <CrowdsaleBlock
+      num={1}
+      tierStore={
+        TierStore {
+          "globalMinCap": "",
+          "tiers": Array [
+            Object {
+              "endTime": "2018-03-09T00:00",
+              "rate": "",
+              "startTime": "2018-03-05T11:05",
+              "supply": "",
+              "tier": "Tier 1",
+              "updatable": "off",
+              "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+              "whitelist": Array [],
+              "whitelistElements": Array [],
+              "whitelistEnabled": "no",
+            },
+            Object {
+              "endTime": "2018-03-13T00:00",
+              "rate": "",
+              "startTime": "2018-03-09T00:00",
+              "supply": "",
+              "tier": "Tier 1",
+              "updatable": "off",
+              "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+              "whitelist": Array [],
+              "whitelistElements": Array [],
+              "whitelistEnabled": "no",
+            },
+            Object {
+              "endTime": "",
+              "rate": "",
+              "startTime": "",
+              "supply": "",
+              "tier": "Tier 2",
+              "updatable": "off",
+              "whitelist": Array [],
+              "whitelistElements": Array [],
+            },
+          ],
+          "validTiers": Array [
+            Object {
+              "endTime": "VALIDATED",
+              "rate": "EMPTY",
+              "startTime": "VALIDATED",
+              "supply": "EMPTY",
+              "tier": "VALIDATED",
+              "updatable": "VALIDATED",
+            },
+            Object {
+              "endTime": "VALIDATED",
+              "rate": "EMPTY",
+              "startTime": "VALIDATED",
+              "supply": "EMPTY",
+              "tier": "VALIDATED",
+              "updatable": "VALIDATED",
+            },
+            Object {
+              "endTime": "VALIDATED",
+              "rate": "EMPTY",
+              "startTime": "VALIDATED",
+              "supply": "EMPTY",
+              "tier": "VALIDATED",
+              "updatable": "VALIDATED",
+            },
+          ],
+        }
+      }
+    >
+      <div
+        className="steps-content container"
+        style={
+          Object {
+            "marginTop": "40px",
+          }
+        }
+      >
+        <div
+          className="hidden"
+        >
+          <div
+            className="input-block-container"
+          >
+            <InputField
+              description="Name of a tier, e.g. PrePreCrowdsale, PreCrowdsale, Crowdsale with bonus A, Crowdsale with bonus B, etc. We simplified that and will increment a number after each tier."
+              errorMessage="Please enter a valid tier name between 1-30 characters"
+              onChange={[Function]}
+              side="left"
+              title="Crowdsale setup name"
+              type="text"
+              valid="VALIDATED"
+              value="Tier 1"
+            >
+              <div
+                className="left"
+              >
+                <label
+                  className="label"
+                >
+                  Crowdsale setup name
+                </label>
+                <input
+                  className="input"
+                  onChange={[Function]}
+                  type="text"
+                  value="Tier 1"
+                />
+                <p
+                  className="description"
+                >
+                  Name of a tier, e.g. PrePreCrowdsale, PreCrowdsale, Crowdsale with bonus A, Crowdsale with bonus B, etc. We simplified that and will increment a number after each tier.
+                </p>
+                <p
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "10px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </div>
+            </InputField>
+            <RadioInputField
+              description="Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing."
+              extraClassName="right"
+              items={
+                Array [
+                  Object {
+                    "label": "on",
+                    "value": "on",
+                  },
+                  Object {
+                    "label": "off",
+                    "value": "off",
+                  },
+                ]
+              }
+              onChange={[Function]}
+              selectedItem="off"
+              title="Allow modifying"
+            >
+              <div
+                className="right"
+              >
+                <label
+                  className="label"
+                >
+                  Allow modifying
+                </label>
+                <div
+                  className="radios-inline"
+                >
+                  <label
+                    className="radio-inline"
+                    key="0"
+                  >
+                    <input
+                      checked={false}
+                      onChange={[Function]}
+                      type="radio"
+                      value="on"
+                    />
+                    <span
+                      className="title"
+                    >
+                      on
+                    </span>
+                  </label>
+                  <label
+                    className="radio-inline"
+                    key="1"
+                  >
+                    <input
+                      checked={true}
+                      onChange={[Function]}
+                      type="radio"
+                      value="off"
+                    />
+                    <span
+                      className="title"
+                    >
+                      off
+                    </span>
+                  </label>
+                </div>
+                <p
+                  className="description"
+                >
+                  Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing.
+                </p>
+              </div>
+            </RadioInputField>
+          </div>
+          <div
+            className="input-block-container"
+          >
+            <InputField
+              description="Date and time when the tier starts. Can't be in the past from the current moment."
+              errorMessage="Please enter a valid date not less than the end time of the previous tier"
+              onChange={[Function]}
+              side="left"
+              title="Start Time"
+              type="datetime-local"
+              valid="VALIDATED"
+              value="2018-03-09T00:00"
+            >
+              <div
+                className="left"
+              >
+                <label
+                  className="label"
+                >
+                  Start Time
+                </label>
+                <input
+                  className="input"
+                  onChange={[Function]}
+                  type="datetime-local"
+                  value="2018-03-09T00:00"
+                />
+                <p
+                  className="description"
+                >
+                  Date and time when the tier starts. Can't be in the past from the current moment.
+                </p>
+                <p
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "10px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </div>
+            </InputField>
+            <InputField
+              description="Date and time when the tier ends. Can be only in the future."
+              errorMessage="Please enter a valid date later than start time"
+              onChange={[Function]}
+              side="right"
+              title="End Time"
+              type="datetime-local"
+              valid="VALIDATED"
+              value="2018-03-13T00:00"
+            >
+              <div
+                className="right"
+              >
+                <label
+                  className="label"
+                >
+                  End Time
+                </label>
+                <input
+                  className="input"
+                  onChange={[Function]}
+                  type="datetime-local"
+                  value="2018-03-13T00:00"
+                />
+                <p
+                  className="description"
+                >
+                  Date and time when the tier ends. Can be only in the future.
+                </p>
+                <p
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "10px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </div>
+            </InputField>
+          </div>
+          <div
+            className="input-block-container"
+          >
+            <BigNumberInput
+              description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens"
+              errorMessage="Please enter a valid number greater than 0"
+              max={1000000000000000000}
+              min={1}
+              onChange={[Function]}
+              pristine={true}
+              side="left"
+              title="Rate"
+              valid="INVALID"
+              value=""
+            >
+              <InputField
+                description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens"
+                errorMessage="Please enter a valid number greater than 0"
+                onChange={[Function]}
+                onKeyPress={[Function]}
+                onPaste={[Function]}
+                pristine={true}
+                side="left"
+                title="Rate"
+                type="text"
+                valid="INVALID"
+                value=""
+              >
+                <div
+                  className="left"
+                >
+                  <label
+                    className="label"
+                  >
+                    Rate
+                  </label>
+                  <input
+                    className="input"
+                    onChange={[Function]}
+                    onKeyPress={[Function]}
+                    onPaste={[Function]}
+                    type="text"
+                    value=""
+                  />
+                  <p
+                    className="description"
+                  >
+                    Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
+                  </p>
+                  <p
+                    style={
+                      Object {
+                        "color": "red",
+                        "fontSize": "12px",
+                        "fontWeight": "bold",
+                        "height": "10px",
+                        "width": "100%",
+                      }
+                    }
+                  />
+                </div>
+              </InputField>
+            </BigNumberInput>
+            <InputField
+              description="How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers"
+              errorMessage="Please enter a valid number greater than 0"
+              onChange={[Function]}
+              side="right"
+              title="Supply"
+              type="number"
+              valid="EMPTY"
+              value=""
+            >
+              <div
+                className="right"
+              >
+                <label
+                  className="label"
+                >
+                  Supply
+                </label>
+                <input
+                  className="input"
+                  onChange={[Function]}
+                  type="number"
+                  value=""
+                />
+                <p
+                  className="description"
+                >
+                  How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
+                </p>
+                <p
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "10px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </div>
+            </InputField>
+          </div>
+        </div>
+      </div>
+    </CrowdsaleBlock>
+  </inject-CrowdsaleBlock-with-tierStore>
+</Provider>
+`;
+
+exports[`CrowdsaleBlock Should render the component for the second Tier with whitelist enabled 1`] = `
+<Provider
+  tierStore={
+    TierStore {
+      "globalMinCap": "",
+      "tiers": Array [
+        Object {
+          "endTime": "2018-03-09T00:00",
+          "rate": "",
+          "startTime": "2018-03-05T11:05",
+          "supply": "",
+          "tier": "Tier 1",
+          "updatable": "off",
+          "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+          "whitelist": Array [],
+          "whitelistElements": Array [],
+          "whitelistEnabled": "yes",
+        },
+        Object {
+          "endTime": "2018-03-13T00:00",
+          "rate": "",
+          "startTime": "2018-03-09T00:00",
+          "supply": "",
+          "tier": "Tier 1",
+          "updatable": "off",
+          "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+          "whitelist": Array [],
+          "whitelistElements": Array [],
+          "whitelistEnabled": "no",
+        },
+        Object {
+          "endTime": "",
+          "rate": "",
+          "startTime": "",
+          "supply": "",
+          "tier": "Tier 2",
+          "updatable": "off",
+          "whitelist": Array [],
+          "whitelistElements": Array [],
+        },
+        Object {
+          "endTime": "",
+          "rate": "",
+          "startTime": "",
+          "supply": "",
+          "tier": "Tier 1",
+          "updatable": "off",
+          "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+          "whitelist": Array [],
+          "whitelistElements": Array [],
+          "whitelistEnabled": "no",
+        },
+        Object {
+          "endTime": "",
+          "rate": "",
+          "startTime": "",
+          "supply": "",
+          "tier": "Tier 2",
+          "updatable": "off",
+          "whitelist": Array [],
+          "whitelistElements": Array [],
+        },
+      ],
+      "validTiers": Array [
+        Object {
+          "endTime": "VALIDATED",
+          "rate": "EMPTY",
+          "startTime": "VALIDATED",
+          "supply": "EMPTY",
+          "tier": "VALIDATED",
+          "updatable": "VALIDATED",
+        },
+        Object {
+          "endTime": "VALIDATED",
+          "rate": "EMPTY",
+          "startTime": "VALIDATED",
+          "supply": "EMPTY",
+          "tier": "VALIDATED",
+          "updatable": "VALIDATED",
+        },
+        Object {
+          "endTime": "VALIDATED",
+          "rate": "EMPTY",
+          "startTime": "VALIDATED",
+          "supply": "EMPTY",
+          "tier": "VALIDATED",
+          "updatable": "VALIDATED",
+        },
+        Object {
+          "endTime": "VALIDATED",
+          "rate": "EMPTY",
+          "startTime": "VALIDATED",
+          "supply": "EMPTY",
+          "tier": "VALIDATED",
+          "updatable": "VALIDATED",
+        },
+        Object {
+          "endTime": "VALIDATED",
+          "rate": "EMPTY",
+          "startTime": "VALIDATED",
+          "supply": "EMPTY",
+          "tier": "VALIDATED",
+          "updatable": "VALIDATED",
+        },
+      ],
+    }
+  }
+>
+  <inject-CrowdsaleBlock-with-tierStore
+    num={1}
+  >
+    <CrowdsaleBlock
+      num={1}
+      tierStore={
+        TierStore {
+          "globalMinCap": "",
+          "tiers": Array [
+            Object {
+              "endTime": "2018-03-09T00:00",
+              "rate": "",
+              "startTime": "2018-03-05T11:05",
+              "supply": "",
+              "tier": "Tier 1",
+              "updatable": "off",
+              "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+              "whitelist": Array [],
+              "whitelistElements": Array [],
+              "whitelistEnabled": "yes",
+            },
+            Object {
+              "endTime": "2018-03-13T00:00",
+              "rate": "",
+              "startTime": "2018-03-09T00:00",
+              "supply": "",
+              "tier": "Tier 1",
+              "updatable": "off",
+              "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+              "whitelist": Array [],
+              "whitelistElements": Array [],
+              "whitelistEnabled": "no",
+            },
+            Object {
+              "endTime": "",
+              "rate": "",
+              "startTime": "",
+              "supply": "",
+              "tier": "Tier 2",
+              "updatable": "off",
+              "whitelist": Array [],
+              "whitelistElements": Array [],
+            },
+            Object {
+              "endTime": "",
+              "rate": "",
+              "startTime": "",
+              "supply": "",
+              "tier": "Tier 1",
+              "updatable": "off",
+              "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+              "whitelist": Array [],
+              "whitelistElements": Array [],
+              "whitelistEnabled": "no",
+            },
+            Object {
+              "endTime": "",
+              "rate": "",
+              "startTime": "",
+              "supply": "",
+              "tier": "Tier 2",
+              "updatable": "off",
+              "whitelist": Array [],
+              "whitelistElements": Array [],
+            },
+          ],
+          "validTiers": Array [
+            Object {
+              "endTime": "VALIDATED",
+              "rate": "EMPTY",
+              "startTime": "VALIDATED",
+              "supply": "EMPTY",
+              "tier": "VALIDATED",
+              "updatable": "VALIDATED",
+            },
+            Object {
+              "endTime": "VALIDATED",
+              "rate": "EMPTY",
+              "startTime": "VALIDATED",
+              "supply": "EMPTY",
+              "tier": "VALIDATED",
+              "updatable": "VALIDATED",
+            },
+            Object {
+              "endTime": "VALIDATED",
+              "rate": "EMPTY",
+              "startTime": "VALIDATED",
+              "supply": "EMPTY",
+              "tier": "VALIDATED",
+              "updatable": "VALIDATED",
+            },
+            Object {
+              "endTime": "VALIDATED",
+              "rate": "EMPTY",
+              "startTime": "VALIDATED",
+              "supply": "EMPTY",
+              "tier": "VALIDATED",
+              "updatable": "VALIDATED",
+            },
+            Object {
+              "endTime": "VALIDATED",
+              "rate": "EMPTY",
+              "startTime": "VALIDATED",
+              "supply": "EMPTY",
+              "tier": "VALIDATED",
+              "updatable": "VALIDATED",
+            },
+          ],
+        }
+      }
+    >
+      <div
+        className="steps-content container"
+        style={
+          Object {
+            "marginTop": "40px",
+          }
+        }
+      >
+        <div
+          className="hidden"
+        >
+          <div
+            className="input-block-container"
+          >
+            <InputField
+              description="Name of a tier, e.g. PrePreCrowdsale, PreCrowdsale, Crowdsale with bonus A, Crowdsale with bonus B, etc. We simplified that and will increment a number after each tier."
+              errorMessage="Please enter a valid tier name between 1-30 characters"
+              onChange={[Function]}
+              side="left"
+              title="Crowdsale setup name"
+              type="text"
+              valid="VALIDATED"
+              value="Tier 1"
+            >
+              <div
+                className="left"
+              >
+                <label
+                  className="label"
+                >
+                  Crowdsale setup name
+                </label>
+                <input
+                  className="input"
+                  onChange={[Function]}
+                  type="text"
+                  value="Tier 1"
+                />
+                <p
+                  className="description"
+                >
+                  Name of a tier, e.g. PrePreCrowdsale, PreCrowdsale, Crowdsale with bonus A, Crowdsale with bonus B, etc. We simplified that and will increment a number after each tier.
+                </p>
+                <p
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "10px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </div>
+            </InputField>
+            <RadioInputField
+              description="Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing."
+              extraClassName="right"
+              items={
+                Array [
+                  Object {
+                    "label": "on",
+                    "value": "on",
+                  },
+                  Object {
+                    "label": "off",
+                    "value": "off",
+                  },
+                ]
+              }
+              onChange={[Function]}
+              selectedItem="off"
+              title="Allow modifying"
+            >
+              <div
+                className="right"
+              >
+                <label
+                  className="label"
+                >
+                  Allow modifying
+                </label>
+                <div
+                  className="radios-inline"
+                >
+                  <label
+                    className="radio-inline"
+                    key="0"
+                  >
+                    <input
+                      checked={false}
+                      onChange={[Function]}
+                      type="radio"
+                      value="on"
+                    />
+                    <span
+                      className="title"
+                    >
+                      on
+                    </span>
+                  </label>
+                  <label
+                    className="radio-inline"
+                    key="1"
+                  >
+                    <input
+                      checked={true}
+                      onChange={[Function]}
+                      type="radio"
+                      value="off"
+                    />
+                    <span
+                      className="title"
+                    >
+                      off
+                    </span>
+                  </label>
+                </div>
+                <p
+                  className="description"
+                >
+                  Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing.
+                </p>
+              </div>
+            </RadioInputField>
+          </div>
+          <div
+            className="input-block-container"
+          >
+            <InputField
+              description="Date and time when the tier starts. Can't be in the past from the current moment."
+              errorMessage="Please enter a valid date not less than the end time of the previous tier"
+              onChange={[Function]}
+              side="left"
+              title="Start Time"
+              type="datetime-local"
+              valid="VALIDATED"
+              value="2018-03-09T00:00"
+            >
+              <div
+                className="left"
+              >
+                <label
+                  className="label"
+                >
+                  Start Time
+                </label>
+                <input
+                  className="input"
+                  onChange={[Function]}
+                  type="datetime-local"
+                  value="2018-03-09T00:00"
+                />
+                <p
+                  className="description"
+                >
+                  Date and time when the tier starts. Can't be in the past from the current moment.
+                </p>
+                <p
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "10px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </div>
+            </InputField>
+            <InputField
+              description="Date and time when the tier ends. Can be only in the future."
+              errorMessage="Please enter a valid date later than start time"
+              onChange={[Function]}
+              side="right"
+              title="End Time"
+              type="datetime-local"
+              valid="VALIDATED"
+              value="2018-03-13T00:00"
+            >
+              <div
+                className="right"
+              >
+                <label
+                  className="label"
+                >
+                  End Time
+                </label>
+                <input
+                  className="input"
+                  onChange={[Function]}
+                  type="datetime-local"
+                  value="2018-03-13T00:00"
+                />
+                <p
+                  className="description"
+                >
+                  Date and time when the tier ends. Can be only in the future.
+                </p>
+                <p
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "10px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </div>
+            </InputField>
+          </div>
+          <div
+            className="input-block-container"
+          >
+            <BigNumberInput
+              description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens"
+              errorMessage="Please enter a valid number greater than 0"
+              max={1000000000000000000}
+              min={1}
+              onChange={[Function]}
+              pristine={true}
+              side="left"
+              title="Rate"
+              valid="INVALID"
+              value=""
+            >
+              <InputField
+                description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens"
+                errorMessage="Please enter a valid number greater than 0"
+                onChange={[Function]}
+                onKeyPress={[Function]}
+                onPaste={[Function]}
+                pristine={true}
+                side="left"
+                title="Rate"
+                type="text"
+                valid="INVALID"
+                value=""
+              >
+                <div
+                  className="left"
+                >
+                  <label
+                    className="label"
+                  >
+                    Rate
+                  </label>
+                  <input
+                    className="input"
+                    onChange={[Function]}
+                    onKeyPress={[Function]}
+                    onPaste={[Function]}
+                    type="text"
+                    value=""
+                  />
+                  <p
+                    className="description"
+                  >
+                    Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
+                  </p>
+                  <p
+                    style={
+                      Object {
+                        "color": "red",
+                        "fontSize": "12px",
+                        "fontWeight": "bold",
+                        "height": "10px",
+                        "width": "100%",
+                      }
+                    }
+                  />
+                </div>
+              </InputField>
+            </BigNumberInput>
+            <InputField
+              description="How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers"
+              errorMessage="Please enter a valid number greater than 0"
+              onChange={[Function]}
+              side="right"
+              title="Supply"
+              type="number"
+              valid="EMPTY"
+              value=""
+            >
+              <div
+                className="right"
+              >
+                <label
+                  className="label"
+                >
+                  Supply
+                </label>
+                <input
+                  className="input"
+                  onChange={[Function]}
+                  type="number"
+                  value=""
+                />
+                <p
+                  className="description"
+                >
+                  How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
+                </p>
+                <p
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "10px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </div>
+            </InputField>
+          </div>
+        </div>
+        <div>
+          <div
+            className="section-title"
+          >
+            <p
+              className="title"
+            >
+              Whitelist
+            </p>
+          </div>
+          <inject-WhitelistInputBlock-with-tierStore
+            num={1}
+          >
+            <WhitelistInputBlock
+              num={1}
+              tierStore={
+                TierStore {
+                  "globalMinCap": "",
+                  "tiers": Array [
+                    Object {
+                      "endTime": "2018-03-09T00:00",
+                      "rate": "",
+                      "startTime": "2018-03-05T11:05",
+                      "supply": "",
+                      "tier": "Tier 1",
+                      "updatable": "off",
+                      "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+                      "whitelist": Array [],
+                      "whitelistElements": Array [],
+                      "whitelistEnabled": "yes",
+                    },
+                    Object {
+                      "endTime": "2018-03-13T00:00",
+                      "rate": "",
+                      "startTime": "2018-03-09T00:00",
+                      "supply": "",
+                      "tier": "Tier 1",
+                      "updatable": "off",
+                      "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+                      "whitelist": Array [],
+                      "whitelistElements": Array [],
+                      "whitelistEnabled": "no",
+                    },
+                    Object {
+                      "endTime": "",
+                      "rate": "",
+                      "startTime": "",
+                      "supply": "",
+                      "tier": "Tier 2",
+                      "updatable": "off",
+                      "whitelist": Array [],
+                      "whitelistElements": Array [],
+                    },
+                    Object {
+                      "endTime": "",
+                      "rate": "",
+                      "startTime": "",
+                      "supply": "",
+                      "tier": "Tier 1",
+                      "updatable": "off",
+                      "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+                      "whitelist": Array [],
+                      "whitelistElements": Array [],
+                      "whitelistEnabled": "no",
+                    },
+                    Object {
+                      "endTime": "",
+                      "rate": "",
+                      "startTime": "",
+                      "supply": "",
+                      "tier": "Tier 2",
+                      "updatable": "off",
+                      "whitelist": Array [],
+                      "whitelistElements": Array [],
+                    },
+                  ],
+                  "validTiers": Array [
+                    Object {
+                      "endTime": "VALIDATED",
+                      "rate": "EMPTY",
+                      "startTime": "VALIDATED",
+                      "supply": "EMPTY",
+                      "tier": "VALIDATED",
+                      "updatable": "VALIDATED",
+                    },
+                    Object {
+                      "endTime": "VALIDATED",
+                      "rate": "EMPTY",
+                      "startTime": "VALIDATED",
+                      "supply": "EMPTY",
+                      "tier": "VALIDATED",
+                      "updatable": "VALIDATED",
+                    },
+                    Object {
+                      "endTime": "VALIDATED",
+                      "rate": "EMPTY",
+                      "startTime": "VALIDATED",
+                      "supply": "EMPTY",
+                      "tier": "VALIDATED",
+                      "updatable": "VALIDATED",
+                    },
+                    Object {
+                      "endTime": "VALIDATED",
+                      "rate": "EMPTY",
+                      "startTime": "VALIDATED",
+                      "supply": "EMPTY",
+                      "tier": "VALIDATED",
+                      "updatable": "VALIDATED",
+                    },
+                    Object {
+                      "endTime": "VALIDATED",
+                      "rate": "EMPTY",
+                      "startTime": "VALIDATED",
+                      "supply": "EMPTY",
+                      "tier": "VALIDATED",
+                      "updatable": "VALIDATED",
+                    },
+                  ],
+                }
+              }
+            >
+              <div
+                className="white-list-container"
+              >
+                <div
+                  className="white-list-input-container"
+                >
+                  <div
+                    className="white-list-input-container-inner"
+                  >
+                    <InputField
+                      description="Address of a whitelisted account. Whitelists are inherited. E.g., if an account whitelisted on Tier 1 and didn't buy max cap on Tier 1, he can buy on Tier 2, and following tiers."
+                      errorMessage="The inserted address is invalid"
+                      onChange={[Function]}
+                      pristine={true}
+                      side="white-list-input-property white-list-input-property-left"
+                      title="Address"
+                      type="text"
+                      valid="INVALID"
+                      value=""
+                    >
+                      <div
+                        className="white-list-input-property white-list-input-property-left"
+                      >
+                        <label
+                          className="label"
+                        >
+                          Address
+                        </label>
+                        <input
+                          className="input"
+                          onChange={[Function]}
+                          type="text"
+                          value=""
+                        />
+                        <p
+                          className="description"
+                        >
+                          Address of a whitelisted account. Whitelists are inherited. E.g., if an account whitelisted on Tier 1 and didn't buy max cap on Tier 1, he can buy on Tier 2, and following tiers.
+                        </p>
+                        <p
+                          style={
+                            Object {
+                              "color": "red",
+                              "fontSize": "12px",
+                              "fontWeight": "bold",
+                              "height": "10px",
+                              "width": "100%",
+                            }
+                          }
+                        />
+                      </div>
+                    </InputField>
+                    <InputField
+                      description="Minimum amount tokens to buy. Not a minimal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy."
+                      onChange={[Function]}
+                      side="white-list-input-property white-list-input-property-middle"
+                      title="Min"
+                      type="number"
+                      value=""
+                    >
+                      <div
+                        className="white-list-input-property white-list-input-property-middle"
+                      >
+                        <label
+                          className="label"
+                        >
+                          Min
+                        </label>
+                        <input
+                          className="input"
+                          onChange={[Function]}
+                          type="number"
+                          value=""
+                        />
+                        <p
+                          className="description"
+                        >
+                          Minimum amount tokens to buy. Not a minimal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.
+                        </p>
+                        <p
+                          style={
+                            Object {
+                              "color": "red",
+                              "fontSize": "12px",
+                              "fontWeight": "bold",
+                              "height": "10px",
+                              "width": "100%",
+                            }
+                          }
+                        />
+                      </div>
+                    </InputField>
+                    <InputField
+                      description="Maximum is the hard limit."
+                      onChange={[Function]}
+                      side="white-list-input-property white-list-input-property-right"
+                      title="Max"
+                      type="number"
+                      value=""
+                    >
+                      <div
+                        className="white-list-input-property white-list-input-property-right"
+                      >
+                        <label
+                          className="label"
+                        >
+                          Max
+                        </label>
+                        <input
+                          className="input"
+                          onChange={[Function]}
+                          type="number"
+                          value=""
+                        />
+                        <p
+                          className="description"
+                        >
+                          Maximum is the hard limit.
+                        </p>
+                        <p
+                          style={
+                            Object {
+                              "color": "red",
+                              "fontSize": "12px",
+                              "fontWeight": "bold",
+                              "height": "10px",
+                              "width": "100%",
+                            }
+                          }
+                        />
+                      </div>
+                    </InputField>
+                  </div>
+                  <div
+                    className="plus-button-container"
+                  >
+                    <div
+                      className="button button_fill button_fill_plus"
+                      onClick={[Function]}
+                    />
+                  </div>
+                </div>
+                <t
+                  accept=".csv"
+                  disableClick={false}
+                  disablePreview={false}
+                  disabled={false}
+                  maxSize={Infinity}
+                  minSize={0}
+                  multiple={true}
+                  onDrop={[Function]}
+                  preventDropOnDocument={true}
+                  style={
+                    Object {
+                      "cursor": "pointer",
+                      "position": "relative",
+                      "textAlign": "right",
+                    }
+                  }
+                >
+                  <div
+                    aria-disabled={false}
+                    className=""
+                    onClick={[Function]}
+                    onDragEnter={[Function]}
+                    onDragLeave={[Function]}
+                    onDragOver={[Function]}
+                    onDragStart={[Function]}
+                    onDrop={[Function]}
+                    style={
+                      Object {
+                        "cursor": "pointer",
+                        "position": "relative",
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <i
+                      className="fa fa-upload"
+                      title="Upload CSV"
+                    />
+                      Upload CSV
+                    <input
+                      accept=".csv"
+                      autoComplete="off"
+                      disabled={false}
+                      multiple={true}
+                      onChange={[Function]}
+                      style={
+                        Object {
+                          "display": "none",
+                        }
+                      }
+                      type="file"
+                    />
+                  </div>
+                </t>
+              </div>
+            </WhitelistInputBlock>
+          </inject-WhitelistInputBlock-with-tierStore>
+        </div>
+      </div>
+    </CrowdsaleBlock>
+  </inject-CrowdsaleBlock-with-tierStore>
+</Provider>
+`;

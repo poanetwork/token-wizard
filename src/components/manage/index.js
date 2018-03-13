@@ -528,7 +528,7 @@ export class Manage extends Component {
           side='left'
           type='text'
           title={CROWDSALE_SETUP_NAME}
-          value={tier.name}
+          value={tier.tier}
           disabled={true}
         />
         <InputField

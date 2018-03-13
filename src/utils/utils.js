@@ -82,8 +82,6 @@ export const validateLaterTime = (laterTime, previousTime) => getTimeAsNumber(la
 
 export const validateLaterOrEqualTime = (laterTime, previousTime) => getTimeAsNumber(laterTime) >= getTimeAsNumber(previousTime)
 
-export const validateRate = (rate) => isNaN(Number(rate)) === false && Number(rate) > 0
-
 export const validateAddress = (address) => !(!address || address.length !== 42)
 
 export function toFixed(x) {
@@ -102,12 +100,6 @@ export function toFixed(x) {
     }
   }
   return x;
-}
-
-export function defaultCompanyEndDate(startDate) {
-  let endDate = new Date(startDate).setDate(new Date(startDate).getDate() + 4);
-  endDate = new Date(endDate).setUTCHours(0);
-  return new Date(endDate).toISOString().split(".")[0];
 }
 
 export const toast = {
