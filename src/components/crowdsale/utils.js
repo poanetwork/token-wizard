@@ -108,22 +108,6 @@ export function getCrowdsaleTargetDates($this, cb) {
 
         if (!crowdsaleContract) return noContractAlert();
 
-        if (crowdsaleContract.methods.startBlock) {
-          propsCount++;
-          crowdsaleContract.methods.startBlock().call((err, startBlock) => {
-            cbCount++;
-            if (err) return console.log(err);
-
-            console.log("startBlock: " + startBlock);
-            if (!crowdsalePageStore.startBlock || crowdsalePageStore.startBlock > startBlock)
-              crowdsalePageStore.setProperty('startBlock', startBlock);
-            if (propsCount === cbCount) {
-              state.loading = false;
-              $this.setState(state, cb);
-            }
-          });
-        }
-
         if (crowdsaleContract.methods.startsAt) {
           propsCount++;
           crowdsaleContract.methods.startsAt().call((err, startDate) => {
@@ -137,36 +121,6 @@ export function getCrowdsaleTargetDates($this, cb) {
               state.loading = false;
               $this.setState(state, cb);
             }
-          });
-        }
-
-        if (crowdsaleContract.methods.endBlock) {
-          propsCount++;
-          crowdsaleContract.methods.endBlock().call((err, endBlock) => {
-            cbCount++;
-            if (err) return console.log(err);
-
-            console.log("endBlock: " + endBlock);
-
-            if (!crowdsalePageStore.endBlock || crowdsalePageStore.endBlock < endBlock) crowdsalePageStore.endBlock = endBlock;
-
-            web3.eth.getBlockNumber((err, curBlock) => {
-              if (err) return console.log(err);
-
-              console.log("curBlock: " + curBlock);
-              let blocksDiff = parseInt($this.crowdsalePageStore.endBlock, 10) - parseInt(curBlock, 10);
-
-              console.log("blocksDiff: " + blocksDiff);
-              let blocksDiffInSec = blocksDiff * state.blockTimeGeneration;
-
-              console.log("blocksDiffInSec: " + blocksDiffInSec);
-              state.seconds = blocksDiffInSec;
-
-              if (propsCount === cbCount) {
-                state.loading = false;
-                $this.setState(state, cb);
-              }
-            });
           });
         }
 
@@ -325,24 +279,6 @@ export function getCrowdsaleData (crowdsaleContract) {
 
     let propsCount = 0
     let cbCount = 0
-
-    if (crowdsaleContract.methods.supply) {
-      propsCount++
-      crowdsaleContract.methods.supply().call((err, supply) => {
-        cbCount++
-
-        if (err) {
-          return console.log(err)
-        }
-
-        console.log('supply:', supply)
-        crowdsalePageStore.supply = supply
-
-        if (propsCount === cbCount) {
-          resolve()
-        }
-      })
-    }
 
     propsCount++
     crowdsaleContract.methods.token().call((err, tokenAddr) => {
