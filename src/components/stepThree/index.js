@@ -72,28 +72,20 @@ export class stepThree extends React.Component {
   componentDidMount () {
     const { gasPriceStore } = this.props
 
-  addCrowdsale() {
-    const { crowdsaleBlockListStore, tierStore } = this.props;
-    let num = crowdsaleBlockListStore.blockList.length + 1;
-    const newTier = {
-      tier: "Tier " + (num + 1),
-      supply: 0,
-      rate: 0,
-      updatable: "off",
-      whitelist: []
-    };
+    gasPriceStore.updateValues()
+      .then(() => this.setGasPrice(gasPriceStore.slow))
+      .catch(() => noGasPriceAvailable())
+      .then(() => {
+        this.addCrowdsale()
+        this.setState({ loading: false })
+        window.scrollTo(0, 0)
+      })
+  }
 
-    const newTierValidations = {
-      tier: VALID,
-      startTime: VALID,
-      endTime: VALID,
-      supply: EMPTY,
-      rate: EMPTY
-    };
+  showErrorMessages = () => {
+    const { tierStore } = this.props
 
-    tierStore.addTier(newTier);
-    tierStore.addTierValidations(newTierValidations);
-    this.addCrowdsaleBlock(num);
+    tierStore.invalidateToken()
   }
 
   updateTierStore = (event, property, index) => {

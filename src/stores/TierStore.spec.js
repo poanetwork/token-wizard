@@ -19,6 +19,8 @@ describe('TierStore', () => {
       { addr: '0xaca94ef8bd5ffee41947b4585a84bda5a3d3da6e', min: 1234, max: 50505 },
       { addr: '0x1df62f291b2e969fb0849d99d9ce41e2f137006e', min: 1234, max: 50505 },
     ]
+
+    tierStore.addTier({ whitelist: [] })
   })
 
   afterEach(() => {

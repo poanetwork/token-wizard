@@ -8,8 +8,8 @@ import {
   sendTXToContract
 } from '../../utils/blockchainHelpers'
 import { noContractAlert, noContractDataAlert } from '../../utils/alerts'
-import { countDecimalPlaces, floorToDecimals, toFixed } from '../../utils/utils'
-import { CONTRACT_TYPES, DOWNLOAD_NAME, TRUNC_TO_DECIMALS } from '../../utils/constants'
+import { countDecimalPlaces, toFixed } from '../../utils/utils'
+import { CONTRACT_TYPES, DOWNLOAD_NAME } from '../../utils/constants'
 import { isObservableArray } from 'mobx'
 import {
   contractStore,
