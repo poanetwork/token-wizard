@@ -1,43 +1,84 @@
-import React from "react";
-import "../../assets/stylesheets/application.css";
-import { WhitelistInputBlock } from "../Common/WhitelistInputBlock";
-import { defaultCompanyEndDate } from "../../utils/utils";
-import { InputField } from "../Common/InputField";
-import { RadioInputField } from "../Common/RadioInputField";
-import { inject, observer } from "mobx-react";
-import { VALIDATION_MESSAGES, TEXT_FIELDS, DESCRIPTION } from "../../utils/constants";
-const { START_TIME, END_TIME, RATE, SUPPLY, CROWDSALE_SETUP_NAME, ALLOWMODIFYING } = TEXT_FIELDS;
+import React from 'react'
+import '../../assets/stylesheets/application.css'
+import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
+import { defaultCompanyStartDate, defaultCompanyEndDate } from './utils'
+import { InputField } from '../Common/InputField'
+import { RadioInputField } from '../Common/RadioInputField'
+import { inject, observer } from 'mobx-react'
+import { VALIDATION_TYPES, VALIDATION_MESSAGES, TEXT_FIELDS, DESCRIPTION } from '../../utils/constants'
+import { BigNumberInput } from '../Common/BigNumberInput'
+import update from 'immutability-helper'
 
-@inject("tierStore")
+const { START_TIME, END_TIME, RATE, SUPPLY, CROWDSALE_SETUP_NAME, ALLOWMODIFYING } = TEXT_FIELDS
+const { EMPTY, INVALID } = VALIDATION_TYPES
+
+@inject('tierStore')
 @observer
 export class CrowdsaleBlock extends React.Component {
-  componentWillMount() {
-    const { tierStore, num } = this.props;
-    const startTime = tierStore.tiers[num - 1].endTime;
-    const endTime = defaultCompanyEndDate(tierStore.tiers[num - 1].endTime);
-    tierStore.setTierProperty(startTime, "startTime", num);
-    tierStore.setTierProperty(endTime, "endTime", num);
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      rate: '',
+      validation: {
+        rate: {
+          pristine: true,
+          valid: INVALID
+        }
+      }
+    }
   }
 
-  updateTierStore = (event, property) => {
-    const { tierStore, num } = this.props;
-    const value = event.target.value;
-    tierStore.setTierProperty(value, property, num);
-    tierStore.validateTiers(property, num);
-  };
+  componentWillMount () {
+    const { tierStore, num } = this.props
+    const startTime = 0 === num ? defaultCompanyStartDate() : this.tierEndTime(num - 1)
+    const endTime = 0 === num ? defaultCompanyEndDate(startTime) : defaultCompanyEndDate(this.tierEndTime(num - 1))
 
-  render() {
-    let { num, tierStore } = this.props;
-    let whitelistInputBlock = (
+    tierStore.setTierProperty(startTime, 'startTime', num)
+    tierStore.setTierProperty(endTime, 'endTime', num)
+  }
+
+  tierEndTime = (index) => this.props.tierStore.tiers[index].endTime
+
+  updateTierStore = (value, property) => {
+    const { num, tierStore } = this.props
+
+    tierStore.setTierProperty(value, property, num)
+    tierStore.validateTiers(property, num)
+  }
+
+  updateRate = ({ value, pristine, valid }) => {
+    const { num, tierStore } = this.props
+
+    const newState = update(this.state, {
+      validation: {
+        rate: {
+          $set: {
+            pristine,
+            valid
+          }
+        }
+      }
+    })
+    newState.rate = value
+
+    this.setState(newState)
+    tierStore.updateRate(value, valid, num)
+  }
+
+  render () {
+    const { num, tierStore } = this.props
+    const whitelistInputBlock = (
       <div>
         <div className="section-title">
           <p className="title">Whitelist</p>
         </div>
-        <WhitelistInputBlock num={num} />
+        <WhitelistInputBlock num={num}/>
       </div>
-    );
+    )
+
     return (
-      <div key={num.toString()} style={{ marginTop: "40px" }} className="steps-content container">
+      <div style={{ marginTop: '40px' }} className="steps-content container">
         <div className="hidden">
           <div className="input-block-container">
             <InputField
@@ -47,7 +88,7 @@ export class CrowdsaleBlock extends React.Component {
               value={tierStore.tiers[num].tier}
               valid={tierStore.validTiers[num].tier}
               errorMessage={VALIDATION_MESSAGES.TIER}
-              onChange={e => this.updateTierStore(e, "tier")}
+              onChange={e => this.updateTierStore(e.target.value, 'tier')}
               description={DESCRIPTION.CROWDSALE_SETUP_NAME}
             />
             <RadioInputField
@@ -55,7 +96,7 @@ export class CrowdsaleBlock extends React.Component {
               title={ALLOWMODIFYING}
               items={[{ label: 'on', value: 'on' }, { label: 'off', value: 'off' }]}
               selectedItem={this.props.tierStore.tiers[this.props.num].updatable}
-              onChange={e => this.updateTierStore(e, "updatable")}
+              onChange={e => this.updateTierStore(e.target.value, 'updatable')}
               description={DESCRIPTION.ALLOW_MODIFYING}
             />
           </div>
@@ -67,7 +108,7 @@ export class CrowdsaleBlock extends React.Component {
               value={tierStore.tiers[num].startTime}
               valid={tierStore.validTiers[num].startTime}
               errorMessage={VALIDATION_MESSAGES.MULTIPLE_TIERS_START_TIME}
-              onChange={e => this.updateTierStore(e, "startTime")}
+              onChange={e => this.updateTierStore(e.target.value, 'startTime')}
               description={DESCRIPTION.START_TIME}
             />
             <InputField
@@ -77,19 +118,21 @@ export class CrowdsaleBlock extends React.Component {
               value={tierStore.tiers[num].endTime}
               valid={tierStore.validTiers[num].endTime}
               errorMessage={VALIDATION_MESSAGES.END_TIME}
-              onChange={e => this.updateTierStore(e, "endTime")}
+              onChange={e => this.updateTierStore(e.target.value, 'endTime')}
               description={DESCRIPTION.END_TIME}
             />
           </div>
           <div className="input-block-container">
-            <InputField
+            <BigNumberInput
               side="left"
-              type="number"
               title={RATE}
-              value={tierStore.tiers[num].rate}
-              valid={tierStore.validTiers[num].rate}
+              min={1}
+              max={1e18}
+              value={this.state.rate}
+              valid={this.state.validation.rate.valid}
+              pristine={tierStore.validTiers[num].rate === EMPTY}
               errorMessage={VALIDATION_MESSAGES.RATE}
-              onChange={e => this.updateTierStore(e, "rate")}
+              onChange={this.updateRate}
               description={DESCRIPTION.RATE}
             />
             <InputField
@@ -99,13 +142,13 @@ export class CrowdsaleBlock extends React.Component {
               value={tierStore.tiers[num].supply}
               valid={tierStore.validTiers[num].supply}
               errorMessage={VALIDATION_MESSAGES.SUPPLY}
-              onChange={e => this.updateTierStore(e, "supply")}
+              onChange={e => this.updateTierStore(e.target.value, 'supply')}
               description={DESCRIPTION.SUPPLY}
             />
           </div>
         </div>
-        {tierStore.tiers[0].whitelistEnabled === "yes" ? whitelistInputBlock : ""}
+        {tierStore.tiers[0].whitelistEnabled === 'yes' ? whitelistInputBlock : ''}
       </div>
-    );
+    )
   }
 }

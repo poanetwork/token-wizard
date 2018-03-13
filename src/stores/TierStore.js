@@ -1,17 +1,21 @@
 import { observable, action, computed } from 'mobx';
-import { VALIDATION_TYPES, defaultTiers } from '../utils/constants'
+import { VALIDATION_TYPES } from '../utils/constants'
 import {
-  validateName, validateTime, validateSupply, validateRate, validateAddress, validateLaterTime,
-  validateLaterOrEqualTime, validateTier
+  validateTime,
+  validateSupply,
+  validateAddress,
+  validateLaterTime,
+  validateLaterOrEqualTime,
+  validateTier
 } from '../utils/utils'
 import autosave from './autosave'
 const { VALID, INVALID } = VALIDATION_TYPES
 
 class TierStore {
 
-  @observable tiers;
-  @observable validTiers;
-  @observable globalMinCap = '';
+  @observable tiers
+  @observable validTiers
+  @observable globalMinCap = ''
 
   constructor() {
     this.reset()
@@ -19,16 +23,8 @@ class TierStore {
   }
 
   @action reset = () => {
-    this.tiers = defaultTiers.slice()
-    this.validTiers = [{
-      name: 'VALIDATED',
-      walletAddress: 'VALIDATED',
-      rate: 'EMPTY',
-      supply: 'EMPTY',
-      startTime: 'VALIDATED',
-      endTime: 'VALIDATED',
-      updatable: "VALIDATED"
-    }]
+    this.tiers = []
+    this.validTiers = []
   }
 
   @action setGlobalMinCap = (minCap) => {
@@ -63,9 +59,6 @@ class TierStore {
 
   @action validateTiers = (property, index) => {
     switch (property){
-      case 'name':
-        this.validTiers[index][property] = validateName(this.tiers[index][property]) ? VALID : INVALID
-        break
       case 'tier':
         this.validTiers[index][property] = validateTier(this.tiers[index][property]) ? VALID : INVALID
         break
@@ -74,9 +67,6 @@ class TierStore {
         break
       case 'supply':
         this.validTiers[index][property] = validateSupply(this.tiers[index][property]) ? VALID : INVALID
-        break
-      case 'rate':
-        this.validTiers[index][property] = validateRate(this.tiers[index][property]) ? VALID : INVALID
         break
       case 'startTime':
         if (index > 0) {
@@ -91,6 +81,11 @@ class TierStore {
       default:
         // do nothing
     }
+  }
+
+  @action updateRate = (value, validity, tierIndex) => {
+    this.tiers[tierIndex].rate = value
+    this.validTiers[tierIndex].rate = validity
   }
 
   @action validateEditedTier = (property, index) => {

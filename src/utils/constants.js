@@ -1,10 +1,30 @@
-export const defaultTiers = [{
+export const VALIDATION_TYPES = {
+  VALID: "VALIDATED",
+  EMPTY: 'EMPTY',
+  INVALID: 'INVALID'
+}
+const { VALID, EMPTY } = VALIDATION_TYPES
+
+export const defaultTier = {
+  tier: '',
+  rate: '',
+  supply: '',
   startTime: '',
   endTime: '',
   walletAddress: '',
   supply: '',
-  whitelist: []
-}]
+  updatable: 'off',
+  whitelist: [],
+}
+
+export const defaultTierValidations = {
+  tier: VALID,
+  rate: EMPTY,
+  supply: EMPTY,
+  startTime: VALID,
+  endTime: VALID,
+  updatable: VALID
+}
 
 export const CONTRACT_TYPES = {
   standard: "standard",
@@ -131,13 +151,6 @@ export const TEXT_FIELDS = {
   ENABLE_WHITELISTING: 'Enable whitelisting',
   GAS_PRICE: 'Gas Price'
 }
-
-export const VALIDATION_TYPES = {
-  VALID: "VALIDATED",
-  EMPTY: 'EMPTY',
-  INVALID: 'INVALID'
-}
-const { VALID, EMPTY } = VALIDATION_TYPES
 
 export const intitialStepTwoValidations = {
   validations: {
