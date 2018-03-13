@@ -28,7 +28,7 @@ class App extends Component {
           <Header/>
 
           <Web3Provider
-            passive={true}
+            onChangeAccount={deploymentStore.handleAccountChange}
             web3UnavailableScreen={NoWeb3}
           >
             <Switch>

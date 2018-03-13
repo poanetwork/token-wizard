@@ -5,6 +5,8 @@ class DeploymentStore {
   @observable txMap = new Map()
   @observable deploymentStep = null
   @observable hasEnded = false
+  @observable deployerAccount = null
+  @observable invalidAccount = false
 
   constructor() {
     autosave(this, 'DeploymentStore', (store) => {
@@ -70,6 +72,21 @@ class DeploymentStore {
 
   @action setDeploymentStep = (index) => {
     this.deploymentStep = index
+  }
+
+  @action setDeployerAccount = (account) => {
+    if (!this.deployInProgress) {
+      this.deployerAccount = account
+    }
+  }
+
+  @action handleAccountChange = (account) => {
+    if (!this.deployerAccount) {
+      // If there is no deployment in progress, do nothing
+      return
+    }
+
+    this.invalidAccount = account !== this.deployerAccount
   }
 
   @action resetDeploymentStep = () => {

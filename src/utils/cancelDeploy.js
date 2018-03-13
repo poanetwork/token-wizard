@@ -7,6 +7,8 @@ const cancelDeploy = () => {
         localStorage.clear()
         window.location = '/' // go to home
       }
+
+      return result.value
     })
 }
 

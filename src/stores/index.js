@@ -38,6 +38,25 @@ const crowdsaleStore = new CrowdsaleStore()
 const gasPriceStore = new GasPriceStore()
 const deploymentStore = new DeploymentStore()
 
+window.stores = {
+  generalStore,
+  crowdsalePageStore,
+  tierCrowdsaleListStore,
+  crowdsaleBlockListStore,
+  contractStore,
+  pricingStrategyStore,
+  reservedTokenStore,
+  stepThreeValidationStore,
+  stepTwoValidationStore,
+  tierStore,
+  tokenStore,
+  web3Store,
+  investStore,
+  crowdsaleStore,
+  gasPriceStore,
+  deploymentStore
+};
+
 export {
   generalStore,
   crowdsalePageStore,

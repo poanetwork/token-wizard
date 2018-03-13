@@ -31,6 +31,7 @@ import { isObservableArray } from 'mobx'
 import JSZip from 'jszip'
 import executeSequentially from '../../utils/executeSequentially'
 import { PreventRefresh } from '../Common/PreventRefresh'
+import cancelDeploy from '../../utils/cancelDeploy'
 import PropTypes from 'prop-types'
 
 const { PUBLISH } = NAVIGATION_STEPS
@@ -38,17 +39,21 @@ const { PUBLISH } = NAVIGATION_STEPS
 @inject('contractStore', 'reservedTokenStore', 'tierStore', 'tokenStore', 'web3Store', 'deploymentStore')
 @observer
 export class stepFour extends React.Component {
-  constructor (props) {
+  constructor (props, context) {
     super(props)
     this.state = {
       contractDownloaded: false,
       modal: false,
+      preventRefresh: true,
       transactionFailed: false
     }
+
+    this.props.deploymentStore.setDeployerAccount(context.selectedAccount)
   }
 
   static contextTypes = {
-    web3: PropTypes.object
+    web3: PropTypes.object,
+    selectedAccount: PropTypes.string
   }
 
   contractDownloadSuccess = options => {
@@ -245,6 +250,30 @@ export class stepFour extends React.Component {
     this.props.history.push(newHistory)
   }
 
+  cancelDeploy = (e) => {
+    e.preventDefault();
+
+    this.hideModal(); // hide modal, otherwise the warning doesn't show up
+
+    // avoid the beforeunload alert when user cancels the deploy
+    this.setState({
+      preventRefresh: false
+    })
+
+    cancelDeploy()
+      .then(
+        (cancelled) => {
+          if (!cancelled) {
+            this.setState({
+              preventRefresh: true
+            })
+            this.showModal()
+          }
+        },
+        () => this.showModal()
+      )
+  }
+
   render() {
     const { tierStore, contractStore, tokenStore, deploymentStore } = this.props
     const crowdsaleSetups = tierStore.tiers.map((tier, index) => {
@@ -397,6 +426,21 @@ export class stepFour extends React.Component {
         />
       </div>
     )
+
+    const modalContent = deploymentStore.invalidAccount ? (
+      <div>
+        This deploy was started with account <b>{deploymentStore.deployerAccount}</b> but the current account is <b>{this.context.selectedAccount}</b>.
+        Please select the original account to continue with the deploy.
+        If you don't want to continue with that deploy, <a href="#" onClick={this.cancelDeploy}>click here</a>.
+      </div>
+    ) : (
+      <TxProgressStatus
+        txMap={deploymentStore.txMap}
+        deployCrowdsale={this.deployCrowdsale}
+        onSkip={this.state.transactionFailed ? this.skipTransaction : null}
+      />
+    )
+
     return (
       <section className="steps steps_publish">
         <StepNavigation activeStep={PUBLISH} />
@@ -497,13 +541,9 @@ export class stepFour extends React.Component {
           title={'Tx Status'}
           showModal={this.state.modal}
         >
-          <TxProgressStatus
-            txMap={deploymentStore.txMap}
-            deployCrowdsale={this.deployCrowdsale}
-            onSkip={this.state.transactionFailed ? this.skipTransaction : null}
-          />
+          { modalContent }
         </ModalContainer>
-        <PreventRefresh/>
+        { this.state.preventRefresh ? <PreventRefresh /> : null }
       </section>
     )}
 }
