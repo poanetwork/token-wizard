@@ -105,6 +105,11 @@ class DeploymentStore {
       if (txStatuses.some(status => !status)) return tx
     }
   }
+
+  @computed
+  get deployInProgress () {
+    return this.deploymentStep !== null
+  }
 }
 
 export default DeploymentStore

@@ -36,7 +36,7 @@ class App extends Component {
               <Route path="/4" component={stepFour}/>
 
               {
-                deploymentStore.deploymentStep !== null ? (
+                deploymentStore.deployInProgress ? (
                   <IncompleteDeploy />
                 ) : (
                   <Switch>
