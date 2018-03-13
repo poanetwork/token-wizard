@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BigNumberInput Should render the component 1`] = `
+<div
+  className="left"
+>
+  <label
+    className="label"
+  >
+    Rate
+  </label>
+  <input
+    className="input"
+    disabled={undefined}
+    onBlur={undefined}
+    onChange={[Function]}
+    onKeyPress={[Function]}
+    onPaste={[Function]}
+    style={undefined}
+    type="text"
+    value=""
+  />
+  <p
+    className="description"
+  >
+    Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
+  </p>
+  <p
+    style={
+      Object {
+        "color": "red",
+        "fontSize": "12px",
+        "fontWeight": "bold",
+        "height": "10px",
+        "width": "100%",
+      }
+    }
+  />
+</div>
+`;
