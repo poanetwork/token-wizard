@@ -15,7 +15,7 @@ if (!process.env['REACT_APP_REGISTRY_ADDRESS']) {
 }
 
 const devEnvironment = process.env.NODE_ENV === 'development';
-if (devEnvironment) {
+if (devEnvironment && !window.web3) {
   window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 }
 
