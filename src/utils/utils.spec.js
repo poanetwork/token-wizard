@@ -1,4 +1,4 @@
-import { countDecimalPlaces, validateTicker } from './utils'
+import { countDecimalPlaces, validateName, validateTicker } from './utils'
 
 describe('countDecimalPlaces', () => {
   [
@@ -52,6 +52,25 @@ describe('validateTicker', () => {
 
     it(`Should ${action} for '${testCase.value}'`, () => {
       expect(validateTicker(testCase.value)).toBe(testCase.expected)
+    })
+  })
+})
+
+describe('validateName', () => {
+  [
+    {value: '', expected: false},
+    {value: 'T', expected: true},
+    {value: 'MyToken', expected: true},
+    {value: '123456789012345678901234567890', expected: true},
+    {value: '1234567890123456789012345678901', expected: false},
+    {value: 23, expected: false},
+    {value: ['my', 'token'], expected: false},
+    {value: { a: 1 }, expected: false},
+  ].forEach(testCase => {
+    const action = testCase.expected ? 'pass' : 'fail'
+
+    it(`Should ${action} for '${testCase.value}'`, () => {
+      expect(validateName(testCase.value)).toBe(testCase.expected)
     })
   })
 })

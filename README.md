@@ -42,7 +42,7 @@ __Deploying on POA's Sokol or Main network is much faster then using Ethereum's 
 - [Strategy](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Strategy)
 - [How to run](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-How-to-run)
 - [Using POA Networks](https://github.com/poanetwork/token-wizard/wiki/Connecting-to-POA-Networks)
-- [Deployment Time & Gas](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Deployment-Stats)
+- [Deployment Time & Gas](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Deployment-Time-and-Gas)
 - [Verifying Smart-Contracts](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Verifying-Contracts)
 - [Projects on Token Wizard](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Projects)
 - [Notable Contributors](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Notable-Contributors)

@@ -21,6 +21,7 @@ import {
   web3Store
 } from '../../stores'
 import { getEncodedABIClientSide } from '../../utils/microservices'
+import { BigNumber } from 'bignumber.js'
 
 export const setupContractDeployment = (web3) => {
   if (!contractStore.safeMathLib) {
@@ -147,7 +148,9 @@ export const deployToken = () => {
 }
 
 const getPricingStrategyParams = tier => {
-  const oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, 1 / tier.rate)
+  BigNumber.config({ DECIMAL_PLACES: 18 })
+  const rate = new BigNumber(tier.rate)
+  const oneTokenInETH = rate.pow(-1).toFixed()
 
   return [
     web3Store.web3.utils.toWei(oneTokenInETH, 'ether')

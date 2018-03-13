@@ -1,6 +1,6 @@
-import { TRUNC_TO_DECIMALS } from '../utils/constants'
-import { floorToDecimals, setFlatFileContentToState, toFixed } from '../utils/utils'
+import { setFlatFileContentToState, toFixed } from '../utils/utils'
 import { contractStore, tokenStore, tierStore, web3Store } from './index'
+import { BigNumber } from 'bignumber.js'
 
 export function getWhiteListWithCapCrowdsaleAssets() {
   const contractsRoute = './contracts/'
@@ -98,9 +98,10 @@ export const getconstructorParams = (abiConstructor, vals, crowdsaleNum, isCrowd
           params.vals.push(true);
           break;
         case "_oneTokenInWei":
-          let oneTokenInETHRaw = toFixed(1 / tierStore.tiers[crowdsaleNum].rate).toString()
-          let oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, oneTokenInETHRaw)
-          params.vals.push(web3Store.web3.utils.toWei(oneTokenInETH, "ether"));
+          BigNumber.config({ DECIMAL_PLACES: 18 })
+          const rate = new BigNumber(tierStore.tiers[crowdsaleNum].rate)
+          const tokenInEther = rate.pow(-1).toFixed()
+          params.vals.push(web3Store.web3.utils.toWei(tokenInEther, "ether"))
           break;
         case "_isUpdatable":
           params.vals.push(tierStore.tiers[crowdsaleNum].updatable ? tierStore.tiers[crowdsaleNum].updatable==="on" ? true : false : false);

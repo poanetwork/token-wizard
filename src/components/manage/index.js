@@ -459,7 +459,7 @@ export class Manage extends Component {
 
   tierHasStarted = (index) => {
     const initialTierValues = this.props.crowdsaleStore.selected.initialTiersValues[index]
-    return initialTierValues ? Date.now() > new Date(initialTierValues.startTime).getTime() : true
+    return initialTierValues && new Date(initialTierValues.startTime).getTime() < Date.now()
   }
 
   tierHasEnded = (index) => {
@@ -471,7 +471,8 @@ export class Manage extends Component {
     const { formPristine, canFinalize, shouldDistribute, canDistribute, crowdsaleHasEnded, ownerCurrentUser } = this.state
     const { generalStore, tierStore, tokenStore, crowdsaleStore } = this.props
     const { address: crowdsaleAddress, finalized, updatable } = crowdsaleStore.selected
-    let disabled = !ownerCurrentUser || canDistribute || canFinalize || finalized
+
+    const canEditTier = ownerCurrentUser && !canDistribute && !canFinalize && !finalized
 
     const distributeTokensStep = (
       <div className="steps-content container">
@@ -527,7 +528,7 @@ export class Manage extends Component {
           side='left'
           type='text'
           title={CROWDSALE_SETUP_NAME}
-          value={tier.name}
+          value={tier.tier}
           disabled={true}
         />
         <InputField
@@ -541,7 +542,7 @@ export class Manage extends Component {
     }
 
     const tierStartAndEndTime = (tier, index) => {
-      disabled = disabled || !tier.updatable || this.tierHasEnded(index)
+      const disabled = !canEditTier || !tier.updatable || this.tierHasEnded(index)
 
       return <div className='input-block-container'>
         <InputField
@@ -570,7 +571,7 @@ export class Manage extends Component {
     }
 
     const tierRateAndSupply = (tier, index) => {
-      disabled = disabled || !tier.updatable || this.tierHasEnded(index) || this.tierHasStarted(index)
+      const disabled = !canEditTier || !tier.updatable || this.tierHasEnded(index) || this.tierHasStarted(index)
 
       return <div className='input-block-container'>
         <InputField

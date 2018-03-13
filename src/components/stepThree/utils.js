@@ -5,3 +5,8 @@ export function defaultCompanyStartDate() {
   let crowdsaleStartDateFormatted = crowdsaleStartDate.format('YYYY-MM-DDTHH:mm');
   return crowdsaleStartDateFormatted;
 }
+
+export const defaultCompanyEndDate = (startDate) => {
+  const crowdsaleEndDate = moment(startDate).add(4, 'days').startOf('day')
+  return crowdsaleEndDate.format('YYYY-MM-DDTHH:mm')
+}

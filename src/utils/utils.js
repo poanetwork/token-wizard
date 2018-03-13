@@ -70,7 +70,7 @@ export const getStepClass = (step, activeStep) => step === activeStep ? "step-na
 
 export const validateTier = (tier) => typeof tier === 'string' && tier.length > 0 && tier.length < 30
 
-export const validateName = (name) => typeof name === 'string' && name.length > 0 && name.length < 30
+export const validateName = (name) => typeof name === 'string' && name.length > 0 && name.length <= 30
 
 export const validateSupply = (supply) =>  isNaN(Number(supply)) === false && Number(supply) > 0
 
@@ -81,8 +81,6 @@ export const validateTime = (time) => getTimeAsNumber(time) > Date.now()
 export const validateLaterTime = (laterTime, previousTime) => getTimeAsNumber(laterTime) > getTimeAsNumber(previousTime)
 
 export const validateLaterOrEqualTime = (laterTime, previousTime) => getTimeAsNumber(laterTime) >= getTimeAsNumber(previousTime)
-
-export const validateRate = (rate) => isNaN(Number(rate)) === false && Number(rate) > 0
 
 export const validateAddress = (address) => !(!address || address.length !== 42)
 
@@ -102,12 +100,6 @@ export function toFixed(x) {
     }
   }
   return x;
-}
-
-export function defaultCompanyEndDate(startDate) {
-  let endDate = new Date(startDate).setDate(new Date(startDate).getDate() + 4);
-  endDate = new Date(endDate).setUTCHours(0);
-  return new Date(endDate).toISOString().split(".")[0];
 }
 
 export const toast = {
