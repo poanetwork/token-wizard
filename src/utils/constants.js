@@ -11,9 +11,9 @@ export const defaultTier = {
   supply: '',
   startTime: '',
   endTime: '',
+  walletAddress: '',
   updatable: 'off',
   whitelist: [],
-  whitelistElements: []
 }
 
 export const defaultTierValidations = {
@@ -24,8 +24,6 @@ export const defaultTierValidations = {
   endTime: VALID,
   updatable: VALID
 }
-
-export const defaultTiers = [defaultTier]
 
 export const CONTRACT_TYPES = {
   standard: "standard",

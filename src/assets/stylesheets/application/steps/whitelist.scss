@@ -58,6 +58,7 @@
     }
 
     &-container {
+      font-weight: bold;
       border-top: 1px solid #eee;
       display: table;
       width: 100%;
@@ -69,6 +70,28 @@
       &-inner {
         display: table;
         width: 100%;
+      }
+
+      &.to-be-removed {
+        font-weight: normal;
+        color: orange;
+        text-decoration: line-through;
+      }
+
+      &.no-style {
+        font-weight: normal;
+        color: #555555;
+      }
+
+      &.duplicated {
+        padding-bottom: 15px;
+        border-top: 1px dashed orange;
+        margin-top: -15px;
+
+        span {
+          line-height: 30px;
+          height: 12px;
+        }
       }
     }
   }

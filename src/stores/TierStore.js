@@ -163,32 +163,58 @@ class TierStore {
   }
 
   @action addWhitelistItem = ({ addr, min, max }, crowdsaleNum) => {
-    const tier = this.tiers[crowdsaleNum]
+    const { whitelist } = this.tiers[crowdsaleNum]
+    const newItem = { addr, min, max }
+    const _addr = addr.toLowerCase()
+    const isAdded = whitelist.find(item => item.addr.toLowerCase() === _addr)
 
-    const whitelist = tier.whitelist.slice()
+    if (this.deployedContract) {
+      const storedIndex = whitelist.findIndex(item => item.addr.toLowerCase() === _addr && item.stored)
+      const duplicatedIndex = whitelist.findIndex(item => item.addr.toLowerCase() === _addr && !item.stored && item.duplicated)
 
-    const isAdded = whitelist.find(item => item.addr === addr && !item.deleted)
+      if (duplicatedIndex > -1) return
 
-    if (isAdded) return
+      if (storedIndex > -1) {
+        whitelist[storedIndex].duplicated = true
+        newItem.duplicated = true
+      }
 
-    const whitelistElements = tier.whitelistElements.slice()
-    const whitelistNum = whitelistElements.length
+    } else if (isAdded) return
 
-    whitelistElements.push({ addr, min, max, whitelistNum, crowdsaleNum })
-    whitelist.push({ addr, min, max })
+    whitelist.push(newItem)
+    this.sortWhitelist(crowdsaleNum)
+  }
 
-    this.setTierProperty(whitelistElements, 'whitelistElements', crowdsaleNum)
-    this.setTierProperty(whitelist, 'whitelist', crowdsaleNum)
+  @action sortWhitelist = (crowdsaleNum) => {
+    this.tiers[crowdsaleNum].whitelist = this.tiers[crowdsaleNum].whitelist.sort((prev, curr) => {
+      const currentAddress = curr.addr.toLowerCase()
+      const previousAddress = prev.addr.toLowerCase()
+
+      return currentAddress > previousAddress ? -1 : currentAddress === previousAddress ? curr.stored ? 1 : -1 : 1
+    })
   }
 
   @action removeWhitelistItem = (whitelistNum, crowdsaleNum) => {
-    let whitelist = this.tiers[crowdsaleNum].whitelist.slice()
-    whitelist[whitelistNum].deleted = true
-    this.setTierProperty(whitelist, 'whitelist', crowdsaleNum)
+    const removedItem = this.tiers[crowdsaleNum].whitelist.splice(whitelistNum, 1)[0]
+
+    if (this.deployedContract && removedItem.duplicated) {
+      const removedAddr = removedItem.addr.toLowerCase()
+      const storedIndex = this.tiers[crowdsaleNum].whitelist.findIndex(item => item.addr.toLowerCase() === removedAddr)
+
+      if (storedIndex > -1) this.tiers[crowdsaleNum].whitelist[storedIndex].duplicated = false
+    }
   }
 
   @computed get maxSupply () {
     return this.tiers.map(tier => +tier.supply).reduce((a, b) => Math.max(a, b), 0)
+  }
+
+  @computed get deployedContract () {
+    return this.tiers.some(tier => tier.whitelist.some(item => item.stored))
+  }
+
+  @computed get modifiedStoredWhitelist () {
+    return this.deployedContract && this.tiers.some(tier => tier.whitelist.some(item => !item.stored))
   }
 }
 
