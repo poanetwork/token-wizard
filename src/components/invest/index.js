@@ -81,6 +81,10 @@ export class Invest extends React.Component {
       })
   }
 
+  componentWillUnmount () {
+    this.clearTimeInterval()
+  }
+
   extractContractsData() {
     const { contractStore, web3Store } = this.props
     const { web3 } = web3Store
@@ -168,6 +172,15 @@ export class Invest extends React.Component {
       displaySeconds: false,
       timeInterval
     })
+  }
+
+  resetTimers = () => {
+    this.clearTimeInterval()
+    this.setTimers()
+  }
+
+  clearTimeInterval = () => {
+    if (this.state.timeInterval) clearInterval(this.state.timeInterval)
   }
 
   investToTokens = event => {
@@ -293,7 +306,7 @@ export class Invest extends React.Component {
           alpha={0.9}
           size={270}
           showMilliseconds={false}
-          onComplete={this.setTimers}
+          onComplete={this.resetTimers}
         />
       </div>
     )
