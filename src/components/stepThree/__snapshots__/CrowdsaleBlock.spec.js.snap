@@ -15,7 +15,6 @@ exports[`CrowdsaleBlock Should render the component for the first Tier 1`] = `
           "updatable": "off",
           "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
           "whitelist": Array [],
-          "whitelistElements": Array [],
           "whitelistEnabled": "no",
         },
       ],
@@ -50,7 +49,6 @@ exports[`CrowdsaleBlock Should render the component for the first Tier 1`] = `
               "updatable": "off",
               "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
               "whitelist": Array [],
-              "whitelistElements": Array [],
               "whitelistEnabled": "no",
             },
           ],
@@ -410,7 +408,6 @@ exports[`CrowdsaleBlock Should render the component for the second Tier 1`] = `
           "updatable": "off",
           "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
           "whitelist": Array [],
-          "whitelistElements": Array [],
           "whitelistEnabled": "no",
         },
         Object {
@@ -422,7 +419,6 @@ exports[`CrowdsaleBlock Should render the component for the second Tier 1`] = `
           "updatable": "off",
           "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
           "whitelist": Array [],
-          "whitelistElements": Array [],
           "whitelistEnabled": "no",
         },
         Object {
@@ -432,8 +428,8 @@ exports[`CrowdsaleBlock Should render the component for the second Tier 1`] = `
           "supply": "",
           "tier": "Tier 2",
           "updatable": "off",
+          "walletAddress": "",
           "whitelist": Array [],
-          "whitelistElements": Array [],
         },
       ],
       "validTiers": Array [
@@ -483,7 +479,6 @@ exports[`CrowdsaleBlock Should render the component for the second Tier 1`] = `
               "updatable": "off",
               "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
               "whitelist": Array [],
-              "whitelistElements": Array [],
               "whitelistEnabled": "no",
             },
             Object {
@@ -495,7 +490,6 @@ exports[`CrowdsaleBlock Should render the component for the second Tier 1`] = `
               "updatable": "off",
               "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
               "whitelist": Array [],
-              "whitelistElements": Array [],
               "whitelistEnabled": "no",
             },
             Object {
@@ -505,8 +499,8 @@ exports[`CrowdsaleBlock Should render the component for the second Tier 1`] = `
               "supply": "",
               "tier": "Tier 2",
               "updatable": "off",
+              "walletAddress": "",
               "whitelist": Array [],
-              "whitelistElements": Array [],
             },
           ],
           "validTiers": Array [
@@ -881,7 +875,6 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
           "updatable": "off",
           "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
           "whitelist": Array [],
-          "whitelistElements": Array [],
           "whitelistEnabled": "yes",
         },
         Object {
@@ -893,7 +886,6 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
           "updatable": "off",
           "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
           "whitelist": Array [],
-          "whitelistElements": Array [],
           "whitelistEnabled": "no",
         },
         Object {
@@ -903,8 +895,8 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
           "supply": "",
           "tier": "Tier 2",
           "updatable": "off",
+          "walletAddress": "",
           "whitelist": Array [],
-          "whitelistElements": Array [],
         },
         Object {
           "endTime": "",
@@ -915,7 +907,6 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
           "updatable": "off",
           "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
           "whitelist": Array [],
-          "whitelistElements": Array [],
           "whitelistEnabled": "no",
         },
         Object {
@@ -925,8 +916,8 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
           "supply": "",
           "tier": "Tier 2",
           "updatable": "off",
+          "walletAddress": "",
           "whitelist": Array [],
-          "whitelistElements": Array [],
         },
       ],
       "validTiers": Array [
@@ -992,7 +983,6 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
               "updatable": "off",
               "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
               "whitelist": Array [],
-              "whitelistElements": Array [],
               "whitelistEnabled": "yes",
             },
             Object {
@@ -1004,7 +994,6 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
               "updatable": "off",
               "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
               "whitelist": Array [],
-              "whitelistElements": Array [],
               "whitelistEnabled": "no",
             },
             Object {
@@ -1014,8 +1003,8 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
               "supply": "",
               "tier": "Tier 2",
               "updatable": "off",
+              "walletAddress": "",
               "whitelist": Array [],
-              "whitelistElements": Array [],
             },
             Object {
               "endTime": "",
@@ -1026,7 +1015,6 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
               "updatable": "off",
               "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
               "whitelist": Array [],
-              "whitelistElements": Array [],
               "whitelistEnabled": "no",
             },
             Object {
@@ -1036,8 +1024,8 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
               "supply": "",
               "tier": "Tier 2",
               "updatable": "off",
+              "walletAddress": "",
               "whitelist": Array [],
-              "whitelistElements": Array [],
             },
           ],
           "validTiers": Array [
@@ -1435,7 +1423,6 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
                       "updatable": "off",
                       "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
                       "whitelist": Array [],
-                      "whitelistElements": Array [],
                       "whitelistEnabled": "yes",
                     },
                     Object {
@@ -1447,7 +1434,6 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
                       "updatable": "off",
                       "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
                       "whitelist": Array [],
-                      "whitelistElements": Array [],
                       "whitelistEnabled": "no",
                     },
                     Object {
@@ -1457,8 +1443,8 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
                       "supply": "",
                       "tier": "Tier 2",
                       "updatable": "off",
+                      "walletAddress": "",
                       "whitelist": Array [],
-                      "whitelistElements": Array [],
                     },
                     Object {
                       "endTime": "",
@@ -1469,7 +1455,6 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
                       "updatable": "off",
                       "walletAddress": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
                       "whitelist": Array [],
-                      "whitelistElements": Array [],
                       "whitelistEnabled": "no",
                     },
                     Object {
@@ -1479,8 +1464,8 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
                       "supply": "",
                       "tier": "Tier 2",
                       "updatable": "off",
+                      "walletAddress": "",
                       "whitelist": Array [],
-                      "whitelistElements": Array [],
                     },
                   ],
                   "validTiers": Array [

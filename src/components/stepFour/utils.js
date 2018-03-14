@@ -8,8 +8,8 @@ import {
   sendTXToContract
 } from '../../utils/blockchainHelpers'
 import { noContractAlert, noContractDataAlert } from '../../utils/alerts'
-import { countDecimalPlaces, floorToDecimals, toFixed } from '../../utils/utils'
-import { CONTRACT_TYPES, DOWNLOAD_NAME, TRUNC_TO_DECIMALS } from '../../utils/constants'
+import { countDecimalPlaces, toFixed } from '../../utils/utils'
+import { CONTRACT_TYPES, DOWNLOAD_NAME } from '../../utils/constants'
 import { isObservableArray } from 'mobx'
 import {
   contractStore,
@@ -443,12 +443,10 @@ export const addWhitelist = () => {
           let maxCaps = []
 
           for (let i = 0; i < whitelist.length; i++) {
-            if (!whitelist[i].deleted) {
-              addrs.push(whitelist[i].addr)
-              statuses.push(true)
-              minCaps.push(whitelist[i].min * 10 ** tokenStore.decimals ? toFixed((whitelist[i].min * 10 ** tokenStore.decimals).toString()) : 0)
-              maxCaps.push(whitelist[i].max * 10 ** tokenStore.decimals ? toFixed((whitelist[i].max * 10 ** tokenStore.decimals).toString()) : 0)
-            }
+            addrs.push(whitelist[i].addr)
+            statuses.push(true)
+            minCaps.push(whitelist[i].min * 10 ** tokenStore.decimals ? toFixed((whitelist[i].min * 10 ** tokenStore.decimals).toString()) : 0)
+            maxCaps.push(whitelist[i].max * 10 ** tokenStore.decimals ? toFixed((whitelist[i].max * 10 ** tokenStore.decimals).toString()) : 0)
           }
 
           console.log('addrs:', addrs)
