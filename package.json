@@ -91,6 +91,7 @@
     "react-dropzone": "^4.2.8",
     "react-error-overlay": "^1.0.9",
     "react-router-dom": "^4.1.2",
+    "react-tooltip": "^3.4.0",
     "solc": "^0.4.14",
     "solidity-flattener": "file:submodules/solidity-flattener",
     "store2": "^2.6.0",
