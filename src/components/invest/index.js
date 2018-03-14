@@ -135,16 +135,16 @@ export class Invest extends React.Component {
   setTimers = () => {
     const { crowdsalePageStore } = this.props
     let nextTick = 0
-    let millisecondsToNextTic = 0
+    let millisecondsToNextTick = 0
     let timeInterval
 
     if (crowdsalePageStore.ticks.length) {
       nextTick = crowdsalePageStore.extractNextTick()
-      millisecondsToNextTic = nextTick.time - Date.now()
+      millisecondsToNextTick = nextTick.time - Date.now()
 
       setTimeout(() => {
         this.setState({ displaySeconds: true })
-      }, millisecondsToNextTic - 5*6e4)
+      }, millisecondsToNextTick - 5*6e4)
 
       timeInterval = setInterval(() => {
         const time = moment.duration(this.state.nextTick.time - Date.now())
@@ -163,7 +163,7 @@ export class Invest extends React.Component {
 
     this.setState({
       nextTick,
-      msToNextTick: millisecondsToNextTic,
+      msToNextTick: millisecondsToNextTick,
       displaySeconds: false,
       timeInterval
     })
