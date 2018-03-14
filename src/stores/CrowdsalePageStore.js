@@ -17,8 +17,7 @@ class CrowdsalePageStore {
     this[property] = value
   }
 
-  @action setTier = (tier) => {
-    console.log(tier)
+  @action addTier = (tier) => {
     this.tiers.push(tier)
     this.sortTiers()
     this.buildTicksCollection()
@@ -50,7 +49,6 @@ class CrowdsalePageStore {
       return ticks
     }, [])
       .filter(tick => (tick.time - Date.now()) > 0)
-    console.log(this.ticks)
   }
 
   @action extractNextTick = () => {

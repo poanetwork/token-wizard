@@ -44,7 +44,7 @@ describe('CrowdsalePageStore', () => {
   })
 
   it('Should add tiers to collection and sort them', () => {
-    tiers.forEach(tier => crowdsalePageStore.setTier(tier))
+    tiers.forEach(tier => crowdsalePageStore.addTier(tier))
     crowdsalePageStore.tiers.forEach((tier, index) => {
       expect(tier.startDate).toBe(sortedTiers[index].startDate)
       expect(tier.endDate).toBe(sortedTiers[index].endDate)
@@ -52,7 +52,7 @@ describe('CrowdsalePageStore', () => {
   })
 
   it('Should build ticks from tiers collection', () => {
-    tiers.forEach(tier => crowdsalePageStore.setTier(tier))
+    tiers.forEach(tier => crowdsalePageStore.addTier(tier))
     crowdsalePageStore.ticks.forEach((tick, index) => {
       expect(tick.type).toBe(ticks[index].type)
       expect(tick.time).toBe(ticks[index].time)
@@ -63,7 +63,7 @@ describe('CrowdsalePageStore', () => {
   it('Should discard past ticks already closed', () => {
     MockDate.set('2018-03-13T12:00:00')
 
-    tiers.forEach(tier => crowdsalePageStore.setTier(tier))
+    tiers.forEach(tier => crowdsalePageStore.addTier(tier))
     expect(crowdsalePageStore.ticks.length).toBe(4)
 
     const activeTicks = ticks.slice(2)
@@ -75,7 +75,7 @@ describe('CrowdsalePageStore', () => {
   })
 
   it('Should mutate ticks collection on extract', () => {
-    tiers.forEach(tier => crowdsalePageStore.setTier(tier))
+    tiers.forEach(tier => crowdsalePageStore.addTier(tier))
 
     expect(crowdsalePageStore.ticks.length).toBe(6)
     crowdsalePageStore.extractNextTick()
@@ -83,7 +83,7 @@ describe('CrowdsalePageStore', () => {
   })
 
   it('Should return the nearest tick in collection', () => {
-    tiers.forEach(tier => crowdsalePageStore.setTier(tier))
+    tiers.forEach(tier => crowdsalePageStore.addTier(tier))
 
     const nextTick = crowdsalePageStore.extractNextTick()
     expect(nextTick.type).toBe(ticks[0].type)

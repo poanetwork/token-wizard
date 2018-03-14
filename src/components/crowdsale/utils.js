@@ -117,7 +117,7 @@ export function getCrowdsaleTargetDates() {
               const startsAtMilliseconds = startsAt * 1000
               const endsAtMilliseconds = endsAt * 1000
 
-              crowdsalePageStore.setTier({
+              crowdsalePageStore.addTier({
                 startDate: startsAtMilliseconds,
                 endDate: endsAtMilliseconds
               })
