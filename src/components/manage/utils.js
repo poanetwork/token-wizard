@@ -247,7 +247,7 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
       tokenStore.setProperty('ticker', tokenSymbol)
       tokenStore.setProperty('decimals', decimals)
 
-      //total supply: tiers, standard
+      //total supply
       const tokenDecimals = !isNaN(decimals) ? decimals : 0
       const maxCapBeforeDecimals = parseInt(toFixed(maximumSellableTokens), 10) / 10 ** tokenDecimals
 
@@ -259,7 +259,7 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
       const { decimals } = tokenStore
       const tokenDecimals = !isNaN(decimals) ? decimals : 0
 
-      //price: tiers, standard
+      //price
       const tokensPerETHTiers = !isNaN(1 / rate) ? 1 / web3.utils.fromWei(toFixed(rate).toString(), 'ether') : 0
 
       newTier.rate = tokensPerETHTiers

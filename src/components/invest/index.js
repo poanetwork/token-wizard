@@ -329,11 +329,11 @@ export class Invest extends React.Component {
     const maxCapBeforeDecimals = toBigNumber(maximumSellableTokens).div(`1e${tokenDecimals}`)
     const tokenAddress = getContractStoreProperty('token', 'addr')
 
-    //balance: tiers, standard
+    //balance
     const investorBalanceTiers = tokenAmountOf ? (tokenAmountOf / 10 ** tokenDecimals).toString() : '0'
     const investorBalance = investorBalanceTiers
 
-    //total supply: tiers, standard
+    //total supply
     const totalSupply = maxCapBeforeDecimals.toFixed()
 
     let invalidTokenDescription = null

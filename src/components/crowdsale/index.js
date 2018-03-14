@@ -123,7 +123,7 @@ export class Crowdsale extends React.Component {
     const crowdsaleAddr = tempCrowdsaleAddr === 'string' ? tempCrowdsaleAddr : tempCrowdsaleAddr[0]
     const investorsCount = crowdsalePageStore.investors ? crowdsalePageStore.investors.toString() : 0
 
-    const rate = toBigNumber(crowdsalePageStore.rate) //for tiers: 1 token in wei, for standard: 1/? 1 token in eth
+    const rate = toBigNumber(crowdsalePageStore.rate)
     const tokenDecimals = toBigNumber(tokenStore.decimals)
     const maximumSellableTokens = toBigNumber(crowdsalePageStore.maximumSellableTokens)
     const maximumSellableTokensInWei = toBigNumber(crowdsalePageStore.maximumSellableTokensInWei)
