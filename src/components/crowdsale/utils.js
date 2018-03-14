@@ -4,6 +4,12 @@ import { toFixed } from '../../utils/utils'
 import { CONTRACT_TYPES } from '../../utils/constants'
 import { contractStore, crowdsalePageStore, tokenStore, web3Store } from '../../stores'
 import { toJS } from 'mobx'
+import { BigNumber } from 'bignumber.js'
+
+BigNumber.config({ DECIMAL_PLACES : 18 })
+
+export const toBigNumber = (value) => isNaN(value) || value === '' ? new BigNumber(0) : new BigNumber(value)
+
 
 export function getJoinedTiers(abi, addr, joinedCrowdsales, cb) {
   attachToContract(abi, addr)
@@ -108,22 +114,6 @@ export function getCrowdsaleTargetDates($this, cb) {
 
         if (!crowdsaleContract) return noContractAlert();
 
-        if (crowdsaleContract.methods.startBlock) {
-          propsCount++;
-          crowdsaleContract.methods.startBlock().call((err, startBlock) => {
-            cbCount++;
-            if (err) return console.log(err);
-
-            console.log("startBlock: " + startBlock);
-            if (!crowdsalePageStore.startBlock || crowdsalePageStore.startBlock > startBlock)
-              crowdsalePageStore.setProperty('startBlock', startBlock);
-            if (propsCount === cbCount) {
-              state.loading = false;
-              $this.setState(state, cb);
-            }
-          });
-        }
-
         if (crowdsaleContract.methods.startsAt) {
           propsCount++;
           crowdsaleContract.methods.startsAt().call((err, startDate) => {
@@ -137,36 +127,6 @@ export function getCrowdsaleTargetDates($this, cb) {
               state.loading = false;
               $this.setState(state, cb);
             }
-          });
-        }
-
-        if (crowdsaleContract.methods.endBlock) {
-          propsCount++;
-          crowdsaleContract.methods.endBlock().call((err, endBlock) => {
-            cbCount++;
-            if (err) return console.log(err);
-
-            console.log("endBlock: " + endBlock);
-
-            if (!crowdsalePageStore.endBlock || crowdsalePageStore.endBlock < endBlock) crowdsalePageStore.endBlock = endBlock;
-
-            web3.eth.getBlockNumber((err, curBlock) => {
-              if (err) return console.log(err);
-
-              console.log("curBlock: " + curBlock);
-              let blocksDiff = parseInt($this.crowdsalePageStore.endBlock, 10) - parseInt(curBlock, 10);
-
-              console.log("blocksDiff: " + blocksDiff);
-              let blocksDiffInSec = blocksDiff * state.blockTimeGeneration;
-
-              console.log("blocksDiffInSec: " + blocksDiffInSec);
-              state.seconds = blocksDiffInSec;
-
-              if (propsCount === cbCount) {
-                state.loading = false;
-                $this.setState(state, cb);
-              }
-            });
           });
         }
 
@@ -236,12 +196,8 @@ export function getAccumulativeCrowdsaleData() {
           })
 
           let getMaximumSellableTokens = crowdsaleContract.methods.maximumSellableTokens().call().then((maximumSellableTokens) => {
-            const maxSellableTokens = crowdsalePageStore.maximumSellableTokens
-            if (maxSellableTokens) {
-              crowdsalePageStore.setProperty('maximumSellableTokens', maxSellableTokens + parseInt(toFixed(maximumSellableTokens), 10))
-            } else {
-              crowdsalePageStore.setProperty('maximumSellableTokens', parseInt(toFixed(maximumSellableTokens), 10))
-            }
+            const maxSellableTokens = toBigNumber(crowdsalePageStore.maximumSellableTokens)
+            crowdsalePageStore.setProperty('maximumSellableTokens', maxSellableTokens.plus(maximumSellableTokens).toFixed())
 
             //calc maximumSellableTokens in Eth
             return setMaximumSellableTokensInEth(crowdsaleContract, maximumSellableTokens)
@@ -273,13 +229,13 @@ function setMaximumSellableTokensInEth(crowdsaleContract, maximumSellableTokens)
     .then(pricingStrategyContract => {
       if (!pricingStrategyContract) return noContractAlert()
 
-      return pricingStrategyContract.methods.oneTokenInWei().call().then((oneTokenInWei) => {
-        if (crowdsalePageStore.maximumSellableTokensInWei) {
-          crowdsalePageStore.setProperty('maximumSellableTokensInWei', crowdsalePageStore.maximumSellableTokensInWei + parseInt(oneTokenInWei, 10) * maximumSellableTokens / 10 ** tokenStore.decimals)
-        } else {
-          crowdsalePageStore.setProperty('maximumSellableTokensInWei', parseInt(oneTokenInWei, 10) * maximumSellableTokens / 10 ** tokenStore.decimals)
-        }
-      })
+      return pricingStrategyContract.methods.oneTokenInWei().call()
+        .then((oneTokenInWei) => {
+          const currentMaximumSellableTokensInWei = toBigNumber(crowdsalePageStore.maximumSellableTokensInWei)
+          const maximumSellableTokensInWei = toBigNumber(oneTokenInWei).times(maximumSellableTokens).div(`1e${tokenStore.decimals}`).dp(0)
+
+          crowdsalePageStore.setProperty('maximumSellableTokensInWei', currentMaximumSellableTokensInWei.plus(maximumSellableTokensInWei).toFixed())
+        })
     })
 }
 
@@ -325,24 +281,6 @@ export function getCrowdsaleData (crowdsaleContract) {
 
     let propsCount = 0
     let cbCount = 0
-
-    if (crowdsaleContract.methods.supply) {
-      propsCount++
-      crowdsaleContract.methods.supply().call((err, supply) => {
-        cbCount++
-
-        if (err) {
-          return console.log(err)
-        }
-
-        console.log('supply:', supply)
-        crowdsalePageStore.supply = supply
-
-        if (propsCount === cbCount) {
-          resolve()
-        }
-      })
-    }
 
     propsCount++
     crowdsaleContract.methods.token().call((err, tokenAddr) => {
@@ -644,7 +582,7 @@ export function getPricingStrategyData () {
           }
 
           console.log('pricing strategy rate:', rate)
-          crowdsalePageStore.setProperty('rate', parseInt(rate, 10))
+          crowdsalePageStore.setProperty('rate', rate)
           resolve()
         })
       })

@@ -54,14 +54,6 @@ export function successfulInvestmentAlert(tokensToInvest) {
   });
 }
 
-export function investmentDisabledAlert(startBlock, curBlock) {
-  sweetAlert2({
-    title: "Warning",
-    html: "Wait, please. Crowdsale company hasn't started yet. It'll start from <b>" + startBlock + "</b> block. Current block is <b>" + curBlock + "</b>.",
-    type: "warning"
-  });
-}
-
 export function investmentDisabledAlertInTime(startTime) {
   sweetAlert2({
     title: "Warning",
@@ -223,5 +215,13 @@ export function clearingReservedTokens() {
     cancelButtonText: "No",
     confirmButtonText: "Yes",
     reverseButtons: true
+  })
+}
+
+export function whitelistImported(count) {
+  return sweetAlert2({
+    title: 'Addresses imported',
+    html: `${count} addresses were added to the whitelist`,
+    type: 'info'
   })
 }

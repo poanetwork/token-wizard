@@ -147,10 +147,9 @@ export class Invest extends React.Component {
 
     this.setState({ loading: true })
 
-    const startBlock = parseInt(crowdsalePageStore.startBlock, 10)
     const { startDate } = crowdsalePageStore
 
-    if ((isNaN(startBlock) || startBlock === 0) && !startDate) {
+    if (!startDate) {
       this.setState({ loading: false })
       return
     }
