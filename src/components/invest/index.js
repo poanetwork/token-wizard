@@ -9,7 +9,8 @@ import {
   getCrowdsaleTargetDates,
   getCurrentRate,
   getJoinedTiers,
-  initializeAccumulativeData
+  initializeAccumulativeData,
+  toBigNumber
 } from '../crowdsale/utils'
 import { countDecimalPlaces, getQueryVariable, toast } from '../../utils/utils'
 import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
@@ -314,7 +315,7 @@ export class Invest extends React.Component {
 
   render () {
     const { crowdsalePageStore, tokenStore, contractStore, investStore } = this.props
-    const { rate, tokenAmountOf, ethRaised, supply } = crowdsalePageStore
+    const { rate, tokenAmountOf, ethRaised } = crowdsalePageStore
     const { crowdsale, contractType } = contractStore
     const { tokensToInvest } = investStore
 
@@ -327,7 +328,9 @@ export class Invest extends React.Component {
     const tokenDecimals = !isNaN(decimals) ? decimals : 0
     const tokenTicker = ticker ? ticker.toString() : ''
     const tokenName = name ? name.toString() : ''
-    const maxCapBeforeDecimals = crowdsalePageStore.maximumSellableTokens / 10 ** tokenDecimals
+    const supply = toBigNumber(crowdsalePageStore.supply)
+    const maximumSellableTokens = toBigNumber(crowdsalePageStore.maximumSellableTokens)
+    const maxCapBeforeDecimals = toBigNumber(maximumSellableTokens).div(`1e${tokenDecimals}`)
     const tokenAddress = getContractStoreProperty('token', 'addr')
 
     //balance: tiers, standard
@@ -336,8 +339,8 @@ export class Invest extends React.Component {
     const investorBalance = isWhitelistWithCap ? investorBalanceTiers : investorBalanceStandard
 
     //total supply: tiers, standard
-    const tierCap = !isNaN(maxCapBeforeDecimals) ? maxCapBeforeDecimals.toString() : '0'
-    const standardCrowdsaleSupply = !isNaN(supply) ? supply.toString() : '0'
+    const tierCap = maxCapBeforeDecimals.toFixed()
+    const standardCrowdsaleSupply = supply.toFixed()
     const totalSupply = isWhitelistWithCap ? tierCap : standardCrowdsaleSupply
 
     let invalidTokenDescription = null
