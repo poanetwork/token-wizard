@@ -12,7 +12,6 @@ import {
   VALIDATION_MESSAGES,
   VALIDATION_TYPES,
   TEXT_FIELDS,
-  CONTRACT_TYPES,
   CHAINS,
   defaultTier,
   defaultTierValidations
@@ -311,7 +310,7 @@ export class stepThree extends React.Component {
   }
 
   render() {
-    const { contractStore, crowdsaleBlockListStore, tierStore } = this.props;
+    const { crowdsaleBlockListStore, tierStore } = this.props;
 
     const globalSettingsBlock = (
       <div>
@@ -360,30 +359,28 @@ export class stepThree extends React.Component {
       </div>
     )
 
-    if (contractStore.contractType === CONTRACT_TYPES.whitelistwithcap) {
-      return (
-        <section className="steps steps_crowdsale-contract" ref="three">
-          <StepNavigation activeStep={CROWDSALE_SETUP}/>
-          <div className="steps-content container">
-            <div className="about-step">
-              <div className="step-icons step-icons_crowdsale-setup"/>
-              <p className="title">Crowdsale setup</p>
-              <p className="description">The most important and exciting part of the crowdsale process. Here you can
-                define parameters of your crowdsale campaign.</p>
-            </div>
-            {globalSettingsBlock}
+    return (
+      <section className="steps steps_crowdsale-contract" ref="three">
+        <StepNavigation activeStep={CROWDSALE_SETUP}/>
+        <div className="steps-content container">
+          <div className="about-step">
+            <div className="step-icons step-icons_crowdsale-setup"/>
+            <p className="title">Crowdsale setup</p>
+            <p className="description">The most important and exciting part of the crowdsale process. Here you can
+              define parameters of your crowdsale campaign.</p>
           </div>
+          {globalSettingsBlock}
+        </div>
 
-          <div>{crowdsaleBlockListStore.blockList}</div>
+        <div>{crowdsaleBlockListStore.blockList}</div>
 
-          <div className="button-container">
-            <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary">Add Tier</div>
-            <Link onClick={e => this.beforeNavigate(e)} className="button button_fill" to="/4">Continue</Link>
-          </div>
+        <div className="button-container">
+          <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary">Add Tier</div>
+          <Link onClick={e => this.beforeNavigate(e)} className="button button_fill" to="/4">Continue</Link>
+        </div>
 
-          <Loader show={this.state.loading}/>
-        </section>
-      )
-    }
+        <Loader show={this.state.loading}/>
+      </section>
+    )
   }
 }

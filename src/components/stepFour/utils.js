@@ -9,7 +9,7 @@ import {
 } from '../../utils/blockchainHelpers'
 import { noContractAlert, noContractDataAlert } from '../../utils/alerts'
 import { countDecimalPlaces, toFixed } from '../../utils/utils'
-import { CONTRACT_TYPES, DOWNLOAD_NAME } from '../../utils/constants'
+import { DOWNLOAD_NAME } from '../../utils/constants'
 import { isObservableArray } from 'mobx'
 import {
   contractStore,
@@ -200,14 +200,12 @@ const getCrowdSaleParams = index => {
 export const deployCrowdsale = () => {
   return tierStore.tiers.map((tier, index) => {
     return () => {
-      const { whitelistwithcap } = CONTRACT_TYPES
-
       return getNetworkVersion()
         .then(networkID => contractStore.setContractProperty('crowdsale', 'networkID', networkID))
         .then(() => {
           const abiCrowdsale = contractStore.crowdsale.abi || []
           const binCrowdsale = contractStore.crowdsale.bin || ''
-          const paramsCrowdsale = contractStore.contractType === whitelistwithcap ? getCrowdSaleParams(index) : undefined
+          const paramsCrowdsale = getCrowdSaleParams(index)
 
           return deployContract(abiCrowdsale, binCrowdsale, paramsCrowdsale)
         })

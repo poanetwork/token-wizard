@@ -12,7 +12,6 @@ import {
 } from './utils'
 import { noContractDataAlert, successfulDeployment, skippingTransaction } from '../../utils/alerts'
 import {
-  CONTRACT_TYPES,
   DESCRIPTION,
   DOWNLOAD_TYPE,
   FILE_CONTENTS,
@@ -63,17 +62,14 @@ export class stepFour extends React.Component {
   }
 
   deployCrowdsale = () => {
-    const { contractStore, deploymentStore } = this.props
-    const isWhitelistWithCap = contractStore.contractType === CONTRACT_TYPES.whitelistwithcap
+    const { deploymentStore } = this.props
     const firstRun = deploymentStore.deploymentStep === null
 
-    if (isWhitelistWithCap) {
-      if (firstRun) {
-        setupContractDeployment()
-          .then(this.resumeContractDeployment)
-      } else {
-        this.resumeContractDeployment()
-      }
+    if (firstRun) {
+      setupContractDeployment()
+        .then(this.resumeContractDeployment)
+    } else {
+      this.resumeContractDeployment()
     }
   }
 
@@ -242,23 +238,6 @@ export class stepFour extends React.Component {
   render() {
     const { tierStore, contractStore, tokenStore, deploymentStore } = this.props
     const crowdsaleSetups = tierStore.tiers.map((tier, index) => {
-      const capBlock = (
-        <DisplayField
-          side='left'
-          title={'Max cap'}
-          value={tier.supply ? tier.supply : ''}
-          description="How many tokens will be sold on this tier."
-        />
-      )
-      const updatableBlock = (
-        <DisplayField
-          side='right'
-          title={'Allow modifying'}
-          value={tier.updatable ? tier.updatable : 'off'}
-          description={DESCRIPTION.ALLOW_MODIFYING}
-        />
-      )
-
       return (
         <div key={index.toString()}>
           <div className="publish-title-container">
@@ -293,8 +272,18 @@ export class stepFour extends React.Component {
                 description={DESCRIPTION.RATE}
               />
             </div>
-            {contractStore.contractType === CONTRACT_TYPES.whitelistwithcap ? capBlock : ''}
-            {contractStore.contractType === CONTRACT_TYPES.whitelistwithcap ? updatableBlock : ''}
+            <DisplayField
+              side='left'
+              title={'Max cap'}
+              value={tier.supply ? tier.supply : ''}
+              description="How many tokens will be sold on this tier."
+            />
+            <DisplayField
+              side='right'
+              title={'Allow modifying'}
+              value={tier.updatable ? tier.updatable : 'off'}
+              description={DESCRIPTION.ALLOW_MODIFYING}
+            />
           </div>
         </div>
       )
@@ -407,7 +396,7 @@ export class stepFour extends React.Component {
               <div className="publish-title-container">
                 <p className="publish-title" data-step="1">Crowdsale Contract</p>
               </div>
-              <p className="label">{contractStore.contractType === CONTRACT_TYPES.standard ? "Standard" : "Whitelist with cap"}</p>
+              <p className="label">Whitelist with cap</p>
               <p className="description">Crowdsale Contract</p>
             </div>
             <div className="publish-title-container">

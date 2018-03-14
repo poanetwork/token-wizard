@@ -4,7 +4,7 @@ import { checkWeb3 } from '../../utils/blockchainHelpers'
 import { Link } from 'react-router-dom';
 import { setFlatFileContentToState, toast } from '../../utils/utils';
 import { StepNavigation } from '../Common/StepNavigation';
-import { NAVIGATION_STEPS, CONTRACT_TYPES, TOAST } from '../../utils/constants';
+import { NAVIGATION_STEPS, TOAST } from '../../utils/constants';
 import { inject, observer } from 'mobx-react';
 const { CROWDSALE_CONTRACT } = NAVIGATION_STEPS;
 
@@ -43,13 +43,6 @@ export class stepOne extends React.Component {
     }
   }
 
-  getStandardCrowdsaleAssets() {
-    return Promise.all([
-      this.getCrowdsaleAsset("CrowdsaleStandard", "crowdsale"),
-      this.getCrowdsaleAsset("CrowdsaleStandardToken", "token")
-    ])
-  }
-
   getWhiteListWithCapCrowdsaleAssets () {
     return Promise.all([
       this.getCrowdsaleAsset("SafeMathLibExt", "safeMathLib"),
@@ -82,26 +75,10 @@ export class stepOne extends React.Component {
     });
   }
 
-  contractTypeSelected(e) {
-    this.props.contractStore.setContractType(e.currentTarget.id);
-    this.getWhiteListWithCapCrowdsaleAssets();
-  }
-
   componentDidMount() {
     checkWeb3(this.props.web3Store.web3);
 
-    let downloadContracts = null
-
-    switch (this.props.contractStore.contractType) {
-      case CONTRACT_TYPES.standard:
-        downloadContracts = this.getStandardCrowdsaleAssets();
-        break;
-      case CONTRACT_TYPES.whitelistwithcap:
-        downloadContracts = this.getWhiteListWithCapCrowdsaleAssets();
-        break
-      default:
-        break
-    }
+    let downloadContracts = this.getWhiteListWithCapCrowdsaleAssets();
 
     downloadContracts
       .then(
@@ -139,10 +116,9 @@ export class stepOne extends React.Component {
             <label className="radio">
               <input
                 type="radio"
-                checked={this.props.contractStore.contractType === CONTRACT_TYPES.whitelistwithcap}
+                checked={true}
                 name="contract-type"
-                id={CONTRACT_TYPES.whitelistwithcap}
-                onChange={(e) => this.contractTypeSelected(e)}
+                id="white-list-with-cap"
               />
               <span className="title">Whitelist with Cap</span>
               <span className="description">
