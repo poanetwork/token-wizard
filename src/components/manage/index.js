@@ -18,6 +18,7 @@ import { toast } from '../../utils/utils'
 import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
 import { getTiers, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
+import classNames from 'classnames'
 
 const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME } = TEXT_FIELDS
 
@@ -331,14 +332,15 @@ export class Manage extends Component {
     this.updateCrowdsaleStatus()
       .then(() => {
         const { crowdsaleStore, tierStore } = this.props
+        const { formPristine, crowdsaleHasEnded } = this.state
         const updatableTiers = crowdsaleStore.selected.initialTiersValues.filter(tier => tier.updatable)
         const isValidTier = tierStore.individuallyValidTiers
         const validTiers = updatableTiers.every(tier => isValidTier[tier.index])
 
-        if (!this.state.formPristine && !this.state.crowdsaleHasEnded && updatableTiers.length && validTiers) {
+        if ((!formPristine || tierStore.modifiedStoredWhitelist) && !crowdsaleHasEnded && updatableTiers.length && validTiers) {
           const keys = Object
             .keys(updatableTiers[0])
-            .filter(key => key !== 'index' && key !== 'updatable' && key !== 'addresses' && key !== 'whitelistElements')
+            .filter(key => key !== 'index' && key !== 'updatable' && key !== 'addresses')
 
           updatableTiers
             .reduce((toUpdate, tier) => {
@@ -347,11 +349,10 @@ export class Manage extends Component {
                 let newValue = tierStore.tiers[tier.index][key]
 
                 if (isObservableArray(newValue)) {
-                  if (newValue.length > tier[key].length) {
-                    newValue = newValue.slice(tier[key].length).filter(whitelist => !whitelist.deleted)
-                    if (newValue.length) {
-                      toUpdate.push({ key, newValue, addresses })
-                    }
+                  newValue = newValue.filter(item => !item.stored)
+
+                  if (newValue.length) {
+                    toUpdate.push({ key, newValue, addresses })
                   }
 
                 } else if (newValue !== tier[key]) {
@@ -383,12 +384,6 @@ export class Manage extends Component {
       })
   }
 
-  clickedWhiteListInputBlock = e => {
-    if (e.target.classList.contains('button_fill_plus')) {
-      this.setState({ formPristine: false })
-    }
-  }
-
   whitelistInputBlock = index => {
     return (
       <WhitelistInputBlock
@@ -410,7 +405,7 @@ export class Manage extends Component {
     }
 
     return tier.whitelist.map(item => (
-      <div className={'white-list-item-container'} key={item.addr}>
+      <div className={'white-list-item-container no-style'} key={item.addr}>
         <div className="white-list-item-container-inner">
           <span className="white-list-item white-list-item-left">{item.addr}</span>
           <span className="white-list-item white-list-item-middle">{item.min}</span>
@@ -428,7 +423,7 @@ export class Manage extends Component {
     }
 
     return (
-      <div onClick={this.clickedWhiteListInputBlock}>
+      <div>
         <div className="section-title">
           <p className="title">Whitelist</p>
         </div>
@@ -515,12 +510,20 @@ export class Manage extends Component {
       </div>
     )
 
-    const saveButton = (
-      <Link to='/2' onClick={e => this.saveCrowdsale(e)}>
-        <span
-          className={`no-arrow button button_${ownerCurrentUser && !formPristine && !crowdsaleHasEnded ? 'fill' : 'disabled'}`}>Save</span>
-      </Link>
-    )
+    const saveButton = () => {
+      let buttonStyle = 'button_disabled'
+
+      if (ownerCurrentUser && (!formPristine || tierStore.modifiedStoredWhitelist) && !crowdsaleHasEnded) {
+        buttonStyle = 'button_fill'
+      }
+
+      return (
+        <Link to='/2' onClick={e => this.saveCrowdsale(e)}>
+          <span
+            className={classNames('no-arrow', 'button', buttonStyle)}>Save</span>
+        </Link>
+      )
+    }
 
     const tierNameAndWallet = (tier) => {
       return <div className='input-block-container'>
@@ -620,7 +623,7 @@ export class Manage extends Component {
         ))}
         <div className="steps">
           <div className="button-container">
-            {!crowdsaleHasEnded && updatable ? saveButton : null}
+            {!crowdsaleHasEnded && updatable ? saveButton() : null}
           </div>
         </div>
         <Loader show={this.state.loading}/>

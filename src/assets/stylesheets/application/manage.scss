@@ -4,10 +4,33 @@
   .warning-logo {
     color: #642F9C !important;
     border-color: #642F9C !important;
-    position: absolute !important;
-    left: 0 !important;
-    top: 0 !important;
+    position: absolute;
+    left: 0;
+    top: 0;
     display: flex;
+  }
+
+  .white-list-item-container {
+    .remove {
+      display: inline-flex;
+      margin-top: 8px;
+    }
+
+    .swal2-icon {
+      width: 14px;
+      height: 14px;
+      line-height: 14px;
+      border: 2px solid transparent;
+    }
+
+    .warning-logo {
+      color: orange !important;
+      border-color: orange !important;
+      position: relative;
+      float: right;
+      font-size: 14px;
+      font-weight: bold;
+    }
   }
 
   .steps-content {

@@ -34,6 +34,7 @@
     "yargs": "^10.0.3"
   },
   "dependencies": {
+    "airbnb-js-shims": "^1.4.1",
     "autoprefixer": "7.1.1",
     "babel-core": "6.25.0",
     "babel-eslint": "7.2.3",
@@ -89,6 +90,7 @@
     "react-dropzone": "^4.2.8",
     "react-error-overlay": "^1.0.9",
     "react-router-dom": "^4.1.2",
+    "react-tooltip": "^3.4.0",
     "solc": "^0.4.14",
     "solidity-flattener": "file:submodules/solidity-flattener",
     "store2": "^2.6.0",

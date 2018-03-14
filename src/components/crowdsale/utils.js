@@ -264,24 +264,6 @@ export function getCrowdsaleData (crowdsaleContract) {
     let propsCount = 0
     let cbCount = 0
 
-    if (crowdsaleContract.methods.supply) {
-      propsCount++
-      crowdsaleContract.methods.supply().call((err, supply) => {
-        cbCount++
-
-        if (err) {
-          return console.log(err)
-        }
-
-        console.log('supply:', supply)
-        crowdsalePageStore.supply = supply
-
-        if (propsCount === cbCount) {
-          resolve()
-        }
-      })
-    }
-
     propsCount++
     crowdsaleContract.methods.token().call((err, tokenAddr) => {
       cbCount++

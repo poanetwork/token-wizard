@@ -54,14 +54,6 @@ export function successfulInvestmentAlert(tokensToInvest) {
   });
 }
 
-export function investmentDisabledAlert(startBlock, curBlock) {
-  sweetAlert2({
-    title: "Warning",
-    html: "Wait, please. Crowdsale company hasn't started yet. It'll start from <b>" + startBlock + "</b> block. Current block is <b>" + curBlock + "</b>.",
-    type: "warning"
-  });
-}
-
 export function investmentDisabledAlertInTime(startTime) {
   sweetAlert2({
     title: "Warning",

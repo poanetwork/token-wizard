@@ -10,7 +10,7 @@ import {
   initializeAccumulativeData,
   toBigNumber
 } from './utils'
-import { getQueryVariable, toFixed } from '../../utils/utils'
+import { getQueryVariable } from '../../utils/utils'
 import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { CONTRACT_TYPES, NAVIGATION_STEPS } from '../../utils/constants'
