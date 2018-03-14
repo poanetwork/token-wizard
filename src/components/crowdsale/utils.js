@@ -100,59 +100,41 @@ export function findCurrentContractRecursively(i, firstCrowdsaleContract, cb) {
     .catch(err => console.log(err))
 }
 
-export function getCrowdsaleTargetDates($this, cb) {
-  let propsCount = 0;
-  let cbCount = 0;
-  let state = $this.state;
-  const { web3 } = web3Store
+export function getCrowdsaleTargetDates() {
+  return contractStore.crowdsale.addr.reduce((promise, address) => {
+    return promise.then(() => {
+      return attachToContract(contractStore.crowdsale.abi, address)
+        .then(contract => {
+          if (!contract) return Promise.reject(noContractAlert())
 
-  for (let i = 0; i < contractStore.crowdsale.addr.length; i++) {
-    let crowdsaleAddr = contractStore.crowdsale.addr[i];
-    attachToContract(contractStore.crowdsale.abi, crowdsaleAddr)
-      .then(crowdsaleContract => { // eslint-disable-line no-loop-func
-        console.log("attach to crowdsale contract");
+          const { methods } = contract
 
-        if (!crowdsaleContract) return noContractAlert();
+          const whenStartsAt = methods.startsAt ? methods.startsAt().call() : Promise.resolve()
+          const whenEndsAt = methods.endsAt ? methods.endsAt().call() : Promise.resolve()
 
-        if (crowdsaleContract.methods.startsAt) {
-          propsCount++;
-          crowdsaleContract.methods.startsAt().call((err, startDate) => {
-            cbCount++;
-            if (err) return console.log(err);
+          return Promise.all([whenStartsAt, whenEndsAt])
+            .then(([startsAt, endsAt]) => {
+              const startsAtMilliseconds = startsAt * 1000
+              const endsAtMilliseconds = endsAt * 1000
 
-            console.log("startDate: " + startDate * 1000);
-            if (!crowdsalePageStore.startDate || crowdsalePageStore.startDate > startDate * 1000)
-              crowdsalePageStore.startDate = startDate * 1000;
-            if (propsCount === cbCount) {
-              state.loading = false;
-              $this.setState(state, cb);
-            }
-          });
-        }
+              crowdsalePageStore.addTier({
+                startDate: startsAtMilliseconds,
+                endDate: endsAtMilliseconds
+              })
 
-        if (crowdsaleContract.methods.endsAt) {
-          propsCount++;
-          crowdsaleContract.methods.endsAt().call((err, endDate) => {
-            cbCount++;
-            if (err) return console.log(err);
+              console.log("startDate:", startsAtMilliseconds)
+              if (!crowdsalePageStore.startDate || crowdsalePageStore.startDate > startsAtMilliseconds)
+                crowdsalePageStore.startDate = startsAtMilliseconds
 
-            console.log("endDate: " + endDate * 1000);
+              console.log("endDate:", endsAtMilliseconds)
+              if (!crowdsalePageStore.endDate || crowdsalePageStore.endDate < endsAtMilliseconds)
+                crowdsalePageStore.setProperty('endDate', endsAtMilliseconds)
 
-            if (!crowdsalePageStore.endDate || crowdsalePageStore.endDate < endDate * 1000) {
-              crowdsalePageStore.setProperty('endDate', endDate * 1000)
-            }
-
-            console.log("curDate: " + new Date().getTime());
-
-            if (propsCount === cbCount) {
-              state.loading = false;
-              $this.setState(state, cb);
-            }
-          });
-        }
-      })
-      .catch(console.log)
-  }
+              console.log("curDate:", Date.now())
+            })
+        })
+    })
+  }, Promise.resolve())
 }
 
 export function initializeAccumulativeData() {

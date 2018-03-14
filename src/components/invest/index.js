@@ -25,6 +25,7 @@ import { CONTRACT_TYPES, INVESTMENT_OPTIONS, TOAST } from '../../utils/constants
 import { inject, observer } from 'mobx-react'
 import QRPaymentProcess from './QRPaymentProcess'
 import classNames from 'classnames'
+import moment from 'moment'
 
 @inject('contractStore', 'crowdsalePageStore', 'web3Store', 'tierStore', 'tokenStore', 'generalStore', 'investStore', 'gasPriceStore', 'generalStore')
 @observer
@@ -34,12 +35,20 @@ export class Invest extends React.Component {
     window.scrollTo(0, 0)
 
     this.state = {
-      seconds: 0,
       loading: true,
       pristineTokenInput: true,
       web3Available: false,
       investThrough: INVESTMENT_OPTIONS.QR,
-      crowdsaleAddress: CrowdsaleConfig.crowdsaleContractURL || getQueryVariable('addr')
+      crowdsaleAddress: CrowdsaleConfig.crowdsaleContractURL || getQueryVariable('addr'),
+      toNextTick: {
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0
+      },
+      nextTick: {},
+      msToNextTick: 0,
+      displaySeconds: false
     }
   }
 
@@ -57,9 +66,7 @@ export class Invest extends React.Component {
     checkNetWorkByID(networkID)
     contractStore.setContractType(contractType)
 
-    const timeInterval = setInterval(() => this.setState({ seconds: this.state.seconds - 1 }), 1000)
     this.setState({
-      timeInterval,
       web3Available: true,
       investThrough: INVESTMENT_OPTIONS.METAMASK
     })
@@ -74,8 +81,12 @@ export class Invest extends React.Component {
       })
   }
 
+  componentWillUnmount () {
+    this.clearTimeInterval()
+  }
+
   extractContractsData() {
-    const { contractStore, crowdsalePageStore, web3Store } = this.props
+    const { contractStore, web3Store } = this.props
     const { web3 } = web3Store
 
     const crowdsaleAddr = CrowdsaleConfig.crowdsaleContractURL ? CrowdsaleConfig.crowdsaleContractURL : getQueryVariable('addr')
@@ -116,26 +127,65 @@ export class Invest extends React.Component {
           initializeAccumulativeData()
             .then(() => getCrowdsaleData(crowdsaleContract))
             .then(() => getAccumulativeCrowdsaleData())
+            .then(() => getCrowdsaleTargetDates())
+            .then(() => this.setTimers())
+            .catch(err => console.log(err))
             .then(() => this.setState({ loading: false }))
-            .catch(err => {
-              this.setState({ loading: false })
-              console.log(err)
-            })
-
-          getCrowdsaleTargetDates(this, () => {
-            if (crowdsalePageStore.endDate) {
-              this.setState({
-                seconds: (crowdsalePageStore.endDate - new Date().getTime()) / 1000
-              })
-            }
-          })
         })
       })
     })
   }
 
+  setTimers = () => {
+    const { crowdsalePageStore } = this.props
+    let nextTick = 0
+    let millisecondsToNextTick = 0
+    let timeInterval
+
+    if (crowdsalePageStore.ticks.length) {
+      nextTick = crowdsalePageStore.extractNextTick()
+      millisecondsToNextTick = nextTick.time - Date.now()
+      const FIVE_MINUTES_BEFORE_TICK = moment(millisecondsToNextTick).subtract(5, 'minutes').valueOf()
+
+      setTimeout(() => {
+        this.setState({ displaySeconds: true })
+      }, FIVE_MINUTES_BEFORE_TICK)
+
+      timeInterval = setInterval(() => {
+        const time = moment.duration(this.state.nextTick.time - Date.now())
+
+        this.setState({
+          toNextTick: {
+            days: time.days() || 0,
+            hours: time.hours() || 0,
+            minutes: time.minutes() || 0,
+            seconds: time.seconds() || 0
+          }
+        })
+      }, 1000)
+    }
+
+
+    this.setState({
+      nextTick,
+      msToNextTick: millisecondsToNextTick,
+      displaySeconds: false,
+      timeInterval
+    })
+  }
+
+  resetTimers = () => {
+    this.clearTimeInterval()
+    this.setTimers()
+  }
+
+  clearTimeInterval = () => {
+    if (this.state.timeInterval) clearInterval(this.state.timeInterval)
+  }
+
   investToTokens = event => {
     const { investStore, crowdsalePageStore, web3Store } = this.props
+    const { startDate } = crowdsalePageStore
     const { web3 } = web3Store
 
     event.preventDefault()
@@ -146,8 +196,6 @@ export class Invest extends React.Component {
     }
 
     this.setState({ loading: true })
-
-    const { startDate } = crowdsalePageStore
 
     if (!startDate) {
       this.setState({ loading: false })
@@ -253,30 +301,15 @@ export class Invest extends React.Component {
     return (
       <div style={{ marginLeft: '-20px', marginTop: '-20px' }}>
         <ReactCountdownClock
-          seconds={this.state.seconds}
+          seconds={this.state.msToNextTick / 1000}
           color="#733EAB"
           alpha={0.9}
           size={270}
+          showMilliseconds={false}
+          onComplete={this.resetTimers}
         />
       </div>
     )
-  }
-
-  shouldStopCountDown () {
-    if(this.state.seconds < 0) {
-      this.setState({ seconds: 0 })
-      clearInterval(this.state.timeInterval)
-    }
-  }
-
-  getTimeStamps (seconds) {
-    this.shouldStopCountDown()
-    const days        = Math.floor(seconds / 24 / 60 / 60)
-    const hoursLeft   = Math.floor(seconds - days * 86400)
-    const hours       = Math.floor(hoursLeft / 3600)
-    const minutesLeft = Math.floor(hoursLeft - hours * 3600)
-    const minutes     = Math.floor(minutesLeft / 60)
-    return { days, hours, minutes }
   }
 
   render () {
@@ -285,8 +318,8 @@ export class Invest extends React.Component {
     const { crowdsale, contractType } = contractStore
     const { tokensToInvest } = investStore
 
-    const { seconds, curAddr, pristineTokenInput, investThrough, crowdsaleAddress, web3Available } = this.state
-    const { days, hours, minutes } = this.getTimeStamps(seconds)
+    const { curAddr, pristineTokenInput, investThrough, crowdsaleAddress, web3Available, toNextTick, nextTick } = this.state
+    const { days, hours, minutes, seconds } = toNextTick
 
     const { decimals, ticker, name } = tokenStore
     const isWhitelistWithCap = contractType === CONTRACT_TYPES.whitelistwithcap
@@ -328,26 +361,55 @@ export class Invest extends React.Component {
       'qr-selected': investThrough === INVESTMENT_OPTIONS.QR
     })
 
+    const daysHoursMinutes = (
+      <div className="timer">
+        <div className="timer-inner">
+          {this.state.displaySeconds
+            ? null
+            : <div className="timer-i">
+              <div className="timer-count">{days}</div>
+              <div className="timer-interval">Days</div>
+            </div>
+          }
+          {this.state.displaySeconds
+            ? null
+            : <div className="timer-i">
+              <div className="timer-count">{hours}</div>
+              <div className="timer-interval">Hours</div>
+            </div>
+          }
+          <div className="timer-i">
+            <div className="timer-count">{minutes}</div>
+            <div className="timer-interval">Mins</div>
+          </div>
+          {!this.state.displaySeconds
+            ? null
+            : <div className="timer-i">
+              <div className="timer-count">{seconds}</div>
+              <div className="timer-interval">Secs</div>
+            </div>
+          }
+          <div className="timer-i">
+            <div className="timer-interval">
+              <strong>
+                {nextTick.type
+                  ? nextTick.type === 'start'
+                    ? `to start of tier ${nextTick.order || 0} of ${crowdsalePageStore && crowdsalePageStore.tiers.length}`
+                    : `to end of tier ${nextTick.order || 0} of ${crowdsalePageStore && crowdsalePageStore.tiers.length}`
+                  : 'crowdsale has ended'
+                }
+              </strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+
     return <div className="invest container">
       <div className="invest-table">
         <div className="invest-table-cell invest-table-cell_left">
           <div className="timer-container">
-            <div className="timer">
-              <div className="timer-inner">
-                <div className="timer-i">
-                  <div className="timer-count">{days}</div>
-                  <div className="timer-interval">Days</div>
-                </div>
-                <div className="timer-i">
-                  <div className="timer-count">{hours}</div>
-                  <div className="timer-interval">Hours</div>
-                </div>
-                <div className="timer-i">
-                  <div className="timer-count">{minutes}</div>
-                  <div className="timer-interval">Mins</div>
-                </div>
-              </div>
-            </div>
+            {daysHoursMinutes}
             {this.renderPieTracker()}
           </div>
           <div className="hashes">

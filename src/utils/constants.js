@@ -12,7 +12,6 @@ export const defaultTier = {
   startTime: '',
   endTime: '',
   walletAddress: '',
-  supply: '',
   updatable: 'off',
   whitelist: [],
 }
