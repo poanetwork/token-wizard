@@ -20,7 +20,7 @@ const { TOKEN_SETUP } = NAVIGATION_STEPS
 const { NAME, TICKER, DECIMALS } = TEXT_FIELDS
 const { VALID, INVALID } = VALIDATION_TYPES
 
-@inject('tokenStore', 'web3Store', 'tierCrowdsaleListStore', 'reservedTokenStore')
+@inject('tokenStore', 'web3Store', 'reservedTokenStore')
 @observer
 export class stepTwo extends Component {
   constructor(props) {

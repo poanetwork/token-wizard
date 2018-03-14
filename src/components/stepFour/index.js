@@ -45,6 +45,7 @@ export class stepFour extends React.Component {
       modal: false,
       transactionFailed: false
     }
+    this.props.deploymentStore.setDeploymentStep(0)
   }
 
   static contextTypes = {
