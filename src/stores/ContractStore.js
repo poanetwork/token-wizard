@@ -12,7 +12,6 @@ class ContractStore {
   @observable tokenTransferProxy;
   @observable safeMathLib;
   @observable registry;
-  @observable contractType;
 
   constructor() {
     autosave(this, 'ContractStore')
@@ -20,10 +19,6 @@ class ContractStore {
 
   @action setContract = (contractName, contractObj) => {
     this[contractName] = contractObj;
-  }
-
-  @action setContractType = (contractType) => {
-    this.contractType = contractType;
   }
 
   @action setContractProperty = (contractName, property, value) => {

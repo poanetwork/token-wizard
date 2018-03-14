@@ -70,8 +70,6 @@ export function findCurrentContractRecursively(i, firstCrowdsaleContract, cb) {
 
       if (!crowdsaleContract) return noContractAlert()
 
-      console.log(contractStore.crowdsale.contractType)
-
       crowdsaleContract.methods.startsAt().call(function (err, startDate) {
         if (err) return console.log(err)
 
