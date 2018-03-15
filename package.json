@@ -132,7 +132,7 @@
     "e2e-prepare-start": "npm run installWeb3 && npm run generateContracts && npm run compileContracts && cp .env.example .env",
     "e2e-start": "PORT=3000 BROWSER=none node scripts/start.js &",
     "delay": "node ./node_modules/npm-delay 30000",
-    "test:e2e": "npm run e2e-prepare-start && cd submodules/token-wizard-test-automation && npm run test1",
+    "test:e2e": "npm run e2e-prepare-start && cd submodules/token-wizard-test-automation && npm i && npm run test1",
     "coveralls": "jest --env=jsdom --coverage && cat coverage/lcov.info | coveralls",
     "generateContracts": "npm run generateFlatSoliditySafeMathLibContract && npm run generateFlatSolidityCrowdsaleNullFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleFinalizeAgentContract && npm run generateFlatSolidityCrowdsaleContract && npm run generateFlatSolidityCrowdsaleTokenContract && npm run generateFlatSolidityCrowdsalePricingStrategyContract && npm run generateFlatSolidityRegistryContract",
     "generateFlatSoliditySafeMathLibContract": "node $npm_package_config_combine_solidity_script $npm_package_config_tokenmarketnet_path/$npm_package_config_safe_math_lib_contract_name.sol $npm_package_config_contract_folder SafeMathLibExt",
