@@ -35,6 +35,10 @@ class Web3Provider extends Component {
     this.initPoll();
   }
 
+  componentWillUnmount() {
+    clearInterval(this.interval)
+  }
+
   initPoll = () => {
     if (!this.interval) {
       this.interval = setInterval(this.fetchAccounts, ONE_SECOND)
