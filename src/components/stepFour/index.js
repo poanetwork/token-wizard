@@ -30,6 +30,7 @@ import { isObservableArray } from 'mobx'
 import JSZip from 'jszip'
 import executeSequentially from '../../utils/executeSequentially'
 import { PreventRefresh } from '../Common/PreventRefresh'
+import PropTypes from 'prop-types'
 
 const { PUBLISH } = NAVIGATION_STEPS
 
@@ -44,6 +45,10 @@ export class stepFour extends React.Component {
       transactionFailed: false
     }
     this.props.deploymentStore.setDeploymentStep(0)
+  }
+
+  static contextTypes = {
+    web3: PropTypes.object
   }
 
   contractDownloadSuccess = options => {
@@ -63,10 +68,11 @@ export class stepFour extends React.Component {
 
   deployCrowdsale = () => {
     const { deploymentStore } = this.props
+    const { web3 } = this.context
     const firstRun = deploymentStore.deploymentStep === null
 
     if (firstRun) {
-      setupContractDeployment()
+      setupContractDeployment(web3)
         .then(this.resumeContractDeployment)
     } else {
       this.resumeContractDeployment()
@@ -75,8 +81,9 @@ export class stepFour extends React.Component {
 
   resumeContractDeployment = () => {
     const { deploymentStore } = this.props
+    const { web3 } = this.context
     const startAt = deploymentStore.deploymentStep ? deploymentStore.deploymentStep : 0
-    const deploymentSteps = buildDeploymentSteps()
+    const deploymentSteps = buildDeploymentSteps(web3)
 
     executeSequentially(deploymentSteps, startAt, (index) => {
       deploymentStore.setDeploymentStep(index)

@@ -23,7 +23,7 @@ import {
 import { getEncodedABIClientSide } from '../../utils/microservices'
 import { BigNumber } from 'bignumber.js'
 
-export const setupContractDeployment = () => {
+export const setupContractDeployment = (web3) => {
   if (!contractStore.safeMathLib) {
     noContractDataAlert()
     return Promise.reject('no contract data')
@@ -36,7 +36,7 @@ export const setupContractDeployment = () => {
   const whenTokenABIConstructor = Promise.resolve(tokenAddr)
     .then(tokenAddr => {
       if (!tokenAddr) {
-        return getEncodedABIClientSide(tokenABI, [], 0)
+        return getEncodedABIClientSide(web3, tokenABI, [], 0)
           .then(ABIEncoded => {
             console.log('token ABI Encoded params constructor:', ABIEncoded)
             contractStore.setContractProperty('token', 'abiConstructor', ABIEncoded)
@@ -45,7 +45,7 @@ export const setupContractDeployment = () => {
     })
 
   const whenPricingStrategyContract = tierStore.tiers.map((value, index) => {
-    return getEncodedABIClientSide(pricingStrategyABI, [], index)
+    return getEncodedABIClientSide(web3, pricingStrategyABI, [], index)
       .then(ABIEncoded => {
         console.log('pricingStrategy ABI Encoded params constructor:', ABIEncoded)
         const newContract = contractStore.pricingStrategy.abiConstructor.concat(ABIEncoded)
@@ -56,14 +56,14 @@ export const setupContractDeployment = () => {
   return Promise.all([whenTokenABIConstructor, ...whenPricingStrategyContract])
 }
 
-export const buildDeploymentSteps = () => {
+export const buildDeploymentSteps = (web3) => {
   const stepFnCorrelation = {
     safeMathLibrary: deploySafeMathLibrary,
     token: deployToken,
-    pricingStrategy: deployPricingStrategy,
+    pricingStrategy: deployPricingStrategy(web3),
     crowdsale: deployCrowdsale,
     registerCrowdsaleAddress: registerCrowdsaleAddress,
-    finalizeAgent: deployFinalizeAgent,
+    finalizeAgent: deployFinalizeAgent(web3),
     tier: setTier,
     setReservedTokens: setReservedTokensListMultiple,
     updateJoinedCrowdsales: updateJoinedCrowdsales,
@@ -157,7 +157,7 @@ const getPricingStrategyParams = tier => {
   ]
 }
 
-export const deployPricingStrategy = () => {
+export const deployPricingStrategy = (web3) => () => {
   return tierStore.tiers.map((tier, index) => {
     return () => {
       const abiPricingStrategy = contractStore.pricingStrategy.abi || []
@@ -169,7 +169,7 @@ export const deployPricingStrategy = () => {
       return deployContract(abiPricingStrategy, binPricingStrategy, paramsPricingStrategy)
         .then(pricingStrategyAddr => contractStore.pricingStrategy.addr.concat(pricingStrategyAddr))
         .then(newPricingStrategy => contractStore.setContractProperty('pricingStrategy', 'addr', newPricingStrategy))
-        .then(() => getEncodedABIClientSide(abiCrowdsale, [], index, true))
+        .then(() => getEncodedABIClientSide(web3, abiCrowdsale, [], index, true))
         .then(ABIEncoded => contractStore.crowdsale.abiConstructor.concat(ABIEncoded))
         .then(newContract => contractStore.setContractProperty('crowdsale', 'abiConstructor', newContract))
         .then(() => deploymentStore.setAsSuccessful('pricingStrategy'))
@@ -265,7 +265,7 @@ const getFinalizeAgentParams = index => {
   ]
 }
 
-export const deployFinalizeAgent = () => {
+export const deployFinalizeAgent = (web3) => () => {
   return tierStore.tiers.map((tier, index, tiers) => {
     return () => {
       let abi, bin, paramsFinalizeAgent
@@ -280,7 +280,7 @@ export const deployFinalizeAgent = () => {
         bin = contractStore.nullFinalizeAgent.bin || ''
       }
 
-      return getEncodedABIClientSide(abi, [], index)
+      return getEncodedABIClientSide(web3, abi, [], index)
         .then(ABIEncoded => {
           console.log('finalizeAgent ABI encoded params constructor:', ABIEncoded)
 

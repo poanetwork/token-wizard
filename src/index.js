@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Web3 from 'web3'
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import { useStrict } from 'mobx';
@@ -12,6 +13,11 @@ useStrict(true);
 
 if (!process.env['REACT_APP_REGISTRY_ADDRESS']) {
   throw new Error('REACT_APP_REGISTRY_ADDRESS env variable is not present')
+}
+
+const devEnvironment = process.env.NODE_ENV === 'development';
+if (devEnvironment && !window.web3) {
+  window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 }
 
 ReactDOM.render(
