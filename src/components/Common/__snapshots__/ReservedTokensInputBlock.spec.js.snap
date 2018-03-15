@@ -268,6 +268,21 @@ exports[`percentage 1`] = `
       </a>
     </div>
   </div>
+  <div
+    className="clear-all-tokens"
+    onClick={undefined}
+    style={
+      Object {
+        "cursor": "pointer",
+        "textAlign": "right",
+      }
+    }
+  >
+    <i
+      className="fa fa-trash"
+    />
+     Clear All
+  </div>
 </div>
 `;
 
@@ -538,6 +553,21 @@ exports[`tokens 1`] = `
         />
       </a>
     </div>
+  </div>
+  <div
+    className="clear-all-tokens"
+    onClick={undefined}
+    style={
+      Object {
+        "cursor": "pointer",
+        "textAlign": "right",
+      }
+    }
+  >
+    <i
+      className="fa fa-trash"
+    />
+     Clear All
   </div>
 </div>
 `;
