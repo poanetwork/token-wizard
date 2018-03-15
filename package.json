@@ -129,7 +129,7 @@
     "build": "git submodule update --init --recursive --remote && cd submodules/solidity-flattener && npm install && cd ../../ && npm install && cd submodules/poa-web3-1.0 && npm install && cd ../../ && npm install --no-save submodules/poa-web3-1.0/packages/web3 && npm run generateContracts && npm run compileContracts && node scripts/build.js && cp ./build/index.html ./build/invest.html && cp ./build/index.html ./build/crowdsale.html && cp ./build/index.html ./build/manage.html",
     "test": "npm run test:e2e && bash ./start_testrpc.sh && cd ./submodules/poa-token-market-net-ico/ && npm install && node_modules/.bin/truffle migrate --network testrpc && node_modules/.bin/truffle test --network testrpc",
     "test:dapp": "jest --env=jsdom",
-    "e2e-prepare-start": "npm run installWeb3 && npm run generateContracts && npm run compileContracts && cp .env.example .env",
+    "e2e-prepare-start": "npm run generateContracts && npm run compileContracts && cp .env.example .env",
     "e2e-start": "PORT=3000 BROWSER=none node scripts/start.js &",
     "delay": "node ./node_modules/npm-delay 30000",
     "test:e2e": "npm run e2e-prepare-start && npm run e2e-start && npm run delay && cd submodules/token-wizard-test-automation && npm i && npm run test1",
