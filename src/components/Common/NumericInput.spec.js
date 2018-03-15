@@ -68,6 +68,7 @@ describe('NumericInput', () => {
     input().simulate(INPUT_EVENT.PASTE, pasteMock)
     expect(pasteMock.preventDefault).toHaveBeenCalledTimes(0)
   })
+
   it('Should call onValueUpdate callback on successful update', () => {
     changeMock.target.value = '10'
 
@@ -77,6 +78,31 @@ describe('NumericInput', () => {
       value: 10,
       pristine: false,
       valid: VALIDATION_TYPES.VALID
+    })
+  })
+
+  it('Should accept empty values', () => {
+    numericInputComponent.acceptEmpty = true
+    changeMock.target.value = ''
+
+    input().simulate(INPUT_EVENT.CHANGE, changeMock)
+    expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
+    expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
+      value: '',
+      pristine: false,
+      valid: VALIDATION_TYPES.VALID
+    })
+  })
+
+  it('Should reject empty values', () => {
+    changeMock.target.value = ''
+
+    input().simulate(INPUT_EVENT.CHANGE, changeMock)
+    expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
+    expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
+      value: '',
+      pristine: false,
+      valid: VALIDATION_TYPES.INVALID
     })
   })
 
