@@ -79,6 +79,7 @@
     "postcss-flexbugs-fixes": "3.0.0",
     "postcss-loader": "2.0.6",
     "promise": "7.1.1",
+    "prop-types": "^15.6.1",
     "qrcode.react": "^0.7.2",
     "query-string": "^5.0.1",
     "react": "^15.6.1",
