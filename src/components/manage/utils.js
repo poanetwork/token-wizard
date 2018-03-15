@@ -2,6 +2,7 @@ import { attachToContract, sendTXToContract } from '../../utils/blockchainHelper
 import { contractStore, crowdsaleStore, generalStore, tierStore, tokenStore, web3Store } from '../../stores'
 import { TRUNC_TO_DECIMALS, VALIDATION_TYPES } from '../../utils/constants'
 import { floorToDecimals, toFixed } from '../../utils/utils'
+import { toBigNumber } from '../crowdsale/utils'
 
 const { VALID } = VALIDATION_TYPES
 
@@ -260,9 +261,10 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
       const tokenDecimals = !isNaN(decimals) ? decimals : 0
 
       //price
-      const tokensPerETHTiers = !isNaN(1 / rate) ? 1 / web3.utils.fromWei(toFixed(rate).toString(), 'ether') : 0
-
-      newTier.rate = tokensPerETHTiers
+      newTier.rate = toBigNumber(web3.utils.fromWei(toBigNumber(rate).toFixed(), 'ether'))
+        .pow(-1)
+        .decimalPlaces(0)
+        .toFixed()
 
       tierStore.addTier(newTier)
       tierStore.addTierValidations({
