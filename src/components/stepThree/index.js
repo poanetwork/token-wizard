@@ -62,7 +62,7 @@ export class stepThree extends React.Component {
         },
         minCap: {
           pristine: true,
-          valid: INVALID
+          valid: VALID
         }
       }
     }
@@ -340,6 +340,7 @@ export class stepThree extends React.Component {
              bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy."
             disabled={tierStore.tiers[0] && tierStore.tiers[0].whitelistEnabled === "yes"}
             min={0}
+            acceptEmpty={true}
             acceptFloat={!!this.props.tokenStore.decimals}
             maxDecimals={this.props.tokenStore.decimals}
             value={this.state.minCap}
