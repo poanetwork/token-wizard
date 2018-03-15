@@ -269,7 +269,7 @@ export class stepFour extends React.Component {
               <DisplayField
                 side='left'
                 title={'Wallet address'}
-                value={tier.walletAddress ? tier.walletAddress : ''}
+                value={tierStore.tiers[0].walletAddress}
                 description="Where the money goes after investors transactions."
               />
               <DisplayField
