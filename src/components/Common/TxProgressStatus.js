@@ -59,12 +59,6 @@ export class TxProgressStatus extends Component {
             </div>
           </div>
           <div className="steps">
-            {process.env.NODE_ENV === 'development' && !deploymentStore.deploymentHasFinished
-              ? !deploymentStore.deploymentStep
-                ? <a onClick={this.props.deployCrowdsale} className="no_image button button_fill">Deploy!</a>
-                : <a onClick={this.props.deployCrowdsale} className="no_image button button_fill">Resume deploy...</a>
-              : null
-            }
             {this.props.onSkip
               ? <a onClick={this.props.onSkip} className="no_image button button_fill">Skip transaction</a>
               : null

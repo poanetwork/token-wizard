@@ -64,7 +64,7 @@ export class stepFour extends React.Component {
       this.showModal()
     }
 
-    if (process.env.NODE_ENV !== 'development') this.deployCrowdsale()
+    this.deployCrowdsale()
   }
 
   deployCrowdsale = () => {
