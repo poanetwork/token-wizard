@@ -306,7 +306,7 @@ export class stepThree extends React.Component {
   }
 
   updateWhitelistEnabled = (e) => {
-    this.props.tierStore.setGlobalMinCap('')
+    this.updateMinCap({ value: '', valid: VALID, pristine: false })
     this.updateTierStore(e, "whitelistEnabled", 0)
   }
 
