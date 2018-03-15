@@ -72,7 +72,9 @@ export class stepThree extends React.Component {
       .then(() => this.setGasPrice(gasPriceStore.slow))
       .catch(() => noGasPriceAvailable())
       .then(() => {
-        this.addCrowdsale()
+        if (this.props.tierStore.tiers.length === 0) {
+          this.addCrowdsale()
+        }
         this.setState({ loading: false })
         window.scrollTo(0, 0)
       })
