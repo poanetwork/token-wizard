@@ -1,7 +1,6 @@
 import { attachToContract } from '../../utils/blockchainHelpers'
 import { noContractAlert } from '../../utils/alerts'
 import { toFixed } from '../../utils/utils'
-import { CONTRACT_TYPES } from '../../utils/constants'
 import { contractStore, crowdsalePageStore, tokenStore, web3Store } from '../../stores'
 import { toJS } from 'mobx'
 import { BigNumber } from 'bignumber.js'
@@ -70,10 +69,6 @@ export function findCurrentContractRecursively(i, firstCrowdsaleContract, cb) {
       }
 
       if (!crowdsaleContract) return noContractAlert()
-
-      console.log(contractStore.crowdsale.contractType)
-
-      if (contractStore.crowdsale.contractType === CONTRACT_TYPES.standard) return cb(crowdsaleContract, i)
 
       crowdsaleContract.methods.startsAt().call(function (err, startDate) {
         if (err) return console.log(err)

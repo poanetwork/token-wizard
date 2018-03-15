@@ -1,10 +1,9 @@
 import { attachToContract, sendTXToContract } from '../../utils/blockchainHelpers'
 import { contractStore, crowdsaleStore, generalStore, tierStore, tokenStore, web3Store } from '../../stores'
-import { CONTRACT_TYPES, TRUNC_TO_DECIMALS, VALIDATION_TYPES } from '../../utils/constants'
+import { TRUNC_TO_DECIMALS, VALIDATION_TYPES } from '../../utils/constants'
 import { floorToDecimals, toFixed } from '../../utils/utils'
 
 const { VALID } = VALIDATION_TYPES
-const { whitelistwithcap: WHITELIST_WITH_CAP } = CONTRACT_TYPES
 
 const formatDate = timestamp => {
   const ten = i => (i < 10 ? '0' : '') + i
@@ -248,13 +247,11 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
       tokenStore.setProperty('ticker', tokenSymbol)
       tokenStore.setProperty('decimals', decimals)
 
-      //total supply: tiers, standard
+      //total supply
       const tokenDecimals = !isNaN(decimals) ? decimals : 0
       const maxCapBeforeDecimals = parseInt(toFixed(maximumSellableTokens), 10) / 10 ** tokenDecimals
-      const tierCap = maxCapBeforeDecimals ? maxCapBeforeDecimals.toString() : 0
-      const standardCrowdsaleSupply = !isNaN(crowdsaleStore.supply) ? (crowdsaleStore.supply).toString() : 0
 
-      newTier.supply = (contractStore.contractType === WHITELIST_WITH_CAP) ? tierCap : standardCrowdsaleSupply
+      newTier.supply = maxCapBeforeDecimals ? maxCapBeforeDecimals.toString() : 0
 
       return Promise.all([whitelistAccounts, pricingStrategyData(pricingStrategyAddress)])
     })
@@ -262,11 +259,10 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
       const { decimals } = tokenStore
       const tokenDecimals = !isNaN(decimals) ? decimals : 0
 
-      //price: tiers, standard
-      const tokensPerETHStandard = !isNaN(rate) ? rate : 0
+      //price
       const tokensPerETHTiers = !isNaN(1 / rate) ? 1 / web3.utils.fromWei(toFixed(rate).toString(), 'ether') : 0
 
-      newTier.rate = (contractStore.contractType === WHITELIST_WITH_CAP) ? tokensPerETHTiers : tokensPerETHStandard
+      newTier.rate = tokensPerETHTiers
 
       tierStore.addTier(newTier)
       tierStore.addTierValidations({

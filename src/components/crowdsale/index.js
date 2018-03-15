@@ -13,7 +13,7 @@ import {
 import { getQueryVariable } from '../../utils/utils'
 import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
 import { StepNavigation } from '../Common/StepNavigation'
-import { CONTRACT_TYPES, NAVIGATION_STEPS } from '../../utils/constants'
+import { NAVIGATION_STEPS } from '../../utils/constants'
 import { invalidCrowdsaleAddrAlert } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
 import { CrowdsaleConfig } from '../Common/config'
@@ -33,13 +33,12 @@ export class Crowdsale extends React.Component {
     checkWeb3()
 
     const networkID = CrowdsaleConfig.networkID ? CrowdsaleConfig.networkID : getQueryVariable('networkID')
-    const contractType = CONTRACT_TYPES.whitelistwithcap//getQueryVariable("contractType");
 
-    this.getCrowdsale(networkID, contractType)
+    this.getCrowdsale(networkID)
   }
 
-  getCrowdsale = (networkID, contractType) => {
-    const { contractStore, generalStore, web3Store } = this.props
+  getCrowdsale = (networkID) => {
+    const { generalStore, web3Store } = this.props
     const { web3 } = web3Store
 
     if (!web3) {
@@ -49,13 +48,10 @@ export class Crowdsale extends React.Component {
 
     checkNetWorkByID(networkID);
     generalStore.setProperty('networkID', networkID);
-    contractStore.setContractType(contractType);
 
-    if (contractType === CONTRACT_TYPES.whitelistwithcap) {
-      getWhiteListWithCapCrowdsaleAssets()
-        .then(() => this.extractContractsData())
-        .catch(console.log)
-    }
+    getWhiteListWithCapCrowdsaleAssets()
+      .then(() => this.extractContractsData())
+      .catch(console.log)
   }
 
   extractContractsData = () => {
@@ -119,43 +115,36 @@ export class Crowdsale extends React.Component {
   }
 
   render() {
-    const { web3Store, contractStore, tokenStore, crowdsalePageStore } = this.props
+    const { web3Store, tokenStore, crowdsalePageStore } = this.props
     const { web3 } = web3Store
-
-    const isWhitelistWithCap = contractStore.contractType === CONTRACT_TYPES.whitelistwithcap
 
     const tokenAddr = getContractStoreProperty('token','addr')
     const tempCrowdsaleAddr = getContractStoreProperty('crowdsale','addr')
     const crowdsaleAddr = tempCrowdsaleAddr === 'string' ? tempCrowdsaleAddr : tempCrowdsaleAddr[0]
     const investorsCount = crowdsalePageStore.investors ? crowdsalePageStore.investors.toString() : 0
 
-    const rate = toBigNumber(crowdsalePageStore.rate) //for tiers: 1 token in wei, for standard: 1/? 1 token in eth
+    const rate = toBigNumber(crowdsalePageStore.rate)
     const tokenDecimals = toBigNumber(tokenStore.decimals)
     const maximumSellableTokens = toBigNumber(crowdsalePageStore.maximumSellableTokens)
     const maximumSellableTokensInWei = toBigNumber(crowdsalePageStore.maximumSellableTokensInWei)
     const ethRaised = toBigNumber(crowdsalePageStore.ethRaised)
     const tokensSold = toBigNumber(crowdsalePageStore.tokensSold)
-    const supply = toBigNumber(crowdsalePageStore.supply)
     const maxCapBeforeDecimals = maximumSellableTokens.div(`1e${tokenDecimals}`)
 
-    // tokens claimed: tiers, standard
-    const tokensClaimedStandard = rate > 0 ? ethRaised.div(rate).toFixed() : '0'
+    // tokens claimed
     const tokensClaimedTiers = tokensSold.div(`1e${tokenDecimals}`).toFixed()
-    const tokensClaimed = isWhitelistWithCap ? tokensClaimedTiers : tokensClaimedStandard
+    const tokensClaimed = tokensClaimedTiers
 
-    //price: tiers, standard
+    //price
     const rateInETH = toBigNumber(web3.utils.fromWei(rate.toFixed(), 'ether'))
-    const tokensPerETH = isWhitelistWithCap ? rateInETH.pow(-1).toFixed() : rate.toFixed()
+    const tokensPerETH = rateInETH.pow(-1).toFixed()
 
-    //total supply: tiers, standard
-    const tierCap = maxCapBeforeDecimals.toFixed()
-    const standardCrowdsaleSupply = supply.toFixed()
-    const totalSupply = isWhitelistWithCap ? tierCap : standardCrowdsaleSupply
+    //total supply
+    const totalSupply = maxCapBeforeDecimals.toFixed()
 
     //goal in ETH
-    const goalInETHStandard = rate > 0 ? toBigNumber(totalSupply).div(rate).toFixed() : '0'
     const goalInETHTiers = toBigNumber(web3.utils.fromWei(maximumSellableTokensInWei.toFixed(), 'ether')).toFixed()
-    const goalInETH = isWhitelistWithCap ? goalInETHTiers : goalInETHStandard
+    const goalInETH = goalInETHTiers
     const tokensClaimedRatio = goalInETH > 0 ? ethRaised.div(goalInETH).times(100).toFixed() : '0'
 
     return (

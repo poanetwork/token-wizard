@@ -18,7 +18,6 @@ describe('ReservedTokensInputBlock', () => {
   let addressInputMemo, addressInput
   let valueInputMemo, valueInput
   let addressStateMemo, addressState
-  let valueStateMemo, valueState
 
   beforeEach(() => {
     tokenList = [
@@ -65,9 +64,6 @@ describe('ReservedTokensInputBlock', () => {
 
     addressStateMemo = undefined
     addressState = () => addressStateMemo || (addressStateMemo = wrapper().state('validation').address)
-
-    valueStateMemo = undefined
-    valueState = () => valueStateMemo || (valueStateMemo = wrapper().state('validation').value)
   })
 
   describe('render', () => {

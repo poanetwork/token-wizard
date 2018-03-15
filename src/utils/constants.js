@@ -25,12 +25,6 @@ export const defaultTierValidations = {
   updatable: VALID
 }
 
-export const CONTRACT_TYPES = {
-  standard: "standard",
-  capped: "capped",
-  whitelistwithcap: "white-list-with-cap"
-}
-
 export const TRUNC_TO_DECIMALS = {
   DECIMALS18: -18
 }

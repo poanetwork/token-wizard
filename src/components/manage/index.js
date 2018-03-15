@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
 import { isObservableArray } from 'mobx'
 import { Link } from 'react-router-dom'
-import { CONTRACT_TYPES, TEXT_FIELDS, TOAST, VALIDATION_MESSAGES, DESCRIPTION } from '../../utils/constants'
+import { TEXT_FIELDS, TOAST, VALIDATION_MESSAGES, DESCRIPTION } from '../../utils/constants'
 import { InputField } from '../Common/InputField'
 import '../../assets/stylesheets/application.css'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
@@ -50,16 +50,13 @@ export class Manage extends Component {
   }
 
   componentWillMount () {
-    const { crowdsaleStore, contractStore, generalStore, match } = this.props
+    const { crowdsaleStore, generalStore, match } = this.props
     const crowdsaleAddress = match.params.crowdsaleAddress
 
     crowdsaleStore.setSelectedProperty('address', crowdsaleAddress)
 
     // networkID
     getNetworkVersion().then(networkId => generalStore.setProperty('networkId', networkId))
-
-    // contractType
-    contractStore.setContractType(CONTRACT_TYPES.whitelistwithcap)
 
     getWhiteListWithCapCrowdsaleAssets().then(this.extractContractData)
   }
