@@ -39,12 +39,13 @@ export class NumericInput extends Component {
   }
 
   onChange = e => {
-    const value = this.props.acceptFloat ? parseFloat(e.target.value) : parseInt(e.target.value, 10)
+    let value = this.props.acceptFloat ? parseFloat(e.target.value) : parseInt(e.target.value, 10)
+    if (this.props.acceptEmpty && e.target.value === '') value = ''
     this.validate(value)
   }
 
   validate = value => {
-    const { acceptFloat, maxDecimals, minDecimals, min, max } = this.props
+    const { acceptEmpty, acceptFloat, maxDecimals, minDecimals, min, max } = this.props
     let isValid = true
 
     if (acceptFloat) {
@@ -74,6 +75,12 @@ export class NumericInput extends Component {
     if (!isNaN(value)) {
       result.value = value
       result.valid = isValid ? VALID : INVALID
+
+    }
+
+    if (acceptEmpty && value === '') {
+      result.value = ''
+      result.valid = VALID
     }
 
     this.props.onValueUpdate(result)
@@ -88,9 +95,10 @@ export class NumericInput extends Component {
   }
 
   componentDidUpdate (prevProps) {
-    const { acceptFloat, maxDecimals, minDecimals, min, max } = this.props
+    const { acceptEmpty, acceptFloat, maxDecimals, minDecimals, min, max } = this.props
 
     if (
+      prevProps.acceptEmpty !== acceptEmpty ||
       prevProps.acceptFloat !== acceptFloat ||
       prevProps.minDecimals !== minDecimals ||
       prevProps.maxDecimals !== maxDecimals ||
