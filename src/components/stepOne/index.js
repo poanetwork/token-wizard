@@ -116,7 +116,7 @@ export class stepOne extends React.Component {
             <label className="radio">
               <input
                 type="radio"
-                checked={true}
+                defaultChecked={true}
                 name="contract-type"
                 id="white-list-with-cap"
               />
