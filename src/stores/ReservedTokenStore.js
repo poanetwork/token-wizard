@@ -32,6 +32,10 @@ class ReservedTokenStore {
     this.tokens.splice(index,1);
   }
 
+  @action clearAll = () => {
+    this.tokens.splice(0);
+  }
+
   findToken(inputToken) {
     return this.tokens.find((token) => {
       if (inputToken['dim'] === token['dim'] && inputToken['addr'] === token['addr'] && inputToken['val'] === token['val']) {
