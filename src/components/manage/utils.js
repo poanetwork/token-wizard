@@ -264,8 +264,7 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
 
       newTier.rate = tokensPerETHTiers
 
-      tierStore.addTier(newTier)
-      tierStore.addTierValidations({
+      tierStore.addTier(newTier, {
         tier: VALID,
         walletAddress: VALID,
         rate: VALID,
