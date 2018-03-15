@@ -1,5 +1,6 @@
 import React from "react";
 import "../../assets/stylesheets/application.css";
+import Web3 from 'web3'
 import { Link } from "react-router-dom";
 import { setExistingContractParams, getNetworkVersion, getNetWorkNameById } from "../../utils/blockchainHelpers";
 import { gweiToWei, weiToGwei } from "../../utils/utils";
@@ -55,6 +56,7 @@ export class stepThree extends React.Component {
       loading: true,
       gasPriceSelected: gasPriceStore.slow.id,
       minCap: '',
+      walletAddress: '',
       validation: {
         gasPrice: {
           pristine: true,
@@ -63,13 +65,17 @@ export class stepThree extends React.Component {
         minCap: {
           pristine: true,
           valid: INVALID
+        },
+        walletAddress: {
+          pristine: true,
+          valid: INVALID
         }
       }
     }
   }
 
   componentDidMount () {
-    const { gasPriceStore } = this.props
+    const { gasPriceStore, tierStore } = this.props
 
     gasPriceStore.updateValues()
       .then(() => this.setGasPrice(gasPriceStore.slow))
@@ -77,6 +83,7 @@ export class stepThree extends React.Component {
       .then(() => {
         this.addCrowdsale()
         this.setState({ loading: false })
+        this.updateWalletAddress(tierStore.tiers[0].walletAddress)
         window.scrollTo(0, 0)
       })
   }
@@ -182,6 +189,25 @@ export class stepThree extends React.Component {
     } else {
       this.showErrorMessages(e)
     }
+  }
+
+  updateWalletAddress = address => {
+    const isAddressValid = Web3.utils.isAddress(address) ? VALID : INVALID;
+
+    const newState = update(this.state, {
+      walletAddress: { $set: address },
+      validation: {
+        walletAddress: {
+          $set: {
+            pristine: false,
+            valid: isAddressValid
+          },
+        },
+      },
+    });
+
+    this.setState(newState)
+    this.props.tierStore.updateWalletAddress(address, isAddressValid)
   }
 
   updateMinCap = ({ value, pristine, valid }) => {
@@ -322,10 +348,11 @@ export class stepThree extends React.Component {
             side="left"
             type="text"
             title={WALLET_ADDRESS}
-            value={tierStore.tiers[0] && tierStore.tiers[0].walletAddress}
-            valid={tierStore.validTiers[0] && tierStore.validTiers[0].walletAddress}
+            value={this.state.walletAddress}
+            valid={this.state.validation.walletAddress.valid}
+            pristine={this.state.validation.walletAddress.pristine}
             errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS}
-            onChange={e => this.updateTierStore(e, "walletAddress", 0)}
+            onChange={e => this.updateWalletAddress(e.target.value)}
             description="Where the money goes after investors transactions. Immediately after each transaction. We
              recommend to setup a multisig wallet with hardware based signers."
           />

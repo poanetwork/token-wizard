@@ -3,7 +3,6 @@ import { VALIDATION_TYPES } from '../utils/constants'
 import {
   validateTime,
   validateSupply,
-  validateAddress,
   validateLaterTime,
   validateLaterOrEqualTime,
   validateTier
@@ -62,9 +61,6 @@ class TierStore {
       case 'tier':
         this.validTiers[index][property] = validateTier(this.tiers[index][property]) ? VALID : INVALID
         break
-      case 'walletAddress':
-        this.validTiers[index][property] = validateAddress(this.tiers[index][property]) ? VALID : INVALID
-        break
       case 'supply':
         this.validTiers[index][property] = validateSupply(this.tiers[index][property]) ? VALID : INVALID
         break
@@ -86,6 +82,11 @@ class TierStore {
   @action updateRate = (value, validity, tierIndex) => {
     this.tiers[tierIndex].rate = value
     this.validTiers[tierIndex].rate = validity
+  }
+
+  @action updateWalletAddress = (value, validity) => {
+    this.tiers[0].walletAddress = value
+    this.validTiers[0].walletAddress = validity
   }
 
   @action validateEditedTier = (property, index) => {
