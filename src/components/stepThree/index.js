@@ -51,7 +51,7 @@ export class stepThree extends React.Component {
     this.state = {
       loading: true,
       gasPriceSelected: gasPriceStore.slow.id,
-      minCap: '',
+      minCap: props.tierStore.globalMinCap || '',
       validation: {
         gasPrice: {
           pristine: true,
