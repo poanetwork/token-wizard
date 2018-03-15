@@ -205,6 +205,19 @@ export function skippingTransaction() {
     reverseButtons: true
   })
 }
+
+export function clearingReservedTokens() {
+  return sweetAlert2({
+    title: "Clear all reserved tokens",
+    html: "Are you sure you want to remove all reserved tokens?",
+    type: "warning",
+    showCancelButton: true,
+    cancelButtonText: "No",
+    confirmButtonText: "Yes",
+    reverseButtons: true
+  })
+}
+
 export function whitelistImported(count) {
   return sweetAlert2({
     title: 'Addresses imported',

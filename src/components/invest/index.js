@@ -22,7 +22,7 @@ import {
 } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
 import { CrowdsaleConfig } from '../Common/config'
-import { CONTRACT_TYPES, INVESTMENT_OPTIONS, TOAST } from '../../utils/constants'
+import { INVESTMENT_OPTIONS, TOAST } from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
 import QRPaymentProcess from './QRPaymentProcess'
 import classNames from 'classnames'
@@ -54,7 +54,7 @@ export class Invest extends React.Component {
   }
 
   componentDidMount () {
-    const { web3Store, contractStore, gasPriceStore, generalStore } = this.props
+    const { web3Store, gasPriceStore, generalStore } = this.props
     const { web3 } = web3Store
 
     if (!web3) {
@@ -63,9 +63,7 @@ export class Invest extends React.Component {
     }
 
     const networkID = CrowdsaleConfig.networkID ? CrowdsaleConfig.networkID : getQueryVariable('networkID')
-    const contractType = CONTRACT_TYPES.whitelistwithcap
     checkNetWorkByID(networkID)
-    contractStore.setContractType(contractType)
 
     this.setState({
       web3Available: true,
@@ -315,33 +313,28 @@ export class Invest extends React.Component {
 
   render () {
     const { crowdsalePageStore, tokenStore, contractStore, investStore } = this.props
-    const { rate, tokenAmountOf, ethRaised } = crowdsalePageStore
-    const { crowdsale, contractType } = contractStore
+    const { tokenAmountOf } = crowdsalePageStore
+    const { crowdsale } = contractStore
     const { tokensToInvest } = investStore
 
     const { curAddr, pristineTokenInput, investThrough, crowdsaleAddress, web3Available, toNextTick, nextTick } = this.state
     const { days, hours, minutes, seconds } = toNextTick
 
     const { decimals, ticker, name } = tokenStore
-    const isWhitelistWithCap = contractType === CONTRACT_TYPES.whitelistwithcap
 
     const tokenDecimals = !isNaN(decimals) ? decimals : 0
     const tokenTicker = ticker ? ticker.toString() : ''
     const tokenName = name ? name.toString() : ''
-    const supply = toBigNumber(crowdsalePageStore.supply)
     const maximumSellableTokens = toBigNumber(crowdsalePageStore.maximumSellableTokens)
     const maxCapBeforeDecimals = toBigNumber(maximumSellableTokens).div(`1e${tokenDecimals}`)
     const tokenAddress = getContractStoreProperty('token', 'addr')
 
-    //balance: tiers, standard
+    //balance
     const investorBalanceTiers = tokenAmountOf ? (tokenAmountOf / 10 ** tokenDecimals).toString() : '0'
-    const investorBalanceStandard = ethRaised ? (ethRaised / rate).toString() : '0'
-    const investorBalance = isWhitelistWithCap ? investorBalanceTiers : investorBalanceStandard
+    const investorBalance = investorBalanceTiers
 
-    //total supply: tiers, standard
-    const tierCap = maxCapBeforeDecimals.toFixed()
-    const standardCrowdsaleSupply = supply.toFixed()
-    const totalSupply = isWhitelistWithCap ? tierCap : standardCrowdsaleSupply
+    //total supply
+    const totalSupply = maxCapBeforeDecimals.toFixed()
 
     let invalidTokenDescription = null
     if (!pristineTokenInput && !this.isValidToken(tokensToInvest)) {

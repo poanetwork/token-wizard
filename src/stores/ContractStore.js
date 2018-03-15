@@ -1,5 +1,4 @@
 import { observable, action } from 'mobx';
-import { CONTRACT_TYPES } from '../utils/constants';
 import autosave from './autosave'
 
 class ContractStore {
@@ -13,20 +12,13 @@ class ContractStore {
   @observable tokenTransferProxy;
   @observable safeMathLib;
   @observable registry;
-  @observable contractType;
 
   constructor() {
-    this.contractType = CONTRACT_TYPES.whitelistwithcap;
-
     autosave(this, 'ContractStore')
   }
 
   @action setContract = (contractName, contractObj) => {
     this[contractName] = contractObj;
-  }
-
-  @action setContractType = (contractType) => {
-    this.contractType = contractType;
   }
 
   @action setContractProperty = (contractName, property, value) => {

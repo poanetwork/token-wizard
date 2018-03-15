@@ -1,4 +1,3 @@
-import React from 'react'
 import { defaultCompanyStartDate, defaultCompanyEndDate } from './utils'
 import MockDate from 'mockdate'
 import moment from 'moment'
