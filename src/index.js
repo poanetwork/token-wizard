@@ -20,9 +20,23 @@ if (devEnvironment && !window.web3) {
   window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 }
 
-ReactDOM.render(
-  <Provider { ...stores }>
-    <App />
-  </Provider>,
-document.getElementById('root'));
+function renderApp(App) {
+  ReactDOM.render(
+    <Provider { ...stores }>
+      <App />
+    </Provider>,
+    document.getElementById('root')
+  );
+}
+
+renderApp(App)
+
+if (module.hot) {
+  module.hot.accept(() => {
+    const NextApp = require('./App').default
+    renderApp(NextApp)
+  })
+}
+
+
 registerServiceWorker();
