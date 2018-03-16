@@ -72,7 +72,10 @@ export class stepFour extends React.Component {
       this.showModal()
     }
 
-    this.deployCrowdsale()
+    // If user reloads with an invalid account, don't start the deploy automatically
+    if (!this.props.deploymentStore.invalidAccount) {
+      this.deployCrowdsale()
+    }
   }
 
   deployCrowdsale = () => {
