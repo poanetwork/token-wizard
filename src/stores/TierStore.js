@@ -205,6 +205,22 @@ class TierStore {
     }
   }
 
+  @action emptyWhitelist = (crowdsaleNum) => {
+    const whitelist = this.tiers[crowdsaleNum].whitelist
+
+    for (let i = whitelist.length - 1; i >= 0; i--) {
+      if (!whitelist[i].stored) {
+        this.removeWhitelistItem(i, crowdsaleNum)
+      }
+    }
+  }
+
+  isWhitelistEmpty (crowdsaleNum) {
+    const whitelist = this.tiers[crowdsaleNum].whitelist
+
+    return whitelist.every(address => address.stored)
+  }
+
   @computed get maxSupply () {
     return this.tiers.map(tier => +tier.supply).reduce((a, b) => Math.max(a, b), 0)
   }

@@ -1655,61 +1655,71 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
                     />
                   </div>
                 </div>
-                <t
-                  accept=".csv"
-                  disableClick={false}
-                  disablePreview={false}
-                  disabled={false}
-                  maxSize={Infinity}
-                  minSize={0}
-                  multiple={true}
-                  onDrop={[Function]}
-                  preventDropOnDocument={true}
+                <div
                   style={
                     Object {
-                      "cursor": "pointer",
-                      "position": "relative",
                       "textAlign": "right",
                     }
                   }
                 >
-                  <div
-                    aria-disabled={false}
-                    className=""
-                    onClick={[Function]}
-                    onDragEnter={[Function]}
-                    onDragLeave={[Function]}
-                    onDragOver={[Function]}
-                    onDragStart={[Function]}
+                  <t
+                    accept=".csv"
+                    disableClick={false}
+                    disablePreview={false}
+                    disabled={false}
+                    maxSize={Infinity}
+                    minSize={0}
+                    multiple={true}
                     onDrop={[Function]}
+                    preventDropOnDocument={true}
                     style={
                       Object {
                         "cursor": "pointer",
+                        "display": "inline-block",
+                        "marginLeft": "1em",
                         "position": "relative",
-                        "textAlign": "right",
                       }
                     }
                   >
-                    <i
-                      className="fa fa-upload"
-                      title="Upload CSV"
-                    />
-                      Upload CSV
-                    <input
-                      accept=".csv"
-                      autoComplete="off"
-                      disabled={false}
-                      multiple={true}
-                      onChange={[Function]}
+                    <div
+                      aria-disabled={false}
+                      className=""
+                      onClick={[Function]}
+                      onDragEnter={[Function]}
+                      onDragLeave={[Function]}
+                      onDragOver={[Function]}
+                      onDragStart={[Function]}
+                      onDrop={[Function]}
                       style={
                         Object {
-                          "display": "none",
+                          "cursor": "pointer",
+                          "display": "inline-block",
+                          "marginLeft": "1em",
+                          "position": "relative",
                         }
                       }
-                      type="file"
-                    />
-                  </div>
-                </t>
+                    >
+                      <i
+                        className="fa fa-upload"
+                        title="Upload CSV"
+                      />
+                        Upload CSV
+                      <input
+                        accept=".csv"
+                        autoComplete="off"
+                        disabled={false}
+                        multiple={true}
+                        onChange={[Function]}
+                        style={
+                          Object {
+                            "display": "none",
+                          }
+                        }
+                        type="file"
+                      />
+                    </div>
+                  </t>
+                </div>
               </div>
             </WhitelistInputBlock>
           </inject-WhitelistInputBlock-with-tierStore>
