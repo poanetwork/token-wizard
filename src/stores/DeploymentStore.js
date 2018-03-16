@@ -75,7 +75,7 @@ class DeploymentStore {
   }
 
   @action setDeployerAccount = (account) => {
-    if (!this.deployInProgress) {
+    if (!this.deployerAccount) {
       this.deployerAccount = account
     }
   }
