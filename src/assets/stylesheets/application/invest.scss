@@ -5,6 +5,11 @@
   border: 1px solid #eee;
   background-color: #fff;
 
+  &.container {
+    min-width: 960px;
+    max-width: 1000px;
+    width: auto;
+  }
   .timer {
     position: absolute;
     z-index: 2;
@@ -191,14 +196,14 @@
 
   &-table {
     display: table;
-    width: 100%;
 
     &-cell {
       display: table-cell;
+      max-width: 293px;
 
       &_left {
         position: relative;
-        width: 600px;
+        max-width: 670px;
         padding-right: 30px;
         border-right: 1px solid #eee;
       }
