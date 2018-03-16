@@ -47,8 +47,12 @@ export class stepFour extends React.Component {
       transactionFailed: false
     }
 
-    this.props.deploymentStore.setDeploymentStep(0)
-    this.props.deploymentStore.setDeployerAccount(context.selectedAccount)
+    const { deploymentStore } = props
+
+    if (!deploymentStore.deployInProgress) {
+      deploymentStore.setDeploymentStep(0)
+      deploymentStore.setDeployerAccount(context.selectedAccount)
+    }
   }
 
   static contextTypes = {
