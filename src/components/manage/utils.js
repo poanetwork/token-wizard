@@ -266,8 +266,7 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
         .decimalPlaces(0)
         .toFixed()
 
-      tierStore.addTier(newTier)
-      tierStore.addTierValidations({
+      tierStore.addTier(newTier, {
         tier: VALID,
         walletAddress: VALID,
         rate: VALID,
