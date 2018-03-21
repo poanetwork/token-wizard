@@ -1,5 +1,5 @@
 import React from 'react'
-import { checkNetWorkByID, checkTxMined, sendTXToContract } from '../../utils/blockchainHelpers'
+import { attachToContract, checkNetWorkByID, checkTxMined, sendTXToContract } from '../../utils/blockchainHelpers'
 import {
   findCurrentContractRecursively,
   getAccumulativeCrowdsaleData,
@@ -49,7 +49,8 @@ export class Invest extends React.Component {
       },
       nextTick: {},
       msToNextTick: 0,
-      displaySeconds: false
+      displaySeconds: false,
+      isFinalized: false
     }
   }
 
@@ -127,12 +128,20 @@ export class Invest extends React.Component {
             .then(() => getCrowdsaleData(crowdsaleContract))
             .then(() => getAccumulativeCrowdsaleData())
             .then(() => getCrowdsaleTargetDates())
+            .then(() => this.checkIsFinalized())
             .then(() => this.setTimers())
             .catch(err => console.log(err))
             .then(() => this.setState({ loading: false }))
         })
       })
     })
+  }
+
+  checkIsFinalized() {
+    return this.isFinalized()
+      .then(isFinalized => {
+        this.setState({ isFinalized })
+      })
   }
 
   setTimers = () => {
@@ -296,6 +305,16 @@ export class Invest extends React.Component {
     return +token > 0 && countDecimalPlaces(token) <= this.props.tokenStore.decimals
   }
 
+  isFinalized() {
+    const { contractStore } = this.props
+    const lastCrowdsaleAddress = contractStore.crowdsale.addr.slice(-1)[0]
+
+    return attachToContract(contractStore.crowdsale.abi, lastCrowdsaleAddress)
+      .then(crowdsaleContract => {
+        return crowdsaleContract.methods.finalized().call()
+      })
+  }
+
   render () {
     const { crowdsalePageStore, tokenStore, contractStore, investStore } = this.props
     const { tokenAmountOf } = crowdsalePageStore
@@ -355,6 +374,7 @@ export class Invest extends React.Component {
             seconds={seconds}
             msToNextTick={this.state.msToNextTick}
             onComplete={this.resetTimers}
+            isFinalized={this.state.isFinalized}
           />
           <div className="hashes">
             <div className="hashes-i">

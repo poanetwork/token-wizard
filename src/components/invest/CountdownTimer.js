@@ -1,7 +1,64 @@
-import React, { Component } from 'react'
+import React from 'react'
 import ReactCountdownClock from 'react-countdown-clock'
 
-const CountdownTimer = ({ displaySeconds, nextTick, tiersLength, days, hours, minutes, seconds, msToNextTick, onComplete }) => {
+const CountdownTimer = ({
+  displaySeconds,
+  nextTick,
+  tiersLength,
+  days,
+  hours,
+  minutes,
+  seconds,
+  msToNextTick,
+  onComplete,
+  isFinalized
+}) => {
+  const countdownClock = (
+    <div>
+      {displaySeconds
+        ? null
+        : <div className="timer-i">
+          <div className="timer-count">{days}</div>
+          <div className="timer-interval">Days</div>
+        </div>
+      }
+      {displaySeconds
+        ? null
+        : <div className="timer-i">
+          <div className="timer-count">{hours}</div>
+          <div className="timer-interval">Hours</div>
+        </div>
+      }
+      <div className="timer-i">
+        <div className="timer-count">{minutes}</div>
+        <div className="timer-interval">Mins</div>
+      </div>
+      {!displaySeconds
+        ? null
+        : <div className="timer-i">
+          <div className="timer-count">{seconds}</div>
+          <div className="timer-interval">Secs</div>
+        </div>
+      }
+    </div>
+  )
+
+  let message = null
+
+  if (isFinalized) {
+    message = 'crowdsale has been finalized'
+  } else {
+    if (nextTick.type) {
+      if (nextTick.type === 'start') {
+        message = `to start of tier ${nextTick.order || 0} of ${tiersLength}`
+      } else {
+        message = `to end of tier ${nextTick.order || 0} of ${tiersLength}`
+      }
+    } else {
+      message = 'crowdsale has ended'
+    }
+  }
+
   return (
     <div className="timer-container">
       <div style={{ marginLeft: '-20px', marginTop: '-20px' }}>
@@ -16,40 +73,11 @@ const CountdownTimer = ({ displaySeconds, nextTick, tiersLength, days, hours, mi
       </div>
       <div className="timer">
         <div className="timer-inner">
-          {displaySeconds
-            ? null
-            : <div className="timer-i">
-              <div className="timer-count">{days}</div>
-              <div className="timer-interval">Days</div>
-            </div>
-          }
-          {displaySeconds
-            ? null
-            : <div className="timer-i">
-              <div className="timer-count">{hours}</div>
-              <div className="timer-interval">Hours</div>
-            </div>
-          }
-          <div className="timer-i">
-            <div className="timer-count">{minutes}</div>
-            <div className="timer-interval">Mins</div>
-          </div>
-          {!displaySeconds
-            ? null
-            : <div className="timer-i">
-              <div className="timer-count">{seconds}</div>
-              <div className="timer-interval">Secs</div>
-            </div>
-          }
+          {isFinalized ? null : countdownClock}
           <div className="timer-i">
             <div className="timer-interval">
               <strong>
-                {nextTick.type
-                  ? nextTick.type === 'start'
-                    ? `to start of tier ${nextTick.order || 0} of ${tiersLength}`
-                    : `to end of tier ${nextTick.order || 0} of ${tiersLength}`
-                  : 'crowdsale has ended'
-                }
+                { message }
               </strong>
             </div>
           </div>
