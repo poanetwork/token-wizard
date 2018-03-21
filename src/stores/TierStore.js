@@ -31,11 +31,8 @@ class TierStore {
     this.globalMinCap = minCap
   }
 
-  @action addTier = (tier) => {
+  @action addTier = (tier, validations) => {
     this.tiers.push(tier)
-  }
-
-  @action addTierValidations = (validations) => {
     this.validTiers.push(validations)
   }
 

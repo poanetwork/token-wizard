@@ -6,7 +6,6 @@ import StepTwoValidationStore from './StepTwoValidationStore';
 import TierStore from './TierStore';
 import TokenStore from './TokenStore';
 import Web3Store from './Web3Store';
-import CrowdsaleBlockListStore from './CrowdsaleBlockListStore'
 import GeneralStore from './GeneralStore'
 import CrowdsalePageStore from './CrowdsalePageStore'
 import InvestStore from './InvestStore'
@@ -21,7 +20,6 @@ if (storage.has('DeploymentStore') && storage.get('DeploymentStore').deploymentS
 
 const generalStore = new GeneralStore()
 const crowdsalePageStore = new CrowdsalePageStore()
-const crowdsaleBlockListStore = new CrowdsaleBlockListStore()
 const contractStore = new ContractStore()
 const pricingStrategyStore = new PricingStrategyStore()
 const reservedTokenStore = new ReservedTokenStore()
@@ -37,7 +35,6 @@ const deploymentStore = new DeploymentStore()
 export {
   generalStore,
   crowdsalePageStore,
-  crowdsaleBlockListStore,
   contractStore,
   pricingStrategyStore,
   reservedTokenStore,
