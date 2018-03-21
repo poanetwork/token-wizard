@@ -1,4 +1,4 @@
-import { countDecimalPlaces, validateName, validateTicker } from './utils'
+import { countDecimalPlaces } from './utils'
 
 describe('countDecimalPlaces', () => {
   [
@@ -33,44 +33,3 @@ describe('countDecimalPlaces', () => {
   })
 })
 
-describe('validateTicker', () => {
-  [
-    {value: '', expected: false},
-    {value: '\u2615\u2691', expected: false},
-    {value: 'ABcd1e', expected: false},
-    {value: 'A-Z', expected: false},
-    {value: 'a_1', expected: false},
-    {value: 'oh!', expected: false},
-    {value: '????', expected: false},
-    {value: '1-1A_!', expected: false},
-    {value: 'ABC', expected: true},
-    {value: '12345', expected: true},
-    {value: 'aa', expected: true},
-    {value: 'abCD1', expected: true},
-  ].forEach(testCase => {
-    const action = testCase.expected ? 'pass' : 'fail'
-
-    it(`Should ${action} for '${testCase.value}'`, () => {
-      expect(validateTicker(testCase.value)).toBe(testCase.expected)
-    })
-  })
-})
-
-describe('validateName', () => {
-  [
-    {value: '', expected: false},
-    {value: 'T', expected: true},
-    {value: 'MyToken', expected: true},
-    {value: '123456789012345678901234567890', expected: true},
-    {value: '1234567890123456789012345678901', expected: false},
-    {value: 23, expected: false},
-    {value: ['my', 'token'], expected: false},
-    {value: { a: 1 }, expected: false},
-  ].forEach(testCase => {
-    const action = testCase.expected ? 'pass' : 'fail'
-
-    it(`Should ${action} for '${testCase.value}'`, () => {
-      expect(validateName(testCase.value)).toBe(testCase.expected)
-    })
-  })
-})
