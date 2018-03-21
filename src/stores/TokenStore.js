@@ -1,5 +1,4 @@
 import { observable, action, computed } from 'mobx';
-import { validateName, validateTicker } from '../utils/utils'
 import { VALIDATION_TYPES } from '../utils/constants'
 import autosave from './autosave'
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES;
@@ -35,14 +34,6 @@ class TokenStore {
 
   @action setProperty = (property, value) => {
     this[property] = value;
-  }
-
-  @action validateTokens = (property) => {
-    if (property === 'name') {
-      this.validToken[property] = validateName(this.name) ? VALID : INVALID;
-    } else if (property === 'ticker') {
-      this.validToken[property] = validateTicker(this.ticker) ? VALID : INVALID;
-    }
   }
 
   @action updateValidity = (property, validity) => {
