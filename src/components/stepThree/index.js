@@ -1,11 +1,9 @@
 import React from "react";
 import "../../assets/stylesheets/application.css";
-import Web3 from 'web3'
 import { Link } from "react-router-dom";
 import { setExistingContractParams, getNetworkVersion, getNetWorkNameById } from "../../utils/blockchainHelpers";
 import { gweiToWei, weiToGwei } from "../../utils/utils";
 import { StepNavigation } from "../Common/StepNavigation";
-import { InputField } from "../Common/InputField";
 import { RadioInputField } from "../Common/RadioInputField";
 import { CrowdsaleBlock } from "./CrowdsaleBlock";
 import {
@@ -22,6 +20,7 @@ import { Loader } from '../Common/Loader'
 import { noGasPriceAvailable, warningOnMainnetAlert } from '../../utils/alerts'
 import { NumericInput } from '../Common/NumericInput'
 import update from 'immutability-helper'
+import { AddressInput } from '../Common/AddressInput'
 
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS;
 const { VALID, INVALID } = VALIDATION_TYPES;
@@ -83,7 +82,11 @@ export class stepThree extends React.Component {
       .then(() => {
         this.addCrowdsale()
         this.setState({ loading: false })
-        this.updateWalletAddress(tierStore.tiers[0].walletAddress)
+        this.updateWalletAddress({
+          address: tierStore.tiers[0].walletAddress,
+          pristine: true,
+          valid: VALID,
+        })
         window.scrollTo(0, 0)
       })
   }
@@ -191,23 +194,21 @@ export class stepThree extends React.Component {
     }
   }
 
-  updateWalletAddress = address => {
-    const isAddressValid = Web3.utils.isAddress(address) ? VALID : INVALID;
-
+  updateWalletAddress = ({ address, pristine, valid }) => {
     const newState = update(this.state, {
       walletAddress: { $set: address },
       validation: {
         walletAddress: {
           $set: {
-            pristine: false,
-            valid: isAddressValid
+            pristine,
+            valid,
           },
         },
       },
-    });
+    })
 
     this.setState(newState)
-    this.props.tierStore.updateWalletAddress(address, isAddressValid)
+    this.props.tierStore.updateWalletAddress(address, valid)
   }
 
   updateMinCap = ({ value, pristine, valid }) => {
@@ -344,15 +345,14 @@ export class stepThree extends React.Component {
           <p className="title">Global settings</p>
         </div>
         <div className="input-block-container">
-          <InputField
+          <AddressInput
             side="left"
-            type="text"
             title={WALLET_ADDRESS}
-            value={this.state.walletAddress}
+            address={this.state.walletAddress}
             valid={this.state.validation.walletAddress.valid}
             pristine={this.state.validation.walletAddress.pristine}
             errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS}
-            onChange={e => this.updateWalletAddress(e.target.value)}
+            onChange={this.updateWalletAddress}
             description="Where the money goes after investors transactions. Immediately after each transaction. We
              recommend to setup a multisig wallet with hardware based signers."
           />
