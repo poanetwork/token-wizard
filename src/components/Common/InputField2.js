@@ -5,6 +5,7 @@ export const InputField2 = ({ input, meta, side, label, type, description, disab
     <div className={side}>
       <label htmlFor={input.name} className="label">{label}</label>
       <input
+        autoComplete="off"
         className="input"
         type={type}
         disabled={disabled}
