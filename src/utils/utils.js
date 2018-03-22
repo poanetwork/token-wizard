@@ -140,3 +140,9 @@ export const countDecimalPlaces = num => {
   return Math.max(0, digitsAfterDecimal - adjust)
 }
 
+export const acceptPositiveIntegerOnly = (value) => {
+  if (typeof value === 'number') value = String(value)
+  if (typeof value !== 'string') return ''
+
+  return String(value).match(/^(\d*)/)[1]
+}
