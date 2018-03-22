@@ -50,9 +50,9 @@ const CountdownTimer = ({
   } else {
     if (nextTick.type) {
       if (nextTick.type === 'start') {
-        message = `to start of tier ${nextTick.order || 0} of ${tiersLength}`
+        message = `to start of tier ${nextTick.order} of ${tiersLength}`
       } else {
-        message = `to end of tier ${nextTick.order || 0} of ${tiersLength}`
+        message = `to end of tier ${nextTick.order} of ${tiersLength}`
       }
     } else {
       message = 'crowdsale has ended'
