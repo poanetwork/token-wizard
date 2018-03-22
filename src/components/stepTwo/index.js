@@ -28,7 +28,7 @@ export class stepTwo extends Component {
     super(props)
 
     this.state = {
-      decimals: '',
+      decimals: props.tokenStore.decimals || '',
       validation: {
         decimals: {
           disabled: false,

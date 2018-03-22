@@ -18,8 +18,10 @@ export class CrowdsaleBlock extends React.Component {
   constructor (props) {
     super(props)
 
+    const { tierStore, num } = this.props
+
     this.state = {
-      rate: '',
+      rate: tierStore.tiers[num].rate || '',
       validation: {
         rate: {
           pristine: true,
@@ -31,8 +33,11 @@ export class CrowdsaleBlock extends React.Component {
 
   componentWillMount () {
     const { tierStore, num } = this.props
-    const startTime = 0 === num ? defaultCompanyStartDate() : this.tierEndTime(num - 1)
-    const endTime = 0 === num ? defaultCompanyEndDate(startTime) : defaultCompanyEndDate(this.tierEndTime(num - 1))
+    const defaultStartTime = 0 === num ? defaultCompanyStartDate() : this.tierEndTime(num - 1)
+    const defaultEndTime = 0 === num ? defaultCompanyEndDate(defaultStartTime) : defaultCompanyEndDate(this.tierEndTime(num - 1))
+
+    const startTime = tierStore.tiers[num].startTime || defaultStartTime
+    const endTime = tierStore.tiers[num].endTime || defaultEndTime
 
     tierStore.setTierProperty(startTime, 'startTime', num)
     tierStore.setTierProperty(endTime, 'endTime', num)

@@ -421,15 +421,13 @@ export class Invest extends React.Component {
               <p className="hashes-title">{crowdsale && crowdsale.addr && crowdsale.addr[0]}</p>
               <p className="hashes-description">Crowdsale Contract Address</p>
             </div>
-            <div className="hashes-i hidden">
-              <div className="left">
-                <p className="hashes-title">{tokenName}</p>
-                <p className="hashes-description">Name</p>
-              </div>
-              <div className="left">
-                <p className="hashes-title">{tokenTicker}</p>
-                <p className="hashes-description">Ticker</p>
-              </div>
+            <div className="hashes-i">
+              <p className="hashes-title">{tokenName}</p>
+              <p className="hashes-description">Name</p>
+            </div>
+            <div className="hashes-i">
+              <p className="hashes-title">{tokenTicker}</p>
+              <p className="hashes-description">Ticker</p>
             </div>
             <div className="hashes-i">
               <p className="hashes-title">{totalSupply} {tokenTicker}</p>

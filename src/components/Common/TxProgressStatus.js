@@ -26,7 +26,7 @@ export class TxProgressStatus extends Component {
   }
 
   render () {
-    const { tierStore, deploymentStore } = this.props
+    const { tierStore } = this.props
     const tiers = new Array(tierStore.tiers.length).fill(true)
     const tableContent = this.txStatuses()
 

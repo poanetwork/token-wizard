@@ -8,7 +8,7 @@ import { InputField } from './InputField'
 import { TEXT_FIELDS, VALIDATION_TYPES } from '../../utils/constants'
 import { WhitelistItem } from './WhitelistItem'
 import { inject, observer } from 'mobx-react'
-import { whitelistImported } from '../../utils/alerts'
+import { clearingWhitelist, whitelistImported } from '../../utils/alerts'
 import processWhitelist from '../../utils/processWhitelist'
 const { ADDRESS, MIN, MAX } = TEXT_FIELDS
 const {VALID, INVALID} = VALIDATION_TYPES;
@@ -96,15 +96,37 @@ export class WhitelistInputBlock extends React.Component {
     })
   }
 
+  clearAll = () => {
+    const { num, tierStore } = this.props
+
+    return clearingWhitelist()
+      .then(result => {
+        if (result.value) {
+          tierStore.emptyWhitelist(num)
+        }
+      })
+  }
 
   render () {
     const { num, tierStore } = this.props
     const { whitelist } = tierStore.tiers[num]
 
-    const dropzoneStyle = {
-      position: 'relative',
-      cursor: 'pointer',
+    const whitelistEmpty = tierStore.isWhitelistEmpty(num)
+
+    const actionsStyle = {
       textAlign: 'right'
+    }
+
+    const clearAllStyle = {
+      display: 'inline-block',
+      cursor: 'pointer'
+    }
+
+    const dropzoneStyle = {
+      display: 'inline-block',
+      marginLeft: '1em',
+      position: 'relative',
+      cursor: 'pointer'
     }
 
     return (
@@ -154,14 +176,26 @@ export class WhitelistInputBlock extends React.Component {
             {...item}
           />
         )}
-        <Dropzone
-          onDrop={this.onDrop}
-          accept=".csv"
-          style={dropzoneStyle}
-        >
-          <i className="fa fa-upload" title="Upload CSV"></i>&nbsp;
-          Upload CSV
-        </Dropzone>
+
+        {/* Actions */}
+        <div style={actionsStyle}>
+          {
+            whitelistEmpty ? null : (
+              <div className="clear-all-tokens" style={clearAllStyle} onClick={this.clearAll}>
+                <i className="fa fa-trash"></i>&nbsp;Clear All
+              </div>
+            )
+          }
+
+          <Dropzone
+            onDrop={this.onDrop}
+            accept=".csv"
+            style={dropzoneStyle}
+          >
+            <i className="fa fa-upload" title="Upload CSV"></i>&nbsp;
+            Upload CSV
+          </Dropzone>
+        </div>
 
       </div>
     )
