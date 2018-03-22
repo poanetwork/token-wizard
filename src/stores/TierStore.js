@@ -30,11 +30,8 @@ class TierStore {
     this.globalMinCap = minCap
   }
 
-  @action addTier = (tier) => {
+  @action addTier = (tier, validations) => {
     this.tiers.push(tier)
-  }
-
-  @action addTierValidations = (validations) => {
     this.validTiers.push(validations)
   }
 
@@ -204,6 +201,22 @@ class TierStore {
 
       if (storedIndex > -1) this.tiers[crowdsaleNum].whitelist[storedIndex].duplicated = false
     }
+  }
+
+  @action emptyWhitelist = (crowdsaleNum) => {
+    const whitelist = this.tiers[crowdsaleNum].whitelist
+
+    for (let i = whitelist.length - 1; i >= 0; i--) {
+      if (!whitelist[i].stored) {
+        this.removeWhitelistItem(i, crowdsaleNum)
+      }
+    }
+  }
+
+  isWhitelistEmpty (crowdsaleNum) {
+    const whitelist = this.tiers[crowdsaleNum].whitelist
+
+    return whitelist.every(address => address.stored)
   }
 
   @computed get maxSupply () {

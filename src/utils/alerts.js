@@ -218,6 +218,18 @@ export function clearingReservedTokens() {
   })
 }
 
+export function clearingWhitelist() {
+  return sweetAlert2({
+    title: "Clear all whitelist addresses",
+    html: "Are you sure you want to remove all the whitelist addresses for this tier?",
+    type: "warning",
+    showCancelButton: true,
+    cancelButtonText: "No",
+    confirmButtonText: "Yes",
+    reverseButtons: true
+  })
+}
+
 export function whitelistImported(count) {
   return sweetAlert2({
     title: 'Addresses imported',

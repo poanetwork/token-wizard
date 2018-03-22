@@ -153,23 +153,14 @@ export function getAccumulativeCrowdsaleData() {
           if (!crowdsaleContract) return noContractAlert()
 
           let getWeiRaised = crowdsaleContract.methods.weiRaised().call().then((weiRaised) => {
-            let newWeiRaised
-            if (crowdsalePageStore.weiRaised) {
-              newWeiRaised = crowdsalePageStore.weiRaised + parseInt(weiRaised, 10);
-            } else {
-              newWeiRaised = parseInt(weiRaised, 10);
-            }
-
-            crowdsalePageStore.setProperty('weiRaised', newWeiRaised)
-            crowdsalePageStore.setProperty('ethRaised', parseFloat(web3.utils.fromWei(toFixed(crowdsalePageStore.weiRaised).toString(), 'ether')))
+            const storedWeiRaised = toBigNumber(crowdsalePageStore.weiRaised)
+            crowdsalePageStore.setProperty('weiRaised', storedWeiRaised.plus(weiRaised).toFixed())
+            crowdsalePageStore.setProperty('ethRaised', web3.utils.fromWei(crowdsalePageStore.weiRaised, 'ether'))
           })
 
           let getTokensSold = crowdsaleContract.methods.tokensSold().call().then((tokensSold) => {
-            if (crowdsalePageStore.tokensSold) {
-              crowdsalePageStore.setProperty('tokensSold', crowdsalePageStore.tokensSold + parseInt(tokensSold, 10))
-            } else {
-              crowdsalePageStore.setProperty('tokensSold', parseInt(tokensSold, 10))
-            }
+            const storedTokensSold = toBigNumber(crowdsalePageStore.tokensSold)
+            crowdsalePageStore.setProperty('tokensSold', storedTokensSold.plus(tokensSold).toFixed())
           })
 
           let getMaximumSellableTokens = crowdsaleContract.methods.maximumSellableTokens().call().then((maximumSellableTokens) => {
@@ -181,15 +172,9 @@ export function getAccumulativeCrowdsaleData() {
           })
 
           let getInvestors = crowdsaleContract.methods.investorCount().call().then((investors) => {
-            const oldInvestors = crowdsalePageStore.investors
-            const investorsCount = parseInt(investors, 10)
-
-            if (oldInvestors) {
-              crowdsalePageStore.setProperty('investors', oldInvestors + investorsCount);
-            } else {
-              crowdsalePageStore.setProperty('investors', investorsCount);
-            }
-          });
+            const storedInvestorsCount = toBigNumber(crowdsalePageStore.investors)
+            crowdsalePageStore.setProperty('investors', storedInvestorsCount.plus(investors).toFixed())
+          })
 
           return Promise.all([getWeiRaised, getTokensSold, getMaximumSellableTokens, getInvestors])
         })

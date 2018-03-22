@@ -28,7 +28,6 @@ const { MINCAP, WALLET_ADDRESS, ENABLE_WHITELISTING } = TEXT_FIELDS;
 
 @inject(
   "contractStore",
-  "crowdsaleBlockListStore",
   "web3Store",
   "tierStore",
   "generalStore",
@@ -42,19 +41,17 @@ export class stepThree extends React.Component {
   constructor(props) {
     super(props);
 
-    const { contractStore, crowdsaleBlockListStore, gasPriceStore } = props;
+    const { contractStore, gasPriceStore } = props;
 
     if (contractStore.crowdsale.addr.length > 0) {
       contractStore.setContractProperty("pricingStrategy", "addr", []);
       setExistingContractParams(contractStore.abi, contractStore.addr[0], contractStore.setContractProperty);
     }
 
-    crowdsaleBlockListStore.emptyList()
-
     this.state = {
       loading: true,
       gasPriceSelected: gasPriceStore.slow.id,
-      minCap: '',
+      minCap: props.tierStore.globalMinCap || '',
       walletAddress: '',
       validation: {
         gasPrice: {
@@ -80,7 +77,9 @@ export class stepThree extends React.Component {
       .then(() => this.setGasPrice(gasPriceStore.slow))
       .catch(() => noGasPriceAvailable())
       .then(() => {
-        this.addCrowdsale()
+        if (this.props.tierStore.tiers.length === 0) {
+          this.addCrowdsale()
+        }
         this.setState({ loading: false })
         this.updateWalletAddress({
           address: tierStore.tiers[0].walletAddress,
@@ -106,10 +105,10 @@ export class stepThree extends React.Component {
   }
 
   addCrowdsale() {
-    const { crowdsaleBlockListStore, tierStore, web3Store } = this.props
+    const { tierStore, web3Store } = this.props
     const { curAddress } = web3Store
 
-    const num = crowdsaleBlockListStore.blockList.length
+    const num = tierStore.tiers.length
     const newTier = Object.assign({}, defaultTier)
     const newTierValidations = Object.assign({}, defaultTierValidations)
 
@@ -120,15 +119,7 @@ export class stepThree extends React.Component {
       newTier.walletAddress = curAddress
     }
 
-    tierStore.addTier(newTier)
-    tierStore.addTierValidations(newTierValidations)
-    this.addCrowdsaleBlock(num)
-  }
-
-  addCrowdsaleBlock (num) {
-    const { crowdsaleBlockListStore } = this.props
-
-    crowdsaleBlockListStore.addCrowdsaleItem(<CrowdsaleBlock key={num.toString()} num={num}/>)
+    tierStore.addTier(newTier, newTierValidations)
   }
 
   goToDeploymentStage = () => {
@@ -141,14 +132,15 @@ export class stepThree extends React.Component {
 
     const { tierStore, gasPriceStore } = this.props
     const gasPriceIsValid = gasPriceStore.custom.id !== this.state.gasPriceSelected || this.state.validation.gasPrice.valid === VALID
-    const isMinCapValid = tierStore.globalMinCap <= tierStore.maxSupply
+    const isMinCapLessThanMaxSupply = tierStore.globalMinCap <= tierStore.maxSupply
+    const isMinCapValid = this.state.validation.minCap.valid === VALID
 
     for (let index = 0; index < tierStore.tiers.length; index++) {
       tierStore.validateTiers('endTime', index)
       tierStore.validateTiers('startTime', index)
     }
 
-    if (!isMinCapValid) {
+    if (!isMinCapLessThanMaxSupply) {
       this.setState(update(this.state, {
         validation: {
           minCap: {
@@ -158,7 +150,7 @@ export class stepThree extends React.Component {
       }))
     }
 
-    if (tierStore.areTiersValid && gasPriceIsValid && isMinCapValid) {
+    if (tierStore.areTiersValid && gasPriceIsValid && isMinCapValid && isMinCapLessThanMaxSupply) {
       const { reservedTokenStore, deploymentStore } = this.props
       const tiersCount = tierStore.tiers.length
       const reservedCount = reservedTokenStore.tokens.length
@@ -332,12 +324,12 @@ export class stepThree extends React.Component {
   }
 
   updateWhitelistEnabled = (e) => {
-    this.props.tierStore.setGlobalMinCap('')
+    this.updateMinCap({ value: '', valid: VALID, pristine: false })
     this.updateTierStore(e, "whitelistEnabled", 0)
   }
 
   render() {
-    const { crowdsaleBlockListStore, tierStore } = this.props;
+    const { tierStore } = this.props;
 
     const globalSettingsBlock = (
       <div>
@@ -366,6 +358,7 @@ export class stepThree extends React.Component {
              bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy."
             disabled={tierStore.tiers[0] && tierStore.tiers[0].whitelistEnabled === "yes"}
             min={0}
+            acceptEmpty={true}
             acceptFloat={!!this.props.tokenStore.decimals}
             maxDecimals={this.props.tokenStore.decimals}
             value={this.state.minCap}
@@ -399,7 +392,9 @@ export class stepThree extends React.Component {
           {globalSettingsBlock}
         </div>
 
-        <div>{crowdsaleBlockListStore.blockList}</div>
+        <div>
+          { tierStore.tiers.map((tier, index) => <CrowdsaleBlock key={index} num={index}/>) }
+        </div>
 
         <div className="button-container">
           <div onClick={() => this.addCrowdsale()} className="button button_fill_secondary">Add Tier</div>

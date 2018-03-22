@@ -143,6 +143,103 @@ describe('TierStore', () => {
     })
   })
 
+  describe('isWhitelistEmpty', () => {
+    it('should consider empty lists as empty', () => {
+      // Given
+      tierStore.setTierProperty([], 'whitelist', 0)
+
+      // When
+      const result = tierStore.isWhitelistEmpty(0)
+
+      // Then
+      expect(result).toBe(true)
+    })
+    it('should consider lists with only already stored items as empty', () => {
+      // Given
+      tierStore.setTierProperty([
+        { addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1', min: 1, max: 10, stored: true },
+        { addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0', min: 2, max: 20, stored: true }
+      ], 'whitelist', 0)
+
+      // When
+      const result = tierStore.isWhitelistEmpty(0)
+
+      // Then
+      expect(result).toBe(true)
+    })
+    it('should consider lists with only non-stored items as not empty', () => {
+      // Given
+      tierStore.setTierProperty([
+        { addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1', min: 1, max: 10 },
+        { addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0', min: 2, max: 20 }
+      ], 'whitelist', 0)
+
+      // When
+      const result = tierStore.isWhitelistEmpty(0)
+
+      // Then
+      expect(result).toBe(false)
+    })
+    it('should consider lists with both stored and non-stored items as not empty', () => {
+      // Given
+      tierStore.setTierProperty([
+        { addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1', min: 1, max: 10, stored: true },
+        { addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0', min: 2, max: 20 },
+        { addr: '0x22d491bde2303f2f43325b2108d26f1eaba1e32b', min: 3, max: 30 },
+        { addr: '0xe11ba2b4d45eaed5996cd0823791e0c93114882d', min: 4, max: 40, stored: true }
+      ], 'whitelist', 0)
+
+      // When
+      const result = tierStore.isWhitelistEmpty(0)
+
+      // Then
+      expect(result).toBe(false)
+    })
+  })
+
+  describe('isWhitelistEmpty', () => {
+    [{
+      whitelist: [],
+      expected: []
+    }, {
+      whitelist: [
+        { addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1', min: 1, max: 10 },
+        { addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0', min: 2, max: 20 }
+      ],
+      expected: []
+    }, {
+      whitelist: [
+        { addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1', min: 1, max: 10 },
+        { addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0', min: 2, max: 20, stored: true }
+      ],
+      expected: [
+        { addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0', min: 2, max: 20, stored: true }
+      ]
+    }, {
+      whitelist: [
+        { addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1', min: 1, max: 10, stored: true },
+        { addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0', min: 2, max: 20, stored: true }
+      ],
+      expected: [
+        { addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1', min: 1, max: 10, stored: true },
+        { addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0', min: 2, max: 20, stored: true }
+      ]
+    }]
+      .forEach(({ whitelist, expected }) => {
+        it('should remove all non-stored items', () => {
+          // Given
+          tierStore.setTierProperty(whitelist, 'whitelist', 0)
+
+          // When
+          tierStore.emptyWhitelist(0)
+          const result = tierStore.tiers[0].whitelist
+
+          // Then
+          expect(result.toJS()).toEqual(expected)
+        })
+      })
+  })
+
   it('Should be truthy "deployedContract" after adding "stored" addresses', () => {
     // set whitelist items as stored
     tierStore.setTierProperty(whitelist.map(item => {
