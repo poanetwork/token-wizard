@@ -60,7 +60,7 @@ export class stepThree extends React.Component {
         },
         minCap: {
           pristine: true,
-          valid: INVALID
+          valid: VALID
         },
         walletAddress: {
           pristine: true,
