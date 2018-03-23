@@ -1,0 +1,128 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`StepTwoForm Should render the component 1`] = `
+<form
+  id="tokenData"
+  onSubmit={[Function]}
+>
+  <div
+    className="hidden"
+  >
+    <div
+      className="left"
+    >
+      <label
+        className="label"
+        htmlFor="name"
+      >
+        Name
+      </label>
+      <input
+        autoComplete="off"
+        className="input"
+        disabled={undefined}
+        id="name"
+        name="name"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        type="text"
+        value=""
+      />
+      <p
+        className="description"
+      >
+        The name of your token. Will be used by Etherscan and other tokenbrowsers. Be afraid of trademarks.
+      </p>
+      <p
+        style={
+          Object {
+            "color": "red",
+            "fontSize": "12px",
+            "fontWeight": "bold",
+            "height": "10px",
+            "width": "100%",
+          }
+        }
+      />
+    </div>
+    <div
+      className="right"
+    >
+      <label
+        className="label"
+        htmlFor="ticker"
+      >
+        Ticker
+      </label>
+      <input
+        autoComplete="off"
+        className="input"
+        disabled={undefined}
+        id="ticker"
+        name="ticker"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        type="text"
+        value=""
+      />
+      <p
+        className="description"
+      >
+        The five letter ticker for your token. There are 11,881,376 combinations for 26 english letters.
+                  Be hurry.
+      </p>
+      <p
+        style={
+          Object {
+            "color": "red",
+            "fontSize": "12px",
+            "fontWeight": "bold",
+            "height": "10px",
+            "width": "100%",
+          }
+        }
+      />
+    </div>
+    <div
+      className="left"
+    >
+      <label
+        className="label"
+        htmlFor="decimals"
+      >
+        Decimals
+      </label>
+      <input
+        autoComplete="off"
+        className="input"
+        disabled={false}
+        id="decimals"
+        name="decimals"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        type="text"
+        value=""
+      />
+      <p
+        className="description"
+      >
+        Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous).
+      </p>
+      <p
+        style={
+          Object {
+            "color": "red",
+            "fontSize": "12px",
+            "fontWeight": "bold",
+            "height": "10px",
+            "width": "100%",
+          }
+        }
+      />
+    </div>
+  </div>
+</form>
+`;

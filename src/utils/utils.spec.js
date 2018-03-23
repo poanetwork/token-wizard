@@ -1,4 +1,4 @@
-import { countDecimalPlaces, validateName, validateTicker } from './utils'
+import { countDecimalPlaces, acceptPositiveIntegerOnly } from './utils'
 
 describe('countDecimalPlaces', () => {
   [
@@ -33,44 +33,27 @@ describe('countDecimalPlaces', () => {
   })
 })
 
-describe('validateTicker', () => {
+
+describe('acceptPositiveIntegerOnly', () => {
   [
-    {value: '', expected: false},
-    {value: '\u2615\u2691', expected: false},
-    {value: 'ABcd1e', expected: false},
-    {value: 'A-Z', expected: false},
-    {value: 'a_1', expected: false},
-    {value: 'oh!', expected: false},
-    {value: '????', expected: false},
-    {value: '1-1A_!', expected: false},
-    {value: 'ABC', expected: true},
-    {value: '12345', expected: true},
-    {value: 'aa', expected: true},
-    {value: 'abCD1', expected: true},
+    { value: '', expected: '' },
+    { value: 'a', expected: '' },
+    { value: function () {}, expected: '' },
+    { value: undefined, expected: '' },
+    { value: false, expected: '' },
+    { value: 'e', expected: '' },
+    { value: '.', expected: '' },
+    { value: 'as123', expected: '' },
+    { value: '-123', expected: '' },
+    { value: '123', expected: '123' },
+    { value: '12e1', expected: '12' },
+    { value: (22*2), expected: '44' },
+    { value: 35.3*2, expected: '70' },
   ].forEach(testCase => {
-    const action = testCase.expected ? 'pass' : 'fail'
+    const action = testCase.expected === '' ? 'fail' : 'pass'
 
     it(`Should ${action} for '${testCase.value}'`, () => {
-      expect(validateTicker(testCase.value)).toBe(testCase.expected)
-    })
-  })
-})
-
-describe('validateName', () => {
-  [
-    {value: '', expected: false},
-    {value: 'T', expected: true},
-    {value: 'MyToken', expected: true},
-    {value: '123456789012345678901234567890', expected: true},
-    {value: '1234567890123456789012345678901', expected: false},
-    {value: 23, expected: false},
-    {value: ['my', 'token'], expected: false},
-    {value: { a: 1 }, expected: false},
-  ].forEach(testCase => {
-    const action = testCase.expected ? 'pass' : 'fail'
-
-    it(`Should ${action} for '${testCase.value}'`, () => {
-      expect(validateName(testCase.value)).toBe(testCase.expected)
+      expect(acceptPositiveIntegerOnly(testCase.value)).toBe(testCase.expected)
     })
   })
 })
