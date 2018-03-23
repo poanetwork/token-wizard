@@ -1,6 +1,5 @@
 import React from 'react'
-import ReactCountdownClock from 'react-countdown-clock'
-import { checkNetWorkByID, checkTxMined, sendTXToContract } from '../../utils/blockchainHelpers'
+import { attachToContract, checkNetWorkByID, checkTxMined, sendTXToContract } from '../../utils/blockchainHelpers'
 import {
   findCurrentContractRecursively,
   getAccumulativeCrowdsaleData,
@@ -25,6 +24,7 @@ import { CrowdsaleConfig } from '../Common/config'
 import { INVESTMENT_OPTIONS, TOAST } from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
 import QRPaymentProcess from './QRPaymentProcess'
+import CountdownTimer from './CountdownTimer'
 import classNames from 'classnames'
 import moment from 'moment'
 
@@ -49,7 +49,8 @@ export class Invest extends React.Component {
       },
       nextTick: {},
       msToNextTick: 0,
-      displaySeconds: false
+      displaySeconds: false,
+      isFinalized: false
     }
   }
 
@@ -127,12 +128,20 @@ export class Invest extends React.Component {
             .then(() => getCrowdsaleData(crowdsaleContract))
             .then(() => getAccumulativeCrowdsaleData())
             .then(() => getCrowdsaleTargetDates())
+            .then(() => this.checkIsFinalized())
             .then(() => this.setTimers())
             .catch(err => console.log(err))
             .then(() => this.setState({ loading: false }))
         })
       })
     })
+  }
+
+  checkIsFinalized() {
+    return this.isFinalized()
+      .then(isFinalized => {
+        this.setState({ isFinalized })
+      })
   }
 
   setTimers = () => {
@@ -296,19 +305,14 @@ export class Invest extends React.Component {
     return +token > 0 && countDecimalPlaces(token) <= this.props.tokenStore.decimals
   }
 
-  renderPieTracker () {
-    return (
-      <div style={{ marginLeft: '-20px', marginTop: '-20px' }}>
-        <ReactCountdownClock
-          seconds={this.state.msToNextTick / 1000}
-          color="#733EAB"
-          alpha={0.9}
-          size={270}
-          showMilliseconds={false}
-          onComplete={this.resetTimers}
-        />
-      </div>
-    )
+  isFinalized() {
+    const { contractStore } = this.props
+    const lastCrowdsaleAddress = contractStore.crowdsale.addr.slice(-1)[0]
+
+    return attachToContract(contractStore.crowdsale.abi, lastCrowdsaleAddress)
+      .then(crowdsaleContract => {
+        return crowdsaleContract.methods.finalized().call()
+      })
   }
 
   render () {
@@ -357,57 +361,21 @@ export class Invest extends React.Component {
       'qr-selected': investThrough === INVESTMENT_OPTIONS.QR
     })
 
-    const daysHoursMinutes = (
-      <div className="timer">
-        <div className="timer-inner">
-          {this.state.displaySeconds
-            ? null
-            : <div className="timer-i">
-              <div className="timer-count">{days}</div>
-              <div className="timer-interval">Days</div>
-            </div>
-          }
-          {this.state.displaySeconds
-            ? null
-            : <div className="timer-i">
-              <div className="timer-count">{hours}</div>
-              <div className="timer-interval">Hours</div>
-            </div>
-          }
-          <div className="timer-i">
-            <div className="timer-count">{minutes}</div>
-            <div className="timer-interval">Mins</div>
-          </div>
-          {!this.state.displaySeconds
-            ? null
-            : <div className="timer-i">
-              <div className="timer-count">{seconds}</div>
-              <div className="timer-interval">Secs</div>
-            </div>
-          }
-          <div className="timer-i">
-            <div className="timer-interval">
-              <strong>
-                {nextTick.type
-                  ? nextTick.type === 'start'
-                    ? `to start of tier ${nextTick.order || 0} of ${crowdsalePageStore && crowdsalePageStore.tiers.length}`
-                    : `to end of tier ${nextTick.order || 0} of ${crowdsalePageStore && crowdsalePageStore.tiers.length}`
-                  : 'crowdsale has ended'
-                }
-              </strong>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-
     return <div className="invest container">
       <div className="invest-table">
         <div className="invest-table-cell invest-table-cell_left">
-          <div className="timer-container">
-            {daysHoursMinutes}
-            {this.renderPieTracker()}
-          </div>
+          <CountdownTimer
+            displaySeconds={this.state.displaySeconds}
+            nextTick={nextTick}
+            tiersLength={crowdsalePageStore && crowdsalePageStore.tiers.length}
+            days={days}
+            hours={hours}
+            minutes={minutes}
+            seconds={seconds}
+            msToNextTick={this.state.msToNextTick}
+            onComplete={this.resetTimers}
+            isFinalized={this.state.isFinalized}
+          />
           <div className="hashes">
             <div className="hashes-i">
               <p className="hashes-title">{curAddr}</p>
