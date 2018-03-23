@@ -8,9 +8,12 @@
     background: white;
     width: 45%;
     min-width: 830px;
-    padding: 30px 20px 20px;
+    padding: 30px 20px 0;
     border-radius: 10px;
     position: relative;
+    height: 80%;
+    min-height: 480px;
+    max-height: 615px;
 
     .title {
       margin-bottom: 20px;
@@ -43,6 +46,14 @@
       &:hover {
         cursor: pointer;
       }
+    }
+  }
+}
+
+.home {
+  .crowdsale-modal {
+    .modal {
+      max-height: 360px;
     }
   }
 }
