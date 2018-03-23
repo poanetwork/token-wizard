@@ -82,8 +82,6 @@ export const validateLaterTime = (laterTime, previousTime) => getTimeAsNumber(la
 
 export const validateLaterOrEqualTime = (laterTime, previousTime) => getTimeAsNumber(laterTime) >= getTimeAsNumber(previousTime)
 
-export const validateAddress = (address) => !(!address || address.length !== 42)
-
 export function toFixed(x) {
   if (Math.abs(x) < 1.0) {
     let e = parseInt(x.toString().split('e-')[1], 10);

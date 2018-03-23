@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AddressInput Should render the component 1`] = `
+<div
+  className="left"
+>
+  <label
+    className="label"
+  >
+    Wallet Address
+  </label>
+  <input
+    className="input"
+    disabled={undefined}
+    onBlur={undefined}
+    onChange={[Function]}
+    onKeyPress={undefined}
+    onPaste={undefined}
+    style={undefined}
+    type="text"
+    value="0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1"
+  />
+  <p
+    className="description"
+  >
+    Where the money goes after investors transactions. Immediately after each transaction. We recommend to setup a multisig wallet with hardware based signers.
+  </p>
+  <p
+    style={
+      Object {
+        "color": "red",
+        "fontSize": "12px",
+        "fontWeight": "bold",
+        "height": "10px",
+        "width": "100%",
+      }
+    }
+  />
+</div>
+`;
