@@ -354,8 +354,7 @@ export class stepThree extends React.Component {
           <NumericInput
             side="left"
             title={MINCAP}
-            description="Minimum amount tokens to buy. Not a minimal size of a transaction. If minCap is 1 and user
-             bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy."
+            description='Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1 and a user already has 1 token from a previous transaction, they can buy any amount they want.'
             disabled={tierStore.tiers[0] && tierStore.tiers[0].whitelistEnabled === "yes"}
             min={0}
             acceptEmpty={true}
