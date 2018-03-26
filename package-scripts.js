@@ -85,7 +85,7 @@ module.exports = {
       e2e: {
         default: series(
           'nps test.e2e.prepare',
-          'npm test.e2e.start',
+          'nps test.e2e.start',
           'npm run delay',
           'cd submodules/token-wizard-test-automation',
           'npm run test1'
