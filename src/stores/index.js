@@ -47,3 +47,19 @@ export {
   gasPriceStore,
   deploymentStore
 };
+
+window.stores = { // DONTCOMMIT
+  generalStore,
+  crowdsalePageStore,
+  contractStore,
+  pricingStrategyStore,
+  reservedTokenStore,
+  stepTwoValidationStore,
+  tierStore,
+  tokenStore,
+  web3Store,
+  investStore,
+  crowdsaleStore,
+  gasPriceStore,
+  deploymentStore
+};
