@@ -11,13 +11,27 @@ import 'font-awesome/css/font-awesome.css'
 
 useStrict(true);
 
-if (!process.env['REACT_APP_REGISTRY_ADDRESS']) {
-  throw new Error('REACT_APP_REGISTRY_ADDRESS env variable is not present')
-}
+checkEnvVariable('REACT_APP_REGISTRY_STORAGE_ADDRESS');
+checkEnvVariable('REACT_APP_REGISTRY_STORAGE_BIN');
+checkEnvVariable('REACT_APP_REGISTRY_STORAGE_ABI');
+checkEnvVariable('REACT_APP_INIT_REGISTRY_ADDRESS');
+checkEnvVariable('REACT_APP_INIT_REGISTRY_BIN');
+checkEnvVariable('REACT_APP_INIT_REGISTRY_ABI');
+checkEnvVariable('REACT_APP_SCRIPT_EXEC_ADDRESS');
+checkEnvVariable('REACT_APP_SCRIPT_EXEC_BIN');
+checkEnvVariable('REACT_APP_SCRIPT_EXEC_ABI');
+checkEnvVariable('REACT_APP_TOKEN_APP_NAME');
+checkEnvVariable('REACT_APP_CROWDSALE_APP_NAME');
 
 const devEnvironment = process.env.NODE_ENV === 'development';
 if (devEnvironment && !window.web3) {
   window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+}
+
+function checkEnvVariable(envVar) {
+  if (!process.env[envVar]) {
+    throw new Error(`${envVar} env variable is not present`)
+  }
 }
 
 function renderApp(App) {

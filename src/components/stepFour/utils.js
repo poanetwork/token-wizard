@@ -1,7 +1,7 @@
 import {
   attachToContract,
   calculateGasLimit,
-  deployContract,
+  deployInstance,
   getNetWorkNameById,
   getNetworkVersion,
   getRegistryAddress,
@@ -24,11 +24,6 @@ import { getEncodedABIClientSide } from '../../utils/microservices'
 import { BigNumber } from 'bignumber.js'
 
 export const setupContractDeployment = (web3) => {
-  if (!contractStore.safeMathLib) {
-    noContractDataAlert()
-    return Promise.reject('no contract data')
-  }
-
   const tokenABI = contractStore.token.abi || []
   const tokenAddr = contractStore.token.addr || null
   const pricingStrategyABI = contractStore.pricingStrategy.abi || []
@@ -58,21 +53,11 @@ export const setupContractDeployment = (web3) => {
 
 export const buildDeploymentSteps = (web3) => {
   const stepFnCorrelation = {
-    safeMathLibrary: deploySafeMathLibrary,
     token: deployToken,
-    pricingStrategy: deployPricingStrategy(web3),
     crowdsale: deployCrowdsale,
     registerCrowdsaleAddress: registerCrowdsaleAddress,
-    finalizeAgent: deployFinalizeAgent(web3),
-    tier: setTier,
     setReservedTokens: setReservedTokensListMultiple,
-    updateJoinedCrowdsales: updateJoinedCrowdsales,
-    setMintAgentCrowdsale: setMintAgentForCrowdsale,
-    setMintAgentFinalizeAgent: setMintAgentForFinalizeAgent,
     whitelist: addWhitelist,
-    setFinalizeAgent: setFinalizeAgent,
-    setReleaseAgent: setReleaseAgent,
-    transferOwnership: transferOwnership,
   }
 
   let list = []
@@ -86,63 +71,77 @@ export const buildDeploymentSteps = (web3) => {
   return list
 }
 
-export const deploySafeMathLibrary = () => {
-  return [
-    () => {
-      const binSafeMathLib = contractStore.safeMathLib.bin || ''
-      const abiSafeMathLib = contractStore.safeMathLib.abi || []
-
-      console.log('***Deploy safeMathLib contract***')
-
-      return deployContract(abiSafeMathLib, binSafeMathLib, [])
-        .then(safeMathLibAddr => {
-          contractStore.setContractProperty('safeMathLib', 'addr', safeMathLibAddr)
-
-          try {
-            Object.keys(contractStore)
-              .filter(key => contractStore[key] !== undefined)
-              .forEach(key => {
-                if (contractStore[key].bin) {
-                  const strToReplace = '__:SafeMathLibExt_______________________'
-                  const newBin = window.reaplaceAll(strToReplace, safeMathLibAddr.substr(2), contractStore[key].bin)
-                  contractStore.setContractProperty(key, 'bin', newBin)
-                }
-              })
-            deploymentStore.setAsSuccessful('safeMathLibrary')
-            return Promise.resolve()
-
-          } catch (e) {
-            return Promise.reject(e)
-          }
-        })
-    }
-  ]
-}
-
 const getTokenParams = token => {
+  const { walletAddress } = tierStore.tiers[0]
   const whitelistWithGlobalMinCap = tierStore.tiers[0].whitelistEnabled !== 'yes' && tierStore.globalMinCap
   const minCap = whitelistWithGlobalMinCap ? toFixed(tierStore.globalMinCap * 10 ** token.decimals).toString() : 0
 
   return [
     token.name,
     token.ticker,
-    parseInt(token.supply, 10),
     parseInt(token.decimals, 10),
-    true,
-    minCap
+    parseInt(token.supply, 10),
+    //true,
+    //minCap
+    walletAddress
   ]
 }
 
 export const deployToken = () => {
+  const { web3 } = web3Store
   return [
     () => {
-      const abiToken = contractStore.token.abi || []
-      const binToken = contractStore.token.bin || ''
-      const paramsToken = getTokenParams(tokenStore)
+      return getNetworkVersion()
+      .then(networkID => {
+        return web3.eth.getAccounts()
+          .then((accounts) => accounts[0])
+          .then((account) => {
+            console.log("networkID:", networkID)
+            const toJS = x => JSON.parse(JSON.stringify(x))
 
-      return deployContract(abiToken, binToken, paramsToken)
-        .then(tokenAddr => contractStore.setContractProperty('token', 'addr', tokenAddr))
-        .then(() => deploymentStore.setAsSuccessful('token'))
+            const abiScriptExec = contractStore.scriptExec.abi || []
+            const addrsScriptExec = contractStore.scriptExec.addr || {}
+            const paramsToken = getTokenParams(tokenStore)
+            console.log("paramsToken:", paramsToken)
+
+            let tokenAppName = "erc20";
+            let tokenAppNameHex = web3.eth.abi.encodeParameter("bytes32", web3.utils.fromAscii(tokenAppName));
+            console.log("token app name:", tokenAppName);
+            console.log("token app name hex:", tokenAppNameHex);
+
+            let functionName = "init(bytes32,bytes32,uint256,uint256,address)";
+            let functionSignature = web3.eth.abi.encodeFunctionSignature(functionName);
+            console.log("functionSignature init:", functionSignature);
+
+            let encodedParameters = web3.eth.abi.encodeParameters(["bytes32","bytes32","uint256","uint256","address"], [
+              web3.utils.fromAscii("Victor Token 2"),
+              web3.utils.fromAscii("VTC"),
+              18,
+              1000000,
+              "0x7ae09e9963C835959B06240Ba69B00FebDff681A"
+            ]);
+            console.log("encodedParameters:", encodedParameters);
+
+            let fullData = functionSignature + encodedParameters.substr(2);
+            console.log("full calldata:", fullData);
+
+            const scriptExec = new web3.eth.Contract(toJS(abiScriptExec), addrsScriptExec[networkID])
+            console.log(scriptExec)
+
+            const opts = { gasPrice: generalStore.gasPrice, from: account }
+            console.log("opts:", opts)
+            const method = scriptExec.methods.initAppInstance(tokenAppNameHex, fullData)
+            console.log("method:", method)
+
+            return method.estimateGas(opts)
+              .then(estimatedGas => {
+                opts.gasLimit = calculateGasLimit(estimatedGas)
+                return sendTXToContract(method.send(opts))
+                  .then(tokenAddr => contractStore.setContractProperty('token', 'addr', tokenAddr))
+                  .then(() => deploymentStore.setAsSuccessful('token'))
+              })
+          })
+      })
     }
   ]
 }
@@ -155,26 +154,6 @@ const getPricingStrategyParams = tier => {
   return [
     web3Store.web3.utils.toWei(oneTokenInETH, 'ether')
   ]
-}
-
-export const deployPricingStrategy = (web3) => () => {
-  return tierStore.tiers.map((tier, index) => {
-    return () => {
-      const abiPricingStrategy = contractStore.pricingStrategy.abi || []
-      const binPricingStrategy = contractStore.pricingStrategy.bin || ''
-      const abiCrowdsale = contractStore.crowdsale.abi || []
-
-      const paramsPricingStrategy = getPricingStrategyParams(tier)
-
-      return deployContract(abiPricingStrategy, binPricingStrategy, paramsPricingStrategy)
-        .then(pricingStrategyAddr => contractStore.pricingStrategy.addr.concat(pricingStrategyAddr))
-        .then(newPricingStrategy => contractStore.setContractProperty('pricingStrategy', 'addr', newPricingStrategy))
-        .then(() => getEncodedABIClientSide(web3, abiCrowdsale, [], index, true))
-        .then(ABIEncoded => contractStore.crowdsale.abiConstructor.concat(ABIEncoded))
-        .then(newContract => contractStore.setContractProperty('crowdsale', 'abiConstructor', newContract))
-        .then(() => deploymentStore.setAsSuccessful('pricingStrategy'))
-    }
-  })
 }
 
 const getCrowdSaleParams = index => {
@@ -207,7 +186,7 @@ export const deployCrowdsale = () => {
           const binCrowdsale = contractStore.crowdsale.bin || ''
           const paramsCrowdsale = getCrowdSaleParams(index)
 
-          return deployContract(abiCrowdsale, binCrowdsale, paramsCrowdsale)
+          return deployInstance(abiCrowdsale, binCrowdsale, paramsCrowdsale)
         })
         .then(crowdsaleAddr => {
           console.log('***Deploy crowdsale contract***', index, crowdsaleAddr)
@@ -250,145 +229,6 @@ function registerCrowdsaleAddress () {
         .then(() => deploymentStore.setAsSuccessful('registerCrowdsaleAddress'))
     }
   ]
-}
-
-const getNullFinalizeAgentParams = index => {
-  return [
-    contractStore.crowdsale.addr[index]
-  ]
-}
-
-const getFinalizeAgentParams = index => {
-  return [
-    contractStore.token.addr,
-    contractStore.crowdsale.addr[index]
-  ]
-}
-
-export const deployFinalizeAgent = (web3) => () => {
-  return tierStore.tiers.map((tier, index, tiers) => {
-    return () => {
-      let abi, bin, paramsFinalizeAgent
-
-      if (index === tiers.length - 1) {
-        paramsFinalizeAgent = getFinalizeAgentParams(index)
-        abi = contractStore.finalizeAgent.abi || []
-        bin = contractStore.finalizeAgent.bin || ''
-      } else {
-        paramsFinalizeAgent = getNullFinalizeAgentParams(index)
-        abi = contractStore.nullFinalizeAgent.abi || []
-        bin = contractStore.nullFinalizeAgent.bin || ''
-      }
-
-      return getEncodedABIClientSide(web3, abi, [], index)
-        .then(ABIEncoded => {
-          console.log('finalizeAgent ABI encoded params constructor:', ABIEncoded)
-
-          const newAbi = contractStore.finalizeAgent.abiConstructor.concat(ABIEncoded)
-          contractStore.setContractProperty('finalizeAgent', 'abiConstructor', newAbi)
-        })
-        .then(() => deployContract(abi, bin, paramsFinalizeAgent))
-        .then(finalizeAgentAddr => {
-          console.log('***Deploy finalize agent contract***', finalizeAgentAddr)
-
-          const newAddr = contractStore.finalizeAgent.addr.concat(finalizeAgentAddr)
-          contractStore.setContractProperty('finalizeAgent', 'addr', newAddr)
-        })
-        .then(() => deploymentStore.setAsSuccessful('finalizeAgent'))
-    }
-  })
-}
-
-export const setTier = () => {
-  return tierStore.tiers.map((tier, index) => {
-    return () => {
-      console.log('###setTier for Pricing Strategy:###')
-
-      const pricingStrategyAddr = contractStore.pricingStrategy.addr[index]
-      const pricingStrategyABI = contractStore.pricingStrategy.abi.slice()
-      const tierAddr = contractStore.crowdsale.addr[index]
-
-      return attachToContract(pricingStrategyABI, pricingStrategyAddr)
-        .then(pricingStrategyContract => {
-          console.log('attach to pricingStrategy contract')
-
-          const opts = { gasPrice: generalStore.gasPrice }
-          const method = pricingStrategyContract.methods.setTier(tierAddr)
-
-          return method.estimateGas(opts)
-            .then(estimatedGas => {
-              opts.gasLimit = calculateGasLimit(estimatedGas)
-              return sendTXToContract(method.send(opts))
-            })
-        })
-        .then(() => deploymentStore.setAsSuccessful('tier'))
-    }
-  })
-
-}
-
-export const setMintAgentForCrowdsale = () => {
-  return tierStore.tiers.map((tier, index) => {
-    return () => {
-      const abi = contractStore.token.abi.slice()
-      const addr = contractStore.token.addr
-      const acc = contractStore.crowdsale.addr[index]
-
-      console.log('###setMintAgent:###')
-
-      return attachToContract(abi, addr)
-        .then(tokenContract => {
-          console.log('attach to token contract')
-
-          if (!tokenContract) {
-            noContractAlert()
-            return Promise.reject('No contract available')
-          }
-
-          const opts = { gasPrice: generalStore.gasPrice }
-          const method = tokenContract.methods.setMintAgent(acc, true)
-
-          return method.estimateGas(opts)
-            .then(estimatedGas => {
-              opts.gasLimit = calculateGasLimit(estimatedGas)
-              return sendTXToContract(method.send(opts))
-            })
-        })
-        .then(() => deploymentStore.setAsSuccessful('setMintAgentCrowdsale'))
-    }
-  })
-}
-
-export const setMintAgentForFinalizeAgent = () => {
-  return tierStore.tiers.map((tier, index) => {
-    return () => {
-      const abi = contractStore.token.abi.slice()
-      const addr = contractStore.token.addr
-      const acc = contractStore.finalizeAgent.addr[index]
-
-      console.log('###setMintAgent:###')
-
-      return attachToContract(abi, addr)
-        .then(tokenContract => {
-          console.log('attach to token contract')
-
-          if (!tokenContract) {
-            noContractAlert()
-            return Promise.reject('No contract available')
-          }
-
-          const opts = { gasPrice: generalStore.gasPrice }
-          const method = tokenContract.methods.setMintAgent(acc, true)
-
-          return method.estimateGas(opts)
-            .then(estimatedGas => {
-              opts.gasLimit = calculateGasLimit(estimatedGas)
-              return sendTXToContract(method.send(opts))
-            })
-        })
-        .then(() => deploymentStore.setAsSuccessful('setMintAgentFinalizeAgent'))
-    }
-  })
 }
 
 export const addWhitelist = () => {
@@ -466,103 +306,6 @@ export const addWhitelist = () => {
   })
 }
 
-export const updateJoinedCrowdsales = () => {
-  return tierStore.tiers.map((tier, index) => {
-    return () => {
-      const joinedContractAddresses = contractStore.crowdsale.addr
-      const abi = contractStore.crowdsale.abi.slice()
-
-      console.log('###updateJoinedCrowdsales:###')
-
-      return attachToContract(abi, joinedContractAddresses[index])
-        .then(crowdsaleContract => {
-          console.log('attach to crowdsale contract')
-
-          if (!crowdsaleContract) {
-            noContractAlert()
-            return Promise.reject('no contract available')
-          }
-
-          console.log('input:', joinedContractAddresses)
-
-          const opts = { gasPrice: generalStore.gasPrice }
-          const method = crowdsaleContract.methods.updateJoinedCrowdsalesMultiple(joinedContractAddresses)
-
-          return method.estimateGas(opts)
-            .then(estimatedGas => {
-              opts.gasLimit = calculateGasLimit(estimatedGas)
-              return sendTXToContract(method.send(opts))
-            })
-        })
-        .then(() => deploymentStore.setAsSuccessful('updateJoinedCrowdsales'))
-    }
-  })
-}
-
-export const setFinalizeAgent = () => {
-  return tierStore.tiers.map((tier, index) => {
-    return () => {
-      const abi = contractStore.crowdsale.abi.slice()
-      const finalizeAgentAddr = contractStore.finalizeAgent.addr[index]
-      const crowdsaleAddr = contractStore.crowdsale.addr[index]
-
-      console.log('###setFinalizeAgent:###')
-
-      return attachToContract(abi, crowdsaleAddr)
-        .then(crowdsaleContract => {
-          console.log('attach to crowdsale contract')
-
-          if (!crowdsaleContract) {
-            noContractAlert()
-            return Promise.reject('No contract available')
-          }
-
-          const opts = { gasPrice: generalStore.gasPrice }
-          const method = crowdsaleContract.methods.setFinalizeAgent(finalizeAgentAddr)
-
-          return method.estimateGas(opts)
-            .then(estimatedGas => {
-              opts.gasLimit = calculateGasLimit(estimatedGas)
-              return sendTXToContract(method.send(opts))
-            })
-        })
-        .then(() => deploymentStore.setAsSuccessful('setFinalizeAgent'))
-    }
-  })
-}
-
-export const setReleaseAgent = () => {
-  return tierStore.tiers.map((tier, index) => {
-    return () => {
-      const abi = contractStore.token.abi.slice()
-      const addr = contractStore.token.addr
-      const finalizeAgentAddr = contractStore.finalizeAgent.addr[index]
-
-      console.log('###setReleaseAgent:###')
-
-      return attachToContract(abi, addr)
-        .then(tokenContract => {
-          console.log('attach to token contract')
-
-          if (!tokenContract) {
-            noContractAlert()
-            return Promise.reject('No contract available')
-          }
-
-          const opts = { gasPrice: generalStore.gasPrice }
-          const method = tokenContract.methods.setReleaseAgent(finalizeAgentAddr)
-
-          return method.estimateGas(opts)
-            .then(estimatedGas => {
-              opts.gasLimit = calculateGasLimit(estimatedGas)
-              return sendTXToContract(method.send(opts))
-            })
-        })
-        .then(() => deploymentStore.setAsSuccessful('setReleaseAgent'))
-    }
-  })
-}
-
 export const setReservedTokensListMultiple = () => {
   return [() => {
     const abi = contractStore.token.abi.slice()
@@ -630,36 +373,6 @@ export const setReservedTokensListMultiple = () => {
           })
       })
       .then(() => deploymentStore.setAsSuccessful('setReservedTokens'))
-  }]
-}
-
-export const transferOwnership = () => {
-  return [() => {
-    const abi = contractStore.token.abi.slice()
-    const addr = contractStore.token.addr
-    const finalizeAgentAddr = tierStore.tiers[0].walletAddress
-
-    console.log('###transferOwnership:###')
-
-    return attachToContract(abi, addr)
-      .then(tokenContract => {
-        console.log('attach to token contract')
-
-        if (!tokenContract) {
-          noContractAlert()
-          return Promise.reject('No contract available')
-        }
-
-        const opts = { gasPrice: generalStore.gasPrice }
-        const method = tokenContract.methods.transferOwnership(finalizeAgentAddr)
-
-        return method.estimateGas(opts)
-          .then(estimatedGas => {
-            opts.gasLimit = calculateGasLimit(estimatedGas)
-            return sendTXToContract(method.send(opts))
-          })
-      })
-      .then(() => deploymentStore.setAsSuccessful('transferOwnership'))
   }]
 }
 

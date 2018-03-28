@@ -43,11 +43,6 @@ export class stepThree extends React.Component {
 
     const { contractStore, gasPriceStore } = props;
 
-    if (contractStore.crowdsale.addr.length > 0) {
-      contractStore.setContractProperty("pricingStrategy", "addr", []);
-      setExistingContractParams(contractStore.abi, contractStore.addr[0], contractStore.setContractProperty);
-    }
-
     this.state = {
       loading: true,
       gasPriceSelected: gasPriceStore.slow.id,

@@ -202,29 +202,9 @@ export const FILE_CONTENTS = {
   ],
   files: {
     order: [
-      'safeMathLib',
       'token',
-      'pricingStrategy',
-      'crowdsale',
-      'nullFinalizeAgent',
-      'finalizeAgent'
+      'crowdsale'
     ],
-    safeMathLib: {
-      name: 'SafeMathLibExt',
-      txt: [
-        { value: 'SafeMathLib library name: ', parent: 'none', fileValue: 'SafeMathLibExt' },
-        { field: 'addr', value: 'SafeMathLib library address: ', parent: 'contracts', child: 'safeMathLib' },
-        { value: '*****************************', parent: 'none', fileValue: '' },
-        { field: 'abi', value: '****SafeMathLib contract ABI:**** \n\n', parent: 'contracts', child: 'safeMathLib' }
-      ],
-      sol: {
-        field: 'src',
-        value: '****SafeMathLib contract source:**** \n\n',
-        parent: 'contracts',
-        child: 'safeMathLib'
-      }
-
-    },
     token: {
       name: 'CrowdsaleTokenExt',
       txt: [
@@ -242,33 +222,6 @@ export const FILE_CONTENTS = {
       sol: { field: 'src', value: '****Token contract source:**** \n\n', parent: 'contracts', child: 'token' }
 
     },
-    pricingStrategy: {
-      name: 'FlatPricingExt',
-      txt: [
-        { value: 'Pricing strategy contract name: ', parent: 'none', fileValue: 'FlatPricingExt' },
-        { field: 'addr', value: 'Pricing strategy contract address', parent: 'contracts', child: 'pricingStrategy' },
-        { value: '*****************************', parent: 'none', fileValue: '' },
-        {
-          field: 'abi',
-          value: '****Pricing strategy contract ABI:**** \n\n',
-          parent: 'contracts',
-          child: 'pricingStrategy'
-        },
-        {
-          field: 'abiConstructor',
-          value: '****Pricing strategy contract ABI encoded constructor arguments',
-          parent: 'contracts',
-          child: 'pricingStrategy'
-        }
-      ],
-      sol: {
-        field: 'src',
-        value: '****Pricing strategy contract source:**** \n\n',
-        parent: 'contracts',
-        child: 'pricingStrategy'
-      }
-
-    },
     crowdsale: {
       name: 'MintedTokenCappedCrowdsaleExt',
       txt: [
@@ -284,65 +237,6 @@ export const FILE_CONTENTS = {
         }
       ],
       sol: { field: 'src', value: '****Crowdsale contract source:**** \n\n', parent: 'contracts', child: 'crowdsale' }
-
-    },
-    nullFinalizeAgent: {
-      name: 'NullFinalizeAgentExt',
-      txt: [
-        { value: 'Null finalize agent contract name: ', parent: 'none', fileValue: 'NullFinalizeAgentExt' },
-        {
-          field: 'addr',
-          value: 'Null finalize agent contract address',
-          parent: 'contracts',
-          child: 'finalizeAgent'
-        },
-        { value: '*****************************', parent: 'none', fileValue: '' },
-        {
-          field: 'abi',
-          value: '****Null Finalize agent contract ABI:**** \n\n',
-          parent: 'contracts',
-          child: 'nullFinalizeAgent'
-        },
-        {
-          field: 'abiConstructor',
-          value: '****Null Finalize agent contract ABI encoded constructor arguments',
-          parent: 'contracts',
-          child: 'finalizeAgent'
-        }
-      ],
-      sol: {
-        field: 'src',
-        value: '****Null Finalize agent contract source:**** \n\n',
-        parent: 'contracts',
-        child: 'nullFinalizeAgent'
-      }
-
-    },
-    finalizeAgent: {
-      name: 'ReservedTokensFinalizeAgent',
-      txt: [
-        { value: 'Finalize agent contract name: ', parent: 'none', fileValue: 'ReservedTokensFinalizeAgent' },
-        { field: 'addr', value: 'Finalize agent contract address', parent: 'contracts', child: 'finalizeAgent' },
-        { value: '*****************************', parent: 'none', fileValue: '' },
-        {
-          field: 'abi',
-          value: '****Finalize agent contract ABI:**** \n\n',
-          parent: 'contracts',
-          child: 'finalizeAgent'
-        },
-        {
-          field: 'abiConstructor',
-          value: '****Finalize agent contract ABI encoded constructor arguments',
-          parent: 'contracts',
-          child: 'finalizeAgent'
-        }
-      ],
-      sol: {
-        field: 'src',
-        value: '****Finalize agent contract source:**** \n\n',
-        parent: 'contracts',
-        child: 'finalizeAgent'
-      }
 
     }
   }
@@ -379,7 +273,6 @@ export const TOAST = {
 }
 
 export const TX_STEP_DESCRIPTION = {
-  safeMathLibrary: "Deploy SafeMathLibrary Contract",
   token: "Deploy Token Contract",
   pricingStrategy: "Deploy Pricing Strategy Contract",
   crowdsale: "Deploy Crowdsale Contract",

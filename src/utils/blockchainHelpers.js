@@ -107,17 +107,17 @@ export function setExistingContractParams (abi, addr, setContractProperty) {
     })
 }
 
-export const deployContract = (abi, bin, params) => {
+export const deployInstance = (abi, bin, params) => {
   const deployOpts = {
     data: '0x' + bin,
     arguments: params
   }
 
   return web3Store.web3.eth.getAccounts()
-    .then(accounts => deployContractInner(accounts, abi, deployOpts))
+    .then(accounts => deployInstanceInner(accounts, abi, deployOpts))
 }
 
-const deployContractInner = (accounts, abi, deployOpts) => {
+const deployInstanceInner = (accounts, abi, deployOpts) => {
   console.log('abi', abi)
 
   const { web3 } = web3Store

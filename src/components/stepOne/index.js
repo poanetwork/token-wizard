@@ -15,21 +15,11 @@ const DOWNLOAD_STATUS = {
 }
 
 const ContinueButton = ({downloadStatus}) => {
-  const success = downloadStatus === DOWNLOAD_STATUS.SUCCESS
-
-  if (success) {
-    return (
-      <Link to="/2">
-        <span className="button button_fill">Continue</span>
-      </Link>
-    );
-  } else {
-    return (
-      <Link to="/2" onClick={e => e.preventDefault()}>
-        <span className="button button_disabled button_fill">Continue</span>
-      </Link>
-    );
-  }
+  return (
+    <Link to="/2">
+      <span className="button button_fill">Continue</span>
+    </Link>
+  );
 };
 
 @inject('contractStore', 'web3Store') @observer
@@ -45,33 +35,29 @@ export class stepOne extends React.Component {
 
   getWhiteListWithCapCrowdsaleAssets () {
     return Promise.all([
-      this.getCrowdsaleAsset("SafeMathLibExt", "safeMathLib"),
-      this.getCrowdsaleAsset("CrowdsaleWhiteListWithCap", "crowdsale"),
-      this.getCrowdsaleAsset("CrowdsaleWhiteListWithCapToken", "token"),
-      this.getCrowdsaleAsset("CrowdsaleWhiteListWithCapPricingStrategy", "pricingStrategy"),
-      this.getCrowdsaleAsset("CrowdsaleWhiteListWithCapPricingStrategy", "pricingStrategy"),
-      this.getCrowdsaleAsset("FinalizeAgent", "finalizeAgent"),
-      this.getCrowdsaleAsset("NullFinalizeAgent", "nullFinalizeAgent"),
-      this.getCrowdsaleAsset("Registry", "registry")
+      this.getCrowdsaleAsset("REACT_APP_REGISTRY_STORAGE", "registryStorage"),
+      this.getCrowdsaleAsset("REACT_APP_INIT_REGISTRY", "initRegistry"),
+      this.getCrowdsaleAsset("REACT_APP_SCRIPT_EXEC", "scriptExec"),
     ])
   }
 
   getCrowdsaleAsset(contractName, stateProp) {
-    const src = setFlatFileContentToState(`./contracts/${contractName}_flat.sol`)
-    const bin = setFlatFileContentToState(`./contracts/${contractName}_flat.bin`)
-    const abi = setFlatFileContentToState(`./contracts/${contractName}_flat.abi`)
+    const src = "" //to do
+    const bin = process.env[`${contractName}_BIN`] || ''
+    const abi = JSON.parse(process.env[`${contractName}_ABI`] || [])
+    const addr = JSON.parse(process.env[`${contractName}_ADDRESS`] || {})
 
-    return Promise.all([src, bin, abi])
+    return Promise.all([src, bin, abi, addr])
       .then(result => this.addContractsToState(...result, stateProp))
   }
 
-  addContractsToState(src, bin, abi, contract) {
+  addContractsToState(src, bin, abi, addr, contract) {
     this.props.contractStore.setContract(contract, {
       src,
       bin,
-      abi: JSON.parse(abi),
-      addr: (contract==="crowdsale" || contract==="pricingStrategy" || contract==="finalizeAgent") ? [] : "",
-      abiConstructor: (contract==="crowdsale" || contract==="pricingStrategy" || contract==="finalizeAgent") ? [] : ""
+      abi: abi,
+      addr: addr,
+      abiConstructor: []
     });
   }
 

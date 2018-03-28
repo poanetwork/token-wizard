@@ -22,21 +22,11 @@ class DeploymentStore {
 
   @action initialize = (hasReservedToken, hasWhitelist, tiersCount) => {
     const listOfTx = [
-      { name: 'safeMathLibrary', dependsOnTiers: false, required: true },
       { name: 'token', dependsOnTiers: false, required: true },
-      { name: 'pricingStrategy', dependsOnTiers: true, required: true },
       { name: 'crowdsale', dependsOnTiers: true, required: true },
       { name: 'registerCrowdsaleAddress', dependsOnTiers: false, required: true },
-      { name: 'finalizeAgent', dependsOnTiers: true, required: true },
-      { name: 'tier', dependsOnTiers: true, required: true },
       { name: 'setReservedTokens', dependsOnTiers: false, required: hasReservedToken },
-      { name: 'updateJoinedCrowdsales', dependsOnTiers: true, required: true },
-      { name: 'setMintAgentCrowdsale', dependsOnTiers: true, required: true },
-      { name: 'setMintAgentFinalizeAgent', dependsOnTiers: true, required: true },
       { name: 'whitelist', dependsOnTiers: true, required: hasWhitelist },
-      { name: 'setFinalizeAgent', dependsOnTiers: true, required: true },
-      { name: 'setReleaseAgent', dependsOnTiers: true, required: true },
-      { name: 'transferOwnership', dependsOnTiers: false, required: true }
     ]
     const byTierInitialValues = new Array(tiersCount).fill(false)
 
