@@ -94,7 +94,9 @@ export class stepThree extends React.Component {
     // const { gasPriceStore, tierStore } = this.props
     if (this.props.tierStore.tiers.length === 0) {
       this.addCrowdsale()
+
       this.initialTiers = JSON.parse(JSON.stringify(this.props.tierStore.tiers))
+
       this.initialTiers[0].startTime = defaultCompanyStartDate()
       this.initialTiers[0].endTime = defaultCompanyEndDate()
     }
@@ -492,8 +494,8 @@ export class stepThree extends React.Component {
                                         <input
                                           type='radio'
                                           checked={input.value === 'on'}
-                                          value='on'
                                           onChange={() => input.onChange('on')}
+                                          value='on'
                                         />
                                         <span className='title'>on</span>
                                       </label>
@@ -559,6 +561,16 @@ export class stepThree extends React.Component {
                               />
                             </div>
                           </div>
+                          {
+                            tierStore.tiers[index].whitelistEnabled === 'yes' ? (
+                              <div>
+                                <div className="section-title">
+                                  <p className="title">Whitelist</p>
+                                </div>
+                                <WhitelistInputBlock num={index}/>
+                              </div>
+                            ) : null
+                          }
                         </div>
                       ))}
                       <div className="button-container">
