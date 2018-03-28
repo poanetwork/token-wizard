@@ -1,3 +1,4 @@
+import Web3 from 'web3'
 import { VALIDATION_MESSAGES } from './constants'
 
 export const validators = (type, value) => {
@@ -23,4 +24,22 @@ export const validateDecimals = (value) => {
   return isValid ? undefined : VALIDATION_MESSAGES.DECIMALS
 }
 
+export const isPositive = (errorMsg = 'Please enter a valid number greater than 0') => (value) => {
+  const isValid = value > 0
+  return isValid ? undefined : errorMsg
+}
 
+export const isNonNegative = (errorMsg = 'Please enter a valid number greater or equal than 0') => (value) => {
+  const isValid = value >= 0
+  return isValid ? undefined : errorMsg
+}
+
+export const isAddress = (errorMsg = 'Please enter a valid address') => (value) => {
+  const isValid = Web3.utils.isAddress(value)
+  return isValid ? undefined : errorMsg
+}
+
+export const isRequired = (errorMsg = 'This field is required') => (value) => {
+  const isValid = !!value
+  return isValid ? undefined : errorMsg
+}
