@@ -11,6 +11,7 @@ import { RadioInputField } from "../Common/RadioInputField";
 import { InputField2 } from "../Common/InputField2";
 import { CrowdsaleBlock } from "./CrowdsaleBlock";
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
+import GasPriceInput from './GasPriceInput'
 import { defaultCompanyStartDate, defaultCompanyEndDate } from './utils'
 import {
   NAVIGATION_STEPS,
@@ -152,7 +153,7 @@ export class stepThree extends React.Component {
 
   beforeNavigate = () => {
     const { tierStore, gasPriceStore } = this.props
-    const gasPriceIsValid = gasPriceStore.custom.id !== this.state.gasPriceSelected || this.state.validation.gasPrice.valid === VALID
+    // const gasPriceIsValid = gasPriceStore.custom.id !== this.state.gasPriceSelected || this.state.validation.gasPrice.valid === VALID
     const isMinCapLessThanMaxSupply = tierStore.globalMinCap <= tierStore.maxSupply
     const isMinCapValid = this.state.validation.minCap.valid === VALID
 
@@ -171,7 +172,7 @@ export class stepThree extends React.Component {
       }))
     }
 
-    if (tierStore.areTiersValid && gasPriceIsValid && isMinCapValid && isMinCapLessThanMaxSupply) {
+    if (tierStore.areTiersValid /* && gasPriceIsValid */ && isMinCapValid && isMinCapLessThanMaxSupply) {
       const { reservedTokenStore, deploymentStore } = this.props
       const tiersCount = tierStore.tiers.length
       const reservedCount = reservedTokenStore.tokens.length
@@ -354,243 +355,252 @@ export class stepThree extends React.Component {
     height: '10px',
   }
 
+  gasPrices = [{
+    id: 'SLOW',
+    price: 1,
+    description: 'Slow'
+  }, {
+    id: 'FAST',
+    price: 2,
+    description: 'Fast'
+  }, {
+    id: 'CUSTOM',
+    description: 'Custom'
+  }]
+
   render() {
     const { generalStore, tierStore } = this.props
 
     return (
       <section className="steps steps_crowdsale-contract" ref="three">
         <StepNavigation activeStep={CROWDSALE_SETUP}/>
-          <Form
-            onSubmit={this.beforeNavigate}
-            mutators={{ ...arrayMutators }}
-            initialValues={{
-              walletAddress: '',
-              gasPrice: 1,
-              minCap: 0,
-              whitelistEnabled: "no",
-              tiers: this.initialTiers
-            }}
-            render={({ handleSubmit, values, invalid, errors, pristine }) => {
-              const submitButtonClass = classnames('button', 'button_fill', {
-                button_disabled: pristine || invalid
-              })
+        <Form
+          onSubmit={this.beforeNavigate}
+          mutators={{ ...arrayMutators }}
+          initialValues={{
+            walletAddress: '',
+            minCap: 0,
+            gasPrice: this.gasPrices[0],
+            whitelistEnabled: "no",
+            tiers: this.initialTiers
+          }}
+          render={({ handleSubmit, values, invalid, errors, pristine }) => {
+            const submitButtonClass = classnames('button', 'button_fill', {
+              button_disabled: pristine || invalid
+            })
 
-              return (
-                <form onSubmit={handleSubmit}>
-                  <div>
-                    <div className="steps-content container">
-                      <div className="about-step">
-                        <div className="step-icons step-icons_crowdsale-setup"/>
-                        <p className="title">Crowdsale setup</p>
-                        <p className="description">The most important and exciting part of the crowdsale process. Here you can
-                          define parameters of your crowdsale campaign.</p>
-                      </div>
-                      <div className="section-title">
-                        <p className="title">Global settings</p>
-                      </div>
-                      <div className="input-block-container">
-                        <Field
-                          name="walletAddress"
-                          component={InputField2}
-                          validate={isAddress()}
-                          errorStyle={this.inputErrorStyle}
-                          side="left"
-                          label={WALLET_ADDRESS}
-                          description="Where the money goes after investors transactions. Immediately after each transaction. We
-                          recommend to setup a multisig wallet with hardware based signers."
-                        />
+            return (
+              <form onSubmit={handleSubmit}>
+                <div>
+                  <div className="steps-content container">
+                    <div className="about-step">
+                      <div className="step-icons step-icons_crowdsale-setup"/>
+                      <p className="title">Crowdsale setup</p>
+                      <p className="description">The most important and exciting part of the crowdsale process. Here you can
+                        define parameters of your crowdsale campaign.</p>
+                    </div>
+                    <div className="section-title">
+                      <p className="title">Global settings</p>
+                    </div>
+                    <div className="input-block-container">
+                      <Field
+                        name="walletAddress"
+                        component={InputField2}
+                        validate={isAddress()}
+                        errorStyle={this.inputErrorStyle}
+                        side="left"
+                        label={WALLET_ADDRESS}
+                        description="Where the money goes after investors transactions. Immediately after each transaction. We
+                        recommend to setup a multisig wallet with hardware based signers."
+                      />
 
-                        <Field
-                          name="gasPrice"
-                          component={InputField2}
-                          validate={isPositive()}
-                          errorStyle={this.inputErrorStyle}
-                          type="number"
-                          side="right"
-                          label="Gas price"
-                          description="Slow is cheap, fast is expensive"
-                        />
-                      </div>
-                      <div className="input-block-container">
-                        <Field
-                          name="minCap"
-                          component={InputField2}
-                          validate={isNonNegative()}
-                          errorStyle={this.inputErrorStyle}
-                          type="number"
-                          side="left"
-                          label={MINCAP}
-                          description="Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1 and a user already has 1 token from a previous transaction, they can buy any amount they want."
-                        />
-                        <Field
-                          name="whitelistEnabled"
-                          render={({ input }) => (
-                            <div className='right'>
-                              <label className="label">Enable whitelisting</label>
-                              <div className='radios-inline'>
-                                <label className='radio-inline'>
-                                  <input
-                                    type='radio'
-                                    checked={input.value === 'yes'}
-                                    value='yes'
-                                    onChange={() => input.onChange('yes')}
-                                  />
-                                  <span className='title'>yes</span>
-                                </label>
-                                <label className='radio-inline'>
-                                  <input
-                                    type='radio'
-                                    checked={input.value === 'no'}
-                                    value='no'
-                                    onChange={() => input.onChange('no')}
-                                  />
-                                  <span className='title'>no</span>
-                                </label>
-                              </div>
-                              <p className='description'>Enables whitelisting. If disabled, anyone can participate in the crowdsale.</p>
+                      <Field
+                        name="gasPrice"
+                        component={GasPriceInput}
+                        side="right"
+                        gasPrices={this.gasPrices}
+                      />
+                    </div>
+                    <div className="input-block-container">
+                      <Field
+                        name="minCap"
+                        component={InputField2}
+                        validate={isNonNegative()}
+                        errorStyle={this.inputErrorStyle}
+                        type="number"
+                        side="left"
+                        label={MINCAP}
+                        description="Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1 and a user already has 1 token from a previous transaction, they can buy any amount they want."
+                      />
+                      <Field
+                        name="whitelistEnabled"
+                        render={({ input }) => (
+                          <div className='right'>
+                            <label className="label">Enable whitelisting</label>
+                            <div className='radios-inline'>
+                              <label className='radio-inline'>
+                                <input
+                                  type='radio'
+                                  checked={input.value === 'yes'}
+                                  value='yes'
+                                  onChange={() => input.onChange('yes')}
+                                />
+                                <span className='title'>yes</span>
+                              </label>
+                              <label className='radio-inline'>
+                                <input
+                                  type='radio'
+                                  checked={input.value === 'no'}
+                                  value='no'
+                                  onChange={() => input.onChange('no')}
+                                />
+                                <span className='title'>no</span>
+                              </label>
                             </div>
-                          )}
-                        />
-                      </div>
+                            <p className='description'>Enables whitelisting. If disabled, anyone can participate in the crowdsale.</p>
+                          </div>
+                        )}
+                      />
                     </div>
                   </div>
+                </div>
 
-                  <FieldArray name="tiers">
-                    {({ fields }) => (
-                      <div>
-                        {fields.map((name, index) => (
-                          <div style={{ marginTop: '40px' }} className='steps-content container' key={index}>
-                            <div className="hidden">
-                              <div className="input-block-container">
-                                <Field
-                                  name={`${name}.tier`}
-                                  validate={isRequired('Please enter a valid tier name between 1-30 characters')}
-                                  errorStyle={this.inputErrorStyle}
-                                  component={InputField2}
-                                  type="text"
-                                  side="left"
-                                  label={CROWDSALE_SETUP_NAME}
-                                  description={DESCRIPTION.CROWDSALE_SETUP_NAME}
-                                />
-                                <Field
-                                  name={`${name}.updatable`}
-                                  render={({ input }) => (
-                                    <div className='right'>
-                                      <label className="label">{ALLOWMODIFYING}</label>
-                                      <div className='radios-inline'>
-                                        <label className='radio-inline'>
-                                          <input
-                                            type='radio'
-                                            checked={input.value === 'on'}
-                                            value='on'
-                                            onChange={() => input.onChange('on')}
-                                          />
-                                          <span className='title'>on</span>
-                                        </label>
-                                        <label className='radio-inline'>
-                                          <input
-                                            type='radio'
-                                            checked={input.value === 'off'}
-                                            value='off'
-                                            onChange={() => input.onChange('off')}
-                                          />
-                                          <span className='title'>off</span>
-                                        </label>
-                                      </div>
-                                      <p className='description'>{DESCRIPTION.ALLOW_MODIFYING}</p>
+                <FieldArray name="tiers">
+                  {({ fields }) => (
+                    <div>
+                      {fields.map((name, index) => (
+                        <div style={{ marginTop: '40px' }} className='steps-content container' key={index}>
+                          <div className="hidden">
+                            <div className="input-block-container">
+                              <Field
+                                name={`${name}.tier`}
+                                validate={isRequired('Please enter a valid tier name between 1-30 characters')}
+                                errorStyle={this.inputErrorStyle}
+                                component={InputField2}
+                                type="text"
+                                side="left"
+                                label={CROWDSALE_SETUP_NAME}
+                                description={DESCRIPTION.CROWDSALE_SETUP_NAME}
+                              />
+                              <Field
+                                name={`${name}.updatable`}
+                                render={({ input }) => (
+                                  <div className='right'>
+                                    <label className="label">{ALLOWMODIFYING}</label>
+                                    <div className='radios-inline'>
+                                      <label className='radio-inline'>
+                                        <input
+                                          type='radio'
+                                          checked={input.value === 'on'}
+                                          value='on'
+                                          onChange={() => input.onChange('on')}
+                                        />
+                                        <span className='title'>on</span>
+                                      </label>
+                                      <label className='radio-inline'>
+                                        <input
+                                          type='radio'
+                                          checked={input.value === 'off'}
+                                          value='off'
+                                          onChange={() => input.onChange('off')}
+                                        />
+                                        <span className='title'>off</span>
+                                      </label>
                                     </div>
-                                  )}
-                                />
-                              </div>
+                                    <p className='description'>{DESCRIPTION.ALLOW_MODIFYING}</p>
+                                  </div>
+                                )}
+                              />
+                            </div>
 
-                              <div className="input-block-container">
-                                <Field
-                                  name={`${name}.startTime`}
-                                  component={InputField2}
-                                  validate={isRequired()}
-                                  errorStyle={this.inputErrorStyle}
-                                  type="datetime-local"
-                                  side="left"
-                                  label={START_TIME}
-                                  description={DESCRIPTION.START_TIME}
-                                />
-                                <Field
-                                  name={`${name}.endTime`}
-                                  component={InputField2}
-                                  validate={isRequired()}
-                                  errorStyle={this.inputErrorStyle}
-                                  type="datetime-local"
-                                  side="right"
-                                  label={END_TIME}
-                                  description={DESCRIPTION.END_TIME}
-                                />
-                              </div>
+                            <div className="input-block-container">
+                              <Field
+                                name={`${name}.startTime`}
+                                component={InputField2}
+                                validate={isRequired()}
+                                errorStyle={this.inputErrorStyle}
+                                type="datetime-local"
+                                side="left"
+                                label={START_TIME}
+                                description={DESCRIPTION.START_TIME}
+                              />
+                              <Field
+                                name={`${name}.endTime`}
+                                component={InputField2}
+                                validate={isRequired()}
+                                errorStyle={this.inputErrorStyle}
+                                type="datetime-local"
+                                side="right"
+                                label={END_TIME}
+                                description={DESCRIPTION.END_TIME}
+                              />
+                            </div>
 
-                              <div className="input-block-container">
-                                <Field
-                                  name={`${name}.rate`}
-                                  component={InputField2}
-                                  validate={isPositive()}
-                                  errorStyle={this.inputErrorStyle}
-                                  type="text"
-                                  side="left"
-                                  label={RATE}
-                                  description={DESCRIPTION.RATE}
-                                />
-                                <Field
-                                  name={`${name}.supply`}
-                                  component={InputField2}
-                                  validate={isPositive()}
-                                  errorStyle={this.inputErrorStyle}
-                                  type="text"
-                                  side="right"
-                                  label={SUPPLY}
-                                  description={DESCRIPTION.SUPPLY}
-                                />
-                              </div>
+                            <div className="input-block-container">
+                              <Field
+                                name={`${name}.rate`}
+                                component={InputField2}
+                                validate={isPositive()}
+                                errorStyle={this.inputErrorStyle}
+                                type="text"
+                                side="left"
+                                label={RATE}
+                                description={DESCRIPTION.RATE}
+                              />
+                              <Field
+                                name={`${name}.supply`}
+                                component={InputField2}
+                                validate={isPositive()}
+                                errorStyle={this.inputErrorStyle}
+                                type="text"
+                                side="right"
+                                label={SUPPLY}
+                                description={DESCRIPTION.SUPPLY}
+                              />
                             </div>
                           </div>
-                        ))}
-                        <div className="button-container">
-                          <div className="button button_fill_secondary" onClick={() => {
-                            this.addCrowdsale()
-                            const lastTier = this.props.tierStore.tiers[this.props.tierStore.tiers.length - 1]
-                            fields.push(JSON.parse(JSON.stringify(lastTier)))
-                          }}>
-                            Add Tier
-                          </div>
+                        </div>
+                      ))}
+                      <div className="button-container">
+                        <div className="button button_fill_secondary" onClick={() => {
+                          this.addCrowdsale()
+                          const lastTier = this.props.tierStore.tiers[this.props.tierStore.tiers.length - 1]
+                          fields.push(JSON.parse(JSON.stringify(lastTier)))
+                        }}>
+                          Add Tier
                         </div>
                       </div>
-                    )}
-                  </FieldArray>
+                    </div>
+                  )}
+                </FieldArray>
 
-                  <div className="button-container">
-                    <span type="submit" className={submitButtonClass}>Continue</span>
-                  </div>
+                <div className="button-container">
+                  <span onClick={handleSubmit} className={submitButtonClass}>Continue</span>
+                </div>
 
-                  <FormSpy
-                    subscription={{ values: true }}
-                    onChange={({ values }) => {
-                      tierStore.updateWalletAddress(values.walletAddress, VALID)
-                      generalStore.setGasPrice(gweiToWei(values.gasPrice || 0))
-                      tierStore.setGlobalMinCap(values.minCap || 0)
-                      tierStore.setTierProperty(values.whitelistEnabled, "whitelistEnabled", 0)
+                <FormSpy
+                  subscription={{ values: true }}
+                  onChange={({ values }) => {
+                    tierStore.updateWalletAddress(values.walletAddress, VALID)
+                    generalStore.setGasPrice(gweiToWei(values.gasPrice.price || 0))
+                    tierStore.setGlobalMinCap(values.minCap || 0)
+                    tierStore.setTierProperty(values.whitelistEnabled, "whitelistEnabled", 0)
 
-                      values.tiers.forEach((tier, index) => {
-                        tierStore.setTierProperty(tier.tier, 'tier', index)
-                        tierStore.setTierProperty(tier.updatable, 'updatable', index)
-                        tierStore.setTierProperty(tier.startTime, 'startTime', index)
-                        tierStore.setTierProperty(tier.endTime, 'endTime', index)
-                        tierStore.updateRate(tier.rate, VALID, index)
-                        tierStore.setTierProperty(tier.supply, 'supply', index)
-                        tierStore.validateTiers('supply', index)
-                      })
-                    }}
-                  />
-                </form>
-              )
-            }}
-          />
+                    values.tiers.forEach((tier, index) => {
+                      tierStore.setTierProperty(tier.tier, 'tier', index)
+                      tierStore.setTierProperty(tier.updatable, 'updatable', index)
+                      tierStore.setTierProperty(tier.startTime, 'startTime', index)
+                      tierStore.setTierProperty(tier.endTime, 'endTime', index)
+                      tierStore.updateRate(tier.rate, VALID, index)
+                      tierStore.setTierProperty(tier.supply, 'supply', index)
+                      tierStore.validateTiers('supply', index)
+                    })
+                  }}
+                />
+              </form>
+            )
+          }}
+        />
       </section>
     )
   }
