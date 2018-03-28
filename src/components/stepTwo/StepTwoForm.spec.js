@@ -17,6 +17,7 @@ describe('StepTwoForm', () => {
         disableDecimals={false}
         updateTokenStore={jest.fn()}
         id="tokenData"
+        tokens={[]}
       />
     )
 
@@ -38,6 +39,7 @@ describe('StepTwoForm', () => {
         disableDecimals={false}
         updateTokenStore={jest.fn()}
         id="tokenData"
+        tokens={[]}
       />
     )
 
@@ -60,6 +62,7 @@ describe('StepTwoForm', () => {
         disableDecimals={false}
         updateTokenStore={jest.fn()}
         id="tokenData"
+        tokens={[]}
       />
     )
 
@@ -78,6 +81,7 @@ describe('StepTwoForm', () => {
         disableDecimals={false}
         updateTokenStore={updateTokenStore}
         id="tokenData"
+        tokens={[]}
       />
     )
 
@@ -97,6 +101,7 @@ describe('StepTwoForm', () => {
         disableDecimals={false}
         updateTokenStore={updateTokenStore}
         id="tokenData"
+        tokens={[]}
       />
     )
 
@@ -116,6 +121,7 @@ describe('StepTwoForm', () => {
         disableDecimals={false}
         updateTokenStore={updateTokenStore}
         id="tokenData"
+        tokens={[]}
       />
     )
 
