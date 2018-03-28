@@ -72,13 +72,14 @@ export const buildDeploymentSteps = (web3) => {
 }
 
 const getTokenParams = token => {
+  const { web3 } = web3Store
   const { walletAddress } = tierStore.tiers[0]
   const whitelistWithGlobalMinCap = tierStore.tiers[0].whitelistEnabled !== 'yes' && tierStore.globalMinCap
   const minCap = whitelistWithGlobalMinCap ? toFixed(tierStore.globalMinCap * 10 ** token.decimals).toString() : 0
 
   return [
-    token.name,
-    token.ticker,
+    web3.utils.fromAscii(token.name),
+    web3.utils.fromAscii(token.ticker),
     parseInt(token.decimals, 10),
     parseInt(token.supply, 10),
     //true,
@@ -96,7 +97,6 @@ export const deployToken = () => {
         return web3.eth.getAccounts()
           .then((accounts) => accounts[0])
           .then((account) => {
-            console.log("networkID:", networkID)
             const toJS = x => JSON.parse(JSON.stringify(x))
 
             const abiScriptExec = contractStore.scriptExec.abi || []
@@ -104,7 +104,7 @@ export const deployToken = () => {
             const paramsToken = getTokenParams(tokenStore)
             console.log("paramsToken:", paramsToken)
 
-            let tokenAppName = "erc20";
+            let tokenAppName = process.env['REACT_APP_TOKEN_APP_NAME'] || '';
             let tokenAppNameHex = web3.eth.abi.encodeParameter("bytes32", web3.utils.fromAscii(tokenAppName));
             console.log("token app name:", tokenAppName);
             console.log("token app name hex:", tokenAppNameHex);
@@ -113,13 +113,7 @@ export const deployToken = () => {
             let functionSignature = web3.eth.abi.encodeFunctionSignature(functionName);
             console.log("functionSignature init:", functionSignature);
 
-            let encodedParameters = web3.eth.abi.encodeParameters(["bytes32","bytes32","uint256","uint256","address"], [
-              web3.utils.fromAscii("Victor Token 2"),
-              web3.utils.fromAscii("VTC"),
-              18,
-              1000000,
-              "0x7ae09e9963C835959B06240Ba69B00FebDff681A"
-            ]);
+            let encodedParameters = web3.eth.abi.encodeParameters(["bytes32","bytes32","uint256","uint256","address"], paramsToken);
             console.log("encodedParameters:", encodedParameters);
 
             let fullData = functionSignature + encodedParameters.substr(2);
