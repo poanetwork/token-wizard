@@ -69,6 +69,7 @@ class GasPriceInput extends Component {
         {this.state.isCustom ? (
           <input
             type="number"
+            className="input"
             value={this.state.customGasPrice}
             onChange={(e) => this.handleCustomGasPriceChange(e.target.value)}
           />
