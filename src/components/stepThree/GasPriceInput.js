@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { InputField2 } from '../Common/InputField2'
+import { GAS_PRICE } from '../../utils/constants'
 
 class GasPriceInput extends Component {
   constructor(props) {
@@ -26,7 +26,7 @@ class GasPriceInput extends Component {
     })
 
     input.onChange(Object.assign({}, {
-      id: 'CUSTOM',
+      id: GAS_PRICE.CUSTOM.ID,
       gasPrice: this.state.customGasPrice
     }))
   }
@@ -39,12 +39,12 @@ class GasPriceInput extends Component {
     })
 
     input.onChange(Object.assign({}, {
-      id: 'CUSTOM',
-      gasPrice: value
+      id: GAS_PRICE.CUSTOM.ID,
+      price: value
     }))
   }
 
-  render () {
+  render() {
     const { input, side, gasPrices } = this.props
 
     return (
