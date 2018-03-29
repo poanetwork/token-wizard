@@ -107,15 +107,15 @@ export class stepThree extends React.Component {
     gasPriceStore.updateValues()
       .then(() => this.setGasPrice(gasPriceStore.slow))
       .catch(() => noGasPriceAvailable())
-    //   .then(() => {
-    //     this.setState({ loading: false })
+      .then(() => {
+        this.setState({ loading: false })
     //     this.updateWalletAddress({
     //       address: tierStore.tiers[0].walletAddress,
     //       pristine: true,
     //       valid: VALID,
     //     })
     //     window.scrollTo(0, 0)
-    //   })
+      })
   }
 
   showErrorMessages = () => {
@@ -599,6 +599,7 @@ export class stepThree extends React.Component {
             )
           }}
         />
+        <Loader show={this.state.loading}/>
       </section>
     )
   }
