@@ -3,10 +3,12 @@ import "../../assets/stylesheets/application.css";
 import { Field, Form, FormSpy } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import { FieldArray } from 'react-final-form-arrays'
+import { OnChange } from 'react-final-form-listeners'
 import { Link } from "react-router-dom";
 import { setExistingContractParams, getNetworkVersion, getNetWorkNameById } from "../../utils/blockchainHelpers";
 import { gweiToWei, weiToGwei } from "../../utils/utils";
 import { StepNavigation } from "../Common/StepNavigation";
+import { WhenFieldChanges } from '../Common/WhenFieldChanges'
 import { RadioInputField } from "../Common/RadioInputField";
 import { InputField2 } from "../Common/InputField2";
 import { CrowdsaleBlock } from "./CrowdsaleBlock";
@@ -15,7 +17,6 @@ import GasPriceInput from './GasPriceInput'
 import { defaultCompanyStartDate, defaultCompanyEndDate } from './utils'
 import {
   NAVIGATION_STEPS,
-  VALIDATION_MESSAGES,
   VALIDATION_TYPES,
   TEXT_FIELDS,
   CHAINS,
@@ -26,7 +27,15 @@ import {
 import { inject, observer } from "mobx-react";
 import { Loader } from '../Common/Loader'
 import { noGasPriceAvailable, warningOnMainnetAlert } from '../../utils/alerts'
-import { isAddress, isNonNegative, isPositive, isRequired } from '../../utils/validations'
+import {
+  isAddress,
+  isDecimalPlacesNotGreaterThan,
+  isNonNegative,
+  isLessOrEqualThan,
+  isPositive,
+  isRequired,
+  composeValidators,
+} from '../../utils/validations'
 import { NumericInput } from '../Common/NumericInput'
 import update from 'immutability-helper'
 import { AddressInput } from '../Common/AddressInput'
@@ -366,11 +375,11 @@ export class stepThree extends React.Component {
     fontWeight: 'bold',
     fontSize: '12px',
     width: '100%',
-    height: '10px',
+    height: '20px',
   }
 
   render() {
-    const { generalStore, tierStore, gasPriceStore } = this.props
+    const { generalStore, tierStore, gasPriceStore,tokenStore } = this.props
 
     return (
       <section className="steps steps_crowdsale-contract" ref="three">
@@ -392,6 +401,12 @@ export class stepThree extends React.Component {
 
             return (
               <form onSubmit={handleSubmit}>
+                <WhenFieldChanges
+                  field="whitelistEnabled"
+                  becomes={'yes'}
+                  set="minCap"
+                  to={''}
+                />
                 <div>
                   <div className="steps-content container">
                     <div className="about-step">
@@ -426,7 +441,12 @@ export class stepThree extends React.Component {
                       <Field
                         name="minCap"
                         component={InputField2}
-                        validate={isNonNegative()}
+                        validate={composeValidators(
+                          isNonNegative(),
+                          isDecimalPlacesNotGreaterThan()(tokenStore.decimals),
+                          isLessOrEqualThan('Should be less or equal than the supply of some tier')(tierStore.maxSupply)
+                        )}
+                        disabled={values.whitelistEnabled === 'yes'}
                         errorStyle={this.inputErrorStyle}
                         type="number"
                         side="left"
@@ -558,6 +578,21 @@ export class stepThree extends React.Component {
                                 label={SUPPLY}
                                 description={DESCRIPTION.SUPPLY}
                               />
+                              {/*
+                                * TODO: REVIEW. I'm not sure about this approach.
+                                * But it worked for me to keep the error messages properly updated for the minCap field.
+                                */}
+                              <Field name="minCap" subscription={{}}>
+                                {({ input: { onChange } }) => (
+                                  <OnChange name={`${name}.supply`}>
+                                    {() => {
+                                      const { minCap } = values
+                                      onChange(0)
+                                      onChange(minCap)
+                                    }}
+                                  </OnChange>
+                                )}
+                              </Field>
                             </div>
                           </div>
                           {
