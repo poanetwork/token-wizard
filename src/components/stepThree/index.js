@@ -380,7 +380,7 @@ export class stepThree extends React.Component {
           onSubmit={this.beforeNavigate}
           mutators={{ ...arrayMutators }}
           initialValues={{
-            walletAddress: '',
+            walletAddress: tierStore.tiers[0].walletAddress,
             minCap: 0,
             gasPrice: this.gasPrices[0],
             whitelistEnabled: "no",
