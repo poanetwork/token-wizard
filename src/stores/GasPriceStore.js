@@ -89,6 +89,17 @@ class GasPriceStore {
   get customDescription () {
     return GAS_PRICE.CUSTOM.DESCRIPTION
   }
+
+  @computed
+  get gasPrices () {
+    return [
+      { ...this.slow, description: this.slowDescription },
+      { ...this.standard, description: this.standardDescription },
+      { ...this.fast, description: this.fastDescription },
+      { ...this.instant, description: this.instantDescription },
+      { ...this.custom, description: this.customDescription },
+    ]
+  }
 }
 
 export default GasPriceStore

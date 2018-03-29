@@ -91,7 +91,8 @@ export class stepThree extends React.Component {
   }
 
   componentWillMount () {
-    // const { gasPriceStore, tierStore } = this.props
+    const { gasPriceStore, tierStore } = this.props
+
     if (this.props.tierStore.tiers.length === 0) {
       this.addCrowdsale()
 
@@ -103,9 +104,9 @@ export class stepThree extends React.Component {
 
     window.scrollTo(0, 0)
 
-    // gasPriceStore.updateValues()
-    //   .then(() => this.setGasPrice(gasPriceStore.slow))
-    //   .catch(() => noGasPriceAvailable())
+    gasPriceStore.updateValues()
+      .then(() => this.setGasPrice(gasPriceStore.slow))
+      .catch(() => noGasPriceAvailable())
     //   .then(() => {
     //     this.setState({ loading: false })
     //     this.updateWalletAddress({
@@ -357,21 +358,8 @@ export class stepThree extends React.Component {
     height: '10px',
   }
 
-  gasPrices = [{
-    id: 'SLOW',
-    price: 1,
-    description: 'Slow'
-  }, {
-    id: 'FAST',
-    price: 2,
-    description: 'Fast'
-  }, {
-    id: 'CUSTOM',
-    description: 'Custom'
-  }]
-
   render() {
-    const { generalStore, tierStore } = this.props
+    const { generalStore, tierStore, gasPriceStore } = this.props
 
     return (
       <section className="steps steps_crowdsale-contract" ref="three">
@@ -382,7 +370,7 @@ export class stepThree extends React.Component {
           initialValues={{
             walletAddress: tierStore.tiers[0].walletAddress,
             minCap: '',
-            gasPrice: this.gasPrices[0],
+            gasPrice: gasPriceStore.gasPrices[0],
             whitelistEnabled: "no",
             tiers: this.initialTiers
           }}
@@ -420,7 +408,7 @@ export class stepThree extends React.Component {
                         name="gasPrice"
                         component={GasPriceInput}
                         side="right"
-                        gasPrices={this.gasPrices}
+                        gasPrices={gasPriceStore.gasPrices}
                       />
                     </div>
                     <div className="input-block-container">

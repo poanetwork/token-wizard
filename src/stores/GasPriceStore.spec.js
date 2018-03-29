@@ -37,6 +37,34 @@ describe('GasPriceStore', () => {
     expect(gas.health).toBeUndefined()
   })
 
+  it('should return gasPrices collection', () => {
+    expect(gas.gasPrices[0]).toEqual({
+      id: GAS_PRICE.SLOW.ID,
+      price: GAS_PRICE.SLOW.PRICE,
+      description: gas.slowDescription,
+    })
+    expect(gas.gasPrices[1]).toEqual({
+      id: GAS_PRICE.NORMAL.ID,
+      price: GAS_PRICE.NORMAL.PRICE,
+      description: gas.standardDescription,
+    })
+    expect(gas.gasPrices[2]).toEqual({
+      id: GAS_PRICE.FAST.ID,
+      price: GAS_PRICE.FAST.PRICE,
+      description: gas.fastDescription,
+    })
+    expect(gas.gasPrices[3]).toEqual({
+      id: GAS_PRICE.INSTANT.ID,
+      price: GAS_PRICE.INSTANT.PRICE,
+      description: gas.instantDescription,
+    })
+    expect(gas.gasPrices[4]).toEqual({
+      id: GAS_PRICE.CUSTOM.ID,
+      price: GAS_PRICE.CUSTOM.PRICE,
+      description: gas.customDescription,
+    })
+  })
+
   it('should updates values with mocked data', () => {
     const gasPrice = require('../utils/__mocks__/gasPrice.json')
 
