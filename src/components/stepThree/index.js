@@ -381,7 +381,7 @@ export class stepThree extends React.Component {
           mutators={{ ...arrayMutators }}
           initialValues={{
             walletAddress: tierStore.tiers[0].walletAddress,
-            minCap: 0,
+            minCap: '',
             gasPrice: this.gasPrices[0],
             whitelistEnabled: "no",
             tiers: this.initialTiers
