@@ -1,6 +1,8 @@
 import React from 'react'
 
 export const InputField2 = ({ input, meta, side, label, type, description, disabled, errorStyle }) => {
+  const errors = [].concat(meta.error)
+
   return (
     <div className={side}>
       <label htmlFor={input.name} className="label">{label}</label>
@@ -13,7 +15,9 @@ export const InputField2 = ({ input, meta, side, label, type, description, disab
         {...input}
       />
       <p className="description">{description}</p>
-      <p style={errorStyle}>{(!meta.pristine || meta.touched) && meta.error}</p>
+      {errors.map((error, index)=> (
+        <p key={index} style={errorStyle}>{(!meta.pristine || meta.touched) && error}</p>
+      ))}
     </div>
   )
 }
