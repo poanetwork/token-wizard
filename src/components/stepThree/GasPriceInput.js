@@ -51,29 +51,20 @@ class GasPriceInput extends Component {
       <div className={side}>
         <label htmlFor={input.name} className="label">Gas Price</label>
         {gasPrices.map((gasPrice, index) => (
-          gasPrice.id !== 'CUSTOM' ? (
-            <div key={index} className="radios-inline">
-              <label className="radio-inline">
-                <input
-                  type="radio"
-                  checked={input.value.id === gasPrice.id}
-                  onChange={() => this.handleNonCustomSelected(gasPrice)}
-                />
-                <span className="title">{gasPrice.description}</span>
-              </label>
-            </div>
-          ) : (
-            <div key={index} className="radios-inline">
-              <label className="radio-inline">
-                <input
-                  type="radio"
-                  checked={input.value.id === gasPrice.id}
-                  onChange={this.handleCustomSelected}
-                />
-                <span className="title">{gasPrice.description}</span>
-              </label>
-            </div>
-          )
+          <div key={index} className="radios-inline">
+            <label className="radio-inline">
+              <input
+                type="radio"
+                checked={input.value.id === gasPrice.id}
+                onChange={() => {
+                  gasPrice.id !== GAS_PRICE.CUSTOM.ID
+                    ? this.handleNonCustomSelected(gasPrice)
+                    : this.handleCustomSelected()
+                }}
+              />
+              <span className="title">{gasPrice.description}</span>
+            </label>
+          </div>
         ))}
         {this.state.isCustom ? (
           <input
