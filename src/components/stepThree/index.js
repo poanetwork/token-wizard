@@ -93,13 +93,9 @@ export class stepThree extends React.Component {
   componentWillMount () {
     const { gasPriceStore, tierStore } = this.props
 
-    if (this.props.tierStore.tiers.length === 0) {
+    if (tierStore.tiers.length === 0) {
       this.addCrowdsale()
-
-      this.initialTiers = JSON.parse(JSON.stringify(this.props.tierStore.tiers))
-
-      this.initialTiers[0].startTime = defaultCompanyStartDate()
-      this.initialTiers[0].endTime = defaultCompanyEndDate()
+      this.initialTiers = JSON.parse(JSON.stringify(tierStore.tiers))
     }
 
     window.scrollTo(0, 0)
@@ -148,7 +144,22 @@ export class stepThree extends React.Component {
     }
 
     tierStore.addTier(newTier, newTierValidations)
+    this.setTierDates(num)
   }
+
+  setTierDates(num) {
+    const { tierStore } = this.props
+    const defaultStartTime = 0 === num ? defaultCompanyStartDate() : this.tierEndTime(num - 1)
+    const defaultEndTime = 0 === num ? defaultCompanyEndDate(defaultStartTime) : defaultCompanyEndDate(this.tierEndTime(num - 1))
+
+    const startTime = tierStore.tiers[num].startTime || defaultStartTime
+    const endTime = tierStore.tiers[num].endTime || defaultEndTime
+
+    tierStore.setTierProperty(startTime, 'startTime', num)
+    tierStore.setTierProperty(endTime, 'endTime', num)
+  }
+
+  tierEndTime = (index) => this.props.tierStore.tiers[index].endTime
 
   goToDeploymentStage = () => {
     this.props.history.push('/4')
