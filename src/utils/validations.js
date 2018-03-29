@@ -1,5 +1,6 @@
 import Web3 from 'web3'
 import { VALIDATION_MESSAGES } from './constants'
+import { countDecimalPlaces } from './utils'
 
 export const validators = (type, value) => {
   return {
@@ -24,22 +25,42 @@ export const validateDecimals = (value) => {
   return isValid ? undefined : VALIDATION_MESSAGES.DECIMALS
 }
 
-export const isPositive = (errorMsg = 'Please enter a valid number greater than 0') => (value) => {
+export const isPositive = (errorMsg = VALIDATION_MESSAGES.POSITIVE) => (value) => {
   const isValid = value > 0
   return isValid ? undefined : errorMsg
 }
 
-export const isNonNegative = (errorMsg = 'Please enter a valid number greater or equal than 0') => (value) => {
+export const isNonNegative = (errorMsg = VALIDATION_MESSAGES.NON_NEGATIVE) => (value) => {
   const isValid = value >= 0
   return isValid ? undefined : errorMsg
 }
 
-export const isAddress = (errorMsg = 'Please enter a valid address') => (value) => {
+export const isAddress = (errorMsg = VALIDATION_MESSAGES.ADDRESS) => (value) => {
   const isValid = Web3.utils.isAddress(value)
   return isValid ? undefined : errorMsg
 }
 
-export const isRequired = (errorMsg = 'This field is required') => (value) => {
+export const isRequired = (errorMsg = VALIDATION_MESSAGES.REQUIRED) => (value) => {
   const isValid = !!value
   return isValid ? undefined : errorMsg
 }
+
+export const isDecimalPlacesNotGreaterThan = (errorMsg = VALIDATION_MESSAGES.DECIMAL_PLACES) => (decimalsCount) => (value) => {
+  const isValid = countDecimalPlaces(value) <= decimalsCount
+  return isValid ? undefined : errorMsg
+}
+
+export const isLessOrEqualThan = (errorMsg = VALIDATION_MESSAGES.LESS_OR_EQUAL) => (maxValue = Number.Infinity) => (value) => {
+  console.log('validate', value, maxValue)
+  const isValid = value <= maxValue
+  return isValid ? undefined : errorMsg
+}
+
+export const composeValidators = (...validators) => (value) => validators.reduce((errors, validator) => {
+  const validation = validator(value)
+
+  if (validation) errors.push(validation)
+
+  return errors
+}, [])
+

@@ -1,4 +1,15 @@
-import { validators, validateTokenName, validateTicker, validateDecimals } from './validations'
+import {
+  isAddress,
+  isDecimalPlacesNotGreaterThan,
+  isLessOrEqualThan,
+  isNonNegative,
+  isPositive,
+  isRequired,
+  validateDecimals,
+  validateTicker,
+  validateTokenName,
+  validators
+} from './validations'
 import { VALIDATION_MESSAGES } from './constants'
 
 describe('validateTokenName', () => {
@@ -63,6 +74,145 @@ describe('validateDecimals', () => {
 
     it(`Should ${action} for '${testCase.value}'`, () => {
       expect(validateDecimals(testCase.value)).toBe(testCase.expected)
+    })
+  })
+})
+
+describe('isPositive', () => {
+  const testCases = [
+    { value: '1.01', errorMessage: undefined, expected: undefined },
+    { value: '5', errorMessage: undefined, expected: undefined },
+    { value: '1e4', errorMessage: undefined, expected: undefined },
+    { value: '100', errorMessage: undefined, expected: undefined },
+    { value: '0.1', errorMessage: undefined, expected: undefined },
+    { value: Number.MIN_VALUE, errorMessage: undefined, expected: undefined },
+    { value: '0', errorMessage: undefined, expected: VALIDATION_MESSAGES.POSITIVE },
+    { value: '-1', errorMessage: undefined, expected: VALIDATION_MESSAGES.POSITIVE },
+    { value: '-0.1', errorMessage: undefined, expected: VALIDATION_MESSAGES.POSITIVE },
+    { value: '-100', errorMessage: undefined, expected: VALIDATION_MESSAGES.POSITIVE },
+    { value: '-100', errorMessage: 'Personalized error message', expected: 'Personalized error message' },
+  ]
+
+  testCases.forEach(testCase => {
+    const action = testCase.expected === undefined ? 'pass' : 'fail'
+
+    it(`Should ${action} form '${testCase.value}'`, () => {
+      expect(isPositive(testCase.errorMessage)(testCase.value)).toBe(testCase.expected)
+    })
+  })
+})
+
+describe('isNonNegative', () => {
+  const testCases = [
+    { value: '1.01', errorMessage: undefined, expected: undefined },
+    { value: '5', errorMessage: undefined, expected: undefined },
+    { value: '1e4', errorMessage: undefined, expected: undefined },
+    { value: '100', errorMessage: undefined, expected: undefined },
+    { value: '0.1', errorMessage: undefined, expected: undefined },
+    { value: Number.MIN_VALUE, errorMessage: undefined, expected: undefined },
+    { value: '0', errorMessage: undefined, expected: undefined },
+    { value: '-1', errorMessage: undefined, expected: VALIDATION_MESSAGES.NON_NEGATIVE },
+    { value: '-0.1', errorMessage: undefined, expected: VALIDATION_MESSAGES.NON_NEGATIVE },
+    { value: '-100', errorMessage: undefined, expected: VALIDATION_MESSAGES.NON_NEGATIVE },
+    { value: '-100', errorMessage: 'Personalized error message', expected: 'Personalized error message' },
+  ]
+
+  testCases.forEach(testCase => {
+    const action = testCase.expected === undefined ? 'pass' : 'fail'
+
+    it(`Should ${action} form '${testCase.value}'`, () => {
+      expect(isNonNegative(testCase.errorMessage)(testCase.value)).toBe(testCase.expected)
+    })
+  })
+})
+
+describe('isAddress', () => {
+  const testCases = [
+    { value: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1', errorMessage: undefined, expected: undefined },
+    { value: '0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1', errorMessage: undefined, expected: undefined },
+    { value: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0', errorMessage: undefined, expected: undefined },
+    { value: '0x22d491bde2303f2f43325b2108d26f1eaba1e32b', errorMessage: undefined, expected: undefined },
+    { value: '0xe11ba2b4d45eaed5996cd0823791e0c93114882d', errorMessage: undefined, expected: undefined },
+    { value: '', errorMessage: undefined, expected: VALIDATION_MESSAGES.ADDRESS },
+    { value: '0xe11ba2b4d45eaED5996cd0823791e0c93114882d', errorMessage: undefined, expected: VALIDATION_MESSAGES.ADDRESS },
+    { value: '0x123', errorMessage: undefined, expected: VALIDATION_MESSAGES.ADDRESS },
+    { value: '0x123', errorMessage: 'Personalized error message', expected: 'Personalized error message' },
+  ]
+
+  testCases.forEach(testCase => {
+    const action = testCase.expected === undefined ? 'pass' : 'fail'
+
+    it(`Should ${action} form '${testCase.value}'`, () => {
+      expect(isAddress(testCase.errorMessage)(testCase.value)).toBe(testCase.expected)
+    })
+  })
+})
+
+describe('isRequired', () => {
+  const testCases = [
+    { value: '1', errorMessage: undefined, expected: undefined },
+    { value: 'a', errorMessage: undefined, expected: undefined },
+    { value: '0', errorMessage: undefined, expected: undefined },
+    { value: 'undefined', errorMessage: undefined, expected: undefined },
+    { value: 'null', errorMessage: undefined, expected: undefined },
+    { value: 'false', errorMessage: undefined, expected: undefined },
+    { value: false, errorMessage: undefined, expected: VALIDATION_MESSAGES.REQUIRED },
+    { value: undefined, errorMessage: undefined, expected: VALIDATION_MESSAGES.REQUIRED },
+    { value: 0, errorMessage: undefined, expected: VALIDATION_MESSAGES.REQUIRED },
+    { value: null, errorMessage: undefined, expected: VALIDATION_MESSAGES.REQUIRED },
+    { value: '', errorMessage: undefined, expected: VALIDATION_MESSAGES.REQUIRED },
+    { value: '', errorMessage: 'Personalized error message', expected: 'Personalized error message' },
+  ]
+
+  testCases.forEach(testCase => {
+    const action = testCase.expected === undefined ? 'pass' : 'fail'
+
+    it(`Should ${action} form '${testCase.value}'`, () => {
+      expect(isRequired(testCase.errorMessage)(testCase.value)).toBe(testCase.expected)
+    })
+  })
+})
+
+describe('isDecimalPlacesNotGreaterThan', () => {
+  const testCases = [
+    { value: '1', errorMessage: undefined, comparedTo: '5',expected: undefined },
+    { value: '1.1', errorMessage: undefined, comparedTo: '5',expected: undefined },
+    { value: '1.12', errorMessage: undefined, comparedTo: '5',expected: undefined },
+    { value: '1.123', errorMessage: undefined, comparedTo: '5',expected: undefined },
+    { value: '1.1234', errorMessage: undefined, comparedTo: '5',expected: undefined },
+    { value: '1.12345', errorMessage: undefined, comparedTo: '5',expected: undefined },
+    { value: '1.123456', errorMessage: undefined, comparedTo: '5',expected: VALIDATION_MESSAGES.DECIMAL_PLACES },
+    { value: '1.1234567', errorMessage: undefined, comparedTo: '5',expected: VALIDATION_MESSAGES.DECIMAL_PLACES },
+    { value: '1.1234567', errorMessage: 'Personalized error message', comparedTo: '5',expected: 'Personalized error message' },
+  ]
+
+  testCases.forEach(testCase => {
+    const action = testCase.expected === undefined ? 'pass' : 'fail'
+
+    it(`Should ${action} form '${testCase.value}'`, () => {
+      expect(isDecimalPlacesNotGreaterThan(testCase.errorMessage)(testCase.comparedTo)(testCase.value)).toBe(testCase.expected)
+    })
+  })
+})
+
+describe('isLessOrEqualThan', () => {
+  const testCases = [
+    { value: '1', errorMessage: undefined, comparedTo: '5',expected: undefined },
+    { value: '1.1', errorMessage: undefined, comparedTo: '5',expected: undefined },
+    { value: '2', errorMessage: undefined, comparedTo: '5',expected: undefined },
+    { value: '3', errorMessage: undefined, comparedTo: '5',expected: undefined },
+    { value: '4', errorMessage: undefined, comparedTo: '5',expected: undefined },
+    { value: '5', errorMessage: undefined, comparedTo: '5',expected: undefined },
+    { value: '5.1', errorMessage: undefined, comparedTo: '5',expected: VALIDATION_MESSAGES.LESS_OR_EQUAL },
+    { value: '6', errorMessage: undefined, comparedTo: '5',expected: VALIDATION_MESSAGES.LESS_OR_EQUAL },
+    { value: '6', errorMessage: 'Personalized error message', comparedTo: '5',expected: 'Personalized error message' },
+  ]
+
+  testCases.forEach(testCase => {
+    const action = testCase.expected === undefined ? 'pass' : 'fail'
+
+    it(`Should ${action} form '${testCase.value}'`, () => {
+      expect(isLessOrEqualThan(testCase.errorMessage)(testCase.comparedTo)(testCase.value)).toBe(testCase.expected)
     })
   })
 })
