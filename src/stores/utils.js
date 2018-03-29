@@ -2,38 +2,34 @@ import { setFlatFileContentToState, toFixed } from '../utils/utils'
 import { contractStore, tokenStore, tierStore, web3Store } from './index'
 import { BigNumber } from 'bignumber.js'
 
-export function getWhiteListWithCapCrowdsaleAssets() {
-  const contractsRoute = './contracts/'
-  const crowdsaleFilename = 'CrowdsaleWhiteListWithCap'
-  const binAbi = ['bin', 'abi']
+export function getWhiteListWithCapCrowdsaleAssets(networkID) {
+  return new Promise((resolve) => {
+    const contractName = "REACT_APP_INIT_TOKEN";
 
-  const crowdsaleFiles = ['sol', ...binAbi].map(ext => `${contractsRoute}${crowdsaleFilename}_flat.${ext}`)
-  const tokenFiles = binAbi.map(ext => `${contractsRoute}${crowdsaleFilename}Token_flat.${ext}`)
-  const pricingFiles = binAbi.map(ext => `${contractsRoute}${crowdsaleFilename}PricingStrategy_flat.${ext}`)
-  const finalizeFiles = binAbi.map(ext => `${contractsRoute}FinalizeAgent_flat.${ext}`)
-  const nullFiles = binAbi.map(ext => `${contractsRoute}NullFinalizeAgent_flat.${ext}`)
-  const registryFiles = binAbi.map(ext => `${contractsRoute}Registry_flat.${ext}`)
+    getCrowdsaleAsset("REACT_APP_INIT_TOKEN", "initToken", networkID)
+    getCrowdsaleAsset("REACT_APP_REGISTRY_STORAGE", "registryStorage", networkID)
+    resolve(contractStore);
+  })
+}
 
-  const states = crowdsaleFiles.concat(tokenFiles, pricingFiles, finalizeFiles, nullFiles, registryFiles)
-    .map(setFlatFileContentToState)
+function getCrowdsaleAsset(contractName, stateProp, networkID) {
+  const src = "" //to do
+  const bin = process.env[`${contractName}_BIN`] || ''
+  const abi = JSON.parse(process.env[`${contractName}_ABI`] || [])
+  const addr = JSON.parse(process.env[`${contractName}_ADDRESS`] || {})[networkID]
 
-  return Promise.all(states)
-    .then(state => {
-      contractStore.setContractProperty('crowdsale', 'src', state[0])
-      contractStore.setContractProperty('crowdsale', 'bin', state[1])
-      contractStore.setContractProperty('crowdsale', 'abi', JSON.parse(state[2]))
-      contractStore.setContractProperty('token', 'bin', state[3])
-      contractStore.setContractProperty('token', 'abi', JSON.parse(state[4]))
-      contractStore.setContractProperty('pricingStrategy', 'bin', state[5])
-      contractStore.setContractProperty('pricingStrategy', 'abi', JSON.parse(state[6]))
-      contractStore.setContractProperty('finalizeAgent', 'bin', state[7])
-      contractStore.setContractProperty('finalizeAgent', 'abi', JSON.parse(state[8]))
-      contractStore.setContractProperty('nullFinalizeAgent', 'bin', state[9])
-      contractStore.setContractProperty('nullFinalizeAgent', 'abi', JSON.parse(state[10]))
-      contractStore.setContractProperty('registry', 'bin', state[11])
-      contractStore.setContractProperty('registry', 'abi', JSON.parse(state[12]))
-      return contractStore
-    })
+  return Promise.all([src, bin, abi, addr])
+    .then(result => addContractsToState(...result, stateProp))
+}
+
+function addContractsToState(src, bin, abi, addr, contract) {
+  contractStore.setContract(contract, {
+    src,
+    bin,
+    abi: abi,
+    addr: addr,
+    abiConstructor: []
+  });
 }
 
 export const getconstructorParams = (abiConstructor, vals, crowdsaleNum, isCrowdsale) => {

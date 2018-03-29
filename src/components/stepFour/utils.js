@@ -90,14 +90,34 @@ const getTokenParams = token => {
 
 export const deployToken = () => {
   const { web3 } = web3Store
+  const toJS = x => JSON.parse(JSON.stringify(x))
   return [
     () => {
       return getNetworkVersion()
-      .then(networkID => {
-        return web3.eth.getAccounts()
+      .then((networkID) => {
+        console.log(contractStore)
+        const abiRegistryStorage = contractStore.registryStorage.abi || []
+        const addrsRegistryStorage = contractStore.registryStorage.addr || {}
+        const contract2 = new web3.eth.Contract(toJS(abiRegistryStorage), addrsRegistryStorage[networkID])
+        console.log(contract2)
+
+        return contract2.events.ApplicationInitialized({
+          fromBlock: 0
+        }, function(error, event){
+          console.log(error);
+          console.log(event);
+        })
+        .on('data', function(event){
+          console.log(event); // same results as the optional callback above
+        })
+        .on('changed', function(event){
+          // remove event from local database
+        })
+        .on('error', console.error);
+
+        /*return web3.eth.getAccounts()
           .then((accounts) => accounts[0])
           .then((account) => {
-            const toJS = x => JSON.parse(JSON.stringify(x))
 
             const abiScriptExec = contractStore.scriptExec.abi || []
             const addrsScriptExec = contractStore.scriptExec.addr || {}
@@ -134,7 +154,7 @@ export const deployToken = () => {
                   .then(tokenAddr => contractStore.setContractProperty('token', 'addr', tokenAddr))
                   .then(() => deploymentStore.setAsSuccessful('token'))
               })
-          })
+          })*/
       })
     }
   ]

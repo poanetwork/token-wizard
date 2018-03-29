@@ -59,10 +59,11 @@ export class Crowdsale extends React.Component {
     const { web3 } = web3Store
     const crowdsaleAddr = CrowdsaleConfig.crowdsaleContractURL ? CrowdsaleConfig.crowdsaleContractURL : getQueryVariable('addr')
 
-    if (!web3.utils.isAddress(crowdsaleAddr)) {
+    //to do
+    /*if (!web3.utils.isAddress(crowdsaleAddr)) {
       this.setState({ loading: false })
       return invalidCrowdsaleAddrAlert()
-    }
+    }*/
 
     getJoinedTiers(contractStore.crowdsale.abi, crowdsaleAddr, [], (joinedCrowdsales) => {
       console.log('joinedCrowdsales:', joinedCrowdsales)

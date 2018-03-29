@@ -4,6 +4,7 @@ import {
   findCurrentContractRecursively,
   getAccumulativeCrowdsaleData,
   getContractStoreProperty,
+  getTokenData,
   getCrowdsaleData,
   getCrowdsaleTargetDates,
   getCurrentRate,
@@ -71,7 +72,7 @@ export class Invest extends React.Component {
       investThrough: INVESTMENT_OPTIONS.METAMASK
     })
 
-    getWhiteListWithCapCrowdsaleAssets()
+    getWhiteListWithCapCrowdsaleAssets(networkID)
       .then(_newState => {
         this.setState(_newState)
         this.extractContractsData()
@@ -89,14 +90,20 @@ export class Invest extends React.Component {
     const { contractStore, web3Store } = this.props
     const { web3 } = web3Store
 
+    //to do: rename crowdsaleAddr to exec_id
     const crowdsaleAddr = CrowdsaleConfig.crowdsaleContractURL ? CrowdsaleConfig.crowdsaleContractURL : getQueryVariable('addr')
 
-    if (!web3.utils.isAddress(crowdsaleAddr)) {
+    //to do
+    /*if (!web3.utils.isAddress(crowdsaleAddr)) {
       this.setState({ loading: false })
       return invalidCrowdsaleAddrAlert()
-    }
+    }*/
 
-    getJoinedTiers(contractStore.crowdsale.abi, crowdsaleAddr, [], joinedCrowdsales => {
+    getTokenData(crowdsaleAddr)
+      .then(() => this.setState({ loading: false }))
+      .catch(err => console.log(err))
+
+    /*getJoinedTiers(contractStore.crowdsale.abi, crowdsaleAddr, [], joinedCrowdsales => {
       console.log('joinedCrowdsales:', joinedCrowdsales)
 
       const crowdsaleAddrs = typeof joinedCrowdsales === 'string' ? [joinedCrowdsales] : joinedCrowdsales
@@ -134,7 +141,7 @@ export class Invest extends React.Component {
             .then(() => this.setState({ loading: false }))
         })
       })
-    })
+    })*/
   }
 
   checkIsFinalized() {
