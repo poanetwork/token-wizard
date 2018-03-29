@@ -34,7 +34,7 @@ import {
   isLessOrEqualThan,
   isPositive,
   isRequired,
-  composeValidators,
+  composeValidators, isInteger,
 } from '../../utils/validations'
 import { NumericInput } from '../Common/NumericInput'
 import update from 'immutability-helper'
@@ -561,7 +561,11 @@ export class stepThree extends React.Component {
                               <Field
                                 name={`${name}.rate`}
                                 component={InputField2}
-                                validate={isPositive()}
+                                validate={composeValidators(
+                                  isPositive(),
+                                  isInteger(),
+                                  isLessOrEqualThan('Should not be greater than 1 quintillion (10^18)')('1e18')
+                                )}
                                 errorStyle={this.inputErrorStyle}
                                 type="text"
                                 side="left"

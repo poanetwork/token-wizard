@@ -1,6 +1,6 @@
 import {
   isAddress,
-  isDecimalPlacesNotGreaterThan,
+  isDecimalPlacesNotGreaterThan, isInteger,
   isLessOrEqualThan,
   isNonNegative,
   isPositive,
@@ -96,7 +96,7 @@ describe('isPositive', () => {
   testCases.forEach(testCase => {
     const action = testCase.expected === undefined ? 'pass' : 'fail'
 
-    it(`Should ${action} form '${testCase.value}'`, () => {
+    it(`Should ${action} for '${testCase.value}'`, () => {
       expect(isPositive(testCase.errorMessage)(testCase.value)).toBe(testCase.expected)
     })
   })
@@ -120,7 +120,7 @@ describe('isNonNegative', () => {
   testCases.forEach(testCase => {
     const action = testCase.expected === undefined ? 'pass' : 'fail'
 
-    it(`Should ${action} form '${testCase.value}'`, () => {
+    it(`Should ${action} for '${testCase.value}'`, () => {
       expect(isNonNegative(testCase.errorMessage)(testCase.value)).toBe(testCase.expected)
     })
   })
@@ -142,7 +142,7 @@ describe('isAddress', () => {
   testCases.forEach(testCase => {
     const action = testCase.expected === undefined ? 'pass' : 'fail'
 
-    it(`Should ${action} form '${testCase.value}'`, () => {
+    it(`Should ${action} for '${testCase.value}'`, () => {
       expect(isAddress(testCase.errorMessage)(testCase.value)).toBe(testCase.expected)
     })
   })
@@ -167,7 +167,7 @@ describe('isRequired', () => {
   testCases.forEach(testCase => {
     const action = testCase.expected === undefined ? 'pass' : 'fail'
 
-    it(`Should ${action} form '${testCase.value}'`, () => {
+    it(`Should ${action} for '${testCase.value}'`, () => {
       expect(isRequired(testCase.errorMessage)(testCase.value)).toBe(testCase.expected)
     })
   })
@@ -189,7 +189,7 @@ describe('isDecimalPlacesNotGreaterThan', () => {
   testCases.forEach(testCase => {
     const action = testCase.expected === undefined ? 'pass' : 'fail'
 
-    it(`Should ${action} form '${testCase.value}'`, () => {
+    it(`Should ${action} for '${testCase.value}'`, () => {
       expect(isDecimalPlacesNotGreaterThan(testCase.errorMessage)(testCase.comparedTo)(testCase.value)).toBe(testCase.expected)
     })
   })
@@ -203,6 +203,9 @@ describe('isLessOrEqualThan', () => {
     { value: '3', errorMessage: undefined, comparedTo: '5',expected: undefined },
     { value: '4', errorMessage: undefined, comparedTo: '5',expected: undefined },
     { value: '5', errorMessage: undefined, comparedTo: '5',expected: undefined },
+    { value: '1000000000000000000', errorMessage: undefined, comparedTo: '1e18',expected: undefined },
+    { value: '999999999999999999', errorMessage: undefined, comparedTo: '1e18',expected: undefined },
+    { value: '10000000000000000001', errorMessage: undefined, comparedTo: '1e18',expected: VALIDATION_MESSAGES.LESS_OR_EQUAL },
     { value: '5.1', errorMessage: undefined, comparedTo: '5',expected: VALIDATION_MESSAGES.LESS_OR_EQUAL },
     { value: '6', errorMessage: undefined, comparedTo: '5',expected: VALIDATION_MESSAGES.LESS_OR_EQUAL },
     { value: '6', errorMessage: 'Personalized error message', comparedTo: '5',expected: 'Personalized error message' },
@@ -211,8 +214,31 @@ describe('isLessOrEqualThan', () => {
   testCases.forEach(testCase => {
     const action = testCase.expected === undefined ? 'pass' : 'fail'
 
-    it(`Should ${action} form '${testCase.value}'`, () => {
+    it(`Should ${action} for '${testCase.value}'`, () => {
       expect(isLessOrEqualThan(testCase.errorMessage)(testCase.comparedTo)(testCase.value)).toBe(testCase.expected)
+    })
+  })
+})
+
+describe('isInteger', () => {
+  const testCases = [
+    { value: '1', errorMessage: undefined, expected: undefined },
+    { value: '1.', errorMessage: undefined, expected: undefined },
+    { value: '2', errorMessage: undefined, expected: undefined },
+    { value: '1000000000000000000', errorMessage: undefined, expected: undefined },
+    { value: '5.1', errorMessage: undefined, expected: VALIDATION_MESSAGES.INTEGER },
+    { value: '1e-4', errorMessage: undefined, expected: VALIDATION_MESSAGES.INTEGER },
+    { value: '.12', errorMessage: undefined, expected: VALIDATION_MESSAGES.INTEGER },
+    { value: 'abc', errorMessage: undefined, expected: VALIDATION_MESSAGES.INTEGER },
+    { value: '0.12', errorMessage: undefined, expected: VALIDATION_MESSAGES.INTEGER },
+    { value: '0.12', errorMessage: 'Personalized error message', expected: 'Personalized error message' },
+  ]
+
+  testCases.forEach(testCase => {
+    const action = testCase.expected === undefined ? 'pass' : 'fail'
+
+    it(`Should ${action} for '${testCase.value}'`, () => {
+      expect(isInteger(testCase.errorMessage)(testCase.value)).toBe(testCase.expected)
     })
   })
 })

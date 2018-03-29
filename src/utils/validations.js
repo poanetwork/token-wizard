@@ -1,4 +1,5 @@
 import Web3 from 'web3'
+import { BigNumber } from 'bignumber.js'
 import { VALIDATION_MESSAGES } from './constants'
 import { countDecimalPlaces } from './utils'
 
@@ -51,9 +52,22 @@ export const isDecimalPlacesNotGreaterThan = (errorMsg = VALIDATION_MESSAGES.DEC
 }
 
 export const isLessOrEqualThan = (errorMsg = VALIDATION_MESSAGES.LESS_OR_EQUAL) => (maxValue = Number.Infinity) => (value) => {
-  console.log('validate', value, maxValue)
-  const isValid = value <= maxValue
-  return isValid ? undefined : errorMsg
+  try {
+    const max = new BigNumber(String(maxValue))
+    const isValid = max.gte(value)
+    return isValid ? undefined : errorMsg
+  } catch (e) {
+    return errorMsg
+  }
+}
+
+export const isInteger = (errorMsg = VALIDATION_MESSAGES.INTEGER) => (value) => {
+  try {
+    const isValid = new BigNumber(value).isInteger()
+    return isValid ? undefined : errorMsg
+  } catch (e) {
+    return errorMsg
+  }
 }
 
 export const composeValidators = (...validators) => (value) => validators.reduce((errors, validator) => {
