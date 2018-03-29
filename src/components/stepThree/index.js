@@ -386,7 +386,7 @@ export class stepThree extends React.Component {
             whitelistEnabled: "no",
             tiers: this.initialTiers
           }}
-          render={({ handleSubmit, values, invalid, errors, pristine }) => {
+          render={({ handleSubmit, values, invalid, errors, pristine, mutators: { push } }) => {
             const submitButtonClass = classnames('button', 'button_fill', {
               button_disabled: pristine || invalid
             })
@@ -573,20 +573,18 @@ export class stepThree extends React.Component {
                           }
                         </div>
                       ))}
-                      <div className="button-container">
-                        <div className="button button_fill_secondary" onClick={() => {
-                          this.addCrowdsale()
-                          const lastTier = this.props.tierStore.tiers[this.props.tierStore.tiers.length - 1]
-                          fields.push(JSON.parse(JSON.stringify(lastTier)))
-                        }}>
-                          Add Tier
-                        </div>
-                      </div>
                     </div>
                   )}
                 </FieldArray>
 
                 <div className="button-container">
+                    <div className="button button_fill_secondary" onClick={() => {
+                      this.addCrowdsale()
+                      const lastTier = this.props.tierStore.tiers[this.props.tierStore.tiers.length - 1]
+                      push('tiers', JSON.parse(JSON.stringify(lastTier)))
+                    }}>
+                      Add Tier
+                    </div>
                   <span onClick={handleSubmit} className={submitButtonClass}>Continue</span>
                 </div>
 
