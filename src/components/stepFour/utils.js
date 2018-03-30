@@ -137,7 +137,34 @@ export const deployToken = () => {
               .then(estimatedGas => {
                 opts.gasLimit = calculateGasLimit(estimatedGas)
                 return sendTXToContract(method.send(opts))
-                  .then(tokenAddr => contractStore.setContractProperty('token', 'addr', tokenAddr))
+                  .then((logs) => {
+                    console.log("logs:")
+                    console.log(logs)
+
+                    let lasLog = logs.reduce(function(log, current) {
+                      console.log(log)
+                      console.log(current.topics)
+                      console.log(current.logIndex)
+                      if (!log) {
+                        return log = current;
+                      }
+                      if (current.logIndex > log.logIndex) {
+                        log = current;
+                      }
+                      return log
+                    }, 0)
+                    if (lasLog) {
+                      if (lasLog.topics) {
+                        if (lasLog.topics.length > 1) {
+                          let execID = lasLog.topics[1]
+                          console.log("exec_id", execID)
+                          contractStore.setContractProperty('crowdsale', 'addr', execID)
+                        }
+                      }
+                    }
+
+                    //contractStore.setContractProperty('token', 'addr', tokenAddr)
+                  })
                   .then(() => deploymentStore.setAsSuccessful('token'))
               })
           })

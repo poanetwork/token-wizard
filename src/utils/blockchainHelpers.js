@@ -211,7 +211,7 @@ let sendTX = (method, type) => {
 
 const sendTXResponse = (receipt, type) => {
   if (0 !== +receipt.status || null === receipt.status) {
-    return type === DEPLOY_CONTRACT ? Promise.resolve(receipt.contractAddress) : Promise.resolve()
+    return type === DEPLOY_CONTRACT ? Promise.resolve(receipt.contractAddress, receipt.logs) : Promise.resolve(receipt.logs)
   } else {
     return Promise.reject({ message: 0 })
   }
