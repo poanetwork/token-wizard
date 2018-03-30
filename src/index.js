@@ -12,13 +12,10 @@ import 'font-awesome/css/font-awesome.css'
 useStrict(true);
 
 checkEnvVariable('REACT_APP_REGISTRY_STORAGE_ADDRESS');
-checkEnvVariable('REACT_APP_REGISTRY_STORAGE_BIN');
 checkEnvVariable('REACT_APP_REGISTRY_STORAGE_ABI');
 checkEnvVariable('REACT_APP_INIT_REGISTRY_ADDRESS');
-checkEnvVariable('REACT_APP_INIT_REGISTRY_BIN');
 checkEnvVariable('REACT_APP_INIT_REGISTRY_ABI');
 checkEnvVariable('REACT_APP_SCRIPT_EXEC_ADDRESS');
-checkEnvVariable('REACT_APP_SCRIPT_EXEC_BIN');
 checkEnvVariable('REACT_APP_SCRIPT_EXEC_ABI');
 checkEnvVariable('REACT_APP_TOKEN_APP_NAME');
 checkEnvVariable('REACT_APP_CROWDSALE_APP_NAME');

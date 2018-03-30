@@ -37,6 +37,7 @@ export class stepOne extends React.Component {
     return Promise.all([
       this.getCrowdsaleAsset("REACT_APP_REGISTRY_STORAGE", "registryStorage"),
       this.getCrowdsaleAsset("REACT_APP_INIT_REGISTRY", "initRegistry"),
+      this.getCrowdsaleAsset("REACT_APP_INIT_TOKEN", "initToken"),
       this.getCrowdsaleAsset("REACT_APP_SCRIPT_EXEC", "scriptExec"),
     ])
   }

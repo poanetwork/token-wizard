@@ -54,10 +54,10 @@ export const setupContractDeployment = (web3) => {
 export const buildDeploymentSteps = (web3) => {
   const stepFnCorrelation = {
     token: deployToken,
-    crowdsale: deployCrowdsale,
-    registerCrowdsaleAddress: registerCrowdsaleAddress,
-    setReservedTokens: setReservedTokensListMultiple,
-    whitelist: addWhitelist,
+    //crowdsale: deployCrowdsale,
+    //registerCrowdsaleAddress: registerCrowdsaleAddress,
+    //setReservedTokens: setReservedTokensListMultiple,
+    //whitelist: addWhitelist,
   }
 
   let list = []
@@ -95,38 +95,91 @@ export const deployToken = () => {
     () => {
       return getNetworkVersion()
       .then((networkID) => {
-        console.log(contractStore)
-        const abiRegistryStorage = contractStore.registryStorage.abi || []
-        const addrsRegistryStorage = contractStore.registryStorage.addr || {}
-        const contract2 = new web3.eth.Contract(toJS(abiRegistryStorage), addrsRegistryStorage[networkID])
-        console.log(contract2)
 
         return web3.eth.getAccounts()
           .then((accounts) => accounts[0])
           .then((account) => {
 
-            const abiScriptExec = contractStore.scriptExec.abi || []
-            const addrsScriptExec = contractStore.scriptExec.addr || {}
             const paramsToken = getTokenParams(tokenStore)
             console.log("paramsToken:", paramsToken)
 
-            let tokenAppName = process.env['REACT_APP_TOKEN_APP_NAME'] || '';
-            let tokenAppNameHex = web3.eth.abi.encodeParameter("bytes32", web3.utils.fromAscii(tokenAppName));
-            console.log("token app name:", tokenAppName);
-            console.log("token app name hex:", tokenAppNameHex);
+            let encodedParameters = web3.eth.abi.encodeParameters(["bytes32","bytes32","uint256","uint256","address"], paramsToken);
+            console.log("encodedParameters:", encodedParameters);
 
             let functionName = "init(bytes32,bytes32,uint256,uint256,address)";
             let functionSignature = web3.eth.abi.encodeFunctionSignature(functionName);
             console.log("functionSignature init:", functionSignature);
 
+            let fullData = functionSignature + encodedParameters.substr(2);
+            console.log("full calldata:", fullData);
+
+            const abiRegistryStorage = contractStore.registryStorage.abi || []
+            const addrsRegistryStorage = contractStore.registryStorage.addr || {}
+            const registryStorage = new web3.eth.Contract(toJS(abiRegistryStorage), addrsRegistryStorage[networkID])
+            console.log(registryStorage)
+
+            const opts = { gasPrice: generalStore.gasPrice, from: account }
+            console.log("opts:", opts)
+            let isPayable = false;
+            let allowed = [];
+            let paramsToInitAndFinalize = [
+              account,
+              isPayable,
+              contractStore.initToken.addr[networkID],
+              fullData,
+              allowed
+            ]
+            console.log("paramsToInitAndFinalize: ", paramsToInitAndFinalize)
+            const method = registryStorage.methods.initAndFinalize(...paramsToInitAndFinalize)
+            console.log("method:", method)
+
+            return method.estimateGas(opts)
+              .then(estimatedGas => {
+                opts.gasLimit = calculateGasLimit(estimatedGas)
+                return sendTXToContract(method.send(opts))
+                  .then(tokenAddr => contractStore.setContractProperty('token', 'addr', tokenAddr))
+                  .then(() => deploymentStore.setAsSuccessful('token'))
+              })
+          })
+      })
+    }
+  ]
+}
+
+/*export const deployToken = () => {
+  const { web3 } = web3Store
+  const toJS = x => JSON.parse(JSON.stringify(x))
+  return [
+    () => {
+      return getNetworkVersion()
+      .then((networkID) => {
+
+        return web3.eth.getAccounts()
+          .then((accounts) => accounts[0])
+          .then((account) => {
+
+            const paramsToken = getTokenParams(tokenStore)
+            console.log("paramsToken:", paramsToken)
+
             let encodedParameters = web3.eth.abi.encodeParameters(["bytes32","bytes32","uint256","uint256","address"], paramsToken);
             console.log("encodedParameters:", encodedParameters);
+
+            let functionName = "init(bytes32,bytes32,uint256,uint256,address)";
+            let functionSignature = web3.eth.abi.encodeFunctionSignature(functionName);
+            console.log("functionSignature init:", functionSignature);
 
             let fullData = functionSignature + encodedParameters.substr(2);
             console.log("full calldata:", fullData);
 
+            const abiScriptExec = contractStore.scriptExec.abi || []
+            const addrsScriptExec = contractStore.scriptExec.addr || {}
             const scriptExec = new web3.eth.Contract(toJS(abiScriptExec), addrsScriptExec[networkID])
             console.log(scriptExec)
+
+            let tokenAppName = process.env['REACT_APP_TOKEN_APP_NAME'] || '';
+            let tokenAppNameHex = web3.eth.abi.encodeParameter("bytes32", web3.utils.fromAscii(tokenAppName));
+            console.log("token app name:", tokenAppName);
+            console.log("token app name hex:", tokenAppNameHex);
 
             const opts = { gasPrice: generalStore.gasPrice, from: account }
             console.log("opts:", opts)
@@ -144,7 +197,7 @@ export const deployToken = () => {
       })
     }
   ]
-}
+}*/
 
 const getPricingStrategyParams = tier => {
   BigNumber.config({ DECIMAL_PLACES: 18 })
