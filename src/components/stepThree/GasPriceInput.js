@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { GAS_PRICE } from '../../utils/constants'
+import { Error } from '../Common/Error'
 
 class GasPriceInput extends Component {
   constructor(props) {
@@ -75,6 +76,7 @@ class GasPriceInput extends Component {
           />
         ) : null}
         <p className="description">Slow is cheap, fast is expensive</p>
+        <Error name="gasPrice"/>
       </div>
     )
   }
