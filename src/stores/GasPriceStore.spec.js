@@ -1,6 +1,6 @@
 import GasPriceStore  from './GasPriceStore'
 import { GAS_PRICE } from '../utils/constants'
-import { gweiToWei } from '../utils/utils'
+import { gweiToWei, weiToGwei } from '../utils/utils'
 
 jest.mock('../utils/api')
 
@@ -54,11 +54,6 @@ describe('GasPriceStore', () => {
       description: gas.fastDescription,
     })
     expect(gas.gasPrices[3]).toEqual({
-      id: GAS_PRICE.INSTANT.ID,
-      price: GAS_PRICE.INSTANT.PRICE,
-      description: gas.instantDescription,
-    })
-    expect(gas.gasPrices[4]).toEqual({
       id: GAS_PRICE.CUSTOM.ID,
       price: GAS_PRICE.CUSTOM.PRICE,
       description: gas.customDescription,

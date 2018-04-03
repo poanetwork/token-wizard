@@ -96,7 +96,6 @@ class GasPriceStore {
       { ...this.slow, description: this.slowDescription },
       { ...this.standard, description: this.standardDescription },
       { ...this.fast, description: this.fastDescription },
-      { ...this.instant, description: this.instantDescription },
       { ...this.custom, description: this.customDescription },
     ]
   }
