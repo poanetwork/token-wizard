@@ -6,7 +6,7 @@ import { FieldArray } from 'react-final-form-arrays'
 import { OnChange } from 'react-final-form-listeners'
 import { Link } from "react-router-dom";
 import { setExistingContractParams, getNetworkVersion, getNetWorkNameById } from "../../utils/blockchainHelpers";
-import { gweiToWei } from "../../utils/utils";
+import { gweiToWei, validateLaterOrEqualTime, validateLaterTime, validateTime } from "../../utils/utils";
 import { StepNavigation } from "../Common/StepNavigation";
 import { WhenFieldChanges } from '../Common/WhenFieldChanges'
 import { InputField2 } from "../Common/InputField2";
@@ -35,7 +35,7 @@ import {
   isRequired,
   composeValidators,
   isInteger,
-  isGreaterOrEqualThan,
+  isGreaterOrEqualThan, isInFuture, isPreviousThan, isSameOrLater,
 } from '../../utils/validations'
 import update from 'immutability-helper'
 import classnames from 'classnames'
@@ -431,7 +431,12 @@ export class stepThree extends React.Component {
                               <Field
                                 name={`${name}.startTime`}
                                 component={InputField2}
-                                validate={isRequired()}
+                                validate={(value, values) => composeValidators(
+                                  isRequired(),
+                                  isInFuture()(values.tiers[index].endTime),
+                                  isPreviousThan()(values.tiers[index].endTime),
+                                  () => index === 0 ? isRequired() : isSameOrLater()(values.tiers[index - 1].endTime)
+                                )(value, values)}
                                 errorStyle={this.inputErrorStyle}
                                 type="datetime-local"
                                 side="left"

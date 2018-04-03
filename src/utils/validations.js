@@ -1,7 +1,7 @@
 import Web3 from 'web3'
 import { BigNumber } from 'bignumber.js'
 import { VALIDATION_MESSAGES } from './constants'
-import { countDecimalPlaces } from './utils'
+import { countDecimalPlaces, validateLaterOrEqualTime, validateLaterTime, validateTime } from './utils'
 
 export const validators = (type, value) => {
   return {
@@ -69,6 +69,21 @@ export const isGreaterOrEqualThan = (errorMsg = VALIDATION_MESSAGES.GREATER_OR_E
   } catch (e) {
     return errorMsg
   }
+}
+
+export const isInFuture = (errorMsg = "Should be set in the future") => (value) => {
+  const isValid = validateTime(value)
+  return isValid ? undefined : errorMsg
+}
+
+export const isPreviousThan = (errorMsg = "Should be previous than same tier's End Time") => (later) => (value) => {
+  const isValid = validateLaterTime(later, value)
+  return isValid ? undefined : errorMsg
+}
+
+export const isSameOrLater = (errorMsg = "Should be same or later than previous tier's End Time") => (previous) => (value) => {
+  const isValid = validateLaterOrEqualTime(value, previous)
+  return isValid ? undefined : errorMsg
 }
 
 export const isInteger = (errorMsg = VALIDATION_MESSAGES.INTEGER) => (value) => {
