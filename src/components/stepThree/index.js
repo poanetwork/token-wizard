@@ -6,10 +6,9 @@ import { FieldArray } from 'react-final-form-arrays'
 import { OnChange } from 'react-final-form-listeners'
 import { Link } from "react-router-dom";
 import { setExistingContractParams, getNetworkVersion, getNetWorkNameById } from "../../utils/blockchainHelpers";
-import { gweiToWei, weiToGwei } from "../../utils/utils";
+import { gweiToWei } from "../../utils/utils";
 import { StepNavigation } from "../Common/StepNavigation";
 import { WhenFieldChanges } from '../Common/WhenFieldChanges'
-import { RadioInputField } from "../Common/RadioInputField";
 import { InputField2 } from "../Common/InputField2";
 import { CrowdsaleBlock } from "./CrowdsaleBlock";
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
@@ -70,7 +69,7 @@ export class stepThree extends React.Component {
   constructor(props) {
     super(props);
 
-    const { contractStore, gasPriceStore } = props;
+    const { contractStore } = props;
 
     if (contractStore.crowdsale.addr.length > 0) {
       contractStore.setContractProperty("pricingStrategy", "addr", []);
@@ -79,14 +78,9 @@ export class stepThree extends React.Component {
 
     this.state = {
       loading: true,
-      gasPriceSelected: gasPriceStore.slow.id,
       minCap: props.tierStore.globalMinCap || '',
       walletAddress: '',
       validation: {
-        gasPrice: {
-          pristine: true,
-          valid: INVALID
-        },
         minCap: {
           pristine: true,
           valid: VALID
@@ -110,7 +104,6 @@ export class stepThree extends React.Component {
     window.scrollTo(0, 0)
 
     gasPriceStore.updateValues()
-      .then(() => this.setGasPrice(gasPriceStore.slow))
       .catch(() => noGasPriceAvailable())
       .then(() => {
         this.setState({ loading: false })
@@ -175,8 +168,7 @@ export class stepThree extends React.Component {
   }
 
   beforeNavigate = () => {
-    const { tierStore, gasPriceStore } = this.props
-    // const gasPriceIsValid = gasPriceStore.custom.id !== this.state.gasPriceSelected || this.state.validation.gasPrice.valid === VALID
+    const { tierStore } = this.props
     const isMinCapLessThanMaxSupply = tierStore.globalMinCap <= tierStore.maxSupply
     const isMinCapValid = this.state.validation.minCap.valid === VALID
 
@@ -260,33 +252,6 @@ export class stepThree extends React.Component {
 
     this.setState(newState)
     this.props.tierStore.setGlobalMinCap(value)
-  }
-
-  setGasPrice({ id, price }) {
-    this.setState({
-      gasPriceSelected: id
-    })
-
-    // Don't modify the price when choosing custom
-    if (id !== this.props.gasPriceStore.custom.id) {
-      this.props.generalStore.setGasPrice(price)
-    }
-  }
-
-  updateGasPrice = ({value, pristine, valid}) => {
-    const newState = update(this.state, {
-      validation: {
-        gasPrice: {
-          $set: {
-            pristine: pristine,
-            valid: valid
-          }
-        }
-      }
-    })
-
-    this.setState(newState)
-    this.props.generalStore.setGasPrice(gweiToWei(value))
   }
 
   updateWhitelistEnabled = (e) => {
