@@ -405,7 +405,7 @@ export class stepThree extends React.Component {
                   field="whitelistEnabled"
                   becomes={'yes'}
                   set="minCap"
-                  to={''}
+                  to={0}
                 />
                 <div>
                   <div className="steps-content container">

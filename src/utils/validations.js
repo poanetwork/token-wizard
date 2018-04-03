@@ -51,7 +51,7 @@ export const isDecimalPlacesNotGreaterThan = (errorMsg = VALIDATION_MESSAGES.DEC
   return isValid ? undefined : errorMsg
 }
 
-export const isLessOrEqualThan = (errorMsg = VALIDATION_MESSAGES.LESS_OR_EQUAL) => (maxValue = Number.Infinity) => (value) => {
+export const isLessOrEqualThan = (errorMsg = VALIDATION_MESSAGES.LESS_OR_EQUAL) => (maxValue = Infinity) => (value) => {
   try {
     const max = new BigNumber(String(maxValue))
     const isValid = max.gte(value)
