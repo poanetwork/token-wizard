@@ -35,7 +35,10 @@ import {
   isRequired,
   composeValidators,
   isInteger,
-  isGreaterOrEqualThan, isInFuture, isPreviousThan, isSameOrLater,
+  isGreaterOrEqualThan,
+  isDateInFuture,
+  isDatePreviousThan,
+  isDateSameOrLaterThan,
 } from '../../utils/validations'
 import update from 'immutability-helper'
 import classnames from 'classnames'
@@ -431,12 +434,19 @@ export class stepThree extends React.Component {
                               <Field
                                 name={`${name}.startTime`}
                                 component={InputField2}
-                                validate={(value, values) => composeValidators(
-                                  isRequired(),
-                                  isInFuture()(values.tiers[index].endTime),
-                                  isPreviousThan()(values.tiers[index].endTime),
-                                  () => index === 0 ? isRequired() : isSameOrLater()(values.tiers[index - 1].endTime)
-                                )(value, values)}
+                                validate={(value, values) => {
+                                  const listOfValidations = [
+                                    isRequired(),
+                                    isDateInFuture(),
+                                    isDatePreviousThan("Should be previous than same tier's End Time")(values.tiers[index].endTime),
+                                  ]
+
+                                  if (index > 0) {
+                                    listOfValidations.push(isDateSameOrLaterThan("Should be same or later than previous tier's End Time")(values.tiers[index - 1].endTime))
+                                  }
+
+                                  return composeValidators(...listOfValidations)(value)
+                                }}
                                 errorStyle={this.inputErrorStyle}
                                 type="datetime-local"
                                 side="left"

@@ -118,6 +118,9 @@ export const VALIDATION_MESSAGES = {
   LESS_OR_EQUAL: 'Should be less or equal than the specified value',
   GREATER_OR_EQUAL: 'Should be greater than the specified value',
   INTEGER: 'Should be integer',
+  DATE_IN_FUTURE: 'Should be set in the future',
+  DATE_IS_PREVIOUS: 'Should be previous than specified time',
+  DATE_IS_SAME_OR_LATER: 'Should be same or later than specified time',
 }
 
 //descriptions of input fields

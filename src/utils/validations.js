@@ -71,21 +71,6 @@ export const isGreaterOrEqualThan = (errorMsg = VALIDATION_MESSAGES.GREATER_OR_E
   }
 }
 
-export const isInFuture = (errorMsg = "Should be set in the future") => (value) => {
-  const isValid = validateTime(value)
-  return isValid ? undefined : errorMsg
-}
-
-export const isPreviousThan = (errorMsg = "Should be previous than same tier's End Time") => (later) => (value) => {
-  const isValid = validateLaterTime(later, value)
-  return isValid ? undefined : errorMsg
-}
-
-export const isSameOrLater = (errorMsg = "Should be same or later than previous tier's End Time") => (previous) => (value) => {
-  const isValid = validateLaterOrEqualTime(value, previous)
-  return isValid ? undefined : errorMsg
-}
-
 export const isInteger = (errorMsg = VALIDATION_MESSAGES.INTEGER) => (value) => {
   try {
     const isValid = new BigNumber(value).isInteger()
@@ -93,6 +78,21 @@ export const isInteger = (errorMsg = VALIDATION_MESSAGES.INTEGER) => (value) => 
   } catch (e) {
     return errorMsg
   }
+}
+
+export const isDateInFuture = (errorMsg = VALIDATION_MESSAGES.DATE_IN_FUTURE) => (value) => {
+  const isValid = validateTime(value)
+  return isValid ? undefined : errorMsg
+}
+
+export const isDatePreviousThan = (errorMsg = VALIDATION_MESSAGES.DATE_IS_PREVIOUS) => (later) => (value) => {
+  const isValid = validateLaterTime(later, value)
+  return isValid ? undefined : errorMsg
+}
+
+export const isDateSameOrLaterThan = (errorMsg = VALIDATION_MESSAGES.DATE_IS_SAME_OR_LATER) => (previous) => (value) => {
+  const isValid = validateLaterOrEqualTime(value, previous)
+  return isValid ? undefined : errorMsg
 }
 
 export const composeValidators = (...validators) => (value) => validators.reduce((errors, validator) => {
