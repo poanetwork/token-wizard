@@ -34,11 +34,11 @@ import {
   isLessOrEqualThan,
   isPositive,
   isRequired,
-  composeValidators, isInteger,
+  composeValidators,
+  isInteger,
+  isGreaterOrEqualThan,
 } from '../../utils/validations'
-import { NumericInput } from '../Common/NumericInput'
 import update from 'immutability-helper'
-import { AddressInput } from '../Common/AddressInput'
 import classnames from 'classnames'
 
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS;
@@ -289,82 +289,6 @@ export class stepThree extends React.Component {
     this.props.generalStore.setGasPrice(gweiToWei(value))
   }
 
-  renderGasPriceInput() {
-    const { generalStore, gasPriceStore } = this.props
-
-    return (
-      <div className="right">
-        <label className="label">Gas Price</label>
-        <div className="radios-inline">
-          <label className="radio-inline">
-            <input
-              type="radio"
-              checked={this.state.gasPriceSelected === gasPriceStore.slow.id}
-              name="gas-price-option-slow"
-              onChange={() => this.setGasPrice(gasPriceStore.slow)}
-              value="slow"
-            />
-            <span className="title">{gasPriceStore.slowDescription}</span>
-          </label>
-        </div>
-        <div className="radios-inline">
-          <label className="radio-inline">
-            <input
-              type="radio"
-              checked={this.state.gasPriceSelected === gasPriceStore.standard.id}
-              name="gas-price-option-normal"
-              onChange={() => this.setGasPrice(gasPriceStore.standard)}
-              value="slow"
-            />
-            <span className="title">{gasPriceStore.standardDescription}</span>
-          </label>
-        </div>
-        <div className="radios-inline">
-          <label className="radio-inline">
-            <input
-              type="radio"
-              checked={this.state.gasPriceSelected === gasPriceStore.fast.id}
-              name="gas-price-option-fast"
-              onChange={() => this.setGasPrice(gasPriceStore.fast)}
-              value="slow"
-            />
-            <span className="title">{gasPriceStore.fastDescription}</span>
-          </label>
-        </div>
-        <div className="radios-inline">
-          <label className="radio-inline">
-            <input
-              type="radio"
-              checked={this.state.gasPriceSelected === gasPriceStore.custom.id}
-              name="gas-price-option-fast"
-              onChange={() => this.setGasPrice(gasPriceStore.custom)}
-              value="slow"
-            />
-            <span className="title">{gasPriceStore.customDescription}</span>
-          </label>
-        </div>
-
-        {
-          this.state.gasPriceSelected === gasPriceStore.custom.id ?
-            <NumericInput
-              style={{ display: 'inline-block' }}
-              min={0.1}
-              maxDecimals={9}
-              acceptFloat={true}
-              value={weiToGwei(generalStore.gasPrice)}
-              pristine={this.state.validation.gasPrice.pristine}
-              valid={this.state.validation.gasPrice.valid}
-              errorMessage="Gas Price must be greater than 0.1 with up to 9 decimals"
-              onValueUpdate={this.updateGasPrice}
-            /> :
-            null
-        }
-
-        <p className="description">Slow is cheap, fast is expensive</p>
-      </div>
-    );
-  }
-
   updateWhitelistEnabled = (e) => {
     this.updateMinCap({ value: '', valid: VALID, pristine: false })
     this.updateTierStore(e, "whitelistEnabled", 0)
@@ -379,7 +303,7 @@ export class stepThree extends React.Component {
   }
 
   render() {
-    const { generalStore, tierStore, gasPriceStore,tokenStore } = this.props
+    const { generalStore, tierStore, gasPriceStore, tokenStore } = this.props
 
     return (
       <section className="steps steps_crowdsale-contract" ref="three">
@@ -390,7 +314,7 @@ export class stepThree extends React.Component {
           initialValues={{
             walletAddress: tierStore.tiers[0].walletAddress,
             minCap: '',
-            gasPrice: gasPriceStore.gasPrices[0],
+            gasPrice: gasPriceStore.gasPricesInGwei[0],
             whitelistEnabled: "no",
             tiers: this.initialTiers
           }}
@@ -434,7 +358,11 @@ export class stepThree extends React.Component {
                         name="gasPrice"
                         component={GasPriceInput}
                         side="right"
-                        gasPrices={gasPriceStore.gasPrices}
+                        gasPrices={gasPriceStore.gasPricesInGwei}
+                        validate={(value) => composeValidators(
+                          isDecimalPlacesNotGreaterThan("Should not have more than 9 decimals")(9),
+                          isGreaterOrEqualThan("Should be greater than 0.1")(0.1)
+                        )(value.price)}
                       />
                     </div>
                     <div className="input-block-container">
@@ -630,7 +558,7 @@ export class stepThree extends React.Component {
                   subscription={{ values: true }}
                   onChange={({ values }) => {
                     tierStore.updateWalletAddress(values.walletAddress, VALID)
-                    generalStore.setGasPrice(gweiToWei(values.gasPrice.price || 0))
+                    generalStore.setGasPrice(gweiToWei(values.gasPrice.price))
                     tierStore.setGlobalMinCap(values.minCap || 0)
                     tierStore.setTierProperty(values.whitelistEnabled, "whitelistEnabled", 0)
 
