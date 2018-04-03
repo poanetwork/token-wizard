@@ -4,9 +4,8 @@ import { BigNumber } from 'bignumber.js'
 
 export function getWhiteListWithCapCrowdsaleAssets(networkID) {
   return new Promise((resolve) => {
-    const contractName = "REACT_APP_INIT_TOKEN";
-
-    getCrowdsaleAsset("REACT_APP_INIT_TOKEN", "initToken", networkID)
+    getCrowdsaleAsset("REACT_APP_INIT_CROWDSALE", "initCrowdsale", networkID)
+    getCrowdsaleAsset("REACT_APP_CROWDSALE_CONSOLE", "crowdsaleConsole", networkID)
     getCrowdsaleAsset("REACT_APP_REGISTRY_STORAGE", "registryStorage", networkID)
     resolve(contractStore);
   })

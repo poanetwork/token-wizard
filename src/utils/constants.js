@@ -273,9 +273,9 @@ export const TOAST = {
 }
 
 export const TX_STEP_DESCRIPTION = {
-  token: "Deploy Token Contract",
-  //crowdsale: "Deploy Crowdsale Contract",
+  crowdsale: "Initialize Crowdsale Contract",
+  //token: "Initialize Token Contract",
   //registerCrowdsaleAddress: "Associate Crowdsale address to current account",
-  //setReservedTokens: "Register addresses for Reserved Tokens",
-  //whitelist: "Register whitelisted addresses",
+  setReservedTokens: "Register addresses for Reserved Tokens",
+  whitelist: "Register whitelisted addresses",
 }

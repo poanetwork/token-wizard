@@ -224,9 +224,7 @@ export function getCurrentRate(crowdsaleContract) {
         return
       }
 
-      getPricingStrategyData()
-        .then(resolve)
-        .catch(reject)
+      resolve()
     });
   }
 )}
@@ -294,14 +292,7 @@ export function getCrowdsaleData (crowdsaleContract) {
               return
             }
 
-            getPricingStrategyData()
-              .then(() => {
-                cbCount++
-                if (propsCount === cbCount) {
-                  resolve()
-                }
-              })
-              .catch(reject)
+            resolve()
           })
         })
         .catch(reject)
@@ -309,7 +300,8 @@ export function getCrowdsaleData (crowdsaleContract) {
   })
 }
 
-export function getTokenData (exec_id, networkID) {
+export function getTokenData (exec_id) {
+  console.log("exec_id:", exec_id)
   return new Promise((resolve, reject) => {
     const { web3 } = web3Store
 
@@ -326,27 +318,30 @@ export function getTokenData (exec_id, networkID) {
 
       let propsCount = 0
       let cbCount = 0
-      let initTokenObj = toJS(contractStore.initToken)
+      let initCrowdsaleObj = toJS(contractStore.initCrowdsale)
       let registryStorageObj = toJS(contractStore.registryStorage)
 
-      attachToContract(initTokenObj.abi, initTokenObj.addr)
-        .then(iniTokenContract => {
-          console.log('attach to token contract')
+      attachToContract(initCrowdsaleObj.abi, initCrowdsaleObj.addr)
+        .then(iniCrowdsaleContract => {
+          console.log('attach to crowdsale contract')
 
-          if (!iniTokenContract) {
+          if (!iniCrowdsaleContract) {
             noContractAlert()
             reject('no contract')
             return
           }
 
-          let getTokenName = iniTokenContract.methods.name(registryStorageObj.addr, exec_id).call();
-          let getTokenSymbol = iniTokenContract.methods.symbol(registryStorageObj.addr, exec_id).call();
-          let getTokenDecimals = iniTokenContract.methods.decimals(registryStorageObj.addr, exec_id).call();
-          let getTokenTotalSypply = iniTokenContract.methods.totalSupply(registryStorageObj.addr, exec_id).call();
-          let getBalanceOf = iniTokenContract.methods.balanceOf(registryStorageObj.addr, exec_id, accounts[0]).call();
+          let getTokenName = iniCrowdsaleContract.methods.name(registryStorageObj.addr, exec_id).call();
+          let getTokenSymbol = iniCrowdsaleContract.methods.symbol(registryStorageObj.addr, exec_id).call();
+          let getTokenDecimals = iniCrowdsaleContract.methods.decimals(registryStorageObj.addr, exec_id).call();
+          let getTokenTotalSypply = iniCrowdsaleContract.methods.totalSupply(registryStorageObj.addr, exec_id).call();
+          let getBalanceOf = iniCrowdsaleContract.methods.balanceOf(registryStorageObj.addr, exec_id, accounts[0]).call();
+          let getCrowdsaleStartTime = iniCrowdsaleContract.methods.getCrowdsaleStartTime(registryStorageObj.addr, exec_id).call();
+          let getCrowdsaleInfo = iniCrowdsaleContract.methods.getCrowdsaleInfo(registryStorageObj.addr, exec_id).call();
+          let getCurrentTierInfo = iniCrowdsaleContract.methods.getCurrentTierInfo(registryStorageObj.addr, exec_id).call();
 
-          return Promise.all([getTokenName, getTokenSymbol, getTokenDecimals, getTokenTotalSypply, getBalanceOf])
-            .then(([name, ticker, decimals, totalSupply, balanceOf]) => {
+          return Promise.all([getTokenName, getTokenSymbol, getTokenDecimals, getTokenTotalSypply, getBalanceOf, getCrowdsaleStartTime, getCrowdsaleInfo, getCurrentTierInfo])
+            .then(([name, ticker, decimals, totalSupply, balanceOf, crowdsaleStartTime, crowdsaleInfo, currentTierInfo]) => {
               tokenStore.setProperty('name', web3.utils.toAscii(name))
               console.log('token name: ' + name)
               tokenStore.setProperty('ticker', web3.utils.toAscii(ticker))
@@ -360,40 +355,56 @@ export function getTokenData (exec_id, networkID) {
               const tokenAmountOf = crowdsalePageStore.tokenAmountOf ? crowdsalePageStore.tokenAmountOf : 0
               crowdsalePageStore.setProperty('tokenAmountOf', tokenAmountOf + parseInt(balanceOf, 10))
               console.log('token balanceOf: ' + balanceOf)
+              const startsAtMilliseconds = crowdsaleStartTime * 1000
+              console.log('crowdsaleInfo:')
+              console.log(crowdsaleInfo)
+              console.log('currentTierInfo:')
+              console.log(currentTierInfo)
+              let crowdsaleEndTime = currentTierInfo[2]
+              const endsAtMilliseconds = crowdsaleEndTime * 1000
+
+              crowdsalePageStore.addTier({
+                startDate: startsAtMilliseconds,
+                endDate: endsAtMilliseconds
+              })
+
+              if (!crowdsalePageStore.startDate || crowdsalePageStore.startDate > startsAtMilliseconds)
+                crowdsalePageStore.startDate = startsAtMilliseconds
+              console.log('startDate:' + startsAtMilliseconds)
+
+              if (!crowdsalePageStore.endDate || crowdsalePageStore.endDate < endsAtMilliseconds)
+                crowdsalePageStore.setProperty('endDate', endsAtMilliseconds)
+              console.log("endDate:", endsAtMilliseconds)
+
+              crowdsalePageStore.setProperty('weiRaised', Number(crowdsaleInfo[1]).toFixed())
+              crowdsalePageStore.setProperty('ethRaised', web3.utils.fromWei(crowdsalePageStore.weiRaised, 'ether'))
+              crowdsalePageStore.setProperty('rate', Number(crowdsaleInfo[0]).toFixed()) //should be one token in wei
+
+              /*let getTokensSold = crowdsaleContract.methods.tokensSold().call().then((tokensSold) => {
+                const storedTokensSold = toBigNumber(crowdsalePageStore.tokensSold)
+                crowdsalePageStore.setProperty('tokensSold', storedTokensSold.plus(tokensSold).toFixed())
+              })
+
+              let getMaximumSellableTokens = crowdsaleContract.methods.maximumSellableTokens().call().then((maximumSellableTokens) => {
+                const maxSellableTokens = toBigNumber(crowdsalePageStore.maximumSellableTokens)
+                crowdsalePageStore.setProperty('maximumSellableTokens', maxSellableTokens.plus(maximumSellableTokens).toFixed())
+
+                //calc maximumSellableTokens in Eth
+                return setMaximumSellableTokensInEth(crowdsaleContract, maximumSellableTokens)
+              })
+
+              let getInvestors = crowdsaleContract.methods.investorCount().call().then((investors) => {
+                const storedInvestorsCount = toBigNumber(crowdsalePageStore.investors)
+                crowdsalePageStore.setProperty('investors', storedInvestorsCount.plus(investors).toFixed())
+              })*/
+
+
+
               resolve()
             });
         })
         .catch(reject)
     })
-  })
-}
-
-export function getPricingStrategyData () {
-  return new Promise((resolve, reject) => {
-    attachToContract(contractStore.pricingStrategy.abi, contractStore.pricingStrategy.addr)
-      .then(pricingStrategyContract => {
-        console.log('attach to pricing strategy contract')
-
-        if (!pricingStrategyContract) {
-          noContractAlert()
-          reject('no contract')
-          return
-        }
-
-        pricingStrategyContract.methods.oneTokenInWei().call((err, rate) => {
-          if (err) {
-            console.log(err)
-          }
-
-          console.log('pricing strategy rate:', rate)
-          crowdsalePageStore.setProperty('rate', rate)
-          resolve()
-        })
-      })
-      .catch(err => {
-        reject(err)
-        console.log(err)
-      })
   })
 }
 

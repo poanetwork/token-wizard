@@ -6,6 +6,7 @@ import {
   getAccumulativeCrowdsaleData,
   getContractStoreProperty,
   getCrowdsaleData,
+  getTokenData,
   getJoinedTiers,
   initializeAccumulativeData,
   toBigNumber
@@ -49,7 +50,7 @@ export class Crowdsale extends React.Component {
     checkNetWorkByID(networkID);
     generalStore.setProperty('networkID', networkID);
 
-    getWhiteListWithCapCrowdsaleAssets()
+    getWhiteListWithCapCrowdsaleAssets(networkID)
       .then(() => this.extractContractsData())
       .catch(console.log)
   }
@@ -65,7 +66,11 @@ export class Crowdsale extends React.Component {
       return invalidCrowdsaleAddrAlert()
     }*/
 
-    getJoinedTiers(contractStore.crowdsale.abi, crowdsaleAddr, [], (joinedCrowdsales) => {
+    getTokenData(crowdsaleAddr)
+      .then(() => this.setState({ loading: false }))
+      .catch(err => console.log(err))
+
+    /*getJoinedTiers(contractStore.crowdsale.abi, crowdsaleAddr, [], (joinedCrowdsales) => {
       console.log('joinedCrowdsales:', joinedCrowdsales)
 
       const _crowdsaleAddrs = typeof joinedCrowdsales === 'string' ? [joinedCrowdsales] : joinedCrowdsales
@@ -82,7 +87,7 @@ export class Crowdsale extends React.Component {
 
         this.getFullCrowdsaleData(crowdsaleContract)
       })
-    });
+    });*/
   }
 
   getFullCrowdsaleData (crowdsaleContract) {

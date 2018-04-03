@@ -53,11 +53,11 @@ export const setupContractDeployment = (web3) => {
 
 export const buildDeploymentSteps = (web3) => {
   const stepFnCorrelation = {
+    crowdsale: deployCrowdsale,
     token: deployToken,
-    //crowdsale: deployCrowdsale,
     //registerCrowdsaleAddress: registerCrowdsaleAddress,
-    //setReservedTokens: setReservedTokensListMultiple,
-    //whitelist: addWhitelist,
+    setReservedTokens: setReservedTokensListMultiple,
+    whitelist: addWhitelist,
   }
 
   let list = []
@@ -173,59 +173,6 @@ export const deployToken = () => {
   ]
 }
 
-/*export const deployToken = () => {
-  const { web3 } = web3Store
-  const toJS = x => JSON.parse(JSON.stringify(x))
-  return [
-    () => {
-      return getNetworkVersion()
-      .then((networkID) => {
-
-        return web3.eth.getAccounts()
-          .then((accounts) => accounts[0])
-          .then((account) => {
-
-            const paramsToken = getTokenParams(tokenStore)
-            console.log("paramsToken:", paramsToken)
-
-            let encodedParameters = web3.eth.abi.encodeParameters(["bytes32","bytes32","uint256","uint256","address"], paramsToken);
-            console.log("encodedParameters:", encodedParameters);
-
-            let functionName = "init(bytes32,bytes32,uint256,uint256,address)";
-            let functionSignature = web3.eth.abi.encodeFunctionSignature(functionName);
-            console.log("functionSignature init:", functionSignature);
-
-            let fullData = functionSignature + encodedParameters.substr(2);
-            console.log("full calldata:", fullData);
-
-            const abiScriptExec = contractStore.scriptExec.abi || []
-            const addrsScriptExec = contractStore.scriptExec.addr || {}
-            const scriptExec = new web3.eth.Contract(toJS(abiScriptExec), addrsScriptExec[networkID])
-            console.log(scriptExec)
-
-            let tokenAppName = process.env['REACT_APP_TOKEN_APP_NAME'] || '';
-            let tokenAppNameHex = web3.eth.abi.encodeParameter("bytes32", web3.utils.fromAscii(tokenAppName));
-            console.log("token app name:", tokenAppName);
-            console.log("token app name hex:", tokenAppNameHex);
-
-            const opts = { gasPrice: generalStore.gasPrice, from: account }
-            console.log("opts:", opts)
-            const method = scriptExec.methods.initAppInstance(tokenAppNameHex, fullData)
-            console.log("method:", method)
-
-            return method.estimateGas(opts)
-              .then(estimatedGas => {
-                opts.gasLimit = calculateGasLimit(estimatedGas)
-                return sendTXToContract(method.send(opts))
-                  .then(tokenAddr => contractStore.setContractProperty('token', 'addr', tokenAddr))
-                  .then(() => deploymentStore.setAsSuccessful('token'))
-              })
-          })
-      })
-    }
-  ]
-}*/
-
 const getPricingStrategyParams = tier => {
   BigNumber.config({ DECIMAL_PLACES: 18 })
   const rate = new BigNumber(tier.rate)
@@ -236,13 +183,44 @@ const getPricingStrategyParams = tier => {
   ]
 }
 
-const getCrowdSaleParams = index => {
+const getCrowdSaleParams = (account, tierObj, index) => {
+  const { web3 } = web3Store
   const { walletAddress, whitelistEnabled } = tierStore.tiers[0]
   const { updatable, supply, tier, startTime, endTime } = tierStore.tiers[index]
 
+  console.log("1")
+  BigNumber.config({ DECIMAL_PLACES: 18 })
+  console.log("2")
+  console.log(tierObj)
+  const rate = new BigNumber(tierObj.rate)
+  console.log("3")
+  const oneTokenInETH = rate.pow(-1).toFixed()
+  console.log("oneTokenInETH: ", oneTokenInETH)
+
   const formatDate = date => toFixed(parseInt(Date.parse(date) / 1000, 10).toString())
+  const duration = formatDate(endTime) - formatDate(startTime)
+
+  /*init(
+  address _team_wallet,
+  uint _sale_rate,
+  uint _start_time,
+  bytes32 _initial_tier_name,
+  uint _initial_tier_duration,
+  uint _initial_tier_token_sell_cap,
+  bool _initial_tier_is_whitelisted,
+  address _admin)*/
 
   return [
+    walletAddress,
+    web3.utils.toWei(oneTokenInETH, 'ether'),
+    formatDate(startTime),
+    web3.utils.sha3(tier),
+    duration.toString(),
+    toFixed(parseInt(supply, 10) * 10 ** parseInt(tokenStore.decimals, 10)).toString(),
+    whitelistEnabled === 'yes',
+    account
+  ]
+  /*return [
     tier,
     contractStore.token.addr,
     contractStore.pricingStrategy.addr[index],
@@ -253,20 +231,105 @@ const getCrowdSaleParams = index => {
     toFixed(parseInt(supply, 10) * 10 ** parseInt(tokenStore.decimals, 10)).toString(),
     updatable === 'on',
     whitelistEnabled === 'yes'
-  ]
+  ]*/
 }
 
 export const deployCrowdsale = () => {
+  const { web3 } = web3Store
+  const toJS = x => JSON.parse(JSON.stringify(x))
+  return tierStore.tiers.map((tier, index) => {
+    return () => {
+      return getNetworkVersion()
+      .then((networkID) => {
+
+        return web3.eth.getAccounts()
+          .then((accounts) => accounts[0])
+          .then((account) => {
+
+            const paramsCrowdsale = getCrowdSaleParams(account, tier, index)
+            console.log("paramsCrowdsale:", paramsCrowdsale)
+
+            let encodedParameters = web3.eth.abi.encodeParameters(["address","uint256","uint256","bytes32","uint256","uint256","bool","address"], paramsCrowdsale);
+            console.log("encodedParameters:", encodedParameters);
+
+            let functionName = "init(address,uint256,uint256,bytes32,uint256,uint256,bool,address)";
+            let functionSignature = web3.eth.abi.encodeFunctionSignature(functionName);
+            console.log("functionSignature init:", functionSignature);
+
+            let fullData = functionSignature + encodedParameters.substr(2);
+            console.log("full calldata:", fullData);
+
+            const abiRegistryStorage = contractStore.registryStorage.abi || []
+            const addrsRegistryStorage = contractStore.registryStorage.addr || {}
+            const registryStorage = new web3.eth.Contract(toJS(abiRegistryStorage), addrsRegistryStorage[networkID])
+            console.log(registryStorage)
+
+            const opts = { gasPrice: generalStore.gasPrice, from: account }
+            console.log("opts:", opts)
+            let isPayable = false;
+            let allowed = [];
+            let paramsToInitAndFinalize = [
+              account,
+              isPayable,
+              contractStore.initCrowdsale.addr[networkID],
+              fullData,
+              allowed
+            ]
+            console.log("paramsToInitAndFinalize: ", paramsToInitAndFinalize)
+            const method = registryStorage.methods.initAndFinalize(...paramsToInitAndFinalize)
+            console.log("method:", method)
+
+            return method.estimateGas(opts)
+              .then(estimatedGas => {
+                opts.gasLimit = calculateGasLimit(estimatedGas)
+                return sendTXToContract(method.send(opts))
+                  .then((logs) => {
+                    console.log("logs:")
+                    console.log(logs)
+
+                    let lasLog = logs.reduce(function(log, current) {
+                      console.log(log)
+                      console.log(current.topics)
+                      console.log(current.logIndex)
+                      if (!log) {
+                        return log = current;
+                      }
+                      if (current.logIndex > log.logIndex) {
+                        log = current;
+                      }
+                      return log
+                    }, 0)
+                    if (lasLog) {
+                      if (lasLog.topics) {
+                        if (lasLog.topics.length > 1) {
+                          let execID = lasLog.topics[1]
+                          console.log("exec_id", execID)
+                          contractStore.setContractProperty('crowdsale', 'addr', execID)
+                        }
+                      }
+                    }
+
+                    //contractStore.setContractProperty('token', 'addr', tokenAddr)
+                  })
+                  .then(() => deploymentStore.setAsSuccessful('crowdsale'))
+              })
+          })
+      })
+    }
+  })
+}
+
+/*export const deployCrowdsale = () => {
   return tierStore.tiers.map((tier, index) => {
     return () => {
       return getNetworkVersion()
         .then(networkID => contractStore.setContractProperty('crowdsale', 'networkID', networkID))
         .then(() => {
-          const abiCrowdsale = contractStore.crowdsale.abi || []
-          const binCrowdsale = contractStore.crowdsale.bin || ''
+          const abiRegistryStorage = contractStore.registryStorage.abi || []
+          const binRegistryStorage = contractStore.registryStorage.bin || ''
           const paramsCrowdsale = getCrowdSaleParams(index)
 
-          return deployInstance(abiCrowdsale, binCrowdsale, paramsCrowdsale)
+          return deployInstance(abiRegistryStorage, binRegistryStorage, paramsCrowdsale)
         })
         .then(crowdsaleAddr => {
           console.log('***Deploy crowdsale contract***', index, crowdsaleAddr)
@@ -277,7 +340,7 @@ export const deployCrowdsale = () => {
         .then(() => deploymentStore.setAsSuccessful('crowdsale'))
     }
   })
-}
+}*/
 
 function registerCrowdsaleAddress () {
   return [

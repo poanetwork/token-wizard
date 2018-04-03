@@ -22,9 +22,9 @@ class DeploymentStore {
 
   @action initialize = (hasReservedToken, hasWhitelist, tiersCount) => {
     const listOfTx = [
-      { name: 'token', dependsOnTiers: false, required: true },
-      /*{ name: 'crowdsale', dependsOnTiers: true, required: true },
-      { name: 'registerCrowdsaleAddress', dependsOnTiers: false, required: true },
+      //{ name: 'token', dependsOnTiers: false, required: true },
+      { name: 'crowdsale', dependsOnTiers: true, required: true },
+      /*{ name: 'registerCrowdsaleAddress', dependsOnTiers: false, required: true },
       { name: 'setReservedTokens', dependsOnTiers: false, required: hasReservedToken },
       { name: 'whitelist', dependsOnTiers: true, required: hasWhitelist },*/
     ]
