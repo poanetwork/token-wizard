@@ -8,7 +8,7 @@ class GasPriceInput extends Component {
 
     this.state = {
       isCustom: false,
-      customGasPrice: 0
+      customGasPrice: undefined
     }
   }
 
@@ -20,16 +20,21 @@ class GasPriceInput extends Component {
   }
 
   handleCustomSelected = () => {
-    const { input } = this.props
+    const { input, gasPrices } = this.props
 
-    this.setState({
-      isCustom: true
+    const newState = { isCustom: true }
+
+    if (this.state.customGasPrice === undefined) {
+      const slow = gasPrices.find(gasPrice => gasPrice.id === GAS_PRICE.SLOW.ID)
+      newState.customGasPrice = slow.price
+    }
+
+    this.setState(newState, () => {
+      input.onChange(Object.assign({}, {
+        id: GAS_PRICE.CUSTOM.ID,
+        price: this.state.customGasPrice
+      }))
     })
-
-    input.onChange(Object.assign({}, {
-      id: GAS_PRICE.CUSTOM.ID,
-      gasPrice: this.state.customGasPrice
-    }))
   }
 
   handleCustomGasPriceChange = (value) => {
