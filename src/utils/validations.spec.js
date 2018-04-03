@@ -1,6 +1,8 @@
 import {
   isAddress,
-  isDecimalPlacesNotGreaterThan, isInteger,
+  isDecimalPlacesNotGreaterThan,
+  isGreaterOrEqualThan,
+  isInteger,
   isLessOrEqualThan,
   isNonNegative,
   isPositive,
@@ -216,6 +218,31 @@ describe('isLessOrEqualThan', () => {
 
     it(`Should ${action} for '${testCase.value}'`, () => {
       expect(isLessOrEqualThan(testCase.errorMessage)(testCase.comparedTo)(testCase.value)).toBe(testCase.expected)
+    })
+  })
+})
+
+describe('isGreaterOrEqualThan', () => {
+  const testCases = [
+    { value: '10', errorMessage: undefined, comparedTo: '5',expected: undefined },
+    { value: '10.1', errorMessage: undefined, comparedTo: '5',expected: undefined },
+    { value: '20', errorMessage: undefined, comparedTo: '5',expected: undefined },
+    { value: '30', errorMessage: undefined, comparedTo: '5',expected: undefined },
+    { value: '40', errorMessage: undefined, comparedTo: '5',expected: undefined },
+    { value: '50', errorMessage: undefined, comparedTo: '5',expected: undefined },
+    { value: '0.1', errorMessage: undefined, comparedTo: '0.1',expected: undefined },
+    { value: '0.1234', errorMessage: undefined, comparedTo: '0.1',expected: undefined },
+    { value: '0.0001', errorMessage: undefined, comparedTo: '0.1',expected: VALIDATION_MESSAGES.GREATER_OR_EQUAL },
+    { value: '0', errorMessage: undefined, comparedTo: '0.1',expected: VALIDATION_MESSAGES.GREATER_OR_EQUAL },
+    { value: '-10', errorMessage: undefined, comparedTo: '0.1',expected: VALIDATION_MESSAGES.GREATER_OR_EQUAL },
+    { value: '-10', errorMessage: 'Personalized error message', comparedTo: '0.1', expected: 'Personalized error message' },
+  ]
+
+  testCases.forEach(testCase => {
+    const action = testCase.expected === undefined ? 'pass' : 'fail'
+
+    it(`Should ${action} for '${testCase.value}'`, () => {
+      expect(isGreaterOrEqualThan(testCase.errorMessage)(testCase.comparedTo)(testCase.value)).toBe(testCase.expected)
     })
   })
 })

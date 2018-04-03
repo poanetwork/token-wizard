@@ -61,6 +61,16 @@ export const isLessOrEqualThan = (errorMsg = VALIDATION_MESSAGES.LESS_OR_EQUAL) 
   }
 }
 
+export const isGreaterOrEqualThan = (errorMsg = VALIDATION_MESSAGES.GREATER_OR_EQUAL) => (minValue = Number.MIN_VALUE) => (value) => {
+  try {
+    const min = new BigNumber(String(minValue))
+    const isValid = min.lte(value)
+    return isValid ? undefined : errorMsg
+  } catch (e) {
+    return errorMsg
+  }
+}
+
 export const isInteger = (errorMsg = VALIDATION_MESSAGES.INTEGER) => (value) => {
   try {
     const isValid = new BigNumber(value).isInteger()
