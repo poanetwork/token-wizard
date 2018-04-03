@@ -99,6 +99,14 @@ class GasPriceStore {
       { ...this.custom, description: this.customDescription },
     ]
   }
+
+  @computed
+  get gasPricesInGwei () {
+    return this.gasPrices.map(gasPrice => ({
+      ...gasPrice,
+      price: weiToGwei(gasPrice.price)
+    }))
+  }
 }
 
 export default GasPriceStore

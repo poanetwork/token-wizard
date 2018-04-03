@@ -60,6 +60,29 @@ describe('GasPriceStore', () => {
     })
   })
 
+  it('should return gasPrices collection in Gwei', () => {
+    expect(gas.gasPricesInGwei[0]).toEqual({
+      id: GAS_PRICE.SLOW.ID,
+      price: weiToGwei(GAS_PRICE.SLOW.PRICE),
+      description: gas.slowDescription,
+    })
+    expect(gas.gasPricesInGwei[1]).toEqual({
+      id: GAS_PRICE.NORMAL.ID,
+      price: weiToGwei(GAS_PRICE.NORMAL.PRICE),
+      description: gas.standardDescription,
+    })
+    expect(gas.gasPricesInGwei[2]).toEqual({
+      id: GAS_PRICE.FAST.ID,
+      price: weiToGwei(GAS_PRICE.FAST.PRICE),
+      description: gas.fastDescription,
+    })
+    expect(gas.gasPricesInGwei[3]).toEqual({
+      id: GAS_PRICE.CUSTOM.ID,
+      price: weiToGwei(GAS_PRICE.CUSTOM.PRICE),
+      description: gas.customDescription,
+    })
+  })
+
   it('should updates values with mocked data', () => {
     const gasPrice = require('../utils/__mocks__/gasPrice.json')
 
