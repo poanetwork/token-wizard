@@ -154,10 +154,13 @@ export class Invest extends React.Component {
       nextTick = crowdsalePageStore.extractNextTick()
       millisecondsToNextTick = nextTick.time - Date.now()
       const FIVE_MINUTES_BEFORE_TICK = moment(millisecondsToNextTick).subtract(5, 'minutes').valueOf()
+      const ONE_DAY = 24 * 3600 * 1000
 
-      setTimeout(() => {
-        this.setState({ displaySeconds: true })
-      }, FIVE_MINUTES_BEFORE_TICK)
+      if (FIVE_MINUTES_BEFORE_TICK < ONE_DAY) {
+        setTimeout(() => {
+          this.setState({ displaySeconds: true })
+        }, FIVE_MINUTES_BEFORE_TICK)
+      }
 
       timeInterval = setInterval(() => {
         const time = moment.duration(this.state.nextTick.time - Date.now())

@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import '../../assets/stylesheets/application.css'
-import { Link } from 'react-router-dom'
 import { checkWeb3 } from '../../utils/blockchainHelpers'
 import { StepNavigation } from '../Common/StepNavigation'
-import { ReservedTokensInputBlock } from '../Common/ReservedTokensInputBlock'
 import { clearingReservedTokens } from '../../utils/alerts'
 import { NAVIGATION_STEPS, VALIDATION_TYPES } from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
@@ -31,15 +29,6 @@ export class stepTwo extends Component {
 
   componentDidMount() {
     checkWeb3(this.props.web3Store.web3)
-  }
-
-  beforeNavigate = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-
-    document
-      .getElementById('tokenData')
-      .dispatchEvent(new Event('submit'))
   }
 
   removeReservedToken = index => {
@@ -92,21 +81,13 @@ export class stepTwo extends Component {
             component={StepTwoForm}
             disableDecimals={!!this.props.reservedTokenStore.tokens.length}
             updateTokenStore={this.updateTokenStore}
-            id="tokenData"
-          />
-          <div className="reserved-tokens-title">
-            <p className="title">Reserved tokens</p>
-          </div>
-          <ReservedTokensInputBlock
             tokens={this.props.reservedTokenStore.tokens}
             decimals={decimals}
             addReservedTokensItem={this.addReservedTokensItem}
             removeReservedToken={this.removeReservedToken}
             clearAll={this.clearReservedTokens}
+            id="tokenData"
           />
-        </div>
-        <div className="button-container">
-          <Link onClick={e => this.beforeNavigate(e)} className="button button_fill" to="/3">Continue</Link>
         </div>
       </section>
     )}
