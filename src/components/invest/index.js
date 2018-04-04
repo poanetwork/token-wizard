@@ -1,15 +1,15 @@
 import React from 'react'
-import { attachToContract, checkNetWorkByID, checkTxMined, sendTXToContract } from '../../utils/blockchainHelpers'
+import { checkNetWorkByID, checkTxMined, sendTXToContract } from '../../utils/blockchainHelpers'
 import {
   getCurrentAccount,
   attachToInitCrowdsaleContract,
   getAccumulativeCrowdsaleData,
-  getContractStoreProperty,
   getTokenData,
   getCrowdsaleData,
   getCrowdsaleTargetDates,
   getCurrentRate,
   initializeAccumulativeData,
+  isFinalized,
   toBigNumber
 } from '../crowdsale/utils'
 import { countDecimalPlaces, getQueryVariable, toast } from '../../utils/utils'
@@ -104,8 +104,6 @@ export class Invest extends React.Component {
 
     getCurrentAccount()
       .then(account => {
-        const crowdsaleExecID = CrowdsaleConfig.crowdsaleContractURL ? CrowdsaleConfig.crowdsaleContractURL : getQueryVariable('exec-id')
-
         console.log("crowdsaleExecID:", crowdsaleExecID)
         contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
 
@@ -120,18 +118,6 @@ export class Invest extends React.Component {
         }
 
         attachToInitCrowdsaleContract()
-          .then((iniCrowdsaleContract) => {
-            initializeAccumulativeData()
-              .then(() => getCrowdsaleData(iniCrowdsaleContract, crowdsaleExecID))
-              .then(() => getAccumulativeCrowdsaleData())
-              .then(() => getCrowdsaleTargetDates())
-              .then(() => this.checkIsFinalized())
-              .then(() => this.setTimers())
-              .catch(err => console.log(err))
-              .then(() => this.setState({ loading: false }))
-          })
-
-        attachToInitCrowdsaleContract()
           .then((initCrowdsaleContract) => {
             initializeAccumulativeData()
             .then(() => {
@@ -139,9 +125,9 @@ export class Invest extends React.Component {
               let whenCrowdsaleData = getCrowdsaleData(initCrowdsaleContract, crowdsaleExecID)
               return Promise.all([whenTokenData, whenCrowdsaleData])
             })
-              .then(() => getAccumulativeCrowdsaleData())
-              .then(() => getCrowdsaleTargetDates())
-              .then(() => this.checkIsFinalized())
+              .then(() => getAccumulativeCrowdsaleData(initCrowdsaleContract, crowdsaleExecID))
+              .then(() => getCrowdsaleTargetDates(initCrowdsaleContract, crowdsaleExecID))
+              .then(() => this.checkIsFinalized(initCrowdsaleContract, crowdsaleExecID))
               .then(() => this.setTimers())
               .catch(err => console.log(err))
               .then(() => this.setState({ loading: false }))
@@ -149,8 +135,8 @@ export class Invest extends React.Component {
       })
   }
 
-  checkIsFinalized() {
-    return this.isFinalized()
+  checkIsFinalized(initCrowdsaleContract, crowdsaleExecID) {
+    return isFinalized(initCrowdsaleContract, crowdsaleExecID)
       .then(isFinalized => {
         this.setState({ isFinalized })
       })
@@ -234,13 +220,20 @@ export class Invest extends React.Component {
   }
 
   investToTokensForWhitelistedCrowdsale() {
-    const { crowdsalePageStore, web3Store } = this.props
-    const { web3 } = web3Store
+    const { crowdsalePageStore } = this.props
 
     if (crowdsalePageStore.startDate > (new Date()).getTime()) {
       this.setState({ loading: false })
       return investmentDisabledAlertInTime(crowdsalePageStore.startDate)
     }
+
+    getCurrentAccount()
+      .then(account => {
+        attachToInitCrowdsaleContract()
+          .then((initCrowdsaleContract) => {
+            this.investToTokensForWhitelistedCrowdsaleInternal(initCrowdsaleContract, account)
+          })
+      })
 
     /*findCurrentContractRecursively(0, null, (crowdsaleContract, tierNum) => {
       if (!crowdsaleContract) {
@@ -255,13 +248,13 @@ export class Invest extends React.Component {
     })*/
   }
 
-  investToTokensForWhitelistedCrowdsaleInternal(crowdsaleContract, tierNum, accounts) {
+  investToTokensForWhitelistedCrowdsaleInternal(initCrowdsaleContract, account) {
     const { contractStore, tokenStore, crowdsalePageStore, investStore, generalStore } = this.props
 
-    let nextTiers = []
-    for (let i = tierNum + 1; i < contractStore.crowdsale.execID.length; i++) {
+    let nextTiers = [""]
+    /*for (let i = tierNum + 1; i < contractStore.crowdsale.execID.length; i++) {
       nextTiers.push(contractStore.crowdsale.execID[i])
-    }
+    }*/
     console.log('nextTiers:', nextTiers)
     console.log(nextTiers.length)
 
@@ -278,18 +271,18 @@ export class Invest extends React.Component {
     console.log('weiToSend:', weiToSend)
 
     const opts = {
-      from: accounts[0],
+      from: account,
       value: weiToSend,
       gasPrice: generalStore.gasPrice
     }
     console.log(opts)
 
-    crowdsaleContract.methods.buy().estimateGas(opts)
+    initCrowdsaleContract.methods.buy().estimateGas(opts)
       .then(estimatedGas => {
         const estimatedGasMax = 4016260
         opts.gasLimit = !estimatedGas || estimatedGas > estimatedGasMax ? estimatedGasMax : estimatedGas + 100000
 
-        return sendTXToContract(crowdsaleContract.methods.buy().send(opts))
+        return sendTXToContract(initCrowdsaleContract.methods.buy().send(opts))
       })
       .then(() => successfulInvestmentAlert(investStore.tokensToInvest))
       .catch(err => toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED }))
@@ -320,16 +313,6 @@ export class Invest extends React.Component {
     return +token > 0 && countDecimalPlaces(token) <= this.props.tokenStore.decimals
   }
 
-  isFinalized() {
-    const { contractStore } = this.props
-    const lastCrowdsaleAddress = contractStore.crowdsale.execID.slice(-1)[0]
-
-    return attachToContract(contractStore.crowdsale.abi, lastCrowdsaleAddress)
-      .then(crowdsaleContract => {
-        return crowdsaleContract.methods.finalized().call()
-      })
-  }
-
   render () {
     const { crowdsalePageStore, tokenStore, contractStore, investStore } = this.props
     const { tokenAmountOf } = crowdsalePageStore
@@ -346,7 +329,7 @@ export class Invest extends React.Component {
     const tokenName = name ? name.toString() : ''
     const maximumSellableTokens = toBigNumber(crowdsalePageStore.maximumSellableTokens)
     const maxCapBeforeDecimals = toBigNumber(maximumSellableTokens).div(`1e${tokenDecimals}`)
-    const tokenAddress = getContractStoreProperty('token', 'addr')
+    //const tokenAddress = getContractStoreProperty('token', 'addr')
 
     //balance
     const investorBalanceTiers = tokenAmountOf ? (tokenAmountOf / 10 ** tokenDecimals).toString() : '0'

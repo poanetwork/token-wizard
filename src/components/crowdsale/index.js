@@ -103,7 +103,7 @@ export class Crowdsale extends React.Component {
     return Promise.all([whenTokenData, whenCrowdsaleData])
       .then(() => initializeAccumulativeData())
       .then(() => {
-        return getAccumulativeCrowdsaleData()
+        return getAccumulativeCrowdsaleData(initCrowdsaleContract, crowdsaleExecID)
       })
       .then(() => {
         this.setState({ loading: false })
