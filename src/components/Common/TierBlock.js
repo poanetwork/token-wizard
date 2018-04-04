@@ -181,7 +181,7 @@ export const TierBlock = ({ fields, ...props }) => {
             </div>
           </div>
           {
-            props.tierStore.tiers[index].whitelistEnabled === 'yes' ? (
+            props.tierStore.tiers[0].whitelistEnabled === 'yes' ? (
               <div>
                 <div className="section-title">
                   <p className="title">Whitelist</p>
