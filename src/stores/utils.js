@@ -7,6 +7,8 @@ export function getWhiteListWithCapCrowdsaleAssets(networkID) {
     getCrowdsaleAsset("REACT_APP_INIT_CROWDSALE", "initCrowdsale", networkID)
     getCrowdsaleAsset("REACT_APP_CROWDSALE_CONSOLE", "crowdsaleConsole", networkID)
     getCrowdsaleAsset("REACT_APP_REGISTRY_STORAGE", "registryStorage", networkID)
+    getCrowdsaleAsset("REACT_APP_SCRIPT_EXEC", "scriptExec", networkID)
+    getCrowdsaleAsset("REACT_APP_CROWDSALE_BUY_TOKENS", "crowdsaleBuyTokens", networkID)
     resolve(contractStore);
   })
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { checkNetWorkByID, checkTxMined, sendTXToContract } from '../../utils/blockchainHelpers'
+import { checkNetWorkByID, checkTxMined, sendTXToContract, calculateGasLimit } from '../../utils/blockchainHelpers'
 import {
   getCurrentAccount,
   attachToInitCrowdsaleContract,
@@ -28,6 +28,7 @@ import QRPaymentProcess from './QRPaymentProcess'
 import CountdownTimer from './CountdownTimer'
 import classNames from 'classnames'
 import moment from 'moment'
+import { toJS } from 'mobx'
 
 @inject('contractStore', 'crowdsalePageStore', 'web3Store', 'tierStore', 'tokenStore', 'generalStore', 'investStore', 'gasPriceStore', 'generalStore')
 @observer
@@ -248,8 +249,21 @@ export class Invest extends React.Component {
     })*/
   }
 
-  investToTokensForWhitelistedCrowdsaleInternal(initCrowdsaleContract, account) {
-    const { contractStore, tokenStore, crowdsalePageStore, investStore, generalStore } = this.props
+  getBuyParams = (account, weiToSend) => {
+    const { web3Store } = this.props
+    const { web3 } = web3Store
+    console.log(this.state.crowdsaleExecID)
+    console.log(account)
+    console.log(weiToSend)
+    let paramsBuy = [this.state.crowdsaleExecID, account, weiToSend];
+    console.log(paramsBuy);
+    let encodedParameters = web3.eth.abi.encodeParameters(["bytes32","address","uint256"], paramsBuy);
+    return encodedParameters;
+  }
+
+  investToTokensForWhitelistedCrowdsaleInternal = (initCrowdsaleContract, account) => {
+    const { web3Store, contractStore, tokenStore, crowdsalePageStore, investStore, generalStore } = this.props
+    const { web3 } = web3Store
 
     let nextTiers = [""]
     /*for (let i = tierNum + 1; i < contractStore.crowdsale.execID.length; i++) {
@@ -277,7 +291,46 @@ export class Invest extends React.Component {
     }
     console.log(opts)
 
-    initCrowdsaleContract.methods.buy().estimateGas(opts)
+    const paramsBuy = this.getBuyParams(account, weiToSend)
+    console.log("paramsBuy:", paramsBuy)
+
+    let functionName = "buy(bytes)";
+    let functionSignature = web3.eth.abi.encodeFunctionSignature(functionName);
+    console.log("functionSignature buy:", functionSignature);
+
+    let fullData = functionSignature + paramsBuy.substr(2);
+    console.log("full calldata:", fullData);
+
+    const abiScriptExec = contractStore.scriptExec.abi || []
+    console.log("abiScriptExec:", abiScriptExec)
+    const addrScriptExec = contractStore.scriptExec.addr || {}
+    console.log("addrScriptExec:", addrScriptExec)
+    const scriptExec = new web3.eth.Contract(toJS(abiScriptExec), addrScriptExec)
+    console.log(scriptExec)
+
+    const target = contractStore.crowdsaleBuyTokens.addr;
+
+    let paramsToExec = [
+      target,
+      fullData
+    ]
+    console.log("paramsToExec: ", paramsToExec)
+
+    const method = scriptExec.methods.exec(...paramsToExec)
+    console.log("method:", method)
+
+    method.estimateGas(opts)
+      .then(estimatedGas => {
+        console.log("estimatedGas:",estimatedGas)
+        opts.gasLimit = calculateGasLimit(estimatedGas)
+        return sendTXToContract(method.send(opts))
+      })
+      .then(() => successfulInvestmentAlert(investStore.tokensToInvest))
+      .catch(err => toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED }))
+      .then(() => this.setState({ loading: false }))
+      .catch((err) => console.log)
+
+    /*initCrowdsaleContract.methods.buy().estimateGas(opts)
       .then(estimatedGas => {
         const estimatedGasMax = 4016260
         opts.gasLimit = !estimatedGas || estimatedGas > estimatedGasMax ? estimatedGasMax : estimatedGas + 100000
@@ -286,7 +339,7 @@ export class Invest extends React.Component {
       })
       .then(() => successfulInvestmentAlert(investStore.tokensToInvest))
       .catch(err => toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED }))
-      .then(() => this.setState({ loading: false }))
+      .then(() => this.setState({ loading: false }))*/
   }
 
   txMinedCallback(txHash, receipt) {
