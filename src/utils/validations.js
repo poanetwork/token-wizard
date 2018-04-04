@@ -95,6 +95,16 @@ export const isDateSameOrLaterThan = (errorMsg = VALIDATION_MESSAGES.DATE_IS_SAM
   return isValid ? undefined : errorMsg
 }
 
+export const isDateLaterThan = (errorMsg = VALIDATION_MESSAGES.DATE_IS_LATER) => (previous) => (value) => {
+  const isValid = validateLaterTime(value, previous)
+  return isValid ? undefined : errorMsg
+}
+
+export const isDateSameOrPreviousThan = (errorMsg = VALIDATION_MESSAGES.DATE_IS_SAME_OR_LATER) => (later) => (value) => {
+  const isValid = validateLaterOrEqualTime(later, value)
+  return isValid ? undefined : errorMsg
+}
+
 export const composeValidators = (...validators) => (value) => validators.reduce((errors, validator) => {
   const validation = validator(value)
 

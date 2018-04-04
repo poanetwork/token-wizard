@@ -121,6 +121,8 @@ export const VALIDATION_MESSAGES = {
   DATE_IN_FUTURE: 'Should be set in the future',
   DATE_IS_PREVIOUS: 'Should be previous than specified time',
   DATE_IS_SAME_OR_LATER: 'Should be same or later than specified time',
+  DATE_IS_LATER: 'Should be later than specified time',
+  DATE_IS_SAME_OR_PREVIOUS: 'Should be same or previous than specified time',
 }
 
 //descriptions of input fields
