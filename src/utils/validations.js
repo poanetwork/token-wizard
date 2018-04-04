@@ -100,7 +100,7 @@ export const isDateLaterThan = (errorMsg = VALIDATION_MESSAGES.DATE_IS_LATER) =>
   return isValid ? undefined : errorMsg
 }
 
-export const isDateSameOrPreviousThan = (errorMsg = VALIDATION_MESSAGES.DATE_IS_SAME_OR_LATER) => (later) => (value) => {
+export const isDateSameOrPreviousThan = (errorMsg = VALIDATION_MESSAGES.DATE_IS_SAME_OR_PREVIOUS) => (later) => (value) => {
   const isValid = validateLaterOrEqualTime(later, value)
   return isValid ? undefined : errorMsg
 }
