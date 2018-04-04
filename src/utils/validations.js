@@ -105,11 +105,15 @@ export const isDateSameOrPreviousThan = (errorMsg = VALIDATION_MESSAGES.DATE_IS_
   return isValid ? undefined : errorMsg
 }
 
-export const composeValidators = (...validators) => (value) => validators.reduce((errors, validator) => {
-  const validation = validator(value)
+export const composeValidators = (...validators) => (value) => {
+  const errors = validators.reduce((errors, validator) => {
+    const validation = validator(value)
 
-  if (validation) errors.push(validation)
+    if (validation) errors.push(validation)
 
-  return errors
-}, [])
+    return errors
+  }, [])
+
+  return errors.length ? errors : undefined
+}
 

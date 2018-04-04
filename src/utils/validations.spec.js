@@ -532,13 +532,12 @@ describe('composeValidators', () => {
     expect(Array.isArray(listOfErrors)).toBeTruthy()
   })
 
-  it('Should return an empty array if there is no error', () => {
+  it('Should return "undefined" if there is no error', () => {
     const listOfErrors = composeValidators(
       isRequired(),
       isNonNegative(),
     )(123)
 
-    expect(Array.isArray(listOfErrors)).toBeTruthy()
-    expect(listOfErrors.length).toBe(0)
+    expect(listOfErrors).toBeUndefined()
   })
 })
