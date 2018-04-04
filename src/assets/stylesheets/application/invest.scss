@@ -70,6 +70,8 @@
     }
 
     &-title {
+      overflow: hidden;
+      text-overflow: ellipsis;
       margin-bottom: 10px;
       color: #642f9c;
       font-weight: bold;
@@ -83,7 +85,7 @@
 
   .balance {
     border-bottom: 1px solid #eee;
-    padding: 30px;
+    padding: 20px;
 
     &-title {
       margin-bottom: 5px;
@@ -129,7 +131,7 @@
   }
 
   &-form {
-    padding: 30px;
+    padding: 20px;
 
     ::placeholder {
       color: #8197a2;

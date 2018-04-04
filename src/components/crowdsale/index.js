@@ -2,12 +2,12 @@ import React from 'react'
 import '../../assets/stylesheets/application.css'
 import { checkNetWorkByID, checkWeb3 } from '../../utils/blockchainHelpers'
 import {
-  findCurrentContractRecursively,
+  getCurrentAccount,
+  attachToInitCrowdsaleContract,
   getAccumulativeCrowdsaleData,
   getContractStoreProperty,
   getCrowdsaleData,
   getTokenData,
-  getJoinedTiers,
   initializeAccumulativeData,
   toBigNumber
 } from './utils'
@@ -56,42 +56,51 @@ export class Crowdsale extends React.Component {
   }
 
   extractContractsData = () => {
-    const { contractStore, web3Store } = this.props
-    const { web3 } = web3Store
-    const crowdsaleAddr = CrowdsaleConfig.crowdsaleContractURL ? CrowdsaleConfig.crowdsaleContractURL : getQueryVariable('addr')
+    const { contractStore } = this.props
+    const crowdsaleExecID = CrowdsaleConfig.crowdsaleContractURL ? CrowdsaleConfig.crowdsaleContractURL : getQueryVariable('exec-id')
 
+    console.log("crowdsaleExecID:", crowdsaleExecID)
     //to do
     /*if (!web3.utils.isAddress(crowdsaleAddr)) {
       this.setState({ loading: false })
       return invalidCrowdsaleAddrAlert()
     }*/
 
-    getTokenData(crowdsaleAddr)
-      .then(() => this.setState({ loading: false }))
-      .catch(err => console.log(err))
+    contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
 
-    /*getJoinedTiers(contractStore.crowdsale.abi, crowdsaleAddr, [], (joinedCrowdsales) => {
-      console.log('joinedCrowdsales:', joinedCrowdsales)
+    if (!contractStore.crowdsale.execID) {
+      this.setState({ loading: false })
+      return
+    }
 
-      const _crowdsaleAddrs = typeof joinedCrowdsales === 'string' ? [joinedCrowdsales] : joinedCrowdsales
-      contractStore.setContractProperty('crowdsale', 'addr', _crowdsaleAddrs)
+    getCurrentAccount()
+      .then(account => {
 
-      if (!contractStore.crowdsale.addr) {
-        return
-      }
-
-      findCurrentContractRecursively(0, null, (crowdsaleContract) => {
-        if (!crowdsaleContract) {
-          return this.setState({ loading: false })
-        }
-
-        this.getFullCrowdsaleData(crowdsaleContract)
+        attachToInitCrowdsaleContract()
+          .then((initCrowdsaleContract) => {
+            this.getFullCrowdsaleData(initCrowdsaleContract, crowdsaleExecID, account)
+              .then(() => this.setState({ loading: false }))
+              .catch(err => {
+                this.setState({ loading: false })
+                console.log(err)
+              })
+          })
+          .catch(err => {
+            this.setState({ loading: false })
+            console.log(err)
+          })
       })
-    });*/
+      .catch(err => {
+        this.setState({ loading: false })
+        console.log(err)
+      })
   }
 
-  getFullCrowdsaleData (crowdsaleContract) {
-    getCrowdsaleData(crowdsaleContract)
+  getFullCrowdsaleData = (initCrowdsaleContract, crowdsaleExecID, account) => {
+    let whenTokenData = getTokenData(initCrowdsaleContract, crowdsaleExecID, account)
+    let whenCrowdsaleData = getCrowdsaleData(initCrowdsaleContract, crowdsaleExecID, account)
+
+    return Promise.all([whenTokenData, whenCrowdsaleData])
       .then(() => initializeAccumulativeData())
       .then(() => {
         return getAccumulativeCrowdsaleData()
@@ -109,8 +118,8 @@ export class Crowdsale extends React.Component {
     const { contractStore, generalStore } = this.props
     let queryStr = "";
     if (!CrowdsaleConfig.crowdsaleContractURL || !CrowdsaleConfig.networkID) {
-      if (contractStore.crowdsale.addr) {
-        queryStr = "?addr=" + contractStore.crowdsale.addr[0];
+      if (contractStore.crowdsale.execID) {
+        queryStr = "?exec-id=" + contractStore.crowdsale.execID;
         if (generalStore.networkID) {
           queryStr += "&networkID=" + generalStore.networkID;
         }
@@ -124,9 +133,8 @@ export class Crowdsale extends React.Component {
     const { web3Store, tokenStore, crowdsalePageStore } = this.props
     const { web3 } = web3Store
 
-    const tokenAddr = getContractStoreProperty('token','addr')
-    const tempCrowdsaleAddr = getContractStoreProperty('crowdsale','addr')
-    const crowdsaleAddr = tempCrowdsaleAddr === 'string' ? tempCrowdsaleAddr : tempCrowdsaleAddr[0]
+    //const tokenAddr = getContractStoreProperty('token','addr')
+    const crowdsaleExecID = getContractStoreProperty('crowdsale','execID')
     const investorsCount = crowdsalePageStore.investors ? crowdsalePageStore.investors.toString() : 0
 
     const rate = toBigNumber(crowdsalePageStore.rate)
@@ -202,8 +210,10 @@ export class Crowdsale extends React.Component {
                     <p className="description">Contributors</p>
                   </div>
                 </div>
-                <p className="hash">{`${tokenAddr}`}</p>
-                <p className="description">Token Address</p>
+                {/*<p className="hash">{`${tokenAddr}`}</p>
+                <p className="description">Token Address</p>*/}
+                <p className="hash">{`${crowdsaleExecID}`}</p>
+                <p className="description">Crowdsale Execution ID</p>
               </div>
               <div className="right" style={{ width: '58%' }}>
                 <div className="hidden">
@@ -216,8 +226,6 @@ export class Crowdsale extends React.Component {
                     <p className="description">Total Supply</p>
                   </div>
                 </div>
-                <p className="hash">{`${crowdsaleAddr}`}</p>
-                <p className="description">Crowdsale Contract Address</p>
               </div>
             </div>
           </div>

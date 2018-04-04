@@ -2,18 +2,18 @@ import React from 'react'
 import QRCode from 'qrcode.react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
-const QRPaymentProcess = ({ crowdsaleAddress }) => {
+const QRPaymentProcess = ({ crowdsaleExecID }) => {
   return (
     <div>
       <div className="payment-process">
           <div className="payment-process-qr">
-            <QRCode value={crowdsaleAddress}></QRCode>
+            <QRCode value={crowdsaleExecID}></QRCode>
           </div>
         <p className="payment-process-hash">
-          { crowdsaleAddress }
+          { crowdsaleExecID }
         </p>
 
-        <CopyToClipboard text={crowdsaleAddress}>
+        <CopyToClipboard text={crowdsaleExecID}>
           <a href="" onClick={e => e.preventDefault()} className="payment-process-copy">Copy Address</a>
         </CopyToClipboard>
 
