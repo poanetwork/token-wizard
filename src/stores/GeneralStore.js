@@ -4,7 +4,7 @@ import autosave from './autosave'
 
 class GeneralStore {
 
-  @observable networkId;
+  @observable networkID;
   @observable gasPrice = GAS_PRICE.FAST.PRICE;
 
   constructor() {

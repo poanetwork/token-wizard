@@ -13,12 +13,20 @@ import {
   warningOnFinalizeCrowdsale,
   notTheOwner
 } from '../../utils/alerts'
-import { getNetworkVersion, sendTXToContract, attachToContract, calculateGasLimit } from '../../utils/blockchainHelpers'
+import {
+  getCurrentAccount,
+  getNetworkVersion,
+  sendTXToContract,
+  attachToContract,
+  calculateGasLimit,
+  attachToInitCrowdsaleContract
+} from '../../utils/blockchainHelpers'
 import { toast } from '../../utils/utils'
 import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
 import { getTiers, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
 import classNames from 'classnames'
+import { toJS } from 'mobx'
 
 const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME } = TEXT_FIELDS
 
@@ -50,15 +58,21 @@ export class Manage extends Component {
   }
 
   componentWillMount () {
-    const { crowdsaleStore, generalStore, match } = this.props
-    const crowdsaleAddress = match.params.crowdsaleAddress
+    const { contractStore, crowdsaleStore, generalStore, match } = this.props
+    const crowdsaleExecID = match.params.crowdsaleExecID
+    console.log("crowdsaleExecID:", crowdsaleExecID)
 
-    crowdsaleStore.setSelectedProperty('address', crowdsaleAddress)
+    crowdsaleStore.setSelectedProperty('execID', crowdsaleExecID)
 
     // networkID
-    getNetworkVersion().then(networkId => generalStore.setProperty('networkId', networkId))
-
-    getWhiteListWithCapCrowdsaleAssets().then(this.extractContractData)
+    getNetworkVersion().then(networkID => {
+      generalStore.setProperty('networkID', networkID)
+      getWhiteListWithCapCrowdsaleAssets(networkID)
+        .then(_newState => {
+          this.setState(_newState)
+          this.extractContractsData()
+        })
+    })
   }
 
   componentWillUnmount () {
@@ -86,26 +100,47 @@ export class Manage extends Component {
       })
   }
 
-  extractContractData = () => {
-    const { contractStore, crowdsaleStore } = this.props
+  extractContractsData = () => {
+    const { contractStore, crowdsaleStore, match } = this.props
+    contractStore.setContractProperty('crowdsale', 'execID', match.params.crowdsaleExecID)
 
-    getTiers(crowdsaleStore.selected.address)
-      .then(joinedCrowdsales => {
-        contractStore.setContractProperty('crowdsale', 'addr', joinedCrowdsales)
+    //to do: get the number of tiers
+    let numOfTiers = 1;
 
-        if (!contractStore.crowdsale.addr) {
-          this.hideLoader()
-          return Promise.reject('no tiers addresses')
-        }
+    getCurrentAccount()
+      .then(account => {
+        attachToInitCrowdsaleContract()
+          .then((initCrowdsaleContract) => {
+            console.log(initCrowdsaleContract)
+            let registryStorageObj = toJS(contractStore.registryStorage)
+            console.log("registryStorageObj:", registryStorageObj)
+            let whenCrowdsaleData = [];
+            let whenCrowdsale = initCrowdsaleContract.methods.getCrowdsaleInfo(registryStorageObj.addr, contractStore.crowdsale.execID).call();
+            whenCrowdsaleData.push(whenCrowdsale)
+            let whenToken = initCrowdsaleContract.methods.getTokenInfo(registryStorageObj.addr, contractStore.crowdsale.execID).call();
+            whenCrowdsaleData.push(whenToken)
+            for (let tierNum = 0; tierNum < numOfTiers; tierNum++) {
+              let whetTier = initCrowdsaleContract.methods.getCrowdsaleTier(registryStorageObj.addr, contractStore.crowdsale.execID, tierNum).call();
+              whenCrowdsaleData.push(whetTier);
+            }
+
+            return Promise.all(whenCrowdsaleData)
+          })
+          .then(crowdsaleData => {
+            console.log(crowdsaleData)
+            let crowdsale = crowdsaleData[0]
+            let token = crowdsaleData[1]
+            crowdsaleData.shift();
+            crowdsaleData.shift();
+            let tiers = crowdsaleData.slice();
+            return tiers.reduce((promise, tier, index) => {
+              return promise.then(() => processTier(tier, crowdsale, token, index))
+            }, Promise.resolve())
+          })
+          .then(this.updateCrowdsaleStatus)
+          .catch(console.log)
+          .then(this.hideLoader)
       })
-      .then(() => {
-        return contractStore.crowdsale.addr.reduce((promise, addr, index) => {
-          return promise.then(() => processTier(addr, index))
-        }, Promise.resolve())
-      })
-      .then(this.updateCrowdsaleStatus)
-      .catch(console.log)
-      .then(this.hideLoader)
   }
 
   hideLoader = () => {
@@ -501,7 +536,7 @@ export class Manage extends Component {
         <p className="title">{tokenStore.name} ({tokenStore.ticker}) Settings</p>
         <p className="description">The most important and exciting part of the crowdsale process. Here you can define
           parameters of your crowdsale campaign.</p>
-        <Link to={`/crowdsale/?addr=${crowdsaleAddress}&networkID=${generalStore.networkId}`}
+        <Link to={`/crowdsale/?addr=${crowdsaleAddress}&networkID=${generalStore.networkID}`}
               className="crowdsale-page-link"
         >Crowdsale page</Link>
       </div>

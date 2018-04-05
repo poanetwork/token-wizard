@@ -1,7 +1,8 @@
-import { incorrectNetworkAlert, noMetaMaskAlert, invalidNetworkIDAlert } from './alerts'
+import { incorrectNetworkAlert, noMetaMaskAlert, invalidNetworkIDAlert, noContractAlert } from './alerts'
 import { CHAINS, MAX_GAS_PRICE } from './constants'
-import { crowdsaleStore, generalStore, web3Store } from '../stores'
+import { crowdsaleStore, generalStore, web3Store, contractStore } from '../stores'
 import { fetchFile } from './utils'
+import { toJS } from 'mobx'
 
 const DEPLOY_CONTRACT = 1
 const CALL_METHOD = 2
@@ -255,9 +256,9 @@ export function getRegistryAddress () {
   const { web3 } = web3Store
 
   return web3.eth.net.getId()
-    .then(networkId => {
+    .then(networkID => {
       const registryAddressMap = JSON.parse(process.env['REACT_APP_REGISTRY_ADDRESS'] || '{}')
-      return registryAddressMap[networkId]
+      return registryAddressMap[networkID]
     })
 }
 
@@ -297,4 +298,43 @@ export function loadRegistryAddresses () {
     .then(crowdsales => {
       crowdsaleStore.setCrowdsales(crowdsales)
     })
+}
+
+export let getCurrentAccount = () => {
+  const { web3 } = web3Store
+  return new Promise((resolve, reject) => {
+    if (!web3) {
+      reject('no MetaMask')
+    }
+    web3.eth.getAccounts().then(accounts => {
+      if (accounts.length === 0) {
+        reject('no accounts')
+      }
+      resolve(accounts[0]);
+    })
+  });
+}
+
+export let attachToInitCrowdsaleContract = () => {
+  return new Promise((resolve, reject) => {
+    console.log(contractStore)
+    console.log(toJS(contractStore.initCrowdsale))
+
+    let initCrowdsaleObj = toJS(contractStore.initCrowdsale)
+    console.log(initCrowdsaleObj)
+    console.log(initCrowdsaleObj.abi)
+    console.log(initCrowdsaleObj.addr)
+
+    attachToContract(initCrowdsaleObj.abi, initCrowdsaleObj.addr)
+      .then(initCrowdsaleContract => {
+        console.log('attach to initCrowdsale contract')
+
+        if (!initCrowdsaleContract) {
+          noContractAlert()
+          reject('no contract')
+        }
+
+        resolve(initCrowdsaleContract);
+      })
+  });
 }

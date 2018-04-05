@@ -1,9 +1,12 @@
 import React from 'react'
 import '../../assets/stylesheets/application.css'
-import { checkNetWorkByID, checkWeb3 } from '../../utils/blockchainHelpers'
 import {
   getCurrentAccount,
-  attachToInitCrowdsaleContract,
+  checkNetWorkByID,
+  checkWeb3,
+  attachToInitCrowdsaleContract
+} from '../../utils/blockchainHelpers'
+import {
   getAccumulativeCrowdsaleData,
   getContractStoreProperty,
   getCrowdsaleData,
@@ -22,7 +25,14 @@ import { inject, observer } from 'mobx-react'
 
 const { CROWDSALE_PAGE } = NAVIGATION_STEPS
 
-@inject('contractStore', 'crowdsalePageStore', 'web3Store', 'tierStore', 'tokenStore', 'generalStore')
+@inject(
+  'contractStore',
+  'crowdsalePageStore',
+  'web3Store',
+  'tierStore',
+  'tokenStore',
+  'generalStore'
+)
 @observer
 export class Crowdsale extends React.Component {
   constructor (props) {

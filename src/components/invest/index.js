@@ -1,8 +1,13 @@
 import React from 'react'
-import { checkNetWorkByID, checkTxMined, sendTXToContract, calculateGasLimit } from '../../utils/blockchainHelpers'
 import {
   getCurrentAccount,
-  attachToInitCrowdsaleContract,
+  checkNetWorkByID,
+  checkTxMined,
+  sendTXToContract,
+  calculateGasLimit,
+  attachToInitCrowdsaleContract
+} from '../../utils/blockchainHelpers'
+import {
   getAccumulativeCrowdsaleData,
   getTokenData,
   getCrowdsaleData,
@@ -30,7 +35,17 @@ import classNames from 'classnames'
 import moment from 'moment'
 import { toJS } from 'mobx'
 
-@inject('contractStore', 'crowdsalePageStore', 'web3Store', 'tierStore', 'tokenStore', 'generalStore', 'investStore', 'gasPriceStore', 'generalStore')
+@inject(
+  'contractStore',
+  'crowdsalePageStore',
+  'web3Store',
+  'tierStore',
+  'tokenStore',
+  'generalStore',
+  'investStore',
+  'gasPriceStore',
+  'generalStore'
+)
 @observer
 export class Invest extends React.Component {
   constructor(props) {
@@ -99,10 +114,6 @@ export class Invest extends React.Component {
       return invalidCrowdsaleAddrAlert()
     }*/
 
-    /*getTokenData(crowdsaleExecID)
-      .then(() => this.setState({ loading: false }))
-      .catch(err => console.log(err))*/
-
     getCurrentAccount()
       .then(account => {
         console.log("crowdsaleExecID:", crowdsaleExecID)
@@ -130,9 +141,20 @@ export class Invest extends React.Component {
               .then(() => getCrowdsaleTargetDates(initCrowdsaleContract, crowdsaleExecID))
               .then(() => this.checkIsFinalized(initCrowdsaleContract, crowdsaleExecID))
               .then(() => this.setTimers())
-              .catch(err => console.log(err))
+              .catch(err => {
+                this.setState({ loading: false })
+                console.log(err)
+              })
               .then(() => this.setState({ loading: false }))
           })
+          .catch(err => {
+            this.setState({ loading: false })
+            console.log(err)
+          })
+      })
+      .catch(err => {
+        this.setState({ loading: false })
+        console.log(err)
       })
   }
 

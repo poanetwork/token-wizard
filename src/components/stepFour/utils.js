@@ -609,11 +609,11 @@ export function scrollToBottom () {
 export function getDownloadName (tokenAddress) {
   return new Promise(resolve => {
     const whenNetworkName = getNetworkVersion()
-      .then((networkId) => {
-        let networkName = getNetWorkNameById(networkId)
+      .then((networkID) => {
+        let networkName = getNetWorkNameById(networkID)
 
         if (!networkName) {
-          networkName = String(networkId)
+          networkName = String(networkID)
         }
 
         return networkName

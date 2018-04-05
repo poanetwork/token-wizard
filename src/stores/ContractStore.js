@@ -6,6 +6,9 @@ class ContractStore {
   @observable registryStorage;
   @observable initRegistry;
   @observable scriptExec;
+  @observable initCrowdsale;
+  @observable crowdsaleConsole;
+  @observable crowdsaleBuyTokens;
 
   constructor() {
     autosave(this, 'ContractStore')

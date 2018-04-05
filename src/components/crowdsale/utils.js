@@ -261,39 +261,6 @@ function setMaximumSellableTokensInEth(crowdsaleContract, maximumSellableTokens)
   }
 )}*/
 
-export let getCurrentAccount = () => {
-  const { web3 } = web3Store
-  return new Promise((resolve, reject) => {
-    if (!web3) {
-      reject('no MetaMask')
-    }
-    web3.eth.getAccounts().then(accounts => {
-      if (accounts.length === 0) {
-        reject('no accounts')
-      }
-      resolve(accounts[0]);
-    })
-  });
-}
-
-export let attachToInitCrowdsaleContract = () => {
-  return new Promise((resolve, reject) => {
-    let initCrowdsaleObj = toJS(contractStore.initCrowdsale)
-
-    attachToContract(initCrowdsaleObj.abi, initCrowdsaleObj.addr)
-      .then(initCrowdsaleContract => {
-        console.log('attach to crowdsale contract')
-
-        if (!initCrowdsaleContract) {
-          noContractAlert()
-          reject('no contract')
-        }
-
-        resolve(initCrowdsaleContract);
-      })
-  });
-}
-
 export const getContractStoreProperty = (contract, property) => {
   const text = contractStore && contractStore[contract] && contractStore[contract][property]
   return text === undefined ? '' : text
