@@ -5,7 +5,8 @@ import {
   checkTxMined,
   sendTXToContract,
   calculateGasLimit,
-  attachToInitCrowdsaleContract
+  attachToInitCrowdsaleContract,
+  methodToExec
 } from '../../utils/blockchainHelpers'
 import {
   getAccumulativeCrowdsaleData,
@@ -313,33 +314,8 @@ export class Invest extends React.Component {
     }
     console.log(opts)
 
-    const paramsBuy = this.getBuyParams(account, weiToSend)
-    console.log("paramsBuy:", paramsBuy)
-
-    let functionName = "buy(bytes)";
-    let functionSignature = web3.eth.abi.encodeFunctionSignature(functionName);
-    console.log("functionSignature buy:", functionSignature);
-
-    let fullData = functionSignature + paramsBuy.substr(2);
-    console.log("full calldata:", fullData);
-
-    const abiScriptExec = contractStore.scriptExec.abi || []
-    console.log("abiScriptExec:", abiScriptExec)
-    const addrScriptExec = contractStore.scriptExec.addr || {}
-    console.log("addrScriptExec:", addrScriptExec)
-    const scriptExec = new web3.eth.Contract(toJS(abiScriptExec), addrScriptExec)
-    console.log(scriptExec)
-
-    const target = contractStore.crowdsaleBuyTokens.addr;
-
-    let paramsToExec = [
-      target,
-      fullData
-    ]
-    console.log("paramsToExec: ", paramsToExec)
-
-    const method = scriptExec.methods.exec(...paramsToExec)
-    console.log("method:", method)
+    let paramsToExec = [account, weiToSend]
+    const method = methodToExec("buy(bytes)", "crowdsaleBuyTokens", this.getBuyParams, paramsToExec)
 
     method.estimateGas(opts)
       .then(estimatedGas => {

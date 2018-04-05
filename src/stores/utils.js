@@ -5,6 +5,7 @@ import { BigNumber } from 'bignumber.js'
 export function getWhiteListWithCapCrowdsaleAssets(networkID) {
   return new Promise((resolve) => {
     getCrowdsaleAsset("REACT_APP_INIT_CROWDSALE", "initCrowdsale", networkID)
+    getCrowdsaleAsset("REACT_APP_TOKEN_CONSOLE", "tokenConsole", networkID)
     getCrowdsaleAsset("REACT_APP_CROWDSALE_CONSOLE", "crowdsaleConsole", networkID)
     getCrowdsaleAsset("REACT_APP_REGISTRY_STORAGE", "registryStorage", networkID)
     getCrowdsaleAsset("REACT_APP_SCRIPT_EXEC", "scriptExec", networkID)

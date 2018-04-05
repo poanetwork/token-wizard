@@ -338,3 +338,37 @@ export let attachToInitCrowdsaleContract = () => {
       })
   });
 }
+
+export let methodToExec = (methodName, targetName, getEncodedParams, params) => {
+  const { web3 } = web3Store
+  const methodParams = getEncodedParams(...params)
+  console.log("methodParams:", methodParams)
+
+  let methodSignature = web3.eth.abi.encodeFunctionSignature(methodName);
+  console.log(`methodSignature ${methodName}:`, methodSignature);
+
+  let encodedParameters = web3.eth.abi.encodeParameters(["bytes"], [methodParams]);
+
+  let fullData = methodSignature + encodedParameters.substr(2);
+  console.log("full calldata:", fullData);
+
+  const abiScriptExec = contractStore.scriptExec.abi || []
+  console.log("abiScriptExec:", abiScriptExec)
+  const addrScriptExec = contractStore.scriptExec.addr || {}
+  console.log("addrScriptExec:", addrScriptExec)
+  const scriptExec = new web3.eth.Contract(toJS(abiScriptExec), addrScriptExec)
+  console.log(scriptExec)
+
+  const target = contractStore[targetName].addr;
+
+  let paramsToExec = [
+    target,
+    fullData
+  ]
+  console.log("paramsToExec: ", paramsToExec)
+
+  const method = scriptExec.methods.exec(...paramsToExec)
+  console.log("method:", method)
+
+  return method;
+}

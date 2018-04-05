@@ -19,7 +19,8 @@ import {
   sendTXToContract,
   attachToContract,
   calculateGasLimit,
-  attachToInitCrowdsaleContract
+  attachToInitCrowdsaleContract,
+  methodToExec
 } from '../../utils/blockchainHelpers'
 import { toast } from '../../utils/utils'
 import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
@@ -249,17 +250,30 @@ export class Manage extends Component {
       )
   }
 
+  getDistributeReservedTokensParams = (account, addressesPerBatch) => {
+    const { web3Store } = this.props
+    const { web3 } = web3Store
+    console.log(this.state.crowdsaleExecID)
+    console.log(account)
+    let paramsDistributeReservedTokens = [this.state.crowdsaleExecID, account];
+    console.log(paramsDistributeReservedTokens);
+    let context = web3.eth.abi.encodeParameters(["bytes32","address"], paramsDistributeReservedTokens);
+    let encodedParameters = web3.eth.abi.encodeParameters(["uint256","bytes"], [addressesPerBatch, context]);
+    return [addressesPerBatch, encodedParameters];
+  }
+
   distributeReservedTokens = (addressesPerBatch) => {
     this.updateCrowdsaleStatus()
       .then(() => {
-        const { crowdsaleStore } = this.props
+        const { crowdsaleStore, contractStore, web3Store } = this.props
+        const { web3 } = web3Store
 
         if (!crowdsaleStore.selected.distributed && this.state.canDistribute) {
           this.showLoader()
 
-          const { contractStore } = this.props
           const lastCrowdsaleAddress = contractStore.crowdsale.addr.slice(-1)[0]
 
+          //to do
           return attachToContract(contractStore.crowdsale.abi, lastCrowdsaleAddress)
             .then(crowdsaleContract => Promise.all([
               crowdsaleContract,
@@ -271,24 +285,29 @@ export class Manage extends Component {
                   tokenContract.methods.reservedTokensDestinationsLen().call()
                     .then(reservedTokensDestinationsLen => {
 
-                      const batchesLen = Math.ceil(reservedTokensDestinationsLen / addressesPerBatch)
-                      const distributeMethod = crowdsaleContract.methods.distributeReservedTokens(addressesPerBatch)
+                      getCurrentAccount
+                        .then(account => {
+                          const batchesLen = Math.ceil(reservedTokensDestinationsLen / addressesPerBatch)
 
-                      let opts = {
-                        gasPrice: this.props.generalStore.gasPrice
-                      }
-                      let batches = Array.from(Array(batchesLen).keys())
-                      this.distributeReservedTokensRecursive(batches, distributeMethod, opts)
-                        .then(() => {
-                          successfulDistributeAlert()
-                          crowdsaleStore.setSelectedProperty('distributed', true)
-                          return this.updateCrowdsaleStatus()
+                          let paramsToExec = [account, addressesPerBatch]
+                          const method = methodToExec("distributeReservedTokens(uint,bytes)", "tokenConsole", this.getDistributeReservedTokensParams, paramsToExec)
+
+                          let opts = {
+                            gasPrice: this.props.generalStore.gasPrice
+                          }
+                          let batches = Array.from(Array(batchesLen).keys())
+                          this.distributeReservedTokensRecursive(batches, method, opts)
+                            .then(() => {
+                              successfulDistributeAlert()
+                              crowdsaleStore.setSelectedProperty('distributed', true)
+                              return this.updateCrowdsaleStatus()
+                            })
+                            .catch((err) => {
+                              console.log(err)
+                              toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.DISTRIBUTE_FAIL })
+                            })
+                            .then(this.hideLoader)
                         })
-                        .catch((err) => {
-                          console.log(err)
-                          toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.DISTRIBUTE_FAIL })
-                        })
-                        .then(this.hideLoader)
                     })
                 })
             })
@@ -309,10 +328,23 @@ export class Manage extends Component {
     }, Promise.resolve())
   }
 
+  getFinalizeCrowdsaleParams = (account) => {
+    const { web3Store } = this.props
+    const { web3 } = web3Store
+    console.log(this.state.crowdsaleExecID)
+    console.log(account)
+    let paramsDistributeReservedTokens = [this.state.crowdsaleExecID, account];
+    console.log(paramsDistributeReservedTokens);
+    let context = web3.eth.abi.encodeParameters(["bytes32","address"], paramsDistributeReservedTokens);
+    return context;
+  }
+
   finalizeCrowdsale = () => {
+    const { web3Store } = this.props
+    const { web3 } = web3Store
     this.updateCrowdsaleStatus()
       .then(() => {
-        const { crowdsaleStore } = this.props
+        const { crowdsaleStore, contractStore } = this.props
 
         if (!crowdsaleStore.selected.finalized && this.state.canFinalize) {
           warningOnFinalizeCrowdsale()
@@ -320,34 +352,36 @@ export class Manage extends Component {
               if (result.value) {
                 this.showLoader()
 
-                let opts = {
-                  gasPrice: this.props.generalStore.gasPrice
-                }
+                getCurrentAccount
+                  .then(account => {
+                    let paramsToExec = [account]
+                    const method = methodToExec("finalizeCrowdsale(bytes)", "crowdsaleConsole", this.getFinalizeCrowdsaleParams, paramsToExec)
 
-                const { contractStore } = this.props
-                const lastCrowdsaleAddress = contractStore.crowdsale.addr.slice(-1)[0]
+                    let opts = {
+                      gasPrice: this.props.generalStore.gasPrice
+                    }
 
-                return attachToContract(contractStore.crowdsale.abi, lastCrowdsaleAddress)
-                  .then(crowdsaleContract => crowdsaleContract.methods.finalize())
-                  .then(finalizeMethod => Promise.all([finalizeMethod, finalizeMethod.estimateGas(opts)]))
-                  .then(([finalizeMethod, estimatedGas]) => {
-                    opts.gasLimit = calculateGasLimit(estimatedGas)
-                    return sendTXToContract(finalizeMethod.send(opts))
-                  })
-                  .then(() => {
-                    crowdsaleStore.setSelectedProperty('finalized', true)
-                    this.setState({ canFinalize: false }, () => {
-                      successfulFinalizeAlert().then(() => {
-                        this.setState({ loading: true })
-                        setTimeout(() => window.location.reload(), 500)
+                    method.estimateGas(opts)
+                      .then(estimatedGas => {
+                        console.log("estimatedGas:",estimatedGas)
+                        opts.gasLimit = calculateGasLimit(estimatedGas)
+                        return sendTXToContract(method.send(opts))
                       })
-                    })
+                      .then(() => {
+                        crowdsaleStore.setSelectedProperty('finalized', true)
+                        this.setState({ canFinalize: false }, () => {
+                          successfulFinalizeAlert().then(() => {
+                            this.setState({ loading: true })
+                            setTimeout(() => window.location.reload(), 500)
+                          })
+                        })
+                      })
+                      .catch((err) => {
+                        console.log(err)
+                        toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.FINALIZE_FAIL })
+                      })
+                      .then(this.hideLoader)
                   })
-                  .catch((err) => {
-                    console.log(err)
-                    toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.FINALIZE_FAIL })
-                  })
-                  .then(this.hideLoader)
               }
             })
         }
@@ -496,8 +530,8 @@ export class Manage extends Component {
 
   render () {
     const { formPristine, canFinalize, shouldDistribute, canDistribute, crowdsaleHasEnded, ownerCurrentUser } = this.state
-    const { generalStore, tierStore, tokenStore, crowdsaleStore } = this.props
-    const { address: crowdsaleAddress, finalized, updatable } = crowdsaleStore.selected
+    const { generalStore, tierStore, tokenStore, crowdsaleStore, contractStore } = this.props
+    const { address: crowdsaleAddress, finalized, updatable, execID } = crowdsaleStore.selected
 
     const canEditTier = ownerCurrentUser && !canDistribute && !canFinalize && !finalized
 
@@ -536,7 +570,7 @@ export class Manage extends Component {
         <p className="title">{tokenStore.name} ({tokenStore.ticker}) Settings</p>
         <p className="description">The most important and exciting part of the crowdsale process. Here you can define
           parameters of your crowdsale campaign.</p>
-        <Link to={`/crowdsale/?addr=${crowdsaleAddress}&networkID=${generalStore.networkID}`}
+        <Link to={`/crowdsale/?exec-id=${execID}&networkID=${generalStore.networkID}`}
               className="crowdsale-page-link"
         >Crowdsale page</Link>
       </div>
