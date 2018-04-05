@@ -93,7 +93,7 @@ export class stepThree extends React.Component {
   }
 
   render () {
-    const { generalStore, tierStore, gasPriceStore, tokenStore } = this.props
+    const { generalStore, tierStore, gasPriceStore, tokenStore, web3Store } = this.props
 
     return (
       <section className="steps steps_crowdsale-contract" ref="three">
@@ -102,7 +102,7 @@ export class stepThree extends React.Component {
           onSubmit={this.handleOnSubmit}
           mutators={{ ...arrayMutators }}
           initialValues={{
-            walletAddress: tierStore.tiers[0].walletAddress,
+            walletAddress: web3Store.curAddress,
             minCap: 0,
             gasPrice: gasPriceStore.gasPricesInGwei[0],
             whitelistEnabled: "no",
