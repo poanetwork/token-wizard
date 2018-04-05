@@ -91,9 +91,9 @@ export let getCrowdsaleData = (initCrowdsaleContract, execID, account) => {
         console.log('currentTierInfo:')
         console.log(currentTierInfo)
 
-        crowdsalePageStore.setProperty('weiRaised', Number(crowdsaleInfo[1]).toFixed())
+        crowdsalePageStore.setProperty('weiRaised', Number(crowdsaleInfo.sale_rate).toFixed())
         crowdsalePageStore.setProperty('ethRaised', web3.utils.fromWei(crowdsalePageStore.weiRaised, 'ether'))
-        crowdsalePageStore.setProperty('rate', Number(crowdsaleInfo[0]).toFixed()) //should be one token in wei
+        crowdsalePageStore.setProperty('rate', Number(crowdsaleInfo.sale_rate).toFixed()) //should be one token in wei
         const storedTokensSold = toBigNumber(tokensSold)
         crowdsalePageStore.setProperty('tokensSold', storedTokensSold.toFixed())
 
@@ -210,7 +210,7 @@ export let isFinalized = (initCrowdsaleContract, crowdsaleExecID) => {
   let getCrowdsaleInfo = initCrowdsaleContract.methods.getCrowdsaleInfo(registryStorageObj.addr, crowdsaleExecID).call();
 
   return getCrowdsaleInfo.then(crowdsaleInfo => {
-    let isFinalized = crowdsaleInfo[4];
+    let isFinalized = crowdsaleInfo.is_finalized;
     return isFinalized;
   })
 }
