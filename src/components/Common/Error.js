@@ -21,7 +21,7 @@ export const Error = ({ name, errorStyle }) => (
         {
           errors.length
             ? errors.map((error, index) => (
-              <p key={index} style={errorStyle || defaultErrorStyles}>{(!pristine || touched) && error}</p>
+              <p className="error" key={index} style={errorStyle || defaultErrorStyles}>{(!pristine || touched) && error}</p>
             ))
             : null
         }
