@@ -81,7 +81,7 @@ class GasPriceInput extends Component {
           />
         ) : null}
         <p className="description">Slow is cheap, fast is expensive</p>
-        <Error name="gasPrice"/>
+        <Error name={input.name}/>
       </div>
     )
   }
