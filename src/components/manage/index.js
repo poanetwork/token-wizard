@@ -138,8 +138,15 @@ export class Manage extends Component {
             }, Promise.resolve())
           })
           .then(this.updateCrowdsaleStatus)
-          .catch(console.log)
+          .catch(err => {
+            this.setState({ loading: false })
+            console.log(err)
+          })
           .then(this.hideLoader)
+      })
+      .catch(err => {
+        this.setState({ loading: false })
+        console.log(err)
       })
   }
 
@@ -258,7 +265,7 @@ export class Manage extends Component {
     console.log(paramsDistributeReservedTokens);
     let context = web3.eth.abi.encodeParameters(["bytes32","address"], paramsDistributeReservedTokens);
     let encodedParameters = web3.eth.abi.encodeParameters(["uint256","bytes"], [addressesPerBatch, context]);
-    return [addressesPerBatch, encodedParameters];
+    return encodedParameters;
   }
 
   distributeReservedTokens = (addressesPerBatch) => {

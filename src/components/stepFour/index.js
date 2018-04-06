@@ -83,12 +83,7 @@ export class stepFour extends React.Component {
     const { web3 } = this.context
     const firstRun = deploymentStore.deploymentStep === null
 
-    if (firstRun) {
-      setupContractDeployment(web3)
-        .then(this.resumeContractDeployment)
-    } else {
-      this.resumeContractDeployment()
-    }
+    this.resumeContractDeployment()
   }
 
   resumeContractDeployment = () => {
@@ -233,17 +228,17 @@ export class stepFour extends React.Component {
 
   goToCrowdsalePage = () => {
     const { contractStore } = this.props
-    const isValidContract = contractStore.crowdsale.addr.length
+    const isValidContract = contractStore.crowdsale.addr
 
     if (!isValidContract) {
       return noContractDataAlert()
     }
 
     const crowdsalePage = '/crowdsale'
-    const url = `${crowdsalePage}?addr=${contractStore.crowdsale.addr[0]}&networkID=${contractStore.crowdsale.networkID}`
+    const url = `${crowdsalePage}?exec-id=${contractStore.crowdsale.addr}&networkID=${contractStore.crowdsale.networkID}`
 
     if (!this.state.contractDownloaded) {
-      this.downloadCrowdsaleInfo()
+      //this.downloadCrowdsaleInfo()
       this.contractDownloadSuccess()
     }
 

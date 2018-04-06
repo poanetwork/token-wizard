@@ -1,11 +1,12 @@
 import React from 'react'
 import '../../assets/stylesheets/application.css';
-import { checkWeb3 } from '../../utils/blockchainHelpers'
+import { checkWeb3, getNetworkVersion, } from '../../utils/blockchainHelpers'
 import { Link } from 'react-router-dom';
 import { setFlatFileContentToState, toast } from '../../utils/utils';
 import { StepNavigation } from '../Common/StepNavigation';
 import { NAVIGATION_STEPS, TOAST } from '../../utils/constants';
 import { inject, observer } from 'mobx-react';
+import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
 const { CROWDSALE_CONTRACT } = NAVIGATION_STEPS;
 
 const DOWNLOAD_STATUS = {
@@ -22,7 +23,7 @@ const ContinueButton = ({downloadStatus}) => {
   );
 };
 
-@inject('contractStore', 'web3Store') @observer
+@inject('contractStore', 'web3Store', 'generalStore') @observer
 export class stepOne extends React.Component {
 
   constructor() {
@@ -33,7 +34,7 @@ export class stepOne extends React.Component {
     }
   }
 
-  getWhiteListWithCapCrowdsaleAssets () {
+  /*getWhiteListWithCapCrowdsaleAssets () {
     return Promise.all([
       this.getCrowdsaleAsset("REACT_APP_REGISTRY_STORAGE", "registryStorage"),
       this.getCrowdsaleAsset("REACT_APP_INIT_REGISTRY", "initRegistry"),
@@ -61,15 +62,16 @@ export class stepOne extends React.Component {
       addr: addr,
       abiConstructor: []
     });
-  }
+  }*/
 
   componentDidMount() {
-    checkWeb3(this.props.web3Store.web3);
+    let { generalStore,web3Store } = this.props;
+    checkWeb3(web3Store.web3);
 
-    let downloadContracts = this.getWhiteListWithCapCrowdsaleAssets();
-
-    downloadContracts
-      .then(
+    getNetworkVersion().then(networkID => {
+      generalStore.setProperty('networkID', networkID)
+      getWhiteListWithCapCrowdsaleAssets(networkID)
+    }).then(
         () => {
           this.setState({
             contractsDownloaded: DOWNLOAD_STATUS.SUCCESS
