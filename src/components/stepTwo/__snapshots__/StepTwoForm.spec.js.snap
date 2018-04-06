@@ -36,6 +36,7 @@ exports[`StepTwoForm Should render the component 1`] = `
       </p>
       <span>
         <p
+          className="error"
           style={
             Object {
               "color": "red",
@@ -77,6 +78,7 @@ exports[`StepTwoForm Should render the component 1`] = `
       </p>
       <span>
         <p
+          className="error"
           style={
             Object {
               "color": "red",
@@ -117,6 +119,7 @@ exports[`StepTwoForm Should render the component 1`] = `
       </p>
       <span>
         <p
+          className="error"
           style={
             Object {
               "color": "red",
