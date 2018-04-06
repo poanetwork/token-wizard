@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
-import { isObservableArray } from 'mobx'
 import { Link } from 'react-router-dom'
 import { TEXT_FIELDS, TOAST, VALIDATION_MESSAGES, DESCRIPTION } from '../../utils/constants'
 import { InputField } from '../Common/InputField'
@@ -16,7 +15,7 @@ import {
 import { getNetworkVersion, sendTXToContract, attachToContract, calculateGasLimit } from '../../utils/blockchainHelpers'
 import { toast } from '../../utils/utils'
 import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
-import { getTiers, processTier, updateTierAttribute } from './utils'
+import { getFieldsToUpdate, getTiers, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
 import classNames from 'classnames'
 
@@ -335,29 +334,9 @@ export class Manage extends Component {
         const validTiers = updatableTiers.every(tier => isValidTier[tier.index])
 
         if ((!formPristine || tierStore.modifiedStoredWhitelist) && !crowdsaleHasEnded && updatableTiers.length && validTiers) {
-          const keys = Object
-            .keys(updatableTiers[0])
-            .filter(key => key !== 'index' && key !== 'updatable' && key !== 'addresses')
+          const fieldsToUpdate = getFieldsToUpdate(updatableTiers, tierStore.tiers)
 
-          updatableTiers
-            .reduce((toUpdate, tier) => {
-              keys.forEach(key => {
-                const { addresses } = tier
-                let newValue = tierStore.tiers[tier.index][key]
-
-                if (isObservableArray(newValue)) {
-                  newValue = newValue.filter(item => !item.stored)
-
-                  if (newValue.length) {
-                    toUpdate.push({ key, newValue, addresses })
-                  }
-
-                } else if (newValue !== tier[key]) {
-                  toUpdate.push({ key, newValue, addresses })
-                }
-              })
-              return toUpdate
-            }, [])
+          fieldsToUpdate
             .reduce((promise, { key, newValue, addresses }) => {
               return promise.then(() => updateTierAttribute(key, newValue, addresses))
             }, Promise.resolve())

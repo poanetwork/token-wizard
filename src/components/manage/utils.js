@@ -1,3 +1,4 @@
+import { isObservableArray } from 'mobx'
 import { attachToContract, sendTXToContract } from '../../utils/blockchainHelpers'
 import { contractStore, crowdsaleStore, generalStore, tierStore, tokenStore, web3Store } from '../../stores'
 import { TRUNC_TO_DECIMALS, VALIDATION_TYPES } from '../../utils/constants'
@@ -297,4 +298,47 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
       }
       crowdsaleStore.addInitialTierValues(initialValues)
     })
+}
+
+export function getFieldsToUpdate(updatableTiers, tiers) {
+  const keys = Object
+    .keys(updatableTiers[0])
+    .filter(key => key !== 'index' && key !== 'updatable' && key !== 'addresses')
+
+  const toUpdate = updatableTiers
+    .reduce((toUpdate, tier, index) => {
+      keys.forEach(key => {
+        const { addresses } = tier
+        let newValue = tiers[tier.index][key]
+
+        if (isObservableArray(newValue)) {
+          newValue = newValue.filter(item => !item.stored)
+
+          if (newValue.length) {
+            toUpdate.push({ key, newValue, addresses })
+          }
+
+        } else if (newValue !== tier[key]) {
+          toUpdate.push({ key, newValue, addresses, tier: index })
+        }
+      })
+      return toUpdate
+    }, [])
+    .sort((item1, item2) => {
+      if (item1.tier !== item2.tier) {
+        return item2.tier - item1.tier
+      }
+
+      if (item1.key === 'startTime' && item2.key === 'endTime') {
+        return 1
+      }
+
+      if (item1.key === 'endTime' && item2.key === 'startTime') {
+        return -1
+      }
+
+      return 0
+    })
+
+  return toUpdate
 }
