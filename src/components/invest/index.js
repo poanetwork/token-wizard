@@ -167,7 +167,7 @@ export class Invest extends React.Component {
 
         this.setState({
           toNextTick: {
-            days: time.days() || 0,
+            days: Math.floor(time.asDays()) || 0,
             hours: time.hours() || 0,
             minutes: time.minutes() || 0,
             seconds: time.seconds() || 0
