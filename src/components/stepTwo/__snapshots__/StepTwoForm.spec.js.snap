@@ -42,7 +42,7 @@ exports[`StepTwoForm Should render the component 1`] = `
               "color": "red",
               "fontSize": "12px",
               "fontWeight": "bold",
-              "height": "10px",
+              "height": "20px",
               "width": "100%",
             }
           }
@@ -84,7 +84,7 @@ exports[`StepTwoForm Should render the component 1`] = `
               "color": "red",
               "fontSize": "12px",
               "fontWeight": "bold",
-              "height": "10px",
+              "height": "20px",
               "width": "100%",
             }
           }
@@ -125,7 +125,31 @@ exports[`StepTwoForm Should render the component 1`] = `
               "color": "red",
               "fontSize": "12px",
               "fontWeight": "bold",
-              "height": "10px",
+              "height": "20px",
+              "width": "100%",
+            }
+          }
+        />
+        <p
+          className="error"
+          style={
+            Object {
+              "color": "red",
+              "fontSize": "12px",
+              "fontWeight": "bold",
+              "height": "20px",
+              "width": "100%",
+            }
+          }
+        />
+        <p
+          className="error"
+          style={
+            Object {
+              "color": "red",
+              "fontSize": "12px",
+              "fontWeight": "bold",
+              "height": "20px",
               "width": "100%",
             }
           }
