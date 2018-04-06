@@ -10,7 +10,7 @@ const errorStyle = {
   fontWeight: 'bold',
   fontSize: '12px',
   width: '100%',
-  height: '10px',
+  height: '20px',
 }
 
 export const StepTwoForm = ({
