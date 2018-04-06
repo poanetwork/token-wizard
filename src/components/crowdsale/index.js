@@ -85,7 +85,6 @@ export class Crowdsale extends React.Component {
 
     getCurrentAccount()
       .then(account => {
-
         attachToInitCrowdsaleContract()
           .then((initCrowdsaleContract) => {
             this.getFullCrowdsaleData(initCrowdsaleContract, crowdsaleExecID, account)

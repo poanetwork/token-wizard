@@ -134,8 +134,8 @@ export class Invest extends React.Component {
           .then((initCrowdsaleContract) => {
             initializeAccumulativeData()
             .then(() => {
-              let whenTokenData = getTokenData(initCrowdsaleContract, crowdsaleExecID)
-              let whenCrowdsaleData = getCrowdsaleData(initCrowdsaleContract, crowdsaleExecID)
+              let whenTokenData = getTokenData(initCrowdsaleContract, crowdsaleExecID, account)
+              let whenCrowdsaleData = getCrowdsaleData(initCrowdsaleContract, crowdsaleExecID, account)
               return Promise.all([whenTokenData, whenCrowdsaleData])
             })
               .then(() => getAccumulativeCrowdsaleData(initCrowdsaleContract, crowdsaleExecID))
