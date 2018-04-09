@@ -181,7 +181,10 @@ export class WhitelistInputBlock extends React.Component {
       Papa.parse(file, {
         skipEmptyLines: true,
         complete: results => {
-          const { called } = processWhitelist(results.data, item => {
+          const { called } = processWhitelist({
+            rows: results.data,
+            decimals: this.props.decimals
+          }, item => {
             this.props.tierStore.addWhitelistItem(item, this.props.num)
           })
 

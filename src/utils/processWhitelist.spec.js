@@ -11,7 +11,7 @@ describe('processWhitelist function', () => {
     const cb = jest.fn()
 
     // When
-    processWhitelist(rows, cb)
+    processWhitelist({ rows, decimals: 3 }, cb)
 
     // Then
     expect(cb).toHaveBeenCalledTimes(3)
@@ -20,7 +20,7 @@ describe('processWhitelist function', () => {
     expect(cb.mock.calls[2]).toEqual([{ addr: rows[2][0], min: rows[2][1], max: rows[2][2] }])
   })
 
-  it('should ignore items that don\t have 3 elements', () => {
+  it('should ignore items that don\'t have 3 elements', () => {
     // Given
     const rows = [
       ['1', '10'],
@@ -33,7 +33,7 @@ describe('processWhitelist function', () => {
     const cb = jest.fn()
 
     // When
-    processWhitelist(rows, cb)
+    processWhitelist({ rows, decimals: 3 }, cb)
 
     // Then
     expect(cb).toHaveBeenCalledTimes(0)
@@ -49,7 +49,7 @@ describe('processWhitelist function', () => {
     const cb = jest.fn()
 
     // When
-    const { called } = processWhitelist(rows, cb)
+    const { called } = processWhitelist({ rows, decimals: 3 }, cb)
 
     // Then
     expect(called).toBe(3)
@@ -66,7 +66,7 @@ describe('processWhitelist function', () => {
     const cb = jest.fn()
 
     // When
-    const { called } = processWhitelist(rows, cb)
+    const { called } = processWhitelist({ rows, decimals: 3 }, cb)
 
     // Then
     expect(called).toBe(0)
@@ -83,7 +83,7 @@ describe('processWhitelist function', () => {
     const cb = jest.fn()
 
     // When
-    const { called } = processWhitelist(rows, cb)
+    const { called } = processWhitelist({ rows, decimals: 3 }, cb)
 
     // Then
     expect(called).toBe(0)
