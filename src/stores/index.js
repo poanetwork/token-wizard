@@ -1,6 +1,5 @@
 import storage from 'store2'
 import ContractStore from './ContractStore';
-import PricingStrategyStore from './PricingStrategyStore';
 import ReservedTokenStore from './ReservedTokenStore';
 import StepTwoValidationStore from './StepTwoValidationStore';
 import TierStore from './TierStore';
@@ -21,7 +20,6 @@ if (storage.has('DeploymentStore') && storage.get('DeploymentStore').deploymentS
 const generalStore = new GeneralStore()
 const crowdsalePageStore = new CrowdsalePageStore()
 const contractStore = new ContractStore()
-const pricingStrategyStore = new PricingStrategyStore()
 const reservedTokenStore = new ReservedTokenStore()
 const stepTwoValidationStore = new StepTwoValidationStore()
 const tierStore = new TierStore()
@@ -36,7 +34,6 @@ export {
   generalStore,
   crowdsalePageStore,
   contractStore,
-  pricingStrategyStore,
   reservedTokenStore,
   stepTwoValidationStore,
   tierStore,

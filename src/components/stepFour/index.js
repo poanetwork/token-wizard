@@ -157,8 +157,6 @@ export class stepFour extends React.Component {
 
     switch (parent) {
       case 'crowdsale':
-      case 'pricingStrategy':
-      case 'finalizeAgent':
         return handlerForFile(content, this.props.contractStore[parent])
       case 'tierStore':
         index = 'walletAddress' === content.field ? 0 : index
@@ -336,26 +334,6 @@ export class stepFour extends React.Component {
         />
       )
     })
-    const ABIEncodedOutputsPricingStrategy = tierStore.tiers.map((tier, index) => {
-      return (
-        <DisplayTextArea
-          key={index.toString()}
-          label={'Constructor Arguments for ' + (tier.tier ? tier.tier : '') + ' Pricing Strategy Contract (ABI-encoded and appended to the ByteCode above)'}
-          value={contractStore ? contractStore.pricingStrategy ? contractStore.pricingStrategy.abiConstructor ? contractStore.pricingStrategy.abiConstructor[index] : '' : '' : ''}
-          description="Constructor arguments for pricing strategy contract"
-        />
-      )
-    })
-    const ABIEncodedOutputsFinalizeAgent = tierStore.tiers.map((tier, index) => {
-      return (
-        <DisplayTextArea
-          key={index.toString()}
-          label={'Constructor Arguments for ' + (tier.tier ? tier.tier : '') + ' Finalize Agent Contract (ABI-encoded and appended to the ByteCode above)'}
-          value={contractStore ? contractStore.finalizeAgent ? contractStore.finalizeAgent.abiConstructor ? contractStore.finalizeAgent.abiConstructor[index] : '' : '' : ''}
-          description="Constructor arguments for finalize agent contract"
-        />
-      )
-    })
     const globalLimitsBlock = (
       <div>
         <div className="publish-title-container">
@@ -387,34 +365,6 @@ export class stepFour extends React.Component {
           label={'Token Constructor Arguments (ABI-encoded and appended to the ByteCode above)'}
           value={contractStore ? contractStore.token ? contractStore.token.abiConstructor ? contractStore.token.abiConstructor : '' : '' : ''}
           description="Token Constructor Arguments"
-        />
-      </div>
-    )
-    const pricingStrategyBlock = (
-      <div>
-        <DisplayTextArea
-          label={'Pricing Strategy Contract Source Code'}
-          value={contractStore ? contractStore.pricingStrategy ? contractStore.pricingStrategy.src : '' : ''}
-          description="Pricing Strategy Contract Source Code"
-        />
-        <DisplayTextArea
-          label={'Pricing Strategy Contract ABI'}
-          value={contractStore ? contractStore.pricingStrategy ? JSON.stringify(contractStore.pricingStrategy.abi) : '' : ''}
-          description="Pricing Strategy Contract ABI"
-        />
-      </div>
-    )
-    const finalizeAgentBlock = (
-      <div>
-        <DisplayTextArea
-          label={'Finalize Agent Contract Source Code'}
-          value={contractStore ? contractStore.finalizeAgent ? contractStore.finalizeAgent.src : '' : ''}
-          description="Finalize Agent Contract Source Code"
-        />
-        <DisplayTextArea
-          label={'Finalize Agent Contract ABI'}
-          value={contractStore ? contractStore.finalizeAgent ? JSON.stringify(contractStore.finalizeAgent.abi) : '' : ''}
-          description="Finalize Agent Contract ABI"
         />
       </div>
     )
@@ -508,10 +458,6 @@ export class stepFour extends React.Component {
               : null
             }
             {tokenBlock}
-            {pricingStrategyBlock}
-            {ABIEncodedOutputsPricingStrategy}
-            {finalizeAgentBlock}
-            {ABIEncodedOutputsFinalizeAgent}
             <DisplayTextArea
               label={"Crowdsale Contract Source Code"}
               value={contractStore ? contractStore.crowdsale ? contractStore.crowdsale.src : "" : ""}

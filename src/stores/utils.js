@@ -59,9 +59,6 @@ export const getconstructorParams = (abiConstructor, vals, crowdsaleNum, isCrowd
           //params.vals.push(contractStore.multisig.addr);
           params.vals.push(tierStore.tiers[0].walletAddress);
           break;
-        case "_pricingStrategy":
-          params.vals.push(contractStore.pricingStrategy.addr[crowdsaleNum]);
-          break;
         case "_token":
           params.vals.push(contractStore.token.addr);
           break;

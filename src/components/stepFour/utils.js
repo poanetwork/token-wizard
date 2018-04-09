@@ -90,15 +90,9 @@ const getCrowdSaleParams = (account, tierObj, index) => {
   return encodedParameters;
   /*return [
     tier,
-    contractStore.token.addr,
-    contractStore.pricingStrategy.addr[index],
-    walletAddress,
-    formatDate(startTime),
     formatDate(endTime),
     toFixed('0'),
-    toFixed(parseInt(supply, 10) * 10 ** parseInt(tokenStore.decimals, 10)).toString(),
     updatable === 'on',
-    whitelistEnabled === 'yes'
   ]*/
 }
 

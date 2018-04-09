@@ -224,6 +224,7 @@ function setMaximumSellableTokensInEth(initCrowdsaleContract, maximumSellableTok
     })
 }
 
+//to do
 /*export function getCurrentRate(crowdsaleContract) {
   return new Promise((resolve, reject) => {
     if (!crowdsaleContract) {
