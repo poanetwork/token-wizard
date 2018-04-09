@@ -31,6 +31,8 @@
     color: #9c9c9c;
 
     &:hover {
+      background-color: #e6e6e6;
+      color: #9c9c9c;
       cursor: default !important;
     }
   }
@@ -98,6 +100,6 @@
   }
 
   &:disabled {
-    background: #f2f2f2; 
+    background: #f2f2f2;
   }
 }

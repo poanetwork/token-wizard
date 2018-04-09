@@ -1,6 +1,6 @@
 import GasPriceStore  from './GasPriceStore'
 import { GAS_PRICE } from '../utils/constants'
-import { gweiToWei } from '../utils/utils'
+import { gweiToWei, weiToGwei } from '../utils/utils'
 
 jest.mock('../utils/api')
 
@@ -35,6 +35,52 @@ describe('GasPriceStore', () => {
     expect(gas.block_number).toBeUndefined()
     expect(gas.block_time).toBeUndefined()
     expect(gas.health).toBeUndefined()
+  })
+
+  it('should return gasPrices collection', () => {
+    expect(gas.gasPrices[0]).toEqual({
+      id: GAS_PRICE.SLOW.ID,
+      price: GAS_PRICE.SLOW.PRICE,
+      description: gas.slowDescription,
+    })
+    expect(gas.gasPrices[1]).toEqual({
+      id: GAS_PRICE.NORMAL.ID,
+      price: GAS_PRICE.NORMAL.PRICE,
+      description: gas.standardDescription,
+    })
+    expect(gas.gasPrices[2]).toEqual({
+      id: GAS_PRICE.FAST.ID,
+      price: GAS_PRICE.FAST.PRICE,
+      description: gas.fastDescription,
+    })
+    expect(gas.gasPrices[3]).toEqual({
+      id: GAS_PRICE.CUSTOM.ID,
+      price: GAS_PRICE.CUSTOM.PRICE,
+      description: gas.customDescription,
+    })
+  })
+
+  it('should return gasPrices collection in Gwei', () => {
+    expect(gas.gasPricesInGwei[0]).toEqual({
+      id: GAS_PRICE.SLOW.ID,
+      price: weiToGwei(GAS_PRICE.SLOW.PRICE),
+      description: gas.slowDescription,
+    })
+    expect(gas.gasPricesInGwei[1]).toEqual({
+      id: GAS_PRICE.NORMAL.ID,
+      price: weiToGwei(GAS_PRICE.NORMAL.PRICE),
+      description: gas.standardDescription,
+    })
+    expect(gas.gasPricesInGwei[2]).toEqual({
+      id: GAS_PRICE.FAST.ID,
+      price: weiToGwei(GAS_PRICE.FAST.PRICE),
+      description: gas.fastDescription,
+    })
+    expect(gas.gasPricesInGwei[3]).toEqual({
+      id: GAS_PRICE.CUSTOM.ID,
+      price: weiToGwei(GAS_PRICE.CUSTOM.PRICE),
+      description: gas.customDescription,
+    })
   })
 
   it('should updates values with mocked data', () => {

@@ -1,5 +1,5 @@
 import { observable, action, computed } from 'mobx';
-import { VALIDATION_TYPES } from '../utils/constants'
+import { defaultTier, defaultTierValidations, VALIDATION_TYPES } from '../utils/constants'
 import {
   validateTime,
   validateSupply,
@@ -8,6 +8,7 @@ import {
   validateTier
 } from '../utils/utils'
 import autosave from './autosave'
+import { defaultCompanyEndDate, defaultCompanyStartDate } from '../components/stepThree/utils'
 const { VALID, INVALID } = VALIDATION_TYPES
 
 class TierStore {
@@ -217,6 +218,37 @@ class TierStore {
     const whitelist = this.tiers[crowdsaleNum].whitelist
 
     return whitelist.every(address => address.stored)
+  }
+
+  @action addCrowdsale = (walletAddress = '') => {
+    const num = this.tiers.length
+    const newTier = Object.assign({}, defaultTier)
+    const newTierValidations = Object.assign({}, defaultTierValidations)
+
+    newTier.tier = `Tier ${num + 1}`
+
+    if (num === 0) {
+      newTier.whitelistEnabled = "no"
+      newTier.walletAddress = walletAddress
+    }
+
+    this.addTier(newTier, newTierValidations)
+    this.setTierDates(num)
+  }
+
+  @action setTierDates = (num) => {
+    const defaultStartTime = 0 === num ? defaultCompanyStartDate() : this.tierEndTime(num - 1)
+    const defaultEndTime = 0 === num ? defaultCompanyEndDate(defaultStartTime) : defaultCompanyEndDate(this.tierEndTime(num - 1))
+
+    const startTime = this.tiers[num].startTime || defaultStartTime
+    const endTime = this.tiers[num].endTime || defaultEndTime
+
+    this.setTierProperty(startTime, 'startTime', num)
+    this.setTierProperty(endTime, 'endTime', num)
+  }
+
+  tierEndTime (index) {
+    return this.tiers[index].endTime
   }
 
   @computed get maxSupply () {
