@@ -26,6 +26,28 @@ export const validateDecimals = (value) => {
   return isValid ? undefined : VALIDATION_MESSAGES.DECIMALS
 }
 
+export const validateWhitelistMin = ({ min, max, decimals }) => {
+  const listOfErrors = composeValidators(
+    isRequired(),
+    isNonNegative(),
+    isDecimalPlacesNotGreaterThan(`Decimals should not exceed ${decimals} places`)(decimals),
+    isLessOrEqualThan('Should be less or equal than max')(max)
+  )(min)
+
+  return listOfErrors ? listOfErrors.shift() : ''
+}
+
+export const validateWhitelistMax = ({ min, max, decimals }) => {
+  const listOfErrors = composeValidators(
+    isRequired(),
+    isNonNegative(),
+    isDecimalPlacesNotGreaterThan(`Decimals should not exceed ${decimals} places`)(decimals),
+    isGreaterOrEqualThan('Should be greater or equal than min')(min)
+  )(max)
+
+  return listOfErrors ? listOfErrors.shift() : ''
+}
+
 export const isPositive = (errorMsg = VALIDATION_MESSAGES.POSITIVE) => (value) => {
   const isValid = value > 0
   return isValid ? undefined : errorMsg
