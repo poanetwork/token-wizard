@@ -34,36 +34,6 @@ export class stepOne extends React.Component {
     }
   }
 
-  /*getWhiteListWithCapCrowdsaleAssets () {
-    return Promise.all([
-      this.getCrowdsaleAsset("REACT_APP_REGISTRY_STORAGE", "registryStorage"),
-      this.getCrowdsaleAsset("REACT_APP_INIT_REGISTRY", "initRegistry"),
-      this.getCrowdsaleAsset("REACT_APP_INIT_CROWDSALE", "initCrowdsale"),
-      this.getCrowdsaleAsset("REACT_APP_CROWDSALE_CONSOLE", "crowdsaleConsole"),
-      this.getCrowdsaleAsset("REACT_APP_SCRIPT_EXEC", "scriptExec"),
-    ])
-  }
-
-  getCrowdsaleAsset(contractName, stateProp) {
-    const src = "" //to do
-    const bin = process.env[`${contractName}_BIN`] || ''
-    const abi = JSON.parse(process.env[`${contractName}_ABI`] || [])
-    const addr = JSON.parse(process.env[`${contractName}_ADDRESS`] || {})
-
-    return Promise.all([src, bin, abi, addr])
-      .then(result => this.addContractsToState(...result, stateProp))
-  }
-
-  addContractsToState(src, bin, abi, addr, contract) {
-    this.props.contractStore.setContract(contract, {
-      src,
-      bin,
-      abi: abi,
-      addr: addr,
-      abiConstructor: []
-    });
-  }*/
-
   componentDidMount() {
     let { generalStore,web3Store } = this.props;
     checkWeb3(web3Store.web3);

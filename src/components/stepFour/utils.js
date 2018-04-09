@@ -234,17 +234,16 @@ export const initializeToken = () => {
         const opts = { gasPrice: generalStore.gasPrice, gasLimit: 300000, from: account }
         console.log("opts:", opts)
 
-        // return method.estimateGas(opts)
-        //   .then(estimatedGas => {
-        //     opts.gasLimit = calculateGasLimit(estimatedGas)
-        return sendTXToContract(method.send(opts))
-          .then((receipt) => {
-            console.log(receipt)
-          })
-          .then(() => deploymentStore.setAsSuccessful('token'))
+        return method.estimateGas(opts)
+        .then(estimatedGas => {
+          opts.gasLimit = calculateGasLimit(estimatedGas)
+          return sendTXToContract(method.send(opts))
+            .then((receipt) => {
+              console.log(receipt)
+            })
+            .then(() => deploymentStore.setAsSuccessful('token'))
+        })
       })
-          //})
-      // })
     }
   ]
 }

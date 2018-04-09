@@ -400,7 +400,7 @@ export let methodToInitAppInstance = (methodName, targetName, getEncodedParams, 
   const isPayable = true;
 
   let paramsToInitAppInstance = [
-    web3.utils.sha3("MintedCappedCrowdsale"),
+    web3.utils.sha3(process.env['REACT_APP_CROWDSALE_APP_NAME']),
     isPayable,
     fullData
   ]

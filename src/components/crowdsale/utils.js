@@ -97,15 +97,7 @@ export let getCrowdsaleData = (initCrowdsaleContract, execID, account) => {
         const storedTokensSold = toBigNumber(tokensSold)
         crowdsalePageStore.setProperty('tokensSold', storedTokensSold.toFixed())
 
-        /*let getMaximumSellableTokens = crowdsaleContract.methods.maximumSellableTokens().call().then((maximumSellableTokens) => {
-          const maxSellableTokens = toBigNumber(crowdsalePageStore.maximumSellableTokens)
-          crowdsalePageStore.setProperty('maximumSellableTokens', maxSellableTokens.plus(maximumSellableTokens).toFixed())
-
-          //calc maximumSellableTokens in Eth
-          return setMaximumSellableTokensInEth(crowdsaleContract, maximumSellableTokens)
-        })
-
-        let getInvestors = crowdsaleContract.methods.investorCount().call().then((investors) => {
+        /*let getInvestors = crowdsaleContract.methods.investorCount().call().then((investors) => {
           const storedInvestorsCount = toBigNumber(crowdsalePageStore.investors)
           crowdsalePageStore.setProperty('investors', storedInvestorsCount.plus(investors).toFixed())
         })*/
@@ -120,9 +112,6 @@ export function initializeAccumulativeData() {
   crowdsalePageStore.setProperty('maximumSellableTokens', 0)
   crowdsalePageStore.setProperty('maximumSellableTokensInWei', 0)
   crowdsalePageStore.setProperty('investors', 0)
-  //crowdsalePageStore.setProperty('ethRaised', 0)
-  //crowdsalePageStore.setProperty('weiRaised', 0)
-  //crowdsalePageStore.setProperty('tokensSold', 0)
   crowdsalePageStore.setProperty('tokenAmountOf', 0)
   return Promise.resolve()
 }

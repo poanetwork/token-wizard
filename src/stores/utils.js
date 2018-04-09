@@ -16,9 +16,11 @@ export function getWhiteListWithCapCrowdsaleAssets(networkID) {
 }
 
 function getCrowdsaleAsset(contractName, stateProp, networkID) {
+  console.log(contractName, stateProp, networkID)
   const src = "" //to do
   const bin = process.env[`${contractName}_BIN`] || ''
-  const abi = JSON.parse(process.env[`${contractName}_ABI`] || [])
+  console.log("process.env[`${contractName}_ABI`]:", process.env[`${contractName}_ABI`])
+  const abi = JSON.parse(process.env[`${contractName}_ABI`] || '[]')
   const addr = JSON.parse(process.env[`${contractName}_ADDRESS`] || {})[networkID]
 
   return Promise.all([src, bin, abi, addr])
