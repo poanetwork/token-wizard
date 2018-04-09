@@ -27,6 +27,7 @@ import QRPaymentProcess from './QRPaymentProcess'
 import CountdownTimer from './CountdownTimer'
 import classNames from 'classnames'
 import moment from 'moment'
+import { BigNumber } from 'bignumber.js'
 
 @inject('contractStore', 'crowdsalePageStore', 'web3Store', 'tierStore', 'tokenStore', 'generalStore', 'investStore', 'gasPriceStore', 'generalStore')
 @observer
@@ -253,17 +254,17 @@ export class Invest extends React.Component {
     console.log('nextTiers:', nextTiers)
     console.log(nextTiers.length)
 
-    const decimals = parseInt(tokenStore.decimals, 10)
-    console.log('decimals:', decimals)
+    const decimals = new BigNumber(tokenStore.decimals)
+    console.log('decimals:', decimals.toFixed())
 
-    const rate = parseInt(crowdsalePageStore.rate, 10) //it is from contract. It is already in wei. How much 1 token costs in wei.
-    console.log('rate:', rate)
+    const rate = new BigNumber(crowdsalePageStore.rate) //it is from contract. It is already in wei. How much 1 token costs in wei.
+    console.log('rate:', rate.toFixed())
 
-    const tokensToInvest = parseFloat(investStore.tokensToInvest)
-    console.log('tokensToInvest:', tokensToInvest)
+    const tokensToInvest = new BigNumber(investStore.tokensToInvest)
+    console.log('tokensToInvest:', tokensToInvest.toFixed())
 
-    const weiToSend = parseInt(tokensToInvest * rate, 10)
-    console.log('weiToSend:', weiToSend)
+    const weiToSend = tokensToInvest.multipliedBy(rate)
+    console.log('weiToSend:', weiToSend.toFixed())
 
     const opts = {
       from: accounts[0],
