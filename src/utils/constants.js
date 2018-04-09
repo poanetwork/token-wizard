@@ -109,7 +109,20 @@ export const VALIDATION_MESSAGES = {
   EDITED_END_TIME: 'Please enter a valid date later than start time and previous than start time of next tier',
   EDITED_START_TIME: 'Please enter a valid date later than now, less than end time and later than the end time of the previous tier',
   RATE: 'Please enter a valid number greater than 0',
-  MINCAP: 'Value must be positive, decimals should not exceed the amount of decimals specified and min cap should be less or equal than the supply of some tier'
+  MINCAP: 'Value must be positive, decimals should not exceed the amount of decimals specified and min cap should be less or equal than the supply of some tier',
+  POSITIVE: 'Please enter a valid number greater than 0',
+  NON_NEGATIVE: 'Please enter a valid number greater or equal than 0',
+  ADDRESS: 'Please enter a valid address',
+  REQUIRED: 'This field is required',
+  DECIMAL_PLACES: 'Decimals should not exceed the amount of decimals specified',
+  LESS_OR_EQUAL: 'Should be less or equal than the specified value',
+  GREATER_OR_EQUAL: 'Should be greater than the specified value',
+  INTEGER: 'Should be integer',
+  DATE_IN_FUTURE: 'Should be set in the future',
+  DATE_IS_PREVIOUS: 'Should be previous than specified time',
+  DATE_IS_SAME_OR_LATER: 'Should be same or later than specified time',
+  DATE_IS_LATER: 'Should be later than specified time',
+  DATE_IS_SAME_OR_PREVIOUS: 'Should be same or previous than specified time',
 }
 
 //descriptions of input fields

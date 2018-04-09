@@ -89,6 +89,24 @@ class GasPriceStore {
   get customDescription () {
     return GAS_PRICE.CUSTOM.DESCRIPTION
   }
+
+  @computed
+  get gasPrices () {
+    return [
+      { ...this.slow, description: this.slowDescription },
+      { ...this.standard, description: this.standardDescription },
+      { ...this.fast, description: this.fastDescription },
+      { ...this.custom, description: this.customDescription },
+    ]
+  }
+
+  @computed
+  get gasPricesInGwei () {
+    return this.gasPrices.map(gasPrice => ({
+      ...gasPrice,
+      price: weiToGwei(gasPrice.price)
+    }))
+  }
 }
 
 export default GasPriceStore
