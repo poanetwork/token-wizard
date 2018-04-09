@@ -298,39 +298,6 @@ export const initializeCrowdsale = () => {
   ]
 }
 
-/*const getPricingStrategyParams = tier => {
-  BigNumber.config({ DECIMAL_PLACES: 18 })
-  const rate = new BigNumber(tier.rate)
-  const oneTokenInETH = rate.pow(-1).toFixed()
-
-  return [
-    web3Store.web3.utils.toWei(oneTokenInETH, 'ether')
-  ]
-}*/
-
-/*export const deployCrowdsale = () => {
-  return tierStore.tiers.map((tier, index) => {
-    return () => {
-      return getNetworkVersion()
-        .then(networkID => contractStore.setContractProperty('crowdsale', 'networkID', networkID))
-        .then(() => {
-          const abiRegistryStorage = contractStore.registryStorage.abi || []
-          const binRegistryStorage = contractStore.registryStorage.bin || ''
-          const paramsCrowdsale = getCrowdSaleParams(index)
-
-          return deployInstance(abiRegistryStorage, binRegistryStorage, paramsCrowdsale)
-        })
-        .then(crowdsaleAddr => {
-          console.log('***Deploy crowdsale contract***', index, crowdsaleAddr)
-
-          const newCrowdsaleAddr = contractStore.crowdsale.addr.concat(crowdsaleAddr)
-          contractStore.setContractProperty('crowdsale', 'addr', newCrowdsaleAddr)
-        })
-        .then(() => deploymentStore.setAsSuccessful('crowdsale'))
-    }
-  })
-}*/
-
 function registerCrowdsaleAddress () {
   return [
     () => {

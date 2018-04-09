@@ -131,29 +131,27 @@ export function getAccumulativeCrowdsaleData(initCrowdsaleContract, crowdsaleExe
   //to do: iterate through tiers and get accumulative data
   const { web3 } = web3Store
 
-  let promises = /*contractStore.crowdsale.addr*/[]
-    .map(crowdsaleAddr => {
+  //to do: get the number of tiers
+  let numOfTiers = 1;
+  let tiers = new Array(numOfTiers);
+  tiers.push(0);
 
-      /*let getWeiRaised = crowdsaleContract.methods.weiRaised().call().then((weiRaised) => {
-        const storedWeiRaised = toBigNumber(crowdsalePageStore.weiRaised)
-        crowdsalePageStore.setProperty('weiRaised', storedWeiRaised.plus(weiRaised).toFixed())
-        crowdsalePageStore.setProperty('ethRaised', web3.utils.fromWei(crowdsalePageStore.weiRaised, 'ether'))
-      })
+  let promises = /*contractStore.crowdsale.addr*/tiers
+    .map(tierNum => {
 
-      let getTokensSold = crowdsaleContract.methods.tokensSold().call().then((tokensSold) => {
-        const storedTokensSold = toBigNumber(crowdsalePageStore.tokensSold)
-        crowdsalePageStore.setProperty('tokensSold', storedTokensSold.plus(tokensSold).toFixed())
-      })*/
+      let registryStorageObj = toJS(contractStore.registryStorage)
 
-      /*let getMaximumSellableTokens = crowdsaleContract.methods.maximumSellableTokens().call().then((maximumSellableTokens) => {
-        const maxSellableTokens = toBigNumber(crowdsalePageStore.maximumSellableTokens)
-        crowdsalePageStore.setProperty('maximumSellableTokens', maxSellableTokens.plus(maximumSellableTokens).toFixed())
+      initCrowdsaleContract.methods.getCrowdsaleTier(registryStorageObj.addr, contractStore.crowdsale.execID, tierNum).call()
+        .then((getCrowdsaleTier) => {
+          console.log("getCrowdsaleTier:", getCrowdsaleTier)
+          let maximumSellableTokens = toBigNumber(crowdsalePageStore.maximumSellableTokens)
+          crowdsalePageStore.setProperty('maximumSellableTokens', maximumSellableTokens.plus(getCrowdsaleTier.tier_sell_cap).toFixed())
 
-        //calc maximumSellableTokens in Eth
-        return setMaximumSellableTokensInEth(crowdsaleContract, maximumSellableTokens)
-      })
+          //calc maximumSellableTokens in Eth
+          return setMaximumSellableTokensInEth(initCrowdsaleContract, getCrowdsaleTier.tier_sell_cap, crowdsaleExecID)
+        })
 
-      let getInvestors = crowdsaleContract.methods.investorCount().call().then((investors) => {
+      /*let getInvestors = crowdsaleContract.methods.investorCount().call().then((investors) => {
         const storedInvestorsCount = toBigNumber(crowdsalePageStore.investors)
         crowdsalePageStore.setProperty('investors', storedInvestorsCount.plus(investors).toFixed())
       })*/
@@ -215,21 +213,14 @@ export let isFinalized = (initCrowdsaleContract, crowdsaleExecID) => {
   })
 }
 
-function setMaximumSellableTokensInEth(crowdsaleContract, maximumSellableTokens) {
-  return crowdsaleContract.methods.pricingStrategy().call()
-    .then((pricingStrategyAddr) => {
-      return attachToContract(contractStore.pricingStrategy.abi, pricingStrategyAddr)
-    })
-    .then(pricingStrategyContract => {
-      if (!pricingStrategyContract) return noContractAlert()
+function setMaximumSellableTokensInEth(initCrowdsaleContract, maximumSellableTokens, execID) {
+  let registryStorageObj = toJS(contractStore.registryStorage)
+  return initCrowdsaleContract.methods.getCrowdsaleInfo(registryStorageObj.addr, execID).call()
+    .then((crowdsaleInfo) => {
+      const currentMaximumSellableTokensInWei = toBigNumber(crowdsalePageStore.maximumSellableTokensInWei)
+      const maximumSellableTokensInWei = toBigNumber(crowdsaleInfo.sale_rate).times(maximumSellableTokens).div(`1e${tokenStore.decimals}`).dp(0)
 
-      return pricingStrategyContract.methods.oneTokenInWei().call()
-        .then((oneTokenInWei) => {
-          const currentMaximumSellableTokensInWei = toBigNumber(crowdsalePageStore.maximumSellableTokensInWei)
-          const maximumSellableTokensInWei = toBigNumber(oneTokenInWei).times(maximumSellableTokens).div(`1e${tokenStore.decimals}`).dp(0)
-
-          crowdsalePageStore.setProperty('maximumSellableTokensInWei', currentMaximumSellableTokensInWei.plus(maximumSellableTokensInWei).toFixed())
-        })
+      crowdsalePageStore.setProperty('maximumSellableTokensInWei', currentMaximumSellableTokensInWei.plus(maximumSellableTokensInWei).toFixed())
     })
 }
 
