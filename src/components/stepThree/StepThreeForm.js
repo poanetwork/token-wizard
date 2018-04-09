@@ -154,6 +154,7 @@ export const StepThreeForm = ({ handleSubmit, values, invalid, pristine, mutator
           <TierBlock
             fields={fields}
             minCap={values.minCap}
+            decimals={props.decimals}
             tierStore={props.tierStore}
           />
         )}
