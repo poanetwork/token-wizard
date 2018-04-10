@@ -22,7 +22,7 @@ export class stepTwo extends Component {
       tokenValues: {
         name: this.props.tokenStore.name,
         ticker: this.props.tokenStore.ticker,
-        decimals: this.props.tokenStore.decimals,
+        decimals: this.props.tokenStore.decimals || 0,
       }
     }
   }
