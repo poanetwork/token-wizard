@@ -67,19 +67,16 @@ export let getCrowdsaleData = (initCrowdsaleContract, execID, account) => {
 
     let registryStorageObj = toJS(contractStore.registryStorage)
 
-    let getCrowdsaleStartTime = initCrowdsaleContract.methods.getCrowdsaleStartTime(registryStorageObj.addr, execID).call();
     let getCrowdsaleInfo = initCrowdsaleContract.methods.getCrowdsaleInfo(registryStorageObj.addr, execID).call();
     let getCurrentTierInfo = initCrowdsaleContract.methods.getCurrentTierInfo(registryStorageObj.addr, execID).call();
     let getTokensSold = initCrowdsaleContract.methods.getTokensSold(registryStorageObj.addr, execID).call();
 
     return Promise.all([
-      getCrowdsaleStartTime,
       getCrowdsaleInfo,
       getCurrentTierInfo,
       getTokensSold
     ])
       .then(([
-          crowdsaleStartTime,
           crowdsaleInfo,
           currentTierInfo,
           tokensSold
@@ -167,6 +164,7 @@ export let getCrowdsaleTargetDates = (initCrowdsaleContract, execID) => {
 
     return Promise.all([getCrowdsaleStartTime, getCurrentTierInfo])
       .then(([crowdsaleStartTime, currentTierInfo]) => {
+        console.log("crowdsaleStartTime:", crowdsaleStartTime)
         const startsAtMilliseconds = crowdsaleStartTime * 1000
         console.log('currentTierInfo:')
         console.log(currentTierInfo)

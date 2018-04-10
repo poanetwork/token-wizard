@@ -86,6 +86,8 @@ const getCrowdSaleParams = (account, tierObj, index) => {
     account
   ]
 
+  console.log("paramsCrowdsale:", paramsCrowdsale)
+
   let encodedParameters = web3.eth.abi.encodeParameters(["address","uint256","uint256","bytes32","uint256","uint256","bool","address"], paramsCrowdsale);
   return encodedParameters;
   /*return [
