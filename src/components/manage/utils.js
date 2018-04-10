@@ -38,7 +38,7 @@ export const updateTierAttribute = (attribute, value, addresses) => {
     if (attribute === 'startTime' || attribute === 'endTime') {
       value = [toFixed(parseInt(Date.parse(value) / 1000, 10).toString())]
     } else if (attribute === 'supply') {
-      value = [toFixed(parseInt(value, 10) * 10 ** parseInt(tokenStore.decimals, 10)).toString()]
+      value = [toBigNumber(value).times(`1e${tokenStore.decimals}`).toFixed()]
     } else {
       // whitelist
       value = value.reduce((toAdd, whitelist) => {
@@ -251,9 +251,9 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
 
       //total supply
       const tokenDecimals = !isNaN(decimals) ? decimals : 0
-      const maxCapBeforeDecimals = parseInt(toFixed(maximumSellableTokens), 10) / 10 ** tokenDecimals
+      const maxCapBeforeDecimals = toBigNumber(maximumSellableTokens).div(`1e${tokenDecimals}`)
 
-      newTier.supply = maxCapBeforeDecimals ? maxCapBeforeDecimals.toString() : 0
+      newTier.supply = maxCapBeforeDecimals ? maxCapBeforeDecimals.toFixed() : 0
 
       return Promise.all([whitelistAccounts, pricingStrategyData(pricingStrategyAddress)])
     })
