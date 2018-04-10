@@ -22,6 +22,7 @@ import {
 } from '../../stores'
 import { getEncodedABIClientSide } from '../../utils/microservices'
 import { BigNumber } from 'bignumber.js'
+import { toBigNumber } from '../crowdsale/utils'
 
 export const setupContractDeployment = (web3) => {
   if (!contractStore.safeMathLib) {
@@ -191,7 +192,7 @@ const getCrowdSaleParams = index => {
     formatDate(startTime),
     formatDate(endTime),
     toFixed('0'),
-    toFixed(parseInt(supply, 10) * 10 ** parseInt(tokenStore.decimals, 10)).toString(),
+    toBigNumber(supply).times(`1e${tokenStore.decimals}`).toFixed(),
     updatable === 'on',
     whitelistEnabled === 'yes'
   ]
