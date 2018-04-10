@@ -13,7 +13,6 @@ import {
   isNonNegative,
   isPositive,
   isRequired,
-  validateDecimals,
   validateTicker,
   validateTokenName,
   validateWhitelistMax,
@@ -61,30 +60,6 @@ describe('validateTicker', () => {
 
     it(`Should ${action} for '${testCase.value}'`, () => {
       expect(validateTicker(testCase.value)).toBe(testCase.expected)
-    })
-  })
-})
-
-describe('validateDecimals', () => {
-  [
-    { value: '100', expected: VALIDATION_MESSAGES.DECIMALS },
-    { value: '-10', expected: VALIDATION_MESSAGES.DECIMALS },
-    { value: '20', expected: VALIDATION_MESSAGES.DECIMALS },
-    { value: '1.5', expected: VALIDATION_MESSAGES.DECIMALS },
-    { value: '1.', expected: VALIDATION_MESSAGES.DECIMALS },
-    { value: '1e1', expected: VALIDATION_MESSAGES.DECIMALS },
-    { value: '--', expected: VALIDATION_MESSAGES.DECIMALS },
-    { value: undefined, expected: undefined },
-    { value: '', expected: undefined },
-    { value: '0', expected: undefined },
-    { value: '1', expected: undefined },
-    { value: '10', expected: undefined },
-    { value: '18', expected: undefined },
-  ].forEach(testCase => {
-    const action = testCase.expected === undefined ? 'pass' : 'fail'
-
-    it(`Should ${action} for '${testCase.value}'`, () => {
-      expect(validateDecimals(testCase.value)).toBe(testCase.expected)
     })
   })
 })
@@ -595,4 +570,3 @@ describe('composeValidators', () => {
     expect(listOfErrors).toBeUndefined()
   })
 })
-
