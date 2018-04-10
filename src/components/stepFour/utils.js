@@ -26,6 +26,7 @@ import {
 } from '../../stores'
 import { getEncodedABIClientSide } from '../../utils/microservices'
 import { BigNumber } from 'bignumber.js'
+import { toBigNumber } from '../crowdsale/utils'
 
 export const buildDeploymentSteps = (web3) => {
   const stepFnCorrelation = {
@@ -81,7 +82,7 @@ const getCrowdSaleParams = (account, tierObj, index) => {
     formatDate(startTime),
     web3.utils.sha3(tier),
     duration.toString(),
-    toFixed(parseInt(supply, 10) * 10 ** parseInt(tokenStore.decimals, 10)).toString(),
+    toBigNumber(supply).times(`1e${tokenStore.decimals}`).toFixed(),
     whitelistEnabled === 'yes',
     account
   ]
