@@ -1,7 +1,5 @@
 import {
-  attachToContract,
   calculateGasLimit,
-  deployInstance,
   getNetWorkNameById,
   getNetworkVersion,
   getRegistryAddress,
@@ -34,6 +32,7 @@ export const buildDeploymentSteps = (web3) => {
     token: initializeToken,
     //registerCrowdsaleAddress: registerCrowdsaleAddress,
     setReservedTokens: setReservedTokensListMultiple,
+    createCrowdsaleTiers: createCrowdsaleTiers,
     whitelist: addWhitelist,
     crowdsaleInit: initializeCrowdsale,
   }
@@ -105,7 +104,6 @@ const getCrowdSaleParams = (account, tierObj, index, methodInterface) => {
 export const deployCrowdsale = () => {
   console.log("###deploy crowdsale###")
   const { web3 } = web3Store
-  const toJS = x => JSON.parse(JSON.stringify(x))
   return tierStore.tiers.map((tier, index) => {
     return () => {
       return getNetworkVersion()
@@ -237,8 +235,6 @@ const getTokenParams = (token, methodInterface) => {
 
 export const initializeToken = () => {
   console.log("###initialize token###")
-  const { web3 } = web3Store
-  const toJS = x => JSON.parse(JSON.stringify(x))
   return [
     () => {
       return getNetworkVersion()
@@ -246,9 +242,6 @@ export const initializeToken = () => {
 
         const methodInterface = ["bytes32","bytes32","uint256","bytes"]
 
-        //return web3.eth.getAccounts()
-        //  .then((accounts) => accounts[0])
-        //  .then((account) => {
         console.log("contractStore.crowdsale.account: ", contractStore.crowdsale.account)
         let account = contractStore.crowdsale.account;
 
@@ -272,6 +265,84 @@ export const initializeToken = () => {
   ]
 }
 
+const getReservedTokensParams = (addrs, inTokens, inPercentageUnit, inPercentageDecimals, methodInterface) => {
+  const { web3 } = web3Store
+  let account = contractStore.crowdsale.account;
+
+  let paramsReservedTokens = [
+    addrs,
+    inTokens,
+    inPercentageUnit,
+    inPercentageDecimals
+  ]
+  console.log("paramsReservedTokens:",paramsReservedTokens)
+
+  let paramsContext = [contractStore.crowdsale.execID, account, 0];
+  let context = web3.eth.abi.encodeParameters(["bytes32","address","uint256"], paramsContext);
+  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsReservedTokens, context]);
+  return encodedParameters;
+}
+
+export const setReservedTokensListMultiple = () => {
+  console.log('###setReservedTokensListMultiple:###')
+  return [
+    () => {
+      let map = {}
+      let addrs = []
+      let inTokens = []
+      let inPercentageUnit = []
+      let inPercentageDecimals = []
+
+      const reservedTokens = reservedTokenStore.tokens
+
+      for (let i = 0; i < reservedTokens.length; i++) {
+        if (!reservedTokens[i].deleted) {
+          const val = reservedTokens[i].val
+          const addr = reservedTokens[i].addr
+          const obj = map[addr] ? map[addr] : {}
+
+          if (reservedTokens[i].dim === 'tokens') {
+            obj.inTokens = val * 10 ** tokenStore.decimals
+          } else {
+            obj.inPercentageDecimals = countDecimalPlaces(val)
+            obj.inPercentageUnit = val * 10 ** obj.inPercentageDecimals
+          }
+          map[addr] = obj
+        }
+      }
+
+      let keys = Object.keys(map)
+
+      for (let i = 0; i < keys.length; i++) {
+        let key = keys[i]
+        let obj = map[key]
+
+        addrs.push(key)
+        inTokens.push(obj.inTokens ? toFixed(obj.inTokens.toString()) : 0)
+        inPercentageUnit.push(obj.inPercentageUnit ? obj.inPercentageUnit : 0)
+        inPercentageDecimals.push(obj.inPercentageDecimals ? obj.inPercentageDecimals : 0)
+      }
+
+      if (addrs.length === 0 && inTokens.length === 0 && inPercentageUnit.length === 0) {
+        if (inPercentageDecimals.length === 0) return Promise.resolve()
+      }
+
+      const opts = { gasPrice: generalStore.gasPrice }
+
+      const methodInterface = ["address[]","uint256[]","uint256[]","uint256[]","bytes"]
+
+      let paramsToExec = [addrs, inTokens, inPercentageUnit, inPercentageDecimals, methodInterface]
+      const method = methodToExec(`updateMultipleReservedTokens(${methodInterface.join(',')})`, "tokenConsole", getReservedTokensParams, paramsToExec)
+
+      return method.estimateGas(opts)
+        .then(estimatedGas => {
+          opts.gasLimit = calculateGasLimit(estimatedGas)
+          return sendTXToContract(method.send(opts))
+        })
+        .then(() => deploymentStore.setAsSuccessful('setReservedTokens'))
+    }]
+}
+
 const getInitializeCrowdsaleParams = (token) => {
   const { web3 } = web3Store
   let account = contractStore.crowdsale.account;
@@ -282,16 +353,12 @@ const getInitializeCrowdsaleParams = (token) => {
 }
 
 export const initializeCrowdsale = () => {
-  const { web3 } = web3Store
-  const toJS = x => JSON.parse(JSON.stringify(x))
+  console.log("###initialize crowdsale###")
   return [
     () => {
       return getNetworkVersion()
       .then((networkID) => {
 
-        //return web3.eth.getAccounts()
-        //  .then((accounts) => accounts[0])
-        //  .then((account) => {
         let account = contractStore.crowdsale.account;
 
         let paramsToExec = [tokenStore]
@@ -309,7 +376,6 @@ export const initializeCrowdsale = () => {
               })
               .then(() => deploymentStore.setAsSuccessful('crowdsaleInit'))
           })
-      //     })
       })
     }
   ]
@@ -347,17 +413,99 @@ function registerCrowdsaleAddress () {
   ]
 }
 
+const getTiersParams = (methodInterface) => {
+  const { web3 } = web3Store
+  let account = contractStore.crowdsale.account;
+
+  const formatDate = date => toFixed(parseInt(Date.parse(date) / 1000, 10).toString())
+
+  let whitelistEnabledArr = []
+  let updatableArr = []
+  let rateArr = []
+  let supplyArr = []
+  let tierNameArr = []
+  let durationArr = []
+  for (let tierIndex = 1; tierIndex < tierStore.tiers.length; tierIndex++) {
+    let { whitelistEnabled, updatable, rate, supply, tier, startTime, endTime } = tierStore.tiers[tierIndex]
+    let duration = formatDate(endTime) - formatDate(startTime)
+    let tierNameBytes = web3.utils.fromAscii(tier)
+    let encodedTierName = web3.eth.abi.encodeParameter("bytes32", tierNameBytes);
+    durationArr.push(duration)
+    tierNameArr.push(encodedTierName)
+    rateArr.push(rate)
+    supplyArr.push(supply)
+    updatableArr.push(updatable === 'on')
+    whitelistEnabledArr.push(whitelistEnabled === 'yes')
+  }
+  let paramsTiers = [
+    tierNameArr,
+    durationArr,
+    rateArr,
+    supplyArr,
+    updatableArr,
+    whitelistEnabledArr
+  ]
+  console.log("paramsTiers:", paramsTiers)
+
+  let paramsContext = [contractStore.crowdsale.execID, account, 0];
+  let context = web3.eth.abi.encodeParameters(["bytes32","address","uint256"], paramsContext);
+  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsTiers, context]);
+  return encodedParameters;
+}
+
+//to do
+export const createCrowdsaleTiers = () => {
+  return tierStore.tiers.map((tier, index) => {
+    return () => {
+      console.log('###createCrowdsaleTiers:###')
+      const round = index
+
+      const opts = { gasPrice: generalStore.gasPrice }
+
+      const methodInterface = ["bytes32[]", "uint[]", "uint[]", "uint[]", "bool[]", "bool[]","bytes"]
+
+      let paramsToExec = [methodInterface]
+      const method = methodToExec(`createCrowdsaleTiers(${methodInterface.join(',')})`, "crowdsaleConsole", getTiersParams, paramsToExec)
+
+      return method.estimateGas(opts)
+        .then(estimatedGas => {
+          opts.gasLimit = calculateGasLimit(estimatedGas)
+          return sendTXToContract(method.send(opts))
+        })
+        .then(() => deploymentStore.setAsSuccessful('createCrowdsaleTiers'))
+    }
+  })
+}
+
+const getWhitelistsParams = (tierIndex, addrs, minCaps, maxCaps, methodInterface) => {
+  const { web3 } = web3Store
+  let account = contractStore.crowdsale.account;
+
+  let paramsWhitelist = [
+    tierIndex,
+    addrs,
+    minCaps,
+    maxCaps
+  ]
+  console.log("paramsWhitelist:", paramsWhitelist)
+
+  let paramsContext = [contractStore.crowdsale.execID, account, 0];
+  let context = web3.eth.abi.encodeParameters(["bytes32","address","uint256"], paramsContext);
+  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsWhitelist, context]);
+  return encodedParameters;
+}
+
 export const addWhitelist = () => {
   return tierStore.tiers.map((tier, index) => {
     return () => {
+      console.log('###addWhitelist:###')
       const round = index
-      const abi = contractStore.crowdsale.abi.slice()
-      const addr = contractStore.crowdsale.execID
 
-      console.log('###whitelist:###')
       let whitelist = []
+      whitelist.push.apply(whitelist, tier.whitelist)
 
-      for (let i = 0; i <= round; i++) {
+      //inheritance of whitelists
+      /*for (let i = 0; i <= round; i++) {
         const tier = tierStore.tiers[i]
 
         for (let j = 0; j < tier.whitelist.length; j++) {
@@ -374,7 +522,7 @@ export const addWhitelist = () => {
             whitelist.push.apply(whitelist, tier.whitelist)
           }
         }
-      }
+      }*/
 
       console.log('whitelist:', whitelist)
 
@@ -382,118 +530,35 @@ export const addWhitelist = () => {
         return Promise.resolve()
       }
 
-      return attachToContract(abi, addr)
-        .then(crowdsaleContract => {
-          console.log('attach to crowdsale contract')
+      let addrs = []
+      let minCaps = []
+      let maxCaps = []
 
-          if (!crowdsaleContract) {
-            noContractAlert()
-            return Promise.reject('No contract available')
-          }
+      for (let i = 0; i < whitelist.length; i++) {
+        addrs.push(whitelist[i].addr)
+        minCaps.push(whitelist[i].min * 10 ** tokenStore.decimals ? toFixed((whitelist[i].min * 10 ** tokenStore.decimals).toString()) : 0)
+        maxCaps.push(whitelist[i].max * 10 ** tokenStore.decimals ? toFixed((whitelist[i].max * 10 ** tokenStore.decimals).toString()) : 0)
+      }
 
-          let addrs = []
-          let statuses = []
-          let minCaps = []
-          let maxCaps = []
+      console.log('addrs:', addrs)
+      console.log('minCaps:', minCaps)
+      console.log('maxCaps:', maxCaps)
 
-          for (let i = 0; i < whitelist.length; i++) {
-            addrs.push(whitelist[i].addr)
-            statuses.push(true)
-            minCaps.push(whitelist[i].min * 10 ** tokenStore.decimals ? toFixed((whitelist[i].min * 10 ** tokenStore.decimals).toString()) : 0)
-            maxCaps.push(whitelist[i].max * 10 ** tokenStore.decimals ? toFixed((whitelist[i].max * 10 ** tokenStore.decimals).toString()) : 0)
-          }
+      const opts = { gasPrice: generalStore.gasPrice }
 
-          console.log('addrs:', addrs)
-          console.log('statuses:', minCaps)
-          console.log('maxCaps:', maxCaps)
+      const methodInterface = ["uint", "address[]","uint256[]","uint256[]","bytes"]
 
-          const opts = { gasPrice: generalStore.gasPrice }
-          const method = crowdsaleContract.methods.setEarlyParticipantWhitelistMultiple(addrs, statuses, minCaps, maxCaps)
+      let paramsToExec = [index, addrs, minCaps, maxCaps, methodInterface]
+      const method = methodToExec(`whitelistMultiForTier(${methodInterface.join(',')})`, "crowdsaleConsole", getWhitelistsParams, paramsToExec)
 
-          return method.estimateGas(opts)
-            .then(estimatedGas => {
-              opts.gasLimit = calculateGasLimit(estimatedGas)
-              return sendTXToContract(method.send(opts))
-            })
+      return method.estimateGas(opts)
+        .then(estimatedGas => {
+          opts.gasLimit = calculateGasLimit(estimatedGas)
+          return sendTXToContract(method.send(opts))
         })
         .then(() => deploymentStore.setAsSuccessful('whitelist'))
     }
-
   })
-}
-
-const getReservedTokensParams = (addrs, inTokens, inPercentageUnit, inPercentageDecimals) => {
-  const { web3 } = web3Store
-  let account = contractStore.crowdsale.account;
-
-  let paramsReservedTokens = [
-    addrs,
-    inTokens,
-    inPercentageUnit,
-    inPercentageDecimals
-  ]
-  let paramsContext = [contractStore.crowdsale.execID, account, 0];
-  let context = web3.eth.abi.encodeParameters(["bytes32","address","uint256"], paramsContext);
-  let encodedParameters = web3.eth.abi.encodeParameters(["address[]","uint256[]","uint256[]","uint256[]","bytes"], [...paramsReservedTokens, context]);
-  return encodedParameters;
-}
-
-export const setReservedTokensListMultiple = () => {
-  return [() => {
-    console.log('###setReservedTokensListMultiple:###')
-
-    let map = {}
-    let addrs = []
-    let inTokens = []
-    let inPercentageUnit = []
-    let inPercentageDecimals = []
-
-    const reservedTokens = reservedTokenStore.tokens
-
-    for (let i = 0; i < reservedTokens.length; i++) {
-      if (!reservedTokens[i].deleted) {
-        const val = reservedTokens[i].val
-        const addr = reservedTokens[i].addr
-        const obj = map[addr] ? map[addr] : {}
-
-        if (reservedTokens[i].dim === 'tokens') {
-          obj.inTokens = val * 10 ** tokenStore.decimals
-        } else {
-          obj.inPercentageDecimals = countDecimalPlaces(val)
-          obj.inPercentageUnit = val * 10 ** obj.inPercentageDecimals
-        }
-        map[addr] = obj
-      }
-    }
-
-    let keys = Object.keys(map)
-
-    for (let i = 0; i < keys.length; i++) {
-      let key = keys[i]
-      let obj = map[key]
-
-      addrs.push(key)
-      inTokens.push(obj.inTokens ? toFixed(obj.inTokens.toString()) : 0)
-      inPercentageUnit.push(obj.inPercentageUnit ? obj.inPercentageUnit : 0)
-      inPercentageDecimals.push(obj.inPercentageDecimals ? obj.inPercentageDecimals : 0)
-    }
-
-    if (addrs.length === 0 && inTokens.length === 0 && inPercentageUnit.length === 0) {
-      if (inPercentageDecimals.length === 0) return Promise.resolve()
-    }
-
-    const opts = { gasPrice: generalStore.gasPrice }
-
-    let paramsToExec = [addrs, inTokens, inPercentageUnit, inPercentageDecimals]
-    const method = methodToExec("updateMultipleReservedTokens(address[],uint256[],uint256[],uint256[],bytes)", "tokenConsole", getReservedTokensParams, paramsToExec)
-
-    method.estimateGas(opts)
-      .then(estimatedGas => {
-        opts.gasLimit = calculateGasLimit(estimatedGas)
-        return sendTXToContract(method.send(opts))
-      })
-      .then(() => deploymentStore.setAsSuccessful('setReservedTokens'))
-  }]
 }
 
 export const handlerForFile = (content, type) => {

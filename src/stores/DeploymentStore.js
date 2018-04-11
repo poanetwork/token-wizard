@@ -21,13 +21,15 @@ class DeploymentStore {
   }
 
   @action initialize = (hasReservedToken, hasWhitelist, tiersCount) => {
+    console.log("hasReservedToken:", hasReservedToken)
     const listOfTx = [
       { name: 'crowdsaleCreate', dependsOnTiers: false, required: true },
       { name: 'token', dependsOnTiers: false, required: true },
       /*{ name: 'registerCrowdsaleAddress', dependsOnTiers: false, required: true },*/
       { name: 'setReservedTokens', dependsOnTiers: false, required: hasReservedToken },
-      /*{ name: 'whitelist', dependsOnTiers: true, required: hasWhitelist },*/
-      { name: 'crowdsaleInit', dependsOnTiers: true, required: true },
+      { name: 'createCrowdsaleTiers', dependsOnTiers: true, required: tiersCount > 1 },
+      { name: 'whitelist', dependsOnTiers: true, required: hasWhitelist },
+      { name: 'crowdsaleInit', dependsOnTiers: false, required: true },
     ]
     const byTierInitialValues = new Array(tiersCount).fill(false)
 

@@ -391,7 +391,7 @@ export class stepFour extends React.Component {
             <div className="step-icons step-icons_publish"/>
             <p className="title">Publish</p>
             <p className="description">
-              On this step we provide you artifacts about your token and crowdsale contracts. They are useful to verify contracts source code on <a href="https://etherscan.io/verifyContract">Etherscan</a>
+              On this step we provide you artifacts about your token and crowdsale contracts.
             </p>
           </div>
           <div className="hidden">
@@ -430,7 +430,7 @@ export class stepFour extends React.Component {
               </div>
             </div>
             {crowdsaleSetups}
-            <div className="publish-title-container">
+            {/*<div className="publish-title-container">
               <p className="publish-title" data-step={2 + tierStore.tiers.length + 1}>Crowdsale Setup</p>
             </div>
             <div className="hidden">
@@ -452,12 +452,12 @@ export class stepFour extends React.Component {
                 value={true.toString()}
                 description="Optimization in compiling"
               />
-            </div>
+            </div>*/}
             {tierStore.tiers[0].whitelistEnabled !== "yes"
               ? globalLimitsBlock
               : null
             }
-            {tokenBlock}
+            {/*{tokenBlock}
             <DisplayTextArea
               label={"Crowdsale Contract Source Code"}
               value={contractStore ? contractStore.crowdsale ? contractStore.crowdsale.src : "" : ""}
@@ -468,7 +468,7 @@ export class stepFour extends React.Component {
               value={contractStore ? contractStore.crowdsale ? JSON.stringify(contractStore.crowdsale.abi) : "" : ""}
               description="Crowdsale Contract ABI"
             />
-            {ABIEncodedOutputsCrowdsale}
+            {ABIEncodedOutputsCrowdsale}*/}
           </div>
         </div>
         <div className="button-container">

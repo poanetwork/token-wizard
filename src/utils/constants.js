@@ -290,6 +290,7 @@ export const TX_STEP_DESCRIPTION = {
   token: "Initialize Token",
   //registerCrowdsaleAddress: "Associate Crowdsale address to current account",
   setReservedTokens: "Register addresses for Reserved Tokens",
+  createCrowdsaleTiers: "Add tiers to Crowdsale",
   whitelist: "Register whitelisted addresses",
   crowdsaleInit: "Initialize Crowdsale",
 }
