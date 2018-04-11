@@ -351,10 +351,10 @@ export let methodToExec = (methodName, targetName, getEncodedParams, params) => 
   let methodSignature = web3.eth.abi.encodeFunctionSignature(methodName);
   console.log(`methodSignature ${methodName}:`, methodSignature);
 
-  let encodedParameters = web3.eth.abi.encodeParameters(["bytes"], [methodParams]);
-  let fullData = methodSignature + encodedParameters.substr(2);
+  //let encodedParameters = web3.eth.abi.encodeParameters(["bytes"], [methodParams]);
+  //let fullData = methodSignature + encodedParameters.substr(2);
 
-  //let fullData = methodSignature + methodParams.substr(2);
+  let fullData = methodSignature + methodParams.substr(2);
   console.log("full calldata:", fullData);
 
   const abiScriptExec = contractStore.scriptExec.abi || []
