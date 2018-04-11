@@ -237,3 +237,11 @@ export function whitelistImported(count) {
     type: 'info'
   })
 }
+
+export function reservedTokensImported(count) {
+  return sweetAlert2({
+    title: 'Reserved tokens imported',
+    html: `Tokens will be reserved for ${count} addresses`,
+    type: 'info'
+  })
+}
