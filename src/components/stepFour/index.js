@@ -226,14 +226,14 @@ export class stepFour extends React.Component {
 
   goToCrowdsalePage = () => {
     const { contractStore } = this.props
-    const isValidContract = contractStore.crowdsale.addr
+    const isValidContract = contractStore.crowdsale.execID
 
     if (!isValidContract) {
       return noContractDataAlert()
     }
 
     const crowdsalePage = '/crowdsale'
-    const url = `${crowdsalePage}?exec-id=${contractStore.crowdsale.addr}&networkID=${contractStore.crowdsale.networkID}`
+    const url = `${crowdsalePage}?exec-id=${contractStore.crowdsale.execID}&networkID=${contractStore.crowdsale.networkID}`
 
     if (!this.state.contractDownloaded) {
       //this.downloadCrowdsaleInfo()

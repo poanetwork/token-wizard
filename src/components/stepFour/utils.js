@@ -11,7 +11,7 @@ import {
   methodToInitAppInstance,
   methodToInitAndFinalize
 } from '../../utils/blockchainHelpers'
-import { noContractAlert, noContractDataAlert } from '../../utils/alerts'
+import { noContractAlert } from '../../utils/alerts'
 import { countDecimalPlaces, toFixed } from '../../utils/utils'
 import { DOWNLOAD_NAME } from '../../utils/constants'
 import { isObservableArray } from 'mobx'
@@ -49,7 +49,7 @@ export const buildDeploymentSteps = (web3) => {
   return list
 }
 
-const getCrowdSaleParams = (account, tierObj, index) => {
+const getCrowdSaleParams = (account, tierObj, index, methodInterface) => {
   const { web3 } = web3Store
   const { walletAddress, whitelistEnabled } = tierStore.tiers[0]
   const { updatable, supply, tier, startTime, endTime } = tierStore.tiers[index]
@@ -66,21 +66,25 @@ const getCrowdSaleParams = (account, tierObj, index) => {
   const formatDate = date => toFixed(parseInt(Date.parse(date) / 1000, 10).toString())
   const duration = formatDate(endTime) - formatDate(startTime)
 
-  /*init(
-  address _team_wallet,
-  uint _sale_rate,
-  uint _start_time,
-  bytes32 _initial_tier_name,
-  uint _initial_tier_duration,
-  uint _initial_tier_token_sell_cap,
-  bool _initial_tier_is_whitelisted,
-  address _admin)*/
+  /*function init(
+    address _team_wallet,
+    uint _start_time,
+    bytes32 _initial_tier_name,
+    uint _initial_tier_price,
+    uint _initial_tier_duration,
+    uint _initial_tier_token_sell_cap,
+    bool _initial_tier_is_whitelisted,
+    address _admin
+  )*/
+
+  let tierNameBytes = web3.utils.fromAscii(tier)
+  let encodedTierName = web3.eth.abi.encodeParameter("bytes32", tierNameBytes);
 
   let paramsCrowdsale = [
     walletAddress,
-    web3.utils.toWei(oneTokenInETH, 'ether'),
     formatDate(startTime),
-    web3.utils.sha3(tier),
+    encodedTierName,
+    web3.utils.toWei(oneTokenInETH, 'ether'),
     duration.toString(),
     toBigNumber(supply).times(`1e${tokenStore.decimals}`).toFixed(),
     whitelistEnabled === 'yes',
@@ -89,10 +93,9 @@ const getCrowdSaleParams = (account, tierObj, index) => {
 
   console.log("paramsCrowdsale:", paramsCrowdsale)
 
-  let encodedParameters = web3.eth.abi.encodeParameters(["address","uint256","uint256","bytes32","uint256","uint256","bool","address"], paramsCrowdsale);
+  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, paramsCrowdsale);
   return encodedParameters;
   /*return [
-    tier,
     formatDate(endTime),
     toFixed('0'),
     updatable === 'on',
@@ -114,27 +117,33 @@ export const deployCrowdsale = () => {
           .then((account) => {
             contractStore.setContractProperty('crowdsale', 'account', account)
 
+            const methodInterface = ["address","uint256","bytes32","uint256","uint256","uint256","bool","address"]
+
             let params = [
               account,
               tier,
-              index
+              index,
+              methodInterface
             ];
 
-            /*let method = methodToInitAppInstance(
-              "init(address,uint256,uint256,bytes32,uint256,uint256,bool,address)",
-              "initCrowdsale",
-              getCrowdSaleParams,
-              params
-            )*/
-            let method = methodToInit(
-              "init(address,uint256,uint256,bytes32,uint256,uint256,bool,address)",
-              "initCrowdsale",
+            const methodInterfaceStr = `init(${methodInterface.join(',')})`
+            const target = "initCrowdsale"
+
+            let method = methodToInitAppInstance(
+              methodInterfaceStr,
+              target,
               getCrowdSaleParams,
               params
             )
+            /*let method = methodToInit(
+              methodInterfaceStr,
+              target,
+              getCrowdSaleParams,
+              params
+            )*/
             /*let method = methodToInitAndFinalize(
-              "init(address,uint256,uint256,bytes32,uint256,uint256,bool,address)",
-              "initCrowdsale",
+              methodInterfaceStr,
+              target,
               getCrowdSaleParams,
               params
             )*/
@@ -153,20 +162,15 @@ export const deployCrowdsale = () => {
                     if (events) {
                       console.log("events:", events)
                       if (events.ApplicationFinalization) {
-                        console.log("ApplicationFinalization:", events.ApplicationFinalization)
-                        if (events.ApplicationFinalization.returnValues) {
-                          console.log("returnValues:", events.ApplicationFinalization.returnValues)
-                          if (events.ApplicationFinalization.returnValues.execution_id) {
-                            console.log("execution_id", events.ApplicationFinalization.returnValues.execution_id)
-                            contractStore.setContractProperty('crowdsale', 'execID', events.ApplicationFinalization.returnValues.execution_id)
-                          }
-                        }
+                        getExecutionIDFromEvent(events, "ApplicationFinalization");
+                      } else if (events.AppInstanceCreated) {
+                        getExecutionIDFromEvent(events, "AppInstanceCreated");
                       }
                     } else if (logs) {
                       console.log("logs:")
                       console.log(logs)
 
-                      let lasLog = logs.reduce(function(log, current) {
+                      let lastLog = logs.reduce(function(log, current) {
                         console.log(log)
                         console.log(current.topics)
                         console.log(current.logIndex)
@@ -178,10 +182,10 @@ export const deployCrowdsale = () => {
                         }
                         return log
                       }, 0)
-                      if (lasLog) {
-                        if (lasLog.topics) {
-                          if (lasLog.topics.length > 1) {
-                            let execID = lasLog.topics[1]
+                      if (lastLog) {
+                        if (lastLog.topics) {
+                          if (lastLog.topics.length > 1) {
+                            let execID = lastLog.topics[2]
                             console.log("exec_id", execID)
                             contractStore.setContractProperty('crowdsale', 'execID', execID)
                           }
@@ -197,22 +201,37 @@ export const deployCrowdsale = () => {
   })
 }
 
-const getTokenParams = (token) => {
+const getExecutionIDFromEvent = (events, eventName) => {
+  console.log("AppInstanceCreated:", events[eventName])
+  if (events[eventName].returnValues) {
+    console.log("returnValues:", events[eventName].returnValues)
+    let exec_id;
+    if (events[eventName].returnValues.execution_id)
+      exec_id = events[eventName].returnValues.execution_id
+    else if (events[eventName].returnValues.exec_id) {
+      exec_id = events[eventName].returnValues.exec_id
+    }
+    console.log("execution_id", exec_id)
+    contractStore.setContractProperty('crowdsale', 'execID', exec_id)
+  }
+}
+
+const getTokenParams = (token, methodInterface) => {
   const { web3 } = web3Store
   let account = contractStore.crowdsale.account;
   const whitelistWithGlobalMinCap = tierStore.tiers[0].whitelistEnabled !== 'yes' && tierStore.globalMinCap
   const minCap = whitelistWithGlobalMinCap ? toFixed(tierStore.globalMinCap * 10 ** token.decimals).toString() : 0
 
   let paramsToken = [
-    web3.utils.sha3(token.name),
-    web3.utils.sha3(token.ticker),
+    web3.utils.fromAscii(token.name),
+    web3.utils.fromAscii(token.ticker),
     parseInt(token.decimals, 10)
   ]
   console.log("paramsToken: ", paramsToken)
   let paramsContext = [contractStore.crowdsale.execID, account, 0];
   let context = web3.eth.abi.encodeParameters(["bytes32","address","uint256"], paramsContext);
   console.log("context:", context)
-  let encodedParameters = web3.eth.abi.encodeParameters(["bytes32","bytes32","uint256","bytes"], [...paramsToken, context]);
+  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsToken, context]);
   return encodedParameters;
 }
 
@@ -225,14 +244,16 @@ export const initializeToken = () => {
       return getNetworkVersion()
       .then((networkID) => {
 
+        const methodInterface = ["bytes32","bytes32","uint256","bytes"]
+
         //return web3.eth.getAccounts()
         //  .then((accounts) => accounts[0])
         //  .then((account) => {
         console.log("contractStore.crowdsale.account: ", contractStore.crowdsale.account)
         let account = contractStore.crowdsale.account;
 
-        let paramsToExec = [tokenStore]
-        const method = methodToExec("initCrowdsaleToken(bytes32,bytes32,uint256,bytes)", "crowdsaleConsole", getTokenParams, paramsToExec)
+        let paramsToExec = [tokenStore, methodInterface]
+        const method = methodToExec(`initCrowdsaleToken(${methodInterface.join(',')})`, "crowdsaleConsole", getTokenParams, paramsToExec)
 
         const opts = { gasPrice: generalStore.gasPrice, gasLimit: 300000, from: account }
         console.log("opts:", opts)

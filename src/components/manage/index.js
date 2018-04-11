@@ -120,8 +120,10 @@ export class Manage extends Component {
             let whenToken = initCrowdsaleContract.methods.getTokenInfo(registryStorageObj.addr, contractStore.crowdsale.execID).call();
             whenCrowdsaleData.push(whenToken)
             for (let tierNum = 0; tierNum < numOfTiers; tierNum++) {
-              let whetTier = initCrowdsaleContract.methods.getCrowdsaleTier(registryStorageObj.addr, contractStore.crowdsale.execID, tierNum).call();
-              whenCrowdsaleData.push(whetTier);
+              let whenTierData = initCrowdsaleContract.methods.getCrowdsaleTier(registryStorageObj.addr, contractStore.crowdsale.execID, tierNum).call();
+              let whenTierDates = initCrowdsaleContract.methods.getTierStartAndEndDates(registryStorageObj.addr, contractStore.crowdsale.execID, tierNum).call();
+              whenCrowdsaleData.push(whenTierData);
+              whenCrowdsaleData.push(whenTierDates);
             }
 
             return Promise.all(whenCrowdsaleData)
@@ -132,7 +134,19 @@ export class Manage extends Component {
             let token = crowdsaleData[1]
             crowdsaleData.shift();
             crowdsaleData.shift();
-            let tiers = crowdsaleData.slice();
+            let tiersAndTiersDates = crowdsaleData.slice();
+            let tierExtendedObj = {}
+            let tiers = tiersAndTiersDates.map((el) => {
+              let isTierObj = el.hasOwnProperty("tier_name")
+              let isTierDatesObj = el.hasOwnProperty("tier_start")
+              if (isTierObj) {
+                tierExtendedObj = el;
+              } else if (isTierDatesObj) {
+                tierExtendedObj = Object.assign(tierExtendedObj, el)
+              }
+
+              return tierExtendedObj;
+            })
             return tiers.reduce((promise, tier, index) => {
               return promise.then(() => processTier(tier, crowdsale, token, index))
             }, Promise.resolve())

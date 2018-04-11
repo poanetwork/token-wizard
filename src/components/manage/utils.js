@@ -122,8 +122,10 @@ const extractWhitelistInformation = (isWhitelisted, crowdsaleMethods) => {
 
 const crowdsaleData = (tier, crowdsale, token) => {
   const { web3 } = web3Store
-  let startsAt, endsAt, whitelistAccounts //to do
-  let rate = crowdsale.sale_rate //to do
+  let whitelistAccounts //to do
+  let startsAt = tier.tier_start
+  let endsAt = tier.tier_end
+  let rate = tier.tier_price
   let tokenName = web3.utils.toAscii(token.token_name)
   let tokenSymbol = web3.utils.toAscii(token.token_symbol)
   let decimals = token.token_decimals

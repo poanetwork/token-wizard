@@ -352,8 +352,9 @@ export let methodToExec = (methodName, targetName, getEncodedParams, params) => 
   console.log(`methodSignature ${methodName}:`, methodSignature);
 
   let encodedParameters = web3.eth.abi.encodeParameters(["bytes"], [methodParams]);
-
   let fullData = methodSignature + encodedParameters.substr(2);
+
+  //let fullData = methodSignature + methodParams.substr(2);
   console.log("full calldata:", fullData);
 
   const abiScriptExec = contractStore.scriptExec.abi || []
@@ -385,9 +386,10 @@ export let methodToInitAppInstance = (methodName, targetName, getEncodedParams, 
   let methodSignature = web3.eth.abi.encodeFunctionSignature(methodName);
   console.log(`methodSignature ${methodName}:`, methodSignature);
 
-  let encodedParameters = web3.eth.abi.encodeParameters(["bytes"], [methodParams]);
+  // let encodedParameters = web3.eth.abi.encodeParameters(["bytes"], [methodParams]);
+  // let fullData = methodSignature + encodedParameters.substr(2);
 
-  let fullData = methodSignature + encodedParameters.substr(2);
+  let fullData = methodSignature + methodParams.substr(2);
   console.log("full calldata:", fullData);
 
   const abiScriptExec = contractStore.scriptExec.abi || []
@@ -399,8 +401,11 @@ export let methodToInitAppInstance = (methodName, targetName, getEncodedParams, 
 
   const isPayable = true;
 
+  let appNameBytes = web3.utils.fromAscii(process.env['REACT_APP_CROWDSALE_APP_NAME'])
+  let encodedAppName = web3.eth.abi.encodeParameter("bytes32", appNameBytes);
+
   let paramsToInitAppInstance = [
-    web3.utils.sha3(process.env['REACT_APP_CROWDSALE_APP_NAME']),
+    encodedAppName,
     isPayable,
     fullData
   ]
