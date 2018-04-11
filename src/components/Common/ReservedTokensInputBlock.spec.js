@@ -8,6 +8,7 @@ import { configure, mount } from 'enzyme'
 const { VALID, INVALID } = VALIDATION_TYPES
 
 configure({ adapter: new Adapter() })
+jest.mock('react-dropzone', () => () =><span>Dropzone</span>);
 
 describe('ReservedTokensInputBlock', () => {
   let tokenList

@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import Web3 from 'web3'
+import Dropzone from 'react-dropzone';
+import Papa from 'papaparse'
 import '../../assets/stylesheets/application.css'
 import { InputField } from './InputField'
 import { RadioInputField } from './RadioInputField'
@@ -8,6 +10,8 @@ import update from 'immutability-helper'
 import ReservedTokensItem from './ReservedTokensItem'
 import { observer } from 'mobx-react';
 import { NumericInput } from './NumericInput'
+import { reservedTokensImported } from '../../utils/alerts'
+import processReservedTokens from '../../utils/processReservedTokens'
 
 const { VALID, INVALID } = VALIDATION_TYPES
 const { ADDRESS, DIMENSION, VALUE } = TEXT_FIELDS
@@ -130,6 +134,21 @@ export class ReservedTokensInputBlock extends Component {
     this.setState(newState)
   }
 
+  onDrop = (acceptedFiles, rejectedFiles) => {
+    acceptedFiles.forEach(file => {
+      Papa.parse(file, {
+        skipEmptyLines: true,
+        complete: results => {
+          const { called } = processReservedTokens(results.data, item => {
+            this.props.addReservedTokensItem(item)
+          })
+
+          reservedTokensImported(called)
+        }
+      })
+    })
+  }
+
   render () {
     const reservedTokensElements = this.props.tokens.map((token, index) => {
       return (
@@ -165,8 +184,19 @@ export class ReservedTokensInputBlock extends Component {
       console.error(`unrecognized dimension '${this.state.dim}'`)
     }
 
+    const actionsStyle = {
+      textAlign: 'right'
+    }
+
     const clearAllStyle = {
-      textAlign: 'right',
+      display: 'inline-block',
+      cursor: 'pointer'
+    }
+
+    const dropzoneStyle = {
+      display: 'inline-block',
+      marginLeft: '1em',
+      position: 'relative',
       cursor: 'pointer'
     }
 
@@ -210,13 +240,26 @@ export class ReservedTokensInputBlock extends Component {
           </div>
         </div>
         {reservedTokensElements}
-        {
-          tokensListEmpty ? null : (
-            <div className="clear-all-tokens" style={clearAllStyle} onClick={this.props.clearAll}>
-              <i className="fa fa-trash"></i>&nbsp;Clear All
-            </div>
-          )
-        }
+
+        {/* Actions */}
+        <div style={actionsStyle}>
+          {
+            tokensListEmpty ? null : (
+              <div className="clear-all-tokens" style={clearAllStyle} onClick={this.props.clearAll}>
+                <i className="fa fa-trash"></i>&nbsp;Clear All
+              </div>
+            )
+          }
+
+          <Dropzone
+            onDrop={this.onDrop}
+            accept=".csv"
+            style={dropzoneStyle}
+          >
+            <i className="fa fa-upload" title="Upload CSV"></i>&nbsp;
+            Upload CSV
+          </Dropzone>
+        </div>
       </div>
     )
   }
