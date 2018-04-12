@@ -28,7 +28,7 @@ export const validateWhitelistMin = ({ min, max, decimals }) => {
     isLessOrEqualThan('Should be less or equal than max')(max)
   )(min)
 
-  return listOfErrors ? listOfErrors.shift() : ''
+  return listOfErrors ? listOfErrors.shift() : undefined
 }
 
 export const validateWhitelistMax = ({ min, max, decimals }) => {
@@ -39,7 +39,7 @@ export const validateWhitelistMax = ({ min, max, decimals }) => {
     isGreaterOrEqualThan('Should be greater or equal than min')(min)
   )(max)
 
-  return listOfErrors ? listOfErrors.shift() : ''
+  return listOfErrors ? listOfErrors.shift() : undefined
 }
 
 export const isPositive = (errorMsg = VALIDATION_MESSAGES.POSITIVE) => (value) => {
