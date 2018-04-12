@@ -428,10 +428,12 @@ const getTiersParams = (methodInterface) => {
     let duration = formatDate(endTime) - formatDate(startTime)
     let tierNameBytes = web3.utils.fromAscii(tier)
     let encodedTierName = web3.eth.abi.encodeParameter("bytes32", tierNameBytes);
+    const rateBN = new BigNumber(rate)
+    const oneTokenInETH = rateBN.pow(-1).toFixed()
     durationArr.push(duration)
     tierNameArr.push(encodedTierName)
-    rateArr.push(rate)
-    supplyArr.push(supply)
+    rateArr.push(web3.utils.toWei(oneTokenInETH, 'ether'))
+    supplyArr.push(toBigNumber(supply).times(`1e${tokenStore.decimals}`).toFixed())
     updatableArr.push(updatable === 'on')
     whitelistEnabledArr.push(whitelistEnabled === 'yes')
   }
