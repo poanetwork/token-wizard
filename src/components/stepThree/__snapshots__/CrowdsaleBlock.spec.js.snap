@@ -1567,10 +1567,13 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
                     </InputField>
                     <InputField
                       description="Minimum amount tokens to buy. Not a minimal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy."
+                      errorMessage="This field is required"
                       onChange={[Function]}
+                      pristine={true}
                       side="white-list-input-property white-list-input-property-middle"
                       title="Min"
                       type="number"
+                      valid="INVALID"
                       value=""
                     >
                       <div
@@ -1607,10 +1610,13 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
                     </InputField>
                     <InputField
                       description="Maximum is the hard limit."
+                      errorMessage="This field is required"
                       onChange={[Function]}
+                      pristine={true}
                       side="white-list-input-property white-list-input-property-right"
                       title="Max"
                       type="number"
+                      valid="INVALID"
                       value=""
                     >
                       <div

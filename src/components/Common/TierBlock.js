@@ -186,7 +186,7 @@ export const TierBlock = ({ fields, ...props }) => {
                 <div className="section-title">
                   <p className="title">Whitelist</p>
                 </div>
-                <WhitelistInputBlock num={index}/>
+                <WhitelistInputBlock num={index} decimals={props.decimals} />
               </div>
             ) : null
           }

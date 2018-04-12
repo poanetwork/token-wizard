@@ -15,6 +15,8 @@ import {
   isRequired,
   validateTicker,
   validateTokenName,
+  validateWhitelistMax,
+  validateWhitelistMin,
   validators
 } from './validations'
 import { VALIDATION_MESSAGES } from './constants'
@@ -58,6 +60,58 @@ describe('validateTicker', () => {
 
     it(`Should ${action} for '${testCase.value}'`, () => {
       expect(validateTicker(testCase.value)).toBe(testCase.expected)
+    })
+  })
+})
+
+describe('validateWhitelistMin', () => {
+  const testCases = [
+    { value: { min: '0', max: '1', decimals: '0' }, expected: undefined },
+    { value: { min: '0', max: '10', decimals: '0' }, expected: undefined },
+    { value: { min: '5', max: '11', decimals: '5' }, expected: undefined },
+    { value: { min: '10', max: '10', decimals: '0' }, expected: undefined },
+    { value: { min: '10', max: '10', decimals: '7' }, expected: undefined },
+    { value: { min: '5', max: '11.123456', decimals: '3' }, expected: undefined },
+    { value: { min: '5.123', max: '11.123456', decimals: '3' }, expected: undefined },
+    { value: { min: '5.123456', max: '11.123456', decimals: '3' }, expected: 'Decimals should not exceed 3 places' },
+    { value: { min: '5.123456', max: '11.123', decimals: '3' }, expected: 'Decimals should not exceed 3 places' },
+    { value: { min: '25.123456', max: '11.123', decimals: '3' }, expected: 'Decimals should not exceed 3 places' },
+    { value: { min: '25.123', max: '11.123', decimals: '3' }, expected: 'Should be less or equal than max' },
+    { value: { min: '5', max: '3', decimals: '0' }, expected: 'Should be less or equal than max' },
+  ]
+
+  testCases.forEach(testCase => {
+    const action = testCase.expected ? 'fail' : 'pass'
+    const { min, max, decimals } = testCase.value
+
+    it(`Should ${action} for { min: '${min}', max: '${max}', decimals: '${decimals}' }`, () => {
+      expect(validateWhitelistMin({ ...testCase.value })).toBe(testCase.expected)
+    })
+  })
+})
+
+describe('validateWhitelistMax', () => {
+  const testCases = [
+    { value: { min: '0', max: '1', decimals: '0' }, expected: undefined },
+    { value: { min: '0', max: '10', decimals: '0' }, expected: undefined },
+    { value: { min: '5', max: '11', decimals: '5' }, expected: undefined },
+    { value: { min: '10', max: '10', decimals: '0' }, expected: undefined },
+    { value: { min: '10', max: '10', decimals: '7' }, expected: undefined },
+    { value: { min: '5.123456', max: '11', decimals: '3' }, expected: undefined },
+    { value: { min: '5.123345', max: '11.123', decimals: '3' }, expected: undefined },
+    { value: { min: '5.123456', max: '11.123456', decimals: '3' }, expected: 'Decimals should not exceed 3 places' },
+    { value: { min: '5.123', max: '11.123456', decimals: '3' }, expected: 'Decimals should not exceed 3 places' },
+    { value: { min: '25.123', max: '11.123456', decimals: '3' }, expected: 'Decimals should not exceed 3 places' },
+    { value: { min: '25.123', max: '11.123', decimals: '3' }, expected: 'Should be greater or equal than min' },
+    { value: { min: '5', max: '3', decimals: '0' }, expected: 'Should be greater or equal than min' },
+  ]
+
+  testCases.forEach(testCase => {
+    const action = testCase.expected ? 'fail' : 'pass'
+    const { min, max, decimals } = testCase.value
+
+    it(`Should ${action} for { min: '${min}', max: '${max}', decimals: '${decimals}' }`, () => {
+      expect(validateWhitelistMax({ ...testCase.value })).toBe(testCase.expected)
     })
   })
 })

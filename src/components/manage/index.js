@@ -361,10 +361,12 @@ export class Manage extends Component {
   }
 
   whitelistInputBlock = index => {
+    const { tokenStore } = this.props
     return (
       <WhitelistInputBlock
         key={index.toString()}
         num={index}
+        decimals={tokenStore.decimals}
       />
     )
   }
