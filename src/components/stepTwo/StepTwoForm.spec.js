@@ -1,30 +1,13 @@
 import React from 'react'
 import { Form } from 'react-final-form'
 import { StepTwoForm } from './StepTwoForm'
-import renderer from 'react-test-renderer'
 import Adapter from 'enzyme-adapter-react-15'
 import { configure, mount } from 'enzyme'
 
 configure({ adapter: new Adapter() })
+jest.mock('react-dropzone', () => () =><span>Dropzone</span>);
 
 describe('StepTwoForm', () => {
-  it('Should render the component', () => {
-    const component = renderer.create(
-      <Form
-        onSubmit={jest.fn()}
-        initialValues={{}}
-        component={StepTwoForm}
-        disableDecimals={false}
-        updateTokenStore={jest.fn()}
-        id="tokenData"
-        tokens={[]}
-      />
-    )
-
-    const tree = component.toJSON()
-    expect(tree).toMatchSnapshot()
-  })
-
   it('Should call onSubmit if all values are valid', () => {
     const onSubmit = jest.fn()
     const wrapper = mount(

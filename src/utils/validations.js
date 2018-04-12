@@ -58,7 +58,7 @@ export const isAddress = (errorMsg = VALIDATION_MESSAGES.ADDRESS) => (value) => 
 }
 
 export const isRequired = (errorMsg = VALIDATION_MESSAGES.REQUIRED) => (value) => {
-  const isValid = !!value
+  const isValid = value !== '' && value !== null && value !== undefined
   return isValid ? undefined : errorMsg
 }
 
