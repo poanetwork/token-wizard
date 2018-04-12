@@ -248,7 +248,7 @@ export const initializeToken = () => {
         let paramsToExec = [tokenStore, methodInterface]
         const method = methodToExec(`initCrowdsaleToken(${methodInterface.join(',')})`, "crowdsaleConsole", getTokenParams, paramsToExec)
 
-        const opts = { gasPrice: generalStore.gasPrice, gasLimit: 300000, from: account }
+        const opts = { gasPrice: generalStore.gasPrice, from: account }
         console.log("opts:", opts)
 
         return method.estimateGas(opts)
@@ -327,7 +327,8 @@ export const setReservedTokensListMultiple = () => {
         if (inPercentageDecimals.length === 0) return Promise.resolve()
       }
 
-      const opts = { gasPrice: generalStore.gasPrice }
+      let account = contractStore.crowdsale.account;
+      const opts = { gasPrice: generalStore.gasPrice, from: account }
 
       const methodInterface = ["address[]","uint256[]","uint256[]","uint256[]","bytes"]
 
@@ -455,17 +456,17 @@ const getTiersParams = (methodInterface) => {
 
 //to do
 export const createCrowdsaleTiers = () => {
-  return tierStore.tiers.map((tier, index) => {
-    return () => {
+  return [
+    () => {
       console.log('###createCrowdsaleTiers:###')
-      const round = index
-
-      const opts = { gasPrice: generalStore.gasPrice }
 
       const methodInterface = ["bytes32[]", "uint[]", "uint[]", "uint[]", "bool[]", "bool[]","bytes"]
 
       let paramsToExec = [methodInterface]
       const method = methodToExec(`createCrowdsaleTiers(${methodInterface.join(',')})`, "crowdsaleConsole", getTiersParams, paramsToExec)
+
+      let account = contractStore.crowdsale.account;
+      const opts = { gasPrice: generalStore.gasPrice, from: account }
 
       return method.estimateGas(opts)
         .then(estimatedGas => {
@@ -474,7 +475,7 @@ export const createCrowdsaleTiers = () => {
         })
         .then(() => deploymentStore.setAsSuccessful('createCrowdsaleTiers'))
     }
-  })
+  ]
 }
 
 const getWhitelistsParams = (tierIndex, addrs, minCaps, maxCaps, methodInterface) => {
@@ -544,7 +545,8 @@ export const addWhitelist = () => {
       console.log('minCaps:', minCaps)
       console.log('maxCaps:', maxCaps)
 
-      const opts = { gasPrice: generalStore.gasPrice }
+      let account = contractStore.crowdsale.account;
+      const opts = { gasPrice: generalStore.gasPrice, from: account }
 
       const methodInterface = ["uint", "address[]","uint256[]","uint256[]","bytes"]
 

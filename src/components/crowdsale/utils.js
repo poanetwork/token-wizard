@@ -1,6 +1,9 @@
-import { attachToContract } from '../../utils/blockchainHelpers'
 import { noContractAlert } from '../../utils/alerts'
 import { toFixed } from '../../utils/utils'
+import {
+  getCurrentAccount,
+  attachToInitCrowdsaleContract,
+} from '../../utils/blockchainHelpers'
 import { contractStore, crowdsalePageStore, tokenStore, web3Store } from '../../stores'
 import { toJS } from 'mobx'
 import { BigNumber } from 'bignumber.js'
@@ -71,18 +74,21 @@ export let getCrowdsaleData = (initCrowdsaleContract, execID, account) => {
     let getCurrentTierInfo = initCrowdsaleContract.methods.getCurrentTierInfo(registryStorageObj.addr, execID).call();
     let getTokensSold = initCrowdsaleContract.methods.getTokensSold(registryStorageObj.addr, execID).call();
     let getContributors = initCrowdsaleContract.methods.getCrowdsaleUniqueBuyers(registryStorageObj.addr, execID).call();
+    let getCrowdsaleMaxRaise = initCrowdsaleContract.methods.getCrowdsaleMaxRaise(registryStorageObj.addr, execID).call();
 
     return Promise.all([
       getCrowdsaleInfo,
       getCurrentTierInfo,
       getTokensSold,
-      getContributors
+      getContributors,
+      getCrowdsaleMaxRaise
     ])
       .then(([
           crowdsaleInfo,
           currentTierInfo,
           tokensSold,
-          contributors
+          contributors,
+          crowdsaleMaxRaise
       ]) => {
         const { web3 } = web3Store
 
@@ -94,6 +100,8 @@ export let getCrowdsaleData = (initCrowdsaleContract, execID, account) => {
         console.log(tokensSold)
         console.log('contributors:')
         console.log(contributors)
+        console.log('crowdsaleMaxRaise:')
+        console.log(crowdsaleMaxRaise)
 
         crowdsalePageStore.setProperty('weiRaised', Number(crowdsaleInfo.wei_raised).toFixed())
         crowdsalePageStore.setProperty('ethRaised', web3.utils.fromWei(crowdsalePageStore.weiRaised, 'ether'))
@@ -102,6 +110,9 @@ export let getCrowdsaleData = (initCrowdsaleContract, execID, account) => {
         crowdsalePageStore.setProperty('tokensSold', storedTokensSold.toFixed())
         crowdsalePageStore.setProperty('investors', toBigNumber(contributors).toFixed())
 
+        crowdsalePageStore.setProperty('maximumSellableTokens', toBigNumber(crowdsaleMaxRaise.total_sell_cap).toFixed())
+        crowdsalePageStore.setProperty('maximumSellableTokensInWei', toBigNumber(crowdsaleMaxRaise.wei_raise_cap).toFixed())
+
         resolve()
       })
       .catch(reject)
@@ -109,40 +120,8 @@ export let getCrowdsaleData = (initCrowdsaleContract, execID, account) => {
 }
 
 export function initializeAccumulativeData() {
-  crowdsalePageStore.setProperty('maximumSellableTokens', 0)
-  crowdsalePageStore.setProperty('maximumSellableTokensInWei', 0)
   crowdsalePageStore.setProperty('tokenAmountOf', 0)
   return Promise.resolve()
-}
-
-export function getAccumulativeCrowdsaleData(initCrowdsaleContract, crowdsaleExecID) {
-  //to do: iterate through tiers and get accumulative data
-  const { web3 } = web3Store
-
-  //to do: get the number of tiers
-  let numOfTiers = 1;
-  let tiers = new Array(numOfTiers);
-  tiers.push(0);
-
-  let promises = /*contractStore.crowdsale.addr*/tiers
-    .map(tierNum => {
-
-      let registryStorageObj = toJS(contractStore.registryStorage)
-
-      initCrowdsaleContract.methods.getCrowdsaleTier(registryStorageObj.addr, contractStore.crowdsale.execID, tierNum).call()
-        .then((getCrowdsaleTier) => {
-          console.log("getCrowdsaleTier:", getCrowdsaleTier)
-          let maximumSellableTokens = toBigNumber(crowdsalePageStore.maximumSellableTokens)
-          crowdsalePageStore.setProperty('maximumSellableTokens', maximumSellableTokens.plus(getCrowdsaleTier.tier_sell_cap).toFixed())
-
-          //calc maximumSellableTokens in Eth
-          return setMaximumSellableTokensInEth(initCrowdsaleContract, getCrowdsaleTier.tier_sell_cap, getCrowdsaleTier.tier_price, crowdsaleExecID)
-        })
-
-      return Promise.all([/*getWeiRaised, getTokensSold, getMaximumSellableTokens, getInvestors*/])
-    })
-
-  return Promise.all(promises)
 }
 
 export let getCrowdsaleTargetDates = (initCrowdsaleContract, execID) => {
@@ -198,41 +177,23 @@ export let isFinalized = (initCrowdsaleContract, crowdsaleExecID) => {
   })
 }
 
-function setMaximumSellableTokensInEth(initCrowdsaleContract, tierSellCap, tierPrice, execID) {
-  const currentMaximumSellableTokensInWei = toBigNumber(crowdsalePageStore.maximumSellableTokensInWei)
-  const maximumSellableTokensInWei = toBigNumber(tierPrice).times(tierSellCap).div(`1e${tokenStore.decimals}`).dp(0)
+export const getTiers = () => {
+  return getCurrentAccount()
+    .then(account => {
+      return attachToInitCrowdsaleContract()
+        .then((initCrowdsaleContract) => {
+          const { methods } = initCrowdsaleContract
+          let registryStorageObj = toJS(contractStore.registryStorage)
 
-  crowdsalePageStore.setProperty('maximumSellableTokensInWei', currentMaximumSellableTokensInWei.plus(maximumSellableTokensInWei).toFixed())
+          return methods.getCrowdsaleTierList(registryStorageObj.addr, contractStore.crowdsale.execID).call()
+            .then(tiers => {
+              console.log("tiers:", tiers)
+
+              return Promise.resolve(tiers.length)
+            })
+        })
+    })
 }
-
-//to do
-/*export function getCurrentRate(crowdsaleContract) {
-  return new Promise((resolve, reject) => {
-    if (!crowdsaleContract) {
-      noContractAlert()
-      reject('no contract')
-      return
-    }
-
-    crowdsaleContract.methods.pricingStrategy().call((err, pricingStrategyAddr) => {
-      if (err) {
-        console.log(err)
-        reject(err)
-        return
-      }
-
-      console.log('pricingStrategy:', pricingStrategyAddr)
-      contractStore.setContractProperty('pricingStrategy', 'addr', pricingStrategyAddr)
-
-      if (!pricingStrategyAddr || pricingStrategyAddr === "0x") {
-        reject('no pricingStrategy address')
-        return
-      }
-
-      resolve()
-    });
-  }
-)}*/
 
 export const getContractStoreProperty = (contract, property) => {
   const text = contractStore && contractStore[contract] && contractStore[contract][property]

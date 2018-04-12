@@ -1,7 +1,7 @@
 import { isObservableArray } from 'mobx'
 import {
   attachToContract,
-  sendTXToContract
+  sendTXToContract,
 } from '../../utils/blockchainHelpers'
 import { contractStore, crowdsaleStore, generalStore, tierStore, tokenStore, web3Store } from '../../stores'
 import { TRUNC_TO_DECIMALS, VALIDATION_TYPES } from '../../utils/constants'
@@ -150,24 +150,6 @@ const crowdsaleData = (tier, crowdsale, token) => {
   ]);
 }
 
-/*export const getTiers = crowdsaleAddress => {
-  return attachToContract(contractStore.crowdsale.abi, crowdsaleAddress)
-    .then(crowdsaleContract => {
-      const { methods } = crowdsaleContract
-
-      return methods.joinedCrowdsalesLen().call()
-        .then(joinedCrowdsalesLen => {
-          let joinedCrowdsales = []
-
-          for (let joinedTierIndex = 0; joinedTierIndex < joinedCrowdsalesLen; joinedTierIndex++) {
-            joinedCrowdsales.push(methods.joinedCrowdsales(joinedTierIndex).call())
-          }
-
-          return Promise.all(joinedCrowdsales)
-        })
-    })
-}*/
-
 export const processTier = (tier, crowdsale, token, tierNum) => {
   console.log("tier:", tier)
   console.log("crowdsale:", crowdsale)
@@ -250,12 +232,13 @@ export const processTier = (tier, crowdsale, token, tierNum) => {
 
       const whitelist = newTier.whitelist.slice()
 
-      whitelistAccounts.forEach(({ addr, min, max }) => {
+      //to do
+      /*whitelistAccounts.forEach(({ addr, min, max }) => {
         min = parseInt(toFixed(min), 10) / 10 ** tokenDecimals
         max = parseInt(toFixed(max), 10) / 10 ** tokenDecimals
 
         whitelist.push({ addr, min, max, stored: true })
-      })
+      })*/
 
       tierStore.setTierProperty(whitelist, 'whitelist', tierNum)
       tierStore.sortWhitelist(tierNum)

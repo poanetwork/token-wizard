@@ -23,8 +23,9 @@ import {
 } from '../../utils/blockchainHelpers'
 import { toast } from '../../utils/utils'
 import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
-import { getFieldsToUpdate, getTiers, processTier, updateTierAttribute } from './utils'
+import { getFieldsToUpdate, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
+import { getTiers } from '../crowdsale/utils'
 import classNames from 'classnames'
 import { toJS } from 'mobx'
 
@@ -58,7 +59,7 @@ export class Manage extends Component {
   }
 
   componentWillMount () {
-    const { contractStore, crowdsaleStore, generalStore, match } = this.props
+    const { crowdsaleStore, generalStore, match } = this.props
     const crowdsaleExecID = match.params.crowdsaleExecID
     console.log("crowdsaleExecID:", crowdsaleExecID)
 
@@ -101,66 +102,65 @@ export class Manage extends Component {
   }
 
   extractContractsData = () => {
-    const { contractStore, crowdsaleStore, match } = this.props
+    const { contractStore, match } = this.props
     contractStore.setContractProperty('crowdsale', 'execID', match.params.crowdsaleExecID)
 
-    //to do: get the number of tiers
-    let numOfTiers = 1;
+    getTiers()
+      .then(numOfTiers => {
+        console.log("numOfTiers:", numOfTiers)
+        getCurrentAccount()
+          .then(account => {
+            attachToInitCrowdsaleContract()
+              .then((initCrowdsaleContract) => {
+                console.log(initCrowdsaleContract)
+                let registryStorageObj = toJS(contractStore.registryStorage)
+                console.log("registryStorageObj:", registryStorageObj)
+                let whenCrowdsaleData = [];
+                let whenCrowdsale = initCrowdsaleContract.methods.getCrowdsaleInfo(registryStorageObj.addr, contractStore.crowdsale.execID).call();
+                whenCrowdsaleData.push(whenCrowdsale)
+                let whenToken = initCrowdsaleContract.methods.getTokenInfo(registryStorageObj.addr, contractStore.crowdsale.execID).call();
+                whenCrowdsaleData.push(whenToken)
+                for (let tierNum = 0; tierNum < numOfTiers; tierNum++) {
+                  let whenTierData = initCrowdsaleContract.methods.getCrowdsaleTier(registryStorageObj.addr, contractStore.crowdsale.execID, tierNum).call();
+                  let whenTierDates = initCrowdsaleContract.methods.getTierStartAndEndDates(registryStorageObj.addr, contractStore.crowdsale.execID, tierNum).call();
+                  whenCrowdsaleData.push(whenTierData);
+                  whenCrowdsaleData.push(whenTierDates);
+                }
 
-    getCurrentAccount()
-      .then(account => {
-        attachToInitCrowdsaleContract()
-          .then((initCrowdsaleContract) => {
-            console.log(initCrowdsaleContract)
-            let registryStorageObj = toJS(contractStore.registryStorage)
-            console.log("registryStorageObj:", registryStorageObj)
-            let whenCrowdsaleData = [];
-            let whenCrowdsale = initCrowdsaleContract.methods.getCrowdsaleInfo(registryStorageObj.addr, contractStore.crowdsale.execID).call();
-            whenCrowdsaleData.push(whenCrowdsale)
-            let whenToken = initCrowdsaleContract.methods.getTokenInfo(registryStorageObj.addr, contractStore.crowdsale.execID).call();
-            whenCrowdsaleData.push(whenToken)
-            for (let tierNum = 0; tierNum < numOfTiers; tierNum++) {
-              let whenTierData = initCrowdsaleContract.methods.getCrowdsaleTier(registryStorageObj.addr, contractStore.crowdsale.execID, tierNum).call();
-              let whenTierDates = initCrowdsaleContract.methods.getTierStartAndEndDates(registryStorageObj.addr, contractStore.crowdsale.execID, tierNum).call();
-              whenCrowdsaleData.push(whenTierData);
-              whenCrowdsaleData.push(whenTierDates);
-            }
-
-            return Promise.all(whenCrowdsaleData)
+                return Promise.all(whenCrowdsaleData)
+              })
+              .then(crowdsaleData => {
+                console.log(crowdsaleData)
+                let crowdsale = crowdsaleData[0]
+                let token = crowdsaleData[1]
+                crowdsaleData.shift();
+                crowdsaleData.shift();
+                let tiersAndTiersDates = crowdsaleData.slice();
+                let tiers = [];
+                tiersAndTiersDates.reduce((prevEl, curEl, index) => {
+                  let isTierDatesObj = curEl.hasOwnProperty("tier_start")
+                  if (isTierDatesObj && index % 2 != 0) {
+                    let tierExtendedObj = Object.assign(prevEl, curEl)
+                    tiers.push(tierExtendedObj)
+                  }
+                  return curEl
+                })
+                console.log(tiers)
+                return tiers.reduce((promise, tier, index) => {
+                  return promise.then(() => processTier(tier, crowdsale, token, index))
+                }, Promise.resolve())
+              })
+              .then(this.updateCrowdsaleStatus)
+              .catch(err => {
+                this.setState({ loading: false })
+                console.log(err)
+              })
+              .then(this.hideLoader)
           })
-          .then(crowdsaleData => {
-            console.log(crowdsaleData)
-            let crowdsale = crowdsaleData[0]
-            let token = crowdsaleData[1]
-            crowdsaleData.shift();
-            crowdsaleData.shift();
-            let tiersAndTiersDates = crowdsaleData.slice();
-            let tierExtendedObj = {}
-            let tiers = tiersAndTiersDates.map((el) => {
-              let isTierObj = el.hasOwnProperty("tier_name")
-              let isTierDatesObj = el.hasOwnProperty("tier_start")
-              if (isTierObj) {
-                tierExtendedObj = el;
-              } else if (isTierDatesObj) {
-                tierExtendedObj = Object.assign(tierExtendedObj, el)
-              }
-
-              return tierExtendedObj;
-            })
-            return tiers.reduce((promise, tier, index) => {
-              return promise.then(() => processTier(tier, crowdsale, token, index))
-            }, Promise.resolve())
-          })
-          .then(this.updateCrowdsaleStatus)
           .catch(err => {
             this.setState({ loading: false })
             console.log(err)
           })
-          .then(this.hideLoader)
-      })
-      .catch(err => {
-        this.setState({ loading: false })
-        console.log(err)
       })
   }
 
@@ -285,8 +285,7 @@ export class Manage extends Component {
   distributeReservedTokens = (addressesPerBatch) => {
     this.updateCrowdsaleStatus()
       .then(() => {
-        const { crowdsaleStore, contractStore, web3Store } = this.props
-        const { web3 } = web3Store
+        const { crowdsaleStore, contractStore } = this.props
 
         if (!crowdsaleStore.selected.distributed && this.state.canDistribute) {
           this.showLoader()
@@ -360,11 +359,9 @@ export class Manage extends Component {
   }
 
   finalizeCrowdsale = () => {
-    const { web3Store } = this.props
-    const { web3 } = web3Store
     this.updateCrowdsaleStatus()
       .then(() => {
-        const { crowdsaleStore, contractStore } = this.props
+        const { crowdsaleStore } = this.props
 
         if (!crowdsaleStore.selected.finalized && this.state.canFinalize) {
           warningOnFinalizeCrowdsale()
@@ -530,7 +527,7 @@ export class Manage extends Component {
 
   render () {
     const { formPristine, canFinalize, shouldDistribute, canDistribute, crowdsaleHasEnded, ownerCurrentUser } = this.state
-    const { generalStore, tierStore, tokenStore, crowdsaleStore, contractStore } = this.props
+    const { generalStore, tierStore, tokenStore, crowdsaleStore } = this.props
     const { address: crowdsaleAddress, finalized, updatable, execID } = crowdsaleStore.selected
 
     const canEditTier = ownerCurrentUser && !canDistribute && !canFinalize && !finalized

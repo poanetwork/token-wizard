@@ -27,7 +27,7 @@ class DeploymentStore {
       { name: 'token', dependsOnTiers: false, required: true },
       /*{ name: 'registerCrowdsaleAddress', dependsOnTiers: false, required: true },*/
       { name: 'setReservedTokens', dependsOnTiers: false, required: hasReservedToken },
-      { name: 'createCrowdsaleTiers', dependsOnTiers: true, required: tiersCount > 1 },
+      { name: 'createCrowdsaleTiers', dependsOnTiers: false, required: tiersCount > 1 },
       { name: 'whitelist', dependsOnTiers: true, required: hasWhitelist },
       { name: 'crowdsaleInit', dependsOnTiers: false, required: true },
     ]
