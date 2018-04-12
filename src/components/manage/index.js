@@ -175,25 +175,53 @@ export class Manage extends Component {
   updateCrowdsaleStatus = () => {
     return this.setCrowdsaleInfo()
       .then(this.shouldDistribute)
-      .then(this.canDistribute)
+      //.then(this.canDistribute)
       .then(this.canFinalize)
       .then(this.checkOwner)
   }
 
   setCrowdsaleInfo = () => {
     const { contractStore, crowdsaleStore } = this.props
-    const lastCrowdsaleAddress = contractStore.crowdsale.addr.slice(-1)[0]
+    //const lastCrowdsaleAddress = contractStore.crowdsale.addr.slice(-1)[0]
 
-    return attachToContract(contractStore.crowdsale.abi, lastCrowdsaleAddress)
+    return Promise.resolve()
+    //to do
+    /*return attachToContract(contractStore.crowdsale.abi, lastCrowdsaleAddress)
       .then(crowdsaleContract => crowdsaleContract.methods.endsAt().call())
-      .then(crowdsaleEndTime => this.setState({ crowdsaleHasEnded: crowdsaleEndTime * 1000 <= Date.now() || crowdsaleStore.selected.finalized }))
+      .then(crowdsaleEndTime => this.setState({ crowdsaleHasEnded: crowdsaleEndTime * 1000 <= Date.now() || crowdsaleStore.selected.finalized }))*/
   }
 
   shouldDistribute = () => {
+    console.log("shouldDistribute:")
     const { contractStore, match } = this.props
 
     return new Promise(resolve => {
-      attachToContract(contractStore.crowdsale.abi, match.params.crowdsaleAddress)
+
+      getCurrentAccount()
+        .then(account => {
+          attachToInitCrowdsaleContract()
+            .then((initCrowdsaleContract) => {
+              if (!initCrowdsaleContract) return Promise.reject('No contract available')
+
+              let registryStorageObj = toJS(contractStore.registryStorage)
+              console.log("registryStorageObj:", registryStorageObj)
+              initCrowdsaleContract.methods.getReservedTokenDestinationList(registryStorageObj.addr, contractStore.crowdsale.execID).call()
+                .then((reservedTokensObj) => {
+                  let reservedTokensDestinationsLen = reservedTokensObj.num_destinations
+                  if (reservedTokensDestinationsLen > 0)
+                    this.setState({ shouldDistribute: true })
+                  else
+                    this.setState({ shouldDistribute: false })
+                  resolve(this.state.shouldDistribute)
+                })
+                .catch(() => {
+                  this.setState({ shouldDistribute: false })
+                  resolve(this.state.shouldDistribute)
+                })
+            })
+        })
+
+      /*attachToContract(contractStore.crowdsale.abi, match.params.crowdsaleAddress)
       .then(crowdsaleContract => { // eslint-disable-line no-loop-func
         console.log('attach to crowdsale contract')
 
@@ -213,7 +241,7 @@ export class Manage extends Component {
           this.setState({ shouldDistribute: false })
           resolve(this.state.shouldDistribute)
         })
-      })
+      })*/
     })
   }
 

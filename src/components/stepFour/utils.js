@@ -48,18 +48,19 @@ export const buildDeploymentSteps = (web3) => {
   return list
 }
 
-const getCrowdSaleParams = (account, tierObj, index, methodInterface) => {
+const getCrowdSaleParams = (account, methodInterface) => {
   const { web3 } = web3Store
-  const { walletAddress, whitelistEnabled } = tierStore.tiers[0]
-  const { updatable, supply, tier, startTime, endTime } = tierStore.tiers[index]
+  const { walletAddress, whitelistEnabled, updatable, supply, tier, startTime, rate } = tierStore.tiers[0]
+  const { endTime } = tierStore.tiers[tierStore.tiers.length - 1]
 
   console.log("1")
   BigNumber.config({ DECIMAL_PLACES: 18 })
   console.log("2")
-  console.log(tierObj)
-  const rate = new BigNumber(tierObj.rate)
+  //console.log(tierObj)
+  console.log(tierStore.tiers[0])
+  const rateBN = new BigNumber(rate)
   console.log("3")
-  const oneTokenInETH = rate.pow(-1).toFixed()
+  const oneTokenInETH = rateBN.pow(-1).toFixed()
   console.log("oneTokenInETH: ", oneTokenInETH)
 
   const formatDate = date => toFixed(parseInt(Date.parse(date) / 1000, 10).toString())
@@ -96,7 +97,6 @@ const getCrowdSaleParams = (account, tierObj, index, methodInterface) => {
   return encodedParameters;
   /*return [
     formatDate(endTime),
-    toFixed('0'),
     updatable === 'on',
   ]*/
 }
@@ -104,8 +104,8 @@ const getCrowdSaleParams = (account, tierObj, index, methodInterface) => {
 export const deployCrowdsale = () => {
   console.log("###deploy crowdsale###")
   const { web3 } = web3Store
-  return tierStore.tiers.map((tier, index) => {
-    return () => {
+  return [
+    () => {
       return getNetworkVersion()
       .then((networkID) => {
         contractStore.setContractProperty('crowdsale', 'networkID', networkID)
@@ -119,8 +119,6 @@ export const deployCrowdsale = () => {
 
             let params = [
               account,
-              tier,
-              index,
               methodInterface
             ];
 
@@ -196,7 +194,7 @@ export const deployCrowdsale = () => {
           })
       })
     }
-  })
+  ]
 }
 
 const getExecutionIDFromEvent = (events, eventName) => {
@@ -426,7 +424,7 @@ const getTiersParams = (methodInterface) => {
   let supplyArr = []
   let tierNameArr = []
   let durationArr = []
-  for (let tierIndex = 1; tierIndex < tierStore.tiers.length; tierIndex++) {
+  for (let tierIndex = 0; tierIndex < tierStore.tiers.length; tierIndex++) {
     let { whitelistEnabled, updatable, rate, supply, tier, startTime, endTime } = tierStore.tiers[tierIndex]
     let duration = formatDate(endTime) - formatDate(startTime)
     let tierNameBytes = web3.utils.fromAscii(tier)
