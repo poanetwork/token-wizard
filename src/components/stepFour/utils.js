@@ -50,8 +50,7 @@ export const buildDeploymentSteps = (web3) => {
 
 const getCrowdSaleParams = (account, methodInterface) => {
   const { web3 } = web3Store
-  const { walletAddress, whitelistEnabled, updatable, supply, tier, startTime, rate } = tierStore.tiers[0]
-  const { endTime } = tierStore.tiers[tierStore.tiers.length - 1]
+  const { walletAddress, whitelistEnabled, updatable, supply, tier, startTime, endTime, rate } = tierStore.tiers[0]
 
   console.log("1")
   BigNumber.config({ DECIMAL_PLACES: 18 })
@@ -424,7 +423,7 @@ const getTiersParams = (methodInterface) => {
   let supplyArr = []
   let tierNameArr = []
   let durationArr = []
-  for (let tierIndex = 0; tierIndex < tierStore.tiers.length; tierIndex++) {
+  for (let tierIndex = 1; tierIndex < tierStore.tiers.length; tierIndex++) {
     let { whitelistEnabled, updatable, rate, supply, tier, startTime, endTime } = tierStore.tiers[tierIndex]
     let duration = formatDate(endTime) - formatDate(startTime)
     let tierNameBytes = web3.utils.fromAscii(tier)
@@ -452,13 +451,12 @@ const getTiersParams = (methodInterface) => {
   return encodedParameters;
 }
 
-//to do
 export const createCrowdsaleTiers = () => {
   return [
     () => {
       console.log('###createCrowdsaleTiers:###')
 
-      const methodInterface = ["bytes32[]", "uint[]", "uint[]", "uint[]", "bool[]", "bool[]","bytes"]
+      const methodInterface = ["bytes32[]", "uint256[]", "uint256[]", "uint256[]", "bool[]", "bool[]","bytes"]
 
       let paramsToExec = [methodInterface]
       const method = methodToExec(`createCrowdsaleTiers(${methodInterface.join(',')})`, "crowdsaleConsole", getTiersParams, paramsToExec)
@@ -546,7 +544,7 @@ export const addWhitelist = () => {
       let account = contractStore.crowdsale.account;
       const opts = { gasPrice: generalStore.gasPrice, from: account }
 
-      const methodInterface = ["uint", "address[]","uint256[]","uint256[]","bytes"]
+      const methodInterface = ["uint256", "address[]","uint256[]","uint256[]","bytes"]
 
       let paramsToExec = [index, addrs, minCaps, maxCaps, methodInterface]
       const method = methodToExec(`whitelistMultiForTier(${methodInterface.join(',')})`, "crowdsaleConsole", getWhitelistsParams, paramsToExec)
