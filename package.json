@@ -114,7 +114,7 @@
   },
   "scripts": {
     "installWeb3": "cd submodules/poa-web3-1.0 && npm install && cd ../../ && npm install --no-save submodules/poa-web3-1.0/packages/web3",
-    "start": "npm run installWeb3 && nps contracts && node scripts/start.js",
+    "start": "npm run installWeb3 && node scripts/start.js",
     "dev": "nps dev",
     "dev:fast": "nps dev.fast",
     "deployRegistry": "node scripts/deployRegistry.js",
