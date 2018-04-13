@@ -5,11 +5,12 @@ import Dropzone from 'react-dropzone';
 import Papa from 'papaparse'
 import '../../assets/stylesheets/application.css';
 import { InputField } from './InputField'
-import { TEXT_FIELDS, VALIDATION_TYPES } from '../../utils/constants'
+import { TEXT_FIELDS, VALIDATION_MESSAGES, VALIDATION_TYPES } from '../../utils/constants'
 import { WhitelistItem } from './WhitelistItem'
 import { inject, observer } from 'mobx-react'
 import { clearingWhitelist, whitelistImported } from '../../utils/alerts'
 import processWhitelist from '../../utils/processWhitelist'
+import { validateWhitelistMax, validateWhitelistMin } from '../../utils/validations'
 const { ADDRESS, MIN, MAX } = TEXT_FIELDS
 const {VALID, INVALID} = VALIDATION_TYPES;
 
@@ -26,7 +27,17 @@ export class WhitelistInputBlock extends React.Component {
         address: {
           pristine: true,
           valid: INVALID
-        }
+        },
+        min: {
+          pristine: true,
+          valid: INVALID,
+          errorMessage: VALIDATION_MESSAGES.REQUIRED
+        },
+        max: {
+          pristine: true,
+          valid: INVALID,
+          errorMessage: VALIDATION_MESSAGES.REQUIRED
+        },
       }
     }
   }
@@ -40,11 +51,23 @@ export class WhitelistInputBlock extends React.Component {
       validation: {
         address: {
           pristine: { $set: false }
-        }
+        },
+        min: {
+          pristine: { $set: false }
+        },
+        max: {
+          pristine: { $set: false }
+        },
       }
     }))
 
-    if (!addr || !min || !max ||  this.state.validation.address.valid === INVALID) {
+    const {
+      address: { valid: addrValid },
+      min: { valid: minValid },
+      max: { valid: maxValid },
+    } = this.state.validation
+
+    if (!addr || !min || !max ||  addrValid === INVALID || minValid === INVALID || maxValid === INVALID) {
       return
     }
 
@@ -56,7 +79,17 @@ export class WhitelistInputBlock extends React.Component {
         address: {
           pristine: true,
           valid: INVALID
-        }
+        },
+        min: {
+          pristine: true,
+          valid: INVALID,
+          errorMessage: VALIDATION_MESSAGES.REQUIRED
+        },
+        max: {
+          pristine: true,
+          valid: INVALID,
+          errorMessage: VALIDATION_MESSAGES.REQUIRED
+        },
       }
     })
 
@@ -81,12 +114,77 @@ export class WhitelistInputBlock extends React.Component {
     this.setState(newState)
   }
 
+  handleMinChange = ({ min }) => {
+    const errorMessage = validateWhitelistMin({
+      min,
+      max: this.state.max,
+      decimals: this.props.decimals
+    })
+
+    return new Promise((resolve) => {
+      this.setState(update(this.state, {
+        min: { $set: min },
+        validation: {
+          min: {
+            $set: {
+              pristine: false,
+              valid: errorMessage ? INVALID : VALID,
+              errorMessage
+            }
+          }
+        }
+      }), resolve)
+    })
+  }
+
+  handleMaxChange = ({ max }) => {
+    const errorMessage = validateWhitelistMax({
+      min: this.state.min,
+      max,
+      decimals: this.props.decimals
+    })
+
+    return new Promise((resolve) => {
+      this.setState(update(this.state, {
+        max: { $set: max },
+        validation: {
+          max: {
+            $set: {
+              pristine: false,
+              valid: errorMessage ? INVALID : VALID,
+              errorMessage
+            }
+          }
+        }
+      }), resolve)
+    })
+  }
+
+  handleMinMaxChange = ({ min, max }) => {
+    if (min !== undefined) {
+      this.handleMinChange({ min })
+        .then(() => {
+          if (!this.state.validation.max.pristine) this.handleMaxChange({ max: this.state.max })
+        })
+    }
+
+    if (max !== undefined) {
+      this.handleMaxChange({ max })
+        .then(() => {
+          if (!this.state.validation.min.pristine) this.handleMinChange({ min: this.state.min })
+        })
+    }
+  }
+
   onDrop = (acceptedFiles, rejectedFiles) => {
     acceptedFiles.forEach(file => {
       Papa.parse(file, {
         skipEmptyLines: true,
         complete: results => {
-          const { called } = processWhitelist(results.data, item => {
+          const { called } = processWhitelist({
+            rows: results.data,
+            decimals: this.props.decimals
+          }, item => {
             this.props.tierStore.addWhitelistItem(item, this.props.num)
           })
 
@@ -149,16 +247,22 @@ export class WhitelistInputBlock extends React.Component {
               type='number'
               title={MIN}
               value={this.state.min}
-              onChange={e => this.setState({ min: e.target.value })}
+              onChange={e => this.handleMinMaxChange({ min: e.target.value })}
               description={`Minimum amount tokens to buy. Not a minimal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.`}
+              pristine={this.state.validation.min.pristine}
+              valid={this.state.validation.min.valid}
+              errorMessage={this.state.validation.min.errorMessage}
             />
             <InputField
               side='white-list-input-property white-list-input-property-right'
               type='number'
               title={MAX}
               value={this.state.max}
-              onChange={e => this.setState({ max: e.target.value })}
+              onChange={e => this.handleMinMaxChange({ max: e.target.value })}
               description={`Maximum is the hard limit.`}
+              pristine={this.state.validation.max.pristine}
+              valid={this.state.validation.max.valid}
+              errorMessage={this.state.validation.max.errorMessage}
             />
           </div>
           <div className="plus-button-container">
