@@ -5,11 +5,9 @@ import {
   getRegistryAddress,
   sendTXToContract,
   methodToExec,
-  methodToInit,
-  methodToInitAppInstance,
-  methodToInitAndFinalize
+  methodToInitAppInstance
 } from '../../utils/blockchainHelpers'
-import { noContractAlert } from '../../utils/alerts'
+//import { noContractAlert } from '../../utils/alerts'
 import { countDecimalPlaces, toFixed } from '../../utils/utils'
 import { DOWNLOAD_NAME } from '../../utils/constants'
 import { isObservableArray } from 'mobx'
@@ -22,7 +20,7 @@ import {
   tokenStore,
   web3Store
 } from '../../stores'
-import { getEncodedABIClientSide } from '../../utils/microservices'
+//import { getEncodedABIClientSide } from '../../utils/microservices'
 import { BigNumber } from 'bignumber.js'
 import { toBigNumber } from '../crowdsale/utils'
 
@@ -32,6 +30,7 @@ export const buildDeploymentSteps = (web3) => {
     token: initializeToken,
     //registerCrowdsaleAddress: registerCrowdsaleAddress,
     setReservedTokens: setReservedTokensListMultiple,
+    updateGlobalMinContribution: updateGlobalMinContribution,
     createCrowdsaleTiers: createCrowdsaleTiers,
     whitelist: addWhitelist,
     crowdsaleInit: initializeCrowdsale,
@@ -52,41 +51,37 @@ const getCrowdSaleParams = (account, methodInterface) => {
   const { web3 } = web3Store
   const { walletAddress, whitelistEnabled, updatable, supply, tier, startTime, endTime, rate } = tierStore.tiers[0]
 
-  console.log("1")
   BigNumber.config({ DECIMAL_PLACES: 18 })
-  console.log("2")
-  //console.log(tierObj)
   console.log(tierStore.tiers[0])
-  const rateBN = new BigNumber(rate)
-  console.log("3")
-  const oneTokenInETH = rateBN.pow(-1).toFixed()
-  console.log("oneTokenInETH: ", oneTokenInETH)
 
+  //tier 0 oneTokenInWEI
+  const rateBN = new BigNumber(rate)
+  const oneTokenInETH = rateBN.pow(-1).toFixed()
+  const oneTokenInWEI = web3.utils.toWei(oneTokenInETH, 'ether')
+
+  //tier 0 duration
   const formatDate = date => toFixed(parseInt(Date.parse(date) / 1000, 10).toString())
   const duration = formatDate(endTime) - formatDate(startTime)
+  const durationBN = toBigNumber(duration).toFixed()
 
-  /*function init(
-    address _team_wallet,
-    uint _start_time,
-    bytes32 _initial_tier_name,
-    uint _initial_tier_price,
-    uint _initial_tier_duration,
-    uint _initial_tier_token_sell_cap,
-    bool _initial_tier_is_whitelisted,
-    address _admin
-  )*/
+  //is tier 0 whitelisted?
+  const isWhitelisted = whitelistEnabled === 'yes'
 
-  let tierNameBytes = web3.utils.fromAscii(tier)
-  let encodedTierName = web3.eth.abi.encodeParameter("bytes32", tierNameBytes);
+  // tie 0 name bytes32
+  const tierNameBytes = web3.utils.fromAscii(tier)
+  const encodedTierName = web3.eth.abi.encodeParameter("bytes32", tierNameBytes)
+
+  //tier 0 supply
+  const supplyBN = toBigNumber(supply).times(`1e${tokenStore.decimals}`).toFixed()
 
   let paramsCrowdsale = [
     walletAddress,
     formatDate(startTime),
     encodedTierName,
-    web3.utils.toWei(oneTokenInETH, 'ether'),
-    duration.toString(),
-    toBigNumber(supply).times(`1e${tokenStore.decimals}`).toFixed(),
-    whitelistEnabled === 'yes',
+    oneTokenInWEI,
+    durationBN,
+    supplyBN,
+    isWhitelisted,
     account
   ]
 
@@ -94,10 +89,8 @@ const getCrowdSaleParams = (account, methodInterface) => {
 
   let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, paramsCrowdsale);
   return encodedParameters;
-  /*return [
-    formatDate(endTime),
-    updatable === 'on',
-  ]*/
+  //to do
+  //updatable === 'on',
 }
 
 export const deployCrowdsale = () => {
@@ -116,10 +109,7 @@ export const deployCrowdsale = () => {
 
             const methodInterface = ["address","uint256","bytes32","uint256","uint256","uint256","bool","address"]
 
-            let params = [
-              account,
-              methodInterface
-            ];
+            let params = [ account, methodInterface ];
 
             const methodInterfaceStr = `init(${methodInterface.join(',')})`
             const target = "initCrowdsale"
@@ -197,7 +187,7 @@ export const deployCrowdsale = () => {
 }
 
 const getExecutionIDFromEvent = (events, eventName) => {
-  console.log("AppInstanceCreated:", events[eventName])
+  console.log("eventName:", events[eventName])
   if (events[eventName].returnValues) {
     console.log("returnValues:", events[eventName].returnValues)
     let exec_id;
@@ -211,21 +201,27 @@ const getExecutionIDFromEvent = (events, eventName) => {
   }
 }
 
-const getTokenParams = (token, methodInterface) => {
+export const generateContext = () => {
   const { web3 } = web3Store
   let account = contractStore.crowdsale.account;
-  const whitelistWithGlobalMinCap = tierStore.tiers[0].whitelistEnabled !== 'yes' && tierStore.globalMinCap
-  const minCap = whitelistWithGlobalMinCap ? toFixed(tierStore.globalMinCap * 10 ** token.decimals).toString() : 0
+  let paramsContext = [contractStore.crowdsale.execID, account, 0];
+  let context = web3.eth.abi.encodeParameters(["bytes32","address","uint256"], paramsContext);
+  console.log("context:", context)
+  return context;
+}
+
+const getTokenParams = (token, methodInterface) => {
+  const { web3 } = web3Store
+  //to do
+  //const whitelistWithGlobalMinCap = tierStore.tiers[0].whitelistEnabled !== 'yes' && tierStore.globalMinCap
+  //const minCap = whitelistWithGlobalMinCap ? toFixed(tierStore.globalMinCap * toBigNumber(10).pow(token.decimals)).toString() : 0
 
   let paramsToken = [
     web3.utils.fromAscii(token.name),
     web3.utils.fromAscii(token.ticker),
     parseInt(token.decimals, 10)
   ]
-  console.log("paramsToken: ", paramsToken)
-  let paramsContext = [contractStore.crowdsale.execID, account, 0];
-  let context = web3.eth.abi.encodeParameters(["bytes32","address","uint256"], paramsContext);
-  console.log("context:", context)
+  let context = generateContext();
   let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsToken, context]);
   return encodedParameters;
 }
@@ -264,7 +260,6 @@ export const initializeToken = () => {
 
 const getReservedTokensParams = (addrs, inTokens, inPercentageUnit, inPercentageDecimals, methodInterface) => {
   const { web3 } = web3Store
-  let account = contractStore.crowdsale.account;
 
   let paramsReservedTokens = [
     addrs,
@@ -274,8 +269,7 @@ const getReservedTokensParams = (addrs, inTokens, inPercentageUnit, inPercentage
   ]
   console.log("paramsReservedTokens:",paramsReservedTokens)
 
-  let paramsContext = [contractStore.crowdsale.execID, account, 0];
-  let context = web3.eth.abi.encodeParameters(["bytes32","address","uint256"], paramsContext);
+  let context = generateContext();
   let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsReservedTokens, context]);
   return encodedParameters;
 }
@@ -299,10 +293,10 @@ export const setReservedTokensListMultiple = () => {
           const obj = map[addr] ? map[addr] : {}
 
           if (reservedTokens[i].dim === 'tokens') {
-            obj.inTokens = val * 10 ** tokenStore.decimals
+            obj.inTokens = toBigNumber(val).times(`1e${tokenStore.decimals}`).toFixed()
           } else {
             obj.inPercentageDecimals = countDecimalPlaces(val)
-            obj.inPercentageUnit = val * 10 ** obj.inPercentageDecimals
+            obj.inPercentageUnit = toBigNumber(val).times(`1e${obj.inPercentageDecimals}`).toFixed()
           }
           map[addr] = obj
         }
@@ -343,9 +337,7 @@ export const setReservedTokensListMultiple = () => {
 
 const getInitializeCrowdsaleParams = (token) => {
   const { web3 } = web3Store
-  let account = contractStore.crowdsale.account;
-  let paramsContext = [contractStore.crowdsale.execID, account, 0];
-  let context = web3.eth.abi.encodeParameters(["bytes32","address","uint256"], paramsContext);
+  let context = generateContext();
   let encodedParameters = web3.eth.abi.encodeParameters(["bytes"], [context]);
   return encodedParameters;
 }
@@ -413,7 +405,6 @@ function registerCrowdsaleAddress () {
 
 const getTiersParams = (methodInterface) => {
   const { web3 } = web3Store
-  let account = contractStore.crowdsale.account;
 
   const formatDate = date => toFixed(parseInt(Date.parse(date) / 1000, 10).toString())
 
@@ -447,8 +438,7 @@ const getTiersParams = (methodInterface) => {
   ]
   console.log("paramsTiers:", paramsTiers)
 
-  let paramsContext = [contractStore.crowdsale.execID, account, 0];
-  let context = web3.eth.abi.encodeParameters(["bytes32","address","uint256"], paramsContext);
+  let context = generateContext();
   let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsTiers, context]);
   return encodedParameters;
 }
@@ -478,7 +468,6 @@ export const createCrowdsaleTiers = () => {
 
 const getWhitelistsParams = (tierIndex, addrs, minCaps, maxCaps, methodInterface) => {
   const { web3 } = web3Store
-  let account = contractStore.crowdsale.account;
 
   let paramsWhitelist = [
     tierIndex,
@@ -488,8 +477,7 @@ const getWhitelistsParams = (tierIndex, addrs, minCaps, maxCaps, methodInterface
   ]
   console.log("paramsWhitelist:", paramsWhitelist)
 
-  let paramsContext = [contractStore.crowdsale.execID, account, 0];
-  let context = web3.eth.abi.encodeParameters(["bytes32","address","uint256"], paramsContext);
+  let context = generateContext();
   let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsWhitelist, context]);
   return encodedParameters;
 }
@@ -498,7 +486,7 @@ export const addWhitelist = () => {
   return tierStore.tiers.map((tier, index) => {
     return () => {
       console.log('###addWhitelist:###')
-      const round = index
+      //const round = index
 
       let whitelist = []
       whitelist.push.apply(whitelist, tier.whitelist)
@@ -533,10 +521,18 @@ export const addWhitelist = () => {
       let minCaps = []
       let maxCaps = []
 
+      const { web3 } = web3Store
+      const { rate } = tierStore.tiers[index]
+      const rateBN = new BigNumber(rate)
+      const oneTokenInETH = rateBN.pow(-1).toFixed()
+      const oneTokenInWEI = web3.utils.toWei(oneTokenInETH, 'ether')
+
       for (let i = 0; i < whitelist.length; i++) {
         addrs.push(whitelist[i].addr)
-        minCaps.push(whitelist[i].min * 10 ** tokenStore.decimals ? toFixed((whitelist[i].min * 10 ** tokenStore.decimals).toString()) : 0)
-        maxCaps.push(whitelist[i].max * 10 ** tokenStore.decimals ? toFixed((whitelist[i].max * 10 ** tokenStore.decimals).toString()) : 0)
+        let whitelistMin = toBigNumber(whitelist[i].min).times(oneTokenInWEI).toFixed()
+        let whitelistMax = toBigNumber(whitelist[i].max).times(oneTokenInWEI).toFixed()
+        minCaps.push(whitelistMin ? whitelistMin.toString() : 0)
+        maxCaps.push(whitelistMax ? whitelistMax.toString() : 0)
       }
 
       console.log('addrs:', addrs)
@@ -559,6 +555,36 @@ export const addWhitelist = () => {
         .then(() => deploymentStore.setAsSuccessful('whitelist'))
     }
   })
+}
+
+const getUpdateGlobalMinCapParams = (methodInterface) => {
+  const { web3 } = web3Store
+  let globalMinCap = toBigNumber(tierStore.globalMinCap).times(`1e${tokenStore.decimals}`).toFixed()
+
+  let context = generateContext();
+  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [globalMinCap, context]);
+  return encodedParameters;
+}
+
+export const updateGlobalMinContribution = () => {
+  return [() => {
+    console.log('###updateGlobalMinContribution:###')
+
+    const methodInterface = ["uint256","bytes"]
+
+    let paramsToExec = [methodInterface]
+    const method = methodToExec(`updateGlobalMinContribution(${methodInterface.join(',')})`, "crowdsaleConsole", getUpdateGlobalMinCapParams, paramsToExec)
+
+    let account = contractStore.crowdsale.account;
+    const opts = { gasPrice: generalStore.gasPrice, from: account }
+
+    return method.estimateGas(opts)
+      .then(estimatedGas => {
+        opts.gasLimit = calculateGasLimit(estimatedGas)
+        return sendTXToContract(method.send(opts))
+      })
+      .then(() => deploymentStore.setAsSuccessful('updateGlobalMinContribution'))
+  }]
 }
 
 export const handlerForFile = (content, type) => {
@@ -648,7 +674,7 @@ export function scrollToBottom () {
   window.scrollTo(0, document.body.scrollHeight)
 }
 
-export function getDownloadName (tokenAddress) {
+export function getDownloadName () {
   return new Promise(resolve => {
     const whenNetworkName = getNetworkVersion()
       .then((networkID) => {
@@ -660,7 +686,7 @@ export function getDownloadName (tokenAddress) {
 
         return networkName
       })
-      .then((networkName) => `${DOWNLOAD_NAME}_${networkName}_${tokenAddress}`)
+      .then((networkName) => `${DOWNLOAD_NAME}_${networkName}_${contractStore.crowdsale.execID}`)
 
     resolve(whenNetworkName)
   })

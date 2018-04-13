@@ -319,19 +319,19 @@ export let getCurrentAccount = () => {
   });
 }
 
-export let attachToInitCrowdsaleContract = () => {
+export let attachToSpecificCrowdsaleContract = (contractName) => {
   return new Promise((resolve, reject) => {
     console.log(contractStore)
-    console.log(toJS(contractStore.initCrowdsale))
+    console.log(toJS(contractStore[contractName]))
 
-    let initCrowdsaleObj = toJS(contractStore.initCrowdsale)
-    console.log(initCrowdsaleObj)
-    console.log(initCrowdsaleObj.abi)
-    console.log(initCrowdsaleObj.addr)
+    let contractObj = toJS(contractStore[contractName])
+    console.log(contractObj)
+    console.log(contractObj.abi)
+    console.log(contractObj.addr)
 
-    attachToContract(initCrowdsaleObj.abi, initCrowdsaleObj.addr)
+    attachToContract(contractObj.abi, contractObj.addr)
       .then(initCrowdsaleContract => {
-        console.log('attach to initCrowdsale contract')
+        console.log(`attach to ${contractName} contract`)
 
         if (!initCrowdsaleContract) {
           noContractAlert()

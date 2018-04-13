@@ -5,7 +5,7 @@ import {
   checkTxMined,
   sendTXToContract,
   calculateGasLimit,
-  attachToInitCrowdsaleContract,
+  attachToSpecificCrowdsaleContract,
   methodToExec
 } from '../../utils/blockchainHelpers'
 import {
@@ -128,7 +128,7 @@ export class Invest extends React.Component {
           return
         }
 
-        attachToInitCrowdsaleContract()
+        attachToSpecificCrowdsaleContract("initCrowdsale")
           .then((initCrowdsaleContract) => {
             initializeAccumulativeData()
             .then(() => {
@@ -250,7 +250,7 @@ export class Invest extends React.Component {
 
     getCurrentAccount()
       .then(account => {
-        attachToInitCrowdsaleContract()
+        attachToSpecificCrowdsaleContract("initCrowdsale")
           .then((initCrowdsaleContract) => {
             this.investToTokensForWhitelistedCrowdsaleInternal(initCrowdsaleContract, account)
           })

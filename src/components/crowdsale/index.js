@@ -4,7 +4,7 @@ import {
   getCurrentAccount,
   checkNetWorkByID,
   checkWeb3,
-  attachToInitCrowdsaleContract
+  attachToSpecificCrowdsaleContract
 } from '../../utils/blockchainHelpers'
 import {
   getContractStoreProperty,
@@ -84,7 +84,7 @@ export class Crowdsale extends React.Component {
 
     getCurrentAccount()
       .then(account => {
-        attachToInitCrowdsaleContract()
+        attachToSpecificCrowdsaleContract("initCrowdsale")
           .then((initCrowdsaleContract) => {
             this.getFullCrowdsaleData(initCrowdsaleContract, crowdsaleExecID, account)
               .then(() => this.setState({ loading: false }))

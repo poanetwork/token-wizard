@@ -21,7 +21,7 @@ import {
 import { toast } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { DisplayField } from '../Common/DisplayField'
-import { DisplayTextArea } from '../Common/DisplayTextArea'
+//import { DisplayTextArea } from '../Common/DisplayTextArea'
 import { TxProgressStatus } from '../Common/TxProgressStatus'
 import { ModalContainer } from '../Common/ModalContainer'
 import { copy } from '../../utils/copy'
@@ -80,7 +80,6 @@ export class stepFour extends React.Component {
 
   deployCrowdsale = () => {
     const { deploymentStore } = this.props
-    const { web3 } = this.context
     const firstRun = deploymentStore.deploymentStep === null
 
     this.resumeContractDeployment()
@@ -175,33 +174,25 @@ export class stepFour extends React.Component {
   downloadCrowdsaleInfo = () => {
     const zip = new JSZip()
     const { files } = FILE_CONTENTS
-    const [NULL_FINALIZE_AGENT, FINALIZE_AGENT] = ['nullFinalizeAgent', 'finalizeAgent']
-    const tiersCount = isObservableArray(this.props.tierStore.tiers) ? this.props.tierStore.tiers.length : 1
-    const contractsKeys = tiersCount === 1 ? files.order.filter(c => c !== NULL_FINALIZE_AGENT) : files.order;
+    //const tiersCount = isObservableArray(this.props.tierStore.tiers) ? this.props.tierStore.tiers.length : 1
+    const contractsKeys = files.order;
     const orderNumber = order => order.toString().padStart(3, '0');
     let prefix = 1
 
     contractsKeys.forEach(key => {
       if (this.props.contractStore.hasOwnProperty(key)) {
-        const { txt, sol, name } = files[key]
+        console.log(files[key])
+        console.log(this.props.contractStore[key])
+        const { txt, name } = files[key]
         const { abiConstructor } = this.props.contractStore[key]
         let tiersCountPerContract = isObservableArray(abiConstructor) ? abiConstructor.length : 1
 
-        if (tiersCount > 1 && [NULL_FINALIZE_AGENT, FINALIZE_AGENT].includes(key)) {
-          tiersCountPerContract = NULL_FINALIZE_AGENT === key ? tiersCount - 1 : 1
-        }
-
         for (let tier = 0; tier < tiersCountPerContract; tier++) {
           const suffix = tiersCountPerContract > 1 ? `_${tier + 1}` : ''
-          const solFilename = `${orderNumber(prefix++)}_${name}${suffix}`
           const txtFilename = `${orderNumber(prefix++)}_${name}${suffix}`
-          const tierNumber = FINALIZE_AGENT === key ? tiersCount - 1 : tier
+          const tierNumber = tier
           const commonHeader = FILE_CONTENTS.common.map(content => this.handleContentByParent(content, tierNumber))
 
-          zip.file(
-            `${solFilename}.sol`,
-            this.handleContentByParent(sol)
-          )
           zip.file(
             `${txtFilename}.txt`,
             commonHeader.concat(txt.map(content => this.handleContentByParent(content, tierNumber))).join('\n\n')
@@ -212,9 +203,7 @@ export class stepFour extends React.Component {
 
     zip.generateAsync({ type: DOWNLOAD_TYPE.blob })
       .then(content => {
-        const tokenAddr = this.props.contractStore ? this.props.contractStore.token.addr : '';
-
-        getDownloadName(tokenAddr)
+        getDownloadName()
           .then(downloadName => download({ zip: content, filename: downloadName }))
       })
   }
@@ -236,7 +225,7 @@ export class stepFour extends React.Component {
     const url = `${crowdsalePage}?exec-id=${contractStore.crowdsale.execID}&networkID=${contractStore.crowdsale.networkID}`
 
     if (!this.state.contractDownloaded) {
-      //this.downloadCrowdsaleInfo()
+      this.downloadCrowdsaleInfo()
       this.contractDownloadSuccess()
     }
 
@@ -272,7 +261,7 @@ export class stepFour extends React.Component {
   }
 
   render() {
-    const { tierStore, contractStore, tokenStore, deploymentStore } = this.props
+    const { tierStore, tokenStore, deploymentStore } = this.props
     const crowdsaleSetups = tierStore.tiers.map((tier, index) => {
       return (
         <div key={index.toString()}>
@@ -324,7 +313,7 @@ export class stepFour extends React.Component {
         </div>
       )
     })
-    const ABIEncodedOutputsCrowdsale = tierStore.tiers.map((tier, index) => {
+    /*const ABIEncodedOutputsCrowdsale = tierStore.tiers.map((tier, index) => {
       return (
         <DisplayTextArea
           key={index.toString()}
@@ -333,7 +322,7 @@ export class stepFour extends React.Component {
           description="Encoded ABI"
         />
       )
-    })
+    })*/
     const globalLimitsBlock = (
       <div>
         <div className="publish-title-container">
@@ -349,7 +338,7 @@ export class stepFour extends React.Component {
         </div>
       </div>
     )
-    const tokenBlock = (
+    /*const tokenBlock = (
       <div>
         <DisplayTextArea
           label={'Token Contract Source Code'}
@@ -367,7 +356,7 @@ export class stepFour extends React.Component {
           description="Token Constructor Arguments"
         />
       </div>
-    )
+    )*/
 
     const modalContent = deploymentStore.invalidAccount ? (
       <div>

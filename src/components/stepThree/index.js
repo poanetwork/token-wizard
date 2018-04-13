@@ -2,7 +2,6 @@ import React from "react";
 import "../../assets/stylesheets/application.css";
 import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
-import { Link } from "react-router-dom";
 import { setExistingContractParams, getNetworkVersion, getNetWorkNameById } from "../../utils/blockchainHelpers";
 import { StepNavigation } from "../Common/StepNavigation";
 import { NAVIGATION_STEPS, CHAINS } from '../../utils/constants'
@@ -27,8 +26,6 @@ const { CROWDSALE_SETUP } = NAVIGATION_STEPS;
 export class stepThree extends React.Component {
   constructor(props) {
     super(props);
-
-    const { contractStore } = props;
 
     this.state = {
       loading: true,
@@ -61,7 +58,7 @@ export class stepThree extends React.Component {
     const reservedCount = reservedTokenStore.tokens.length
     const hasWhitelist = tierStore.tiers[0].whitelistEnabled === 'yes'
 
-    deploymentStore.initialize(!!reservedCount, hasWhitelist, tiersCount)
+    deploymentStore.initialize(!!reservedCount, hasWhitelist, tiersCount, tierStore.globalMinCap)
 
     getNetworkVersion()
       .then(networkID => {

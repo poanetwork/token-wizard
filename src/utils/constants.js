@@ -209,53 +209,24 @@ export const FILE_CONTENTS = {
     { field: 'rate', value: 'Crowdsale rate: ', parent: 'tierStore' },
     { field: 'startTime', value: 'Crowdsale start time: ', parent: 'tierStore' },
     { field: 'endTime', value: 'Crowdsale end time: ', parent: 'tierStore' },
-    { value: 'Compiler Version: ', parent: 'none', fileValue: '0.4.11' },
-    { value: 'Is optimization enabled?: ', parent: 'none', fileValue: 'true' },
     { value: '*****************************', parent: 'none', fileValue: '' }
   ],
   files: {
     order: [
-      'token',
       'crowdsale'
     ],
-    token: {
-      name: 'CrowdsaleTokenExt',
-      txt: [
-        { value: 'Token contract name: ', parent: 'none', fileValue: 'CrowdsaleTokenExt' },
-        { field: 'addr', value: 'Token contract address: ', parent: 'contracts', child: 'token' },
-        { value: '*****************************', parent: 'none', fileValue: '' },
-        { field: 'abi', value: '****Token contract ABI:**** \n\n', parent: 'contracts', child: 'token' },
-        {
-          field: 'abiConstructor',
-          value: '****Token contract ABI encoded constructor arguments',
-          parent: 'contracts',
-          child: 'token'
-        }
-      ],
-      sol: { field: 'src', value: '****Token contract source:**** \n\n', parent: 'contracts', child: 'token' }
-
-    },
     crowdsale: {
-      name: 'MintedTokenCappedCrowdsaleExt',
+      name: 'MintedCappedCrowdsale',
       txt: [
-        { value: 'Crowdsale contract name: ', parent: 'none', fileValue: 'MintedTokenCappedCrowdsaleExt' },
-        { field: 'addr', value: 'Crowdsale contract address', parent: 'contracts', child: 'crowdsale' },
-        { value: '*****************************', parent: 'none', fileValue: '' },
-        { field: 'abi', value: '****Crowdsale contract ABI:**** \n\n', parent: 'contracts', child: 'crowdsale' },
-        {
-          field: 'abiConstructor',
-          value: '****Crowdsale contract ABI encoded constructor arguments',
-          parent: 'contracts',
-          child: 'crowdsale'
-        }
-      ],
-      sol: { field: 'src', value: '****Crowdsale contract source:**** \n\n', parent: 'contracts', child: 'crowdsale' }
-
+        { value: 'Auth_os application name: ', parent: 'none', fileValue: 'MintedCappedCrowdsale' },
+        { field: 'execID', value: 'Auth_os execution ID: ', parent: 'crowdsale' },
+        { value: '*****************************', parent: 'none', fileValue: '' }
+      ]
     }
   }
 }
 
-export const DOWNLOAD_NAME = 'icowizard'
+export const DOWNLOAD_NAME = 'tokenwizard'
 export const DOWNLOAD_TYPE = {
   text: 'text/plain',
   blob: 'blob'
@@ -290,6 +261,7 @@ export const TX_STEP_DESCRIPTION = {
   token: "Initialize Token",
   //registerCrowdsaleAddress: "Associate Crowdsale address to current account",
   setReservedTokens: "Register addresses for Reserved Tokens",
+  updateGlobalMinContribution: "Update global minimum contribution",
   createCrowdsaleTiers: "Add tiers to Crowdsale",
   whitelist: "Register whitelisted addresses",
   crowdsaleInit: "Initialize Crowdsale",

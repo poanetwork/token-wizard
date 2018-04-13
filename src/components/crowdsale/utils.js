@@ -2,7 +2,7 @@ import { noContractAlert } from '../../utils/alerts'
 import { toFixed } from '../../utils/utils'
 import {
   getCurrentAccount,
-  attachToInitCrowdsaleContract,
+  attachToSpecificCrowdsaleContract,
 } from '../../utils/blockchainHelpers'
 import { contractStore, crowdsalePageStore, tokenStore, web3Store } from '../../stores'
 import { toJS } from 'mobx'
@@ -180,7 +180,7 @@ export let isFinalized = (initCrowdsaleContract, crowdsaleExecID) => {
 export const getTiers = () => {
   return getCurrentAccount()
     .then(account => {
-      return attachToInitCrowdsaleContract()
+      return attachToSpecificCrowdsaleContract("initCrowdsale")
         .then((initCrowdsaleContract) => {
           const { methods } = initCrowdsaleContract
           let registryStorageObj = toJS(contractStore.registryStorage)

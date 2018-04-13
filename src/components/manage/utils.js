@@ -1,12 +1,14 @@
 import { isObservableArray } from 'mobx'
 import {
-  attachToContract,
+  getCurrentAccount,
   sendTXToContract,
+  methodToExec
 } from '../../utils/blockchainHelpers'
 import { contractStore, crowdsaleStore, generalStore, tierStore, tokenStore, web3Store } from '../../stores'
 import { TRUNC_TO_DECIMALS, VALIDATION_TYPES } from '../../utils/constants'
 import { floorToDecimals, toFixed } from '../../utils/utils'
 import { toBigNumber } from '../crowdsale/utils'
+import { generateContext } from '../stepFour/utils'
 
 const { VALID } = VALIDATION_TYPES
 
@@ -22,26 +24,27 @@ const formatDate = timestamp => {
   return YYYY + '-' + MM + '-' + DD + 'T' + HH + ':' + II
 }
 
-export const updateTierAttribute = (attribute, value, addresses) => {
+export const updateTierAttribute = (attribute, value, tierIndex) => {
   const { decimals } = tokenStore
   let methods = {
-    startTime: 'setStartsAt',
-    endTime: 'setEndsAt',
-    supply: 'setMaximumSellableTokens',
-    rate: 'updateRate',
-    whitelist: 'setEarlyParticipantWhitelistMultiple'
+    //startTime: 'setStartsAt',
+    endTime: 'updateTierDuration',
+    //supply: 'setMaximumSellableTokens',
+    //rate: 'updateRate',
+    //whitelist: 'setEarlyParticipantWhitelistMultiple'
   }
-  let abi
-  let contractAddresses
 
   if (attribute === 'startTime' || attribute === 'endTime' || attribute === 'supply' || attribute === 'whitelist') {
-    abi = contractStore.crowdsale.abi
-    contractAddresses = [addresses.crowdsaleAddress]
 
-    if (attribute === 'startTime' || attribute === 'endTime') {
-      value = [toFixed(parseInt(Date.parse(value) / 1000, 10).toString())]
+    if (attribute === 'startTime') {
+      value = toFixed(parseInt(Date.parse(value) / 1000, 10).toString())
+    } else if (attribute === 'endTime') {
+      let { startTime, endTime } = tierStore.tiers[tierIndex]
+      const duration = formatDate(endTime) - formatDate(startTime)
+      const durationBN = toBigNumber(duration).toFixed()
+      value = durationBN
     } else if (attribute === 'supply') {
-      value = [toBigNumber(value).times(`1e${tokenStore.decimals}`).toFixed()]
+      value = toBigNumber(value).times(`1e${tokenStore.decimals}`).toFixed()
     } else {
       // whitelist
       value = value.reduce((toAdd, whitelist) => {
@@ -55,15 +58,12 @@ export const updateTierAttribute = (attribute, value, addresses) => {
   }
 
   if (attribute === 'rate') {
-    abi = contractStore.crowdsale.abi
-    contractAddresses = [addresses.crowdsaleAddress]
     const oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, 1 / Number(value))
-    value = [web3Store.web3.utils.toWei(oneTokenInETH, 'ether')]
+    value = web3Store.web3.utils.toWei(oneTokenInETH, 'ether')
   }
 
-  if (!contractAddresses) return Promise.reject('no updatable value')
-
-  if (attribute === 'whitelist') {
+  //to do
+  /*if (attribute === 'whitelist') {
     const totalTiers = tierStore.tiers.length
     const currentTierIndex = crowdsaleStore.selected.initialTiersValues
       .findIndex(tier => tier.addresses.crowdsaleAddress === addresses.crowdsaleAddress)
@@ -73,28 +73,41 @@ export const updateTierAttribute = (attribute, value, addresses) => {
         .slice(currentTierIndex)
         .map(tier => tier.addresses.crowdsaleAddress)
     }
-  }
+  }*/
 
-  return contractAddresses.reduce((promise, contractAddress) => {
-    return promise.then(() => {
-      return attachToContract(abi, contractAddress)
-        .then(contract => {
-          const method = contract.methods[methods[attribute]]
+  console.log("attribute:", attribute)
+  console.log("methods[attribute]:", methods[attribute])
 
-          return method(...value).estimateGas()
-            .then(estimatedGas => {
-              return sendTXToContract(method(...value)
-                .send({
-                  gasLimit: estimatedGas,
-                  gasPrice: generalStore.gasPrice
-                })
-              )
-            })
+  console.log("tierIndex:", tierIndex)
+  console.log("value:", value)
+
+  const methodInterface = ["uint256","uint256","bytes"]
+  const paramsToExec = [ tierIndex, value, methodInterface ]
+
+  const method = methodToExec(`updateTierDuration(${methodInterface.join(',')})`, "crowdsaleConsole", updateCrowdsaleParams, paramsToExec)
+
+  return getCurrentAccount()
+    .then(account => {
+      return method.estimateGas()
+      .then(estimatedGas => {
+        return sendTXToContract(method.send({
+          gasLimit: estimatedGas,
+          gasPrice: generalStore.gasPrice,
+          from: account
         })
+        )
+      })
     })
-  }, Promise.resolve())
 }
 
+const updateCrowdsaleParams = (tierIndex, duration, methodInterface) => {
+  const { web3 } = web3Store
+  let context = generateContext();
+  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [tierIndex, duration, context]);
+  return encodedParameters;
+}
+
+//to do
 const extractWhitelistInformation = (isWhitelisted, crowdsaleMethods) => {
   let whitelistedAccounts = []
   const whenWhitelistedAddresses = []
@@ -211,8 +224,8 @@ export const processTier = (tier, crowdsale, token, tierNum) => {
       return Promise.all([whitelistAccounts, rate])
     })
     .then(([whitelistAccounts, rate]) => {
-      const { decimals } = tokenStore
-      const tokenDecimals = !isNaN(decimals) ? decimals : 0
+      //const { decimals } = tokenStore
+      //const tokenDecimals = !isNaN(decimals) ? decimals : 0
 
       //price
       newTier.rate = toBigNumber(web3.utils.fromWei(toBigNumber(rate).toFixed(), 'ether'))
@@ -262,18 +275,17 @@ export function getFieldsToUpdate(updatableTiers, tiers) {
   const toUpdate = updatableTiers
     .reduce((toUpdate, tier, index) => {
       keys.forEach(key => {
-        const { addresses } = tier
         let newValue = tiers[tier.index][key]
 
         if (isObservableArray(newValue)) {
           newValue = newValue.filter(item => !item.stored)
 
           if (newValue.length) {
-            toUpdate.push({ key, newValue, addresses })
+            toUpdate.push({ key, newValue, tier: index })
           }
 
         } else if (newValue !== tier[key]) {
-          toUpdate.push({ key, newValue, addresses, tier: index })
+          toUpdate.push({ key, newValue, tier: index })
         }
       })
       return toUpdate

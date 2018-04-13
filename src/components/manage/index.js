@@ -7,7 +7,6 @@ import '../../assets/stylesheets/application.css'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
 import {
   successfulFinalizeAlert,
-  successfulDistributeAlert,
   successfulUpdateCrowdsaleAlert,
   warningOnFinalizeCrowdsale,
   notTheOwner
@@ -16,9 +15,8 @@ import {
   getCurrentAccount,
   getNetworkVersion,
   sendTXToContract,
-  attachToContract,
   calculateGasLimit,
-  attachToInitCrowdsaleContract,
+  attachToSpecificCrowdsaleContract,
   methodToExec
 } from '../../utils/blockchainHelpers'
 import { toast } from '../../utils/utils'
@@ -26,6 +24,7 @@ import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
 import { getFieldsToUpdate, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
 import { getTiers } from '../crowdsale/utils'
+import { generateContext } from '../stepFour/utils'
 import classNames from 'classnames'
 import { toJS } from 'mobx'
 
@@ -48,8 +47,6 @@ export class Manage extends Component {
       formPristine: true,
       loading: true,
       canFinalize: false,
-      canDistribute: false,
-      shouldDistribute: false,
       ownerCurrentUser: true
     }
   }
@@ -86,9 +83,10 @@ export class Manage extends Component {
   checkOwner = () => {
     const { contractStore, web3Store } = this.props
 
-    return attachToContract(contractStore.crowdsale.abi, contractStore.crowdsale.addr[0])
-      .then(crowdsaleContract => {
-        const whenOwner = crowdsaleContract.methods.owner().call()
+    return attachToSpecificCrowdsaleContract("initCrowdsale")
+      .then((initCrowdsaleContract) => {
+        let registryStorageObj = toJS(contractStore.registryStorage)
+        const whenOwner = initCrowdsaleContract.methods.getAdmin(registryStorageObj.addr, contractStore.crowdsale.execID).call()
         const whenAccounts = web3Store.web3.eth.getAccounts()
 
         return Promise.all([whenOwner, whenAccounts])
@@ -110,7 +108,7 @@ export class Manage extends Component {
         console.log("numOfTiers:", numOfTiers)
         getCurrentAccount()
           .then(account => {
-            attachToInitCrowdsaleContract()
+            attachToSpecificCrowdsaleContract("initCrowdsale")
               .then((initCrowdsaleContract) => {
                 console.log(initCrowdsaleContract)
                 let registryStorageObj = toJS(contractStore.registryStorage)
@@ -174,123 +172,46 @@ export class Manage extends Component {
 
   updateCrowdsaleStatus = () => {
     return this.setCrowdsaleInfo()
-      .then(this.shouldDistribute)
-      //.then(this.canDistribute)
       .then(this.canFinalize)
       .then(this.checkOwner)
   }
 
   setCrowdsaleInfo = () => {
     const { contractStore, crowdsaleStore } = this.props
-    //const lastCrowdsaleAddress = contractStore.crowdsale.addr.slice(-1)[0]
 
-    return Promise.resolve()
-    //to do
-    /*return attachToContract(contractStore.crowdsale.abi, lastCrowdsaleAddress)
-      .then(crowdsaleContract => crowdsaleContract.methods.endsAt().call())
-      .then(crowdsaleEndTime => this.setState({ crowdsaleHasEnded: crowdsaleEndTime * 1000 <= Date.now() || crowdsaleStore.selected.finalized }))*/
-  }
-
-  shouldDistribute = () => {
-    console.log("shouldDistribute:")
-    const { contractStore, match } = this.props
-
-    return new Promise(resolve => {
-
-      getCurrentAccount()
-        .then(account => {
-          attachToInitCrowdsaleContract()
-            .then((initCrowdsaleContract) => {
-              if (!initCrowdsaleContract) return Promise.reject('No contract available')
-
-              let registryStorageObj = toJS(contractStore.registryStorage)
-              console.log("registryStorageObj:", registryStorageObj)
-              initCrowdsaleContract.methods.getReservedTokenDestinationList(registryStorageObj.addr, contractStore.crowdsale.execID).call()
-                .then((reservedTokensObj) => {
-                  let reservedTokensDestinationsLen = reservedTokensObj.num_destinations
-                  if (reservedTokensDestinationsLen > 0)
-                    this.setState({ shouldDistribute: true })
-                  else
-                    this.setState({ shouldDistribute: false })
-                  resolve(this.state.shouldDistribute)
-                })
-                .catch(() => {
-                  this.setState({ shouldDistribute: false })
-                  resolve(this.state.shouldDistribute)
-                })
-            })
-        })
-
-      /*attachToContract(contractStore.crowdsale.abi, match.params.crowdsaleAddress)
-      .then(crowdsaleContract => { // eslint-disable-line no-loop-func
-        console.log('attach to crowdsale contract')
-
-        if (!crowdsaleContract) return Promise.reject('No contract available')
-
-        crowdsaleContract.methods.token().call()
-        .then(tokenAddress => attachToContract(contractStore.token.abi, tokenAddress))
-        .then(tokenContract => tokenContract.methods.reservedTokensDestinationsLen().call())
-        .then((reservedTokensDestinationsLen) => {
-          if (reservedTokensDestinationsLen > 0)
-            this.setState({ shouldDistribute: true })
-          else
-            this.setState({ shouldDistribute: false })
-          resolve(this.state.shouldDistribute)
-        })
-        .catch(() => {
-          this.setState({ shouldDistribute: false })
-          resolve(this.state.shouldDistribute)
-        })
-      })*/
-    })
-  }
-
-  canDistribute = () => {
-    const { contractStore, match } = this.props
-
-    return new Promise(resolve => {
-      attachToContract(contractStore.crowdsale.abi, match.params.crowdsaleAddress)
-        .then(crowdsaleContract => { // eslint-disable-line no-loop-func
-          console.log('attach to crowdsale contract')
-
-          if (!crowdsaleContract) return Promise.reject('No contract available')
-
-          crowdsaleContract.methods.canDistributeReservedTokens().call((err, canDistributeReservedTokens) => {
-            return canDistributeReservedTokens
-          }).then((canDistributeReservedTokens) => {
-            console.log('#canDistributeReservedTokens:', canDistributeReservedTokens)
-            this.setState({ canDistribute: canDistributeReservedTokens })
-            resolve(this.state.canDistribute)
-          })
-          .catch(() => {
-            this.setState({ canDistribute: false })
-            resolve(this.state.canDistribute)
-          })
-        })
-    })
+    return attachToSpecificCrowdsaleContract("initCrowdsale")
+      .then((initCrowdsaleContract) => {
+        let registryStorageObj = toJS(contractStore.registryStorage)
+        return initCrowdsaleContract.methods.getCrowdsaleStartAndEndTimes(registryStorageObj.addr, contractStore.crowdsale.execID).call();
+      })
+      .then(crowdsaleStartAndEndTimes => {
+        console.log("crowdsaleStartAndEndTimes.end_time:", crowdsaleStartAndEndTimes.end_time)
+        this.setState({ crowdsaleHasEnded: crowdsaleStartAndEndTimes.end_time * 1000 <= Date.now() || crowdsaleStore.selected.finalized })
+      })
   }
 
   canFinalize = () => {
     const { contractStore } = this.props
-    const lastCrowdsaleAddress = contractStore.crowdsale.addr.slice(-1)[0]
 
-    return attachToContract(contractStore.crowdsale.abi, lastCrowdsaleAddress)
-      .then(crowdsaleContract => {
-        const whenIsFinalized = crowdsaleContract.methods.finalized().call()
-        const whenIsCrowdsaleFull = crowdsaleContract.methods.isCrowdsaleFull().call()
+    return attachToSpecificCrowdsaleContract("initCrowdsale")
+      .then((initCrowdsaleContract) => {
+        let registryStorageObj = toJS(contractStore.registryStorage)
+        const whenCrowdsaleInfo = initCrowdsaleContract.methods.getCrowdsaleInfo(registryStorageObj.addr, contractStore.crowdsale.execID).call();
 
-        return Promise.all([whenIsFinalized, whenIsCrowdsaleFull])
+        return Promise.all([whenCrowdsaleInfo])
       })
       .then(
-        ([isFinalized, isCrowdsaleFull]) => {
+        ([crowdsaleInfo]) => {
+          //to do: isCrowdsaleFull
+          const isCrowdsaleFull = false
+          const isFinalized = crowdsaleInfo.is_finalized
           if (isFinalized) {
             this.setState({ canFinalize: false })
           } else {
-            const { crowdsaleHasEnded, shouldDistribute, canDistribute } = this.state
-            const wasDistributed = shouldDistribute && !canDistribute
+            const { crowdsaleHasEnded } = this.state
 
             this.setState({
-              canFinalize: (crowdsaleHasEnded || isCrowdsaleFull) && (wasDistributed || !shouldDistribute)
+              canFinalize: (crowdsaleHasEnded || isCrowdsaleFull)
             })
           }
         },
@@ -298,92 +219,13 @@ export class Manage extends Component {
       )
   }
 
-  getDistributeReservedTokensParams = (account, addressesPerBatch) => {
+  getFinalizeCrowdsaleParams = (methodInterface) => {
     const { web3Store } = this.props
     const { web3 } = web3Store
-    console.log(this.state.crowdsaleExecID)
-    console.log(account)
-    let paramsDistributeReservedTokens = [this.state.crowdsaleExecID, account];
-    console.log(paramsDistributeReservedTokens);
-    let context = web3.eth.abi.encodeParameters(["bytes32","address"], paramsDistributeReservedTokens);
-    let encodedParameters = web3.eth.abi.encodeParameters(["uint256","bytes"], [addressesPerBatch, context]);
+
+    let context = generateContext();
+    let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [context]);
     return encodedParameters;
-  }
-
-  distributeReservedTokens = (addressesPerBatch) => {
-    this.updateCrowdsaleStatus()
-      .then(() => {
-        const { crowdsaleStore, contractStore } = this.props
-
-        if (!crowdsaleStore.selected.distributed && this.state.canDistribute) {
-          this.showLoader()
-
-          const lastCrowdsaleAddress = contractStore.crowdsale.addr.slice(-1)[0]
-
-          //to do
-          return attachToContract(contractStore.crowdsale.abi, lastCrowdsaleAddress)
-            .then(crowdsaleContract => Promise.all([
-              crowdsaleContract,
-              crowdsaleContract.methods.token().call()
-            ]))
-            .then(([crowdsaleContract, token]) => {
-              attachToContract(contractStore.token.abi, token)
-                .then(tokenContract => {
-                  tokenContract.methods.reservedTokensDestinationsLen().call()
-                    .then(reservedTokensDestinationsLen => {
-
-                      getCurrentAccount
-                        .then(account => {
-                          const batchesLen = Math.ceil(reservedTokensDestinationsLen / addressesPerBatch)
-
-                          let paramsToExec = [account, addressesPerBatch]
-                          const method = methodToExec("distributeReservedTokens(uint,bytes)", "tokenConsole", this.getDistributeReservedTokensParams, paramsToExec)
-
-                          let opts = {
-                            gasPrice: this.props.generalStore.gasPrice
-                          }
-                          let batches = Array.from(Array(batchesLen).keys())
-                          this.distributeReservedTokensRecursive(batches, method, opts)
-                            .then(() => {
-                              successfulDistributeAlert()
-                              crowdsaleStore.setSelectedProperty('distributed', true)
-                              return this.updateCrowdsaleStatus()
-                            })
-                            .catch((err) => {
-                              console.log(err)
-                              toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.DISTRIBUTE_FAIL })
-                            })
-                            .then(this.hideLoader)
-                        })
-                    })
-                })
-            })
-        }
-      })
-      .catch(console.error)
-  }
-
-  distributeReservedTokensRecursive = (batches, distributeMethod, opts) => {
-    return batches.reduce((promise) => {
-      return promise
-        .then(() => distributeMethod.estimateGas(opts)
-          .then(estimatedGas => {
-            opts.gasLimit = calculateGasLimit(estimatedGas)
-            return sendTXToContract(distributeMethod.send(opts))
-          })
-        )
-    }, Promise.resolve())
-  }
-
-  getFinalizeCrowdsaleParams = (account) => {
-    const { web3Store } = this.props
-    const { web3 } = web3Store
-    console.log(this.state.crowdsaleExecID)
-    console.log(account)
-    let paramsDistributeReservedTokens = [this.state.crowdsaleExecID, account];
-    console.log(paramsDistributeReservedTokens);
-    let context = web3.eth.abi.encodeParameters(["bytes32","address"], paramsDistributeReservedTokens);
-    return context;
   }
 
   finalizeCrowdsale = () => {
@@ -399,11 +241,13 @@ export class Manage extends Component {
 
                 getCurrentAccount
                   .then(account => {
-                    let paramsToExec = [account]
-                    const method = methodToExec("finalizeCrowdsale(bytes)", "crowdsaleConsole", this.getFinalizeCrowdsaleParams, paramsToExec)
+                    const methodInterface = ["bytes"]
+                    let paramsToExec = [methodInterface]
+                    const method = methodToExec(`finalizeCrowdsale(${methodInterface.join(',')})`, "crowdsaleConsole", this.getFinalizeCrowdsaleParams, paramsToExec)
 
                     let opts = {
-                      gasPrice: this.props.generalStore.gasPrice
+                      gasPrice: this.props.generalStore.gasPrice,
+                      from: account
                     }
 
                     method.estimateGas(opts)
@@ -452,8 +296,8 @@ export class Manage extends Component {
           const fieldsToUpdate = getFieldsToUpdate(updatableTiers, tierStore.tiers)
 
           fieldsToUpdate
-            .reduce((promise, { key, newValue, addresses }) => {
-              return promise.then(() => updateTierAttribute(key, newValue, addresses))
+            .reduce((promise, { key, newValue, tier }) => {
+              return promise.then(() => updateTierAttribute(key, newValue, tier))
             }, Promise.resolve())
             .then(() => {
               this.hideLoader()
@@ -556,27 +400,11 @@ export class Manage extends Component {
   }
 
   render () {
-    const { formPristine, canFinalize, shouldDistribute, canDistribute, crowdsaleHasEnded, ownerCurrentUser } = this.state
+    const { formPristine, canFinalize, crowdsaleHasEnded, ownerCurrentUser } = this.state
     const { generalStore, tierStore, tokenStore, crowdsaleStore } = this.props
-    const { address: crowdsaleAddress, finalized, updatable, execID } = crowdsaleStore.selected
+    const { finalized, updatable, execID } = crowdsaleStore.selected
 
-    const canEditTier = ownerCurrentUser && !canDistribute && !canFinalize && !finalized
-
-    const distributeTokensStep = (
-      <div className="steps-content container">
-        <div className="about-step">
-          <div className="swal2-icon swal2-info warning-logo">!</div>
-          <p className="title">Distribute reserved tokens</p>
-          <p className="description">Reserved tokens distribution is the last step of the crowdsale before finalization.
-            You can make it after the end of the last tier or if hard cap is reached. If you reserved more then 100
-            addresses for your crowdsale, the distribution will be executed in batches with 100 reserved addresses per
-            batch. Amount of batches is equal to amount of transactions</p>
-          <Link to='#' onClick={() => this.distributeReservedTokens(100)}>
-            <span className={`button button_${!ownerCurrentUser || !canDistribute ? 'disabled' : 'fill'}`}>Distribute tokens</span>
-          </Link>
-        </div>
-      </div>
-    )
+    const canEditTier = ownerCurrentUser && !canFinalize && !finalized
 
     const aboutStep = (
       <div className="about-step">
@@ -697,7 +525,6 @@ export class Manage extends Component {
 
     return (
       <section className="manage">
-        {shouldDistribute ? distributeTokensStep : null}
         <div className="steps-content container">
           {aboutStep}
         </div>
