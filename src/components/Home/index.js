@@ -50,7 +50,7 @@ export class Home extends Component {
             <div className="container">
               <h1 className="title">Welcome to Token Wizard</h1>
               <p className="description">
-              Token Wizard is a client side tool to create token and crowdsale contracts in five steps. It helps you to publish contracts on the Ethereum network, create a crowdsale page with stats. For participants, the wizard creates a page to invest into the campaign.
+              Token Wizard is a client side tool to create ERC20 token and crowdsale in five steps. It helps you to publish contracts on the Ethereum network, create a crowdsale page with stats. For participants, the wizard creates a page to contribute into the campaign.
               <br/>Token Wizard is powered by <a href="https://github.com/auth-os/beta">Auth_os</a>.
               </p>
               <div className="buttons">
