@@ -201,10 +201,11 @@ const getExecutionIDFromEvent = (events, eventName) => {
   }
 }
 
-export const generateContext = () => {
+export const generateContext = (weiToSend) => {
   const { web3 } = web3Store
-  let account = contractStore.crowdsale.account;
-  let paramsContext = [contractStore.crowdsale.execID, account, 0];
+  let { account, execID } = contractStore.crowdsale;
+  console.log(account, execID);
+  let paramsContext = [execID, account, weiToSend];
   let context = web3.eth.abi.encodeParameters(["bytes32","address","uint256"], paramsContext);
   console.log("context:", context)
   return context;
@@ -221,7 +222,7 @@ const getTokenParams = (token, methodInterface) => {
     web3.utils.fromAscii(token.ticker),
     parseInt(token.decimals, 10)
   ]
-  let context = generateContext();
+  let context = generateContext(0);
   let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsToken, context]);
   return encodedParameters;
 }
@@ -269,7 +270,7 @@ const getReservedTokensParams = (addrs, inTokens, inPercentageUnit, inPercentage
   ]
   console.log("paramsReservedTokens:",paramsReservedTokens)
 
-  let context = generateContext();
+  let context = generateContext(0);
   let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsReservedTokens, context]);
   return encodedParameters;
 }
@@ -337,7 +338,7 @@ export const setReservedTokensListMultiple = () => {
 
 const getInitializeCrowdsaleParams = (token) => {
   const { web3 } = web3Store
-  let context = generateContext();
+  let context = generateContext(0);
   let encodedParameters = web3.eth.abi.encodeParameters(["bytes"], [context]);
   return encodedParameters;
 }
@@ -438,7 +439,7 @@ const getTiersParams = (methodInterface) => {
   ]
   console.log("paramsTiers:", paramsTiers)
 
-  let context = generateContext();
+  let context = generateContext(0);
   let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsTiers, context]);
   return encodedParameters;
 }
@@ -477,7 +478,7 @@ const getWhitelistsParams = (tierIndex, addrs, minCaps, maxCaps, methodInterface
   ]
   console.log("paramsWhitelist:", paramsWhitelist)
 
-  let context = generateContext();
+  let context = generateContext(0);
   let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsWhitelist, context]);
   return encodedParameters;
 }
@@ -561,7 +562,7 @@ const getUpdateGlobalMinCapParams = (methodInterface) => {
   const { web3 } = web3Store
   let globalMinCap = toBigNumber(tierStore.globalMinCap).times(`1e${tokenStore.decimals}`).toFixed()
 
-  let context = generateContext();
+  let context = generateContext(0);
   let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [globalMinCap, context]);
   return encodedParameters;
 }

@@ -223,7 +223,7 @@ export class Manage extends Component {
     const { web3Store } = this.props
     const { web3 } = web3Store
 
-    let context = generateContext();
+    let context = generateContext(0);
     let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [context]);
     return encodedParameters;
   }

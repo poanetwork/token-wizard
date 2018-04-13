@@ -33,6 +33,7 @@ import CountdownTimer from './CountdownTimer'
 import classNames from 'classnames'
 import moment from 'moment'
 import { BigNumber } from 'bignumber.js'
+import { generateContext } from '../stepFour/utils'
 
 @inject(
   'contractStore',
@@ -117,6 +118,7 @@ export class Invest extends React.Component {
       .then(account => {
         console.log("crowdsaleExecID:", crowdsaleExecID)
         contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
+        contractStore.setContractProperty('crowdsale', 'account', account)
 
         this.setState({
           curAddr: account,
@@ -250,26 +252,20 @@ export class Invest extends React.Component {
 
     getCurrentAccount()
       .then(account => {
-        attachToSpecificCrowdsaleContract("initCrowdsale")
-          .then((initCrowdsaleContract) => {
-            this.investToTokensForWhitelistedCrowdsaleInternal(initCrowdsaleContract, account)
-          })
+        this.investToTokensForWhitelistedCrowdsaleInternal(account)
       })
   }
 
-  getBuyParams = (account, weiToSend) => {
+  getBuyParams = (weiToSend, methodInterface) => {
     const { web3Store } = this.props
     const { web3 } = web3Store
-    console.log(this.state.crowdsaleExecID)
-    console.log(account)
-    console.log(weiToSend)
-    let paramsBuy = [this.state.crowdsaleExecID, account, weiToSend];
-    console.log(paramsBuy);
-    let encodedParameters = web3.eth.abi.encodeParameters(["bytes32","address","uint256"], paramsBuy);
+    let context = generateContext(weiToSend);
+    let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [context]);
     return encodedParameters;
+    //return context;
   }
 
-  investToTokensForWhitelistedCrowdsaleInternal = (initCrowdsaleContract, account) => {
+  investToTokensForWhitelistedCrowdsaleInternal = (account) => {
     const { tokenStore, crowdsalePageStore, investStore, generalStore } = this.props
 
     const decimals = new BigNumber(tokenStore.decimals)
@@ -291,8 +287,9 @@ export class Invest extends React.Component {
     }
     console.log(opts)
 
-    let paramsToExec = [account, weiToSend]
-    const method = methodToExec("buy(bytes)", "crowdsaleBuyTokens", this.getBuyParams, paramsToExec)
+    let methodInterface = ["bytes"];
+    let paramsToExec = [weiToSend, methodInterface]
+    const method = methodToExec(`buy(${methodInterface.join(',')})`, "crowdsaleBuyTokens", this.getBuyParams, paramsToExec)
 
     method.estimateGas(opts)
       .then(estimatedGas => {

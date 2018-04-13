@@ -102,7 +102,7 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
 
 const updateCrowdsaleParams = (tierIndex, duration, methodInterface) => {
   const { web3 } = web3Store
-  let context = generateContext();
+  let context = generateContext(0);
   let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [tierIndex, duration, context]);
   return encodedParameters;
 }
