@@ -403,6 +403,7 @@ export class Manage extends Component {
           initialValues={{ tiers: this.initialTiers, }}
           component={ManageForm}
           canEditTiers={ownerCurrentUser && !canDistribute && !canFinalize && !finalized}
+          decimals={tokenStore.decimals}
           aboutTier={
             <AboutCrowdsale
               name={tokenStore.name}

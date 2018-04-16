@@ -86,7 +86,7 @@ export const ManageTierBlock = ({
                   <p className="title">Whitelist</p>
                 </div>
                 {canEdit
-                  ? <WhitelistInputBlock key={index.toString()} num={index}/>
+                  ? <WhitelistInputBlock key={index.toString()} num={index} decimals={props.decimals}/>
                   : <ReadOnlyWhitelistAddresses tier={currentTier}/>
                 }
               </div>
