@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
 import { Link } from 'react-router-dom'
-import { TEXT_FIELDS, TOAST, VALIDATION_MESSAGES, DESCRIPTION } from '../../utils/constants'
-import { InputField } from '../Common/InputField'
+import { TOAST, VALIDATION_TYPES } from '../../utils/constants'
 import '../../assets/stylesheets/application.css'
-import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
 import {
   successfulFinalizeAlert,
   successfulDistributeAlert,
@@ -17,9 +15,14 @@ import { toast } from '../../utils/utils'
 import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
 import { getFieldsToUpdate, getTiers, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
-import classNames from 'classnames'
+import { Form } from 'react-final-form'
+import arrayMutators from 'final-form-arrays'
+import { AboutCrowdsale } from './AboutCrowdsale'
+import { FinalizeCrowdsaleStep } from './FinalizeCrowdsaleStep'
+import { DistributeTokensStep } from './DistributeTokensStep'
+import { ManageForm } from './ManageForm'
 
-const { START_TIME, END_TIME, RATE, SUPPLY, WALLET_ADDRESS, CROWDSALE_SETUP_NAME } = TEXT_FIELDS
+const { VALID } = VALIDATION_TYPES
 
 @inject(
   'crowdsaleStore',
@@ -42,6 +45,8 @@ export class Manage extends Component {
       shouldDistribute: false,
       ownerCurrentUser: true
     }
+
+    this.initialTiers = []
   }
 
   componentDidMount () {
@@ -49,7 +54,7 @@ export class Manage extends Component {
   }
 
   componentWillMount () {
-    const { crowdsaleStore, generalStore, match } = this.props
+    const { crowdsaleStore, generalStore, match, tierStore } = this.props
     const crowdsaleAddress = match.params.crowdsaleAddress
 
     crowdsaleStore.setSelectedProperty('address', crowdsaleAddress)
@@ -57,7 +62,11 @@ export class Manage extends Component {
     // networkID
     getNetworkVersion().then(networkId => generalStore.setProperty('networkId', networkId))
 
-    getWhiteListWithCapCrowdsaleAssets().then(this.extractContractData)
+    getWhiteListWithCapCrowdsaleAssets()
+      .then(this.extractContractData)
+      .then(() => {
+        this.initialTiers = JSON.parse(JSON.stringify(tierStore.tiers))
+      })
   }
 
   componentWillUnmount () {
@@ -88,7 +97,7 @@ export class Manage extends Component {
   extractContractData = () => {
     const { contractStore, crowdsaleStore } = this.props
 
-    getTiers(crowdsaleStore.selected.address)
+    return getTiers(crowdsaleStore.selected.address)
       .then(joinedCrowdsales => {
         contractStore.setContractProperty('crowdsale', 'addr', joinedCrowdsales)
 
@@ -137,26 +146,26 @@ export class Manage extends Component {
 
     return new Promise(resolve => {
       attachToContract(contractStore.crowdsale.abi, match.params.crowdsaleAddress)
-      .then(crowdsaleContract => { // eslint-disable-line no-loop-func
-        console.log('attach to crowdsale contract')
+        .then(crowdsaleContract => { // eslint-disable-line no-loop-func
+          console.log('attach to crowdsale contract')
 
-        if (!crowdsaleContract) return Promise.reject('No contract available')
+          if (!crowdsaleContract) return Promise.reject('No contract available')
 
-        crowdsaleContract.methods.token().call()
-        .then(tokenAddress => attachToContract(contractStore.token.abi, tokenAddress))
-        .then(tokenContract => tokenContract.methods.reservedTokensDestinationsLen().call())
-        .then((reservedTokensDestinationsLen) => {
-          if (reservedTokensDestinationsLen > 0)
-            this.setState({ shouldDistribute: true })
-          else
-            this.setState({ shouldDistribute: false })
-          resolve(this.state.shouldDistribute)
+          crowdsaleContract.methods.token().call()
+            .then(tokenAddress => attachToContract(contractStore.token.abi, tokenAddress))
+            .then(tokenContract => tokenContract.methods.reservedTokensDestinationsLen().call())
+            .then((reservedTokensDestinationsLen) => {
+              if (reservedTokensDestinationsLen > 0)
+                this.setState({ shouldDistribute: true })
+              else
+                this.setState({ shouldDistribute: false })
+              resolve(this.state.shouldDistribute)
+            })
+            .catch(() => {
+              this.setState({ shouldDistribute: false })
+              resolve(this.state.shouldDistribute)
+            })
         })
-        .catch(() => {
-          this.setState({ shouldDistribute: false })
-          resolve(this.state.shouldDistribute)
-        })
-      })
     })
   }
 
@@ -177,10 +186,10 @@ export class Manage extends Component {
             this.setState({ canDistribute: canDistributeReservedTokens })
             resolve(this.state.canDistribute)
           })
-          .catch(() => {
-            this.setState({ canDistribute: false })
-            resolve(this.state.canDistribute)
-          })
+            .catch(() => {
+              this.setState({ canDistribute: false })
+              resolve(this.state.canDistribute)
+            })
         })
     })
   }
@@ -319,21 +328,17 @@ export class Manage extends Component {
       .catch(console.error)
   }
 
-  saveCrowdsale = e => {
+  saveCrowdsale = () => {
     this.showLoader()
-
-    e.preventDefault()
-    e.stopPropagation()
 
     this.updateCrowdsaleStatus()
       .then(() => {
         const { crowdsaleStore, tierStore } = this.props
-        const { formPristine, crowdsaleHasEnded } = this.state
         const updatableTiers = crowdsaleStore.selected.initialTiersValues.filter(tier => tier.updatable)
         const isValidTier = tierStore.individuallyValidTiers
         const validTiers = updatableTiers.every(tier => isValidTier[tier.index])
 
-        if ((!formPristine || tierStore.modifiedStoredWhitelist) && !crowdsaleHasEnded && updatableTiers.length && validTiers) {
+        if (updatableTiers.length && validTiers) {
           const fieldsToUpdate = getFieldsToUpdate(updatableTiers, tierStore.tiers)
 
           fieldsToUpdate
@@ -360,249 +365,58 @@ export class Manage extends Component {
       })
   }
 
-  whitelistInputBlock = index => {
-    return (
-      <WhitelistInputBlock
-        key={index.toString()}
-        num={index}
-      />
-    )
-  }
-
-  readOnlyWhitelistedAddresses = tier => {
-    if (!tier.whitelist.length) {
-      return (
-        <div className="white-list-item-container">
-          <div className="white-list-item-container-inner">
-            <span className="white-list-item white-list-item-left">no addresses loaded</span>
-          </div>
-        </div>
-      )
-    }
-
-    return tier.whitelist.map(item => (
-      <div className={'white-list-item-container no-style'} key={item.addr}>
-        <div className="white-list-item-container-inner">
-          <span className="white-list-item white-list-item-left">{item.addr}</span>
-          <span className="white-list-item white-list-item-middle">{item.min}</span>
-          <span className="white-list-item white-list-item-right">{item.max}</span>
-        </div>
-      </div>
-    ))
-  }
-
-  renderWhitelistInputBlock = (tier, index) => {
-    const { crowdsaleStore, tierStore } = this.props
-
-    if (tierStore.tiers[0].whitelistEnabled !== 'yes') {
-      return null
-    }
-
-    return (
-      <div>
-        <div className="section-title">
-          <p className="title">Whitelist</p>
-        </div>
-        {tier.updatable && !crowdsaleStore.selected.finalized && !this.tierHasEnded(index) && this.state.ownerCurrentUser
-          ? this.whitelistInputBlock(index)
-          : this.readOnlyWhitelistedAddresses(tier)
-        }
-      </div>
-    )
-  }
-
-  updateTierStore = (event, property, index) => {
+  updateTierStore = ({ values }) => {
     const { tierStore } = this.props
-    const value = event.target.value
-
-    tierStore.setTierProperty(value, property, index)
-
-    if (property === 'endTime' || property === 'startTime') {
-      tierStore.validateEditedTier(property, index)
-    } else {
-      tierStore.validateTiers(property, index)
-    }
-
-    if (this.state.formPristine) {
-      this.setState({ formPristine: false })
-    }
-  }
-
-  tierHasStarted = (index) => {
-    const initialTierValues = this.props.crowdsaleStore.selected.initialTiersValues[index]
-    return initialTierValues && new Date(initialTierValues.startTime).getTime() < Date.now()
-  }
-
-  tierHasEnded = (index) => {
-    const initialTierValues = this.props.crowdsaleStore.selected.initialTiersValues[index]
-    return initialTierValues && new Date(initialTierValues.endTime).getTime() <= Date.now()
+    values.tiers.forEach((tier, index) => {
+      tierStore.setTierProperty(tier.tier, 'tier', index)
+      tierStore.setTierProperty(tier.updatable, 'updatable', index)
+      tierStore.setTierProperty(tier.startTime, 'startTime', index)
+      tierStore.setTierProperty(tier.endTime, 'endTime', index)
+      tierStore.updateRate(tier.rate, VALID, index)
+      tierStore.setTierProperty(tier.supply, 'supply', index)
+      tierStore.validateTiers('supply', index)
+    })
   }
 
   render () {
-    const { formPristine, canFinalize, shouldDistribute, canDistribute, crowdsaleHasEnded, ownerCurrentUser } = this.state
+    const { canFinalize, shouldDistribute, canDistribute, crowdsaleHasEnded, ownerCurrentUser } = this.state
     const { generalStore, tierStore, tokenStore, crowdsaleStore } = this.props
-    const { address: crowdsaleAddress, finalized, updatable } = crowdsaleStore.selected
-
-    const canEditTier = ownerCurrentUser && !canDistribute && !canFinalize && !finalized
-
-    const distributeTokensStep = (
-      <div className="steps-content container">
-        <div className="about-step">
-          <div className="swal2-icon swal2-info warning-logo">!</div>
-          <p className="title">Distribute reserved tokens</p>
-          <p className="description">Reserved tokens distribution is the last step of the crowdsale before finalization.
-            You can make it after the end of the last tier or if hard cap is reached. If you reserved more then 100
-            addresses for your crowdsale, the distribution will be executed in batches with 100 reserved addresses per
-            batch. Amount of batches is equal to amount of transactions</p>
-          <Link to='#' onClick={() => this.distributeReservedTokens(100)}>
-            <span className={`button button_${!ownerCurrentUser || !canDistribute ? 'disabled' : 'fill'}`}>Distribute tokens</span>
-          </Link>
-        </div>
-      </div>
-    )
-
-    const aboutStep = (
-      <div className="about-step">
-        <div className="swal2-icon swal2-info warning-logo">!</div>
-        <p className="title">Finalize Crowdsale</p>
-        <p className="description">Finalize - Finalization is the last step of the crowdsale.
-          You can make it only after the end of the last tier. After finalization, it's not possible to update tiers,
-          buy tokens. All tokens will be movable, reserved tokens will be issued.</p>
-        <Link to='#' onClick={() => this.finalizeCrowdsale()}>
-          <span className={`button button_${!ownerCurrentUser || finalized || !canFinalize ? 'disabled' : 'fill'}`}>Finalize Crowdsale</span>
-        </Link>
-      </div>
-    )
-
-    const aboutTier = (
-      <div className="about-step">
-        <div className="step-icons step-icons_crowdsale-setup"/>
-        <p className="title">{tokenStore.name} ({tokenStore.ticker}) Settings</p>
-        <p className="description">The most important and exciting part of the crowdsale process. Here you can define
-          parameters of your crowdsale campaign.</p>
-        <Link to={`/crowdsale/?addr=${crowdsaleAddress}&networkID=${generalStore.networkId}`}
-              className="crowdsale-page-link"
-        >Crowdsale page</Link>
-      </div>
-    )
-
-    const saveButton = () => {
-      let buttonStyle = 'button_disabled'
-
-      if (ownerCurrentUser && (!formPristine || tierStore.modifiedStoredWhitelist) && !crowdsaleHasEnded) {
-        buttonStyle = 'button_fill'
-      }
-
-      return (
-        <Link to='/2' onClick={e => this.saveCrowdsale(e)}>
-          <span
-            className={classNames('no-arrow', 'button', buttonStyle)}>Save</span>
-        </Link>
-      )
-    }
-
-    const tierNameAndWallet = (tier) => {
-      return <div className='input-block-container'>
-        <InputField
-          side='left'
-          type='text'
-          title={CROWDSALE_SETUP_NAME}
-          value={tier.tier}
-          disabled={true}
-        />
-        <InputField
-          side='right'
-          type='text'
-          title={WALLET_ADDRESS}
-          value={tier.walletAddress}
-          disabled={true}
-        />
-      </div>
-    }
-
-    const tierStartAndEndTime = (tier, index) => {
-      const disabled = !canEditTier || !tier.updatable || this.tierHasEnded(index)
-
-      return <div className='input-block-container'>
-        <InputField
-          side='left'
-          type='datetime-local'
-          title={START_TIME}
-          value={tier.startTime}
-          valid={tierStore.validTiers[index] && tierStore.validTiers[index].startTime}
-          errorMessage={VALIDATION_MESSAGES.EDITED_START_TIME}
-          onChange={e => this.updateTierStore(e, 'startTime', index)}
-          description={DESCRIPTION.START_TIME}
-          disabled={disabled || this.tierHasStarted(index)}
-        />
-        <InputField
-          side='right'
-          type='datetime-local'
-          title={END_TIME}
-          value={tier.endTime}
-          valid={tierStore.validTiers[index] && tierStore.validTiers[index].endTime}
-          errorMessage={VALIDATION_MESSAGES.EDITED_END_TIME}
-          onChange={e => this.updateTierStore(e, 'endTime', index)}
-          description={DESCRIPTION.END_TIME}
-          disabled={disabled}
-        />
-      </div>
-    }
-
-    const tierRateAndSupply = (tier, index) => {
-      const disabled = !canEditTier || !tier.updatable || this.tierHasEnded(index) || this.tierHasStarted(index)
-
-      return <div className='input-block-container'>
-        <InputField
-          side='left'
-          type='number'
-          title={RATE}
-          value={tier.rate}
-          valid={tierStore.validTiers[index] && tierStore.validTiers[index].rate}
-          errorMessage={VALIDATION_MESSAGES.RATE}
-          onChange={e => this.updateTierStore(e, 'rate', index)}
-          description={DESCRIPTION.RATE}
-          disabled={disabled}
-        />
-        <InputField
-          side='right'
-          type='number'
-          title={SUPPLY}
-          value={tier.supply}
-          valid={tierStore.validTiers[index] && tierStore.validTiers[index].supply}
-          errorMessage={VALIDATION_MESSAGES.SUPPLY}
-          onChange={e => this.updateTierStore(e, 'supply', index)}
-          description={DESCRIPTION.SUPPLY}
-          disabled={disabled}
-        />
-      </div>
-    }
+    const { address, finalized, updatable } = crowdsaleStore.selected
 
     return (
       <section className="manage">
-        {shouldDistribute ? distributeTokensStep : null}
-        <div className="steps-content container">
-          {aboutStep}
-        </div>
-        {tierStore.tiers.map((tier, index) => (
-          <div className="steps" key={index.toString()}>
-            <div className="steps-content container">
-              {index === 0 ? aboutTier : null}
-              <div className={`hidden ${tierStore.tiers[0].whitelistEnabled === 'yes' ? 'divisor' : ''}`}>
-                {tierNameAndWallet(tier)}
-                {tierStartAndEndTime(tier, index)}
-                {tierRateAndSupply(tier, index)}
-              </div>
-              {this.renderWhitelistInputBlock(tier, index)}
-            </div>
-          </div>
-        ))}
-        <div className="steps">
-          <div className="button-container">
-            {!crowdsaleHasEnded && updatable ? saveButton() : null}
-          </div>
-        </div>
+        {shouldDistribute ? (
+          <DistributeTokensStep
+            disabled={!ownerCurrentUser || !canDistribute}
+            handleClick={this.distributeReservedTokens}
+          />
+        ) : null}
+
+        <FinalizeCrowdsaleStep
+          disabled={!ownerCurrentUser || finalized || !canFinalize}
+          handleClick={this.finalizeCrowdsale}
+        />
+
+        <Form
+          onSubmit={this.saveCrowdsale}
+          mutators={{ ...arrayMutators }}
+          initialValues={{ tiers: this.initialTiers, }}
+          component={ManageForm}
+          canEditTiers={ownerCurrentUser && !canDistribute && !canFinalize && !finalized}
+          aboutTier={
+            <AboutCrowdsale
+              name={tokenStore.name}
+              ticker={tokenStore.ticker}
+              address={address}
+              networkId={generalStore.networkId}
+            />
+          }
+          handleChange={this.updateTierStore}
+          canSave={ownerCurrentUser && tierStore.modifiedStoredWhitelist && !crowdsaleHasEnded && updatable}
+        />
+
         <Loader show={this.state.loading}/>
+
       </section>
     )
   }
