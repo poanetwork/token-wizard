@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AboutCrowdsale should render the component 1`] = `
+<div
+  className="about-step"
+>
+  <div
+    className="step-icons step-icons_crowdsale-setup"
+  />
+  <p
+    className="title"
+  >
+    MyToken
+     (
+    MTK
+    ) Settings
+  </p>
+  <p
+    className="description"
+  >
+    The most important and exciting part of the crowdsale process. Here you can define parameters of your crowdsale campaign.
+  </p>
+  <a
+    className="crowdsale-page-link"
+    href="/crowdsale/?addr=0x0000000000000000000000000000000000000001&networkID=12648430"
+    onClick={[Function]}
+  >
+    Crowdsale page
+  </a>
+</div>
+`;
