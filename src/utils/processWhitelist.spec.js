@@ -11,7 +11,7 @@ describe('processWhitelist function', () => {
     const cb = jest.fn()
 
     // When
-    processWhitelist(rows, cb)
+    processWhitelist({ rows, decimals: 3 }, cb)
 
     // Then
     expect(cb).toHaveBeenCalledTimes(3)
@@ -20,7 +20,7 @@ describe('processWhitelist function', () => {
     expect(cb.mock.calls[2]).toEqual([{ addr: rows[2][0], min: rows[2][1], max: rows[2][2] }])
   })
 
-  it('should ignore items that don\t have 3 elements', () => {
+  it('should ignore items that don\'t have 3 elements', () => {
     // Given
     const rows = [
       ['1', '10'],
@@ -33,7 +33,7 @@ describe('processWhitelist function', () => {
     const cb = jest.fn()
 
     // When
-    processWhitelist(rows, cb)
+    processWhitelist({ rows, decimals: 3 }, cb)
 
     // Then
     expect(cb).toHaveBeenCalledTimes(0)
@@ -49,7 +49,7 @@ describe('processWhitelist function', () => {
     const cb = jest.fn()
 
     // When
-    const { called } = processWhitelist(rows, cb)
+    const { called } = processWhitelist({ rows, decimals: 3 }, cb)
 
     // Then
     expect(called).toBe(3)
@@ -66,7 +66,7 @@ describe('processWhitelist function', () => {
     const cb = jest.fn()
 
     // When
-    const { called } = processWhitelist(rows, cb)
+    const { called } = processWhitelist({ rows, decimals: 3 }, cb)
 
     // Then
     expect(called).toBe(0)
@@ -83,9 +83,45 @@ describe('processWhitelist function', () => {
     const cb = jest.fn()
 
     // When
-    const { called } = processWhitelist(rows, cb)
+    const { called } = processWhitelist({ rows, decimals: 3 }, cb)
 
     // Then
     expect(called).toBe(0)
+  })
+
+  it('should reject invalid decimals', () => {
+    // Given
+    const rows = [
+      ['0x1111111111111111111111111111111111111111', '10', '10.1'],
+      ['0x3333333333333333333333333333333333333333', '10.1234', '10'],
+      ['0x2222222222222222222222222222222222222222', '10.12', '10.123'],
+      ['0x4444444444444444444444444444444444444444', '10.123456', '10.123456']
+    ]
+    const cb = jest.fn()
+
+    // When
+    const { called } = processWhitelist({ rows, decimals: 3 }, cb)
+
+    // Then
+    expect(called).toBe(2)
+  })
+
+  it('should reject min > max', () => {
+    // Given
+    const rows = [
+      ['0x1111111111111111111111111111111111111111', '15', '10.1'],
+      ['0x2222222222222222222222222222222222222222', '10.13', '10.123'],
+      ['0x3333333333333333333333333333333333333333', '100', '99.999999999999999999'],
+      ['0x3333333333333333333333333333333333333333', '11', '11'],
+      ['0x3333333333333333333333333333333333333333', '10.124', '11'],
+      ['0x4444444444444444444444444444444444444444', '10.124', '10.125']
+    ]
+    const cb = jest.fn()
+
+    // When
+    const { called } = processWhitelist({ rows, decimals: 3 }, cb)
+
+    // Then
+    expect(called).toBe(3)
   })
 })

@@ -116,7 +116,7 @@ export const VALIDATION_MESSAGES = {
   REQUIRED: 'This field is required',
   DECIMAL_PLACES: 'Decimals should not exceed the amount of decimals specified',
   LESS_OR_EQUAL: 'Should be less or equal than the specified value',
-  GREATER_OR_EQUAL: 'Should be greater than the specified value',
+  GREATER_OR_EQUAL: 'Should be greater or equal than the specified value',
   INTEGER: 'Should be integer',
   DATE_IN_FUTURE: 'Should be set in the future',
   DATE_IS_PREVIOUS: 'Should be previous than specified time',
