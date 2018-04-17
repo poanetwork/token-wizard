@@ -3,7 +3,7 @@ import { StaticRouter } from 'react-router'
 import { Form } from 'react-final-form'
 import renderer from 'react-test-renderer'
 import Adapter from 'enzyme-adapter-react-15'
-import { configure, mount } from 'enzyme'
+import { configure } from 'enzyme'
 import MockDate from 'mockdate'
 import { ManageTierBlock } from './ManageTierBlock'
 
@@ -80,7 +80,7 @@ describe('ManageTierBlock', () => {
       <StaticRouter location="testLocation" context={{}}>
         <Form
           onSubmit={jest.fn()}
-          render={({}) => (
+          render={() => (
             <ManageTierBlock {...manageTierBlockProps} />
           )}
         />

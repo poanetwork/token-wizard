@@ -3,7 +3,7 @@ import { StaticRouter } from 'react-router'
 import { AboutCrowdsale } from './AboutCrowdsale'
 import renderer from 'react-test-renderer'
 import Adapter from 'enzyme-adapter-react-15'
-import { configure, mount } from 'enzyme'
+import { configure } from 'enzyme'
 
 configure({ adapter: new Adapter() })
 
