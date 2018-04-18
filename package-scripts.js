@@ -21,7 +21,7 @@ module.exports = {
         'npm install',
         'cd submodules/poa-web3-1.0', 'npm install', 'cd ../../',
         'npm install --no-save submodules/poa-web3-1.0/packages/web3',
-        'nps contracts',
+        //'nps contracts',
         'node scripts/build.js',
         'cp ./build/index.html ./build/invest.html',
         'cp ./build/index.html ./build/crowdsale.html',
