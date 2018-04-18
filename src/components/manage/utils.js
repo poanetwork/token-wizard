@@ -26,55 +26,53 @@ const formatDate = timestamp => {
 }
 
 export const updateTierAttribute = (attribute, value, tierIndex) => {
+  let methodInterface
+  let methodToExecName
+  let getParams
   const { decimals } = tokenStore
   let methods = {
-    //startTime: 'setStartsAt',
+    //startTime: 'setStartsAt', // startTime is not changed from migration to Auth_os
     endTime: 'updateTierDuration',
-    //supply: 'setMaximumSellableTokens',
-    //rate: 'updateRate',
-    //whitelist: 'setEarlyParticipantWhitelistMultiple'
+    //supply: 'setMaximumSellableTokens', // supply is not changed from migration to Auth_os
+    //rate: 'updateRate', // rate is not changed from migration to Auth_os
+    whitelist: 'whitelistMultiForTier'
   }
 
   if (attribute === 'startTime' || attribute === 'endTime' || attribute === 'supply' || attribute === 'whitelist') {
 
-    if (attribute === 'startTime') {
+    /*if (attribute === 'startTime') {
       value = toFixed(parseInt(Date.parse(value) / 1000, 10).toString())
-    } else if (attribute === 'endTime') {
+    } else */
+
+    if (attribute === 'endTime') {
       let { startTime, endTime } = tierStore.tiers[tierIndex]
-      const duration = formatDate(endTime) - formatDate(startTime)
+      console.log(startTime, endTime)
+      const duration = new Date(endTime) - new Date(startTime)
       const durationBN = toBigNumber(duration).toFixed()
       value = durationBN
-    } else if (attribute === 'supply') {
+      methodInterface = ["uint256","uint256","bytes"]
+      getParams = updateDurationParams
+    } /*else if (attribute === 'supply') {
       value = toBigNumber(value).times(`1e${tokenStore.decimals}`).toFixed()
-    } else {
+    } */else if (attribute === 'whitelist')  {
       // whitelist
       value = value.reduce((toAdd, whitelist) => {
         toAdd[0].push(whitelist.addr)
-        toAdd[1].push(true)
-        toAdd[2].push(whitelist.min * 10 ** decimals ? toFixed((whitelist.min * 10 ** decimals).toString()) : 0)
-        toAdd[3].push(whitelist.max * 10 ** decimals ? toFixed((whitelist.max * 10 ** decimals).toString()) : 0)
+        toAdd[1].push(whitelist.min * 10 ** decimals ? toFixed((whitelist.min * 10 ** decimals).toString()) : 0)
+        toAdd[2].push(whitelist.max * 10 ** decimals ? toFixed((whitelist.max * 10 ** decimals).toString()) : 0)
         return toAdd
-      }, [[], [], [], []])
+      }, [[], [], []])
+      methodInterface = ["uint256","address[]","uint256[]","uint256[]","bytes"]
+      getParams = updateWhitelistParams
     }
   }
 
-  if (attribute === 'rate') {
+  /*if (attribute === 'rate') {
     const oneTokenInETH = floorToDecimals(TRUNC_TO_DECIMALS.DECIMALS18, 1 / Number(value))
     value = web3Store.web3.utils.toWei(oneTokenInETH, 'ether')
-  }
-
-  //to do
-  /*if (attribute === 'whitelist') {
-    const totalTiers = tierStore.tiers.length
-    const currentTierIndex = crowdsaleStore.selected.initialTiersValues
-      .findIndex(tier => tier.addresses.crowdsaleAddress === addresses.crowdsaleAddress)
-
-    if (currentTierIndex <= totalTiers - 1) {
-      contractAddresses = crowdsaleStore.selected.initialTiersValues
-        .slice(currentTierIndex)
-        .map(tier => tier.addresses.crowdsaleAddress)
-    }
   }*/
+
+  console.log("value:", value)
 
   console.log("attribute:", attribute)
   console.log("methods[attribute]:", methods[attribute])
@@ -82,10 +80,9 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
   console.log("tierIndex:", tierIndex)
   console.log("value:", value)
 
-  const methodInterface = ["uint256","uint256","bytes"]
   const paramsToExec = [ tierIndex, value, methodInterface ]
 
-  const method = methodToExec(`updateTierDuration(${methodInterface.join(',')})`, "crowdsaleConsole", updateCrowdsaleParams, paramsToExec)
+  const method = methodToExec(`${methods[attribute]}(${methodInterface.join(',')})`, "crowdsaleConsole", getParams, paramsToExec)
 
   return getCurrentAccount()
     .then(account => {
@@ -101,10 +98,19 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
     })
 }
 
-const updateCrowdsaleParams = (tierIndex, duration, methodInterface) => {
+const updateDurationParams = (tierIndex, duration, methodInterface) => {
+  console.log(duration)
   const { web3 } = web3Store
   let context = generateContext(0);
   let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [tierIndex, duration, context]);
+  return encodedParameters;
+}
+
+const updateWhitelistParams = (tierIndex, [addr, min, max], methodInterface) => {
+  console.log(tierIndex, addr, min, max, methodInterface)
+  const { web3 } = web3Store
+  let context = generateContext(0);
+  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [tierIndex, addr, min, max, context]);
   return encodedParameters;
 }
 

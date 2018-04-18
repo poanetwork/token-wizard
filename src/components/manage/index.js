@@ -108,6 +108,7 @@ export class Manage extends Component {
         console.log("numOfTiers:", numOfTiers)
         getCurrentAccount()
           .then(account => {
+            contractStore.setContractProperty('crowdsale', 'account', account)
             attachToSpecificCrowdsaleContract("initCrowdsale")
               .then((initCrowdsaleContract) => {
                 console.log(initCrowdsaleContract)
@@ -525,7 +526,8 @@ export class Manage extends Component {
     }
 
     const tierStartAndEndTime = (tier, index) => {
-      const disabled = !canEditTier || !tier.updatable || this.tierHasEnded(index)
+      const disabledStartDate = true
+      const disabledEndDate = !canEditTier || !tier.updatable || this.tierHasEnded(index)
 
       return <div className='input-block-container'>
         <InputField
@@ -537,7 +539,7 @@ export class Manage extends Component {
           errorMessage={VALIDATION_MESSAGES.EDITED_START_TIME}
           onChange={e => this.updateTierStore(e, 'startTime', index)}
           description={DESCRIPTION.START_TIME}
-          disabled={disabled || this.tierHasStarted(index)}
+          disabled={disabledStartDate}
         />
         <InputField
           side='right'
@@ -548,13 +550,13 @@ export class Manage extends Component {
           errorMessage={VALIDATION_MESSAGES.EDITED_END_TIME}
           onChange={e => this.updateTierStore(e, 'endTime', index)}
           description={DESCRIPTION.END_TIME}
-          disabled={disabled}
+          disabled={disabledEndDate}
         />
       </div>
     }
 
     const tierRateAndSupply = (tier, index) => {
-      const disabled = !canEditTier || !tier.updatable || this.tierHasEnded(index) || this.tierHasStarted(index)
+      const disabled = true //!canEditTier || !tier.updatable || this.tierHasEnded(index) || this.tierHasStarted(index)
 
       return <div className='input-block-container'>
         <InputField
