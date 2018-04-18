@@ -336,8 +336,7 @@ export class Invest extends React.Component {
     const tokenAddress = getContractStoreProperty('token', 'addr')
 
     //balance
-    const investorBalanceTiers = tokenAmountOf ? (tokenAmountOf / 10 ** tokenDecimals).toString() : '0'
-    const investorBalance = investorBalanceTiers
+    const investorBalance = tokenAmountOf ? toBigNumber(tokenAmountOf).div(`1e${tokenDecimals}`).toFixed() : '0'
 
     //total supply
     const totalSupply = maxCapBeforeDecimals.toFixed()
