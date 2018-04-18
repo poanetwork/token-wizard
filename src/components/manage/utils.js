@@ -80,7 +80,7 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
   console.log("tierIndex:", tierIndex)
   console.log("value:", value)
 
-  const paramsToExec = [ tierIndex, value, methodInterface ]
+  const paramsToExec = [ tierIndex, value, methodInterface ] // tierIndex + 1 due to `The index of the tier whose duration will be updated (indexes in the tier list are 1-indexed: 0 is an invalid index)`
 
   const method = methodToExec(`${methods[attribute]}(${methodInterface.join(',')})`, "crowdsaleConsole", getParams, paramsToExec)
 
@@ -99,7 +99,7 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
 }
 
 const updateDurationParams = (tierIndex, duration, methodInterface) => {
-  console.log(duration)
+  console.log(tierIndex, duration)
   const { web3 } = web3Store
   let context = generateContext(0);
   let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [tierIndex, duration, context]);

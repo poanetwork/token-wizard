@@ -113,7 +113,6 @@ export class Manage extends Component {
               .then((initCrowdsaleContract) => {
                 console.log(initCrowdsaleContract)
                 let registryStorageObj = toJS(contractStore.registryStorage)
-                console.log("registryStorageObj:", registryStorageObj)
                 let whenCrowdsaleData = [];
                 let whenCrowdsale = initCrowdsaleContract.methods.getCrowdsaleInfo(registryStorageObj.addr, contractStore.crowdsale.execID).call();
                 whenCrowdsaleData.push(initCrowdsaleContract)
@@ -137,24 +136,25 @@ export class Manage extends Component {
                 crowdsaleData.shift();
                 crowdsaleData.shift();
                 crowdsaleData.shift();
-                let tiersAndDates = crowdsaleData.slice();
+
                 let tiers = [];
                 let tierExtendedObj = {};
-
+                let tiersAndDates = crowdsaleData.slice();
+                console.log("tiersAndDates:", tiersAndDates)
                 tiersAndDates.reduce((prevEl, curEl, index) => {
-                  let isTierDatesObj = curEl.hasOwnProperty("tier_start")
+                  let isTierObj = curEl.hasOwnProperty("tier_name")
                   if (index == 1) {
-                    tierExtendedObj = prevEl
-                  }
-
-                  if (isTierDatesObj && (index + 1) % 2 == 0) {
-                    tierExtendedObj = Object.assign(tierExtendedObj, curEl)
+                    tierExtendedObj = Object.assign(prevEl, curEl)
                     tiers.push(tierExtendedObj)
                     tierExtendedObj = {}
-                  } else if (index % 2 == 0) {
-                    tierExtendedObj = prevEl
                   } else {
-                    tierExtendedObj = Object.assign(tierExtendedObj, curEl)
+                    if (!isTierObj) {
+                      tierExtendedObj = Object.assign(tierExtendedObj, curEl)
+                      tiers.push(tierExtendedObj)
+                      tierExtendedObj = {}
+                    } else {
+                      tierExtendedObj = curEl
+                    }
                   }
                   return curEl
                 })
@@ -175,6 +175,7 @@ export class Manage extends Component {
 
                 return Promise.all(whenWhiteListsData)
                   .then((whiteListsData) => {
+                    console.log("whiteListsData:", whiteListsData)
                     let whitelistPromises = []
                     for (let tierNum = 0; tierNum < numOfTiers; tierNum++) {
                       if (tiers[tierNum].whitelist_enabled) {

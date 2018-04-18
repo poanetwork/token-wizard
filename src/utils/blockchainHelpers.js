@@ -326,8 +326,8 @@ export let attachToSpecificCrowdsaleContract = (contractName) => {
 
     let contractObj = toJS(contractStore[contractName])
     console.log(contractObj)
-    console.log(contractObj.abi)
-    console.log(contractObj.addr)
+    //console.log(contractObj.abi)
+    //console.log(contractObj.addr)
 
     attachToContract(contractObj.abi, contractObj.addr)
       .then(initCrowdsaleContract => {

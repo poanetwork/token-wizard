@@ -415,7 +415,8 @@ const getTiersParams = (methodInterface) => {
   let tierNameArr = []
   let durationArr = []
   for (let tierIndex = 1; tierIndex < tierStore.tiers.length; tierIndex++) {
-    let { whitelistEnabled, updatable, rate, supply, tier, startTime, endTime } = tierStore.tiers[tierIndex]
+    let { whitelistEnabled } = tierStore.tiers[0]
+    let { updatable, rate, supply, tier, startTime, endTime } = tierStore.tiers[tierIndex]
     let duration = formatDate(endTime) - formatDate(startTime)
     let tierNameBytes = web3.utils.fromAscii(tier)
     let encodedTierName = web3.eth.abi.encodeParameter("bytes32", tierNameBytes);
