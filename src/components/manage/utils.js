@@ -227,12 +227,14 @@ export const processTier = (tier, crowdsale, token, tierNum) => {
 
       const whitelist = newTier.whitelist.slice()
 
-      whitelistAccounts.forEach(({ addr, min, max }) => {
-        min = parseInt(toFixed(min), 10) * newTier.rate / 10 ** tokenDecimals
-        max = parseInt(toFixed(max), 10) * newTier.rate / 10 ** tokenDecimals
+      if (whitelistAccounts) {
+        whitelistAccounts.forEach(({ addr, min, max }) => {
+          min = parseInt(toFixed(min), 10) * newTier.rate / 10 ** tokenDecimals
+          max = parseInt(toFixed(max), 10) * newTier.rate / 10 ** tokenDecimals
 
-        whitelist.push({ addr, min, max, stored: true })
-      })
+          whitelist.push({ addr, min, max, stored: true })
+        })
+      }
 
       tierStore.setTierProperty(whitelist, 'whitelist', tierNum)
       tierStore.sortWhitelist(tierNum)
