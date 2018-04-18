@@ -9,6 +9,7 @@ import { TRUNC_TO_DECIMALS, VALIDATION_TYPES } from '../../utils/constants'
 import { floorToDecimals, toFixed } from '../../utils/utils'
 import { toBigNumber } from '../crowdsale/utils'
 import { generateContext } from '../stepFour/utils'
+import { toJS } from 'mobx'
 
 const { VALID } = VALIDATION_TYPES
 
@@ -107,35 +108,8 @@ const updateCrowdsaleParams = (tierIndex, duration, methodInterface) => {
   return encodedParameters;
 }
 
-//to do
-const extractWhitelistInformation = (isWhitelisted, crowdsaleMethods) => {
-  let whitelistedAccounts = []
-  const whenWhitelistedAddresses = []
-
-  if (isWhitelisted && crowdsaleMethods.whitelistedParticipantsLength) {
-    return crowdsaleMethods.whitelistedParticipantsLength().call()
-      .then(participantsCount => {
-        for (let participantIndex = 0; participantIndex < participantsCount; participantIndex++) {
-          whenWhitelistedAddresses.push(crowdsaleMethods.whitelistedParticipants(participantIndex).call())
-        }
-
-        return Promise.all(whenWhitelistedAddresses)
-      })
-      .then(whitelistedAddresses => {
-        const whenAccountData = whitelistedAddresses
-          .map(address => crowdsaleMethods.earlyParticipantWhitelist(address).call())
-
-        return Promise.all(whenAccountData)
-          .then(accountData => [isWhitelisted, whitelistedAddresses, accountData])
-      })
-  }
-
-  return Promise.resolve([isWhitelisted, whenWhitelistedAddresses, whitelistedAccounts])
-}
-
 const crowdsaleData = (tier, crowdsale, token) => {
   const { web3 } = web3Store
-  let whitelistAccounts //to do
   let startsAt = tier.tier_start
   let endsAt = tier.tier_end
   let rate = tier.tier_price
@@ -148,7 +122,9 @@ const crowdsaleData = (tier, crowdsale, token) => {
   let isUpdatable = tier.duration_is_modifiable
   let isWhitelisted = tier.whitelist_enabled
   let isFinalized = crowdsale.is_finalized
-  return Promise.resolve([
+  let whitelistAccounts = tier.whitelist
+
+  return Promise.all([
     multisigWallet,
     startsAt,
     endsAt,
@@ -221,9 +197,9 @@ export const processTier = (tier, crowdsale, token, tierNum) => {
 
       newTier.supply = maxCapBeforeDecimals ? maxCapBeforeDecimals.toFixed() : 0
 
-      return Promise.all([whitelistAccounts, rate])
+      return Promise.all([whitelistAccounts, rate, tokenDecimals])
     })
-    .then(([whitelistAccounts, rate]) => {
+    .then(([whitelistAccounts, rate, tokenDecimals]) => {
       //const { decimals } = tokenStore
       //const tokenDecimals = !isNaN(decimals) ? decimals : 0
 
@@ -245,13 +221,12 @@ export const processTier = (tier, crowdsale, token, tierNum) => {
 
       const whitelist = newTier.whitelist.slice()
 
-      //to do
-      /*whitelistAccounts.forEach(({ addr, min, max }) => {
-        min = parseInt(toFixed(min), 10) / 10 ** tokenDecimals
-        max = parseInt(toFixed(max), 10) / 10 ** tokenDecimals
+      whitelistAccounts.forEach(({ addr, min, max }) => {
+        min = parseInt(toFixed(min), 10) * newTier.rate / 10 ** tokenDecimals
+        max = parseInt(toFixed(max), 10) * newTier.rate / 10 ** tokenDecimals
 
         whitelist.push({ addr, min, max, stored: true })
-      })*/
+      })
 
       tierStore.setTierProperty(whitelist, 'whitelist', tierNum)
       tierStore.sortWhitelist(tierNum)

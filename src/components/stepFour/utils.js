@@ -67,6 +67,9 @@ const getCrowdSaleParams = (account, methodInterface) => {
   //is tier 0 whitelisted?
   const isWhitelisted = whitelistEnabled === 'yes'
 
+  //is tier updatable
+  const isUpdatable = updatable === 'on'
+
   // tie 0 name bytes32
   const tierNameBytes = web3.utils.fromAscii(tier)
   const encodedTierName = web3.eth.abi.encodeParameter("bytes32", tierNameBytes)
@@ -82,6 +85,7 @@ const getCrowdSaleParams = (account, methodInterface) => {
     durationBN,
     supplyBN,
     isWhitelisted,
+    isUpdatable,
     account
   ]
 
@@ -89,8 +93,6 @@ const getCrowdSaleParams = (account, methodInterface) => {
 
   let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, paramsCrowdsale);
   return encodedParameters;
-  //to do
-  //updatable === 'on',
 }
 
 export const deployCrowdsale = () => {
@@ -107,7 +109,7 @@ export const deployCrowdsale = () => {
           .then((account) => {
             contractStore.setContractProperty('crowdsale', 'account', account)
 
-            const methodInterface = ["address","uint256","bytes32","uint256","uint256","uint256","bool","address"]
+            const methodInterface = ["address","uint256","bytes32","uint256","uint256","uint256","bool","bool","address"]
 
             let params = [ account, methodInterface ];
 
@@ -213,9 +215,6 @@ export const generateContext = (weiToSend) => {
 
 const getTokenParams = (token, methodInterface) => {
   const { web3 } = web3Store
-  //to do
-  //const whitelistWithGlobalMinCap = tierStore.tiers[0].whitelistEnabled !== 'yes' && tierStore.globalMinCap
-  //const minCap = whitelistWithGlobalMinCap ? toFixed(tierStore.globalMinCap * toBigNumber(10).pow(token.decimals)).toString() : 0
 
   let paramsToken = [
     web3.utils.fromAscii(token.name),

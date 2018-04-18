@@ -48,7 +48,7 @@ export let getTokenData = (initCrowdsaleContract, execID, account) => {
         totalSupply = totalSupply * toBigNumber(10).pow(Number(decimals))
         tokenStore.setProperty('supply', totalSupply)
         console.log('token supply: ' + totalSupply)
-        balanceOf = toFixed(balanceOf * toBigNumber(10).pow(Number(decimals)))
+        balanceOf = toFixed(balanceOf)
         const tokenAmountOf = crowdsalePageStore.tokenAmountOf ? crowdsalePageStore.tokenAmountOf : 0
         crowdsalePageStore.setProperty('tokenAmountOf', tokenAmountOf + parseInt(balanceOf, 10))
         console.log('token balanceOf: ' + balanceOf)

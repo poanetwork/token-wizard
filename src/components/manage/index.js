@@ -115,6 +115,7 @@ export class Manage extends Component {
                 console.log("registryStorageObj:", registryStorageObj)
                 let whenCrowdsaleData = [];
                 let whenCrowdsale = initCrowdsaleContract.methods.getCrowdsaleInfo(registryStorageObj.addr, contractStore.crowdsale.execID).call();
+                whenCrowdsaleData.push(initCrowdsaleContract)
                 whenCrowdsaleData.push(whenCrowdsale)
                 let whenToken = initCrowdsaleContract.methods.getTokenInfo(registryStorageObj.addr, contractStore.crowdsale.execID).call();
                 whenCrowdsaleData.push(whenToken)
@@ -124,41 +125,100 @@ export class Manage extends Component {
                   whenCrowdsaleData.push(whenTierData);
                   whenCrowdsaleData.push(whenTierDates);
                 }
-
                 return Promise.all(whenCrowdsaleData)
               })
-              .then(crowdsaleData => {
-                console.log(crowdsaleData)
-                let crowdsale = crowdsaleData[0]
-                let token = crowdsaleData[1]
+              .then((crowdsaleData) => {
+                console.log("crowdsaleData:");
+                console.log(crowdsaleData);
+                let initCrowdsaleContract = crowdsaleData[0];
+                let crowdsale = crowdsaleData[1];
+                let token = crowdsaleData[2];
                 crowdsaleData.shift();
                 crowdsaleData.shift();
-                let tiersAndTiersDates = crowdsaleData.slice();
+                crowdsaleData.shift();
+                let tiersAndDates = crowdsaleData.slice();
                 let tiers = [];
-                tiersAndTiersDates.reduce((prevEl, curEl, index) => {
+                let tierExtendedObj = {};
+
+                tiersAndDates.reduce((prevEl, curEl, index) => {
                   let isTierDatesObj = curEl.hasOwnProperty("tier_start")
-                  if (isTierDatesObj && index % 2 != 0) {
-                    let tierExtendedObj = Object.assign(prevEl, curEl)
+                  if (index == 1) {
+                    tierExtendedObj = prevEl
+                  }
+
+                  if (isTierDatesObj && (index + 1) % 2 == 0) {
+                    tierExtendedObj = Object.assign(tierExtendedObj, curEl)
                     tiers.push(tierExtendedObj)
+                    tierExtendedObj = {}
+                  } else if (index % 2 == 0) {
+                    tierExtendedObj = prevEl
+                  } else {
+                    tierExtendedObj = Object.assign(tierExtendedObj, curEl)
                   }
                   return curEl
                 })
+                console.log("tiers:")
                 console.log(tiers)
-                return tiers.reduce((promise, tier, index) => {
-                  return promise.then(() => processTier(tier, crowdsale, token, index))
-                }, Promise.resolve())
+
+                //get whitelists for tiers
+                let whenWhiteListsData = [];
+                let registryStorageObj = toJS(contractStore.registryStorage)
+                for (let tierNum = 0; tierNum < numOfTiers; tierNum++) {
+                  if (tiers[tierNum].whitelist_enabled) {
+                    let whenTierWhitelist = initCrowdsaleContract.methods.getTierWhitelist(registryStorageObj.addr, contractStore.crowdsale.execID, tierNum).call()
+                    whenWhiteListsData.push(whenTierWhitelist);
+                  } else {
+                    whenWhiteListsData.push(null);
+                  }
+                }
+
+                return Promise.all(whenWhiteListsData)
+                  .then((whiteListsData) => {
+                    let whitelistPromises = []
+                    for (let tierNum = 0; tierNum < numOfTiers; tierNum++) {
+                      if (tiers[tierNum].whitelist_enabled) {
+                        tiers[tierNum].whitelist = []
+                        for (let whiteListItemNum = 0; whiteListItemNum < whiteListsData[tierNum].whitelist.length; whiteListItemNum++) {
+                          let newWhitelistPromise = new Promise((resolve) => {
+                            initCrowdsaleContract.methods.getWhitelistStatus(registryStorageObj.addr, contractStore.crowdsale.execID, tierNum, whiteListsData[tierNum].whitelist[whiteListItemNum]).call()
+                              .then(whitelistStatus => {
+                                console.log("whitelistStatus:", whitelistStatus)
+                                tiers[tierNum].whitelist.push({
+                                  addr: whiteListsData[tierNum].whitelist[whiteListItemNum],
+                                  min: whitelistStatus.minimum_contribution,
+                                  max: whitelistStatus.max_spend_remaining
+                                })
+                                resolve();
+                              })
+                          })
+                          whitelistPromises.push(newWhitelistPromise)
+                        }
+                      }
+                    }
+                    return Promise.all(whitelistPromises)
+                      .then(() => {
+                        console.log(tiers)
+                        return tiers.reduce((promise, tier, index) => {
+                          return promise.then(() => processTier(tier, crowdsale, token, index))
+                        }, Promise.resolve())
+                      })
+                  })
               })
               .then(this.updateCrowdsaleStatus)
               .catch(err => {
-                this.setState({ loading: false })
+                this.hideLoader()
                 console.log(err)
               })
               .then(this.hideLoader)
           })
           .catch(err => {
-            this.setState({ loading: false })
             console.log(err)
+            this.hideLoader()
           })
+      })
+      .catch(err => {
+        console.log(err)
+        this.hideLoader()
       })
   }
 
@@ -197,13 +257,12 @@ export class Manage extends Component {
       .then((initCrowdsaleContract) => {
         let registryStorageObj = toJS(contractStore.registryStorage)
         const whenCrowdsaleInfo = initCrowdsaleContract.methods.getCrowdsaleInfo(registryStorageObj.addr, contractStore.crowdsale.execID).call();
-
-        return Promise.all([whenCrowdsaleInfo])
+        const whenIsCrowdsaleFull = initCrowdsaleContract.methods.isCrowdsaleFull(registryStorageObj.addr, contractStore.crowdsale.execID).call();
+        return Promise.all([whenCrowdsaleInfo, whenIsCrowdsaleFull])
       })
       .then(
-        ([crowdsaleInfo]) => {
-          //to do: isCrowdsaleFull
-          const isCrowdsaleFull = false
+        ([crowdsaleInfo, isCrowdsaleFullObj]) => {
+          const isCrowdsaleFull = isCrowdsaleFullObj.is_crowdsale_full
           const isFinalized = crowdsaleInfo.is_finalized
           if (isFinalized) {
             this.setState({ canFinalize: false })
