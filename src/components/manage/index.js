@@ -300,7 +300,7 @@ export class Manage extends Component {
               if (result.value) {
                 this.showLoader()
 
-                getCurrentAccount
+                getCurrentAccount()
                   .then(account => {
                     const methodInterface = ["bytes"]
                     let paramsToExec = [methodInterface]
