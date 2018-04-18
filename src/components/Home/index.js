@@ -5,14 +5,53 @@ import CrowdsalesList from '../Common/CrowdsalesList'
 import { Loader } from '../Common/Loader'
 import { loadRegistryAddresses } from '../../utils/blockchainHelpers'
 import { ModalContainer } from '../Common/ModalContainer'
+import { toast } from '../../utils/utils';
+import { TOAST } from '../../utils/constants';
+import { inject, observer } from 'mobx-react';
+import { checkWeb3, getNetworkVersion, } from '../../utils/blockchainHelpers'
+import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
 
+const DOWNLOAD_STATUS = {
+  PENDING: 'pending',
+  SUCCESS: 'success',
+  FAILURE: 'failure'
+}
+
+@inject('web3Store', 'generalStore') @observer
 export class Home extends Component {
   constructor (props) {
     super(props)
     this.state = {
       showModal: false,
-      loading: false
+      loading: false,
+      contractsDownloaded: DOWNLOAD_STATUS.PENDING
     }
+  }
+
+  componentDidMount() {
+    let { generalStore,web3Store } = this.props;
+    checkWeb3(web3Store.web3);
+
+    getNetworkVersion().then(networkID => {
+      generalStore.setProperty('networkID', networkID)
+      getWhiteListWithCapCrowdsaleAssets(networkID)
+    }).then(
+        () => {
+          this.setState({
+            contractsDownloaded: DOWNLOAD_STATUS.SUCCESS
+          })
+        },
+        (e) => {
+          console.error('Error downloading contracts', e)
+          toast.showToaster({
+            type: TOAST.TYPE.ERROR,
+            message: 'The contracts could not be downloaded.Please try to refresh the page. If the problem persists, try again later.'
+          })
+          this.setState({
+            contractsDownloaded: DOWNLOAD_STATUS.FAILURE
+          })
+        }
+      )
   }
 
   chooseContract = () => {
@@ -55,7 +94,7 @@ export class Home extends Component {
               </p>
               <div className="buttons">
                 <Link to='/1'><span className="button button_fill">New crowdsale</span></Link>
-                <div onClick={() => this.chooseContract()} className="button button_outline">Choose Contract</div>
+                <div onClick={() => this.chooseContract()} className="button button_outline">Choose Crowdsale</div>
               </div>
             </div>
           </div>

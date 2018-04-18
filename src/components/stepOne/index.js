@@ -2,19 +2,12 @@ import React from 'react'
 import '../../assets/stylesheets/application.css';
 import { checkWeb3, getNetworkVersion, } from '../../utils/blockchainHelpers'
 import { Link } from 'react-router-dom';
-import { setFlatFileContentToState, toast } from '../../utils/utils';
+import { setFlatFileContentToState } from '../../utils/utils';
 import { StepNavigation } from '../Common/StepNavigation';
-import { NAVIGATION_STEPS, TOAST } from '../../utils/constants';
-import { inject, observer } from 'mobx-react';
-import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
+import { NAVIGATION_STEPS } from '../../utils/constants';
 const { CROWDSALE_CONTRACT } = NAVIGATION_STEPS;
 
-const DOWNLOAD_STATUS = {
-  PENDING: 'pending',
-  SUCCESS: 'success',
-  FAILURE: 'failure'
-}
-
+//to do: downloadStatus is not used
 const ContinueButton = ({downloadStatus}) => {
   return (
     <Link to="/2">
@@ -23,42 +16,7 @@ const ContinueButton = ({downloadStatus}) => {
   );
 };
 
-@inject('contractStore', 'web3Store', 'generalStore') @observer
 export class stepOne extends React.Component {
-
-  constructor() {
-    super()
-
-    this.state = {
-      contractsDownloaded: DOWNLOAD_STATUS.PENDING
-    }
-  }
-
-  componentDidMount() {
-    let { generalStore,web3Store } = this.props;
-    checkWeb3(web3Store.web3);
-
-    getNetworkVersion().then(networkID => {
-      generalStore.setProperty('networkID', networkID)
-      getWhiteListWithCapCrowdsaleAssets(networkID)
-    }).then(
-        () => {
-          this.setState({
-            contractsDownloaded: DOWNLOAD_STATUS.SUCCESS
-          })
-        },
-        (e) => {
-          console.error('Error downloading contracts', e)
-          toast.showToaster({
-            type: TOAST.TYPE.ERROR,
-            message: 'The contracts could not be downloaded.Please try to refresh the page. If the problem persists, try again later.'
-          })
-          this.setState({
-            contractsDownloaded: DOWNLOAD_STATUS.FAILURE
-          })
-        }
-      )
-  }
 
   render() {
     return (
@@ -88,7 +46,7 @@ export class stepOne extends React.Component {
           </div>
         </div>
         <div className="button-container">
-          <ContinueButton downloadStatus={this.state.contractsDownloaded} />
+          <ContinueButton />
         </div>
       </section>
     )
