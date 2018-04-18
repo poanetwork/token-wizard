@@ -268,7 +268,7 @@ export class Invest extends React.Component {
 
     const opts = {
       from: accounts[0],
-      value: weiToSend,
+      value: weiToSend.integerValue(BigNumber.ROUND_CEIL),
       gasPrice: generalStore.gasPrice
     }
     console.log(opts)
