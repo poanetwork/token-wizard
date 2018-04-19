@@ -1,0 +1,386 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TokenDecimals should render TokenDecimals component 1`] = `
+<TokenDecimals
+  __versions={
+    Object {
+      "final-form": "4.2.0",
+      "react-final-form": "3.1.4",
+    }
+  }
+  batch={[Function]}
+  blur={[Function]}
+  change={[Function]}
+  dirty={false}
+  dirtySinceLastSubmit={false}
+  errorStyle={
+    Object {
+      "color": "red",
+      "fontWeight": "bold",
+    }
+  }
+  errors={Object {}}
+  focus={[Function]}
+  handleSubmit={[Function]}
+  initialize={[Function]}
+  invalid={false}
+  mutators={Object {}}
+  pristine={true}
+  reset={[Function]}
+  submitFailed={false}
+  submitSucceeded={false}
+  submitting={false}
+  touched={Object {}}
+  valid={true}
+  validating={false}
+  values={Object {}}
+  visited={Object {}}
+/>
+`;
+
+exports[`TokenDecimals should render TokenDecimals component and its children 1`] = `
+<ReactFinalForm(4.2.0)(3.1.4)
+  component={[Function]}
+  errorStyle={
+    Object {
+      "color": "red",
+      "fontWeight": "bold",
+    }
+  }
+  onSubmit={[Function]}
+>
+  <TokenDecimals
+    __versions={
+      Object {
+        "final-form": "4.2.0",
+        "react-final-form": "3.1.4",
+      }
+    }
+    batch={[Function]}
+    blur={[Function]}
+    change={[Function]}
+    dirty={false}
+    dirtySinceLastSubmit={false}
+    errorStyle={
+      Object {
+        "color": "red",
+        "fontWeight": "bold",
+      }
+    }
+    errors={Object {}}
+    focus={[Function]}
+    handleSubmit={[Function]}
+    initialize={[Function]}
+    invalid={false}
+    mutators={Object {}}
+    pristine={true}
+    reset={[Function]}
+    submitFailed={false}
+    submitSucceeded={false}
+    submitting={false}
+    touched={Object {}}
+    valid={true}
+    validating={false}
+    values={Object {}}
+    visited={Object {}}
+  >
+    <Field
+      component={[Function]}
+      description="Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous)."
+      errorStyle={
+        Object {
+          "color": "red",
+          "fontWeight": "bold",
+        }
+      }
+      format={[Function]}
+      label="Decimals"
+      name="decimals"
+      parse={[Function]}
+      side="left"
+      type="text"
+      validate={[Function]}
+    >
+      <InputField2
+        description="Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous)."
+        errorStyle={
+          Object {
+            "color": "red",
+            "fontWeight": "bold",
+          }
+        }
+        input={
+          Object {
+            "name": "decimals",
+            "onBlur": [Function],
+            "onChange": [Function],
+            "onFocus": [Function],
+            "value": "",
+          }
+        }
+        label="Decimals"
+        meta={
+          Object {
+            "active": false,
+            "data": Object {},
+            "dirty": false,
+            "dirtySinceLastSubmit": false,
+            "error": "This field is required",
+            "initial": undefined,
+            "invalid": true,
+            "length": undefined,
+            "pristine": true,
+            "submitError": undefined,
+            "submitFailed": false,
+            "submitSucceeded": false,
+            "touched": false,
+            "valid": false,
+            "visited": false,
+          }
+        }
+        side="left"
+        type="text"
+      >
+        <div
+          className="left"
+        >
+          <label
+            className="label"
+            htmlFor="decimals"
+          >
+            Decimals
+          </label>
+          <input
+            autoComplete="off"
+            className="input"
+            id="decimals"
+            name="decimals"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            type="text"
+            value=""
+          />
+          <p
+            className="description"
+          >
+            Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous).
+          </p>
+          <Error
+            errorStyle={
+              Object {
+                "color": "red",
+                "fontWeight": "bold",
+              }
+            }
+            name="decimals"
+          >
+            <Field
+              format={[Function]}
+              name="decimals"
+              parse={[Function]}
+              render={[Function]}
+              subscription={
+                Object {
+                  "error": true,
+                  "pristine": true,
+                  "touched": true,
+                }
+              }
+            >
+              <span>
+                <p
+                  className="error"
+                  key="0"
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontWeight": "bold",
+                    }
+                  }
+                />
+              </span>
+            </Field>
+          </Error>
+        </div>
+      </InputField2>
+    </Field>
+  </TokenDecimals>
+</ReactFinalForm(4.2.0)(3.1.4)>
+`;
+
+exports[`TokenDecimals should render TokenDecimals component and its children, with input field disabled 1`] = `
+<ReactFinalForm(4.2.0)(3.1.4)
+  component={[Function]}
+  disabled={true}
+  errorStyle={
+    Object {
+      "color": "red",
+      "fontWeight": "bold",
+    }
+  }
+  onSubmit={[Function]}
+>
+  <TokenDecimals
+    __versions={
+      Object {
+        "final-form": "4.2.0",
+        "react-final-form": "3.1.4",
+      }
+    }
+    batch={[Function]}
+    blur={[Function]}
+    change={[Function]}
+    dirty={false}
+    dirtySinceLastSubmit={false}
+    disabled={true}
+    errorStyle={
+      Object {
+        "color": "red",
+        "fontWeight": "bold",
+      }
+    }
+    errors={Object {}}
+    focus={[Function]}
+    handleSubmit={[Function]}
+    initialize={[Function]}
+    invalid={false}
+    mutators={Object {}}
+    pristine={true}
+    reset={[Function]}
+    submitFailed={false}
+    submitSucceeded={false}
+    submitting={false}
+    touched={Object {}}
+    valid={true}
+    validating={false}
+    values={Object {}}
+    visited={Object {}}
+  >
+    <Field
+      component={[Function]}
+      description="Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous)."
+      disabled={true}
+      errorStyle={
+        Object {
+          "color": "red",
+          "fontWeight": "bold",
+        }
+      }
+      format={[Function]}
+      label="Decimals"
+      name="decimals"
+      parse={[Function]}
+      side="left"
+      type="text"
+      validate={[Function]}
+    >
+      <InputField2
+        description="Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous)."
+        disabled={true}
+        errorStyle={
+          Object {
+            "color": "red",
+            "fontWeight": "bold",
+          }
+        }
+        input={
+          Object {
+            "name": "decimals",
+            "onBlur": [Function],
+            "onChange": [Function],
+            "onFocus": [Function],
+            "value": "",
+          }
+        }
+        label="Decimals"
+        meta={
+          Object {
+            "active": false,
+            "data": Object {},
+            "dirty": false,
+            "dirtySinceLastSubmit": false,
+            "error": "This field is required",
+            "initial": undefined,
+            "invalid": true,
+            "length": undefined,
+            "pristine": true,
+            "submitError": undefined,
+            "submitFailed": false,
+            "submitSucceeded": false,
+            "touched": false,
+            "valid": false,
+            "visited": false,
+          }
+        }
+        side="left"
+        type="text"
+      >
+        <div
+          className="left"
+        >
+          <label
+            className="label"
+            htmlFor="decimals"
+          >
+            Decimals
+          </label>
+          <input
+            autoComplete="off"
+            className="input"
+            disabled={true}
+            id="decimals"
+            name="decimals"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            type="text"
+            value=""
+          />
+          <p
+            className="description"
+          >
+            Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous).
+          </p>
+          <Error
+            errorStyle={
+              Object {
+                "color": "red",
+                "fontWeight": "bold",
+              }
+            }
+            name="decimals"
+          >
+            <Field
+              format={[Function]}
+              name="decimals"
+              parse={[Function]}
+              render={[Function]}
+              subscription={
+                Object {
+                  "error": true,
+                  "pristine": true,
+                  "touched": true,
+                }
+              }
+            >
+              <span>
+                <p
+                  className="error"
+                  key="0"
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontWeight": "bold",
+                    }
+                  }
+                />
+              </span>
+            </Field>
+          </Error>
+        </div>
+      </InputField2>
+    </Field>
+  </TokenDecimals>
+</ReactFinalForm(4.2.0)(3.1.4)>
+`;
