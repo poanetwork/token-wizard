@@ -379,9 +379,11 @@ function getTokenData () {
                 return console.log(err)
               }
 
-              console.log('balanceOf: ' + balanceOf)
-              const tokenAmountOf = crowdsalePageStore.tokenAmountOf ? crowdsalePageStore.tokenAmountOf : 0
-              crowdsalePageStore.setProperty('tokenAmountOf', tokenAmountOf + parseInt(balanceOf, 10))
+              const balance = toBigNumber(balanceOf)
+              console.log('balanceOf:', balance.toFixed())
+
+              const currentAmount = crowdsalePageStore.tokenAmountOf || 0
+              crowdsalePageStore.setProperty('tokenAmountOf', balance.plus(currentAmount).toFixed())
 
               if (propsCount === cbCount) {
                 resolve()
@@ -474,9 +476,11 @@ function getTokenData () {
                         return console.log(err)
                       }
 
-                      console.log('balanceOf:', balanceOf)
-                      const tokenAmountOf = crowdsalePageStore.tokenAmountOf ? crowdsalePageStore.tokenAmountOf : 0
-                      crowdsalePageStore.setProperty('tokenAmountOf', tokenAmountOf + parseInt(balanceOf, 10))
+                      const balance = toBigNumber(balanceOf)
+                      console.log('balanceOf:', balance.toFixed())
+
+                      const currentAmount = crowdsalePageStore.tokenAmountOf || 0
+                      crowdsalePageStore.setProperty('tokenAmountOf', balance.plus(currentAmount).toFixed())
 
                       if (propsCount === cbCount) {
                         resolve()
