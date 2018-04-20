@@ -126,3 +126,30 @@ export const composeValidators = (...validators) => (value) => {
   return errors.length ? errors : undefined
 }
 
+export const validateTierStartDate  = (index) => (value, values) => {
+  const listOfValidations = [
+    isRequired(),
+    isDateInFuture(),
+    isDatePreviousThan("Should be previous than same tier's End Time")(values.tiers[index].endTime),
+  ]
+
+  if (index > 0) {
+    listOfValidations.push(isDateSameOrLaterThan("Should be same or later than previous tier's End Time")(values.tiers[index - 1].endTime))
+  }
+
+  return composeValidators(...listOfValidations)(value)
+}
+
+export const validateTierEndDate  = (index) => (value, values) => {
+  const listOfValidations = [
+    isRequired(),
+    isDateInFuture(),
+    isDateLaterThan("Should be later than same tier's Start Time")(values.tiers[index].startTime),
+  ]
+
+  if (index < values.tiers.length - 1) {
+    listOfValidations.push(isDateSameOrPreviousThan("Should be same or previous than next tier's Start Time")(values.tiers[index + 1].startTime))
+  }
+
+  return composeValidators(...listOfValidations)(value)
+}

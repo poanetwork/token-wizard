@@ -2,7 +2,6 @@ import React from "react";
 import "../../assets/stylesheets/application.css";
 import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
-import { Link } from "react-router-dom";
 import { setExistingContractParams, getNetworkVersion, getNetWorkNameById } from "../../utils/blockchainHelpers";
 import { StepNavigation } from "../Common/StepNavigation";
 import { NAVIGATION_STEPS, CHAINS } from '../../utils/constants'
