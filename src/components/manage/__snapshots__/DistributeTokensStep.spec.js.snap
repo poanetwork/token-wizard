@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DistributeTokensStep should render the component with active button 1`] = `
+<div
+  className="steps-content container"
+>
+  <div
+    className="about-step"
+  >
+    <div
+      className="swal2-icon swal2-info warning-logo"
+    >
+      !
+    </div>
+    <p
+      className="title"
+    >
+      Distribute reserved tokens
+    </p>
+    <p
+      className="description"
+    >
+      Reserved tokens distribution is the last step of the crowdsale before finalization. You can make it after the end of the last tier or if hard cap is reached. If you reserved more then 100 addresses for your crowdsale, the distribution will be executed in batches with 100 reserved addresses per batch. Amount of batches is equal to amount of transactions
+    </p>
+    <a
+      href="/#"
+      onClick={[Function]}
+    >
+      <span
+        className="button button_fill"
+      >
+        Distribute tokens
+      </span>
+    </a>
+  </div>
+</div>
+`;
+
+exports[`DistributeTokensStep should render the component with disabled button 1`] = `
+<div
+  className="steps-content container"
+>
+  <div
+    className="about-step"
+  >
+    <div
+      className="swal2-icon swal2-info warning-logo"
+    >
+      !
+    </div>
+    <p
+      className="title"
+    >
+      Distribute reserved tokens
+    </p>
+    <p
+      className="description"
+    >
+      Reserved tokens distribution is the last step of the crowdsale before finalization. You can make it after the end of the last tier or if hard cap is reached. If you reserved more then 100 addresses for your crowdsale, the distribution will be executed in batches with 100 reserved addresses per batch. Amount of batches is equal to amount of transactions
+    </p>
+    <a
+      href="/#"
+      onClick={[Function]}
+    >
+      <span
+        className="button button_disabled"
+      >
+        Distribute tokens
+      </span>
+    </a>
+  </div>
+</div>
+`;
