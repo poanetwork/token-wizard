@@ -16,7 +16,9 @@ export default function ({ rows, decimals }, cb) {
     if (row.length !== 3) return
 
     let valueErrors = undefined
-    const [addr, dim, val] = row
+    let [addr, dim, val] = row
+    dim = dim.trim().toLowerCase()
+    val = val.trim()
 
     // `dim` must be either 'tokens' or 'percentage'
     if (dim === 'tokens') {
