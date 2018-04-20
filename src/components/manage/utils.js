@@ -5,12 +5,11 @@ import {
   methodToExec
 } from '../../utils/blockchainHelpers'
 import { contractStore, crowdsaleStore, generalStore, tierStore, tokenStore, web3Store } from '../../stores'
-import { TRUNC_TO_DECIMALS, VALIDATION_TYPES } from '../../utils/constants'
-import { floorToDecimals, toFixed } from '../../utils/utils'
+import { VALIDATION_TYPES } from '../../utils/constants'
+import { toFixed } from '../../utils/utils'
 import { toBigNumber } from '../crowdsale/utils'
 import { generateContext } from '../stepFour/utils'
 import { BigNumber } from 'bignumber.js'
-import { toJS } from 'mobx'
 
 const { VALID } = VALIDATION_TYPES
 
@@ -28,7 +27,6 @@ const formatDate = timestamp => {
 
 export const updateTierAttribute = (attribute, value, tierIndex) => {
   let methodInterface
-  let methodToExecName
   let getParams
   const { decimals } = tokenStore
   let methods = {

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
-import { Link } from 'react-router-dom'
 import { TOAST, VALIDATION_TYPES } from '../../utils/constants'
 import '../../assets/stylesheets/application.css'
 import {
@@ -23,13 +22,11 @@ import { getFieldsToUpdate, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
 import { getTiers } from '../crowdsale/utils'
 import { generateContext } from '../stepFour/utils'
-import classNames from 'classnames'
 import { toJS } from 'mobx'
 import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import { AboutCrowdsale } from './AboutCrowdsale'
 import { FinalizeCrowdsaleStep } from './FinalizeCrowdsaleStep'
-import { DistributeTokensStep } from './DistributeTokensStep'
 import { ManageForm } from './ManageForm'
 
 const { VALID } = VALIDATION_TYPES

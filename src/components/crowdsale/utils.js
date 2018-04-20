@@ -47,10 +47,11 @@ export let getTokenData = (initCrowdsaleContract, execID, account) => {
         totalSupply = totalSupply * toBigNumber(10).pow(Number(decimals))
         tokenStore.setProperty('supply', totalSupply)
         console.log('token supply: ' + totalSupply)
-        balanceOf = toFixed(balanceOf)
+        balanceOf = Number(balanceOf).toFixed()
+        console.log('balanceOf: ' + balanceOf)
         const tokenAmountOf = crowdsalePageStore.tokenAmountOf ? crowdsalePageStore.tokenAmountOf : 0
+        console.log('tokenAmountOf: ' + tokenAmountOf)
         crowdsalePageStore.setProperty('tokenAmountOf', tokenAmountOf + parseInt(balanceOf, 10))
-        console.log('token balanceOf: ' + balanceOf)
 
         resolve()
       })
@@ -187,7 +188,6 @@ export const getTiers = () => {
           return methods.getCrowdsaleTierList(registryStorageObj.addr, contractStore.crowdsale.execID).call()
             .then(tiers => {
               console.log("tiers:", tiers)
-
               return Promise.resolve(tiers.length)
             })
         })

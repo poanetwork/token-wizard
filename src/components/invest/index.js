@@ -33,6 +33,8 @@ import CountdownTimer from './CountdownTimer'
 import classNames from 'classnames'
 import moment from 'moment'
 import { BigNumber } from 'bignumber.js'
+import { Form } from 'react-final-form'
+import { InvestForm } from './InvestForm'
 import { generateContext } from '../stepFour/utils'
 
 @inject(
@@ -43,8 +45,7 @@ import { generateContext } from '../stepFour/utils'
   'tokenStore',
   'generalStore',
   'investStore',
-  'gasPriceStore',
-  'generalStore'
+  'gasPriceStore'
 )
 @observer
 export class Invest extends React.Component {
@@ -215,12 +216,10 @@ export class Invest extends React.Component {
     if (this.state.timeInterval) clearInterval(this.state.timeInterval)
   }
 
-  investToTokens = event => {
+  investToTokens = () => {
     const { investStore, crowdsalePageStore, web3Store } = this.props
     const { startDate } = crowdsalePageStore
     const { web3 } = web3Store
-
-    event.preventDefault()
 
     if (!this.isValidToken(investStore.tokensToInvest)) {
       this.setState({ pristineTokenInput: false })
@@ -282,7 +281,7 @@ export class Invest extends React.Component {
 
     const opts = {
       from: account,
-      value: weiToSend,
+      value: weiToSend.integerValue(BigNumber.ROUND_CEIL),
       gasPrice: generalStore.gasPrice
     }
     console.log(opts)
@@ -318,9 +317,8 @@ export class Invest extends React.Component {
     }
   }
 
-  tokensToInvestOnChange = event => {
-    this.setState({ pristineTokenInput: false })
-    this.props.investStore.setProperty('tokensToInvest', event.target.value)
+  updateInvestThrough = (investThrough) => {
+    this.setState({ investThrough })
   }
 
   isValidToken(token) {
@@ -328,10 +326,9 @@ export class Invest extends React.Component {
   }
 
   render () {
-    const { crowdsalePageStore, tokenStore, contractStore, investStore } = this.props
+    const { crowdsalePageStore, tokenStore, contractStore } = this.props
     const { tokenAmountOf } = crowdsalePageStore
     const { crowdsale } = contractStore
-    const { tokensToInvest } = investStore
 
     const { curAddr, pristineTokenInput, investThrough, crowdsaleExecID, web3Available, toNextTick, nextTick } = this.state
     const { days, hours, minutes, seconds } = toNextTick
@@ -345,27 +342,13 @@ export class Invest extends React.Component {
     const maxCapBeforeDecimals = toBigNumber(maximumSellableTokens).div(`1e${tokenDecimals}`)
 
     //balance
-    const investorBalanceTiers = tokenAmountOf ? (tokenAmountOf / 10 ** tokenDecimals).toString() : '0'
-    const investorBalance = investorBalanceTiers
+    const investorBalance = tokenAmountOf ? toBigNumber(tokenAmountOf).div(`1e${tokenDecimals}`).toFixed() : '0'
 
     //total supply
     const totalSupply = maxCapBeforeDecimals.toFixed()
 
-    let invalidTokenDescription = null
-    if (!pristineTokenInput && !this.isValidToken(tokensToInvest)) {
-      invalidTokenDescription = (
-        <p className="error">
-          Number of tokens to buy should be positive and should not exceed {decimals} decimals.
-        </p>
-      )
-    }
-
     const QRPaymentProcessElement = investThrough === INVESTMENT_OPTIONS.QR ?
       <QRPaymentProcess crowdsaleExecID={crowdsaleExecID} /> :
-      null
-
-    const ContributeButton = investThrough === INVESTMENT_OPTIONS.METAMASK ?
-      <a className="button button_fill" onClick={this.investToTokens}>Contribute</a> :
       null
 
     const rightColumnClasses = classNames('invest-table-cell', 'invest-table-cell_right', {
@@ -428,25 +411,14 @@ export class Invest extends React.Component {
               Your balance in tokens.
             </p>
           </div>
-          <form className="invest-form" onSubmit={this.investToTokens}>
-            <label className="invest-form-label">Choose amount to invest</label>
-            <div className="invest-form-input-container">
-              <input type="text" className="invest-form-input" value={tokensToInvest} onChange={this.tokensToInvestOnChange} placeholder="0"/>
-              <div className="invest-form-label">TOKENS</div>
-              {invalidTokenDescription}
-            </div>
-            <div className="invest-through-container">
-              <select value={investThrough} className="invest-through" onChange={(e) => this.setState({ investThrough: e.target.value })}>
-                <option disabled={!web3Available} value={INVESTMENT_OPTIONS.METAMASK}>Metamask {!web3Available ? ' (not available)' : null}</option>
-                <option value={INVESTMENT_OPTIONS.QR}>QR</option>
-              </select>
-              { ContributeButton }
-            </div>
-            <p className="description">
-              Think twice before contributing to Crowdsales. Tokens will be deposited on a wallet you used to buy tokens.
-            </p>
-          </form>
-          { QRPaymentProcessElement }
+          <Form
+            onSubmit={this.investToTokens}
+            component={InvestForm}
+            investThrough={investThrough}
+            updateInvestThrough={this.updateInvestThrough}
+            web3Available={web3Available}
+          />
+          {QRPaymentProcessElement}
         </div>
       </div>
       <Loader show={this.state.loading}></Loader>
