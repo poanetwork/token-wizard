@@ -72,9 +72,9 @@ export class Manage extends Component {
     getNetworkVersion().then(networkID => {
       generalStore.setProperty('networkID', networkID)
       getWhiteListWithCapCrowdsaleAssets(networkID)
-        .then(_newState => {
-          this.setState(_newState)
-          this.extractContractsData()
+        .then(_newState => { this.setState(_newState) })
+        .then(this.extractContractsData)
+        .then(() => {
           this.initialTiers = JSON.parse(JSON.stringify(tierStore.tiers))
         })
     })
@@ -110,13 +110,13 @@ export class Manage extends Component {
     const { contractStore, match } = this.props
     contractStore.setContractProperty('crowdsale', 'execID', match.params.crowdsaleExecID)
 
-    getTiers()
+    return getTiers()
       .then(numOfTiers => {
         console.log("numOfTiers:", numOfTiers)
-        getCurrentAccount()
+        return getCurrentAccount()
           .then(account => {
             contractStore.setContractProperty('crowdsale', 'account', account)
-            attachToSpecificCrowdsaleContract("initCrowdsale")
+            return attachToSpecificCrowdsaleContract("initCrowdsale")
               .then((initCrowdsaleContract) => {
                 console.log(initCrowdsaleContract)
                 let registryStorageObj = toJS(contractStore.registryStorage)
