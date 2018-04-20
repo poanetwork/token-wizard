@@ -9,6 +9,7 @@ import { TRUNC_TO_DECIMALS, VALIDATION_TYPES } from '../../utils/constants'
 import { floorToDecimals, toFixed } from '../../utils/utils'
 import { toBigNumber } from '../crowdsale/utils'
 import { generateContext } from '../stepFour/utils'
+import { BigNumber } from 'bignumber.js'
 import { toJS } from 'mobx'
 
 const { VALID } = VALIDATION_TYPES
@@ -39,7 +40,6 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
   }
 
   if (attribute === 'startTime' || attribute === 'endTime' || attribute === 'supply' || attribute === 'whitelist') {
-
     /*if (attribute === 'startTime') {
       value = toFixed(parseInt(Date.parse(value) / 1000, 10).toString())
     } else */
@@ -56,10 +56,16 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
       value = toBigNumber(value).times(`1e${tokenStore.decimals}`).toFixed()
     } */else if (attribute === 'whitelist')  {
       // whitelist
+      const rate = tierStore.tiers[tierIndex].rate;
+      const rateBN = new BigNumber(rate)
+      const oneTokenInETH = rateBN.pow(-1).toFixed()
+      const oneTokenInWEI = web3Store.web3.utils.toWei(oneTokenInETH, 'ether')
       value = value.reduce((toAdd, whitelist) => {
         toAdd[0].push(whitelist.addr)
-        toAdd[1].push(whitelist.min * 10 ** decimals ? toFixed((whitelist.min * 10 ** decimals).toString()) : 0)
-        toAdd[2].push(whitelist.max * 10 ** decimals ? toFixed((whitelist.max * 10 ** decimals).toString()) : 0)
+        toAdd[1].push(toBigNumber(whitelist.min).times(oneTokenInWEI).toFixed())
+        toAdd[2].push(toBigNumber(whitelist.max).times(oneTokenInWEI).toFixed())
+        //toAdd[1].push(whitelist.min * 10 ** decimals ? toFixed((whitelist.min * 10 ** decimals).toString()) : 0)
+        //toAdd[2].push(whitelist.max * 10 ** decimals ? toFixed((whitelist.max * 10 ** decimals).toString()) : 0)
         return toAdd
       }, [[], [], []])
       methodInterface = ["uint256","address[]","uint256[]","uint256[]","bytes"]

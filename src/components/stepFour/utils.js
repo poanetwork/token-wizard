@@ -492,26 +492,6 @@ export const addWhitelist = () => {
       let whitelist = []
       whitelist.push.apply(whitelist, tier.whitelist)
 
-      //inheritance of whitelists
-      /*for (let i = 0; i <= round; i++) {
-        const tier = tierStore.tiers[i]
-
-        for (let j = 0; j < tier.whitelist.length; j++) {
-          let itemIsAdded = false
-
-          for (let k = 0; k < whitelist.length; k++) {
-            if (whitelist[k].addr === tier.whitelist[j].addr) {
-              itemIsAdded = true
-              break
-            }
-          }
-
-          if (!itemIsAdded) {
-            whitelist.push.apply(whitelist, tier.whitelist)
-          }
-        }
-      }*/
-
       console.log('whitelist:', whitelist)
 
       if (whitelist.length === 0) {
