@@ -212,6 +212,12 @@ export class Manage extends Component {
                         }, Promise.resolve())
                       })
                   })
+                  .catch((err) => {
+                    console.log(tiers)
+                    return tiers.reduce((promise, tier, index) => {
+                      return promise.then(() => processTier(tier, crowdsale, token, index))
+                    }, Promise.resolve())
+                  })
               })
               .then(this.updateCrowdsaleStatus)
               .catch(err => {
