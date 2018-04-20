@@ -15,6 +15,8 @@ import {
   isNonNegative,
   isPositive,
   isRequired,
+  validateTierEndDate,
+  validateTierStartDate,
   validateWhitelistMax,
   validateWhitelistMin,
 } from './validations'
@@ -566,5 +568,159 @@ describe('composeValidators', () => {
     )(123)
 
     expect(listOfErrors).toBeUndefined()
+  })
+})
+
+describe('validateTierStartDate', () => {
+  const TIMESTAMPS = {
+    CURRENT_TIME: 1520852400000,
+    PLUS_5_MINUTES: 1520852700000,
+    PLUS_10_DAYS: 1521716400000,
+    MINUS_5_MINUTES: 1520852100000,
+    MINUS_10_DAYS: 1519988400000,
+  }
+
+  afterEach(() => {
+    MockDate.reset()
+  })
+
+  it('should fail if startTime is previous than current time', () => {
+    const values = {
+      tiers: [
+        {
+          startTime: TIMESTAMPS.CURRENT_TIME,
+          endTime: TIMESTAMPS.PLUS_5_MINUTES,
+        },
+        {
+          startTime: TIMESTAMPS.PLUS_5_MINUTES,
+          endTime: TIMESTAMPS.PLUS_10_DAYS,
+        },
+      ]
+    }
+
+    MockDate.set(TIMESTAMPS.PLUS_5_MINUTES)
+
+    const validationResult = validateTierStartDate(0)(values.tiers[0].startTime, values)
+
+    expect(validationResult).toEqual([VALIDATION_MESSAGES.DATE_IN_FUTURE])
+  })
+
+  it('should fail if startTime is same or later than same tier\'s endTime', () => {
+    const values = {
+      tiers: [
+        {
+          startTime: TIMESTAMPS.PLUS_5_MINUTES,
+          endTime: TIMESTAMPS.PLUS_5_MINUTES,
+        },
+        {
+          startTime: TIMESTAMPS.PLUS_5_MINUTES,
+          endTime: TIMESTAMPS.PLUS_10_DAYS,
+        },
+      ]
+    }
+
+    MockDate.set(TIMESTAMPS.CURRENT_TIME)
+
+    const validationResult = validateTierStartDate(0)(values.tiers[0].startTime, values)
+
+    expect(validationResult).toEqual(["Should be previous than same tier's End Time"])
+  })
+
+  it('should fail if startTime is before than previous tier\'s endTime', () => {
+    const values = {
+      tiers: [
+        {
+          startTime: TIMESTAMPS.MINUS_5_MINUTES,
+          endTime: TIMESTAMPS.PLUS_5_MINUTES,
+        },
+        {
+          startTime: TIMESTAMPS.CURRENT_TIME,
+          endTime: TIMESTAMPS.PLUS_10_DAYS,
+        },
+      ]
+    }
+
+    MockDate.set(TIMESTAMPS.MINUS_5_MINUTES)
+
+    const validationResult = validateTierStartDate(1)(values.tiers[1].startTime, values)
+
+    expect(validationResult).toEqual(["Should be same or later than previous tier's End Time"])
+  })
+})
+
+describe('validateTierEndDate', () => {
+  const TIMESTAMPS = {
+    CURRENT_TIME: 1520852400000,
+    PLUS_5_MINUTES: 1520852700000,
+    PLUS_10_DAYS: 1521716400000,
+    MINUS_5_MINUTES: 1520852100000,
+    MINUS_10_DAYS: 1519988400000,
+  }
+
+  afterEach(() => {
+    MockDate.reset()
+  })
+
+  it('should fail if endTime is previous than current time', () => {
+    const values = {
+      tiers: [
+        {
+          startTime: TIMESTAMPS.MINUS_5_MINUTES,
+          endTime: TIMESTAMPS.CURRENT_TIME,
+        },
+        {
+          startTime: TIMESTAMPS.PLUS_5_MINUTES,
+          endTime: TIMESTAMPS.PLUS_10_DAYS,
+        },
+      ]
+    }
+
+    MockDate.set(TIMESTAMPS.PLUS_5_MINUTES)
+
+    const validationResult = validateTierEndDate(0)(values.tiers[0].endTime, values)
+
+    expect(validationResult).toEqual([VALIDATION_MESSAGES.DATE_IN_FUTURE])
+  })
+
+  it('should fail if endTime is same or previous than same tier\'s startTime', () => {
+    const values = {
+      tiers: [
+        {
+          startTime: TIMESTAMPS.PLUS_5_MINUTES,
+          endTime: TIMESTAMPS.CURRENT_TIME,
+        },
+        {
+          startTime: TIMESTAMPS.PLUS_5_MINUTES,
+          endTime: TIMESTAMPS.PLUS_10_DAYS,
+        },
+      ]
+    }
+
+    MockDate.set(TIMESTAMPS.MINUS_5_MINUTES)
+
+    const validationResult = validateTierEndDate(0)(values.tiers[0].endTime, values)
+
+    expect(validationResult).toEqual(["Should be later than same tier's Start Time"])
+  })
+
+  it('should fail if endTime is after than next tier\'s startTime', () => {
+    const values = {
+      tiers: [
+        {
+          startTime: TIMESTAMPS.MINUS_5_MINUTES,
+          endTime: TIMESTAMPS.PLUS_5_MINUTES,
+        },
+        {
+          startTime: TIMESTAMPS.CURRENT_TIME,
+          endTime: TIMESTAMPS.PLUS_10_DAYS,
+        },
+      ]
+    }
+
+    MockDate.set(TIMESTAMPS.MINUS_5_MINUTES)
+
+    const validationResult = validateTierEndDate(0)(values.tiers[1].endTime, values)
+
+    expect(validationResult).toEqual(["Should be same or previous than next tier's Start Time"])
   })
 })
