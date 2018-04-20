@@ -48,7 +48,7 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
       let { startTime, endTime } = tierStore.tiers[tierIndex]
       console.log(startTime, endTime)
       const duration = new Date(endTime) - new Date(startTime)
-      const durationBN = toBigNumber(duration).toFixed()
+      const durationBN = (toBigNumber(duration)/1000).toFixed()
       value = durationBN
       methodInterface = ["uint256","uint256","bytes"]
       getParams = updateDurationParams
@@ -86,14 +86,11 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
 
   return getCurrentAccount()
     .then(account => {
-      return method.estimateGas()
+      const opts = { gasPrice: generalStore.gasPrice, from: account }
+      return method.estimateGas(opts)
       .then(estimatedGas => {
-        return sendTXToContract(method.send({
-          gasLimit: estimatedGas,
-          gasPrice: generalStore.gasPrice,
-          from: account
-        })
-        )
+        opts.gasLimit = estimatedGas
+        return sendTXToContract(method.send(opts))
       })
     })
 }
