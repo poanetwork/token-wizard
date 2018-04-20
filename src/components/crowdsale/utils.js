@@ -1,6 +1,5 @@
 import { attachToContract } from '../../utils/blockchainHelpers'
 import { noContractAlert } from '../../utils/alerts'
-import { toFixed } from '../../utils/utils'
 import { contractStore, crowdsalePageStore, tokenStore, web3Store } from '../../stores'
 import { toJS } from 'mobx'
 import { BigNumber } from 'bignumber.js'
