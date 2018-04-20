@@ -1,0 +1,301 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InvestForm should render InvestForm component 1`] = `
+<inject-_class-with-investStore-tokenStore
+  __versions={
+    Object {
+      "final-form": "4.2.0",
+      "react-final-form": "3.1.4",
+    }
+  }
+  batch={[Function]}
+  blur={[Function]}
+  change={[Function]}
+  dirty={false}
+  dirtySinceLastSubmit={false}
+  errors={Object {}}
+  focus={[Function]}
+  handleSubmit={[Function]}
+  initialize={[Function]}
+  invalid={false}
+  investThrough="metamask"
+  mutators={Object {}}
+  pristine={true}
+  reset={[Function]}
+  submitFailed={false}
+  submitSucceeded={false}
+  submitting={false}
+  touched={Object {}}
+  updateInvestThrough={[Function]}
+  valid={true}
+  validating={false}
+  values={Object {}}
+  visited={Object {}}
+  web3Available={true}
+/>
+`;
+
+exports[`InvestForm should render InvestForm component and its children 1`] = `
+<Provider
+  investStore={InvestStore {}}
+  tokenStore={
+    TokenStore {
+      "decimals": undefined,
+      "name": undefined,
+      "reservedTokens": Array [],
+      "reservedTokensInput": Object {},
+      "supply": 0,
+      "ticker": undefined,
+      "validToken": Object {
+        "decimals": "EMPTY",
+        "name": "EMPTY",
+        "ticker": "EMPTY",
+      },
+    }
+  }
+>
+  <ReactFinalForm(4.2.0)(3.1.4)
+    component={[Function]}
+    investThrough="metamask"
+    onSubmit={[Function]}
+    updateInvestThrough={[Function]}
+    web3Available={true}
+  >
+    <inject-_class-with-investStore-tokenStore
+      __versions={
+        Object {
+          "final-form": "4.2.0",
+          "react-final-form": "3.1.4",
+        }
+      }
+      batch={[Function]}
+      blur={[Function]}
+      change={[Function]}
+      dirty={false}
+      dirtySinceLastSubmit={false}
+      errors={Object {}}
+      focus={[Function]}
+      handleSubmit={[Function]}
+      initialize={[Function]}
+      invalid={false}
+      investThrough="metamask"
+      mutators={Object {}}
+      pristine={true}
+      reset={[Function]}
+      submitFailed={false}
+      submitSucceeded={false}
+      submitting={false}
+      touched={Object {}}
+      updateInvestThrough={[Function]}
+      valid={true}
+      validating={false}
+      values={Object {}}
+      visited={Object {}}
+      web3Available={true}
+    >
+      <_class
+        __versions={
+          Object {
+            "final-form": "4.2.0",
+            "react-final-form": "3.1.4",
+          }
+        }
+        batch={[Function]}
+        blur={[Function]}
+        change={[Function]}
+        dirty={false}
+        dirtySinceLastSubmit={false}
+        errors={Object {}}
+        focus={[Function]}
+        handleSubmit={[Function]}
+        initialize={[Function]}
+        invalid={false}
+        investStore={InvestStore {}}
+        investThrough="metamask"
+        mutators={Object {}}
+        pristine={true}
+        reset={[Function]}
+        submitFailed={false}
+        submitSucceeded={false}
+        submitting={false}
+        tokenStore={
+          TokenStore {
+            "decimals": undefined,
+            "name": undefined,
+            "reservedTokens": Array [],
+            "reservedTokensInput": Object {},
+            "supply": 0,
+            "ticker": undefined,
+            "validToken": Object {
+              "decimals": "EMPTY",
+              "name": "EMPTY",
+              "ticker": "EMPTY",
+            },
+          }
+        }
+        touched={Object {}}
+        updateInvestThrough={[Function]}
+        valid={true}
+        validating={false}
+        values={Object {}}
+        visited={Object {}}
+        web3Available={true}
+      >
+        <form
+          className="invest-form"
+          onSubmit={[Function]}
+        >
+          <label
+            className="invest-form-label"
+          >
+            Choose amount to invest
+          </label>
+          <div
+            className="invest-form-input-container"
+          >
+            <Field
+              component={[Function]}
+              format={[Function]}
+              inputClassName="invest-form-input"
+              name="invest"
+              parse={[Function]}
+              placeholder="0"
+              validate={[Function]}
+            >
+              <InputField2
+                input={
+                  Object {
+                    "name": "invest",
+                    "onBlur": [Function],
+                    "onChange": [Function],
+                    "onFocus": [Function],
+                    "value": "",
+                  }
+                }
+                inputClassName="invest-form-input"
+                meta={
+                  Object {
+                    "active": false,
+                    "data": Object {},
+                    "dirty": false,
+                    "dirtySinceLastSubmit": false,
+                    "error": "This field is required",
+                    "initial": undefined,
+                    "invalid": true,
+                    "length": undefined,
+                    "pristine": true,
+                    "submitError": undefined,
+                    "submitFailed": false,
+                    "submitSucceeded": false,
+                    "touched": false,
+                    "valid": false,
+                    "visited": false,
+                  }
+                }
+                placeholder="0"
+              >
+                <div>
+                  <label
+                    className="label"
+                    htmlFor="invest"
+                  />
+                  <input
+                    autoComplete="off"
+                    className="invest-form-input"
+                    id="invest"
+                    name="invest"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder="0"
+                    value=""
+                  />
+                  <p
+                    className="description"
+                  />
+                  <Error
+                    name="invest"
+                  >
+                    <Field
+                      format={[Function]}
+                      name="invest"
+                      parse={[Function]}
+                      render={[Function]}
+                      subscription={
+                        Object {
+                          "error": true,
+                          "pristine": true,
+                          "touched": true,
+                        }
+                      }
+                    >
+                      <span>
+                        <p
+                          className="error"
+                          key="0"
+                          style={
+                            Object {
+                              "color": "red",
+                              "fontSize": "12px",
+                              "fontWeight": "bold",
+                              "height": "20px",
+                              "width": "100%",
+                            }
+                          }
+                        />
+                      </span>
+                    </Field>
+                  </Error>
+                </div>
+              </InputField2>
+            </Field>
+            <FormSpy
+              onChange={[Function]}
+              subscription={
+                Object {
+                  "values": true,
+                }
+              }
+            />
+            <div
+              className="invest-form-label"
+            >
+              TOKENS
+            </div>
+          </div>
+          <div
+            className="invest-through-container"
+          >
+            <select
+              className="invest-through"
+              onChange={[Function]}
+              value="metamask"
+            >
+              <option
+                disabled={false}
+                value="metamask"
+              />
+              <option
+                value="qr"
+              >
+                QR
+              </option>
+            </select>
+            <a
+              className="button button_fill button_disabled"
+              onClick={[Function]}
+            >
+              Contribute
+            </a>
+          </div>
+          <p
+            className="description"
+          >
+            Think twice before contributing to Crowdsales. Tokens will be deposited on a wallet you used to buy tokens.
+          </p>
+        </form>
+      </_class>
+    </inject-_class-with-investStore-tokenStore>
+  </ReactFinalForm(4.2.0)(3.1.4)>
+</Provider>
+`;
