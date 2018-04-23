@@ -3,6 +3,7 @@ import autosave from './autosave'
 
 class CrowdsaleStore {
   @observable crowdsales
+  @observable strategy
   @observable maximumSellableTokens
   @observable maximumSellableTokensInWei
   @observable supply

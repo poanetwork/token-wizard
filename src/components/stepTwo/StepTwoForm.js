@@ -4,6 +4,7 @@ import { TokenName } from '../Common/TokenName'
 import { TokenTicker } from '../Common/TokenTicker'
 import { TokenDecimals } from '../Common/TokenDecimals'
 import { ReservedTokensInputBlock } from '../Common/ReservedTokensInputBlock'
+import { CROWDSALE_STRATEGIES } from '../../utils/constants';
 
 const errorStyle = {
   color: 'red',
@@ -22,8 +23,22 @@ export const StepTwoForm = ({
   decimals,
   addReservedTokensItem,
   removeReservedToken,
-  clearAll
+  clearAll,
+  crowdsaleStore
 }) => {
+  const reservedTokens = (<div>
+    <div className="reserved-tokens-title">
+      <p className="title">Reserved tokens</p>
+    </div>
+    <ReservedTokensInputBlock
+      tokens={tokens}
+      decimals={decimals}
+      addReservedTokensItem={addReservedTokensItem}
+      removeReservedToken={removeReservedToken}
+      clearAll={clearAll}
+    />
+  </div>)
+
   return (
     <form id={id} onSubmit={handleSubmit}>
       <div className="hidden">
@@ -31,16 +46,7 @@ export const StepTwoForm = ({
         <TokenTicker errorStyle={errorStyle}/>
         <TokenDecimals disabled={disableDecimals} errorStyle={errorStyle}/>
       </div>
-      <div className="reserved-tokens-title">
-        <p className="title">Reserved tokens</p>
-      </div>
-      <ReservedTokensInputBlock
-        tokens={tokens}
-        decimals={decimals}
-        addReservedTokensItem={addReservedTokensItem}
-        removeReservedToken={removeReservedToken}
-        clearAll={clearAll}
-      />
+      {crowdsaleStore.strategy == CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE ? reservedTokens : null}
 
       <div className="button-container">
         <a onClick={e => { e.preventDefault(); handleSubmit() }} className="button button_fill">Continue</a>

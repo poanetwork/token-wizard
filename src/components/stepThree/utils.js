@@ -1,4 +1,7 @@
 import moment from 'moment';
+import { StepThreeFormMintedCapped } from './StepThreeFormMintedCapped'
+import { StepThreeFormDutchAuction } from './StepThreeFormDutchAuction'
+import { CROWDSALE_STRATEGIES } from '../../utils/constants'
 
 export function defaultCompanyStartDate() {
   let crowdsaleStartDate = moment().add(5, 'minutes');
@@ -9,4 +12,18 @@ export function defaultCompanyStartDate() {
 export const defaultCompanyEndDate = (startDate) => {
   const crowdsaleEndDate = moment(startDate).add(4, 'days').startOf('day')
   return crowdsaleEndDate.format('YYYY-MM-DDTHH:mm')
+}
+
+export const getStep3Component = (strategy) => {
+  switch(strategy) {
+    case CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE:
+      return StepThreeFormMintedCapped;
+      break;
+    case CROWDSALE_STRATEGIES.DUTCH_AUCTION:
+      return StepThreeFormDutchAuction;
+      break;
+    default:
+      return StepThreeFormMintedCapped;
+      break;
+  }
 }

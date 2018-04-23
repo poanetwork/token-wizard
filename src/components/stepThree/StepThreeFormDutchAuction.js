@@ -15,7 +15,7 @@ import {
   isNonNegative,
 } from '../../utils/validations'
 import { TEXT_FIELDS, VALIDATION_TYPES } from '../../utils/constants'
-import { TierBlock } from '../Common/TierBlock'
+import { DutchAuctionBlock } from '../Common/DutchAuctionBlock'
 
 const { VALID } = VALIDATION_TYPES
 const { MINCAP, WALLET_ADDRESS } = TEXT_FIELDS
@@ -28,16 +28,10 @@ const inputErrorStyle = {
   height: '20px',
 }
 
-export const StepThreeForm = ({ handleSubmit, values, invalid, pristine, mutators: { push }, ...props }) => {
+export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, pristine, mutators: { push }, ...props }) => {
   const submitButtonClass = classnames('button', 'button_fill', {
     button_disabled: pristine || invalid
   })
-
-  const addTier = () => {
-    props.addCrowdsale()
-    const lastTier = props.tierStore.tiers[props.tierStore.tiers.length - 1]
-    push('tiers', JSON.parse(JSON.stringify(lastTier)))
-  }
 
   const handleOnChange = ({ values }) => {
     props.tierStore.updateWalletAddress(values.walletAddress, VALID)
@@ -98,60 +92,12 @@ export const StepThreeForm = ({ handleSubmit, values, invalid, pristine, mutator
               )(value.price)}
             />
           </div>
-          <div className="input-block-container">
-            <Field
-              name="minCap"
-              component={InputField2}
-              validate={composeValidators(
-                isNonNegative(),
-                isDecimalPlacesNotGreaterThan()(props.decimals),
-                isLessOrEqualThan('Should be less or equal than the supply of some tier')(props.tierStore.maxSupply)
-              )}
-              disabled={values.whitelistEnabled === 'yes'}
-              errorStyle={inputErrorStyle}
-              type="number"
-              side="left"
-              label={MINCAP}
-              description="Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1
-               and a user already has 1 token from a previous transaction, they can buy any amount they want."
-            />
-            <Field
-              name="whitelistEnabled"
-              render={({ input }) => (
-                <div className='right'>
-                  <label className="label">Enable whitelisting</label>
-                  <div className='radios-inline'>
-                    <label className='radio-inline'>
-                      <input
-                        type='radio'
-                        checked={input.value === 'yes'}
-                        value='yes'
-                        onChange={() => input.onChange('yes')}
-                      />
-                      <span className='title'>yes</span>
-                    </label>
-                    <label className='radio-inline'>
-                      <input
-                        type='radio'
-                        checked={input.value === 'no'}
-                        value='no'
-                        onChange={() => input.onChange('no')}
-                      />
-                      <span className='title'>no</span>
-                    </label>
-                  </div>
-                  <p className='description'>Enables whitelisting. If disabled, anyone can participate in the
-                    crowdsale.</p>
-                </div>
-              )}
-            />
-          </div>
         </div>
       </div>
 
       <FieldArray name="tiers">
         {({ fields }) => (
-          <TierBlock
+          <DutchAuctionBlock
             fields={fields}
             minCap={values.minCap}
             decimals={props.decimals}
@@ -161,9 +107,6 @@ export const StepThreeForm = ({ handleSubmit, values, invalid, pristine, mutator
       </FieldArray>
 
       <div className="button-container">
-        <div className="button button_fill_secondary" onClick={addTier}>
-          Add Tier
-        </div>
         <span onClick={handleSubmit} className={submitButtonClass}>Continue</span>
       </div>
 

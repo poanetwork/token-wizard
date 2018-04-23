@@ -274,7 +274,10 @@ export function loadRegistryAddresses () {
           .then((deployer_instance) => {
             console.log("deployer_instance:", deployer_instance)
             let appName = web3.utils.toAscii(deployer_instance.app_name)
-            if (appName.toString().toLowerCase().includes(process.env[`REACT_APP_CROWDSALE_APP_NAME`].toString().toLowerCase())) {
+            let appNameLowerCase = appName.toLowerCase()
+            if (
+              appNameLowerCase.includes(process.env[`REACT_APP_MINTED_CAPPED_CROWDSALE_APP_NAME`].toLowerCase())
+              || appNameLowerCase.includes(process.env[`REACT_APP_DUTCH_CROWDSALE_APP_NAME`].toLowerCase())) {
               crowdsales.push(deployer_instance.exec_id)
             }
             resolve();
@@ -399,7 +402,7 @@ export let methodToInitAppInstance = (methodName, targetName, getEncodedParams, 
 
   const isPayable = true;
 
-  let appNameBytes = web3.utils.fromAscii(process.env['REACT_APP_CROWDSALE_APP_NAME'])
+  let appNameBytes = web3.utils.fromAscii(process.env['REACT_APP_MINTED_CAPPED_CROWDSALE_APP_NAME'])
   let encodedAppName = web3.eth.abi.encodeParameter("bytes32", appNameBytes);
 
   let paramsToInitAppInstance = [

@@ -11,7 +11,7 @@ import { StepTwoForm } from './StepTwoForm'
 const { TOKEN_SETUP } = NAVIGATION_STEPS
 const { VALID, INVALID } = VALIDATION_TYPES
 
-@inject('tokenStore', 'web3Store', 'reservedTokenStore')
+@inject('tokenStore', 'crowdsaleStore', 'web3Store', 'reservedTokenStore')
 @observer
 export class stepTwo extends Component {
   constructor (props) {
@@ -88,6 +88,7 @@ export class stepTwo extends Component {
             removeReservedToken={this.removeReservedToken}
             clearAll={this.clearReservedTokens}
             id="tokenData"
+            crowdsaleStore={this.props.crowdsaleStore}
           />
         </div>
       </section>

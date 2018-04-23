@@ -1,3 +1,8 @@
+export const CROWDSALE_STRATEGIES = {
+  MINTED_CAPPED_CROWDSALE: "white-list-with-cap",
+  DUTCH_AUCTION: "dutch-auction"
+}
+
 export const VALIDATION_TYPES = {
   VALID: "VALIDATED",
   EMPTY: 'EMPTY',

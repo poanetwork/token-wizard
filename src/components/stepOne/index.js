@@ -1,10 +1,9 @@
 import React from 'react'
 import '../../assets/stylesheets/application.css';
-import { checkWeb3, getNetworkVersion, } from '../../utils/blockchainHelpers'
 import { Link } from 'react-router-dom';
-import { setFlatFileContentToState } from '../../utils/utils';
 import { StepNavigation } from '../Common/StepNavigation';
-import { NAVIGATION_STEPS } from '../../utils/constants';
+import { NAVIGATION_STEPS, CROWDSALE_STRATEGIES } from '../../utils/constants';
+import { inject, observer } from 'mobx-react'
 const { CROWDSALE_CONTRACT } = NAVIGATION_STEPS;
 
 //to do: downloadStatus is not used
@@ -16,7 +15,22 @@ const ContinueButton = ({downloadStatus}) => {
   );
 };
 
+@inject('crowdsaleStore')
+@observer
 export class stepOne extends React.Component {
+
+  constructor (props) {
+    super(props)
+
+    this.setStrategy(null, CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE);
+  }
+
+  setStrategy = (event, strategy) => {
+    if (!strategy) {
+      strategy = event.target.id
+    }
+    this.props.crowdsaleStore.setProperty('strategy', strategy)
+  }
 
   render() {
     return (
@@ -30,17 +44,29 @@ export class stepOne extends React.Component {
               Select a strategy for your crowdsale contract.
             </p>
           </div>
-          <div className="radios">
+          <div className="radios" onChange={this.setStrategy}>
             <label className="radio">
               <input
                 type="radio"
                 defaultChecked={true}
                 name="contract-type"
-                id="white-list-with-cap"
+                id={CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE}
               />
               <span className="title">Whitelist with Cap</span>
               <span className="description">
                 Modern crowdsale strategy with multiple tiers, whitelists, and limits. Recommended for every crowdsale.
+              </span>
+            </label>
+            <label className="radio">
+              <input
+                type="radio"
+                defaultChecked={false}
+                name="contract-type"
+                id={CROWDSALE_STRATEGIES.DUTCH_AUCTION}
+              />
+              <span className="title">Dutch auction</span>
+              <span className="description">
+                Dutch auction crowdsale.
               </span>
             </label>
           </div>
