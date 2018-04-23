@@ -1,9 +1,11 @@
-const { concurrent, series } = require('nps-utils')
+const { concurrent, series, ncp } = require('nps-utils')
+const path = require('path')
 
-const combineSolidityScript = 'submodules/solidity-flattener/index.js'
-const tokenMarketNetPath = 'submodules/poa-token-market-net-ico/contracts/'
-const contractFolder = './public/contracts'
-const extensionPath = './scripts/POAExtendedCrowdSale.sol'
+const combineSolidityScript = path.join('submodules', 'solidity-flattener', 'index.js')
+const tokenMarketNetPath = path.join('submodules', 'poa-token-market-net-ico', 'contracts')
+const contractFolder = path.join('.', 'public', 'contracts')
+const extensionPath = path.join('.', 'scripts', 'POAExtendedCrowdSale.sol')
+const compileContractPath = path.join('.', 'scripts', 'compileContract.js')
 
 const safeMathLibContractName = 'SafeMathLibExt'
 const crowdsaleContractName = 'MintedTokenCappedCrowdsaleExt'
@@ -12,6 +14,9 @@ const crowdsalePricingStrategyContractName = 'FlatPricingExt'
 const nullFinalizeAgentContractName = 'NullFinalizeAgentExt'
 const finalizeAgentContractName = 'ReservedTokensFinalizeAgent'
 const registryContractName = 'Registry'
+
+const buildContractPath = (...paths) => path.join(tokenMarketNetPath, ...paths)
+const buildCompilePath = (...paths) => path.join(contractFolder, ...paths)
 
 module.exports = {
   scripts: {
@@ -23,9 +28,9 @@ module.exports = {
         'npm install --no-save submodules/poa-web3-1.0/packages/web3',
         //'nps contracts',
         'node scripts/build.js',
-        'cp ./build/index.html ./build/invest.html',
-        'cp ./build/index.html ./build/crowdsale.html',
-        'cp ./build/index.html ./build/manage.html'
+        ncp('./build/index.html ./build/invest.html'),
+        ncp('./build/index.html ./build/crowdsale.html'),
+        ncp('./build/index.html ./build/manage.html')
       )
     },
     contracts: {
@@ -40,13 +45,13 @@ module.exports = {
           'contracts.generate.crowdsaleFinalizeAgent',
           'contracts.generate.registry'
         ),
-        safeMathLib: `node ${combineSolidityScript} ${tokenMarketNetPath}/${safeMathLibContractName}.sol ${contractFolder} SafeMathLibExt`,
-        crowdsale: `node ${combineSolidityScript} ${tokenMarketNetPath}/${crowdsaleContractName}.sol ${contractFolder} CrowdsaleWhiteListWithCap`,
-        crowdsaleToken: `node ${combineSolidityScript} ${tokenMarketNetPath}/${crowdsaleTokenContractName}.sol ${contractFolder} CrowdsaleWhiteListWithCapToken`,
-        crowdsalePricingStrategy: `node ${combineSolidityScript} ${tokenMarketNetPath}/${crowdsalePricingStrategyContractName}.sol ${contractFolder} CrowdsaleWhiteListWithCapPricingStrategy`,
-        crowdsaleNullFinalizeAgent: `node ${combineSolidityScript} ${tokenMarketNetPath}/${nullFinalizeAgentContractName}.sol ${contractFolder} NullFinalizeAgent`,
-        crowdsaleFinalizeAgent: `node ${combineSolidityScript} ${tokenMarketNetPath}/${finalizeAgentContractName}.sol ${contractFolder} FinalizeAgent`,
-        registry: `node ${combineSolidityScript} ${tokenMarketNetPath}/${registryContractName}.sol ${contractFolder} Registry`,
+        safeMathLib: `node ${combineSolidityScript} ${buildContractPath(safeMathLibContractName)}.sol ${contractFolder} SafeMathLibExt`,
+        crowdsale: `node ${combineSolidityScript} ${buildContractPath(crowdsaleContractName)}.sol ${contractFolder} CrowdsaleWhiteListWithCap`,
+        crowdsaleToken: `node ${combineSolidityScript} ${buildContractPath(crowdsaleTokenContractName)}.sol ${contractFolder} CrowdsaleWhiteListWithCapToken`,
+        crowdsalePricingStrategy: `node ${combineSolidityScript} ${buildContractPath(crowdsalePricingStrategyContractName)}.sol ${contractFolder} CrowdsaleWhiteListWithCapPricingStrategy`,
+        crowdsaleNullFinalizeAgent: `node ${combineSolidityScript} ${buildContractPath(nullFinalizeAgentContractName)}.sol ${contractFolder} NullFinalizeAgent`,
+        crowdsaleFinalizeAgent: `node ${combineSolidityScript} ${buildContractPath(finalizeAgentContractName)}.sol ${contractFolder} FinalizeAgent`,
+        registry: `node ${combineSolidityScript} ${buildContractPath(registryContractName)}.sol ${contractFolder} Registry`,
       },
       compile: {
         default: concurrent.nps(
@@ -58,13 +63,13 @@ module.exports = {
           'contracts.compile.crowdsaleFinalizeAgent',
           'contracts.compile.registry'
         ),
-        safeMathLibExt: `node ./scripts/compileContract.js ${contractFolder}/SafeMathLibExt_flat.sol ${contractFolder} ${extensionPath} false ${safeMathLibContractName} SafeMathLibExt`,
-        crowdsale: `node ./scripts/compileContract.js ${contractFolder}/CrowdsaleWhiteListWithCap_flat.sol ${contractFolder} ${extensionPath} false ${crowdsaleContractName} CrowdsaleWhiteListWithCap`,
-        crowdsaleToken: `node ./scripts/compileContract.js ${contractFolder}/CrowdsaleWhiteListWithCapToken_flat.sol ${contractFolder} ${extensionPath} false ${crowdsaleTokenContractName} CrowdsaleWhiteListWithCapToken`,
-        crowdsalePricingStrategy: `node ./scripts/compileContract.js ${contractFolder}/CrowdsaleWhiteListWithCapPricingStrategy_flat.sol ${contractFolder} ${extensionPath} false ${crowdsalePricingStrategyContractName} CrowdsaleWhiteListWithCapPricingStrategy`,
-        crowdsaleNullFinalizeAgent: `node ./scripts/compileContract.js ${contractFolder}/NullFinalizeAgent_flat.sol ${contractFolder} ${extensionPath} false ${nullFinalizeAgentContractName} NullFinalizeAgent`,
-        crowdsaleFinalizeAgent: `node ./scripts/compileContract.js ${contractFolder}/FinalizeAgent_flat.sol ${contractFolder} ${extensionPath} false ${finalizeAgentContractName} FinalizeAgent`,
-        registry: `node ./scripts/compileContract.js ${contractFolder}/Registry_flat.sol ${contractFolder} ${extensionPath} false ${registryContractName} Registry`
+        safeMathLibExt: `node ${compileContractPath} ${buildCompilePath('SafeMathLibExt_flat.sol')} ${contractFolder} ${extensionPath} false ${safeMathLibContractName} SafeMathLibExt`,
+        crowdsale: `node ${compileContractPath} ${buildCompilePath('CrowdsaleWhiteListWithCap_flat.sol')} ${contractFolder} ${extensionPath} false ${crowdsaleContractName} CrowdsaleWhiteListWithCap`,
+        crowdsaleToken: `node ${compileContractPath} ${buildCompilePath('CrowdsaleWhiteListWithCapToken_flat.sol')} ${contractFolder} ${extensionPath} false ${crowdsaleTokenContractName} CrowdsaleWhiteListWithCapToken`,
+        crowdsalePricingStrategy: `node ${compileContractPath} ${buildCompilePath('CrowdsaleWhiteListWithCapPricingStrategy_flat.sol')} ${contractFolder} ${extensionPath} false ${crowdsalePricingStrategyContractName} CrowdsaleWhiteListWithCapPricingStrategy`,
+        crowdsaleNullFinalizeAgent: `node ${compileContractPath} ${buildCompilePath('NullFinalizeAgent_flat.sol')} ${contractFolder} ${extensionPath} false ${nullFinalizeAgentContractName} NullFinalizeAgent`,
+        crowdsaleFinalizeAgent: `node ${compileContractPath} ${buildCompilePath('FinalizeAgent_flat.sol')} ${contractFolder} ${extensionPath} false ${finalizeAgentContractName} FinalizeAgent`,
+        registry: `node ${compileContractPath} ${buildCompilePath('Registry_flat.sol')} ${contractFolder} ${extensionPath} false ${registryContractName} Registry`
       }
     },
     dev: {
