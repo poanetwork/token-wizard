@@ -46,13 +46,7 @@ export const StepTwoForm = ({
         <a onClick={e => { e.preventDefault(); handleSubmit() }} className="button button_fill">Continue</a>
       </div>
 
-      <FormSpy
-        onChange={({ values }) => {
-          updateTokenStore('name', values.name)
-          updateTokenStore('ticker', values.ticker)
-          updateTokenStore('decimals', values.decimals)
-        }}
-      />
+      <FormSpy onChange={updateTokenStore}/>
     </form>
   )
 }

@@ -6,7 +6,6 @@ import { clearingReservedTokens } from '../../utils/alerts'
 import { NAVIGATION_STEPS, VALIDATION_TYPES } from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
 import { Form } from 'react-final-form'
-import { validators } from '../../utils/validations'
 import { StepTwoForm } from './StepTwoForm'
 
 const { TOKEN_SETUP } = NAVIGATION_STEPS
@@ -48,11 +47,13 @@ export class stepTwo extends Component {
     this.props.reservedTokenStore.addToken(newToken)
   }
 
-  updateTokenStore = (property, value) => {
-    const validity = validators(property, value) ? VALID : INVALID
+  updateTokenStore = ({ values, errors }) => {
+    const { tokenStore } = this.props
 
-    this.props.tokenStore.setProperty(property, value)
-    this.props.tokenStore.updateValidity(property, validity)
+    Object.keys(values).forEach((key) => {
+      tokenStore.setProperty(key, values[key])
+      tokenStore.updateValidity(key, errors[key] !== undefined ? INVALID : VALID)
+    })
   }
 
   onSubmit = () => {

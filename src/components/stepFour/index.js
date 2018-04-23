@@ -80,7 +80,7 @@ export class stepFour extends React.Component {
 
   deployCrowdsale = () => {
     const { deploymentStore } = this.props
-    const firstRun = deploymentStore.deploymentStep === null
+    const firstRun = deploymentStore.deploymentStep === 0
 
     this.resumeContractDeployment()
   }

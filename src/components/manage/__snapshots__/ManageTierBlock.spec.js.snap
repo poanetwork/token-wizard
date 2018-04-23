@@ -113,6 +113,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
+              placeholder={undefined}
               type="datetime-local"
               value=""
             />
@@ -154,6 +155,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
+              placeholder={undefined}
               type="datetime-local"
               value=""
             />
@@ -199,6 +201,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
+              placeholder={undefined}
               type="text"
               value=""
             />
@@ -240,6 +243,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
+              placeholder={undefined}
               type="text"
               value=""
             />
@@ -478,6 +482,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
+              placeholder={undefined}
               type="datetime-local"
               value=""
             />
@@ -519,6 +524,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
+              placeholder={undefined}
               type="datetime-local"
               value=""
             />
@@ -564,6 +570,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
+              placeholder={undefined}
               type="text"
               value=""
             />
@@ -605,6 +612,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
+              placeholder={undefined}
               type="text"
               value=""
             />
