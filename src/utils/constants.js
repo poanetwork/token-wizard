@@ -361,7 +361,7 @@ export const FILE_CONTENTS = {
   }
 }
 
-export const DOWNLOAD_NAME = 'icowizard'
+export const DOWNLOAD_NAME = 'tokenwizard'
 export const DOWNLOAD_TYPE = {
   text: 'text/plain',
   blob: 'blob'

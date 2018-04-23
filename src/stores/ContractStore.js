@@ -6,10 +6,8 @@ class ContractStore {
   @observable token;
   @observable crowdsale;
   @observable pricingStrategy;
-  @observable multisig;
   @observable nullFinalizeAgent;
   @observable finalizeAgent;
-  @observable tokenTransferProxy;
   @observable safeMathLib;
   @observable registry;
 
