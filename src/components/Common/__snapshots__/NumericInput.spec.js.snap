@@ -26,6 +26,7 @@ exports[`NumericInput Should render the component 1`] = `
     Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous).
   </p>
   <p
+    className="error"
     style={
       Object {
         "color": "red",

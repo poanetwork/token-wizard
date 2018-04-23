@@ -26,6 +26,7 @@ exports[`BigNumberInput Should render the component 1`] = `
     Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
   </p>
   <p
+    className="error"
     style={
       Object {
         "color": "red",
