@@ -81,7 +81,7 @@ export class stepFour extends React.Component {
   deployCrowdsale = () => {
     const { deploymentStore } = this.props
     const { web3 } = this.context
-    const firstRun = deploymentStore.deploymentStep === null
+    const firstRun = deploymentStore.deploymentStep === 0
 
     if (firstRun) {
       setupContractDeployment(web3)

@@ -3,23 +3,6 @@ import { BigNumber } from 'bignumber.js'
 import { VALIDATION_MESSAGES } from './constants'
 import { countDecimalPlaces, validateLaterOrEqualTime, validateLaterTime, validateTime } from './utils'
 
-export const validators = (type, value) => {
-  return {
-    name: value && typeof value === 'string' && 1 <= value.length && value.length <= 30,
-    ticker: /^[a-zA-Z0-9]{1,5}$/.test(value),
-  }[type] || false
-}
-
-export const validateTokenName = (value) => {
-  const isValid = validators('name', value)
-  return isValid ? undefined : VALIDATION_MESSAGES.NAME
-}
-
-export const validateTicker = (value) => {
-  const isValid = validators('ticker', value)
-  return isValid ? undefined : VALIDATION_MESSAGES.TICKER
-}
-
 export const validateWhitelistMin = ({ min, max, decimals }) => {
   const listOfErrors = composeValidators(
     isRequired(),
@@ -40,6 +23,16 @@ export const validateWhitelistMax = ({ min, max, decimals }) => {
   )(max)
 
   return listOfErrors ? listOfErrors.shift() : undefined
+}
+
+export const isMaxLength = (errorMsg = VALIDATION_MESSAGES.NAME) => (maxLength = 256) => (value) => {
+  const isValid = typeof value === 'string' && value.length <= maxLength
+  return isValid ? undefined : errorMsg
+}
+
+export const isMatchingPattern = (errorMsg = VALIDATION_MESSAGES.PATTERN) => (regex = /.*/) => (value) => {
+  const isValid = regex.test(value)
+  return isValid ? undefined : errorMsg
 }
 
 export const isPositive = (errorMsg = VALIDATION_MESSAGES.POSITIVE) => (value) => {
@@ -133,3 +126,30 @@ export const composeValidators = (...validators) => (value) => {
   return errors.length ? errors : undefined
 }
 
+export const validateTierStartDate  = (index) => (value, values) => {
+  const listOfValidations = [
+    isRequired(),
+    isDateInFuture(),
+    isDatePreviousThan("Should be previous than same tier's End Time")(values.tiers[index].endTime),
+  ]
+
+  if (index > 0) {
+    listOfValidations.push(isDateSameOrLaterThan("Should be same or later than previous tier's End Time")(values.tiers[index - 1].endTime))
+  }
+
+  return composeValidators(...listOfValidations)(value)
+}
+
+export const validateTierEndDate  = (index) => (value, values) => {
+  const listOfValidations = [
+    isRequired(),
+    isDateInFuture(),
+    isDateLaterThan("Should be later than same tier's Start Time")(values.tiers[index].startTime),
+  ]
+
+  if (index < values.tiers.length - 1) {
+    listOfValidations.push(isDateSameOrPreviousThan("Should be same or previous than next tier's Start Time")(values.tiers[index + 1].startTime))
+  }
+
+  return composeValidators(...listOfValidations)(value)
+}

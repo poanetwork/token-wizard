@@ -6,9 +6,10 @@ export const InputField2 = (props) => (
     <label htmlFor={props.input.name} className="label">{props.label}</label>
     <input
       autoComplete="off"
-      className="input"
+      className={props.inputClassName ? props.inputClassName : "input"}
       type={props.type}
       disabled={props.disabled}
+      placeholder={props.placeholder}
       id={props.input.name}
       {...props.input}
     />

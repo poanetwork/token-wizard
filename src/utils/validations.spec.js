@@ -10,59 +10,18 @@ import {
   isGreaterOrEqualThan,
   isInteger,
   isLessOrEqualThan,
+  isMatchingPattern,
+  isMaxLength,
   isNonNegative,
   isPositive,
   isRequired,
-  validateTicker,
-  validateTokenName,
+  validateTierEndDate,
+  validateTierStartDate,
   validateWhitelistMax,
   validateWhitelistMin,
-  validators
 } from './validations'
 import { VALIDATION_MESSAGES } from './constants'
 import MockDate from 'mockdate'
-
-describe('validateTokenName', () => {
-  [
-    { value: '', expected: VALIDATION_MESSAGES.NAME },
-    { value: 'T', expected: undefined },
-    { value: 'MyToken', expected: undefined },
-    { value: '123456789012345678901234567890', undefined },
-    { value: '1234567890123456789012345678901', expected: VALIDATION_MESSAGES.NAME },
-    { value: 23, expected: VALIDATION_MESSAGES.NAME },
-    { value: ['my', 'token'], expected: VALIDATION_MESSAGES.NAME },
-    { value: { a: 1 }, expected: VALIDATION_MESSAGES.NAME },
-  ].forEach(testCase => {
-    const action = testCase.expected === undefined ? 'pass' : 'fail'
-
-    it(`Should ${action} for '${testCase.value}'`, () => {
-      expect(validateTokenName(testCase.value)).toBe(testCase.expected)
-    })
-  })
-})
-
-describe('validateTicker', () => {
-  [
-    { value: '', expected: VALIDATION_MESSAGES.TICKER },
-    { value: '\u2615\u2691', expected: VALIDATION_MESSAGES.TICKER },
-    { value: 'ABcd1e', expected: VALIDATION_MESSAGES.TICKER },
-    { value: 'A-Z', expected: VALIDATION_MESSAGES.TICKER },
-    { value: 'a_1', expected: VALIDATION_MESSAGES.TICKER },
-    { value: 'oh!', expected: VALIDATION_MESSAGES.TICKER },
-    { value: '????', expected: VALIDATION_MESSAGES.TICKER },
-    { value: '1-1A_!', expected: VALIDATION_MESSAGES.TICKER },
-    { value: 'ABC', expected: undefined },
-    { value: '12345', expected: undefined },
-    { value: 'aa', expected: undefined },
-    { value: 'abCD1', expected: undefined },
-  ].forEach(testCase => {
-    const action = testCase.expected === undefined ? 'pass' : 'fail'
-
-    it(`Should ${action} for '${testCase.value}'`, () => {
-      expect(validateTicker(testCase.value)).toBe(testCase.expected)
-    })
-  })
-})
 
 describe('validateWhitelistMin', () => {
   const testCases = [
@@ -112,6 +71,53 @@ describe('validateWhitelistMax', () => {
 
     it(`Should ${action} for { min: '${min}', max: '${max}', decimals: '${decimals}' }`, () => {
       expect(validateWhitelistMax({ ...testCase.value })).toBe(testCase.expected)
+    })
+  })
+})
+
+describe('isMaxLength', () => {
+  const testCases = [
+    { value: '123456789012354678901234567890', errorMessage: undefined, comparedTo: 30, expected: undefined },
+    { value: 'ABC', errorMessage: undefined, comparedTo: 30, expected: undefined },
+    { value: '', errorMessage: undefined, comparedTo: 30, expected: undefined },
+    { value: 'ABCDEF', errorMessage: undefined, comparedTo: 3, expected: VALIDATION_MESSAGES.NAME },
+    { value: 'ABCDEF', errorMessage: 'Personalized error message', comparedTo: 3, expected: 'Personalized error message' },
+  ]
+
+  testCases.forEach(testCase => {
+    const action = testCase.expected === undefined ? 'pass' : 'fail'
+
+    it(`Should ${action} for '${testCase.value}'`, () => {
+      expect(isMaxLength(testCase.errorMessage)(testCase.comparedTo)(testCase.value)).toBe(testCase.expected)
+    })
+  })
+})
+
+describe('isMatchingPattern', () => {
+  const testCases = [
+    { value: '123456789012354678901234567890', errorMessage: undefined, comparedTo: /^[0-9]*$/, expected: undefined },
+    { value: '123456789012354678901234567890', errorMessage: undefined, comparedTo: /^[0-9]{1,30}$/, expected: undefined },
+    { value: '1', errorMessage: undefined, comparedTo: /^[0-9]{1,30}$/, expected: undefined },
+    { value: 'ABC', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]*$/, expected: undefined },
+    { value: 'ABC123', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]*$/, expected: undefined },
+    { value: 'ABC123abc', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]*$/, expected: undefined },
+    { value: 'ABC123abc', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]{1,10}$/, expected: undefined },
+    { value: 'A1a', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]{1,10}$/, expected: undefined },
+    { value: '', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]*$/, expected: undefined },
+    { value: '', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]+$/, expected: VALIDATION_MESSAGES.PATTERN },
+    { value: '@', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]$/, expected: VALIDATION_MESSAGES.PATTERN },
+    { value: 'ABCDEF', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]{1,5}$/, expected: VALIDATION_MESSAGES.PATTERN },
+    { value: 'ABC@D', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]{1,5}$/, expected: VALIDATION_MESSAGES.PATTERN },
+    { value: 'ñandú', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]{1,5}$/, expected: VALIDATION_MESSAGES.PATTERN },
+    { value: 'ñandú', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]{1,5}$/, expected: VALIDATION_MESSAGES.PATTERN },
+    { value: 'ñandú', errorMessage: 'Personalized error message', comparedTo: /^[a-zA-Z0-9]{1,5}$/, expected: 'Personalized error message' },
+  ]
+
+  testCases.forEach(testCase => {
+    const action = testCase.expected === undefined ? 'pass' : 'fail'
+
+    it(`Should ${action} for '${testCase.value}'`, () => {
+      expect(isMatchingPattern(testCase.errorMessage)(testCase.comparedTo)(testCase.value)).toBe(testCase.expected)
     })
   })
 })
@@ -305,12 +311,6 @@ describe('isInteger', () => {
     it(`Should ${action} for '${testCase.value}'`, () => {
       expect(isInteger(testCase.errorMessage)(testCase.value)).toBe(testCase.expected)
     })
-  })
-})
-
-describe('validators', () => {
-  it('Should return false if validator does not exist', () => {
-    expect(validators('nonExistent', '')).toBeFalsy()
   })
 })
 
@@ -568,5 +568,159 @@ describe('composeValidators', () => {
     )(123)
 
     expect(listOfErrors).toBeUndefined()
+  })
+})
+
+describe('validateTierStartDate', () => {
+  const TIMESTAMPS = {
+    CURRENT_TIME: 1520852400000,
+    PLUS_5_MINUTES: 1520852700000,
+    PLUS_10_DAYS: 1521716400000,
+    MINUS_5_MINUTES: 1520852100000,
+    MINUS_10_DAYS: 1519988400000,
+  }
+
+  afterEach(() => {
+    MockDate.reset()
+  })
+
+  it('should fail if startTime is previous than current time', () => {
+    const values = {
+      tiers: [
+        {
+          startTime: TIMESTAMPS.CURRENT_TIME,
+          endTime: TIMESTAMPS.PLUS_5_MINUTES,
+        },
+        {
+          startTime: TIMESTAMPS.PLUS_5_MINUTES,
+          endTime: TIMESTAMPS.PLUS_10_DAYS,
+        },
+      ]
+    }
+
+    MockDate.set(TIMESTAMPS.PLUS_5_MINUTES)
+
+    const validationResult = validateTierStartDate(0)(values.tiers[0].startTime, values)
+
+    expect(validationResult).toEqual([VALIDATION_MESSAGES.DATE_IN_FUTURE])
+  })
+
+  it('should fail if startTime is same or later than same tier\'s endTime', () => {
+    const values = {
+      tiers: [
+        {
+          startTime: TIMESTAMPS.PLUS_5_MINUTES,
+          endTime: TIMESTAMPS.PLUS_5_MINUTES,
+        },
+        {
+          startTime: TIMESTAMPS.PLUS_5_MINUTES,
+          endTime: TIMESTAMPS.PLUS_10_DAYS,
+        },
+      ]
+    }
+
+    MockDate.set(TIMESTAMPS.CURRENT_TIME)
+
+    const validationResult = validateTierStartDate(0)(values.tiers[0].startTime, values)
+
+    expect(validationResult).toEqual(["Should be previous than same tier's End Time"])
+  })
+
+  it('should fail if startTime is before than previous tier\'s endTime', () => {
+    const values = {
+      tiers: [
+        {
+          startTime: TIMESTAMPS.MINUS_5_MINUTES,
+          endTime: TIMESTAMPS.PLUS_5_MINUTES,
+        },
+        {
+          startTime: TIMESTAMPS.CURRENT_TIME,
+          endTime: TIMESTAMPS.PLUS_10_DAYS,
+        },
+      ]
+    }
+
+    MockDate.set(TIMESTAMPS.MINUS_5_MINUTES)
+
+    const validationResult = validateTierStartDate(1)(values.tiers[1].startTime, values)
+
+    expect(validationResult).toEqual(["Should be same or later than previous tier's End Time"])
+  })
+})
+
+describe('validateTierEndDate', () => {
+  const TIMESTAMPS = {
+    CURRENT_TIME: 1520852400000,
+    PLUS_5_MINUTES: 1520852700000,
+    PLUS_10_DAYS: 1521716400000,
+    MINUS_5_MINUTES: 1520852100000,
+    MINUS_10_DAYS: 1519988400000,
+  }
+
+  afterEach(() => {
+    MockDate.reset()
+  })
+
+  it('should fail if endTime is previous than current time', () => {
+    const values = {
+      tiers: [
+        {
+          startTime: TIMESTAMPS.MINUS_5_MINUTES,
+          endTime: TIMESTAMPS.CURRENT_TIME,
+        },
+        {
+          startTime: TIMESTAMPS.PLUS_5_MINUTES,
+          endTime: TIMESTAMPS.PLUS_10_DAYS,
+        },
+      ]
+    }
+
+    MockDate.set(TIMESTAMPS.PLUS_5_MINUTES)
+
+    const validationResult = validateTierEndDate(0)(values.tiers[0].endTime, values)
+
+    expect(validationResult).toEqual([VALIDATION_MESSAGES.DATE_IN_FUTURE])
+  })
+
+  it('should fail if endTime is same or previous than same tier\'s startTime', () => {
+    const values = {
+      tiers: [
+        {
+          startTime: TIMESTAMPS.PLUS_5_MINUTES,
+          endTime: TIMESTAMPS.CURRENT_TIME,
+        },
+        {
+          startTime: TIMESTAMPS.PLUS_5_MINUTES,
+          endTime: TIMESTAMPS.PLUS_10_DAYS,
+        },
+      ]
+    }
+
+    MockDate.set(TIMESTAMPS.MINUS_5_MINUTES)
+
+    const validationResult = validateTierEndDate(0)(values.tiers[0].endTime, values)
+
+    expect(validationResult).toEqual(["Should be later than same tier's Start Time"])
+  })
+
+  it('should fail if endTime is after than next tier\'s startTime', () => {
+    const values = {
+      tiers: [
+        {
+          startTime: TIMESTAMPS.MINUS_5_MINUTES,
+          endTime: TIMESTAMPS.PLUS_5_MINUTES,
+        },
+        {
+          startTime: TIMESTAMPS.CURRENT_TIME,
+          endTime: TIMESTAMPS.PLUS_10_DAYS,
+        },
+      ]
+    }
+
+    MockDate.set(TIMESTAMPS.MINUS_5_MINUTES)
+
+    const validationResult = validateTierEndDate(0)(values.tiers[1].endTime, values)
+
+    expect(validationResult).toEqual(["Should be same or previous than next tier's Start Time"])
   })
 })

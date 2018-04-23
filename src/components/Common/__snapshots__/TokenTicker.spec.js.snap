@@ -1,0 +1,210 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TokenTicker should render TokenTicker component 1`] = `
+<TokenTicker
+  __versions={
+    Object {
+      "final-form": "4.2.0",
+      "react-final-form": "3.1.4",
+    }
+  }
+  batch={[Function]}
+  blur={[Function]}
+  change={[Function]}
+  dirty={false}
+  dirtySinceLastSubmit={false}
+  errorStyle={
+    Object {
+      "color": "red",
+      "fontWeight": "bold",
+    }
+  }
+  errors={Object {}}
+  focus={[Function]}
+  handleSubmit={[Function]}
+  initialize={[Function]}
+  invalid={false}
+  mutators={Object {}}
+  pristine={true}
+  reset={[Function]}
+  submitFailed={false}
+  submitSucceeded={false}
+  submitting={false}
+  touched={Object {}}
+  valid={true}
+  validating={false}
+  values={Object {}}
+  visited={Object {}}
+/>
+`;
+
+exports[`TokenTicker should render TokenTicker component and its children 1`] = `
+<ReactFinalForm(4.2.0)(3.1.4)
+  component={[Function]}
+  errorStyle={
+    Object {
+      "color": "red",
+      "fontWeight": "bold",
+    }
+  }
+  onSubmit={[Function]}
+>
+  <TokenTicker
+    __versions={
+      Object {
+        "final-form": "4.2.0",
+        "react-final-form": "3.1.4",
+      }
+    }
+    batch={[Function]}
+    blur={[Function]}
+    change={[Function]}
+    dirty={false}
+    dirtySinceLastSubmit={false}
+    errorStyle={
+      Object {
+        "color": "red",
+        "fontWeight": "bold",
+      }
+    }
+    errors={Object {}}
+    focus={[Function]}
+    handleSubmit={[Function]}
+    initialize={[Function]}
+    invalid={false}
+    mutators={Object {}}
+    pristine={true}
+    reset={[Function]}
+    submitFailed={false}
+    submitSucceeded={false}
+    submitting={false}
+    touched={Object {}}
+    valid={true}
+    validating={false}
+    values={Object {}}
+    visited={Object {}}
+  >
+    <Field
+      component={[Function]}
+      description="The five letter ticker for your token. There are 11,881,376 combinations for 26 english letters. Be hurry."
+      errorStyle={
+        Object {
+          "color": "red",
+          "fontWeight": "bold",
+        }
+      }
+      format={[Function]}
+      label="Ticker"
+      name="ticker"
+      parse={[Function]}
+      side="right"
+      type="text"
+      validate={[Function]}
+    >
+      <InputField2
+        description="The five letter ticker for your token. There are 11,881,376 combinations for 26 english letters. Be hurry."
+        errorStyle={
+          Object {
+            "color": "red",
+            "fontWeight": "bold",
+          }
+        }
+        input={
+          Object {
+            "name": "ticker",
+            "onBlur": [Function],
+            "onChange": [Function],
+            "onFocus": [Function],
+            "value": "",
+          }
+        }
+        label="Ticker"
+        meta={
+          Object {
+            "active": false,
+            "data": Object {},
+            "dirty": false,
+            "dirtySinceLastSubmit": false,
+            "error": "This field is required",
+            "initial": undefined,
+            "invalid": true,
+            "length": undefined,
+            "pristine": true,
+            "submitError": undefined,
+            "submitFailed": false,
+            "submitSucceeded": false,
+            "touched": false,
+            "valid": false,
+            "visited": false,
+          }
+        }
+        side="right"
+        type="text"
+      >
+        <div
+          className="right"
+        >
+          <label
+            className="label"
+            htmlFor="ticker"
+          >
+            Ticker
+          </label>
+          <input
+            autoComplete="off"
+            className="input"
+            id="ticker"
+            name="ticker"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            type="text"
+            value=""
+          />
+          <p
+            className="description"
+          >
+            The five letter ticker for your token. There are 11,881,376 combinations for 26 english letters. Be hurry.
+          </p>
+          <Error
+            errorStyle={
+              Object {
+                "color": "red",
+                "fontWeight": "bold",
+              }
+            }
+            name="ticker"
+          >
+            <Field
+              format={[Function]}
+              name="ticker"
+              parse={[Function]}
+              render={[Function]}
+              subscription={
+                Object {
+                  "error": true,
+                  "pristine": true,
+                  "touched": true,
+                }
+              }
+            >
+              <span>
+                <p
+                  className="error"
+                  key="0"
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontWeight": "bold",
+                    }
+                  }
+                />
+              </span>
+            </Field>
+          </Error>
+        </div>
+      </InputField2>
+    </Field>
+  </TokenTicker>
+</ReactFinalForm(4.2.0)(3.1.4)>
+`;

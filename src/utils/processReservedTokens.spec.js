@@ -12,7 +12,7 @@ describe('processReservedTokens function', () => {
     const cb = jest.fn()
 
     // When
-    processReservedTokens(rows, cb)
+    processReservedTokens({ rows, decimals: 2 }, cb)
 
     // Then
     expect(cb).toHaveBeenCalledTimes(4)
@@ -35,7 +35,7 @@ describe('processReservedTokens function', () => {
     const cb = jest.fn()
 
     // When
-    processReservedTokens(rows, cb)
+    processReservedTokens({ rows, decimals: 2 }, cb)
 
     // Then
     expect(cb).toHaveBeenCalledTimes(0)
@@ -52,7 +52,7 @@ describe('processReservedTokens function', () => {
     const cb = jest.fn()
 
     // When
-    const { called } = processReservedTokens(rows, cb)
+    const { called } = processReservedTokens({ rows, decimals: 2 }, cb)
 
     // Then
     expect(called).toBe(4)
@@ -69,7 +69,7 @@ describe('processReservedTokens function', () => {
     const cb = jest.fn()
 
     // When
-    const { called } = processReservedTokens(rows, cb)
+    const { called } = processReservedTokens({ rows, decimals: 2 }, cb)
 
     // Then
     expect(called).toBe(0)
@@ -86,7 +86,7 @@ describe('processReservedTokens function', () => {
     const cb = jest.fn()
 
     // When
-    const { called } = processReservedTokens(rows, cb)
+    const { called } = processReservedTokens({ rows, decimals: 2 }, cb)
 
     // Then
     expect(called).toBe(0)
@@ -103,9 +103,48 @@ describe('processReservedTokens function', () => {
     const cb = jest.fn()
 
     // When
-    processReservedTokens(rows, cb)
+    processReservedTokens({ rows, decimals: 2 }, cb)
 
     // Then
     expect(cb).toHaveBeenCalledTimes(0)
+  })
+
+  it(`should ignore tokens with more decimals than specified`, () => {
+    // Given
+    const rows = [
+      ['0x1111111111111111111111111111111111111111', 'tokens', '10.1'],
+      ['0x2222222222222222222222222222222222222222', 'tokens', '10'],
+      ['0x2222222222222222222222222222222222222222', 'tokens', '10.123'],
+      ['0x3333333333333333333333333333333333333333', 'tokens', '10.12']
+    ]
+    const cb = jest.fn()
+
+    // When
+    processReservedTokens({ rows, decimals: 2 }, cb)
+
+    // Then
+    expect(cb).toHaveBeenCalledTimes(3)
+    expect(cb.mock.calls[0]).toEqual([{ addr: rows[0][0], dim: rows[0][1], val: rows[0][2] }])
+    expect(cb.mock.calls[1]).toEqual([{ addr: rows[1][0], dim: rows[1][1], val: rows[1][2] }])
+    expect(cb.mock.calls[2]).toEqual([{ addr: rows[3][0], dim: rows[3][1], val: rows[3][2] }])
+  })
+
+  it(`should ignore percentage with invalid values`, () => {
+    // Given
+    const rows = [
+      ['0x1111111111111111111111111111111111111111', 'percentage', '10'],
+      ['0x2222222222222222222222222222222222222222', 'percentage', '-10'],
+      ['0x2222222222222222222222222222222222222222', 'percentage', ''],
+      ['0x3333333333333333333333333333333333333333', 'percentage', '0.12']
+    ]
+    const cb = jest.fn()
+
+    // When
+    processReservedTokens({ rows, decimals: 2 }, cb)
+
+    // Then
+    expect(cb).toHaveBeenCalledTimes(2)
+    expect(cb.mock.calls[0]).toEqual([{ addr: rows[0][0], dim: rows[0][1], val: rows[0][2] }])
+    expect(cb.mock.calls[1]).toEqual([{ addr: rows[3][0], dim: rows[3][1], val: rows[3][2] }])
   })
 })

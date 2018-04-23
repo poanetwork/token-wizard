@@ -1,0 +1,907 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ManageForm should render the component with tiers 1`] = `
+<form
+  onSubmit={[Function]}
+>
+  <div>
+    <div
+      className="steps"
+    >
+      <div
+        className="steps-content container"
+      >
+        <div
+          className="hidden divisor"
+        >
+          <div
+            className="input-block-container"
+          >
+            <div
+              className="left"
+            >
+              <label
+                className="label"
+              >
+                Crowdsale setup name
+              </label>
+              <input
+                className="input"
+                disabled={true}
+                onBlur={undefined}
+                onChange={undefined}
+                onKeyPress={undefined}
+                onPaste={undefined}
+                style={undefined}
+                type="text"
+                value="Tier 1"
+              />
+              <p
+                className="description"
+              />
+              <p
+                style={
+                  Object {
+                    "color": "red",
+                    "fontSize": "12px",
+                    "fontWeight": "bold",
+                    "height": "10px",
+                    "width": "100%",
+                  }
+                }
+              >
+                
+              </p>
+            </div>
+            <div
+              className="right"
+            >
+              <label
+                className="label"
+              >
+                Wallet Address
+              </label>
+              <input
+                className="input"
+                disabled={true}
+                onBlur={undefined}
+                onChange={undefined}
+                onKeyPress={undefined}
+                onPaste={undefined}
+                style={undefined}
+                type="text"
+                value="0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1"
+              />
+              <p
+                className="description"
+              />
+              <p
+                style={
+                  Object {
+                    "color": "red",
+                    "fontSize": "12px",
+                    "fontWeight": "bold",
+                    "height": "10px",
+                    "width": "100%",
+                  }
+                }
+              >
+                
+              </p>
+            </div>
+          </div>
+          <div
+            className="input-block-container"
+          >
+            <div
+              className="left"
+            >
+              <label
+                className="label"
+                htmlFor="tiers[0].startTime"
+              >
+                Start Time
+              </label>
+              <input
+                autoComplete="off"
+                className="input"
+                disabled={true}
+                id="tiers[0].startTime"
+                name="tiers[0].startTime"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder={undefined}
+                type="datetime-local"
+                value="2018-04-13T16:07"
+              />
+              <p
+                className="description"
+              >
+                Date and time when the tier starts. Can't be in the past from the current moment.
+              </p>
+              <span>
+                <p
+                  className="error"
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "20px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </span>
+            </div>
+            <div
+              className="right"
+            >
+              <label
+                className="label"
+                htmlFor="tiers[0].endTime"
+              >
+                End Time
+              </label>
+              <input
+                autoComplete="off"
+                className="input"
+                disabled={true}
+                id="tiers[0].endTime"
+                name="tiers[0].endTime"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder={undefined}
+                type="datetime-local"
+                value="2018-04-17T00:00"
+              />
+              <p
+                className="description"
+              >
+                Date and time when the tier ends. Can be only in the future.
+              </p>
+              <span>
+                <p
+                  className="error"
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "20px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </span>
+            </div>
+          </div>
+          <div
+            className="input-block-container"
+          >
+            <div
+              className="left"
+            >
+              <label
+                className="label"
+                htmlFor="tiers[0].rate"
+              >
+                Rate
+              </label>
+              <input
+                autoComplete="off"
+                className="input"
+                disabled={true}
+                id="tiers[0].rate"
+                name="tiers[0].rate"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder={undefined}
+                type="text"
+                value="123"
+              />
+              <p
+                className="description"
+              >
+                Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
+              </p>
+              <span>
+                <p
+                  className="error"
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "20px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </span>
+            </div>
+            <div
+              className="right"
+            >
+              <label
+                className="label"
+                htmlFor="tiers[0].supply"
+              >
+                Supply
+              </label>
+              <input
+                autoComplete="off"
+                className="input"
+                disabled={true}
+                id="tiers[0].supply"
+                name="tiers[0].supply"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder={undefined}
+                type="text"
+                value="132"
+              />
+              <p
+                className="description"
+              >
+                How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
+              </p>
+              <span>
+                <p
+                  className="error"
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "20px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div
+            className="section-title"
+          >
+            <p
+              className="title"
+            >
+              Whitelist
+            </p>
+          </div>
+          <div>
+            <div
+              className="white-list-item-container no-style"
+            >
+              <div
+                className="white-list-item-container-inner"
+              >
+                <span
+                  className="white-list-item white-list-item-left"
+                >
+                  0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b
+                </span>
+                <span
+                  className="white-list-item white-list-item-middle"
+                >
+                  1234
+                </span>
+                <span
+                  className="white-list-item white-list-item-right"
+                >
+                  50505
+                </span>
+              </div>
+            </div>
+            <div
+              className="white-list-item-container no-style"
+            >
+              <div
+                className="white-list-item-container-inner"
+              >
+                <span
+                  className="white-list-item white-list-item-left"
+                >
+                  0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1
+                </span>
+                <span
+                  className="white-list-item white-list-item-middle"
+                >
+                  1234
+                </span>
+                <span
+                  className="white-list-item white-list-item-right"
+                >
+                  50505
+                </span>
+              </div>
+            </div>
+            <div
+              className="white-list-item-container no-style"
+            >
+              <div
+                className="white-list-item-container-inner"
+              >
+                <span
+                  className="white-list-item white-list-item-left"
+                >
+                  0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d
+                </span>
+                <span
+                  className="white-list-item white-list-item-middle"
+                >
+                  1234
+                </span>
+                <span
+                  className="white-list-item white-list-item-right"
+                >
+                  50505
+                </span>
+              </div>
+            </div>
+            <div
+              className="white-list-item-container no-style"
+            >
+              <div
+                className="white-list-item-container-inner"
+              >
+                <span
+                  className="white-list-item white-list-item-left"
+                >
+                  0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0
+                </span>
+                <span
+                  className="white-list-item white-list-item-middle"
+                >
+                  1234
+                </span>
+                <span
+                  className="white-list-item white-list-item-right"
+                >
+                  50505
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="steps"
+    >
+      <div
+        className="steps-content container"
+      >
+        <div
+          className="hidden divisor"
+        >
+          <div
+            className="input-block-container"
+          >
+            <div
+              className="left"
+            >
+              <label
+                className="label"
+              >
+                Crowdsale setup name
+              </label>
+              <input
+                className="input"
+                disabled={true}
+                onBlur={undefined}
+                onChange={undefined}
+                onKeyPress={undefined}
+                onPaste={undefined}
+                style={undefined}
+                type="text"
+                value="Tier 2"
+              />
+              <p
+                className="description"
+              />
+              <p
+                style={
+                  Object {
+                    "color": "red",
+                    "fontSize": "12px",
+                    "fontWeight": "bold",
+                    "height": "10px",
+                    "width": "100%",
+                  }
+                }
+              >
+                
+              </p>
+            </div>
+            <div
+              className="right"
+            >
+              <label
+                className="label"
+              >
+                Wallet Address
+              </label>
+              <input
+                className="input"
+                disabled={true}
+                onBlur={undefined}
+                onChange={undefined}
+                onKeyPress={undefined}
+                onPaste={undefined}
+                style={undefined}
+                type="text"
+                value="0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1"
+              />
+              <p
+                className="description"
+              />
+              <p
+                style={
+                  Object {
+                    "color": "red",
+                    "fontSize": "12px",
+                    "fontWeight": "bold",
+                    "height": "10px",
+                    "width": "100%",
+                  }
+                }
+              >
+                
+              </p>
+            </div>
+          </div>
+          <div
+            className="input-block-container"
+          >
+            <div
+              className="left"
+            >
+              <label
+                className="label"
+                htmlFor="tiers[1].startTime"
+              >
+                Start Time
+              </label>
+              <input
+                autoComplete="off"
+                className="input"
+                disabled={true}
+                id="tiers[1].startTime"
+                name="tiers[1].startTime"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder={undefined}
+                type="datetime-local"
+                value="2018-04-17T00:00"
+              />
+              <p
+                className="description"
+              >
+                Date and time when the tier starts. Can't be in the past from the current moment.
+              </p>
+              <span>
+                <p
+                  className="error"
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "20px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </span>
+            </div>
+            <div
+              className="right"
+            >
+              <label
+                className="label"
+                htmlFor="tiers[1].endTime"
+              >
+                End Time
+              </label>
+              <input
+                autoComplete="off"
+                className="input"
+                disabled={true}
+                id="tiers[1].endTime"
+                name="tiers[1].endTime"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder={undefined}
+                type="datetime-local"
+                value="2018-04-21T00:00"
+              />
+              <p
+                className="description"
+              >
+                Date and time when the tier ends. Can be only in the future.
+              </p>
+              <span>
+                <p
+                  className="error"
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "20px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </span>
+            </div>
+          </div>
+          <div
+            className="input-block-container"
+          >
+            <div
+              className="left"
+            >
+              <label
+                className="label"
+                htmlFor="tiers[1].rate"
+              >
+                Rate
+              </label>
+              <input
+                autoComplete="off"
+                className="input"
+                disabled={true}
+                id="tiers[1].rate"
+                name="tiers[1].rate"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder={undefined}
+                type="text"
+                value="55"
+              />
+              <p
+                className="description"
+              >
+                Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
+              </p>
+              <span>
+                <p
+                  className="error"
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "20px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </span>
+            </div>
+            <div
+              className="right"
+            >
+              <label
+                className="label"
+                htmlFor="tiers[1].supply"
+              >
+                Supply
+              </label>
+              <input
+                autoComplete="off"
+                className="input"
+                disabled={true}
+                id="tiers[1].supply"
+                name="tiers[1].supply"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder={undefined}
+                type="text"
+                value="156"
+              />
+              <p
+                className="description"
+              >
+                How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
+              </p>
+              <span>
+                <p
+                  className="error"
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "20px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div
+            className="section-title"
+          >
+            <p
+              className="title"
+            >
+              Whitelist
+            </p>
+          </div>
+          <div>
+            <div
+              className="white-list-item-container no-style"
+            >
+              <div
+                className="white-list-item-container-inner"
+              >
+                <span
+                  className="white-list-item white-list-item-left"
+                >
+                  0x1dF62f291b2E969fB0849d99D9Ce41e2F137006e
+                </span>
+                <span
+                  className="white-list-item white-list-item-middle"
+                >
+                  1234
+                </span>
+                <span
+                  className="white-list-item white-list-item-right"
+                >
+                  50505
+                </span>
+              </div>
+            </div>
+            <div
+              className="white-list-item-container no-style"
+            >
+              <div
+                className="white-list-item-container-inner"
+              >
+                <span
+                  className="white-list-item white-list-item-left"
+                >
+                  0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b
+                </span>
+                <span
+                  className="white-list-item white-list-item-middle"
+                >
+                  1234
+                </span>
+                <span
+                  className="white-list-item white-list-item-right"
+                >
+                  50505
+                </span>
+              </div>
+            </div>
+            <div
+              className="white-list-item-container no-style"
+            >
+              <div
+                className="white-list-item-container-inner"
+              >
+                <span
+                  className="white-list-item white-list-item-left"
+                >
+                  0x3E5e9111Ae8eB78Fe1CC3bb8915d5D461F3Ef9A9
+                </span>
+                <span
+                  className="white-list-item white-list-item-middle"
+                >
+                  1234
+                </span>
+                <span
+                  className="white-list-item white-list-item-right"
+                >
+                  50505
+                </span>
+              </div>
+            </div>
+            <div
+              className="white-list-item-container no-style"
+            >
+              <div
+                className="white-list-item-container-inner"
+              >
+                <span
+                  className="white-list-item white-list-item-left"
+                >
+                  0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1
+                </span>
+                <span
+                  className="white-list-item white-list-item-middle"
+                >
+                  1234
+                </span>
+                <span
+                  className="white-list-item white-list-item-right"
+                >
+                  50505
+                </span>
+              </div>
+            </div>
+            <div
+              className="white-list-item-container no-style"
+            >
+              <div
+                className="white-list-item-container-inner"
+              >
+                <span
+                  className="white-list-item white-list-item-left"
+                >
+                  0x95cED938F7991cd0dFcb48F0a06a40FA1aF46EBC
+                </span>
+                <span
+                  className="white-list-item white-list-item-middle"
+                >
+                  1234
+                </span>
+                <span
+                  className="white-list-item white-list-item-right"
+                >
+                  50505
+                </span>
+              </div>
+            </div>
+            <div
+              className="white-list-item-container no-style"
+            >
+              <div
+                className="white-list-item-container-inner"
+              >
+                <span
+                  className="white-list-item white-list-item-left"
+                >
+                  0xACa94ef8bD5ffEE41947b4585a84BdA5a3d3DA6E
+                </span>
+                <span
+                  className="white-list-item white-list-item-middle"
+                >
+                  1234
+                </span>
+                <span
+                  className="white-list-item white-list-item-right"
+                >
+                  50505
+                </span>
+              </div>
+            </div>
+            <div
+              className="white-list-item-container no-style"
+            >
+              <div
+                className="white-list-item-container-inner"
+              >
+                <span
+                  className="white-list-item white-list-item-left"
+                >
+                  0xd03ea8624C8C5987235048901fB614fDcA89b117
+                </span>
+                <span
+                  className="white-list-item white-list-item-middle"
+                >
+                  1234
+                </span>
+                <span
+                  className="white-list-item white-list-item-right"
+                >
+                  50505
+                </span>
+              </div>
+            </div>
+            <div
+              className="white-list-item-container no-style"
+            >
+              <div
+                className="white-list-item-container-inner"
+              >
+                <span
+                  className="white-list-item white-list-item-left"
+                >
+                  0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d
+                </span>
+                <span
+                  className="white-list-item white-list-item-middle"
+                >
+                  1234
+                </span>
+                <span
+                  className="white-list-item white-list-item-right"
+                >
+                  50505
+                </span>
+              </div>
+            </div>
+            <div
+              className="white-list-item-container no-style"
+            >
+              <div
+                className="white-list-item-container-inner"
+              >
+                <span
+                  className="white-list-item white-list-item-left"
+                >
+                  0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0
+                </span>
+                <span
+                  className="white-list-item white-list-item-middle"
+                >
+                  1234
+                </span>
+                <span
+                  className="white-list-item white-list-item-right"
+                >
+                  50505
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="steps"
+  >
+    <div
+      className="button-container"
+    >
+      <a
+        href="/#"
+        onClick={[Function]}
+      >
+        <span
+          className="no_arrow button button_fill"
+        >
+          Save
+        </span>
+      </a>
+    </div>
+  </div>
+</form>
+`;
+
+exports[`ManageForm should render the component without tiers 1`] = `
+<form
+  onSubmit={[Function]}
+>
+  <div />
+  <div
+    className="steps"
+  >
+    <div
+      className="button-container"
+    >
+      <a
+        href="/#"
+        onClick={[Function]}
+      >
+        <span
+          className="no_arrow button button_fill"
+        >
+          Save
+        </span>
+      </a>
+    </div>
+  </div>
+</form>
+`;

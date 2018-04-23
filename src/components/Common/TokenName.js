@@ -1,14 +1,21 @@
 import React from 'react'
-import { validateTokenName } from '../../utils/validations'
+import { composeValidators, isRequired, isMaxLength, isMatchingPattern } from '../../utils/validations'
 import { TEXT_FIELDS } from '../../utils/constants'
 import { Field } from 'react-final-form'
 import { InputField2 } from './InputField2'
 
 export const TokenName = ({ errorStyle }) => (
   <Field
-    validate={validateTokenName}
+    validate={(value) => {
+      const errors = composeValidators(
+        isRequired(),
+        isMaxLength()(30),
+        isMatchingPattern('Name should have at least one character')(/.*\S.*/)
+      )(value)
+
+      if (errors) return errors.shift()
+    }}
     component={InputField2}
-    parse={(value) => value ? value.replace(/^\s+/, '') : value}
     side="left"
     name="name"
     type="text"

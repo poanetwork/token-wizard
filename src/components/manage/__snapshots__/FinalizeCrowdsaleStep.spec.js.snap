@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FinalizeCrowdsaleStep should render the component with active button 1`] = `
+<div
+  className="steps-content container"
+>
+  <div
+    className="about-step"
+  >
+    <div
+      className="swal2-icon swal2-info warning-logo"
+    >
+      !
+    </div>
+    <p
+      className="title"
+    >
+      Finalize Crowdsale
+    </p>
+    <p
+      className="description"
+    >
+      Finalize - Finalization is the last step of the crowdsale. You can make it only after the end of the last tier. After finalization, it's not possible to update tiers, buy tokens. All tokens will be movable, reserved tokens will be issued.
+    </p>
+    <a
+      href="/#"
+      onClick={[Function]}
+    >
+      <span
+        className="button button_fill"
+      >
+        Finalize Crowdsale
+      </span>
+    </a>
+  </div>
+</div>
+`;
+
+exports[`FinalizeCrowdsaleStep should render the component with disabled button 1`] = `
+<div
+  className="steps-content container"
+>
+  <div
+    className="about-step"
+  >
+    <div
+      className="swal2-icon swal2-info warning-logo"
+    >
+      !
+    </div>
+    <p
+      className="title"
+    >
+      Finalize Crowdsale
+    </p>
+    <p
+      className="description"
+    >
+      Finalize - Finalization is the last step of the crowdsale. You can make it only after the end of the last tier. After finalization, it's not possible to update tiers, buy tokens. All tokens will be movable, reserved tokens will be issued.
+    </p>
+    <a
+      href="/#"
+      onClick={[Function]}
+    >
+      <span
+        className="button button_disabled"
+      >
+        Finalize Crowdsale
+      </span>
+    </a>
+  </div>
+</div>
+`;

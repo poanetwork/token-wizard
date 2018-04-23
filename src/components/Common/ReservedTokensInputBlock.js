@@ -139,7 +139,10 @@ export class ReservedTokensInputBlock extends Component {
       Papa.parse(file, {
         skipEmptyLines: true,
         complete: results => {
-          const { called } = processReservedTokens(results.data, item => {
+          const { called } = processReservedTokens({
+            rows: results.data,
+            decimals: this.props.decimals
+          }, item => {
             this.props.addReservedTokensItem(item)
           })
 
