@@ -10,61 +10,18 @@ import {
   isGreaterOrEqualThan,
   isInteger,
   isLessOrEqualThan,
+  isMatchingPattern,
+  isMaxLength,
   isNonNegative,
   isPositive,
   isRequired,
-  validateTicker,
   validateTierEndDate,
   validateTierStartDate,
-  validateTokenName,
   validateWhitelistMax,
   validateWhitelistMin,
-  validators
 } from './validations'
 import { VALIDATION_MESSAGES } from './constants'
 import MockDate from 'mockdate'
-
-describe('validateTokenName', () => {
-  [
-    { value: '', expected: VALIDATION_MESSAGES.NAME },
-    { value: 'T', expected: undefined },
-    { value: 'MyToken', expected: undefined },
-    { value: '123456789012345678901234567890', undefined },
-    { value: '1234567890123456789012345678901', expected: VALIDATION_MESSAGES.NAME },
-    { value: 23, expected: VALIDATION_MESSAGES.NAME },
-    { value: ['my', 'token'], expected: VALIDATION_MESSAGES.NAME },
-    { value: { a: 1 }, expected: VALIDATION_MESSAGES.NAME },
-  ].forEach(testCase => {
-    const action = testCase.expected === undefined ? 'pass' : 'fail'
-
-    it(`Should ${action} for '${testCase.value}'`, () => {
-      expect(validateTokenName(testCase.value)).toBe(testCase.expected)
-    })
-  })
-})
-
-describe('validateTicker', () => {
-  [
-    { value: '', expected: VALIDATION_MESSAGES.TICKER },
-    { value: '\u2615\u2691', expected: VALIDATION_MESSAGES.TICKER },
-    { value: 'ABcd1e', expected: VALIDATION_MESSAGES.TICKER },
-    { value: 'A-Z', expected: VALIDATION_MESSAGES.TICKER },
-    { value: 'a_1', expected: VALIDATION_MESSAGES.TICKER },
-    { value: 'oh!', expected: VALIDATION_MESSAGES.TICKER },
-    { value: '????', expected: VALIDATION_MESSAGES.TICKER },
-    { value: '1-1A_!', expected: VALIDATION_MESSAGES.TICKER },
-    { value: 'ABC', expected: undefined },
-    { value: '12345', expected: undefined },
-    { value: 'aa', expected: undefined },
-    { value: 'abCD1', expected: undefined },
-  ].forEach(testCase => {
-    const action = testCase.expected === undefined ? 'pass' : 'fail'
-
-    it(`Should ${action} for '${testCase.value}'`, () => {
-      expect(validateTicker(testCase.value)).toBe(testCase.expected)
-    })
-  })
-})
 
 describe('validateWhitelistMin', () => {
   const testCases = [
@@ -114,6 +71,53 @@ describe('validateWhitelistMax', () => {
 
     it(`Should ${action} for { min: '${min}', max: '${max}', decimals: '${decimals}' }`, () => {
       expect(validateWhitelistMax({ ...testCase.value })).toBe(testCase.expected)
+    })
+  })
+})
+
+describe('isMaxLength', () => {
+  const testCases = [
+    { value: '123456789012354678901234567890', errorMessage: undefined, comparedTo: 30, expected: undefined },
+    { value: 'ABC', errorMessage: undefined, comparedTo: 30, expected: undefined },
+    { value: '', errorMessage: undefined, comparedTo: 30, expected: undefined },
+    { value: 'ABCDEF', errorMessage: undefined, comparedTo: 3, expected: VALIDATION_MESSAGES.NAME },
+    { value: 'ABCDEF', errorMessage: 'Personalized error message', comparedTo: 3, expected: 'Personalized error message' },
+  ]
+
+  testCases.forEach(testCase => {
+    const action = testCase.expected === undefined ? 'pass' : 'fail'
+
+    it(`Should ${action} for '${testCase.value}'`, () => {
+      expect(isMaxLength(testCase.errorMessage)(testCase.comparedTo)(testCase.value)).toBe(testCase.expected)
+    })
+  })
+})
+
+describe('isMatchingPattern', () => {
+  const testCases = [
+    { value: '123456789012354678901234567890', errorMessage: undefined, comparedTo: /^[0-9]*$/, expected: undefined },
+    { value: '123456789012354678901234567890', errorMessage: undefined, comparedTo: /^[0-9]{1,30}$/, expected: undefined },
+    { value: '1', errorMessage: undefined, comparedTo: /^[0-9]{1,30}$/, expected: undefined },
+    { value: 'ABC', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]*$/, expected: undefined },
+    { value: 'ABC123', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]*$/, expected: undefined },
+    { value: 'ABC123abc', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]*$/, expected: undefined },
+    { value: 'ABC123abc', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]{1,10}$/, expected: undefined },
+    { value: 'A1a', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]{1,10}$/, expected: undefined },
+    { value: '', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]*$/, expected: undefined },
+    { value: '', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]+$/, expected: VALIDATION_MESSAGES.PATTERN },
+    { value: '@', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]$/, expected: VALIDATION_MESSAGES.PATTERN },
+    { value: 'ABCDEF', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]{1,5}$/, expected: VALIDATION_MESSAGES.PATTERN },
+    { value: 'ABC@D', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]{1,5}$/, expected: VALIDATION_MESSAGES.PATTERN },
+    { value: 'ñandú', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]{1,5}$/, expected: VALIDATION_MESSAGES.PATTERN },
+    { value: 'ñandú', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]{1,5}$/, expected: VALIDATION_MESSAGES.PATTERN },
+    { value: 'ñandú', errorMessage: 'Personalized error message', comparedTo: /^[a-zA-Z0-9]{1,5}$/, expected: 'Personalized error message' },
+  ]
+
+  testCases.forEach(testCase => {
+    const action = testCase.expected === undefined ? 'pass' : 'fail'
+
+    it(`Should ${action} for '${testCase.value}'`, () => {
+      expect(isMatchingPattern(testCase.errorMessage)(testCase.comparedTo)(testCase.value)).toBe(testCase.expected)
     })
   })
 })
@@ -307,12 +311,6 @@ describe('isInteger', () => {
     it(`Should ${action} for '${testCase.value}'`, () => {
       expect(isInteger(testCase.errorMessage)(testCase.value)).toBe(testCase.expected)
     })
-  })
-})
-
-describe('validators', () => {
-  it('Should return false if validator does not exist', () => {
-    expect(validators('nonExistent', '')).toBeFalsy()
   })
 })
 

@@ -1,0 +1,210 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TokenName should render TokenName component 1`] = `
+<TokenName
+  __versions={
+    Object {
+      "final-form": "4.2.0",
+      "react-final-form": "3.1.4",
+    }
+  }
+  batch={[Function]}
+  blur={[Function]}
+  change={[Function]}
+  dirty={false}
+  dirtySinceLastSubmit={false}
+  errorStyle={
+    Object {
+      "color": "red",
+      "fontWeight": "bold",
+    }
+  }
+  errors={Object {}}
+  focus={[Function]}
+  handleSubmit={[Function]}
+  initialize={[Function]}
+  invalid={false}
+  mutators={Object {}}
+  pristine={true}
+  reset={[Function]}
+  submitFailed={false}
+  submitSucceeded={false}
+  submitting={false}
+  touched={Object {}}
+  valid={true}
+  validating={false}
+  values={Object {}}
+  visited={Object {}}
+/>
+`;
+
+exports[`TokenName should render TokenName component and its children 1`] = `
+<ReactFinalForm(4.2.0)(3.1.4)
+  component={[Function]}
+  errorStyle={
+    Object {
+      "color": "red",
+      "fontWeight": "bold",
+    }
+  }
+  onSubmit={[Function]}
+>
+  <TokenName
+    __versions={
+      Object {
+        "final-form": "4.2.0",
+        "react-final-form": "3.1.4",
+      }
+    }
+    batch={[Function]}
+    blur={[Function]}
+    change={[Function]}
+    dirty={false}
+    dirtySinceLastSubmit={false}
+    errorStyle={
+      Object {
+        "color": "red",
+        "fontWeight": "bold",
+      }
+    }
+    errors={Object {}}
+    focus={[Function]}
+    handleSubmit={[Function]}
+    initialize={[Function]}
+    invalid={false}
+    mutators={Object {}}
+    pristine={true}
+    reset={[Function]}
+    submitFailed={false}
+    submitSucceeded={false}
+    submitting={false}
+    touched={Object {}}
+    valid={true}
+    validating={false}
+    values={Object {}}
+    visited={Object {}}
+  >
+    <Field
+      component={[Function]}
+      description="The name of your token. Will be used by Etherscan and other tokenbrowsers. Be afraid of trademarks."
+      errorStyle={
+        Object {
+          "color": "red",
+          "fontWeight": "bold",
+        }
+      }
+      format={[Function]}
+      label="Name"
+      name="name"
+      parse={[Function]}
+      side="left"
+      type="text"
+      validate={[Function]}
+    >
+      <InputField2
+        description="The name of your token. Will be used by Etherscan and other tokenbrowsers. Be afraid of trademarks."
+        errorStyle={
+          Object {
+            "color": "red",
+            "fontWeight": "bold",
+          }
+        }
+        input={
+          Object {
+            "name": "name",
+            "onBlur": [Function],
+            "onChange": [Function],
+            "onFocus": [Function],
+            "value": "",
+          }
+        }
+        label="Name"
+        meta={
+          Object {
+            "active": false,
+            "data": Object {},
+            "dirty": false,
+            "dirtySinceLastSubmit": false,
+            "error": "This field is required",
+            "initial": undefined,
+            "invalid": true,
+            "length": undefined,
+            "pristine": true,
+            "submitError": undefined,
+            "submitFailed": false,
+            "submitSucceeded": false,
+            "touched": false,
+            "valid": false,
+            "visited": false,
+          }
+        }
+        side="left"
+        type="text"
+      >
+        <div
+          className="left"
+        >
+          <label
+            className="label"
+            htmlFor="name"
+          >
+            Name
+          </label>
+          <input
+            autoComplete="off"
+            className="input"
+            id="name"
+            name="name"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            type="text"
+            value=""
+          />
+          <p
+            className="description"
+          >
+            The name of your token. Will be used by Etherscan and other tokenbrowsers. Be afraid of trademarks.
+          </p>
+          <Error
+            errorStyle={
+              Object {
+                "color": "red",
+                "fontWeight": "bold",
+              }
+            }
+            name="name"
+          >
+            <Field
+              format={[Function]}
+              name="name"
+              parse={[Function]}
+              render={[Function]}
+              subscription={
+                Object {
+                  "error": true,
+                  "pristine": true,
+                  "touched": true,
+                }
+              }
+            >
+              <span>
+                <p
+                  className="error"
+                  key="0"
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontWeight": "bold",
+                    }
+                  }
+                />
+              </span>
+            </Field>
+          </Error>
+        </div>
+      </InputField2>
+    </Field>
+  </TokenName>
+</ReactFinalForm(4.2.0)(3.1.4)>
+`;

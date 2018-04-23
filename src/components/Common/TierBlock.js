@@ -14,7 +14,7 @@ import {
   isLessOrEqualThan,
   isPositive,
   isRequired,
-  validateTokenName,
+  isMaxLength,
 } from '../../utils/validations'
 import { DESCRIPTION, TEXT_FIELDS } from '../../utils/constants'
 
@@ -36,8 +36,6 @@ const inputErrorStyle = {
 }
 
 export const TierBlock = ({ fields, ...props }) => {
-  const validateTierName = (value) => validateTokenName(value)
-
   const validateTierStartDate  = (index) => (value, values) => {
     const listOfValidations = [
       isRequired(),
@@ -74,7 +72,14 @@ export const TierBlock = ({ fields, ...props }) => {
             <div className="input-block-container">
               <Field
                 name={`${name}.tier`}
-                validate={validateTierName}
+                validate={(value) => {
+                  const errors = composeValidators(
+                    isRequired(),
+                    isMaxLength()(30)
+                  )(value)
+
+                  if (errors) return errors.shift()
+                }}
                 errorStyle={inputErrorStyle}
                 component={InputField2}
                 type="text"

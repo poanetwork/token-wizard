@@ -123,6 +123,7 @@ export const VALIDATION_MESSAGES = {
   DATE_IS_SAME_OR_LATER: 'Should be same or later than specified time',
   DATE_IS_LATER: 'Should be later than specified time',
   DATE_IS_SAME_OR_PREVIOUS: 'Should be same or previous than specified time',
+  PATTERN: 'Should match the specified pattern',
 }
 
 //descriptions of input fields
