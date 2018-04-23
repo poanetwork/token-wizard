@@ -29,7 +29,7 @@ export const InputField = props => {
         onPaste={props.onPaste}
       />
       <p className="description">{props.description}</p>
-      { props.pristine ? <p style={errorStyle}/> : <p style={errorStyle}>{error}</p> }
+      { props.pristine ? <p style={errorStyle} className="error"/> : <p style={errorStyle}>{error}</p> }
     </div>
   );
 };
