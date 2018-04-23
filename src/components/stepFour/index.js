@@ -53,7 +53,6 @@ export class stepFour extends React.Component {
       deploymentStore.setDeploymentStep(0)
       deploymentStore.setDeployerAccount(context.selectedAccount)
     }
-
   }
 
   static contextTypes = {
@@ -204,7 +203,6 @@ export class stepFour extends React.Component {
           const solFilename = `${orderNumber(prefix++)}_${name}${suffix}`
           const txtFilename = `${orderNumber(prefix++)}_${name}${suffix}`
           const tierNumber = FINALIZE_AGENT === key ? tiersCount - 1 : tier
-
           const commonHeader = FILE_CONTENTS.common.map(content => this.handleContentByParent(content, tierNumber))
 
           zip.file(
