@@ -1,5 +1,6 @@
-import { action, observable } from 'mobx'
+import { action, observable, computed } from 'mobx'
 import autosave from './autosave'
+import { CROWDSALE_STRATEGIES } from '../utils/constants'
 
 class CrowdsaleStore {
   @observable crowdsales
@@ -12,6 +13,20 @@ class CrowdsaleStore {
   constructor () {
     this.reset()
     autosave(this, 'CrowdsaleStore')
+  }
+
+  @computed
+  get isDutchAuction () {
+    if (this.strategy == CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE) return false;
+    else if (this.strategy == CROWDSALE_STRATEGIES.DUTCH_AUCTION) return true;
+    return false;
+  }
+
+  @computed
+  get isMintedCappedCrowdsale () {
+    if (this.strategy == CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE) return true;
+    else if (this.strategy == CROWDSALE_STRATEGIES.DUTCH_AUCTION) return false;
+    return false;
   }
 
   @action reset = () => {

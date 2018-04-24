@@ -10,7 +10,7 @@ export const CrowdsaleEndTime = ({ index, ...props }) => (
     validate={props.disabled ? undefined : validateTierEndDate(index)}
     type="datetime-local"
     label={TEXT_FIELDS.END_TIME}
-    description={DESCRIPTION.END_TIME}
+    description={props.description || DESCRIPTION.END_TIME}
     {...props}
   />
 )

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
-import { TOAST, VALIDATION_TYPES } from '../../utils/constants'
+import { TOAST, VALIDATION_TYPES, CROWDSALE_STRATEGIES } from '../../utils/constants'
 import '../../assets/stylesheets/application.css'
 import {
   successfulFinalizeAlert,
@@ -14,7 +14,8 @@ import {
   sendTXToContract,
   calculateGasLimit,
   attachToSpecificCrowdsaleContract,
-  methodToExec
+  methodToExec,
+  getCrowdsaleStrategy
 } from '../../utils/blockchainHelpers'
 import { toast } from '../../utils/utils'
 import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
@@ -70,9 +71,13 @@ export class Manage extends Component {
       generalStore.setProperty('networkID', networkID)
       getWhiteListWithCapCrowdsaleAssets(networkID)
         .then(_newState => { this.setState(_newState) })
+        .then(() => getCrowdsaleStrategy(crowdsaleExecID))
+        .then((strategy) => crowdsaleStore.setProperty('strategy', strategy))
+        //.then((strategy) => crowdsaleStore.setProperty('strategy', CROWDSALE_STRATEGIES.DUTCH_AUCTION)) // to do
         .then(this.extractContractsData)
         .then(() => {
           this.initialTiers = JSON.parse(JSON.stringify(tierStore.tiers))
+          console.log("strategy:", crowdsaleStore.strategy)
         })
     })
   }
@@ -104,7 +109,7 @@ export class Manage extends Component {
   }
 
   extractContractsData = () => {
-    const { contractStore, match } = this.props
+    const { crowdsaleStore, contractStore, match } = this.props
     contractStore.setContractProperty('crowdsale', 'execID', match.params.crowdsaleExecID)
 
     return getTiers()
@@ -168,12 +173,14 @@ export class Manage extends Component {
                 //get whitelists for tiers
                 let whenWhiteListsData = [];
                 let registryStorageObj = toJS(contractStore.registryStorage)
-                for (let tierNum = 0; tierNum < numOfTiers; tierNum++) {
-                  if (tiers[tierNum].whitelist_enabled) {
-                    let whenTierWhitelist = initCrowdsaleContract.methods.getTierWhitelist(registryStorageObj.addr, contractStore.crowdsale.execID, tierNum).call()
-                    whenWhiteListsData.push(whenTierWhitelist);
-                  } else {
-                    whenWhiteListsData.push(null);
+                if (crowdsaleStore.isMintedCappedCrowdsale) {
+                  for (let tierNum = 0; tierNum < numOfTiers; tierNum++) {
+                    if (tiers[tierNum].whitelist_enabled) {
+                      let whenTierWhitelist = initCrowdsaleContract.methods.getTierWhitelist(registryStorageObj.addr, contractStore.crowdsale.execID, tierNum).call()
+                      whenWhiteListsData.push(whenTierWhitelist);
+                    } else {
+                      whenWhiteListsData.push(null);
+                    }
                   }
                 }
 
@@ -416,7 +423,8 @@ export class Manage extends Component {
           mutators={{ ...arrayMutators }}
           initialValues={{ tiers: this.initialTiers, }}
           component={ManageForm}
-          canEditTiers={ownerCurrentUser && !canFinalize && !finalized}
+          canEditTiers={ownerCurrentUser && crowdsaleStore.isMintedCappedCrowdsale && !canFinalize && !finalized}
+          crowdsaleStore={crowdsaleStore}
           decimals={tokenStore.decimals}
           aboutTier={
             <AboutCrowdsale

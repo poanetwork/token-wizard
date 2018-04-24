@@ -10,7 +10,7 @@ export const CrowdsaleStartTime = ({ index, ...props }) => (
     validate={props.disabled ? undefined : validateTierStartDate(index)}
     type="datetime-local"
     label={TEXT_FIELDS.START_TIME}
-    description={DESCRIPTION.START_TIME}
+    description={props.description || DESCRIPTION.START_TIME}
     {...props}
   />
 )

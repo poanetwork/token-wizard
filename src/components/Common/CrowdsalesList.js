@@ -38,12 +38,12 @@ export default class CrowdsalesList extends Component {
         </div>
         <div className="scrollable-content">
           {
-            crowdsaleStore.crowdsales.map((crowdsaleAddress, index) => (
+            crowdsaleStore.crowdsales.map((crowdsale, index) => (
               <div className={`table-row clickable ${this.state.selectedRow === index ? 'selected' : ''}`}
                     key={index.toString()}
-                    onClick={() => this.selectCrowdsale(index, crowdsaleAddress)}
+                    onClick={() => this.selectCrowdsale(index, crowdsale.execID)}
               >
-                <div className="text">{crowdsaleAddress}</div>
+                <div className="text">{crowdsale.execID}</div>
               </div>
             ))
           }

@@ -3,7 +3,7 @@ import { CrowdsaleStartTime } from './../Common/CrowdsaleStartTime'
 import { CrowdsaleEndTime } from './../Common/CrowdsaleEndTime'
 import { CrowdsaleRate } from './../Common/CrowdsaleRate'
 import { CrowdsaleSupply } from './../Common/CrowdsaleSupply'
-import { TEXT_FIELDS } from '../../utils/constants'
+import { TEXT_FIELDS, DESCRIPTION } from '../../utils/constants'
 import { InputField } from '../Common/InputField'
 import { isDateLaterThan } from '../../utils/validations'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
@@ -17,10 +17,10 @@ const inputErrorStyle = {
   width: '100%',
   height: '20px',
 }
-const { CROWDSALE_SETUP_NAME, WALLET_ADDRESS } = TEXT_FIELDS
+const { WALLET_ADDRESS, STRATEGY } = TEXT_FIELDS
 const dateToTimestamp = (date) => new Date(date).getTime()
 
-export const ManageTierBlock = ({
+export const ManageDutchAuctionBlock = ({
   fields,
   canEditTiers,
   crowdsaleStore,
@@ -30,7 +30,7 @@ export const ManageTierBlock = ({
   <div>
     {fields.map((name, index) => {
       const currentTier = fields.value[index]
-      const { tier, walletAddress, updatable } = currentTier
+      const { walletAddress, updatable } = currentTier
       const { startTime: initialStartTime, endTime: initialEndTime } = fields.initial[index]
 
       const tierHasStarted = !isDateLaterThan()(dateToTimestamp(initialStartTime))(Date.now())
@@ -45,7 +45,7 @@ export const ManageTierBlock = ({
 
             <div className={classNames('hidden', { 'divisor': isWhitelistEnabled })}>
               <div className="input-block-container">
-                <InputField side='left' type='text' title={CROWDSALE_SETUP_NAME} value={tier} disabled={true}/>
+                <InputField side='left' type='text' title={STRATEGY} value={"Dutch Auction"} disabled={true}/>
                 <InputField side='right' type='text' title={WALLET_ADDRESS} value={walletAddress} disabled={true}/>
               </div>
 
@@ -55,6 +55,7 @@ export const ManageTierBlock = ({
                   index={index}
                   disabled={!canEdit || tierHasStarted}
                   side="left"
+                  description={DESCRIPTION.START_TIME_DUTCH_AUCTION}
                   errorStyle={inputErrorStyle}
                 />
                 <CrowdsaleEndTime
@@ -62,20 +63,33 @@ export const ManageTierBlock = ({
                   index={index}
                   disabled={!canEdit}
                   side="right"
+                  description={DESCRIPTION.END_TIME_DUTCH_AUCTION}
                   errorStyle={inputErrorStyle}
                 />
               </div>
 
               <div className="input-block-container">
                 <CrowdsaleRate
-                  name={`${name}.rate`}
+                  name={`${name}.maxRate`}
                   side="left"
+                  label={TEXT_FIELDS.MAX_RATE}
                   disabled={!canEdit || tierHasStarted}
                   errorStyle={inputErrorStyle}
                 />
+                <CrowdsaleRate
+                  name={`${name}.minRate`}
+                  side="right"
+                  label={TEXT_FIELDS.MIN_RATE}
+                  disabled={!canEdit || tierHasStarted}
+                  errorStyle={inputErrorStyle}
+                />
+              </div>
+
+              <div className="input-block-container">
                 <CrowdsaleSupply
                   name={`${name}.supply`}
-                  side="right"
+                  side="left"
+                  description={DESCRIPTION.SUPPLY_DUTCH_AUCTION}
                   disabled={!canEdit || tierHasStarted}
                   errorStyle={inputErrorStyle}
                 />

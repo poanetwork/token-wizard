@@ -10,7 +10,7 @@ export const CrowdsaleSupply = ({ ...props }) => (
     validate={props.disabled ? undefined : isPositive()}
     type="text"
     label={TEXT_FIELDS.SUPPLY}
-    description={DESCRIPTION.SUPPLY}
+    description={props.description || DESCRIPTION.SUPPLY}
     {...props}
   />
 )
