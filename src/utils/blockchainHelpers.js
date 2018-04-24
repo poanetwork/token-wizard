@@ -409,7 +409,7 @@ export let methodToExec = (methodName, targetName, getEncodedParams, params) => 
   return method;
 }
 
-export let methodToInitAppInstance = (methodName, targetName, getEncodedParams, params) => {
+export let methodToInitAppInstance = (methodName, targetName, getEncodedParams, params, appName) => {
   const { web3 } = web3Store
   const methodParams = getEncodedParams(...params)
   console.log("methodParams:", methodParams)
@@ -432,7 +432,7 @@ export let methodToInitAppInstance = (methodName, targetName, getEncodedParams, 
 
   const isPayable = true;
 
-  let appNameBytes = web3.utils.fromAscii(process.env['REACT_APP_MINTED_CAPPED_CROWDSALE_APP_NAME'])
+  let appNameBytes = web3.utils.fromAscii(appName)
   let encodedAppName = web3.eth.abi.encodeParameter("bytes32", appNameBytes);
 
   let paramsToInitAppInstance = [

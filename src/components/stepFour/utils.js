@@ -134,7 +134,8 @@ export const deployCrowdsale = () => {
               methodInterfaceStr,
               target,
               getCrowdSaleParams,
-              params
+              params,
+              process.env['REACT_APP_MINTED_CAPPED_CROWDSALE_APP_NAME']
             )
             /*let method = methodToInit(
               methodInterfaceStr,
@@ -272,7 +273,8 @@ export const deployDutchAuctionCrowdsale = () => {
               methodInterfaceStr,
               target,
               getDutchAuctionCrowdSaleParams,
-              params
+              params,
+              process.env['REACT_APP_DUTCH_CROWDSALE_APP_NAME']
             )
 
             const opts = { gasPrice: generalStore.gasPrice, from: account }
