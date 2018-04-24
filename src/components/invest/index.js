@@ -375,10 +375,6 @@ export class Invest extends React.Component {
               <p className="hashes-title">{curAddr}</p>
               <p className="hashes-description">Current Account</p>
             </div>
-            {/*<div className="hashes-i">
-              <p className="hashes-title">{tokenAddress}</p>
-              <p className="hashes-description">Token Address</p>
-            </div>*/}
             <div className="hashes-i">
               <p className="hashes-title">{crowdsale && crowdsale.execID}</p>
               <p className="hashes-description">Crowdsale Execution ID</p>
@@ -399,8 +395,6 @@ export class Invest extends React.Component {
           <p className="invest-title">Invest page</p>
           <p className="invest-description">
             {'Here you can invest in the crowdsale campaign. At the moment, you need Metamask client to invest into the crowdsale.'}
-            {/*{'Here you can invest in the crowdsale campaign. At the moment, you need Metamask client to invest into the crowdsale. If you don\'t have Metamask, you can send ethers to the crowdsale address with a MethodID: 0xa6f2ae3a. Sample '}*/}
-            {/*<a href="https://kovan.etherscan.io/tx/0x42073576a160206e61b4d9b70b436359b8d220f8b88c7c272c77023513c62c3d">transaction</a> on Kovan network.*/}
           </p>
         </div>
         <div className={rightColumnClasses}>

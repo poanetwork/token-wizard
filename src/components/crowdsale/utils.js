@@ -19,14 +19,14 @@ export let getTokenData = (initCrowdsaleContract, execID, account) => {
     let getTokenName = initCrowdsaleContract.methods.name(registryStorageObj.addr, execID).call();
     let getTokenSymbol = initCrowdsaleContract.methods.symbol(registryStorageObj.addr, execID).call();
     let getTokenDecimals = initCrowdsaleContract.methods.decimals(registryStorageObj.addr, execID).call();
-    let getTokenTotalSypply = initCrowdsaleContract.methods.totalSupply(registryStorageObj.addr, execID).call();
+    let getTokenTotalSupply = initCrowdsaleContract.methods.totalSupply(registryStorageObj.addr, execID).call();
     let getBalanceOf = initCrowdsaleContract.methods.balanceOf(registryStorageObj.addr, execID, account).call();
 
     return Promise.all([
       getTokenName,
       getTokenSymbol,
       getTokenDecimals,
-      getTokenTotalSypply,
+      getTokenTotalSupply,
       getBalanceOf
     ])
       .then(([
@@ -59,7 +59,7 @@ export let getTokenData = (initCrowdsaleContract, execID, account) => {
   })
 }
 
-export let getCrowdsaleData = (initCrowdsaleContract, execID, account) => {
+export let getCrowdsaleData = (initCrowdsaleContract, execID, account, isMintedCappedCrowdsale) => {
   return new Promise((resolve, reject) => {
     if (!initCrowdsaleContract) {
       noContractAlert()
@@ -73,7 +73,7 @@ export let getCrowdsaleData = (initCrowdsaleContract, execID, account) => {
     let getCrowdsaleInfo = initCrowdsaleContract.methods.getCrowdsaleInfo(registryStorageObj.addr, execID).call();
     let getCurrentTierInfo = initCrowdsaleContract.methods.getCurrentTierInfo(registryStorageObj.addr, execID).call();
     let getTokensSold = initCrowdsaleContract.methods.getTokensSold(registryStorageObj.addr, execID).call();
-    let getContributors = initCrowdsaleContract.methods.getCrowdsaleUniqueBuyers(registryStorageObj.addr, execID).call();
+    let getContributors = isMintedCappedCrowdsale ? initCrowdsaleContract.methods.getCrowdsaleUniqueBuyers(registryStorageObj.addr, execID).call() : null;
     let getCrowdsaleMaxRaise = initCrowdsaleContract.methods.getCrowdsaleMaxRaise(registryStorageObj.addr, execID).call();
 
     return Promise.all([
@@ -108,7 +108,8 @@ export let getCrowdsaleData = (initCrowdsaleContract, execID, account) => {
         crowdsalePageStore.setProperty('rate', Number(currentTierInfo.tier_price).toFixed()) //should be one token in wei
         const storedTokensSold = toBigNumber(tokensSold)
         crowdsalePageStore.setProperty('tokensSold', storedTokensSold.toFixed())
-        crowdsalePageStore.setProperty('investors', toBigNumber(contributors).toFixed())
+        if (contributors)
+          crowdsalePageStore.setProperty('investors', toBigNumber(contributors).toFixed())
 
         crowdsalePageStore.setProperty('maximumSellableTokens', toBigNumber(crowdsaleMaxRaise.total_sell_cap).toFixed())
         crowdsalePageStore.setProperty('maximumSellableTokensInWei', toBigNumber(crowdsaleMaxRaise.wei_raise_cap).toFixed())

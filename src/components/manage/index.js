@@ -65,6 +65,7 @@ export class Manage extends Component {
     console.log("crowdsaleExecID:", crowdsaleExecID)
 
     crowdsaleStore.setSelectedProperty('execID', crowdsaleExecID)
+    crowdsaleStore.setProperty('execID', crowdsaleExecID)
 
     // networkID
     getNetworkVersion().then(networkID => {
@@ -410,6 +411,7 @@ export class Manage extends Component {
     const { canFinalize, crowdsaleHasEnded, ownerCurrentUser } = this.state
     const { generalStore, tierStore, tokenStore, crowdsaleStore } = this.props
     const { address, finalized, updatable } = crowdsaleStore.selected
+    const { execID } = crowdsaleStore
 
     return (
       <section className="manage">
@@ -430,8 +432,8 @@ export class Manage extends Component {
             <AboutCrowdsale
               name={tokenStore.name}
               ticker={tokenStore.ticker}
-              address={address}
-              networkId={generalStore.networkId}
+              execID={execID}
+              networkID={generalStore.networkID}
             />
           }
           handleChange={this.updateTierStore}

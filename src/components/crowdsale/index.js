@@ -4,7 +4,8 @@ import {
   getCurrentAccount,
   checkNetWorkByID,
   checkWeb3,
-  attachToSpecificCrowdsaleContract
+  attachToSpecificCrowdsaleContract,
+  getCrowdsaleStrategy
 } from '../../utils/blockchainHelpers'
 import {
   getContractStoreProperty,
@@ -16,7 +17,7 @@ import {
 import { getQueryVariable } from '../../utils/utils'
 import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
 import { StepNavigation } from '../Common/StepNavigation'
-import { NAVIGATION_STEPS } from '../../utils/constants'
+import { NAVIGATION_STEPS, CROWDSALE_STRATEGIES } from '../../utils/constants'
 import { invalidCrowdsaleAddrAlert } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
 import { CrowdsaleConfig } from '../Common/config'
@@ -26,6 +27,7 @@ const { CROWDSALE_PAGE } = NAVIGATION_STEPS
 
 @inject(
   'contractStore',
+  'crowdsaleStore',
   'crowdsalePageStore',
   'web3Store',
   'tierStore',
@@ -48,7 +50,7 @@ export class Crowdsale extends React.Component {
   }
 
   getCrowdsale = (networkID) => {
-    const { generalStore, web3Store } = this.props
+    const { generalStore, web3Store, crowdsaleStore, contractStore } = this.props
     const { web3 } = web3Store
 
     if (!web3) {
@@ -59,40 +61,42 @@ export class Crowdsale extends React.Component {
     checkNetWorkByID(networkID);
     generalStore.setProperty('networkID', networkID);
 
+    const crowdsaleExecID = CrowdsaleConfig.crowdsaleContractURL ? CrowdsaleConfig.crowdsaleContractURL : getQueryVariable('exec-id')
+    console.log("crowdsaleExecID:", crowdsaleExecID)
+    contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
+
+    let account
     getWhiteListWithCapCrowdsaleAssets(networkID)
-      .then(() => this.extractContractsData())
+      .then(getCurrentAccount)
+      .then((_account) => { account = _account })
+      .catch(err => {
+        this.setState({ loading: false })
+        console.log(err)
+      })
+      .then(() => getCrowdsaleStrategy(contractStore.crowdsale.execID))
+      .then((strategy) => crowdsaleStore.setProperty('strategy', strategy))
+      //.then((strategy) => crowdsaleStore.setProperty('strategy', CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE)) //to do
+      .then(() => this.extractContractsData(account))
       .catch(console.log)
   }
 
-  extractContractsData = () => {
-    const { contractStore } = this.props
-    const crowdsaleExecID = CrowdsaleConfig.crowdsaleContractURL ? CrowdsaleConfig.crowdsaleContractURL : getQueryVariable('exec-id')
-
-    console.log("crowdsaleExecID:", crowdsaleExecID)
+  extractContractsData = (account) => {
+    const { contractStore, crowdsaleStore } = this.props
     //to do
     /*if (!web3.utils.isAddress(crowdsaleAddr)) {
       this.setState({ loading: false })
       return invalidCrowdsaleAddrAlert()
     }*/
 
-    contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
-
     if (!contractStore.crowdsale.execID) {
       this.setState({ loading: false })
       return
     }
 
-    getCurrentAccount()
-      .then(account => {
-        attachToSpecificCrowdsaleContract("initCrowdsale")
-          .then((initCrowdsaleContract) => {
-            this.getFullCrowdsaleData(initCrowdsaleContract, crowdsaleExecID, account)
-              .then(() => this.setState({ loading: false }))
-              .catch(err => {
-                this.setState({ loading: false })
-                console.log(err)
-              })
-          })
+    attachToSpecificCrowdsaleContract("initCrowdsale")
+      .then((initCrowdsaleContract) => {
+        this.getFullCrowdsaleData(initCrowdsaleContract, contractStore.crowdsale.execID, account, crowdsaleStore.isMintedCappedCrowdsale)
+          .then(() => this.setState({ loading: false }))
           .catch(err => {
             this.setState({ loading: false })
             console.log(err)
@@ -104,9 +108,9 @@ export class Crowdsale extends React.Component {
       })
   }
 
-  getFullCrowdsaleData = (initCrowdsaleContract, crowdsaleExecID, account) => {
+  getFullCrowdsaleData = (initCrowdsaleContract, crowdsaleExecID, account, isMintedCappedCrowdsale) => {
     let whenTokenData = getTokenData(initCrowdsaleContract, crowdsaleExecID, account)
-    let whenCrowdsaleData = getCrowdsaleData(initCrowdsaleContract, crowdsaleExecID, account)
+    let whenCrowdsaleData = getCrowdsaleData(initCrowdsaleContract, crowdsaleExecID, account, isMintedCappedCrowdsale)
 
     return Promise.all([whenTokenData, whenCrowdsaleData])
       .then(() => initializeAccumulativeData())
@@ -135,7 +139,7 @@ export class Crowdsale extends React.Component {
   }
 
   render() {
-    const { web3Store, tokenStore, crowdsalePageStore } = this.props
+    const { web3Store, tokenStore, crowdsalePageStore, crowdsaleStore } = this.props
     const { web3 } = web3Store
 
     const crowdsaleExecID = getContractStoreProperty('crowdsale','execID')
@@ -164,6 +168,11 @@ export class Crowdsale extends React.Component {
     const goalInETHTiers = toBigNumber(web3.utils.fromWei(maximumSellableTokensInWei.toFixed(), 'ether')).toFixed()
     const goalInETH = goalInETHTiers
     const tokensClaimedRatio = goalInETH > 0 ? ethRaised.div(goalInETH).times(100).toFixed() : '0'
+
+    const investorsBlock = crowdsaleStore.isMintedCappedCrowdsale ? <div className="right">
+      <p className="title">{`${investorsCount}`}</p>
+      <p className="description">Contributors</p>
+    </div> : null
 
     return (
       <section className="steps steps_crowdsale-page">
@@ -209,13 +218,8 @@ export class Crowdsale extends React.Component {
                     <p className="title">{`${tokensClaimed}`}</p>
                     <p className="description">Tokens Claimed</p>
                   </div>
-                  <div className="right">
-                    <p className="title">{`${investorsCount}`}</p>
-                    <p className="description">Contributors</p>
-                  </div>
+                  { investorsBlock }
                 </div>
-                {/*<p className="hash">{`${tokenAddr}`}</p>
-                <p className="description">Token Address</p>*/}
                 <p className="hash">{`${crowdsaleExecID}`}</p>
                 <p className="description">Crowdsale Execution ID</p>
               </div>
