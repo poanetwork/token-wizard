@@ -1,7 +1,6 @@
 import React from 'react'
 import { Field, FormSpy } from 'react-final-form'
 import { FieldArray } from 'react-final-form-arrays'
-import { WhenFieldChanges } from '../Common/WhenFieldChanges'
 import { InputField2 } from '../Common/InputField2'
 import GasPriceInput from './GasPriceInput'
 import { gweiToWei } from '../../utils/utils'
@@ -10,15 +9,13 @@ import {
   composeValidators,
   isAddress,
   isDecimalPlacesNotGreaterThan,
-  isGreaterOrEqualThan,
-  isLessOrEqualThan,
-  isNonNegative,
+  isGreaterOrEqualThan
 } from '../../utils/validations'
 import { TEXT_FIELDS, VALIDATION_TYPES } from '../../utils/constants'
 import { DutchAuctionBlock } from '../Common/DutchAuctionBlock'
 
 const { VALID } = VALIDATION_TYPES
-const { MINCAP, WALLET_ADDRESS } = TEXT_FIELDS
+const { WALLET_ADDRESS } = TEXT_FIELDS
 
 const inputErrorStyle = {
   color: 'red',
@@ -36,15 +33,10 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, prist
   const handleOnChange = ({ values }) => {
     props.tierStore.updateWalletAddress(values.walletAddress, VALID)
     props.generalStore.setGasPrice(gweiToWei(values.gasPrice.price))
-    props.tierStore.setGlobalMinCap(values.minCap || 0)
-    props.tierStore.setTierProperty(values.whitelistEnabled, "whitelistEnabled", 0)
 
     values.tiers.forEach((tier, index) => {
-      props.tierStore.setTierProperty(tier.tier, 'tier', index)
-      props.tierStore.setTierProperty(tier.updatable, 'updatable', index)
       props.tierStore.setTierProperty(tier.startTime, 'startTime', index)
       props.tierStore.setTierProperty(tier.endTime, 'endTime', index)
-      props.tierStore.updateRate(tier.rate, VALID, index)
       props.tierStore.updateMinRate(tier.minRate, VALID, index)
       props.tierStore.updateMaxRate(tier.maxRate, VALID, index)
       props.tierStore.setTierProperty(tier.supply, 'supply', index)
@@ -54,12 +46,6 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, prist
 
   return (
     <form onSubmit={handleSubmit}>
-      <WhenFieldChanges
-        field="whitelistEnabled"
-        becomes={'yes'}
-        set="minCap"
-        to={0}
-      />
       <div>
         <div className="steps-content container">
           <div className="about-step">

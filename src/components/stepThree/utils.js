@@ -18,12 +18,9 @@ export const getStep3Component = (strategy) => {
   switch(strategy) {
     case CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE:
       return StepThreeFormMintedCapped;
-      break;
     case CROWDSALE_STRATEGIES.DUTCH_AUCTION:
       return StepThreeFormDutchAuction;
-      break;
     default:
       return StepThreeFormMintedCapped;
-      break;
   }
 }

@@ -1,4 +1,4 @@
-import { noContractAlert, toFixed } from '../../utils/alerts'
+import { noContractAlert } from '../../utils/alerts'
 import {
   getCurrentAccount,
   attachToSpecificCrowdsaleContract,

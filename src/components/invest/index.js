@@ -330,7 +330,7 @@ export class Invest extends React.Component {
     const { tokenAmountOf } = crowdsalePageStore
     const { crowdsale } = contractStore
 
-    const { curAddr, pristineTokenInput, investThrough, crowdsaleExecID, web3Available, toNextTick, nextTick } = this.state
+    const { curAddr, investThrough, crowdsaleExecID, web3Available, toNextTick, nextTick } = this.state
     const { days, hours, minutes, seconds } = toNextTick
 
     const { decimals, ticker, name } = tokenStore

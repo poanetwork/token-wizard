@@ -1,7 +1,6 @@
 import { incorrectNetworkAlert, noMetaMaskAlert, invalidNetworkIDAlert, noContractAlert } from './alerts'
 import { CHAINS, MAX_GAS_PRICE } from './constants'
 import { crowdsaleStore, generalStore, web3Store, contractStore } from '../stores'
-import { fetchFile } from './utils'
 import { toJS } from 'mobx'
 
 const DEPLOY_CONTRACT = 1
@@ -264,6 +263,7 @@ export function loadRegistryAddresses () {
 
   return Promise.all([whenScriptExecContract, whenAccount])
     .then(([scriptExecContract, account]) => {
+      console.log("account:", account)
       console.log("scriptExecContract:", scriptExecContract)
       let promises = [];
       const crowdsales = []
@@ -291,16 +291,10 @@ export function loadRegistryAddresses () {
       return Promise.all(promises)
         .then(() => {
           return Promise.all(crowdsales)
-          return scriptExecContract.methods.deployer_instances(account, 0).call()
-            .then((deployer_instance) => {
-              console.log("deployer_instance:", deployer_instance)
-              const crowdsales = []
-              crowdsales.push(deployer_instance.exec_id)
-              return Promise.all(crowdsales)
-            })
         })
     })
     .then(crowdsales => {
+      console.log(crowdsales)
       crowdsaleStore.setCrowdsales(crowdsales)
     })
 }

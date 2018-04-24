@@ -2,7 +2,6 @@ import {
   calculateGasLimit,
   getNetWorkNameById,
   getNetworkVersion,
-  getRegistryAddress,
   sendTXToContract,
   methodToExec,
   methodToInitAppInstance
@@ -45,6 +44,10 @@ export const buildDeploymentSteps = (web3) => {
         token: initializeToken,
         crowdsaleInit: initializeCrowdsale,
       }
+      break;
+    default:
+      stepFnCorrelation = {}
+      break;
   }
 
   let list = []
@@ -201,7 +204,7 @@ export const deployCrowdsale = () => {
 
 const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
   const { web3 } = web3Store
-  const { walletAddress, supply, tier, startTime, endTime, minRate, maxRate } = tierStore.tiers[0]
+  const { walletAddress, supply, startTime, endTime, minRate, maxRate } = tierStore.tiers[0]
 
   BigNumber.config({ DECIMAL_PLACES: 18 })
   console.log(tierStore.tiers[0])
@@ -504,38 +507,6 @@ export const initializeCrowdsale = () => {
               .then(() => deploymentStore.setAsSuccessful('crowdsaleInit'))
           })
       })
-    }
-  ]
-}
-
-function registerCrowdsaleAddress () {
-  return [
-    () => {
-      const { web3 } = web3Store
-      const toJS = x => JSON.parse(JSON.stringify(x))
-
-      const registryAbi = contractStore.registry.abi
-      const crowdsaleAddress = contractStore.crowdsale.execID
-
-      const whenRegistryAddress = getRegistryAddress()
-
-      const whenAccount = web3.eth.getAccounts()
-        .then((accounts) => accounts[0])
-
-      return Promise.all([whenRegistryAddress, whenAccount])
-        .then(([registryAddress, account]) => {
-          const registry = new web3.eth.Contract(toJS(registryAbi), registryAddress)
-
-          const opts = { gasPrice: generalStore.gasPrice, from: account }
-          const method = registry.methods.add(crowdsaleAddress)
-
-          return method.estimateGas(opts)
-            .then(estimatedGas => {
-              opts.gasLimit = calculateGasLimit(estimatedGas)
-              return sendTXToContract(method.send(opts))
-            })
-        })
-        .then(() => deploymentStore.setAsSuccessful('registerCrowdsaleAddress'))
     }
   ]
 }

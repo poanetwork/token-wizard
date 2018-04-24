@@ -1,6 +1,5 @@
 import React from 'react'
 import { Field } from 'react-final-form'
-import { OnChange } from 'react-final-form-listeners'
 import { InputField2 } from './InputField2'
 import {
   composeValidators,
@@ -13,13 +12,10 @@ import {
   isLessOrEqualThan,
   isPositive,
   isRequired,
-  isMaxLength,
 } from '../../utils/validations'
 import { DESCRIPTION, TEXT_FIELDS } from '../../utils/constants'
 
 const {
-  ALLOWMODIFYING,
-  CROWDSALE_SETUP_NAME,
   START_TIME,
   END_TIME,
   MIN_RATE,
