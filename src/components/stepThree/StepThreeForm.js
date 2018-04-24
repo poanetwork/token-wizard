@@ -104,8 +104,7 @@ export const StepThreeForm = ({ handleSubmit, values, invalid, pristine, mutator
               component={InputField2}
               validate={composeValidators(
                 isNonNegative(),
-                isDecimalPlacesNotGreaterThan()(props.decimals),
-                isLessOrEqualThan('Should be less or equal than the supply of some tier')(props.tierStore.maxSupply)
+                isDecimalPlacesNotGreaterThan()(props.decimals)
               )}
               disabled={values.whitelistEnabled === 'yes'}
               errorStyle={inputErrorStyle}
