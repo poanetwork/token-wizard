@@ -26,6 +26,7 @@ exports[`AddressInput Should render the component 1`] = `
     Where the money goes after investors transactions. Immediately after each transaction. We recommend to setup a multisig wallet with hardware based signers.
   </p>
   <p
+    className="error"
     style={
       Object {
         "color": "red",
