@@ -45,6 +45,8 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, prist
       props.tierStore.setTierProperty(tier.startTime, 'startTime', index)
       props.tierStore.setTierProperty(tier.endTime, 'endTime', index)
       props.tierStore.updateRate(tier.rate, VALID, index)
+      props.tierStore.updateMinRate(tier.minRate, VALID, index)
+      props.tierStore.updateMaxRate(tier.maxRate, VALID, index)
       props.tierStore.setTierProperty(tier.supply, 'supply', index)
       props.tierStore.validateTiers('supply', index)
     })
@@ -99,7 +101,6 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, prist
         {({ fields }) => (
           <DutchAuctionBlock
             fields={fields}
-            minCap={values.minCap}
             decimals={props.decimals}
             tierStore={props.tierStore}
           />

@@ -82,6 +82,16 @@ class TierStore {
     this.validTiers[tierIndex].rate = validity
   }
 
+  @action updateMinRate = (value, validity, tierIndex) => {
+    this.tiers[tierIndex].minRate = value
+    this.validTiers[tierIndex].minRate = validity
+  }
+
+  @action updateMaxRate = (value, validity, tierIndex) => {
+    this.tiers[tierIndex].maxRate = value
+    this.validTiers[tierIndex].maxRate = validity
+  }
+
   @action updateWalletAddress = (value, validity) => {
     this.tiers[0].walletAddress = value
     this.validTiers[0].walletAddress = validity

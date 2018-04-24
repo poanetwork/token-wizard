@@ -3,6 +3,7 @@ import { FormSpy } from 'react-final-form'
 import { TokenName } from '../Common/TokenName'
 import { TokenTicker } from '../Common/TokenTicker'
 import { TokenDecimals } from '../Common/TokenDecimals'
+import { TokenSupply } from '../Common/TokenSupply'
 import { ReservedTokensInputBlock } from '../Common/ReservedTokensInputBlock'
 import { CROWDSALE_STRATEGIES } from '../../utils/constants';
 
@@ -45,6 +46,7 @@ export const StepTwoForm = ({
         <TokenName errorStyle={errorStyle}/>
         <TokenTicker errorStyle={errorStyle}/>
         <TokenDecimals disabled={disableDecimals} errorStyle={errorStyle}/>
+        {crowdsaleStore.strategy == CROWDSALE_STRATEGIES.DUTCH_AUCTION ? <TokenSupply errorStyle={errorStyle}/> : null}
       </div>
       {crowdsaleStore.strategy == CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE ? reservedTokens : null}
 

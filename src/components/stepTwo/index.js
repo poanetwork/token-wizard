@@ -73,7 +73,7 @@ export class stepTwo extends Component {
             <div className="step-icons step-icons_token-setup"/>
             <p className="title">Token setup</p>
             <p className="description">
-              Configure properties of your token. Created token contract will be ERC-20 compatible.
+              Configure properties of your token. Created token will be ERC-20 compatible.
             </p>
           </div>
           <Form

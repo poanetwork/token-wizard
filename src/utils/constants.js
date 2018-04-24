@@ -139,15 +139,19 @@ export const DESCRIPTION = {
   START_TIME: `Date and time when the tier starts. Can't be in the past from the current moment.`,
   END_TIME: `Date and time when the tier ends. Can be only in the future.`,
   RATE: `Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens`,
-  SUPPLY: `How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers`
+  SUPPLY: `How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers`,
+  TOKEN_SUPPLY: `The total supply of the token`
 }
 
 export const TEXT_FIELDS = {
   NAME: 'Name',
   TICKER: 'Ticker',
   SUPPLY: 'Supply',
+  TOKEN_SUPPLY: 'Supply',
   DECIMALS: 'Decimals',
   RATE: 'Rate',
+  MIN_RATE: 'Min Rate',
+  MAX_RATE: 'Max Rate',
   WALLET_ADDRESS: 'Wallet Address',
   START_TIME: 'Start Time',
   END_TIME: 'End Time',

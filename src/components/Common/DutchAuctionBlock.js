@@ -2,7 +2,6 @@ import React from 'react'
 import { Field } from 'react-final-form'
 import { OnChange } from 'react-final-form-listeners'
 import { InputField2 } from './InputField2'
-import { WhitelistInputBlock } from './WhitelistInputBlock'
 import {
   composeValidators,
   isDateInFuture,
@@ -23,7 +22,8 @@ const {
   CROWDSALE_SETUP_NAME,
   START_TIME,
   END_TIME,
-  RATE,
+  MIN_RATE,
+  MAX_RATE,
   SUPPLY
 } = TEXT_FIELDS
 
@@ -36,8 +36,106 @@ const inputErrorStyle = {
 }
 
 export const DutchAuctionBlock = ({ fields, ...props }) => {
+  const validateTierStartDate  = (index) => (value, values) => {
+    const listOfValidations = [
+      isRequired(),
+      isDateInFuture(),
+      isDatePreviousThan("Should be previous than same tier's End Time")(values.tiers[index].endTime),
+    ]
+
+    if (index > 0) {
+      listOfValidations.push(isDateSameOrLaterThan("Should be same or later than previous tier's End Time")(values.tiers[index - 1].endTime))
+    }
+
+    return composeValidators(...listOfValidations)(value)
+  }
+
+  const validateTierEndDate  = (index) => (value, values) => {
+    const listOfValidations = [
+      isRequired(),
+      isDateInFuture(),
+      isDateLaterThan("Should be later than same tier's Start Time")(values.tiers[index].startTime),
+    ]
+
+    if (index < values.tiers.length - 1) {
+      listOfValidations.push(isDateSameOrPreviousThan("Should be same or previous than next tier's Start Time")(values.tiers[index + 1].startTime))
+    }
+
+    return composeValidators(...listOfValidations)(value)
+  }
 
   return (
-    null
+    <div>
+      {fields.map((name, index) => (
+        <div style={{ marginTop: '40px' }} className='steps-content container' key={index}>
+          <div className="hidden">
+
+            <div className="input-block-container">
+              <Field
+                name={`${name}.startTime`}
+                component={InputField2}
+                validate={validateTierStartDate(index)}
+                errorStyle={inputErrorStyle}
+                type="datetime-local"
+                side="left"
+                label={START_TIME}
+                description={DESCRIPTION.START_TIME}
+              />
+              <Field
+                name={`${name}.endTime`}
+                component={InputField2}
+                validate={validateTierEndDate(index)}
+                errorStyle={inputErrorStyle}
+                type="datetime-local"
+                side="right"
+                label={END_TIME}
+                description={DESCRIPTION.END_TIME}
+              />
+            </div>
+
+            <div className="input-block-container">
+              <Field
+                name={`${name}.maxRate`}
+                component={InputField2}
+                validate={composeValidators(
+                  isPositive(),
+                  isInteger(),
+                  isLessOrEqualThan('Should not be greater than 1 quintillion (10^18)')('1e18')
+                )}
+                errorStyle={inputErrorStyle}
+                type="text"
+                side="left"
+                label={MAX_RATE}
+                description={DESCRIPTION.RATE}
+              />
+              <Field
+                name={`${name}.minRate`}
+                component={InputField2}
+                validate={composeValidators(
+                  isPositive(),
+                  isInteger(),
+                  isLessOrEqualThan('Should not be greater than 1 quintillion (10^18)')('1e18')
+                )}
+                errorStyle={inputErrorStyle}
+                type="text"
+                side="right"
+                label={MIN_RATE}
+                description={DESCRIPTION.RATE}
+              />
+              <Field
+                name={`${name}.supply`}
+                component={InputField2}
+                validate={isPositive()}
+                errorStyle={inputErrorStyle}
+                type="text"
+                side="left"
+                label={SUPPLY}
+                description={DESCRIPTION.SUPPLY}
+              />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
   )
 }
