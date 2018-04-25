@@ -38,11 +38,6 @@ export class Invest extends React.Component {
     super(props)
     window.scrollTo(0, 0)
 
-    const { web3Store } = this.props
-    const networkID = CrowdsaleConfig.networkID ? CrowdsaleConfig.networkID : getQueryVariable('networkID')
-    web3Store.setProperty('networkID', networkID);
-    checkNetWorkByID(networkID)
-
     this.state = {
       loading: true,
       pristineTokenInput: true,
@@ -70,6 +65,9 @@ export class Invest extends React.Component {
       this.setState({ loading: false })
       return
     }
+
+    const networkID = CrowdsaleConfig.networkID ? CrowdsaleConfig.networkID : getQueryVariable('networkID') 
+    checkNetWorkByID(networkID)
 
     this.setState({
       web3Available: true,
