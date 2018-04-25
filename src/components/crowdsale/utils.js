@@ -356,7 +356,7 @@ function getTokenData () {
               name,
               ticker,
               decimals,
-              totalSupply,
+              supply,
               balanceOf
           ]) => {
 
@@ -364,17 +364,14 @@ function getTokenData () {
             tokenStore.setProperty('name', name)
             console.log('token ticker: ' + ticker)
             tokenStore.setProperty('ticker', ticker)
+            const balance = toBigNumber(balanceOf)
+            console.log('balanceOf:', balance.toFixed())
+            const currentAmount = crowdsalePageStore.tokenAmountOf || 0
+            crowdsalePageStore.setProperty('tokenAmountOf', balance.plus(currentAmount).toFixed())
             console.log('token decimals: ' + decimals)
             tokenStore.setProperty('decimals', decimals)
-            totalSupply = totalSupply * toBigNumber(10).pow(Number(decimals))
-            console.log('token supply: ' + totalSupply)
-            tokenStore.setProperty('supply', totalSupply)
-            balanceOf = Number(balanceOf).toFixed()
-            const balance = toBigNumber(balanceOf)
-            console.log('balanceOf: ' + balanceOf)
-            const currentAmount = crowdsalePageStore.tokenAmountOf ? crowdsalePageStore.tokenAmountOf : 0
-            console.log('tokenAmountOf: ' + currentAmount)
-            crowdsalePageStore.setProperty('tokenAmountOf', balance.plus(currentAmount).toFixed())
+            console.log('token supply: ' + supply)
+            tokenStore.setProperty('supply', supply)
 
             resolve()
           })
