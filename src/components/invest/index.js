@@ -66,7 +66,7 @@ export class Invest extends React.Component {
       return
     }
 
-    const networkID = CrowdsaleConfig.networkID ? CrowdsaleConfig.networkID : getQueryVariable('networkID') 
+    const networkID = CrowdsaleConfig.networkID ? CrowdsaleConfig.networkID : getQueryVariable('networkID')
     checkNetWorkByID(networkID)
 
     this.setState({
