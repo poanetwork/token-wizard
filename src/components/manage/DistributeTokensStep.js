@@ -24,7 +24,7 @@ export const DistributeTokensStep = inject('reservedTokenStore')(observer(
             'button_fill': !disabled
           }
         )}>
-          Distribute tokens
+          Distribute reserved tokens
         </span>
         </Link>
         {!owner ? null : (
