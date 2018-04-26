@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ReservedTokensItem should render the component with delete button enabled 1`] = `
+<div
+  className="reserved-tokens-item-container"
+>
+  <div
+    className="reserved-tokens-item-container-inner"
+  >
+    <span
+      className="reserved-tokens-item reserved-tokens-item-left"
+    >
+      0x1111111111111111111111111111111111111111
+    </span>
+    <span
+      className="reserved-tokens-item reserved-tokens-item-middle"
+    >
+      percentage
+    </span>
+    <span
+      className="reserved-tokens-item reserved-tokens-item-right"
+    >
+      12.1234
+    </span>
+  </div>
+  <div
+    className="reserved-tokens-item-empty"
+  >
+    <a
+      onClick={[Function]}
+    >
+      <span
+        className="item-remove"
+      />
+    </a>
+  </div>
+</div>
+`;
+
+exports[`ReservedTokensItem should render the component with no delete button 1`] = `
+<div
+  className="reserved-tokens-item-container"
+>
+  <div
+    className="reserved-tokens-item-container-inner monospace"
+  >
+    <span
+      className="reserved-tokens-item reserved-tokens-item-left"
+    >
+      0x1111111111111111111111111111111111111111
+    </span>
+    <span
+      className="reserved-tokens-item reserved-tokens-item-middle"
+    >
+      percentage
+    </span>
+    <span
+      className="reserved-tokens-item reserved-tokens-item-right"
+    >
+      12.1234
+    </span>
+  </div>
+</div>
+`;
