@@ -21,7 +21,7 @@ export const DistributeTokensStep = ({ disabled, handleClick }) => (
             'button_fill': !disabled
           }
         )}>
-          Distribute tokens
+          Distribute reserved tokens
         </span>
       </Link>
     </div>
