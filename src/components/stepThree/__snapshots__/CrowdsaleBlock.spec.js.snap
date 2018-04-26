@@ -330,6 +330,7 @@ exports[`CrowdsaleBlock Should render the component for the first Tier 1`] = `
                     Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
                   </p>
                   <p
+                    className="error"
                     style={
                       Object {
                         "color": "red",
@@ -797,6 +798,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier 1`] = `
                     Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
                   </p>
                   <p
+                    className="error"
                     style={
                       Object {
                         "color": "red",
@@ -1338,6 +1340,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
                     Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
                   </p>
                   <p
+                    className="error"
                     style={
                       Object {
                         "color": "red",
@@ -1553,6 +1556,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
                           Address of a whitelisted account. Whitelists are inherited. E.g., if an account whitelisted on Tier 1 and didn't buy max cap on Tier 1, he can buy on Tier 2, and following tiers.
                         </p>
                         <p
+                          className="error"
                           style={
                             Object {
                               "color": "red",
@@ -1596,6 +1600,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
                           Minimum amount tokens to buy. Not a minimal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.
                         </p>
                         <p
+                          className="error"
                           style={
                             Object {
                               "color": "red",
@@ -1639,6 +1644,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
                           Maximum is the hard limit.
                         </p>
                         <p
+                          className="error"
                           style={
                             Object {
                               "color": "red",
