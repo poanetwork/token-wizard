@@ -22,10 +22,6 @@ class Web3Store {
     })
   }
 
-  @action setProperty = (property, value) => {
-    this[property] = value
-  }
-
   getInfuraLink = (network) => {
     const infuraToken = 'kEpzZR9fIyO3a8gTqJcI'
     return `https://${network}.infura.io/${infuraToken}`

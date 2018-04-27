@@ -117,10 +117,6 @@ export class Invest extends React.Component {
           })
         })
         .then(() => {
-          this.setState({
-            web3
-          })
-
           if (!contractStore.crowdsale.addr) {
             this.setState({ loading: false })
             return
