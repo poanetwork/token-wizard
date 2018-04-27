@@ -1,5 +1,5 @@
 import Web3 from 'web3'
-import { observable, action } from 'mobx';
+import { observable } from 'mobx';
 import { getQueryVariable } from '../utils/utils'
 import { CrowdsaleConfig } from '../components/Common/config'
 import { CHAINS } from '../utils/constants'
