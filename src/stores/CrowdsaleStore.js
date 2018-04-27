@@ -29,6 +29,18 @@ class CrowdsaleStore {
     return false;
   }
 
+  @computed
+  get contractTargetSuffix() {
+    switch (this.strategy) {
+      case CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE:
+        return "MintedCapped"
+      case CROWDSALE_STRATEGIES.DUTCH_AUCTION:
+        return "DutchAuction"
+      default:
+        return "MintedCapped"
+    }
+  }
+
   @action reset = () => {
     this.crowdsales = []
     this.selected = {

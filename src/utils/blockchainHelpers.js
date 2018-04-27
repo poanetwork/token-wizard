@@ -395,6 +395,8 @@ export let methodToExec = (methodName, targetName, getEncodedParams, params) => 
   const scriptExec = new web3.eth.Contract(toJS(abiScriptExec), addrScriptExec)
   console.log(scriptExec)
 
+  console.log("targetName:", targetName)
+
   const target = contractStore[targetName].addr;
 
   let paramsToExec = [

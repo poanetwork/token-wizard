@@ -93,9 +93,14 @@ export class Crowdsale extends React.Component {
       return
     }
 
-    attachToSpecificCrowdsaleContract("initCrowdsale")
+    const targetPrefix = "initCrowdsale"
+    const targetSuffix = crowdsaleStore.contractTargetSuffix
+    const target = `${targetPrefix}${targetSuffix}`
+    console.log("target:", target)
+
+    attachToSpecificCrowdsaleContract(target)
       .then((initCrowdsaleContract) => {
-        this.getFullCrowdsaleData(initCrowdsaleContract, contractStore.crowdsale.execID, account, crowdsaleStore.isMintedCappedCrowdsale)
+        this.getFullCrowdsaleData(initCrowdsaleContract, contractStore.crowdsale.execID, account)
           .then(() => this.setState({ loading: false }))
           .catch(err => {
             this.setState({ loading: false })
@@ -108,9 +113,9 @@ export class Crowdsale extends React.Component {
       })
   }
 
-  getFullCrowdsaleData = (initCrowdsaleContract, crowdsaleExecID, account, isMintedCappedCrowdsale) => {
+  getFullCrowdsaleData = (initCrowdsaleContract, crowdsaleExecID, account) => {
     let whenTokenData = getTokenData(initCrowdsaleContract, crowdsaleExecID, account)
-    let whenCrowdsaleData = getCrowdsaleData(initCrowdsaleContract, crowdsaleExecID, account, isMintedCappedCrowdsale)
+    let whenCrowdsaleData = getCrowdsaleData(initCrowdsaleContract, crowdsaleExecID, account)
 
     return Promise.all([whenTokenData, whenCrowdsaleData])
       .then(() => initializeAccumulativeData())
@@ -169,10 +174,10 @@ export class Crowdsale extends React.Component {
     const goalInETH = goalInETHTiers
     const tokensClaimedRatio = goalInETH > 0 ? ethRaised.div(goalInETH).times(100).toFixed() : '0'
 
-    const investorsBlock = crowdsaleStore.isMintedCappedCrowdsale ? <div className="right">
+    const investorsBlock = <div className="right">
       <p className="title">{`${investorsCount}`}</p>
       <p className="description">Contributors</p>
-    </div> : null
+    </div>
 
     return (
       <section className="steps steps_crowdsale-page">

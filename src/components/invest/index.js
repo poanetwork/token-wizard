@@ -6,7 +6,8 @@ import {
   sendTXToContract,
   calculateGasLimit,
   attachToSpecificCrowdsaleContract,
-  methodToExec
+  methodToExec,
+  getCrowdsaleStrategy
 } from '../../utils/blockchainHelpers'
 import {
   getTokenData,
@@ -45,7 +46,8 @@ import { generateContext } from '../stepFour/utils'
   'tokenStore',
   'generalStore',
   'investStore',
-  'gasPriceStore'
+  'gasPriceStore',
+  'crowdsaleStore'
 )
 @observer
 export class Invest extends React.Component {
@@ -73,7 +75,7 @@ export class Invest extends React.Component {
   }
 
   componentDidMount () {
-    const { web3Store, gasPriceStore, generalStore } = this.props
+    const { web3Store, gasPriceStore, generalStore, contractStore, crowdsaleStore } = this.props
     const { web3 } = web3Store
 
     if (!web3) {
@@ -92,6 +94,10 @@ export class Invest extends React.Component {
     getWhiteListWithCapCrowdsaleAssets(networkID)
       .then(_newState => {
         this.setState(_newState)
+      })
+      .then(() => getCrowdsaleStrategy(this.state.crowdsaleExecID))
+      .then((strategy) => crowdsaleStore.setProperty('strategy', strategy))
+      .then(() => {
         this.extractContractsData()
         gasPriceStore.updateValues()
           .then(() => generalStore.setGasPrice(gasPriceStore.slow.price))
@@ -104,7 +110,7 @@ export class Invest extends React.Component {
   }
 
   extractContractsData() {
-    const { contractStore, web3Store } = this.props
+    const { contractStore, web3Store, crowdsaleStore } = this.props
     const { web3 } = web3Store
 
     const crowdsaleExecID = CrowdsaleConfig.crowdsaleContractURL ? CrowdsaleConfig.crowdsaleContractURL : getQueryVariable('exec-id')
@@ -131,12 +137,16 @@ export class Invest extends React.Component {
           return
         }
 
-        attachToSpecificCrowdsaleContract("initCrowdsale")
+        const targetPrefix = "initCrowdsale"
+        const targetSuffix = crowdsaleStore.contractTargetSuffix
+        const target = `${targetPrefix}${targetSuffix}`
+
+        attachToSpecificCrowdsaleContract(target)
           .then((initCrowdsaleContract) => {
             initializeAccumulativeData()
             .then(() => {
               let whenTokenData = getTokenData(initCrowdsaleContract, crowdsaleExecID, account)
-              let whenCrowdsaleData = getCrowdsaleData(initCrowdsaleContract, crowdsaleExecID, account)
+              let whenCrowdsaleData = getCrowdsaleData(initCrowdsaleContract, crowdsaleExecID, account, crowdsaleStore)
               return Promise.all([whenTokenData, whenCrowdsaleData])
             })
               .then(() => getCrowdsaleTargetDates(initCrowdsaleContract, crowdsaleExecID))
@@ -265,7 +275,7 @@ export class Invest extends React.Component {
   }
 
   investToTokensForWhitelistedCrowdsaleInternal = (account) => {
-    const { tokenStore, crowdsalePageStore, investStore, generalStore } = this.props
+    const { tokenStore, crowdsalePageStore, investStore, generalStore, crowdsaleStore } = this.props
 
     const decimals = new BigNumber(tokenStore.decimals)
     console.log('decimals:', decimals.toFixed())
@@ -287,8 +297,13 @@ export class Invest extends React.Component {
     console.log(opts)
 
     let methodInterface = ["bytes"];
+
+    const targetPrefix = "crowdsaleBuyTokens"
+    const targetSuffix = crowdsaleStore.contractTargetSuffix
+    const target = `${targetPrefix}${targetSuffix}`
+
     let paramsToExec = [weiToSend, methodInterface]
-    const method = methodToExec(`buy(${methodInterface.join(',')})`, "crowdsaleBuyTokens", this.getBuyParams, paramsToExec)
+    const method = methodToExec(`buy(${methodInterface.join(',')})`, target, this.getBuyParams, paramsToExec)
 
     method.estimateGas(opts)
       .then(estimatedGas => {

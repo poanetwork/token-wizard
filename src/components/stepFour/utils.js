@@ -42,6 +42,8 @@ export const buildDeploymentSteps = (web3) => {
       stepFnCorrelation = {
         crowdsaleCreate: deployDutchAuctionCrowdsale,
         token: initializeToken,
+        updateGlobalMinContribution: updateGlobalMinContribution,
+        whitelist: addWhitelist,
         crowdsaleInit: initializeCrowdsale,
       }
       break;
@@ -128,7 +130,7 @@ export const deployCrowdsale = () => {
             let params = [ account, methodInterface ];
 
             const methodInterfaceStr = `init(${methodInterface.join(',')})`
-            const target = "initCrowdsale"
+            const target = "initCrowdsaleMintedCapped"
 
             let method = methodToInitAppInstance(
               methodInterfaceStr,
@@ -205,7 +207,7 @@ export const deployCrowdsale = () => {
 
 const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
   const { web3 } = web3Store
-  const { walletAddress, supply, startTime, endTime, minRate, maxRate } = tierStore.tiers[0]
+  const { walletAddress, supply, startTime, endTime, minRate, maxRate, whitelistEnabled } = tierStore.tiers[0]
 
   BigNumber.config({ DECIMAL_PLACES: 18 })
   console.log(tierStore.tiers[0])
@@ -231,14 +233,18 @@ const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
   //Dutch Auction crowdsale supply
   const crowdsaleSupplyBN = toBigNumber(supply).times(`1e${tokenStore.decimals}`).toFixed()
 
+  //is Dutch Auction crowdsale whitelisted?
+  const isWhitelisted = whitelistEnabled === 'yes'
+
   let paramsCrowdsale = [
     walletAddress,
     tokenSupplyBN,
     crowdsaleSupplyBN,
-    maxOneTokenInWEI,
     minOneTokenInWEI,
+    maxOneTokenInWEI,
     durationBN,
     formatDate(startTime),
+    isWhitelisted,
     account
   ]
 
@@ -262,12 +268,12 @@ export const deployDutchAuctionCrowdsale = () => {
           .then((account) => {
             contractStore.setContractProperty('crowdsale', 'account', account)
 
-            const methodInterface = ["address","uint256","uint256","uint256","uint256","uint256","uint256","address"]
+            const methodInterface = ["address","uint256","uint256","uint256","uint256","uint256","uint256","bool","address"]
 
             let params = [ account, methodInterface ];
 
             const methodInterfaceStr = `init(${methodInterface.join(',')})`
-            const target = "initCrowdsale"
+            const target = "initCrowdsaleDutchAuction"
 
             let method = methodToInitAppInstance(
               methodInterfaceStr,
@@ -380,8 +386,12 @@ export const initializeToken = () => {
         console.log("contractStore.crowdsale.account: ", contractStore.crowdsale.account)
         let account = contractStore.crowdsale.account;
 
+        const targetPrefix = "crowdsaleConsole"
+        const targetSuffix = crowdsaleStore.contractTargetSuffix
+        const target = `${targetPrefix}${targetSuffix}`
+
         let paramsToExec = [tokenStore, methodInterface]
-        const method = methodToExec(`initCrowdsaleToken(${methodInterface.join(',')})`, "crowdsaleConsole", getTokenParams, paramsToExec)
+        const method = methodToExec(`initCrowdsaleToken(${methodInterface.join(',')})`, target, getTokenParams, paramsToExec)
 
         const opts = { gasPrice: generalStore.gasPrice, from: account }
         console.log("opts:", opts)
@@ -466,7 +476,7 @@ export const setReservedTokensListMultiple = () => {
       const methodInterface = ["address[]","uint256[]","uint256[]","uint256[]","bytes"]
 
       let paramsToExec = [addrs, inTokens, inPercentageUnit, inPercentageDecimals, methodInterface]
-      const method = methodToExec(`updateMultipleReservedTokens(${methodInterface.join(',')})`, "tokenConsole", getReservedTokensParams, paramsToExec)
+      const method = methodToExec(`updateMultipleReservedTokens(${methodInterface.join(',')})`, "tokenConsoleMintedCapped", getReservedTokensParams, paramsToExec)
 
       return method.estimateGas(opts)
         .then(estimatedGas => {
@@ -493,8 +503,12 @@ export const initializeCrowdsale = () => {
 
         let account = contractStore.crowdsale.account;
 
+        const targetPrefix = "crowdsaleConsole"
+        const targetSuffix = crowdsaleStore.contractTargetSuffix
+        const target = `${targetPrefix}${targetSuffix}`
+
         let paramsToExec = [tokenStore]
-        const method = methodToExec("initializeCrowdsale(bytes)", "crowdsaleConsole", getInitializeCrowdsaleParams, paramsToExec)
+        const method = methodToExec("initializeCrowdsale(bytes)", target, getInitializeCrowdsaleParams, paramsToExec)
 
         const opts = { gasPrice: generalStore.gasPrice, from: account }
         console.log("opts:", opts)
@@ -562,7 +576,7 @@ export const createCrowdsaleTiers = () => {
       const methodInterface = ["bytes32[]", "uint256[]", "uint256[]", "uint256[]", "bool[]", "bool[]","bytes"]
 
       let paramsToExec = [methodInterface]
-      const method = methodToExec(`createCrowdsaleTiers(${methodInterface.join(',')})`, "crowdsaleConsole", getTiersParams, paramsToExec)
+      const method = methodToExec(`createCrowdsaleTiers(${methodInterface.join(',')})`, "crowdsaleConsoleMintedCapped", getTiersParams, paramsToExec)
 
       let account = contractStore.crowdsale.account;
       const opts = { gasPrice: generalStore.gasPrice, from: account }
@@ -633,10 +647,22 @@ export const addWhitelist = () => {
       let account = contractStore.crowdsale.account;
       const opts = { gasPrice: generalStore.gasPrice, from: account }
 
-      const methodInterface = ["uint256", "address[]","uint256[]","uint256[]","bytes"]
+      const targetPrefix = "crowdsaleConsole"
+      const targetSuffix = crowdsaleStore.contractTargetSuffix
+      const target = `${targetPrefix}${targetSuffix}`
+
+      let methodInterface
+      let methodName
+      if (crowdsaleStore.initCrowdsaleMintedCapped) {
+        methodInterface = ["uint256", "address[]","uint256[]","uint256[]","bytes"]
+        methodName = "whitelistMultiForTier"
+      } else if (crowdsaleStore.isDutchAuction) {
+        methodInterface = ["address[]","uint256[]","uint256[]","bytes"]
+        methodName = "whitelistMulti"
+      }
 
       let paramsToExec = [index, addrs, minCaps, maxCaps, methodInterface]
-      const method = methodToExec(`whitelistMultiForTier(${methodInterface.join(',')})`, "crowdsaleConsole", getWhitelistsParams, paramsToExec)
+      const method = methodToExec(`${methodName}(${methodInterface.join(',')})`, target, getWhitelistsParams, paramsToExec)
 
       return method.estimateGas(opts)
         .then(estimatedGas => {
@@ -663,8 +689,12 @@ export const updateGlobalMinContribution = () => {
 
     const methodInterface = ["uint256","bytes"]
 
+    const targetPrefix = "crowdsaleConsole"
+    const targetSuffix = crowdsaleStore.contractTargetSuffix
+    const target = `${targetPrefix}${targetSuffix}`
+
     let paramsToExec = [methodInterface]
-    const method = methodToExec(`updateGlobalMinContribution(${methodInterface.join(',')})`, "crowdsaleConsole", getUpdateGlobalMinCapParams, paramsToExec)
+    const method = methodToExec(`updateGlobalMinContribution(${methodInterface.join(',')})`, target, getUpdateGlobalMinCapParams, paramsToExec)
 
     let account = contractStore.crowdsale.account;
     const opts = { gasPrice: generalStore.gasPrice, from: account }

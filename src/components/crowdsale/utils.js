@@ -3,7 +3,7 @@ import {
   getCurrentAccount,
   attachToSpecificCrowdsaleContract,
 } from '../../utils/blockchainHelpers'
-import { contractStore, crowdsalePageStore, tokenStore, web3Store } from '../../stores'
+import { contractStore, crowdsalePageStore, tokenStore, web3Store, crowdsaleStore } from '../../stores'
 import { toJS } from 'mobx'
 import { BigNumber } from 'bignumber.js'
 
@@ -44,14 +44,17 @@ export let getTokenData = (initCrowdsaleContract, execID, account) => {
         console.log('token ticker: ' + ticker)
         tokenStore.setProperty('decimals', decimals)
         console.log('token decimals: ' + decimals)
-        totalSupply = totalSupply * toBigNumber(10).pow(Number(decimals))
+        if (crowdsaleStore.isMintedCappedCrowdsale) {
+          totalSupply = totalSupply * toBigNumber(10).pow(Number(decimals))
+        }
         tokenStore.setProperty('supply', totalSupply)
         console.log('token supply: ' + totalSupply)
-        balanceOf = Number(balanceOf).toFixed()
+
+        balanceOf = toBigNumber(balanceOf)
         console.log('balanceOf: ' + balanceOf)
-        const tokenAmountOf = crowdsalePageStore.tokenAmountOf ? crowdsalePageStore.tokenAmountOf : 0
+        const tokenAmountOf = crowdsalePageStore.tokenAmountOf ? toBigNumber(crowdsalePageStore.tokenAmountOf) : toBigNumber(0)
         console.log('tokenAmountOf: ' + tokenAmountOf)
-        crowdsalePageStore.setProperty('tokenAmountOf', tokenAmountOf + parseInt(balanceOf, 10))
+        crowdsalePageStore.setProperty('tokenAmountOf', tokenAmountOf.plus(balanceOf))
 
         resolve()
       })
@@ -59,7 +62,7 @@ export let getTokenData = (initCrowdsaleContract, execID, account) => {
   })
 }
 
-export let getCrowdsaleData = (initCrowdsaleContract, execID, account, isMintedCappedCrowdsale) => {
+export let getCrowdsaleData = (initCrowdsaleContract, execID, account) => {
   return new Promise((resolve, reject) => {
     if (!initCrowdsaleContract) {
       noContractAlert()
@@ -71,24 +74,35 @@ export let getCrowdsaleData = (initCrowdsaleContract, execID, account, isMintedC
     let registryStorageObj = toJS(contractStore.registryStorage)
 
     let getCrowdsaleInfo = initCrowdsaleContract.methods.getCrowdsaleInfo(registryStorageObj.addr, execID).call();
-    let getCurrentTierInfo = initCrowdsaleContract.methods.getCurrentTierInfo(registryStorageObj.addr, execID).call();
     let getTokensSold = initCrowdsaleContract.methods.getTokensSold(registryStorageObj.addr, execID).call();
-    let getContributors = isMintedCappedCrowdsale ? initCrowdsaleContract.methods.getCrowdsaleUniqueBuyers(registryStorageObj.addr, execID).call() : null;
-    let getCrowdsaleMaxRaise = initCrowdsaleContract.methods.getCrowdsaleMaxRaise(registryStorageObj.addr, execID).call();
+    let getContributors = initCrowdsaleContract.methods.getCrowdsaleUniqueBuyers(registryStorageObj.addr, execID).call();
+
+    let getCurrentTierInfo = crowdsaleStore.isMintedCappedCrowdsale? initCrowdsaleContract.methods.getCurrentTierInfo(registryStorageObj.addr, execID).call() : null;
+    let getCrowdsaleMaxRaise = crowdsaleStore.isMintedCappedCrowdsale ? initCrowdsaleContract.methods.getCrowdsaleMaxRaise(registryStorageObj.addr, execID).call() : null;
+
+    let getCrowdsaleStartAndEndTimes = crowdsaleStore.isDutchAuction ? initCrowdsaleContract.methods.getCrowdsaleStartAndEndTimes(registryStorageObj.addr, execID).call() : null;
+    let getCrowdsaleStatus = crowdsaleStore.isDutchAuction ? initCrowdsaleContract.methods.getCrowdsaleStatus(registryStorageObj.addr, execID).call() : null;
+    let getIsCrowdsaleFull = crowdsaleStore.isDutchAuction ? initCrowdsaleContract.methods.isCrowdsaleFull(registryStorageObj.addr, execID).call() : null;
 
     return Promise.all([
       getCrowdsaleInfo,
       getCurrentTierInfo,
       getTokensSold,
       getContributors,
-      getCrowdsaleMaxRaise
+      getCrowdsaleMaxRaise,
+      getCrowdsaleStartAndEndTimes,
+      getCrowdsaleStatus,
+      getIsCrowdsaleFull,
     ])
       .then(([
           crowdsaleInfo,
           currentTierInfo,
           tokensSold,
           contributors,
-          crowdsaleMaxRaise
+          crowdsaleMaxRaise,
+          crowdsaleStartAndEndTimes,
+          crowdsaleStatus,
+          isCrowdsaleFull,
       ]) => {
         const { web3 } = web3Store
 
@@ -102,17 +116,37 @@ export let getCrowdsaleData = (initCrowdsaleContract, execID, account, isMintedC
         console.log(contributors)
         console.log('crowdsaleMaxRaise:')
         console.log(crowdsaleMaxRaise)
+        console.log('crowdsaleStartAndEndTimes:')
+        console.log(crowdsaleStartAndEndTimes)
+        console.log('crowdsaleStatus:')
+        console.log(crowdsaleStatus)
+        console.log('isCrowdsaleFull:')
+        console.log(isCrowdsaleFull)
 
         crowdsalePageStore.setProperty('weiRaised', Number(crowdsaleInfo.wei_raised).toFixed())
         crowdsalePageStore.setProperty('ethRaised', web3.utils.fromWei(crowdsalePageStore.weiRaised, 'ether'))
-        crowdsalePageStore.setProperty('rate', Number(currentTierInfo.tier_price).toFixed()) //should be one token in wei
+
+        if (crowdsaleStore.isMintedCappedCrowdsale) {
+          crowdsalePageStore.setProperty('rate', Number(currentTierInfo.tier_price).toFixed()) //should be one token in wei
+          crowdsalePageStore.setProperty('maximumSellableTokens', toBigNumber(crowdsaleMaxRaise.total_sell_cap).toFixed())
+          crowdsalePageStore.setProperty('maximumSellableTokensInWei', toBigNumber(crowdsaleMaxRaise.wei_raise_cap).toFixed())
+        } else if (crowdsaleStore.isDutchAuction) {
+          crowdsalePageStore.setProperty('rate', Number(crowdsaleStatus.current_rate).toFixed()) //should be one token in wei
+          crowdsalePageStore.setProperty('maximumSellableTokens', toBigNumber(isCrowdsaleFull.max_sellable).toFixed())
+          let remainingETH = parseInt((toBigNumber(crowdsaleStatus.tokens_remaining)).div(toBigNumber(crowdsaleStatus.current_rate)), 10)
+          console.log("remainingETH:",remainingETH)
+          let maximumSellableTokensInETH = (toBigNumber(crowdsaleInfo.wei_raised)).plus(remainingETH).toFixed()
+          let maximumSellableTokensInWei = web3.utils.toWei(maximumSellableTokensInETH, 'ether')
+          console.log("maximumSellableTokensInETH:", maximumSellableTokensInETH)
+          console.log("maximumSellableTokensInWei:", maximumSellableTokensInWei)
+          crowdsalePageStore.setProperty('maximumSellableTokensInWei', maximumSellableTokensInWei)
+        }
+
         const storedTokensSold = toBigNumber(tokensSold)
         crowdsalePageStore.setProperty('tokensSold', storedTokensSold.toFixed())
+
         if (contributors)
           crowdsalePageStore.setProperty('investors', toBigNumber(contributors).toFixed())
-
-        crowdsalePageStore.setProperty('maximumSellableTokens', toBigNumber(crowdsaleMaxRaise.total_sell_cap).toFixed())
-        crowdsalePageStore.setProperty('maximumSellableTokensInWei', toBigNumber(crowdsaleMaxRaise.wei_raise_cap).toFixed())
 
         resolve()
       })
@@ -137,16 +171,22 @@ export let getCrowdsaleTargetDates = (initCrowdsaleContract, execID) => {
     let registryStorageObj = toJS(contractStore.registryStorage)
 
     let getCrowdsaleStartAndEndTimes = initCrowdsaleContract.methods.getCrowdsaleStartAndEndTimes(registryStorageObj.addr, execID).call();
-    let getCurrentTierInfo = initCrowdsaleContract.methods.getCurrentTierInfo(registryStorageObj.addr, execID).call();
+    let getCurrentTierInfo = crowdsaleStore.isMintedCappedCrowdsale ? initCrowdsaleContract.methods.getCurrentTierInfo(registryStorageObj.addr, execID).call() : null;
 
     return Promise.all([getCrowdsaleStartAndEndTimes, getCurrentTierInfo])
       .then(([crowdsaleStartAndEndTimes, currentTierInfo]) => {
+        console.log("crowdsaleStartAndEndTimes:", crowdsaleStartAndEndTimes)
         let crowdsaleStartTime = crowdsaleStartAndEndTimes.start_time
         console.log("crowdsaleStartTime:", crowdsaleStartTime)
         const startsAtMilliseconds = crowdsaleStartTime * 1000
         console.log('currentTierInfo:')
         console.log(currentTierInfo)
-        let crowdsaleEndTime = currentTierInfo.tier_ends_at
+        let crowdsaleEndTime
+        if (crowdsaleStore.isMintedCappedCrowdsale) {
+          crowdsaleEndTime = currentTierInfo.tier_ends_at
+        } else if (crowdsaleStore.isDutchAuction) {
+          crowdsaleEndTime = crowdsaleStartAndEndTimes.end_time
+        }
         const endsAtMilliseconds = crowdsaleEndTime * 1000
 
         crowdsalePageStore.addTier({
@@ -179,20 +219,28 @@ export let isFinalized = (initCrowdsaleContract, crowdsaleExecID) => {
 }
 
 export const getTiers = () => {
-  return getCurrentAccount()
-    .then(account => {
-      return attachToSpecificCrowdsaleContract("initCrowdsale")
-        .then((initCrowdsaleContract) => {
-          const { methods } = initCrowdsaleContract
-          let registryStorageObj = toJS(contractStore.registryStorage)
+  if (crowdsaleStore.isMintedCappedCrowdsale) {
+    return getCurrentAccount()
+      .then(account => {
+        const targetPrefix = "initCrowdsale"
+        const targetSuffix = crowdsaleStore.contractTargetSuffix
+        const target = `${targetPrefix}${targetSuffix}`
+        return attachToSpecificCrowdsaleContract(target)
+          .then((initCrowdsaleContract) => {
+            const { methods } = initCrowdsaleContract
+            let registryStorageObj = toJS(contractStore.registryStorage)
 
-          return methods.getCrowdsaleTierList(registryStorageObj.addr, contractStore.crowdsale.execID).call()
-            .then(tiers => {
-              console.log("tiers:", tiers)
-              return Promise.resolve(tiers.length)
-            })
-        })
-    })
+            return methods.getCrowdsaleTierList(registryStorageObj.addr, contractStore.crowdsale.execID).call()
+              .then(tiers => {
+                console.log("tiers:", tiers)
+                return Promise.resolve(tiers.length)
+              })
+          })
+      })
+  } else if (crowdsaleStore.isDutchAuction) {
+    const dutchAuctionTiersLength = 1
+    return Promise.resolve(dutchAuctionTiersLength)
+  }
 }
 
 export const getContractStoreProperty = (contract, property) => {

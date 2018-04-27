@@ -91,9 +91,12 @@ export class Manage extends Component {
   }
 
   checkOwner = () => {
-    const { contractStore, web3Store } = this.props
+    const { contractStore, web3Store, crowdsaleStore } = this.props
 
-    return attachToSpecificCrowdsaleContract("initCrowdsale")
+    const targetPrefix = "initCrowdsale"
+    const targetSuffix = crowdsaleStore.contractTargetSuffix
+    const target = `${targetPrefix}${targetSuffix}`
+    return attachToSpecificCrowdsaleContract(target)
       .then((initCrowdsaleContract) => {
         let registryStorageObj = toJS(contractStore.registryStorage)
         const whenOwner = initCrowdsaleContract.methods.getAdmin(registryStorageObj.addr, contractStore.crowdsale.execID).call()
@@ -119,7 +122,10 @@ export class Manage extends Component {
         return getCurrentAccount()
           .then(account => {
             contractStore.setContractProperty('crowdsale', 'account', account)
-            return attachToSpecificCrowdsaleContract("initCrowdsale")
+            const targetPrefix = "initCrowdsale"
+            const targetSuffix = crowdsaleStore.contractTargetSuffix
+            const target = `${targetPrefix}${targetSuffix}`
+            return attachToSpecificCrowdsaleContract(target)
               .then((initCrowdsaleContract) => {
                 console.log(initCrowdsaleContract)
                 let registryStorageObj = toJS(contractStore.registryStorage)
@@ -129,11 +135,19 @@ export class Manage extends Component {
                 whenCrowdsaleData.push(whenCrowdsale)
                 let whenToken = initCrowdsaleContract.methods.getTokenInfo(registryStorageObj.addr, contractStore.crowdsale.execID).call();
                 whenCrowdsaleData.push(whenToken)
-                for (let tierNum = 0; tierNum < numOfTiers; tierNum++) {
-                  let whenTierData = initCrowdsaleContract.methods.getCrowdsaleTier(registryStorageObj.addr, contractStore.crowdsale.execID, tierNum).call();
-                  let whenTierDates = initCrowdsaleContract.methods.getTierStartAndEndDates(registryStorageObj.addr, contractStore.crowdsale.execID, tierNum).call();
-                  whenCrowdsaleData.push(whenTierData);
-                  whenCrowdsaleData.push(whenTierDates);
+
+                if (crowdsaleStore.isMintedCappedCrowdsale) {
+                  for (let tierNum = 0; tierNum < numOfTiers; tierNum++) {
+                    let whenTierData = initCrowdsaleContract.methods.getCrowdsaleTier(registryStorageObj.addr, contractStore.crowdsale.execID, tierNum).call();
+                    let whenTierDates = initCrowdsaleContract.methods.getTierStartAndEndDates(registryStorageObj.addr, contractStore.crowdsale.execID, tierNum).call();
+                    whenCrowdsaleData.push(whenTierData);
+                    whenCrowdsaleData.push(whenTierDates);
+                  }
+                } else if (crowdsaleStore.isDutchAuction) {
+                  let whenDutchAuctionData = initCrowdsaleContract.methods.getCrowdsaleStatus(registryStorageObj.addr, contractStore.crowdsale.execID).call();
+                  let whenDutchAuctionDates = initCrowdsaleContract.methods.getCrowdsaleStartAndEndTimes(registryStorageObj.addr, contractStore.crowdsale.execID).call();
+                  whenCrowdsaleData.push(whenDutchAuctionData);
+                  whenCrowdsaleData.push(whenDutchAuctionDates);
                 }
                 return Promise.all(whenCrowdsaleData)
               })
@@ -259,7 +273,10 @@ export class Manage extends Component {
   setCrowdsaleInfo = () => {
     const { contractStore, crowdsaleStore } = this.props
 
-    return attachToSpecificCrowdsaleContract("initCrowdsale")
+    const targetPrefix = "initCrowdsale"
+    const targetSuffix = crowdsaleStore.contractTargetSuffix
+    const target = `${targetPrefix}${targetSuffix}`
+    return attachToSpecificCrowdsaleContract(target)
       .then((initCrowdsaleContract) => {
         let registryStorageObj = toJS(contractStore.registryStorage)
         return initCrowdsaleContract.methods.getCrowdsaleStartAndEndTimes(registryStorageObj.addr, contractStore.crowdsale.execID).call();
@@ -271,9 +288,13 @@ export class Manage extends Component {
   }
 
   canFinalize = () => {
-    const { contractStore } = this.props
+    const { contractStore, crowdsaleStore } = this.props
 
-    return attachToSpecificCrowdsaleContract("initCrowdsale")
+    const targetPrefix = "initCrowdsale"
+    const targetSuffix = crowdsaleStore.contractTargetSuffix
+    const target = `${targetPrefix}${targetSuffix}`
+
+    return attachToSpecificCrowdsaleContract(target)
       .then((initCrowdsaleContract) => {
         let registryStorageObj = toJS(contractStore.registryStorage)
         const whenCrowdsaleInfo = initCrowdsaleContract.methods.getCrowdsaleInfo(registryStorageObj.addr, contractStore.crowdsale.execID).call();
@@ -321,8 +342,21 @@ export class Manage extends Component {
                 getCurrentAccount()
                   .then(account => {
                     const methodInterface = ["bytes"]
+
+                    let methodName
+                    let targetPrefix
+                    if (crowdsaleStore.isMintedCappedCrowdsale) {
+                      methodName = "finalizeCrowdsale"
+                      targetPrefix = "tokenConsole"
+                    } else if (crowdsaleStore.isDutchAuction) {
+                      methodName = "finalizeCrowdsaleAndToken"
+                      targetPrefix = "crowdsaleConsole"
+                    }
+                    const targetSuffix = crowdsaleStore.contractTargetSuffix
+                    const target = `${targetPrefix}${targetSuffix}`
+
                     let paramsToExec = [methodInterface]
-                    const method = methodToExec(`finalizeCrowdsale(${methodInterface.join(',')})`, "crowdsaleConsole", this.getFinalizeCrowdsaleParams, paramsToExec)
+                    const method = methodToExec(`${methodName}(${methodInterface.join(',')})`, target, this.getFinalizeCrowdsaleParams, paramsToExec)
 
                     let opts = {
                       gasPrice: this.props.generalStore.gasPrice,
@@ -410,7 +444,7 @@ export class Manage extends Component {
   render () {
     const { canFinalize, crowdsaleHasEnded, ownerCurrentUser } = this.state
     const { generalStore, tierStore, tokenStore, crowdsaleStore } = this.props
-    const { address, finalized, updatable } = crowdsaleStore.selected
+    const { finalized, updatable } = crowdsaleStore.selected
     const { execID } = crowdsaleStore
 
     return (
@@ -425,7 +459,7 @@ export class Manage extends Component {
           mutators={{ ...arrayMutators }}
           initialValues={{ tiers: this.initialTiers, }}
           component={ManageForm}
-          canEditTiers={ownerCurrentUser && crowdsaleStore.isMintedCappedCrowdsale && !canFinalize && !finalized}
+          canEditTiers={ownerCurrentUser && !canFinalize && !finalized}
           crowdsaleStore={crowdsaleStore}
           decimals={tokenStore.decimals}
           aboutTier={

@@ -91,20 +91,6 @@ export const DutchAuctionBlock = ({ fields, ...props }) => {
 
             <div className="input-block-container">
               <Field
-                name={`${name}.maxRate`}
-                component={InputField2}
-                validate={composeValidators(
-                  isPositive(),
-                  isInteger(),
-                  isLessOrEqualThan('Should not be greater than 1 quintillion (10^18)')('1e18')
-                )}
-                errorStyle={inputErrorStyle}
-                type="text"
-                side="left"
-                label={MAX_RATE}
-                description={DESCRIPTION.RATE}
-              />
-              <Field
                 name={`${name}.minRate`}
                 component={InputField2}
                 validate={composeValidators(
@@ -114,8 +100,22 @@ export const DutchAuctionBlock = ({ fields, ...props }) => {
                 )}
                 errorStyle={inputErrorStyle}
                 type="text"
-                side="right"
+                side="left"
                 label={MIN_RATE}
+                description={DESCRIPTION.RATE}
+              />
+              <Field
+                name={`${name}.maxRate`}
+                component={InputField2}
+                validate={composeValidators(
+                  isPositive(),
+                  isInteger(),
+                  isLessOrEqualThan('Should not be greater than 1 quintillion (10^18)')('1e18')
+                )}
+                errorStyle={inputErrorStyle}
+                type="text"
+                side="right"
+                label={MAX_RATE}
                 description={DESCRIPTION.RATE}
               />
               <Field

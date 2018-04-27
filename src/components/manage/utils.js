@@ -29,6 +29,7 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
   let methodInterface
   let getParams
   const { decimals } = tokenStore
+  //to do: support of Dutch Auction method setCrowdsaleStartAndDuration
   let methods = {
     //startTime: 'setStartsAt', // startTime is not changed from migration to Auth_os
     endTime: 'updateTierDuration',
@@ -84,9 +85,13 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
   console.log("tierIndex:", tierIndex)
   console.log("value:", value)
 
+  const targetPrefix = "crowdsaleConsole"
+  const targetSuffix = crowdsaleStore.contractTargetSuffix
+  const target = `${targetPrefix}${targetSuffix}`
+
   const paramsToExec = [ tierIndex, value, methodInterface ] // tierIndex + 1 due to `The index of the tier whose duration will be updated (indexes in the tier list are 1-indexed: 0 is an invalid index)`
 
-  const method = methodToExec(`${methods[attribute]}(${methodInterface.join(',')})`, "crowdsaleConsole", getParams, paramsToExec)
+  const method = methodToExec(`${methods[attribute]}(${methodInterface.join(',')})`, target, getParams, paramsToExec)
 
   return getCurrentAccount()
     .then(account => {
@@ -117,15 +122,37 @@ const updateWhitelistParams = (tierIndex, [addr, min, max], methodInterface) => 
 
 const crowdsaleData = (tier, crowdsale, token) => {
   const { web3 } = web3Store
-  let startsAt = tier.tier_start
-  let endsAt = tier.tier_end
-  let rate = tier.tier_price
+  let startsAt
+  if (crowdsaleStore.isMintedCappedCrowdsale) {
+    startsAt = tier.tier_start
+  } else if (crowdsaleStore.isDutchAuction) {
+    startsAt = tier.start_time
+  }
+
+  let endsAt
+  if (crowdsaleStore.isMintedCappedCrowdsale) {
+    endsAt = tier.tier_end
+  } else if (crowdsaleStore.isDutchAuction) {
+    endsAt = tier.end_time
+  }
+
+  let rate
+  if (crowdsaleStore.isMintedCappedCrowdsale) {
+    rate = tier.tier_price
+  } else if (crowdsaleStore.isDutchAuction) {
+    rate = tier.current_rate
+  }
   let tokenName = web3.utils.toAscii(token.token_name)
   let tokenSymbol = web3.utils.toAscii(token.token_symbol)
   let decimals = token.token_decimals
   let multisigWallet = crowdsale.team_wallet
-  let tierName = web3.utils.toAscii(tier.tier_name)
-  let maximumSellableTokens = tier.tier_sell_cap
+  let tierName = crowdsaleStore.isMintedCappedCrowdsale ? web3.utils.toAscii(tier.tier_name) : ''
+  let maximumSellableTokens
+  if (crowdsaleStore.isMintedCappedCrowdsale) {
+    maximumSellableTokens = tier.tier_sell_cap
+  } else if (crowdsaleStore.isDutchAuction) {
+    maximumSellableTokens = token.total_supply
+  }
   let isUpdatable = tier.duration_is_modifiable
   let isWhitelisted = tier.whitelist_enabled
   let isFinalized = crowdsale.is_finalized

@@ -9,13 +9,14 @@ import {
   composeValidators,
   isAddress,
   isDecimalPlacesNotGreaterThan,
-  isGreaterOrEqualThan
+  isGreaterOrEqualThan,
+  isNonNegative
 } from '../../utils/validations'
 import { TEXT_FIELDS, VALIDATION_TYPES } from '../../utils/constants'
 import { DutchAuctionBlock } from '../Common/DutchAuctionBlock'
 
 const { VALID } = VALIDATION_TYPES
-const { WALLET_ADDRESS } = TEXT_FIELDS
+const { MINCAP, WALLET_ADDRESS } = TEXT_FIELDS
 
 const inputErrorStyle = {
   color: 'red',
@@ -68,7 +69,6 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, prist
               description="Where the money goes after investors transactions. Immediately after each transaction. We
                         recommend to setup a multisig wallet with hardware based signers."
             />
-
             <Field
               name="gasPrice"
               component={GasPriceInput}
@@ -78,6 +78,53 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, prist
                 isDecimalPlacesNotGreaterThan("Should not have more than 9 decimals")(9),
                 isGreaterOrEqualThan("Should be greater than 0.1")(0.1)
               )(value.price)}
+            />
+          </div>
+          <div className="input-block-container">
+            <Field
+              name="minCap"
+              component={InputField2}
+              validate={composeValidators(
+                isNonNegative(),
+                isDecimalPlacesNotGreaterThan()(props.decimals)
+              )}
+              disabled={values.whitelistEnabled === 'yes'}
+              errorStyle={inputErrorStyle}
+              type="number"
+              side="left"
+              label={MINCAP}
+              description="Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1
+               and a user already has 1 token from a previous transaction, they can buy any amount they want."
+            />
+            <Field
+              name="whitelistEnabled"
+              render={({ input }) => (
+                <div className='right'>
+                  <label className="label">Enable whitelisting</label>
+                  <div className='radios-inline'>
+                    <label className='radio-inline'>
+                      <input
+                        type='radio'
+                        checked={input.value === 'yes'}
+                        value='yes'
+                        onChange={() => input.onChange('yes')}
+                      />
+                      <span className='title'>yes</span>
+                    </label>
+                    <label className='radio-inline'>
+                      <input
+                        type='radio'
+                        checked={input.value === 'no'}
+                        value='no'
+                        onChange={() => input.onChange('no')}
+                      />
+                      <span className='title'>no</span>
+                    </label>
+                  </div>
+                  <p className='description'>Enables whitelisting. If disabled, anyone can participate in the
+                    crowdsale.</p>
+                </div>
+              )}
             />
           </div>
         </div>

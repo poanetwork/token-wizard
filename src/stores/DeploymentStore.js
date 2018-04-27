@@ -25,7 +25,6 @@ class DeploymentStore {
     const listOfTx = [
       { name: 'crowdsaleCreate', dependsOnTiers: false, required: true },
       { name: 'token', dependsOnTiers: false, required: true },
-      /*{ name: 'registerCrowdsaleAddress', dependsOnTiers: false, required: true },*/
       { name: 'setReservedTokens', dependsOnTiers: false, required: hasReservedToken },
       { name: 'updateGlobalMinContribution', dependsOnTiers: false, required: globalMinCap > 0 },
       { name: 'createCrowdsaleTiers', dependsOnTiers: false, required: tiersCount > 1 },

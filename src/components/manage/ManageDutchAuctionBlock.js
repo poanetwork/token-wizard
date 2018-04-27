@@ -70,25 +70,15 @@ export const ManageDutchAuctionBlock = ({
 
               <div className="input-block-container">
                 <CrowdsaleRate
-                  name={`${name}.maxRate`}
+                  name={`${name}.rate`}
                   side="left"
-                  label={TEXT_FIELDS.MAX_RATE}
+                  label={TEXT_FIELDS.RATE}
                   disabled={!canEdit || tierHasStarted}
                   errorStyle={inputErrorStyle}
                 />
-                <CrowdsaleRate
-                  name={`${name}.minRate`}
-                  side="right"
-                  label={TEXT_FIELDS.MIN_RATE}
-                  disabled={!canEdit || tierHasStarted}
-                  errorStyle={inputErrorStyle}
-                />
-              </div>
-
-              <div className="input-block-container">
                 <CrowdsaleSupply
                   name={`${name}.supply`}
-                  side="left"
+                  side="right"
                   description={DESCRIPTION.SUPPLY_DUTCH_AUCTION}
                   disabled={!canEdit || tierHasStarted}
                   errorStyle={inputErrorStyle}
