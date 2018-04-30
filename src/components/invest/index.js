@@ -27,7 +27,7 @@ import {
 } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
 import { CrowdsaleConfig } from '../Common/config'
-import { INVESTMENT_OPTIONS, TOAST } from '../../utils/constants'
+import { INVESTMENT_OPTIONS, TOAST, CROWDSALE_STRATEGIES } from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
 import QRPaymentProcess from './QRPaymentProcess'
 import CountdownTimer from './CountdownTimer'
@@ -97,6 +97,7 @@ export class Invest extends React.Component {
       })
       .then(() => getCrowdsaleStrategy(this.state.crowdsaleExecID))
       .then((strategy) => crowdsaleStore.setProperty('strategy', strategy))
+      //.then((strategy) => crowdsaleStore.setProperty('strategy', CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE)) //to do
       .then(() => {
         this.extractContractsData()
         gasPriceStore.updateValues()

@@ -653,7 +653,7 @@ export const addWhitelist = () => {
 
       let methodInterface
       let methodName
-      if (crowdsaleStore.initCrowdsaleMintedCapped) {
+      if (crowdsaleStore.isMintedCappedCrowdsale) {
         methodInterface = ["uint256", "address[]","uint256[]","uint256[]","bytes"]
         methodName = "whitelistMultiForTier"
       } else if (crowdsaleStore.isDutchAuction) {

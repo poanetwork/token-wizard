@@ -302,17 +302,22 @@ function getApplicationsInstances () {
     })
 }
 
+function getApplicationsInstance(execID) {
+  const whenScriptExecContract = attachToSpecificCrowdsaleContract("scriptExec")
+  return Promise.resolve(whenScriptExecContract)
+    .then((scriptExecContract) => {
+      return scriptExecContract.methods.deployed_apps(contractStore.registryStorage.addr, execID).call()
+        .then((appObj) => {
+          return Promise.resolve(appObj)
+        })
+    })
+}
 
 export function getCrowdsaleStrategy (execID) {
-  return getApplicationsInstances()
-    .then(crowdsales => {
-      let appName = "";
-      crowdsales.some((item) => {
-        if (item.execID == execID) {
-          appName = item.appName
-          return
-        }
-      })
+  return getApplicationsInstance(execID)
+    .then((appObj) => {
+      const { web3 } = web3Store
+      let appName = web3.utils.toAscii(appObj.app_name);
 
       let appNameLowerCase = appName.toLowerCase();
       if (appNameLowerCase.includes(process.env[`REACT_APP_MINTED_CAPPED_CROWDSALE_APP_NAME`].toLowerCase())) {
