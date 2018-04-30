@@ -1,5 +1,5 @@
 import { incorrectNetworkAlert, noMetaMaskAlert, invalidNetworkIDAlert, noContractAlert } from './alerts'
-import { CHAINS, MAX_GAS_PRICE, CROWDSALE_STRATEGIES } from './constants'
+import { CHAINS, MAX_GAS_PRICE, CROWDSALE_STRATEGIES, EXCEPTIONS } from './constants'
 import { crowdsaleStore, generalStore, web3Store, contractStore } from '../stores'
 import { toJS } from 'mobx'
 
@@ -206,7 +206,18 @@ let sendTX = (method, type) => {
         sendTXResponse(receipt, type).then(resolve).catch(reject)
       })
   })
+}
 
+let checkEventTopics = (obj) => {
+  const topics = obj.topics || obj.raw.topics
+  console.log("topics:", topics)
+  const { web3 } = web3Store
+  if (topics.length > 0) {
+    const eventEncoded = topics[0];
+    if (eventEncoded == web3.utils.sha3(EXCEPTIONS.storageException)
+      || eventEncoded == web3.utils.sha3(EXCEPTIONS.applicationException))
+      return true;
+  }
 }
 
 const sendTXResponse = (receipt, type) => {
@@ -215,7 +226,16 @@ const sendTXResponse = (receipt, type) => {
   console.log("receipt.status:")
   console.log(receipt.status)
   if (0 !== +receipt.status || null === receipt.status) {
-    return type === DEPLOY_CONTRACT ? Promise.resolve(receipt.contractAddress, receipt) : Promise.resolve(receipt)
+    const logs = receipt.logs
+    const events = receipt.events;
+    const eventsArr = Object.keys(events).map((ind) => { return events[ind] })
+    const ev_logs = logs || eventsArr
+    console.log("ev_logs:", ev_logs)
+    if (ev_logs.some(checkEventTopics)) {
+      return Promise.reject({ message: 0 })
+    } else {
+      return type === DEPLOY_CONTRACT ? Promise.resolve(receipt.contractAddress, receipt) : Promise.resolve(receipt)
+    }
   } else {
     return Promise.reject({ message: 0 })
   }
