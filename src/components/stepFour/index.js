@@ -199,7 +199,13 @@ export class stepFour extends React.Component {
           const suffix = tiersCountPerContract > 1 ? `_${tier + 1}` : ''
           const txtFilename = `${orderNumber(prefix++)}_${name}${suffix}`
           const tierNumber = tier
-          const commonHeader = SUMMARY_FILE_MINTED_CAPPED_CROWDSALE_CONTENTS.common.map(content => this.handleContentByParent(content, tierNumber))
+          let common
+          if (crowdsaleStore.isMintedCappedCrowdsale) {
+            common = SUMMARY_FILE_MINTED_CAPPED_CROWDSALE_CONTENTS.common
+          } else if (crowdsaleStore.isDutchAuction) {
+            common = SUMMARY_FILE_DUTCH_AUCTION_CONTENTS.common
+          }
+          const commonHeader = common.map(content => this.handleContentByParent(content, tierNumber))
 
           zip.file(
             `${txtFilename}.txt`,

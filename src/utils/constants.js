@@ -257,8 +257,8 @@ export const SUMMARY_FILE_DUTCH_AUCTION_CONTENTS = {
     { field: 'supply', value: 'Token supply: ', parent: 'tokenStore' },
     { field: 'walletAddress', value: 'Multisig wallet address: ', parent: 'tierStore' },
     { value: '*****************************', parent: 'none', fileValue: '' },
-    { field: 'maxRate', value: 'Crowdsale min rate: ', parent: 'tierStore' },
-    { field: 'minRate', value: 'Crowdsale max rate: ', parent: 'tierStore' },
+    { field: 'minRate', value: 'Crowdsale min rate: ', parent: 'tierStore' },
+    { field: 'maxRate', value: 'Crowdsale max rate: ', parent: 'tierStore' },
     { field: 'supply', value: 'Crowdsale supply: ', parent: 'tierStore' },
     { field: 'startTime', value: 'Crowdsale start time: ', parent: 'tierStore' },
     { field: 'endTime', value: 'Crowdsale end time: ', parent: 'tierStore' },
@@ -271,7 +271,7 @@ export const SUMMARY_FILE_DUTCH_AUCTION_CONTENTS = {
     crowdsale: {
       name: 'DutchAuction',
       txt: [
-        { value: 'Auth_os application name: ', parent: 'none', fileValue: 'MintedCappedCrowdsale' },
+        { value: 'Auth_os application name: ', parent: 'none', fileValue: 'DutchAuction' },
         { field: 'execID', value: 'Auth_os execution ID: ', parent: 'crowdsale' },
         { value: '*****************************', parent: 'none', fileValue: '' }
       ]
