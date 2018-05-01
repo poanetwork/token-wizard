@@ -40,22 +40,26 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
 
   let crowdsaleStartTime
   if (attribute === 'startTime' || attribute === 'endTime' || attribute === 'supply' || attribute === 'whitelist') {
-    /*if (attribute === 'startTime') {
-      value = toFixed(parseInt(Date.parse(value) / 1000, 10).toString())
-    } else */
-
-    if (attribute === 'endTime') {
+    if (attribute === 'startTime') {
+      let { startTime, endTime } = tierStore.tiers[tierIndex]
+      crowdsaleStartTime = toFixed(parseInt(Date.parse(value) / 1000, 10).toString())
+      const duration = new Date(endTime) - new Date(startTime)
+      const durationBN = (toBigNumber(duration) / 1000).toFixed()
+      methodInterface = ["uint256","uint256","bytes"]
+      value = durationBN
+      getParams = updateDutchAuctionDurationParams
+    } else if (attribute === 'endTime') {
       let { startTime, endTime } = tierStore.tiers[tierIndex]
       console.log(startTime, endTime)
       const duration = new Date(endTime) - new Date(startTime)
-      const durationBN = (toBigNumber(duration)/1000).toFixed()
+      const durationBN = (toBigNumber(duration) / 1000).toFixed()
       value = durationBN
       methodInterface = ["uint256","uint256","bytes"]
       if (crowdsaleStore.isMintedCappedCrowdsale) {
         getParams = updateMintedCappedCrowdsaleDurationParams
       } else if (crowdsaleStore.isDutchAuction) {
         getParams = updateDutchAuctionDurationParams
-        crowdsaleStartTime = new Date(startTime)
+        crowdsaleStartTime = toFixed((new Date(startTime)).getTime() / 1000).toString()
       }
     } /*else if (attribute === 'supply') {
       value = toBigNumber(value).times(`1e${tokenStore.decimals}`).toFixed()
@@ -83,6 +87,7 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
     value = web3Store.web3.utils.toWei(oneTokenInETH, 'ether')
   }*/
 
+  console.log("crowdsaleStartTime:", crowdsaleStartTime)
   console.log("value:", value)
 
   console.log("attribute:", attribute)
@@ -227,7 +232,7 @@ export const processTier = (tier, crowdsale, token, tierNum) => {
       newTier.updatable = updatable
       newTier.tier = name
 
-      initialValues.updatable = newTier.updatable
+      initialValues.updatable = crowdsaleStore.isMintedCappedCrowdsale ? newTier.updatable : crowdsaleStore.isDutchAuction ? true : null
       initialValues.index = tierNum
       initialValues.addresses = {
         crowdsaleAddress: contractStore.crowdsale.execID
@@ -290,8 +295,8 @@ export const processTier = (tier, crowdsale, token, tierNum) => {
       if (initialValues.updatable) {
         initialValues.startTime = newTier.startTime
         initialValues.endTime = newTier.endTime
-        initialValues.rate = newTier.rate
-        initialValues.supply = newTier.supply
+        //initialValues.rate = newTier.rate
+        //initialValues.supply = newTier.supply
         initialValues.whitelist = whitelist
       }
       crowdsaleStore.addInitialTierValues(initialValues)
