@@ -53,7 +53,7 @@ export const ManageTierBlock = ({
                 <CrowdsaleStartTime
                   name={`${name}.startTime`}
                   index={index}
-                  disabled={!canEdit || tierHasStarted}
+                  disabled={true}
                   side="left"
                   errorStyle={inputErrorStyle}
                 />
@@ -70,13 +70,13 @@ export const ManageTierBlock = ({
                 <CrowdsaleRate
                   name={`${name}.rate`}
                   side="left"
-                  disabled={!canEdit || tierHasStarted}
+                  disabled={true}
                   errorStyle={inputErrorStyle}
                 />
                 <CrowdsaleSupply
                   name={`${name}.supply`}
                   side="right"
-                  disabled={!canEdit || tierHasStarted}
+                  disabled={true}
                   errorStyle={inputErrorStyle}
                 />
               </div>
