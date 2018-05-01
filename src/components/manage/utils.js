@@ -31,13 +31,14 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
   const { decimals } = tokenStore
   //to do: support of Dutch Auction method setCrowdsaleStartAndDuration
   let methods = {
-    //startTime: 'setStartsAt', // startTime is not changed from migration to Auth_os
-    endTime: 'updateTierDuration',
-    //supply: 'setMaximumSellableTokens', // supply is not changed from migration to Auth_os
-    //rate: 'updateRate', // rate is not changed from migration to Auth_os
+    startTime: crowdsaleStore.isDutchAuction ? 'setCrowdsaleStartAndDuration' : null, // startTime is not changed after migration to Auth_os in MintedCappedCrowdsale strategy
+    endTime: crowdsaleStore.isMintedCappedCrowdsale ? 'updateTierDuration' : crowdsaleStore.isDutchAuction ? 'setCrowdsaleStartAndDuration' : null,
+    //supply: 'setMaximumSellableTokens', // supply is not changed after migration to Auth_os
+    //rate: 'updateRate', // rate is not changed after migration to Auth_os
     whitelist: 'whitelistMultiForTier'
   }
 
+  let crowdsaleStartTime
   if (attribute === 'startTime' || attribute === 'endTime' || attribute === 'supply' || attribute === 'whitelist') {
     /*if (attribute === 'startTime') {
       value = toFixed(parseInt(Date.parse(value) / 1000, 10).toString())
@@ -50,7 +51,12 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
       const durationBN = (toBigNumber(duration)/1000).toFixed()
       value = durationBN
       methodInterface = ["uint256","uint256","bytes"]
-      getParams = updateDurationParams
+      if (crowdsaleStore.isMintedCappedCrowdsale) {
+        getParams = updateMintedCappedCrowdsaleDurationParams
+      } else if (crowdsaleStore.isDutchAuction) {
+        getParams = updateDutchAuctionDurationParams
+        crowdsaleStartTime = new Date(startTime)
+      }
     } /*else if (attribute === 'supply') {
       value = toBigNumber(value).times(`1e${tokenStore.decimals}`).toFixed()
     } */else if (attribute === 'whitelist')  {
@@ -89,7 +95,12 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
   const targetSuffix = crowdsaleStore.contractTargetSuffix
   const target = `${targetPrefix}${targetSuffix}`
 
-  const paramsToExec = [ tierIndex, value, methodInterface ] // tierIndex + 1 due to `The index of the tier whose duration will be updated (indexes in the tier list are 1-indexed: 0 is an invalid index)`
+  let paramsToExec
+  if (crowdsaleStore.isMintedCappedCrowdsale) {
+    paramsToExec = [ tierIndex, value, methodInterface ]
+  } else if (crowdsaleStore.isDutchAuction) {
+    paramsToExec = [ crowdsaleStartTime, value, methodInterface ]
+  }
 
   const method = methodToExec(`${methods[attribute]}(${methodInterface.join(',')})`, target, getParams, paramsToExec)
 
@@ -104,11 +115,19 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
     })
 }
 
-const updateDurationParams = (tierIndex, duration, methodInterface) => {
+const updateMintedCappedCrowdsaleDurationParams = (tierIndex, duration, methodInterface) => {
   console.log(tierIndex, duration)
   const { web3 } = web3Store
   let context = generateContext(0);
   let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [tierIndex, duration, context]);
+  return encodedParameters;
+}
+
+const updateDutchAuctionDurationParams = (startTime, duration, methodInterface) => {
+  console.log(startTime, duration)
+  const { web3 } = web3Store
+  let context = generateContext(0);
+  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [startTime, duration, context]);
   return encodedParameters;
 }
 
@@ -279,6 +298,8 @@ export const processTier = (tier, crowdsale, token, tierNum) => {
 }
 
 export function getFieldsToUpdate(updatableTiers, tiers) {
+  console.log("updatableTiers:", updatableTiers)
+  console.log("tiers:", tiers)
   const keys = Object
     .keys(updatableTiers[0])
     .filter(key => key !== 'index' && key !== 'updatable' && key !== 'addresses')

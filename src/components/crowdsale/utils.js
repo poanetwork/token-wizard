@@ -133,7 +133,7 @@ export let getCrowdsaleData = (initCrowdsaleContract, execID, account) => {
         } else if (crowdsaleStore.isDutchAuction) {
           crowdsalePageStore.setProperty('rate', Number(crowdsaleStatus.current_rate).toFixed()) //should be one token in wei
           crowdsalePageStore.setProperty('maximumSellableTokens', toBigNumber(isCrowdsaleFull.max_sellable).toFixed())
-          let remainingETH = parseInt((toBigNumber(crowdsaleStatus.tokens_remaining)).div(toBigNumber(crowdsaleStatus.current_rate)), 10)
+          let remainingETH = toBigNumber(crowdsaleStatus.current_rate) > 0 ? parseInt((toBigNumber(crowdsaleStatus.tokens_remaining)).div(toBigNumber(crowdsaleStatus.current_rate)), 10) : 0
           console.log("remainingETH:",remainingETH)
           let maximumSellableTokensInETH = (toBigNumber(crowdsaleInfo.wei_raised)).plus(remainingETH).toFixed()
           let maximumSellableTokensInWei = web3.utils.toWei(maximumSellableTokensInETH, 'ether')

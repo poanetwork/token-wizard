@@ -397,12 +397,15 @@ export class Manage extends Component {
     this.updateCrowdsaleStatus()
       .then(() => {
         const { crowdsaleStore, tierStore } = this.props
-        const updatableTiers = crowdsaleStore.selected.initialTiersValues.filter(tier => tier.updatable)
+        const updatableTiersMintedCappedCrowdsale = crowdsaleStore.selected.initialTiersValues.filter(tier => tier.updatable)
+        const updatableTiers = crowdsaleStore.isMintedCappedCrowdsale ? updatableTiersMintedCappedCrowdsale : crowdsaleStore.isDutchAuction ? crowdsaleStore.selected.initialTiersValues : []
         const isValidTier = tierStore.individuallyValidTiers
         const validTiers = updatableTiers.every(tier => isValidTier[tier.index])
 
         if (updatableTiers.length && validTiers) {
           const fieldsToUpdate = getFieldsToUpdate(updatableTiers, tierStore.tiers)
+
+          console.log("fieldsToUpdate:", fieldsToUpdate)
 
           fieldsToUpdate
             .reduce((promise, { key, newValue, tier }) => {
