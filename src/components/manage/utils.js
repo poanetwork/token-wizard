@@ -257,10 +257,11 @@ export const processTier = (tier, crowdsale, token, tierNum) => {
       //const tokenDecimals = !isNaN(decimals) ? decimals : 0
 
       //price
-      newTier.rate = toBigNumber(web3.utils.fromWei(toBigNumber(rate).toFixed(), 'ether'))
+      newTier.rate = rate > 0 ? toBigNumber(web3.utils.fromWei(toBigNumber(rate).toFixed(), 'ether'))
         .pow(-1)
         .decimalPlaces(0)
         .toFixed()
+        : 0
 
       tierStore.addTier(newTier, {
         tier: VALID,
