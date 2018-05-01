@@ -14,7 +14,8 @@ import { noContractDataAlert, successfulDeployment, skippingTransaction } from '
 import {
   DESCRIPTION,
   DOWNLOAD_TYPE,
-  FILE_CONTENTS,
+  SUMMARY_FILE_MINTED_CAPPED_CROWDSALE_CONTENTS,
+  SUMMARY_FILE_DUTCH_AUCTION_CONTENTS,
   NAVIGATION_STEPS,
   TOAST,
   CROWDSALE_STRATEGIES_DISPLAYNAMES
@@ -173,26 +174,32 @@ export class stepFour extends React.Component {
   }
 
   downloadCrowdsaleInfo = () => {
+    const { contractStore, crowdsaleStore } = this.props
     const zip = new JSZip()
-    const { files } = FILE_CONTENTS
+    let files
+    if (crowdsaleStore.isMintedCappedCrowdsale) {
+      files = SUMMARY_FILE_MINTED_CAPPED_CROWDSALE_CONTENTS.files
+    } else if (crowdsaleStore.isDutchAuction) {
+      files = SUMMARY_FILE_DUTCH_AUCTION_CONTENTS.files
+    }
     //const tiersCount = isObservableArray(this.props.tierStore.tiers) ? this.props.tierStore.tiers.length : 1
     const contractsKeys = files.order;
     const orderNumber = order => order.toString().padStart(3, '0');
     let prefix = 1
 
     contractsKeys.forEach(key => {
-      if (this.props.contractStore.hasOwnProperty(key)) {
+      if (contractStore.hasOwnProperty(key)) {
         console.log(files[key])
-        console.log(this.props.contractStore[key])
+        console.log(contractStore[key])
         const { txt, name } = files[key]
-        const { abiConstructor } = this.props.contractStore[key]
+        const { abiConstructor } = contractStore[key]
         let tiersCountPerContract = isObservableArray(abiConstructor) ? abiConstructor.length : 1
 
         for (let tier = 0; tier < tiersCountPerContract; tier++) {
           const suffix = tiersCountPerContract > 1 ? `_${tier + 1}` : ''
           const txtFilename = `${orderNumber(prefix++)}_${name}${suffix}`
           const tierNumber = tier
-          const commonHeader = FILE_CONTENTS.common.map(content => this.handleContentByParent(content, tierNumber))
+          const commonHeader = SUMMARY_FILE_MINTED_CAPPED_CROWDSALE_CONTENTS.common.map(content => this.handleContentByParent(content, tierNumber))
 
           zip.file(
             `${txtFilename}.txt`,
