@@ -16,7 +16,8 @@ import {
   DOWNLOAD_TYPE,
   FILE_CONTENTS,
   NAVIGATION_STEPS,
-  TOAST
+  TOAST,
+  CROWDSALE_STRATEGIES_DISPLAYNAMES
 } from '../../utils/constants'
 import { toast } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
@@ -35,7 +36,7 @@ import PropTypes from 'prop-types'
 
 const { PUBLISH } = NAVIGATION_STEPS
 
-@inject('contractStore', 'reservedTokenStore', 'tierStore', 'tokenStore', 'web3Store', 'deploymentStore')
+@inject('contractStore', 'reservedTokenStore', 'tierStore', 'tokenStore', 'web3Store', 'deploymentStore', 'crowdsaleStore')
 @observer
 export class stepFour extends React.Component {
   constructor (props, context) {
@@ -261,8 +262,26 @@ export class stepFour extends React.Component {
   }
 
   render() {
-    const { tierStore, tokenStore, deploymentStore } = this.props
+    const { tierStore, tokenStore, deploymentStore, crowdsaleStore } = this.props
     const crowdsaleSetups = tierStore.tiers.map((tier, index) => {
+      const mintedCappedCrowdsaleRateBlock = (<DisplayField
+        side='right'
+        title={'RATE'}
+        value={tier.rate ? tier.rate : 0 + ' ETH'}
+        description={DESCRIPTION.RATE}
+      />)
+      const dutchAuctionCrowdsaleRateBlock = (<div className="hidden"><DisplayField
+        side='left'
+        title={'MIN RATE'}
+        value={tier.minRate ? tier.minRate : 0 + ' ETH'}
+        description={DESCRIPTION.RATE}
+      />
+      <DisplayField
+        side='right'
+        title={'MAX RATE'}
+        value={tier.maxRate ? tier.maxRate : 0 + ' ETH'}
+        description={DESCRIPTION.RATE}
+      /></div>)
       return (
         <div key={index.toString()}>
           <div className="publish-title-container">
@@ -292,37 +311,23 @@ export class stepFour extends React.Component {
               />
               <DisplayField
                 side='right'
-                title={'RATE'}
-                value={tier.rate ? tier.rate : 0 + ' ETH'}
-                description={DESCRIPTION.RATE}
+                title={'Allow modifying'}
+                value={crowdsaleStore.isDutchAuction ? 'on' : tier.updatable ? tier.updatable : 'off'}
+                description={DESCRIPTION.ALLOW_MODIFYING}
               />
             </div>
+            {crowdsaleStore.isMintedCappedCrowdsale ? mintedCappedCrowdsaleRateBlock : crowdsaleStore.isDutchAuction ? dutchAuctionCrowdsaleRateBlock : null}
             <DisplayField
-              side='left'
+              side={crowdsaleStore.isMintedCappedCrowdsale ? 'right' : crowdsaleStore.isDutchAuction ? 'left' : null}
               title={'Max cap'}
               value={tier.supply ? tier.supply : ''}
               description="How many tokens will be sold on this tier."
-            />
-            <DisplayField
-              side='right'
-              title={'Allow modifying'}
-              value={tier.updatable ? tier.updatable : 'off'}
-              description={DESCRIPTION.ALLOW_MODIFYING}
             />
           </div>
         </div>
       )
     })
-    /*const ABIEncodedOutputsCrowdsale = tierStore.tiers.map((tier, index) => {
-      return (
-        <DisplayTextArea
-          key={index.toString()}
-          label={'Constructor Arguments for ' + (tier.tier ? tier.tier : 'contract') + ' (ABI-encoded and appended to the ByteCode above)'}
-          value={contractStore ? contractStore.crowdsale ? contractStore.crowdsale.abiConstructor ? contractStore.crowdsale.abiConstructor[index] : '' : '' : ''}
-          description="Encoded ABI"
-        />
-      )
-    })*/
+
     const globalLimitsBlock = (
       <div>
         <div className="publish-title-container">
@@ -338,25 +343,6 @@ export class stepFour extends React.Component {
         </div>
       </div>
     )
-    /*const tokenBlock = (
-      <div>
-        <DisplayTextArea
-          label={'Token Contract Source Code'}
-          value={contractStore ? contractStore.token ? contractStore.token.src : '' : ''}
-          description="Token Contract Source Code"
-        />
-        <DisplayTextArea
-          label={'Token Contract ABI'}
-          value={contractStore ? contractStore.token ? JSON.stringify(contractStore.token.abi) : '' : ''}
-          description="Token Contract ABI"
-        />
-        <DisplayTextArea
-          label={'Token Constructor Arguments (ABI-encoded and appended to the ByteCode above)'}
-          value={contractStore ? contractStore.token ? contractStore.token.abiConstructor ? contractStore.token.abiConstructor : '' : '' : ''}
-          description="Token Constructor Arguments"
-        />
-      </div>
-    )*/
 
     const modalContent = deploymentStore.invalidAccount ? (
       <div>
@@ -371,6 +357,15 @@ export class stepFour extends React.Component {
         onSkip={this.state.transactionFailed ? this.skipTransaction : null}
       />
     )
+
+    let strategyName
+    strategyName = crowdsaleStore.isMintedCappedCrowdsale ? CROWDSALE_STRATEGIES_DISPLAYNAMES.MINTED_CAPPED_CROWDSALE : crowdsaleStore.isDutchAuction ? CROWDSALE_STRATEGIES_DISPLAYNAMES.DUTCH_AUCTION : ""
+    const tokenSupplyBlock = (<DisplayField
+        side='right'
+        title='SUPPLY'
+        value={tokenStore.supply ? tokenStore.supply.toString() : ""}
+        description="Token supply."
+      />)
 
     return (
       <section className="steps steps_publish">
@@ -388,7 +383,7 @@ export class stepFour extends React.Component {
               <div className="publish-title-container">
                 <p className="publish-title" data-step="1">Crowdsale Contract</p>
               </div>
-              <p className="label">Whitelist with cap</p>
+              <p className="label">{strategyName}</p>
               <p className="description">Crowdsale Contract</p>
             </div>
             <div className="publish-title-container">
@@ -416,48 +411,14 @@ export class stepFour extends React.Component {
                   value={tokenStore.decimals ? tokenStore.decimals.toString() : ""}
                   description="The decimals of your token."
                 />
+                {crowdsaleStore.isDutchAuction ? tokenSupplyBlock: null}
               </div>
             </div>
             {crowdsaleSetups}
-            {/*<div className="publish-title-container">
-              <p className="publish-title" data-step={2 + tierStore.tiers.length + 1}>Crowdsale Setup</p>
-            </div>
-            <div className="hidden">
-              <DisplayField
-                side='left'
-                title='Compiler Version'
-                value={'0.4.11'}
-                description="Compiler Version"
-              />
-              <DisplayField
-                side='right'
-                title='Contract name'
-                value={'MintedTokenCappedCrowdsaleExt'}
-                description="Crowdsale contract name"
-              />
-              <DisplayField
-                side='left'
-                title='Optimized'
-                value={true.toString()}
-                description="Optimization in compiling"
-              />
-            </div>*/}
             {tierStore.tiers[0].whitelistEnabled !== "yes"
               ? globalLimitsBlock
               : null
             }
-            {/*{tokenBlock}
-            <DisplayTextArea
-              label={"Crowdsale Contract Source Code"}
-              value={contractStore ? contractStore.crowdsale ? contractStore.crowdsale.src : "" : ""}
-              description="Crowdsale Contract Source Code"
-            />
-            <DisplayTextArea
-              label={"Crowdsale Contract ABI"}
-              value={contractStore ? contractStore.crowdsale ? JSON.stringify(contractStore.crowdsale.abi) : "" : ""}
-              description="Crowdsale Contract ABI"
-            />
-            {ABIEncodedOutputsCrowdsale}*/}
           </div>
         </div>
         <div className="button-container">

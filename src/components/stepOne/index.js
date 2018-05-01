@@ -2,7 +2,7 @@ import React from 'react'
 import '../../assets/stylesheets/application.css';
 import { Link } from 'react-router-dom';
 import { StepNavigation } from '../Common/StepNavigation';
-import { NAVIGATION_STEPS, CROWDSALE_STRATEGIES } from '../../utils/constants';
+import { NAVIGATION_STEPS, CROWDSALE_STRATEGIES, CROWDSALE_STRATEGIES_DISPLAYNAMES } from '../../utils/constants';
 import { inject, observer } from 'mobx-react'
 const { CROWDSALE_CONTRACT } = NAVIGATION_STEPS;
 
@@ -52,7 +52,7 @@ export class stepOne extends React.Component {
                 name="contract-type"
                 id={CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE}
               />
-              <span className="title">Whitelist with Cap</span>
+              <span className="title">{CROWDSALE_STRATEGIES_DISPLAYNAMES.MINTED_CAPPED_CROWDSALE}</span>
               <span className="description">
                 Modern crowdsale strategy with multiple tiers, whitelists, and limits. Recommended for every crowdsale.
               </span>
@@ -64,7 +64,7 @@ export class stepOne extends React.Component {
                 name="contract-type"
                 id={CROWDSALE_STRATEGIES.DUTCH_AUCTION}
               />
-              <span className="title">Dutch auction</span>
+              <span className="title">{CROWDSALE_STRATEGIES_DISPLAYNAMES.DUTCH_AUCTION}</span>
               <span className="description">
                 Dutch auction crowdsale.
               </span>

@@ -228,7 +228,10 @@ const sendTXResponse = (receipt, type) => {
   if (0 !== +receipt.status || null === receipt.status) {
     const logs = receipt.logs
     const events = receipt.events;
-    const eventsArr = Object.keys(events).map((ind) => { return events[ind] })
+    let eventsArr;
+    if (events) {
+      eventsArr = Object.keys(events).map((ind) => { return events[ind] })
+    }
     const ev_logs = logs || eventsArr
     console.log("ev_logs:", ev_logs)
     if (ev_logs.some(checkEventTopics)) {
