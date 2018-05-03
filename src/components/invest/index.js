@@ -304,7 +304,7 @@ export class Invest extends React.Component {
     const target = `${targetPrefix}${targetSuffix}`
 
     let paramsToExec = [weiToSend, methodInterface]
-    const method = methodToExec(`buy(${methodInterface.join(',')})`, target, this.getBuyParams, paramsToExec)
+    const method = methodToExec("scriptExec", `buy(${methodInterface.join(',')})`, target, this.getBuyParams, paramsToExec)
 
     method.estimateGas(opts)
       .then(estimatedGas => {

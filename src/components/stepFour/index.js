@@ -278,7 +278,7 @@ export class stepFour extends React.Component {
     const { tierStore, tokenStore, deploymentStore, crowdsaleStore } = this.props
     const crowdsaleSetups = tierStore.tiers.map((tier, index) => {
       const mintedCappedCrowdsaleRateBlock = (<DisplayField
-        side='right'
+        side='left'
         title={'RATE'}
         value={tier.rate ? tier.rate : 0 + ' ETH'}
         description={DESCRIPTION.RATE}

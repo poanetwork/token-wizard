@@ -4,6 +4,8 @@ import {
   getNetworkVersion,
   sendTXToContract,
   methodToExec,
+  methodToInitAppInstanceFromRegistry,
+  methodToInitAndFinalize,
   methodToInitAppInstance
 } from '../../utils/blockchainHelpers'
 //import { noContractAlert } from '../../utils/alerts'
@@ -130,16 +132,15 @@ export const deployCrowdsale = () => {
             let params = [ account, methodInterface ];
 
             const methodInterfaceStr = `init(${methodInterface.join(',')})`
-            const target = "initCrowdsaleMintedCapped"
 
             let method = methodToInitAppInstance(
               methodInterfaceStr,
-              target,
               getCrowdSaleParams,
               params,
               process.env['REACT_APP_MINTED_CAPPED_CROWDSALE_APP_NAME']
             )
-            /*let method = methodToInit(
+            /*const target = "initCrowdsaleMintedCapped"
+            let method = methodToInitAppInstanceFromRegistry(
               methodInterfaceStr,
               target,
               getCrowdSaleParams,
@@ -169,6 +170,8 @@ export const deployCrowdsale = () => {
                         getExecutionIDFromEvent(events, "ApplicationFinalization");
                       } else if (events.AppInstanceCreated) {
                         getExecutionIDFromEvent(events, "AppInstanceCreated");
+                      } else if (events.ApplicationInitialized) {
+                        getExecutionIDFromEvent(events, "ApplicationInitialized");
                       }
                     } else if (logs) {
                       console.log("logs:")
@@ -273,15 +276,26 @@ export const deployDutchAuctionCrowdsale = () => {
             let params = [ account, methodInterface ];
 
             const methodInterfaceStr = `init(${methodInterface.join(',')})`
-            const target = "initCrowdsaleDutchAuction"
 
             let method = methodToInitAppInstance(
               methodInterfaceStr,
-              target,
               getDutchAuctionCrowdSaleParams,
               params,
               process.env['REACT_APP_DUTCH_CROWDSALE_APP_NAME']
             )
+            /*const target = "initCrowdsaleDutchAuction"
+            let method = methodToInitAppInstanceFromRegistry(
+              methodInterfaceStr,
+              target,
+              getCrowdSaleParams,
+              params
+            )*/
+            /*let method = methodToInitAndFinalize(
+              methodInterfaceStr,
+              target,
+              getCrowdSaleParams,
+              params
+            )*/
 
             const opts = { gasPrice: generalStore.gasPrice, from: account }
             console.log("opts:", opts)
@@ -300,6 +314,8 @@ export const deployDutchAuctionCrowdsale = () => {
                         getExecutionIDFromEvent(events, "ApplicationFinalization");
                       } else if (events.AppInstanceCreated) {
                         getExecutionIDFromEvent(events, "AppInstanceCreated");
+                      } else if (events.ApplicationInitialized) {
+                        getExecutionIDFromEvent(events, "ApplicationInitialized");
                       }
                     } else if (logs) {
                       console.log("logs:")
@@ -391,7 +407,7 @@ export const initializeToken = () => {
         const target = `${targetPrefix}${targetSuffix}`
 
         let paramsToExec = [tokenStore, methodInterface]
-        const method = methodToExec(`initCrowdsaleToken(${methodInterface.join(',')})`, target, getTokenParams, paramsToExec)
+        const method = methodToExec("scriptExec", `initCrowdsaleToken(${methodInterface.join(',')})`, target, getTokenParams, paramsToExec)
 
         const opts = { gasPrice: generalStore.gasPrice, from: account }
         console.log("opts:", opts)
@@ -476,7 +492,7 @@ export const setReservedTokensListMultiple = () => {
       const methodInterface = ["address[]","uint256[]","uint256[]","uint256[]","bytes"]
 
       let paramsToExec = [addrs, inTokens, inPercentageUnit, inPercentageDecimals, methodInterface]
-      const method = methodToExec(`updateMultipleReservedTokens(${methodInterface.join(',')})`, "tokenConsoleMintedCapped", getReservedTokensParams, paramsToExec)
+      const method = methodToExec("scriptExec", `updateMultipleReservedTokens(${methodInterface.join(',')})`, "tokenConsoleMintedCapped", getReservedTokensParams, paramsToExec)
 
       return method.estimateGas(opts)
         .then(estimatedGas => {
@@ -508,7 +524,7 @@ export const initializeCrowdsale = () => {
         const target = `${targetPrefix}${targetSuffix}`
 
         let paramsToExec = [tokenStore]
-        const method = methodToExec("initializeCrowdsale(bytes)", target, getInitializeCrowdsaleParams, paramsToExec)
+        const method = methodToExec("scriptExec", "initializeCrowdsale(bytes)", target, getInitializeCrowdsaleParams, paramsToExec)
 
         const opts = { gasPrice: generalStore.gasPrice, from: account }
         console.log("opts:", opts)
@@ -576,7 +592,7 @@ export const createCrowdsaleTiers = () => {
       const methodInterface = ["bytes32[]", "uint256[]", "uint256[]", "uint256[]", "bool[]", "bool[]","bytes"]
 
       let paramsToExec = [methodInterface]
-      const method = methodToExec(`createCrowdsaleTiers(${methodInterface.join(',')})`, "crowdsaleConsoleMintedCapped", getTiersParams, paramsToExec)
+      const method = methodToExec("scriptExec", `createCrowdsaleTiers(${methodInterface.join(',')})`, "crowdsaleConsoleMintedCapped", getTiersParams, paramsToExec)
 
       let account = contractStore.crowdsale.account;
       const opts = { gasPrice: generalStore.gasPrice, from: account }
@@ -662,7 +678,7 @@ export const addWhitelist = () => {
       }
 
       let paramsToExec = [index, addrs, minCaps, maxCaps, methodInterface]
-      const method = methodToExec(`${methodName}(${methodInterface.join(',')})`, target, getWhitelistsParams, paramsToExec)
+      const method = methodToExec("scriptExec", `${methodName}(${methodInterface.join(',')})`, target, getWhitelistsParams, paramsToExec)
 
       return method.estimateGas(opts)
         .then(estimatedGas => {
@@ -694,7 +710,7 @@ export const updateGlobalMinContribution = () => {
     const target = `${targetPrefix}${targetSuffix}`
 
     let paramsToExec = [methodInterface]
-    const method = methodToExec(`updateGlobalMinContribution(${methodInterface.join(',')})`, target, getUpdateGlobalMinCapParams, paramsToExec)
+    const method = methodToExec("scriptExec", `updateGlobalMinContribution(${methodInterface.join(',')})`, target, getUpdateGlobalMinCapParams, paramsToExec)
 
     let account = contractStore.crowdsale.account;
     const opts = { gasPrice: generalStore.gasPrice, from: account }

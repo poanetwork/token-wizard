@@ -356,7 +356,7 @@ export class Manage extends Component {
                     const target = `${targetPrefix}${targetSuffix}`
 
                     let paramsToExec = [methodInterface]
-                    const method = methodToExec(`${methodName}(${methodInterface.join(',')})`, target, this.getFinalizeCrowdsaleParams, paramsToExec)
+                    const method = methodToExec("scriptExec", `${methodName}(${methodInterface.join(',')})`, target, this.getFinalizeCrowdsaleParams, paramsToExec)
 
                     let opts = {
                       gasPrice: this.props.generalStore.gasPrice,

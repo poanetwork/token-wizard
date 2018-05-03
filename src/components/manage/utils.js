@@ -107,7 +107,7 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
     paramsToExec = [ crowdsaleStartTime, value, methodInterface ]
   }
 
-  const method = methodToExec(`${methods[attribute]}(${methodInterface.join(',')})`, target, getParams, paramsToExec)
+  const method = methodToExec("scriptExec", `${methods[attribute]}(${methodInterface.join(',')})`, target, getParams, paramsToExec)
 
   return getCurrentAccount()
     .then(account => {

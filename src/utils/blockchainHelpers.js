@@ -402,7 +402,7 @@ export let attachToSpecificCrowdsaleContract = (contractName) => {
   });
 }
 
-export let methodToExec = (methodName, targetName, getEncodedParams, params) => {
+export let methodToExec = (contractName, methodName, targetName, getEncodedParams, params) => {
   const { web3 } = web3Store
   const methodParams = getEncodedParams(...params)
   console.log("methodParams:", methodParams)
@@ -416,30 +416,42 @@ export let methodToExec = (methodName, targetName, getEncodedParams, params) => 
   let fullData = methodSignature + methodParams.substr(2);
   console.log("full calldata:", fullData);
 
-  const abiScriptExec = contractStore.scriptExec.abi || []
-  console.log("abiScriptExec:", abiScriptExec)
-  const addrScriptExec = contractStore.scriptExec.addr || {}
-  console.log("addrScriptExec:", addrScriptExec)
-  const scriptExec = new web3.eth.Contract(toJS(abiScriptExec), addrScriptExec)
-  console.log(scriptExec)
+  const abiContract = contractStore[contractName].abi || []
+  console.log("abiContract:", abiContract)
+  const addrContract = contractStore[contractName].addr || {}
+  console.log("addrContract:", addrContract)
+  const contract = new web3.eth.Contract(toJS(abiContract), addrContract)
+  console.log(contract)
 
   console.log("targetName:", targetName)
 
   const target = contractStore[targetName].addr;
 
-  let paramsToExec = [
-    target,
-    fullData
-  ]
+  let paramsToExec
+
+  if (contractName == "scriptExec") {
+    paramsToExec = [
+      target,
+      fullData
+    ]
+  } else if (contractName == "registryStorage") {
+    let { execID } = contractStore.crowdsale;
+    paramsToExec = [
+      target,
+      execID,
+      fullData
+    ]
+  }
+
   console.log("paramsToExec: ", paramsToExec)
 
-  const method = scriptExec.methods.exec(...paramsToExec)
+  const method = contract.methods.exec(...paramsToExec)
   console.log("method:", method)
 
   return method;
 }
 
-export let methodToInitAppInstance = (methodName, targetName, getEncodedParams, params, appName) => {
+export let methodToInitAppInstance = (methodName, getEncodedParams, params, appName) => {
   const { web3 } = web3Store
   const methodParams = getEncodedParams(...params)
   console.log("methodParams:", methodParams)
@@ -478,7 +490,7 @@ export let methodToInitAppInstance = (methodName, targetName, getEncodedParams, 
   return method;
 }
 
-export let methodToInit = (methodName, targetName, getEncodedParams, params) => {
+export let methodToInitAppInstanceFromRegistry = (methodName, targetName, getEncodedParams, params) => {
   const { web3 } = web3Store
   const methodParams = getEncodedParams(...params)
   console.log("methodParams:", methodParams)
@@ -486,9 +498,10 @@ export let methodToInit = (methodName, targetName, getEncodedParams, params) => 
   let methodSignature = web3.eth.abi.encodeFunctionSignature(methodName);
   console.log(`methodSignature ${methodName}:`, methodSignature);
 
-  let encodedParameters = web3.eth.abi.encodeParameters(["bytes"], [methodParams]);
+  //let encodedParameters = web3.eth.abi.encodeParameters(["bytes"], [methodParams]);
+  //let fullData = methodSignature + encodedParameters.substr(2);
 
-  let fullData = methodSignature + encodedParameters.substr(2);
+  let fullData = methodSignature + methodParams.substr(2);
   console.log("full calldata:", fullData);
 
   const abiRegistryStorage = contractStore.registryStorage.abi || []
@@ -498,16 +511,16 @@ export let methodToInit = (methodName, targetName, getEncodedParams, params) => 
 
   let account = params[0];
   let isPayable = false;
-  let allowed = [];
-  let paramsToInitAndFinalize = [
+  let allowed = [contractStore["appConsole"].addr, contractStore["versionConsole"].addr, contractStore["implementationConsole"].addr];
+  let paramsToInitAppInstance = [
     account,
     isPayable,
     contractStore[targetName].addr,
     fullData,
     allowed
   ]
-  console.log("paramsToInitAndFinalize: ", paramsToInitAndFinalize)
-  const method = registryStorage.methods.initAndFinalize(...paramsToInitAndFinalize)
+  console.log("paramsToInitAppInstance: ", paramsToInitAppInstance)
+  const method = registryStorage.methods.initAppInstance(...paramsToInitAppInstance)
   console.log("method:", method)
 
   return method;
@@ -521,9 +534,10 @@ export let methodToInitAndFinalize = (methodName, targetName, getEncodedParams, 
   let methodSignature = web3.eth.abi.encodeFunctionSignature(methodName);
   console.log(`methodSignature ${methodName}:`, methodSignature);
 
-  let encodedParameters = web3.eth.abi.encodeParameters(["bytes"], [methodParams]);
+  //let encodedParameters = web3.eth.abi.encodeParameters(["bytes"], [methodParams]);
+  //let fullData = methodSignature + encodedParameters.substr(2);
 
-  let fullData = methodSignature + encodedParameters.substr(2);
+  let fullData = methodSignature + methodParams.substr(2);
   console.log("full calldata:", fullData);
 
   const abiRegistryStorage = contractStore.registryStorage.abi || []
