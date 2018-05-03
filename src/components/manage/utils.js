@@ -174,17 +174,25 @@ const crowdsaleData = crowdsaleAddress => {
 const parseReservedTokenValue = (value, decimals) => toBigNumber(value).div(`1e${decimals}`).toFixed()
 
 const buildReservedTokenInfo = ([tokensInfo, addresses, decimals]) => addresses.map((address, index) => {
-  const info = { addr: address }
+  const info = []
   const tokenInfo = tokensInfo[index]
 
   if (tokenInfo.inTokens !== '0') {
-    info.dim = 'tokens'
-    info.val = parseReservedTokenValue(tokenInfo.inTokens, decimals)
-    return info
+    info.push({
+      addr: address,
+      dim: 'tokens',
+      val: parseReservedTokenValue(tokenInfo.inTokens, decimals)
+    })
   }
 
-  info.dim = 'percentage'
-  info.val = parseReservedTokenValue(tokenInfo.inPercentageUnit, tokenInfo.inPercentageDecimals)
+  if (tokenInfo.inPercentageUnit !== '0') {
+    info.push({
+      addr: address,
+      dim: 'percentage',
+      val: parseReservedTokenValue(tokenInfo.inPercentageUnit, tokenInfo.inPercentageDecimals)
+    })
+  }
+
   return info
 })
 
@@ -200,6 +208,7 @@ const getReservedTokensData = (methods, length, decimals) => {
     .then((addresses) => Promise.all(addresses.map(address => methods.reservedTokensList(address).call())))
     .then((reservedTokensInfo) => Promise.all([reservedTokensInfo, Promise.all(whenReservedTokensAddresses), decimals]))
     .then(buildReservedTokenInfo)
+    .then(addresses => [].concat.apply([], addresses))
 }
 
 const tokenData = tokenAddress => {
