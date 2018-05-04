@@ -55,7 +55,7 @@ export const ManageDutchAuctionBlock = ({
                 <CrowdsaleStartTime
                   name={`${name}.startTime`}
                   index={index}
-                  disabled={!canEdit || tierHasStarted}
+                  disabled={true}
                   side="left"
                   description={DESCRIPTION.START_TIME_DUTCH_AUCTION}
                   errorStyle={inputErrorStyle}
@@ -63,7 +63,7 @@ export const ManageDutchAuctionBlock = ({
                 <CrowdsaleEndTime
                   name={`${name}.endTime`}
                   index={index}
-                  disabled={!canEdit}
+                  disabled={true}
                   side="right"
                   description={DESCRIPTION.END_TIME_DUTCH_AUCTION}
                   errorStyle={inputErrorStyle}
