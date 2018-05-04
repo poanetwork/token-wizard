@@ -650,8 +650,8 @@ export const addWhitelist = () => {
 
       for (let i = 0; i < whitelist.length; i++) {
         addrs.push(whitelist[i].addr)
-        let whitelistMin = toBigNumber(whitelist[i].min).times(oneTokenInWEI).toFixed()
-        let whitelistMax = toBigNumber(whitelist[i].max).times(oneTokenInWEI).toFixed()
+        let whitelistMin = toBigNumber(whitelist[i].min).times(`1e${tokenStore.decimals}`).toFixed() // in tokens, token do have decimals accounted
+        let whitelistMax = toBigNumber(whitelist[i].max).times(oneTokenInWEI).toFixed() // in wei
         minCaps.push(whitelistMin ? whitelistMin.toString() : 0)
         maxCaps.push(whitelistMax ? whitelistMax.toString() : 0)
       }
