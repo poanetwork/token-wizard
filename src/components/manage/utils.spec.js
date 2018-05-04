@@ -5,7 +5,6 @@ describe('getFieldsToUpdate', () => {
     // Given
     const updatableTiers = [{
       index: 0,
-      addresses: {},
       rate: '10',
       supply: '1000'
     }]
@@ -19,7 +18,6 @@ describe('getFieldsToUpdate', () => {
 
     // Then
     expect(result).toEqual([{
-      addresses: {},
       key: 'rate',
       newValue: '20',
       tier: 0
@@ -30,12 +28,10 @@ describe('getFieldsToUpdate', () => {
     // Given
     const updatableTiers = [{
       index: 0,
-      addresses: {},
       rate: '10',
       supply: '1000'
     }, {
       index: 1,
-      addresses: {},
       rate: '10',
       supply: '1000'
     }]
@@ -52,12 +48,10 @@ describe('getFieldsToUpdate', () => {
 
     // Then
     expect(result).toEqual([{
-      addresses: {},
       key: 'supply',
       newValue: '2000',
       tier: 1
     }, {
-      addresses: {},
       key: 'rate',
       newValue: '20',
       tier: 0
@@ -68,7 +62,6 @@ describe('getFieldsToUpdate', () => {
     // Given
     const updatableTiers = [{
       index: 0,
-      addresses: {},
       startTime: '2018-01-01T00:00',
       endTime: '2018-01-05T00:00'
     }]
@@ -82,12 +75,10 @@ describe('getFieldsToUpdate', () => {
 
     // Then
     expect(result).toEqual([{
-      addresses: {},
       key: 'endTime',
       newValue: '2018-01-10T00:00',
       tier: 0
     }, {
-      addresses: {},
       key: 'startTime',
       newValue: '2018-01-06T00:00',
       tier: 0
