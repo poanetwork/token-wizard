@@ -1,5 +1,560 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ManageForm should render for Dutch Auction 1`] = `
+<form
+  onSubmit={[Function]}
+>
+  <div>
+    <div
+      className="steps"
+    >
+      <div
+        className="steps-content container"
+      >
+        <div
+          className="hidden divisor"
+        >
+          <div
+            className="input-block-container"
+          >
+            <div
+              className="left"
+            >
+              <label
+                className="label"
+              >
+                Crowdsale Type
+              </label>
+              <input
+                className="input"
+                disabled={true}
+                onBlur={undefined}
+                onChange={undefined}
+                onKeyPress={undefined}
+                onPaste={undefined}
+                style={undefined}
+                type="text"
+                value="Dutch Auction"
+              />
+              <p
+                className="description"
+              />
+              <p
+                style={
+                  Object {
+                    "color": "red",
+                    "fontSize": "12px",
+                    "fontWeight": "bold",
+                    "height": "10px",
+                    "width": "100%",
+                  }
+                }
+              >
+                
+              </p>
+            </div>
+            <div
+              className="right"
+            >
+              <label
+                className="label"
+              >
+                Wallet Address
+              </label>
+              <input
+                className="input"
+                disabled={true}
+                onBlur={undefined}
+                onChange={undefined}
+                onKeyPress={undefined}
+                onPaste={undefined}
+                style={undefined}
+                type="text"
+                value="0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1"
+              />
+              <p
+                className="description"
+              />
+              <p
+                style={
+                  Object {
+                    "color": "red",
+                    "fontSize": "12px",
+                    "fontWeight": "bold",
+                    "height": "10px",
+                    "width": "100%",
+                  }
+                }
+              >
+                
+              </p>
+            </div>
+          </div>
+          <div
+            className="input-block-container"
+          >
+            <div
+              className="left"
+            >
+              <label
+                className="label"
+                htmlFor="tiers[0].startTime"
+              >
+                Start Time
+              </label>
+              <input
+                autoComplete="off"
+                className="input"
+                disabled={true}
+                id="tiers[0].startTime"
+                name="tiers[0].startTime"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder={undefined}
+                type="datetime-local"
+                value="2018-04-13T16:07"
+              />
+              <p
+                className="description"
+              >
+                Date and time when the crowdsale starts. Can't be in the past from the current moment.
+              </p>
+              <span>
+                <p
+                  className="error"
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "20px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </span>
+            </div>
+            <div
+              className="right"
+            >
+              <label
+                className="label"
+                htmlFor="tiers[0].endTime"
+              >
+                End Time
+              </label>
+              <input
+                autoComplete="off"
+                className="input"
+                disabled={true}
+                id="tiers[0].endTime"
+                name="tiers[0].endTime"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder={undefined}
+                type="datetime-local"
+                value="2018-04-17T00:00"
+              />
+              <p
+                className="description"
+              >
+                Date and time when the crowdsale ends. Can be only in the future.
+              </p>
+              <span>
+                <p
+                  className="error"
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "20px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </span>
+            </div>
+          </div>
+          <div
+            className="input-block-container"
+          >
+            <div
+              className="left"
+            >
+              <label
+                className="label"
+                htmlFor="tiers[0].rate"
+              >
+                Rate
+              </label>
+              <input
+                autoComplete="off"
+                className="input"
+                disabled={true}
+                id="tiers[0].rate"
+                name="tiers[0].rate"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder={undefined}
+                type="text"
+                value="123"
+              />
+              <p
+                className="description"
+              >
+                Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
+              </p>
+              <span>
+                <p
+                  className="error"
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "20px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </span>
+            </div>
+            <div
+              className="right"
+            >
+              <label
+                className="label"
+                htmlFor="tiers[0].supply"
+              >
+                Supply
+              </label>
+              <input
+                autoComplete="off"
+                className="input"
+                disabled={true}
+                id="tiers[0].supply"
+                name="tiers[0].supply"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder={undefined}
+                type="text"
+                value="132"
+              />
+              <p
+                className="description"
+              >
+                How many tokens will be sold on crowdsale
+              </p>
+              <span>
+                <p
+                  className="error"
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "20px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="steps"
+    >
+      <div
+        className="steps-content container"
+      >
+        <div
+          className="hidden divisor"
+        >
+          <div
+            className="input-block-container"
+          >
+            <div
+              className="left"
+            >
+              <label
+                className="label"
+              >
+                Crowdsale Type
+              </label>
+              <input
+                className="input"
+                disabled={true}
+                onBlur={undefined}
+                onChange={undefined}
+                onKeyPress={undefined}
+                onPaste={undefined}
+                style={undefined}
+                type="text"
+                value="Dutch Auction"
+              />
+              <p
+                className="description"
+              />
+              <p
+                style={
+                  Object {
+                    "color": "red",
+                    "fontSize": "12px",
+                    "fontWeight": "bold",
+                    "height": "10px",
+                    "width": "100%",
+                  }
+                }
+              >
+                
+              </p>
+            </div>
+            <div
+              className="right"
+            >
+              <label
+                className="label"
+              >
+                Wallet Address
+              </label>
+              <input
+                className="input"
+                disabled={true}
+                onBlur={undefined}
+                onChange={undefined}
+                onKeyPress={undefined}
+                onPaste={undefined}
+                style={undefined}
+                type="text"
+                value="0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1"
+              />
+              <p
+                className="description"
+              />
+              <p
+                style={
+                  Object {
+                    "color": "red",
+                    "fontSize": "12px",
+                    "fontWeight": "bold",
+                    "height": "10px",
+                    "width": "100%",
+                  }
+                }
+              >
+                
+              </p>
+            </div>
+          </div>
+          <div
+            className="input-block-container"
+          >
+            <div
+              className="left"
+            >
+              <label
+                className="label"
+                htmlFor="tiers[1].startTime"
+              >
+                Start Time
+              </label>
+              <input
+                autoComplete="off"
+                className="input"
+                disabled={true}
+                id="tiers[1].startTime"
+                name="tiers[1].startTime"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder={undefined}
+                type="datetime-local"
+                value="2018-04-17T00:00"
+              />
+              <p
+                className="description"
+              >
+                Date and time when the crowdsale starts. Can't be in the past from the current moment.
+              </p>
+              <span>
+                <p
+                  className="error"
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "20px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </span>
+            </div>
+            <div
+              className="right"
+            >
+              <label
+                className="label"
+                htmlFor="tiers[1].endTime"
+              >
+                End Time
+              </label>
+              <input
+                autoComplete="off"
+                className="input"
+                disabled={true}
+                id="tiers[1].endTime"
+                name="tiers[1].endTime"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder={undefined}
+                type="datetime-local"
+                value="2018-04-21T00:00"
+              />
+              <p
+                className="description"
+              >
+                Date and time when the crowdsale ends. Can be only in the future.
+              </p>
+              <span>
+                <p
+                  className="error"
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "20px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </span>
+            </div>
+          </div>
+          <div
+            className="input-block-container"
+          >
+            <div
+              className="left"
+            >
+              <label
+                className="label"
+                htmlFor="tiers[1].rate"
+              >
+                Rate
+              </label>
+              <input
+                autoComplete="off"
+                className="input"
+                disabled={true}
+                id="tiers[1].rate"
+                name="tiers[1].rate"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder={undefined}
+                type="text"
+                value="55"
+              />
+              <p
+                className="description"
+              >
+                Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
+              </p>
+              <span>
+                <p
+                  className="error"
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "20px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </span>
+            </div>
+            <div
+              className="right"
+            >
+              <label
+                className="label"
+                htmlFor="tiers[1].supply"
+              >
+                Supply
+              </label>
+              <input
+                autoComplete="off"
+                className="input"
+                disabled={true}
+                id="tiers[1].supply"
+                name="tiers[1].supply"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder={undefined}
+                type="text"
+                value="156"
+              />
+              <p
+                className="description"
+              >
+                How many tokens will be sold on crowdsale
+              </p>
+              <span>
+                <p
+                  className="error"
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "20px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="steps"
+  >
+    <div
+      className="button-container"
+    >
+      <a
+        href="/#"
+        onClick={[Function]}
+      >
+        <span
+          className="no_arrow button button_fill"
+        >
+          Save
+        </span>
+      </a>
+    </div>
+  </div>
+</form>
+`;
+
 exports[`ManageForm should render the component with tiers 1`] = `
 <form
   onSubmit={[Function]}

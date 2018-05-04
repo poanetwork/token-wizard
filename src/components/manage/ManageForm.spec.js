@@ -7,6 +7,8 @@ import renderer from 'react-test-renderer'
 import Adapter from 'enzyme-adapter-react-15'
 import { configure, mount } from 'enzyme'
 import MockDate from 'mockdate'
+import CrowdsaleStore from '../../stores/CrowdsaleStore'
+import { CROWDSALE_STRATEGIES } from '../../utils/constants'
 
 const DATE = {
   TIER_0: {
@@ -60,11 +62,19 @@ const initialTiers = [{
 configure({ adapter: new Adapter() })
 
 describe('ManageForm', () => {
+  let crowdsaleStore
+
+  beforeEach(() => {
+    crowdsaleStore = new CrowdsaleStore()
+    crowdsaleStore.setProperty('strategy', CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE)
+  })
+
   it('should render the component without tiers', () => {
     const onSubmit = jest.fn()
     const manageFormProps = {
       handleChange: jest.fn(),
       canSave: true,
+      crowdsaleStore: crowdsaleStore
     }
 
     MockDate.set(DATE.TIER_0.BEFORE_START)
@@ -87,6 +97,32 @@ describe('ManageForm', () => {
     const manageFormProps = {
       handleChange: jest.fn(),
       canSave: true,
+      crowdsaleStore: crowdsaleStore
+    }
+    MockDate.set(DATE.TIER_0.BEFORE_START)
+
+    expect(renderer.create(
+      <StaticRouter location="testLocation" context={{}}>
+        <Form
+          onSubmit={onSubmit}
+          mutators={{ ...arrayMutators }}
+          initialValues={{ tiers: initialTiers, }}
+          component={ManageForm}
+          {...manageFormProps}
+        />
+      </StaticRouter>
+    ).toJSON()).toMatchSnapshot()
+  })
+
+  it('should render for Dutch Auction', () => {
+    crowdsaleStore.setProperty('strategy', CROWDSALE_STRATEGIES.DUTCH_AUCTION)
+
+    const onSubmit = jest.fn()
+
+    const manageFormProps = {
+      handleChange: jest.fn(),
+      canSave: true,
+      crowdsaleStore: crowdsaleStore
     }
     MockDate.set(DATE.TIER_0.BEFORE_START)
 
@@ -110,6 +146,7 @@ describe('ManageForm', () => {
     const manageFormProps = {
       handleChange: jest.fn(),
       canSave: true,
+      crowdsaleStore: crowdsaleStore
     }
 
     const wrapper = mount(
@@ -140,6 +177,7 @@ describe('ManageForm', () => {
     const manageFormProps = {
       handleChange: jest.fn(),
       canSave: false,
+      crowdsaleStore: crowdsaleStore
     }
 
     const wrapper = mount(
@@ -166,6 +204,7 @@ describe('ManageForm', () => {
     const manageFormProps = {
       handleChange: jest.fn(),
       canSave: true,
+      crowdsaleStore: crowdsaleStore
     }
 
     const wrapper = mount(
@@ -192,6 +231,7 @@ describe('ManageForm', () => {
     const manageFormProps = {
       handleChange: jest.fn(),
       canSave: true,
+      crowdsaleStore: crowdsaleStore
     }
 
     const wrapper = mount(
