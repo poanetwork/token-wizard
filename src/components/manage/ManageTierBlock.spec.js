@@ -6,6 +6,8 @@ import Adapter from 'enzyme-adapter-react-15'
 import { configure } from 'enzyme'
 import MockDate from 'mockdate'
 import { ManageTierBlock } from './ManageTierBlock'
+import CrowdsaleStore from '../../stores/CrowdsaleStore'
+import { CROWDSALE_STRATEGIES } from '../../utils/constants'
 
 const DATE = {
   TIER_0: {
@@ -59,7 +61,10 @@ const initialTiers = [{
 configure({ adapter: new Adapter() })
 
 describe('ManageTierBlock', () => {
-  it('should render the ManageTierBlock component with tiers', () => {
+  it('should render the ManageTierBlock component with tiers for Minted Capped Crowdsale', () => {
+    const crowdsaleStore = new CrowdsaleStore()
+    crowdsaleStore.setProperty('strategy', CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE)
+
     MockDate.set(DATE.TIER_0.ACTIVE)
 
     const fields = {
@@ -74,6 +79,40 @@ describe('ManageTierBlock', () => {
       fields: fields,
       canEditTiers: false,
       aboutTier: <div id='about_tier'>About Tier</div>,
+      crowdsaleStore: crowdsaleStore
+    }
+
+    expect(renderer.create(
+      <StaticRouter location="testLocation" context={{}}>
+        <Form
+          onSubmit={jest.fn()}
+          render={() => (
+            <ManageTierBlock {...manageTierBlockProps} />
+          )}
+        />
+      </StaticRouter>
+    ).toJSON()).toMatchSnapshot()
+  })
+
+  it('should render the ManageTierBlock component with tiers for Dutch Auction Crowdsale', () => {
+    const crowdsaleStore = new CrowdsaleStore()
+    crowdsaleStore.setProperty('strategy', CROWDSALE_STRATEGIES.DUTCH_AUCTION)
+
+    MockDate.set(DATE.TIER_0.ACTIVE)
+
+    const fields = {
+      initial: initialTiers,
+      value: initialTiers,
+      map: function (cb) {
+        return Object.keys(this.initial).map((name, index) => cb(`tiers[${index}].${name}`, index))
+      }
+    }
+
+    const manageTierBlockProps = {
+      fields: fields,
+      canEditTiers: false,
+      aboutTier: <div id='about_tier'>About Tier</div>,
+      crowdsaleStore: crowdsaleStore
     }
 
     expect(renderer.create(
