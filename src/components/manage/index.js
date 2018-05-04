@@ -405,10 +405,10 @@ export class Manage extends Component {
                     let methodName
                     let targetPrefix
                     if (crowdsaleStore.isMintedCappedCrowdsale) {
-                      methodName = "finalizeCrowdsale"
+                      methodName = "finalizeCrowdsaleAndToken"
                       targetPrefix = "tokenConsole"
                     } else if (crowdsaleStore.isDutchAuction) {
-                      methodName = "finalizeCrowdsaleAndToken"
+                      methodName = "finalizeCrowdsale"
                       targetPrefix = "crowdsaleConsole"
                     }
                     const targetSuffix = crowdsaleStore.contractTargetSuffix
