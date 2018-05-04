@@ -8,6 +8,30 @@ import ReservedTokenStore from '../../stores/ReservedTokenStore'
 
 configure({ adapter: new Adapter() })
 
+const tokenList = [
+  {
+    addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+    dim: 'tokens',
+    value: '120'
+  },
+  {
+    addr: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+    dim: 'percentage',
+    value: '105'
+  },
+  {
+    addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
+    dim: 'percentage',
+    value: '100'
+  },
+  {
+    addr: '0x22d491bde2303f2f43325b2108d26f1eaba1e32b',
+    dim: 'tokens',
+    value: '20'
+  }
+]
+
+
 describe('DistributeTokensStep', () => {
   let reservedTokenStore
 
@@ -19,79 +43,9 @@ describe('DistributeTokensStep', () => {
     reservedTokenStore.clearAll()
   })
 
-  it('should render the component with active button', () => {
-    const distributeTokensStateParams = {
-      disabled: false,
-      handleClick: jest.fn(),
-      reservedTokenStore,
-      owner: true
-    }
-
-    expect(renderer.create(
-      <StaticRouter location="testLocation" context={{}}>
-        <DistributeTokensStep {...distributeTokensStateParams} />
-      </StaticRouter>
-    ).toJSON()).toMatchSnapshot()
-  })
-
-  it('should render the component with disabled button', () => {
-    const distributeTokensStateParams = {
-      disabled: true,
-      handleClick: jest.fn(),
-      reservedTokenStore,
-      owner: true
-    }
-
-    expect(renderer.create(
-      <StaticRouter location="testLocation" context={{}}>
-        <DistributeTokensStep {...distributeTokensStateParams} />
-      </StaticRouter>
-    ).toJSON()).toMatchSnapshot()
-  })
-
-  it('should call handleClick', () => {
-    const distributeTokensStateParams = {
-      disabled: false,
-      handleClick: jest.fn(),
-      reservedTokenStore,
-      owner: true
-    }
-
-    const wrapper = mount(
-      <StaticRouter location="testLocation" context={{}}>
-        <DistributeTokensStep {...distributeTokensStateParams} />
-      </StaticRouter>
-    )
-
-    const button = wrapper.find('Link').at(0)
-
-    button.simulate('click')
-
-    expect(distributeTokensStateParams.handleClick).toHaveBeenCalled()
-  })
-
-  it('should not call handleClick', () => {
-    const distributeTokensStateParams = {
-      disabled: true,
-      handleClick: jest.fn(),
-      reservedTokenStore,
-      owner: true
-    }
-
-    const wrapper = mount(
-      <StaticRouter location="testLocation" context={{}}>
-        <DistributeTokensStep {...distributeTokensStateParams} />
-      </StaticRouter>
-    )
-
-    const button = wrapper.find('Link').at(0)
-
-    button.simulate('click')
-
-    expect(distributeTokensStateParams.handleClick).toHaveBeenCalledTimes(0)
-  })
-
   it(`should render reserved token addresses if it's the owner`, () => {
+    tokenList.forEach(token => reservedTokenStore.addToken(token))
+
     const distributeTokensStateParams = {
       disabled: false,
       handleClick: jest.fn(),
@@ -109,6 +63,8 @@ describe('DistributeTokensStep', () => {
   })
 
   it(`should not render reserved token addresses if not the owner`, () => {
+    tokenList.forEach(token => reservedTokenStore.addToken(token))
+
     const distributeTokensStateParams = {
       disabled: false,
       handleClick: jest.fn(),
@@ -123,5 +79,22 @@ describe('DistributeTokensStep', () => {
     )
 
     expect(wrapper.find('.read-only')).toHaveLength(0)
+  })
+
+  it(`should not the component if there's no tokens in the reservedTokenStore`, () => {
+    const distributeTokensStateParams = {
+      disabled: false,
+      handleClick: jest.fn(),
+      reservedTokenStore,
+      owner: false
+    }
+
+    const wrapper = mount(
+      <StaticRouter location="testLocation" context={{}}>
+        <DistributeTokensStep {...distributeTokensStateParams} />
+      </StaticRouter>
+    )
+
+    expect(wrapper.find('.steps-content.container')).toHaveLength(0)
   })
 })
