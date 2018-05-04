@@ -160,16 +160,12 @@ export class Manage extends Component {
                 let initCrowdsaleContract = crowdsaleData[0];
                 let crowdsale = crowdsaleData[1];
                 let token = crowdsaleData[2];
-                let reservedTokensDestinationsObj
-                if (crowdsaleStore.isMintedCappedCrowdsale) {
-                  reservedTokensDestinationsObj = crowdsaleData[3];
-                }
+                let reservedTokensDestinationsObj = crowdsaleData[3];
+
                 crowdsaleData.shift(); //initCrowdsaleContract
                 crowdsaleData.shift(); //crowdsale
                 crowdsaleData.shift(); //token
-                if (crowdsaleStore.isMintedCappedCrowdsale) {
-                  crowdsaleData.shift(); //reservedTokensDestinationsObj
-                }
+                crowdsaleData.shift(); //reservedTokensDestinationsObj
 
                 let tiers = [];
                 let tierExtendedObj = {};
@@ -198,9 +194,10 @@ export class Manage extends Component {
                 let registryStorageObj = toJS(contractStore.registryStorage)
 
                 //get reserved tokens info
-                let reservedTokensDestinations = reservedTokensDestinationsObj.reserved_destinations
+                let reservedTokensDestinations = []
                 let whenReservedTokensInfoArr = [];
                 if (crowdsaleStore.isMintedCappedCrowdsale) {
+                  reservedTokensDestinations = reservedTokensDestinationsObj.reserved_destinations
                   for (let dest = 0; dest < reservedTokensDestinationsObj.reserved_destinations.length; dest++) {
                     let destination = reservedTokensDestinations[dest]
                     console.log("destination:", destination)
