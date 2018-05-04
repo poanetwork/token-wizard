@@ -32,6 +32,35 @@ exports[`DistributeTokensStep should render the component with active button 1`]
         Distribute reserved tokens
       </span>
     </a>
+    <div
+      className="reserved-tokens read-only"
+    >
+      <div
+        className="reserved-tokens-item-container-inner"
+      >
+        <span
+          className="reserved-tokens-item reserved-tokens-item-left"
+        >
+          <strong>
+            Address
+          </strong>
+        </span>
+        <span
+          className="reserved-tokens-item reserved-tokens-item-middle"
+        >
+          <strong>
+            Dimension
+          </strong>
+        </span>
+        <span
+          className="reserved-tokens-item reserved-tokens-item-right"
+        >
+          <strong>
+            Value
+          </strong>
+        </span>
+      </div>
+    </div>
   </div>
 </div>
 `;
@@ -68,6 +97,35 @@ exports[`DistributeTokensStep should render the component with disabled button 1
         Distribute reserved tokens
       </span>
     </a>
+    <div
+      className="reserved-tokens read-only"
+    >
+      <div
+        className="reserved-tokens-item-container-inner"
+      >
+        <span
+          className="reserved-tokens-item reserved-tokens-item-left"
+        >
+          <strong>
+            Address
+          </strong>
+        </span>
+        <span
+          className="reserved-tokens-item reserved-tokens-item-middle"
+        >
+          <strong>
+            Dimension
+          </strong>
+        </span>
+        <span
+          className="reserved-tokens-item reserved-tokens-item-right"
+        >
+          <strong>
+            Value
+          </strong>
+        </span>
+      </div>
+    </div>
   </div>
 </div>
 `;

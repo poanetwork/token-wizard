@@ -49,7 +49,7 @@ export class Manage extends Component {
       formPristine: true,
       loading: true,
       canFinalize: false,
-      ownerCurrentUser: true
+      ownerCurrentUser: false
     }
 
     this.initialTiers = []
