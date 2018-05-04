@@ -47,7 +47,7 @@
       padding-left: 5px;
     }
   }
-  
+
   &-input-container {
     margin-bottom: 20px;
     display: table;
@@ -91,6 +91,22 @@
         display: table;
         width: 100%;
       }
+    }
+  }
+
+  &.read-only {
+    &:not(:nth-child(1)) {
+      margin-top: 30px;
+    }
+    color: #56616d;
+    font-family: monospace;
+
+    .reserved-tokens-item {
+      width: 25%;
+    }
+
+    .reserved-tokens-item-left {
+      width: 50%;
     }
   }
 }

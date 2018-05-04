@@ -1,6 +1,14 @@
 import { isObservableArray } from 'mobx'
 import { attachToContract, sendTXToContract } from '../../utils/blockchainHelpers'
-import { contractStore, crowdsaleStore, generalStore, tierStore, tokenStore, web3Store } from '../../stores'
+import {
+  contractStore,
+  crowdsaleStore,
+  generalStore,
+  reservedTokenStore,
+  tierStore,
+  tokenStore,
+  web3Store
+} from '../../stores'
 import { TRUNC_TO_DECIMALS, VALIDATION_TYPES } from '../../utils/constants'
 import { floorToDecimals, toFixed } from '../../utils/utils'
 import { toBigNumber } from '../crowdsale/utils'
@@ -163,6 +171,46 @@ const crowdsaleData = crowdsaleAddress => {
     })
 }
 
+const parseReservedTokenValue = (value, decimals) => toBigNumber(value).div(`1e${decimals}`).toFixed()
+
+const buildReservedTokenInfo = ([tokensInfo, addresses, decimals]) => addresses.map((address, index) => {
+  const info = []
+  const tokenInfo = tokensInfo[index]
+
+  if (tokenInfo.inTokens !== '0') {
+    info.push({
+      addr: address,
+      dim: 'tokens',
+      val: parseReservedTokenValue(tokenInfo.inTokens, decimals)
+    })
+  }
+
+  if (tokenInfo.inPercentageUnit !== '0') {
+    info.push({
+      addr: address,
+      dim: 'percentage',
+      val: parseReservedTokenValue(tokenInfo.inPercentageUnit, tokenInfo.inPercentageDecimals)
+    })
+  }
+
+  return info
+})
+
+const getReservedTokensData = (methods, length, decimals) => {
+  const whenReservedTokensAddresses = []
+
+  for (let i = 0; i < length; i++) {
+    whenReservedTokensAddresses.push(methods.reservedTokensDestinations(i).call())
+  }
+
+  return Promise
+    .all(whenReservedTokensAddresses)
+    .then((addresses) => Promise.all(addresses.map(address => methods.reservedTokensList(address).call())))
+    .then((reservedTokensInfo) => Promise.all([reservedTokensInfo, Promise.all(whenReservedTokensAddresses), decimals]))
+    .then(buildReservedTokenInfo)
+    .then(addresses => [].concat.apply([], addresses))
+}
+
 const tokenData = tokenAddress => {
   return attachToContract(contractStore.token.abi, tokenAddress)
     .then(tokenContract => {
@@ -170,8 +218,11 @@ const tokenData = tokenAddress => {
       const whenName = methods.name().call()
       const whenSymbol = methods.symbol().call()
       const whenDecimals = methods.decimals().call()
+      const whenReservedTokensInfo = Promise
+        .all([methods.reservedTokensDestinationsLen().call(), whenDecimals])
+        .then(([length, decimals]) => getReservedTokensData(methods, length, decimals))
 
-      return Promise.all([whenName, whenSymbol, whenDecimals])
+      return Promise.all([whenName, whenSymbol, whenDecimals, whenReservedTokensInfo])
     })
 }
 
@@ -244,10 +295,16 @@ export const processTier = (crowdsaleAddress, crowdsaleNum) => {
 
       return Promise.all([pricingStrategyAddress, maximumSellableTokens, whitelistAccounts, tokenData(tokenAddress)])
     })
-    .then(([pricingStrategyAddress, maximumSellableTokens, whitelistAccounts, [tokenName, tokenSymbol, decimals]]) => {
+    .then(([
+      pricingStrategyAddress,
+      maximumSellableTokens,
+      whitelistAccounts,
+      [tokenName, tokenSymbol, decimals, reservedTokensInfo]
+    ]) => {
       tokenStore.setProperty('name', tokenName)
       tokenStore.setProperty('ticker', tokenSymbol)
       tokenStore.setProperty('decimals', decimals)
+      reservedTokensInfo.forEach((reservedTokenInfo) => reservedTokenStore.addToken(reservedTokenInfo))
 
       //total supply
       const tokenDecimals = !isNaN(decimals) ? decimals : 0

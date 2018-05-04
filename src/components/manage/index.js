@@ -43,7 +43,7 @@ export class Manage extends Component {
       canFinalize: false,
       canDistribute: false,
       shouldDistribute: false,
-      ownerCurrentUser: true
+      ownerCurrentUser: false
     }
 
     this.initialTiers = []
@@ -387,6 +387,7 @@ export class Manage extends Component {
       <section className="manage">
         {shouldDistribute ? (
           <DistributeTokensStep
+            owner={ownerCurrentUser}
             disabled={!ownerCurrentUser || !canDistribute}
             handleClick={this.distributeReservedTokens}
           />
