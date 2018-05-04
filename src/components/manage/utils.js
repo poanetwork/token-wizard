@@ -158,21 +158,6 @@ const getReservedTokensData = (methods, length, decimals) => {
     .then(addresses => [].concat.apply([], addresses))
 }
 
-/*const tokenData = (tokenAddress) => {
-  return attachToContract(contractStore.token.abi, tokenAddress)
-    .then(tokenContract => {
-      const { methods } = tokenContract
-      const whenName = methods.name().call()
-      const whenSymbol = methods.symbol().call()
-      const whenDecimals = methods.decimals().call()
-      const whenReservedTokensInfo = Promise
-        .all([methods.reservedTokensDestinationsLen().call(), whenDecimals])
-        .then(([length, decimals]) => getReservedTokensData(methods, length, decimals))
-
-      return Promise.all([whenName, whenSymbol, whenDecimals, whenReservedTokensInfo])
-    })
-}*/
-
 const updateDutchAuctionDurationParams = (startTime, duration, methodInterface) => {
   console.log(startTime, duration)
   const { web3 } = web3Store
@@ -189,7 +174,7 @@ const updateWhitelistParams = (tierIndex, [addr, min, max], methodInterface) => 
   return encodedParameters;
 }
 
-const crowdsaleData = (tier, crowdsale, token) => {
+const crowdsaleData = (tier, crowdsale, token, reservedTokensInfo) => {
   const { web3 } = web3Store
   let startsAt
   let endsAt
@@ -211,7 +196,6 @@ const crowdsaleData = (tier, crowdsale, token) => {
   let tokenName = web3.utils.toAscii(token.token_name)
   let tokenSymbol = web3.utils.toAscii(token.token_symbol)
   let decimals = token.token_decimals
-  let reservedTokensInfo = []
   let multisigWallet = crowdsale.team_wallet
   let tierName = crowdsaleStore.isMintedCappedCrowdsale ? web3.utils.toAscii(tier.tier_name) : ''
   let isUpdatable = tier.duration_is_modifiable
@@ -234,8 +218,9 @@ const crowdsaleData = (tier, crowdsale, token) => {
   ]);
 }
 
-export const processTier = (tier, crowdsale, token, tierNum) => {
+export const processTier = (tier, crowdsale, token, reservedTokensInfo, tierNum) => {
   console.log("tier:", tier)
+  console.log("reservedTokensInfo:", reservedTokensInfo)
   console.log("crowdsale:", crowdsale)
   console.log("token:", token)
   const { web3 } = web3Store
@@ -246,7 +231,7 @@ export const processTier = (tier, crowdsale, token, tierNum) => {
 
   const initialValues = {}
 
-  return crowdsaleData(tier, crowdsale, token)
+  return crowdsaleData(tier, crowdsale, token, reservedTokensInfo)
     .then(([
              walletAddress,
              startsAt,
@@ -282,6 +267,7 @@ export const processTier = (tier, crowdsale, token, tierNum) => {
       return Promise.all([maximumSellableTokens, whitelistAccounts, rate, [tokenName, tokenSymbol, decimals, reservedTokensInfo]])
     })
     .then(([maximumSellableTokens, whitelistAccounts, rate, [tokenName, tokenSymbol, decimals, reservedTokensInfo]]) => {
+      console.log("reservedTokensInfo:", reservedTokensInfo)
       tokenStore.setProperty('name', tokenName)
       tokenStore.setProperty('ticker', tokenSymbol)
       tokenStore.setProperty('decimals', decimals)
