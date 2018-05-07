@@ -105,38 +105,39 @@ export class Invest extends React.Component {
       const crowdsaleAddrs = typeof joinedCrowdsales === 'string' ? [joinedCrowdsales] : joinedCrowdsales
       contractStore.setContractProperty('crowdsale', 'addr', crowdsaleAddrs)
 
-      web3.eth.getAccounts().then((accounts) => {
-        if (accounts.length === 0) {
-          this.setState({ loading: false })
-          return
-        }
+      web3.eth.getAccounts()
+        .then((accounts) => {
+          if (accounts.length === 0) {
+            this.setState({ loading: false })
+          }
 
-        this.setState({
-          curAddr: accounts[0],
-          web3
+          this.setState({
+            curAddr: accounts[0],
+            web3
+          })
         })
-
-        if (!contractStore.crowdsale.addr) {
-          this.setState({ loading: false })
-          return
-        }
-
-        findCurrentContractRecursively(0, null, crowdsaleContract => {
-          if (!crowdsaleContract) {
+        .then(() => {
+          if (!contractStore.crowdsale.addr) {
             this.setState({ loading: false })
             return
           }
 
-          initializeAccumulativeData()
-            .then(() => getCrowdsaleData(crowdsaleContract))
-            .then(() => getAccumulativeCrowdsaleData())
-            .then(() => getCrowdsaleTargetDates())
-            .then(() => this.checkIsFinalized())
-            .then(() => this.setTimers())
-            .catch(err => console.log(err))
-            .then(() => this.setState({ loading: false }))
+          findCurrentContractRecursively(0, null, crowdsaleContract => {
+            if (!crowdsaleContract) {
+              this.setState({ loading: false })
+              return
+            }
+
+            initializeAccumulativeData()
+              .then(() => getCrowdsaleData(crowdsaleContract))
+              .then(() => getAccumulativeCrowdsaleData())
+              .then(() => getCrowdsaleTargetDates())
+              .then(() => this.checkIsFinalized())
+              .then(() => this.setTimers())
+              .catch(err => console.log(err))
+              .then(() => this.setState({ loading: false }))
+          })
         })
-      })
     })
   }
 

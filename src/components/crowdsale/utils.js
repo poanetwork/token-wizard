@@ -314,218 +314,69 @@ function getTokenData () {
 
     if (!web3) {
       resolve('no MetaMask')
-      return
     }
 
-    web3.eth.getAccounts().then(accounts => {
-      if (accounts.length === 0) {
-        resolve('no accounts')
-        return
-      }
+    let account
 
-      let propsCount = 0
-      let cbCount = 0
-      let tokenObj = toJS(contractStore.token)
-      console.log('tokenObj', tokenObj)
+    web3.eth.getAccounts()
+      .then(accounts => {
+        if (accounts.length === 0) {
+          resolve('no accounts')
+        } else {
+          account = accounts[0]
+        }
+      })
+      .then(() => {
+        let tokenObj = toJS(contractStore.token)
+        console.log('tokenObj', tokenObj)
+        return attachToContract(tokenObj.abi, tokenObj.addr)
+      })
+      .then(tokenContract => {
+        console.log('attach to token contract')
 
-      attachToContract(tokenObj.abi, tokenObj.addr)
-        .then(tokenContract => {
-          console.log('attach to token contract')
+        if (!tokenContract) {
+          noContractAlert()
+          reject('no contract')
+        }
 
-          if (!tokenContract) {
-            noContractAlert()
-            reject('no contract')
-            return
-          }
+        let getTokenName = tokenContract.methods.name().call();
+        let getTokenSymbol = tokenContract.methods.symbol().call();
+        let getTokenDecimals = tokenContract.methods.decimals().call();
+        let getTokenTotalSupply = tokenContract.methods.totalSupply().call();
+        let getBalanceOf = tokenContract.methods.balanceOf(account).call();
 
-          propsCount++
-          tokenContract.methods.name().call((err, name) => {
-            cbCount++
+        return Promise.all([
+          getTokenName,
+          getTokenSymbol,
+          getTokenDecimals,
+          getTokenTotalSupply,
+          getBalanceOf
+        ])
+          .then(([
+              name,
+              ticker,
+              decimals,
+              supply,
+              balanceOf
+          ]) => {
 
-            if (err) {
-              return console.log(err)
-            }
-
-            console.log('token name:', name)
+            console.log('token name: ' + name)
             tokenStore.setProperty('name', name)
-
-            if (propsCount === cbCount) {
-              resolve()
-            }
-          })
-
-          propsCount++
-          tokenContract.methods.symbol().call((err, ticker) => {
-            cbCount++
-
-            if (err) {
-              console.log(err)
-            }
-
             console.log('token ticker: ' + ticker)
             tokenStore.setProperty('ticker', ticker)
-
-            if (propsCount === cbCount) {
-              resolve()
-            }
-          })
-
-          if (tokenContract.methods.balanceOf) {
-            propsCount++
-            tokenContract.methods.balanceOf.call(accounts[0], (err, balanceOf) => {
-              cbCount++
-
-              if (err) {
-                return console.log(err)
-              }
-
-              const balance = toBigNumber(balanceOf)
-              console.log('balanceOf:', balance.toFixed())
-
-              const currentAmount = crowdsalePageStore.tokenAmountOf || 0
-              crowdsalePageStore.setProperty('tokenAmountOf', balance.plus(currentAmount).toFixed())
-
-              if (propsCount === cbCount) {
-                resolve()
-              }
-            })
-          }
-
-          propsCount++
-          tokenContract.methods.decimals().call((err, decimals) => {
-            cbCount++
-
-            if (err) {
-              console.log(err)
-            }
-
-            console.log('token decimals:', decimals)
+            const balance = toBigNumber(balanceOf)
+            console.log('balanceOf:', balance.toFixed())
+            const currentAmount = crowdsalePageStore.tokenAmountOf || 0
+            crowdsalePageStore.setProperty('tokenAmountOf', balance.plus(currentAmount).toFixed())
+            console.log('token decimals: ' + decimals)
             tokenStore.setProperty('decimals', decimals)
-
-            if (propsCount === cbCount) {
-              resolve()
-            }
-          })
-
-          propsCount++
-          tokenContract.methods.totalSupply().call((err, supply) => {
-            cbCount++
-
-            if (err) {
-              console.log(err)
-            }
-
-            console.log('token supply:', supply)
+            console.log('token supply: ' + supply)
             tokenStore.setProperty('supply', supply)
 
-            if (propsCount === cbCount) {
-              resolve()
-
-            } else {
-              let propsCount = 0
-              let cbCount = 0
-
-              attachToContract(contractStore.token.abi, contractStore.token.addr)
-                .then(tokenContract => {
-                  console.log('attach to token contract')
-
-                  if (!tokenContract) {
-                    noContractAlert()
-                    reject('no contract')
-                    return
-                  }
-
-                  propsCount++
-                  tokenContract.methods.name().call((err, name) => {
-                    cbCount++
-
-                    if (err) {
-                      return console.log(err)
-                    }
-
-                    console.log('token name:', name)
-                    tokenStore.setProperty('name', name)
-
-                    if (propsCount === cbCount) {
-                      resolve()
-                    }
-                  })
-
-                  propsCount++
-                  tokenContract.methods.symbol().call((err, ticker) => {
-                    cbCount++
-
-                    if (err) {
-                      console.log(err)
-                    }
-
-                    console.log('token ticker:', ticker)
-                    tokenStore.setProperty('ticker', ticker)
-
-                    if (propsCount === cbCount) {
-                      resolve()
-                    }
-                  })
-
-                  if (tokenContract.methods.balanceOf) {
-                    propsCount++
-                    tokenContract.methods.balanceOf(accounts[0]).call((err, balanceOf) => {
-                      cbCount++
-
-                      if (err) {
-                        return console.log(err)
-                      }
-
-                      const balance = toBigNumber(balanceOf)
-                      console.log('balanceOf:', balance.toFixed())
-
-                      const currentAmount = crowdsalePageStore.tokenAmountOf || 0
-                      crowdsalePageStore.setProperty('tokenAmountOf', balance.plus(currentAmount).toFixed())
-
-                      if (propsCount === cbCount) {
-                        resolve()
-                      }
-                    })
-                  }
-
-                  propsCount++
-                  tokenContract.methods.decimals().call((err, decimals) => {
-                    cbCount++
-
-                    if (err) {
-                      console.log(err)
-                    }
-
-                    console.log('token decimals:', decimals)
-                    tokenStore.setProperty('decimals', decimals)
-
-                    if (propsCount === cbCount) {
-                      resolve()
-                    }
-                  })
-
-                  propsCount++
-                  tokenContract.methods.totalSupply().call((err, supply) => {
-                    cbCount++
-
-                    if (err) {
-                      console.log(err)
-                    }
-
-                    console.log('token supply:', supply)
-                    tokenStore.setProperty('supply', supply)
-
-                    if (propsCount === cbCount) {
-                      resolve()
-                    }
-                  })
-                })
-                .catch(reject)
-            }
+            resolve()
           })
-        })
-        .catch(reject)
-    })
+          .catch(reject)
+      })
   })
 }
 
