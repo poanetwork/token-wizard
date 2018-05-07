@@ -23,8 +23,7 @@ class Web3Store {
   }
 
   getInfuraLink = (network) => {
-    const infuraToken = 'kEpzZR9fIyO3a8gTqJcI'
-    return `https://${network}.infura.io/${infuraToken}`
+    return `https://${network}.infura.io/${process.env['REACT_APP_INFURA_TOKEN']}`
   }
 
   getWeb3 = cb => {
