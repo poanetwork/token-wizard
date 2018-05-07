@@ -1,1487 +1,503 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`StepTwoForm should render StepTwoForm for Dutch Auction Crowdsale 1`] = `
-<ReactFinalForm(4.2.0)(3.1.4)
-  component={[Function]}
-  crowdsaleStore={
-    CrowdsaleStore {
-      "crowdsales": Array [],
-      "maximumSellableTokens": undefined,
-      "maximumSellableTokensInWei": undefined,
-      "selected": Object {
-        "initialTiersValues": Array [],
-        "updatable": false,
-      },
-      "strategy": "dutch-auction",
-      "supply": undefined,
-    }
-  }
-  disableDecimals={false}
+<form
   id="tokenData"
-  initialValues={
-    Object {
-      "decimals": "14",
-      "name": "This is a valid name",
-      "ticker": "TTK",
-    }
-  }
   onSubmit={[Function]}
-  tokens={Array []}
-  updateTokenStore={[Function]}
 >
-  <StepTwoForm
-    __versions={
-      Object {
-        "final-form": "4.2.0",
-        "react-final-form": "3.1.4",
-      }
-    }
-    batch={[Function]}
-    blur={[Function]}
-    change={[Function]}
-    crowdsaleStore={
-      CrowdsaleStore {
-        "crowdsales": Array [],
-        "maximumSellableTokens": undefined,
-        "maximumSellableTokensInWei": undefined,
-        "selected": Object {
-          "initialTiersValues": Array [],
-          "updatable": false,
-        },
-        "strategy": "dutch-auction",
-        "supply": undefined,
-      }
-    }
-    dirty={false}
-    dirtySinceLastSubmit={false}
-    disableDecimals={false}
-    errors={Object {}}
-    focus={[Function]}
-    handleSubmit={[Function]}
-    id="tokenData"
-    initialValues={
-      Object {
-        "decimals": "14",
-        "name": "This is a valid name",
-        "ticker": "TTK",
-      }
-    }
-    initialize={[Function]}
-    invalid={false}
-    mutators={Object {}}
-    pristine={true}
-    reset={[Function]}
-    submitFailed={false}
-    submitSucceeded={false}
-    submitting={false}
-    tokens={Array []}
-    touched={Object {}}
-    updateTokenStore={[Function]}
-    valid={true}
-    validating={false}
-    values={
-      Object {
-        "decimals": "14",
-        "name": "This is a valid name",
-        "ticker": "TTK",
-      }
-    }
-    visited={Object {}}
+  <div
+    className="hidden"
   >
-    <form
-      id="tokenData"
-      onSubmit={[Function]}
+    <div
+      className="left"
     >
-      <div
-        className="hidden"
+      <label
+        className="label"
+        htmlFor="name"
       >
-        <TokenName
-          errorStyle={
-            Object {
-              "color": "red",
-              "fontSize": "12px",
-              "fontWeight": "bold",
-              "height": "20px",
-              "width": "100%",
-            }
-          }
-        >
-          <Field
-            component={[Function]}
-            description="The name of your token. Will be used by Etherscan and other tokenbrowsers. Be afraid of trademarks."
-            errorStyle={
-              Object {
-                "color": "red",
-                "fontSize": "12px",
-                "fontWeight": "bold",
-                "height": "20px",
-                "width": "100%",
-              }
-            }
-            format={[Function]}
-            label="Name"
-            name="name"
-            parse={[Function]}
-            side="left"
-            type="text"
-            validate={[Function]}
-          >
-            <InputField2
-              description="The name of your token. Will be used by Etherscan and other tokenbrowsers. Be afraid of trademarks."
-              errorStyle={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "20px",
-                  "width": "100%",
-                }
-              }
-              input={
-                Object {
-                  "name": "name",
-                  "onBlur": [Function],
-                  "onChange": [Function],
-                  "onFocus": [Function],
-                  "value": "This is a valid name",
-                }
-              }
-              label="Name"
-              meta={
-                Object {
-                  "active": false,
-                  "data": Object {},
-                  "dirty": false,
-                  "dirtySinceLastSubmit": false,
-                  "error": undefined,
-                  "initial": "This is a valid name",
-                  "invalid": false,
-                  "length": undefined,
-                  "pristine": true,
-                  "submitError": undefined,
-                  "submitFailed": false,
-                  "submitSucceeded": false,
-                  "touched": false,
-                  "valid": true,
-                  "visited": false,
-                }
-              }
-              side="left"
-              type="text"
-            >
-              <div
-                className="left"
-              >
-                <label
-                  className="label"
-                  htmlFor="name"
-                >
-                  Name
-                </label>
-                <input
-                  autoComplete="off"
-                  className="input"
-                  id="name"
-                  name="name"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  type="text"
-                  value="This is a valid name"
-                />
-                <p
-                  className="description"
-                >
-                  The name of your token. Will be used by Etherscan and other tokenbrowsers. Be afraid of trademarks.
-                </p>
-                <Error
-                  errorStyle={
-                    Object {
-                      "color": "red",
-                      "fontSize": "12px",
-                      "fontWeight": "bold",
-                      "height": "20px",
-                      "width": "100%",
-                    }
-                  }
-                  name="name"
-                >
-                  <Field
-                    format={[Function]}
-                    name="name"
-                    parse={[Function]}
-                    render={[Function]}
-                    subscription={
-                      Object {
-                        "error": true,
-                        "pristine": true,
-                        "touched": true,
-                      }
-                    }
-                  >
-                    <span>
-                      <p
-                        className="error"
-                        key="0"
-                        style={
-                          Object {
-                            "color": "red",
-                            "fontSize": "12px",
-                            "fontWeight": "bold",
-                            "height": "20px",
-                            "width": "100%",
-                          }
-                        }
-                      />
-                    </span>
-                  </Field>
-                </Error>
-              </div>
-            </InputField2>
-          </Field>
-        </TokenName>
-        <TokenTicker
-          errorStyle={
-            Object {
-              "color": "red",
-              "fontSize": "12px",
-              "fontWeight": "bold",
-              "height": "20px",
-              "width": "100%",
-            }
-          }
-        >
-          <Field
-            component={[Function]}
-            description="The five letter ticker for your token. There are 11,881,376 combinations for 26 english letters. Be hurry."
-            errorStyle={
-              Object {
-                "color": "red",
-                "fontSize": "12px",
-                "fontWeight": "bold",
-                "height": "20px",
-                "width": "100%",
-              }
-            }
-            format={[Function]}
-            label="Ticker"
-            name="ticker"
-            parse={[Function]}
-            side="right"
-            type="text"
-            validate={[Function]}
-          >
-            <InputField2
-              description="The five letter ticker for your token. There are 11,881,376 combinations for 26 english letters. Be hurry."
-              errorStyle={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "20px",
-                  "width": "100%",
-                }
-              }
-              input={
-                Object {
-                  "name": "ticker",
-                  "onBlur": [Function],
-                  "onChange": [Function],
-                  "onFocus": [Function],
-                  "value": "TTK",
-                }
-              }
-              label="Ticker"
-              meta={
-                Object {
-                  "active": false,
-                  "data": Object {},
-                  "dirty": false,
-                  "dirtySinceLastSubmit": false,
-                  "error": undefined,
-                  "initial": "TTK",
-                  "invalid": false,
-                  "length": undefined,
-                  "pristine": true,
-                  "submitError": undefined,
-                  "submitFailed": false,
-                  "submitSucceeded": false,
-                  "touched": false,
-                  "valid": true,
-                  "visited": false,
-                }
-              }
-              side="right"
-              type="text"
-            >
-              <div
-                className="right"
-              >
-                <label
-                  className="label"
-                  htmlFor="ticker"
-                >
-                  Ticker
-                </label>
-                <input
-                  autoComplete="off"
-                  className="input"
-                  id="ticker"
-                  name="ticker"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  type="text"
-                  value="TTK"
-                />
-                <p
-                  className="description"
-                >
-                  The five letter ticker for your token. There are 11,881,376 combinations for 26 english letters. Be hurry.
-                </p>
-                <Error
-                  errorStyle={
-                    Object {
-                      "color": "red",
-                      "fontSize": "12px",
-                      "fontWeight": "bold",
-                      "height": "20px",
-                      "width": "100%",
-                    }
-                  }
-                  name="ticker"
-                >
-                  <Field
-                    format={[Function]}
-                    name="ticker"
-                    parse={[Function]}
-                    render={[Function]}
-                    subscription={
-                      Object {
-                        "error": true,
-                        "pristine": true,
-                        "touched": true,
-                      }
-                    }
-                  >
-                    <span>
-                      <p
-                        className="error"
-                        key="0"
-                        style={
-                          Object {
-                            "color": "red",
-                            "fontSize": "12px",
-                            "fontWeight": "bold",
-                            "height": "20px",
-                            "width": "100%",
-                          }
-                        }
-                      />
-                    </span>
-                  </Field>
-                </Error>
-              </div>
-            </InputField2>
-          </Field>
-        </TokenTicker>
-        <TokenDecimals
-          disabled={false}
-          errorStyle={
-            Object {
-              "color": "red",
-              "fontSize": "12px",
-              "fontWeight": "bold",
-              "height": "20px",
-              "width": "100%",
-            }
-          }
-        >
-          <Field
-            component={[Function]}
-            description="Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous)."
-            disabled={false}
-            errorStyle={
-              Object {
-                "color": "red",
-                "fontSize": "12px",
-                "fontWeight": "bold",
-                "height": "20px",
-                "width": "100%",
-              }
-            }
-            format={[Function]}
-            label="Decimals"
-            name="decimals"
-            parse={[Function]}
-            side="left"
-            type="text"
-            validate={[Function]}
-          >
-            <InputField2
-              description="Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous)."
-              disabled={false}
-              errorStyle={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "20px",
-                  "width": "100%",
-                }
-              }
-              input={
-                Object {
-                  "name": "decimals",
-                  "onBlur": [Function],
-                  "onChange": [Function],
-                  "onFocus": [Function],
-                  "value": "14",
-                }
-              }
-              label="Decimals"
-              meta={
-                Object {
-                  "active": false,
-                  "data": Object {},
-                  "dirty": false,
-                  "dirtySinceLastSubmit": false,
-                  "error": undefined,
-                  "initial": "14",
-                  "invalid": false,
-                  "length": undefined,
-                  "pristine": true,
-                  "submitError": undefined,
-                  "submitFailed": false,
-                  "submitSucceeded": false,
-                  "touched": false,
-                  "valid": true,
-                  "visited": false,
-                }
-              }
-              side="left"
-              type="text"
-            >
-              <div
-                className="left"
-              >
-                <label
-                  className="label"
-                  htmlFor="decimals"
-                >
-                  Decimals
-                </label>
-                <input
-                  autoComplete="off"
-                  className="input"
-                  disabled={false}
-                  id="decimals"
-                  name="decimals"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  type="text"
-                  value="14"
-                />
-                <p
-                  className="description"
-                >
-                  Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous).
-                </p>
-                <Error
-                  errorStyle={
-                    Object {
-                      "color": "red",
-                      "fontSize": "12px",
-                      "fontWeight": "bold",
-                      "height": "20px",
-                      "width": "100%",
-                    }
-                  }
-                  name="decimals"
-                >
-                  <Field
-                    format={[Function]}
-                    name="decimals"
-                    parse={[Function]}
-                    render={[Function]}
-                    subscription={
-                      Object {
-                        "error": true,
-                        "pristine": true,
-                        "touched": true,
-                      }
-                    }
-                  >
-                    <span>
-                      <p
-                        className="error"
-                        key="0"
-                        style={
-                          Object {
-                            "color": "red",
-                            "fontSize": "12px",
-                            "fontWeight": "bold",
-                            "height": "20px",
-                            "width": "100%",
-                          }
-                        }
-                      />
-                    </span>
-                  </Field>
-                </Error>
-              </div>
-            </InputField2>
-          </Field>
-        </TokenDecimals>
-        <TokenSupply
-          errorStyle={
-            Object {
-              "color": "red",
-              "fontSize": "12px",
-              "fontWeight": "bold",
-              "height": "20px",
-              "width": "100%",
-            }
-          }
-        >
-          <Field
-            component={[Function]}
-            description="The total supply of the token"
-            errorStyle={
-              Object {
-                "color": "red",
-                "fontSize": "12px",
-                "fontWeight": "bold",
-                "height": "20px",
-                "width": "100%",
-              }
-            }
-            format={[Function]}
-            label="Supply"
-            name="supply"
-            parse={[Function]}
-            side="right"
-            type="text"
-            validate={[Function]}
-          >
-            <InputField2
-              description="The total supply of the token"
-              errorStyle={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "20px",
-                  "width": "100%",
-                }
-              }
-              input={
-                Object {
-                  "name": "supply",
-                  "onBlur": [Function],
-                  "onChange": [Function],
-                  "onFocus": [Function],
-                  "value": "",
-                }
-              }
-              label="Supply"
-              meta={
-                Object {
-                  "active": false,
-                  "data": Object {},
-                  "dirty": false,
-                  "dirtySinceLastSubmit": false,
-                  "error": "This field is required",
-                  "initial": undefined,
-                  "invalid": true,
-                  "length": undefined,
-                  "pristine": true,
-                  "submitError": undefined,
-                  "submitFailed": false,
-                  "submitSucceeded": false,
-                  "touched": false,
-                  "valid": false,
-                  "visited": false,
-                }
-              }
-              side="right"
-              type="text"
-            >
-              <div
-                className="right"
-              >
-                <label
-                  className="label"
-                  htmlFor="supply"
-                >
-                  Supply
-                </label>
-                <input
-                  autoComplete="off"
-                  className="input"
-                  id="supply"
-                  name="supply"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  type="text"
-                  value=""
-                />
-                <p
-                  className="description"
-                >
-                  The total supply of the token
-                </p>
-                <Error
-                  errorStyle={
-                    Object {
-                      "color": "red",
-                      "fontSize": "12px",
-                      "fontWeight": "bold",
-                      "height": "20px",
-                      "width": "100%",
-                    }
-                  }
-                  name="supply"
-                >
-                  <Field
-                    format={[Function]}
-                    name="supply"
-                    parse={[Function]}
-                    render={[Function]}
-                    subscription={
-                      Object {
-                        "error": true,
-                        "pristine": true,
-                        "touched": true,
-                      }
-                    }
-                  >
-                    <span>
-                      <p
-                        className="error"
-                        key="0"
-                        style={
-                          Object {
-                            "color": "red",
-                            "fontSize": "12px",
-                            "fontWeight": "bold",
-                            "height": "20px",
-                            "width": "100%",
-                          }
-                        }
-                      />
-                    </span>
-                  </Field>
-                </Error>
-              </div>
-            </InputField2>
-          </Field>
-        </TokenSupply>
-      </div>
-      <div
-        className="button-container"
-      >
-        <a
-          className="button button_fill"
-          onClick={[Function]}
-        >
-          Continue
-        </a>
-      </div>
-      <FormSpy
+        Name
+      </label>
+      <input
+        autoComplete="off"
+        className="input"
+        disabled={undefined}
+        id="name"
+        name="name"
+        onBlur={[Function]}
         onChange={[Function]}
+        onFocus={[Function]}
+        placeholder={undefined}
+        type="text"
+        value="This is a valid name"
       />
-    </form>
-  </StepTwoForm>
-</ReactFinalForm(4.2.0)(3.1.4)>
+      <p
+        className="description"
+      >
+        The name of your token. Will be used by Etherscan and other tokenbrowsers. Be afraid of trademarks.
+      </p>
+      <span>
+        <p
+          className="error"
+          style={
+            Object {
+              "color": "red",
+              "fontSize": "12px",
+              "fontWeight": "bold",
+              "height": "20px",
+              "width": "100%",
+            }
+          }
+        />
+      </span>
+    </div>
+    <div
+      className="right"
+    >
+      <label
+        className="label"
+        htmlFor="ticker"
+      >
+        Ticker
+      </label>
+      <input
+        autoComplete="off"
+        className="input"
+        disabled={undefined}
+        id="ticker"
+        name="ticker"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder={undefined}
+        type="text"
+        value="TTK"
+      />
+      <p
+        className="description"
+      >
+        The five letter ticker for your token. There are 11,881,376 combinations for 26 english letters. Be hurry.
+      </p>
+      <span>
+        <p
+          className="error"
+          style={
+            Object {
+              "color": "red",
+              "fontSize": "12px",
+              "fontWeight": "bold",
+              "height": "20px",
+              "width": "100%",
+            }
+          }
+        />
+      </span>
+    </div>
+    <div
+      className="left"
+    >
+      <label
+        className="label"
+        htmlFor="decimals"
+      >
+        Decimals
+      </label>
+      <input
+        autoComplete="off"
+        className="input"
+        disabled={false}
+        id="decimals"
+        name="decimals"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder={undefined}
+        type="text"
+        value="14"
+      />
+      <p
+        className="description"
+      >
+        Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous).
+      </p>
+      <span>
+        <p
+          className="error"
+          style={
+            Object {
+              "color": "red",
+              "fontSize": "12px",
+              "fontWeight": "bold",
+              "height": "20px",
+              "width": "100%",
+            }
+          }
+        />
+      </span>
+    </div>
+    <div
+      className="right"
+    >
+      <label
+        className="label"
+        htmlFor="supply"
+      >
+        Supply
+      </label>
+      <input
+        autoComplete="off"
+        className="input"
+        disabled={undefined}
+        id="supply"
+        name="supply"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder={undefined}
+        type="text"
+        value=""
+      />
+      <p
+        className="description"
+      >
+        The total supply of the token
+      </p>
+      <span>
+        <p
+          className="error"
+          style={
+            Object {
+              "color": "red",
+              "fontSize": "12px",
+              "fontWeight": "bold",
+              "height": "20px",
+              "width": "100%",
+            }
+          }
+        />
+      </span>
+    </div>
+  </div>
+  <div
+    className="button-container"
+  >
+    <a
+      className="button button_fill"
+      onClick={[Function]}
+    >
+      Continue
+    </a>
+  </div>
+</form>
 `;
 
 exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] = `
-<ReactFinalForm(4.2.0)(3.1.4)
-  component={[Function]}
-  crowdsaleStore={
-    CrowdsaleStore {
-      "crowdsales": Array [],
-      "maximumSellableTokens": undefined,
-      "maximumSellableTokensInWei": undefined,
-      "selected": Object {
-        "initialTiersValues": Array [],
-        "updatable": false,
-      },
-      "strategy": "white-list-with-cap",
-      "supply": undefined,
-    }
-  }
-  disableDecimals={false}
+<form
   id="tokenData"
-  initialValues={
-    Object {
-      "decimals": "14",
-      "name": "This is a valid name",
-      "ticker": "TTK",
-    }
-  }
   onSubmit={[Function]}
-  tokens={Array []}
-  updateTokenStore={[Function]}
 >
-  <StepTwoForm
-    __versions={
-      Object {
-        "final-form": "4.2.0",
-        "react-final-form": "3.1.4",
-      }
-    }
-    batch={[Function]}
-    blur={[Function]}
-    change={[Function]}
-    crowdsaleStore={
-      CrowdsaleStore {
-        "crowdsales": Array [],
-        "maximumSellableTokens": undefined,
-        "maximumSellableTokensInWei": undefined,
-        "selected": Object {
-          "initialTiersValues": Array [],
-          "updatable": false,
-        },
-        "strategy": "white-list-with-cap",
-        "supply": undefined,
-      }
-    }
-    dirty={false}
-    dirtySinceLastSubmit={false}
-    disableDecimals={false}
-    errors={Object {}}
-    focus={[Function]}
-    handleSubmit={[Function]}
-    id="tokenData"
-    initialValues={
-      Object {
-        "decimals": "14",
-        "name": "This is a valid name",
-        "ticker": "TTK",
-      }
-    }
-    initialize={[Function]}
-    invalid={false}
-    mutators={Object {}}
-    pristine={true}
-    reset={[Function]}
-    submitFailed={false}
-    submitSucceeded={false}
-    submitting={false}
-    tokens={Array []}
-    touched={Object {}}
-    updateTokenStore={[Function]}
-    valid={true}
-    validating={false}
-    values={
-      Object {
-        "decimals": "14",
-        "name": "This is a valid name",
-        "ticker": "TTK",
-      }
-    }
-    visited={Object {}}
+  <div
+    className="hidden"
   >
-    <form
-      id="tokenData"
-      onSubmit={[Function]}
+    <div
+      className="left"
+    >
+      <label
+        className="label"
+        htmlFor="name"
+      >
+        Name
+      </label>
+      <input
+        autoComplete="off"
+        className="input"
+        disabled={undefined}
+        id="name"
+        name="name"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder={undefined}
+        type="text"
+        value="This is a valid name"
+      />
+      <p
+        className="description"
+      >
+        The name of your token. Will be used by Etherscan and other tokenbrowsers. Be afraid of trademarks.
+      </p>
+      <span>
+        <p
+          className="error"
+          style={
+            Object {
+              "color": "red",
+              "fontSize": "12px",
+              "fontWeight": "bold",
+              "height": "20px",
+              "width": "100%",
+            }
+          }
+        />
+      </span>
+    </div>
+    <div
+      className="right"
+    >
+      <label
+        className="label"
+        htmlFor="ticker"
+      >
+        Ticker
+      </label>
+      <input
+        autoComplete="off"
+        className="input"
+        disabled={undefined}
+        id="ticker"
+        name="ticker"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder={undefined}
+        type="text"
+        value="TTK"
+      />
+      <p
+        className="description"
+      >
+        The five letter ticker for your token. There are 11,881,376 combinations for 26 english letters. Be hurry.
+      </p>
+      <span>
+        <p
+          className="error"
+          style={
+            Object {
+              "color": "red",
+              "fontSize": "12px",
+              "fontWeight": "bold",
+              "height": "20px",
+              "width": "100%",
+            }
+          }
+        />
+      </span>
+    </div>
+    <div
+      className="left"
+    >
+      <label
+        className="label"
+        htmlFor="decimals"
+      >
+        Decimals
+      </label>
+      <input
+        autoComplete="off"
+        className="input"
+        disabled={false}
+        id="decimals"
+        name="decimals"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder={undefined}
+        type="text"
+        value="14"
+      />
+      <p
+        className="description"
+      >
+        Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous).
+      </p>
+      <span>
+        <p
+          className="error"
+          style={
+            Object {
+              "color": "red",
+              "fontSize": "12px",
+              "fontWeight": "bold",
+              "height": "20px",
+              "width": "100%",
+            }
+          }
+        />
+      </span>
+    </div>
+  </div>
+  <div>
+    <div
+      className="reserved-tokens-title"
+    >
+      <p
+        className="title"
+      >
+        Reserved tokens
+      </p>
+    </div>
+    <div
+      className="reserved-tokens-container"
     >
       <div
-        className="hidden"
+        className="reserved-tokens-input-container"
       >
-        <TokenName
-          errorStyle={
-            Object {
-              "color": "red",
-              "fontSize": "12px",
-              "fontWeight": "bold",
-              "height": "20px",
-              "width": "100%",
-            }
-          }
-        >
-          <Field
-            component={[Function]}
-            description="The name of your token. Will be used by Etherscan and other tokenbrowsers. Be afraid of trademarks."
-            errorStyle={
-              Object {
-                "color": "red",
-                "fontSize": "12px",
-                "fontWeight": "bold",
-                "height": "20px",
-                "width": "100%",
-              }
-            }
-            format={[Function]}
-            label="Name"
-            name="name"
-            parse={[Function]}
-            side="left"
-            type="text"
-            validate={[Function]}
-          >
-            <InputField2
-              description="The name of your token. Will be used by Etherscan and other tokenbrowsers. Be afraid of trademarks."
-              errorStyle={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "20px",
-                  "width": "100%",
-                }
-              }
-              input={
-                Object {
-                  "name": "name",
-                  "onBlur": [Function],
-                  "onChange": [Function],
-                  "onFocus": [Function],
-                  "value": "This is a valid name",
-                }
-              }
-              label="Name"
-              meta={
-                Object {
-                  "active": false,
-                  "data": Object {},
-                  "dirty": false,
-                  "dirtySinceLastSubmit": false,
-                  "error": undefined,
-                  "initial": "This is a valid name",
-                  "invalid": false,
-                  "length": undefined,
-                  "pristine": true,
-                  "submitError": undefined,
-                  "submitFailed": false,
-                  "submitSucceeded": false,
-                  "touched": false,
-                  "valid": true,
-                  "visited": false,
-                }
-              }
-              side="left"
-              type="text"
-            >
-              <div
-                className="left"
-              >
-                <label
-                  className="label"
-                  htmlFor="name"
-                >
-                  Name
-                </label>
-                <input
-                  autoComplete="off"
-                  className="input"
-                  id="name"
-                  name="name"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  type="text"
-                  value="This is a valid name"
-                />
-                <p
-                  className="description"
-                >
-                  The name of your token. Will be used by Etherscan and other tokenbrowsers. Be afraid of trademarks.
-                </p>
-                <Error
-                  errorStyle={
-                    Object {
-                      "color": "red",
-                      "fontSize": "12px",
-                      "fontWeight": "bold",
-                      "height": "20px",
-                      "width": "100%",
-                    }
-                  }
-                  name="name"
-                >
-                  <Field
-                    format={[Function]}
-                    name="name"
-                    parse={[Function]}
-                    render={[Function]}
-                    subscription={
-                      Object {
-                        "error": true,
-                        "pristine": true,
-                        "touched": true,
-                      }
-                    }
-                  >
-                    <span>
-                      <p
-                        className="error"
-                        key="0"
-                        style={
-                          Object {
-                            "color": "red",
-                            "fontSize": "12px",
-                            "fontWeight": "bold",
-                            "height": "20px",
-                            "width": "100%",
-                          }
-                        }
-                      />
-                    </span>
-                  </Field>
-                </Error>
-              </div>
-            </InputField2>
-          </Field>
-        </TokenName>
-        <TokenTicker
-          errorStyle={
-            Object {
-              "color": "red",
-              "fontSize": "12px",
-              "fontWeight": "bold",
-              "height": "20px",
-              "width": "100%",
-            }
-          }
-        >
-          <Field
-            component={[Function]}
-            description="The five letter ticker for your token. There are 11,881,376 combinations for 26 english letters. Be hurry."
-            errorStyle={
-              Object {
-                "color": "red",
-                "fontSize": "12px",
-                "fontWeight": "bold",
-                "height": "20px",
-                "width": "100%",
-              }
-            }
-            format={[Function]}
-            label="Ticker"
-            name="ticker"
-            parse={[Function]}
-            side="right"
-            type="text"
-            validate={[Function]}
-          >
-            <InputField2
-              description="The five letter ticker for your token. There are 11,881,376 combinations for 26 english letters. Be hurry."
-              errorStyle={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "20px",
-                  "width": "100%",
-                }
-              }
-              input={
-                Object {
-                  "name": "ticker",
-                  "onBlur": [Function],
-                  "onChange": [Function],
-                  "onFocus": [Function],
-                  "value": "TTK",
-                }
-              }
-              label="Ticker"
-              meta={
-                Object {
-                  "active": false,
-                  "data": Object {},
-                  "dirty": false,
-                  "dirtySinceLastSubmit": false,
-                  "error": undefined,
-                  "initial": "TTK",
-                  "invalid": false,
-                  "length": undefined,
-                  "pristine": true,
-                  "submitError": undefined,
-                  "submitFailed": false,
-                  "submitSucceeded": false,
-                  "touched": false,
-                  "valid": true,
-                  "visited": false,
-                }
-              }
-              side="right"
-              type="text"
-            >
-              <div
-                className="right"
-              >
-                <label
-                  className="label"
-                  htmlFor="ticker"
-                >
-                  Ticker
-                </label>
-                <input
-                  autoComplete="off"
-                  className="input"
-                  id="ticker"
-                  name="ticker"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  type="text"
-                  value="TTK"
-                />
-                <p
-                  className="description"
-                >
-                  The five letter ticker for your token. There are 11,881,376 combinations for 26 english letters. Be hurry.
-                </p>
-                <Error
-                  errorStyle={
-                    Object {
-                      "color": "red",
-                      "fontSize": "12px",
-                      "fontWeight": "bold",
-                      "height": "20px",
-                      "width": "100%",
-                    }
-                  }
-                  name="ticker"
-                >
-                  <Field
-                    format={[Function]}
-                    name="ticker"
-                    parse={[Function]}
-                    render={[Function]}
-                    subscription={
-                      Object {
-                        "error": true,
-                        "pristine": true,
-                        "touched": true,
-                      }
-                    }
-                  >
-                    <span>
-                      <p
-                        className="error"
-                        key="0"
-                        style={
-                          Object {
-                            "color": "red",
-                            "fontSize": "12px",
-                            "fontWeight": "bold",
-                            "height": "20px",
-                            "width": "100%",
-                          }
-                        }
-                      />
-                    </span>
-                  </Field>
-                </Error>
-              </div>
-            </InputField2>
-          </Field>
-        </TokenTicker>
-        <TokenDecimals
-          disabled={false}
-          errorStyle={
-            Object {
-              "color": "red",
-              "fontSize": "12px",
-              "fontWeight": "bold",
-              "height": "20px",
-              "width": "100%",
-            }
-          }
-        >
-          <Field
-            component={[Function]}
-            description="Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous)."
-            disabled={false}
-            errorStyle={
-              Object {
-                "color": "red",
-                "fontSize": "12px",
-                "fontWeight": "bold",
-                "height": "20px",
-                "width": "100%",
-              }
-            }
-            format={[Function]}
-            label="Decimals"
-            name="decimals"
-            parse={[Function]}
-            side="left"
-            type="text"
-            validate={[Function]}
-          >
-            <InputField2
-              description="Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous)."
-              disabled={false}
-              errorStyle={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "20px",
-                  "width": "100%",
-                }
-              }
-              input={
-                Object {
-                  "name": "decimals",
-                  "onBlur": [Function],
-                  "onChange": [Function],
-                  "onFocus": [Function],
-                  "value": "14",
-                }
-              }
-              label="Decimals"
-              meta={
-                Object {
-                  "active": false,
-                  "data": Object {},
-                  "dirty": false,
-                  "dirtySinceLastSubmit": false,
-                  "error": undefined,
-                  "initial": "14",
-                  "invalid": false,
-                  "length": undefined,
-                  "pristine": true,
-                  "submitError": undefined,
-                  "submitFailed": false,
-                  "submitSucceeded": false,
-                  "touched": false,
-                  "valid": true,
-                  "visited": false,
-                }
-              }
-              side="left"
-              type="text"
-            >
-              <div
-                className="left"
-              >
-                <label
-                  className="label"
-                  htmlFor="decimals"
-                >
-                  Decimals
-                </label>
-                <input
-                  autoComplete="off"
-                  className="input"
-                  disabled={false}
-                  id="decimals"
-                  name="decimals"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  type="text"
-                  value="14"
-                />
-                <p
-                  className="description"
-                >
-                  Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous).
-                </p>
-                <Error
-                  errorStyle={
-                    Object {
-                      "color": "red",
-                      "fontSize": "12px",
-                      "fontWeight": "bold",
-                      "height": "20px",
-                      "width": "100%",
-                    }
-                  }
-                  name="decimals"
-                >
-                  <Field
-                    format={[Function]}
-                    name="decimals"
-                    parse={[Function]}
-                    render={[Function]}
-                    subscription={
-                      Object {
-                        "error": true,
-                        "pristine": true,
-                        "touched": true,
-                      }
-                    }
-                  >
-                    <span>
-                      <p
-                        className="error"
-                        key="0"
-                        style={
-                          Object {
-                            "color": "red",
-                            "fontSize": "12px",
-                            "fontWeight": "bold",
-                            "height": "20px",
-                            "width": "100%",
-                          }
-                        }
-                      />
-                    </span>
-                  </Field>
-                </Error>
-              </div>
-            </InputField2>
-          </Field>
-        </TokenDecimals>
-      </div>
-      <div>
         <div
-          className="reserved-tokens-title"
-        >
-          <p
-            className="title"
-          >
-            Reserved tokens
-          </p>
-        </div>
-        <ReservedTokensInputBlock
-          tokens={Array []}
+          className="reserved-tokens-input-container-inner"
         >
           <div
-            className="reserved-tokens-container"
+            className="reserved-tokens-input-property reserved-tokens-input-property-left"
           >
-            <div
-              className="reserved-tokens-input-container"
+            <label
+              className="label"
             >
-              <div
-                className="reserved-tokens-input-container-inner"
-              >
-                <InputField
-                  description="Address where to send reserved tokens."
-                  errorMessage="The inserted address is invalid"
-                  onChange={[Function]}
-                  pristine={true}
-                  side="reserved-tokens-input-property reserved-tokens-input-property-left"
-                  title="Address"
-                  type="text"
-                  valid="INVALID"
-                  value=""
-                >
-                  <div
-                    className="reserved-tokens-input-property reserved-tokens-input-property-left"
-                  >
-                    <label
-                      className="label"
-                    >
-                      Address
-                    </label>
-                    <input
-                      className="input"
-                      onChange={[Function]}
-                      type="text"
-                      value=""
-                    />
-                    <p
-                      className="description"
-                    >
-                      Address where to send reserved tokens.
-                    </p>
-                    <p
-                      className="error"
-                      style={
-                        Object {
-                          "color": "red",
-                          "fontSize": "12px",
-                          "fontWeight": "bold",
-                          "height": "10px",
-                          "width": "100%",
-                        }
-                      }
-                    />
-                  </div>
-                </InputField>
-                <RadioInputField
-                  description="Fixed amount or % of crowdsaled tokens. Will be deposited to the account after finalization of the crowdsale."
-                  extraClassName="reserved-tokens-input-property reserved-tokens-input-property-middle"
-                  items={
-                    Array [
-                      Object {
-                        "label": "tokens",
-                        "value": "tokens",
-                      },
-                      Object {
-                        "label": "percentage",
-                        "value": "percentage",
-                      },
-                    ]
-                  }
-                  onChange={[Function]}
-                  selectedItem="tokens"
-                  title="Dimension"
-                >
-                  <div
-                    className="reserved-tokens-input-property reserved-tokens-input-property-middle"
-                  >
-                    <label
-                      className="label"
-                    >
-                      Dimension
-                    </label>
-                    <div
-                      className="radios-inline"
-                    >
-                      <label
-                        className="radio-inline"
-                        key="0"
-                      >
-                        <input
-                          checked={true}
-                          onChange={[Function]}
-                          type="radio"
-                          value="tokens"
-                        />
-                        <span
-                          className="title"
-                        >
-                          tokens
-                        </span>
-                      </label>
-                      <label
-                        className="radio-inline"
-                        key="1"
-                      >
-                        <input
-                          checked={false}
-                          onChange={[Function]}
-                          type="radio"
-                          value="percentage"
-                        />
-                        <span
-                          className="title"
-                        >
-                          percentage
-                        </span>
-                      </label>
-                    </div>
-                    <p
-                      className="description"
-                    >
-                      Fixed amount or % of crowdsaled tokens. Will be deposited to the account after finalization of the crowdsale.
-                    </p>
-                  </div>
-                </RadioInputField>
-                <NumericInput
-                  acceptFloat={true}
-                  description="Value in tokens. Don't forget to click + button for each reserved token."
-                  errorMessage="Value must be positive and decimals should not exceed the amount of decimals specified"
-                  maxDecimals={0}
-                  min={0}
-                  onValueUpdate={[Function]}
-                  pristine={true}
-                  side="reserved-tokens-input-property reserved-tokens-input-property-right"
-                  title="Value"
-                  valid="INVALID"
-                  value=""
-                >
-                  <InputField
-                    description="Value in tokens. Don't forget to click + button for each reserved token."
-                    errorMessage="Value must be positive and decimals should not exceed the amount of decimals specified"
-                    onChange={[Function]}
-                    onKeyPress={[Function]}
-                    onPaste={[Function]}
-                    pristine={true}
-                    side="reserved-tokens-input-property reserved-tokens-input-property-right"
-                    title="Value"
-                    type="number"
-                    valid="INVALID"
-                    value=""
-                  >
-                    <div
-                      className="reserved-tokens-input-property reserved-tokens-input-property-right"
-                    >
-                      <label
-                        className="label"
-                      >
-                        Value
-                      </label>
-                      <input
-                        className="input"
-                        onChange={[Function]}
-                        onKeyPress={[Function]}
-                        onPaste={[Function]}
-                        type="number"
-                        value=""
-                      />
-                      <p
-                        className="description"
-                      >
-                        Value in tokens. Don't forget to click + button for each reserved token.
-                      </p>
-                      <p
-                        className="error"
-                        style={
-                          Object {
-                            "color": "red",
-                            "fontSize": "12px",
-                            "fontWeight": "bold",
-                            "height": "10px",
-                            "width": "100%",
-                          }
-                        }
-                      />
-                    </div>
-                  </InputField>
-                </NumericInput>
-              </div>
-              <div
-                className="plus-button-container"
-              >
-                <div
-                  className="button button_fill button_fill_plus"
-                  onClick={[Function]}
-                />
-              </div>
-            </div>
-            <div
+              Address
+            </label>
+            <input
+              className="input"
+              disabled={undefined}
+              onBlur={undefined}
+              onChange={[Function]}
+              onKeyPress={undefined}
+              onPaste={undefined}
+              style={undefined}
+              type="text"
+              value=""
+            />
+            <p
+              className="description"
+            >
+              Address where to send reserved tokens.
+            </p>
+            <p
+              className="error"
               style={
                 Object {
-                  "textAlign": "right",
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "10px",
+                  "width": "100%",
                 }
               }
-            >
-              <Component
-                accept=".csv"
-                onDrop={[Function]}
-                style={
-                  Object {
-                    "cursor": "pointer",
-                    "display": "inline-block",
-                    "marginLeft": "1em",
-                    "position": "relative",
-                  }
-                }
-              >
-                <span>
-                  Dropzone
-                </span>
-              </Component>
-            </div>
+            />
           </div>
-        </ReservedTokensInputBlock>
+          <div
+            className="reserved-tokens-input-property reserved-tokens-input-property-middle"
+          >
+            <label
+              className="label"
+            >
+              Dimension
+            </label>
+            <div
+              className="radios-inline"
+            >
+              <label
+                className="radio-inline"
+              >
+                <input
+                  checked={true}
+                  onChange={[Function]}
+                  type="radio"
+                  value="tokens"
+                />
+                <span
+                  className="title"
+                >
+                  tokens
+                </span>
+              </label>
+              <label
+                className="radio-inline"
+              >
+                <input
+                  checked={false}
+                  onChange={[Function]}
+                  type="radio"
+                  value="percentage"
+                />
+                <span
+                  className="title"
+                >
+                  percentage
+                </span>
+              </label>
+            </div>
+            <p
+              className="description"
+            >
+              Fixed amount or % of crowdsaled tokens. Will be deposited to the account after finalization of the crowdsale.
+            </p>
+          </div>
+          <div
+            className="reserved-tokens-input-property reserved-tokens-input-property-right"
+          >
+            <label
+              className="label"
+            >
+              Value
+            </label>
+            <input
+              className="input"
+              disabled={undefined}
+              onBlur={undefined}
+              onChange={[Function]}
+              onKeyPress={[Function]}
+              onPaste={[Function]}
+              style={undefined}
+              type="number"
+              value=""
+            />
+            <p
+              className="description"
+            >
+              Value in tokens. Don't forget to click + button for each reserved token.
+            </p>
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "10px",
+                  "width": "100%",
+                }
+              }
+            />
+          </div>
+        </div>
+        <div
+          className="plus-button-container"
+        >
+          <div
+            className="button button_fill button_fill_plus"
+            onClick={[Function]}
+          />
+        </div>
       </div>
       <div
-        className="button-container"
+        style={
+          Object {
+            "textAlign": "right",
+          }
+        }
       >
-        <a
-          className="button button_fill"
-          onClick={[Function]}
-        >
-          Continue
-        </a>
+        <span>
+          Dropzone
+        </span>
       </div>
-      <FormSpy
-        onChange={[Function]}
-      />
-    </form>
-  </StepTwoForm>
-</ReactFinalForm(4.2.0)(3.1.4)>
+    </div>
+  </div>
+  <div
+    className="button-container"
+  >
+    <a
+      className="button button_fill"
+      onClick={[Function]}
+    >
+      Continue
+    </a>
+  </div>
+</form>
 `;

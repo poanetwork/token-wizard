@@ -1,6 +1,7 @@
 import React from 'react'
 import { TokenName } from './TokenName'
 import { Form } from 'react-final-form'
+import renderer from 'react-test-renderer'
 import Adapter from 'enzyme-adapter-react-15'
 import { configure, mount, shallow } from 'enzyme'
 import { VALIDATION_MESSAGES } from '../../utils/constants'
@@ -9,14 +10,14 @@ configure({ adapter: new Adapter() })
 
 describe('TokenName', () => {
   it(`should render TokenName component`, () => {
-    const wrapper = shallow(
+    const wrapper = renderer.create(
       <Form onSubmit={jest.fn()} component={TokenName} errorStyle={{ color: 'red', fontWeight: 'bold', }}/>
     )
     expect(wrapper).toMatchSnapshot()
   })
 
   it(`should render TokenName component and its children`, () => {
-    const wrapper = mount(
+    const wrapper = renderer.create(
       <Form onSubmit={jest.fn()} component={TokenName} errorStyle={{ color: 'red', fontWeight: 'bold', }}/>
     )
     expect(wrapper).toMatchSnapshot()

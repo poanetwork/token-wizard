@@ -1,6 +1,7 @@
 import React from 'react'
 import { Form } from 'react-final-form'
 import { StepTwoForm } from './StepTwoForm'
+import renderer from 'react-test-renderer'
 import Adapter from 'enzyme-adapter-react-15'
 import { configure, mount } from 'enzyme'
 import CrowdsaleStore from '../../stores/CrowdsaleStore'
@@ -18,7 +19,7 @@ describe('StepTwoForm', () => {
   })
 
   it(`should render StepTwoForm for Minted Capped Crowdsale`, () => {
-    const wrapper = mount(
+    const wrapper = renderer.create(
       <Form
         crowdsaleStore={crowdsaleStore}
         onSubmit={jest.fn()}
@@ -41,7 +42,7 @@ describe('StepTwoForm', () => {
   it(`should render StepTwoForm for Dutch Auction Crowdsale`, () => {
     crowdsaleStore.setProperty('strategy', CROWDSALE_STRATEGIES.DUTCH_AUCTION)
 
-    const wrapper = mount(
+    const wrapper = renderer.create(
       <Form
         crowdsaleStore={crowdsaleStore}
         onSubmit={jest.fn()}
