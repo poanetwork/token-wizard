@@ -66,10 +66,8 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
       const oneTokenInWEI = web3Store.web3.utils.toWei(oneTokenInETH, 'ether')
       value = value.reduce((toAdd, whitelist) => {
         toAdd[0].push(whitelist.addr)
-        toAdd[1].push(toBigNumber(whitelist.min).times(oneTokenInWEI).toFixed())
+        toAdd[1].push(toBigNumber(whitelist.min).times(`1e${decimals}`).toFixed())
         toAdd[2].push(toBigNumber(whitelist.max).times(oneTokenInWEI).toFixed())
-        //toAdd[1].push(whitelist.min * 10 ** decimals ? toFixed((whitelist.min * 10 ** decimals).toString()) : 0)
-        //toAdd[2].push(whitelist.max * 10 ** decimals ? toFixed((whitelist.max * 10 ** decimals).toString()) : 0)
         return toAdd
       }, [[], [], []])
       methodInterface = ["uint256","address[]","uint256[]","uint256[]","bytes"]
@@ -306,8 +304,8 @@ export const processTier = (tier, crowdsale, token, reservedTokensInfo, tierNum)
 
       if (whitelistAccounts) {
         whitelistAccounts.forEach(({ addr, min, max }) => {
-          min = parseInt(toFixed(min), 10) * newTier.rate / 10 ** tokenDecimals
-          max = parseInt(toFixed(max), 10) * newTier.rate / 10 ** tokenDecimals
+          min = toBigNumber(toFixed(min)).dividedBy(`1e${tokenDecimals}`)
+          max = toBigNumber(web3.utils.fromWei(toFixed(max)), 'ether').times(newTier.rate)
 
           whitelist.push({ addr, min, max, stored: true })
         })
