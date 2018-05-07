@@ -369,7 +369,7 @@ exports[`CountdownTimer Should render the component when the crowdsale was final
       fontSize="auto"
       onComplete={[Function]}
       paused={false}
-      seconds={30.445}
+      seconds={0}
       showMilliseconds={false}
       size={270}
       timeFormat="hms"

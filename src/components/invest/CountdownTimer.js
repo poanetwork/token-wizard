@@ -47,6 +47,7 @@ const CountdownTimer = ({
 
   if (isFinalized) {
     message = 'crowdsale has been finalized'
+    msToNextTick = 0
   } else {
     if (nextTick.type) {
       if (nextTick.type === 'start') {
