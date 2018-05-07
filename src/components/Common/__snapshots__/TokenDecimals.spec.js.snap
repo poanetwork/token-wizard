@@ -85,7 +85,7 @@ exports[`TokenDecimals should render TokenDecimals component and its children 1`
 `;
 
 exports[`TokenDecimals should render TokenDecimals component and its children, with input field disabled 1`] = `
-<ReactFinalForm(4.2.0)(3.1.4)
+<ReactFinalForm
   component={[Function]}
   disabled={true}
   errorStyle={
@@ -99,8 +99,8 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
   <TokenDecimals
     __versions={
       Object {
-        "final-form": "4.2.0",
-        "react-final-form": "3.1.4",
+        "final-form": "4.6.1",
+        "react-final-form": "3.4.0",
       }
     }
     batch={[Function]}
@@ -115,22 +115,57 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
         "fontWeight": "bold",
       }
     }
-    errors={Object {}}
+    errors={
+      Object {
+        "decimals": "This field is required",
+      }
+    }
     focus={[Function]}
+    form={
+      Object {
+        "batch": [Function],
+        "blur": [Function],
+        "change": [Function],
+        "focus": [Function],
+        "getFieldState": [Function],
+        "getRegisteredFields": [Function],
+        "getState": [Function],
+        "initialize": [Function],
+        "isValidationPaused": [Function],
+        "mutators": Object {},
+        "pauseValidation": [Function],
+        "registerField": [Function],
+        "reset": [Function],
+        "resumeValidation": [Function],
+        "setConfig": [Function],
+        "submit": [Function],
+        "subscribe": [Function],
+      }
+    }
     handleSubmit={[Function]}
+    hasSubmitErrors={false}
+    hasValidationErrors={true}
     initialize={[Function]}
-    invalid={false}
+    invalid={true}
     mutators={Object {}}
     pristine={true}
     reset={[Function]}
     submitFailed={false}
     submitSucceeded={false}
     submitting={false}
-    touched={Object {}}
-    valid={true}
+    touched={
+      Object {
+        "decimals": false,
+      }
+    }
+    valid={false}
     validating={false}
     values={Object {}}
-    visited={Object {}}
+    visited={
+      Object {
+        "decimals": false,
+      }
+    }
   >
     <Field
       component={[Function]}
@@ -178,7 +213,6 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
             "error": "This field is required",
             "initial": undefined,
             "invalid": true,
-            "length": undefined,
             "pristine": true,
             "submitError": undefined,
             "submitFailed": false,
@@ -257,5 +291,5 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
       </InputField2>
     </Field>
   </TokenDecimals>
-</ReactFinalForm(4.2.0)(3.1.4)>
+</ReactFinalForm>
 `;
