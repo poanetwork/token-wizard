@@ -287,12 +287,12 @@ export class Invest extends React.Component {
     const tokensToInvest = new BigNumber(investStore.tokensToInvest)
     console.log('tokensToInvest:', tokensToInvest.toFixed())
 
-    const weiToSend = tokensToInvest.multipliedBy(rate)
-    console.log('weiToSend:', weiToSend.toFixed())
+    const weiToSend = tokensToInvest.multipliedBy(rate).integerValue(BigNumber.ROUND_CEIL)
+    console.log('weiToSend:', weiToSend)
 
     const opts = {
       from: account,
-      value: weiToSend.integerValue(BigNumber.ROUND_CEIL),
+      value: weiToSend,
       gasPrice: generalStore.gasPrice
     }
     console.log(opts)
