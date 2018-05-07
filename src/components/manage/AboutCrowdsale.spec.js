@@ -12,8 +12,8 @@ describe('AboutCrowdsale', () => {
     const aboutCrowdsaleParams = {
       name: 'MyToken',
       ticker: 'MTK',
-      address: '0x0000000000000000000000000000000000000001',
-      networkId: '12648430',
+      execID: '0x461451505864e9dfe45bac39478a4ed689d74a737c0c3308cb0c8607ca0c14bd',
+      networkID: '12648430',
     }
 
     expect(renderer.create(

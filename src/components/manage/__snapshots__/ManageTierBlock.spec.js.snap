@@ -1,6 +1,544 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ManageTierBlock should render the ManageTierBlock component with tiers 1`] = `
+exports[`ManageTierBlock should render the ManageTierBlock component with tiers for Dutch Auction Crowdsale 1`] = `
+<div>
+  <div
+    className="steps"
+  >
+    <div
+      className="steps-content container"
+    >
+      <div
+        id="about_tier"
+      >
+        About Tier
+      </div>
+      <div
+        className="hidden divisor"
+      >
+        <div
+          className="input-block-container"
+        >
+          <div
+            className="left"
+          >
+            <label
+              className="label"
+            >
+              Crowdsale setup name
+            </label>
+            <input
+              className="input"
+              disabled={true}
+              onBlur={undefined}
+              onChange={undefined}
+              onKeyPress={undefined}
+              onPaste={undefined}
+              style={undefined}
+              type="text"
+              value="Tier 1"
+            />
+            <p
+              className="description"
+            />
+            <p
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "10px",
+                  "width": "100%",
+                }
+              }
+            >
+              
+            </p>
+          </div>
+          <div
+            className="right"
+          >
+            <label
+              className="label"
+            >
+              Wallet Address
+            </label>
+            <input
+              className="input"
+              disabled={true}
+              onBlur={undefined}
+              onChange={undefined}
+              onKeyPress={undefined}
+              onPaste={undefined}
+              style={undefined}
+              type="text"
+              value="0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1"
+            />
+            <p
+              className="description"
+            />
+            <p
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "10px",
+                  "width": "100%",
+                }
+              }
+            >
+              
+            </p>
+          </div>
+        </div>
+        <div
+          className="input-block-container"
+        >
+          <div
+            className="left"
+          >
+            <label
+              className="label"
+              htmlFor="tiers[0].0.startTime"
+            >
+              Start Time
+            </label>
+            <input
+              autoComplete="off"
+              className="input"
+              disabled={true}
+              id="tiers[0].0.startTime"
+              name="tiers[0].0.startTime"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder={undefined}
+              type="datetime-local"
+              value=""
+            />
+            <p
+              className="description"
+            >
+              Date and time when the tier starts. Can't be in the past from the current moment.
+            </p>
+            <span>
+              <p
+                className="error"
+                style={
+                  Object {
+                    "color": "red",
+                    "fontSize": "12px",
+                    "fontWeight": "bold",
+                    "height": "20px",
+                    "width": "100%",
+                  }
+                }
+              />
+            </span>
+          </div>
+          <div
+            className="right"
+          >
+            <label
+              className="label"
+              htmlFor="tiers[0].0.endTime"
+            >
+              End Time
+            </label>
+            <input
+              autoComplete="off"
+              className="input"
+              disabled={true}
+              id="tiers[0].0.endTime"
+              name="tiers[0].0.endTime"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder={undefined}
+              type="datetime-local"
+              value=""
+            />
+            <p
+              className="description"
+            >
+              Date and time when the tier ends. Can be only in the future.
+            </p>
+            <span>
+              <p
+                className="error"
+                style={
+                  Object {
+                    "color": "red",
+                    "fontSize": "12px",
+                    "fontWeight": "bold",
+                    "height": "20px",
+                    "width": "100%",
+                  }
+                }
+              />
+            </span>
+          </div>
+        </div>
+        <div
+          className="input-block-container"
+        >
+          <div
+            className="left"
+          >
+            <label
+              className="label"
+              htmlFor="tiers[0].0.rate"
+            >
+              Rate
+            </label>
+            <input
+              autoComplete="off"
+              className="input"
+              disabled={true}
+              id="tiers[0].0.rate"
+              name="tiers[0].0.rate"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder={undefined}
+              type="text"
+              value=""
+            />
+            <p
+              className="description"
+            >
+              Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
+            </p>
+            <span>
+              <p
+                className="error"
+                style={
+                  Object {
+                    "color": "red",
+                    "fontSize": "12px",
+                    "fontWeight": "bold",
+                    "height": "20px",
+                    "width": "100%",
+                  }
+                }
+              />
+            </span>
+          </div>
+          <div
+            className="right"
+          >
+            <label
+              className="label"
+              htmlFor="tiers[0].0.supply"
+            >
+              Supply
+            </label>
+            <input
+              autoComplete="off"
+              className="input"
+              disabled={true}
+              id="tiers[0].0.supply"
+              name="tiers[0].0.supply"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder={undefined}
+              type="text"
+              value=""
+            />
+            <p
+              className="description"
+            >
+              How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
+            </p>
+            <span>
+              <p
+                className="error"
+                style={
+                  Object {
+                    "color": "red",
+                    "fontSize": "12px",
+                    "fontWeight": "bold",
+                    "height": "20px",
+                    "width": "100%",
+                  }
+                }
+              />
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="steps"
+  >
+    <div
+      className="steps-content container"
+    >
+      <div
+        className="hidden divisor"
+      >
+        <div
+          className="input-block-container"
+        >
+          <div
+            className="left"
+          >
+            <label
+              className="label"
+            >
+              Crowdsale setup name
+            </label>
+            <input
+              className="input"
+              disabled={true}
+              onBlur={undefined}
+              onChange={undefined}
+              onKeyPress={undefined}
+              onPaste={undefined}
+              style={undefined}
+              type="text"
+              value="Tier 2"
+            />
+            <p
+              className="description"
+            />
+            <p
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "10px",
+                  "width": "100%",
+                }
+              }
+            >
+              
+            </p>
+          </div>
+          <div
+            className="right"
+          >
+            <label
+              className="label"
+            >
+              Wallet Address
+            </label>
+            <input
+              className="input"
+              disabled={true}
+              onBlur={undefined}
+              onChange={undefined}
+              onKeyPress={undefined}
+              onPaste={undefined}
+              style={undefined}
+              type="text"
+              value="0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1"
+            />
+            <p
+              className="description"
+            />
+            <p
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "10px",
+                  "width": "100%",
+                }
+              }
+            >
+              
+            </p>
+          </div>
+        </div>
+        <div
+          className="input-block-container"
+        >
+          <div
+            className="left"
+          >
+            <label
+              className="label"
+              htmlFor="tiers[1].1.startTime"
+            >
+              Start Time
+            </label>
+            <input
+              autoComplete="off"
+              className="input"
+              disabled={true}
+              id="tiers[1].1.startTime"
+              name="tiers[1].1.startTime"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder={undefined}
+              type="datetime-local"
+              value=""
+            />
+            <p
+              className="description"
+            >
+              Date and time when the tier starts. Can't be in the past from the current moment.
+            </p>
+            <span>
+              <p
+                className="error"
+                style={
+                  Object {
+                    "color": "red",
+                    "fontSize": "12px",
+                    "fontWeight": "bold",
+                    "height": "20px",
+                    "width": "100%",
+                  }
+                }
+              />
+            </span>
+          </div>
+          <div
+            className="right"
+          >
+            <label
+              className="label"
+              htmlFor="tiers[1].1.endTime"
+            >
+              End Time
+            </label>
+            <input
+              autoComplete="off"
+              className="input"
+              disabled={true}
+              id="tiers[1].1.endTime"
+              name="tiers[1].1.endTime"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder={undefined}
+              type="datetime-local"
+              value=""
+            />
+            <p
+              className="description"
+            >
+              Date and time when the tier ends. Can be only in the future.
+            </p>
+            <span>
+              <p
+                className="error"
+                style={
+                  Object {
+                    "color": "red",
+                    "fontSize": "12px",
+                    "fontWeight": "bold",
+                    "height": "20px",
+                    "width": "100%",
+                  }
+                }
+              />
+            </span>
+          </div>
+        </div>
+        <div
+          className="input-block-container"
+        >
+          <div
+            className="left"
+          >
+            <label
+              className="label"
+              htmlFor="tiers[1].1.rate"
+            >
+              Rate
+            </label>
+            <input
+              autoComplete="off"
+              className="input"
+              disabled={true}
+              id="tiers[1].1.rate"
+              name="tiers[1].1.rate"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder={undefined}
+              type="text"
+              value=""
+            />
+            <p
+              className="description"
+            >
+              Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
+            </p>
+            <span>
+              <p
+                className="error"
+                style={
+                  Object {
+                    "color": "red",
+                    "fontSize": "12px",
+                    "fontWeight": "bold",
+                    "height": "20px",
+                    "width": "100%",
+                  }
+                }
+              />
+            </span>
+          </div>
+          <div
+            className="right"
+          >
+            <label
+              className="label"
+              htmlFor="tiers[1].1.supply"
+            >
+              Supply
+            </label>
+            <input
+              autoComplete="off"
+              className="input"
+              disabled={true}
+              id="tiers[1].1.supply"
+              name="tiers[1].1.supply"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder={undefined}
+              type="text"
+              value=""
+            />
+            <p
+              className="description"
+            >
+              How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
+            </p>
+            <span>
+              <p
+                className="error"
+                style={
+                  Object {
+                    "color": "red",
+                    "fontSize": "12px",
+                    "fontWeight": "bold",
+                    "height": "20px",
+                    "width": "100%",
+                  }
+                }
+              />
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ManageTierBlock should render the ManageTierBlock component with tiers for Minted Capped Crowdsale 1`] = `
 <div>
   <div
     className="steps"

@@ -22,7 +22,7 @@ exports[`AboutCrowdsale should render the component 1`] = `
   </p>
   <a
     className="crowdsale-page-link"
-    href="/crowdsale/?addr=0x0000000000000000000000000000000000000001&networkID=12648430"
+    href="/crowdsale/?exec-id=0x461451505864e9dfe45bac39478a4ed689d74a737c0c3308cb0c8607ca0c14bd&networkID=12648430"
     onClick={[Function]}
   >
     Crowdsale page
