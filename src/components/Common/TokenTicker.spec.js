@@ -1,6 +1,7 @@
 import React from 'react'
 import { TokenTicker } from './TokenTicker'
 import { Form } from 'react-final-form'
+import renderer from 'react-test-renderer'
 import Adapter from 'enzyme-adapter-react-15'
 import { configure, mount, shallow } from 'enzyme'
 import { VALIDATION_MESSAGES } from '../../utils/constants'
@@ -9,14 +10,14 @@ configure({ adapter: new Adapter() })
 
 describe('TokenTicker', () => {
   it(`should render TokenTicker component`, () => {
-    const wrapper = shallow(
+    const wrapper = renderer.create(
       <Form onSubmit={jest.fn()} component={TokenTicker} errorStyle={{ color: 'red', fontWeight: 'bold', }}/>
     )
     expect(wrapper).toMatchSnapshot()
   })
 
   it(`should render TokenTicker component and its children`, () => {
-    const wrapper = mount(
+    const wrapper = renderer.create(
       <Form onSubmit={jest.fn()} component={TokenTicker} errorStyle={{ color: 'red', fontWeight: 'bold', }}/>
     )
     expect(wrapper).toMatchSnapshot()
