@@ -674,7 +674,20 @@ export const handlerForFile = (content, type) => {
     suffix = ` (GMT ${operator} ${Math.abs(timezoneOffset)})`
   }
 
-  return `${content.value}${type[content.field]}${suffix}`
+  console.log("content:", content)
+  console.log("type:", type)
+
+  if (content && type) {
+    return `${content.value}${type[content.field]}${suffix}`
+  } else {
+    if (!content) {
+      console.log("WARNING!: content is undefined")
+    }
+    if (!type) {
+      console.log("WARNING!: type is undefined")
+    }
+    return ''
+  }
 }
 
 export const handleConstantForFile = content => {
