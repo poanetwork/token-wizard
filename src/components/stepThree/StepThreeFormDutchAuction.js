@@ -34,6 +34,7 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, prist
   const handleOnChange = ({ values }) => {
     props.tierStore.updateWalletAddress(values.walletAddress, VALID)
     props.generalStore.setGasPrice(gweiToWei(values.gasPrice.price))
+    props.tierStore.setGlobalMinCap(values.minCap || 0)
 
     values.tiers.forEach((tier, index) => {
       props.tierStore.setTierProperty(tier.startTime, 'startTime', index)

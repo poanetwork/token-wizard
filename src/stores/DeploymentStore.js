@@ -22,6 +22,7 @@ class DeploymentStore {
 
   @action initialize = (hasReservedToken, hasWhitelist, tiersCount, globalMinCap) => {
     console.log("hasReservedToken:", hasReservedToken)
+    console.log("globalMinCap:", globalMinCap)
     const listOfTx = [
       { name: 'crowdsaleCreate', dependsOnTiers: false, required: true },
       { name: 'token', dependsOnTiers: false, required: true },
@@ -46,8 +47,8 @@ class DeploymentStore {
     this.logTxMap()
   }
 
-  @action initializePersonalized = (hasReservedToken, hasWhitelist, tiersCount, listOfTx) => {
-    this.initialize(hasReservedToken, hasWhitelist, tiersCount)
+  @action initializePersonalized = (hasReservedToken, hasWhitelist, tiersCount, listOfTx, globalMinCap) => {
+    this.initialize(hasReservedToken, hasWhitelist, tiersCount, globalMinCap)
     // TODO: based on listOfTx, modify this.txMap so it reflects the required amount of steps
   }
 
