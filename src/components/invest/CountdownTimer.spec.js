@@ -100,4 +100,23 @@ describe('CountdownTimer', () => {
 
     expect(wrapper).toMatchSnapshot()
   })
+
+  it(`Should stop countdown if crowdsale was finalized`, () => {
+    const wrapper = shallow(
+      <CountdownTimer
+        displaySeconds={false}
+        nextTick={{ type: 'start', order: 1 }}
+        tiersLength={2}
+        days={1}
+        hours={4}
+        minutes={45}
+        seconds={30}
+        msToNextTick={30445000}
+        onComplete={jest.fn()}
+        isFinalized={true}
+      />
+    )
+
+    expect(wrapper.find('ReactCountdownClock').props().seconds).toBe(0)
+  })
 })
