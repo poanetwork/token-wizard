@@ -137,9 +137,11 @@ exports[`percentage 1`] = `
       className="plus-button-container"
     >
       <div
-        className="button button_fill button_fill_plus"
+        className="button button_fill button_no_icon"
         onClick={[Function]}
-      />
+      >
+        Submit
+      </div>
     </div>
   </div>
   <div
@@ -436,9 +438,11 @@ exports[`tokens 1`] = `
       className="plus-button-container"
     >
       <div
-        className="button button_fill button_fill_plus"
+        className="button button_fill button_no_icon"
         onClick={[Function]}
-      />
+      >
+        Submit
+      </div>
     </div>
   </div>
   <div
