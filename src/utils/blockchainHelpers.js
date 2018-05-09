@@ -1,4 +1,4 @@
-import { incorrectNetworkAlert, noMetaMaskAlert, invalidNetworkIDAlert } from './alerts'
+import { incorrectNetworkAlert, noMetaMaskAlert, MetaMaskIsLockedAlert, invalidNetworkIDAlert } from './alerts'
 import { CHAINS, MAX_GAS_PRICE } from './constants'
 import { crowdsaleStore, generalStore, web3Store } from '../stores'
 import { fetchFile } from './utils'
@@ -24,11 +24,21 @@ export function checkWeb3 () {
 
 const checkMetaMask = () => {
   const { web3 } = web3Store
+  console.log(web3.currentProvider)
 
-  web3.eth.getAccounts()
-    .then(accounts => {
-      if (accounts.length === 0) return noMetaMaskAlert()
-    })
+  if (!web3.currentProvider) {
+    return noMetaMaskAlert()
+  }
+
+  if (web3.currentProvider.isMetaMask) {
+    web3.eth.getAccounts()
+      .then(accounts => {
+        if (accounts.length === 0) return MetaMaskIsLockedAlert()
+      })
+      .catch((err) => {
+        return MetaMaskIsLockedAlert()
+      })
+  }
 }
 
 export function checkNetWorkByID (_networkIdFromGET) {
