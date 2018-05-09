@@ -239,7 +239,7 @@ export class ReservedTokensInputBlock extends Component {
             />
           </div>
           <div className="plus-button-container">
-            <div onClick={e => this.addReservedTokensItem()} className="button button_fill button_fill_plus"/>
+            <div onClick={e => this.addReservedTokensItem()} className="button button_fill button_no_icon">Submit</div>
           </div>
         </div>
         {reservedTokensElements}

@@ -26,6 +26,11 @@
     }
   }
 
+  &_no_icon {
+    padding-left: 15px !important;
+    background-image: none !important;
+  }
+
   &_disabled {
     background-color: #e6e6e6;
     color: #9c9c9c;
