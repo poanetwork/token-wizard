@@ -190,7 +190,6 @@ const crowdsaleData = (tier, crowdsale, token, reservedTokensInfo) => {
     maximumSellableTokens = token.total_supply
   }
 
-  //to do: reservedTokensInfo
   let tokenName = web3.utils.toAscii(token.token_name)
   let tokenSymbol = web3.utils.toAscii(token.token_symbol)
   let decimals = token.token_decimals
