@@ -303,8 +303,8 @@ export const processTier = (tier, crowdsale, token, reservedTokensInfo, tierNum)
 
       if (whitelistAccounts) {
         whitelistAccounts.forEach(({ addr, min, max }) => {
-          min = toBigNumber(toFixed(min)).dividedBy(`1e${tokenDecimals}`)
-          max = toBigNumber(web3.utils.fromWei(toFixed(max)), 'ether').times(newTier.rate)
+          min = toBigNumber(toFixed(min)).dividedBy(`1e${tokenDecimals}`).toFixed()
+          max = toBigNumber(web3.utils.fromWei(toFixed(max)), 'ether').times(newTier.rate).toFixed()
 
           whitelist.push({ addr, min, max, stored: true })
         })
