@@ -10,3 +10,7 @@
 	path = submodules/token-wizard-test-automation
 	url = https://github.com/poanetwork/token-wizard-test-automation
 	branch = master
+[submodule "submodules/auth-os-applications"]
+	path = submodules/auth-os-applications
+	url = https://github.com/poanetwork/auth-os-applications
+	branch = master
