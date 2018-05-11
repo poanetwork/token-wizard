@@ -2,6 +2,7 @@ import { incorrectNetworkAlert, noMetaMaskAlert, invalidNetworkIDAlert, noContra
 import { CHAINS, MAX_GAS_PRICE, CROWDSALE_STRATEGIES, EXCEPTIONS } from './constants'
 import { crowdsaleStore, generalStore, web3Store, contractStore } from '../stores'
 import { toJS } from 'mobx'
+import { removeTrailingNUL } from './utils'
 
 const DEPLOY_CONTRACT = 1
 const CALL_METHOD = 2
@@ -296,7 +297,7 @@ function getApplicationsInstances () {
           scriptExecContract.methods.deployer_instances(account, i).call()
           .then((deployer_instance) => {
             //console.log("deployer_instance:", deployer_instance)
-            let appName = web3.utils.toAscii(deployer_instance.app_name)
+            let appName = removeTrailingNUL(web3.utils.toAscii(deployer_instance.app_name))
             let appNameLowerCase = appName.toLowerCase()
             if (
               appNameLowerCase.includes(process.env[`REACT_APP_MINTED_CAPPED_CROWDSALE_APP_NAME`].toLowerCase())
@@ -340,7 +341,7 @@ export function getCrowdsaleStrategy (execID) {
   return getApplicationsInstance(execID)
     .then((appObj) => {
       const { web3 } = web3Store
-      let appName = web3.utils.toAscii(appObj.app_name);
+      let appName = removeTrailingNUL(web3.utils.toAscii(appObj.app_name));
 
       let appNameLowerCase = appName.toLowerCase();
       if (appNameLowerCase.includes(process.env[`REACT_APP_MINTED_CAPPED_CROWDSALE_APP_NAME`].toLowerCase())) {

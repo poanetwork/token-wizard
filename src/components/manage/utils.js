@@ -6,7 +6,7 @@ import {
 } from '../../utils/blockchainHelpers'
 import { contractStore, crowdsaleStore, generalStore, tierStore, tokenStore, web3Store, reservedTokenStore } from '../../stores'
 import { VALIDATION_TYPES } from '../../utils/constants'
-import { toFixed } from '../../utils/utils'
+import { removeTrailingNUL, toFixed } from '../../utils/utils'
 import { toBigNumber } from '../crowdsale/utils'
 import { generateContext } from '../stepFour/utils'
 import { BigNumber } from 'bignumber.js'
@@ -190,11 +190,11 @@ const crowdsaleData = (tier, crowdsale, token, reservedTokensInfo) => {
     maximumSellableTokens = token.total_supply
   }
 
-  let tokenName = web3.utils.toAscii(token.token_name)
-  let tokenSymbol = web3.utils.toAscii(token.token_symbol)
+  let tokenName = removeTrailingNUL(web3.utils.toAscii(token.token_name))
+  let tokenSymbol = removeTrailingNUL(web3.utils.toAscii(token.token_symbol))
   let decimals = token.token_decimals
   let multisigWallet = crowdsale.team_wallet
-  let tierName = crowdsaleStore.isMintedCappedCrowdsale ? web3.utils.toAscii(tier.tier_name) : ''
+  let tierName = crowdsaleStore.isMintedCappedCrowdsale ? removeTrailingNUL(web3.utils.toAscii(tier.tier_name)) : ''
   let isUpdatable = tier.duration_is_modifiable
   let isWhitelisted = tier.whitelist_enabled
   let isFinalized = crowdsale.is_finalized
