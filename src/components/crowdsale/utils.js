@@ -247,3 +247,10 @@ export const getContractStoreProperty = (contract, property) => {
   const text = contractStore && contractStore[contract] && contractStore[contract][property]
   return text === undefined ? '' : text
 }
+
+export const getUserLimits = async (addr, execID, target, account) => {
+  const { methods } =  await attachToSpecificCrowdsaleContract(target)
+  const currentTier = await methods.getCurrentTierInfo(addr, execID).call()
+
+  return await methods.getWhitelistStatus(addr, execID, currentTier['tier_index'], account).call()
+}

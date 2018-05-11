@@ -15,7 +15,8 @@ import {
   getCrowdsaleTargetDates,
   initializeAccumulativeData,
   isFinalized,
-  toBigNumber
+  toBigNumber,
+  getUserLimits
 } from '../crowdsale/utils'
 import { countDecimalPlaces, getQueryVariable, toast } from '../../utils/utils'
 import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
@@ -29,6 +30,7 @@ import { Loader } from '../Common/Loader'
 import { CrowdsaleConfig } from '../Common/config'
 import { INVESTMENT_OPTIONS, TOAST, CROWDSALE_STRATEGIES } from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
+import { toJS } from 'mobx'
 import QRPaymentProcess from './QRPaymentProcess'
 import CountdownTimer from './CountdownTimer'
 import classNames from 'classnames'
@@ -252,7 +254,7 @@ export class Invest extends React.Component {
     this.investToTokensForWhitelistedCrowdsale()
   }
 
-  investToTokensForWhitelistedCrowdsale() {
+  investToTokensForWhitelistedCrowdsale = () => {
     const { crowdsalePageStore } = this.props
 
     if (crowdsalePageStore.startDate > (new Date()).getTime()) {
@@ -260,10 +262,7 @@ export class Invest extends React.Component {
       return investmentDisabledAlertInTime(crowdsalePageStore.startDate)
     }
 
-    getCurrentAccount()
-      .then(account => {
-        this.investToTokensForWhitelistedCrowdsaleInternal(account)
-      })
+    this.investToTokensForWhitelistedCrowdsaleInternal()
   }
 
   getBuyParams = (weiToSend, methodInterface) => {
@@ -275,20 +274,33 @@ export class Invest extends React.Component {
     //return context;
   }
 
-  investToTokensForWhitelistedCrowdsaleInternal = (account) => {
-    const { tokenStore, crowdsalePageStore, investStore, generalStore, crowdsaleStore } = this.props
+  calculateWeiToSend = async () => {
+    const { execID, account } = this.props.contractStore.crowdsale
+    const { addr } = toJS(this.props.contractStore.registryStorage)
+
+    // rate is from contract. It is already in wei. How much 1 token costs in wei.
+    const rate = toBigNumber(this.props.crowdsalePageStore.rate)
+    console.log('rate:', rate.toFixed())
+
+    const tokensToInvest = toBigNumber(this.props.investStore.tokensToInvest).times(rate).integerValue(BigNumber.ROUND_CEIL)
+    console.log('tokensToInvest:', tokensToInvest.toFixed())
+
+    const initTarget = `initCrowdsale${this.props.crowdsaleStore.contractTargetSuffix}`
+    const { max_spend_remaining } = await getUserLimits(addr, execID, initTarget, account)
+    const maxSpendRemaining = toBigNumber(max_spend_remaining)
+
+    return tokensToInvest.gt(maxSpendRemaining) ? maxSpendRemaining : tokensToInvest
+  }
+
+  investToTokensForWhitelistedCrowdsaleInternal = async () => {
+    const { tokenStore, generalStore, crowdsaleStore, contractStore, crowdsalePageStore } = this.props
+    const { account } = contractStore.crowdsale
 
     const decimals = new BigNumber(tokenStore.decimals)
     console.log('decimals:', decimals.toFixed())
 
-    const rate = new BigNumber(crowdsalePageStore.rate) //it is from contract. It is already in wei. How much 1 token costs in wei.
-    console.log('rate:', rate.toFixed())
-
-    const tokensToInvest = new BigNumber(investStore.tokensToInvest)
-    console.log('tokensToInvest:', tokensToInvest.toFixed())
-
-    const weiToSend = tokensToInvest.multipliedBy(rate).integerValue(BigNumber.ROUND_CEIL)
-    console.log('weiToSend:', weiToSend)
+    const weiToSend = await this.calculateWeiToSend()
+    console.log('weiToSend:', weiToSend.toFixed())
 
     const opts = {
       from: account,
@@ -306,16 +318,20 @@ export class Invest extends React.Component {
     let paramsToExec = [weiToSend, methodInterface]
     const method = methodToExec("scriptExec", `buy(${methodInterface.join(',')})`, target, this.getBuyParams, paramsToExec)
 
-    method.estimateGas(opts)
-      .then(estimatedGas => {
-        console.log("estimatedGas:",estimatedGas)
-        opts.gasLimit = calculateGasLimit(estimatedGas)
-        return sendTXToContract(method.send(opts))
+    const estimatedGas = await method.estimateGas(opts)
+    console.log('estimatedGas:', estimatedGas)
+
+    opts.gasLimit = calculateGasLimit(estimatedGas)
+
+    const tokensToInvest = weiToSend.div(crowdsalePageStore.rate).integerValue(BigNumber.ROUND_CEIL)
+
+    sendTXToContract(method.send(opts))
+      .then(() => successfulInvestmentAlert(tokensToInvest))
+      .catch(err => {
+        console.error(err)
+        return toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED })
       })
-      .then(() => successfulInvestmentAlert(investStore.tokensToInvest))
-      .catch(err => toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED }))
       .then(() => this.setState({ loading: false }))
-      .catch((err) => console.log)
   }
 
   txMinedCallback(txHash, receipt) {
