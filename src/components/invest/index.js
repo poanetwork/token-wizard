@@ -24,6 +24,7 @@ import {
   invalidCrowdsaleAddrAlert,
   investmentDisabledAlertInTime, noGasPriceAvailable,
   noMetaMaskAlert,
+  MetaMaskIsLockedAlert,
   successfulInvestmentAlert
 } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
@@ -248,7 +249,7 @@ export class Invest extends React.Component {
 
     if (web3.eth.accounts.length === 0) {
       this.setState({ loading: false })
-      return noMetaMaskAlert()
+      return MetaMaskIsLockedAlert()
     }
 
     this.investToTokensForWhitelistedCrowdsale()

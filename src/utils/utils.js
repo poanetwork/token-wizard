@@ -144,3 +144,5 @@ export const acceptPositiveIntegerOnly = (value) => {
 
   return String(value).match(/^(\d*)/)[1]
 }
+
+export const removeTrailingNUL = ascii => ascii.replace(/\x00+/, '')

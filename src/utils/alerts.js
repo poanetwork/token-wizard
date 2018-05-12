@@ -10,6 +10,14 @@ export function noMetaMaskAlert() {
   });
 }
 
+export function MetaMaskIsLockedAlert() {
+  sweetAlert2({
+    title: "Warning",
+    html: "You signed out from Metamask. Open Metamask extension and sign in.",
+    type: "warning"
+  });
+}
+
 export function noContractDataAlert() {
   sweetAlert2({
     title: "Warning",
@@ -66,14 +74,6 @@ export function incorrectNetworkAlert(correctNetworkName, incorrectNetworkName) 
   sweetAlert2({
     title: "Warning",
     html: "Crowdsale contract is from <b>" + correctNetworkName + " network</b>. But you are connected to <b>" + incorrectNetworkName + " network</b>. Please, change connection in MetaMask plugin.",
-    type: "warning"
-  });
-}
-
-export function noDeploymentOnMainnetAlert() {
-  sweetAlert2({
-    title: "Warning",
-    html: "Wizard is under maintenance on Ethereum Mainnet. Please come back later or use Kovan/Rinkeby/POA. Follow <a href='https://twitter.com/poanetwork'>https://twitter.com/poanetwork</a> for status.",
     type: "warning"
   });
 }

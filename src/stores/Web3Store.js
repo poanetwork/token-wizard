@@ -16,7 +16,9 @@ class Web3Store {
         this.web3 = web3
         web3.eth.getAccounts().then((accounts) => {
           this.accounts = accounts
-          this.curAddress = accounts[0]
+          if (accounts.length > 0) {
+            this.curAddress = accounts[0]
+          }
         })
       }
     })
@@ -27,7 +29,8 @@ class Web3Store {
   }
 
   getWeb3 = cb => {
-    const networkID = CrowdsaleConfig.networkID ? CrowdsaleConfig.networkID : getQueryVariable('networkID')
+    let networkID = CrowdsaleConfig.networkID ? CrowdsaleConfig.networkID : getQueryVariable('networkID')
+    networkID = Number(networkID)
     var web3 = window.web3;
     if (typeof web3 === 'undefined') {
       // no web3, use fallback
@@ -57,7 +60,8 @@ class Web3Store {
             infuraLink = this.getInfuraLink(CHAINS.MAINNET)
             break
         }
-        web3 = new Web3(new Web3.providers.HttpProvider(infuraLink));
+        let httpProvider = new Web3.providers.HttpProvider(infuraLink)
+        web3 = new Web3(httpProvider)
       }
 
       cb(web3, false);
