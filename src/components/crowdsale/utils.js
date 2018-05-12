@@ -6,6 +6,7 @@ import {
 import { contractStore, crowdsalePageStore, tokenStore, web3Store, crowdsaleStore } from '../../stores'
 import { toJS } from 'mobx'
 import { BigNumber } from 'bignumber.js'
+import { removeTrailingNUL } from '../../utils/utils'
 
 BigNumber.config({ DECIMAL_PLACES : 18 })
 
@@ -38,9 +39,9 @@ export let getTokenData = (initCrowdsaleContract, execID, account) => {
       ]) => {
         const { web3 } = web3Store
 
-        tokenStore.setProperty('name', web3.utils.toAscii(name))
+        tokenStore.setProperty('name', removeTrailingNUL(web3.utils.toAscii(name)))
         console.log('token name: ' + name)
-        tokenStore.setProperty('ticker', web3.utils.toAscii(ticker))
+        tokenStore.setProperty('ticker', removeTrailingNUL(web3.utils.toAscii(ticker)))
         console.log('token ticker: ' + ticker)
         tokenStore.setProperty('decimals', decimals)
         console.log('token decimals: ' + decimals)
