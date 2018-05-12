@@ -1,4 +1,4 @@
-import { incorrectNetworkAlert, noMetaMaskAlert, MetaMaskIsLockedAlert, invalidNetworkIDAlert } from './alerts'
+import { incorrectNetworkAlert, noMetaMaskAlert, MetaMaskIsLockedAlert, invalidNetworkIDAlert, noContractAlert } from './alerts'
 import { CHAINS, MAX_GAS_PRICE, CROWDSALE_STRATEGIES, EXCEPTIONS } from './constants'
 import { crowdsaleStore, generalStore, web3Store, contractStore } from '../stores'
 import { toJS } from 'mobx'
