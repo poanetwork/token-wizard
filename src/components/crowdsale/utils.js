@@ -251,9 +251,14 @@ export const getContractStoreProperty = (contract, property) => {
 
 export const getUserLimits = async (addr, execID, target, account) => {
   const { methods } =  await attachToSpecificCrowdsaleContract(target)
-  const currentTier = await methods.getCurrentTierInfo(addr, execID).call()
+  const currentTierInfo = await methods.getCurrentTierInfo(addr, execID).call()
+  const { whitelist_enabled, tier_tokens_remaining, tier_price, tier_index } = currentTierInfo
+  const tierTokensRemaining = toBigNumber(tier_tokens_remaining).times(tier_price).integerValue(BigNumber.ROUND_CEIL)
 
-  if (!currentTier['whitelist_enabled']) return Promise.resolve(null)
+  if (!whitelist_enabled) return tierTokensRemaining
 
-  return await methods.getWhitelistStatus(addr, execID, currentTier['tier_index'], account).call()
+  const { max_spend_remaining } = await methods.getWhitelistStatus(addr, execID, tier_index, account).call()
+  const maxSpendRemaining = toBigNumber(max_spend_remaining)
+
+  return tierTokensRemaining.lt(maxSpendRemaining) ? tierTokensRemaining : maxSpendRemaining
 }

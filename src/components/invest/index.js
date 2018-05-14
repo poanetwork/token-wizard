@@ -25,7 +25,8 @@ import {
   investmentDisabledAlertInTime, noGasPriceAvailable,
   noMetaMaskAlert,
   MetaMaskIsLockedAlert,
-  successfulInvestmentAlert
+  successfulInvestmentAlert,
+  noMoreTokensAvailable
 } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
 import { CrowdsaleConfig } from '../Common/config'
@@ -289,10 +290,7 @@ export class Invest extends React.Component {
     const initTarget = `initCrowdsale${this.props.crowdsaleStore.contractTargetSuffix}`
     const userLimits = await getUserLimits(addr, execID, initTarget, account)
 
-    if (userLimits === null) return tokensToInvest
-
-    const maxSpendRemaining = toBigNumber(userLimits['max_spend_remaining'])
-    return tokensToInvest.gt(maxSpendRemaining) ? maxSpendRemaining : tokensToInvest
+    return tokensToInvest.gt(userLimits) ? userLimits : tokensToInvest
   }
 
   investToTokensForWhitelistedCrowdsaleInternal = async () => {
@@ -304,6 +302,11 @@ export class Invest extends React.Component {
 
     const weiToSend = await this.calculateWeiToSend()
     console.log('weiToSend:', weiToSend.toFixed())
+
+    if (weiToSend.eq('0')) {
+      this.setState({ loading: false })
+      return noMoreTokensAvailable()
+    }
 
     const opts = {
       from: account,
