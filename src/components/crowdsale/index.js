@@ -142,7 +142,7 @@ export class Crowdsale extends React.Component {
   }
 
   render() {
-    const { web3Store, tokenStore, crowdsalePageStore, crowdsaleStore } = this.props
+    const { web3Store, tokenStore, crowdsalePageStore } = this.props
     const { web3 } = web3Store
 
     const crowdsaleExecID = getContractStoreProperty('crowdsale','execID')

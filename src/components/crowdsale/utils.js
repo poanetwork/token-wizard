@@ -251,3 +251,20 @@ export const getContractStoreProperty = (contract, property) => {
   const text = contractStore && contractStore[contract] && contractStore[contract][property]
   return text === undefined ? '' : text
 }
+
+export const getUserLimits = async (addr, execID, target, account) => {
+  const { methods } =  await attachToSpecificCrowdsaleContract(target)
+  if (crowdsaleStore.isMintedCappedCrowdsale) {
+    const currentTier = await methods.getCurrentTierInfo(addr, execID).call()
+
+    if (!currentTier['whitelist_enabled']) return Promise.resolve(null)
+
+    return await methods.getWhitelistStatus(addr, execID, currentTier['tier_index'], account).call()
+  } else if (crowdsaleStore.isDutchAuction) {
+    const crowdsaleWhitelist = await methods.getCrowdsaleWhitelist(addr, execID).call()
+
+    if (crowdsaleWhitelist['num_whitelisted'] == 0) return Promise.resolve(null)
+
+    return await methods.getWhitelistStatus(addr, execID, account).call()
+  }
+}
