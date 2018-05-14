@@ -286,9 +286,11 @@ export class Invest extends React.Component {
     console.log('tokensToInvest:', tokensToInvest.toFixed())
 
     const initTarget = `initCrowdsale${this.props.crowdsaleStore.contractTargetSuffix}`
-    const { max_spend_remaining } = await getUserLimits(addr, execID, initTarget, account)
-    const maxSpendRemaining = toBigNumber(max_spend_remaining)
+    const userLimits = await getUserLimits(addr, execID, initTarget, account)
 
+    if (userLimits === null) return tokensToInvest
+
+    const maxSpendRemaining = toBigNumber(userLimits['max_spend_remaining'])
     return tokensToInvest.gt(maxSpendRemaining) ? maxSpendRemaining : tokensToInvest
   }
 
