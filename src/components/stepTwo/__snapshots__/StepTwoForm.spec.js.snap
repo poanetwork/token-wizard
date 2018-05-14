@@ -471,9 +471,11 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
           className="plus-button-container"
         >
           <div
-            className="button button_fill button_fill_plus"
+            className="button button_fill button_no_icon"
             onClick={[Function]}
-          />
+          >
+            Submit
+          </div>
         </div>
       </div>
       <div
