@@ -114,18 +114,16 @@ export class Crowdsale extends React.Component {
   }
 
   getFullCrowdsaleData = (initCrowdsaleContract, crowdsaleExecID, account) => {
-    let whenTokenData = getTokenData(initCrowdsaleContract, crowdsaleExecID, account)
-    let whenCrowdsaleData = getCrowdsaleData(initCrowdsaleContract, crowdsaleExecID, account)
-
-    return Promise.all([whenTokenData, whenCrowdsaleData])
-      .then(() => initializeAccumulativeData())
-      .then(() => {
-        this.setState({ loading: false })
-      })
-      .catch(err => {
-        this.setState({ loading: false })
-        console.log(err)
-      })
+    return getTokenData(initCrowdsaleContract, crowdsaleExecID, account)
+    .then(() => getCrowdsaleData(initCrowdsaleContract, crowdsaleExecID, account))
+    .then(() => initializeAccumulativeData())
+    .then(() => {
+      this.setState({ loading: false })
+    })
+    .catch(err => {
+      this.setState({ loading: false })
+      console.log(err)
+    })
   }
 
   goToInvestPage = () => {

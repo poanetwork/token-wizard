@@ -38,6 +38,7 @@ import { BigNumber } from 'bignumber.js'
 import { Form } from 'react-final-form'
 import { InvestForm } from './InvestForm'
 import { generateContext } from '../stepFour/utils'
+import { toJS } from 'mobx'
 
 @inject(
   'contractStore',
@@ -146,19 +147,16 @@ export class Invest extends React.Component {
         attachToSpecificCrowdsaleContract(target)
           .then((initCrowdsaleContract) => {
             initializeAccumulativeData()
-            .then(() => {
-              let whenTokenData = getTokenData(initCrowdsaleContract, crowdsaleExecID, account)
-              let whenCrowdsaleData = getCrowdsaleData(initCrowdsaleContract, crowdsaleExecID, account, crowdsaleStore)
-              return Promise.all([whenTokenData, whenCrowdsaleData])
+            .then(() => getTokenData(initCrowdsaleContract, crowdsaleExecID, account))
+            .then(() => getCrowdsaleData(initCrowdsaleContract, crowdsaleExecID, account, crowdsaleStore))
+            .then(() => getCrowdsaleTargetDates(initCrowdsaleContract, crowdsaleExecID))
+            .then(() => this.checkIsFinalized(initCrowdsaleContract, crowdsaleExecID))
+            .then(() => this.setTimers())
+            .catch(err => {
+              this.setState({ loading: false })
+              console.log(err)
             })
-              .then(() => getCrowdsaleTargetDates(initCrowdsaleContract, crowdsaleExecID))
-              .then(() => this.checkIsFinalized(initCrowdsaleContract, crowdsaleExecID))
-              .then(() => this.setTimers())
-              .catch(err => {
-                this.setState({ loading: false })
-                console.log(err)
-              })
-              .then(() => this.setState({ loading: false }))
+            .then(() => this.setState({ loading: false }))
           })
           .catch(err => {
             this.setState({ loading: false })
@@ -277,46 +275,63 @@ export class Invest extends React.Component {
   }
 
   investToTokensForWhitelistedCrowdsaleInternal = (account) => {
-    const { tokenStore, crowdsalePageStore, investStore, generalStore, crowdsaleStore } = this.props
+    const { tokenStore, crowdsalePageStore, investStore, generalStore, crowdsaleStore, contractStore } = this.props
+    const { crowdsaleExecID } = this.state
 
-    const decimals = new BigNumber(tokenStore.decimals)
-    console.log('decimals:', decimals.toFixed())
-
-    const rate = new BigNumber(crowdsalePageStore.rate) //it is from contract. It is already in wei. How much 1 token costs in wei.
-    console.log('rate:', rate.toFixed())
-
-    const tokensToInvest = new BigNumber(investStore.tokensToInvest)
-    console.log('tokensToInvest:', tokensToInvest.toFixed())
-
-    const weiToSend = tokensToInvest.multipliedBy(rate).integerValue(BigNumber.ROUND_CEIL)
-    console.log('weiToSend:', weiToSend)
-
-    const opts = {
-      from: account,
-      value: weiToSend,
-      gasPrice: generalStore.gasPrice
-    }
-    console.log(opts)
-
-    let methodInterface = ["bytes"];
-
-    const targetPrefix = "crowdsaleBuyTokens"
+    const targetPrefix = "initCrowdsale"
     const targetSuffix = crowdsaleStore.contractTargetSuffix
     const target = `${targetPrefix}${targetSuffix}`
 
-    let paramsToExec = [weiToSend, methodInterface]
-    const method = methodToExec("scriptExec", `buy(${methodInterface.join(',')})`, target, this.getBuyParams, paramsToExec)
+    let registryStorageObj = toJS(contractStore.registryStorage)
 
-    method.estimateGas(opts)
-      .then(estimatedGas => {
-        console.log("estimatedGas:",estimatedGas)
-        opts.gasLimit = calculateGasLimit(estimatedGas)
-        return sendTXToContract(method.send(opts))
+    attachToSpecificCrowdsaleContract(target)
+      .then((initCrowdsaleContract) => {
+        const { methods } = initCrowdsaleContract
+        return crowdsaleStore.isMintedCappedCrowdsale ? methods.getCurrentTierInfo(registryStorageObj.addr, crowdsaleExecID).call() : methods.getCrowdsaleStatus(registryStorageObj.addr, crowdsaleExecID).call()
       })
-      .then(() => successfulInvestmentAlert(investStore.tokensToInvest))
-      .catch(err => toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED }))
-      .then(() => this.setState({ loading: false }))
-      .catch((err) => console.log)
+      .then((currentTierInfo) => {
+        if (crowdsaleStore.isMintedCappedCrowdsale) {
+          crowdsalePageStore.setProperty('rate', Number(currentTierInfo.tier_price).toFixed()) //should be one token in wei
+        } else if (crowdsaleStore.isDutchAuction) {
+          crowdsalePageStore.setProperty('rate', Number(currentTierInfo.current_rate).toFixed()) //should be one token in wei
+        }
+
+        const rate = new BigNumber(crowdsalePageStore.rate) //it is from contract. It is already in wei. How much 1 token costs in wei.
+        console.log('rate:', rate.toFixed())
+
+        const tokensToInvest = new BigNumber(investStore.tokensToInvest)
+        console.log('tokensToInvest:', tokensToInvest.toFixed())
+
+        const weiToSend = tokensToInvest.multipliedBy(rate).integerValue(BigNumber.ROUND_CEIL)
+        console.log('weiToSend:', weiToSend)
+
+        const opts = {
+          from: account,
+          value: weiToSend,
+          gasPrice: generalStore.gasPrice
+        }
+        console.log(opts)
+
+        let methodInterface = ["bytes"];
+
+        const targetPrefix = "crowdsaleBuyTokens"
+        const targetSuffix = crowdsaleStore.contractTargetSuffix
+        const target = `${targetPrefix}${targetSuffix}`
+
+        let paramsToExec = [weiToSend, methodInterface]
+        const method = methodToExec("scriptExec", `buy(${methodInterface.join(',')})`, target, this.getBuyParams, paramsToExec)
+
+        method.estimateGas(opts)
+          .then(estimatedGas => {
+            console.log("estimatedGas:",estimatedGas)
+            opts.gasLimit = calculateGasLimit(estimatedGas)
+            return sendTXToContract(method.send(opts))
+          })
+          .then(() => successfulInvestmentAlert(investStore.tokensToInvest))
+          .catch(err => toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED }))
+          .then(() => this.setState({ loading: false }))
+          .catch((err) => console.log)
+      })
   }
 
   txMinedCallback(txHash, receipt) {
