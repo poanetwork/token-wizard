@@ -23,7 +23,6 @@ import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
 import {
   invalidCrowdsaleAddrAlert,
   investmentDisabledAlertInTime, noGasPriceAvailable,
-  noMetaMaskAlert,
   MetaMaskIsLockedAlert,
   successfulInvestmentAlert,
   noMoreTokensAvailable
@@ -79,7 +78,7 @@ export class Invest extends React.Component {
   }
 
   componentDidMount () {
-    const { web3Store, gasPriceStore, generalStore, contractStore, crowdsaleStore } = this.props
+    const { web3Store, gasPriceStore, generalStore, crowdsaleStore } = this.props
     const { web3 } = web3Store
 
     if (!web3) {
@@ -149,19 +148,16 @@ export class Invest extends React.Component {
         attachToSpecificCrowdsaleContract(target)
           .then((initCrowdsaleContract) => {
             initializeAccumulativeData()
-            .then(() => {
-              let whenTokenData = getTokenData(initCrowdsaleContract, crowdsaleExecID, account)
-              let whenCrowdsaleData = getCrowdsaleData(initCrowdsaleContract, crowdsaleExecID, account, crowdsaleStore)
-              return Promise.all([whenTokenData, whenCrowdsaleData])
+            .then(() => getTokenData(initCrowdsaleContract, crowdsaleExecID, account))
+            .then(() => getCrowdsaleData(initCrowdsaleContract, crowdsaleExecID, account, crowdsaleStore))
+            .then(() => getCrowdsaleTargetDates(initCrowdsaleContract, crowdsaleExecID))
+            .then(() => this.checkIsFinalized(initCrowdsaleContract, crowdsaleExecID))
+            .then(() => this.setTimers())
+            .catch(err => {
+              this.setState({ loading: false })
+              console.log(err)
             })
-              .then(() => getCrowdsaleTargetDates(initCrowdsaleContract, crowdsaleExecID))
-              .then(() => this.checkIsFinalized(initCrowdsaleContract, crowdsaleExecID))
-              .then(() => this.setTimers())
-              .catch(err => {
-                this.setState({ loading: false })
-                console.log(err)
-              })
-              .then(() => this.setState({ loading: false }))
+            .then(() => this.setState({ loading: false }))
           })
           .catch(err => {
             this.setState({ loading: false })
@@ -273,18 +269,33 @@ export class Invest extends React.Component {
     let context = generateContext(weiToSend);
     let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [context]);
     return encodedParameters;
-    //return context;
   }
 
   calculateWeiToSend = async () => {
+    const { crowdsalePageStore, crowdsaleStore, contractStore, investStore } = this.props
     const { execID, account } = this.props.contractStore.crowdsale
-    const { addr } = toJS(this.props.contractStore.registryStorage)
+    const { addr } = toJS(contractStore.registryStorage)
+
+    const targetPrefix = "initCrowdsale"
+    const targetSuffix = crowdsaleStore.contractTargetSuffix
+    const target = `${targetPrefix}${targetSuffix}`
+
+    const initCrowdsaleContract = await attachToSpecificCrowdsaleContract(target)
+    const { methods } = initCrowdsaleContract
+
+    const  currentTierInfo = crowdsaleStore.isMintedCappedCrowdsale ? await methods.getCurrentTierInfo(addr, execID).call() : await methods.getCrowdsaleStatus(addr, execID).call()
+    console.log("currentTierInfo:", currentTierInfo)
+    if (crowdsaleStore.isMintedCappedCrowdsale) {
+      crowdsalePageStore.setProperty('rate', Number(currentTierInfo.tier_price).toFixed()) //should be one token in wei
+    } else if (crowdsaleStore.isDutchAuction) {
+      crowdsalePageStore.setProperty('rate', Number(currentTierInfo.current_rate).toFixed()) //should be one token in wei
+    }
 
     // rate is from contract. It is already in wei. How much 1 token costs in wei.
-    const rate = toBigNumber(this.props.crowdsalePageStore.rate)
+    const rate = toBigNumber(crowdsalePageStore.rate)
     console.log('rate:', rate.toFixed())
 
-    const tokensToInvest = toBigNumber(this.props.investStore.tokensToInvest).times(rate).integerValue(BigNumber.ROUND_CEIL)
+    const tokensToInvest = toBigNumber(investStore.tokensToInvest).times(rate).integerValue(BigNumber.ROUND_CEIL)
     console.log('tokensToInvest:', tokensToInvest.toFixed())
 
     const initTarget = `initCrowdsale${this.props.crowdsaleStore.contractTargetSuffix}`
@@ -294,14 +305,11 @@ export class Invest extends React.Component {
   }
 
   investToTokensForWhitelistedCrowdsaleInternal = async () => {
-    const { tokenStore, generalStore, crowdsaleStore, contractStore, crowdsalePageStore } = this.props
+    const { generalStore, crowdsaleStore, contractStore, crowdsalePageStore } = this.props
     const { account } = contractStore.crowdsale
 
-    const decimals = new BigNumber(tokenStore.decimals)
-    console.log('decimals:', decimals.toFixed())
-
     const weiToSend = await this.calculateWeiToSend()
-    console.log('weiToSend:', weiToSend.toFixed())
+    console.log('weiToSend:', weiToSend)
 
     if (weiToSend.eq('0')) {
       this.setState({ loading: false })

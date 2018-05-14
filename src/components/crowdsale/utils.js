@@ -78,7 +78,7 @@ export let getCrowdsaleData = (initCrowdsaleContract, execID, account) => {
     let getTokensSold = initCrowdsaleContract.methods.getTokensSold(registryStorageObj.addr, execID).call();
     let getContributors = initCrowdsaleContract.methods.getCrowdsaleUniqueBuyers(registryStorageObj.addr, execID).call();
 
-    let getCurrentTierInfo = crowdsaleStore.isMintedCappedCrowdsale? initCrowdsaleContract.methods.getCurrentTierInfo(registryStorageObj.addr, execID).call() : null;
+    let getCurrentTierInfo = crowdsaleStore.isMintedCappedCrowdsale ? initCrowdsaleContract.methods.getCurrentTierInfo(registryStorageObj.addr, execID).call() : null;
     let getCrowdsaleMaxRaise = crowdsaleStore.isMintedCappedCrowdsale ? initCrowdsaleContract.methods.getCrowdsaleMaxRaise(registryStorageObj.addr, execID).call() : null;
 
     let getCrowdsaleStartAndEndTimes = crowdsaleStore.isDutchAuction ? initCrowdsaleContract.methods.getCrowdsaleStartAndEndTimes(registryStorageObj.addr, execID).call() : null;
@@ -134,10 +134,13 @@ export let getCrowdsaleData = (initCrowdsaleContract, execID, account) => {
         } else if (crowdsaleStore.isDutchAuction) {
           crowdsalePageStore.setProperty('rate', Number(crowdsaleStatus.current_rate).toFixed()) //should be one token in wei
           crowdsalePageStore.setProperty('maximumSellableTokens', toBigNumber(isCrowdsaleFull.max_sellable).toFixed())
-          let remainingETH = toBigNumber(crowdsaleStatus.current_rate) > 0 ? parseInt((toBigNumber(crowdsaleStatus.tokens_remaining)).div(toBigNumber(crowdsaleStatus.current_rate)), 10) : 0
-          console.log("remainingETH:",remainingETH)
-          let maximumSellableTokensInETH = (toBigNumber(crowdsaleInfo.wei_raised)).plus(remainingETH).toFixed()
-          let maximumSellableTokensInWei = web3.utils.toWei(maximumSellableTokensInETH, 'ether')
+
+          let curRateBN = (toBigNumber(crowdsaleStatus.current_rate))//.multipliedBy(`1e18`) //one token in wei
+          let tokenRemainingBN = toBigNumber(crowdsaleStatus.tokens_remaining)
+          let remainingWEI = curRateBN > 0 ? (tokenRemainingBN.div(`1e${tokenStore.decimals}`).multipliedBy(curRateBN)).integerValue(BigNumber.ROUND_CEIL) : 0
+          console.log("remainingWEI:",remainingWEI)
+          let maximumSellableTokensInWei = (toBigNumber(crowdsaleInfo.wei_raised)).plus(remainingWEI).toFixed()
+          let maximumSellableTokensInETH = web3.utils.fromWei(maximumSellableTokensInWei, 'ether')
           console.log("maximumSellableTokensInETH:", maximumSellableTokensInETH)
           console.log("maximumSellableTokensInWei:", maximumSellableTokensInWei)
           crowdsalePageStore.setProperty('maximumSellableTokensInWei', maximumSellableTokensInWei)
