@@ -249,7 +249,7 @@ export function reservedTokensImported(count) {
 export function noMoreTokensAvailable() {
   return sweetAlert2({
     title: 'No more tokens available',
-    html: `You're not able to buy more tokens. You have bought your maximum allowed or tier has reached it's hard cap`,
+    html: `You're not able to buy more tokens. You have bought your maximum allowed or tier has reached its hard cap`,
     type: 'info'
   })
 }
