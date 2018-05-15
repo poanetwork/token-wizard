@@ -283,12 +283,15 @@ export class Invest extends React.Component {
     const initCrowdsaleContract = await attachToSpecificCrowdsaleContract(target)
     const { methods } = initCrowdsaleContract
 
-    const  currentTierInfo = crowdsaleStore.isMintedCappedCrowdsale ? await methods.getCurrentTierInfo(addr, execID).call() : await methods.getCrowdsaleStatus(addr, execID).call()
-    console.log("currentTierInfo:", currentTierInfo)
     if (crowdsaleStore.isMintedCappedCrowdsale) {
-      crowdsalePageStore.setProperty('rate', Number(currentTierInfo.tier_price).toFixed()) //should be one token in wei
+      const { tier_price } = await methods.getCurrentTierInfo(addr, execID).call()
+      console.log('tier_price:', tier_price)
+      crowdsalePageStore.setProperty('rate', tier_price) //should be one token in wei
+
     } else if (crowdsaleStore.isDutchAuction) {
-      crowdsalePageStore.setProperty('rate', Number(currentTierInfo.current_rate).toFixed()) //should be one token in wei
+      const { current_rate } = await methods.getCrowdsaleStatus(addr, execID).call()
+      console.log('current_rate:', current_rate)
+      crowdsalePageStore.setProperty('rate', current_rate) //should be one token in wei
     }
 
     // rate is from contract. It is already in wei. How much 1 token costs in wei.
@@ -309,7 +312,7 @@ export class Invest extends React.Component {
     const { account } = contractStore.crowdsale
 
     const weiToSend = await this.calculateWeiToSend()
-    console.log('weiToSend:', weiToSend)
+    console.log('weiToSend:', weiToSend.toFixed())
 
     if (weiToSend.eq('0')) {
       this.setState({ loading: false })

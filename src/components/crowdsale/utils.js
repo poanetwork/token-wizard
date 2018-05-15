@@ -254,14 +254,32 @@ export const getContractStoreProperty = (contract, property) => {
 
 export const getUserLimits = async (addr, execID, target, account) => {
   const { methods } =  await attachToSpecificCrowdsaleContract(target)
-  const currentTierInfo = await methods.getCurrentTierInfo(addr, execID).call()
-  const { whitelist_enabled, tier_tokens_remaining, tier_price, tier_index } = currentTierInfo
-  const tierTokensRemaining = toBigNumber(tier_tokens_remaining).times(tier_price).integerValue(BigNumber.ROUND_CEIL)
 
-  if (!whitelist_enabled) return tierTokensRemaining
+  if (crowdsaleStore.isMintedCappedCrowdsale) {
+    const { getCurrentTierInfo, getWhitelistStatus } = methods
+    const { whitelist_enabled, tier_tokens_remaining, tier_price, tier_index } = await getCurrentTierInfo(addr, execID).call()
 
-  const { max_spend_remaining } = await methods.getWhitelistStatus(addr, execID, tier_index, account).call()
-  const maxSpendRemaining = toBigNumber(max_spend_remaining)
+    const tierTokensRemaining = toBigNumber(tier_tokens_remaining).times(tier_price).integerValue(BigNumber.ROUND_CEIL)
 
-  return tierTokensRemaining.lt(maxSpendRemaining) ? tierTokensRemaining : maxSpendRemaining
+    if (!whitelist_enabled) return tierTokensRemaining
+
+    const { max_spend_remaining } = await getWhitelistStatus(addr, execID, tier_index, account).call()
+    const maxSpendRemaining = toBigNumber(max_spend_remaining)
+
+    return tierTokensRemaining.lt(maxSpendRemaining) ? tierTokensRemaining : maxSpendRemaining
+
+  } else if (crowdsaleStore.isDutchAuction) {
+    const { getCrowdsaleWhitelist, getCrowdsaleStatus, getWhitelistStatus } = methods
+    const { num_whitelisted } = await getCrowdsaleWhitelist(addr, execID).call()
+    const { current_rate, tokens_remaining } = await getCrowdsaleStatus(addr, execID).call()
+
+    const crowdsaleTokensRemaining = toBigNumber(tokens_remaining).times(current_rate).integerValue(BigNumber.ROUND_CEIL)
+
+    if (num_whitelisted === '0') return crowdsaleTokensRemaining
+
+    const { max_spend_remaining } = await getWhitelistStatus(addr, execID, account).call()
+    const maxSpendRemaining = toBigNumber(max_spend_remaining)
+
+    return crowdsaleTokensRemaining.lt(maxSpendRemaining) ? crowdsaleTokensRemaining : maxSpendRemaining
+  }
 }
