@@ -1,6 +1,7 @@
 import React from 'react'
 import { Field } from 'react-final-form'
 import { InputField2 } from './InputField2'
+import { WhitelistInputBlock } from './WhitelistInputBlock'
 import {
   composeValidators,
   isDateInFuture,
@@ -130,6 +131,16 @@ export const DutchAuctionBlock = ({ fields, ...props }) => {
               />
             </div>
           </div>
+          {
+            props.tierStore.tiers[0].whitelistEnabled === 'yes' ? (
+              <div>
+                <div className="section-title">
+                  <p className="title">Whitelist</p>
+                </div>
+                <WhitelistInputBlock num={index} decimals={props.decimals} />
+              </div>
+            ) : null
+          }
         </div>
       ))}
     </div>

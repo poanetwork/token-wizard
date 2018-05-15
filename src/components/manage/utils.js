@@ -116,7 +116,7 @@ const updateMintedCappedCrowdsaleDurationParams = (tierIndex, duration, methodIn
   return encodedParameters;
 }
 
-const parseReservedTokenValue = (value, decimals) => toBigNumber(value).div(`1e${decimals}`).toFixed()
+/*const parseReservedTokenValue = (value, decimals) => toBigNumber(value).div(`1e${decimals}`).toFixed()
 
 const buildReservedTokenInfo = ([tokensInfo, addresses, decimals]) => addresses.map((address, index) => {
   const info = []
@@ -154,7 +154,7 @@ const getReservedTokensData = (methods, length, decimals) => {
     .then((reservedTokensInfo) => Promise.all([reservedTokensInfo, Promise.all(whenReservedTokensAddresses), decimals]))
     .then(buildReservedTokenInfo)
     .then(addresses => [].concat.apply([], addresses))
-}
+}*/
 
 const updateDutchAuctionDurationParams = (startTime, duration, methodInterface) => {
   console.log(startTime, duration)

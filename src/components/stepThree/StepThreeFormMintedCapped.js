@@ -11,14 +11,13 @@ import {
   isAddress,
   isDecimalPlacesNotGreaterThan,
   isGreaterOrEqualThan,
-  isLessOrEqualThan,
   isNonNegative,
 } from '../../utils/validations'
-import { TEXT_FIELDS, VALIDATION_TYPES } from '../../utils/constants'
+import { TEXT_FIELDS, VALIDATION_TYPES, VALIDATION_MESSAGES, DESCRIPTION } from '../../utils/constants'
 import { TierBlock } from '../Common/TierBlock'
 
 const { VALID } = VALIDATION_TYPES
-const { MINCAP, WALLET_ADDRESS } = TEXT_FIELDS
+const { MINCAP, WALLET_ADDRESS, ENABLE_WHITELISTING } = TEXT_FIELDS
 
 const inputErrorStyle = {
   color: 'red',
@@ -69,8 +68,7 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
           <div className="about-step">
             <div className="step-icons step-icons_crowdsale-setup"/>
             <p className="title">Crowdsale setup</p>
-            <p className="description">The most important and exciting part of the crowdsale process. Here you can
-              define parameters of your crowdsale campaign.</p>
+            <p className="description">{DESCRIPTION.CROWDSALE_SETUP}</p>
           </div>
           <div className="section-title">
             <p className="title">Global settings</p>
@@ -83,8 +81,7 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
               errorStyle={inputErrorStyle}
               side="left"
               label={WALLET_ADDRESS}
-              description="Where the money goes after investors transactions. Immediately after each transaction. We
-                        recommend to setup a multisig wallet with hardware based signers."
+              description={DESCRIPTION.WALLET}
             />
 
             <Field
@@ -93,8 +90,8 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
               side="right"
               gasPrices={props.gasPricesInGwei}
               validate={(value) => composeValidators(
-                isDecimalPlacesNotGreaterThan("Should not have more than 9 decimals")(9),
-                isGreaterOrEqualThan("Should be greater than 0.1")(0.1)
+                isDecimalPlacesNotGreaterThan(VALIDATION_MESSAGES.DECIMAL_PLACES_9)(9),
+                isGreaterOrEqualThan(VALIDATION_MESSAGES.NUMBER_GREATER_THAN)(0.1)
               )(value.price)}
             />
           </div>
@@ -111,14 +108,13 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
               type="number"
               side="left"
               label={MINCAP}
-              description="Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1
-               and a user already has 1 token from a previous transaction, they can buy any amount they want."
+              description={DESCRIPTION.MIN_CAP}
             />
             <Field
               name="whitelistEnabled"
               render={({ input }) => (
                 <div className='right'>
-                  <label className="label">Enable whitelisting</label>
+                  <label className="label">{ENABLE_WHITELISTING}</label>
                   <div className='radios-inline'>
                     <label className='radio-inline'>
                       <input
@@ -139,8 +135,7 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
                       <span className='title'>no</span>
                     </label>
                   </div>
-                  <p className='description'>Enables whitelisting. If disabled, anyone can participate in the
-                    crowdsale.</p>
+                  <p className='description'>{DESCRIPTION.ENABLE_WHITELIST}</p>
                 </div>
               )}
             />
