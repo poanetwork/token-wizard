@@ -610,12 +610,21 @@ export const createCrowdsaleTiers = () => {
 const getWhitelistsParams = (tierIndex, addrs, minCaps, maxCaps, methodInterface) => {
   const { web3 } = web3Store
 
-  let paramsWhitelist = [
-    tierIndex,
+  const commonParams = [
     addrs,
     minCaps,
     maxCaps
   ]
+
+  let paramsWhitelist
+  if (crowdsaleStore.isMintedCappedCrowdsale) {
+    paramsWhitelist = [
+      tierIndex, ...commonParams
+    ]
+  } else if (crowdsaleStore.isDutchAuction) {
+    paramsWhitelist = commonParams
+  }
+
   console.log("paramsWhitelist:", paramsWhitelist)
 
   let context = generateContext(0);
@@ -627,7 +636,6 @@ export const addWhitelist = () => {
   return tierStore.tiers.map((tier, index) => {
     return () => {
       console.log('###addWhitelist:###')
-      //const round = index
 
       let whitelist = []
       whitelist.push.apply(whitelist, tier.whitelist)
@@ -643,8 +651,13 @@ export const addWhitelist = () => {
       let maxCaps = []
 
       const { web3 } = web3Store
-      const { rate } = tierStore.tiers[index]
-      const rateBN = new BigNumber(rate)
+      const { rate,  minRate } = tierStore.tiers[index]
+      let rateBN
+      if (crowdsaleStore.isMintedCappedCrowdsale) {
+        rateBN = new BigNumber(rate)
+      } else if (crowdsaleStore.isDutchAuction) {
+        rateBN = new BigNumber(minRate)
+      }
       const oneTokenInETH = rateBN.pow(-1).toFixed()
       const oneTokenInWEI = web3.utils.toWei(oneTokenInETH, 'ether')
 
