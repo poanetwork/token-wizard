@@ -1,7 +1,11 @@
 language: node_js
 node_js:
   - "8"
-
+env:
+  - TEST_SUITE=contractMintedCappedCrowdsale
+  - TEST_SUITE=contractDutchAuction
+  - TEST_SUITE=e2eMintedCappedCrowdsale
+  - TEST_SUITE=e2etDutchAuction
 install:
   - npm install
 
@@ -19,7 +23,10 @@ before_script:
 
 script:
   - npm run lint
-  - npm test
+  - if [ $TEST_SUITE == 'contractMintedCappedCrowdsale' ]; then npm run testContractsMintedCappedCrowdsale; fi
+  - if [ $TEST_SUITE == 'contractDutchAuction' ]; then npm run testContractsDutchAuction ; fi
+  - if [ $TEST_SUITE == 'e2eMintedCappedCrowdsale' ]; then npm run e2eMintedCappedCrowdsale ; fi
+  - if [ $TEST_SUITE == 'e2etDutchAuction' ]; then npm run e2eDutchAuction; fi
   - npm run coveralls
 
 after_script:

@@ -78,29 +78,28 @@ module.exports = {
     },
     test: {
       default: series(
-        'nps test.DutchAuction',
-        'nps test.MintedCappedCrowdsale',
+
       ),
       MintedCappedCrowdsale: series(
+        'nps build',
         'bash ./scripts/start_ganache.sh',
         'cd ./submodules/auth-os-applications/',
         'cd ./TokenWizard/crowdsale/MintedCappedCrowdsale/',
-        'npm install',
-        'node_modules/.bin/truffle migrate --network development',
-        'node_modules/.bin/truffle test --network development',
+        'truffle compile',
+        'truffle migrate -network development',
+        'truffle test -network development',
         'cd ../../../../../',
-        //'nps test.e2e'
-        'bash ./scripts/stop_ganache.sh',
+        'bash ./scripts/stop_ganache.sh'
       ),
       DutchAuction: series(
+        'nps build',
         'bash ./scripts/start_ganache.sh',
         'cd ./submodules/auth-os-applications/',
         'cd ./TokenWizard/crowdsale/DutchCrowdsale/',
-        'npm install',
-        'node_modules/.bin/truffle migrate --network development',
-        'node_modules/.bin/truffle test --network development',
+        'truffle compile',
+        'truffle migrate --network development',
+        'truffle test --network development',
         'cd ../../../../../',
-        //'nps test.e2e'
         'bash ./scripts/stop_ganache.sh',
       ),
       e2e: {
@@ -112,13 +111,45 @@ module.exports = {
           'npm run test1'
         ),
         prepare: series(
-          'nps contracts',
+          'bash ./scripts/start_ganache.sh',
+          'cd ./submodules/auth-os-applications/',
+          'git checkout e2e',
+          'ls'
+        ),
+        start: 'PORT=3000 BROWSER=none node scripts/start.js &',
+        MintedCappedCrowdsale: series(
+          'nps build',
+          'bash ./scripts/start_ganache.sh',
+          'cd ./submodules/auth-os-applications/',
+          'git checkout e2e',
+          'cd ./TokenWizard/crowdsale/MintedCappedCrowdsale/',
+          'truffle compile',
+          'truffle migrate --network development',
+          'truffle test --network development',
+          'cp .env ../../../../../.env',
+          'cd ../../../../../',
+          'npm start',
           'cd submodules/token-wizard-test-automation',
           'npm i',
-          'npm run e2e-deployRegistry',
-          'cp .env ../../.env'
+          'npm run e2eMinted',
+          'bash ./scripts/stop_ganache.sh'
         ),
-        start: 'PORT=3000 BROWSER=none node scripts/start.js &'
+        DutchAuction: series(
+          'nps build',
+          'bash ./scripts/start_ganache.sh',
+          'cd ./submodules/auth-os-applications/',
+          'cd ./TokenWizard/crowdsale/DutchCrowdsale/',
+          'truffle compile',
+          'truffle migrate --network development',
+          'truffle test --network development',
+          'cp .env ../../../../../.env',
+          'cd ../../../../../',
+          'npm start',
+          'cd submodules/token-wizard-test-automation',
+          'npm i',
+          'npm run e2eDutch',
+          'bash ./scripts/stop_ganache.sh'
+        ),
       }
     }
   }
