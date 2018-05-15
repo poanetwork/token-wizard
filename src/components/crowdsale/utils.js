@@ -132,10 +132,10 @@ export let getCrowdsaleData = (initCrowdsaleContract, execID, account) => {
           crowdsalePageStore.setProperty('maximumSellableTokens', toBigNumber(crowdsaleMaxRaise.total_sell_cap).toFixed())
           crowdsalePageStore.setProperty('maximumSellableTokensInWei', toBigNumber(crowdsaleMaxRaise.wei_raise_cap).toFixed())
         } else if (crowdsaleStore.isDutchAuction) {
-          crowdsalePageStore.setProperty('rate', Number(crowdsaleStatus.current_rate).toFixed()) //should be one token in wei
+          crowdsalePageStore.setProperty('rate', Number(chooseRateForDutchAuction(crowdsaleStatus)).toFixed()) //should be one token in wei
           crowdsalePageStore.setProperty('maximumSellableTokens', toBigNumber(isCrowdsaleFull.max_sellable).toFixed())
 
-          let curRateBN = (toBigNumber(crowdsaleStatus.current_rate))//.multipliedBy(`1e18`) //one token in wei
+          let curRateBN = toBigNumber(chooseRateForDutchAuction(crowdsaleStatus)) //one token in wei
           let tokenRemainingBN = toBigNumber(crowdsaleStatus.tokens_remaining)
           let remainingWEI = curRateBN > 0 ? (tokenRemainingBN.div(`1e${tokenStore.decimals}`).multipliedBy(curRateBN)).integerValue(BigNumber.ROUND_CEIL) : 0
           console.log("remainingWEI:",remainingWEI)
@@ -156,6 +156,14 @@ export let getCrowdsaleData = (initCrowdsaleContract, execID, account) => {
       })
       .catch(reject)
   })
+}
+
+function chooseRateForDutchAuction(crowdsaleStatus) {
+  const curRate = crowdsaleStatus.current_rate
+  const startRate = crowdsaleStatus.start_rate
+  const endRate = crowdsaleStatus.end_rate
+  const timeRemaining = crowdsaleStatus.time_remaining
+  return Number(curRate) > 0 ? curRate : Number(timeRemaining) > 0 ? startRate : endRate
 }
 
 export function initializeAccumulativeData() {
