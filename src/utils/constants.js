@@ -138,6 +138,8 @@ export const VALIDATION_MESSAGES = {
   DATE_IS_LATER: 'Should be later than specified time',
   DATE_IS_SAME_OR_PREVIOUS: 'Should be same or previous than specified time',
   PATTERN: 'Should match the specified pattern',
+  DECIMAL_PLACES_9: 'Should not have more than 9 decimals',
+  NUMBER_GREATER_THAN: 'Should be greater than 0.1'
 }
 
 //descriptions of input fields
@@ -152,7 +154,14 @@ export const DESCRIPTION = {
   RATE: `Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens`,
   SUPPLY: `How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers`,
   SUPPLY_DUTCH_AUCTION: `How many tokens will be sold on crowdsale`,
-  TOKEN_SUPPLY: `The total supply of the token`
+  TOKEN_SUPPLY: `The total supply of the token`,
+  MIN_CAP: `Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1
+               and a user already has 1 token from a previous transaction, they can buy any amount they want.`,
+  ENABLE_WHITELIST: `Enables whitelisting. If disabled, anyone can participate in the crowdsale.`,
+  WALLET: `Where the money goes after investors transactions. Immediately after each transaction. We
+                        recommend to setup a multisig wallet with hardware based signers.`,
+  CROWDSALE_SETUP: `The most important and exciting part of the crowdsale process. Here you can
+              define parameters of your crowdsale campaign.`
 }
 
 export const TEXT_FIELDS = {
