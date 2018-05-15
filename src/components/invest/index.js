@@ -280,8 +280,7 @@ export class Invest extends React.Component {
     const targetSuffix = crowdsaleStore.contractTargetSuffix
     const target = `${targetPrefix}${targetSuffix}`
 
-    const initCrowdsaleContract = await attachToSpecificCrowdsaleContract(target)
-    const { methods } = initCrowdsaleContract
+    const { methods } = await attachToSpecificCrowdsaleContract(target)
 
     if (crowdsaleStore.isMintedCappedCrowdsale) {
       const { tier_price } = await methods.getCurrentTierInfo(addr, execID).call()
