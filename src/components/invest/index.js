@@ -24,7 +24,8 @@ import {
   invalidCrowdsaleAddrAlert,
   investmentDisabledAlertInTime, noGasPriceAvailable,
   MetaMaskIsLockedAlert,
-  successfulInvestmentAlert
+  successfulInvestmentAlert,
+  noMoreTokensAvailable
 } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
 import { CrowdsaleConfig } from '../Common/config'
@@ -279,15 +280,17 @@ export class Invest extends React.Component {
     const targetSuffix = crowdsaleStore.contractTargetSuffix
     const target = `${targetPrefix}${targetSuffix}`
 
-    const initCrowdsaleContract = await attachToSpecificCrowdsaleContract(target)
-    const { methods } = initCrowdsaleContract
+    const { methods } = await attachToSpecificCrowdsaleContract(target)
 
-    const  currentTierInfo = crowdsaleStore.isMintedCappedCrowdsale ? await methods.getCurrentTierInfo(addr, execID).call() : await methods.getCrowdsaleStatus(addr, execID).call()
-    console.log("currentTierInfo:", currentTierInfo)
     if (crowdsaleStore.isMintedCappedCrowdsale) {
-      crowdsalePageStore.setProperty('rate', Number(currentTierInfo.tier_price).toFixed()) //should be one token in wei
+      const { tier_price } = await methods.getCurrentTierInfo(addr, execID).call()
+      console.log('tier_price:', tier_price)
+      crowdsalePageStore.setProperty('rate', tier_price) //should be one token in wei
+
     } else if (crowdsaleStore.isDutchAuction) {
-      crowdsalePageStore.setProperty('rate', Number(currentTierInfo.current_rate).toFixed()) //should be one token in wei
+      const { current_rate } = await methods.getCrowdsaleStatus(addr, execID).call()
+      console.log('current_rate:', current_rate)
+      crowdsalePageStore.setProperty('rate', current_rate) //should be one token in wei
     }
 
     // rate is from contract. It is already in wei. How much 1 token costs in wei.
@@ -300,10 +303,7 @@ export class Invest extends React.Component {
     const initTarget = `initCrowdsale${this.props.crowdsaleStore.contractTargetSuffix}`
     const userLimits = await getUserLimits(addr, execID, initTarget, account)
 
-    if (userLimits === null) return tokensToInvest
-
-    const maxSpendRemaining = toBigNumber(userLimits['max_spend_remaining'])
-    return tokensToInvest.gt(maxSpendRemaining) ? maxSpendRemaining : tokensToInvest
+    return tokensToInvest.gt(userLimits) ? userLimits : tokensToInvest
   }
 
   investToTokensForWhitelistedCrowdsaleInternal = async () => {
@@ -311,7 +311,12 @@ export class Invest extends React.Component {
     const { account } = contractStore.crowdsale
 
     const weiToSend = await this.calculateWeiToSend()
-    console.log('weiToSend:', weiToSend)
+    console.log('weiToSend:', weiToSend.toFixed())
+
+    if (weiToSend.eq('0')) {
+      this.setState({ loading: false })
+      return noMoreTokensAvailable()
+    }
 
     const opts = {
       from: account,
