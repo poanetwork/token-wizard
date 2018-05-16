@@ -8,18 +8,19 @@ import {
   handleContractsForFile,
   handlerForFile,
   scrollToBottom,
-  setupContractDeployment
+  SUMMARY_FILE_CONTENTS
 } from './utils'
 import { noContractDataAlert, successfulDeployment, skippingTransaction } from '../../utils/alerts'
 import {
   DESCRIPTION,
-  DOWNLOAD_TYPE,
-  SUMMARY_FILE_MINTED_CAPPED_CROWDSALE_CONTENTS,
-  SUMMARY_FILE_DUTCH_AUCTION_CONTENTS,
   NAVIGATION_STEPS,
   TOAST,
+  CROWDSALE_STRATEGIES,
   CROWDSALE_STRATEGIES_DISPLAYNAMES
 } from '../../utils/constants'
+import  {
+  DOWNLOAD_TYPE,
+} from './constants'
 import { toast } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { DisplayField } from '../Common/DisplayField'
@@ -159,6 +160,8 @@ export class stepFour extends React.Component {
     switch (parent) {
       case 'crowdsale':
         return handlerForFile(content, this.props.contractStore[parent])
+      case 'crowdsaleStore':
+        return handlerForFile(content, this.props[parent])
       case 'tierStore':
         index = 'walletAddress' === content.field ? 0 : index
         return handlerForFile(content, this.props[parent].tiers[index])
@@ -176,13 +179,9 @@ export class stepFour extends React.Component {
   downloadCrowdsaleInfo = () => {
     const { contractStore, crowdsaleStore } = this.props
     const zip = new JSZip()
-    let files
-    if (crowdsaleStore.isMintedCappedCrowdsale) {
-      files = SUMMARY_FILE_MINTED_CAPPED_CROWDSALE_CONTENTS.files
-    } else if (crowdsaleStore.isDutchAuction) {
-      files = SUMMARY_FILE_DUTCH_AUCTION_CONTENTS.files
-    }
-    //const tiersCount = isObservableArray(this.props.tierStore.tiers) ? this.props.tierStore.tiers.length : 1
+    const fileContents = SUMMARY_FILE_CONTENTS(contractStore.crowdsale.networkID)
+    let files = fileContents.files
+    const tiersCount = isObservableArray(this.props.tierStore.tiers) ? this.props.tierStore.tiers.length : 1
     const contractsKeys = files.order;
     const orderNumber = order => order.toString().padStart(3, '0');
     let prefix = 1
@@ -192,25 +191,33 @@ export class stepFour extends React.Component {
         console.log(files[key])
         console.log(contractStore[key])
         const { txt, name } = files[key]
-        const { abiConstructor } = contractStore[key]
-        let tiersCountPerContract = isObservableArray(abiConstructor) ? abiConstructor.length : 1
 
-        for (let tier = 0; tier < tiersCountPerContract; tier++) {
-          const suffix = tiersCountPerContract > 1 ? `_${tier + 1}` : ''
-          const txtFilename = `${orderNumber(prefix++)}_${name}${suffix}`
-          const tierNumber = tier
-          let common
-          if (crowdsaleStore.isMintedCappedCrowdsale) {
-            common = SUMMARY_FILE_MINTED_CAPPED_CROWDSALE_CONTENTS.common
-          } else if (crowdsaleStore.isDutchAuction) {
-            common = SUMMARY_FILE_DUTCH_AUCTION_CONTENTS.common
+        const authOS = fileContents.auth_os
+        const authOSHeader = authOS.map(content => this.handleContentByParent(content))
+
+        zip.file(
+          `Auth_os_addresses.txt`,
+          authOSHeader.join('\n')
+        )
+
+        const common = fileContents.common
+        const commonHeader = common.map(content => this.handleContentByParent(content))
+
+        zip.file(
+          `${name}_data.txt`,
+          commonHeader.join('\n')
+        )
+
+        if (crowdsaleStore.strategy == CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE) {
+          for (let tier = 0; tier < tiersCount; tier++) {
+            const txtFilename = `${orderNumber(prefix++)}_tier`
+            const tierNumber = tier
+
+            zip.file(
+              `${txtFilename}.txt`,
+              txt.map(content => this.handleContentByParent(content, tierNumber)).join('\n')
+            )
           }
-          const commonHeader = common.map(content => this.handleContentByParent(content, tierNumber))
-
-          zip.file(
-            `${txtFilename}.txt`,
-            commonHeader.concat(txt.map(content => this.handleContentByParent(content, tierNumber))).join('\n\n')
-          )
         }
       }
     })

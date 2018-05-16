@@ -10,7 +10,8 @@ import {
 } from '../../utils/blockchainHelpers'
 //import { noContractAlert } from '../../utils/alerts'
 import { countDecimalPlaces, toFixed } from '../../utils/utils'
-import { DOWNLOAD_NAME, CROWDSALE_STRATEGIES } from '../../utils/constants'
+import { CROWDSALE_STRATEGIES } from '../../utils/constants'
+import { DOWNLOAD_NAME, REACT_PREFIX, MINTED_PREFIX, DUTCH_PREFIX } from './constants'
 import { isObservableArray } from 'mobx'
 import {
   contractStore,
@@ -853,4 +854,113 @@ export function getDownloadName () {
 
     resolve(whenNetworkName)
   })
+}
+
+const getAddr = (contractName, networkID) => {
+  return JSON.parse(process.env[`${REACT_PREFIX}${contractName}_ADDRESS`] || {})[networkID]
+}
+
+const authOSContractString = (contrct) => {return `Auth_os ${contrct} address: `}
+
+const getAppName = (strategy) => {
+  switch(strategy) {
+    case CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE:
+      return process.env[`${REACT_PREFIX}${MINTED_PREFIX}APP_NAME`]
+    case CROWDSALE_STRATEGIES.DUTCH_AUCTION:
+      return process.env[`${REACT_PREFIX}${DUTCH_PREFIX}APP_NAME`]
+  }
+}
+
+const getCrowdsaleContractAddr = (strategy, contractName, networkID) => {
+  switch(strategy) {
+    case CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE:
+      return JSON.parse(process.env[`${REACT_PREFIX}${MINTED_PREFIX}${contractName}_ADDRESS`] || {})[networkID]
+    case CROWDSALE_STRATEGIES.DUTCH_AUCTION:
+      return JSON.parse(process.env[`${REACT_PREFIX}${DUTCH_PREFIX}${contractName}_ADDRESS`] || {})[networkID]
+  }
+}
+
+const footerElemets = [
+  { value: '\n*****************************', parent: 'none', fileValue: '' },
+  { value: '*****************************', parent: 'none', fileValue: '' },
+  { value: '*****************************', parent: 'none', fileValue: '\n' },
+]
+
+const bigHeaderElements = (headerName) => {
+  return [
+    { value: '*****************************', parent: 'none', fileValue: '' },
+    { value: headerName, parent: 'none', fileValue: '' },
+    { value: '*****************************', parent: 'none', fileValue: '\n' },
+  ]
+}
+
+const smallHeader = (headerName) => {
+  return { value: headerName, parent: 'none', fileValue: '\n' }
+}
+
+export const SUMMARY_FILE_CONTENTS = (networkID) => {
+  let rates = []
+  if (crowdsaleStore.strategy == CROWDSALE_STRATEGIES.DUTCH_AUCTION) {
+    rates = [
+      { field: 'minRate', value: 'Crowdsale min rate: ', parent: 'tierStore' },
+      { field: 'maxRate', value: 'Crowdsale max rate: ', parent: 'tierStore' },
+    ]
+  }
+
+  return {
+    common: [
+      ...bigHeaderElements('*********TOKEN SETUP*********'),
+      { field: 'name', value: 'Token name: ', parent: 'tokenStore' },
+      { field: 'ticker', value: 'Token ticker: ', parent: 'tokenStore' },
+      { field: 'decimals', value: 'Token decimals: ', parent: 'tokenStore' },
+      { field: 'supply', value: 'Token total supply: ', parent: 'tokenStore' },
+      '\n',
+      ...bigHeaderElements('*******CROWDSALE SETUP*******'),
+      { field: 'walletAddress', value: 'Multisig wallet address: ', parent: 'tierStore' },
+      ...rates,
+      { field: 'supply', value: 'Crowdsale hard cap: ', parent: 'crowdsaleStore' },
+      { field: 'startTime', value: 'Crowdsale start time: ', parent: 'tierStore' },
+      { field: 'endTime', value: 'Crowdsale end time: ', parent: 'crowdsaleStore' },
+      ...footerElemets
+    ],
+    auth_os: [
+      ...bigHeaderElements('*******AUTH_OS METADATA******'),
+      smallHeader('**********REGISTRY***********'),
+      { value: authOSContractString('registry storage'), parent: 'none', fileValue: getAddr("REGISTRY_STORAGE", networkID) },
+      { value: authOSContractString('script exectutor'), parent: 'none', fileValue: getAddr("SCRIPT_EXEC", networkID) },
+      { value: authOSContractString('InitRegistry'), parent: 'none', fileValue: getAddr("INIT_REGISTRY", networkID) },
+      { value: authOSContractString('AppConsole'), parent: 'none', fileValue: getAddr("APP_CONSOLE", networkID) },
+      { value: authOSContractString('VersionConsole'), parent: 'none', fileValue: getAddr("VERSION_CONSOLE", networkID) },
+      { value: authOSContractString('ImplementationConsole'), parent: 'none', fileValue: `${getAddr("IMPLEMENTATION_CONSOLE", networkID)}\n` },
+      smallHeader('*********CROWDSALE***********'),
+      { value: 'Auth_os application name: ', parent: 'none', fileValue: getAppName(crowdsaleStore.strategy) },
+      { field: 'execID', value: 'Auth_os execution ID: ', parent: 'crowdsale' },
+      { value: authOSContractString('InitCrowdsale'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "INIT_CROWDSALE", networkID) },
+      { value: authOSContractString('CrowdsaleConsole'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE_CONSOLE", networkID) },
+      { value: authOSContractString('TokenConsole'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "TOKEN_CONSOLE", networkID) },
+      { value: authOSContractString('CrowdsaleBuyTokens'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE_BUY_TOKENS", networkID) },
+      { value: authOSContractString('TokenTransfer'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "TOKEN_TRANSFER", networkID) },
+      { value: authOSContractString('TokenTransferFrom'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "TOKEN_TRANSFER_FROM", networkID) },
+      { value: authOSContractString('TokenApprove'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "TOKEN_APPROVE", networkID) },
+      ...footerElemets
+    ],
+    files: {
+      order: [
+        'crowdsale'
+      ],
+      crowdsale: {
+        name: getAppName(crowdsaleStore.strategy),
+        txt: [
+          ...bigHeaderElements('*********TIER SETUP**********'),
+          { field: 'tier', value: 'Tier name: ', parent: 'tierStore' },
+          { field: 'rate', value: 'Tier rate: ', parent: 'tierStore' },
+          { field: 'supply', value: 'Tier max cap: ', parent: 'tierStore' },
+          { field: 'startTime', value: 'Tier start time: ', parent: 'tierStore' },
+          { field: 'endTime', value: 'Tier end time: ', parent: 'tierStore' },
+          { field: 'updatable', value: 'Tier is modifiable: ', parent: 'tierStore' },
+          ...footerElemets
+        ]
+      }
+    }
+  }
 }

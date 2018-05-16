@@ -109,6 +109,7 @@ export class stepThree extends React.Component {
           decimals={tokenStore.decimals}
           tierStore={tierStore}
           generalStore={generalStore}
+          crowdsaleStore={crowdsaleStore}
           validate={(values) => {
             const errors = {}
             const maxSupply = tierStore.maxSupply

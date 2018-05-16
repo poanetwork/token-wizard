@@ -44,7 +44,10 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
     props.tierStore.setGlobalMinCap(values.minCap || 0)
     props.tierStore.setTierProperty(values.whitelistEnabled, "whitelistEnabled", 0)
 
+    let totalSupply = 0
+
     values.tiers.forEach((tier, index) => {
+      totalSupply += Number(tier.supply)
       props.tierStore.setTierProperty(tier.tier, 'tier', index)
       props.tierStore.setTierProperty(tier.updatable, 'updatable', index)
       props.tierStore.setTierProperty(tier.startTime, 'startTime', index)
@@ -53,6 +56,8 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
       props.tierStore.setTierProperty(tier.supply, 'supply', index)
       props.tierStore.validateTiers('supply', index)
     })
+    props.crowdsaleStore.setProperty('supply', totalSupply)
+    props.crowdsaleStore.setProperty('endTime', values.tiers[values.tiers.length - 1].endTime)
   }
 
   return (

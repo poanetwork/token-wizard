@@ -8,6 +8,7 @@ class CrowdsaleStore {
   @observable maximumSellableTokens
   @observable maximumSellableTokensInWei
   @observable supply
+  @observable endTime
   @observable selected
 
   constructor () {
