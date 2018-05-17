@@ -9,7 +9,7 @@ import { VALIDATION_TYPES, VALIDATION_MESSAGES, TEXT_FIELDS, DESCRIPTION } from 
 import { BigNumberInput } from '../Common/BigNumberInput'
 import update from 'immutability-helper'
 
-const { START_TIME, END_TIME, RATE, SUPPLY, CROWDSALE_SETUP_NAME, ALLOWMODIFYING } = TEXT_FIELDS
+const { START_TIME, END_TIME, RATE, SUPPLY, CROWDSALE_SETUP_NAME, ALLOW_MODIFYING } = TEXT_FIELDS
 const { EMPTY, INVALID } = VALIDATION_TYPES
 
 @inject('tierStore')
@@ -98,7 +98,7 @@ export class CrowdsaleBlock extends React.Component {
             />
             <RadioInputField
               extraClassName="right"
-              title={ALLOWMODIFYING}
+              title={ALLOW_MODIFYING}
               items={[{ label: 'on', value: 'on' }, { label: 'off', value: 'off' }]}
               selectedItem={this.props.tierStore.tiers[this.props.num].updatable}
               onChange={e => this.updateTierStore(e.target.value, 'updatable')}

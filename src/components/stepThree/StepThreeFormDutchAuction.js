@@ -13,11 +13,12 @@ import {
   isGreaterOrEqualThan,
   isNonNegative
 } from '../../utils/validations'
-import { TEXT_FIELDS, VALIDATION_TYPES, VALIDATION_MESSAGES, DESCRIPTION } from '../../utils/constants'
+import { TEXT_FIELDS, VALIDATION_TYPES, VALIDATION_MESSAGES, DESCRIPTION, NAVIGATION_STEPS } from '../../utils/constants'
 import { DutchAuctionBlock } from '../Common/DutchAuctionBlock'
 
+const { CROWDSALE_SETUP } = NAVIGATION_STEPS;
 const { VALID } = VALIDATION_TYPES
-const { MINCAP, WALLET_ADDRESS, ENABLE_WHITELISTING } = TEXT_FIELDS
+const { MIN_CAP, WALLET_ADDRESS, ENABLE_WHITELISTING } = TEXT_FIELDS
 
 const inputErrorStyle = {
   color: 'red',
@@ -65,7 +66,7 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, prist
         <div className="steps-content container">
           <div className="about-step">
             <div className="step-icons step-icons_crowdsale-setup"/>
-            <p className="title">Crowdsale setup</p>
+            <p className="title">{CROWDSALE_SETUP}</p>
             <p className="description">{DESCRIPTION.CROWDSALE_SETUP}</p>
           </div>
           <div className="section-title">
@@ -104,7 +105,7 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, prist
               errorStyle={inputErrorStyle}
               type="number"
               side="left"
-              label={MINCAP}
+              label={MIN_CAP}
               description={DESCRIPTION.MIN_CAP}
             />
             <Field

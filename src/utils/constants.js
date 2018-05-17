@@ -102,7 +102,7 @@ export const CHAINS = {
 }
 
 export const NAVIGATION_STEPS = {
-  CROWDSALE_CONTRACT: 'Crowdsale Contract',
+  CROWDSALE_STRATEGY: 'Crowdsale Strategy',
   TOKEN_SETUP: 'Token Setup',
   CROWDSALE_SETUP: 'Crowdsale Setup',
   PUBLISH: 'Publish',
@@ -123,7 +123,7 @@ export const VALIDATION_MESSAGES = {
   EDITED_END_TIME: 'Please enter a valid date later than start time and previous than start time of next tier',
   EDITED_START_TIME: 'Please enter a valid date later than now, less than end time and later than the end time of the previous tier',
   RATE: 'Please enter a valid number greater than 0',
-  MINCAP: 'Value must be positive, decimals should not exceed the amount of decimals specified and min cap should be less or equal than the supply of some tier',
+  MIN_CAP: 'Value must be positive, decimals should not exceed the amount of decimals specified and min cap should be less or equal than the supply of some tier',
   POSITIVE: 'Please enter a valid number greater than 0',
   NON_NEGATIVE: 'Please enter a valid number greater or equal than 0',
   ADDRESS: 'Please enter a valid address',
@@ -146,7 +146,7 @@ export const VALIDATION_MESSAGES = {
 export const DESCRIPTION = {
   TOKEN_TICKER: 'The five letter ticker for your token.',
   CROWDSALE_SETUP_NAME: `Name of a tier, e.g. PrePreCrowdsale, PreCrowdsale, Crowdsale with bonus A, Crowdsale with bonus B, etc. We simplified that and will increment a number after each tier.`,
-  ALLOW_MODIFYING: `Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing.`,
+  ALLOW_MODIFYING: `If it's enabled, a creator of the crowdsale can modify crowdsale duration after publishing.`,
   START_TIME: `Date and time when the tier starts. Can't be in the past from the current moment.`,
   START_TIME_DUTCH_AUCTION: `Date and time when the crowdsale starts. Can't be in the past from the current moment.`,
   END_TIME: `Date and time when the tier ends. Can be only in the future.`,
@@ -164,6 +164,20 @@ export const DESCRIPTION = {
               define parameters of your crowdsale campaign.`
 }
 
+export const PUBLISH_DESCRIPTION = {
+  TOKEN_TOTAL_SUPPLY: 'Total token initial supply.',
+  TOKEN_NAME: 'The name of your token. Will be used by Etherscan and other token browsers.',
+  TOKEN_DECIMALS: 'How your token is divisible.',
+  GLOBAL_MIN_CAP: 'Global Min Cap for all contributors for the 1st contribution transaction.',
+  WALLET_ADDRESS: "Where the money goes after contributors' transactions.",
+  CROWDSALE_START_TIME: 'Date and time when the crowdsale starts.',
+  CROWDSALE_END_TIME: 'Date and time when the crowdsale ends.',
+  TIER_START_TIME: 'Date and time when the tier starts.',
+  TIER_END_TIME: 'Date and time when the tier ends.',
+  HARD_CAP: 'How many tokens will be sold on this tier.',
+  ENABLE_WHITELISTING: 'Is whitelist enabled on this tier?'
+}
+
 export const TEXT_FIELDS = {
   NAME: 'Name',
   TICKER: 'Ticker',
@@ -174,17 +188,20 @@ export const TEXT_FIELDS = {
   MIN_RATE: 'Min Rate',
   MAX_RATE: 'Max Rate',
   WALLET_ADDRESS: 'Wallet Address',
+  CROWDSALE_START_TIME: 'Crowdsale Start time',
+  CROWDSALE_END_TIME: 'Crowdsale End time',
   START_TIME: 'Start Time',
   END_TIME: 'End Time',
   CROWDSALE_SETUP_NAME: 'Crowdsale setup name',
   ADDRESS: 'Address',
   MIN: 'Min',
   MAX: 'Max',
-  MINCAP: 'Investor min cap',
+  GLOBAL_MIN_CAP: 'Global Min Cap',
+  MIN_CAP: 'Investor min cap',
   DIMENSION: 'Dimension',
   VALUE: 'Value',
   MAX_CAP: 'Max cap',
-  ALLOWMODIFYING: 'Allow modifying',
+  ALLOW_MODIFYING: 'Allow modifying',
   ENABLE_WHITELISTING: 'Enable whitelisting',
   GAS_PRICE: 'Gas Price',
   STRATEGY: 'Crowdsale Type'
