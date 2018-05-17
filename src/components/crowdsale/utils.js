@@ -260,9 +260,7 @@ export const getContractStoreProperty = (contract, property) => {
   return text === undefined ? '' : text
 }
 
-export const getUserLimits = async (addr, execID, target, account) => {
-  const { methods } =  await attachToSpecificCrowdsaleContract(target)
-
+export const getUserMaxLimits = async (addr, execID, methods, account) => {
   if (crowdsaleStore.isMintedCappedCrowdsale) {
     const { getCurrentTierInfo, getWhitelistStatus } = methods
     const { whitelist_enabled, tier_tokens_remaining, tier_price, tier_index } = await getCurrentTierInfo(addr, execID).call()
@@ -291,5 +289,61 @@ export const getUserLimits = async (addr, execID, target, account) => {
     const maxSpendRemaining = toBigNumber(max_spend_remaining)
 
     return crowdsaleTokensRemaining.lt(maxSpendRemaining) ? crowdsaleTokensRemaining : maxSpendRemaining
+  }
+}
+
+const getRate = async (addr, execID, methods) => {
+  if (crowdsaleStore.isMintedCappedCrowdsale) {
+    const { tier_price } = await methods.getCurrentTierInfo(addr, execID).call()
+    return toBigNumber(tier_price)
+
+  } else if (crowdsaleStore.isDutchAuction) {
+    const { current_rate } = await methods.getCrowdsaleStatus(addr, execID).call()
+    return toBigNumber(current_rate)
+  }
+
+  return toBigNumber('0')
+}
+
+const calculateMinContribution = async (method, decimals, naturalMinCap) => {
+  const { minimum_contribution } = await method.call()
+  const minimumContribution = toBigNumber(minimum_contribution).times(`1e-${decimals}`)
+  return minimumContribution.gt(naturalMinCap) ? minimumContribution : naturalMinCap
+}
+
+export const getUserMinLimits = async (addr, execID, methods, account) => {
+  const { decimals, balanceOf } = methods
+  const token_decimals = await decimals(addr, execID).call()
+  const owner_balance = toBigNumber(await balanceOf(addr, execID, account).call())
+  const rate = await getRate(addr, execID, methods)
+  const { DECIMAL_PLACES } = rate.constructor.config()
+
+  rate.constructor.config({ DECIMAL_PLACES: +token_decimals })
+
+  const minimumByRate = rate.pow(-1)
+  const minimumByDecimals = toBigNumber(`1e-${token_decimals}`)
+  const naturalMinCap = minimumByRate.gt(minimumByDecimals) ? minimumByRate : minimumByDecimals
+
+  rate.constructor.config({ DECIMAL_PLACES })
+
+  if (crowdsaleStore.isMintedCappedCrowdsale) {
+    const { getCurrentTierInfo, getWhitelistStatus, getCrowdsaleInfo } = methods
+    const { whitelist_enabled, tier_index } = await getCurrentTierInfo(addr, execID).call()
+
+    if (!whitelist_enabled) {
+      if (owner_balance.gt('0')) return naturalMinCap
+      return calculateMinContribution(getCrowdsaleInfo(addr, execID), token_decimals, naturalMinCap)
+    }
+    return calculateMinContribution(getWhitelistStatus(addr, execID, tier_index, account), token_decimals, naturalMinCap)
+
+  } else if (crowdsaleStore.isDutchAuction) {
+    const { getCrowdsaleWhitelist, getWhitelistStatus, getCrowdsaleInfo } = methods
+    const { num_whitelisted } = await getCrowdsaleWhitelist(addr, execID).call()
+
+    if (num_whitelisted === '0') {
+      if (owner_balance.gt('0')) return naturalMinCap
+      return calculateMinContribution(getCrowdsaleInfo(addr, execID), token_decimals, naturalMinCap)
+    }
+    return calculateMinContribution(getWhitelistStatus(addr, execID, account), token_decimals, naturalMinCap)
   }
 }

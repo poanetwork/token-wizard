@@ -3,7 +3,12 @@ import { inject, observer } from 'mobx-react'
 import { Field, FormSpy } from 'react-final-form'
 import { INVESTMENT_OPTIONS } from '../../utils/constants'
 import { InputField2 } from '../Common/InputField2'
-import { composeValidators, isDecimalPlacesNotGreaterThan, isRequired } from '../../utils/validations'
+import {
+  composeValidators,
+  isDecimalPlacesNotGreaterThan,
+  isGreaterOrEqualThan,
+  isRequired
+} from '../../utils/validations'
 import classNames from 'classnames'
 
 export const InvestForm = inject('investStore', 'tokenStore')
@@ -20,7 +25,12 @@ export const InvestForm = inject('investStore', 'tokenStore')
 
   const validateInvest = (value) => {
     const decimalsErr = `Number of tokens to buy should be positive and should not exceed ${decimals} decimals.`
-    const errors = composeValidators(isRequired(), isDecimalPlacesNotGreaterThan(decimalsErr)(decimals))(value)
+    const minimumContributionErr = `Minimum valid contribution: ${props.minimumContribution}`
+    const errors = composeValidators(
+      isRequired(),
+      isDecimalPlacesNotGreaterThan(decimalsErr)(decimals),
+      isGreaterOrEqualThan(minimumContributionErr)(props.minimumContribution)
+    )(value)
     if (errors) return errors.shift()
   }
 

@@ -16,7 +16,8 @@ import {
   initializeAccumulativeData,
   isFinalized,
   toBigNumber,
-  getUserLimits
+  getUserMaxLimits,
+  getUserMinLimits
 } from '../crowdsale/utils'
 import { countDecimalPlaces, getQueryVariable, toast } from '../../utils/utils'
 import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
@@ -152,6 +153,7 @@ export class Invest extends React.Component {
             .then(() => getCrowdsaleData(initCrowdsaleContract, crowdsaleExecID, account, crowdsaleStore))
             .then(() => getCrowdsaleTargetDates(initCrowdsaleContract, crowdsaleExecID))
             .then(() => this.checkIsFinalized(initCrowdsaleContract, crowdsaleExecID))
+            .then(() => this.calculateMinContribution())
             .then(() => this.setTimers())
             .catch(err => {
               this.setState({ loading: false })
@@ -300,14 +302,28 @@ export class Invest extends React.Component {
     const tokensToInvest = toBigNumber(investStore.tokensToInvest).times(rate).integerValue(BigNumber.ROUND_CEIL)
     console.log('tokensToInvest:', tokensToInvest.toFixed())
 
-    const initTarget = `initCrowdsale${this.props.crowdsaleStore.contractTargetSuffix}`
-    const userLimits = await getUserLimits(addr, execID, initTarget, account)
+    const userLimits = await getUserMaxLimits(addr, execID, methods, account)
 
     return tokensToInvest.gt(userLimits) ? userLimits : tokensToInvest
   }
 
+  calculateMinContribution = async () => {
+    const { crowdsaleStore, contractStore } = this.props
+    const { execID, account } = this.props.contractStore.crowdsale
+    const { addr } = toJS(contractStore.registryStorage)
+
+    const targetPrefix = "initCrowdsale"
+    const targetSuffix = crowdsaleStore.contractTargetSuffix
+    const target = `${targetPrefix}${targetSuffix}`
+
+    const { methods } = await attachToSpecificCrowdsaleContract(target)
+    const userMinLimits = await getUserMinLimits(addr, execID, methods, account)
+
+    this.setState({ minimumContribution: userMinLimits.toFixed() })
+  }
+
   investToTokensForWhitelistedCrowdsaleInternal = async () => {
-    const { generalStore, crowdsaleStore, contractStore, crowdsalePageStore } = this.props
+    const { generalStore, crowdsaleStore, contractStore, crowdsalePageStore, tokenStore } = this.props
     const { account } = contractStore.crowdsale
 
     const weiToSend = await this.calculateWeiToSend()
@@ -339,7 +355,11 @@ export class Invest extends React.Component {
 
     opts.gasLimit = calculateGasLimit(estimatedGas)
 
-    const tokensToInvest = weiToSend.div(crowdsalePageStore.rate).integerValue(BigNumber.ROUND_CEIL)
+    const { DECIMAL_PLACES } = weiToSend.constructor.config()
+    weiToSend.constructor.config({ DECIMAL_PLACES: +tokenStore.decimals })
+
+    const tokensToInvest = weiToSend.div(crowdsalePageStore.rate).toFixed()
+    weiToSend.constructor.config({ DECIMAL_PLACES })
 
     sendTXToContract(method.send(opts))
       .then(() => successfulInvestmentAlert(tokensToInvest))
@@ -378,7 +398,7 @@ export class Invest extends React.Component {
     const { tokenAmountOf } = crowdsalePageStore
     const { crowdsale } = contractStore
 
-    const { curAddr, investThrough, crowdsaleExecID, web3Available, toNextTick, nextTick } = this.state
+    const { curAddr, investThrough, crowdsaleExecID, web3Available, toNextTick, nextTick, minimumContribution } = this.state
     const { days, hours, minutes, seconds } = toNextTick
 
     const { decimals, ticker, name } = tokenStore
@@ -439,6 +459,10 @@ export class Invest extends React.Component {
               <p className="hashes-title">{totalSupply} {tokenTicker}</p>
               <p className="hashes-description">Total Supply</p>
             </div>
+            <div className="hashes-i">
+              <p className="hashes-title">{minimumContribution}</p>
+              <p className="hashes-description">Minimum Contribution</p>
+            </div>
           </div>
           <p className="invest-title">Invest page</p>
           <p className="invest-description">
@@ -459,6 +483,7 @@ export class Invest extends React.Component {
             investThrough={investThrough}
             updateInvestThrough={this.updateInvestThrough}
             web3Available={web3Available}
+            minimumContribution={minimumContribution}
           />
           {QRPaymentProcessElement}
         </div>
