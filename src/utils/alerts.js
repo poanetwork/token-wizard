@@ -73,7 +73,7 @@ export function investmentDisabledAlertInTime(startTime) {
 export function incorrectNetworkAlert(correctNetworkName, incorrectNetworkName) {
   sweetAlert2({
     title: "Warning",
-    html: "Crowdsale contract is from <b>" + correctNetworkName + " network</b>. But you are connected to <b>" + incorrectNetworkName + " network</b>. Please, change connection in MetaMask plugin.",
+    html: "Crowdsale is from <b>" + correctNetworkName + " network</b>. But you are connected to <b>" + incorrectNetworkName + " network</b>. Please, change connection in MetaMask plugin.",
     type: "warning"
   });
 }

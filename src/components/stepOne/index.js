@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { StepNavigation } from '../Common/StepNavigation';
 import { NAVIGATION_STEPS, CROWDSALE_STRATEGIES, CROWDSALE_STRATEGIES_DISPLAYNAMES } from '../../utils/constants';
 import { inject, observer } from 'mobx-react'
-const { CROWDSALE_CONTRACT } = NAVIGATION_STEPS;
+const { CROWDSALE_STRATEGY } = NAVIGATION_STEPS;
 
 //to do: downloadStatus is not used
 const ContinueButton = ({downloadStatus}) => {
@@ -35,13 +35,13 @@ export class stepOne extends React.Component {
   render() {
     return (
        <section className="steps steps_crowdsale-contract">
-       <StepNavigation activeStep={CROWDSALE_CONTRACT}/>
+       <StepNavigation activeStep={CROWDSALE_STRATEGY}/>
         <div className="steps-content container">
           <div className="about-step">
             <div className="step-icons step-icons_crowdsale-contract"></div>
-            <p className="title">Crowdsale Contract</p>
+            <p className="title">{CROWDSALE_STRATEGY}</p>
             <p className="description">
-              Select a strategy for your crowdsale contract.
+              Select a strategy for your crowdsale.
             </p>
           </div>
           <div className="radios" onChange={this.setStrategy}>

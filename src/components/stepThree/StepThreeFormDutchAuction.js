@@ -1,6 +1,7 @@
 import React from 'react'
 import { Field, FormSpy } from 'react-final-form'
 import { FieldArray } from 'react-final-form-arrays'
+import { WhenFieldChanges } from '../Common/WhenFieldChanges'
 import { InputField2 } from '../Common/InputField2'
 import GasPriceInput from './GasPriceInput'
 import { gweiToWei } from '../../utils/utils'
@@ -12,11 +13,12 @@ import {
   isGreaterOrEqualThan,
   isNonNegative
 } from '../../utils/validations'
-import { TEXT_FIELDS, VALIDATION_TYPES, VALIDATION_MESSAGES, DESCRIPTION } from '../../utils/constants'
+import { TEXT_FIELDS, VALIDATION_TYPES, VALIDATION_MESSAGES, DESCRIPTION, NAVIGATION_STEPS } from '../../utils/constants'
 import { DutchAuctionBlock } from '../Common/DutchAuctionBlock'
 
+const { CROWDSALE_SETUP } = NAVIGATION_STEPS;
 const { VALID } = VALIDATION_TYPES
-const { MINCAP, WALLET_ADDRESS, ENABLE_WHITELISTING } = TEXT_FIELDS
+const { MIN_CAP, WALLET_ADDRESS, ENABLE_WHITELISTING } = TEXT_FIELDS
 
 const inputErrorStyle = {
   color: 'red',
@@ -37,7 +39,10 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, prist
     props.tierStore.setGlobalMinCap(values.minCap || 0)
     props.tierStore.setTierProperty(values.whitelistEnabled, "whitelistEnabled", 0)
 
+    let totalSupply = 0
+
     values.tiers.forEach((tier, index) => {
+      totalSupply += Number(tier.supply)
       props.tierStore.setTierProperty(tier.startTime, 'startTime', index)
       props.tierStore.setTierProperty(tier.endTime, 'endTime', index)
       props.tierStore.updateMinRate(tier.minRate, VALID, index)
@@ -45,15 +50,23 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, prist
       props.tierStore.setTierProperty(tier.supply, 'supply', index)
       props.tierStore.validateTiers('supply', index)
     })
+    props.crowdsaleStore.setProperty('supply', totalSupply)
+    props.crowdsaleStore.setProperty('endTime', values.tiers[values.tiers.length - 1].endTime)
   }
 
   return (
     <form onSubmit={handleSubmit}>
+      <WhenFieldChanges
+        field="whitelistEnabled"
+        becomes={'yes'}
+        set="minCap"
+        to={0}
+      />
       <div>
         <div className="steps-content container">
           <div className="about-step">
             <div className="step-icons step-icons_crowdsale-setup"/>
-            <p className="title">Crowdsale setup</p>
+            <p className="title">{CROWDSALE_SETUP}</p>
             <p className="description">{DESCRIPTION.CROWDSALE_SETUP}</p>
           </div>
           <div className="section-title">
@@ -92,7 +105,7 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, prist
               errorStyle={inputErrorStyle}
               type="number"
               side="left"
-              label={MINCAP}
+              label={MIN_CAP}
               description={DESCRIPTION.MIN_CAP}
             />
             <Field

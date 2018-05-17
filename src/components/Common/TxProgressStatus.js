@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { observer, inject } from 'mobx-react'
 import '../../assets/stylesheets/application.css'
-import { TX_STEP_DESCRIPTION } from '../../utils/constants'
+import { TX_STEP_DESCRIPTION } from '../stepFour/constants'
 
 @inject('tierStore', 'deploymentStore')
 @observer
