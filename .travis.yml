@@ -27,7 +27,7 @@ script:
   - if [ $TEST_SUITE == 'contractsMintedCappedCrowdsale' ]; then npm run testContractsMintedCappedCrowdsale; fi
   - if [ $TEST_SUITE == 'contractsDutchAuction' ]; then npm run testContractsDutchAuction ; fi
   - if [ $TEST_SUITE == 'e2eMintedCappedCrowdsale' ]; then npm run e2eMintedCappedCrowdsale ; fi
-  - if [ $TEST_SUITE == 'e2eDutchAuction' ]; then npm run e2eDutchAuction; fi
+  - if [ $TEST_SUITE == 'e2eDutchAuction' ]; then npm run e2eDutchAuction && npm run coveralls; fi
 
 after_script:
   - sudo kill `sudo lsof -t -i:8545`
