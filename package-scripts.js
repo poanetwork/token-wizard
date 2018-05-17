@@ -78,7 +78,7 @@ module.exports = {
           'npm install',
           'npm run e2eMinted',
           'cd ../../',
-          'bash ./scripts/stop_ganache.sh'
+          //'bash ./scripts/stop_ganache.sh'
         ),
         DutchAuction: series(
           'nps test.e2e.prepare',
@@ -95,7 +95,7 @@ module.exports = {
           'npm install',
           'npm run e2eDutch',
           'cd ../../',
-          'bash ./scripts/stop_ganache.sh'
+          //'bash ./scripts/stop_ganache.sh'
         ),
         prepare: series (
           'bash ./scripts/start_ganache.sh',
