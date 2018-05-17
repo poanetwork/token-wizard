@@ -13,7 +13,7 @@ module.exports = {
   scripts: {
     build: {
       default: series(
-        'git submodule update -f --recursive --remote',
+        'git submodule update --init --recursive --remote',
         'cd submodules/solidity-flattener',
         'npm install',
         'cd ../../',
