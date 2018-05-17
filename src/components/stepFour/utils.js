@@ -751,8 +751,17 @@ export const handlerForFile = (content, type) => {
   console.log("content:", content)
   console.log("type:", type)
 
+  let whitelistItems = []
   if (content && type) {
-    return `${content.value}${type[content.field]}${suffix}`
+    if (content.field == "whitelist") {
+      for (let i = 0; i < type.whitelist.length; i++) {
+        let whiteListItem = type.whitelist[i]
+        whitelistItems.push(whitelistTableItem(whiteListItem).join('\n'));
+      }
+      return whitelistItems
+    } else {
+      return `${content.value}${type[content.field]}${suffix}`
+    }
   } else {
     if (!content) {
       console.log("WARNING!: content is undefined")
@@ -761,6 +770,30 @@ export const handlerForFile = (content, type) => {
       console.log("WARNING!: type is undefined")
     }
     return ''
+  }
+}
+
+const whitelistTableItem = (whiteListItem) => {
+  const valBoxLen = 28
+  const addrBoxLen = 44
+  return [
+    '|                                            |                            |                            |',
+    `|${fillWithSpaces(whiteListItem.addr, addrBoxLen)}|${fillWithSpaces(whiteListItem.min, valBoxLen)}|${fillWithSpaces(whiteListItem.max, valBoxLen)}|`,
+    '|____________________________________________|____________________________|____________________________|'
+  ]
+}
+
+const fillWithSpaces = (val, len) => {
+  if (val.length < len) {
+    const whitespaceLen = len - val.length
+    const prefixLen = Math.ceil(whitespaceLen / 2)
+    const suffixLen = Number.isInteger(whitespaceLen / 2) ? prefixLen : prefixLen - 1
+    let prefix = new Array(prefixLen).fill(' ').join('')
+    let suffix = new Array(suffixLen).fill(' ').join('')
+    const out = prefix + val + suffix
+    return out
+  } else {
+    return val.substr(len)
   }
 }
 
@@ -898,12 +931,41 @@ const smallHeader = (headerName) => {
   return { value: headerName, parent: 'none', fileValue: '\n' }
 }
 
+const whitelistHeaderTableElements = () => {
+  return [
+    { value: '________________________________________________________________________________________________________', parent: 'none', fileValue: '' },
+    { value: '|                                            |                            |                            |', parent: 'none', fileValue: '' },
+    { value: '|                ADDRESS                     |     MIN CAP IN TOKENS      |     MAX CAP IN TOKENS      |', parent: 'none', fileValue: '' },
+    { value: '|____________________________________________|____________________________|____________________________|', parent: 'none', fileValue: '' },
+  ]
+}
+
 export const SUMMARY_FILE_CONTENTS = (networkID) => {
   let rates = []
+  let crowdsaleIsModifiableEl = []
   if (crowdsaleStore.strategy == CROWDSALE_STRATEGIES.DUTCH_AUCTION) {
     rates = [
       { field: 'minRate', value: 'Crowdsale min rate: ', parent: 'tierStore' },
       { field: 'maxRate', value: 'Crowdsale max rate: ', parent: 'tierStore' },
+    ]
+
+    crowdsaleIsModifiableEl = [
+      { value: 'Crowdsale is modifiable: ', parent: 'none', fileValue: 'no' },
+    ]
+  }
+
+  let globalMinCapEl = []
+  let whitelistElements = []
+  if (tierStore.tiers[0].whitelistEnabled !== "yes") {
+    globalMinCapEl = [
+      { field: 'globalMinCap', value: 'Crowdsale global min cap: ', parent: 'tierStore' }
+    ]
+  } else {
+    whitelistElements = [
+      '\n',
+      ...bigHeaderElements('*********WHITELIST***********'),
+      ...whitelistHeaderTableElements(),
+      { field: 'whitelist', value: '', parent: 'tierStore' },
     ]
   }
 
@@ -918,16 +980,20 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
       ...bigHeaderElements('*******CROWDSALE SETUP*******'),
       { field: 'walletAddress', value: 'Multisig wallet address: ', parent: 'tierStore' },
       ...rates,
+      ...globalMinCapEl,
       { field: 'supply', value: 'Crowdsale hard cap: ', parent: 'crowdsaleStore' },
       { field: 'startTime', value: 'Crowdsale start time: ', parent: 'tierStore' },
       { field: 'endTime', value: 'Crowdsale end time: ', parent: 'crowdsaleStore' },
+      ...crowdsaleIsModifiableEl,
+      { field: 'whitelistEnabled', value: 'Crowdsale is whitelisted: ', parent: 'tierStore' },
+      ...whitelistElements,
       ...footerElemets
     ],
     auth_os: [
       ...bigHeaderElements('*******AUTH_OS METADATA******'),
       smallHeader('**********REGISTRY***********'),
       { value: authOSContractString('registry storage'), parent: 'none', fileValue: getAddr("REGISTRY_STORAGE", networkID) },
-      { value: authOSContractString('script exectutor'), parent: 'none', fileValue: getAddr("SCRIPT_EXEC", networkID) },
+      { value: authOSContractString('script executor'), parent: 'none', fileValue: getAddr("SCRIPT_EXEC", networkID) },
       { value: authOSContractString('InitRegistry'), parent: 'none', fileValue: getAddr("INIT_REGISTRY", networkID) },
       { value: authOSContractString('AppConsole'), parent: 'none', fileValue: getAddr("APP_CONSOLE", networkID) },
       { value: authOSContractString('VersionConsole'), parent: 'none', fileValue: getAddr("VERSION_CONSOLE", networkID) },

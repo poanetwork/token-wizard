@@ -162,9 +162,14 @@ export class stepFour extends React.Component {
         return handlerForFile(content, this.props.contractStore[parent])
       case 'crowdsaleStore':
         return handlerForFile(content, this.props[parent])
-      case 'tierStore':
-        index = 'walletAddress' === content.field ? 0 : index
-        return handlerForFile(content, this.props[parent].tiers[index])
+      case 'tierStore': {
+        if (content.field == 'globalMinCap') {
+          return handlerForFile(content, this.props[parent])
+        } else {
+          index = (content.field === 'walletAddress' || content.field === 'whitelistEnabled') ? 0 : index
+          return handlerForFile(content, this.props[parent].tiers[index])
+        }
+      }
       case 'tokenStore':
         return handlerForFile(content, this.props[parent])
       case 'contracts':

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Field, FormSpy } from 'react-final-form'
 import { FieldArray } from 'react-final-form-arrays'
+import { WhenFieldChanges } from '../Common/WhenFieldChanges'
 import { InputField2 } from '../Common/InputField2'
 import GasPriceInput from './GasPriceInput'
 import { gweiToWei } from '../../utils/utils'
@@ -54,6 +55,12 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, prist
 
   return (
     <form onSubmit={handleSubmit}>
+      <WhenFieldChanges
+        field="whitelistEnabled"
+        becomes={'yes'}
+        set="minCap"
+        to={0}
+      />
       <div>
         <div className="steps-content container">
           <div className="about-step">
