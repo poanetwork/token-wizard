@@ -33,9 +33,9 @@ module.exports = {
       deployContracts:series(
         'npm install truffle',
         'npm install solc',
-        './node_modules/.bin/truffle compile',
-        './node_modules/.bin/truffle migrate --network development',
-        './node_modules/.bin/truffle test --network development'
+        'truffle compile',
+        'truffle migrate --network development',
+        'truffle test --network development'
       ),
       prepare: series(
         'bash ./scripts/start_ganache.sh',
@@ -70,6 +70,7 @@ module.exports = {
           'cp .env ../../../../../.env',
           'cd ../../../../../',
           'nps test.e2e.start',
+          'npm run delay',
           'cd submodules/token-wizard-test-automation',
           'git checkout e2e-wizard2.0',
           'npm install',
@@ -86,6 +87,7 @@ module.exports = {
           'cp .env ../../../../../.env',
           'cd ../../../../../',
           'nps test.e2e.start',
+          'npm run delay',
           'cd submodules/token-wizard-test-automation',
           'git checkout e2e-wizard2.0',
           'npm install',
