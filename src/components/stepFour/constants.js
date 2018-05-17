@@ -7,6 +7,8 @@ export const DOWNLOAD_TYPE = {
   blob: 'blob'
 }
 
+export const ADDR_BOX_LEN = 44
+
 export const TX_STEP_DESCRIPTION = {
   crowdsaleCreate: "Create Crowdsale instance",
   token: "Initialize Token",

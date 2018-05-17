@@ -171,6 +171,7 @@ export class stepFour extends React.Component {
         }
       }
       case 'tokenStore':
+      case 'reservedTokenStore':
         return handlerForFile(content, this.props[parent])
       case 'contracts':
         return handleContractsForFile(content, index, this.props.contractStore, this.props.tierStore)

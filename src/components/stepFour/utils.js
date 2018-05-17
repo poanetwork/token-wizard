@@ -11,7 +11,7 @@ import {
 //import { noContractAlert } from '../../utils/alerts'
 import { countDecimalPlaces, toFixed } from '../../utils/utils'
 import { CROWDSALE_STRATEGIES } from '../../utils/constants'
-import { DOWNLOAD_NAME, REACT_PREFIX, MINTED_PREFIX, DUTCH_PREFIX } from './constants'
+import { DOWNLOAD_NAME, REACT_PREFIX, MINTED_PREFIX, DUTCH_PREFIX, ADDR_BOX_LEN } from './constants'
 import { isObservableArray } from 'mobx'
 import {
   contractStore,
@@ -445,6 +445,7 @@ const getReservedTokensParams = (addrs, inTokens, inPercentageUnit, inPercentage
 
 export const setReservedTokensListMultiple = () => {
   console.log('###setReservedTokensListMultiple:###')
+  console.log("reservedTokenStore:", reservedTokenStore)
   return [
     () => {
       let map = {}
@@ -751,14 +752,21 @@ export const handlerForFile = (content, type) => {
   console.log("content:", content)
   console.log("type:", type)
 
-  let whitelistItems = []
   if (content && type) {
     if (content.field == "whitelist") {
+      let whitelistItems = []
       for (let i = 0; i < type.whitelist.length; i++) {
         let whiteListItem = type.whitelist[i]
-        whitelistItems.push(whitelistTableItem(whiteListItem).join('\n'));
+        whitelistItems.push(whitelistTableItem(whiteListItem).join('\n'))
       }
       return whitelistItems
+    } else if (content.field == "tokens" && content.parent == "reservedTokenStore") {
+      let reservedTokensItems = []
+      for (let i = 0; i < type.tokens.length; i++) {
+        let reservedTokensItem = type.tokens[i]
+        reservedTokensItems.push(reservedTokensTableItem(reservedTokensItem).join('\n'))
+      }
+      return reservedTokensItems.join('\n')
     } else {
       return `${content.value}${type[content.field]}${suffix}`
     }
@@ -775,15 +783,25 @@ export const handlerForFile = (content, type) => {
 
 const whitelistTableItem = (whiteListItem) => {
   const valBoxLen = 28
-  const addrBoxLen = 44
   return [
     '|                                            |                            |                            |',
-    `|${fillWithSpaces(whiteListItem.addr, addrBoxLen)}|${fillWithSpaces(whiteListItem.min, valBoxLen)}|${fillWithSpaces(whiteListItem.max, valBoxLen)}|`,
+    `|${fillWithSpaces(whiteListItem.addr, ADDR_BOX_LEN)}|${fillWithSpaces(whiteListItem.min, valBoxLen)}|${fillWithSpaces(whiteListItem.max, valBoxLen)}|`,
     '|____________________________________________|____________________________|____________________________|'
   ]
 }
 
+const reservedTokensTableItem = (reservedTokensItem) => {
+  const valBoxLen = 56
+  const dim = reservedTokensItem.dim === 'percentage' ? '%' : 'tokens'
+  return [
+    '|                                            |                                                        |',
+    `|${fillWithSpaces(reservedTokensItem.addr, ADDR_BOX_LEN)}|${fillWithSpaces(`${reservedTokensItem.val} ${dim}`, valBoxLen)}|`,
+    '|____________________________________________|________________________________________________________|'
+  ]
+}
+
 const fillWithSpaces = (val, len) => {
+  val = val.toString()
   if (val.length < len) {
     const whitespaceLen = len - val.length
     const prefixLen = Math.ceil(whitespaceLen / 2)
@@ -793,7 +811,7 @@ const fillWithSpaces = (val, len) => {
     const out = prefix + val + suffix
     return out
   } else {
-    return val.substr(len)
+    return val.toString().substr(len)
   }
 }
 
@@ -940,6 +958,15 @@ const whitelistHeaderTableElements = () => {
   ]
 }
 
+const reservedTokensHeaderTableElements = () => {
+  return [
+    { value: '_______________________________________________________________________________________________________', parent: 'none', fileValue: '' },
+    { value: '|                                            |                                                        |', parent: 'none', fileValue: '' },
+    { value: '|                ADDRESS                     |                        VALUE                           |', parent: 'none', fileValue: '' },
+    { value: '|____________________________________________|________________________________________________________|', parent: 'none', fileValue: '' },
+  ]
+}
+
 export const SUMMARY_FILE_CONTENTS = (networkID) => {
   let globalMinCapEl = []
   let crowdsaleWhitelistElements = []
@@ -954,6 +981,16 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
       ...bigHeaderElements('*********WHITELIST***********'),
       ...whitelistHeaderTableElements(),
       { field: 'whitelist', value: '', parent: 'tierStore' },
+    ]
+  }
+
+  let reservedTokensElements = []
+  if (reservedTokenStore.tokens.length > 0) {
+    reservedTokensElements = [
+      '\n',
+      ...bigHeaderElements('******RESERVED TOKENS********'),
+      ...reservedTokensHeaderTableElements(),
+      { field: 'tokens', value: '', parent: 'reservedTokenStore' },
     ]
   }
 
@@ -979,6 +1016,7 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
       { field: 'ticker', value: 'Token ticker: ', parent: 'tokenStore' },
       { field: 'decimals', value: 'Token decimals: ', parent: 'tokenStore' },
       { field: 'supply', value: 'Token total supply: ', parent: 'tokenStore' },
+      ...reservedTokensElements,
       '\n',
       ...bigHeaderElements('*******CROWDSALE SETUP*******'),
       { field: 'walletAddress', value: 'Multisig wallet address: ', parent: 'tierStore' },
