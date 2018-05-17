@@ -46,7 +46,7 @@ module.exports = {
         'nps test.prepare',
         'cd ./submodules/auth-os-applications/',
         'cd ./TokenWizard/crowdsale/MintedCappedCrowdsale/',
-        'npm install',
+        'npm init -y',
         'nps test.deployContracts',
         'cd ../../../../../',
         'bash ./scripts/stop_ganache.sh'
@@ -55,7 +55,7 @@ module.exports = {
         'nps test.prepare',
         'cd ./submodules/auth-os-applications/',
         'cd ./TokenWizard/crowdsale/DutchCrowdsale/',
-        'npm install',
+        'npm init -y',
         'nps test.deployContracts',
         'cd ../../../../../',
         'bash ./scripts/stop_ganache.sh',
