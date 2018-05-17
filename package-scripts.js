@@ -13,7 +13,7 @@ module.exports = {
   scripts: {
     build: {
       default: series(
-        'git submodule update --init --recursive --remote',
+        'git submodule update --init  --recursive --remote',
         'cd submodules/solidity-flattener',
         'npm install',
         'cd ../../',
@@ -33,9 +33,9 @@ module.exports = {
       deployContracts:series(
         'npm install truffle',
         'npm install solc',
-        'truffle compile',
-        'truffle migrate --network development',
-        'truffle test --network development'
+        './node_modules/.bin/truffle compile',
+        './node_modules/.bin/truffle migrate --network development',
+        './node_modules/.bin/truffle test --network development'
       ),
       prepare: series(
         'bash ./scripts/start_ganache.sh',
@@ -46,6 +46,7 @@ module.exports = {
         'nps test.prepare',
         'cd ./submodules/auth-os-applications/',
         'cd ./TokenWizard/crowdsale/MintedCappedCrowdsale/',
+        'npm install',
         'nps test.deployContracts',
         'cd ../../../../../',
         'bash ./scripts/stop_ganache.sh'
@@ -54,6 +55,7 @@ module.exports = {
         'nps test.prepare',
         'cd ./submodules/auth-os-applications/',
         'cd ./TokenWizard/crowdsale/DutchCrowdsale/',
+        'npm install',
         'nps test.deployContracts',
         'cd ../../../../../',
         'bash ./scripts/stop_ganache.sh',
@@ -70,7 +72,6 @@ module.exports = {
           'cp .env ../../../../../.env',
           'cd ../../../../../',
           'nps test.e2e.start',
-          'npm run delay',
           'cd submodules/token-wizard-test-automation',
           'git checkout e2e-wizard2.0',
           'npm install',
@@ -87,7 +88,6 @@ module.exports = {
           'cp .env ../../../../../.env',
           'cd ../../../../../',
           'nps test.e2e.start',
-          'npm run delay',
           'cd submodules/token-wizard-test-automation',
           'git checkout e2e-wizard2.0',
           'npm install',
