@@ -32,7 +32,7 @@
     "react-router": "^4.2.0",
     "react-test-renderer": "^15.6.2",
     "shelljs": "^0.7.8",
-    "truffle": "^3.4.9",
+    "truffle": "^3.4.11",
     "yargs": "^10.0.3"
   },
   "dependencies": {
@@ -105,7 +105,6 @@
     "react-final-form-listeners": "^1.0.0",
     "react-router-dom": "^4.1.2",
     "react-tooltip": "^3.4.0",
-    "solc": "^0.4.14",
     "solidity-flattener": "file:submodules/solidity-flattener",
     "store2": "^2.6.0",
     "style-loader": "0.18.2",
