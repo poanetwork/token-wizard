@@ -941,6 +941,22 @@ const whitelistHeaderTableElements = () => {
 }
 
 export const SUMMARY_FILE_CONTENTS = (networkID) => {
+  let globalMinCapEl = []
+  let crowdsaleWhitelistElements = []
+  let tierWhitelistElements = []
+  if (tierStore.tiers[0].whitelistEnabled !== "yes") {
+    globalMinCapEl = [
+      { field: 'globalMinCap', value: 'Crowdsale global min cap: ', parent: 'tierStore' }
+    ]
+  } else {
+    tierWhitelistElements = [
+      '\n',
+      ...bigHeaderElements('*********WHITELIST***********'),
+      ...whitelistHeaderTableElements(),
+      { field: 'whitelist', value: '', parent: 'tierStore' },
+    ]
+  }
+
   let rates = []
   let crowdsaleIsModifiableEl = []
   if (crowdsaleStore.strategy == CROWDSALE_STRATEGIES.DUTCH_AUCTION) {
@@ -952,21 +968,8 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
     crowdsaleIsModifiableEl = [
       { value: 'Crowdsale is modifiable: ', parent: 'none', fileValue: 'no' },
     ]
-  }
 
-  let globalMinCapEl = []
-  let whitelistElements = []
-  if (tierStore.tiers[0].whitelistEnabled !== "yes") {
-    globalMinCapEl = [
-      { field: 'globalMinCap', value: 'Crowdsale global min cap: ', parent: 'tierStore' }
-    ]
-  } else {
-    whitelistElements = [
-      '\n',
-      ...bigHeaderElements('*********WHITELIST***********'),
-      ...whitelistHeaderTableElements(),
-      { field: 'whitelist', value: '', parent: 'tierStore' },
-    ]
+    crowdsaleWhitelistElements = tierWhitelistElements
   }
 
   return {
@@ -986,7 +989,7 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
       { field: 'endTime', value: 'Crowdsale end time: ', parent: 'crowdsaleStore' },
       ...crowdsaleIsModifiableEl,
       { field: 'whitelistEnabled', value: 'Crowdsale is whitelisted: ', parent: 'tierStore' },
-      ...whitelistElements,
+      ...crowdsaleWhitelistElements,
       ...footerElemets
     ],
     auth_os: [
@@ -1024,6 +1027,7 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
           { field: 'startTime', value: 'Tier start time: ', parent: 'tierStore' },
           { field: 'endTime', value: 'Tier end time: ', parent: 'tierStore' },
           { field: 'updatable', value: 'Tier is modifiable: ', parent: 'tierStore' },
+          ...tierWhitelistElements,
           ...footerElemets
         ]
       }
