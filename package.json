@@ -125,7 +125,7 @@
     "build": "nps build",
     "testContractsDutchAuction": "nps test.DutchAuction",
     "testContractsMintedCappedCrowdsale": "nps test.MintedCappedCrowdsale",
-    "e2eDutchAuction": "nps test.e2e.DutchAuction",
+    "e2eDutchAuction": "nps test.e2e.DutchAuction && npm run coveralls",
     "e2eMintedCappedCrowdsale": "nps test.e2e.MintedCappedCrowdsale",
     "test:dapp": "jest --env=jsdom -w='2'",
     "e2e-prepare-start": "nps test.e2e.prepare",
