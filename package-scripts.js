@@ -28,7 +28,6 @@ module.exports = {
     },
     test: {
       default: series(
-        'npm install',
         'git submodule update --init --recursive --remote',
         'npm run installWeb3',
         'npm run testContractsMintedCappedCrowdsale',
@@ -46,7 +45,7 @@ module.exports = {
       prepare: series(
         'bash ./scripts/start_ganache.sh',
         'cd ./submodules/auth-os-applications/',
-        'git checkout master',
+        'git checkout -f master',
       ),
       MintedCappedCrowdsale: series(
         'nps test.prepare',
@@ -108,7 +107,7 @@ module.exports = {
         prepare: series(
           'bash ./scripts/start_ganache.sh',
           'cd ./submodules/auth-os-applications',
-          'git checkout e2e',
+          'git checkout -f e2e',
         ),
         start: 'PORT=3000 BROWSER=none node scripts/start.js &'
       }
