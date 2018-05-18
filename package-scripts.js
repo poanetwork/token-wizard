@@ -28,9 +28,15 @@ module.exports = {
     },
     test: {
       default: series(
-
+        'npm install',
+        'git submodule update --init --recursive --remote',
+        'npm run installWeb3',
+        'npm run testContractsMintedCappedCrowdsale',
+        'npm run testContractsDutchAuction',
+        'npm run e2eMintedCappedCrowdsale',
+        'npm run e2eDutchAuction'
       ),
-      deployContracts:series(
+      deployContracts: series(
         'npm install truffle',
         'npm install solc',
         './node_modules/.bin/truffle compile',
@@ -49,7 +55,8 @@ module.exports = {
         'npm init -y',
         'nps test.deployContracts',
         'cd ../../../../../',
-        'bash ./scripts/stop_ganache.sh'
+        'bash ./scripts/stop_ganache.sh',
+        'kill `lsof -t -i:3000`'
       ),
       DutchAuction: series(
         'nps test.prepare',
@@ -59,6 +66,7 @@ module.exports = {
         'nps test.deployContracts',
         'cd ../../../../../',
         'bash ./scripts/stop_ganache.sh',
+        'kill `lsof -t -i:3000`'
       ),
       e2e: {
         default: series(
@@ -78,7 +86,8 @@ module.exports = {
           'npm install',
           'npm run e2eMinted',
           'cd ../../',
-          'bash ./scripts/stop_ganache.sh'
+          'bash ./scripts/stop_ganache.sh',
+          'kill `lsof -t -i:3000`'
         ),
         DutchAuction: series(
           'nps test.e2e.prepare',
@@ -95,9 +104,10 @@ module.exports = {
           'npm install',
           'npm run e2eDutch',
           'cd ../../',
-          'bash ./scripts/stop_ganache.sh'
+          'bash ./scripts/stop_ganache.sh',
+          'kill `lsof -t -i:3000`'
         ),
-        prepare: series (
+        prepare: series(
           'bash ./scripts/start_ganache.sh',
           'cd ./submodules/auth-os-applications',
           'git checkout e2e',

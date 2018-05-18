@@ -123,6 +123,7 @@
     "dev:fast": "nps dev.fast",
     "deployRegistry": "node scripts/deployRegistry.js",
     "build": "nps build",
+    "test": "nps test",
     "testContractsDutchAuction": "nps test.DutchAuction",
     "testContractsMintedCappedCrowdsale": "nps test.MintedCappedCrowdsale",
     "e2eDutchAuction": "nps test.e2e.DutchAuction",
