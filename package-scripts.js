@@ -55,8 +55,7 @@ module.exports = {
         'npm init -y',
         'nps test.deployContracts',
         'cd ../../../../../',
-        'bash ./scripts/stop_ganache.sh',
-        'kill `lsof -t -i:3000`'
+        'bash ./scripts/stop_ganache.sh'
       ),
       DutchAuction: series(
         'nps test.prepare',
@@ -65,8 +64,7 @@ module.exports = {
         'npm init -y',
         'nps test.deployContracts',
         'cd ../../../../../',
-        'bash ./scripts/stop_ganache.sh',
-        'kill `lsof -t -i:3000`'
+        'bash ./scripts/stop_ganache.sh'
       ),
       e2e: {
         default: series(
