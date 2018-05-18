@@ -114,7 +114,7 @@ export class Manage extends Component {
   }
 
   extractContractsData = () => {
-    const { crowdsaleStore, contractStore, tokenStore, match } = this.props
+    const { crowdsaleStore, contractStore, match } = this.props
     contractStore.setContractProperty('crowdsale', 'execID', match.params.crowdsaleExecID)
 
     return getTiers()

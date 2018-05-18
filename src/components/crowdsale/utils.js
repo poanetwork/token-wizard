@@ -132,10 +132,10 @@ export let getCrowdsaleData = (initCrowdsaleContract, execID, account) => {
           crowdsalePageStore.setProperty('maximumSellableTokens', toBigNumber(crowdsaleMaxRaise.total_sell_cap).toFixed())
           crowdsalePageStore.setProperty('maximumSellableTokensInWei', toBigNumber(crowdsaleMaxRaise.wei_raise_cap).toFixed())
         } else if (crowdsaleStore.isDutchAuction) {
-          crowdsalePageStore.setProperty('rate', Number(crowdsaleStatus.current_rate).toFixed()) //should be one token in wei
+          crowdsalePageStore.setProperty('rate', Number(chooseRateForDutchAuction(crowdsaleStatus)).toFixed()) //should be one token in wei
           crowdsalePageStore.setProperty('maximumSellableTokens', toBigNumber(isCrowdsaleFull.max_sellable).toFixed())
 
-          let curRateBN = (toBigNumber(crowdsaleStatus.current_rate))//.multipliedBy(`1e18`) //one token in wei
+          let curRateBN = toBigNumber(chooseRateForDutchAuction(crowdsaleStatus)) //one token in wei
           let tokenRemainingBN = toBigNumber(crowdsaleStatus.tokens_remaining)
           let remainingWEI = curRateBN > 0 ? (tokenRemainingBN.div(`1e${tokenStore.decimals}`).multipliedBy(curRateBN)).integerValue(BigNumber.ROUND_CEIL) : 0
           console.log("remainingWEI:",remainingWEI)
@@ -156,6 +156,14 @@ export let getCrowdsaleData = (initCrowdsaleContract, execID, account) => {
       })
       .catch(reject)
   })
+}
+
+function chooseRateForDutchAuction(crowdsaleStatus) {
+  const curRate = crowdsaleStatus.current_rate
+  const startRate = crowdsaleStatus.start_rate
+  const endRate = crowdsaleStatus.end_rate
+  const timeRemaining = crowdsaleStatus.time_remaining
+  return Number(curRate) > 0 ? curRate : Number(timeRemaining) > 0 ? startRate : endRate
 }
 
 export function initializeAccumulativeData() {
@@ -254,17 +262,34 @@ export const getContractStoreProperty = (contract, property) => {
 
 export const getUserLimits = async (addr, execID, target, account) => {
   const { methods } =  await attachToSpecificCrowdsaleContract(target)
+
   if (crowdsaleStore.isMintedCappedCrowdsale) {
-    const currentTier = await methods.getCurrentTierInfo(addr, execID).call()
+    const { getCurrentTierInfo, getWhitelistStatus } = methods
+    const { whitelist_enabled, tier_tokens_remaining, tier_price, tier_index } = await getCurrentTierInfo(addr, execID).call()
 
-    if (!currentTier['whitelist_enabled']) return Promise.resolve(null)
+    const tierTokensRemaining = toBigNumber(tier_tokens_remaining).times(tier_price).integerValue(BigNumber.ROUND_CEIL)
 
-    return await methods.getWhitelistStatus(addr, execID, currentTier['tier_index'], account).call()
+    if (!whitelist_enabled) return tierTokensRemaining
+
+    const { max_spend_remaining } = await getWhitelistStatus(addr, execID, tier_index, account).call()
+    const maxSpendRemaining = toBigNumber(max_spend_remaining)
+
+    return tierTokensRemaining.lt(maxSpendRemaining) ? tierTokensRemaining : maxSpendRemaining
+
   } else if (crowdsaleStore.isDutchAuction) {
-    const crowdsaleWhitelist = await methods.getCrowdsaleWhitelist(addr, execID).call()
+    const { getCrowdsaleWhitelist, getCrowdsaleStatus, getWhitelistStatus, decimals } = methods
+    const { num_whitelisted } = await getCrowdsaleWhitelist(addr, execID).call()
+    const { current_rate, tokens_remaining } = await getCrowdsaleStatus(addr, execID).call()
+    const token_decimals = await decimals(addr, execID).call()
 
-    if (crowdsaleWhitelist['num_whitelisted'] == 0) return Promise.resolve(null)
+    const currentRate = toBigNumber(current_rate).div(`1e${token_decimals}`)
+    const crowdsaleTokensRemaining = toBigNumber(tokens_remaining).times(currentRate).integerValue(BigNumber.ROUND_CEIL)
 
-    return await methods.getWhitelistStatus(addr, execID, account).call()
+    if (num_whitelisted === '0') return crowdsaleTokensRemaining
+
+    const { max_spend_remaining } = await getWhitelistStatus(addr, execID, account).call()
+    const maxSpendRemaining = toBigNumber(max_spend_remaining)
+
+    return crowdsaleTokensRemaining.lt(maxSpendRemaining) ? crowdsaleTokensRemaining : maxSpendRemaining
   }
 }

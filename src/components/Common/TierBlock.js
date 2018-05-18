@@ -19,7 +19,7 @@ import {
 import { DESCRIPTION, TEXT_FIELDS } from '../../utils/constants'
 
 const {
-  ALLOWMODIFYING,
+  ALLOW_MODIFYING,
   CROWDSALE_SETUP_NAME,
   START_TIME,
   END_TIME,
@@ -92,7 +92,7 @@ export const TierBlock = ({ fields, ...props }) => {
                 name={`${name}.updatable`}
                 render={({ input }) => (
                   <div className='right'>
-                    <label className="label">{ALLOWMODIFYING}</label>
+                    <label className="label">{ALLOW_MODIFYING}</label>
                     <div className='radios-inline'>
                       <label className='radio-inline'>
                         <input

@@ -122,7 +122,7 @@ exports[`CrowdsaleBlock Should render the component for the first Tier 1`] = `
               </div>
             </InputField>
             <RadioInputField
-              description="Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing."
+              description="If it's enabled, a creator of the crowdsale can modify crowdsale duration after publishing."
               extraClassName="right"
               items={
                 Array [
@@ -187,7 +187,7 @@ exports[`CrowdsaleBlock Should render the component for the first Tier 1`] = `
                 <p
                   className="description"
                 >
-                  Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing.
+                  If it's enabled, a creator of the crowdsale can modify crowdsale duration after publishing.
                 </p>
               </div>
             </RadioInputField>
@@ -590,7 +590,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier 1`] = `
               </div>
             </InputField>
             <RadioInputField
-              description="Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing."
+              description="If it's enabled, a creator of the crowdsale can modify crowdsale duration after publishing."
               extraClassName="right"
               items={
                 Array [
@@ -655,7 +655,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier 1`] = `
                 <p
                   className="description"
                 >
-                  Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing.
+                  If it's enabled, a creator of the crowdsale can modify crowdsale duration after publishing.
                 </p>
               </div>
             </RadioInputField>
@@ -1132,7 +1132,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
               </div>
             </InputField>
             <RadioInputField
-              description="Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing."
+              description="If it's enabled, a creator of the crowdsale can modify crowdsale duration after publishing."
               extraClassName="right"
               items={
                 Array [
@@ -1197,7 +1197,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
                 <p
                   className="description"
                 >
-                  Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing.
+                  If it's enabled, a creator of the crowdsale can modify crowdsale duration after publishing.
                 </p>
               </div>
             </RadioInputField>

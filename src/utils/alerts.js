@@ -73,7 +73,7 @@ export function investmentDisabledAlertInTime(startTime) {
 export function incorrectNetworkAlert(correctNetworkName, incorrectNetworkName) {
   sweetAlert2({
     title: "Warning",
-    html: "Crowdsale contract is from <b>" + correctNetworkName + " network</b>. But you are connected to <b>" + incorrectNetworkName + " network</b>. Please, change connection in MetaMask plugin.",
+    html: "Crowdsale is from <b>" + correctNetworkName + " network</b>. But you are connected to <b>" + incorrectNetworkName + " network</b>. Please, change connection in MetaMask plugin.",
     type: "warning"
   });
 }
@@ -242,6 +242,14 @@ export function reservedTokensImported(count) {
   return sweetAlert2({
     title: 'Reserved tokens imported',
     html: `Tokens will be reserved for ${count} addresses`,
+    type: 'info'
+  })
+}
+
+export function noMoreTokensAvailable() {
+  return sweetAlert2({
+    title: 'No more tokens available',
+    html: `You're not able to buy more tokens. You have bought your maximum allowed or tier has reached its hard cap`,
     type: 'info'
   })
 }

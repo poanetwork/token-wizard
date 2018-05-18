@@ -11,7 +11,6 @@ class TokenStore {
   @observable decimals;
   @observable validToken;
   @observable reservedTokensInput;
-  @observable reservedTokens;
 
   constructor() {
     this.reset()
@@ -29,7 +28,6 @@ class TokenStore {
       'decimals': EMPTY
     }
     this.reservedTokensInput = {}
-    this.reservedTokens = []
   }
 
   @action setProperty = (property, value) => {

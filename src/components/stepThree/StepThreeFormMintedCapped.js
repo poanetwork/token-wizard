@@ -11,14 +11,14 @@ import {
   isAddress,
   isDecimalPlacesNotGreaterThan,
   isGreaterOrEqualThan,
-  isLessOrEqualThan,
   isNonNegative,
 } from '../../utils/validations'
-import { TEXT_FIELDS, VALIDATION_TYPES } from '../../utils/constants'
+import { TEXT_FIELDS, VALIDATION_TYPES, VALIDATION_MESSAGES, DESCRIPTION, NAVIGATION_STEPS } from '../../utils/constants'
 import { TierBlock } from '../Common/TierBlock'
 
+const { CROWDSALE_SETUP } = NAVIGATION_STEPS;
 const { VALID } = VALIDATION_TYPES
-const { MINCAP, WALLET_ADDRESS } = TEXT_FIELDS
+const { MIN_CAP, WALLET_ADDRESS, ENABLE_WHITELISTING } = TEXT_FIELDS
 
 const inputErrorStyle = {
   color: 'red',
@@ -45,7 +45,10 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
     props.tierStore.setGlobalMinCap(values.minCap || 0)
     props.tierStore.setTierProperty(values.whitelistEnabled, "whitelistEnabled", 0)
 
+    let totalSupply = 0
+
     values.tiers.forEach((tier, index) => {
+      totalSupply += Number(tier.supply)
       props.tierStore.setTierProperty(tier.tier, 'tier', index)
       props.tierStore.setTierProperty(tier.updatable, 'updatable', index)
       props.tierStore.setTierProperty(tier.startTime, 'startTime', index)
@@ -54,6 +57,8 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
       props.tierStore.setTierProperty(tier.supply, 'supply', index)
       props.tierStore.validateTiers('supply', index)
     })
+    props.crowdsaleStore.setProperty('supply', totalSupply)
+    props.crowdsaleStore.setProperty('endTime', values.tiers[values.tiers.length - 1].endTime)
   }
 
   return (
@@ -68,9 +73,8 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
         <div className="steps-content container">
           <div className="about-step">
             <div className="step-icons step-icons_crowdsale-setup"/>
-            <p className="title">Crowdsale setup</p>
-            <p className="description">The most important and exciting part of the crowdsale process. Here you can
-              define parameters of your crowdsale campaign.</p>
+            <p className="title">{CROWDSALE_SETUP}</p>
+            <p className="description">{DESCRIPTION.CROWDSALE_SETUP}</p>
           </div>
           <div className="section-title">
             <p className="title">Global settings</p>
@@ -83,8 +87,7 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
               errorStyle={inputErrorStyle}
               side="left"
               label={WALLET_ADDRESS}
-              description="Where the money goes after investors transactions. Immediately after each transaction. We
-                        recommend to setup a multisig wallet with hardware based signers."
+              description={DESCRIPTION.WALLET}
             />
 
             <Field
@@ -93,8 +96,8 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
               side="right"
               gasPrices={props.gasPricesInGwei}
               validate={(value) => composeValidators(
-                isDecimalPlacesNotGreaterThan("Should not have more than 9 decimals")(9),
-                isGreaterOrEqualThan("Should be greater than 0.1")(0.1)
+                isDecimalPlacesNotGreaterThan(VALIDATION_MESSAGES.DECIMAL_PLACES_9)(9),
+                isGreaterOrEqualThan(VALIDATION_MESSAGES.NUMBER_GREATER_THAN)(0.1)
               )(value.price)}
             />
           </div>
@@ -110,15 +113,14 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
               errorStyle={inputErrorStyle}
               type="number"
               side="left"
-              label={MINCAP}
-              description="Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1
-               and a user already has 1 token from a previous transaction, they can buy any amount they want."
+              label={MIN_CAP}
+              description={DESCRIPTION.MIN_CAP}
             />
             <Field
               name="whitelistEnabled"
               render={({ input }) => (
                 <div className='right'>
-                  <label className="label">Enable whitelisting</label>
+                  <label className="label">{ENABLE_WHITELISTING}</label>
                   <div className='radios-inline'>
                     <label className='radio-inline'>
                       <input
@@ -139,8 +141,7 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
                       <span className='title'>no</span>
                     </label>
                   </div>
-                  <p className='description'>Enables whitelisting. If disabled, anyone can participate in the
-                    crowdsale.</p>
+                  <p className='description'>{DESCRIPTION.ENABLE_WHITELIST}</p>
                 </div>
               )}
             />

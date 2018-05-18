@@ -116,46 +116,6 @@ const updateMintedCappedCrowdsaleDurationParams = (tierIndex, duration, methodIn
   return encodedParameters;
 }
 
-const parseReservedTokenValue = (value, decimals) => toBigNumber(value).div(`1e${decimals}`).toFixed()
-
-const buildReservedTokenInfo = ([tokensInfo, addresses, decimals]) => addresses.map((address, index) => {
-  const info = []
-  const tokenInfo = tokensInfo[index]
-
-  if (tokenInfo.inTokens !== '0') {
-    info.push({
-      addr: address,
-      dim: 'tokens',
-      val: parseReservedTokenValue(tokenInfo.inTokens, decimals)
-    })
-  }
-
-  if (tokenInfo.inPercentageUnit !== '0') {
-    info.push({
-      addr: address,
-      dim: 'percentage',
-      val: parseReservedTokenValue(tokenInfo.inPercentageUnit, tokenInfo.inPercentageDecimals)
-    })
-  }
-
-  return info
-})
-
-const getReservedTokensData = (methods, length, decimals) => {
-  const whenReservedTokensAddresses = []
-
-  for (let i = 0; i < length; i++) {
-    whenReservedTokensAddresses.push(methods.reservedTokensDestinations(i).call())
-  }
-
-  return Promise
-    .all(whenReservedTokensAddresses)
-    .then((addresses) => Promise.all(addresses.map(address => methods.reservedTokensList(address).call())))
-    .then((reservedTokensInfo) => Promise.all([reservedTokensInfo, Promise.all(whenReservedTokensAddresses), decimals]))
-    .then(buildReservedTokenInfo)
-    .then(addresses => [].concat.apply([], addresses))
-}
-
 const updateDutchAuctionDurationParams = (startTime, duration, methodInterface) => {
   console.log(startTime, duration)
   const { web3 } = web3Store

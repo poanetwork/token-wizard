@@ -102,7 +102,7 @@ export const CHAINS = {
 }
 
 export const NAVIGATION_STEPS = {
-  CROWDSALE_CONTRACT: 'Crowdsale Contract',
+  CROWDSALE_STRATEGY: 'Crowdsale Strategy',
   TOKEN_SETUP: 'Token Setup',
   CROWDSALE_SETUP: 'Crowdsale Setup',
   PUBLISH: 'Publish',
@@ -123,7 +123,7 @@ export const VALIDATION_MESSAGES = {
   EDITED_END_TIME: 'Please enter a valid date later than start time and previous than start time of next tier',
   EDITED_START_TIME: 'Please enter a valid date later than now, less than end time and later than the end time of the previous tier',
   RATE: 'Please enter a valid number greater than 0',
-  MINCAP: 'Value must be positive, decimals should not exceed the amount of decimals specified and min cap should be less or equal than the supply of some tier',
+  MIN_CAP: 'Value must be positive, decimals should not exceed the amount of decimals specified and min cap should be less or equal than the supply of some tier',
   POSITIVE: 'Please enter a valid number greater than 0',
   NON_NEGATIVE: 'Please enter a valid number greater or equal than 0',
   ADDRESS: 'Please enter a valid address',
@@ -138,13 +138,15 @@ export const VALIDATION_MESSAGES = {
   DATE_IS_LATER: 'Should be later than specified time',
   DATE_IS_SAME_OR_PREVIOUS: 'Should be same or previous than specified time',
   PATTERN: 'Should match the specified pattern',
+  DECIMAL_PLACES_9: 'Should not have more than 9 decimals',
+  NUMBER_GREATER_THAN: 'Should be greater than 0.1'
 }
 
 //descriptions of input fields
 export const DESCRIPTION = {
   TOKEN_TICKER: 'The five letter ticker for your token.',
   CROWDSALE_SETUP_NAME: `Name of a tier, e.g. PrePreCrowdsale, PreCrowdsale, Crowdsale with bonus A, Crowdsale with bonus B, etc. We simplified that and will increment a number after each tier.`,
-  ALLOW_MODIFYING: `Pandora box feature. If it's enabled, a creator of the crowdsale can modify Start time, End time, Rate, Limit after publishing.`,
+  ALLOW_MODIFYING: `If it's enabled, a creator of the crowdsale can modify crowdsale duration after publishing.`,
   START_TIME: `Date and time when the tier starts. Can't be in the past from the current moment.`,
   START_TIME_DUTCH_AUCTION: `Date and time when the crowdsale starts. Can't be in the past from the current moment.`,
   END_TIME: `Date and time when the tier ends. Can be only in the future.`,
@@ -152,7 +154,28 @@ export const DESCRIPTION = {
   RATE: `Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens`,
   SUPPLY: `How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers`,
   SUPPLY_DUTCH_AUCTION: `How many tokens will be sold on crowdsale`,
-  TOKEN_SUPPLY: `The total supply of the token`
+  TOKEN_SUPPLY: `The total supply of the token`,
+  MIN_CAP: `Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1
+               and a user already has 1 token from a previous transaction, they can buy any amount they want.`,
+  ENABLE_WHITELIST: `Enables whitelisting. If disabled, anyone can participate in the crowdsale.`,
+  WALLET: `Where the money goes after investors transactions. Immediately after each transaction. We
+                        recommend to setup a multisig wallet with hardware based signers.`,
+  CROWDSALE_SETUP: `The most important and exciting part of the crowdsale process. Here you can
+              define parameters of your crowdsale campaign.`
+}
+
+export const PUBLISH_DESCRIPTION = {
+  TOKEN_TOTAL_SUPPLY: 'Total token initial supply.',
+  TOKEN_NAME: 'The name of your token. Will be used by Etherscan and other token browsers.',
+  TOKEN_DECIMALS: 'How your token is divisible.',
+  GLOBAL_MIN_CAP: 'Global Min Cap for all contributors for the 1st contribution transaction.',
+  WALLET_ADDRESS: "Where the money goes after contributors' transactions.",
+  CROWDSALE_START_TIME: 'Date and time when the crowdsale starts.',
+  CROWDSALE_END_TIME: 'Date and time when the crowdsale ends.',
+  TIER_START_TIME: 'Date and time when the tier starts.',
+  TIER_END_TIME: 'Date and time when the tier ends.',
+  HARD_CAP: 'How many tokens will be sold on this tier.',
+  ENABLE_WHITELISTING: 'Is whitelist enabled on this tier?'
 }
 
 export const TEXT_FIELDS = {
@@ -165,17 +188,20 @@ export const TEXT_FIELDS = {
   MIN_RATE: 'Min Rate',
   MAX_RATE: 'Max Rate',
   WALLET_ADDRESS: 'Wallet Address',
+  CROWDSALE_START_TIME: 'Crowdsale Start time',
+  CROWDSALE_END_TIME: 'Crowdsale End time',
   START_TIME: 'Start Time',
   END_TIME: 'End Time',
   CROWDSALE_SETUP_NAME: 'Crowdsale setup name',
   ADDRESS: 'Address',
   MIN: 'Min',
   MAX: 'Max',
-  MINCAP: 'Investor min cap',
+  GLOBAL_MIN_CAP: 'Global Min Cap',
+  MIN_CAP: 'Investor min cap',
   DIMENSION: 'Dimension',
   VALUE: 'Value',
   MAX_CAP: 'Max cap',
-  ALLOWMODIFYING: 'Allow modifying',
+  ALLOW_MODIFYING: 'Allow modifying',
   ENABLE_WHITELISTING: 'Enable whitelisting',
   GAS_PRICE: 'Gas Price',
   STRATEGY: 'Crowdsale Type'
@@ -222,69 +248,6 @@ export const initialStepThreeValues = {
   }]
 }
 
-export const SUMMARY_FILE_MINTED_CAPPED_CROWDSALE_CONTENTS = {
-  common: [
-    { field: 'name', value: 'Token name: ', parent: 'tokenStore' },
-    { field: 'ticker', value: 'Token ticker: ', parent: 'tokenStore' },
-    { field: 'decimals', value: 'Token decimals: ', parent: 'tokenStore' },
-    { field: 'walletAddress', value: 'Multisig wallet address: ', parent: 'tierStore' },
-    { value: '*****************************', parent: 'none', fileValue: '' },
-    { field: 'rate', value: 'Crowdsale rate: ', parent: 'tierStore' },
-    { field: 'startTime', value: 'Crowdsale start time: ', parent: 'tierStore' },
-    { field: 'endTime', value: 'Crowdsale end time: ', parent: 'tierStore' },
-    { value: '*****************************', parent: 'none', fileValue: '' }
-  ],
-  files: {
-    order: [
-      'crowdsale'
-    ],
-    crowdsale: {
-      name: 'MintedCappedCrowdsale',
-      txt: [
-        { value: 'Auth_os application name: ', parent: 'none', fileValue: 'MintedCappedCrowdsale' },
-        { field: 'execID', value: 'Auth_os execution ID: ', parent: 'crowdsale' },
-        { value: '*****************************', parent: 'none', fileValue: '' }
-      ]
-    }
-  }
-}
-
-export const SUMMARY_FILE_DUTCH_AUCTION_CONTENTS = {
-  common: [
-    { field: 'name', value: 'Token name: ', parent: 'tokenStore' },
-    { field: 'ticker', value: 'Token ticker: ', parent: 'tokenStore' },
-    { field: 'decimals', value: 'Token decimals: ', parent: 'tokenStore' },
-    { field: 'supply', value: 'Token supply: ', parent: 'tokenStore' },
-    { field: 'walletAddress', value: 'Multisig wallet address: ', parent: 'tierStore' },
-    { value: '*****************************', parent: 'none', fileValue: '' },
-    { field: 'minRate', value: 'Crowdsale min rate: ', parent: 'tierStore' },
-    { field: 'maxRate', value: 'Crowdsale max rate: ', parent: 'tierStore' },
-    { field: 'supply', value: 'Crowdsale supply: ', parent: 'tierStore' },
-    { field: 'startTime', value: 'Crowdsale start time: ', parent: 'tierStore' },
-    { field: 'endTime', value: 'Crowdsale end time: ', parent: 'tierStore' },
-    { value: '*****************************', parent: 'none', fileValue: '' }
-  ],
-  files: {
-    order: [
-      'crowdsale'
-    ],
-    crowdsale: {
-      name: 'DutchAuction',
-      txt: [
-        { value: 'Auth_os application name: ', parent: 'none', fileValue: 'DutchAuction' },
-        { field: 'execID', value: 'Auth_os execution ID: ', parent: 'crowdsale' },
-        { value: '*****************************', parent: 'none', fileValue: '' }
-      ]
-    }
-  }
-}
-
-export const DOWNLOAD_NAME = 'tokenwizard'
-export const DOWNLOAD_TYPE = {
-  text: 'text/plain',
-  blob: 'blob'
-}
-
 export const INVESTMENT_OPTIONS = {
   METAMASK: 'metamask',
   QR: 'qr'
@@ -307,15 +270,4 @@ export const TOAST = {
     offset: 80,
     time: 10000
   }
-}
-
-export const TX_STEP_DESCRIPTION = {
-  crowdsaleCreate: "Create Crowdsale instance",
-  token: "Initialize Token",
-  //registerCrowdsaleAddress: "Associate Crowdsale address to current account",
-  setReservedTokens: "Register addresses for Reserved Tokens",
-  updateGlobalMinContribution: "Update global minimum contribution",
-  createCrowdsaleTiers: "Add tiers to Crowdsale",
-  whitelist: "Register whitelisted addresses",
-  crowdsaleInit: "Initialize Crowdsale",
 }

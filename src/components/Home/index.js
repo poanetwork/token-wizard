@@ -6,10 +6,12 @@ import { Loader } from '../Common/Loader'
 import { loadRegistryAddresses } from '../../utils/blockchainHelpers'
 import { ModalContainer } from '../Common/ModalContainer'
 import { toast } from '../../utils/utils';
-import { TOAST } from '../../utils/constants';
+import { TOAST, NAVIGATION_STEPS } from '../../utils/constants';
 import { inject, observer } from 'mobx-react';
 import { checkWeb3, getNetworkVersion, } from '../../utils/blockchainHelpers'
 import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
+
+const { CROWDSALE_STRATEGY, TOKEN_SETUP, CROWDSALE_SETUP, PUBLISH, CROWDSALE_PAGE } = NAVIGATION_STEPS
 
 const DOWNLOAD_STATUS = {
   PENDING: 'pending',
@@ -102,35 +104,35 @@ export class Home extends Component {
             <div className="container">
               <div className="process-item">
                 <div className="step-icons step-icons_crowdsale-contract"></div>
-                <p className="title">Crowdsale Contract</p>
+                <p className="title">{CROWDSALE_STRATEGY}</p>
                 <p className="description">
-                  Select a strategy for crowdsale contract
+                  Select a strategy for crowdsale strategy
                 </p>
               </div>
               <div className="process-item">
                 <div className="step-icons step-icons_token-setup"></div>
-                <p className="title">Token Setup</p>
+                <p className="title">{TOKEN_SETUP}</p>
                 <p className="description">
                   Setup token and reserved distribution
                 </p>
               </div>
               <div className="process-item">
                 <div className="step-icons step-icons_crowdsale-setup"></div>
-                <p className="title">Crowdsale Setup</p>
+                <p className="title">{CROWDSALE_SETUP}</p>
                 <p className="description">
                   Setup tiers and crowdsale parameters
                 </p>
               </div>
               <div className="process-item">
                 <div className="step-icons step-icons_publish"></div>
-                <p className="title">Publish</p>
+                <p className="title">{PUBLISH}</p>
                 <p className="description">
                   Get artifacts to interact with Auth_os framework
                 </p>
               </div>
               <div className="process-item">
                 <div className="step-icons step-icons_crowdsale-page"></div>
-                <p className="title">Crowdsale Page</p>
+                <p className="title">{CROWDSALE_PAGE}</p>
                 <p className="description">
                   Bookmark this page for the campaign statistics
                 </p>

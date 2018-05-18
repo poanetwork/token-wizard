@@ -8,18 +8,21 @@ import {
   handleContractsForFile,
   handlerForFile,
   scrollToBottom,
-  setupContractDeployment
+  SUMMARY_FILE_CONTENTS
 } from './utils'
 import { noContractDataAlert, successfulDeployment, skippingTransaction } from '../../utils/alerts'
 import {
   DESCRIPTION,
-  DOWNLOAD_TYPE,
-  SUMMARY_FILE_MINTED_CAPPED_CROWDSALE_CONTENTS,
-  SUMMARY_FILE_DUTCH_AUCTION_CONTENTS,
   NAVIGATION_STEPS,
   TOAST,
-  CROWDSALE_STRATEGIES_DISPLAYNAMES
+  CROWDSALE_STRATEGIES,
+  CROWDSALE_STRATEGIES_DISPLAYNAMES,
+  TEXT_FIELDS,
+  PUBLISH_DESCRIPTION
 } from '../../utils/constants'
+import  {
+  DOWNLOAD_TYPE,
+} from './constants'
 import { toast } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { DisplayField } from '../Common/DisplayField'
@@ -35,7 +38,25 @@ import { PreventRefresh } from '../Common/PreventRefresh'
 import cancelDeploy from '../../utils/cancelDeploy'
 import PropTypes from 'prop-types'
 
-const { PUBLISH } = NAVIGATION_STEPS
+const { PUBLISH, CROWDSALE_STRATEGY, TOKEN_SETUP, CROWDSALE_SETUP } = NAVIGATION_STEPS
+const {
+  NAME,
+  TICKER,
+  DECIMALS,
+  SUPPLY,
+  WALLET_ADDRESS,
+  GLOBAL_MIN_CAP,
+  RATE,
+  MIN_RATE,
+  MAX_RATE,
+  CROWDSALE_START_TIME,
+  CROWDSALE_END_TIME,
+  START_TIME,
+  END_TIME,
+  ALLOW_MODIFYING,
+  ENABLE_WHITELISTING,
+  MAX_CAP
+} = TEXT_FIELDS
 
 @inject('contractStore', 'reservedTokenStore', 'tierStore', 'tokenStore', 'web3Store', 'deploymentStore', 'crowdsaleStore')
 @observer
@@ -159,10 +180,18 @@ export class stepFour extends React.Component {
     switch (parent) {
       case 'crowdsale':
         return handlerForFile(content, this.props.contractStore[parent])
-      case 'tierStore':
-        index = 'walletAddress' === content.field ? 0 : index
-        return handlerForFile(content, this.props[parent].tiers[index])
+      case 'crowdsaleStore':
+        return handlerForFile(content, this.props[parent])
+      case 'tierStore': {
+        if (content.field == 'globalMinCap') {
+          return handlerForFile(content, this.props[parent])
+        } else {
+          index = (content.field === 'walletAddress' || content.field === 'whitelistEnabled') ? 0 : index
+          return handlerForFile(content, this.props[parent].tiers[index])
+        }
+      }
       case 'tokenStore':
+      case 'reservedTokenStore':
         return handlerForFile(content, this.props[parent])
       case 'contracts':
         return handleContractsForFile(content, index, this.props.contractStore, this.props.tierStore)
@@ -176,13 +205,9 @@ export class stepFour extends React.Component {
   downloadCrowdsaleInfo = () => {
     const { contractStore, crowdsaleStore } = this.props
     const zip = new JSZip()
-    let files
-    if (crowdsaleStore.isMintedCappedCrowdsale) {
-      files = SUMMARY_FILE_MINTED_CAPPED_CROWDSALE_CONTENTS.files
-    } else if (crowdsaleStore.isDutchAuction) {
-      files = SUMMARY_FILE_DUTCH_AUCTION_CONTENTS.files
-    }
-    //const tiersCount = isObservableArray(this.props.tierStore.tiers) ? this.props.tierStore.tiers.length : 1
+    const fileContents = SUMMARY_FILE_CONTENTS(contractStore.crowdsale.networkID)
+    let files = fileContents.files
+    const tiersCount = isObservableArray(this.props.tierStore.tiers) ? this.props.tierStore.tiers.length : 1
     const contractsKeys = files.order;
     const orderNumber = order => order.toString().padStart(3, '0');
     let prefix = 1
@@ -192,25 +217,33 @@ export class stepFour extends React.Component {
         console.log(files[key])
         console.log(contractStore[key])
         const { txt, name } = files[key]
-        const { abiConstructor } = contractStore[key]
-        let tiersCountPerContract = isObservableArray(abiConstructor) ? abiConstructor.length : 1
 
-        for (let tier = 0; tier < tiersCountPerContract; tier++) {
-          const suffix = tiersCountPerContract > 1 ? `_${tier + 1}` : ''
-          const txtFilename = `${orderNumber(prefix++)}_${name}${suffix}`
-          const tierNumber = tier
-          let common
-          if (crowdsaleStore.isMintedCappedCrowdsale) {
-            common = SUMMARY_FILE_MINTED_CAPPED_CROWDSALE_CONTENTS.common
-          } else if (crowdsaleStore.isDutchAuction) {
-            common = SUMMARY_FILE_DUTCH_AUCTION_CONTENTS.common
+        const authOS = fileContents.auth_os
+        const authOSHeader = authOS.map(content => this.handleContentByParent(content))
+
+        zip.file(
+          `Auth_os_addresses.txt`,
+          authOSHeader.join('\n')
+        )
+
+        const common = fileContents.common
+        const commonHeader = common.map(content => this.handleContentByParent(content))
+
+        zip.file(
+          `${name}_data.txt`,
+          commonHeader.join('\n')
+        )
+
+        if (crowdsaleStore.strategy == CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE) {
+          for (let tier = 0; tier < tiersCount; tier++) {
+            const txtFilename = `${orderNumber(prefix++)}_tier`
+            const tierNumber = tier
+
+            zip.file(
+              `${txtFilename}.txt`,
+              txt.map(content => this.handleContentByParent(content, tierNumber)).join('\n')
+            )
           }
-          const commonHeader = common.map(content => this.handleContentByParent(content, tierNumber))
-
-          zip.file(
-            `${txtFilename}.txt`,
-            commonHeader.concat(txt.map(content => this.handleContentByParent(content, tierNumber))).join('\n\n')
-          )
         }
       }
     })
@@ -276,86 +309,81 @@ export class stepFour extends React.Component {
 
   render() {
     const { tierStore, tokenStore, deploymentStore, crowdsaleStore } = this.props
-    const crowdsaleSetups = tierStore.tiers.map((tier, index) => {
-      const mintedCappedCrowdsaleRateBlock = (<DisplayField
-        side='left'
-        title={'RATE'}
-        value={tier.rate ? tier.rate : 0 + ' ETH'}
-        description={DESCRIPTION.RATE}
-      />)
-      const dutchAuctionCrowdsaleRateBlock = (<div className="hidden"><DisplayField
-        side='left'
-        title={'MIN RATE'}
-        value={tier.minRate ? tier.minRate : 0 + ' ETH'}
-        description={DESCRIPTION.RATE}
-      />
-      <DisplayField
-        side='right'
-        title={'MAX RATE'}
-        value={tier.maxRate ? tier.maxRate : 0 + ' ETH'}
-        description={DESCRIPTION.RATE}
-      /></div>)
+    const tokenSupplyStr = tokenStore.supply ? tokenStore.supply.toString() : 0
+    const tokenNameStr = tokenStore.name ? tokenStore.name : ''
+    const tokenDecimalsStr = tokenStore.decimals ? tokenStore.decimals.toString() : ''
+    const tokenSupplyBlock = (
+      <DisplayField side='right' title={SUPPLY} value={tokenSupplyStr} description={PUBLISH_DESCRIPTION.TOKEN_TOTAL_SUPPLY} />
+    )
+    const tokenSetup = (
+      <div className='hidden'>
+        <div className='hidden'>
+          <DisplayField side='left' title={NAME} value={tokenNameStr} description={PUBLISH_DESCRIPTION.TOKEN_NAME} />
+          <DisplayField side='right' title={TICKER} value={tokenStore.ticker ? tokenStore.ticker : ''} description={DESCRIPTION.TOKEN_TICKER} />
+        </div>
+        <div className='hidden'>
+          <DisplayField side='left' title={DECIMALS} value={tokenDecimalsStr} description={PUBLISH_DESCRIPTION.TOKEN_DECIMALS} />
+          {tokenSupplyBlock}
+        </div>
+      </div>)
+
+    const globalLimitsBlock = (
+      <DisplayField side='right' title={GLOBAL_MIN_CAP} value={tierStore.globalMinCap} description={PUBLISH_DESCRIPTION.GLOBAL_MIN_CAP} />
+    )
+    const walletAddressStr = tierStore.tiers[0].walletAddress
+    const crowdsaleStartTimeStr = tierStore.tiers[0].startTime ? tierStore.tiers[0].startTime.split('T').join(' ') : ''
+    const crowdsaleEndTimeStr = tierStore.tiers[tierStore.tiers.length - 1].endTime ? tierStore.tiers[tierStore.tiers.length - 1].endTime.split('T').join(' ') : ''
+    const crowdsaleSetup = (
+      <div className='hidden'>
+        <div className='hidden'>
+          <DisplayField side='left' title={WALLET_ADDRESS} value={walletAddressStr} description={PUBLISH_DESCRIPTION.WALLET_ADDRESS} />
+          {globalLimitsBlock}
+        </div>
+        <div className='hidden'>
+          <DisplayField side='left' title={CROWDSALE_START_TIME} value={crowdsaleStartTimeStr} description={PUBLISH_DESCRIPTION.CROWDSALE_START_TIME} />
+          <DisplayField side='right' title={CROWDSALE_END_TIME} value={crowdsaleEndTimeStr} description={PUBLISH_DESCRIPTION.CROWDSALE_END_TIME} />
+        </div>
+      </div>
+    )
+    const tiersSetup = tierStore.tiers.map((tier, index) => {
+      const tierRateStr = tier.rate ? tier.rate : 0 + ' ETH'
+      const tierMinRateStr = tier.minRate ? tier.minRate : 0 + ' ETH'
+      const tierMaxRateStr = tier.maxRate ? tier.maxRate : 0 + ' ETH'
+      const mintedCappedCrowdsaleRateBlock = (
+        <DisplayField side='left' title={RATE} value={tierRateStr} description={DESCRIPTION.RATE} />
+      )
+      const dutchAuctionCrowdsaleRateBlock = (
+        <div className='hidden'>
+          <DisplayField side='left' title={MIN_RATE} value={tierMinRateStr} description={DESCRIPTION.RATE} />
+          <DisplayField side='right' title={MAX_RATE} value={tierMaxRateStr} description={DESCRIPTION.RATE} />
+        </div>
+      )
+      const tierStartTimeStr = tier.startTime ? tier.startTime.split('T').join(' ') : ''
+      const tierEndTimeStr = tier.endTime ? tier.endTime.split('T').join(' ') : ''
+      const tierIsUpdatable = crowdsaleStore.isDutchAuction ? 'on' : tier.updatable ? tier.updatable : 'off'
+      const tierIsWhitelisted = tier.whitelistEnabled ? tier.whitelistEnabled : 'off'
+      const tierSupplyStr = tier.supply ? tier.supply : ''
+      const hardCapSide = crowdsaleStore.isMintedCappedCrowdsale ? 'right' : crowdsaleStore.isDutchAuction ? 'left' : null
       return (
         <div key={index.toString()}>
           <div className="publish-title-container">
-            <p className="publish-title" data-step={3 + index}>Crowdsale Setup {tier.tier}</p>
+            <p className="publish-title" data-step="3">{tier.tier} Setup</p>
           </div>
-          <div className="hidden">
-            <div className="hidden">
-              <DisplayField
-                side='left'
-                title={'Start time'}
-                value={tier.startTime ? tier.startTime.split('T').join(' ') : ''}
-                description="Date and time when the tier starts."
-              />
-              <DisplayField
-                side='right'
-                title={'End time'}
-                value={tier.endTime ? tier.endTime.split('T').join(' ') : ''}
-                description="Date and time when the tier ends."
-              />
+          <div className='hidden'>
+            <div className='hidden'>
+              <DisplayField side='left' title={START_TIME} value={tierStartTimeStr} description={PUBLISH_DESCRIPTION.TIER_START_TIME} />
+              <DisplayField side='right' title={END_TIME} value={tierEndTimeStr} description={PUBLISH_DESCRIPTION.TIER_END_TIME} />
             </div>
-            <div className="hidden">
-              <DisplayField
-                side='left'
-                title={'Wallet address'}
-                value={tierStore.tiers[0].walletAddress}
-                description="Where the money goes after investors transactions."
-              />
-              <DisplayField
-                side='right'
-                title={'Allow modifying'}
-                value={crowdsaleStore.isDutchAuction ? 'on' : tier.updatable ? tier.updatable : 'off'}
-                description={DESCRIPTION.ALLOW_MODIFYING}
-              />
+            <div className='hidden'>
+              <DisplayField side='left' title={ENABLE_WHITELISTING} value={tierIsWhitelisted} description={PUBLISH_DESCRIPTION.ENABLE_WHITELISTING} />
+              <DisplayField side='right' title={ALLOW_MODIFYING} value={tierIsUpdatable} description={DESCRIPTION.ALLOW_MODIFYING} />
             </div>
             {crowdsaleStore.isMintedCappedCrowdsale ? mintedCappedCrowdsaleRateBlock : crowdsaleStore.isDutchAuction ? dutchAuctionCrowdsaleRateBlock : null}
-            <DisplayField
-              side={crowdsaleStore.isMintedCappedCrowdsale ? 'right' : crowdsaleStore.isDutchAuction ? 'left' : null}
-              title={'Max cap'}
-              value={tier.supply ? tier.supply : ''}
-              description="How many tokens will be sold on this tier."
-            />
+            <DisplayField side={hardCapSide} title={MAX_CAP} value={tierSupplyStr} description={PUBLISH_DESCRIPTION.HARD_CAP} />
           </div>
         </div>
       )
     })
-
-    const globalLimitsBlock = (
-      <div>
-        <div className="publish-title-container">
-          <p className="publish-title" data-step={2 + tierStore.tiers.length + 2}>Global Limits</p>
-        </div>
-        <div className="hidden">
-          <DisplayField
-            side='left'
-            title='Min Cap'
-            value={tierStore.globalMinCap}
-            description="Min Cap for all investors"
-          />
-        </div>
-      </div>
-    )
 
     const modalContent = deploymentStore.invalidAccount ? (
       <div>
@@ -373,12 +401,6 @@ export class stepFour extends React.Component {
 
     let strategyName
     strategyName = crowdsaleStore.isMintedCappedCrowdsale ? CROWDSALE_STRATEGIES_DISPLAYNAMES.MINTED_CAPPED_CROWDSALE : crowdsaleStore.isDutchAuction ? CROWDSALE_STRATEGIES_DISPLAYNAMES.DUTCH_AUCTION : ""
-    const tokenSupplyBlock = (<DisplayField
-        side='right'
-        title='SUPPLY'
-        value={tokenStore.supply ? tokenStore.supply.toString() : ""}
-        description="Token supply."
-      />)
 
     return (
       <section className="steps steps_publish">
@@ -386,7 +408,7 @@ export class stepFour extends React.Component {
         <div className="steps-content container">
           <div className="about-step">
             <div className="step-icons step-icons_publish"/>
-            <p className="title">Publish</p>
+            <p className="title">{PUBLISH}</p>
             <p className="description">
               On this step we provide you artifacts about your token and crowdsale contracts.
             </p>
@@ -394,44 +416,20 @@ export class stepFour extends React.Component {
           <div className="hidden">
             <div className="item">
               <div className="publish-title-container">
-                <p className="publish-title" data-step="1">Crowdsale Contract</p>
+                <p className="publish-title" data-step="1">{CROWDSALE_STRATEGY}</p>
               </div>
               <p className="label">{strategyName}</p>
-              <p className="description">Crowdsale Contract</p>
+              <p className="description">{CROWDSALE_STRATEGY}</p>
             </div>
             <div className="publish-title-container">
-              <p className="publish-title" data-step="2">Token Setup</p>
+              <p className="publish-title" data-step="2">{TOKEN_SETUP}</p>
             </div>
-            <div className="hidden">
-              <div className="hidden">
-                <DisplayField
-                  side='left'
-                  title='Name'
-                  value={tokenStore.name ? tokenStore.name : ""}
-                  description="The name of your token. Will be used by Etherscan and other token browsers."
-                />
-                <DisplayField
-                  side='right'
-                  title='Ticker'
-                  value={tokenStore.ticker ? tokenStore.ticker : ""}
-                  description={DESCRIPTION.TOKEN_TICKER}
-                />
-              </div>
-              <div className="hidden">
-                <DisplayField
-                  side='left'
-                  title='DECIMALS'
-                  value={tokenStore.decimals ? tokenStore.decimals.toString() : ""}
-                  description="The decimals of your token."
-                />
-                {crowdsaleStore.isDutchAuction ? tokenSupplyBlock: null}
-              </div>
+            {tokenSetup}
+            <div className="publish-title-container">
+              <p className="publish-title" data-step="3">{CROWDSALE_SETUP}</p>
             </div>
-            {crowdsaleSetups}
-            {tierStore.tiers[0].whitelistEnabled !== "yes"
-              ? globalLimitsBlock
-              : null
-            }
+            {crowdsaleSetup}
+            {tiersSetup}
           </div>
         </div>
         <div className="button-container">
