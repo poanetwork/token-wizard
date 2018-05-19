@@ -28,7 +28,6 @@ module.exports = {
     },
     test: {
       default: series(
-        'git submodule update --init --recursive --remote',
         'npm run installWeb3',
         'npm run testContractsMintedCappedCrowdsale',
         'npm run testContractsDutchAuction',
@@ -107,7 +106,7 @@ module.exports = {
         prepare: series(
           'bash ./scripts/start_ganache.sh',
           'cd ./submodules/auth-os-applications',
-          'git checkout -f e2e',
+          'git checkout -f e2e'
         ),
         start: 'PORT=3000 BROWSER=none node scripts/start.js &'
       }
