@@ -1,6 +1,6 @@
 import { incorrectNetworkAlert, noMetaMaskAlert, MetaMaskIsLockedAlert, invalidNetworkIDAlert } from './alerts'
 import { CHAINS, MAX_GAS_PRICE } from './constants'
-import { crowdsaleStore, generalStore, web3Store } from '../stores'
+import { crowdsaleStore, generalStore, web3Store, contractStore } from '../stores'
 import { fetchFile } from './utils'
 
 const DEPLOY_CONTRACT = 1
@@ -306,5 +306,109 @@ export function loadRegistryAddresses () {
     })
     .then(crowdsales => {
       crowdsaleStore.setCrowdsales(crowdsales)
+    })
+}
+
+export function getAllCrowdsaleAddresses () {
+  const whenRegistryContract = getRegistryContract()
+
+  return Promise.all([whenRegistryContract])
+    .then(([registry]) => {
+      return registry.getPastEvents('Added', {fromBlock: 0})
+      .then((events) => {
+        let crowdsalesAddresses = []
+        events.forEach((event) => {
+          let crowdsaleAddress = event.returnValues.deployAddress
+          crowdsalesAddresses.push(crowdsaleAddress)
+        })
+
+        let whenCrowdsales = []
+        let crowdsaleABI = contractStore.crowdsale.abi
+        for (let i = 0; i < /*crowdsalesAddresses.length*/20; i++) {
+          let whenCrowdsale = attachToContract(crowdsaleABI, crowdsalesAddresses[i])
+          whenCrowdsales.push(whenCrowdsale)
+        }
+
+        return Promise.all(whenCrowdsales)
+      })
+    })
+    .then(crowdsales => {
+      //console.log("crowdsales:", crowdsales)
+
+      let whenJoinedCrowdsalesArr = []
+      for (let i = 0; i < /*crowdsales.length*/20; i++) {
+        let crowdsale = crowdsales[i]
+        whenJoinedCrowdsalesArr.push(crowdsale.methods.joinedCrowdsalesLen().call())
+      }
+
+      let whenJoinedCrowdsalesData = []
+
+      let fullCrowdsales = {}
+
+      crowdsales.forEach((crowdsale, ind) => {
+        console.log("crowdsale.address:", crowdsale._address)
+        let promise = attachToContract(contractStore.crowdsale.abi, crowdsale._address)
+        .then((crowdsale) => {
+          crowdsale.methods.joinedCrowdsalesLen().call()
+          .then((len) => {
+            let whenJoinedCrowdsales = []
+            for (let i = 0; i < len; i++) {
+              whenJoinedCrowdsales.push(crowdsale.methods.joinedCrowdsales(i).call())
+            }
+            return Promise.all(whenJoinedCrowdsales)
+            .then((joinedCrowdsales) => {
+              fullCrowdsales[crowdsale._address] = {
+                "joinedCrowdsales": joinedCrowdsales
+              }
+            })
+          })
+          whenJoinedCrowdsalesData.push(promise)
+        })
+      })
+
+      return Promise.all(whenJoinedCrowdsalesData)
+      .then(() => {
+        console.log("fullCrowdsales:", fullCrowdsales)
+        console.log("fullCrowdsales.length", Object.keys(fullCrowdsales).length)
+
+        let whenTiers = []
+        Object.keys(fullCrowdsales).forEach((obj) => {
+          console.log("obj:", obj)
+          whenTiers.push(attachToContract(contractStore.crowdsale.abi, obj))
+        })
+
+        return Promise.all(whenTiers)
+        .then((tiers) => {
+          let whenWeiRaisedArr = []
+          let whenContributorsArr = []
+          for (let i = 0; i < tiers.length; i++) {
+            let crowdsale = tiers[i]
+            whenWeiRaisedArr.push(crowdsale.methods.weiRaised().call())
+            whenContributorsArr.push(crowdsale.methods.investorCount().call())
+          }
+
+          let totalArr = [
+            whenWeiRaisedArr.map(p => p.catch(() => undefined)),
+            whenJoinedCrowdsalesArr.map(p => p.catch(() => undefined)),
+            whenContributorsArr.map(p => p.catch(() => undefined))
+          ]
+
+          console.log("totalArr:", totalArr)
+
+          let totalArrayReorg = totalArr.map(function(innerPromiseArray) {
+            return Promise.all(innerPromiseArray);
+          })
+
+          console.log("totalArrayReorg:", totalArrayReorg)
+
+          return Promise.all(totalArrayReorg)
+        })
+      })
+    })
+    .then((totalArr) => {
+      return totalArr
+    })
+    .catch((err) => {
+      console.log("err: ", err)
     })
 }
