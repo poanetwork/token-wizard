@@ -93,26 +93,22 @@ export class Manage extends Component {
     crowdsaleStore.reset()
   }
 
-  checkOwner = () => {
+  checkOwner = async () => {
     const { contractStore, web3Store, crowdsaleStore } = this.props
 
     const targetPrefix = "initCrowdsale"
     const targetSuffix = crowdsaleStore.contractTargetSuffix
     const target = `${targetPrefix}${targetSuffix}`
-    return attachToSpecificCrowdsaleContract(target)
-      .then((initCrowdsaleContract) => {
-        let registryStorageObj = toJS(contractStore.registryStorage)
-        const whenOwner = initCrowdsaleContract.methods.getAdmin(registryStorageObj.addr, contractStore.crowdsale.execID).call()
-        const whenAccounts = web3Store.web3.eth.getAccounts()
 
-        return Promise.all([whenOwner, whenAccounts])
-      })
-      .then(([ownerAccount, accounts]) => this.setState({ ownerCurrentUser: accounts[0] === ownerAccount }))
-      .then(() => {
-        if (!this.state.ownerCurrentUser) {
-          notTheOwner()
-        }
-      })
+    const { methods } = await attachToSpecificCrowdsaleContract(target)
+    const { addr } = toJS(contractStore.registryStorage)
+    const ownerAccount = await methods.getAdmin(addr, contractStore.crowdsale.execID).call()
+    const accounts = await web3Store.web3.eth.getAccounts()
+
+    const ownerCurrentUser = accounts[0] === ownerAccount
+    this.setState({ ownerCurrentUser })
+
+    if (!ownerCurrentUser) notTheOwner()
   }
 
   extractContractsData = () => {
@@ -328,53 +324,49 @@ export class Manage extends Component {
       .then(this.checkOwner)
   }
 
-  setCrowdsaleInfo = () => {
+  setCrowdsaleInfo = async () => {
     const { contractStore, crowdsaleStore } = this.props
 
     const targetPrefix = "initCrowdsale"
     const targetSuffix = crowdsaleStore.contractTargetSuffix
     const target = `${targetPrefix}${targetSuffix}`
-    return attachToSpecificCrowdsaleContract(target)
-      .then((initCrowdsaleContract) => {
-        let registryStorageObj = toJS(contractStore.registryStorage)
-        return initCrowdsaleContract.methods.getCrowdsaleStartAndEndTimes(registryStorageObj.addr, contractStore.crowdsale.execID).call();
-      })
-      .then(crowdsaleStartAndEndTimes => {
-        console.log("crowdsaleStartAndEndTimes.end_time:", crowdsaleStartAndEndTimes.end_time)
-        this.setState({ crowdsaleHasEnded: crowdsaleStartAndEndTimes.end_time * 1000 <= Date.now() || crowdsaleStore.selected.finalized })
-      })
+
+    const { methods } = await attachToSpecificCrowdsaleContract(target)
+    const { addr } = toJS(contractStore.registryStorage)
+    const { end_time } = methods.getCrowdsaleStartAndEndTimes(addr, contractStore.crowdsale.execID).call()
+
+    console.log("crowdsaleStartAndEndTimes.end_time:", end_time)
+    this.setState({ crowdsaleHasEnded: end_time * 1000 <= Date.now() || crowdsaleStore.selected.finalized })
   }
 
-  canFinalize = () => {
+  canFinalize = async () => {
     const { contractStore, crowdsaleStore } = this.props
 
     const targetPrefix = "initCrowdsale"
     const targetSuffix = crowdsaleStore.contractTargetSuffix
     const target = `${targetPrefix}${targetSuffix}`
 
-    return attachToSpecificCrowdsaleContract(target)
-      .then((initCrowdsaleContract) => {
-        let registryStorageObj = toJS(contractStore.registryStorage)
-        const whenCrowdsaleInfo = initCrowdsaleContract.methods.getCrowdsaleInfo(registryStorageObj.addr, contractStore.crowdsale.execID).call();
-        const whenIsCrowdsaleFull = initCrowdsaleContract.methods.isCrowdsaleFull(registryStorageObj.addr, contractStore.crowdsale.execID).call();
-        return Promise.all([whenCrowdsaleInfo, whenIsCrowdsaleFull])
-      })
-      .then(
-        ([crowdsaleInfo, isCrowdsaleFullObj]) => {
-          const isCrowdsaleFull = isCrowdsaleFullObj.is_crowdsale_full
-          const isFinalized = crowdsaleInfo.is_finalized
-          if (isFinalized) {
-            this.setState({ canFinalize: false })
-          } else {
-            const { crowdsaleHasEnded } = this.state
+    const { methods } = await attachToSpecificCrowdsaleContract(target)
+    const { getCrowdsaleInfo, isCrowdsaleFull } = methods
+    const { addr } = toJS(contractStore.registryStorage)
 
-            this.setState({
-              canFinalize: (crowdsaleHasEnded || isCrowdsaleFull)
-            })
-          }
-        },
-        () => this.setState({ canFinalize: false })
-      )
+    try {
+      const { is_finalized } = getCrowdsaleInfo(addr, contractStore.crowdsale.execID).call()
+      const { is_crowdsale_full } = isCrowdsaleFull(addr, contractStore.crowdsale.execID).call()
+
+      if (is_finalized) {
+        this.setState({ canFinalize: false })
+      } else {
+        const { crowdsaleHasEnded } = this.state
+
+        this.setState({
+          canFinalize: crowdsaleHasEnded || is_crowdsale_full
+        })
+      }
+    } catch (e) {
+      console.error(e)
+      this.setState({ canFinalize: false })
+    }
   }
 
   getFinalizeCrowdsaleParams = (methodInterface) => {
@@ -505,18 +497,19 @@ export class Manage extends Component {
   calculator = createDecorator({
     field: /.+\.endTime/,
     updates: (value, name, allValues) => {
-      const tierIndex = +name.match(/(\d+)/)[1]
+      const nextTierIndex = +name.match(/(\d+)/)[1] + 1
       const { tierStore } = this.props
       const newValue = {}
 
-      if (tierStore.tiers[tierIndex + 1]) {
-        const currentEnd = moment(allValues.tiers[tierIndex + 1].endTime)
-        const currentStart = moment(allValues.tiers[tierIndex + 1].startTime)
+
+      if (tierStore.tiers[nextTierIndex]) {
+        const currentEnd = moment(allValues.tiers[nextTierIndex].endTime)
+        const currentStart = moment(allValues.tiers[nextTierIndex].startTime)
         const duration = moment.duration(currentEnd.diff(currentStart)).as('minutes')
         const nextEnd = moment(value).add(duration, 'm').format('YYYY-MM-DDTHH:mm')
 
-        newValue[`tiers[${tierIndex + 1}].startTime`] = value
-        newValue[`tiers[${tierIndex + 1}].endTime`] = nextEnd
+        newValue[`tiers[${nextTierIndex}].startTime`] = value
+        newValue[`tiers[${nextTierIndex}].endTime`] = nextEnd
       }
 
       return newValue
