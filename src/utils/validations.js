@@ -147,9 +147,5 @@ export const validateTierEndDate  = (index) => (value, values) => {
     isDateLaterThan("Should be later than same tier's Start Time")(values.tiers[index].startTime),
   ]
 
-  if (index < values.tiers.length - 1) {
-    listOfValidations.push(isDateSameOrPreviousThan("Should be same or previous than next tier's Start Time")(values.tiers[index + 1].startTime))
-  }
-
   return composeValidators(...listOfValidations)(value)
 }

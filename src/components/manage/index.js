@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
-import { TOAST, VALIDATION_TYPES, CROWDSALE_STRATEGIES } from '../../utils/constants'
+import { TOAST, VALIDATION_TYPES } from '../../utils/constants'
 import '../../assets/stylesheets/application.css'
 import {
   successfulFinalizeAlert,
@@ -26,10 +26,12 @@ import { generateContext } from '../stepFour/utils'
 import { toJS } from 'mobx'
 import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
+import createDecorator from 'final-form-calculate'
 import { AboutCrowdsale } from './AboutCrowdsale'
 import { FinalizeCrowdsaleStep } from './FinalizeCrowdsaleStep'
 import { DistributeTokensStep } from './DistributeTokensStep'
 import { ManageForm } from './ManageForm'
+import moment from 'moment'
 
 const { VALID } = VALIDATION_TYPES
 
@@ -500,6 +502,27 @@ export class Manage extends Component {
     })
   }
 
+  calculator = createDecorator({
+    field: /.+\.endTime/,
+    updates: (value, name, allValues) => {
+      const tierIndex = +name.match(/(\d+)/)[1]
+      const { tierStore } = this.props
+      const newValue = {}
+
+      if (tierStore.tiers[tierIndex + 1]) {
+        const currentEnd = moment(allValues.tiers[tierIndex + 1].endTime)
+        const currentStart = moment(allValues.tiers[tierIndex + 1].startTime)
+        const duration = moment.duration(currentEnd.diff(currentStart)).as('minutes')
+        const nextEnd = moment(value).add(duration, 'm').format('YYYY-MM-DDTHH:mm')
+
+        newValue[`tiers[${tierIndex + 1}].startTime`] = value
+        newValue[`tiers[${tierIndex + 1}].endTime`] = nextEnd
+      }
+
+      return newValue
+    }
+  })
+
   render () {
     const { canFinalize, crowdsaleHasEnded, ownerCurrentUser } = this.state
     const { generalStore, tierStore, tokenStore, crowdsaleStore } = this.props
@@ -523,6 +546,7 @@ export class Manage extends Component {
         <Form
           onSubmit={this.saveCrowdsale}
           mutators={{ ...arrayMutators }}
+          decorators={[this.calculator]}
           initialValues={{ tiers: this.initialTiers, }}
           component={ManageForm}
           canEditTiers={ownerCurrentUser && !canFinalize && !finalized}
