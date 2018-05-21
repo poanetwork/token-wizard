@@ -1,4 +1,4 @@
-const { concurrent, series, ncp } = require('nps-utils')
+const {concurrent, series, ncp} = require('nps-utils')
 const path = require('path')
 
 const combineSolidityScript = path.join('submodules', 'solidity-flattener', 'index.js')
@@ -6,15 +6,6 @@ const tokenMarketNetPath = path.join('submodules', 'poa-token-market-net-ico', '
 const contractFolder = path.join('.', 'public', 'contracts')
 const extensionPath = path.join('.', 'scripts', 'POAExtendedCrowdSale.sol')
 const compileContractPath = path.join('.', 'scripts', 'compileContract.js')
-
-const safeMathLibContractName = 'SafeMathLibExt'
-const crowdsaleContractName = 'MintedTokenCappedCrowdsaleExt'
-const crowdsaleTokenContractName = 'CrowdsaleTokenExt'
-const crowdsalePricingStrategyContractName = 'FlatPricingExt'
-const nullFinalizeAgentContractName = 'NullFinalizeAgentExt'
-const finalizeAgentContractName = 'ReservedTokensFinalizeAgent'
-const registryContractName = 'Registry'
-
 const buildContractPath = (...paths) => path.join(tokenMarketNetPath, ...paths)
 const buildCompilePath = (...paths) => path.join(contractFolder, ...paths)
 
@@ -22,101 +13,98 @@ module.exports = {
   scripts: {
     build: {
       default: series(
-        'git submodule update --init --recursive --remote', 'cd submodules/solidity-flattener', 'npm install', 'cd ../../',
+        'git submodule update --init  --recursive --remote',
+        'cd submodules/solidity-flattener',
+        'npm install',
+        'cd ../../',
         'npm install',
         'cd submodules/poa-web3-1.0', 'npm install', 'cd ../../',
         'npm install --no-save submodules/poa-web3-1.0/packages/web3',
-        //'nps contracts',
         'node scripts/build.js',
         ncp('./build/index.html ./build/invest.html'),
         ncp('./build/index.html ./build/crowdsale.html'),
         ncp('./build/index.html ./build/manage.html')
       )
     },
-    contracts: {
-      default: series.nps('contracts.generate', 'contracts.compile'),
-      generate: {
-        default: concurrent.nps(
-          'contracts.generate.safeMathLib',
-          'contracts.generate.crowdsale',
-          'contracts.generate.crowdsaleToken',
-          'contracts.generate.crowdsalePricingStrategy',
-          'contracts.generate.crowdsaleNullFinalizeAgent',
-          'contracts.generate.crowdsaleFinalizeAgent',
-          'contracts.generate.registry'
-        ),
-        safeMathLib: `node ${combineSolidityScript} ${buildContractPath(safeMathLibContractName)}.sol ${contractFolder} SafeMathLibExt`,
-        crowdsale: `node ${combineSolidityScript} ${buildContractPath(crowdsaleContractName)}.sol ${contractFolder} CrowdsaleWhiteListWithCap`,
-        crowdsaleToken: `node ${combineSolidityScript} ${buildContractPath(crowdsaleTokenContractName)}.sol ${contractFolder} CrowdsaleWhiteListWithCapToken`,
-        crowdsalePricingStrategy: `node ${combineSolidityScript} ${buildContractPath(crowdsalePricingStrategyContractName)}.sol ${contractFolder} CrowdsaleWhiteListWithCapPricingStrategy`,
-        crowdsaleNullFinalizeAgent: `node ${combineSolidityScript} ${buildContractPath(nullFinalizeAgentContractName)}.sol ${contractFolder} NullFinalizeAgent`,
-        crowdsaleFinalizeAgent: `node ${combineSolidityScript} ${buildContractPath(finalizeAgentContractName)}.sol ${contractFolder} FinalizeAgent`,
-        registry: `node ${combineSolidityScript} ${buildContractPath(registryContractName)}.sol ${contractFolder} Registry`,
-      },
-      compile: {
-        default: concurrent.nps(
-          'contracts.compile.safeMathLibExt',
-          'contracts.compile.crowdsale',
-          'contracts.compile.crowdsaleToken',
-          'contracts.compile.crowdsalePricingStrategy',
-          'contracts.compile.crowdsaleNullFinalizeAgent',
-          'contracts.compile.crowdsaleFinalizeAgent',
-          'contracts.compile.registry'
-        ),
-        safeMathLibExt: `node ${compileContractPath} ${buildCompilePath('SafeMathLibExt_flat.sol')} ${contractFolder} ${extensionPath} false ${safeMathLibContractName} SafeMathLibExt`,
-        crowdsale: `node ${compileContractPath} ${buildCompilePath('CrowdsaleWhiteListWithCap_flat.sol')} ${contractFolder} ${extensionPath} false ${crowdsaleContractName} CrowdsaleWhiteListWithCap`,
-        crowdsaleToken: `node ${compileContractPath} ${buildCompilePath('CrowdsaleWhiteListWithCapToken_flat.sol')} ${contractFolder} ${extensionPath} false ${crowdsaleTokenContractName} CrowdsaleWhiteListWithCapToken`,
-        crowdsalePricingStrategy: `node ${compileContractPath} ${buildCompilePath('CrowdsaleWhiteListWithCapPricingStrategy_flat.sol')} ${contractFolder} ${extensionPath} false ${crowdsalePricingStrategyContractName} CrowdsaleWhiteListWithCapPricingStrategy`,
-        crowdsaleNullFinalizeAgent: `node ${compileContractPath} ${buildCompilePath('NullFinalizeAgent_flat.sol')} ${contractFolder} ${extensionPath} false ${nullFinalizeAgentContractName} NullFinalizeAgent`,
-        crowdsaleFinalizeAgent: `node ${compileContractPath} ${buildCompilePath('FinalizeAgent_flat.sol')} ${contractFolder} ${extensionPath} false ${finalizeAgentContractName} FinalizeAgent`,
-        registry: `node ${compileContractPath} ${buildCompilePath('Registry_flat.sol')} ${contractFolder} ${extensionPath} false ${registryContractName} Registry`
-      }
-    },
-    dev: {
-      default: 'npm run installWeb3 && nps contracts.generate.registry && nps contracts.compile.registry && npm run deployRegistry && npm start',
-      fast: 'npm run installWeb3 && nps contracts.generate.registry && nps contracts.compile.registry && npm run deployRegistry && node scripts/start.js'
-    },
     test: {
       default: series(
-        'nps test.DutchAuction',
-        'nps test.MintedCappedCrowdsale',
+        'npm run installWeb3',
+        'npm run testContractsMintedCappedCrowdsale',
+        'npm run testContractsDutchAuction',
+        'npm run e2eMintedCappedCrowdsale',
+        'npm run e2eDutchAuction'
+      ),
+      deployContracts: series(
+        'npm install truffle',
+        'npm install solc',
+        './node_modules/.bin/truffle compile',
+        './node_modules/.bin/truffle migrate --network development',
+        './node_modules/.bin/truffle test --network development'
+      ),
+      prepare: series(
+        'bash ./scripts/start_ganache.sh',
+        'cd ./submodules/auth-os-applications/',
+        'git checkout -f master',
       ),
       MintedCappedCrowdsale: series(
-        'bash ./scripts/start_ganache.sh',
+        'nps test.prepare',
         'cd ./submodules/auth-os-applications/',
         'cd ./TokenWizard/crowdsale/MintedCappedCrowdsale/',
-        'npm install',
-        'node_modules/.bin/truffle migrate --network development',
-        'node_modules/.bin/truffle test --network development',
+        'npm init -y',
+        'nps test.deployContracts',
         'cd ../../../../../',
-        //'nps test.e2e'
-        'bash ./scripts/stop_ganache.sh',
+        'bash ./scripts/stop_ganache.sh'
       ),
       DutchAuction: series(
-        'bash ./scripts/start_ganache.sh',
+        'nps test.prepare',
         'cd ./submodules/auth-os-applications/',
         'cd ./TokenWizard/crowdsale/DutchCrowdsale/',
-        'npm install',
-        'node_modules/.bin/truffle migrate --network development',
-        'node_modules/.bin/truffle test --network development',
+        'npm init -y',
+        'nps test.deployContracts',
         'cd ../../../../../',
-        //'nps test.e2e'
-        'bash ./scripts/stop_ganache.sh',
+        'bash ./scripts/stop_ganache.sh'
       ),
       e2e: {
         default: series(
+        ),
+        MintedCappedCrowdsale: series(
           'nps test.e2e.prepare',
+          'cd ./submodules/auth-os-applications',
+          'cd ./TokenWizard/crowdsale/MintedCappedCrowdsale',
+          'npm install',
+          'nps test.deployContracts',
+          'cp .env ../../../../../.env',
+          'cd ../../../../../',
           'nps test.e2e.start',
           'npm run delay',
           'cd submodules/token-wizard-test-automation',
-          'npm run test1'
+          'npm install',
+          'npm run e2eMinted',
+          'cd ../../',
+          'bash ./scripts/stop_ganache.sh',
+          'kill `lsof -t -i:3000`'
+        ),
+        DutchAuction: series(
+          'nps test.e2e.prepare',
+          'cd ./submodules/auth-os-applications',
+          'cd ./TokenWizard/crowdsale/DutchCrowdsale',
+          'npm install',
+          'nps test.deployContracts',
+          'cp .env ../../../../../.env',
+          'cd ../../../../../',
+          'nps test.e2e.start',
+          'npm run delay',
+          'cd submodules/token-wizard-test-automation',
+          'npm install',
+          'npm run e2eDutch',
+          'cd ../../',
+          'bash ./scripts/stop_ganache.sh',
+          'kill `lsof -t -i:3000`'
         ),
         prepare: series(
-          'nps contracts',
-          'cd submodules/token-wizard-test-automation',
-          'npm i',
-          'npm run e2e-deployRegistry',
-          'cp .env ../../.env'
+          'bash ./scripts/start_ganache.sh',
+          'cd ./submodules/auth-os-applications',
+          'git checkout -f e2e'
         ),
         start: 'PORT=3000 BROWSER=none node scripts/start.js &'
       }
