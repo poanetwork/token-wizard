@@ -1,11 +1,16 @@
 language: node_js
 node_js:
   - "8"
-
+env:
+  - TEST_SUITE=contractsMintedCappedCrowdsale
+  - TEST_SUITE=contractsDutchAuction
+  - TEST_SUITE=e2eMintedCappedCrowdsale
+  - TEST_SUITE=e2eDutchAuction
 install:
-  - npm install
+
 
 before_script:
+  - git submodule update --init --recursive --remote
   - npm run installWeb3
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
@@ -19,8 +24,10 @@ before_script:
 
 script:
   - npm run lint
-  - npm test
-  - npm run coveralls
+  - if [ $TEST_SUITE == 'contractsMintedCappedCrowdsale' ]; then npm run testContractsMintedCappedCrowdsale; fi
+  - if [ $TEST_SUITE == 'contractsDutchAuction' ]; then npm run testContractsDutchAuction ; fi
+  - if [ $TEST_SUITE == 'e2eMintedCappedCrowdsale' ]; then npm run e2eMintedCappedCrowdsale ; fi
+  - if [ $TEST_SUITE == 'e2eDutchAuction' ]; then npm run e2eDutchAuction && npm run coveralls; fi
 
 after_script:
   - sudo kill `sudo lsof -t -i:8545`
