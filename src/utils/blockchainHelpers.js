@@ -324,7 +324,7 @@ export function getAllCrowdsaleAddresses () {
 
         let whenCrowdsales = []
         let crowdsaleABI = contractStore.crowdsale.abi
-        for (let i = 0; i < /*crowdsalesAddresses.length*/20; i++) {
+        for (let i = 0; i < crowdsalesAddresses.length; i++) {
           let whenCrowdsale = attachToContract(crowdsaleABI, crowdsalesAddresses[i])
           whenCrowdsales.push(whenCrowdsale)
         }
@@ -335,71 +335,71 @@ export function getAllCrowdsaleAddresses () {
     .then(crowdsales => {
       //console.log("crowdsales:", crowdsales)
 
-      let whenJoinedCrowdsalesArr = []
-      for (let i = 0; i < /*crowdsales.length*/20; i++) {
-        let crowdsale = crowdsales[i]
-        whenJoinedCrowdsalesArr.push(crowdsale.methods.joinedCrowdsalesLen().call())
-      }
-
       let whenJoinedCrowdsalesData = []
 
       let fullCrowdsales = {}
 
-      crowdsales.forEach((crowdsale, ind) => {
-        console.log("crowdsale.address:", crowdsale._address)
-        let promise = attachToContract(contractStore.crowdsale.abi, crowdsale._address)
-        .then((crowdsale) => {
-          crowdsale.methods.joinedCrowdsalesLen().call()
-          .then((len) => {
-            let whenJoinedCrowdsales = []
-            for (let i = 0; i < len; i++) {
-              whenJoinedCrowdsales.push(crowdsale.methods.joinedCrowdsales(i).call())
+      crowdsales.forEach((crowdsale) => {
+        //console.log("crowdsale:", crowdsale)
+        let promiseInner = crowdsale.methods.joinedCrowdsalesLen().call()
+        let promiseOuter = promiseInner.then((len) => {
+          //console.log("len: ", len)
+          let whenJoinedCrowdsales = []
+          for (let i = 0; i < len; i++) {
+            whenJoinedCrowdsales.push(crowdsale.methods.joinedCrowdsales(i).call())
+          }
+          return Promise.all(whenJoinedCrowdsales)
+          .then((joinedCrowdsales) => {
+            fullCrowdsales[crowdsale._address] = {
+              "joinedCrowdsales": joinedCrowdsales
             }
-            return Promise.all(whenJoinedCrowdsales)
-            .then((joinedCrowdsales) => {
-              fullCrowdsales[crowdsale._address] = {
-                "joinedCrowdsales": joinedCrowdsales
-              }
-            })
+
+            return Promise.resolve()
           })
-          whenJoinedCrowdsalesData.push(promise)
         })
+        whenJoinedCrowdsalesData.push(promiseOuter)
       })
 
-      return Promise.all(whenJoinedCrowdsalesData)
+      console.log("whenJoinedCrowdsalesData:", whenJoinedCrowdsalesData)
+
+      return Promise.all(whenJoinedCrowdsalesData.map(p => p.catch(() => undefined)))
       .then(() => {
         console.log("fullCrowdsales:", fullCrowdsales)
         console.log("fullCrowdsales.length", Object.keys(fullCrowdsales).length)
 
         let whenTiers = []
-        Object.keys(fullCrowdsales).forEach((obj) => {
-          console.log("obj:", obj)
-          whenTiers.push(attachToContract(contractStore.crowdsale.abi, obj))
+        Object.keys(fullCrowdsales).forEach((crowdsaleAddress) => {
+          whenTiers.push(attachToContract(contractStore.crowdsale.abi, crowdsaleAddress))
+          let joinedTiers = fullCrowdsales[crowdsaleAddress].joinedCrowdsales
+          for (let i = 0; i < joinedTiers.length; i++) {
+            let joinedTierAddress = joinedTiers[i]
+            whenTiers.push(attachToContract(contractStore.crowdsale.abi, joinedTierAddress))
+          }
         })
 
         return Promise.all(whenTiers)
         .then((tiers) => {
+          //console.log("tiers: ", tiers)
           let whenWeiRaisedArr = []
+          let whenJoinedCrowdsalesArr = []
           let whenContributorsArr = []
           for (let i = 0; i < tiers.length; i++) {
             let crowdsale = tiers[i]
             whenWeiRaisedArr.push(crowdsale.methods.weiRaised().call())
+            whenJoinedCrowdsalesArr.push(crowdsale.methods.joinedCrowdsalesLen().call())
             whenContributorsArr.push(crowdsale.methods.investorCount().call())
           }
 
           let totalArr = [
+            crowdsales,
             whenWeiRaisedArr.map(p => p.catch(() => undefined)),
             whenJoinedCrowdsalesArr.map(p => p.catch(() => undefined)),
             whenContributorsArr.map(p => p.catch(() => undefined))
           ]
 
-          console.log("totalArr:", totalArr)
-
           let totalArrayReorg = totalArr.map(function(innerPromiseArray) {
             return Promise.all(innerPromiseArray);
           })
-
-          console.log("totalArrayReorg:", totalArrayReorg)
 
           return Promise.all(totalArrayReorg)
         })
