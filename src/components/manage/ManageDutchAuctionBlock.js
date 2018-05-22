@@ -37,7 +37,7 @@ export const ManageDutchAuctionBlock = ({
 
       const tierHasStarted = !isDateLaterThan()(dateToTimestamp(initialStartTime))(Date.now())
       const tierHasEnded = !isDateLaterThan()(dateToTimestamp(initialEndTime))(Date.now())
-      const canEdit = canEditTiers && updatable && !tierHasEnded
+      const canEdit = canEditTiers && updatable && !tierHasEnded && !tierHasStarted
       const isWhitelistEnabled = fields.initial[0].whitelistEnabled === 'yes'
 
       return (
