@@ -343,15 +343,27 @@ export function getAllCrowdsaleAddresses () {
         //console.log("crowdsale:", crowdsale)
         let promiseInner = crowdsale.methods.joinedCrowdsalesLen().call()
         let promiseOuter = promiseInner.then((len) => {
-          //console.log("len: ", len)
           let whenJoinedCrowdsales = []
+          let whenIsWhiteListed = []
+          let whenIsFinalized = []
           for (let i = 0; i < len; i++) {
             whenJoinedCrowdsales.push(crowdsale.methods.joinedCrowdsales(i).call())
           }
-          return Promise.all(whenJoinedCrowdsales)
-          .then((joinedCrowdsales) => {
+          whenIsWhiteListed.push(crowdsale.methods.isWhiteListed().call())
+          whenIsFinalized.push(crowdsale.methods.finalized().call())
+
+          let crowdsalePropsArr = [whenJoinedCrowdsales, whenIsWhiteListed, whenIsFinalized]
+
+          let crowdsalePropsArrReorg = crowdsalePropsArr.map(function(innerPromiseArray) {
+            return Promise.all(innerPromiseArray);
+          })
+
+          return Promise.all(crowdsalePropsArrReorg)
+          .then(([joinedCrowdsales, isWhitelisted, isFinalized]) => {
             fullCrowdsales[crowdsale._address] = {
-              "joinedCrowdsales": joinedCrowdsales
+              "joinedCrowdsales": joinedCrowdsales,
+              "isWhitelisted": isWhitelisted[0],
+              "isFinalized": isFinalized[0]
             }
 
             return Promise.resolve()
@@ -362,15 +374,17 @@ export function getAllCrowdsaleAddresses () {
 
       console.log("whenJoinedCrowdsalesData:", whenJoinedCrowdsalesData)
 
+      const fullCrowdsalesArr = Object.keys(fullCrowdsales).map(function(k) { return fullCrowdsales[k] })
+
       return Promise.all(whenJoinedCrowdsalesData.map(p => p.catch(() => undefined)))
       .then(() => {
-        console.log("fullCrowdsales:", fullCrowdsales)
-        console.log("fullCrowdsales.length", Object.keys(fullCrowdsales).length)
+        console.log("fullCrowdsales:", fullCrowdsalesArr)
+        console.log("fullCrowdsalesArr.length", fullCrowdsalesArr.length)
 
         let whenTiers = []
-        Object.keys(fullCrowdsales).forEach((crowdsaleAddress) => {
+        fullCrowdsalesArr.forEach((crowdsaleAddress) => {
           whenTiers.push(attachToContract(contractStore.crowdsale.abi, crowdsaleAddress))
-          let joinedTiers = fullCrowdsales[crowdsaleAddress].joinedCrowdsales
+          let joinedTiers = fullCrowdsalesArr[crowdsaleAddress].joinedCrowdsales
           for (let i = 0; i < joinedTiers.length; i++) {
             let joinedTierAddress = joinedTiers[i]
             whenTiers.push(attachToContract(contractStore.crowdsale.abi, joinedTierAddress))
@@ -391,7 +405,7 @@ export function getAllCrowdsaleAddresses () {
           }
 
           let totalArr = [
-            crowdsales,
+            fullCrowdsalesArr,
             whenWeiRaisedArr.map(p => p.catch(() => undefined)),
             whenJoinedCrowdsalesArr.map(p => p.catch(() => undefined)),
             whenContributorsArr.map(p => p.catch(() => undefined))

@@ -17,6 +17,9 @@ export class Stats extends Component {
     this.setState({
       totalEthRaised: 0,
       totalCrowdsales: 0,
+      percentageOfWhitelisted: 0,
+      percentageOfFinalized: 0,
+      percentageOfMultiTiers: 0,
       totalInvolvedContributorsAmount: 0,
       maxTiersAmount: 0,
       maxEthRaised: 0,
@@ -24,8 +27,8 @@ export class Stats extends Component {
     })
     getWhiteListWithCapCrowdsaleAssets()
       .then(() => getAllCrowdsaleAddresses())
-      .then(([crowdsales, weiRaisedArr, joinedCrowdsalesArr, contributorsArr]) => {
-        console.log("crowdsales:", crowdsales)
+      .then(([fullCrowdsalesArr, weiRaisedArr, joinedCrowdsalesArr, contributorsArr]) => {
+        console.log("fullCrowdsalesArr:", fullCrowdsalesArr)
         console.log("weiRaisedArr:", weiRaisedArr)
         console.log("joinedCrowdsalesArr:", joinedCrowdsalesArr)
         console.log("contributorsArr:", contributorsArr)
@@ -50,9 +53,27 @@ export class Stats extends Component {
           totalInvolvedContributorsAmount += contributors
         })
 
+        const whitelistedCrowdsales = fullCrowdsalesArr.filter((_crowdsale) => {
+          return _crowdsale.isWhitelisted
+        })
+        const percentageOfWhitelisted = fullCrowdsalesArr.length > 0 ? Math.round(whitelistedCrowdsales.length * 100 / fullCrowdsalesArr.length * 100) / 100 : 0
+
+        const finalizedCrowdsales =fullCrowdsalesArr.filter((_crowdsale) => {
+          return _crowdsale.isFinalized
+        })
+        const percentageOfFinalized = fullCrowdsalesArr.length > 0 ? Math.round(finalizedCrowdsales.length * 100 / fullCrowdsalesArr.length * 100) / 100 : 0
+
+        const multiTiersCrowdsales =fullCrowdsalesArr.filter((_crowdsale) => {
+          return _crowdsale.joinedCrowdsales.length > 1
+        })
+        const percentageOfMultiTiers = fullCrowdsalesArr.length > 0 ? Math.round(multiTiersCrowdsales.length * 100 / fullCrowdsalesArr.length * 100) / 100 : 0
+
         this.setState({
           totalEthRaised: totalEthRaised,
-          totalCrowdsales: crowdsales.length,
+          totalCrowdsales: fullCrowdsalesArr.length,
+          percentageOfWhitelisted: percentageOfWhitelisted,
+          percentageOfFinalized: percentageOfFinalized,
+          percentageOfMultiTiers: percentageOfMultiTiers,
           totalInvolvedContributorsAmount: totalInvolvedContributorsAmount,
           maxTiersAmount: maxTiersAmount,
           maxEthRaised: maxEthRaised,
@@ -69,6 +90,9 @@ export class Stats extends Component {
     const totalInvolvedContributorsAmount = this.state ? this.state.totalInvolvedContributorsAmount ? this.state.totalInvolvedContributorsAmount.toString() : '0' : '0'
     const maxTiersAmount = this.state ? this.state.maxTiersAmount ? this.state.maxTiersAmount.toString() : '0' : '0'
     const maxEthRaised = this.state ? this.state.maxEthRaised ? this.state.maxEthRaised.toString() : '0' : '0'
+    const percentageOfWhitelisted = this.state ? this.state.percentageOfWhitelisted ? this.state.percentageOfWhitelisted.toString() : '0' : '0'
+    const percentageOfFinalized = this.state ? this.state.percentageOfFinalized ? this.state.percentageOfFinalized.toString() : '0' : '0'
+    const percentageOfMultiTiers = this.state ? this.state.percentageOfMultiTiers ? this.state.percentageOfMultiTiers.toString() : '0' : '0'
     return (
       <div className="stats container">
         <p className="title">Token Wizard statistics (from 2018)</p>
@@ -98,6 +122,22 @@ export class Stats extends Component {
               <div className="stats-items-i">
                 <p className="stats-items-title">{maxEthRaised}</p>
                 <p className="stats-items-description">Max eth raised in one tier</p>
+              </div>
+            </div>
+          </div>
+          <div className="stats-table-cell">
+            <div className="stats-items">
+              <div className="stats-items-i">
+                <p className="stats-items-title">{percentageOfFinalized} %</p>
+                <p className="stats-items-description">Percentage of finalized crowdsales</p>
+              </div>
+              <div className="stats-items-i">
+                <p className="stats-items-title">{percentageOfWhitelisted} %</p>
+                <p className="stats-items-description">Percentage of whitelisted crowdsales</p>
+              </div>
+              <div className="stats-items-i">
+                <p className="stats-items-title">{percentageOfMultiTiers} %</p>
+                <p className="stats-items-description">Percentage of crowdsales with multiple tiers</p>
               </div>
             </div>
           </div>
