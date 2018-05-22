@@ -1,4 +1,3 @@
-import { isObservableArray } from 'mobx'
 import {
   getCurrentAccount,
   sendTXToContract,
@@ -10,6 +9,7 @@ import { removeTrailingNUL, toFixed } from '../../utils/utils'
 import { toBigNumber } from '../crowdsale/utils'
 import { generateContext } from '../stepFour/utils'
 import { BigNumber } from 'bignumber.js'
+import moment from 'moment'
 
 const { VALID } = VALIDATION_TYPES
 
@@ -211,6 +211,7 @@ export const processTier = (tier, crowdsale, token, reservedTokensInfo, tierNum)
       newTier.updatable = updatable
       newTier.tier = name
 
+      initialValues.duration = (endsAt * 1000) - (startsAt * 1000)
       initialValues.updatable = crowdsaleStore.isMintedCappedCrowdsale ? newTier.updatable : crowdsaleStore.isDutchAuction ? true : null
       initialValues.index = tierNum
       initialValues.addresses = {
@@ -285,43 +286,32 @@ export const processTier = (tier, crowdsale, token, reservedTokensInfo, tierNum)
 export function getFieldsToUpdate(updatableTiers, tiers) {
   console.log("updatableTiers:", updatableTiers)
   console.log("tiers:", tiers)
-  const keys = Object
-    .keys(updatableTiers[0])
-    .filter(key => key !== 'index' && key !== 'updatable' && key !== 'addresses')
 
-  const toUpdate = updatableTiers
-    .reduce((toUpdate, tier, index) => {
+  const keys = Object.keys(updatableTiers[0]).filter(key => key === 'endTime' || key === 'whitelist')
+
+  return updatableTiers
+    .reduce((toUpdate, updatableTier, index) => {
       keys.forEach(key => {
-        let newValue = tiers[tier.index][key]
+        let newValue = tiers[updatableTier.index][key]
 
-        if (isObservableArray(newValue)) {
+        if (key === 'whitelist') {
           newValue = newValue.filter(item => !item.stored)
 
           if (newValue.length) {
             toUpdate.push({ key, newValue, tier: index })
           }
 
-        } else if (newValue !== tier[key]) {
-          toUpdate.push({ key, newValue, tier: index })
+        } else if (key === 'endTime') {
+          const end = moment(tiers[updatableTier.index].endTime)
+          const start = moment(tiers[updatableTier.index].startTime)
+          const duration = moment.duration(end.diff(start)).as('milliseconds')
+
+          if (updatableTier.duration !== duration) {
+            toUpdate.push({ key, newValue, tier: index })
+          }
         }
       })
+
       return toUpdate
     }, [])
-    .sort((item1, item2) => {
-      if (item1.tier !== item2.tier) {
-        return item2.tier - item1.tier
-      }
-
-      if (item1.key === 'startTime' && item2.key === 'endTime') {
-        return 1
-      }
-
-      if (item1.key === 'endTime' && item2.key === 'startTime') {
-        return -1
-      }
-
-      return 0
-    })
-
-  return toUpdate
 }
