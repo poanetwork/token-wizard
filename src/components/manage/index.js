@@ -333,7 +333,7 @@ export class Manage extends Component {
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
     const { addr } = toJS(contractStore.registryStorage)
-    const { end_time } = methods.getCrowdsaleStartAndEndTimes(addr, contractStore.crowdsale.execID).call()
+    const { end_time } = await methods.getCrowdsaleStartAndEndTimes(addr, contractStore.crowdsale.execID).call()
 
     console.log("crowdsaleStartAndEndTimes.end_time:", end_time)
     this.setState({ crowdsaleHasEnded: end_time * 1000 <= Date.now() || crowdsaleStore.selected.finalized })
@@ -351,8 +351,8 @@ export class Manage extends Component {
     const { addr } = toJS(contractStore.registryStorage)
 
     try {
-      const { is_finalized } = getCrowdsaleInfo(addr, contractStore.crowdsale.execID).call()
-      const { is_crowdsale_full } = isCrowdsaleFull(addr, contractStore.crowdsale.execID).call()
+      const { is_finalized } = await getCrowdsaleInfo(addr, contractStore.crowdsale.execID).call()
+      const { is_crowdsale_full } = await isCrowdsaleFull(addr, contractStore.crowdsale.execID).call()
 
       if (is_finalized) {
         this.setState({ canFinalize: false })
