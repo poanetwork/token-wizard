@@ -143,11 +143,7 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, prist
 
       <FieldArray name="tiers">
         {({ fields }) => (
-          <DutchAuctionBlock
-            fields={fields}
-            decimals={props.decimals}
-            tierStore={props.tierStore}
-          />
+          <DutchAuctionBlock fields={fields} decimals={props.decimals}/>
         )}
       </FieldArray>
 
