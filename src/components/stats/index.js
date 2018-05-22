@@ -20,8 +20,9 @@ export class Stats extends Component {
     })
     getWhiteListWithCapCrowdsaleAssets()
       .then(() => getAllCrowdsaleAddresses())
-      .then(([fullCrowdsalesArr, weiRaisedArr, joinedCrowdsalesArr, contributorsArr]) => {
+      .then(([fullCrowdsalesArr, reservedDestinationsLensArr, weiRaisedArr, joinedCrowdsalesArr, contributorsArr]) => {
         console.log("fullCrowdsalesArr:", fullCrowdsalesArr)
+        console.log("reservedDestinationsLensArr:", reservedDestinationsLensArr)
         console.log("weiRaisedArr:", weiRaisedArr)
         console.log("joinedCrowdsalesArr:", joinedCrowdsalesArr)
         console.log("contributorsArr:", contributorsArr)
@@ -51,6 +52,11 @@ export class Stats extends Component {
         })
         const percentageOfWhitelisted = fullCrowdsalesArr.length > 0 ? Math.round(whitelistedCrowdsales.length * 100 / fullCrowdsalesArr.length * 100) / 100 : 0
 
+        const crowdsalesWithRservedDestinations = reservedDestinationsLensArr.filter((reservedLength) => {
+          return Number(reservedLength) > 0
+        })
+        const percentageOfReserved = fullCrowdsalesArr.length > 0 ? Math.round(crowdsalesWithRservedDestinations.length * 100 / fullCrowdsalesArr.length * 100) / 100 : 0
+
         const finalizedCrowdsales =fullCrowdsalesArr.filter((_crowdsale) => {
           return _crowdsale.isFinalized
         })
@@ -66,6 +72,7 @@ export class Stats extends Component {
         statsStore.setProperty("percentageOfWhitelisted", percentageOfWhitelisted)
         statsStore.setProperty("percentageOfFinalized", percentageOfFinalized)
         statsStore.setProperty("percentageOfMultiTiers", percentageOfMultiTiers)
+        statsStore.setProperty("percentageOfReserved", percentageOfReserved)
         statsStore.setProperty("totalInvolvedContributorsAmount", totalInvolvedContributorsAmount)
         statsStore.setProperty("maxTiersAmount", maxTiersAmount)
         statsStore.setProperty("maxEthRaised", maxEthRaised)
@@ -86,6 +93,7 @@ export class Stats extends Component {
     const percentageOfWhitelisted = statsStore.percentageOfWhitelisted ? statsStore.percentageOfWhitelisted.toString() : '0'
     const percentageOfFinalized = statsStore.percentageOfFinalized ? statsStore.percentageOfFinalized.toString() : '0'
     const percentageOfMultiTiers = statsStore.percentageOfMultiTiers ? statsStore.percentageOfMultiTiers.toString() : '0'
+    const percentageOfReserved = statsStore.percentageOfReserved ? statsStore.percentageOfReserved.toString() : '0'
     return (
       <div className="stats container">
         <p className="title">Token Wizard statistics (from 2018)</p>
@@ -116,13 +124,17 @@ export class Stats extends Component {
                 <p className="stats-items-title">{maxEthRaised}</p>
                 <p className="stats-items-description">Max eth raised in one tier</p>
               </div>
+              <div className="stats-items-i">
+                <p className="stats-items-title">{percentageOfFinalized} %</p>
+                <p className="stats-items-description">Percentage of finalized crowdsales</p>
+              </div>
             </div>
           </div>
           <div className="stats-table-cell">
             <div className="stats-items">
               <div className="stats-items-i">
-                <p className="stats-items-title">{percentageOfFinalized} %</p>
-                <p className="stats-items-description">Percentage of finalized crowdsales</p>
+                <p className="stats-items-title">{percentageOfReserved} %</p>
+                <p className="stats-items-description">Percentage of crowdsales with reserved tokens</p>
               </div>
               <div className="stats-items-i">
                 <p className="stats-items-title">{percentageOfWhitelisted} %</p>

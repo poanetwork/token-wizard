@@ -6,6 +6,7 @@ class StatsStore {
   @observable percentageOfWhitelisted
   @observable percentageOfFinalized
   @observable percentageOfMultiTiers
+  @observable percentageOfReserved
   @observable totalInvolvedContributorsAmount
   @observable maxTiersAmount
   @observable maxEthRaised
