@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react'
 import './assets/stylesheets/application.css';
-import { Header, Footer, Home, Manage, stepOne, stepTwo, stepThree, stepFour, Crowdsale, Invest } from './components/index'
+import { Header, Footer, Home, Manage, stepOne, stepTwo, stepThree, stepFour, Crowdsale, Invest, Stats } from './components/index'
 import NoWeb3 from './components/Common/NoWeb3'
 import IncompleteDeploy from './components/IncompleteDeploy'
 import { getQueryVariable } from './utils/utils'
@@ -25,6 +25,7 @@ class App extends Component {
     return (
       <Router>
         <div>
+          <Route exact path="/stats" component={Stats}/>
           <Header/>
 
           <Switch>

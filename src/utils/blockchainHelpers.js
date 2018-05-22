@@ -1,6 +1,6 @@
 import { incorrectNetworkAlert, noMetaMaskAlert, MetaMaskIsLockedAlert, invalidNetworkIDAlert } from './alerts'
 import { CHAINS, MAX_GAS_PRICE } from './constants'
-import { crowdsaleStore, generalStore, web3Store } from '../stores'
+import { crowdsaleStore, generalStore, web3Store, contractStore } from '../stores'
 import { fetchFile } from './utils'
 
 const DEPLOY_CONTRACT = 1
@@ -306,5 +306,157 @@ export function loadRegistryAddresses () {
     })
     .then(crowdsales => {
       crowdsaleStore.setCrowdsales(crowdsales)
+    })
+}
+
+export function getAllCrowdsaleAddresses () {
+  const whenRegistryContract = getRegistryContract()
+
+  return Promise.all([whenRegistryContract])
+    .then(([registry]) => {
+      return registry.getPastEvents('Added', {fromBlock: 0})
+      .then((events) => {
+        let crowdsalesAddresses = []
+        events.forEach((event) => {
+          let crowdsaleAddress = event.returnValues.deployAddress
+          crowdsalesAddresses.push(crowdsaleAddress)
+        })
+
+        let whenCrowdsales = []
+        let crowdsaleABI = contractStore.crowdsale.abi
+        for (let i = 0; i < crowdsalesAddresses.length; i++) {
+          let whenCrowdsale = attachToContract(crowdsaleABI, crowdsalesAddresses[i])
+          whenCrowdsales.push(whenCrowdsale)
+        }
+
+        return Promise.all(whenCrowdsales)
+      })
+    })
+    .then(crowdsales => {
+      //console.log("crowdsales:", crowdsales)
+
+      let whenJoinedCrowdsalesData = []
+
+      let fullCrowdsales = {}
+
+      crowdsales.forEach((crowdsale) => {
+        //console.log("crowdsale:", crowdsale)
+        let promiseInner = crowdsale.methods.joinedCrowdsalesLen().call()
+        let promiseOuter = promiseInner.then((len) => {
+          let whenJoinedCrowdsales = []
+          let whenIsWhiteListed = []
+          let whenIsFinalized = []
+          let whenTokenAddress = []
+          for (let i = 0; i < len; i++) {
+            whenJoinedCrowdsales.push(crowdsale.methods.joinedCrowdsales(i).call())
+          }
+          whenIsWhiteListed.push(crowdsale.methods.isWhiteListed().call())
+          whenIsFinalized.push(crowdsale.methods.finalized().call())
+          whenTokenAddress.push(crowdsale.methods.token().call())
+
+          let crowdsalePropsArr = [whenJoinedCrowdsales, whenIsWhiteListed, whenIsFinalized, whenTokenAddress]
+
+          let crowdsalePropsArrReorg = crowdsalePropsArr.map(function(innerPromiseArray) {
+            return Promise.all(innerPromiseArray);
+          })
+
+          //console.log("crowdsalePropsArrReorg:", crowdsalePropsArrReorg)
+
+          return Promise.all(crowdsalePropsArrReorg)
+          .then(([joinedCrowdsales, isWhitelisted, isFinalized, tokenAddress]) => {
+            fullCrowdsales[crowdsale._address] = {
+              "joinedCrowdsales": joinedCrowdsales,
+              "isWhitelisted": isWhitelisted[0],
+              "isFinalized": isFinalized[0],
+              "tokenAddress": tokenAddress[0]
+            }
+
+            return Promise.resolve()
+          })
+        })
+        whenJoinedCrowdsalesData.push(promiseOuter)
+      })
+
+      return Promise.all(whenJoinedCrowdsalesData.map(p => p.catch(() => undefined)))
+      .then(() => {
+        const fullCrowdsalesArr = Object.keys(fullCrowdsales)
+        .map(function(addr) {
+          fullCrowdsales[addr].addr = addr;
+          return fullCrowdsales[addr]
+        })
+
+        let whenTokens = []
+        for (let i = 0; i < fullCrowdsalesArr.length; i++) {
+          whenTokens.push(attachToContract(contractStore.token.abi, fullCrowdsalesArr[i].tokenAddress))
+        }
+
+        return Promise.all(whenTokens.map(p => p.catch(() => undefined)))
+      })
+      .then((tokens) => {
+
+        let whenTokensReservedDestinationsLens = []
+
+        for (let i = 0; i < tokens.length; i++) {
+          let token = tokens[i]
+          whenTokensReservedDestinationsLens.push(token.methods.reservedTokensDestinationsLen().call())
+        }
+
+        return Promise.all(whenTokensReservedDestinationsLens.map(p => p.catch(() => undefined)))
+      })
+      .then((reservedDestinationsLens) => {
+        const fullCrowdsalesArr = Object.keys(fullCrowdsales)
+        .map(function(addr) {
+          fullCrowdsales[addr].addr = addr;
+          return fullCrowdsales[addr]
+        })
+
+        console.log("reservedDestinationsLens", reservedDestinationsLens)
+        console.log("fullCrowdsales:", fullCrowdsalesArr)
+        console.log("fullCrowdsalesArr.length", fullCrowdsalesArr.length)
+
+        let whenTiers = []
+        fullCrowdsalesArr.forEach((crowdsale) => {
+          whenTiers.push(attachToContract(contractStore.crowdsale.abi, crowdsale.addr))
+          let joinedTiers = crowdsale.joinedCrowdsales
+          for (let i = 0; i < joinedTiers.length; i++) {
+            let joinedTierAddress = joinedTiers[i]
+            whenTiers.push(attachToContract(contractStore.crowdsale.abi, joinedTierAddress))
+          }
+        })
+
+        return Promise.all(whenTiers)
+        .then((tiers) => {
+          //console.log("tiers: ", tiers)
+          let whenWeiRaisedArr = []
+          let whenJoinedCrowdsalesArr = []
+          let whenContributorsArr = []
+          for (let i = 0; i < tiers.length; i++) {
+            let crowdsale = tiers[i]
+            whenWeiRaisedArr.push(crowdsale.methods.weiRaised().call())
+            whenJoinedCrowdsalesArr.push(crowdsale.methods.joinedCrowdsalesLen().call())
+            whenContributorsArr.push(crowdsale.methods.investorCount().call())
+          }
+
+          let totalArr = [
+            fullCrowdsalesArr,
+            reservedDestinationsLens,
+            whenWeiRaisedArr.map(p => p.catch(() => undefined)),
+            whenJoinedCrowdsalesArr.map(p => p.catch(() => undefined)),
+            whenContributorsArr.map(p => p.catch(() => undefined))
+          ]
+
+          let totalArrayReorg = totalArr.map(function(innerPromiseArray) {
+            return Promise.all(innerPromiseArray);
+          })
+
+          return Promise.all(totalArrayReorg)
+        })
+      })
+    })
+    .then((totalArr) => {
+      return totalArr
+    })
+    .catch((err) => {
+      console.log("err: ", err)
     })
 }
