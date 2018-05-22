@@ -3,29 +3,14 @@ import { Field } from 'react-final-form'
 import { OnChange } from 'react-final-form-listeners'
 import { InputField2 } from './InputField2'
 import { WhitelistInputBlock } from './WhitelistInputBlock'
-import {
-  composeValidators,
-  isDateInFuture,
-  isDateLaterThan,
-  isDatePreviousThan,
-  isDateSameOrLaterThan,
-  isDateSameOrPreviousThan,
-  isInteger,
-  isLessOrEqualThan,
-  isPositive,
-  isRequired,
-  isMaxLength,
-} from '../../utils/validations'
+import { composeValidators, isRequired, isMaxLength } from '../../utils/validations'
 import { DESCRIPTION, TEXT_FIELDS } from '../../utils/constants'
+import { CrowdsaleStartTime } from './CrowdsaleStartTime'
+import { CrowdsaleEndTime } from './CrowdsaleEndTime'
+import { CrowdsaleRate } from './CrowdsaleRate'
+import { CrowdsaleSupply } from './CrowdsaleSupply'
 
-const {
-  ALLOW_MODIFYING,
-  CROWDSALE_SETUP_NAME,
-  START_TIME,
-  END_TIME,
-  RATE,
-  SUPPLY
-} = TEXT_FIELDS
+const { ALLOW_MODIFYING, CROWDSALE_SETUP_NAME } = TEXT_FIELDS
 
 const inputErrorStyle = {
   color: 'red',
@@ -36,34 +21,6 @@ const inputErrorStyle = {
 }
 
 export const TierBlock = ({ fields, ...props }) => {
-  const validateTierStartDate  = (index) => (value, values) => {
-    const listOfValidations = [
-      isRequired(),
-      isDateInFuture(),
-      isDatePreviousThan("Should be previous than same tier's End Time")(values.tiers[index].endTime),
-    ]
-
-    if (index > 0) {
-      listOfValidations.push(isDateSameOrLaterThan("Should be same or later than previous tier's End Time")(values.tiers[index - 1].endTime))
-    }
-
-    return composeValidators(...listOfValidations)(value)
-  }
-
-  const validateTierEndDate  = (index) => (value, values) => {
-    const listOfValidations = [
-      isRequired(),
-      isDateInFuture(),
-      isDateLaterThan("Should be later than same tier's Start Time")(values.tiers[index].startTime),
-    ]
-
-    if (index < values.tiers.length - 1) {
-      listOfValidations.push(isDateSameOrPreviousThan("Should be same or previous than next tier's Start Time")(values.tiers[index + 1].startTime))
-    }
-
-    return composeValidators(...listOfValidations)(value)
-  }
-
   return (
     <div>
       {fields.map((name, index) => (
@@ -120,52 +77,31 @@ export const TierBlock = ({ fields, ...props }) => {
             </div>
 
             <div className="input-block-container">
-              <Field
+              <CrowdsaleStartTime
                 name={`${name}.startTime`}
-                component={InputField2}
-                validate={validateTierStartDate(index)}
-                errorStyle={inputErrorStyle}
-                type="datetime-local"
+                index={index}
+                disabled={index > 0}
                 side="left"
-                label={START_TIME}
-                description={DESCRIPTION.START_TIME}
-              />
-              <Field
-                name={`${name}.endTime`}
-                component={InputField2}
-                validate={validateTierEndDate(index)}
                 errorStyle={inputErrorStyle}
-                type="datetime-local"
+              />
+              <CrowdsaleEndTime
+                name={`${name}.endTime`}
+                index={index}
                 side="right"
-                label={END_TIME}
-                description={DESCRIPTION.END_TIME}
+                errorStyle={inputErrorStyle}
               />
             </div>
 
             <div className="input-block-container">
-              <Field
+              <CrowdsaleRate
                 name={`${name}.rate`}
-                component={InputField2}
-                validate={composeValidators(
-                  isPositive(),
-                  isInteger(),
-                  isLessOrEqualThan('Should not be greater than 1 quintillion (10^18)')('1e18')
-                )}
                 errorStyle={inputErrorStyle}
-                type="text"
                 side="left"
-                label={RATE}
-                description={DESCRIPTION.RATE}
               />
-              <Field
+              <CrowdsaleSupply
                 name={`${name}.supply`}
-                component={InputField2}
-                validate={isPositive()}
                 errorStyle={inputErrorStyle}
-                type="text"
                 side="right"
-                label={SUPPLY}
-                description={DESCRIPTION.SUPPLY}
               />
               {
                 /*
