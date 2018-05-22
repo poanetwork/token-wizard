@@ -262,10 +262,12 @@ export const getContractStoreProperty = (contract, property) => {
 
 export const getUserMaxLimits = async (addr, execID, methods, account) => {
   if (crowdsaleStore.isMintedCappedCrowdsale) {
-    const { getCurrentTierInfo, getWhitelistStatus } = methods
+    const { getCurrentTierInfo, getWhitelistStatus, decimals } = methods
     const { whitelist_enabled, tier_tokens_remaining, tier_price, tier_index } = await getCurrentTierInfo(addr, execID).call()
+    const token_decimals = await decimals(addr, execID).call()
 
-    const tierTokensRemaining = toBigNumber(tier_tokens_remaining).times(tier_price).integerValue(BigNumber.ROUND_CEIL)
+    const currentRate = toBigNumber(tier_price).times(`1e-${token_decimals}`)
+    const tierTokensRemaining = toBigNumber(tier_tokens_remaining).times(currentRate)
 
     if (!whitelist_enabled) return tierTokensRemaining
 
@@ -280,8 +282,8 @@ export const getUserMaxLimits = async (addr, execID, methods, account) => {
     const { current_rate, tokens_remaining } = await getCrowdsaleStatus(addr, execID).call()
     const token_decimals = await decimals(addr, execID).call()
 
-    const currentRate = toBigNumber(current_rate).div(`1e${token_decimals}`)
-    const crowdsaleTokensRemaining = toBigNumber(tokens_remaining).times(currentRate).integerValue(BigNumber.ROUND_CEIL)
+    const currentRate = toBigNumber(current_rate).times(`1e-${token_decimals}`)
+    const crowdsaleTokensRemaining = toBigNumber(tokens_remaining).times(currentRate)
 
     if (num_whitelisted === '0') return crowdsaleTokensRemaining
 
