@@ -30,7 +30,7 @@ module.exports = {
         'node scripts/build.js',
         ncp('./build/index.html ./build/invest.html'),
         ncp('./build/index.html ./build/crowdsale.html'),
-        ncp('./build/index.html ./build/manage.html')
+        ncp('./build/index.html ./build/manage.html'),
         ncp('./build/index.html ./build/stats.html')
       )
     },
