@@ -9,6 +9,7 @@ import {
   isDatePreviousThan,
   isDateSameOrLaterThan,
   isDateSameOrPreviousThan,
+  isGreaterOrEqualThan,
   isInteger,
   isLessOrEqualThan,
   isPositive,
@@ -94,11 +95,16 @@ export const DutchAuctionBlock = ({ fields, ...props }) => {
               <Field
                 name={`${name}.minRate`}
                 component={InputField2}
-                validate={composeValidators(
-                  isPositive(),
-                  isInteger(),
-                  isLessOrEqualThan('Should not be greater than 1 quintillion (10^18)')('1e18')
-                )}
+                validate={(value, allValues) => {
+                  const errors = composeValidators(
+                    isPositive(),
+                    isInteger(),
+                    isLessOrEqualThan('Should be less than or equal to Max Rate')(allValues.tiers[index].maxRate),
+                    isLessOrEqualThan('Should be less than or equal to 1 quintillion (10^18)')('1e18')
+                  )(value)
+
+                  if (errors) return errors.shift()
+                }}
                 errorStyle={inputErrorStyle}
                 type="text"
                 side="left"
@@ -108,11 +114,16 @@ export const DutchAuctionBlock = ({ fields, ...props }) => {
               <Field
                 name={`${name}.maxRate`}
                 component={InputField2}
-                validate={composeValidators(
-                  isPositive(),
-                  isInteger(),
-                  isLessOrEqualThan('Should not be greater than 1 quintillion (10^18)')('1e18')
-                )}
+                validate={(value, allValues) => {
+                  const errors = composeValidators(
+                    isPositive(),
+                    isInteger(),
+                    isGreaterOrEqualThan('Should be greater than or equal to Min Rate')(allValues.tiers[index].minRate),
+                    isLessOrEqualThan('Should less than or equal to 1 quintillion (10^18)')('1e18')
+                  )(value)
+
+                  if (errors) return errors.shift()
+                }}
                 errorStyle={inputErrorStyle}
                 type="text"
                 side="right"
