@@ -15,6 +15,8 @@ import {
   isRequired,
 } from '../../utils/validations'
 import { DESCRIPTION, TEXT_FIELDS } from '../../utils/constants'
+import { inject, observer } from 'mobx-react'
+import { acceptPositiveIntegerOnly } from '../../utils/utils'
 
 const {
   START_TIME,
@@ -32,7 +34,7 @@ const inputErrorStyle = {
   height: '20px',
 }
 
-export const DutchAuctionBlock = ({ fields, ...props }) => {
+export const DutchAuctionBlock = inject('tierStore', 'tokenStore')(observer(({ tierStore, tokenStore, fields, ...props }) => {
   const validateTierStartDate  = (index) => (value, values) => {
     const listOfValidations = [
       isRequired(),
@@ -122,7 +124,15 @@ export const DutchAuctionBlock = ({ fields, ...props }) => {
               <Field
                 name={`${name}.supply`}
                 component={InputField2}
-                validate={isPositive()}
+                validate={(value) => {
+                  const { supply } = tokenStore
+                  const errors = composeValidators(
+                    isPositive(),
+                    isLessOrEqualThan(`Should not be greater than Token's total supply: ${supply}`)(supply)
+                  )(value)
+                  if (errors) return errors.shift()
+                }}
+                parse={acceptPositiveIntegerOnly}
                 errorStyle={inputErrorStyle}
                 type="text"
                 side="left"
@@ -132,7 +142,7 @@ export const DutchAuctionBlock = ({ fields, ...props }) => {
             </div>
           </div>
           {
-            props.tierStore.tiers[0].whitelistEnabled === 'yes' ? (
+             tierStore.tiers[0].whitelistEnabled === 'yes' ? (
               <div>
                 <div className="section-title">
                   <p className="title">Whitelist</p>
@@ -145,4 +155,4 @@ export const DutchAuctionBlock = ({ fields, ...props }) => {
       ))}
     </div>
   )
-}
+}))
