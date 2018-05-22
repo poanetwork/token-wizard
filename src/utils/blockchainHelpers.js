@@ -416,7 +416,6 @@ export function getAllCrowdsaleAddresses () {
 
         let whenTiers = []
         fullCrowdsalesArr.forEach((crowdsale) => {
-          whenTiers.push(attachToContract(contractStore.crowdsale.abi, crowdsale.addr))
           let joinedTiers = crowdsale.joinedCrowdsales
           for (let i = 0; i < joinedTiers.length; i++) {
             let joinedTierAddress = joinedTiers[i]
