@@ -7,22 +7,15 @@ import { BigNumber } from 'bignumber.js'
 
 @inject(
   'web3Store',
+  'statsStore'
 )
 @observer
 export class Stats extends Component {
   constructor (props) {
     super(props)
-    const { web3Store } = props
+    const { web3Store, statsStore } = props
     const { web3 } = web3Store
     this.setState({
-      totalEthRaised: 0,
-      totalCrowdsales: 0,
-      percentageOfWhitelisted: 0,
-      percentageOfFinalized: 0,
-      percentageOfMultiTiers: 0,
-      totalInvolvedContributorsAmount: 0,
-      maxTiersAmount: 0,
-      maxEthRaised: 0,
       loading: true
     })
     getWhiteListWithCapCrowdsaleAssets()
@@ -68,31 +61,31 @@ export class Stats extends Component {
         })
         const percentageOfMultiTiers = fullCrowdsalesArr.length > 0 ? Math.round(multiTiersCrowdsales.length * 100 / fullCrowdsalesArr.length * 100) / 100 : 0
 
+        statsStore.setProperty("totalEthRaised", totalEthRaised)
+        statsStore.setProperty("totalCrowdsales", fullCrowdsalesArr.length)
+        statsStore.setProperty("percentageOfWhitelisted", percentageOfWhitelisted)
+        statsStore.setProperty("percentageOfFinalized", percentageOfFinalized)
+        statsStore.setProperty("percentageOfMultiTiers", percentageOfMultiTiers)
+        statsStore.setProperty("totalInvolvedContributorsAmount", totalInvolvedContributorsAmount)
+        statsStore.setProperty("maxTiersAmount", maxTiersAmount)
+        statsStore.setProperty("maxEthRaised", maxEthRaised)
+
         this.setState({
-          totalEthRaised: totalEthRaised,
-          totalCrowdsales: fullCrowdsalesArr.length,
-          percentageOfWhitelisted: percentageOfWhitelisted,
-          percentageOfFinalized: percentageOfFinalized,
-          percentageOfMultiTiers: percentageOfMultiTiers,
-          totalInvolvedContributorsAmount: totalInvolvedContributorsAmount,
-          maxTiersAmount: maxTiersAmount,
-          maxEthRaised: maxEthRaised,
           loading: false
         })
       })
   }
 
   render () {
-    const { web3Store } = this.props
-    const { web3 } = web3Store
-    const totalEthRaised = this.state ? this.state.totalEthRaised ? this.state.totalEthRaised.toString() : '0' : '0'
-    const totalCrowdsalesAmount = this.state ? this.state.totalCrowdsales ? this.state.totalCrowdsales.toString() : '0' : '0'
-    const totalInvolvedContributorsAmount = this.state ? this.state.totalInvolvedContributorsAmount ? this.state.totalInvolvedContributorsAmount.toString() : '0' : '0'
-    const maxTiersAmount = this.state ? this.state.maxTiersAmount ? this.state.maxTiersAmount.toString() : '0' : '0'
-    const maxEthRaised = this.state ? this.state.maxEthRaised ? this.state.maxEthRaised.toString() : '0' : '0'
-    const percentageOfWhitelisted = this.state ? this.state.percentageOfWhitelisted ? this.state.percentageOfWhitelisted.toString() : '0' : '0'
-    const percentageOfFinalized = this.state ? this.state.percentageOfFinalized ? this.state.percentageOfFinalized.toString() : '0' : '0'
-    const percentageOfMultiTiers = this.state ? this.state.percentageOfMultiTiers ? this.state.percentageOfMultiTiers.toString() : '0' : '0'
+    const { statsStore } = this.props
+    const totalEthRaised = statsStore.totalEthRaised ? statsStore.totalEthRaised.toString() : '0'
+    const totalCrowdsalesAmount = statsStore.totalCrowdsales ? statsStore.totalCrowdsales.toString() : '0'
+    const totalInvolvedContributorsAmount = statsStore.totalInvolvedContributorsAmount ? statsStore.totalInvolvedContributorsAmount.toString() : '0'
+    const maxTiersAmount = statsStore.maxTiersAmount ? statsStore.maxTiersAmount.toString() : '0'
+    const maxEthRaised = statsStore.maxEthRaised ? statsStore.maxEthRaised.toString() : '0'
+    const percentageOfWhitelisted = statsStore.percentageOfWhitelisted ? statsStore.percentageOfWhitelisted.toString() : '0'
+    const percentageOfFinalized = statsStore.percentageOfFinalized ? statsStore.percentageOfFinalized.toString() : '0'
+    const percentageOfMultiTiers = statsStore.percentageOfMultiTiers ? statsStore.percentageOfMultiTiers.toString() : '0'
     return (
       <div className="stats container">
         <p className="title">Token Wizard statistics (from 2018)</p>

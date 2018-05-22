@@ -324,7 +324,7 @@ export function getAllCrowdsaleAddresses () {
 
         let whenCrowdsales = []
         let crowdsaleABI = contractStore.crowdsale.abi
-        for (let i = 0; i < crowdsalesAddresses.length; i++) {
+        for (let i = 0; i < /*crowdsalesAddresses.length*/10; i++) {
           let whenCrowdsale = attachToContract(crowdsaleABI, crowdsalesAddresses[i])
           whenCrowdsales.push(whenCrowdsale)
         }

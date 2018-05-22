@@ -12,6 +12,7 @@ import InvestStore from './InvestStore'
 import CrowdsaleStore from './CrowdsaleStore'
 import GasPriceStore from './GasPriceStore'
 import DeploymentStore from './DeploymentStore'
+import StatsStore from './StatsStore'
 
 // Clear local storage if there is no incomplete deployment
 if (storage.has('DeploymentStore') && storage.get('DeploymentStore').deploymentStep === null) {
@@ -31,6 +32,7 @@ const investStore = new InvestStore()
 const crowdsaleStore = new CrowdsaleStore()
 const gasPriceStore = new GasPriceStore()
 const deploymentStore = new DeploymentStore()
+const statsStore = new StatsStore()
 
 export {
   generalStore,
@@ -45,5 +47,6 @@ export {
   investStore,
   crowdsaleStore,
   gasPriceStore,
-  deploymentStore
+  deploymentStore,
+  statsStore
 };
