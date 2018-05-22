@@ -324,7 +324,7 @@ export function getAllCrowdsaleAddresses () {
 
         let whenCrowdsales = []
         let crowdsaleABI = contractStore.crowdsale.abi
-        for (let i = 0; i < /*crowdsalesAddresses.length*/10; i++) {
+        for (let i = 0; i < crowdsalesAddresses.length; i++) {
           let whenCrowdsale = attachToContract(crowdsaleABI, crowdsalesAddresses[i])
           whenCrowdsales.push(whenCrowdsale)
         }
@@ -358,6 +358,8 @@ export function getAllCrowdsaleAddresses () {
             return Promise.all(innerPromiseArray);
           })
 
+          //console.log("crowdsalePropsArrReorg:", crowdsalePropsArrReorg)
+
           return Promise.all(crowdsalePropsArrReorg)
           .then(([joinedCrowdsales, isWhitelisted, isFinalized]) => {
             fullCrowdsales[crowdsale._address] = {
@@ -372,19 +374,22 @@ export function getAllCrowdsaleAddresses () {
         whenJoinedCrowdsalesData.push(promiseOuter)
       })
 
-      console.log("whenJoinedCrowdsalesData:", whenJoinedCrowdsalesData)
-
-      const fullCrowdsalesArr = Object.keys(fullCrowdsales).map(function(k) { return fullCrowdsales[k] })
+      //console.log("whenJoinedCrowdsalesData:", whenJoinedCrowdsalesData)
 
       return Promise.all(whenJoinedCrowdsalesData.map(p => p.catch(() => undefined)))
       .then(() => {
+        const fullCrowdsalesArr = Object.keys(fullCrowdsales)
+        .map(function(addr) {
+          fullCrowdsales[addr].addr = addr;
+          return fullCrowdsales[addr]
+        })
         console.log("fullCrowdsales:", fullCrowdsalesArr)
         console.log("fullCrowdsalesArr.length", fullCrowdsalesArr.length)
 
         let whenTiers = []
-        fullCrowdsalesArr.forEach((crowdsaleAddress) => {
-          whenTiers.push(attachToContract(contractStore.crowdsale.abi, crowdsaleAddress))
-          let joinedTiers = fullCrowdsalesArr[crowdsaleAddress].joinedCrowdsales
+        fullCrowdsalesArr.forEach((crowdsale) => {
+          whenTiers.push(attachToContract(contractStore.crowdsale.abi, crowdsale.addr))
+          let joinedTiers = crowdsale.joinedCrowdsales
           for (let i = 0; i < joinedTiers.length; i++) {
             let joinedTierAddress = joinedTiers[i]
             whenTiers.push(attachToContract(contractStore.crowdsale.abi, joinedTierAddress))
