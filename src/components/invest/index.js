@@ -299,7 +299,7 @@ export class Invest extends React.Component {
     const rate = toBigNumber(crowdsalePageStore.rate)
     console.log('rate:', rate.toFixed())
 
-    const tokensToInvest = toBigNumber(investStore.tokensToInvest).times(rate).integerValue(BigNumber.ROUND_CEIL)
+    const tokensToInvest = toBigNumber(investStore.tokensToInvest).times(rate)
     console.log('tokensToInvest:', tokensToInvest.toFixed())
 
     const userLimits = await getUserMaxLimits(addr, execID, methods, account)
@@ -336,7 +336,7 @@ export class Invest extends React.Component {
 
     const opts = {
       from: account,
-      value: weiToSend,
+      value: weiToSend.integerValue(BigNumber.ROUND_CEIL),
       gasPrice: generalStore.gasPrice
     }
     console.log(opts)
@@ -347,7 +347,7 @@ export class Invest extends React.Component {
     const targetSuffix = crowdsaleStore.contractTargetSuffix
     const target = `${targetPrefix}${targetSuffix}`
 
-    let paramsToExec = [weiToSend, methodInterface]
+    let paramsToExec = [opts.value, methodInterface]
     const method = methodToExec("scriptExec", `buy(${methodInterface.join(',')})`, target, this.getBuyParams, paramsToExec)
 
     const estimatedGas = await method.estimateGas(opts)
