@@ -310,6 +310,7 @@ export function loadRegistryAddresses () {
 }
 
 export function getAllCrowdsaleAddresses () {
+  let tierData = {}
   const whenRegistryContract = getRegistryContract()
 
   return Promise.all([whenRegistryContract])
@@ -335,7 +336,7 @@ export function getAllCrowdsaleAddresses () {
     .then(crowdsales => {
       //console.log("crowdsales:", crowdsales)
 
-      let whenJoinedCrowdsalesData = []
+      let whenJoinedTiersData = []
 
       let fullCrowdsales = {}
 
@@ -343,18 +344,18 @@ export function getAllCrowdsaleAddresses () {
         //console.log("crowdsale:", crowdsale)
         let promiseInner = crowdsale.methods.joinedCrowdsalesLen().call()
         let promiseOuter = promiseInner.then((len) => {
-          let whenJoinedCrowdsales = []
+          let whenJoinedTiers = []
           let whenIsWhiteListed = []
           let whenIsFinalized = []
           let whenTokenAddress = []
           for (let i = 0; i < len; i++) {
-            whenJoinedCrowdsales.push(crowdsale.methods.joinedCrowdsales(i).call())
+            whenJoinedTiers.push(crowdsale.methods.joinedCrowdsales(i).call())
           }
           whenIsWhiteListed.push(crowdsale.methods.isWhiteListed().call())
           whenIsFinalized.push(crowdsale.methods.finalized().call())
           whenTokenAddress.push(crowdsale.methods.token().call())
 
-          let crowdsalePropsArr = [whenJoinedCrowdsales, whenIsWhiteListed, whenIsFinalized, whenTokenAddress]
+          let crowdsalePropsArr = [whenJoinedTiers, whenIsWhiteListed, whenIsFinalized, whenTokenAddress]
 
           let crowdsalePropsArrReorg = crowdsalePropsArr.map(function(innerPromiseArray) {
             return Promise.all(innerPromiseArray);
@@ -363,9 +364,9 @@ export function getAllCrowdsaleAddresses () {
           //console.log("crowdsalePropsArrReorg:", crowdsalePropsArrReorg)
 
           return Promise.all(crowdsalePropsArrReorg)
-          .then(([joinedCrowdsales, isWhitelisted, isFinalized, tokenAddress]) => {
+          .then(([joinedTiers, isWhitelisted, isFinalized, tokenAddress]) => {
             fullCrowdsales[crowdsale._address] = {
-              "joinedCrowdsales": joinedCrowdsales,
+              "joinedTiers": joinedTiers,
               "isWhitelisted": isWhitelisted[0],
               "isFinalized": isFinalized[0],
               "tokenAddress": tokenAddress[0]
@@ -374,10 +375,10 @@ export function getAllCrowdsaleAddresses () {
             return Promise.resolve()
           })
         })
-        whenJoinedCrowdsalesData.push(promiseOuter)
+        whenJoinedTiersData.push(promiseOuter)
       })
 
-      return Promise.all(whenJoinedCrowdsalesData.map(p => p.catch(() => undefined)))
+      return Promise.all(whenJoinedTiersData.map(p => p.catch(() => undefined)))
       .then(() => {
         const fullCrowdsalesArr = Object.keys(fullCrowdsales)
         .map(function(addr) {
@@ -410,13 +411,9 @@ export function getAllCrowdsaleAddresses () {
           return fullCrowdsales[addr]
         })
 
-        console.log("reservedDestinationsLens", reservedDestinationsLens)
-        console.log("fullCrowdsales:", fullCrowdsalesArr)
-        console.log("fullCrowdsalesArr.length", fullCrowdsalesArr.length)
-
         let whenTiers = []
         fullCrowdsalesArr.forEach((crowdsale) => {
-          let joinedTiers = crowdsale.joinedCrowdsales
+          let joinedTiers = crowdsale.joinedTiers
           for (let i = 0; i < joinedTiers.length; i++) {
             let joinedTierAddress = joinedTiers[i]
             whenTiers.push(attachToContract(contractStore.crowdsale.abi, joinedTierAddress))
@@ -426,22 +423,43 @@ export function getAllCrowdsaleAddresses () {
         return Promise.all(whenTiers)
         .then((tiers) => {
           //console.log("tiers: ", tiers)
-          let whenWeiRaisedArr = []
-          let whenJoinedCrowdsalesArr = []
-          let whenContributorsArr = []
+          let whenTierArr = []
           for (let i = 0; i < tiers.length; i++) {
-            let crowdsale = tiers[i]
-            whenWeiRaisedArr.push(crowdsale.methods.weiRaised().call())
-            whenJoinedCrowdsalesArr.push(crowdsale.methods.joinedCrowdsalesLen().call())
-            whenContributorsArr.push(crowdsale.methods.investorCount().call())
+            let tier = tiers[i]
+            let whenWeiRaised = tier.methods.weiRaised().call()
+            .then((weiRaised) => {
+              if (!tierData[tier._address]) tierData[tier._address] = {}
+              tierData[tier._address].weiRaised = weiRaised
+              return Promise.resolve()
+            })
+            whenTierArr.push(whenWeiRaised)
+            let whenTierContributor = tier.methods.investorCount().call()
+            .then((contributorsCount) => {
+              if (!tierData[tier._address]) tierData[tier._address] = {}
+              tierData[tier._address].contributorsCount = contributorsCount
+              return Promise.resolve()
+            })
+            whenTierArr.push(whenTierContributor)
+            let whenTierStartsAt = tier.methods.startsAt().call()
+            .then((startsAt) => {
+              if (!tierData[tier._address]) tierData[tier._address] = {}
+              tierData[tier._address].startsAt = startsAt
+              return Promise.resolve()
+            })
+            whenTierArr.push(whenTierStartsAt)
+            let whenTierEndsAt = tier.methods.endsAt().call()
+            .then((endsAt) => {
+              if (!tierData[tier._address]) tierData[tier._address] = {}
+              tierData[tier._address].endsAt = endsAt
+              return Promise.resolve()
+            })
+            whenTierArr.push(whenTierEndsAt)
           }
 
           let totalArr = [
             fullCrowdsalesArr,
             reservedDestinationsLens,
-            whenWeiRaisedArr.map(p => p.catch(() => undefined)),
-            whenJoinedCrowdsalesArr.map(p => p.catch(() => undefined)),
-            whenContributorsArr.map(p => p.catch(() => undefined))
+            whenTierArr.map(p => p.catch(() => undefined))
           ]
 
           let totalArrayReorg = totalArr.map(function(innerPromiseArray) {
@@ -453,7 +471,8 @@ export function getAllCrowdsaleAddresses () {
       })
     })
     .then((totalArr) => {
-      return totalArr
+      let [fullCrowdsalesArr, reservedDestinationsLensArr, ] = totalArr
+      return [fullCrowdsalesArr, reservedDestinationsLensArr, tierData]
     })
     .catch((err) => {
       console.log("err: ", err)
