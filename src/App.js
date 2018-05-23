@@ -25,12 +25,12 @@ class App extends Component {
     return (
       <Router>
         <div>
-          <Route exact path="/stats" component={Stats}/>
           <Header/>
 
           <Switch>
             <Route exact path="/crowdsale" component={Crowdsale}/>
             <Route exact path="/invest" component={Invest}/>
+            <Route exact path="/stats" component={Stats}/>
 
             <Route>
               <Web3Provider
