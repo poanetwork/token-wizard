@@ -61,7 +61,7 @@ export class stepThree extends React.Component {
     const reservedCount = reservedTokenStore.tokens.length
     const hasWhitelist = tierStore.tiers.some((tier) => { return tier.whitelistEnabled === 'yes' })
 
-    deploymentStore.initialize(!!reservedCount, hasWhitelist, tiersCount, tierStore.globalMinCap)
+    deploymentStore.initialize(!!reservedCount, hasWhitelist, tierStore.tiers, tierStore.globalMinCap)
 
     getNetworkVersion()
       .then(networkID => {
@@ -72,7 +72,11 @@ export class stepThree extends React.Component {
 
           if (hasWhitelist) {
             whitelistCount = tierStore.tiers.reduce((total, tier) => {
-              total += tier.whitelist.length
+              if (tier.whitelist) {
+                if (tier.whitelist.length) {
+                  total++
+                }
+              }
               return total
             }, 0)
           }

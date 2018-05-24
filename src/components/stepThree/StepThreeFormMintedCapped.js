@@ -61,14 +61,27 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
     props.crowdsaleStore.setProperty('endTime', values.tiers[values.tiers.length - 1].endTime)
   }
 
+  const whenWhitelistBlock = (tierInd) => {
+    return (<WhenFieldChanges
+      key={`whenWhitelistBlock_${tierInd}`}
+      field={`tiers[${tierInd}].whitelistEnabled`}
+      becomes={'yes'}
+      set="minCap"
+      to={0}
+    />)
+  }
+
+  const whenWhitelistsChanges = () => {
+    return (
+      <div>
+      { values.tiers.map((tier, ind) => { return whenWhitelistBlock(ind) }) }
+      </div>
+    )
+  }
+
   return (
     <form onSubmit={handleSubmit}>
-      <WhenFieldChanges
-        field="whitelistEnabled"
-        becomes={'yes'}
-        set="minCap"
-        to={0}
-      />
+      {whenWhitelistsChanges()}
       <div>
         <div className="steps-content container">
           <div className="about-step">
@@ -109,7 +122,7 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
                 isNonNegative(),
                 isDecimalPlacesNotGreaterThan()(props.decimals)
               )}
-              disabled={values.whitelistEnabled === 'yes'}
+              disabled={values.tiers.some((tier) => { return tier.whitelistEnabled === 'yes'} )}
               errorStyle={inputErrorStyle}
               type="number"
               side="left"

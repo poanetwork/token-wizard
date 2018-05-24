@@ -43,6 +43,7 @@ export const TRUNC_TO_DECIMALS = {
   DECIMALS18: -18
 }
 
+//to do: should be updated for 2.0
 export const DEPLOYMENT_VALUES = {
   GAS_REQUIRED: {
     DEFAULT: 8044737,
@@ -51,7 +52,7 @@ export const DEPLOYMENT_VALUES = {
 
   },
   TX_REQUIRED: {
-    DEFAULT: 13,
+    DEFAULT: 3,
     WHITELIST: 1,
     RESERVED_TOKEN: 1
   }

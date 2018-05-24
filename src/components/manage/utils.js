@@ -156,7 +156,8 @@ const crowdsaleData = (tier, crowdsale, token, reservedTokensInfo) => {
   let multisigWallet = crowdsale.team_wallet
   let tierName = crowdsaleStore.isMintedCappedCrowdsale ? removeTrailingNUL(web3.utils.toAscii(tier.tier_name)) : ''
   let isUpdatable = tier.duration_is_modifiable
-  let isWhitelisted = tier.whitelist_enabled
+  //to do: wait when Auth_os will implement whitelist_enabled status for Dutch Auction
+  let isWhitelisted = crowdsaleStore.isMintedCappedCrowdsale ? tier.whitelist_enabled : tier.whitelist ? tier.whitelist.length > 0 ? true : false : false
   let isFinalized = crowdsale.is_finalized
   let whitelistAccounts = tier.whitelist
 

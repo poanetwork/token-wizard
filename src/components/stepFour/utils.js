@@ -1024,7 +1024,6 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
       { field: 'startTime', value: 'Crowdsale start time: ', parent: 'tierStore' },
       { field: 'endTime', value: 'Crowdsale end time: ', parent: 'crowdsaleStore' },
       ...crowdsaleIsModifiableEl,
-      { field: 'whitelistEnabled', value: 'Crowdsale is whitelisted: ', parent: 'tierStore' },
       ...crowdsaleWhitelistElements,
       ...footerElemets
     ],
@@ -1063,6 +1062,7 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
           { field: 'startTime', value: 'Tier start time: ', parent: 'tierStore' },
           { field: 'endTime', value: 'Tier end time: ', parent: 'tierStore' },
           { field: 'updatable', value: 'Tier is modifiable: ', parent: 'tierStore' },
+          { field: 'whitelistEnabled', value: 'Crowdsale is whitelisted: ', parent: 'tierStore' },
           ...tierWhitelistElements,
           ...footerElemets
         ]

@@ -206,20 +206,25 @@ export class Manage extends Component {
 
                 //get whitelists for tiers
                 let whenWhiteListsData = [];
+                let method
                 if (crowdsaleStore.isMintedCappedCrowdsale) {
                   for (let tierNum = 0; tierNum < numOfTiers; tierNum++) {
+                    method = initCrowdsaleContract.methods.getTierWhitelist(registryStorageObj.addr, contractStore.crowdsale.execID, tierNum).call()
                     if (tiers[tierNum].whitelist_enabled) {
-                      let whenTierWhitelist = initCrowdsaleContract.methods.getTierWhitelist(registryStorageObj.addr, contractStore.crowdsale.execID, tierNum).call()
-                      whenWhiteListsData.push(whenTierWhitelist);
+                      whenWhiteListsData.push(method);
                     } else {
                       whenWhiteListsData.push(null);
                     }
                   }
+                } else if (crowdsaleStore.isDutchAuction) {
+                  method = initCrowdsaleContract.methods.getCrowdsaleWhitelist(registryStorageObj.addr, contractStore.crowdsale.execID).call()
+                  whenWhiteListsData.push(method);
                 }
 
                 let whenTotalData = whenReservedTokensInfoArr.concat(whenWhiteListsData)
                 console.log("whenTotalData:", whenTotalData)
                 console.log("whenReservedTokensInfoArr.length:", whenReservedTokensInfoArr.length)
+                console.log("whenWhiteListsData.length:", whenWhiteListsData.length)
 
                 return Promise.all(whenTotalData)
                   .then((totalData) => {
@@ -233,27 +238,45 @@ export class Manage extends Component {
                       whiteListsData = totalData.slice()
                     }
                     console.log("whiteListsData:", whiteListsData)
-                    let whitelistPromises = []
-                    for (let tierNum = 0; tierNum < numOfTiers; tierNum++) {
-                      if (tiers[tierNum].whitelist_enabled) {
-                        tiers[tierNum].whitelist = []
-                        for (let whiteListItemNum = 0; whiteListItemNum < whiteListsData[tierNum].whitelist.length; whiteListItemNum++) {
-                          let newWhitelistPromise = new Promise((resolve) => {
-                            initCrowdsaleContract.methods.getWhitelistStatus(registryStorageObj.addr, contractStore.crowdsale.execID, tierNum, whiteListsData[tierNum].whitelist[whiteListItemNum]).call()
-                              .then(whitelistStatus => {
-                                console.log("whitelistStatus:", whitelistStatus)
-                                tiers[tierNum].whitelist.push({
+
+                    const fillWhiteListPromises = (tierNum) => {
+                      for (let whiteListItemNum = 0; whiteListItemNum < whiteListsData[tierNum].whitelist.length; whiteListItemNum++) {
+                        let newWhitelistPromise = new Promise((resolve) => {
+                          let method
+                          if (crowdsaleStore.isMintedCappedCrowdsale) {
+                            method = initCrowdsaleContract.methods.getWhitelistStatus(registryStorageObj.addr, contractStore.crowdsale.execID, tierNum, whiteListsData[tierNum].whitelist[whiteListItemNum]).call()
+                          } else if (crowdsaleStore.isDutchAuction) {
+                            method = initCrowdsaleContract.methods.getWhitelistStatus(registryStorageObj.addr, contractStore.crowdsale.execID, whiteListsData[tierNum].whitelist[whiteListItemNum]).call()
+                          }
+                          method
+                            .then(whitelistStatus => {
+                              if (whitelistStatus.max_spend_remaining > 0) {
+                                let whitelistItem = {
                                   addr: whiteListsData[tierNum].whitelist[whiteListItemNum],
                                   min: whitelistStatus.minimum_contribution,
                                   max: whitelistStatus.max_spend_remaining
-                                })
-                                resolve();
-                              })
-                          })
-                          whitelistPromises.push(newWhitelistPromise)
-                        }
+                                }
+                                tiers[tierNum].whitelist = []
+                                tiers[tierNum].whitelist.push(whitelistItem)
+                              }
+                              resolve();
+                            })
+                        })
+                        whitelistPromises.push(newWhitelistPromise)
                       }
                     }
+
+                    let whitelistPromises = []
+                    if (crowdsaleStore.isMintedCappedCrowdsale) {
+                      for (let tierNum = 0; tierNum < numOfTiers; tierNum++) {
+                        if (tiers[tierNum].whitelist_enabled) {
+                          fillWhiteListPromises(tierNum)
+                        }
+                      }
+                    } else if (crowdsaleStore.isDutchAuction) {
+                      fillWhiteListPromises(0)
+                    }
+
                     console.log("reservedTokensInfoRaw:", reservedTokensInfoRaw)
                     let reservedTokensInfo = []
                     for (let dest = 0; dest < reservedTokensInfoRaw.length; dest++) {

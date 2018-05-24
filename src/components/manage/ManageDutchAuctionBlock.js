@@ -40,7 +40,6 @@ export const ManageDutchAuctionBlock = ({
       const canEdit = canEditTiers && updatable && !tierHasEnded && !tierHasStarted
       const isWhitelistEnabled = fields.initial[index].whitelistEnabled === 'yes'
 
-
       return (
         <div className="steps" key={index}>
           <div className='steps-content container'>
@@ -88,7 +87,7 @@ export const ManageDutchAuctionBlock = ({
                 />
               </div>
             </div>
-            { crowdsaleStore.isMintedCappedCrowdsale & isWhitelistEnabled ? (
+            { crowdsaleStore.isDutchAuction & isWhitelistEnabled ? (
               <div>
                 <div className="section-title">
                   <p className="title">Whitelist</p>
