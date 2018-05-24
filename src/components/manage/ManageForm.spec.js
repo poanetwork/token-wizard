@@ -55,6 +55,7 @@ const initialTiers = [{
   endTime: "2018-04-21T00:00",
   updatable: false,
   tier: "Tier 2",
+  whitelistEnabled: "yes",
   supply: "156",
   rate: "55"
 }]
