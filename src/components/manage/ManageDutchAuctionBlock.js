@@ -31,13 +31,15 @@ export const ManageDutchAuctionBlock = ({
     {fields.map((name, index) => {
       const currentTier = fields.value[index]
       let { walletAddress, updatable } = currentTier
-      const { endTime: initialEndTime } = fields.initial[index]
+      const { startTime: initialStartTime, endTime: initialEndTime } = fields.initial[index]
 
       updatable = crowdsaleStore.isDutchAuction ? true : updatable
 
+      const tierHasStarted = !isDateLaterThan()(dateToTimestamp(initialStartTime))(Date.now())
       const tierHasEnded = !isDateLaterThan()(dateToTimestamp(initialEndTime))(Date.now())
-      const canEdit = canEditTiers && updatable && !tierHasEnded
+      const canEdit = canEditTiers && updatable && !tierHasEnded && !tierHasStarted
       const isWhitelistEnabled = fields.initial[index].whitelistEnabled === 'yes'
+
 
       return (
         <div className="steps" key={index}>

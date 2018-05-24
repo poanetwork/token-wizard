@@ -31,10 +31,11 @@ export const ManageTierBlock = ({
     {fields.map((name, index) => {
       const currentTier = fields.value[index]
       const { tier, walletAddress, updatable } = currentTier
-      const { endTime: initialEndTime } = fields.initial[index]
+      const { startTime: initialStartTime, endTime: initialEndTime } = fields.initial[index]
 
+      const tierHasStarted = !isDateLaterThan()(dateToTimestamp(initialStartTime))(Date.now())
       const tierHasEnded = !isDateLaterThan()(dateToTimestamp(initialEndTime))(Date.now())
-      const canEdit = canEditTiers && updatable && !tierHasEnded
+      const canEdit = canEditTiers && updatable && !tierHasEnded && !tierHasStarted
       const isWhitelistEnabled = fields.initial[index].whitelistEnabled === 'yes'
 
       return (
@@ -80,7 +81,7 @@ export const ManageTierBlock = ({
                 />
               </div>
             </div>
-            { crowdsaleStore.isMintedCappedCrowdsale & isWhitelistEnabled ? (
+            { crowdsaleStore.isMintedCappedCrowdsale && isWhitelistEnabled ? (
               <div>
                 <div className="section-title">
                   <p className="title">Whitelist</p>

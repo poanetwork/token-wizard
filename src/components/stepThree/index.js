@@ -2,7 +2,7 @@ import React from "react";
 import "../../assets/stylesheets/application.css";
 import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
-import { setExistingContractParams, getNetworkVersion, getNetWorkNameById } from "../../utils/blockchainHelpers";
+import { getNetworkVersion, getNetWorkNameById } from "../../utils/blockchainHelpers";
 import { StepNavigation } from "../Common/StepNavigation";
 import { NAVIGATION_STEPS, CHAINS } from '../../utils/constants'
 import { inject, observer } from "mobx-react";
@@ -10,6 +10,7 @@ import { Loader } from '../Common/Loader'
 import { noGasPriceAvailable, warningOnMainnetAlert } from '../../utils/alerts'
 import { getStep3Component } from './utils'
 import { isLessOrEqualThan } from '../../utils/validations'
+import createDecorator from 'final-form-calculate'
 
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS;
 
@@ -86,6 +87,21 @@ export class stepThree extends React.Component {
       })
   }
 
+  calculator = createDecorator({
+    field: /.+\.endTime/,
+    updates: (value, name) => {
+      const nextTierIndex = +name.match(/(\d+)/)[1] + 1
+      const { tierStore } = this.props
+      const newValue = {}
+
+      if (tierStore.tiers[nextTierIndex]) {
+        newValue[`tiers[${nextTierIndex}].startTime`] = value
+      }
+
+      return newValue
+    }
+  })
+
   render () {
     const { generalStore, tierStore, gasPriceStore, tokenStore, web3Store, crowdsaleStore } = this.props
     let stepThreeComponent = getStep3Component(crowdsaleStore.strategy)
@@ -96,6 +112,7 @@ export class stepThree extends React.Component {
         <Form
           onSubmit={this.handleOnSubmit}
           mutators={{ ...arrayMutators }}
+          decorators={[this.calculator]}
           initialValues={{
             walletAddress: web3Store.curAddress,
             minCap: 0,
