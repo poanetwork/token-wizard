@@ -37,7 +37,6 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, prist
     props.tierStore.updateWalletAddress(values.walletAddress, VALID)
     props.generalStore.setGasPrice(gweiToWei(values.gasPrice.price))
     props.tierStore.setGlobalMinCap(values.minCap || 0)
-    props.tierStore.setTierProperty(values.whitelistEnabled, "whitelistEnabled", 0)
 
     let totalSupply = 0
 
@@ -48,6 +47,7 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, prist
       props.tierStore.updateMinRate(tier.minRate, VALID, index)
       props.tierStore.updateMaxRate(tier.maxRate, VALID, index)
       props.tierStore.setTierProperty(tier.supply, 'supply', index)
+      props.tierStore.setTierProperty(tier.whitelistEnabled, "whitelistEnabled", index)
       props.tierStore.validateTiers('supply', index)
     })
     props.crowdsaleStore.setProperty('supply', totalSupply)
@@ -57,7 +57,7 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, prist
   return (
     <form onSubmit={handleSubmit}>
       <WhenFieldChanges
-        field="whitelistEnabled"
+        field="tiers[0].whitelistEnabled"
         becomes={'yes'}
         set="minCap"
         to={0}
@@ -101,41 +101,12 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, prist
                 isNonNegative(),
                 isDecimalPlacesNotGreaterThan()(props.decimals)
               )}
-              disabled={values.whitelistEnabled === 'yes'}
+              disabled={values.tiers.some((tier) => { return tier.whitelistEnabled === 'yes'} )}
               errorStyle={inputErrorStyle}
               type="number"
               side="left"
               label={MIN_CAP}
               description={DESCRIPTION.MIN_CAP}
-            />
-            <Field
-              name="whitelistEnabled"
-              render={({ input }) => (
-                <div className='right'>
-                  <label className="label">{ENABLE_WHITELISTING}</label>
-                  <div className='radios-inline'>
-                    <label className='radio-inline'>
-                      <input
-                        type='radio'
-                        checked={input.value === 'yes'}
-                        value='yes'
-                        onChange={() => input.onChange('yes')}
-                      />
-                      <span className='title'>yes</span>
-                    </label>
-                    <label className='radio-inline'>
-                      <input
-                        type='radio'
-                        checked={input.value === 'no'}
-                        value='no'
-                        onChange={() => input.onChange('no')}
-                      />
-                      <span className='title'>no</span>
-                    </label>
-                  </div>
-                  <p className='description'>{DESCRIPTION.ENABLE_WHITELIST}</p>
-                </div>
-              )}
             />
           </div>
         </div>

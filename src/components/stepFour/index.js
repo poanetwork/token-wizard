@@ -186,7 +186,7 @@ export class stepFour extends React.Component {
         if (content.field == 'globalMinCap') {
           return handlerForFile(content, this.props[parent])
         } else {
-          index = (content.field === 'walletAddress' || content.field === 'whitelistEnabled') ? 0 : index
+          index = (content.field === 'walletAddress') ? 0 : index
           return handlerForFile(content, this.props[parent].tiers[index])
         }
       }

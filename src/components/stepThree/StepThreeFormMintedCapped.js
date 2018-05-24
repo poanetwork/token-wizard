@@ -18,7 +18,7 @@ import { TierBlock } from '../Common/TierBlock'
 
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS;
 const { VALID } = VALIDATION_TYPES
-const { MIN_CAP, WALLET_ADDRESS, ENABLE_WHITELISTING } = TEXT_FIELDS
+const { MIN_CAP, WALLET_ADDRESS } = TEXT_FIELDS
 
 const inputErrorStyle = {
   color: 'red',
@@ -43,7 +43,6 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
     props.tierStore.updateWalletAddress(values.walletAddress, VALID)
     props.generalStore.setGasPrice(gweiToWei(values.gasPrice.price))
     props.tierStore.setGlobalMinCap(values.minCap || 0)
-    props.tierStore.setTierProperty(values.whitelistEnabled, "whitelistEnabled", 0)
 
     let totalSupply = 0
 
@@ -55,20 +54,34 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
       props.tierStore.setTierProperty(tier.endTime, 'endTime', index)
       props.tierStore.updateRate(tier.rate, VALID, index)
       props.tierStore.setTierProperty(tier.supply, 'supply', index)
+      props.tierStore.setTierProperty(tier.whitelistEnabled, "whitelistEnabled", index)
       props.tierStore.validateTiers('supply', index)
     })
     props.crowdsaleStore.setProperty('supply', totalSupply)
     props.crowdsaleStore.setProperty('endTime', values.tiers[values.tiers.length - 1].endTime)
   }
 
+  const whenWhitelistBlock = (tierInd) => {
+    return (<WhenFieldChanges
+      key={`whenWhitelistBlock_${tierInd}`}
+      field={`tiers[${tierInd}].whitelistEnabled`}
+      becomes={'yes'}
+      set="minCap"
+      to={0}
+    />)
+  }
+
+  const whenWhitelistsChanges = () => {
+    return (
+      <div>
+      { values.tiers.map((tier, ind) => { return whenWhitelistBlock(ind) }) }
+      </div>
+    )
+  }
+
   return (
     <form onSubmit={handleSubmit}>
-      <WhenFieldChanges
-        field="whitelistEnabled"
-        becomes={'yes'}
-        set="minCap"
-        to={0}
-      />
+      {whenWhitelistsChanges()}
       <div>
         <div className="steps-content container">
           <div className="about-step">
@@ -109,41 +122,12 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
                 isNonNegative(),
                 isDecimalPlacesNotGreaterThan()(props.decimals)
               )}
-              disabled={values.whitelistEnabled === 'yes'}
+              disabled={values.tiers.some((tier) => { return tier.whitelistEnabled === 'yes'} )}
               errorStyle={inputErrorStyle}
               type="number"
               side="left"
               label={MIN_CAP}
               description={DESCRIPTION.MIN_CAP}
-            />
-            <Field
-              name="whitelistEnabled"
-              render={({ input }) => (
-                <div className='right'>
-                  <label className="label">{ENABLE_WHITELISTING}</label>
-                  <div className='radios-inline'>
-                    <label className='radio-inline'>
-                      <input
-                        type='radio'
-                        checked={input.value === 'yes'}
-                        value='yes'
-                        onChange={() => input.onChange('yes')}
-                      />
-                      <span className='title'>yes</span>
-                    </label>
-                    <label className='radio-inline'>
-                      <input
-                        type='radio'
-                        checked={input.value === 'no'}
-                        value='no'
-                        onChange={() => input.onChange('no')}
-                      />
-                      <span className='title'>no</span>
-                    </label>
-                  </div>
-                  <p className='description'>{DESCRIPTION.ENABLE_WHITELIST}</p>
-                </div>
-              )}
             />
           </div>
         </div>

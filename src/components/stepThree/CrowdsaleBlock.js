@@ -76,7 +76,7 @@ export class CrowdsaleBlock extends React.Component {
     const whitelistInputBlock = (
       <div>
         <div className="section-title">
-          <p className="title">Whitelist</p>
+          <p className="title">Whitelist 2</p>
         </div>
         <WhitelistInputBlock num={num}/>
       </div>
@@ -152,7 +152,7 @@ export class CrowdsaleBlock extends React.Component {
             />
           </div>
         </div>
-        {tierStore.tiers[0].whitelistEnabled === 'yes' ? whitelistInputBlock : ''}
+        {tierStore.tiers[num].whitelistEnabled === 'yes' ? whitelistInputBlock : ''}
       </div>
     )
   }

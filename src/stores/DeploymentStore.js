@@ -20,24 +20,32 @@ class DeploymentStore {
     })
   }
 
-  @action initialize = (hasReservedToken, hasWhitelist, tiersCount, globalMinCap) => {
+  @action initialize = (hasReservedToken, hasWhitelist, tiers, globalMinCap) => {
     console.log("hasReservedToken:", hasReservedToken)
+    console.log("hasWhitelist:", hasWhitelist)
     console.log("globalMinCap:", globalMinCap)
     const listOfTx = [
       { name: 'crowdsaleCreate', dependsOnTiers: false, required: true },
       { name: 'token', dependsOnTiers: false, required: true },
       { name: 'setReservedTokens', dependsOnTiers: false, required: hasReservedToken },
       { name: 'updateGlobalMinContribution', dependsOnTiers: false, required: globalMinCap > 0 },
-      { name: 'createCrowdsaleTiers', dependsOnTiers: false, required: tiersCount > 1 },
+      { name: 'createCrowdsaleTiers', dependsOnTiers: false, required: tiers.length > 1 },
       { name: 'whitelist', dependsOnTiers: true, required: hasWhitelist },
       { name: 'crowdsaleInit', dependsOnTiers: false, required: true },
     ]
-    const byTierInitialValues = new Array(tiersCount).fill(false)
+    const byTierWhitelistInitialValues = tiers.map((tier) => {
+      if (tier.whitelistEnabled === 'yes') {
+        if (tier.whitelist.length > 0) {
+          return false
+        }
+      }
+      return null
+    })
 
     listOfTx.forEach(tx => {
       if (tx.required) {
         if (tx.dependsOnTiers) {
-          return this.txMap.set(tx.name, byTierInitialValues)
+          return this.txMap.set(tx.name, byTierWhitelistInitialValues)
         }
         return this.txMap.set(tx.name, [false])
       }
@@ -47,14 +55,18 @@ class DeploymentStore {
     this.logTxMap()
   }
 
-  @action initializePersonalized = (hasReservedToken, hasWhitelist, tiersCount, listOfTx, globalMinCap) => {
-    this.initialize(hasReservedToken, hasWhitelist, tiersCount, globalMinCap)
+  @action initializePersonalized = (hasReservedToken, hasWhitelist, tiers, listOfTx, globalMinCap) => {
+    this.initialize(hasReservedToken, hasWhitelist, tiers, globalMinCap)
     // TODO: based on listOfTx, modify this.txMap so it reflects the required amount of steps
   }
 
   @action setAsSuccessful = (txName) => {
     const txStatus = this.txMap.get(txName)
-    const toBeUpdated = txStatus.findIndex(isSuccess => !isSuccess)
+    const toBeUpdated = txStatus.findIndex((isSuccess) => {
+      if (isSuccess !== null) {
+        return !isSuccess
+      }
+    })
 
     if (toBeUpdated !== -1) {
       txStatus[toBeUpdated] = true

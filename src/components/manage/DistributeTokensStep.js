@@ -1,6 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-import classNames from 'classnames'
 import ReservedTokensItem from '../Common/ReservedTokensItem'
 import { inject, observer } from 'mobx-react'
 
