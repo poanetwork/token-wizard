@@ -37,7 +37,6 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, prist
     props.tierStore.updateWalletAddress(values.walletAddress, VALID)
     props.generalStore.setGasPrice(gweiToWei(values.gasPrice.price))
     props.tierStore.setGlobalMinCap(values.minCap || 0)
-    props.tierStore.setTierProperty(values.whitelistEnabled, "whitelistEnabled", 0)
 
     let totalSupply = 0
 
@@ -48,6 +47,7 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, prist
       props.tierStore.updateMinRate(tier.minRate, VALID, index)
       props.tierStore.updateMaxRate(tier.maxRate, VALID, index)
       props.tierStore.setTierProperty(tier.supply, 'supply', index)
+      props.tierStore.setTierProperty(tier.whitelistEnabled, "whitelistEnabled", index)
       props.tierStore.validateTiers('supply', index)
     })
     props.crowdsaleStore.setProperty('supply', totalSupply)

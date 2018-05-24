@@ -236,9 +236,9 @@ class TierStore {
     const newTierValidations = Object.assign({}, defaultTierValidations)
 
     newTier.tier = `Tier ${num + 1}`
+    newTier.whitelistEnabled = "no"
 
     if (num === 0) {
-      newTier.whitelistEnabled = "no"
       newTier.walletAddress = walletAddress
     }
 

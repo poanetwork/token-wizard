@@ -58,7 +58,7 @@ export class stepThree extends React.Component {
     const { tierStore, reservedTokenStore, deploymentStore } = this.props
     const tiersCount = tierStore.tiers.length
     const reservedCount = reservedTokenStore.tokens.length
-    const hasWhitelist = tierStore.tiers[0].whitelistEnabled === 'yes'
+    const hasWhitelist = tierStore.tiers.some((tier) => { return tier.whitelistEnabled === 'yes' })
 
     deploymentStore.initialize(!!reservedCount, hasWhitelist, tiersCount, tierStore.globalMinCap)
 

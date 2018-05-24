@@ -1,6 +1,4 @@
-import { toFixed } from '../utils/utils'
-import { contractStore, tokenStore, tierStore, web3Store } from './index'
-import { BigNumber } from 'bignumber.js'
+import { contractStore } from './index'
 
 export function getWhiteListWithCapCrowdsaleAssets(networkID) {
   return new Promise((resolve) => {
@@ -64,82 +62,4 @@ function addContractsToState(bin, abi, addr, contract) {
     addr: addr,
     abiConstructor: []
   });
-}
-
-export const getconstructorParams = (abiConstructor, vals, crowdsaleNum, isCrowdsale) => {
-  let params = {"types": [], "vals": []};
-  if (!abiConstructor) return params;
-
-  for (let j = 0; j < abiConstructor.length; j++) {
-    let inp = abiConstructor[j];
-    params.types.push(inp.type);
-    if (vals.length > 0) {
-      params.vals.push(vals[j]);
-    } else {
-      switch(inp.name) {
-        case "_start":
-          params.vals.push(toFixed(new Date(tierStore.tiers[crowdsaleNum].startTime).getTime() / 1000).toString());
-          break;
-        case "_end":
-          params.vals.push(toFixed(new Date(tierStore.tiers[crowdsaleNum].endTime).getTime() / 1000).toString());
-          break;
-        case "_rate":
-          params.vals.push(tierStore.tiers[crowdsaleNum].rate);
-          break;
-        case "_multisigWallet":
-          params.vals.push(tierStore.tiers[0].walletAddress);
-          break;
-        case "_token":
-          params.vals.push(contractStore.token.addr);
-          break;
-        case "_crowdsale":
-          params.vals.push(contractStore.crowdsale.addr[crowdsaleNum]);
-          break;
-        case "_name":
-          if (isCrowdsale) {
-            params.vals.push(tierStore.tiers[crowdsaleNum].tier);
-          } else {
-            params.vals.push(tokenStore.name);
-          }
-          break;
-        case "_symbol":
-          params.vals.push(tokenStore.ticker);
-          break;
-        case "_decimals":
-          params.vals.push(tokenStore.decimals);
-          break;
-        case "_globalMinCap":
-          params.vals.push(tierStore.tiers[0].whitelistEnabled !== 'yes' ? tokenStore.globalmincap ? toFixed(tokenStore.globalmincap * 10 ** tokenStore.decimals).toString() : 0 : 0)
-          break;
-        case "_initialSupply":
-          params.vals.push(tokenStore.supply);
-          break;
-        case "_maximumSellableTokens":
-          params.vals.push(toFixed(tierStore.tiers[crowdsaleNum].supply * 10**tokenStore.decimals).toString());
-          break;
-        case "_minimumFundingGoal":
-          params.vals.push(0);
-          break;
-        case "_mintable":
-          params.vals.push(true);
-          break;
-        case "_oneTokenInWei":
-          BigNumber.config({ DECIMAL_PLACES: 18 })
-          const rate = new BigNumber(tierStore.tiers[crowdsaleNum].rate)
-          const tokenInEther = rate.pow(-1).toFixed()
-          params.vals.push(web3Store.web3.utils.toWei(tokenInEther, "ether"))
-          break;
-        case "_isUpdatable":
-          params.vals.push(tierStore.tiers[crowdsaleNum].updatable ? tierStore.tiers[crowdsaleNum].updatable==="on" ? true : false : false);
-          break;
-        case "_isWhiteListed":
-          params.vals.push(tierStore.tiers[0].whitelistEnabled ? tierStore.tiers[0].whitelistEnabled === "yes" : false)
-          break;
-        default:
-          params.vals.push("");
-          break;
-      }
-    }
-  }
-  return params;
 }

@@ -31,12 +31,11 @@ export const ManageTierBlock = ({
     {fields.map((name, index) => {
       const currentTier = fields.value[index]
       const { tier, walletAddress, updatable } = currentTier
-      const { startTime: initialStartTime, endTime: initialEndTime } = fields.initial[index]
+      const { endTime: initialEndTime } = fields.initial[index]
 
-      const tierHasStarted = !isDateLaterThan()(dateToTimestamp(initialStartTime))(Date.now())
       const tierHasEnded = !isDateLaterThan()(dateToTimestamp(initialEndTime))(Date.now())
       const canEdit = canEditTiers && updatable && !tierHasEnded
-      const isWhitelistEnabled = fields.initial[0].whitelistEnabled === 'yes'
+      const isWhitelistEnabled = fields.initial[index].whitelistEnabled === 'yes'
 
       return (
         <div className="steps" key={index}>

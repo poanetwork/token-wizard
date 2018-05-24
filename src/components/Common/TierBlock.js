@@ -24,7 +24,8 @@ const {
   START_TIME,
   END_TIME,
   RATE,
-  SUPPLY
+  SUPPLY,
+  ENABLE_WHITELISTING
 } = TEXT_FIELDS
 
 const inputErrorStyle = {
@@ -87,11 +88,13 @@ export const TierBlock = ({ fields, ...props }) => {
                 label={CROWDSALE_SETUP_NAME}
                 description={DESCRIPTION.CROWDSALE_SETUP_NAME}
               />
+            </div>
 
+            <div className="input-block-container">
               <Field
                 name={`${name}.updatable`}
                 render={({ input }) => (
-                  <div className='right'>
+                  <div className='left'>
                     <label className="label">{ALLOW_MODIFYING}</label>
                     <div className='radios-inline'>
                       <label className='radio-inline'>
@@ -114,6 +117,36 @@ export const TierBlock = ({ fields, ...props }) => {
                       </label>
                     </div>
                     <p className='description'>{DESCRIPTION.ALLOW_MODIFYING}</p>
+                  </div>
+                )}
+              />
+
+              <Field
+                name={`${name}.whitelistEnabled`}
+                render={({ input }) => (
+                  <div className='right'>
+                    <label className="label">{ENABLE_WHITELISTING}</label>
+                    <div className='radios-inline'>
+                      <label className='radio-inline'>
+                        <input
+                          type='radio'
+                          checked={input.value === 'yes'}
+                          value='yes'
+                          onChange={() => input.onChange('yes')}
+                        />
+                        <span className='title'>yes</span>
+                      </label>
+                      <label className='radio-inline'>
+                        <input
+                          type='radio'
+                          checked={input.value === 'no'}
+                          value='no'
+                          onChange={() => input.onChange('no')}
+                        />
+                        <span className='title'>no</span>
+                      </label>
+                    </div>
+                    <p className='description'>{DESCRIPTION.ENABLE_WHITELIST}</p>
                   </div>
                 )}
               />
@@ -186,7 +219,7 @@ export const TierBlock = ({ fields, ...props }) => {
             </div>
           </div>
           {
-            props.tierStore.tiers[0].whitelistEnabled === 'yes' ? (
+            props.tierStore.tiers[index].whitelistEnabled === 'yes' ? (
               <div>
                 <div className="section-title">
                   <p className="title">Whitelist</p>

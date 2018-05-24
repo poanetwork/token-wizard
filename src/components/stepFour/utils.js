@@ -23,7 +23,6 @@ import {
   tokenStore,
   web3Store
 } from '../../stores'
-//import { getEncodedABIClientSide } from '../../utils/microservices'
 import { BigNumber } from 'bignumber.js'
 import { toBigNumber } from '../crowdsale/utils'
 
@@ -83,7 +82,7 @@ const getCrowdSaleParams = (account, methodInterface) => {
   const duration = formatDate(endTime) - formatDate(startTime)
   const durationBN = toBigNumber(duration).toFixed()
 
-  //is tier 0 whitelisted?
+  //is tier whitelisted?
   const isWhitelisted = whitelistEnabled === 'yes'
 
   //is tier updatable
@@ -557,8 +556,7 @@ const getTiersParams = (methodInterface) => {
   let tierNameArr = []
   let durationArr = []
   for (let tierIndex = 1; tierIndex < tierStore.tiers.length; tierIndex++) {
-    let { whitelistEnabled } = tierStore.tiers[0]
-    let { updatable, rate, supply, tier, startTime, endTime } = tierStore.tiers[tierIndex]
+    let { updatable, whitelistEnabled, rate, supply, tier, startTime, endTime } = tierStore.tiers[tierIndex]
     let duration = formatDate(endTime) - formatDate(startTime)
     let tierNameBytes = web3.utils.fromAscii(tier)
     let encodedTierName = web3.eth.abi.encodeParameter("bytes32", tierNameBytes);
@@ -971,7 +969,7 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
   let globalMinCapEl = []
   let crowdsaleWhitelistElements = []
   let tierWhitelistElements = []
-  if (tierStore.tiers[0].whitelistEnabled !== "yes") {
+  if (tierStore.tiers.every((tier) => { return tier.whitelistEnabled !== "yes" })) {
     globalMinCapEl = [
       { field: 'globalMinCap', value: 'Crowdsale global min cap: ', parent: 'tierStore' }
     ]

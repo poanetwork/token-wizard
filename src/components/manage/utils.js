@@ -217,9 +217,7 @@ export const processTier = (tier, crowdsale, token, reservedTokensInfo, tierNum)
         crowdsaleAddress: contractStore.crowdsale.execID
       }
 
-      if (tierNum === 0) {
-        newTier.whitelistEnabled = isWhitelisted ? 'yes' : 'no'
-      }
+      newTier.whitelistEnabled = isWhitelisted ? 'yes' : 'no'
 
       return Promise.all([maximumSellableTokens, whitelistAccounts, rate, [tokenName, tokenSymbol, decimals, reservedTokensInfo]])
     })
