@@ -464,39 +464,55 @@ export class Manage extends Component {
       .catch(console.error)
   }
 
+  canBeSaved = () => {
+    const { crowdsaleHasEnded, ownerCurrentUser } = this.state
+    const { tierStore, crowdsaleStore } = this.props
+    const { updatable } = crowdsaleStore.selected
+
+    const updatableTiersMintedCappedCrowdsale = crowdsaleStore.selected.initialTiersValues.filter(tier => tier.updatable)
+    const updatableTiers = crowdsaleStore.isMintedCappedCrowdsale ? updatableTiersMintedCappedCrowdsale : crowdsaleStore.isDutchAuction ? crowdsaleStore.selected.initialTiersValues : []
+    const isValidTier = tierStore.individuallyValidTiers
+    const validTiers = updatableTiers.every(tier => isValidTier[tier.index])
+
+    let fieldsToUpdate = []
+    if (updatableTiers.length && validTiers) {
+      fieldsToUpdate = getFieldsToUpdate(updatableTiers, tierStore.tiers)
+    }
+
+    let canSave = ownerCurrentUser && (tierStore.modifiedStoredWhitelist || fieldsToUpdate.length > 0) && !crowdsaleHasEnded && updatable
+
+    const canSaveObj = {
+      canSave,
+      fieldsToUpdate
+    }
+
+    return canSaveObj
+  }
+
   saveCrowdsale = () => {
+    const canSaveObj = this.canBeSaved()
+    if (!canSaveObj.canSave) return;
+
     this.showLoader()
 
     this.updateCrowdsaleStatus()
       .then(() => {
-        const { crowdsaleStore, tierStore } = this.props
-        const updatableTiersMintedCappedCrowdsale = crowdsaleStore.selected.initialTiersValues.filter(tier => tier.updatable)
-        const updatableTiers = crowdsaleStore.isMintedCappedCrowdsale ? updatableTiersMintedCappedCrowdsale : crowdsaleStore.isDutchAuction ? crowdsaleStore.selected.initialTiersValues : []
-        const isValidTier = tierStore.individuallyValidTiers
-        const validTiers = updatableTiers.every(tier => isValidTier[tier.index])
+        console.log("fieldsToUpdate:", canSaveObj.fieldsToUpdate)
 
-        if (updatableTiers.length && validTiers) {
-          const fieldsToUpdate = getFieldsToUpdate(updatableTiers, tierStore.tiers)
+        canSaveObj.fieldsToUpdate
+          .reduce((promise, { key, newValue, tier }) => {
+            return promise.then(() => updateTierAttribute(key, newValue, tier))
+          }, Promise.resolve())
+          .then(() => {
+            this.hideLoader()
+            successfulUpdateCrowdsaleAlert()
+          })
+          .catch(err => {
+            console.log(err)
+            this.hideLoader()
+            toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED })
+          })
 
-          console.log("fieldsToUpdate:", fieldsToUpdate)
-
-          fieldsToUpdate
-            .reduce((promise, { key, newValue, tier }) => {
-              return promise.then(() => updateTierAttribute(key, newValue, tier))
-            }, Promise.resolve())
-            .then(() => {
-              this.hideLoader()
-              successfulUpdateCrowdsaleAlert()
-            })
-            .catch(err => {
-              console.log(err)
-              this.hideLoader()
-              toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED })
-            })
-
-        } else {
-          this.hideLoader()
-        }
       })
       .catch(error => {
         console.error(error)
@@ -507,13 +523,7 @@ export class Manage extends Component {
   updateTierStore = ({ values }) => {
     const { tierStore } = this.props
     values.tiers.forEach((tier, index) => {
-      tierStore.setTierProperty(tier.tier, 'tier', index)
-      tierStore.setTierProperty(tier.updatable, 'updatable', index)
-      tierStore.setTierProperty(tier.startTime, 'startTime', index)
       tierStore.setTierProperty(tier.endTime, 'endTime', index)
-      tierStore.updateRate(tier.rate, VALID, index)
-      tierStore.setTierProperty(tier.supply, 'supply', index)
-      tierStore.validateTiers('supply', index)
     })
   }
 
@@ -540,9 +550,9 @@ export class Manage extends Component {
   })
 
   render () {
-    const { canFinalize, crowdsaleHasEnded, ownerCurrentUser } = this.state
-    const { generalStore, tierStore, tokenStore, crowdsaleStore } = this.props
-    const { finalized, updatable } = crowdsaleStore.selected
+    const { canFinalize, ownerCurrentUser } = this.state
+    const { generalStore, tokenStore, crowdsaleStore } = this.props
+    const { finalized } = crowdsaleStore.selected
     const { execID } = crowdsaleStore
 
     return (
@@ -577,7 +587,7 @@ export class Manage extends Component {
             />
           }
           handleChange={this.updateTierStore}
-          canSave={ownerCurrentUser && tierStore.modifiedStoredWhitelist && !crowdsaleHasEnded && updatable}
+          canSave={this.canBeSaved().canSave}
         />
 
         <Loader show={this.state.loading}/>
