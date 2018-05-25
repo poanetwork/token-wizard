@@ -307,9 +307,13 @@ const getRate = async (addr, execID, methods) => {
   return toBigNumber('0')
 }
 
-const calculateMinContribution = async (method, decimals, naturalMinCap) => {
-  const { minimum_contribution } = await method.call()
+const calculateMinContribution = async (method, decimals, naturalMinCap, isWhitelisted) => {
+  const { minimum_contribution, max_spend_remaining } = await method.call()
   const minimumContribution = toBigNumber(minimum_contribution).times(`1e-${decimals}`)
+  const maximumContribution = toBigNumber(max_spend_remaining)
+  if (isWhitelisted && maximumContribution == 0) {
+    return -1
+  }
   return minimumContribution.gt(naturalMinCap) ? minimumContribution : naturalMinCap
 }
 
@@ -328,6 +332,7 @@ export const getUserMinLimits = async (addr, execID, methods, account) => {
 
   rate.constructor.config({ DECIMAL_PLACES })
 
+  let isWhitelisted = false
   if (crowdsaleStore.isMintedCappedCrowdsale) {
     const { getCurrentTierInfo, getWhitelistStatus, getCrowdsaleInfo } = methods
     const { whitelist_enabled, tier_index } = await getCurrentTierInfo(addr, execID).call()
@@ -335,8 +340,10 @@ export const getUserMinLimits = async (addr, execID, methods, account) => {
     if (!whitelist_enabled) {
       if (owner_balance.gt('0')) return naturalMinCap
       return calculateMinContribution(getCrowdsaleInfo(addr, execID), token_decimals, naturalMinCap)
+    } else {
+      isWhitelisted = true
     }
-    return calculateMinContribution(getWhitelistStatus(addr, execID, tier_index, account), token_decimals, naturalMinCap)
+    return calculateMinContribution(getWhitelistStatus(addr, execID, tier_index, account), token_decimals, naturalMinCap, isWhitelisted)
 
   } else if (crowdsaleStore.isDutchAuction) {
     const { getCrowdsaleWhitelist, getWhitelistStatus, getCrowdsaleInfo } = methods
@@ -345,7 +352,9 @@ export const getUserMinLimits = async (addr, execID, methods, account) => {
     if (num_whitelisted === '0') {
       if (owner_balance.gt('0')) return naturalMinCap
       return calculateMinContribution(getCrowdsaleInfo(addr, execID), token_decimals, naturalMinCap)
+    } else {
+      isWhitelisted = true
     }
-    return calculateMinContribution(getWhitelistStatus(addr, execID, account), token_decimals, naturalMinCap)
+    return calculateMinContribution(getWhitelistStatus(addr, execID, account), token_decimals, naturalMinCap, isWhitelisted)
   }
 }
