@@ -218,6 +218,7 @@ export class Invest extends React.Component {
       displaySeconds: false,
       timeInterval
     })
+
   }
 
   resetTimers = () => {
@@ -415,6 +416,9 @@ export class Invest extends React.Component {
     //total supply
     const totalSupply = maxCapBeforeDecimals.toFixed()
 
+    //min contribution
+    const minimumContributionDisplay = minimumContribution >= 0 ? `${minimumContribution} ${tokenTicker}` : 'You are not allowed'
+
     const QRPaymentProcessElement = investThrough === INVESTMENT_OPTIONS.QR ?
       <QRPaymentProcess crowdsaleExecID={crowdsaleExecID} /> :
       null
@@ -460,7 +464,7 @@ export class Invest extends React.Component {
               <p className="hashes-description">Total Supply</p>
             </div>
             <div className="hashes-i">
-              <p className="hashes-title">{minimumContribution} {tokenTicker}</p>
+              <p className="hashes-title">{minimumContributionDisplay}</p>
               <p className="hashes-description">Minimum Contribution</p>
             </div>
           </div>
