@@ -115,6 +115,11 @@ export class Manage extends Component {
     const { crowdsaleStore, contractStore, match } = this.props
     contractStore.setContractProperty('crowdsale', 'execID', match.params.crowdsaleExecID)
 
+    const registryStorageObj = toJS(contractStore.registryStorage)
+    const { addr: registryStorageAddr } = registryStorageObj
+    const execID = contractStore.crowdsale.execID
+    const { isMintedCappedCrowdsale, isDutchAuction } = crowdsaleStore
+
     return getTiersLength()
       .then(numOfTiers => {
         console.log("numOfTiers:", numOfTiers)
@@ -127,136 +132,128 @@ export class Manage extends Component {
             return attachToSpecificCrowdsaleContract(target)
               .then((initCrowdsaleContract) => {
                 console.log(initCrowdsaleContract)
-                let registryStorageObj = toJS(contractStore.registryStorage)
-                let whenCrowdsaleData = [];
-                let whenCrowdsale = initCrowdsaleContract.methods.getCrowdsaleInfo(registryStorageObj.addr, contractStore.crowdsale.execID).call();
-                whenCrowdsaleData.push(initCrowdsaleContract)
-                whenCrowdsaleData.push(whenCrowdsale)
-                let whenToken = initCrowdsaleContract.methods.getTokenInfo(registryStorageObj.addr, contractStore.crowdsale.execID).call();
-                whenCrowdsaleData.push(whenToken)
-                const whenReservedTokensDestinations = crowdsaleStore.isMintedCappedCrowdsale ? initCrowdsaleContract.methods.getReservedTokenDestinationList(registryStorageObj.addr, contractStore.crowdsale.execID).call() : null;
-                whenCrowdsaleData.push(whenReservedTokensDestinations)
+                const { methods } = initCrowdsaleContract
 
-                if (crowdsaleStore.isMintedCappedCrowdsale) {
+                let whenCrowdsale = methods.getCrowdsaleInfo(registryStorageAddr, execID).call()
+                let whenToken = methods.getTokenInfo(registryStorageAddr, execID).call()
+                const whenReservedTokensDestinations = isMintedCappedCrowdsale ? methods.getReservedTokenDestinationList(registryStorageAddr, execID).call() : null
+
+                let whenCrowdsaleData = []
+                let whenCrowdsaleDates = []
+                if (isMintedCappedCrowdsale) {
                   for (let tierNum = 0; tierNum < numOfTiers; tierNum++) {
-                    let whenTierData = initCrowdsaleContract.methods.getCrowdsaleTier(registryStorageObj.addr, contractStore.crowdsale.execID, tierNum).call();
-                    let whenTierDates = initCrowdsaleContract.methods.getTierStartAndEndDates(registryStorageObj.addr, contractStore.crowdsale.execID, tierNum).call();
-                    whenCrowdsaleData.push(whenTierData);
-                    whenCrowdsaleData.push(whenTierDates);
+                    let whenTierData = methods.getCrowdsaleTier(registryStorageAddr, execID, tierNum).call()
+                    let whenTierDates = methods.getTierStartAndEndDates(registryStorageAddr, execID, tierNum).call()
+                    whenCrowdsaleData.push(whenTierData)
+                    whenCrowdsaleDates.push(whenTierDates)
                   }
-                } else if (crowdsaleStore.isDutchAuction) {
-                  let whenDutchAuctionData = initCrowdsaleContract.methods.getCrowdsaleStatus(registryStorageObj.addr, contractStore.crowdsale.execID).call();
-                  let whenDutchAuctionDates = initCrowdsaleContract.methods.getCrowdsaleStartAndEndTimes(registryStorageObj.addr, contractStore.crowdsale.execID).call();
-                  whenCrowdsaleData.push(whenDutchAuctionData);
-                  whenCrowdsaleData.push(whenDutchAuctionDates);
+                } else if (isDutchAuction) {
+                  let whenDutchAuctionData = methods.getCrowdsaleStatus(registryStorageAddr, execID).call()
+                  let whenDutchAuctionDates = methods.getCrowdsaleStartAndEndTimes(registryStorageAddr, execID).call()
+                  whenCrowdsaleData.push(whenDutchAuctionData)
+                  whenCrowdsaleDates.push(whenDutchAuctionDates)
                 }
-                return Promise.all(whenCrowdsaleData)
+                const allPromisesRaw = [methods, whenCrowdsale, whenToken, whenReservedTokensDestinations, whenCrowdsaleData, whenCrowdsaleDates]
+                const allPromises = allPromisesRaw.map(function(item) {
+                  if (Array.isArray(item)) { return Promise.all(item) }
+                  else { return item }
+                })
+                return Promise.all(allPromises)
               })
-              .then((crowdsaleData) => {
-                console.log("crowdsaleData:");
-                console.log(crowdsaleData);
-                let initCrowdsaleContract = crowdsaleData[0];
-                let crowdsale = crowdsaleData[1];
-                let token = crowdsaleData[2];
-                let reservedTokensDestinationsObj = crowdsaleData[3];
-
-                crowdsaleData.shift(); //initCrowdsaleContract
-                crowdsaleData.shift(); //crowdsale
-                crowdsaleData.shift(); //token
-                crowdsaleData.shift(); //reservedTokensDestinationsObj
-
-                let tiers = [];
-                let tierExtendedObj = {};
-                let tiersAndDates = crowdsaleData.slice();
-                console.log("tiersAndDates:", tiersAndDates)
-                tiersAndDates.reduce((prevEl, curEl, index) => {
-                  let isTierObj = curEl.hasOwnProperty("tier_name")
-                  if (index == 1) {
-                    tierExtendedObj = Object.assign(prevEl, curEl)
-                    tiers.push(tierExtendedObj)
-                    tierExtendedObj = {}
-                  } else {
-                    if (!isTierObj) {
-                      tierExtendedObj = Object.assign(tierExtendedObj, curEl)
-                      tiers.push(tierExtendedObj)
-                      tierExtendedObj = {}
-                    } else {
-                      tierExtendedObj = curEl
-                    }
-                  }
-                  return curEl
+              .then(([methods, crowdsale, token, reservedTokensDestinationsObj, crowdsaleData, crowdsaleDates]) => {
+                let tiers = []
+                let tierExtendedObj = {}
+                crowdsaleData.forEach((el, ind) => {
+                  tierExtendedObj = Object.assign(el, crowdsaleDates[ind])
+                  tiers.push(tierExtendedObj)
                 })
                 console.log("tiers:")
                 console.log(tiers)
 
-                let registryStorageObj = toJS(contractStore.registryStorage)
-
                 //get reserved tokens info
                 let reservedTokensDestinations = []
-                let whenReservedTokensInfoArr = [];
-                if (crowdsaleStore.isMintedCappedCrowdsale) {
+                let whenReservedTokensInfoArr = []
+                if (isMintedCappedCrowdsale) {
                   reservedTokensDestinations = reservedTokensDestinationsObj.reserved_destinations
-                  for (let dest = 0; dest < reservedTokensDestinationsObj.reserved_destinations.length; dest++) {
+                  for (let dest = 0; dest < reservedTokensDestinations.length; dest++) {
                     let destination = reservedTokensDestinations[dest]
                     console.log("destination:", destination)
-                    let whenReservedTokensInfo = initCrowdsaleContract.methods.getReservedDestinationInfo(registryStorageObj.addr, contractStore.crowdsale.execID, destination).call()
-                    whenReservedTokensInfoArr.push(whenReservedTokensInfo);
+                    let whenReservedTokensInfo = methods.getReservedDestinationInfo(registryStorageAddr, execID, destination).call()
+                    whenReservedTokensInfoArr.push(whenReservedTokensInfo)
                   }
                 }
 
                 //get whitelists for tiers
-                let whenWhiteListsData = [];
+                let whenWhiteListsData = []
                 let method
-                if (crowdsaleStore.isMintedCappedCrowdsale) {
+                if (isMintedCappedCrowdsale) {
                   for (let tierNum = 0; tierNum < numOfTiers; tierNum++) {
-                    method = initCrowdsaleContract.methods.getTierWhitelist(registryStorageObj.addr, contractStore.crowdsale.execID, tierNum).call()
+                    method = methods.getTierWhitelist(registryStorageAddr, execID, tierNum).call()
                     if (tiers[tierNum].whitelist_enabled) {
-                      whenWhiteListsData.push(method);
+                      whenWhiteListsData.push(method)
                     } else {
-                      whenWhiteListsData.push(null);
+                      whenWhiteListsData.push(null)
                     }
                   }
-                } else if (crowdsaleStore.isDutchAuction) {
-                  method = initCrowdsaleContract.methods.getCrowdsaleWhitelist(registryStorageObj.addr, contractStore.crowdsale.execID).call()
-                  whenWhiteListsData.push(method);
+                } else if (isDutchAuction) {
+                  method = methods.getCrowdsaleWhitelist(registryStorageAddr, execID).call()
+                  whenWhiteListsData.push(method)
                 }
 
-                let whenTotalData = whenReservedTokensInfoArr.concat(whenWhiteListsData)
-                console.log("whenTotalData:", whenTotalData)
                 console.log("whenReservedTokensInfoArr.length:", whenReservedTokensInfoArr.length)
                 console.log("whenWhiteListsData.length:", whenWhiteListsData.length)
 
-                return Promise.all(whenTotalData)
-                  .then((totalData) => {
-                    console.log("totalData:", totalData)
-                    let whiteListsData = []
-                    let reservedTokensInfoRaw = []
-                    if (whenReservedTokensInfoArr.length > 0) {
-                      reservedTokensInfoRaw = totalData.slice(0, whenReservedTokensInfoArr.length);
-                      whiteListsData = totalData.slice(whenReservedTokensInfoArr.length);
-                    } else {
-                      whiteListsData = totalData.slice()
+                const allPromisesRaw = [whenReservedTokensInfoArr, whenWhiteListsData]
+                const allPromises = allPromisesRaw.map(function(item) {
+                  if (Array.isArray(item)) { return Promise.all(item) }
+                  else { return item }
+                })
+
+                return Promise.all(allPromises)
+                  .then(([reservedTokensInfoRaw, whiteListsData]) => {
+                    console.log("totalData:", [reservedTokensInfoRaw, whiteListsData])
+
+                    console.log("reservedTokensInfoRaw:", reservedTokensInfoRaw)
+                    let reservedTokensInfo = []
+                    for (let dest = 0; dest < reservedTokensInfoRaw.length; dest++) {
+                      let reservedTokensInfoObj = reservedTokensInfoRaw[dest]
+                      if (reservedTokensInfoObj.num_tokens > 0) {
+                        let reservedTokensObj = {
+                          addr: reservedTokensDestinations[dest],
+                          dim: "tokens",
+                          val: Number(reservedTokensInfoObj.num_tokens) / `1e${token.token_decimals}`
+                        }
+                        reservedTokensInfo.push(reservedTokensObj)
+                      }
+                      if (reservedTokensInfoObj.num_percent > 0) {
+                        let reservedTokensObj = {
+                          addr: reservedTokensDestinations[dest],
+                          dim: "percentage",
+                          val: Number(reservedTokensInfoObj.num_percent) / `1e${reservedTokensInfoObj.percent_decimals}`
+                        }
+                        reservedTokensInfo.push(reservedTokensObj)
+                      }
                     }
-                    console.log("whiteListsData:", whiteListsData)
 
                     const fillWhiteListPromises = (tierNum) => {
-                      for (let whiteListItemNum = 0; whiteListItemNum < whiteListsData[tierNum].whitelist.length; whiteListItemNum++) {
+                      let whitelist = whiteListsData[tierNum].whitelist
+                      for (let whiteListItemNum = 0; whiteListItemNum < whitelist.length; whiteListItemNum++) {
                         let newWhitelistPromise = new Promise((resolve) => {
                           let method
-                          if (crowdsaleStore.isMintedCappedCrowdsale) {
-                            method = initCrowdsaleContract.methods.getWhitelistStatus(registryStorageObj.addr, contractStore.crowdsale.execID, tierNum, whiteListsData[tierNum].whitelist[whiteListItemNum]).call()
-                          } else if (crowdsaleStore.isDutchAuction) {
-                            method = initCrowdsaleContract.methods.getWhitelistStatus(registryStorageObj.addr, contractStore.crowdsale.execID, whiteListsData[tierNum].whitelist[whiteListItemNum]).call()
+                          if (isMintedCappedCrowdsale) {
+                            method = methods.getWhitelistStatus(registryStorageAddr, execID, tierNum, whitelist[whiteListItemNum]).call()
+                          } else if (isDutchAuction) {
+                            method = methods.getWhitelistStatus(registryStorageAddr, execID, whitelist[whiteListItemNum]).call()
                           }
                           method
                             .then(whitelistStatus => {
                               if (whitelistStatus.max_spend_remaining > 0) {
                                 let whitelistItem = {
-                                  addr: whiteListsData[tierNum].whitelist[whiteListItemNum],
+                                  addr: whitelist[whiteListItemNum],
                                   min: whitelistStatus.minimum_contribution,
                                   max: whitelistStatus.max_spend_remaining
                                 }
-                                tiers[tierNum].whitelist = []
+                                if (!tiers[tierNum].whitelist) tiers[tierNum].whitelist = []
                                 tiers[tierNum].whitelist.push(whitelistItem)
                               }
                               resolve();
@@ -267,39 +264,16 @@ export class Manage extends Component {
                     }
 
                     let whitelistPromises = []
-                    if (crowdsaleStore.isMintedCappedCrowdsale) {
+                    if (isMintedCappedCrowdsale) {
                       for (let tierNum = 0; tierNum < numOfTiers; tierNum++) {
                         if (tiers[tierNum].whitelist_enabled) {
                           fillWhiteListPromises(tierNum)
                         }
                       }
-                    } else if (crowdsaleStore.isDutchAuction) {
+                    } else if (isDutchAuction) {
                       fillWhiteListPromises(0)
                     }
 
-                    console.log("reservedTokensInfoRaw:", reservedTokensInfoRaw)
-                    let reservedTokensInfo = []
-                    for (let dest = 0; dest < reservedTokensInfoRaw.length; dest++) {
-                      let reservedTokensInfoObj = reservedTokensInfoRaw[dest]
-                      if (reservedTokensInfoObj.num_tokens > 0) {
-                        reservedTokensInfo.push(
-                          {
-                            addr: reservedTokensDestinations[dest],
-                            dim: "tokens",
-                            val: Number(reservedTokensInfoObj.num_tokens) / `1e${token.token_decimals}`
-                          }
-                        )
-                      }
-                      if (reservedTokensInfoObj.num_percent > 0) {
-                        reservedTokensInfo.push(
-                          {
-                            addr: reservedTokensDestinations[dest],
-                            dim: "percentage",
-                            val: Number(reservedTokensInfoObj.num_percent) / `1e${reservedTokensInfoObj.percent_decimals}`
-                          }
-                        )
-                      }
-                    }
                     return Promise.all(whitelistPromises)
                       .then(() => {
                         console.log(tiers)
@@ -316,24 +290,18 @@ export class Manage extends Component {
                   })
               })
               .then(this.updateCrowdsaleStatus)
-              .catch(err => {
-                this.hideLoader()
-                console.log(err)
-              })
+              .catch((err) => { this.hideLoader(err) })
               .then(this.hideLoader)
           })
-          .catch(err => {
-            console.log(err)
-            this.hideLoader()
-          })
+          .catch((err) => { this.hideLoader(err) })
       })
-      .catch(err => {
-        console.log(err)
-        this.hideLoader()
-      })
+      .catch((err) => { this.hideLoader(err) })
   }
 
-  hideLoader = () => {
+  hideLoader = (err) => {
+    if (err) {
+      console.log(err)
+    }
     this.setState({ loading: false })
   }
 
@@ -508,15 +476,13 @@ export class Manage extends Component {
             successfulUpdateCrowdsaleAlert()
           })
           .catch(err => {
-            console.log(err)
-            this.hideLoader()
+            this.hideLoader(err)
             toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED })
           })
 
       })
       .catch(error => {
-        console.error(error)
-        this.hideLoader()
+        this.hideLoader(error)
       })
   }
 

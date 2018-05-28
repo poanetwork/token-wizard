@@ -279,9 +279,6 @@ export const processTier = (tier, crowdsale, token, reservedTokensInfo, tierNum)
 }
 
 export function getFieldsToUpdate(updatableTiers, tiers) {
-  console.log("updatableTiers:", updatableTiers)
-  console.log("tiers:", tiers)
-
   const keys = Object.keys(updatableTiers[0]).filter(key => key === 'endTime' || key === 'whitelist')
 
   return updatableTiers
