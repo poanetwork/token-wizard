@@ -82,7 +82,6 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
   console.log("methods[attribute]:", methods[attribute])
 
   console.log("tierIndex:", tierIndex)
-  console.log("value:", value)
 
   const targetPrefix = "crowdsaleConsole"
   const targetSuffix = crowdsaleStore.contractTargetSuffix
@@ -239,9 +238,6 @@ export const processTier = (tier, crowdsale, token, reservedTokensInfo, tierNum)
       return Promise.all([whitelistAccounts, rate, tokenDecimals])
     })
     .then(([whitelistAccounts, rate, tokenDecimals]) => {
-      //const { decimals } = tokenStore
-      //const tokenDecimals = !isNaN(decimals) ? decimals : 0
-
       //price
       newTier.rate = rate > 0 ? toBigNumber(web3.utils.fromWei(toBigNumber(rate).toFixed(), 'ether'))
         .pow(-1)
