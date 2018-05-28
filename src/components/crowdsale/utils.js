@@ -182,42 +182,69 @@ export let getCrowdsaleTargetDates = (initCrowdsaleContract, execID) => {
 
     let registryStorageObj = toJS(contractStore.registryStorage)
 
-    let getCrowdsaleStartAndEndTimes = initCrowdsaleContract.methods.getCrowdsaleStartAndEndTimes(registryStorageObj.addr, execID).call();
-    let getCurrentTierInfo = crowdsaleStore.isMintedCappedCrowdsale ? initCrowdsaleContract.methods.getCurrentTierInfo(registryStorageObj.addr, execID).call() : null;
+    if (crowdsaleStore.isMintedCappedCrowdsale) {
+      return getTiersLength()
+        .then((tiersLength) => {
+          let getTiersStartAndEndDates = []
+          for (let ind = 0; ind < tiersLength; ind++) {
+            let getTierStartAndEndDates = initCrowdsaleContract.methods.getTierStartAndEndDates(registryStorageObj.addr, execID, ind).call()
+            getTiersStartAndEndDates.push(getTierStartAndEndDates)
+          }
 
-    return Promise.all([getCrowdsaleStartAndEndTimes, getCurrentTierInfo])
-      .then(([crowdsaleStartAndEndTimes, currentTierInfo]) => {
-        console.log("crowdsaleStartAndEndTimes:", crowdsaleStartAndEndTimes)
-        let crowdsaleStartTime = crowdsaleStartAndEndTimes.start_time
-        console.log("crowdsaleStartTime:", crowdsaleStartTime)
-        const startsAtMilliseconds = crowdsaleStartTime * 1000
-        console.log('currentTierInfo:')
-        console.log(currentTierInfo)
-        let crowdsaleEndTime
-        if (crowdsaleStore.isMintedCappedCrowdsale) {
-          crowdsaleEndTime = currentTierInfo.tier_ends_at
-        } else if (crowdsaleStore.isDutchAuction) {
-          crowdsaleEndTime = crowdsaleStartAndEndTimes.end_time
-        }
-        const endsAtMilliseconds = crowdsaleEndTime * 1000
-
-        crowdsalePageStore.addTier({
-          startDate: startsAtMilliseconds,
-          endDate: endsAtMilliseconds
+          return Promise.all(getTiersStartAndEndDates)
         })
+        .then((tiersStartAndEndDates) => {
+          console.log("tiersStartAndEndDates:", tiersStartAndEndDates)
+          let crowdsaleStartDate
+          let crowdsaleEndDate = 0
+          tiersStartAndEndDates.forEach((tierStartAndEndDates) => {
+            const tierDates = setTierDates(tierStartAndEndDates.tier_start, tierStartAndEndDates.tier_end)
+            crowdsaleStartDate = crowdsaleStartDate ? Math.min(crowdsaleStartDate, tierDates.startsAtMilliseconds) : tierDates.startsAtMilliseconds
+            crowdsaleEndDate = Math.max(crowdsaleEndDate, tierDates.endsAtMilliseconds)
+          })
 
-        if (!crowdsalePageStore.startDate || crowdsalePageStore.startDate > startsAtMilliseconds)
-          crowdsalePageStore.startDate = startsAtMilliseconds
-        console.log('startDate:' + startsAtMilliseconds)
+          fillCrowdsalePageStoreDates(crowdsaleStartDate, crowdsaleEndDate)
 
-        if (!crowdsalePageStore.endDate || crowdsalePageStore.endDate < endsAtMilliseconds)
-          crowdsalePageStore.setProperty('endDate', endsAtMilliseconds)
-        console.log("endDate:", endsAtMilliseconds)
+          resolve()
+        })
+        .catch(reject)
+    } else if (crowdsaleStore.isDutchAuction) {
+      initCrowdsaleContract.methods.getCrowdsaleStartAndEndTimes(registryStorageObj.addr, execID).call()
+        .then((crowdsaleStartAndEndTimes) => {
+          const tierDates = setTierDates(crowdsaleStartAndEndTimes.start_time, crowdsaleStartAndEndTimes.end_time)
 
-        resolve()
-      })
-      .catch(reject)
+          fillCrowdsalePageStoreDates(tierDates.startsAtMilliseconds, tierDates.endsAtMilliseconds)
+
+          resolve()
+        })
+        .catch(reject)
+    }
   })
+}
+
+let setTierDates = (startTime, endTime) => {
+  const startsAtMilliseconds = startTime * 1000
+  const endsAtMilliseconds = endTime * 1000
+
+  crowdsalePageStore.addTier({
+    startDate: startsAtMilliseconds,
+    endDate: endsAtMilliseconds
+  })
+
+  return {
+    startsAtMilliseconds,
+    endsAtMilliseconds
+  }
+}
+
+let fillCrowdsalePageStoreDates = (startsAtMilliseconds, endsAtMilliseconds) => {
+  if (!crowdsalePageStore.startDate || crowdsalePageStore.startDate > startsAtMilliseconds)
+    crowdsalePageStore.startDate = startsAtMilliseconds
+  console.log('startDate:' + startsAtMilliseconds)
+
+  if (!crowdsalePageStore.endDate || crowdsalePageStore.endDate < endsAtMilliseconds)
+    crowdsalePageStore.setProperty('endDate', endsAtMilliseconds)
+  console.log("endDate:", endsAtMilliseconds)
 }
 
 export let isFinalized = (initCrowdsaleContract, crowdsaleExecID) => {
@@ -230,7 +257,7 @@ export let isFinalized = (initCrowdsaleContract, crowdsaleExecID) => {
   })
 }
 
-export const getTiers = () => {
+export const getTiersLength = () => {
   if (crowdsaleStore.isMintedCappedCrowdsale) {
     return getCurrentAccount()
       .then(account => {
@@ -245,6 +272,7 @@ export const getTiers = () => {
             return methods.getCrowdsaleTierList(registryStorageObj.addr, contractStore.crowdsale.execID).call()
               .then(tiers => {
                 console.log("tiers:", tiers)
+                console.log("tiersLength:", tiers.length)
                 return Promise.resolve(tiers.length)
               })
           })

@@ -21,7 +21,7 @@ import { toast } from '../../utils/utils'
 import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
 import { getFieldsToUpdate, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
-import { getTiers } from '../crowdsale/utils'
+import { getTiersLength } from '../crowdsale/utils'
 import { generateContext } from '../stepFour/utils'
 import { toJS } from 'mobx'
 import { Form } from 'react-final-form'
@@ -115,7 +115,7 @@ export class Manage extends Component {
     const { crowdsaleStore, contractStore, match } = this.props
     contractStore.setContractProperty('crowdsale', 'execID', match.params.crowdsaleExecID)
 
-    return getTiers()
+    return getTiersLength()
       .then(numOfTiers => {
         console.log("numOfTiers:", numOfTiers)
         return getCurrentAccount()
