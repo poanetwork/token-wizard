@@ -22,15 +22,16 @@ import {
 import { countDecimalPlaces, getQueryVariable, toast } from '../../utils/utils'
 import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
 import {
-  invalidCrowdsaleAddrAlert,
-  investmentDisabledAlertInTime, noGasPriceAvailable,
+  investmentDisabledAlertInTime,
+  noGasPriceAvailable,
   MetaMaskIsLockedAlert,
   successfulInvestmentAlert,
-  noMoreTokensAvailable
+  noMoreTokensAvailable,
+  notAllowedContributor
 } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
 import { CrowdsaleConfig } from '../Common/config'
-import { INVESTMENT_OPTIONS, TOAST, CROWDSALE_STRATEGIES } from '../../utils/constants'
+import { INVESTMENT_OPTIONS, TOAST } from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
 import { toJS } from 'mobx'
 import QRPaymentProcess from './QRPaymentProcess'
@@ -324,6 +325,11 @@ export class Invest extends React.Component {
   }
 
   investToTokensForWhitelistedCrowdsaleInternal = async () => {
+    if (this.state.minimumContribution < 0) {
+      this.setState({ loading: false })
+      return notAllowedContributor()
+    }
+
     const { generalStore, crowdsaleStore, contractStore, crowdsalePageStore, tokenStore } = this.props
     const { account } = contractStore.crowdsale
 

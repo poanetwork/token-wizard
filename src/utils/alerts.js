@@ -253,3 +253,11 @@ export function noMoreTokensAvailable() {
     type: 'info'
   })
 }
+
+export function notAllowedContributor() {
+  return sweetAlert2({
+    title: 'Not allowed',
+    html: `You're not allowed to buy tokens during this tier.`,
+    type: 'info'
+  })
+}
