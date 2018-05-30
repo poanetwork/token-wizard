@@ -37,7 +37,7 @@ export const ManageDutchAuctionBlock = ({
 
       const tierHasStarted = !isDateLaterThan()(dateToTimestamp(initialStartTime))(Date.now())
       const tierHasEnded = !isDateLaterThan()(dateToTimestamp(initialEndTime))(Date.now())
-      const canEdit = canEditTiers && updatable && !tierHasEnded && !tierHasStarted
+      const canEditWhiteList = canEditTiers && updatable && !tierHasEnded
       const isWhitelistEnabled = fields.initial[index].whitelistEnabled === 'yes'
 
       return (
@@ -105,7 +105,7 @@ export const ManageDutchAuctionBlock = ({
                 <div className="section-title">
                   <p className="title">Whitelist</p>
                 </div>
-                {canEdit
+                {canEditWhiteList
                   ? <WhitelistInputBlock key={index.toString()} num={index} decimals={props.decimals}/>
                   : <ReadOnlyWhitelistAddresses tier={currentTier}/>
                 }

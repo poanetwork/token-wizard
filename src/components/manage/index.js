@@ -433,10 +433,11 @@ export class Manage extends Component {
   canBeSaved = () => {
     const { crowdsaleHasEnded, ownerCurrentUser } = this.state
     const { tierStore, crowdsaleStore } = this.props
-    const { updatable } = crowdsaleStore.selected
+    const { isMintedCappedCrowdsale, isDutchAuction } = crowdsaleStore
+    const { updatable, initialTiersValues } = crowdsaleStore.selected
 
-    const updatableTiersMintedCappedCrowdsale = crowdsaleStore.selected.initialTiersValues.filter(tier => tier.updatable)
-    const updatableTiers = crowdsaleStore.isMintedCappedCrowdsale ? updatableTiersMintedCappedCrowdsale : crowdsaleStore.isDutchAuction ? crowdsaleStore.selected.initialTiersValues : []
+    const updatableTiersMintedCappedCrowdsale = initialTiersValues.filter(tier => tier.updatable)
+    const updatableTiers = isMintedCappedCrowdsale ? updatableTiersMintedCappedCrowdsale : isDutchAuction ? initialTiersValues : []
     const isValidTier = tierStore.individuallyValidTiers
     const validTiers = updatableTiers.every(tier => isValidTier[tier.index])
 
@@ -445,7 +446,11 @@ export class Manage extends Component {
       fieldsToUpdate = getFieldsToUpdate(updatableTiers, tierStore.tiers)
     }
 
-    let canSave = ownerCurrentUser && (tierStore.modifiedStoredWhitelist || fieldsToUpdate.length > 0) && !crowdsaleHasEnded && updatable
+    const canSaveCommon = ownerCurrentUser && (tierStore.modifiedStoredWhitelist || fieldsToUpdate.length > 0) && !crowdsaleHasEnded
+    let canSave = canSaveCommon
+    if (isMintedCappedCrowdsale) {
+      canSave = canSaveCommon && updatable
+    }
 
     const canSaveObj = {
       canSave,
@@ -453,6 +458,21 @@ export class Manage extends Component {
     }
 
     return canSaveObj
+  }
+
+  saveDisplayed = () => {
+    const { crowdsaleHasEnded, ownerCurrentUser } = this.state
+    const { crowdsaleStore } = this.props
+    const { isDutchAuction } = crowdsaleStore
+    const crowdsaleIsUpdatable = crowdsaleStore.selected.initialTiersValues.some(tier => tier.updatable)
+    if (
+      !ownerCurrentUser
+      || crowdsaleHasEnded
+      || (!crowdsaleIsUpdatable)
+    ) {
+      return false
+    }
+    return true
   }
 
   saveCrowdsale = () => {
@@ -553,6 +573,7 @@ export class Manage extends Component {
           }
           handleChange={this.updateTierStore}
           canSave={this.canBeSaved().canSave}
+          displaySave={this.saveDisplayed()}
         />
 
         <Loader show={this.state.loading}/>

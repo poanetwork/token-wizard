@@ -221,9 +221,9 @@ export const processTier = (tier, crowdsale, token, reservedTokensInfo, tierNum)
 
       newTier.whitelistEnabled = isWhitelisted ? 'yes' : 'no'
 
-      return Promise.all([maximumSellableTokens, whitelistAccounts, rate, [tokenName, tokenSymbol, tokenSupply, decimals, reservedTokensInfo]])
+      return Promise.all([maximumSellableTokens, whitelistAccounts, isWhitelisted, rate, [tokenName, tokenSymbol, tokenSupply, decimals, reservedTokensInfo]])
     })
-    .then(([maximumSellableTokens, whitelistAccounts, rate, [tokenName, tokenSymbol, tokenSupply, decimals, reservedTokensInfo]]) => {
+    .then(([maximumSellableTokens, whitelistAccounts, isWhitelisted, rate, [tokenName, tokenSymbol, tokenSupply, decimals, reservedTokensInfo]]) => {
       console.log("reservedTokensInfo:", reservedTokensInfo)
       tokenStore.setProperty('name', tokenName)
       tokenStore.setProperty('ticker', tokenSymbol)
@@ -237,9 +237,9 @@ export const processTier = (tier, crowdsale, token, reservedTokensInfo, tierNum)
 
       newTier.supply = maxCapBeforeDecimals ? maxCapBeforeDecimals.toFixed() : 0
 
-      return Promise.all([whitelistAccounts, rate, tokenDecimals])
+      return Promise.all([whitelistAccounts, isWhitelisted, rate, tokenDecimals])
     })
-    .then(([whitelistAccounts, rate, tokenDecimals]) => {
+    .then(([whitelistAccounts, isWhitelisted, rate, tokenDecimals]) => {
       //price
       newTier.rate = rate > 0 ? toBigNumber(web3.utils.fromWei(toBigNumber(rate).toFixed(), 'ether'))
         .pow(-1)
@@ -275,6 +275,7 @@ export const processTier = (tier, crowdsale, token, reservedTokensInfo, tierNum)
         initialValues.startTime = newTier.startTime
         initialValues.endTime = newTier.endTime
         initialValues.whitelist = whitelist
+        initialValues.isWhitelisted = isWhitelisted
       }
       crowdsaleStore.addInitialTierValues(initialValues)
     })
