@@ -994,6 +994,7 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
 
   let rates = []
   let crowdsaleIsModifiableEl = []
+  let crowdsaleIsWhitelistedEl = []
   if (crowdsaleStore.strategy == CROWDSALE_STRATEGIES.DUTCH_AUCTION) {
     rates = [
       { field: 'minRate', value: 'Crowdsale min rate: ', parent: 'tierStore' },
@@ -1001,7 +1002,11 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
     ]
 
     crowdsaleIsModifiableEl = [
-      { value: 'Crowdsale is modifiable: ', parent: 'none', fileValue: 'no' },
+      { value: 'Crowdsale\'s duration is modifiable: ', parent: 'none', fileValue: 'no' },
+    ]
+
+    crowdsaleIsWhitelistedEl = [
+      { field: 'whitelistEnabled', value: 'Crowdsale is whitelisted: ', parent: 'tierStore' },
     ]
 
     crowdsaleWhitelistElements = tierWhitelistElements
@@ -1024,6 +1029,7 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
       { field: 'startTime', value: 'Crowdsale start time: ', parent: 'tierStore' },
       { field: 'endTime', value: 'Crowdsale end time: ', parent: 'crowdsaleStore' },
       ...crowdsaleIsModifiableEl,
+      ...crowdsaleIsWhitelistedEl,
       ...crowdsaleWhitelistElements,
       ...footerElemets
     ],
@@ -1061,8 +1067,8 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
           { field: 'supply', value: 'Tier max cap: ', parent: 'tierStore' },
           { field: 'startTime', value: 'Tier start time: ', parent: 'tierStore' },
           { field: 'endTime', value: 'Tier end time: ', parent: 'tierStore' },
-          { field: 'updatable', value: 'Tier is modifiable: ', parent: 'tierStore' },
-          { field: 'whitelistEnabled', value: 'Crowdsale is whitelisted: ', parent: 'tierStore' },
+          { field: 'updatable', value: 'Tier\'s duration is modifiable: ', parent: 'tierStore' },
+          { field: 'whitelistEnabled', value: 'Tier is whitelisted: ', parent: 'tierStore' },
           ...tierWhitelistElements,
           ...footerElemets
         ]
