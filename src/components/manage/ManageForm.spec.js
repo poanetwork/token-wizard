@@ -171,7 +171,7 @@ describe('ManageForm', () => {
   })
 
 
-  it('should start with "Save" button disabled', () => {
+  it('should start without "Save" button', () => {
     MockDate.set(DATE.TIER_0.ACTIVE)
 
     const onSubmit = jest.fn()
@@ -195,7 +195,7 @@ describe('ManageForm', () => {
 
     const disabledSaveButton = wrapper.find("Link").find(".button_disabled").at(0)
 
-    expect(disabledSaveButton.exists()).toBeTruthy()
+    expect(disabledSaveButton.exists()).toBeFalsy()
   })
 
   it('should enable "Save" button', () => {
