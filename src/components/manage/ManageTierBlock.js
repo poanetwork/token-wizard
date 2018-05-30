@@ -30,8 +30,8 @@ export const ManageTierBlock = ({
   <div>
     {fields.map((name, index) => {
       const currentTier = fields.value[index]
-      const { tier, walletAddress, updatable } = currentTier
-      const { startTime: initialStartTime, endTime: initialEndTime, whitelistEnabled } = fields.initial[index]
+      const { tier, walletAddress } = currentTier
+      const { startTime: initialStartTime, endTime: initialEndTime, whitelistEnabled, updatable } = fields.initial[index]
 
       const tierHasStarted = !isDateLaterThan()(dateToTimestamp(initialStartTime))(Date.now())
       const tierHasEnded = !isDateLaterThan()(dateToTimestamp(initialEndTime))(Date.now())
