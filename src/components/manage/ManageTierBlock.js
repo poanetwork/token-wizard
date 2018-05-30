@@ -2,7 +2,7 @@ import React from 'react'
 import { CrowdsaleStartTime } from './../Common/CrowdsaleStartTime'
 import { CrowdsaleEndTime } from './../Common/CrowdsaleEndTime'
 import { CrowdsaleRate } from './../Common/CrowdsaleRate'
-import { CrowdsaleSupply } from './../Common/CrowdsaleSupply'
+import { Supply } from './../Common/Supply'
 import { TEXT_FIELDS } from '../../utils/constants'
 import { InputField } from '../Common/InputField'
 import { isDateLaterThan } from '../../utils/validations'
@@ -74,7 +74,7 @@ export const ManageTierBlock = ({
                   disabled={true}
                   errorStyle={inputErrorStyle}
                 />
-                <CrowdsaleSupply
+                <Supply
                   name={`${name}.supply`}
                   side="right"
                   disabled={true}

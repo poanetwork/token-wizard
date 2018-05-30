@@ -152,6 +152,7 @@ const crowdsaleData = (tier, crowdsale, token, reservedTokensInfo) => {
   let tokenName = removeTrailingNUL(web3.utils.toAscii(token.token_name))
   let tokenSymbol = removeTrailingNUL(web3.utils.toAscii(token.token_symbol))
   let decimals = token.token_decimals
+  let tokenSupply = toBigNumber(token.total_supply.toString()).div(`1e${decimals}`)
   let multisigWallet = crowdsale.team_wallet
   let tierName = crowdsaleStore.isMintedCappedCrowdsale ? removeTrailingNUL(web3.utils.toAscii(tier.tier_name)) : ''
   let isUpdatable = tier.duration_is_modifiable
@@ -171,7 +172,7 @@ const crowdsaleData = (tier, crowdsale, token, reservedTokensInfo) => {
     isFinalized,
     tierName,
     whitelistAccounts,
-    [tokenName, tokenSymbol, decimals, reservedTokensInfo]
+    [tokenName, tokenSymbol, tokenSupply, decimals, reservedTokensInfo]
   ]);
 }
 
@@ -200,7 +201,7 @@ export const processTier = (tier, crowdsale, token, reservedTokensInfo, tierNum)
              isFinalized,
              name,
              whitelistAccounts,
-             [tokenName, tokenSymbol, decimals, reservedTokensInfo]
+             [tokenName, tokenSymbol, tokenSupply, decimals, reservedTokensInfo]
            ]) => {
       crowdsaleStore.setSelectedProperty('finalized', isFinalized)
       crowdsaleStore.setSelectedProperty('updatable', crowdsaleStore.selected.updatable || updatable)
@@ -220,13 +221,14 @@ export const processTier = (tier, crowdsale, token, reservedTokensInfo, tierNum)
 
       newTier.whitelistEnabled = isWhitelisted ? 'yes' : 'no'
 
-      return Promise.all([maximumSellableTokens, whitelistAccounts, rate, [tokenName, tokenSymbol, decimals, reservedTokensInfo]])
+      return Promise.all([maximumSellableTokens, whitelistAccounts, rate, [tokenName, tokenSymbol, tokenSupply, decimals, reservedTokensInfo]])
     })
-    .then(([maximumSellableTokens, whitelistAccounts, rate, [tokenName, tokenSymbol, decimals, reservedTokensInfo]]) => {
+    .then(([maximumSellableTokens, whitelistAccounts, rate, [tokenName, tokenSymbol, tokenSupply, decimals, reservedTokensInfo]]) => {
       console.log("reservedTokensInfo:", reservedTokensInfo)
       tokenStore.setProperty('name', tokenName)
       tokenStore.setProperty('ticker', tokenSymbol)
       tokenStore.setProperty('decimals', decimals)
+      tokenStore.setProperty('supply', tokenSupply)
       reservedTokensInfo.forEach((reservedTokenInfo) => reservedTokenStore.addToken(reservedTokenInfo))
 
       //total supply

@@ -182,8 +182,9 @@ export const PUBLISH_DESCRIPTION = {
 export const TEXT_FIELDS = {
   NAME: 'Name',
   TICKER: 'Ticker',
-  SUPPLY: 'Supply',
-  TOKEN_SUPPLY: 'Supply',
+  CROWDSALE_SUPPLY: 'Crowdsale Supply',
+  TOKEN_SUPPLY: 'Token Supply',
+  SUPPLY_SHORT: 'Supply',
   DECIMALS: 'Decimals',
   RATE: 'Rate',
   MIN_RATE: 'Min Rate',

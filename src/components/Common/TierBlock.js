@@ -8,7 +8,7 @@ import { DESCRIPTION, TEXT_FIELDS } from '../../utils/constants'
 import { CrowdsaleStartTime } from './CrowdsaleStartTime'
 import { CrowdsaleEndTime } from './CrowdsaleEndTime'
 import { CrowdsaleRate } from './CrowdsaleRate'
-import { CrowdsaleSupply } from './CrowdsaleSupply'
+import { Supply } from './Supply'
 
 const { ALLOW_MODIFYING, CROWDSALE_SETUP_NAME, ENABLE_WHITELISTING } = TEXT_FIELDS
 
@@ -130,7 +130,7 @@ export const TierBlock = ({ fields, ...props }) => {
                 errorStyle={inputErrorStyle}
                 side="left"
               />
-              <CrowdsaleSupply
+              <Supply
                 name={`${name}.supply`}
                 errorStyle={inputErrorStyle}
                 side="right"

@@ -2,6 +2,9 @@ import React from 'react'
 import { Error } from './Error'
 
 export const InputField2 = (props) => (
+  if (props.val) {
+    props.input.value = props.val
+  }
   <div className={props.side}>
     <label htmlFor={props.input.name} className="label">{props.label}</label>
     <input

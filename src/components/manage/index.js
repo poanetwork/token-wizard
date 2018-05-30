@@ -131,7 +131,6 @@ export class Manage extends Component {
             const target = `${targetPrefix}${targetSuffix}`
             return attachToSpecificCrowdsaleContract(target)
               .then((initCrowdsaleContract) => {
-                console.log(initCrowdsaleContract)
                 const { methods } = initCrowdsaleContract
 
                 let whenCrowdsale = methods.getCrowdsaleInfo(registryStorageAddr, execID).call()
@@ -167,8 +166,7 @@ export class Manage extends Component {
                   tierExtendedObj = Object.assign(el, crowdsaleDates[ind])
                   tiers.push(tierExtendedObj)
                 })
-                console.log("tiers:")
-                console.log(tiers)
+                console.log("tiers:", tiers)
 
                 //get reserved tokens info
                 let reservedTokensDestinations = []
@@ -544,6 +542,7 @@ export class Manage extends Component {
           canEditTiers={ownerCurrentUser && !canFinalize && !finalized}
           crowdsaleStore={crowdsaleStore}
           decimals={tokenStore.decimals}
+          tokenSupply={tokenStore.supply}
           aboutTier={
             <AboutCrowdsale
               name={tokenStore.name}

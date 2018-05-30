@@ -9,7 +9,7 @@ import { VALIDATION_TYPES, VALIDATION_MESSAGES, TEXT_FIELDS, DESCRIPTION } from 
 import { BigNumberInput } from '../Common/BigNumberInput'
 import update from 'immutability-helper'
 
-const { START_TIME, END_TIME, RATE, SUPPLY, CROWDSALE_SETUP_NAME, ALLOW_MODIFYING } = TEXT_FIELDS
+const { START_TIME, END_TIME, RATE, SUPPLY_SHORT, CROWDSALE_SETUP_NAME, ALLOW_MODIFYING } = TEXT_FIELDS
 const { EMPTY, INVALID } = VALIDATION_TYPES
 
 @inject('tierStore')
@@ -143,7 +143,7 @@ export class CrowdsaleBlock extends React.Component {
             <InputField
               side="right"
               type="number"
-              title={SUPPLY}
+              title={SUPPLY_SHORT}
               value={tierStore.tiers[num].supply}
               valid={tierStore.validTiers[num].supply}
               errorMessage={VALIDATION_MESSAGES.SUPPLY}

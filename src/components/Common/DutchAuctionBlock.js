@@ -24,7 +24,7 @@ const {
   END_TIME,
   MIN_RATE,
   MAX_RATE,
-  SUPPLY,
+  SUPPLY_SHORT,
   ENABLE_WHITELISTING
 } = TEXT_FIELDS
 
@@ -148,7 +148,7 @@ export const DutchAuctionBlock = inject('tierStore', 'tokenStore')(observer(({ t
                 errorStyle={inputErrorStyle}
                 type="text"
                 side="left"
-                label={SUPPLY}
+                label={SUPPLY_SHORT}
                 description={DESCRIPTION.SUPPLY}
               />
               <Field

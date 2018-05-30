@@ -2,7 +2,7 @@ import React from 'react'
 import { CrowdsaleStartTime } from './../Common/CrowdsaleStartTime'
 import { CrowdsaleEndTime } from './../Common/CrowdsaleEndTime'
 import { CrowdsaleRate } from './../Common/CrowdsaleRate'
-import { CrowdsaleSupply } from './../Common/CrowdsaleSupply'
+import { Supply } from './../Common/Supply'
 import { TEXT_FIELDS, DESCRIPTION, CROWDSALE_STRATEGIES_DISPLAYNAMES } from '../../utils/constants'
 import { InputField } from '../Common/InputField'
 import { isDateLaterThan } from '../../utils/validations'
@@ -78,10 +78,22 @@ export const ManageDutchAuctionBlock = ({
                   disabled={true}
                   errorStyle={inputErrorStyle}
                 />
-                <CrowdsaleSupply
+                <Supply
                   name={`${name}.supply`}
                   side="right"
+                  label={TEXT_FIELDS.CROWDSALE_SUPPLY}
                   description={DESCRIPTION.SUPPLY_DUTCH_AUCTION}
+                  disabled={true}
+                  errorStyle={inputErrorStyle}
+                />
+              </div>
+
+              <div className="input-block-container">
+                <Supply
+                  value={`${props.tokenSupply}`}
+                  side="left"
+                  label={TEXT_FIELDS.TOKEN_SUPPLY}
+                  description={DESCRIPTION.TOKEN_SUPPLY}
                   disabled={true}
                   errorStyle={inputErrorStyle}
                 />
