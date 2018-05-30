@@ -276,10 +276,20 @@ export const getTiersLength = () => {
                 return Promise.resolve(tiers.length)
               })
           })
+          .catch((err) => {
+            console.error(err)
+            return Promise.reject(0)
+          })
+      })
+      .catch((err) => {
+        console.error(err)
+        return Promise.reject(0)
       })
   } else if (crowdsaleStore.isDutchAuction) {
     const dutchAuctionTiersLength = 1
     return Promise.resolve(dutchAuctionTiersLength)
+  } else {
+    return Promise.reject(0)
   }
 }
 

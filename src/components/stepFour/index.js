@@ -42,7 +42,7 @@ const {
   NAME,
   TICKER,
   DECIMALS,
-  SUPPLY,
+  SUPPLY_SHORT,
   WALLET_ADDRESS,
   GLOBAL_MIN_CAP,
   RATE,
@@ -335,7 +335,7 @@ export class stepFour extends React.Component {
           </div>
           <div className='hidden'>
             <DisplayField side='left' title={DECIMALS} value={tokenDecimalsStr} description={PD_TOKEN_DECIMALS} />
-            <DisplayField side='right' title={SUPPLY} value={tokenSupplyStr} description={PD_TOKEN_TOTAL_SUPPLY} />
+            <DisplayField side='right' title={SUPPLY_SHORT} value={tokenSupplyStr} description={PD_TOKEN_TOTAL_SUPPLY} />
           </div>
         </div>
       )

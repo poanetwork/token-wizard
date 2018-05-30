@@ -12,6 +12,7 @@ export const ManageForm = ({
   pristine,
   handleChange,
   canSave,
+  displaySave,
   ...props,
 }) => {
   function getManageBlock (fields) {
@@ -29,6 +30,19 @@ export const ManageForm = ({
     }
     return manageBlock;
   }
+  const saveButton = (
+    <Link to='#' onClick={handleSubmit}>
+      <span className={classNames(
+        'no_arrow',
+        'button',
+        'button_fill',
+        {
+          'button_disabled': (pristine || invalid) && !canSave
+        }
+      )}>Save</span>
+    </Link>
+  )
+
   return (
     <form onSubmit={handleSubmit}>
       <FieldArray name="tiers">
@@ -40,16 +54,7 @@ export const ManageForm = ({
 
       <div className="steps">
         <div className="button-container">
-          <Link to='#' onClick={handleSubmit}>
-            <span className={classNames(
-              'no_arrow',
-              'button',
-              'button_fill',
-              {
-                'button_disabled': (pristine || invalid) && !canSave
-              }
-            )}>Save</span>
-          </Link>
+        { displaySave? saveButton : null }
         </div>
       </div>
 

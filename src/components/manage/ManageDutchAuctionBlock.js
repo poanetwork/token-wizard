@@ -2,7 +2,7 @@ import React from 'react'
 import { CrowdsaleStartTime } from './../Common/CrowdsaleStartTime'
 import { CrowdsaleEndTime } from './../Common/CrowdsaleEndTime'
 import { CrowdsaleRate } from './../Common/CrowdsaleRate'
-import { CrowdsaleSupply } from './../Common/CrowdsaleSupply'
+import { Supply } from './../Common/Supply'
 import { TEXT_FIELDS, DESCRIPTION, CROWDSALE_STRATEGIES_DISPLAYNAMES } from '../../utils/constants'
 import { InputField } from '../Common/InputField'
 import { isDateLaterThan } from '../../utils/validations'
@@ -30,15 +30,12 @@ export const ManageDutchAuctionBlock = ({
   <div>
     {fields.map((name, index) => {
       const currentTier = fields.value[index]
-      let { walletAddress, updatable } = currentTier
-      const { startTime: initialStartTime, endTime: initialEndTime } = fields.initial[index]
+      let { walletAddress } = currentTier
+      const { endTime: initialEndTime, whitelistEnabled } = fields.initial[index]
 
-      updatable = crowdsaleStore.isDutchAuction ? true : updatable
-
-      const tierHasStarted = !isDateLaterThan()(dateToTimestamp(initialStartTime))(Date.now())
       const tierHasEnded = !isDateLaterThan()(dateToTimestamp(initialEndTime))(Date.now())
-      const canEdit = canEditTiers && updatable && !tierHasEnded && !tierHasStarted
-      const isWhitelistEnabled = fields.initial[index].whitelistEnabled === 'yes'
+      const canEditWhiteList = canEditTiers && !tierHasEnded
+      const isWhitelistEnabled = whitelistEnabled === 'yes'
 
       return (
         <div className="steps" key={index}>
@@ -78,21 +75,34 @@ export const ManageDutchAuctionBlock = ({
                   disabled={true}
                   errorStyle={inputErrorStyle}
                 />
-                <CrowdsaleSupply
+                <Supply
                   name={`${name}.supply`}
                   side="right"
+                  label={TEXT_FIELDS.CROWDSALE_SUPPLY}
                   description={DESCRIPTION.SUPPLY_DUTCH_AUCTION}
                   disabled={true}
                   errorStyle={inputErrorStyle}
                 />
               </div>
+
+              <div className="input-block-container">
+                <Supply
+                  name={`token.supply`}
+                  value={`${props.tokenSupply}`}
+                  side="left"
+                  label={TEXT_FIELDS.TOKEN_SUPPLY}
+                  description={DESCRIPTION.TOKEN_SUPPLY}
+                  disabled={true}
+                  errorStyle={inputErrorStyle}
+                />
+              </div>
             </div>
-            { crowdsaleStore.isDutchAuction & isWhitelistEnabled ? (
+            { isWhitelistEnabled ? (
               <div>
                 <div className="section-title">
                   <p className="title">Whitelist</p>
                 </div>
-                {canEdit
+                {canEditWhiteList
                   ? <WhitelistInputBlock key={index.toString()} num={index} decimals={props.decimals}/>
                   : <ReadOnlyWhitelistAddresses tier={currentTier}/>
                 }

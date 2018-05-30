@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
-import { TOAST, VALIDATION_TYPES } from '../../utils/constants'
+import { TOAST } from '../../utils/constants'
 import '../../assets/stylesheets/application.css'
 import {
   successfulFinalizeAlert,
@@ -32,8 +32,6 @@ import { FinalizeCrowdsaleStep } from './FinalizeCrowdsaleStep'
 import { DistributeTokensStep } from './DistributeTokensStep'
 import { ManageForm } from './ManageForm'
 import moment from 'moment'
-
-const { VALID } = VALIDATION_TYPES
 
 @inject(
   'crowdsaleStore',
@@ -131,7 +129,6 @@ export class Manage extends Component {
             const target = `${targetPrefix}${targetSuffix}`
             return attachToSpecificCrowdsaleContract(target)
               .then((initCrowdsaleContract) => {
-                console.log(initCrowdsaleContract)
                 const { methods } = initCrowdsaleContract
 
                 let whenCrowdsale = methods.getCrowdsaleInfo(registryStorageAddr, execID).call()
@@ -140,6 +137,7 @@ export class Manage extends Component {
 
                 let whenCrowdsaleData = []
                 let whenCrowdsaleDates = []
+                let whenTokensSold = []
                 if (isMintedCappedCrowdsale) {
                   for (let tierNum = 0; tierNum < numOfTiers; tierNum++) {
                     let whenTierData = methods.getCrowdsaleTier(registryStorageAddr, execID, tierNum).call()
@@ -149,26 +147,28 @@ export class Manage extends Component {
                   }
                 } else if (isDutchAuction) {
                   let whenDutchAuctionData = methods.getCrowdsaleStatus(registryStorageAddr, execID).call()
+                  let whenDutchAuctionGetTokensSold = methods.getTokensSold(registryStorageAddr, execID).call()
                   let whenDutchAuctionDates = methods.getCrowdsaleStartAndEndTimes(registryStorageAddr, execID).call()
                   whenCrowdsaleData.push(whenDutchAuctionData)
                   whenCrowdsaleDates.push(whenDutchAuctionDates)
+                  whenTokensSold.push(whenDutchAuctionGetTokensSold)
                 }
-                const allPromisesRaw = [methods, whenCrowdsale, whenToken, whenReservedTokensDestinations, whenCrowdsaleData, whenCrowdsaleDates]
+                const allPromisesRaw = [methods, whenCrowdsale, whenToken, whenReservedTokensDestinations, whenCrowdsaleData, whenCrowdsaleDates, whenTokensSold]
                 const allPromises = allPromisesRaw.map(function(item) {
                   if (Array.isArray(item)) { return Promise.all(item) }
                   else { return item }
                 })
                 return Promise.all(allPromises)
               })
-              .then(([methods, crowdsale, token, reservedTokensDestinationsObj, crowdsaleData, crowdsaleDates]) => {
+              .then(([methods, crowdsale, token, reservedTokensDestinationsObj, crowdsaleData, crowdsaleDates, tokensSold]) => {
                 let tiers = []
                 let tierExtendedObj = {}
                 crowdsaleData.forEach((el, ind) => {
                   tierExtendedObj = Object.assign(el, crowdsaleDates[ind])
+                  tierExtendedObj.token_sold = tokensSold[ind]
                   tiers.push(tierExtendedObj)
                 })
-                console.log("tiers:")
-                console.log(tiers)
+                console.log("tiers:", tiers)
 
                 //get reserved tokens info
                 let reservedTokensDestinations = []
@@ -435,10 +435,11 @@ export class Manage extends Component {
   canBeSaved = () => {
     const { crowdsaleHasEnded, ownerCurrentUser } = this.state
     const { tierStore, crowdsaleStore } = this.props
-    const { updatable } = crowdsaleStore.selected
+    const { isMintedCappedCrowdsale, isDutchAuction } = crowdsaleStore
+    const { updatable, initialTiersValues } = crowdsaleStore.selected
 
-    const updatableTiersMintedCappedCrowdsale = crowdsaleStore.selected.initialTiersValues.filter(tier => tier.updatable)
-    const updatableTiers = crowdsaleStore.isMintedCappedCrowdsale ? updatableTiersMintedCappedCrowdsale : crowdsaleStore.isDutchAuction ? crowdsaleStore.selected.initialTiersValues : []
+    const updatableTiersMintedCappedCrowdsale = initialTiersValues.filter(tier => tier.updatable)
+    const updatableTiers = isMintedCappedCrowdsale ? updatableTiersMintedCappedCrowdsale : isDutchAuction ? initialTiersValues : []
     const isValidTier = tierStore.individuallyValidTiers
     const validTiers = updatableTiers.every(tier => isValidTier[tier.index])
 
@@ -447,7 +448,11 @@ export class Manage extends Component {
       fieldsToUpdate = getFieldsToUpdate(updatableTiers, tierStore.tiers)
     }
 
-    let canSave = ownerCurrentUser && (tierStore.modifiedStoredWhitelist || fieldsToUpdate.length > 0) && !crowdsaleHasEnded && updatable
+    const canSaveCommon = ownerCurrentUser && (tierStore.modifiedStoredWhitelist || fieldsToUpdate.length > 0) && !crowdsaleHasEnded
+    let canSave = canSaveCommon
+    if (isMintedCappedCrowdsale) {
+      canSave = canSaveCommon && updatable
+    }
 
     const canSaveObj = {
       canSave,
@@ -455,6 +460,23 @@ export class Manage extends Component {
     }
 
     return canSaveObj
+  }
+
+  saveDisplayed = () => {
+    const { crowdsaleHasEnded, ownerCurrentUser } = this.state
+    const { crowdsaleStore } = this.props
+    const { isDutchAuction, isMintedCappedCrowdsale } = crowdsaleStore
+    const crowdsaleIsUpdatable = crowdsaleStore.selected.initialTiersValues.some(tier => tier.updatable)
+    const crowdsaleIsWhitelisted = crowdsaleStore.selected.initialTiersValues.some(tier => tier.isWhitelisted)
+    if (
+      !ownerCurrentUser
+      || crowdsaleHasEnded
+      || (isMintedCappedCrowdsale && !crowdsaleIsUpdatable)
+      || (isDutchAuction && !crowdsaleIsWhitelisted)
+    ) {
+      return false
+    }
+    return true
   }
 
   saveCrowdsale = () => {
@@ -544,6 +566,7 @@ export class Manage extends Component {
           canEditTiers={ownerCurrentUser && !canFinalize && !finalized}
           crowdsaleStore={crowdsaleStore}
           decimals={tokenStore.decimals}
+          tokenSupply={tokenStore.supply}
           aboutTier={
             <AboutCrowdsale
               name={tokenStore.name}
@@ -554,6 +577,7 @@ export class Manage extends Component {
           }
           handleChange={this.updateTierStore}
           canSave={this.canBeSaved().canSave}
+          displaySave={this.saveDisplayed()}
         />
 
         <Loader show={this.state.loading}/>
