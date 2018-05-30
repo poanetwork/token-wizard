@@ -956,18 +956,7 @@ exports[`ManageForm should render for Dutch Auction 1`] = `
   >
     <div
       className="button-container"
-    >
-      <a
-        href="/#"
-        onClick={[Function]}
-      >
-        <span
-          className="no_arrow button button_fill"
-        >
-          Save
-        </span>
-      </a>
-    </div>
+    />
   </div>
 </form>
 `;
@@ -1836,18 +1825,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
   >
     <div
       className="button-container"
-    >
-      <a
-        href="/#"
-        onClick={[Function]}
-      >
-        <span
-          className="no_arrow button button_fill"
-        >
-          Save
-        </span>
-      </a>
-    </div>
+    />
   </div>
 </form>
 `;
@@ -1862,18 +1840,7 @@ exports[`ManageForm should render the component without tiers 1`] = `
   >
     <div
       className="button-container"
-    >
-      <a
-        href="/#"
-        onClick={[Function]}
-      >
-        <span
-          className="no_arrow button button_fill"
-        >
-          Save
-        </span>
-      </a>
-    </div>
+    />
   </div>
 </form>
 `;

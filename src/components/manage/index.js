@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
-import { TOAST, VALIDATION_TYPES } from '../../utils/constants'
+import { TOAST } from '../../utils/constants'
 import '../../assets/stylesheets/application.css'
 import {
   successfulFinalizeAlert,
@@ -32,8 +32,6 @@ import { FinalizeCrowdsaleStep } from './FinalizeCrowdsaleStep'
 import { DistributeTokensStep } from './DistributeTokensStep'
 import { ManageForm } from './ManageForm'
 import moment from 'moment'
-
-const { VALID } = VALIDATION_TYPES
 
 @inject(
   'crowdsaleStore',
@@ -463,12 +461,14 @@ export class Manage extends Component {
   saveDisplayed = () => {
     const { crowdsaleHasEnded, ownerCurrentUser } = this.state
     const { crowdsaleStore } = this.props
-    const { isDutchAuction } = crowdsaleStore
+    const { isDutchAuction, isMintedCappedCrowdsale } = crowdsaleStore
     const crowdsaleIsUpdatable = crowdsaleStore.selected.initialTiersValues.some(tier => tier.updatable)
+    const crowdsaleIsWhitelisted = crowdsaleStore.selected.initialTiersValues.some(tier => tier.isWhitelisted)
     if (
       !ownerCurrentUser
       || crowdsaleHasEnded
-      || (!crowdsaleIsUpdatable)
+      || (isMintedCappedCrowdsale && !crowdsaleIsUpdatable)
+      || (isDutchAuction && !crowdsaleIsWhitelisted)
     ) {
       return false
     }
