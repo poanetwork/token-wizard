@@ -170,7 +170,7 @@ const crowdsaleData = (tier, crowdsale, token, reservedTokensInfo) => {
     startsAt = tier.start_time
     endsAt = tier.end_time
     rate = tier.current_rate
-    maximumSellableTokens = token.total_supply
+    maximumSellableTokens = toBigNumber(tier.tokens_remaining).plus(toBigNumber(tier.token_sold))
   }
 
   let tokenName = removeTrailingNUL(web3.utils.toAscii(token.token_name))
@@ -302,6 +302,7 @@ export const processTier = (tier, crowdsale, token, reservedTokensInfo, tierNum)
       }
       initialValues.whitelist = whitelist
       initialValues.isWhitelisted = isWhitelisted
+      initialValues.supply = newTier.supply
       crowdsaleStore.addInitialTierValues(initialValues)
     })
 }

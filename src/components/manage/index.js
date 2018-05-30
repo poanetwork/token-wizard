@@ -137,6 +137,7 @@ export class Manage extends Component {
 
                 let whenCrowdsaleData = []
                 let whenCrowdsaleDates = []
+                let whenTokensSold = []
                 if (isMintedCappedCrowdsale) {
                   for (let tierNum = 0; tierNum < numOfTiers; tierNum++) {
                     let whenTierData = methods.getCrowdsaleTier(registryStorageAddr, execID, tierNum).call()
@@ -146,22 +147,25 @@ export class Manage extends Component {
                   }
                 } else if (isDutchAuction) {
                   let whenDutchAuctionData = methods.getCrowdsaleStatus(registryStorageAddr, execID).call()
+                  let whenDutchAuctionGetTokensSold = methods.getTokensSold(registryStorageAddr, execID).call()
                   let whenDutchAuctionDates = methods.getCrowdsaleStartAndEndTimes(registryStorageAddr, execID).call()
                   whenCrowdsaleData.push(whenDutchAuctionData)
                   whenCrowdsaleDates.push(whenDutchAuctionDates)
+                  whenTokensSold.push(whenDutchAuctionGetTokensSold)
                 }
-                const allPromisesRaw = [methods, whenCrowdsale, whenToken, whenReservedTokensDestinations, whenCrowdsaleData, whenCrowdsaleDates]
+                const allPromisesRaw = [methods, whenCrowdsale, whenToken, whenReservedTokensDestinations, whenCrowdsaleData, whenCrowdsaleDates, whenTokensSold]
                 const allPromises = allPromisesRaw.map(function(item) {
                   if (Array.isArray(item)) { return Promise.all(item) }
                   else { return item }
                 })
                 return Promise.all(allPromises)
               })
-              .then(([methods, crowdsale, token, reservedTokensDestinationsObj, crowdsaleData, crowdsaleDates]) => {
+              .then(([methods, crowdsale, token, reservedTokensDestinationsObj, crowdsaleData, crowdsaleDates, tokensSold]) => {
                 let tiers = []
                 let tierExtendedObj = {}
                 crowdsaleData.forEach((el, ind) => {
                   tierExtendedObj = Object.assign(el, crowdsaleDates[ind])
+                  tierExtendedObj.token_sold = tokensSold[ind]
                   tiers.push(tierExtendedObj)
                 })
                 console.log("tiers:", tiers)
