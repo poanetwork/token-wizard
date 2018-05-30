@@ -90,6 +90,7 @@ export const ManageDutchAuctionBlock = ({
 
               <div className="input-block-container">
                 <Supply
+                  name={`token.supply`}
                   value={`${props.tokenSupply}`}
                   side="left"
                   label={TEXT_FIELDS.TOKEN_SUPPLY}
