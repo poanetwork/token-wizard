@@ -336,30 +336,22 @@ function getApplicationsInstances () {
     })
 }
 
-function getApplicationsInstance(execID) {
-  const whenScriptExecContract = attachToSpecificCrowdsaleContract("scriptExec")
-  return Promise.resolve(whenScriptExecContract)
-    .then((scriptExecContract) => {
-      return scriptExecContract.methods.deployed_apps(contractStore.registryStorage.addr, execID).call()
-        .then((appObj) => {
-          return Promise.resolve(appObj)
-        })
-    })
+async function getApplicationsInstance(execID) {
+  const { methods } = await attachToSpecificCrowdsaleContract("scriptExec")
+  return await methods.deployed_apps(contractStore.registryStorage.addr, execID).call()
 }
 
-export function getCrowdsaleStrategy (execID) {
-  return getApplicationsInstance(execID)
-    .then((appObj) => {
-      const { web3 } = web3Store
-      let appName = removeTrailingNUL(web3.utils.toAscii(appObj.app_name));
+export async function getCrowdsaleStrategy (execID) {
+  const { REACT_APP_MINTED_CAPPED_CROWDSALE_APP_NAME, REACT_APP_DUTCH_CROWDSALE_APP_NAME } = process.env
+  const { toAscii } = web3Store.web3.utils
+  const { app_name } = await getApplicationsInstance(execID)
+  const app_name_lower_case = removeTrailingNUL(toAscii(app_name)).toLowerCase()
 
-      let appNameLowerCase = appName.toLowerCase();
-      if (appNameLowerCase.includes(process.env[`REACT_APP_MINTED_CAPPED_CROWDSALE_APP_NAME`].toLowerCase())) {
-        return CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE
-      } else if (appNameLowerCase.includes(process.env[`REACT_APP_DUTCH_CROWDSALE_APP_NAME`].toLowerCase())) {
-        return CROWDSALE_STRATEGIES.DUTCH_AUCTION
-      }
-    })
+  if (app_name_lower_case.includes(REACT_APP_MINTED_CAPPED_CROWDSALE_APP_NAME.toLowerCase())) {
+    return CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE
+  } else if (app_name_lower_case.includes(REACT_APP_DUTCH_CROWDSALE_APP_NAME.toLowerCase())) {
+    return CROWDSALE_STRATEGIES.DUTCH_AUCTION
+  }
 }
 
 export function loadRegistryAddresses () {

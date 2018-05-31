@@ -257,29 +257,16 @@ export let isFinalized = (initCrowdsaleContract, crowdsaleExecID) => {
   })
 }
 
-export const getTiersLength = () => {
-  if (crowdsaleStore.isMintedCappedCrowdsale) {
-    return getCurrentAccount()
-      .then(account => {
-        const targetPrefix = "initCrowdsale"
-        const targetSuffix = crowdsaleStore.contractTargetSuffix
-        const target = `${targetPrefix}${targetSuffix}`
-        return attachToSpecificCrowdsaleContract(target)
-          .then((initCrowdsaleContract) => {
-            const { methods } = initCrowdsaleContract
-            let registryStorageObj = toJS(contractStore.registryStorage)
+export const getTiersLength = async () => {
+  if (crowdsaleStore.isDutchAuction) return 1
 
-            return methods.getCrowdsaleTierList(registryStorageObj.addr, contractStore.crowdsale.execID).call()
-              .then(tiers => {
-                console.log("tiers:", tiers)
-                console.log("tiersLength:", tiers.length)
-                return Promise.resolve(tiers.length)
-              })
-          })
-      })
-  } else if (crowdsaleStore.isDutchAuction) {
-    const dutchAuctionTiersLength = 1
-    return Promise.resolve(dutchAuctionTiersLength)
+  if (crowdsaleStore.isMintedCappedCrowdsale) {
+    const { methods } = await attachToSpecificCrowdsaleContract(`initCrowdsale${crowdsaleStore.contractTargetSuffix}`)
+    const { getCrowdsaleTierList } = methods
+    const { addr } = toJS(contractStore.registryStorage)
+    const tiers = await getCrowdsaleTierList(addr, contractStore.crowdsale.execID).call()
+
+    return tiers.length
   }
 }
 
