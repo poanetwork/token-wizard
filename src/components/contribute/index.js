@@ -50,7 +50,7 @@ import { generateContext } from '../stepFour/utils'
   'tierStore',
   'tokenStore',
   'generalStore',
-  'investStore',
+  'contributeStore',
   'gasPriceStore',
   'crowdsaleStore'
 )
@@ -232,11 +232,11 @@ export class Contribute extends React.Component {
   }
 
   investToTokens = () => {
-    const { investStore, crowdsalePageStore, web3Store } = this.props
+    const { contributeStore, crowdsalePageStore, web3Store } = this.props
     const { startDate } = crowdsalePageStore
     const { web3 } = web3Store
 
-    if (!this.isValidToken(investStore.tokensToInvest)) {
+    if (!this.isValidToken(contributeStore.tokensToInvest)) {
       this.setState({ pristineTokenInput: false })
       return
     }
@@ -276,7 +276,7 @@ export class Contribute extends React.Component {
   }
 
   calculateWeiToSend = async () => {
-    const { crowdsalePageStore, crowdsaleStore, contractStore, investStore } = this.props
+    const { crowdsalePageStore, crowdsaleStore, contractStore, contributeStore } = this.props
     const { execID, account } = this.props.contractStore.crowdsale
     const { addr } = toJS(contractStore.registryStorage)
 
@@ -301,7 +301,7 @@ export class Contribute extends React.Component {
     const rate = toBigNumber(crowdsalePageStore.rate)
     console.log('rate:', rate.toFixed())
 
-    const tokensToInvest = toBigNumber(investStore.tokensToInvest).times(rate)
+    const tokensToInvest = toBigNumber(contributeStore.tokensToInvest).times(rate)
     console.log('tokensToInvest:', tokensToInvest.toFixed())
 
     const userLimits = await getUserMaxLimits(addr, execID, methods, account)
@@ -378,12 +378,12 @@ export class Contribute extends React.Component {
   }
 
   txMinedCallback(txHash, receipt) {
-    const { investStore } = this.props
+    const { contributeStore } = this.props
 
     if (receipt) {
       if (receipt.blockNumber) {
         this.setState({ loading: false })
-        successfulContributionAlert(investStore.tokensToInvest)
+        successfulContributionAlert(contributeStore.tokensToInvest)
       }
     } else {
       setTimeout(() => {

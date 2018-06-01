@@ -11,8 +11,8 @@ import {
 } from '../../utils/validations'
 import classNames from 'classnames'
 
-export const ContributeForm = inject('investStore', 'tokenStore')
-(observer(({ investStore, tokenStore, handleSubmit, pristine, invalid, ...props}) => {
+export const ContributeForm = inject('contributeStore', 'tokenStore')
+(observer(({ contributeStore, tokenStore, handleSubmit, pristine, invalid, ...props}) => {
   const { decimals } = tokenStore
   const { investThrough, updateInvestThrough, web3Available } = props
 
@@ -36,7 +36,7 @@ export const ContributeForm = inject('investStore', 'tokenStore')
 
   const tokensToInvestOnChange = ({ values }) => {
     if (values && values.invest !== undefined) {
-      investStore.setProperty('tokensToInvest', values.invest)
+      contributeStore.setProperty('tokensToInvest', values.invest)
     }
   }
 

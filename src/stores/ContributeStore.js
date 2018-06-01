@@ -1,6 +1,6 @@
 import { observable, action } from 'mobx';
 
-class InvestStore {
+class ContributeStore {
 
   @observable tokensToInvest;
 
@@ -9,4 +9,4 @@ class InvestStore {
   }
 }
 
-export default InvestStore;
+export default ContributeStore;

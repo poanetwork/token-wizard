@@ -7,7 +7,7 @@ import TokenStore from './TokenStore';
 import Web3Store from './Web3Store';
 import GeneralStore from './GeneralStore'
 import CrowdsalePageStore from './CrowdsalePageStore'
-import InvestStore from './InvestStore'
+import ContributeStore from './ContributeStore'
 import CrowdsaleStore from './CrowdsaleStore'
 import GasPriceStore from './GasPriceStore'
 import DeploymentStore from './DeploymentStore'
@@ -25,7 +25,7 @@ const stepTwoValidationStore = new StepTwoValidationStore()
 const tierStore = new TierStore()
 const tokenStore = new TokenStore()
 const web3Store = new Web3Store()
-const investStore = new InvestStore()
+const contributeStore = new ContributeStore()
 const crowdsaleStore = new CrowdsaleStore()
 const gasPriceStore = new GasPriceStore()
 const deploymentStore = new DeploymentStore()
@@ -39,7 +39,7 @@ export {
   tierStore,
   tokenStore,
   web3Store,
-  investStore,
+  contributeStore,
   crowdsaleStore,
   gasPriceStore,
   deploymentStore

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Provider } from 'mobx-react'
 import { Form } from 'react-final-form'
-import InvestStore from '../../stores/InvestStore'
+import ContributeStore from '../../stores/ContributeStore'
 import TokenStore from '../../stores/TokenStore'
 import { ContributeForm } from './ContributeForm'
 import renderer from 'react-test-renderer'
@@ -12,17 +12,17 @@ import { CONTRIBUTION_OPTIONS } from '../../utils/constants'
 configure({ adapter: new Adapter() })
 
 describe('ContributeForm', () => {
-  let investStore
+  let contributeStore
   let tokenStore
 
   beforeEach(() => {
-    investStore = new InvestStore()
+    contributeStore = new ContributeStore()
     tokenStore = new TokenStore()
   })
 
   it(`should render ContributeForm component`, () => {
     const wrapper = renderer.create(
-      <Provider investStore={investStore} tokenStore={tokenStore}>
+      <Provider contributeStore={contributeStore} tokenStore={tokenStore}>
         <Form
           onSubmit={jest.fn()}
           component={ContributeForm}
@@ -38,7 +38,7 @@ describe('ContributeForm', () => {
 
   it(`should render ContributeForm component and its children`, () => {
     const wrapper = renderer.create(
-      <Provider investStore={investStore} tokenStore={tokenStore}>
+      <Provider contributeStore={contributeStore} tokenStore={tokenStore}>
         <Form
           onSubmit={jest.fn()}
           component={ContributeForm}
@@ -52,11 +52,11 @@ describe('ContributeForm', () => {
     expect(wrapper).toMatchSnapshot()
   })
 
-  it(`should update tokensToInvest in investStore`, () => {
+  it(`should update tokensToInvest in contributeStore`, () => {
     const value = 55
 
     const wrapper = mount(
-      <Provider investStore={investStore} tokenStore={tokenStore}>
+      <Provider contributeStore={contributeStore} tokenStore={tokenStore}>
         <Form
           onSubmit={jest.fn()}
           component={ContributeForm}
@@ -67,11 +67,11 @@ describe('ContributeForm', () => {
       </Provider>
     )
 
-    expect(investStore.tokensToInvest).toBeUndefined()
+    expect(contributeStore.tokensToInvest).toBeUndefined()
 
     wrapper.find('input').simulate('change', { target: { value } })
 
-    expect(investStore.tokensToInvest).toBe(value)
+    expect(contributeStore.tokensToInvest).toBe(value)
   })
 
   it(`should call onSubmit`, () => {
@@ -80,7 +80,7 @@ describe('ContributeForm', () => {
     tokenStore.setProperty('decimals', 18)
 
     const wrapper = mount(
-      <Provider investStore={investStore} tokenStore={tokenStore}>
+      <Provider contributeStore={contributeStore} tokenStore={tokenStore}>
         <Form
           onSubmit={onSubmit}
           component={ContributeForm}
@@ -101,7 +101,7 @@ describe('ContributeForm', () => {
     const updateInvestThrough = jest.fn()
 
     const wrapper = mount(
-      <Provider investStore={investStore} tokenStore={tokenStore}>
+      <Provider contributeStore={contributeStore} tokenStore={tokenStore}>
         <Form
           onSubmit={jest.fn()}
           component={ContributeForm}
