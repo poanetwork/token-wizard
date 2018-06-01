@@ -1,12 +1,12 @@
 import { observable, action } from 'mobx';
 
-class InvestStore {
+class ContributeStore {
 
-  @observable tokensToInvest;
+  @observable tokensToContribute;
 
   @action setProperty = (property, value) => {
     this[property] = value
   }
 }
 
-export default InvestStore;
+export default ContributeStore;

@@ -126,7 +126,7 @@ export class Crowdsale extends React.Component {
     })
   }
 
-  goToInvestPage = () => {
+  goToContributePage = () => {
     const { contractStore, generalStore } = this.props
     let queryStr = "";
     if (!CrowdsaleConfig.crowdsaleContractURL || !CrowdsaleConfig.networkID) {
@@ -138,7 +138,7 @@ export class Crowdsale extends React.Component {
       }
     }
 
-    this.props.history.push('/invest' + queryStr);
+    this.props.history.push('/contribute' + queryStr);
   }
 
   render() {
@@ -146,7 +146,7 @@ export class Crowdsale extends React.Component {
     const { web3 } = web3Store
 
     const crowdsaleExecID = getContractStoreProperty('crowdsale','execID')
-    const investorsCount = crowdsalePageStore.investors ? crowdsalePageStore.investors.toString() : 0
+    const contributorsCount = crowdsalePageStore.contributors ? crowdsalePageStore.contributors.toString() : 0
 
     const rate = toBigNumber(crowdsalePageStore.rate)
     const tokenDecimals = toBigNumber(tokenStore.decimals)
@@ -172,8 +172,8 @@ export class Crowdsale extends React.Component {
     const goalInETH = goalInETHTiers
     const tokensClaimedRatio = goalInETH > 0 ? ethRaised.div(goalInETH).times(100).toFixed() : '0'
 
-    const investorsBlock = <div className="right">
-      <p className="title">{`${investorsCount}`}</p>
+    const contributorsBlock = <div className="right">
+      <p className="title">{`${contributorsCount}`}</p>
       <p className="description">Contributors</p>
     </div>
 
@@ -221,7 +221,7 @@ export class Crowdsale extends React.Component {
                     <p className="title">{`${tokensClaimed}`}</p>
                     <p className="description">Tokens Claimed</p>
                   </div>
-                  { investorsBlock }
+                  { contributorsBlock }
                 </div>
                 <p className="hash">{`${crowdsaleExecID}`}</p>
                 <p className="description">Crowdsale Execution ID</p>
@@ -242,7 +242,7 @@ export class Crowdsale extends React.Component {
           </div>
         </div>
         <div className="button-container">
-          <a onClick={this.goToInvestPage} className="button button_fill">Invest</a>
+          <a onClick={this.goToContributePage} className="button button_fill">Contribute</a>
         </div>
         <Loader show={this.state.loading} />
       </section>

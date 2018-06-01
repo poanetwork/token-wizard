@@ -150,7 +150,7 @@ export let getCrowdsaleData = (initCrowdsaleContract, execID, account) => {
         crowdsalePageStore.setProperty('tokensSold', storedTokensSold.toFixed())
 
         if (contributors)
-          crowdsalePageStore.setProperty('investors', toBigNumber(contributors).toFixed())
+          crowdsalePageStore.setProperty('contributors', toBigNumber(contributors).toFixed())
 
         resolve()
       })

@@ -50,10 +50,10 @@ export function invalidNetworkIDAlert() {
   });
 }
 
-export function successfulInvestmentAlert(tokensToInvest) {
+export function successfulContributionAlert(tokensToContribute) {
   sweetAlert2({
     title: "Success",
-    html: "Congrats! You've successfully bought " + tokensToInvest + " tokens!",
+    html: "Congrats! You've successfully bought " + tokensToContribute + " tokens!",
     type: "success"
   }).then(function(result) {
     if (result.value) {
@@ -62,7 +62,7 @@ export function successfulInvestmentAlert(tokensToInvest) {
   });
 }
 
-export function investmentDisabledAlertInTime(startTime) {
+export function contributionDisabledAlertInTime(startTime) {
   sweetAlert2({
     title: "Warning",
     html: "Wait, please. Crowdsale company hasn't started yet. It'll start from <b>" + new Date(startTime) + "</b>.",

@@ -23,7 +23,7 @@ exports[`AddressInput Should render the component 1`] = `
   <p
     className="description"
   >
-    Where the money goes after investors transactions. Immediately after each transaction. We recommend to setup a multisig wallet with hardware based signers.
+    Where the money goes after contributors transactions. Immediately after each transaction. We recommend to setup a multisig wallet with hardware based signers.
   </p>
   <p
     className="error"
