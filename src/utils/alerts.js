@@ -50,7 +50,7 @@ export function invalidNetworkIDAlert() {
   });
 }
 
-export function successfulInvestmentAlert(tokensToInvest) {
+export function successfulContributionAlert(tokensToInvest) {
   sweetAlert2({
     title: "Success",
     html: "Congrats! You've successfully bought " + tokensToInvest + " tokens!",
@@ -62,7 +62,7 @@ export function successfulInvestmentAlert(tokensToInvest) {
   });
 }
 
-export function investmentDisabledAlertInTime(startTime) {
+export function contributionDisabledAlertInTime(startTime) {
   sweetAlert2({
     title: "Warning",
     html: "Wait, please. Crowdsale company hasn't started yet. It'll start from <b>" + new Date(startTime) + "</b>.",

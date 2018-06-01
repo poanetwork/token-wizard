@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`InvestForm should render InvestForm component 1`] = `
+exports[`ContributeForm should render ContributeForm component 1`] = `
 <form
   className="invest-form"
   onSubmit={[Function]}
@@ -92,7 +92,7 @@ exports[`InvestForm should render InvestForm component 1`] = `
 </form>
 `;
 
-exports[`InvestForm should render InvestForm component and its children 1`] = `
+exports[`ContributeForm should render ContributeForm component and its children 1`] = `
 <form
   className="invest-form"
   onSubmit={[Function]}

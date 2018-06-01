@@ -3,15 +3,15 @@ import { Provider } from 'mobx-react'
 import { Form } from 'react-final-form'
 import InvestStore from '../../stores/InvestStore'
 import TokenStore from '../../stores/TokenStore'
-import { InvestForm } from './InvestForm'
+import { ContributeForm } from './ContributeForm'
 import renderer from 'react-test-renderer'
 import Adapter from 'enzyme-adapter-react-15'
 import { configure, mount, shallow } from 'enzyme'
-import { INVESTMENT_OPTIONS } from '../../utils/constants'
+import { CONTRIBUTION_OPTIONS } from '../../utils/constants'
 
 configure({ adapter: new Adapter() })
 
-describe('InvestForm', () => {
+describe('ContributeForm', () => {
   let investStore
   let tokenStore
 
@@ -20,13 +20,13 @@ describe('InvestForm', () => {
     tokenStore = new TokenStore()
   })
 
-  it(`should render InvestForm component`, () => {
+  it(`should render ContributeForm component`, () => {
     const wrapper = renderer.create(
       <Provider investStore={investStore} tokenStore={tokenStore}>
         <Form
           onSubmit={jest.fn()}
-          component={InvestForm}
-          investThrough={INVESTMENT_OPTIONS.METAMASK}
+          component={ContributeForm}
+          investThrough={CONTRIBUTION_OPTIONS.METAMASK}
           updateInvestThrough={jest.fn()}
           web3Available={true}
         />
@@ -36,13 +36,13 @@ describe('InvestForm', () => {
     expect(wrapper).toMatchSnapshot()
   })
 
-  it(`should render InvestForm component and its children`, () => {
+  it(`should render ContributeForm component and its children`, () => {
     const wrapper = renderer.create(
       <Provider investStore={investStore} tokenStore={tokenStore}>
         <Form
           onSubmit={jest.fn()}
-          component={InvestForm}
-          investThrough={INVESTMENT_OPTIONS.METAMASK}
+          component={ContributeForm}
+          investThrough={CONTRIBUTION_OPTIONS.METAMASK}
           updateInvestThrough={jest.fn()}
           web3Available={true}
         />
@@ -59,8 +59,8 @@ describe('InvestForm', () => {
       <Provider investStore={investStore} tokenStore={tokenStore}>
         <Form
           onSubmit={jest.fn()}
-          component={InvestForm}
-          investThrough={INVESTMENT_OPTIONS.METAMASK}
+          component={ContributeForm}
+          investThrough={CONTRIBUTION_OPTIONS.METAMASK}
           updateInvestThrough={jest.fn()}
           web3Available={true}
         />
@@ -83,8 +83,8 @@ describe('InvestForm', () => {
       <Provider investStore={investStore} tokenStore={tokenStore}>
         <Form
           onSubmit={onSubmit}
-          component={InvestForm}
-          investThrough={INVESTMENT_OPTIONS.METAMASK}
+          component={ContributeForm}
+          investThrough={CONTRIBUTION_OPTIONS.METAMASK}
           updateInvestThrough={jest.fn()}
           web3Available={true}
         />
@@ -104,17 +104,17 @@ describe('InvestForm', () => {
       <Provider investStore={investStore} tokenStore={tokenStore}>
         <Form
           onSubmit={jest.fn()}
-          component={InvestForm}
-          investThrough={INVESTMENT_OPTIONS.METAMASK}
+          component={ContributeForm}
+          investThrough={CONTRIBUTION_OPTIONS.METAMASK}
           updateInvestThrough={updateInvestThrough}
           web3Available={true}
         />
       </Provider>
     )
 
-    wrapper.find('select').simulate('change', { target: { value: INVESTMENT_OPTIONS.QR } })
+    wrapper.find('select').simulate('change', { target: { value: CONTRIBUTION_OPTIONS.QR } })
 
     expect(updateInvestThrough).toHaveBeenCalledTimes(1)
-    expect(updateInvestThrough).toHaveBeenCalledWith(INVESTMENT_OPTIONS.QR)
+    expect(updateInvestThrough).toHaveBeenCalledWith(CONTRIBUTION_OPTIONS.QR)
   })
 })

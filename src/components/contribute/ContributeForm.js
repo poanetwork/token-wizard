@@ -1,7 +1,7 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
 import { Field, FormSpy } from 'react-final-form'
-import { INVESTMENT_OPTIONS } from '../../utils/constants'
+import { CONTRIBUTION_OPTIONS } from '../../utils/constants'
 import { InputField2 } from '../Common/InputField2'
 import {
   composeValidators,
@@ -11,7 +11,7 @@ import {
 } from '../../utils/validations'
 import classNames from 'classnames'
 
-export const InvestForm = inject('investStore', 'tokenStore')
+export const ContributeForm = inject('investStore', 'tokenStore')
 (observer(({ investStore, tokenStore, handleSubmit, pristine, invalid, ...props}) => {
   const { decimals } = tokenStore
   const { investThrough, updateInvestThrough, web3Available } = props
@@ -20,7 +20,7 @@ export const InvestForm = inject('investStore', 'tokenStore')
     'button_disabled': pristine || invalid
   })
 
-  const ContributeButton = investThrough === INVESTMENT_OPTIONS.METAMASK ?
+  const ContributeButton = investThrough === CONTRIBUTION_OPTIONS.METAMASK ?
     <a className={contributeButtonClasses} onClick={handleSubmit}>Contribute</a> : null
 
   const validateInvest = (value) => {
@@ -58,9 +58,9 @@ export const InvestForm = inject('investStore', 'tokenStore')
 
       <div className="invest-through-container">
         <select value={investThrough} className="invest-through" onChange={(e) => updateInvestThrough(e.target.value)}>
-          <option disabled={!web3Available} value={INVESTMENT_OPTIONS.METAMASK}>
+          <option disabled={!web3Available} value={CONTRIBUTION_OPTIONS.METAMASK}>
             Metamask {!web3Available ? ' (not available)' : null}</option>
-          <option value={INVESTMENT_OPTIONS.QR}>QR</option>
+          <option value={CONTRIBUTION_OPTIONS.QR}>QR</option>
         </select>
         {ContributeButton}
       </div>

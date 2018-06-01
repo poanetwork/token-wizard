@@ -22,16 +22,16 @@ import {
 import { countDecimalPlaces, getQueryVariable, toast } from '../../utils/utils'
 import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
 import {
-  investmentDisabledAlertInTime,
+  contributionDisabledAlertInTime,
   noGasPriceAvailable,
   MetaMaskIsLockedAlert,
-  successfulInvestmentAlert,
+  successfulContributionAlert,
   noMoreTokensAvailable,
   notAllowedContributor
 } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
 import { CrowdsaleConfig } from '../Common/config'
-import { INVESTMENT_OPTIONS, TOAST } from '../../utils/constants'
+import { CONTRIBUTION_OPTIONS, TOAST } from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
 import { toJS } from 'mobx'
 import QRPaymentProcess from './QRPaymentProcess'
@@ -40,7 +40,7 @@ import classNames from 'classnames'
 import moment from 'moment'
 import { BigNumber } from 'bignumber.js'
 import { Form } from 'react-final-form'
-import { InvestForm } from './InvestForm'
+import { ContributeForm } from './ContributeForm'
 import { generateContext } from '../stepFour/utils'
 
 @inject(
@@ -55,7 +55,7 @@ import { generateContext } from '../stepFour/utils'
   'crowdsaleStore'
 )
 @observer
-export class Invest extends React.Component {
+export class Contribute extends React.Component {
   constructor(props) {
     super(props)
     window.scrollTo(0, 0)
@@ -64,7 +64,7 @@ export class Invest extends React.Component {
       loading: true,
       pristineTokenInput: true,
       web3Available: false,
-      investThrough: INVESTMENT_OPTIONS.QR,
+      investThrough: CONTRIBUTION_OPTIONS.QR,
       crowdsaleExecID: CrowdsaleConfig.crowdsaleContractURL || getQueryVariable('exec-id'),
       toNextTick: {
         days: 0,
@@ -93,7 +93,7 @@ export class Invest extends React.Component {
 
     this.setState({
       web3Available: true,
-      investThrough: INVESTMENT_OPTIONS.METAMASK
+      investThrough: CONTRIBUTION_OPTIONS.METAMASK
     })
 
     getWhiteListWithCapCrowdsaleAssets(networkID)
@@ -261,7 +261,7 @@ export class Invest extends React.Component {
 
     if (crowdsalePageStore.startDate > (new Date()).getTime()) {
       this.setState({ loading: false })
-      return investmentDisabledAlertInTime(crowdsalePageStore.startDate)
+      return contributionDisabledAlertInTime(crowdsalePageStore.startDate)
     }
 
     this.investToTokensForWhitelistedCrowdsaleInternal()
@@ -369,7 +369,7 @@ export class Invest extends React.Component {
     weiToSend.constructor.config({ DECIMAL_PLACES })
 
     sendTXToContract(method.send(opts))
-      .then(() => successfulInvestmentAlert(tokensToInvest))
+      .then(() => successfulContributionAlert(tokensToInvest))
       .catch(err => {
         console.error(err)
         return toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED })
@@ -383,7 +383,7 @@ export class Invest extends React.Component {
     if (receipt) {
       if (receipt.blockNumber) {
         this.setState({ loading: false })
-        successfulInvestmentAlert(investStore.tokensToInvest)
+        successfulContributionAlert(investStore.tokensToInvest)
       }
     } else {
       setTimeout(() => {
@@ -425,12 +425,12 @@ export class Invest extends React.Component {
     //min contribution
     const minimumContributionDisplay = minimumContribution >= 0 ? `${minimumContribution} ${tokenTicker}` : 'You are not allowed'
 
-    const QRPaymentProcessElement = investThrough === INVESTMENT_OPTIONS.QR ?
+    const QRPaymentProcessElement = investThrough === CONTRIBUTION_OPTIONS.QR ?
       <QRPaymentProcess crowdsaleExecID={crowdsaleExecID} /> :
       null
 
     const rightColumnClasses = classNames('invest-table-cell', 'invest-table-cell_right', {
-      'qr-selected': investThrough === INVESTMENT_OPTIONS.QR
+      'qr-selected': investThrough === CONTRIBUTION_OPTIONS.QR
     })
 
     return <div className="invest container">
@@ -474,9 +474,9 @@ export class Invest extends React.Component {
               <p className="hashes-description">Minimum Contribution</p>
             </div>
           </div>
-          <p className="invest-title">Invest page</p>
+          <p className="invest-title">Contribute page</p>
           <p className="invest-description">
-            {'Here you can invest in the crowdsale campaign. At the moment, you need Metamask client to invest into the crowdsale.'}
+            {'Here you can contribute in the crowdsale campaign. At the moment, you need Metamask client to contribute into the crowdsale.'}
           </p>
         </div>
         <div className={rightColumnClasses}>
@@ -489,7 +489,7 @@ export class Invest extends React.Component {
           </div>
           <Form
             onSubmit={this.investToTokens}
-            component={InvestForm}
+            component={ContributeForm}
             investThrough={investThrough}
             updateInvestThrough={this.updateInvestThrough}
             web3Available={web3Available}

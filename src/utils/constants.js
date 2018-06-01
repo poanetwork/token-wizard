@@ -159,7 +159,7 @@ export const DESCRIPTION = {
   MIN_CAP: `Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1
                and a user already has 1 token from a previous transaction, they can buy any amount they want.`,
   ENABLE_WHITELIST: `Enables whitelisting. If disabled, anyone can participate in the crowdsale.`,
-  WALLET: `Where the money goes after investors transactions. Immediately after each transaction. We
+  WALLET: `Where the money goes after contributors transactions. Immediately after each transaction. We
                         recommend to setup a multisig wallet with hardware based signers.`,
   CROWDSALE_SETUP: `The most important and exciting part of the crowdsale process. Here you can
               define parameters of your crowdsale campaign.`
@@ -199,7 +199,7 @@ export const TEXT_FIELDS = {
   MIN: 'Min',
   MAX: 'Max',
   GLOBAL_MIN_CAP: 'Global Min Cap',
-  MIN_CAP: 'Investor min cap',
+  MIN_CAP: 'Contributor min cap',
   DIMENSION: 'Dimension',
   VALUE: 'Value',
   MAX_CAP: 'Max cap',
@@ -250,7 +250,7 @@ export const initialStepThreeValues = {
   }]
 }
 
-export const INVESTMENT_OPTIONS = {
+export const CONTRIBUTION_OPTIONS = {
   METAMASK: 'metamask',
   QR: 'qr'
 }

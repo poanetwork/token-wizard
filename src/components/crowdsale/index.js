@@ -126,7 +126,7 @@ export class Crowdsale extends React.Component {
     })
   }
 
-  goToInvestPage = () => {
+  goToContributePage = () => {
     const { contractStore, generalStore } = this.props
     let queryStr = "";
     if (!CrowdsaleConfig.crowdsaleContractURL || !CrowdsaleConfig.networkID) {
@@ -138,7 +138,7 @@ export class Crowdsale extends React.Component {
       }
     }
 
-    this.props.history.push('/invest' + queryStr);
+    this.props.history.push('/contribute' + queryStr);
   }
 
   render() {
@@ -242,7 +242,7 @@ export class Crowdsale extends React.Component {
           </div>
         </div>
         <div className="button-container">
-          <a onClick={this.goToInvestPage} className="button button_fill">Invest</a>
+          <a onClick={this.goToContributePage} className="button button_fill">Contribute</a>
         </div>
         <Loader show={this.state.loading} />
       </section>
