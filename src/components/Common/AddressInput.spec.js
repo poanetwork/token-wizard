@@ -23,7 +23,7 @@ describe('AddressInput', () => {
         pristine={state.pristine}
         errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS}
         onChange={jest.fn()}
-        description="Where the money goes after investors transactions. Immediately after each transaction. We
+        description="Where the money goes after contributors transactions. Immediately after each transaction. We
              recommend to setup a multisig wallet with hardware based signers."
       />
     )
@@ -47,7 +47,7 @@ describe('AddressInput', () => {
         pristine={state.pristine}
         errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS}
         onChange={onChange}
-        description="Where the money goes after investors transactions. Immediately after each transaction. We
+        description="Where the money goes after contributors transactions. Immediately after each transaction. We
              recommend to setup a multisig wallet with hardware based signers."
       />
     )
@@ -79,7 +79,7 @@ describe('AddressInput', () => {
         pristine={state.pristine}
         errorMessage={VALIDATION_MESSAGES.WALLET_ADDRESS}
         onChange={onChange}
-        description="Where the money goes after investors transactions. Immediately after each transaction. We
+        description="Where the money goes after contributors transactions. Immediately after each transaction. We
              recommend to setup a multisig wallet with hardware based signers."
       />
     )

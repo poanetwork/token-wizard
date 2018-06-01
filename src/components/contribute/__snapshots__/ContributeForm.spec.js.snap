@@ -2,30 +2,30 @@
 
 exports[`ContributeForm should render ContributeForm component 1`] = `
 <form
-  className="invest-form"
+  className="contribute-form"
   onSubmit={[Function]}
 >
   <label
-    className="invest-form-label"
+    className="contribute-form-label"
   >
-    Choose amount to invest
+    Choose amount to contribute
   </label>
   <div
-    className="invest-form-input-container"
+    className="contribute-form-input-container"
   >
     <div
       className={undefined}
     >
       <label
         className="label"
-        htmlFor="invest"
+        htmlFor="contribute"
       />
       <input
         autoComplete="off"
-        className="invest-form-input"
+        className="contribute-form-input"
         disabled={undefined}
-        id="invest"
-        name="invest"
+        id="contribute"
+        name="contribute"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
@@ -52,16 +52,16 @@ exports[`ContributeForm should render ContributeForm component 1`] = `
       </span>
     </div>
     <div
-      className="invest-form-label"
+      className="contribute-form-label"
     >
       TOKENS
     </div>
   </div>
   <div
-    className="invest-through-container"
+    className="contribute-through-container"
   >
     <select
-      className="invest-through"
+      className="contribute-through"
       onChange={[Function]}
       value="metamask"
     >
@@ -94,30 +94,30 @@ exports[`ContributeForm should render ContributeForm component 1`] = `
 
 exports[`ContributeForm should render ContributeForm component and its children 1`] = `
 <form
-  className="invest-form"
+  className="contribute-form"
   onSubmit={[Function]}
 >
   <label
-    className="invest-form-label"
+    className="contribute-form-label"
   >
-    Choose amount to invest
+    Choose amount to contribute
   </label>
   <div
-    className="invest-form-input-container"
+    className="contribute-form-input-container"
   >
     <div
       className={undefined}
     >
       <label
         className="label"
-        htmlFor="invest"
+        htmlFor="contribute"
       />
       <input
         autoComplete="off"
-        className="invest-form-input"
+        className="contribute-form-input"
         disabled={undefined}
-        id="invest"
-        name="invest"
+        id="contribute"
+        name="contribute"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
@@ -144,16 +144,16 @@ exports[`ContributeForm should render ContributeForm component and its children 
       </span>
     </div>
     <div
-      className="invest-form-label"
+      className="contribute-form-label"
     >
       TOKENS
     </div>
   </div>
   <div
-    className="invest-through-container"
+    className="contribute-through-container"
   >
     <select
-      className="invest-through"
+      className="contribute-through"
       onChange={[Function]}
       value="metamask"
     >

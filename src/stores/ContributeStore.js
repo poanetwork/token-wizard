@@ -2,7 +2,7 @@ import { observable, action } from 'mobx';
 
 class ContributeStore {
 
-  @observable tokensToInvest;
+  @observable tokensToContribute;
 
   @action setProperty = (property, value) => {
     this[property] = value

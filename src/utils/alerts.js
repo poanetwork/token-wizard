@@ -50,10 +50,10 @@ export function invalidNetworkIDAlert() {
   });
 }
 
-export function successfulContributionAlert(tokensToInvest) {
+export function successfulContributionAlert(tokensToContribute) {
   sweetAlert2({
     title: "Success",
-    html: "Congrats! You've successfully bought " + tokensToInvest + " tokens!",
+    html: "Congrats! You've successfully bought " + tokensToContribute + " tokens!",
     type: "success"
   }).then(function(result) {
     if (result.value) {

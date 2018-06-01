@@ -26,8 +26,8 @@ describe('ContributeForm', () => {
         <Form
           onSubmit={jest.fn()}
           component={ContributeForm}
-          investThrough={CONTRIBUTION_OPTIONS.METAMASK}
-          updateInvestThrough={jest.fn()}
+          contributeThrough={CONTRIBUTION_OPTIONS.METAMASK}
+          updateContributeThrough={jest.fn()}
           web3Available={true}
         />
       </Provider>
@@ -42,8 +42,8 @@ describe('ContributeForm', () => {
         <Form
           onSubmit={jest.fn()}
           component={ContributeForm}
-          investThrough={CONTRIBUTION_OPTIONS.METAMASK}
-          updateInvestThrough={jest.fn()}
+          contributeThrough={CONTRIBUTION_OPTIONS.METAMASK}
+          updateContributeThrough={jest.fn()}
           web3Available={true}
         />
       </Provider>
@@ -52,7 +52,7 @@ describe('ContributeForm', () => {
     expect(wrapper).toMatchSnapshot()
   })
 
-  it(`should update tokensToInvest in contributeStore`, () => {
+  it(`should update tokensToContribute in contributeStore`, () => {
     const value = 55
 
     const wrapper = mount(
@@ -60,18 +60,18 @@ describe('ContributeForm', () => {
         <Form
           onSubmit={jest.fn()}
           component={ContributeForm}
-          investThrough={CONTRIBUTION_OPTIONS.METAMASK}
-          updateInvestThrough={jest.fn()}
+          contributeThrough={CONTRIBUTION_OPTIONS.METAMASK}
+          updateContributeThrough={jest.fn()}
           web3Available={true}
         />
       </Provider>
     )
 
-    expect(contributeStore.tokensToInvest).toBeUndefined()
+    expect(contributeStore.tokensToContribute).toBeUndefined()
 
     wrapper.find('input').simulate('change', { target: { value } })
 
-    expect(contributeStore.tokensToInvest).toBe(value)
+    expect(contributeStore.tokensToContribute).toBe(value)
   })
 
   it(`should call onSubmit`, () => {
@@ -84,8 +84,8 @@ describe('ContributeForm', () => {
         <Form
           onSubmit={onSubmit}
           component={ContributeForm}
-          investThrough={CONTRIBUTION_OPTIONS.METAMASK}
-          updateInvestThrough={jest.fn()}
+          contributeThrough={CONTRIBUTION_OPTIONS.METAMASK}
+          updateContributeThrough={jest.fn()}
           web3Available={true}
         />
       </Provider>
@@ -97,16 +97,16 @@ describe('ContributeForm', () => {
     expect(onSubmit).toHaveBeenCalledTimes(1)
   })
 
-  it(`should set investThrough to QR`, () => {
-    const updateInvestThrough = jest.fn()
+  it(`should set contributeThrough to QR`, () => {
+    const updateContributeThrough = jest.fn()
 
     const wrapper = mount(
       <Provider contributeStore={contributeStore} tokenStore={tokenStore}>
         <Form
           onSubmit={jest.fn()}
           component={ContributeForm}
-          investThrough={CONTRIBUTION_OPTIONS.METAMASK}
-          updateInvestThrough={updateInvestThrough}
+          contributeThrough={CONTRIBUTION_OPTIONS.METAMASK}
+          updateContributeThrough={updateContributeThrough}
           web3Available={true}
         />
       </Provider>
@@ -114,7 +114,7 @@ describe('ContributeForm', () => {
 
     wrapper.find('select').simulate('change', { target: { value: CONTRIBUTION_OPTIONS.QR } })
 
-    expect(updateInvestThrough).toHaveBeenCalledTimes(1)
-    expect(updateInvestThrough).toHaveBeenCalledWith(CONTRIBUTION_OPTIONS.QR)
+    expect(updateContributeThrough).toHaveBeenCalledTimes(1)
+    expect(updateContributeThrough).toHaveBeenCalledWith(CONTRIBUTION_OPTIONS.QR)
   })
 })

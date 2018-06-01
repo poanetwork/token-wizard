@@ -64,7 +64,7 @@ export class Contribute extends React.Component {
       loading: true,
       pristineTokenInput: true,
       web3Available: false,
-      investThrough: CONTRIBUTION_OPTIONS.QR,
+      contributeThrough: CONTRIBUTION_OPTIONS.QR,
       crowdsaleExecID: CrowdsaleConfig.crowdsaleContractURL || getQueryVariable('exec-id'),
       toNextTick: {
         days: 0,
@@ -93,7 +93,7 @@ export class Contribute extends React.Component {
 
     this.setState({
       web3Available: true,
-      investThrough: CONTRIBUTION_OPTIONS.METAMASK
+      contributeThrough: CONTRIBUTION_OPTIONS.METAMASK
     })
 
     getWhiteListWithCapCrowdsaleAssets(networkID)
@@ -231,12 +231,12 @@ export class Contribute extends React.Component {
     if (this.state.timeInterval) clearInterval(this.state.timeInterval)
   }
 
-  investToTokens = () => {
+  contributeToTokens = () => {
     const { contributeStore, crowdsalePageStore, web3Store } = this.props
     const { startDate } = crowdsalePageStore
     const { web3 } = web3Store
 
-    if (!this.isValidToken(contributeStore.tokensToInvest)) {
+    if (!this.isValidToken(contributeStore.tokensToContribute)) {
       this.setState({ pristineTokenInput: false })
       return
     }
@@ -253,10 +253,10 @@ export class Contribute extends React.Component {
       return MetaMaskIsLockedAlert()
     }
 
-    this.investToTokensForWhitelistedCrowdsale()
+    this.contributeToTokensForWhitelistedCrowdsale()
   }
 
-  investToTokensForWhitelistedCrowdsale = () => {
+  contributeToTokensForWhitelistedCrowdsale = () => {
     const { crowdsalePageStore } = this.props
 
     if (crowdsalePageStore.startDate > (new Date()).getTime()) {
@@ -264,7 +264,7 @@ export class Contribute extends React.Component {
       return contributionDisabledAlertInTime(crowdsalePageStore.startDate)
     }
 
-    this.investToTokensForWhitelistedCrowdsaleInternal()
+    this.contributeToTokensForWhitelistedCrowdsaleInternal()
   }
 
   getBuyParams = (weiToSend, methodInterface) => {
@@ -301,12 +301,12 @@ export class Contribute extends React.Component {
     const rate = toBigNumber(crowdsalePageStore.rate)
     console.log('rate:', rate.toFixed())
 
-    const tokensToInvest = toBigNumber(contributeStore.tokensToInvest).times(rate)
-    console.log('tokensToInvest:', tokensToInvest.toFixed())
+    const tokensToContribute = toBigNumber(contributeStore.tokensToContribute).times(rate)
+    console.log('tokensToContribute:', tokensToContribute.toFixed())
 
     const userLimits = await getUserMaxLimits(addr, execID, methods, account)
 
-    return tokensToInvest.gt(userLimits) ? userLimits : tokensToInvest
+    return tokensToContribute.gt(userLimits) ? userLimits : tokensToContribute
   }
 
   calculateMinContribution = async () => {
@@ -324,7 +324,7 @@ export class Contribute extends React.Component {
     this.setState({ minimumContribution: userMinLimits.toFixed() })
   }
 
-  investToTokensForWhitelistedCrowdsaleInternal = async () => {
+  contributeToTokensForWhitelistedCrowdsaleInternal = async () => {
     if (this.state.minimumContribution < 0) {
       this.setState({ loading: false })
       return notAllowedContributor()
@@ -365,11 +365,11 @@ export class Contribute extends React.Component {
     const { DECIMAL_PLACES } = weiToSend.constructor.config()
     weiToSend.constructor.config({ DECIMAL_PLACES: +tokenStore.decimals })
 
-    const tokensToInvest = weiToSend.div(crowdsalePageStore.rate).toFixed()
+    const tokensToContribute = weiToSend.div(crowdsalePageStore.rate).toFixed()
     weiToSend.constructor.config({ DECIMAL_PLACES })
 
     sendTXToContract(method.send(opts))
-      .then(() => successfulContributionAlert(tokensToInvest))
+      .then(() => successfulContributionAlert(tokensToContribute))
       .catch(err => {
         console.error(err)
         return toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED })
@@ -383,7 +383,7 @@ export class Contribute extends React.Component {
     if (receipt) {
       if (receipt.blockNumber) {
         this.setState({ loading: false })
-        successfulContributionAlert(contributeStore.tokensToInvest)
+        successfulContributionAlert(contributeStore.tokensToContribute)
       }
     } else {
       setTimeout(() => {
@@ -392,8 +392,8 @@ export class Contribute extends React.Component {
     }
   }
 
-  updateInvestThrough = (investThrough) => {
-    this.setState({ investThrough })
+  updateContributeThrough = (contributeThrough) => {
+    this.setState({ contributeThrough })
   }
 
   isValidToken(token) {
@@ -405,7 +405,7 @@ export class Contribute extends React.Component {
     const { tokenAmountOf } = crowdsalePageStore
     const { crowdsale } = contractStore
 
-    const { curAddr, investThrough, crowdsaleExecID, web3Available, toNextTick, nextTick, minimumContribution } = this.state
+    const { curAddr, contributeThrough, crowdsaleExecID, web3Available, toNextTick, nextTick, minimumContribution } = this.state
     const { days, hours, minutes, seconds } = toNextTick
 
     const { decimals, ticker, name } = tokenStore
@@ -417,7 +417,7 @@ export class Contribute extends React.Component {
     const maxCapBeforeDecimals = toBigNumber(maximumSellableTokens).div(`1e${tokenDecimals}`)
 
     //balance
-    const investorBalance = tokenAmountOf ? toBigNumber(tokenAmountOf).div(`1e${tokenDecimals}`).toFixed() : '0'
+    const contributorBalance = tokenAmountOf ? toBigNumber(tokenAmountOf).div(`1e${tokenDecimals}`).toFixed() : '0'
 
     //total supply
     const totalSupply = maxCapBeforeDecimals.toFixed()
@@ -425,17 +425,17 @@ export class Contribute extends React.Component {
     //min contribution
     const minimumContributionDisplay = minimumContribution >= 0 ? `${minimumContribution} ${tokenTicker}` : 'You are not allowed'
 
-    const QRPaymentProcessElement = investThrough === CONTRIBUTION_OPTIONS.QR ?
+    const QRPaymentProcessElement = contributeThrough === CONTRIBUTION_OPTIONS.QR ?
       <QRPaymentProcess crowdsaleExecID={crowdsaleExecID} /> :
       null
 
-    const rightColumnClasses = classNames('invest-table-cell', 'invest-table-cell_right', {
-      'qr-selected': investThrough === CONTRIBUTION_OPTIONS.QR
+    const rightColumnClasses = classNames('contribute-table-cell', 'contribute-table-cell_right', {
+      'qr-selected': contributeThrough === CONTRIBUTION_OPTIONS.QR
     })
 
-    return <div className="invest container">
-      <div className="invest-table">
-        <div className="invest-table-cell invest-table-cell_left">
+    return <div className="contribute container">
+      <div className="contribute-table">
+        <div className="contribute-table-cell contribute-table-cell_left">
           <CountdownTimer
             displaySeconds={this.state.displaySeconds}
             nextTick={nextTick}
@@ -474,24 +474,24 @@ export class Contribute extends React.Component {
               <p className="hashes-description">Minimum Contribution</p>
             </div>
           </div>
-          <p className="invest-title">Contribute page</p>
-          <p className="invest-description">
+          <p className="contribute-title">Contribute page</p>
+          <p className="contribute-description">
             {'Here you can contribute in the crowdsale campaign. At the moment, you need Metamask client to contribute into the crowdsale.'}
           </p>
         </div>
         <div className={rightColumnClasses}>
           <div className="balance">
-            <p className="balance-title">{investorBalance} {tokenTicker}</p>
+            <p className="balance-title">{contributorBalance} {tokenTicker}</p>
             <p className="balance-description">Balance</p>
             <p className="description">
               Your balance in tokens.
             </p>
           </div>
           <Form
-            onSubmit={this.investToTokens}
+            onSubmit={this.contributeToTokens}
             component={ContributeForm}
-            investThrough={investThrough}
-            updateInvestThrough={this.updateInvestThrough}
+            contributeThrough={contributeThrough}
+            updateContributeThrough={this.updateContributeThrough}
             web3Available={web3Available}
             minimumContribution={minimumContribution}
           />

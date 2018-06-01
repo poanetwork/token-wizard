@@ -146,7 +146,7 @@ export class Crowdsale extends React.Component {
     const { web3 } = web3Store
 
     const crowdsaleExecID = getContractStoreProperty('crowdsale','execID')
-    const investorsCount = crowdsalePageStore.investors ? crowdsalePageStore.investors.toString() : 0
+    const contributorsCount = crowdsalePageStore.contributors ? crowdsalePageStore.contributors.toString() : 0
 
     const rate = toBigNumber(crowdsalePageStore.rate)
     const tokenDecimals = toBigNumber(tokenStore.decimals)
@@ -172,8 +172,8 @@ export class Crowdsale extends React.Component {
     const goalInETH = goalInETHTiers
     const tokensClaimedRatio = goalInETH > 0 ? ethRaised.div(goalInETH).times(100).toFixed() : '0'
 
-    const investorsBlock = <div className="right">
-      <p className="title">{`${investorsCount}`}</p>
+    const contributorsBlock = <div className="right">
+      <p className="title">{`${contributorsCount}`}</p>
       <p className="description">Contributors</p>
     </div>
 
@@ -221,7 +221,7 @@ export class Crowdsale extends React.Component {
                     <p className="title">{`${tokensClaimed}`}</p>
                     <p className="description">Tokens Claimed</p>
                   </div>
-                  { investorsBlock }
+                  { contributorsBlock }
                 </div>
                 <p className="hash">{`${crowdsaleExecID}`}</p>
                 <p className="description">Crowdsale Execution ID</p>

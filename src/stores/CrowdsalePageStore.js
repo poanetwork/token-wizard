@@ -4,7 +4,7 @@ class CrowdsalePageStore {
 
   @observable maximumSellableTokens;
   @observable maximumSellableTokensInWei;
-  @observable investors;
+  @observable contributors;
   @observable ethRaised;
   @observable weiRaised;
   @observable rate;
