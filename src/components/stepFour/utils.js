@@ -42,7 +42,7 @@ export const buildDeploymentSteps = (web3) => {
   deploymentStore.txMap.forEach((steps, name) => {
     const { isMintedCappedCrowdsale, isDutchAuction, crowdsaleDeployInterface, appName } = crowdsaleStore
     if (steps.length) {
-      if (name == "crowdsaleCreate") {
+      if (name === "crowdsaleCreate") {
         let getParams
         if (isMintedCappedCrowdsale) {
           getParams = getCrowdSaleParams
@@ -650,14 +650,14 @@ export const handlerForFile = (content, type) => {
   console.log("type:", type)
 
   if (content && type) {
-    if (content.field == "whitelist") {
+    if (content.field === "whitelist") {
       let whitelistItems = []
       for (let i = 0; i < type.whitelist.length; i++) {
         let whiteListItem = type.whitelist[i]
         whitelistItems.push(whitelistTableItem(whiteListItem).join('\n'))
       }
       return whitelistItems
-    } else if (content.field == "tokens" && content.parent == "reservedTokenStore") {
+    } else if (content.field === "tokens" && content.parent === "reservedTokenStore") {
       let reservedTokensItems = []
       for (let i = 0; i < type.tokens.length; i++) {
         let reservedTokensItem = type.tokens[i]
@@ -810,21 +810,14 @@ const getAddr = (contractName, networkID) => {
 
 const authOSContractString = (contrct) => {return `Auth_os ${contrct} address: `}
 
-const getAppName = (strategy) => {
-  switch(strategy) {
-    case CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE:
-      return process.env[`${REACT_PREFIX}${MINTED_PREFIX}APP_NAME`]
-    case CROWDSALE_STRATEGIES.DUTCH_AUCTION:
-      return process.env[`${REACT_PREFIX}${DUTCH_PREFIX}APP_NAME`]
-  }
-}
-
 const getCrowdsaleContractAddr = (strategy, contractName, networkID) => {
   switch(strategy) {
     case CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE:
       return JSON.parse(process.env[`${REACT_PREFIX}${MINTED_PREFIX}${contractName}_ADDRESS`] || {})[networkID]
     case CROWDSALE_STRATEGIES.DUTCH_AUCTION:
       return JSON.parse(process.env[`${REACT_PREFIX}${DUTCH_PREFIX}${contractName}_ADDRESS`] || {})[networkID]
+    default:
+      return ''
   }
 }
 
@@ -894,7 +887,7 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
   let rates = []
   let crowdsaleIsModifiableEl = []
   let crowdsaleIsWhitelistedEl = []
-  if (crowdsaleStore.strategy == CROWDSALE_STRATEGIES.DUTCH_AUCTION) {
+  if (crowdsaleStore.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION) {
     rates = [
       { field: 'minRate', value: 'Crowdsale min rate: ', parent: 'tierStore' },
       { field: 'maxRate', value: 'Crowdsale max rate: ', parent: 'tierStore' },
@@ -942,7 +935,7 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
       { value: authOSContractString('VersionConsole'), parent: 'none', fileValue: getAddr("VERSION_CONSOLE", networkID) },
       { value: authOSContractString('ImplementationConsole'), parent: 'none', fileValue: `${getAddr("IMPLEMENTATION_CONSOLE", networkID)}\n` },
       smallHeader('*********CROWDSALE***********'),
-      { value: 'Auth_os application name: ', parent: 'none', fileValue: getAppName(crowdsaleStore.strategy) },
+      { value: 'Auth_os application name: ', parent: 'none', fileValue: crowdsaleStore.appName },
       { field: 'execID', value: 'Auth_os execution ID: ', parent: 'crowdsale' },
       { value: authOSContractString('InitCrowdsale'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "INIT_CROWDSALE", networkID) },
       { value: authOSContractString('CrowdsaleConsole'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE_CONSOLE", networkID) },
@@ -958,7 +951,7 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
         'crowdsale'
       ],
       crowdsale: {
-        name: getAppName(crowdsaleStore.strategy),
+        name: crowdsaleStore.appName,
         txt: [
           ...bigHeaderElements('*********TIER SETUP**********'),
           { field: 'tier', value: 'Tier name: ', parent: 'tierStore' },
