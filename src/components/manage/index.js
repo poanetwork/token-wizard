@@ -154,7 +154,7 @@ export class Manage extends Component {
                   whenTokensSold.push(whenDutchAuctionGetTokensSold)
                 }
                 const allPromisesRaw = [methods, whenCrowdsale, whenToken, whenReservedTokensDestinations, whenCrowdsaleData, whenCrowdsaleDates, whenTokensSold]
-                const allPromises = allPromisesRaw.map(function(item) {
+                const allPromises = allPromisesRaw.map((item) => {
                   if (Array.isArray(item)) { return Promise.all(item) }
                   else { return item }
                 })
@@ -204,7 +204,7 @@ export class Manage extends Component {
                 console.log("whenWhiteListsData.length:", whenWhiteListsData.length)
 
                 const allPromisesRaw = [whenReservedTokensInfoArr, whenWhiteListsData]
-                const allPromises = allPromisesRaw.map(function(item) {
+                const allPromises = allPromisesRaw.map((item) => {
                   if (Array.isArray(item)) { return Promise.all(item) }
                   else { return item }
                 })
