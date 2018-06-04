@@ -121,17 +121,15 @@ export const deployCrowdsale = (getParams, methodInterface, appName) => {
           .then((account) => {
             contractStore.setContractProperty('crowdsale', 'account', account)
 
-            //const methodInterface = ["address","uint256","bytes32","uint256","uint256","uint256","bool","bool","address"]
-
             let params = [ account, methodInterface ];
 
             const methodInterfaceStr = `init(${methodInterface.join(',')})`
 
             let method = methodToInitAppInstance(
               methodInterfaceStr,
-              getParams, //getCrowdSaleParams,
+              getParams,
               params,
-              appName //process.env['REACT_APP_MINTED_CAPPED_CROWDSALE_APP_NAME']
+              appName
             )
             /*const target = "initCrowdsaleMintedCapped"
             let method = methodToInitAppInstanceFromRegistry(
