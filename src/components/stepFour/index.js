@@ -186,7 +186,7 @@ export class stepFour extends React.Component {
       case 'crowdsaleStore':
         return handlerForFile(content, this.props[parent])
       case 'tierStore': {
-        if (content.field == 'globalMinCap') {
+        if (content.field === 'globalMinCap') {
           return handlerForFile(content, this.props[parent])
         } else {
           index = (content.field === 'walletAddress') ? 0 : index
@@ -237,7 +237,7 @@ export class stepFour extends React.Component {
           commonHeader.join('\n')
         )
 
-        if (crowdsaleStore.strategy == CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE) {
+        if (crowdsaleStore.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE) {
           for (let tier = 0; tier < tiersCount; tier++) {
             const txtFilename = `${orderNumber(prefix++)}_tier`
             const tierNumber = tier

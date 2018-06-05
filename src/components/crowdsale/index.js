@@ -17,7 +17,7 @@ import {
 import { getQueryVariable } from '../../utils/utils'
 import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
 import { StepNavigation } from '../Common/StepNavigation'
-import { NAVIGATION_STEPS, CROWDSALE_STRATEGIES } from '../../utils/constants'
+import { NAVIGATION_STEPS } from '../../utils/constants'
 import { invalidCrowdsaleAddrAlert } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
 import { CrowdsaleConfig } from '../Common/config'
@@ -75,7 +75,6 @@ export class Crowdsale extends React.Component {
       })
       .then(() => getCrowdsaleStrategy(contractStore.crowdsale.execID))
       .then((strategy) => crowdsaleStore.setProperty('strategy', strategy))
-      //.then((strategy) => crowdsaleStore.setProperty('strategy', CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE)) //to do
       .then(() => this.extractContractsData(account))
       .catch(console.log)
   }

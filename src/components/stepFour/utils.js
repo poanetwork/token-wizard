@@ -27,38 +27,32 @@ import { BigNumber } from 'bignumber.js'
 import { toBigNumber } from '../crowdsale/utils'
 
 export const buildDeploymentSteps = (web3) => {
-  let stepFnCorrelation
-  switch (crowdsaleStore.strategy) {
-    case CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE:
-      stepFnCorrelation = {
-        crowdsaleCreate: deployCrowdsale,
-        token: initializeToken,
-        setReservedTokens: setReservedTokensListMultiple,
-        updateGlobalMinContribution: updateGlobalMinContribution,
-        createCrowdsaleTiers: createCrowdsaleTiers,
-        whitelist: addWhitelist,
-        crowdsaleInit: initializeCrowdsale,
-      }
-      break;
-    case CROWDSALE_STRATEGIES.DUTCH_AUCTION:
-      stepFnCorrelation = {
-        crowdsaleCreate: deployDutchAuctionCrowdsale,
-        token: initializeToken,
-        updateGlobalMinContribution: updateGlobalMinContribution,
-        whitelist: addWhitelist,
-        crowdsaleInit: initializeCrowdsale,
-      }
-      break;
-    default:
-      stepFnCorrelation = {}
-      break;
+  let stepFnCorrelation = {
+    crowdsaleCreate: deployCrowdsale,
+    token: initializeToken,
+    setReservedTokens: setReservedTokensListMultiple,
+    updateGlobalMinContribution: updateGlobalMinContribution,
+    createCrowdsaleTiers: createCrowdsaleTiers,
+    whitelist: addWhitelist,
+    crowdsaleInit: initializeCrowdsale,
   }
 
   let list = []
 
   deploymentStore.txMap.forEach((steps, name) => {
+    const { isMintedCappedCrowdsale, isDutchAuction, crowdsaleDeployInterface, appName } = crowdsaleStore
     if (steps.length) {
-      list = list.concat(stepFnCorrelation[name]())
+      if (name === "crowdsaleCreate") {
+        let getParams
+        if (isMintedCappedCrowdsale) {
+          getParams = getCrowdSaleParams
+        } else if (isDutchAuction) {
+          getParams = getDutchAuctionCrowdSaleParams
+        }
+        list = list.concat(stepFnCorrelation[name](getParams, crowdsaleDeployInterface, appName))
+      } else {
+        list = list.concat(stepFnCorrelation[name]())
+      }
     }
   })
 
@@ -113,7 +107,7 @@ const getCrowdSaleParams = (account, methodInterface) => {
   return encodedParameters;
 }
 
-export const deployCrowdsale = () => {
+export const deployCrowdsale = (getParams, methodInterface, appName) => {
   console.log("###deploy crowdsale###")
   const { web3 } = web3Store
   return [
@@ -127,17 +121,15 @@ export const deployCrowdsale = () => {
           .then((account) => {
             contractStore.setContractProperty('crowdsale', 'account', account)
 
-            const methodInterface = ["address","uint256","bytes32","uint256","uint256","uint256","bool","bool","address"]
-
             let params = [ account, methodInterface ];
 
             const methodInterfaceStr = `init(${methodInterface.join(',')})`
 
             let method = methodToInitAppInstance(
               methodInterfaceStr,
-              getCrowdSaleParams,
+              getParams,
               params,
-              process.env['REACT_APP_MINTED_CAPPED_CROWDSALE_APP_NAME']
+              appName
             )
             /*const target = "initCrowdsaleMintedCapped"
             let method = methodToInitAppInstanceFromRegistry(
@@ -177,7 +169,7 @@ export const deployCrowdsale = () => {
                       console.log("logs:")
                       console.log(logs)
 
-                      let lastLog = logs.reduce(function(log, current) {
+                      let lastLog = logs.reduce((log, current) => {
                         console.log(log)
                         console.log(current.topics)
                         console.log(current.logIndex)
@@ -255,101 +247,6 @@ const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
 
   let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, paramsCrowdsale);
   return encodedParameters;
-}
-
-export const deployDutchAuctionCrowdsale = () => {
-  console.log("###deploy Dutch Auction crowdsale###")
-  const { web3 } = web3Store
-  return [
-    () => {
-      return getNetworkVersion()
-      .then((networkID) => {
-        contractStore.setContractProperty('crowdsale', 'networkID', networkID)
-
-        return web3.eth.getAccounts()
-          .then((accounts) => accounts[0])
-          .then((account) => {
-            contractStore.setContractProperty('crowdsale', 'account', account)
-
-            const methodInterface = ["address","uint256","uint256","uint256","uint256","uint256","uint256","bool","address"]
-
-            let params = [ account, methodInterface ];
-
-            const methodInterfaceStr = `init(${methodInterface.join(',')})`
-
-            let method = methodToInitAppInstance(
-              methodInterfaceStr,
-              getDutchAuctionCrowdSaleParams,
-              params,
-              process.env['REACT_APP_DUTCH_CROWDSALE_APP_NAME']
-            )
-            /*const target = "initCrowdsaleDutchAuction"
-            let method = methodToInitAppInstanceFromRegistry(
-              methodInterfaceStr,
-              target,
-              getCrowdSaleParams,
-              params
-            )*/
-            /*let method = methodToInitAndFinalize(
-              methodInterfaceStr,
-              target,
-              getCrowdSaleParams,
-              params
-            )*/
-
-            const opts = { gasPrice: generalStore.gasPrice, from: account }
-            console.log("opts:", opts)
-
-            return method.estimateGas(opts)
-              .then(estimatedGas => {
-                opts.gasLimit = calculateGasLimit(estimatedGas)
-                return sendTXToContract(method.send(opts))
-                  .then((receipt) => {
-                    console.log("receipt:", receipt)
-                    let logs = receipt.logs;
-                    let events = receipt.events;
-                    if (events) {
-                      console.log("events:", events)
-                      if (events.ApplicationFinalization) {
-                        getExecutionIDFromEvent(events, "ApplicationFinalization");
-                      } else if (events.AppInstanceCreated) {
-                        getExecutionIDFromEvent(events, "AppInstanceCreated");
-                      } else if (events.ApplicationInitialized) {
-                        getExecutionIDFromEvent(events, "ApplicationInitialized");
-                      }
-                    } else if (logs) {
-                      console.log("logs:")
-                      console.log(logs)
-
-                      let lastLog = logs.reduce(function(log, current) {
-                        console.log(log)
-                        console.log(current.topics)
-                        console.log(current.logIndex)
-                        if (!log) {
-                          return log = current;
-                        }
-                        if (current.logIndex > log.logIndex) {
-                          log = current;
-                        }
-                        return log
-                      }, 0)
-                      if (lastLog) {
-                        if (lastLog.topics) {
-                          if (lastLog.topics.length > 1) {
-                            let execID = lastLog.topics[2]
-                            console.log("exec_id", execID)
-                            contractStore.setContractProperty('crowdsale', 'execID', execID)
-                          }
-                        }
-                      }
-                    }
-                  })
-                  .then(() => deploymentStore.setAsSuccessful('crowdsaleCreate'))
-              })
-          })
-      })
-    }
-  ]
 }
 
 const getExecutionIDFromEvent = (events, eventName) => {
@@ -751,14 +648,14 @@ export const handlerForFile = (content, type) => {
   console.log("type:", type)
 
   if (content && type) {
-    if (content.field == "whitelist") {
+    if (content.field === "whitelist") {
       let whitelistItems = []
       for (let i = 0; i < type.whitelist.length; i++) {
         let whiteListItem = type.whitelist[i]
         whitelistItems.push(whitelistTableItem(whiteListItem).join('\n'))
       }
       return whitelistItems
-    } else if (content.field == "tokens" && content.parent == "reservedTokenStore") {
+    } else if (content.field === "tokens" && content.parent === "reservedTokenStore") {
       let reservedTokensItems = []
       for (let i = 0; i < type.tokens.length; i++) {
         let reservedTokensItem = type.tokens[i]
@@ -911,21 +808,14 @@ const getAddr = (contractName, networkID) => {
 
 const authOSContractString = (contrct) => {return `Auth_os ${contrct} address: `}
 
-const getAppName = (strategy) => {
-  switch(strategy) {
-    case CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE:
-      return process.env[`${REACT_PREFIX}${MINTED_PREFIX}APP_NAME`]
-    case CROWDSALE_STRATEGIES.DUTCH_AUCTION:
-      return process.env[`${REACT_PREFIX}${DUTCH_PREFIX}APP_NAME`]
-  }
-}
-
 const getCrowdsaleContractAddr = (strategy, contractName, networkID) => {
   switch(strategy) {
     case CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE:
       return JSON.parse(process.env[`${REACT_PREFIX}${MINTED_PREFIX}${contractName}_ADDRESS`] || {})[networkID]
     case CROWDSALE_STRATEGIES.DUTCH_AUCTION:
       return JSON.parse(process.env[`${REACT_PREFIX}${DUTCH_PREFIX}${contractName}_ADDRESS`] || {})[networkID]
+    default:
+      return ''
   }
 }
 
@@ -995,7 +885,7 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
   let rates = []
   let crowdsaleIsModifiableEl = []
   let crowdsaleIsWhitelistedEl = []
-  if (crowdsaleStore.strategy == CROWDSALE_STRATEGIES.DUTCH_AUCTION) {
+  if (crowdsaleStore.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION) {
     rates = [
       { field: 'minRate', value: 'Crowdsale min rate: ', parent: 'tierStore' },
       { field: 'maxRate', value: 'Crowdsale max rate: ', parent: 'tierStore' },
@@ -1043,7 +933,7 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
       { value: authOSContractString('VersionConsole'), parent: 'none', fileValue: getAddr("VERSION_CONSOLE", networkID) },
       { value: authOSContractString('ImplementationConsole'), parent: 'none', fileValue: `${getAddr("IMPLEMENTATION_CONSOLE", networkID)}\n` },
       smallHeader('*********CROWDSALE***********'),
-      { value: 'Auth_os application name: ', parent: 'none', fileValue: getAppName(crowdsaleStore.strategy) },
+      { value: 'Auth_os application name: ', parent: 'none', fileValue: crowdsaleStore.appName },
       { field: 'execID', value: 'Auth_os execution ID: ', parent: 'crowdsale' },
       { value: authOSContractString('InitCrowdsale'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "INIT_CROWDSALE", networkID) },
       { value: authOSContractString('CrowdsaleConsole'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE_CONSOLE", networkID) },
@@ -1059,7 +949,7 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
         'crowdsale'
       ],
       crowdsale: {
-        name: getAppName(crowdsaleStore.strategy),
+        name: crowdsaleStore.appName,
         txt: [
           ...bigHeaderElements('*********TIER SETUP**********'),
           { field: 'tier', value: 'Tier name: ', parent: 'tierStore' },

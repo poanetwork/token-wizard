@@ -55,7 +55,7 @@ export function successfulContributionAlert(tokensToContribute) {
     title: "Success",
     html: "Congrats! You've successfully bought " + tokensToContribute + " tokens!",
     type: "success"
-  }).then(function(result) {
+  }).then((result) => {
     if (result.value) {
       window.location.reload();
     }
@@ -102,7 +102,7 @@ export function warningOnMainnetAlert(tiersCount, priceSelected, reservedCount, 
     showCancelButton: true,
     confirmButtonText: 'Yes, I am sure!',
     cancelButtonText: "No, cancel it!",
-  }).then(function(result) {
+  }).then((result) => {
     if (result.value) {
       cb()
     }
@@ -150,7 +150,7 @@ export function successfulUpdateCrowdsaleAlert() {
     title: "Success",
     html: "Congrats! You've successfully updated the Crowdsale!",
     type: "success"
-  }).then(function(result) {
+  }).then((result) => {
     if (result.value) {
       window.location.reload();
     }
