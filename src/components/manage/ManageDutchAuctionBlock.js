@@ -9,6 +9,7 @@ import { isDateLaterThan } from '../../utils/validations'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
 import { ReadOnlyWhitelistAddresses } from './ReadOnlyWhitelistAddresses'
 import classNames from 'classnames'
+import { inject, observer } from 'mobx-react'
 
 const inputErrorStyle = {
   color: 'red',
@@ -17,10 +18,10 @@ const inputErrorStyle = {
   width: '100%',
   height: '20px',
 }
-const { WALLET_ADDRESS, STRATEGY } = TEXT_FIELDS
+const { STRATEGY } = TEXT_FIELDS
 const dateToTimestamp = (date) => new Date(date).getTime()
 
-export const ManageDutchAuctionBlock = ({
+export const ManageDutchAuctionBlock = inject('crowdsaleStore')(observer(({
   fields,
   canEditTiers,
   crowdsaleStore,
@@ -30,7 +31,7 @@ export const ManageDutchAuctionBlock = ({
   <div>
     {fields.map((name, index) => {
       const currentTier = fields.value[index]
-      let { walletAddress, updatable } = currentTier
+      let { updatable } = currentTier
       const { startTime: initialStartTime, endTime: initialEndTime } = fields.initial[index]
 
       updatable = crowdsaleStore.isDutchAuction ? true : updatable
@@ -43,12 +44,10 @@ export const ManageDutchAuctionBlock = ({
       return (
         <div className="steps" key={index}>
           <div className='steps-content container'>
-            {index === 0 ? aboutTier : null}
 
             <div className={classNames('hidden', { 'divisor': isWhitelistEnabled })}>
               <div className="input-block-container">
                 <InputField side='left' type='text' title={STRATEGY} value={CROWDSALE_STRATEGIES_DISPLAYNAMES.DUTCH_AUCTION} disabled={true}/>
-                <InputField side='right' type='text' title={WALLET_ADDRESS} value={walletAddress} disabled={true}/>
               </div>
 
               <div className="input-block-container">
@@ -87,7 +86,7 @@ export const ManageDutchAuctionBlock = ({
                 />
               </div>
             </div>
-            { crowdsaleStore.isDutchAuction & isWhitelistEnabled ? (
+            { crowdsaleStore.isDutchAuction && isWhitelistEnabled ? (
               <div>
                 <div className="section-title">
                   <p className="title">Whitelist</p>
@@ -103,4 +102,4 @@ export const ManageDutchAuctionBlock = ({
       )
     })}
   </div>
-)
+)))

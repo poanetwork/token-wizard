@@ -14,15 +14,7 @@ import moment from 'moment'
 const { VALID } = VALIDATION_TYPES
 
 const formatDate = timestamp => {
-  const ten = i => (i < 10 ? '0' : '') + i
-  const date = new Date(timestamp * 1000)
-  const YYYY = date.getFullYear()
-  const MM = ten(date.getMonth() + 1)
-  const DD = ten(date.getDate())
-  const HH = ten(date.getHours())
-  const II = ten(date.getMinutes())
-
-  return YYYY + '-' + MM + '-' + DD + 'T' + HH + ':' + II
+  return moment(timestamp * 1000).format('YYYY-MM-DDTHH:mm')
 }
 
 export const updateTierAttribute = (attribute, value, tierIndex) => {
@@ -49,8 +41,8 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
       let { startTime, endTime } = tierStore.tiers[tierIndex]
       console.log(startTime, endTime)
       const duration = new Date(endTime) - new Date(startTime)
-      const durationBN = (toBigNumber(duration) / 1000).toFixed()
-      value = durationBN
+      const durationBN = toBigNumber(duration).div(1000)
+      value = durationBN.toFixed()
       methodInterface = ["uint256","uint256","bytes"]
       if (crowdsaleStore.isMintedCappedCrowdsale) {
         getParams = updateMintedCappedCrowdsaleDurationParams
@@ -195,7 +187,7 @@ export const processTier = (tier, crowdsale, token, reserved_tokens_info, tier_i
   const token_decimals = !isNaN(crowdsale_token.decimals) ? crowdsale_token.decimals : 0
   const max_cap_before_decimals = toBigNumber(max_sell_cap).div(`1e${token_decimals}`).toFixed()
   const rate = rate_in_wei > 0 ? toBigNumber(web3.utils.fromWei(rate_in_wei, 'ether')).pow(-1).dp(0).toFixed() : 0
-  // TODO: remove this filter after auth_os implement uniqueness for the whitelisted addresses
+  // TODO: remove this filter after auth_os implement uniqueness for the whitelisted addresses (#871)
   const filtered_whitelist = [...new Set(whitelist.map(item => JSON.stringify(item)))].map(item => JSON.parse(item))
 
   const new_tier = {
@@ -267,9 +259,9 @@ export function getFieldsToUpdate(updatableTiers, tiers) {
           }
 
         } else if (key === 'endTime') {
-          const end = moment(tiers[updatableTier.index].endTime)
-          const start = moment(tiers[updatableTier.index].startTime)
-          const duration = moment.duration(end.diff(start)).as('milliseconds')
+          const end = new Date(tiers[updatableTier.index].endTime)
+          const start = new Date(tiers[updatableTier.index].startTime)
+          const duration = end - start
 
           if (updatableTier.duration !== duration) {
             toUpdate.push({ key, newValue, tier: index })

@@ -22,14 +22,12 @@ import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
 import { getFieldsToUpdate, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
 import { getTiersLength, toBigNumber } from '../crowdsale/utils'
-import { generateContext } from '../stepFour/utils'
+import { generateContext, updateGlobalMinContribution } from '../stepFour/utils'
 import { toJS } from 'mobx'
 import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import createDecorator from 'final-form-calculate'
-import { AboutCrowdsale } from './AboutCrowdsale'
 import { FinalizeCrowdsaleStep } from './FinalizeCrowdsaleStep'
-import { DistributeTokensStep } from './DistributeTokensStep'
 import { ManageForm } from './ManageForm'
 import moment from 'moment'
 
@@ -50,7 +48,8 @@ export class Manage extends Component {
       formPristine: true,
       loading: true,
       canFinalize: false,
-      ownerCurrentUser: false
+      ownerCurrentUser: false,
+      initialGlobalMinCap: 0
     }
 
     this.initialTiers = []
@@ -75,10 +74,10 @@ export class Manage extends Component {
         .then(_newState => { this.setState(_newState) })
         .then(() => getCrowdsaleStrategy(crowdsaleExecID))
         .then((strategy) => crowdsaleStore.setProperty('strategy', strategy))
-        //.then((strategy) => crowdsaleStore.setProperty('strategy', CROWDSALE_STRATEGIES.DUTCH_AUCTION)) // to do
         .then(this.extractContractsData)
         .then(() => {
           this.initialTiers = JSON.parse(JSON.stringify(tierStore.tiers))
+          this.setState({ initialGlobalMinCap: tierStore.globalMinCap })
           console.log("strategy:", crowdsaleStore.strategy)
         })
     })
@@ -111,7 +110,7 @@ export class Manage extends Component {
 
   extractContractsData = async () => {
     try {
-      const { crowdsaleStore, contractStore, match } = this.props
+      const { crowdsaleStore, contractStore, tierStore, match } = this.props
       const { crowdsaleExecID } = match.params
       const { addr: registryStorageAddr } = toJS(contractStore.registryStorage)
       const { isMintedCappedCrowdsale, isDutchAuction } = crowdsaleStore
@@ -235,6 +234,8 @@ export class Manage extends Component {
       console.log('tiers:', tiers)
 
       tiers.forEach((tier, index) => processTier(tier, crowdsale, token, reserved_tokens_info, index))
+
+      tierStore.setGlobalMinCap(toBigNumber(crowdsale.minimum_contribution).div(`1e${token.token_decimals}`).toFixed())
 
       await this.updateCrowdsaleStatus()
 
@@ -383,22 +384,28 @@ export class Manage extends Component {
     const { crowdsaleHasEnded, ownerCurrentUser } = this.state
     const { tierStore, crowdsaleStore } = this.props
     const { updatable } = crowdsaleStore.selected
+    const { globalMinCap } = tierStore
+
+    // TODO: review validations after this fix: https://github.com/final-form/react-final-form/issues/151
+    // once done, can be replaced with _pristine_ state value
 
     const updatableTiersMintedCappedCrowdsale = crowdsaleStore.selected.initialTiersValues.filter(tier => tier.updatable)
     const updatableTiers = crowdsaleStore.isMintedCappedCrowdsale ? updatableTiersMintedCappedCrowdsale : crowdsaleStore.isDutchAuction ? crowdsaleStore.selected.initialTiersValues : []
     const isValidTier = tierStore.individuallyValidTiers
     const validTiers = updatableTiers.every(tier => isValidTier[tier.index])
+    const modifiedMinCap = globalMinCap !== '' ? !toBigNumber(this.state.initialGlobalMinCap).eq(globalMinCap) : false
 
     let fieldsToUpdate = []
     if (updatableTiers.length && validTiers) {
       fieldsToUpdate = getFieldsToUpdate(updatableTiers, tierStore.tiers)
     }
 
-    let canSave = ownerCurrentUser && (tierStore.modifiedStoredWhitelist || fieldsToUpdate.length > 0) && !crowdsaleHasEnded && updatable
+    let canSave = ownerCurrentUser && (tierStore.modifiedStoredWhitelist || fieldsToUpdate.length > 0 || modifiedMinCap) && !crowdsaleHasEnded && updatable
 
     const canSaveObj = {
       canSave,
-      fieldsToUpdate
+      fieldsToUpdate,
+      globalMinCap: modifiedMinCap ? globalMinCap : null
     }
 
     return canSaveObj
@@ -418,6 +425,7 @@ export class Manage extends Component {
           .reduce((promise, { key, newValue, tier }) => {
             return promise.then(() => updateTierAttribute(key, newValue, tier))
           }, Promise.resolve())
+          .then(() => canSaveObj.globalMinCap !== null ? updateGlobalMinContribution()[0]() : Promise.resolve())
           .then(() => {
             this.hideLoader()
             successfulUpdateCrowdsaleAlert()
@@ -438,6 +446,7 @@ export class Manage extends Component {
     values.tiers.forEach((tier, index) => {
       tierStore.setTierProperty(tier.endTime, 'endTime', index)
     })
+    tierStore.setGlobalMinCap(values.minCap)
   }
 
   calculator = createDecorator({
@@ -464,9 +473,8 @@ export class Manage extends Component {
 
   render () {
     const { canFinalize, ownerCurrentUser } = this.state
-    const { generalStore, tokenStore, crowdsaleStore } = this.props
+    const { crowdsaleStore } = this.props
     const { finalized } = crowdsaleStore.selected
-    const { execID } = crowdsaleStore
 
     return (
       <section className="manage">
@@ -476,29 +484,16 @@ export class Manage extends Component {
           handleClick={this.finalizeCrowdsale}
         />
 
-        <DistributeTokensStep
-          owner={ownerCurrentUser}
-          disabled={!ownerCurrentUser}
-          handleClick={this.distributeReservedTokens}
-        />
-
         <Form
           onSubmit={this.saveCrowdsale}
           mutators={{ ...arrayMutators }}
           decorators={[this.calculator]}
-          initialValues={{ tiers: this.initialTiers, }}
+          initialValues={{
+            tiers: this.initialTiers,
+            minCap: this.state.initialGlobalMinCap
+          }}
           component={ManageForm}
           canEditTiers={ownerCurrentUser && !canFinalize && !finalized}
-          crowdsaleStore={crowdsaleStore}
-          decimals={tokenStore.decimals}
-          aboutTier={
-            <AboutCrowdsale
-              name={tokenStore.name}
-              ticker={tokenStore.ticker}
-              execID={execID}
-              networkID={generalStore.networkID}
-            />
-          }
           handleChange={this.updateTierStore}
           canSave={this.canBeSaved().canSave}
         />

@@ -9,6 +9,7 @@ import { isDateLaterThan } from '../../utils/validations'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
 import { ReadOnlyWhitelistAddresses } from './ReadOnlyWhitelistAddresses'
 import classNames from 'classnames'
+import { inject, observer } from 'mobx-react'
 
 const inputErrorStyle = {
   color: 'red',
@@ -17,10 +18,10 @@ const inputErrorStyle = {
   width: '100%',
   height: '20px',
 }
-const { CROWDSALE_SETUP_NAME, WALLET_ADDRESS } = TEXT_FIELDS
+const { CROWDSALE_SETUP_NAME } = TEXT_FIELDS
 const dateToTimestamp = (date) => new Date(date).getTime()
 
-export const ManageTierBlock = ({
+export const ManageTierBlock = inject('crowdsaleStore')(observer(({
   fields,
   canEditTiers,
   crowdsaleStore,
@@ -30,7 +31,7 @@ export const ManageTierBlock = ({
   <div>
     {fields.map((name, index) => {
       const currentTier = fields.value[index]
-      const { tier, walletAddress, updatable } = currentTier
+      const { tier, updatable } = currentTier
       const { startTime: initialStartTime, endTime: initialEndTime } = fields.initial[index]
 
       const tierHasStarted = !isDateLaterThan()(dateToTimestamp(initialStartTime))(Date.now())
@@ -42,12 +43,10 @@ export const ManageTierBlock = ({
       return (
         <div className="steps" key={index}>
           <div className='steps-content container'>
-            {index === 0 ? aboutTier : null}
 
             <div className={classNames('hidden', { 'divisor': isWhitelistEnabled })}>
               <div className="input-block-container">
                 <InputField side='left' type='text' title={CROWDSALE_SETUP_NAME} value={tier} disabled={true}/>
-                <InputField side='right' type='text' title={WALLET_ADDRESS} value={walletAddress} disabled={true}/>
               </div>
 
               <div className="input-block-container">
@@ -98,4 +97,4 @@ export const ManageTierBlock = ({
       )
     })}
   </div>
-)
+)))
