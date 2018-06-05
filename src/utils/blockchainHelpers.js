@@ -432,12 +432,12 @@ export let methodToExec = (contractName, methodName, targetName, getEncodedParam
 
   let paramsToExec
 
-  if (contractName == "scriptExec") {
+  if (contractName === "scriptExec") {
     paramsToExec = [
       target,
       fullData
     ]
-  } else if (contractName == "registryStorage") {
+  } else if (contractName === "registryStorage") {
     let { execID } = contractStore.crowdsale;
     paramsToExec = [
       target,

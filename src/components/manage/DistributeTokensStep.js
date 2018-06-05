@@ -4,7 +4,7 @@ import { inject, observer } from 'mobx-react'
 
 export const DistributeTokensStep = inject('reservedTokenStore')(observer(
   ({ reservedTokenStore, owner, disabled, handleClick }) => {
-    return reservedTokenStore.tokens.length == 0 ? null : (
+    return reservedTokenStore.tokens.length === 0 ? null : (
     <div className="steps-content container">
       <div className="about-step">
         <div className="swal2-icon swal2-info warning-logo">!</div>

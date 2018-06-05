@@ -50,19 +50,19 @@ export function invalidNetworkIDAlert() {
   });
 }
 
-export function successfulInvestmentAlert(tokensToInvest) {
+export function successfulContributionAlert(tokensToContribute) {
   sweetAlert2({
     title: "Success",
-    html: "Congrats! You've successfully bought " + tokensToInvest + " tokens!",
+    html: "Congrats! You've successfully bought " + tokensToContribute + " tokens!",
     type: "success"
-  }).then(function(result) {
+  }).then((result) => {
     if (result.value) {
       window.location.reload();
     }
   });
 }
 
-export function investmentDisabledAlertInTime(startTime) {
+export function contributionDisabledAlertInTime(startTime) {
   sweetAlert2({
     title: "Warning",
     html: "Wait, please. Crowdsale company hasn't started yet. It'll start from <b>" + new Date(startTime) + "</b>.",
@@ -102,7 +102,7 @@ export function warningOnMainnetAlert(tiersCount, priceSelected, reservedCount, 
     showCancelButton: true,
     confirmButtonText: 'Yes, I am sure!',
     cancelButtonText: "No, cancel it!",
-  }).then(function(result) {
+  }).then((result) => {
     if (result.value) {
       cb()
     }
@@ -150,7 +150,7 @@ export function successfulUpdateCrowdsaleAlert() {
     title: "Success",
     html: "Congrats! You've successfully updated the Crowdsale!",
     type: "success"
-  }).then(function(result) {
+  }).then((result) => {
     if (result.value) {
       window.location.reload();
     }

@@ -18,7 +18,7 @@ import { DutchAuctionBlock } from '../Common/DutchAuctionBlock'
 
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS;
 const { VALID } = VALIDATION_TYPES
-const { MIN_CAP, WALLET_ADDRESS, ENABLE_WHITELISTING } = TEXT_FIELDS
+const { MIN_CAP, WALLET_ADDRESS } = TEXT_FIELDS
 
 const inputErrorStyle = {
   color: 'red',

@@ -46,9 +46,9 @@ export const StepTwoForm = ({
         <TokenName errorStyle={errorStyle}/>
         <TokenTicker errorStyle={errorStyle}/>
         <TokenDecimals disabled={disableDecimals} errorStyle={errorStyle}/>
-        {crowdsaleStore.strategy == CROWDSALE_STRATEGIES.DUTCH_AUCTION ? <TokenSupply errorStyle={errorStyle}/> : null}
+        {crowdsaleStore.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION ? <TokenSupply errorStyle={errorStyle}/> : null}
       </div>
-      {crowdsaleStore.strategy == CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE ? reservedTokens : null}
+      {crowdsaleStore.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE ? reservedTokens : null}
 
       <div className="button-container">
         <a onClick={e => { e.preventDefault(); handleSubmit() }} className="button button_fill">Continue</a>

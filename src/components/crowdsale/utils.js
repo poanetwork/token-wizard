@@ -150,7 +150,7 @@ export let getCrowdsaleData = (initCrowdsaleContract, execID, account) => {
         crowdsalePageStore.setProperty('tokensSold', storedTokensSold.toFixed())
 
         if (contributors)
-          crowdsalePageStore.setProperty('investors', toBigNumber(contributors).toFixed())
+          crowdsalePageStore.setProperty('contributors', toBigNumber(contributors).toFixed())
 
         resolve()
       })
@@ -268,6 +268,8 @@ export const getTiersLength = async () => {
 
     return tiers.length
   }
+
+  return Promise.reject(0)
 }
 
 export const getContractStoreProperty = (contract, property) => {
@@ -326,7 +328,7 @@ const calculateMinContribution = async (method, decimals, naturalMinCap, isWhite
   const { minimum_contribution, max_spend_remaining } = await method.call()
   const minimumContribution = toBigNumber(minimum_contribution).times(`1e-${decimals}`)
   const maximumContribution = toBigNumber(max_spend_remaining)
-  if (isWhitelisted && maximumContribution == 0) {
+  if (isWhitelisted && maximumContribution.eq(0)) {
     return -1
   }
   return minimumContribution.gt(naturalMinCap) ? minimumContribution : naturalMinCap

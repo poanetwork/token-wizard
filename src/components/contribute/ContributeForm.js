@@ -1,7 +1,7 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
 import { Field, FormSpy } from 'react-final-form'
-import { INVESTMENT_OPTIONS } from '../../utils/constants'
+import { CONTRIBUTION_OPTIONS } from '../../utils/constants'
 import { InputField2 } from '../Common/InputField2'
 import {
   composeValidators,
@@ -11,19 +11,19 @@ import {
 } from '../../utils/validations'
 import classNames from 'classnames'
 
-export const InvestForm = inject('investStore', 'tokenStore')
-(observer(({ investStore, tokenStore, handleSubmit, pristine, invalid, ...props}) => {
+export const ContributeForm = inject('contributeStore', 'tokenStore')
+(observer(({ contributeStore, tokenStore, handleSubmit, pristine, invalid, ...props}) => {
   const { decimals } = tokenStore
-  const { investThrough, updateInvestThrough, web3Available } = props
+  const { contributeThrough, updateContributeThrough, web3Available } = props
 
   const contributeButtonClasses = classNames('button', 'button_fill', {
     'button_disabled': pristine || invalid
   })
 
-  const ContributeButton = investThrough === INVESTMENT_OPTIONS.METAMASK ?
+  const ContributeButton = contributeThrough === CONTRIBUTION_OPTIONS.METAMASK ?
     <a className={contributeButtonClasses} onClick={handleSubmit}>Contribute</a> : null
 
-  const validateInvest = (value) => {
+  const validateContribute = (value) => {
     const decimalsErr = `Number of tokens to buy should be positive and should not exceed ${decimals} decimals.`
     const minimumContributionErr = `Minimum valid contribution: ${props.minimumContribution}`
     const errors = composeValidators(
@@ -34,33 +34,33 @@ export const InvestForm = inject('investStore', 'tokenStore')
     if (errors) return errors.shift()
   }
 
-  const tokensToInvestOnChange = ({ values }) => {
-    if (values && values.invest !== undefined) {
-      investStore.setProperty('tokensToInvest', values.invest)
+  const tokensToContributeOnChange = ({ values }) => {
+    if (values && values.contribute !== undefined) {
+      contributeStore.setProperty('tokensToContribute', values.contribute)
     }
   }
 
   return (
-    <form className="invest-form" onSubmit={handleSubmit}>
-      <label className="invest-form-label">Choose amount to invest</label>
+    <form className="contribute-form" onSubmit={handleSubmit}>
+      <label className="contribute-form-label">Choose amount to contribute</label>
 
-      <div className="invest-form-input-container">
+      <div className="contribute-form-input-container">
         <Field
-          name="invest"
+          name="contribute"
           component={InputField2}
-          validate={validateInvest}
+          validate={validateContribute}
           placeholder="0"
-          inputClassName="invest-form-input"
+          inputClassName="contribute-form-input"
         />
-        <FormSpy subscription={{ values: true }} onChange={tokensToInvestOnChange}/>
-        <div className="invest-form-label">TOKENS</div>
+        <FormSpy subscription={{ values: true }} onChange={tokensToContributeOnChange}/>
+        <div className="contribute-form-label">TOKENS</div>
       </div>
 
-      <div className="invest-through-container">
-        <select value={investThrough} className="invest-through" onChange={(e) => updateInvestThrough(e.target.value)}>
-          <option disabled={!web3Available} value={INVESTMENT_OPTIONS.METAMASK}>
+      <div className="contribute-through-container">
+        <select value={contributeThrough} className="contribute-through" onChange={(e) => updateContributeThrough(e.target.value)}>
+          <option disabled={!web3Available} value={CONTRIBUTION_OPTIONS.METAMASK}>
             Metamask {!web3Available ? ' (not available)' : null}</option>
-          <option value={INVESTMENT_OPTIONS.QR}>QR</option>
+          <option value={CONTRIBUTION_OPTIONS.QR}>QR</option>
         </select>
         {ContributeButton}
       </div>

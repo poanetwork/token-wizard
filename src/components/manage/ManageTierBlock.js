@@ -2,7 +2,7 @@ import React from 'react'
 import { CrowdsaleStartTime } from './../Common/CrowdsaleStartTime'
 import { CrowdsaleEndTime } from './../Common/CrowdsaleEndTime'
 import { CrowdsaleRate } from './../Common/CrowdsaleRate'
-import { CrowdsaleSupply } from './../Common/CrowdsaleSupply'
+import { Supply } from './../Common/Supply'
 import { TEXT_FIELDS } from '../../utils/constants'
 import { InputField } from '../Common/InputField'
 import { isDateLaterThan } from '../../utils/validations'
@@ -31,14 +31,14 @@ export const ManageTierBlock = inject('crowdsaleStore')(observer(({
   <div>
     {fields.map((name, index) => {
       const currentTier = fields.value[index]
-      const { tier, updatable } = currentTier
-      const { startTime: initialStartTime, endTime: initialEndTime } = fields.initial[index]
+      const { tier } = currentTier
+      const { startTime: initialStartTime, endTime: initialEndTime, whitelistEnabled, updatable } = fields.initial[index]
 
       const tierHasStarted = !isDateLaterThan()(dateToTimestamp(initialStartTime))(Date.now())
       const tierHasEnded = !isDateLaterThan()(dateToTimestamp(initialEndTime))(Date.now())
       const canEditDuration = canEditTiers && updatable && !tierHasEnded && !tierHasStarted
       const canEditWhiteList = canEditTiers && updatable && !tierHasEnded
-      const isWhitelistEnabled = fields.initial[index].whitelistEnabled === 'yes'
+      const isWhitelistEnabled = whitelistEnabled === 'yes'
 
       return (
         <div className="steps" key={index}>
@@ -73,7 +73,7 @@ export const ManageTierBlock = inject('crowdsaleStore')(observer(({
                   disabled={true}
                   errorStyle={inputErrorStyle}
                 />
-                <CrowdsaleSupply
+                <Supply
                   name={`${name}.supply`}
                   side="right"
                   disabled={true}
@@ -81,7 +81,7 @@ export const ManageTierBlock = inject('crowdsaleStore')(observer(({
                 />
               </div>
             </div>
-            { crowdsaleStore.isMintedCappedCrowdsale && isWhitelistEnabled ? (
+            { isWhitelistEnabled ? (
               <div>
                 <div className="section-title">
                   <p className="title">Whitelist</p>

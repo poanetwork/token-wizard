@@ -1,4 +1,4 @@
-.invest {
+.contribute {
   margin: 30px auto;
   padding-left: 30px;
   border-radius: 8px;
@@ -159,7 +159,7 @@
         position: relative;
         margin: 15px 0 50px;
 
-        .invest-form-label {
+        .contribute-form-label {
           transform: translateY(-50%);
           position: absolute;
           right: 0;
@@ -223,7 +223,7 @@
       .description {
         display: none;
       }
-      .invest-form {
+      .contribute-form {
         padding-bottom: 0;
         &-label {
           display: none;

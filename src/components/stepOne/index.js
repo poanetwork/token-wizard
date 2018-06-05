@@ -66,7 +66,7 @@ export class stepOne extends React.Component {
               />
               <span className="title">{CROWDSALE_STRATEGIES_DISPLAYNAMES.DUTCH_AUCTION}</span>
               <span className="description">
-                Dutch auction crowdsale.
+                An auction with descending price.
               </span>
             </label>
           </div>

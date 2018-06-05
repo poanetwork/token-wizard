@@ -230,7 +230,7 @@ exports[`ManageForm should render for Dutch Auction 1`] = `
                 className="label"
                 htmlFor="tiers[0].supply"
               >
-                Supply
+                Crowdsale Supply
               </label>
               <input
                 autoComplete="off"
@@ -249,6 +249,52 @@ exports[`ManageForm should render for Dutch Auction 1`] = `
                 className="description"
               >
                 How many tokens will be sold on crowdsale
+              </p>
+              <span>
+                <p
+                  className="error"
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "20px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </span>
+            </div>
+          </div>
+          <div
+            className="input-block-container"
+          >
+            <div
+              className="left"
+            >
+              <label
+                className="label"
+                htmlFor="token.supply"
+              >
+                Token Supply
+              </label>
+              <input
+                autoComplete="off"
+                className="input"
+                disabled={true}
+                id="token.supply"
+                name="token.supply"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder={undefined}
+                type="text"
+                value="undefined"
+              />
+              <p
+                className="description"
+              >
+                The total supply of the token
               </p>
               <span>
                 <p
@@ -599,7 +645,7 @@ exports[`ManageForm should render for Dutch Auction 1`] = `
                 className="label"
                 htmlFor="tiers[1].supply"
               >
-                Supply
+                Crowdsale Supply
               </label>
               <input
                 autoComplete="off"
@@ -618,6 +664,52 @@ exports[`ManageForm should render for Dutch Auction 1`] = `
                 className="description"
               >
                 How many tokens will be sold on crowdsale
+              </p>
+              <span>
+                <p
+                  className="error"
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontSize": "12px",
+                      "fontWeight": "bold",
+                      "height": "20px",
+                      "width": "100%",
+                    }
+                  }
+                />
+              </span>
+            </div>
+          </div>
+          <div
+            className="input-block-container"
+          >
+            <div
+              className="left"
+            >
+              <label
+                className="label"
+                htmlFor="token.supply"
+              >
+                Token Supply
+              </label>
+              <input
+                autoComplete="off"
+                className="input"
+                disabled={true}
+                id="token.supply"
+                name="token.supply"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder={undefined}
+                type="text"
+                value="undefined"
+              />
+              <p
+                className="description"
+              >
+                The total supply of the token
               </p>
               <span>
                 <p
@@ -864,18 +956,7 @@ exports[`ManageForm should render for Dutch Auction 1`] = `
   >
     <div
       className="button-container"
-    >
-      <a
-        href="/#"
-        onClick={[Function]}
-      >
-        <span
-          className="no_arrow button button_fill"
-        >
-          Save
-        </span>
-      </a>
-    </div>
+    />
   </div>
 </form>
 `;
@@ -1744,18 +1825,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
   >
     <div
       className="button-container"
-    >
-      <a
-        href="/#"
-        onClick={[Function]}
-      >
-        <span
-          className="no_arrow button button_fill"
-        >
-          Save
-        </span>
-      </a>
-    </div>
+    />
   </div>
 </form>
 `;
@@ -1770,18 +1840,7 @@ exports[`ManageForm should render the component without tiers 1`] = `
   >
     <div
       className="button-container"
-    >
-      <a
-        href="/#"
-        onClick={[Function]}
-      >
-        <span
-          className="no_arrow button button_fill"
-        >
-          Save
-        </span>
-      </a>
-    </div>
+    />
   </div>
 </form>
 `;

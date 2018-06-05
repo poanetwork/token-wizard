@@ -19,6 +19,7 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
   tokenStore,
   generalStore,
   crowdsaleStore,
+  displaySave,
   ...props,
 }) => {
   if (!props.initialValues.tiers[0]) return null
@@ -33,6 +34,14 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
 
   // const button_disabled = (pristine || invalid) && !canSave -- use once canSave TO-DO is done
   const button_disabled = invalid || !canSave
+
+  const saveButton = (
+    <button type="submit" className={classNames('no_arrow', 'button', 'button_fill', {
+      'button_disabled': button_disabled
+    })} style={{border: 'none'}}>
+      Save
+    </button>
+  )
 
   return (
     <form onSubmit={handleSubmit}>
@@ -80,11 +89,7 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
 
       <div className="steps">
         <div className="button-container">
-          <button type="submit" className={classNames('no_arrow', 'button', 'button_fill', {
-            'button_disabled': button_disabled
-          })} style={{border: 'none'}}>
-            Save
-          </button>
+          { displaySave? saveButton : null }
         </div>
       </div>
 
