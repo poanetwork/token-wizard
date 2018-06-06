@@ -409,7 +409,7 @@ export class Manage extends Component {
     let canSave = ownerCurrentUser && (tierStore.modifiedStoredWhitelist || fieldsToUpdate.length > 0 || modifiedMinCap) && !crowdsaleHasEnded
 
     const canSaveObj = {
-      canSave: canSave && isMintedCappedCrowdsale ? updatable : true,
+      canSave: canSave && isMintedCappedCrowdsale ? updatable : canSave,
       fieldsToUpdate,
       globalMinCap: modifiedMinCap ? globalMinCap : null
     }
@@ -500,7 +500,6 @@ export class Manage extends Component {
     const { canFinalize, ownerCurrentUser } = this.state
     const { crowdsaleStore } = this.props
     const { finalized } = crowdsaleStore.selected
-    const { canSave, globalMinCap } = this.canBeSaved()
 
     return (
       <section className="manage">
@@ -523,8 +522,7 @@ export class Manage extends Component {
           component={ManageForm}
           canEditTiers={ownerCurrentUser && !canFinalize && !finalized}
           handleChange={this.updateTierStore}
-          canSave={canSave}
-          canSaveGlobalMinCap={globalMinCap}
+          canSave={this.canBeSaved().canSave}
           displaySave={this.saveDisplayed()}
         />
 

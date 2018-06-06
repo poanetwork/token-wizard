@@ -22,7 +22,6 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
   invalid,
   handleChange,
   canSave,
-  canSaveGlobalMinCap,
   tokenStore,
   generalStore,
   crowdsaleStore,
@@ -40,7 +39,7 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
   }
 
   // const button_disabled = (pristine || invalid) && !canSave -- use once canSave TO-DO is done
-  const button_disabled = invalid || !canSave || !canSaveGlobalMinCap
+  const button_disabled = invalid || !canSave
 
   const crowdsale_has_started = !isDateLaterThan()(dateToTimestamp(props.initialValues.tiers[0].startTime))(Date.now())
 
