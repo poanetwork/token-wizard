@@ -102,7 +102,7 @@ export const ManageDutchAuctionBlock = inject('crowdsaleStore', 'tokenStore')(ob
                   <p className="title">Whitelist</p>
                 </div>
                 {canEditWhiteList
-                  ? <WhitelistInputBlock key={index.toString()} num={index} decimals={props.decimals}/>
+                  ? <WhitelistInputBlock key={index.toString()} num={index} decimals={tokenStore.decimals}/>
                   : <ReadOnlyWhitelistAddresses tier={currentTier}/>
                 }
               </div>

@@ -21,10 +21,11 @@ const inputErrorStyle = {
 const { CROWDSALE_SETUP_NAME } = TEXT_FIELDS
 const dateToTimestamp = (date) => new Date(date).getTime()
 
-export const ManageTierBlock = inject('crowdsaleStore')(observer(({
+export const ManageTierBlock = inject('crowdsaleStore', 'tokenStore')(observer(({
   fields,
   canEditTiers,
   crowdsaleStore,
+  tokenStore,
   aboutTier,
   ...props
 }) => (
@@ -87,7 +88,7 @@ export const ManageTierBlock = inject('crowdsaleStore')(observer(({
                   <p className="title">Whitelist</p>
                 </div>
                 {canEditWhiteList
-                  ? <WhitelistInputBlock key={index.toString()} num={index} decimals={props.decimals}/>
+                  ? <WhitelistInputBlock key={index.toString()} num={index} decimals={tokenStore.decimals}/>
                   : <ReadOnlyWhitelistAddresses tier={currentTier}/>
                 }
               </div>
