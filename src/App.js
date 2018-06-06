@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react'
 import './assets/stylesheets/application.css';
-import { Header, Footer, Home, Manage, stepOne, stepTwo, stepThree, stepFour, Crowdsale, Contribute } from './components/index'
+import { Header, Footer, Home, Manage, stepOne, stepTwo, stepThree, stepFour, Crowdsale, Contribute, Stats } from './components/index'
 import NoWeb3 from './components/Common/NoWeb3'
 import IncompleteDeploy from './components/IncompleteDeploy'
 import { getQueryVariable } from './utils/utils'
@@ -30,7 +30,7 @@ class App extends Component {
           <Switch>
             <Route exact path="/crowdsale" component={Crowdsale}/>
             <Route exact path="/contribute" component={Contribute}/>
-
+            <Route exact path="/stats" component={Stats}/>
             <Route>
               <Web3Provider
                 onChangeAccount={deploymentStore.handleAccountChange}

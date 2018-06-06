@@ -289,50 +289,44 @@ export function attachToContract (abi, addr) {
     })
 }
 
-function getApplicationsInstances () {
+async function getApplicationsInstances () {
   const { web3 } = web3Store
   const whenScriptExecContract = attachToSpecificCrowdsaleContract("scriptExec")
-  const whenAccount = web3.eth.getAccounts()
-    .then((accounts) => accounts[0])
+  const accounts = await web3.eth.getAccounts()
+  const whenAccount = accounts[0]
 
-  return Promise.all([whenScriptExecContract, whenAccount])
-    .then(([scriptExecContract, account]) => {
-      console.log("account:", account)
-      console.log("scriptExecContract:", scriptExecContract)
-      let promises = [];
-      const crowdsales = []
-      //to do: length of applications
-      for (let i = 0; i < 100; i++) {
-        let promise = new Promise((resolve, reject) => {
-          scriptExecContract.methods.deployer_instances(account, i).call()
-          .then((deployer_instance) => {
-            //console.log("deployer_instance:", deployer_instance)
-            let appName = removeTrailingNUL(web3.utils.toAscii(deployer_instance.app_name))
-            let appNameLowerCase = appName.toLowerCase()
-            if (
-              appNameLowerCase.includes(process.env[`REACT_APP_MINTED_CAPPED_CROWDSALE_APP_NAME`].toLowerCase())
-              || appNameLowerCase.includes(process.env[`REACT_APP_DUTCH_CROWDSALE_APP_NAME`].toLowerCase())) {
-              crowdsales.push({
-                appName: appName,
-                execID: deployer_instance.exec_id
-              })
-            }
-            resolve();
+  const [scriptExecContract, account] = await Promise.all([whenScriptExecContract, whenAccount])
+  console.log("account:", account)
+  console.log("scriptExecContract:", scriptExecContract)
+  let promises = [];
+  const crowdsales = []
+  //to do: length of applications
+  for (let i = 0; i < 100; i++) {
+    let promise = new Promise((resolve, reject) => {
+      scriptExecContract.methods.deployer_instances(account, i).call()
+      .then((deployer_instance) => {
+        //console.log("deployer_instance:", deployer_instance)
+        let appName = removeTrailingNUL(web3.utils.toAscii(deployer_instance.app_name))
+        let appNameLowerCase = appName.toLowerCase()
+        if (
+          appNameLowerCase.includes(process.env[`REACT_APP_MINTED_CAPPED_CROWDSALE_APP_NAME`].toLowerCase())
+          || appNameLowerCase.includes(process.env[`REACT_APP_DUTCH_CROWDSALE_APP_NAME`].toLowerCase())) {
+          crowdsales.push({
+            appName: appName,
+            execID: deployer_instance.exec_id
           })
-          .catch((err) => {
-            resolve();
-          })
-        })
-        promises.push(promise)
-      }
-      return Promise.all(promises)
-        .then(() => {
-          return Promise.all(crowdsales)
-        })
+        }
+        resolve();
+      })
+      .catch((err) => {
+        resolve();
+      })
     })
-    .catch((err) => {
-      console.log(err)
-      return []
+    promises.push(promise)
+  }
+  return Promise.all(promises)
+    .then(() => {
+      return Promise.all(crowdsales)
     })
 }
 
@@ -362,12 +356,10 @@ export function getCrowdsaleStrategy (execID) {
     })
 }
 
-export function loadRegistryAddresses () {
-  return getApplicationsInstances()
-    .then(crowdsales => {
-      console.log(crowdsales)
-      crowdsaleStore.setCrowdsales(crowdsales)
-    })
+export async function loadRegistryAddresses () {
+  const crowdsales = await getApplicationsInstances()
+  console.log(crowdsales)
+  crowdsaleStore.setCrowdsales(crowdsales)
 }
 
 export let getCurrentAccount = () => {
@@ -388,7 +380,7 @@ export let getCurrentAccount = () => {
 export let attachToSpecificCrowdsaleContract = (contractName) => {
   return new Promise((resolve, reject) => {
     console.log(contractStore)
-    console.log(`contractName:${contractName},`)
+    console.log(`contractName:${contractName}`)
     console.log(toJS(contractStore[contractName]))
 
     let contractObj = toJS(contractStore[contractName])
@@ -571,4 +563,22 @@ export let methodToInitAndFinalize = (methodName, targetName, getEncodedParams, 
   console.log("method:", method)
 
   return method;
+}
+
+export async function getAllCrowdsaleAddresses () {
+  const instances = []
+  console.log("instances:", instances)
+
+  let fullCrowdsales = []
+  let whenJoinedCrowdsalesData = []
+
+  let totalArr = [
+    instances,
+    [],
+    [],
+    [],
+    []
+  ]
+
+  return Promise.all(totalArr)
 }
