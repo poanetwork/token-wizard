@@ -75,7 +75,7 @@ export class Manage extends Component {
         .then(_newState => { this.setState(_newState) })
         .then(() => getCrowdsaleStrategy(crowdsaleExecID))
         .then((strategy) => crowdsaleStore.setProperty('strategy', strategy))
-        //.then((strategy) => crowdsaleStore.setProperty('strategy', CROWDSALE_STRATEGIES.DUTCH_AUCTION)) // to do
+        //.then((strategy) => crowdsaleStore.setProperty('strategy', CROWDSALE_STRATEGIES.DUTCH_AUCTION)) // todo
         .then(this.extractContractsData)
         .then(() => {
           this.initialTiers = JSON.parse(JSON.stringify(tierStore.tiers))
@@ -398,7 +398,7 @@ export class Manage extends Component {
     const updatableTiers = isMintedCappedCrowdsale ? updatableTiersMintedCappedCrowdsale : isDutchAuction ? initialTiersValues : []
     const isValidTier = tierStore.individuallyValidTiers
     const validTiers = updatableTiers.every(tier => isValidTier[tier.index])
-    const modifiedMinCap = globalMinCap !== '' ? !toBigNumber(this.state.initialGlobalMinCap).eq(globalMinCap) : false
+    const modifiedMinCap = globalMinCap ? !toBigNumber(this.state.initialGlobalMinCap).eq(globalMinCap) : false
 
     let fieldsToUpdate = []
     if (updatableTiers.length && validTiers) {
