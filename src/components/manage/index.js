@@ -17,7 +17,7 @@ import {
   methodToExec,
   getCrowdsaleStrategy
 } from '../../utils/blockchainHelpers'
-import { toast } from '../../utils/utils'
+import { dateToTimestamp, toast } from '../../utils/utils'
 import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
 import { getFieldsToUpdate, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
@@ -31,6 +31,7 @@ import { FinalizeCrowdsaleStep } from './FinalizeCrowdsaleStep'
 import { ReservedTokensList } from './ReservedTokensList'
 import { ManageForm } from './ManageForm'
 import moment from 'moment'
+import { isDateLaterThan } from '../../utils/validations'
 
 @inject(
   'crowdsaleStore',
@@ -209,7 +210,7 @@ export class Manage extends Component {
         const { num_whitelisted, whitelist } = await getCrowdsaleWhitelist(registryStorageAddr, crowdsaleExecID).call()
         const tokens_sold = await getTokensSold(registryStorageAddr, crowdsaleExecID).call()
 
-        if (num_whitelisted) {
+        if (num_whitelisted !== '0') {
           // TODO: remove this attribute overwrite after auth_os implement whitelist_enabled for Dutch Auction
           tier_data.whitelist_enabled = true
 
@@ -420,13 +421,15 @@ export class Manage extends Component {
     const { crowdsaleHasEnded, ownerCurrentUser } = this.state
     const { crowdsaleStore } = this.props
     const { isDutchAuction, isMintedCappedCrowdsale } = crowdsaleStore
-    const crowdsaleIsUpdatable = crowdsaleStore.selected.initialTiersValues.some(tier => tier.updatable)
-    const crowdsaleIsWhitelisted = crowdsaleStore.selected.initialTiersValues.some(tier => tier.isWhitelisted)
+    const { initialTiersValues } = crowdsaleStore.selected
+    const crowdsaleIsUpdatable = initialTiersValues.some(tier => tier.updatable)
+    const crowdsaleIsWhitelisted = initialTiersValues.some(tier => tier.isWhitelisted)
+    const crowdsaleHasStarted = initialTiersValues.length ? !isDateLaterThan()(dateToTimestamp(initialTiersValues[0].startTime))(Date.now()) : true
     if (
       !ownerCurrentUser
       || crowdsaleHasEnded
       || (isMintedCappedCrowdsale && !crowdsaleIsUpdatable)
-      || (isDutchAuction && !crowdsaleIsWhitelisted)
+      || (isDutchAuction && !crowdsaleIsWhitelisted && crowdsaleHasStarted)
     ) {
       return false
     }
@@ -497,6 +500,7 @@ export class Manage extends Component {
     const { canFinalize, ownerCurrentUser } = this.state
     const { crowdsaleStore } = this.props
     const { finalized } = crowdsaleStore.selected
+    const { canSave, globalMinCap } = this.canBeSaved()
 
     return (
       <section className="manage">
@@ -519,7 +523,8 @@ export class Manage extends Component {
           component={ManageForm}
           canEditTiers={ownerCurrentUser && !canFinalize && !finalized}
           handleChange={this.updateTierStore}
-          canSave={this.canBeSaved().canSave}
+          canSave={canSave}
+          canSaveGlobalMinCap={globalMinCap}
           displaySave={this.saveDisplayed()}
         />
 

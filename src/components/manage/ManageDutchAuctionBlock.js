@@ -10,6 +10,7 @@ import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
 import { ReadOnlyWhitelistAddresses } from './ReadOnlyWhitelistAddresses'
 import classNames from 'classnames'
 import { inject, observer } from 'mobx-react'
+import { dateToTimestamp } from '../../utils/utils'
 
 const inputErrorStyle = {
   color: 'red',
@@ -19,12 +20,12 @@ const inputErrorStyle = {
   height: '20px',
 }
 const { STRATEGY } = TEXT_FIELDS
-const dateToTimestamp = (date) => new Date(date).getTime()
 
-export const ManageDutchAuctionBlock = inject('crowdsaleStore')(observer(({
+export const ManageDutchAuctionBlock = inject('crowdsaleStore', 'tokenStore')(observer(({
   fields,
   canEditTiers,
   crowdsaleStore,
+  tokenStore,
   aboutTier,
   ...props
 }) => (
@@ -86,7 +87,7 @@ export const ManageDutchAuctionBlock = inject('crowdsaleStore')(observer(({
               <div className="input-block-container">
                 <Supply
                   name={`token.supply`}
-                  value={`${props.tokenSupply}`}
+                  value={tokenStore.supply}
                   side="left"
                   label={TEXT_FIELDS.TOKEN_SUPPLY}
                   description={DESCRIPTION.TOKEN_SUPPLY}

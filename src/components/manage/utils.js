@@ -173,7 +173,7 @@ const crowdsaleData = (tier, crowdsale, token, reserved_tokens_info) => {
     start_time: isMintedCappedCrowdsale ? tier_start : start_time,
     end_time: isMintedCappedCrowdsale ? tier_end : end_time,
     rate: isMintedCappedCrowdsale ? tier_price : current_rate,
-    max_sell_cap: isMintedCappedCrowdsale ? tier_sell_cap : toBigNumber(tokens_remaining).plus(tokens_sold),
+    max_sell_cap: isMintedCappedCrowdsale ? tier_sell_cap : toBigNumber(tokens_remaining).plus(tokens_sold || '0'),
     name: isMintedCappedCrowdsale ? removeTrailingNUL(toAscii(tier_name)) : '',
     updatable: isMintedCappedCrowdsale ? duration_is_modifiable : true,
     whitelist: whitelist || [],

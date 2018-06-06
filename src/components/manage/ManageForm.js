@@ -8,19 +8,21 @@ import { InputField } from '../Common/InputField'
 import { TEXT_FIELDS } from '../../utils/constants'
 import { InputField2 } from '../Common/InputField2'
 import {
-  composeValidators, isDateLaterThan, isDecimalPlacesNotGreaterThan,
+  composeValidators,
+  isDateLaterThan,
+  isDecimalPlacesNotGreaterThan,
   isNonNegative
 } from '../../utils/validations'
 import { AboutCrowdsale } from './AboutCrowdsale'
 import { inject, observer } from 'mobx-react'
-
-const dateToTimestamp = (date) => new Date(date).getTime()
+import { dateToTimestamp } from '../../utils/utils'
 
 export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')(observer(({
   handleSubmit,
   invalid,
   handleChange,
   canSave,
+  canSaveGlobalMinCap,
   tokenStore,
   generalStore,
   crowdsaleStore,
@@ -38,7 +40,7 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
   }
 
   // const button_disabled = (pristine || invalid) && !canSave -- use once canSave TO-DO is done
-  const button_disabled = invalid || !canSave
+  const button_disabled = invalid || !canSave || !canSaveGlobalMinCap
 
   const crowdsale_has_started = !isDateLaterThan()(dateToTimestamp(props.initialValues.tiers[0].startTime))(Date.now())
 
