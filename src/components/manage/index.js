@@ -28,6 +28,7 @@ import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import createDecorator from 'final-form-calculate'
 import { FinalizeCrowdsaleStep } from './FinalizeCrowdsaleStep'
+import { ReservedTokensList } from './ReservedTokensList'
 import { ManageForm } from './ManageForm'
 import moment from 'moment'
 
@@ -504,6 +505,8 @@ export class Manage extends Component {
           disabled={!ownerCurrentUser || finalized || !canFinalize}
           handleClick={this.finalizeCrowdsale}
         />
+
+        <ReservedTokensList owner={ownerCurrentUser}/>
 
         <Form
           onSubmit={this.saveCrowdsale}
