@@ -31,11 +31,10 @@ export const ManageDutchAuctionBlock = inject('crowdsaleStore')(observer(({
   <div>
     {fields.map((name, index) => {
       const currentTier = fields.value[index]
-      const { startTime: initialStartTime, endTime: initialEndTime, whitelistEnabled } = fields.initial[index]
+      const { endTime: initialEndTime, whitelistEnabled } = fields.initial[index]
 
-      const tierHasStarted = !isDateLaterThan()(dateToTimestamp(initialStartTime))(Date.now())
       const tierHasEnded = !isDateLaterThan()(dateToTimestamp(initialEndTime))(Date.now())
-      const canEditWhiteList = canEditTiers && !tierHasEnded && !tierHasStarted
+      const canEditWhiteList = canEditTiers && !tierHasEnded
       const isWhitelistEnabled = whitelistEnabled === 'yes'
 
       return (
