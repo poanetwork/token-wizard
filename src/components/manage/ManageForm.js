@@ -7,9 +7,14 @@ import classNames from 'classnames'
 import { InputField } from '../Common/InputField'
 import { TEXT_FIELDS } from '../../utils/constants'
 import { InputField2 } from '../Common/InputField2'
-import { composeValidators, isDecimalPlacesNotGreaterThan, isNonNegative } from '../../utils/validations'
+import {
+  composeValidators, isDateLaterThan, isDecimalPlacesNotGreaterThan,
+  isNonNegative
+} from '../../utils/validations'
 import { AboutCrowdsale } from './AboutCrowdsale'
 import { inject, observer } from 'mobx-react'
+
+const dateToTimestamp = (date) => new Date(date).getTime()
 
 export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')(observer(({
   handleSubmit,
@@ -34,6 +39,8 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
 
   // const button_disabled = (pristine || invalid) && !canSave -- use once canSave TO-DO is done
   const button_disabled = invalid || !canSave
+
+  const crowdsale_has_started = !isDateLaterThan()(dateToTimestamp(props.initialValues.tiers[0].startTime))(Date.now())
 
   const saveButton = (
     <button type="submit" className={classNames('no_arrow', 'button', 'button_fill', {
@@ -62,6 +69,7 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
                 isNonNegative(),
                 isDecimalPlacesNotGreaterThan()(tokenStore.decimals)
               )}
+              disabled={!props.canEditTiers || crowdsale_has_started}
               errorStyle={inputErrorStyle}
               type="number"
               side="left"
