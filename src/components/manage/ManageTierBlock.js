@@ -9,6 +9,7 @@ import { isDateLaterThan } from '../../utils/validations'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
 import { ReadOnlyWhitelistAddresses } from './ReadOnlyWhitelistAddresses'
 import classNames from 'classnames'
+import { inject, observer } from 'mobx-react'
 
 const inputErrorStyle = {
   color: 'red',
@@ -17,20 +18,21 @@ const inputErrorStyle = {
   width: '100%',
   height: '20px',
 }
-const { CROWDSALE_SETUP_NAME, WALLET_ADDRESS } = TEXT_FIELDS
+const { CROWDSALE_SETUP_NAME } = TEXT_FIELDS
 const dateToTimestamp = (date) => new Date(date).getTime()
 
-export const ManageTierBlock = ({
+export const ManageTierBlock = inject('crowdsaleStore', 'tokenStore')(observer(({
   fields,
   canEditTiers,
   crowdsaleStore,
+  tokenStore,
   aboutTier,
   ...props
 }) => (
   <div>
     {fields.map((name, index) => {
       const currentTier = fields.value[index]
-      const { tier, walletAddress } = currentTier
+      const { tier } = currentTier
       const { startTime: initialStartTime, endTime: initialEndTime, whitelistEnabled, updatable } = fields.initial[index]
 
       const tierHasStarted = !isDateLaterThan()(dateToTimestamp(initialStartTime))(Date.now())
@@ -42,12 +44,10 @@ export const ManageTierBlock = ({
       return (
         <div className="steps" key={index}>
           <div className='steps-content container'>
-            {index === 0 ? aboutTier : null}
 
             <div className={classNames('hidden', { 'divisor': isWhitelistEnabled })}>
               <div className="input-block-container">
                 <InputField side='left' type='text' title={CROWDSALE_SETUP_NAME} value={tier} disabled={true}/>
-                <InputField side='right' type='text' title={WALLET_ADDRESS} value={walletAddress} disabled={true}/>
               </div>
 
               <div className="input-block-container">
@@ -88,7 +88,7 @@ export const ManageTierBlock = ({
                   <p className="title">Whitelist</p>
                 </div>
                 {canEditWhiteList
-                  ? <WhitelistInputBlock key={index.toString()} num={index} decimals={props.decimals}/>
+                  ? <WhitelistInputBlock key={index.toString()} num={index} decimals={tokenStore.decimals}/>
                   : <ReadOnlyWhitelistAddresses tier={currentTier}/>
                 }
               </div>
@@ -98,4 +98,4 @@ export const ManageTierBlock = ({
       )
     })}
   </div>
-)
+)))

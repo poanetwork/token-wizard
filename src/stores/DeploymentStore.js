@@ -62,6 +62,9 @@ class DeploymentStore {
 
   @action setAsSuccessful = (txName) => {
     const txStatus = this.txMap.get(txName)
+
+    if (!txStatus) return
+
     const toBeUpdated = txStatus.findIndex((isSuccess) => {
       if (isSuccess !== null) {
         return !isSuccess

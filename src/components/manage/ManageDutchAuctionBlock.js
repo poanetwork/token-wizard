@@ -9,6 +9,8 @@ import { isDateLaterThan } from '../../utils/validations'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
 import { ReadOnlyWhitelistAddresses } from './ReadOnlyWhitelistAddresses'
 import classNames from 'classnames'
+import { inject, observer } from 'mobx-react'
+import { dateToTimestamp } from '../../utils/utils'
 
 const inputErrorStyle = {
   color: 'red',
@@ -17,20 +19,19 @@ const inputErrorStyle = {
   width: '100%',
   height: '20px',
 }
-const { WALLET_ADDRESS, STRATEGY } = TEXT_FIELDS
-const dateToTimestamp = (date) => new Date(date).getTime()
+const { STRATEGY } = TEXT_FIELDS
 
-export const ManageDutchAuctionBlock = ({
+export const ManageDutchAuctionBlock = inject('crowdsaleStore', 'tokenStore')(observer(({
   fields,
   canEditTiers,
   crowdsaleStore,
+  tokenStore,
   aboutTier,
   ...props
 }) => (
   <div>
     {fields.map((name, index) => {
       const currentTier = fields.value[index]
-      let { walletAddress } = currentTier
       const { endTime: initialEndTime, whitelistEnabled } = fields.initial[index]
 
       const tierHasEnded = !isDateLaterThan()(dateToTimestamp(initialEndTime))(Date.now())
@@ -40,12 +41,10 @@ export const ManageDutchAuctionBlock = ({
       return (
         <div className="steps" key={index}>
           <div className='steps-content container'>
-            {index === 0 ? aboutTier : null}
 
             <div className={classNames('hidden', { 'divisor': isWhitelistEnabled })}>
               <div className="input-block-container">
                 <InputField side='left' type='text' title={STRATEGY} value={CROWDSALE_STRATEGIES_DISPLAYNAMES.DUTCH_AUCTION} disabled={true}/>
-                <InputField side='right' type='text' title={WALLET_ADDRESS} value={walletAddress} disabled={true}/>
               </div>
 
               <div className="input-block-container">
@@ -88,7 +87,7 @@ export const ManageDutchAuctionBlock = ({
               <div className="input-block-container">
                 <Supply
                   name={`token.supply`}
-                  value={`${props.tokenSupply}`}
+                  value={tokenStore.supply}
                   side="left"
                   label={TEXT_FIELDS.TOKEN_SUPPLY}
                   description={DESCRIPTION.TOKEN_SUPPLY}
@@ -103,7 +102,7 @@ export const ManageDutchAuctionBlock = ({
                   <p className="title">Whitelist</p>
                 </div>
                 {canEditWhiteList
-                  ? <WhitelistInputBlock key={index.toString()} num={index} decimals={props.decimals}/>
+                  ? <WhitelistInputBlock key={index.toString()} num={index} decimals={tokenStore.decimals}/>
                   : <ReadOnlyWhitelistAddresses tier={currentTier}/>
                 }
               </div>
@@ -113,4 +112,4 @@ export const ManageDutchAuctionBlock = ({
       )
     })}
   </div>
-)
+)))
