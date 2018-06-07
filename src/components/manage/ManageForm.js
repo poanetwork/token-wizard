@@ -11,6 +11,7 @@ import {
   composeValidators,
   isDateLaterThan,
   isDecimalPlacesNotGreaterThan,
+  isLessOrEqualThan,
   isNonNegative
 } from '../../utils/validations'
 import { AboutCrowdsale } from './AboutCrowdsale'
@@ -28,7 +29,9 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
   displaySave,
   ...props,
 }) => {
-  if (!props.initialValues.tiers[0]) return null
+  const { tiers } = props.initialValues
+
+  if (!tiers[0]) return null
 
   const inputErrorStyle = {
     color: 'red',
@@ -41,8 +44,9 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
   // const button_disabled = (pristine || invalid) && !canSave -- use once canSave TO-DO is done
   const button_disabled = invalid || !canSave
 
-  const crowdsale_has_started = !isDateLaterThan()(dateToTimestamp(props.initialValues.tiers[0].startTime))(Date.now())
-  const some_tier_whitelisted = props.initialValues.tiers.some(tier => tier.whitelistEnabled === 'yes')
+  const crowdsale_has_started = !isDateLaterThan()(dateToTimestamp(tiers[0].startTime))(Date.now())
+  const some_tier_whitelisted = tiers.some(tier => tier.whitelistEnabled === 'yes')
+  const minimum_supply = tiers.reduce((min, tier) => tier.supply < min ? tier.supply : min, Infinity)
 
   const saveButton = (
     <button type="submit" className={classNames('no_arrow', 'button', 'button_fill', {
@@ -69,7 +73,8 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
               component={InputField2}
               validate={composeValidators(
                 isNonNegative(),
-                isDecimalPlacesNotGreaterThan()(tokenStore.decimals)
+                isDecimalPlacesNotGreaterThan()(tokenStore.decimals),
+                isLessOrEqualThan(`Should be less than or equal to ${minimum_supply}`)(minimum_supply)
               )}
               disabled={!props.canEditTiers || crowdsale_has_started || some_tier_whitelisted}
               errorStyle={inputErrorStyle}
@@ -83,7 +88,7 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
               side='right'
               type='text'
               title={TEXT_FIELDS.WALLET_ADDRESS}
-              value={props.initialValues.tiers[0].walletAddress}
+              value={tiers[0].walletAddress}
               disabled={true}
             />
           </div>
@@ -101,7 +106,7 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
         <div className="button-container">
           { displaySave? saveButton : null }
         </div>
-      </div>
+      </div>7
 
     </form>
   )
