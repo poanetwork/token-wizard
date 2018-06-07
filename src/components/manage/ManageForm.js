@@ -42,7 +42,7 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
   const button_disabled = invalid || !canSave
 
   const crowdsale_has_started = !isDateLaterThan()(dateToTimestamp(props.initialValues.tiers[0].startTime))(Date.now())
-  const all_tiers_whitelisted = props.initialValues.tiers.every(tier => tier.whitelistEnabled)
+  const some_tier_whitelisted = props.initialValues.tiers.some(tier => tier.whitelistEnabled === 'yes')
 
   const saveButton = (
     <button type="submit" className={classNames('no_arrow', 'button', 'button_fill', {
@@ -71,7 +71,7 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
                 isNonNegative(),
                 isDecimalPlacesNotGreaterThan()(tokenStore.decimals)
               )}
-              disabled={!props.canEditTiers || crowdsale_has_started || all_tiers_whitelisted}
+              disabled={!props.canEditTiers || crowdsale_has_started || some_tier_whitelisted}
               errorStyle={inputErrorStyle}
               type="number"
               side="left"
