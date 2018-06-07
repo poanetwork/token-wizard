@@ -531,6 +531,9 @@ export class Manage extends Component {
 
         newValue[`tiers[${nextTierIndex}].startTime`] = value
         newValue[`tiers[${nextTierIndex}].endTime`] = nextEnd
+
+        tierStore.setTierProperty(value, 'startTime', nextTierIndex)
+        tierStore.setTierProperty(nextEnd, 'endTime', nextTierIndex)
       }
 
       return newValue
