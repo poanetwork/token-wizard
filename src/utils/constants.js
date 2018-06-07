@@ -2,9 +2,15 @@ export const EXCEPTIONS = {
   storageException: "StorageException(address,bytes32,address,uint256)",
   applicationException: "ApplicationException(address, bytes32, bytes32)"
 }
+
 export const CROWDSALE_STRATEGIES = {
   MINTED_CAPPED_CROWDSALE: "white-list-with-cap",
   DUTCH_AUCTION: "dutch-auction"
+}
+
+export const CROWDSALE_APP_NAMES = {
+  MINTED_CAPPED_CROWDSALE: "MintedCappedCrowdsale",
+  DUTCH_AUCTION: "DutchCrowdsale"
 }
 
 export const CROWDSALE_STRATEGIES_DISPLAYNAMES = {

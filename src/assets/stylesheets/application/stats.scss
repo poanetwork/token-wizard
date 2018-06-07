@@ -1,3 +1,12 @@
+@mixin stats-title {
+  display: block;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 50px;
+}
+
 .stats {
   margin: 30px auto;
   padding-top: 30px;
@@ -13,12 +22,12 @@
   }
 
   .title {
-    display: block;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 50px;
+    @include stats-title;
+
+    &-secondary {
+      @include stats-title;
+      margin-top: 70px;
+    }
   }
 
   .stats-items {

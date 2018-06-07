@@ -1,5 +1,5 @@
 import { incorrectNetworkAlert, noMetaMaskAlert, MetaMaskIsLockedAlert, invalidNetworkIDAlert, noContractAlert } from './alerts'
-import { CHAINS, MAX_GAS_PRICE, CROWDSALE_STRATEGIES, EXCEPTIONS } from './constants'
+import { CHAINS, MAX_GAS_PRICE, CROWDSALE_STRATEGIES, EXCEPTIONS, CROWDSALE_APP_NAMES } from './constants'
 import { crowdsaleStore, generalStore, web3Store, contractStore } from '../stores'
 import { toJS } from 'mobx'
 import { removeTrailingNUL } from './utils'
@@ -565,20 +565,79 @@ export let methodToInitAndFinalize = (methodName, targetName, getEncodedParams, 
   return method;
 }
 
+function getCrowdsaleInfo (initCrowdsaleContract, addr, execID) {
+  const whenCrowdsaleInfo = initCrowdsaleContract.methods.getCrowdsaleInfo(addr, execID).call()
+  return whenCrowdsaleInfo
+}
+
+function getCrowdsaleContributors (initCrowdsaleContract, addr, execID) {
+  const whenCrowdsaleUniqueBuyers = initCrowdsaleContract.methods.getCrowdsaleUniqueBuyers(addr, execID).call()
+  return whenCrowdsaleUniqueBuyers
+}
+
+function getCrowdsaleStartAndEndTimes (initCrowdsaleContract, addr, execID) {
+  const whenCrowdsaleStartAndEndTimes = initCrowdsaleContract.methods.getCrowdsaleStartAndEndTimes(addr, execID).call()
+  return whenCrowdsaleStartAndEndTimes
+}
+
+function getCrowdsaleTierList (initCrowdsaleContract, addr, execID) {
+  const whenCrowdsaleTierList = initCrowdsaleContract.methods.getCrowdsaleTierList(addr, execID).call()
+  return whenCrowdsaleTierList
+}
+
+//to do: it gets all instances crated by current user. We need to get all instances from all users. Should be implemented in Auth-os side.
 export async function getAllCrowdsaleAddresses () {
-  const instances = []
+  const instances = await getApplicationsInstances()
+  const targetPrefix = "initCrowdsale"
+
+  const targetMintedCapped = `${targetPrefix}MintedCapped`
+  const initCrowdsaleContractMintedCapped = await attachToSpecificCrowdsaleContract(targetMintedCapped)
+
+  const targetDutchAuction = `${targetPrefix}DutchAuction`
+  const initCrowdsaleContractDutchAuction = await attachToSpecificCrowdsaleContract(targetDutchAuction)
+
+  const registryStorageObj = toJS(contractStore.registryStorage)
+  const { addr } = registryStorageObj
+
+  let whenCrowdsaleInfo = []
+  let whenCrowdsaleContributors = []
+  let whenCrowdsaleDates = []
+  let whenCrowdsaleTierList = []
+  instances.forEach((instance) => {
+    let initCrowdsaleContract
+    switch (instance.appName) {
+      case CROWDSALE_APP_NAMES.MINTED_CAPPED_CROWDSALE:
+        initCrowdsaleContract = initCrowdsaleContractMintedCapped
+        whenCrowdsaleTierList.push(getCrowdsaleTierList(initCrowdsaleContract, addr, instance.execID))
+        break
+      case CROWDSALE_APP_NAMES.DUTCH_AUCTION:
+        initCrowdsaleContract = initCrowdsaleContractDutchAuction
+        whenCrowdsaleTierList.push([])
+        break
+      default:
+        initCrowdsaleContract = initCrowdsaleContractMintedCapped
+        break
+    }
+    whenCrowdsaleInfo.push(getCrowdsaleInfo(initCrowdsaleContract, addr, instance.execID))
+    whenCrowdsaleContributors.push(getCrowdsaleContributors(initCrowdsaleContract, addr, instance.execID))
+    whenCrowdsaleDates.push(getCrowdsaleStartAndEndTimes(initCrowdsaleContract, addr, instance.execID))
+  })
+
+  const crowdsaleData = [whenCrowdsaleInfo, whenCrowdsaleContributors, whenCrowdsaleDates, whenCrowdsaleTierList]
+  let crowdsaleDataReorg = crowdsaleData.map(function(innerPromiseArray) {
+    return Promise.all(innerPromiseArray);
+  })
+
+  const [crowdsalesInfo, crowdsaleContributors, crowdsaleDates, crowdsaleTierList] = await Promise.all(crowdsaleDataReorg)
+
+  crowdsalesInfo.forEach((crowdsaleInfo, ind) => {
+    instances[ind].crowdsaleInfo = crowdsaleInfo
+    instances[ind].crowdsaleContributors = crowdsaleContributors[ind]
+    instances[ind].crowdsaleDates = crowdsaleDates[ind]
+    instances[ind].crowdsaleTierList = crowdsaleTierList[ind]
+  })
+
   console.log("instances:", instances)
 
-  let fullCrowdsales = []
-  let whenJoinedCrowdsalesData = []
-
-  let totalArr = [
-    instances,
-    [],
-    [],
-    [],
-    []
-  ]
-
-  return Promise.all(totalArr)
+  return Promise.all(instances)
 }
