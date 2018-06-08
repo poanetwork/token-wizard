@@ -1,6 +1,5 @@
 import { noContractAlert } from '../../utils/alerts'
 import {
-  getCurrentAccount,
   attachToSpecificCrowdsaleContract,
 } from '../../utils/blockchainHelpers'
 import { contractStore, crowdsalePageStore, tokenStore, web3Store, crowdsaleStore } from '../../stores'

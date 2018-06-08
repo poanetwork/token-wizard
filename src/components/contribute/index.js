@@ -20,7 +20,7 @@ import {
   getUserMinLimits
 } from '../crowdsale/utils'
 import { countDecimalPlaces, getQueryVariable, toast } from '../../utils/utils'
-import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
+import { getCrowdsaleAssets } from '../../stores/utils'
 import {
   contributionDisabledAlertInTime,
   noGasPriceAvailable,
@@ -96,7 +96,7 @@ export class Contribute extends React.Component {
       contributeThrough: CONTRIBUTION_OPTIONS.METAMASK
     })
 
-    getWhiteListWithCapCrowdsaleAssets(networkID)
+    getCrowdsaleAssets(networkID)
       .then(_newState => {
         this.setState(_newState)
       })

@@ -373,7 +373,6 @@ export let attachToSpecificCrowdsaleContract = (contractName) => {
   return new Promise((resolve, reject) => {
     console.log(contractStore)
     console.log(`contractName:${contractName}`)
-    console.log(toJS(contractStore[contractName]))
 
     let contractObj = toJS(contractStore[contractName])
     console.log(contractObj)

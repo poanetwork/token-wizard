@@ -18,7 +18,7 @@ import {
   getCrowdsaleStrategy
 } from '../../utils/blockchainHelpers'
 import { dateToTimestamp, toast } from '../../utils/utils'
-import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
+import { getCrowdsaleAssets } from '../../stores/utils'
 import { getFieldsToUpdate, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
 import { getTiersLength, toBigNumber } from '../crowdsale/utils'
@@ -72,7 +72,7 @@ export class Manage extends Component {
     // networkID
     getNetworkVersion().then(networkID => {
       generalStore.setProperty('networkID', networkID)
-      getWhiteListWithCapCrowdsaleAssets(networkID)
+      getCrowdsaleAssets(networkID)
         .then(_newState => { this.setState(_newState) })
         .then(() => getCrowdsaleStrategy(crowdsaleExecID))
         .then((strategy) => crowdsaleStore.setProperty('strategy', strategy))
@@ -154,6 +154,8 @@ export class Manage extends Component {
 
           if (tier_data.whitelist_enabled) {
             const { whitelist } = await getTierWhitelist(registryStorageAddr, crowdsaleExecID, tier_num).call()
+
+            console.log("whitelist:", whitelist)
 
             for (let whitelist_item_index = 0; whitelist_item_index < whitelist.length; whitelist_item_index++) {
               const whitelist_item_addr = whitelist[whitelist_item_index]

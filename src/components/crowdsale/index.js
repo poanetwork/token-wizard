@@ -15,7 +15,7 @@ import {
   toBigNumber
 } from './utils'
 import { getQueryVariable } from '../../utils/utils'
-import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
+import { getCrowdsaleAssets } from '../../stores/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../../utils/constants'
 import { invalidCrowdsaleAddrAlert } from '../../utils/alerts'
@@ -66,7 +66,7 @@ export class Crowdsale extends React.Component {
     contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
 
     let account
-    getWhiteListWithCapCrowdsaleAssets(networkID)
+    getCrowdsaleAssets(networkID)
       .then(getCurrentAccount)
       .then((_account) => { account = _account })
       .catch(err => {

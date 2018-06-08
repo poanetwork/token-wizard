@@ -9,7 +9,7 @@ import { toast } from '../../utils/utils';
 import { TOAST, NAVIGATION_STEPS } from '../../utils/constants';
 import { inject, observer } from 'mobx-react';
 import { checkWeb3, getNetworkVersion, } from '../../utils/blockchainHelpers'
-import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
+import { getCrowdsaleAssets } from '../../stores/utils'
 
 const { CROWDSALE_STRATEGY, TOKEN_SETUP, CROWDSALE_SETUP, PUBLISH, CROWDSALE_PAGE } = NAVIGATION_STEPS
 
@@ -36,7 +36,7 @@ export class Home extends Component {
 
     getNetworkVersion().then(networkID => {
       generalStore.setProperty('networkID', networkID)
-      getWhiteListWithCapCrowdsaleAssets(networkID)
+      getCrowdsaleAssets(networkID)
     }).then(
         () => {
           this.setState({

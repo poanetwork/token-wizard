@@ -1,6 +1,6 @@
 import { contractStore } from './index'
 
-export function getWhiteListWithCapCrowdsaleAssets(networkID) {
+export function getCrowdsaleAssets(networkID) {
   return new Promise((resolve) => {
     getCrowdsaleAsset("REACT_APP_REGISTRY_STORAGE", "registryStorage", networkID)
     getCrowdsaleAsset("REACT_APP_INIT_REGISTRY", "initRegistry", networkID)
