@@ -18,8 +18,8 @@ class CrowdsaleStore {
 
   @computed
   get appName() {
-    if (this.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE) return process.env['REACT_APP_MINTED_CAPPED_CROWDSALE_APP_NAME'];
-    else if (this.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION) return process.env['REACT_APP_DUTCH_CROWDSALE_APP_NAME'];
+    if (this.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE) return process.env['REACT_APP_MINTED_CAPPED_APP_NAME'];
+    else if (this.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION) return process.env['REACT_APP_DUTCH_APP_NAME'];
     return '';
   }
 

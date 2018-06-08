@@ -74,7 +74,9 @@ export class Crowdsale extends React.Component {
         console.log(err)
       })
       .then(() => getCrowdsaleStrategy(contractStore.crowdsale.execID))
-      .then((strategy) => crowdsaleStore.setProperty('strategy', strategy))
+      .then((strategy) => {
+        crowdsaleStore.setProperty('strategy', strategy)
+      })
       .then(() => this.extractContractsData(account))
       .catch(console.log)
   }
@@ -92,7 +94,7 @@ export class Crowdsale extends React.Component {
       return
     }
 
-    const targetPrefix = "initCrowdsale"
+    const targetPrefix = "idx"
     const targetSuffix = crowdsaleStore.contractTargetSuffix
     const target = `${targetPrefix}${targetSuffix}`
     console.log("target:", target)

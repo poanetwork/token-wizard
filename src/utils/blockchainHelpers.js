@@ -309,8 +309,8 @@ async function getApplicationsInstances () {
         let appName = removeTrailingNUL(web3.utils.toAscii(deployer_instance.app_name))
         let appNameLowerCase = appName.toLowerCase()
         if (
-          appNameLowerCase.includes(process.env[`REACT_APP_MINTED_CAPPED_CROWDSALE_APP_NAME`].toLowerCase())
-          || appNameLowerCase.includes(process.env[`REACT_APP_DUTCH_CROWDSALE_APP_NAME`].toLowerCase())) {
+          appNameLowerCase.includes(process.env[`REACT_APP_MINTED_CAPPED_APP_NAME`].toLowerCase())
+          || appNameLowerCase.includes(process.env[`REACT_APP_DUTCH_APP_NAME`].toLowerCase())) {
           crowdsales.push({
             appName: appName,
             execID: deployer_instance.exec_id
@@ -332,18 +332,18 @@ async function getApplicationsInstances () {
 
 async function getApplicationsInstance(execID) {
   const { methods } = await attachToSpecificCrowdsaleContract("scriptExec")
-  return await methods.deployed_apps(contractStore.registryStorage.addr, execID).call()
+  return await methods.instance_info(execID).call()
 }
 
 export async function getCrowdsaleStrategy (execID) {
-  const { REACT_APP_MINTED_CAPPED_CROWDSALE_APP_NAME, REACT_APP_DUTCH_CROWDSALE_APP_NAME } = process.env
+  const { REACT_APP_MINTED_CAPPED_APP_NAME, REACT_APP_DUTCH_APP_NAME } = process.env
   const { toAscii } = web3Store.web3.utils
   const { app_name } = await getApplicationsInstance(execID)
   const app_name_lower_case = removeTrailingNUL(toAscii(app_name)).toLowerCase()
 
-  if (app_name_lower_case.includes(REACT_APP_MINTED_CAPPED_CROWDSALE_APP_NAME.toLowerCase())) {
+  if (app_name_lower_case.includes(REACT_APP_MINTED_CAPPED_APP_NAME.toLowerCase())) {
     return CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE
-  } else if (app_name_lower_case.includes(REACT_APP_DUTCH_CROWDSALE_APP_NAME.toLowerCase())) {
+  } else if (app_name_lower_case.includes(REACT_APP_DUTCH_APP_NAME.toLowerCase())) {
     return CROWDSALE_STRATEGIES.DUTCH_AUCTION
   }
 }
@@ -396,6 +396,7 @@ export let attachToSpecificCrowdsaleContract = (contractName) => {
   });
 }
 
+//to do: targetName is redundant
 export let methodToExec = (contractName, methodName, targetName, getEncodedParams, params) => {
   const { web3 } = web3Store
   const methodParams = getEncodedParams(...params)
@@ -417,25 +418,11 @@ export let methodToExec = (contractName, methodName, targetName, getEncodedParam
   const contract = new web3.eth.Contract(toJS(abiContract), addrContract)
   console.log(contract)
 
-  console.log("targetName:", targetName)
-
-  const target = contractStore[targetName].addr;
-
-  let paramsToExec
-
-  if (contractName === "scriptExec") {
-    paramsToExec = [
-      target,
-      fullData
-    ]
-  } else if (contractName === "registryStorage") {
-    let { execID } = contractStore.crowdsale;
-    paramsToExec = [
-      target,
-      execID,
-      fullData
-    ]
-  }
+  const { execID } = contractStore.crowdsale;
+  const paramsToExec = [
+    execID,
+    fullData
+  ]
 
   console.log("paramsToExec: ", paramsToExec)
 
@@ -445,7 +432,7 @@ export let methodToExec = (contractName, methodName, targetName, getEncodedParam
   return method;
 }
 
-export let methodToInitAppInstance = (methodName, getEncodedParams, params, appName) => {
+export let methodToCreateAppInstance = (methodName, getEncodedParams, params, appName) => {
   const { web3 } = web3Store
   const methodParams = getEncodedParams(...params)
   console.log("methodParams:", methodParams)
@@ -466,91 +453,16 @@ export let methodToInitAppInstance = (methodName, getEncodedParams, params, appN
   const scriptExec = new web3.eth.Contract(toJS(abiScriptExec), addrScriptExec)
   console.log(scriptExec)
 
-  const isPayable = true;
-
   let appNameBytes = web3.utils.fromAscii(appName)
   let encodedAppName = web3.eth.abi.encodeParameter("bytes32", appNameBytes);
 
-  let paramsToInitAppInstance = [
+  let paramsToCreateAppInstance = [
     encodedAppName,
-    isPayable,
     fullData
   ]
-  console.log("paramsToInitAppInstance: ", paramsToInitAppInstance)
+  console.log("paramsToCreateAppInstance: ", paramsToCreateAppInstance)
 
-  const method = scriptExec.methods.initAppInstance(...paramsToInitAppInstance)
-  console.log("method:", method)
-
-  return method;
-}
-
-export let methodToInitAppInstanceFromRegistry = (methodName, targetName, getEncodedParams, params) => {
-  const { web3 } = web3Store
-  const methodParams = getEncodedParams(...params)
-  console.log("methodParams:", methodParams)
-
-  let methodSignature = web3.eth.abi.encodeFunctionSignature(methodName);
-  console.log(`methodSignature ${methodName}:`, methodSignature);
-
-  //let encodedParameters = web3.eth.abi.encodeParameters(["bytes"], [methodParams]);
-  //let fullData = methodSignature + encodedParameters.substr(2);
-
-  let fullData = methodSignature + methodParams.substr(2);
-  console.log("full calldata:", fullData);
-
-  const abiRegistryStorage = contractStore.registryStorage.abi || []
-  const addrsRegistryStorage = contractStore.registryStorage.addr || {}
-  const registryStorage = new web3.eth.Contract(toJS(abiRegistryStorage), addrsRegistryStorage)
-  console.log(registryStorage)
-
-  let account = params[0];
-  let isPayable = false;
-  let allowed = [contractStore["appConsole"].addr, contractStore["versionConsole"].addr, contractStore["implementationConsole"].addr];
-  let paramsToInitAppInstance = [
-    account,
-    isPayable,
-    contractStore[targetName].addr,
-    fullData,
-    allowed
-  ]
-  console.log("paramsToInitAppInstance: ", paramsToInitAppInstance)
-  const method = registryStorage.methods.initAppInstance(...paramsToInitAppInstance)
-  console.log("method:", method)
-
-  return method;
-}
-
-export let methodToInitAndFinalize = (methodName, targetName, getEncodedParams, params) => {
-  const { web3 } = web3Store
-  const methodParams = getEncodedParams(...params)
-  console.log("methodParams:", methodParams)
-
-  let methodSignature = web3.eth.abi.encodeFunctionSignature(methodName);
-  console.log(`methodSignature ${methodName}:`, methodSignature);
-
-  //let encodedParameters = web3.eth.abi.encodeParameters(["bytes"], [methodParams]);
-  //let fullData = methodSignature + encodedParameters.substr(2);
-
-  let fullData = methodSignature + methodParams.substr(2);
-  console.log("full calldata:", fullData);
-
-  const abiRegistryStorage = contractStore.registryStorage.abi || []
-  const addrsRegistryStorage = contractStore.registryStorage.addr || {}
-  const registryStorage = new web3.eth.Contract(toJS(abiRegistryStorage), addrsRegistryStorage)
-  console.log(registryStorage)
-
-  let account = params[0];
-  let isPayable = false;
-  let allowed = [];
-  let paramsToInitAndFinalize = [
-    account,
-    isPayable,
-    contractStore[targetName].addr,
-    fullData,
-    allowed
-  ]
-  console.log("paramsToInitAndFinalize: ", paramsToInitAndFinalize)
-  const method = registryStorage.methods.initAndFinalize(...paramsToInitAndFinalize)
+  const method = scriptExec.methods.createAppInstance(...paramsToCreateAppInstance)
   console.log("method:", method)
 
   return method;
@@ -579,7 +491,7 @@ function getCrowdsaleTierList (initCrowdsaleContract, addr, execID) {
 //to do: it gets all instances crated by current user. We need to get all instances from all users. Should be implemented in Auth-os side.
 export async function getAllCrowdsaleAddresses () {
   const instances = await getApplicationsInstances()
-  const targetPrefix = "initCrowdsale"
+  const targetPrefix = "idx"
 
   const targetMintedCapped = `${targetPrefix}MintedCapped`
   const initCrowdsaleContractMintedCapped = await attachToSpecificCrowdsaleContract(targetMintedCapped)
@@ -587,7 +499,7 @@ export async function getAllCrowdsaleAddresses () {
   const targetDutchAuction = `${targetPrefix}DutchAuction`
   const initCrowdsaleContractDutchAuction = await attachToSpecificCrowdsaleContract(targetDutchAuction)
 
-  const registryStorageObj = toJS(contractStore.registryStorage)
+  const registryStorageObj = toJS(contractStore.abstractStorage)
   const { addr } = registryStorageObj
 
   let whenCrowdsaleInfo = []

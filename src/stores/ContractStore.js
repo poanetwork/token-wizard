@@ -3,20 +3,19 @@ import autosave from './autosave'
 
 class ContractStore {
 
-  @observable registryStorage;
-  @observable initRegistry;
+  @observable abstractSorage;
+  @observable registryIdx;
+  @observable provider;
   @observable scriptExec;
-  @observable initCrowdsaleMintedCapped;
-  @observable crowdsaleConsoleMintedCapped;
-  @observable crowdsaleBuyTokensMintedCapped;
+  @observable idxMintedCapped;
+  @observable saleMintedCapped;
+  @observable saleManagerMintedCapped;
+  @observable tokenMintedCapped;
+  @observable tokenManagerMintedCapped;
   @observable initCrowdsaleDutchAuction;
   @observable crowdsaleConsoleDutchAuction;
   @observable crowdsaleBuyTokensDutchAuction;
   @observable crowdsale;
-  @observable appConsole;
-  @observable versionConsole;
-  @observable implementationConsole;
-  @observable tokenConsoleMintedCapped;
   @observable tokenTransfer;
   @observable tokenTransferFrom;
   @observable tokenApprove;

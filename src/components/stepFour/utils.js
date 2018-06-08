@@ -4,9 +4,7 @@ import {
   getNetworkVersion,
   sendTXToContract,
   methodToExec,
-  methodToInitAppInstanceFromRegistry,
-  methodToInitAndFinalize,
-  methodToInitAppInstance
+  methodToCreateAppInstance
 } from '../../utils/blockchainHelpers'
 //import { noContractAlert } from '../../utils/alerts'
 import { countDecimalPlaces, toFixed } from '../../utils/utils'
@@ -107,6 +105,55 @@ const getCrowdSaleParams = (account, methodInterface) => {
   return encodedParameters;
 }
 
+const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
+  const { web3 } = web3Store
+  const { walletAddress, supply, startTime, endTime, minRate, maxRate, whitelistEnabled } = tierStore.tiers[0]
+
+  BigNumber.config({ DECIMAL_PLACES: 18 })
+  console.log(tierStore.tiers[0])
+
+  //Dutch Auction crowdsale minOneTokenInWEI
+  const minRateBN = new BigNumber(minRate)
+  const minOneTokenInETH = minRateBN.pow(-1).toFixed()
+  const minOneTokenInWEI = web3.utils.toWei(minOneTokenInETH, 'ether')
+
+  //Dutch Auction crowdsale maxOneTokenInWEI
+  const maxRateBN = new BigNumber(maxRate)
+  const maxOneTokenInETH = maxRateBN.pow(-1).toFixed()
+  const maxOneTokenInWEI = web3.utils.toWei(maxOneTokenInETH, 'ether')
+
+  //Dutch Auction crowdsale duration
+  const formatDate = date => toFixed(parseInt(Date.parse(date) / 1000, 10).toString())
+  const duration = formatDate(endTime) - formatDate(startTime)
+  const durationBN = toBigNumber(duration).toFixed()
+
+  //token supply
+  const tokenSupplyBN = toBigNumber(tokenStore.supply).times(`1e${tokenStore.decimals}`).toFixed()
+
+  //Dutch Auction crowdsale supply
+  const crowdsaleSupplyBN = toBigNumber(supply).times(`1e${tokenStore.decimals}`).toFixed()
+
+  //is Dutch Auction crowdsale whitelisted?
+  const isWhitelisted = whitelistEnabled === 'yes'
+
+  let paramsCrowdsale = [
+    walletAddress,
+    tokenSupplyBN,
+    crowdsaleSupplyBN,
+    minOneTokenInWEI,
+    maxOneTokenInWEI,
+    durationBN,
+    formatDate(startTime),
+    isWhitelisted,
+    account
+  ]
+
+  console.log("paramsCrowdsale:", paramsCrowdsale)
+
+  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, paramsCrowdsale);
+  return encodedParameters;
+}
+
 export const deployCrowdsale = (getParams, methodInterface, appName) => {
   console.log("###deploy crowdsale###")
   const { web3 } = web3Store
@@ -125,25 +172,12 @@ export const deployCrowdsale = (getParams, methodInterface, appName) => {
 
             const methodInterfaceStr = `init(${methodInterface.join(',')})`
 
-            let method = methodToInitAppInstance(
+            let method = methodToCreateAppInstance(
               methodInterfaceStr,
               getParams,
               params,
               appName
             )
-            /*const target = "initCrowdsaleMintedCapped"
-            let method = methodToInitAppInstanceFromRegistry(
-              methodInterfaceStr,
-              target,
-              getCrowdSaleParams,
-              params
-            )*/
-            /*let method = methodToInitAndFinalize(
-              methodInterfaceStr,
-              target,
-              getCrowdSaleParams,
-              params
-            )*/
 
             const opts = { gasPrice: generalStore.gasPrice, from: account }
             console.log("opts:", opts)
@@ -200,55 +234,6 @@ export const deployCrowdsale = (getParams, methodInterface, appName) => {
   ]
 }
 
-const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
-  const { web3 } = web3Store
-  const { walletAddress, supply, startTime, endTime, minRate, maxRate, whitelistEnabled } = tierStore.tiers[0]
-
-  BigNumber.config({ DECIMAL_PLACES: 18 })
-  console.log(tierStore.tiers[0])
-
-  //Dutch Auction crowdsale minOneTokenInWEI
-  const minRateBN = new BigNumber(minRate)
-  const minOneTokenInETH = minRateBN.pow(-1).toFixed()
-  const minOneTokenInWEI = web3.utils.toWei(minOneTokenInETH, 'ether')
-
-  //Dutch Auction crowdsale maxOneTokenInWEI
-  const maxRateBN = new BigNumber(maxRate)
-  const maxOneTokenInETH = maxRateBN.pow(-1).toFixed()
-  const maxOneTokenInWEI = web3.utils.toWei(maxOneTokenInETH, 'ether')
-
-  //Dutch Auction crowdsale duration
-  const formatDate = date => toFixed(parseInt(Date.parse(date) / 1000, 10).toString())
-  const duration = formatDate(endTime) - formatDate(startTime)
-  const durationBN = toBigNumber(duration).toFixed()
-
-  //token supply
-  const tokenSupplyBN = toBigNumber(tokenStore.supply).times(`1e${tokenStore.decimals}`).toFixed()
-
-  //Dutch Auction crowdsale supply
-  const crowdsaleSupplyBN = toBigNumber(supply).times(`1e${tokenStore.decimals}`).toFixed()
-
-  //is Dutch Auction crowdsale whitelisted?
-  const isWhitelisted = whitelistEnabled === 'yes'
-
-  let paramsCrowdsale = [
-    walletAddress,
-    tokenSupplyBN,
-    crowdsaleSupplyBN,
-    minOneTokenInWEI,
-    maxOneTokenInWEI,
-    durationBN,
-    formatDate(startTime),
-    isWhitelisted,
-    account
-  ]
-
-  console.log("paramsCrowdsale:", paramsCrowdsale)
-
-  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, paramsCrowdsale);
-  return encodedParameters;
-}
-
 const getExecutionIDFromEvent = (events, eventName) => {
   console.log("eventName:", events[eventName])
   if (events[eventName].returnValues) {
@@ -264,16 +249,6 @@ const getExecutionIDFromEvent = (events, eventName) => {
   }
 }
 
-export const generateContext = (weiToSend) => {
-  const { web3 } = web3Store
-  let { account, execID } = contractStore.crowdsale;
-  console.log(account, execID);
-  let paramsContext = [execID, account, weiToSend];
-  let context = web3.eth.abi.encodeParameters(["bytes32","address","uint256"], paramsContext);
-  console.log("context:", context)
-  return context;
-}
-
 const getTokenParams = (token, methodInterface) => {
   const { web3 } = web3Store
 
@@ -282,8 +257,7 @@ const getTokenParams = (token, methodInterface) => {
     web3.utils.fromAscii(token.ticker),
     parseInt(token.decimals, 10)
   ]
-  let context = generateContext(0);
-  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsToken, context]);
+  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsToken]);
   return encodedParameters;
 }
 
@@ -294,12 +268,12 @@ export const initializeToken = () => {
       return getNetworkVersion()
       .then((networkID) => {
 
-        const methodInterface = ["bytes32","bytes32","uint256","bytes"]
+        const methodInterface = ["bytes32","bytes32","uint256"]
 
         console.log("contractStore.crowdsale.account: ", contractStore.crowdsale.account)
         let account = contractStore.crowdsale.account;
 
-        const targetPrefix = "crowdsaleConsole"
+        const targetPrefix = "tokenManager"
         const targetSuffix = crowdsaleStore.contractTargetSuffix
         const target = `${targetPrefix}${targetSuffix}`
 
@@ -334,8 +308,7 @@ const getReservedTokensParams = (addrs, inTokens, inPercentageUnit, inPercentage
   ]
   console.log("paramsReservedTokens:",paramsReservedTokens)
 
-  let context = generateContext(0);
-  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsReservedTokens, context]);
+  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsReservedTokens]);
   return encodedParameters;
 }
 
@@ -387,10 +360,10 @@ export const setReservedTokensListMultiple = () => {
       let account = contractStore.crowdsale.account;
       const opts = { gasPrice: generalStore.gasPrice, from: account }
 
-      const methodInterface = ["address[]","uint256[]","uint256[]","uint256[]","bytes"]
+      const methodInterface = ["address[]","uint256[]","uint256[]","uint256[]"]
 
       let paramsToExec = [addrs, inTokens, inPercentageUnit, inPercentageDecimals, methodInterface]
-      const method = methodToExec("scriptExec", `updateMultipleReservedTokens(${methodInterface.join(',')})`, "tokenConsoleMintedCapped", getReservedTokensParams, paramsToExec)
+      const method = methodToExec("scriptExec", `updateMultipleReservedTokens(${methodInterface.join(',')})`, "tokenManagerMintedCapped", getReservedTokensParams, paramsToExec)
 
       return method.estimateGas(opts)
         .then(estimatedGas => {
@@ -403,8 +376,7 @@ export const setReservedTokensListMultiple = () => {
 
 const getInitializeCrowdsaleParams = (token) => {
   const { web3 } = web3Store
-  let context = generateContext(0);
-  let encodedParameters = web3.eth.abi.encodeParameters(["bytes"], [context]);
+  let encodedParameters = web3.eth.abi.encodeParameters([], []);
   return encodedParameters;
 }
 
@@ -417,12 +389,12 @@ export const initializeCrowdsale = () => {
 
         let account = contractStore.crowdsale.account;
 
-        const targetPrefix = "crowdsaleConsole"
+        const targetPrefix = "saleManager"
         const targetSuffix = crowdsaleStore.contractTargetSuffix
         const target = `${targetPrefix}${targetSuffix}`
 
-        let paramsToExec = [tokenStore]
-        const method = methodToExec("scriptExec", "initializeCrowdsale(bytes)", target, getInitializeCrowdsaleParams, paramsToExec)
+        let paramsToExec = []
+        const method = methodToExec("scriptExec", "initializeCrowdsale()", target, getInitializeCrowdsaleParams, paramsToExec)
 
         const opts = { gasPrice: generalStore.gasPrice, from: account }
         console.log("opts:", opts)
@@ -476,8 +448,7 @@ const getTiersParams = (methodInterface) => {
   ]
   console.log("paramsTiers:", paramsTiers)
 
-  let context = generateContext(0);
-  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsTiers, context]);
+  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsTiers]);
   return encodedParameters;
 }
 
@@ -486,10 +457,10 @@ export const createCrowdsaleTiers = () => {
     () => {
       console.log('###createCrowdsaleTiers:###')
 
-      const methodInterface = ["bytes32[]", "uint256[]", "uint256[]", "uint256[]", "bool[]", "bool[]","bytes"]
+      const methodInterface = ["bytes32[]", "uint256[]", "uint256[]", "uint256[]", "bool[]", "bool[]"]
 
       let paramsToExec = [methodInterface]
-      const method = methodToExec("scriptExec", `createCrowdsaleTiers(${methodInterface.join(',')})`, "crowdsaleConsoleMintedCapped", getTiersParams, paramsToExec)
+      const method = methodToExec("scriptExec", `createCrowdsaleTiers(${methodInterface.join(',')})`, "saleManagerMintedCapped", getTiersParams, paramsToExec)
 
       let account = contractStore.crowdsale.account;
       const opts = { gasPrice: generalStore.gasPrice, from: account }
@@ -524,8 +495,7 @@ const getWhitelistsParams = (tierIndex, addrs, minCaps, maxCaps, methodInterface
 
   console.log("paramsWhitelist:", paramsWhitelist)
 
-  let context = generateContext(0);
-  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsWhitelist, context]);
+  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsWhitelist]);
   return encodedParameters;
 }
 
@@ -573,17 +543,21 @@ export const addWhitelist = () => {
       let account = contractStore.crowdsale.account;
       const opts = { gasPrice: generalStore.gasPrice, from: account }
 
-      const targetPrefix = "crowdsaleConsole"
-      const targetSuffix = crowdsaleStore.contractTargetSuffix
-      const target = `${targetPrefix}${targetSuffix}`
-
       let methodInterface
       let methodName
+      //to do: define target before if statement
+      let target
       if (crowdsaleStore.isMintedCappedCrowdsale) {
-        methodInterface = ["uint256", "address[]","uint256[]","uint256[]","bytes"]
+        const targetPrefix = "saleManager"
+        const targetSuffix = crowdsaleStore.contractTargetSuffix
+        target = `${targetPrefix}${targetSuffix}`
+        methodInterface = ["uint256", "address[]","uint256[]","uint256[]"]
         methodName = "whitelistMultiForTier"
       } else if (crowdsaleStore.isDutchAuction) {
-        methodInterface = ["address[]","uint256[]","uint256[]","bytes"]
+        const targetPrefix = "crowdsaleConsole"
+        const targetSuffix = crowdsaleStore.contractTargetSuffix
+        target = `${targetPrefix}${targetSuffix}`
+        methodInterface = ["address[]","uint256[]","uint256[]"]
         methodName = "whitelistMulti"
       }
 
@@ -604,8 +578,7 @@ const getUpdateGlobalMinCapParams = (methodInterface) => {
   const { web3 } = web3Store
   let globalMinCap = toBigNumber(tierStore.globalMinCap).times(`1e${tokenStore.decimals}`).toFixed()
 
-  let context = generateContext(0);
-  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [globalMinCap, context]);
+  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [globalMinCap]);
   return encodedParameters;
 }
 
@@ -613,9 +586,9 @@ export const updateGlobalMinContribution = () => {
   return [() => {
     console.log('###updateGlobalMinContribution:###')
 
-    const methodInterface = ["uint256","bytes"]
+    const methodInterface = ["uint256"]
 
-    const targetPrefix = "crowdsaleConsole"
+    const targetPrefix = "saleManager"
     const targetSuffix = crowdsaleStore.contractTargetSuffix
     const target = `${targetPrefix}${targetSuffix}`
 
@@ -926,22 +899,18 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
     auth_os: [
       ...bigHeaderElements('*******AUTH_OS METADATA******'),
       smallHeader('**********REGISTRY***********'),
-      { value: authOSContractString('registry storage'), parent: 'none', fileValue: getAddr("REGISTRY_STORAGE", networkID) },
+      { value: authOSContractString('abstract storage'), parent: 'none', fileValue: getAddr("ABSTRACT_STORAGE", networkID) },
+      { value: authOSContractString('registry idx'), parent: 'none', fileValue: getAddr("REGISTRY_IDX", networkID) },
       { value: authOSContractString('script executor'), parent: 'none', fileValue: getAddr("SCRIPT_EXEC", networkID) },
-      { value: authOSContractString('InitRegistry'), parent: 'none', fileValue: getAddr("INIT_REGISTRY", networkID) },
-      { value: authOSContractString('AppConsole'), parent: 'none', fileValue: getAddr("APP_CONSOLE", networkID) },
-      { value: authOSContractString('VersionConsole'), parent: 'none', fileValue: getAddr("VERSION_CONSOLE", networkID) },
-      { value: authOSContractString('ImplementationConsole'), parent: 'none', fileValue: `${getAddr("IMPLEMENTATION_CONSOLE", networkID)}\n` },
+      { value: authOSContractString('provider'), parent: 'none', fileValue: getAddr("PROVIDER", networkID) },
       smallHeader('*********CROWDSALE***********'),
       { value: 'Auth_os application name: ', parent: 'none', fileValue: crowdsaleStore.appName },
       { field: 'execID', value: 'Auth_os execution ID: ', parent: 'crowdsale' },
-      { value: authOSContractString('InitCrowdsale'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "INIT_CROWDSALE", networkID) },
-      { value: authOSContractString('CrowdsaleConsole'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE_CONSOLE", networkID) },
-      { value: authOSContractString('TokenConsole'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "TOKEN_CONSOLE", networkID) },
-      { value: authOSContractString('CrowdsaleBuyTokens'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE_BUY_TOKENS", networkID) },
-      { value: authOSContractString('TokenTransfer'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "TOKEN_TRANSFER", networkID) },
-      { value: authOSContractString('TokenTransferFrom'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "TOKEN_TRANSFER_FROM", networkID) },
-      { value: authOSContractString('TokenApprove'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "TOKEN_APPROVE", networkID) },
+      { value: authOSContractString('MintedCappedIdx'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "IDX", networkID) },
+      { value: authOSContractString('Sale'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE", networkID) },
+      { value: authOSContractString('SaleManager'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE_MANAGER", networkID) },
+      { value: authOSContractString('Token'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "TOKEN", networkID) },
+      { value: authOSContractString('TokenManager'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "TOKEN_MANAGER", networkID) },
       ...footerElemets
     ],
     files: {

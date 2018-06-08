@@ -29,6 +29,7 @@ export class Stats extends Component {
     const { web3 } = web3Store
     const networkID = await getNetworkVersion()
     console.log("networkID:", networkID)
+    //to do: wei_raised -> _wei_raised
     getCrowdsaleAssets(networkID)
       .then(getCurrentAccount)
       .then(getAllCrowdsaleAddresses)
