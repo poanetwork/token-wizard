@@ -179,7 +179,7 @@ export class Manage extends Component {
           tiers.push(Object.assign(tier_data, tier_dates))
         }
 
-        const { reserved_destinations } = await getReservedTokenDestinationList(registryStorageAddr, crowdsaleExecID).call()
+        const { _reserved_destinations: reserved_destinations } = await getReservedTokenDestinationList(registryStorageAddr, crowdsaleExecID).call()
 
         if (reserved_destinations) {
           for (let destination_index = 0; destination_index < reserved_destinations.length; destination_index++) {
