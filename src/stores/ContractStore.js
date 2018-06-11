@@ -6,7 +6,7 @@ class ContractStore {
   @observable abstractSorage;
   @observable registryIdx;
   @observable provider;
-  @observable scriptExec;
+  @observable registryExec;
   @observable idxMintedCapped;
   @observable saleMintedCapped;
   @observable saleManagerMintedCapped;

@@ -1,4 +1,3 @@
-export const REACT_PREFIX = 'REACT_APP_'
 export const MINTED_PREFIX = 'MINTED_CAPPED_'
 export const DUTCH_PREFIX = 'DUTCH_'
 export const DOWNLOAD_NAME = 'tokenwizard'

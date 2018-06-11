@@ -9,7 +9,8 @@ import {
 //import { noContractAlert } from '../../utils/alerts'
 import { countDecimalPlaces, toFixed } from '../../utils/utils'
 import { CROWDSALE_STRATEGIES } from '../../utils/constants'
-import { DOWNLOAD_NAME, REACT_PREFIX, MINTED_PREFIX, DUTCH_PREFIX, ADDR_BOX_LEN } from './constants'
+import { DOWNLOAD_NAME, MINTED_PREFIX, DUTCH_PREFIX, ADDR_BOX_LEN } from './constants'
+import { REACT_PREFIX } from '../../utils/constants'
 import { isObservableArray } from 'mobx'
 import {
   contractStore,
@@ -278,7 +279,7 @@ export const initializeToken = () => {
         const target = `${targetPrefix}${targetSuffix}`
 
         let paramsToExec = [tokenStore, methodInterface]
-        const method = methodToExec("scriptExec", `initCrowdsaleToken(${methodInterface.join(',')})`, target, getTokenParams, paramsToExec)
+        const method = methodToExec("registryExec", `initCrowdsaleToken(${methodInterface.join(',')})`, target, getTokenParams, paramsToExec)
 
         const opts = { gasPrice: generalStore.gasPrice, from: account }
         console.log("opts:", opts)
@@ -363,7 +364,7 @@ export const setReservedTokensListMultiple = () => {
       const methodInterface = ["address[]","uint256[]","uint256[]","uint256[]"]
 
       let paramsToExec = [addrs, inTokens, inPercentageUnit, inPercentageDecimals, methodInterface]
-      const method = methodToExec("scriptExec", `updateMultipleReservedTokens(${methodInterface.join(',')})`, "tokenManagerMintedCapped", getReservedTokensParams, paramsToExec)
+      const method = methodToExec("registryExec", `updateMultipleReservedTokens(${methodInterface.join(',')})`, "tokenManagerMintedCapped", getReservedTokensParams, paramsToExec)
 
       return method.estimateGas(opts)
         .then(estimatedGas => {
@@ -394,7 +395,7 @@ export const initializeCrowdsale = () => {
         const target = `${targetPrefix}${targetSuffix}`
 
         let paramsToExec = []
-        const method = methodToExec("scriptExec", "initializeCrowdsale()", target, getInitializeCrowdsaleParams, paramsToExec)
+        const method = methodToExec("registryExec", "initializeCrowdsale()", target, getInitializeCrowdsaleParams, paramsToExec)
 
         const opts = { gasPrice: generalStore.gasPrice, from: account }
         console.log("opts:", opts)
@@ -460,7 +461,7 @@ export const createCrowdsaleTiers = () => {
       const methodInterface = ["bytes32[]", "uint256[]", "uint256[]", "uint256[]", "bool[]", "bool[]"]
 
       let paramsToExec = [methodInterface]
-      const method = methodToExec("scriptExec", `createCrowdsaleTiers(${methodInterface.join(',')})`, "saleManagerMintedCapped", getTiersParams, paramsToExec)
+      const method = methodToExec("registryExec", `createCrowdsaleTiers(${methodInterface.join(',')})`, "saleManagerMintedCapped", getTiersParams, paramsToExec)
 
       let account = contractStore.crowdsale.account;
       const opts = { gasPrice: generalStore.gasPrice, from: account }
@@ -562,7 +563,7 @@ export const addWhitelist = () => {
       }
 
       let paramsToExec = [index, addrs, minCaps, maxCaps, methodInterface]
-      const method = methodToExec("scriptExec", `${methodName}(${methodInterface.join(',')})`, target, getWhitelistsParams, paramsToExec)
+      const method = methodToExec("registryExec", `${methodName}(${methodInterface.join(',')})`, target, getWhitelistsParams, paramsToExec)
 
       return method.estimateGas(opts)
         .then(estimatedGas => {
@@ -593,7 +594,7 @@ export const updateGlobalMinContribution = () => {
     const target = `${targetPrefix}${targetSuffix}`
 
     let paramsToExec = [methodInterface]
-    const method = methodToExec("scriptExec", `updateGlobalMinContribution(${methodInterface.join(',')})`, target, getUpdateGlobalMinCapParams, paramsToExec)
+    const method = methodToExec("registryExec", `updateGlobalMinContribution(${methodInterface.join(',')})`, target, getUpdateGlobalMinCapParams, paramsToExec)
 
     let account = contractStore.crowdsale.account;
     const opts = { gasPrice: generalStore.gasPrice, from: account }
@@ -901,7 +902,7 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
       smallHeader('**********REGISTRY***********'),
       { value: authOSContractString('abstract storage'), parent: 'none', fileValue: getAddr("ABSTRACT_STORAGE", networkID) },
       { value: authOSContractString('registry idx'), parent: 'none', fileValue: getAddr("REGISTRY_IDX", networkID) },
-      { value: authOSContractString('script executor'), parent: 'none', fileValue: getAddr("SCRIPT_EXEC", networkID) },
+      { value: authOSContractString('script executor'), parent: 'none', fileValue: getAddr("REGISTRY_EXEC", networkID) },
       { value: authOSContractString('provider'), parent: 'none', fileValue: getAddr("PROVIDER", networkID) },
       smallHeader('*********CROWDSALE***********'),
       { value: 'Auth_os application name: ', parent: 'none', fileValue: crowdsaleStore.appName },

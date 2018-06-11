@@ -100,7 +100,7 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
   console.log("methodInterface:", methodInterface)
   console.log("target:", target)
 
-  const method = methodToExec("scriptExec", `${methods[attribute]}(${methodInterface.join(',')})`, target, getParams, paramsToExec)
+  const method = methodToExec("registryExec", `${methods[attribute]}(${methodInterface.join(',')})`, target, getParams, paramsToExec)
   console.log("method:", method)
 
   return getCurrentAccount()

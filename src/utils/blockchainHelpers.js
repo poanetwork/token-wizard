@@ -1,5 +1,5 @@
 import { incorrectNetworkAlert, noMetaMaskAlert, MetaMaskIsLockedAlert, invalidNetworkIDAlert, noContractAlert } from './alerts'
-import { CHAINS, MAX_GAS_PRICE, CROWDSALE_STRATEGIES, EXCEPTIONS, CROWDSALE_APP_NAMES } from './constants'
+import { CHAINS, MAX_GAS_PRICE, CROWDSALE_STRATEGIES, EXCEPTIONS, CROWDSALE_APP_NAMES, REACT_PREFIX } from './constants'
 import { crowdsaleStore, generalStore, web3Store, contractStore } from '../stores'
 import { toJS } from 'mobx'
 import { removeTrailingNUL } from './utils'
@@ -291,26 +291,26 @@ export function attachToContract (abi, addr) {
 
 async function getApplicationsInstances () {
   const { web3 } = web3Store
-  const whenScriptExecContract = attachToSpecificCrowdsaleContract("scriptExec")
+  const whenRegistryExecContract = attachToSpecificCrowdsaleContract("registryExec")
   const accounts = await web3.eth.getAccounts()
   const whenAccount = accounts[0]
 
-  const [scriptExecContract, account] = await Promise.all([whenScriptExecContract, whenAccount])
+  const [registryExecContract, account] = await Promise.all([whenRegistryExecContract, whenAccount])
   console.log("account:", account)
-  console.log("scriptExecContract:", scriptExecContract)
+  console.log("registryExecContract:", registryExecContract)
   let promises = [];
   const crowdsales = []
   //to do: length of applications
   for (let i = 0; i < 100; i++) {
     let promise = new Promise((resolve, reject) => {
-      scriptExecContract.methods.deployer_instances(account, i).call()
+      registryExecContract.methods.deployer_instances(account, i).call()
       .then((deployer_instance) => {
         //console.log("deployer_instance:", deployer_instance)
         let appName = removeTrailingNUL(web3.utils.toAscii(deployer_instance.app_name))
         let appNameLowerCase = appName.toLowerCase()
         if (
-          appNameLowerCase.includes(process.env[`REACT_APP_MINTED_CAPPED_APP_NAME`].toLowerCase())
-          || appNameLowerCase.includes(process.env[`REACT_APP_DUTCH_APP_NAME`].toLowerCase())) {
+          appNameLowerCase.includes(process.env[`${REACT_PREFIX}MINTED_CAPPED_APP_NAME`].toLowerCase())
+          || appNameLowerCase.includes(process.env[`${REACT_PREFIX}DUTCH_APP_NAME`].toLowerCase())) {
           crowdsales.push({
             appName: appName,
             execID: deployer_instance.exec_id
@@ -331,7 +331,7 @@ async function getApplicationsInstances () {
 }
 
 async function getApplicationsInstance(execID) {
-  const { methods } = await attachToSpecificCrowdsaleContract("scriptExec")
+  const { methods } = await attachToSpecificCrowdsaleContract("registryExec")
   return await methods.instance_info(execID).call()
 }
 
@@ -446,12 +446,12 @@ export let methodToCreateAppInstance = (methodName, getEncodedParams, params, ap
   let fullData = methodSignature + methodParams.substr(2);
   console.log("full calldata:", fullData);
 
-  const abiScriptExec = contractStore.scriptExec.abi || []
-  console.log("abiScriptExec:", abiScriptExec)
-  const addrScriptExec = contractStore.scriptExec.addr || {}
-  console.log("addrScriptExec:", addrScriptExec)
-  const scriptExec = new web3.eth.Contract(toJS(abiScriptExec), addrScriptExec)
-  console.log(scriptExec)
+  const abiRegistryExec = contractStore.registryExec.abi || []
+  console.log("abiRegistryExec:", abiRegistryExec)
+  const addrRegistryExec = contractStore.registryExec.addr || {}
+  console.log("addrRegistryExec:", addrRegistryExec)
+  const registryExec = new web3.eth.Contract(toJS(abiRegistryExec), addrRegistryExec)
+  console.log(registryExec)
 
   let appNameBytes = web3.utils.fromAscii(appName)
   let encodedAppName = web3.eth.abi.encodeParameter("bytes32", appNameBytes);
@@ -462,7 +462,7 @@ export let methodToCreateAppInstance = (methodName, getEncodedParams, params, ap
   ]
   console.log("paramsToCreateAppInstance: ", paramsToCreateAppInstance)
 
-  const method = scriptExec.methods.createAppInstance(...paramsToCreateAppInstance)
+  const method = registryExec.methods.createAppInstance(...paramsToCreateAppInstance)
   console.log("method:", method)
 
   return method;

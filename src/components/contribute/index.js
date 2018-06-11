@@ -353,7 +353,7 @@ export class Contribute extends React.Component {
     const target = `${targetPrefix}${targetSuffix}`
 
     let paramsToExec = [opts.value, methodInterface]
-    const method = methodToExec("scriptExec", `buy()`, target, this.getBuyParams, paramsToExec)
+    const method = methodToExec("registryExec", `buy()`, target, this.getBuyParams, paramsToExec)
 
     const estimatedGas = await method.estimateGas(opts)
     console.log('estimatedGas:', estimatedGas)

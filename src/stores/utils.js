@@ -1,23 +1,24 @@
 import { contractStore } from './index'
+import { REACT_PREFIX } from '../utils/constants'
 
 export function getCrowdsaleAssets(networkID) {
   return new Promise((resolve) => {
-    getCrowdsaleAsset("REACT_APP_ABSTRACT_STORAGE", "abstractStorage", networkID)
-    getCrowdsaleAsset("REACT_APP_REGISTRY_IDX", "registryIdx", networkID)
-    getCrowdsaleAsset("REACT_APP_SCRIPT_EXEC", "scriptExec", networkID)
-    getCrowdsaleAsset("REACT_APP_PROVIDER", "provider", networkID)
-    getCrowdsaleAsset("REACT_APP_MINTED_CAPPED_IDX", "idxMintedCapped", networkID)
-    getCrowdsaleAsset("REACT_APP_MINTED_CAPPED_CROWDSALE", "saleMintedCapped", networkID)
-    getCrowdsaleAsset("REACT_APP_MINTED_CAPPED_CROWDSALE_MANAGER", "saleManagerMintedCapped", networkID)
-    getCrowdsaleAsset("REACT_APP_MINTED_CAPPED_TOKEN", "tokenMintedCapped", networkID)
-    getCrowdsaleAsset("REACT_APP_MINTED_CAPPED_TOKEN_MANAGER", "tokenManagerMintedCapped", networkID)
-    getCrowdsaleAsset("REACT_APP_DUTCH_INIT_CROWDSALE", "initCrowdsaleDutchAuction", networkID)
-    getCrowdsaleAsset("REACT_APP_DUTCH_TOKEN_CONSOLE", "tokenConsoleDutchAuction", networkID)
-    getCrowdsaleAsset("REACT_APP_DUTCH_CROWDSALE_CONSOLE", "crowdsaleConsoleDutchAuction", networkID)
-    getCrowdsaleAsset("REACT_APP_DUTCH_CROWDSALE_BUY_TOKENS", "crowdsaleBuyTokensDutchAuction", networkID)
-    getCrowdsaleAsset("REACT_APP_DUTCH_TOKEN_TRANSFER", "tokenTransfer", networkID)
-    getCrowdsaleAsset("REACT_APP_DUTCH_TOKEN_TRANSFER_FROM", "tokenTransferFrom", networkID)
-    getCrowdsaleAsset("REACT_APP_DUTCH_TOKEN_APPROVE", "tokenApprove", networkID)
+    getCrowdsaleAsset(`${REACT_PREFIX}ABSTRACT_STORAGE`, "abstractStorage", networkID)
+    getCrowdsaleAsset(`${REACT_PREFIX}REGISTRY_IDX`, "registryIdx", networkID)
+    getCrowdsaleAsset(`${REACT_PREFIX}REGISTRY_EXEC`, "registryExec", networkID)
+    getCrowdsaleAsset(`${REACT_PREFIX}PROVIDER`, "provider", networkID)
+    getCrowdsaleAsset(`${REACT_PREFIX}MINTED_CAPPED_IDX`, "idxMintedCapped", networkID)
+    getCrowdsaleAsset(`${REACT_PREFIX}MINTED_CAPPED_CROWDSALE`, "saleMintedCapped", networkID)
+    getCrowdsaleAsset(`${REACT_PREFIX}MINTED_CAPPED_CROWDSALE_MANAGER`, "saleManagerMintedCapped", networkID)
+    getCrowdsaleAsset(`${REACT_PREFIX}MINTED_CAPPED_TOKEN`, "tokenMintedCapped", networkID)
+    getCrowdsaleAsset(`${REACT_PREFIX}MINTED_CAPPED_TOKEN_MANAGER`, "tokenManagerMintedCapped", networkID)
+    getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_INIT_CROWDSALE`, "initCrowdsaleDutchAuction", networkID)
+    getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_TOKEN_CONSOLE`, "tokenConsoleDutchAuction", networkID)
+    getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_CROWDSALE_CONSOLE`, "crowdsaleConsoleDutchAuction", networkID)
+    getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_CROWDSALE_BUY_TOKENS`, "crowdsaleBuyTokensDutchAuction", networkID)
+    getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_TOKEN_TRANSFER`, "tokenTransfer", networkID)
+    getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_TOKEN_TRANSFER_FROM`, "tokenTransferFrom", networkID)
+    getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_TOKEN_APPROVE`, "tokenApprove", networkID)
     resolve(contractStore)
   })
 }
@@ -27,7 +28,7 @@ function getCrowdsaleAsset(contractName, stateProp, networkID) {
   let abi;
   //to do
   switch (stateProp) {
-    case "scriptExec":
+    case "registryExec":
       abi = [{"constant":true,"inputs":[],"name":"provider","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"bytes32"}],"name":"deployed_by","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_deployer","type":"address"}],"name":"getDeployedLength","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_exec_id","type":"bytes32"}],"name":"setRegistryExecID","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"registry_exec_id","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_admin","type":"address"}],"name":"setAdmin","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"app_storage","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_exec_id","type":"bytes32"},{"name":"_calldata","type":"bytes"}],"name":"exec","outputs":[{"name":"success","type":"bool"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"bytes32"}],"name":"instance_info","outputs":[{"name":"current_provider","type":"address"},{"name":"current_registry_exec_id","type":"bytes32"},{"name":"app_exec_id","type":"bytes32"},{"name":"app_name","type":"bytes32"},{"name":"version_name","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"exec_admin","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getRegistryImplementation","outputs":[{"name":"indx","type":"address"},{"name":"implementation","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_provider","type":"address"}],"name":"setProvider","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_app_name","type":"bytes32"},{"name":"_init_calldata","type":"bytes"}],"name":"createAppInstance","outputs":[{"name":"exec_id","type":"bytes32"},{"name":"version","type":"bytes32"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"},{"name":"","type":"uint256"}],"name":"deployed_instances","outputs":[{"name":"current_provider","type":"address"},{"name":"current_registry_exec_id","type":"bytes32"},{"name":"app_exec_id","type":"bytes32"},{"name":"app_name","type":"bytes32"},{"name":"version_name","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"bytes32"},{"name":"","type":"uint256"}],"name":"app_instances","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_exec_id","type":"bytes32"}],"name":"getInstanceImplementation","outputs":[{"name":"index","type":"address"},{"name":"functions","type":"bytes4[]"},{"name":"implementations","type":"address[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_app_name","type":"bytes32"}],"name":"getInstances","outputs":[{"name":"","type":"bytes32[]"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"_exec_admin","type":"address"},{"name":"_app_storage","type":"address"},{"name":"_provider","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":true,"name":"creator","type":"address"},{"indexed":true,"name":"execution_id","type":"bytes32"},{"indexed":false,"name":"app_name","type":"bytes32"},{"indexed":false,"name":"version_name","type":"bytes32"}],"name":"AppInstanceCreated","type":"event"}]
       break;
     case "idxMintedCapped":
