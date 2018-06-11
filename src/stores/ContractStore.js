@@ -3,7 +3,7 @@ import autosave from './autosave'
 
 class ContractStore {
 
-  @observable abstractSorage;
+  @observable abstractStorage;
   @observable registryIdx;
   @observable provider;
   @observable registryExec;
