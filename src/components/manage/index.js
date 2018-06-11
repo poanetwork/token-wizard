@@ -22,7 +22,7 @@ import { getCrowdsaleAssets } from '../../stores/utils'
 import { getFieldsToUpdate, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
 import { getTiersLength, toBigNumber } from '../crowdsale/utils'
-import { generateContext, updateGlobalMinContribution } from '../stepFour/utils'
+import { updateGlobalMinContribution } from '../stepFour/utils'
 import { toJS } from 'mobx'
 import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
@@ -96,12 +96,12 @@ export class Manage extends Component {
   checkOwner = async () => {
     const { contractStore, web3Store, crowdsaleStore } = this.props
 
-    const targetPrefix = "initCrowdsale"
+    const targetPrefix = "idx"
     const targetSuffix = crowdsaleStore.contractTargetSuffix
     const target = `${targetPrefix}${targetSuffix}`
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
-    const { addr } = toJS(contractStore.registryStorage)
+    const { addr } = toJS(contractStore.abstractStorage)
     const ownerAccount = await methods.getAdmin(addr, contractStore.crowdsale.execID).call()
     const accounts = await web3Store.web3.eth.getAccounts()
 
@@ -115,7 +115,7 @@ export class Manage extends Component {
     try {
       const { crowdsaleStore, contractStore, tierStore, match } = this.props
       const { crowdsaleExecID } = match.params
-      const { addr: registryStorageAddr } = toJS(contractStore.registryStorage)
+      const { addr: registryStorageAddr } = toJS(contractStore.abstractStorage)
       const { isMintedCappedCrowdsale, isDutchAuction } = crowdsaleStore
       const account = await getCurrentAccount()
 
@@ -125,7 +125,7 @@ export class Manage extends Component {
       const num_of_tiers = await getTiersLength()
       console.log("num_of_tiers:", num_of_tiers)
 
-      const { methods } = await attachToSpecificCrowdsaleContract(`initCrowdsale${crowdsaleStore.contractTargetSuffix}`)
+      const { methods } = await attachToSpecificCrowdsaleContract(`idx${crowdsaleStore.contractTargetSuffix}`)
       const {
         getCrowdsaleInfo,
         getTokenInfo,
@@ -181,28 +181,30 @@ export class Manage extends Component {
 
         const { reserved_destinations } = await getReservedTokenDestinationList(registryStorageAddr, crowdsaleExecID).call()
 
-        for (let destination_index = 0; destination_index < reserved_destinations.length; destination_index++) {
-          const reserved_addr = reserved_destinations[destination_index]
-          const {
-            num_tokens,
-            num_percent,
-            percent_decimals
-          } = await getReservedDestinationInfo(registryStorageAddr, crowdsaleExecID, reserved_addr).call()
+        if (reserved_destinations) {
+          for (let destination_index = 0; destination_index < reserved_destinations.length; destination_index++) {
+            const reserved_addr = reserved_destinations[destination_index]
+            const {
+              num_tokens,
+              num_percent,
+              percent_decimals
+            } = await getReservedDestinationInfo(registryStorageAddr, crowdsaleExecID, reserved_addr).call()
 
-          if (num_tokens > 0) {
-            reserved_tokens_info.push({
-              addr: reserved_addr,
-              dim: "tokens",
-              val: toBigNumber(num_tokens).times(`1e-${token.token_decimals}`).toFixed()
-            })
-          }
+            if (num_tokens > 0) {
+              reserved_tokens_info.push({
+                addr: reserved_addr,
+                dim: "tokens",
+                val: toBigNumber(num_tokens).times(`1e-${token._token_decimals}`).toFixed()
+              })
+            }
 
-          if (num_percent > 0) {
-            reserved_tokens_info.push({
-              addr: reserved_addr,
-              dim: "percentage",
-              val: toBigNumber(num_percent).times(`1e-${percent_decimals}`).toFixed()
-            })
+            if (num_percent > 0) {
+              reserved_tokens_info.push({
+                addr: reserved_addr,
+                dim: "percentage",
+                val: toBigNumber(num_percent).times(`1e-${percent_decimals}`).toFixed()
+              })
+            }
           }
         }
 
@@ -242,7 +244,7 @@ export class Manage extends Component {
 
       tiers.forEach((tier, index) => processTier(tier, crowdsale, token, reserved_tokens_info, index))
 
-      tierStore.setGlobalMinCap(toBigNumber(crowdsale.minimum_contribution).div(`1e${token.token_decimals}`).toFixed())
+      tierStore.setGlobalMinCap(toBigNumber(crowdsale.minimum_contribution).div(`1e${token._token_decimals}`).toFixed())
 
       await this.updateCrowdsaleStatus()
 
@@ -273,12 +275,12 @@ export class Manage extends Component {
   setCrowdsaleInfo = async () => {
     const { contractStore, crowdsaleStore } = this.props
 
-    const targetPrefix = "initCrowdsale"
+    const targetPrefix = "idx"
     const targetSuffix = crowdsaleStore.contractTargetSuffix
     const target = `${targetPrefix}${targetSuffix}`
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
-    const { addr } = toJS(contractStore.registryStorage)
+    const { addr } = toJS(contractStore.abstractStorage)
     const { end_time } = await methods.getCrowdsaleStartAndEndTimes(addr, contractStore.crowdsale.execID).call()
 
     console.log("crowdsaleStartAndEndTimes.end_time:", end_time)
@@ -288,13 +290,13 @@ export class Manage extends Component {
   canFinalize = async () => {
     const { contractStore, crowdsaleStore } = this.props
 
-    const targetPrefix = "initCrowdsale"
+    const targetPrefix = "idx"
     const targetSuffix = crowdsaleStore.contractTargetSuffix
     const target = `${targetPrefix}${targetSuffix}`
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
     const { getCrowdsaleInfo, isCrowdsaleFull } = methods
-    const { addr } = toJS(contractStore.registryStorage)
+    const { addr } = toJS(contractStore.abstractStorage)
 
     try {
       const { is_finalized } = await getCrowdsaleInfo(addr, contractStore.crowdsale.execID).call()
@@ -319,8 +321,7 @@ export class Manage extends Component {
     const { web3Store } = this.props
     const { web3 } = web3Store
 
-    let context = generateContext(0);
-    let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [context]);
+    let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, []);
     return encodedParameters;
   }
 
@@ -337,13 +338,13 @@ export class Manage extends Component {
 
                 getCurrentAccount()
                   .then(account => {
-                    const methodInterface = ["bytes"]
+                    const methodInterface = []
 
                     let methodName
                     let targetPrefix
                     if (crowdsaleStore.isMintedCappedCrowdsale) {
                       methodName = "finalizeCrowdsaleAndToken"
-                      targetPrefix = "tokenConsole"
+                      targetPrefix = "tokenManager"
                     } else if (crowdsaleStore.isDutchAuction) {
                       methodName = "finalizeCrowdsale"
                       targetPrefix = "crowdsaleConsole"
@@ -352,7 +353,7 @@ export class Manage extends Component {
                     const target = `${targetPrefix}${targetSuffix}`
 
                     let paramsToExec = [methodInterface]
-                    const method = methodToExec("scriptExec", `${methodName}(${methodInterface.join(',')})`, target, this.getFinalizeCrowdsaleParams, paramsToExec)
+                    const method = methodToExec("registryExec", `${methodName}(${methodInterface.join(',')})`, target, this.getFinalizeCrowdsaleParams, paramsToExec)
 
                     let opts = {
                       gasPrice: this.props.generalStore.gasPrice,

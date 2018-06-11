@@ -1,6 +1,6 @@
 import { action, observable, computed } from 'mobx'
 import autosave from './autosave'
-import { CROWDSALE_STRATEGIES } from '../utils/constants'
+import { CROWDSALE_STRATEGIES, REACT_PREFIX } from '../utils/constants'
 
 class CrowdsaleStore {
   @observable crowdsales
@@ -18,8 +18,8 @@ class CrowdsaleStore {
 
   @computed
   get appName() {
-    if (this.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE) return process.env['REACT_APP_MINTED_CAPPED_CROWDSALE_APP_NAME'];
-    else if (this.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION) return process.env['REACT_APP_DUTCH_CROWDSALE_APP_NAME'];
+    if (this.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE) return process.env[`${REACT_PREFIX}MINTED_CAPPED_APP_NAME`];
+    else if (this.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION) return process.env[`${REACT_PREFIX}DUTCH_APP_NAME`];
     return '';
   }
 
