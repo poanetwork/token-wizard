@@ -5,7 +5,7 @@ import {
   getAllCrowdsaleAddresses,
   getNetworkVersion
 } from '../../utils/blockchainHelpers'
-import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
+import { getCrowdsaleAssets } from '../../stores/utils'
 import { CROWDSALE_APP_NAMES } from '../../utils/constants'
 import { Loader } from '../Common/Loader'
 import { BigNumber } from 'bignumber.js'
@@ -29,7 +29,8 @@ export class Stats extends Component {
     const { web3 } = web3Store
     const networkID = await getNetworkVersion()
     console.log("networkID:", networkID)
-    getWhiteListWithCapCrowdsaleAssets(networkID)
+    //to do: wei_raised -> _wei_raised
+    getCrowdsaleAssets(networkID)
       .then(getCurrentAccount)
       .then(getAllCrowdsaleAddresses)
       .then((crowdsaleInstances) => {

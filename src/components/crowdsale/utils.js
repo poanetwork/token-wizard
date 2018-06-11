@@ -1,6 +1,5 @@
 import { noContractAlert } from '../../utils/alerts'
 import {
-  getCurrentAccount,
   attachToSpecificCrowdsaleContract,
 } from '../../utils/blockchainHelpers'
 import { contractStore, crowdsalePageStore, tokenStore, web3Store, crowdsaleStore } from '../../stores'
@@ -20,7 +19,7 @@ export let getTokenData = async (initCrowdsaleContract, execID, account) => {
 
   try {
     const { name, symbol, decimals, totalSupply, balanceOf } = initCrowdsaleContract.methods
-    const { addr } = toJS(contractStore.registryStorage)
+    const { addr } = contractStore.abstractStorage
     const { toAscii } = web3Store.web3.utils
 
     const token_name = await name(addr, execID).call()
@@ -65,7 +64,7 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
   }
 
   try {
-    const { addr } = toJS(contractStore.registryStorage)
+    const { addr } = contractStore.abstractStorage
     const {
       getCrowdsaleInfo,
       getTokensSold,
@@ -76,13 +75,13 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
       isCrowdsaleFull
     } = initCrowdsaleContract.methods
 
-    const { wei_raised } = await getCrowdsaleInfo(addr, execID).call()
+    const { _wei_raised } = await getCrowdsaleInfo(addr, execID).call()
     const tokensSold = await getTokensSold(addr, execID).call()
     const contributors = await getCrowdsaleUniqueBuyers(addr, execID).call()
     const { fromWei } = web3Store.web3.utils
 
-    crowdsalePageStore.setProperty('weiRaised', wei_raised)
-    crowdsalePageStore.setProperty('ethRaised', fromWei(wei_raised, 'ether'))
+    crowdsalePageStore.setProperty('weiRaised', _wei_raised)
+    crowdsalePageStore.setProperty('ethRaised', fromWei(_wei_raised, 'ether'))
     crowdsalePageStore.setProperty('tokensSold', tokensSold)
 
     if (contributors) crowdsalePageStore.setProperty('contributors', contributors)
@@ -97,6 +96,7 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
     }
 
     if (crowdsaleStore.isDutchAuction) {
+      //todo: wei_raised -> _wei_raised
       const crowdsaleStatus = await getCrowdsaleStatus(addr, execID).call()
       const { max_sellable } = await isCrowdsaleFull(addr, execID).call()
       const current_rate = chooseRateForDutchAuction(crowdsaleStatus)
@@ -111,7 +111,7 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
         : 0
       console.log("remainingWEI:", remainingWEI.toFixed())
 
-      const maximumSellableTokensInWei = toBigNumber(wei_raised).plus(remainingWEI).toFixed()
+      const maximumSellableTokensInWei = toBigNumber(_wei_raised).plus(remainingWEI).toFixed()
       const maximumSellableTokensInETH = fromWei(maximumSellableTokensInWei, 'ether')
       console.log("maximumSellableTokensInETH:", maximumSellableTokensInETH)
       console.log("maximumSellableTokensInWei:", maximumSellableTokensInWei)
@@ -137,14 +137,17 @@ export let getCrowdsaleTargetDates = (initCrowdsaleContract, execID) => {
 
     console.log(initCrowdsaleContract)
 
-    let registryStorageObj = toJS(contractStore.registryStorage)
+    const registryStorageObj = toJS(contractStore.abstractStorage)
+    const { addr } = registryStorageObj
+    const { methods } = initCrowdsaleContract
 
     if (crowdsaleStore.isMintedCappedCrowdsale) {
       return getTiersLength()
         .then((tiersLength) => {
+          console.log("tiersLength:", tiersLength)
           let getTiersStartAndEndDates = []
           for (let ind = 0; ind < tiersLength; ind++) {
-            let getTierStartAndEndDates = initCrowdsaleContract.methods.getTierStartAndEndDates(registryStorageObj.addr, execID, ind).call()
+            let getTierStartAndEndDates = methods.getTierStartAndEndDates(addr, execID, ind).call()
             getTiersStartAndEndDates.push(getTierStartAndEndDates)
           }
 
@@ -166,7 +169,7 @@ export let getCrowdsaleTargetDates = (initCrowdsaleContract, execID) => {
         })
         .catch(reject)
     } else if (crowdsaleStore.isDutchAuction) {
-      initCrowdsaleContract.methods.getCrowdsaleStartAndEndTimes(registryStorageObj.addr, execID).call()
+      methods.getCrowdsaleStartAndEndTimes(addr, execID).call()
         .then((crowdsaleStartAndEndTimes) => {
           const tierDates = setTierDates(crowdsaleStartAndEndTimes.start_time, crowdsaleStartAndEndTimes.end_time)
 
@@ -207,7 +210,7 @@ let fillCrowdsalePageStoreDates = (startsAtMilliseconds, endsAtMilliseconds) => 
 }
 
 export let isFinalized = (initCrowdsaleContract, crowdsaleExecID) => {
-  let registryStorageObj = toJS(contractStore.registryStorage)
+  const registryStorageObj = toJS(contractStore.abstractStorage)
   let getCrowdsaleInfo = initCrowdsaleContract.methods.getCrowdsaleInfo(registryStorageObj.addr, crowdsaleExecID).call();
 
   return getCrowdsaleInfo.then(crowdsaleInfo => {
@@ -216,40 +219,19 @@ export let isFinalized = (initCrowdsaleContract, crowdsaleExecID) => {
   })
 }
 
-export const getTiersLength = () => {
-  if (crowdsaleStore.isMintedCappedCrowdsale) {
-    return getCurrentAccount()
-      .then(account => {
-        const targetPrefix = "initCrowdsale"
-        const targetSuffix = crowdsaleStore.contractTargetSuffix
-        const target = `${targetPrefix}${targetSuffix}`
-        return attachToSpecificCrowdsaleContract(target)
-          .then((initCrowdsaleContract) => {
-            const { methods } = initCrowdsaleContract
-            let registryStorageObj = toJS(contractStore.registryStorage)
+export const getTiersLength = async () => {
+  if (crowdsaleStore.isDutchAuction) return 1
 
-            return methods.getCrowdsaleTierList(registryStorageObj.addr, contractStore.crowdsale.execID).call()
-              .then(tiers => {
-                console.log("tiers:", tiers)
-                console.log("tiersLength:", tiers.length)
-                return Promise.resolve(tiers.length)
-              })
-          })
-          .catch((err) => {
-            console.error(err)
-            return Promise.reject(0)
-          })
-      })
-      .catch((err) => {
-        console.error(err)
-        return Promise.reject(0)
-      })
-  } else if (crowdsaleStore.isDutchAuction) {
-    const dutchAuctionTiersLength = 1
-    return Promise.resolve(dutchAuctionTiersLength)
-  } else {
-    return Promise.reject(0)
+  if (crowdsaleStore.isMintedCappedCrowdsale) {
+    const { methods } = await attachToSpecificCrowdsaleContract(`idx${crowdsaleStore.contractTargetSuffix}`)
+    const { getCrowdsaleTierList } = methods
+    const { addr } = toJS(contractStore.abstractStorage)
+    const tiers = await getCrowdsaleTierList(addr, contractStore.crowdsale.execID).call()
+
+    return tiers.length
   }
+
+  return Promise.reject(0)
 }
 
 export const getContractStoreProperty = (contract, property) => {

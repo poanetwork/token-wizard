@@ -5,25 +5,27 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import { useStrict } from 'mobx';
 import { Provider } from 'mobx-react';
+import { REACT_PREFIX } from './utils/constants'
 import * as stores from './stores';
 import 'airbnb-js-shims'
 import 'font-awesome/css/font-awesome.css'
 
 useStrict(true);
 
-checkEnvVariable('REACT_APP_REGISTRY_STORAGE_ADDRESS');
-checkEnvVariable('REACT_APP_INIT_REGISTRY_ADDRESS');
-checkEnvVariable('REACT_APP_SCRIPT_EXEC_ADDRESS');
-checkEnvVariable('REACT_APP_MINTED_CAPPED_CROWDSALE_INIT_CROWDSALE_ADDRESS');
-checkEnvVariable('REACT_APP_MINTED_CAPPED_CROWDSALE_TOKEN_CONSOLE_ADDRESS');
-checkEnvVariable('REACT_APP_MINTED_CAPPED_CROWDSALE_CROWDSALE_CONSOLE_ADDRESS');
-checkEnvVariable('REACT_APP_MINTED_CAPPED_CROWDSALE_CROWDSALE_BUY_TOKENS_ADDRESS');
-checkEnvVariable('REACT_APP_DUTCH_CROWDSALE_INIT_CROWDSALE_ADDRESS');
-checkEnvVariable('REACT_APP_DUTCH_CROWDSALE_TOKEN_CONSOLE_ADDRESS');
-checkEnvVariable('REACT_APP_DUTCH_CROWDSALE_CROWDSALE_CONSOLE_ADDRESS');
-checkEnvVariable('REACT_APP_DUTCH_CROWDSALE_CROWDSALE_BUY_TOKENS_ADDRESS');
-checkEnvVariable('REACT_APP_MINTED_CAPPED_CROWDSALE_APP_NAME');
-checkEnvVariable('REACT_APP_DUTCH_CROWDSALE_APP_NAME');
+checkEnvVariable(`${REACT_PREFIX}REGISTRY_IDX_ADDRESS`);
+checkEnvVariable(`${REACT_PREFIX}PROVIDER_ADDRESS`);
+checkEnvVariable(`${REACT_PREFIX}REGISTRY_EXEC_ADDRESS`);
+checkEnvVariable(`${REACT_PREFIX}MINTED_CAPPED_IDX_ADDRESS`);
+checkEnvVariable(`${REACT_PREFIX}MINTED_CAPPED_CROWDSALE_ADDRESS`);
+checkEnvVariable(`${REACT_PREFIX}MINTED_CAPPED_CROWDSALE_MANAGER_ADDRESS`);
+checkEnvVariable(`${REACT_PREFIX}MINTED_CAPPED_TOKEN_ADDRESS`);
+checkEnvVariable(`${REACT_PREFIX}MINTED_CAPPED_TOKEN_MANAGER_ADDRESS`);
+checkEnvVariable(`${REACT_PREFIX}DUTCH_INIT_CROWDSALE_ADDRESS`);
+checkEnvVariable(`${REACT_PREFIX}DUTCH_TOKEN_CONSOLE_ADDRESS`);
+checkEnvVariable(`${REACT_PREFIX}DUTCH_CROWDSALE_CONSOLE_ADDRESS`);
+checkEnvVariable(`${REACT_PREFIX}DUTCH_CROWDSALE_BUY_TOKENS_ADDRESS`);
+checkEnvVariable(`${REACT_PREFIX}MINTED_CAPPED_APP_NAME`);
+checkEnvVariable(`${REACT_PREFIX}DUTCH_APP_NAME`);
 
 const devEnvironment = process.env.NODE_ENV === 'development';
 if (devEnvironment && !window.web3) {

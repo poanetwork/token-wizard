@@ -156,3 +156,5 @@ export const acceptPositiveIntegerOnly = (value) => {
 }
 
 export const removeTrailingNUL = ascii => ascii.replace(/\x00+/, '')
+
+export const dateToTimestamp = (date) => new Date(date).getTime()

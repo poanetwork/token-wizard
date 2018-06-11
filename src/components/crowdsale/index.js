@@ -3,9 +3,9 @@ import '../../assets/stylesheets/application.css'
 import {
   getCurrentAccount,
   checkNetWorkByID,
+  checkWeb3,
   attachToSpecificCrowdsaleContract,
-  getCrowdsaleStrategy,
-  checkWeb3
+  getCrowdsaleStrategy
 } from '../../utils/blockchainHelpers'
 import {
   getContractStoreProperty,
@@ -15,7 +15,7 @@ import {
   toBigNumber
 } from './utils'
 import { getExecID, getNetworkID } from '../../utils/utils'
-import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
+import { getCrowdsaleAssets } from '../../stores/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../../utils/constants'
 import { Loader } from '../Common/Loader'
@@ -83,7 +83,7 @@ export class Crowdsale extends React.Component {
     const { crowdsaleStore, contractStore, generalStore } = this.props
 
     try {
-      await getWhiteListWithCapCrowdsaleAssets(generalStore.networkID)
+      await getCrowdsaleAssets(generalStore.networkID)
       const strategy = await getCrowdsaleStrategy(contractStore.crowdsale.execID)
       crowdsaleStore.setProperty('strategy', strategy)
     } catch (err) {
@@ -99,7 +99,7 @@ export class Crowdsale extends React.Component {
       return invalidCrowdsaleAddrAlert()
     }*/
 
-    const targetPrefix = "initCrowdsale"
+    const targetPrefix = "idx"
     const targetSuffix = crowdsaleStore.contractTargetSuffix
     const target = `${targetPrefix}${targetSuffix}`
     console.log("target:", target)

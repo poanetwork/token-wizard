@@ -2,7 +2,7 @@ import Web3 from 'web3'
 import { observable } from 'mobx';
 import { getNetworkID } from '../utils/utils'
 import { CrowdsaleConfig } from '../components/Common/config'
-import { CHAINS } from '../utils/constants'
+import { CHAINS, REACT_PREFIX } from '../utils/constants'
 
 class Web3Store {
 
@@ -25,7 +25,8 @@ class Web3Store {
   }
 
   getInfuraLink = (network) => {
-    return `https://${network}.infura.io/${process.env['REACT_APP_INFURA_TOKEN']}`
+    const infuraTokenEnvVar = process.env[`${REACT_PREFIX}INFURA_TOKEN`]
+    return `https://${network}.infura.io/${infuraTokenEnvVar}`
   }
 
   getWeb3 = cb => {

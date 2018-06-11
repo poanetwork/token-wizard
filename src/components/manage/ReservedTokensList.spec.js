@@ -1,7 +1,6 @@
 import React from 'react'
 import { StaticRouter } from 'react-router'
-import { DistributeTokensStep } from './DistributeTokensStep'
-import renderer from 'react-test-renderer'
+import { ReservedTokensList } from './ReservedTokensList'
 import Adapter from 'enzyme-adapter-react-15'
 import { configure, mount } from 'enzyme'
 import ReservedTokenStore from '../../stores/ReservedTokenStore'
@@ -55,7 +54,7 @@ describe('DistributeTokensStep', () => {
 
     const wrapper = mount(
       <StaticRouter location="testLocation" context={{}}>
-        <DistributeTokensStep {...distributeTokensStateParams} />
+        <ReservedTokensList {...distributeTokensStateParams} />
       </StaticRouter>
     )
 
@@ -74,7 +73,7 @@ describe('DistributeTokensStep', () => {
 
     const wrapper = mount(
       <StaticRouter location="testLocation" context={{}}>
-        <DistributeTokensStep {...distributeTokensStateParams} />
+        <ReservedTokensList {...distributeTokensStateParams} />
       </StaticRouter>
     )
 
@@ -91,7 +90,7 @@ describe('DistributeTokensStep', () => {
 
     const wrapper = mount(
       <StaticRouter location="testLocation" context={{}}>
-        <DistributeTokensStep {...distributeTokensStateParams} />
+        <ReservedTokensList {...distributeTokensStateParams} />
       </StaticRouter>
     )
 

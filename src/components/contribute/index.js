@@ -21,7 +21,7 @@ import {
   getUserMinLimits
 } from '../crowdsale/utils'
 import { countDecimalPlaces, getExecID, getNetworkID, toast } from '../../utils/utils'
-import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
+import { getCrowdsaleAssets } from '../../stores/utils'
 import {
   contributionDisabledAlertInTime,
   noGasPriceAvailable,
@@ -44,7 +44,6 @@ import moment from 'moment'
 import { BigNumber } from 'bignumber.js'
 import { Form } from 'react-final-form'
 import { ContributeForm } from './ContributeForm'
-import { generateContext } from '../stepFour/utils'
 
 @inject(
   'contractStore',
@@ -86,7 +85,7 @@ export class Contribute extends React.Component {
     const { gasPriceStore, generalStore, crowdsaleStore } = this.props
 
     this.validateEnvironment()
-      .then(() => getWhiteListWithCapCrowdsaleAssets(generalStore.networkID))
+      .then(() => getCrowdsaleAssets(generalStore.networkID))
       .then(() => getCrowdsaleStrategy(this.state.crowdsaleExecID))
       .then((strategy) => crowdsaleStore.setProperty('strategy', strategy))
       //.then((strategy) => crowdsaleStore.setProperty('strategy', CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE)) //todo
@@ -163,7 +162,7 @@ export class Contribute extends React.Component {
       web3
     })
 
-    const targetPrefix = "initCrowdsale"
+    const targetPrefix = "idx"
     const targetSuffix = crowdsaleStore.contractTargetSuffix
     const target = `${targetPrefix}${targetSuffix}`
 
@@ -278,17 +277,16 @@ export class Contribute extends React.Component {
   getBuyParams = (weiToSend, methodInterface) => {
     const { web3Store } = this.props
     const { web3 } = web3Store
-    let context = generateContext(weiToSend);
-    let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [context]);
+    let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, []);
     return encodedParameters;
   }
 
   calculateWeiToSend = async () => {
     const { crowdsalePageStore, crowdsaleStore, contractStore, contributeStore } = this.props
     const { execID, account } = this.props.contractStore.crowdsale
-    const { addr } = toJS(contractStore.registryStorage)
+    const { addr } = toJS(contractStore.abstractStorage)
 
-    const targetPrefix = "initCrowdsale"
+    const targetPrefix = "idx"
     const targetSuffix = crowdsaleStore.contractTargetSuffix
     const target = `${targetPrefix}${targetSuffix}`
 
@@ -320,9 +318,9 @@ export class Contribute extends React.Component {
   calculateMinContribution = async () => {
     const { crowdsaleStore, contractStore } = this.props
     const { execID, account } = this.props.contractStore.crowdsale
-    const { addr } = toJS(contractStore.registryStorage)
+    const { addr } = toJS(contractStore.abstractStorage)
 
-    const targetPrefix = "initCrowdsale"
+    const targetPrefix = "idx"
     const targetSuffix = crowdsaleStore.contractTargetSuffix
     const target = `${targetPrefix}${targetSuffix}`
 
@@ -356,14 +354,14 @@ export class Contribute extends React.Component {
     }
     console.log(opts)
 
-    let methodInterface = ["bytes"];
+    let methodInterface = [];
 
-    const targetPrefix = "crowdsaleBuyTokens"
+    const targetPrefix = "sale"
     const targetSuffix = crowdsaleStore.contractTargetSuffix
     const target = `${targetPrefix}${targetSuffix}`
 
     let paramsToExec = [opts.value, methodInterface]
-    const method = methodToExec("scriptExec", `buy(${methodInterface.join(',')})`, target, this.getBuyParams, paramsToExec)
+    const method = methodToExec("registryExec", `buy()`, target, this.getBuyParams, paramsToExec)
 
     const estimatedGas = await method.estimateGas(opts)
     console.log('estimatedGas:', estimatedGas)
