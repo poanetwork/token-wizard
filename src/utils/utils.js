@@ -6,6 +6,16 @@ export function getQueryVariable(variable) {
   return queryString.parse(window.location.search)[variable]
 }
 
+export const getExecID = () => {
+  const execID = getQueryVariable('exec-id')
+  return (/^0x[a-f0-9]{64}$/i).test(execID) ? execID : null
+}
+
+export const getNetworkID = () => {
+  const networkID = getQueryVariable('networkID')
+  return /^[0-9]+$/.test(networkID) ? networkID : null
+}
+
 export function setFlatFileContentToState(file) {
   return fetchFile(file)
 }
