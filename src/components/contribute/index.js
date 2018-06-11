@@ -7,7 +7,8 @@ import {
   calculateGasLimit,
   attachToSpecificCrowdsaleContract,
   methodToExec,
-  getCrowdsaleStrategy
+  getCrowdsaleStrategy,
+  checkWeb3
 } from '../../utils/blockchainHelpers'
 import {
   getTokenData,
@@ -19,7 +20,7 @@ import {
   getUserMaxLimits,
   getUserMinLimits
 } from '../crowdsale/utils'
-import { countDecimalPlaces, getQueryVariable, toast } from '../../utils/utils'
+import { countDecimalPlaces, getExecID, getNetworkID, toast } from '../../utils/utils'
 import { getWhiteListWithCapCrowdsaleAssets } from '../../stores/utils'
 import {
   contributionDisabledAlertInTime,
@@ -27,7 +28,9 @@ import {
   MetaMaskIsLockedAlert,
   successfulContributionAlert,
   noMoreTokensAvailable,
-  notAllowedContributor
+  notAllowedContributor,
+  invalidCrowdsaleExecIDAlert,
+  invalidNetworkIDAlert
 } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
 import { CrowdsaleConfig } from '../Common/config'
@@ -65,7 +68,7 @@ export class Contribute extends React.Component {
       pristineTokenInput: true,
       web3Available: false,
       contributeThrough: CONTRIBUTION_OPTIONS.QR,
-      crowdsaleExecID: CrowdsaleConfig.crowdsaleContractURL || getQueryVariable('exec-id'),
+      crowdsaleExecID: '',
       toNextTick: {
         days: 0,
         hours: 0,
@@ -80,46 +83,70 @@ export class Contribute extends React.Component {
   }
 
   componentDidMount () {
-    const { web3Store, gasPriceStore, generalStore, crowdsaleStore } = this.props
-    const { web3 } = web3Store
+    const { gasPriceStore, generalStore, crowdsaleStore } = this.props
 
-    if (!web3) {
-      this.setState({ loading: false })
-      return
+    this.validateEnvironment()
+      .then(() => getWhiteListWithCapCrowdsaleAssets(generalStore.networkID))
+      .then(() => getCrowdsaleStrategy(this.state.crowdsaleExecID))
+      .then((strategy) => crowdsaleStore.setProperty('strategy', strategy))
+      //.then((strategy) => crowdsaleStore.setProperty('strategy', CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE)) //todo
+      .then(() => this.extractContractsData())
+      .then(() => gasPriceStore.updateValues()
+        .then(
+          () => generalStore.setGasPrice(gasPriceStore.slow.price),
+          () => noGasPriceAvailable()
+        )
+      )
+      .catch((err) => console.error(err))
+      .then(() => this.setState({ loading: false }))
+  }
+
+  validateEnvironment = async () => {
+    const { web3Store, generalStore, contractStore } = this.props
+
+    await checkWeb3()
+
+    if (!web3Store.web3) {
+      return Promise.reject('no web3 available')
     }
-
-    const networkID = CrowdsaleConfig.networkID ? CrowdsaleConfig.networkID : getQueryVariable('networkID')
-    checkNetWorkByID(networkID)
 
     this.setState({
       web3Available: true,
       contributeThrough: CONTRIBUTION_OPTIONS.METAMASK
     })
 
-    getWhiteListWithCapCrowdsaleAssets(networkID)
-      .then(_newState => {
-        this.setState(_newState)
-      })
-      .then(() => getCrowdsaleStrategy(this.state.crowdsaleExecID))
-      .then((strategy) => crowdsaleStore.setProperty('strategy', strategy))
-      //.then((strategy) => crowdsaleStore.setProperty('strategy', CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE)) //to do
-      .then(() => {
-        this.extractContractsData()
-        gasPriceStore.updateValues()
-          .then(() => generalStore.setGasPrice(gasPriceStore.slow.price))
-          .catch(() => noGasPriceAvailable())
-      })
+    const networkID = CrowdsaleConfig.networkID || getNetworkID()
+    generalStore.setProperty('networkID', networkID)
+
+    const networkInfo = await checkNetWorkByID(networkID)
+
+    if (networkInfo === null || !networkID) {
+      invalidNetworkIDAlert()
+      return Promise.reject('invalid networkID')
+    } else if (String(networkInfo) !== networkID) {
+      return Promise.reject('invalid networkID')
+    }
+
+    const crowdsaleExecID = CrowdsaleConfig.crowdsaleContractURL || getExecID()
+    contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
+
+    this.setState({ crowdsaleExecID })
+
+    if (!crowdsaleExecID) {
+      invalidCrowdsaleExecIDAlert()
+      return Promise.reject('invalid exec-id')
+    }
   }
 
   componentWillUnmount () {
     this.clearTimeInterval()
   }
 
-  extractContractsData() {
+  extractContractsData = async () => {
     const { contractStore, web3Store, crowdsaleStore } = this.props
     const { web3 } = web3Store
 
-    const crowdsaleExecID = CrowdsaleConfig.crowdsaleContractURL ? CrowdsaleConfig.crowdsaleContractURL : getQueryVariable('exec-id')
+    const { crowdsaleExecID } = this.state
 
     //to do
     /*if (!web3.utils.isAddress(crowdsaleAddr)) {
@@ -127,50 +154,31 @@ export class Contribute extends React.Component {
       return invalidCrowdsaleAddrAlert()
     }*/
 
-    getCurrentAccount()
-      .then(account => {
-        console.log("crowdsaleExecID:", crowdsaleExecID)
-        contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
-        contractStore.setContractProperty('crowdsale', 'account', account)
+    const account = await getCurrentAccount()
 
-        this.setState({
-          curAddr: account,
-          web3
-        })
+    contractStore.setContractProperty('crowdsale', 'account', account)
 
-        if (!contractStore.crowdsale.execID) {
-          this.setState({ loading: false })
-          return
-        }
+    this.setState({
+      curAddr: account,
+      web3
+    })
 
-        const targetPrefix = "initCrowdsale"
-        const targetSuffix = crowdsaleStore.contractTargetSuffix
-        const target = `${targetPrefix}${targetSuffix}`
+    const targetPrefix = "initCrowdsale"
+    const targetSuffix = crowdsaleStore.contractTargetSuffix
+    const target = `${targetPrefix}${targetSuffix}`
 
-        attachToSpecificCrowdsaleContract(target)
-          .then((initCrowdsaleContract) => {
-            initializeAccumulativeData()
-            .then(() => getTokenData(initCrowdsaleContract, crowdsaleExecID, account))
-            .then(() => getCrowdsaleData(initCrowdsaleContract, crowdsaleExecID, account, crowdsaleStore))
-            .then(() => getCrowdsaleTargetDates(initCrowdsaleContract, crowdsaleExecID))
-            .then(() => this.checkIsFinalized(initCrowdsaleContract, crowdsaleExecID))
-            .then(() => this.calculateMinContribution())
-            .then(() => this.setTimers())
-            .catch(err => {
-              this.setState({ loading: false })
-              console.log(err)
-            })
-            .then(() => this.setState({ loading: false }))
-          })
-          .catch(err => {
-            this.setState({ loading: false })
-            console.log(err)
-          })
-      })
-      .catch(err => {
-        this.setState({ loading: false })
-        console.log(err)
-      })
+    try {
+      const initCrowdsaleContract = await attachToSpecificCrowdsaleContract(target)
+      await initializeAccumulativeData()
+      await getTokenData(initCrowdsaleContract, crowdsaleExecID, account)
+      await getCrowdsaleData(initCrowdsaleContract, crowdsaleExecID, account, crowdsaleStore)
+      await getCrowdsaleTargetDates(initCrowdsaleContract, crowdsaleExecID)
+      await this.checkIsFinalized(initCrowdsaleContract, crowdsaleExecID)
+      await this.calculateMinContribution()
+      await this.setTimers()
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   checkIsFinalized(initCrowdsaleContract, crowdsaleExecID) {
@@ -425,7 +433,7 @@ export class Contribute extends React.Component {
     //min contribution
     const minimumContributionDisplay = minimumContribution >= 0 ? `${minimumContribution} ${tokenTicker}` : 'You are not allowed'
 
-    const QRPaymentProcessElement = contributeThrough === CONTRIBUTION_OPTIONS.QR ?
+    const QRPaymentProcessElement = contributeThrough === CONTRIBUTION_OPTIONS.QR && crowdsaleExecID ?
       <QRPaymentProcess crowdsaleExecID={crowdsaleExecID} /> :
       null
 

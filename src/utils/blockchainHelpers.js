@@ -45,21 +45,23 @@ const checkMetaMask = () => {
 export function checkNetWorkByID (_networkIdFromGET) {
   console.log(_networkIdFromGET)
 
-  if (!_networkIdFromGET) return invalidNetworkIDAlert()
+  if (!_networkIdFromGET) return null
 
   const { web3 } = web3Store
   let networkNameFromGET = getNetWorkNameById(_networkIdFromGET)
   networkNameFromGET = networkNameFromGET ? networkNameFromGET : CHAINS.UNKNOWN
 
-  web3.eth.net.getId()
+  return web3.eth.net.getId()
     .then(_networkIdFromNetwork => {
       let networkNameFromNetwork = getNetWorkNameById(_networkIdFromNetwork)
       networkNameFromNetwork = networkNameFromNetwork ? networkNameFromNetwork : CHAINS.UNKNOWN
 
       if (networkNameFromGET !== networkNameFromNetwork) {
         console.log(networkNameFromGET + '!=' + networkNameFromNetwork)
-        incorrectNetworkAlert(networkNameFromGET, networkNameFromNetwork)
+        return incorrectNetworkAlert(networkNameFromGET, networkNameFromNetwork)
       }
+
+      return _networkIdFromNetwork
     })
 }
 
@@ -330,30 +332,32 @@ async function getApplicationsInstances () {
     })
 }
 
-function getApplicationsInstance(execID) {
-  const whenScriptExecContract = attachToSpecificCrowdsaleContract("scriptExec")
-  return Promise.resolve(whenScriptExecContract)
-    .then((scriptExecContract) => {
-      return scriptExecContract.methods.deployed_apps(contractStore.registryStorage.addr, execID).call()
-        .then((appObj) => {
-          return Promise.resolve(appObj)
-        })
-    })
+const getApplicationsInstance = async (execID) => {
+  if (!execID) return Promise.reject('invalid exec-id')
+
+  const { methods } = await attachToSpecificCrowdsaleContract("scriptExec")
+  return await methods.deployed_apps(contractStore.registryStorage.addr, execID).call()
 }
 
-export function getCrowdsaleStrategy (execID) {
-  return getApplicationsInstance(execID)
-    .then((appObj) => {
-      const { web3 } = web3Store
-      let appName = removeTrailingNUL(web3.utils.toAscii(appObj.app_name));
+export const getCrowdsaleStrategy = async (execID) => {
+  try {
+    const { app_name } = await getApplicationsInstance(execID)
+    const { web3 } = web3Store
+    const appNameLowerCase = removeTrailingNUL(web3.utils.toAscii(app_name)).toLowerCase()
 
-      let appNameLowerCase = appName.toLowerCase();
-      if (appNameLowerCase.includes(process.env[`REACT_APP_MINTED_CAPPED_CROWDSALE_APP_NAME`].toLowerCase())) {
-        return CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE
-      } else if (appNameLowerCase.includes(process.env[`REACT_APP_DUTCH_CROWDSALE_APP_NAME`].toLowerCase())) {
-        return CROWDSALE_STRATEGIES.DUTCH_AUCTION
-      }
-    })
+    console.log(app_name)
+
+    if (appNameLowerCase.includes(process.env[`REACT_APP_MINTED_CAPPED_CROWDSALE_APP_NAME`].toLowerCase())) {
+      return CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE
+    } else if (appNameLowerCase.includes(process.env[`REACT_APP_DUTCH_CROWDSALE_APP_NAME`].toLowerCase())) {
+      return CROWDSALE_STRATEGIES.DUTCH_AUCTION
+    } else {
+      return Promise.reject('no strategy defined')
+    }
+  } catch (err) {
+    console.error(err)
+    return null
+  }
 }
 
 export async function loadRegistryAddresses () {
@@ -377,32 +381,28 @@ export let getCurrentAccount = () => {
   });
 }
 
-export let attachToSpecificCrowdsaleContract = (contractName) => {
-  return new Promise((resolve, reject) => {
-    console.log(contractStore)
-    console.log(`contractName:${contractName}`)
-    console.log(toJS(contractStore[contractName]))
+export const attachToSpecificCrowdsaleContract = async (contractName) => {
+  const contractObj = toJS(contractStore[contractName])
 
-    let contractObj = toJS(contractStore[contractName])
-    console.log(contractObj)
+  if (!contractObj) {
+    noContractAlert()
+    return Promise.reject('no contract')
+  }
 
-    if (!contractObj) {
+  try {
+    const { abi, addr } = contractObj
+    const contractInstance = await attachToContract(abi, addr)
+
+    if (!contractInstance) {
       noContractAlert()
-      reject('no contract')
+      return Promise.reject('no contract')
     }
 
-    attachToContract(contractObj.abi, contractObj.addr)
-      .then(contractInstance => {
-        console.log(`attach to ${contractName} contract`)
-
-        if (!contractInstance) {
-          noContractAlert()
-          reject('no contract')
-        }
-
-        resolve(contractInstance);
-      })
-  });
+    console.log(`attach to ${contractName} contract`)
+    return contractInstance
+  } catch (err) {
+    return Promise.reject(err)
+  }
 }
 
 export let methodToExec = (contractName, methodName, targetName, getEncodedParams, params) => {

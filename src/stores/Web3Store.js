@@ -1,6 +1,6 @@
 import Web3 from 'web3'
 import { observable } from 'mobx';
-import { getQueryVariable } from '../utils/utils'
+import { getNetworkID } from '../utils/utils'
 import { CrowdsaleConfig } from '../components/Common/config'
 import { CHAINS } from '../utils/constants'
 
@@ -29,9 +29,9 @@ class Web3Store {
   }
 
   getWeb3 = cb => {
-    let networkID = CrowdsaleConfig.networkID ? CrowdsaleConfig.networkID : getQueryVariable('networkID')
+    let networkID = CrowdsaleConfig.networkID || getNetworkID()
     networkID = Number(networkID)
-    var web3 = window.web3;
+    let web3 = window.web3;
     if (typeof web3 === 'undefined') {
       // no web3, use fallback
       console.error("Please use a web3 browser");
