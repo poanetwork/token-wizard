@@ -6,7 +6,6 @@ import {
   getNetworkVersion
 } from '../../utils/blockchainHelpers'
 import { getCrowdsaleAssets } from '../../stores/utils'
-import { CROWDSALE_APP_NAMES } from '../../utils/constants'
 import { Loader } from '../Common/Loader'
 import { BigNumber } from 'bignumber.js'
 
@@ -29,7 +28,6 @@ export class Stats extends Component {
     const { web3 } = web3Store
     const networkID = await getNetworkVersion()
     console.log("networkID:", networkID)
-    //to do: wei_raised -> _wei_raised
     getCrowdsaleAssets(networkID)
       .then(getCurrentAccount)
       .then(getAllCrowdsaleAddresses)
@@ -38,7 +36,7 @@ export class Stats extends Component {
         let maxEthRaised = new BigNumber("0")
         let totalContributorsAmount = 0
         crowdsaleInstances.forEach((_crowdsale) => {
-          let ethRaised = web3.utils.fromWei(_crowdsale.crowdsaleInfo.wei_raised, "ether")
+          let ethRaised = web3.utils.fromWei(_crowdsale.crowdsaleInfo._wei_raised, "ether")
           totalEthRaised = totalEthRaised.plus(ethRaised)
           maxEthRaised = Math.max(maxEthRaised, ethRaised)
           totalContributorsAmount += Number(_crowdsale.crowdsaleContributors)
@@ -47,7 +45,7 @@ export class Stats extends Component {
         const curDate = (new Date()).getTime()
 
         const mintedCappedCrowdsales = crowdsaleInstances.filter((_crowdsale) => {
-          return _crowdsale.appName === CROWDSALE_APP_NAMES.MINTED_CAPPED_CROWDSALE
+          return _crowdsale.appName === process.env["REACT_APP_MINTED_CAPPED_APP_NAME"]
         })
         let mintedCappedEthRaised = new BigNumber("0")
         let mintedCappedMaxEthRaised = new BigNumber("0")
@@ -57,7 +55,7 @@ export class Stats extends Component {
         let mintedCappedPastCrowdsales = 0
         let mintedCappedMaxTiersAmount = 0
         mintedCappedCrowdsales.forEach((_crowdsale) => {
-          let ethRaised = web3.utils.fromWei(_crowdsale.crowdsaleInfo.wei_raised, "ether")
+          let ethRaised = web3.utils.fromWei(_crowdsale.crowdsaleInfo._wei_raised, "ether")
           mintedCappedEthRaised = mintedCappedEthRaised.plus(ethRaised)
           mintedCappedMaxEthRaised = Math.max(maxEthRaised, ethRaised)
           mintedCappedContributorsAmount += Number(_crowdsale.crowdsaleContributors)
@@ -86,7 +84,7 @@ export class Stats extends Component {
         const mintedCappedPercentageOfMultiTiers = mintedCappedCrowdsales.length > 0 ? Math.round(mintedCappedMultiTiersCrowdsales.length * 100 / mintedCappedCrowdsales.length * 100) / 100 : 0
 
         const dutchAuctionCrowdsales = crowdsaleInstances.filter((_crowdsale) => {
-          return _crowdsale.appName === CROWDSALE_APP_NAMES.DUTCH_AUCTION
+          return _crowdsale.appName === process.env["REACT_APP_DUTCH_APP_NAME"]
         })
         let dutchAuctionEthRaised = new BigNumber("0")
         let dutchAuctionMaxEthRaised = new BigNumber("0")
@@ -95,7 +93,7 @@ export class Stats extends Component {
         let dutchAuctionFutureCrowdsales = 0
         let dutchAuctionPastCrowdsales = 0
         dutchAuctionCrowdsales.forEach((_crowdsale) => {
-          let ethRaised = web3.utils.fromWei(_crowdsale.crowdsaleInfo.wei_raised, "ether")
+          let ethRaised = web3.utils.fromWei(_crowdsale.crowdsaleInfo._wei_raised, "ether")
           dutchAuctionEthRaised = dutchAuctionEthRaised.plus(ethRaised)
           dutchAuctionMaxEthRaised = Math.max(maxEthRaised, ethRaised)
           dutchAuctionContributorsAmount += Number(_crowdsale.crowdsaleContributors)

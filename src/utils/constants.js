@@ -10,11 +10,6 @@ export const CROWDSALE_STRATEGIES = {
   DUTCH_AUCTION: "dutch-auction"
 }
 
-export const CROWDSALE_APP_NAMES = {
-  MINTED_CAPPED_CROWDSALE: "MintedCappedCrowdsale",
-  DUTCH_AUCTION: "DutchCrowdsale"
-}
-
 export const CROWDSALE_STRATEGIES_DISPLAYNAMES = {
   MINTED_CAPPED_CROWDSALE: "Whitelist with Cap",
   DUTCH_AUCTION: "Dutch Auction"

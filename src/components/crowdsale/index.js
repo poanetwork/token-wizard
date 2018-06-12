@@ -93,11 +93,6 @@ export class Crowdsale extends React.Component {
 
   extractContractsData = async () => {
     const { crowdsaleStore } = this.props
-    //todo
-    /*if (!web3.utils.isAddress(crowdsaleAddr)) {
-      this.setState({ loading: false })
-      return invalidCrowdsaleAddrAlert()
-    }*/
 
     const targetPrefix = "idx"
     const targetSuffix = crowdsaleStore.contractTargetSuffix

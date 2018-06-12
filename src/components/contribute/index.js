@@ -147,12 +147,6 @@ export class Contribute extends React.Component {
 
     const { crowdsaleExecID } = this.state
 
-    //to do
-    /*if (!web3.utils.isAddress(crowdsaleAddr)) {
-      this.setState({ loading: false })
-      return invalidCrowdsaleAddrAlert()
-    }*/
-
     const account = await getCurrentAccount()
 
     contractStore.setContractProperty('crowdsale', 'account', account)
