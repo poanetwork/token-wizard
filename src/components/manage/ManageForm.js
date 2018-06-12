@@ -44,7 +44,6 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
   // const button_disabled = (pristine || invalid) && !canSave -- use once canSave TO-DO is done
   const button_disabled = invalid || !canSave
 
-  const crowdsale_has_started = !isDateLaterThan()(dateToTimestamp(tiers[0].startTime))(Date.now())
   const some_tier_whitelisted = tiers.some(tier => tier.whitelistEnabled === 'yes')
   const has_editable_tier = tiers.some(tier => tier.updatable)
   const minimum_supply = tiers.reduce((min, tier) => tier.supply < min ? tier.supply : min, Infinity)
@@ -77,7 +76,7 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
                 isDecimalPlacesNotGreaterThan()(tokenStore.decimals),
                 isLessOrEqualThan(`Should be less than or equal to ${minimum_supply}`)(minimum_supply)
               )}
-              disabled={!props.canEditTiers || !has_editable_tier || crowdsale_has_started || some_tier_whitelisted}
+              disabled={!props.canEditTiers || !has_editable_tier || some_tier_whitelisted}
               errorStyle={inputErrorStyle}
               type="number"
               side="left"
