@@ -1,8 +1,8 @@
 export const REACT_PREFIX = 'REACT_APP_'
 
 export const EXCEPTIONS = {
-  storageException: "StorageException(address,bytes32,address,uint256)",
-  applicationException: "ApplicationException(address, bytes32, bytes32)"
+  storageException: "StorageException(bytes32,string)",
+  applicationException: "ApplicationException(address, bytes32, bytes)"
 }
 
 export const CROWDSALE_STRATEGIES = {
