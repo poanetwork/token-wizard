@@ -45,7 +45,6 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
   const button_disabled = invalid || !canSave
 
   const some_tier_whitelisted = tiers.some(tier => tier.whitelistEnabled === 'yes')
-  const has_editable_tier = tiers.some(tier => tier.updatable)
   const minimum_supply = tiers.reduce((min, tier) => tier.supply < min ? tier.supply : min, Infinity)
 
   const saveButton = (
@@ -76,7 +75,7 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
                 isDecimalPlacesNotGreaterThan()(tokenStore.decimals),
                 isLessOrEqualThan(`Should be less than or equal to ${minimum_supply}`)(minimum_supply)
               )}
-              disabled={!props.canEditTiers || !has_editable_tier || some_tier_whitelisted}
+              disabled={!props.canEditTiers || some_tier_whitelisted}
               errorStyle={inputErrorStyle}
               type="number"
               side="left"
