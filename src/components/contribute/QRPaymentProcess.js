@@ -21,7 +21,7 @@ const QRPaymentProcess = ({ registryExecAddr, txData }) => {
         <div className="payment-process-notation">
           <p className="payment-process-notation-title">Important</p>
           <p className="payment-process-notation-description">
-            Send ethers to the Auth-os RegistryExec smart-contract address with a MethodID: { txData }
+            Send ethers to the Auth-os RegistryExec smart-contract address with a data: { txData }
           </p>
         </div>
       </div>

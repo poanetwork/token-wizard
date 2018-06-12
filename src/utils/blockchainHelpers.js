@@ -448,13 +448,18 @@ export const attachToSpecificCrowdsaleContract = async (contractName) => {
   }
 }
 
-export let execCallData = () => {
+export const getExecCallData = (execID) => {
   const { web3 } = web3Store
-  const methodInterface = ["bytes32", "bytes"]
-  const methodSignature = web3.eth.abi.encodeFunctionSignature(`exec(${methodInterface.join(',')})`);
-  //todo:
-  const methodABIEncoded = methodSignature
-  return methodABIEncoded
+  const buySignature = web3.eth.abi.encodeFunctionSignature(`buy()`);
+  const execInterface = ["bytes32", "bytes"]
+  const execSignature = web3.eth.abi.encodeFunctionSignature(`exec(${execInterface.join(',')})`);
+  const execParams = [
+    execID,
+    buySignature
+  ]
+  const execEncodedParams = web3.eth.abi.encodeParameters(execInterface, execParams)
+  const execABIEncoded = execSignature + execEncodedParams.substr(2)
+  return execABIEncoded
 }
 
 //todo: targetName is redundant
