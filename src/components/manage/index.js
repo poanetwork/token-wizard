@@ -398,21 +398,19 @@ export class Manage extends Component {
     // TODO: review validations after this fix: https://github.com/final-form/react-final-form/issues/151
     // once done, can be replaced with _pristine_ state value
 
-    const updatableTiersMintedCappedCrowdsale = initialTiersValues.filter(tier => tier.updatable)
-    const updatableTiers = isMintedCappedCrowdsale ? updatableTiersMintedCappedCrowdsale : isDutchAuction ? initialTiersValues : []
     const isValidTier = tierStore.individuallyValidTiers
-    const validTiers = updatableTiers.every(tier => isValidTier[tier.index])
+    const validTiers = initialTiersValues.every(tier => isValidTier[tier.index])
     const modifiedMinCap = globalMinCap ? !toBigNumber(this.state.initialGlobalMinCap).eq(globalMinCap) : false
 
     let fieldsToUpdate = []
-    if (updatableTiers.length && validTiers) {
-      fieldsToUpdate = getFieldsToUpdate(updatableTiers, tierStore.tiers)
+    if (initialTiersValues.length && validTiers) {
+      fieldsToUpdate = getFieldsToUpdate(initialTiersValues, tierStore.tiers)
     }
 
     let canSave = ownerCurrentUser && (tierStore.modifiedStoredWhitelist || fieldsToUpdate.length > 0 || modifiedMinCap) && !crowdsaleHasEnded
 
     const canSaveObj = {
-      canSave: canSave && isMintedCappedCrowdsale ? updatable : canSave,
+      canSave,
       fieldsToUpdate,
       globalMinCap: modifiedMinCap ? globalMinCap : null
     }
@@ -431,7 +429,7 @@ export class Manage extends Component {
     if (
       !ownerCurrentUser
       || crowdsaleHasEnded
-      || (isMintedCappedCrowdsale && !crowdsaleIsUpdatable)
+      || (isMintedCappedCrowdsale && !crowdsaleIsWhitelisted && !crowdsaleIsUpdatable)
       || (isDutchAuction && !crowdsaleIsWhitelisted && crowdsaleHasStarted)
     ) {
       return false

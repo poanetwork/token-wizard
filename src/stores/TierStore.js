@@ -270,7 +270,7 @@ class TierStore {
   }
 
   @computed get modifiedStoredWhitelist () {
-    return this.deployedContract && this.tiers.some(tier => tier.whitelist.some(item => !item.stored))
+    return this.tiers.some(tier => tier.whitelist.some(item => !item.stored))
   }
 }
 
