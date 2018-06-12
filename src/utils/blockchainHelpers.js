@@ -1,5 +1,5 @@
 import { incorrectNetworkAlert, noMetaMaskAlert, MetaMaskIsLockedAlert, invalidNetworkIDAlert, noContractAlert } from './alerts'
-import { CHAINS, MAX_GAS_PRICE, CROWDSALE_STRATEGIES, EXCEPTIONS, CROWDSALE_APP_NAMES, REACT_PREFIX } from './constants'
+import { CHAINS, MAX_GAS_PRICE, CROWDSALE_STRATEGIES, EXCEPTIONS, REACT_PREFIX } from './constants'
 import { crowdsaleStore, generalStore, web3Store, contractStore } from '../stores'
 import { toJS } from 'mobx'
 import { removeTrailingNUL } from './utils'
@@ -291,7 +291,51 @@ export function attachToContract (abi, addr) {
     })
 }
 
-async function getApplicationsInstances () {
+async function getAllApplicationsInstances () {
+  const { web3 } = web3Store
+  const whenRegistryExecContract = attachToSpecificCrowdsaleContract("registryExec")
+  //todo: check DUTCH_APP_NAME_HASH in .env when it will be ready from Auth-os side
+  const {
+    REACT_APP_MINTED_CAPPED_APP_NAME: MINTED_CAPPED_APP_NAME,
+    REACT_APP_DUTCH_APP_NAME: DUTCH_APP_NAME,
+    REACT_APP_MINTED_CAPPED_APP_NAME_HASH: MINTED_CAPPED_APP_NAME_HASH,
+    REACT_APP_DUTCH_APP_NAME_HASH: DUTCH_APP_NAME_HASH,
+  } = process.env
+
+  //todo: leave only appName. AppNameHash parameter should be removed in the future and calculated from appName
+  const getApplicationInstance = (registryExecContract, appName, appNameHash, i, resolve, reject) => {
+    registryExecContract.methods.app_instances(appNameHash, i).call()
+    .then((app_instance) => {
+      console.log("app_instance:", app_instance)
+      crowdsales.push({
+        appName: appName,
+        execID: app_instance
+      })
+      resolve();
+    })
+    .catch((err) => {
+      resolve();
+    })
+  }
+
+  const registryExecContract = await whenRegistryExecContract
+  console.log("registryExecContract:", registryExecContract)
+  let promises = [];
+  const crowdsales = []
+  //to do: length of applications
+  for (let i = 0; i < 1000; i++) {
+    let promiseMintedCapped = new Promise((resolve, reject) => getApplicationInstance(registryExecContract, MINTED_CAPPED_APP_NAME, MINTED_CAPPED_APP_NAME_HASH, i, resolve, reject))
+    let promiseDutchAuction = new Promise((resolve, reject) => getApplicationInstance(registryExecContract, DUTCH_APP_NAME, DUTCH_APP_NAME_HASH, i, resolve, reject))
+    promises.push(promiseMintedCapped)
+    promises.push(promiseDutchAuction)
+  }
+  return Promise.all(promises)
+    .then(() => {
+      return Promise.all(crowdsales)
+    })
+}
+
+async function getOwnerApplicationsInstances () {
   const { web3 } = web3Store
   const whenRegistryExecContract = attachToSpecificCrowdsaleContract("registryExec")
   const accounts = await web3.eth.getAccounts()
@@ -360,7 +404,7 @@ export const getCrowdsaleStrategy = async (execID) => {
 }
 
 export async function loadRegistryAddresses () {
-  const crowdsales = await getApplicationsInstances()
+  const crowdsales = await getOwnerApplicationsInstances()
   console.log(crowdsales)
   crowdsaleStore.setCrowdsales(crowdsales)
 }
@@ -507,17 +551,18 @@ function getCrowdsaleTierList (initCrowdsaleContract, addr, execID) {
 
 //todo: it gets all instances crated by current user. We need to get all instances from all users. Should be implemented in Auth-os side.
 export async function getAllCrowdsaleAddresses () {
-  const instances = await getApplicationsInstances()
+  const instances = await getAllApplicationsInstances()
+  console.log("instances:", instances)
   const targetPrefix = "idx"
 
   const targetMintedCapped = `${targetPrefix}MintedCapped`
   const initCrowdsaleContractMintedCapped = await attachToSpecificCrowdsaleContract(targetMintedCapped)
 
-  const targetDutchAuction = `${targetPrefix}DutchAuction`
+  //todo: initCrowdsale -> idx
+  const targetDutchAuction = `initCrowdsaleDutchAuction`
   const initCrowdsaleContractDutchAuction = await attachToSpecificCrowdsaleContract(targetDutchAuction)
 
-  const registryStorageObj = toJS(contractStore.abstractStorage)
-  const { addr } = registryStorageObj
+  const { addr } = toJS(contractStore.abstractStorage)
 
   let whenCrowdsaleInfo = []
   let whenCrowdsaleContributors = []
@@ -526,11 +571,11 @@ export async function getAllCrowdsaleAddresses () {
   instances.forEach((instance) => {
     let initCrowdsaleContract
     switch (instance.appName) {
-      case CROWDSALE_APP_NAMES.MINTED_CAPPED_CROWDSALE:
+      case process.env["REACT_APP_MINTED_CAPPED_APP_NAME"]:
         initCrowdsaleContract = initCrowdsaleContractMintedCapped
         whenCrowdsaleTierList.push(getCrowdsaleTierList(initCrowdsaleContract, addr, instance.execID))
         break
-      case CROWDSALE_APP_NAMES.DUTCH_AUCTION:
+      case process.env["REACT_APP_DUTCH_APP_NAME"]:
         initCrowdsaleContract = initCrowdsaleContractDutchAuction
         whenCrowdsaleTierList.push([])
         break
