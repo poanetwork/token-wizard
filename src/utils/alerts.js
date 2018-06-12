@@ -34,10 +34,10 @@ export function noContractAlert() {
   });
 }
 
-export function invalidCrowdsaleAddrAlert() {
+export function invalidCrowdsaleExecIDAlert() {
   sweetAlert2({
     title: "Warning",
-    html: "Invalid crowdsale address is indicated in config and/or in query string.",
+    html: "Invalid crowdsale exec-id is indicated in config and/or in query string.",
     type: "warning"
   });
 }

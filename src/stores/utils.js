@@ -1,26 +1,24 @@
 import { contractStore } from './index'
 import { REACT_PREFIX } from '../utils/constants'
 
-export function getCrowdsaleAssets(networkID) {
-  return new Promise((resolve) => {
-    getCrowdsaleAsset(`${REACT_PREFIX}ABSTRACT_STORAGE`, "abstractStorage", networkID)
-    getCrowdsaleAsset(`${REACT_PREFIX}REGISTRY_IDX`, "registryIdx", networkID)
-    getCrowdsaleAsset(`${REACT_PREFIX}REGISTRY_EXEC`, "registryExec", networkID)
-    getCrowdsaleAsset(`${REACT_PREFIX}PROVIDER`, "provider", networkID)
-    getCrowdsaleAsset(`${REACT_PREFIX}MINTED_CAPPED_IDX`, "idxMintedCapped", networkID)
-    getCrowdsaleAsset(`${REACT_PREFIX}MINTED_CAPPED_CROWDSALE`, "saleMintedCapped", networkID)
-    getCrowdsaleAsset(`${REACT_PREFIX}MINTED_CAPPED_CROWDSALE_MANAGER`, "saleManagerMintedCapped", networkID)
-    getCrowdsaleAsset(`${REACT_PREFIX}MINTED_CAPPED_TOKEN`, "tokenMintedCapped", networkID)
-    getCrowdsaleAsset(`${REACT_PREFIX}MINTED_CAPPED_TOKEN_MANAGER`, "tokenManagerMintedCapped", networkID)
-    getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_INIT_CROWDSALE`, "initCrowdsaleDutchAuction", networkID)
-    getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_TOKEN_CONSOLE`, "tokenConsoleDutchAuction", networkID)
-    getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_CROWDSALE_CONSOLE`, "crowdsaleConsoleDutchAuction", networkID)
-    getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_CROWDSALE_BUY_TOKENS`, "crowdsaleBuyTokensDutchAuction", networkID)
-    getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_TOKEN_TRANSFER`, "tokenTransfer", networkID)
-    getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_TOKEN_TRANSFER_FROM`, "tokenTransferFrom", networkID)
-    getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_TOKEN_APPROVE`, "tokenApprove", networkID)
-    resolve(contractStore)
-  })
+export const getCrowdsaleAssets = (networkID) => {
+  getCrowdsaleAsset(`${REACT_PREFIX}ABSTRACT_STORAGE`, "abstractStorage", networkID)
+  getCrowdsaleAsset(`${REACT_PREFIX}REGISTRY_IDX`, "registryIdx", networkID)
+  getCrowdsaleAsset(`${REACT_PREFIX}REGISTRY_EXEC`, "registryExec", networkID)
+  getCrowdsaleAsset(`${REACT_PREFIX}PROVIDER`, "provider", networkID)
+  getCrowdsaleAsset(`${REACT_PREFIX}MINTED_CAPPED_IDX`, "idxMintedCapped", networkID)
+  getCrowdsaleAsset(`${REACT_PREFIX}MINTED_CAPPED_CROWDSALE`, "saleMintedCapped", networkID)
+  getCrowdsaleAsset(`${REACT_PREFIX}MINTED_CAPPED_CROWDSALE_MANAGER`, "saleManagerMintedCapped", networkID)
+  getCrowdsaleAsset(`${REACT_PREFIX}MINTED_CAPPED_TOKEN`, "tokenMintedCapped", networkID)
+  getCrowdsaleAsset(`${REACT_PREFIX}MINTED_CAPPED_TOKEN_MANAGER`, "tokenManagerMintedCapped", networkID)
+  getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_INIT_CROWDSALE`, "initCrowdsaleDutchAuction", networkID)
+  getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_TOKEN_CONSOLE`, "tokenConsoleDutchAuction", networkID)
+  getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_CROWDSALE_CONSOLE`, "crowdsaleConsoleDutchAuction", networkID)
+  getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_CROWDSALE_BUY_TOKENS`, "crowdsaleBuyTokensDutchAuction", networkID)
+  getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_TOKEN_TRANSFER`, "tokenTransfer", networkID)
+  getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_TOKEN_TRANSFER_FROM`, "tokenTransferFrom", networkID)
+  getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_TOKEN_APPROVE`, "tokenApprove", networkID)
+  return Promise.resolve()
 }
 
 function getCrowdsaleAsset(contractName, stateProp, networkID) {
@@ -43,8 +41,7 @@ function getCrowdsaleAsset(contractName, stateProp, networkID) {
   }
   const addr = JSON.parse(process.env[`${contractName}_ADDRESS`] || {})[networkID]
 
-  return Promise.all([abi, addr])
-    .then(result => addContractsToState(...result, stateProp))
+  addContractsToState(abi, addr, stateProp)
 }
 
 function addContractsToState(abi, addr, contract) {

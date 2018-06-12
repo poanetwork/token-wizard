@@ -45,21 +45,23 @@ const checkMetaMask = () => {
 export function checkNetWorkByID (_networkIdFromGET) {
   console.log(_networkIdFromGET)
 
-  if (!_networkIdFromGET) return invalidNetworkIDAlert()
+  if (!_networkIdFromGET) return null
 
   const { web3 } = web3Store
   let networkNameFromGET = getNetWorkNameById(_networkIdFromGET)
   networkNameFromGET = networkNameFromGET ? networkNameFromGET : CHAINS.UNKNOWN
 
-  web3.eth.net.getId()
+  return web3.eth.net.getId()
     .then(_networkIdFromNetwork => {
       let networkNameFromNetwork = getNetWorkNameById(_networkIdFromNetwork)
       networkNameFromNetwork = networkNameFromNetwork ? networkNameFromNetwork : CHAINS.UNKNOWN
 
       if (networkNameFromGET !== networkNameFromNetwork) {
         console.log(networkNameFromGET + '!=' + networkNameFromNetwork)
-        incorrectNetworkAlert(networkNameFromGET, networkNameFromNetwork)
+        return incorrectNetworkAlert(networkNameFromGET, networkNameFromNetwork)
       }
+
+      return _networkIdFromNetwork
     })
 }
 
@@ -330,21 +332,30 @@ async function getApplicationsInstances () {
     })
 }
 
-async function getApplicationsInstance(execID) {
+const getApplicationsInstance = async (execID) => {
+  if (!execID) return Promise.reject('invalid exec-id')
+
   const { methods } = await attachToSpecificCrowdsaleContract("registryExec")
   return await methods.instance_info(execID).call()
 }
 
-export async function getCrowdsaleStrategy (execID) {
-  const { REACT_APP_MINTED_CAPPED_APP_NAME, REACT_APP_DUTCH_APP_NAME } = process.env
-  const { toAscii } = web3Store.web3.utils
-  const { app_name } = await getApplicationsInstance(execID)
-  const app_name_lower_case = removeTrailingNUL(toAscii(app_name)).toLowerCase()
+export const getCrowdsaleStrategy = async (execID) => {
+  try {
+    const { REACT_APP_MINTED_CAPPED_APP_NAME, REACT_APP_DUTCH_APP_NAME } = process.env
+    const { toAscii } = web3Store.web3.utils
+    const { app_name } = await getApplicationsInstance(execID)
+    const app_name_lower_case = removeTrailingNUL(toAscii(app_name)).toLowerCase()
 
-  if (app_name_lower_case.includes(REACT_APP_MINTED_CAPPED_APP_NAME.toLowerCase())) {
-    return CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE
-  } else if (app_name_lower_case.includes(REACT_APP_DUTCH_APP_NAME.toLowerCase())) {
-    return CROWDSALE_STRATEGIES.DUTCH_AUCTION
+    if (app_name_lower_case.includes(REACT_APP_MINTED_CAPPED_APP_NAME.toLowerCase())) {
+      return CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE
+    } else if (app_name_lower_case.includes(REACT_APP_DUTCH_APP_NAME.toLowerCase())) {
+      return CROWDSALE_STRATEGIES.DUTCH_AUCTION
+    } else {
+      return Promise.reject('no strategy defined')
+    }
+  } catch (err) {
+    console.error(err)
+    return null
   }
 }
 
@@ -369,34 +380,31 @@ export let getCurrentAccount = () => {
   });
 }
 
-export let attachToSpecificCrowdsaleContract = (contractName) => {
-  return new Promise((resolve, reject) => {
-    console.log(contractStore)
-    console.log(`contractName:${contractName}`)
+export const attachToSpecificCrowdsaleContract = async (contractName) => {
+  const contractObj = toJS(contractStore[contractName])
 
-    let contractObj = toJS(contractStore[contractName])
-    console.log(contractObj)
+  if (!contractObj) {
+    noContractAlert()
+    return Promise.reject('no contract')
+  }
 
-    if (!contractObj) {
+  try {
+    const { abi, addr } = contractObj
+    const contractInstance = await attachToContract(abi, addr)
+
+    if (!contractInstance) {
       noContractAlert()
-      reject('no contract')
+      return Promise.reject('no contract')
     }
 
-    attachToContract(contractObj.abi, contractObj.addr)
-      .then(contractInstance => {
-        console.log(`attach to ${contractName} contract`)
-
-        if (!contractInstance) {
-          noContractAlert()
-          reject('no contract')
-        }
-
-        resolve(contractInstance);
-      })
-  });
+    console.log(`attach to ${contractName} contract`)
+    return contractInstance
+  } catch (err) {
+    return Promise.reject(err)
+  }
 }
 
-//to do: targetName is redundant
+//todo: targetName is redundant
 export let methodToExec = (contractName, methodName, targetName, getEncodedParams, params) => {
   const { web3 } = web3Store
   const methodParams = getEncodedParams(...params)
@@ -488,7 +496,7 @@ function getCrowdsaleTierList (initCrowdsaleContract, addr, execID) {
   return whenCrowdsaleTierList
 }
 
-//to do: it gets all instances crated by current user. We need to get all instances from all users. Should be implemented in Auth-os side.
+//todo: it gets all instances crated by current user. We need to get all instances from all users. Should be implemented in Auth-os side.
 export async function getAllCrowdsaleAddresses () {
   const instances = await getApplicationsInstances()
   const targetPrefix = "idx"

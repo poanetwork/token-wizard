@@ -14,14 +14,14 @@ import {
   initializeAccumulativeData,
   toBigNumber
 } from './utils'
-import { getQueryVariable } from '../../utils/utils'
+import { getExecID, getNetworkID } from '../../utils/utils'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../../utils/constants'
-import { invalidCrowdsaleAddrAlert } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
 import { CrowdsaleConfig } from '../Common/config'
 import { inject, observer } from 'mobx-react'
+import { invalidCrowdsaleExecIDAlert, invalidNetworkIDAlert } from '../../utils/alerts'
 
 const { CROWDSALE_PAGE } = NAVIGATION_STEPS
 
@@ -42,89 +42,87 @@ export class Crowdsale extends React.Component {
   }
 
   componentDidMount () {
-    checkWeb3()
-
-    const networkID = CrowdsaleConfig.networkID ? CrowdsaleConfig.networkID : getQueryVariable('networkID')
-
-    this.getCrowdsale(networkID)
+    this.validateEnvironment()
+      .then(() => this.getCrowdsale())
+      .then(() => this.extractContractsData())
+      .catch((err) => console.error(err))
+      .then(() => this.setState({ loading: false }))
   }
 
-  getCrowdsale = (networkID) => {
-    const { generalStore, web3Store, crowdsaleStore, contractStore } = this.props
-    const { web3 } = web3Store
+  validateEnvironment = async () => {
+    const { generalStore, contractStore, web3Store } = this.props
 
-    if (!web3) {
-      this.setState({ loading: false })
-      return
+    await checkWeb3()
+
+    if (!web3Store.web3) {
+      return Promise.reject('no web3 available')
     }
 
-    checkNetWorkByID(networkID);
-    generalStore.setProperty('networkID', networkID);
+    const networkID = CrowdsaleConfig.networkID || getNetworkID()
+    generalStore.setProperty('networkID', networkID)
 
-    const crowdsaleExecID = CrowdsaleConfig.crowdsaleContractURL ? CrowdsaleConfig.crowdsaleContractURL : getQueryVariable('exec-id')
-    console.log("crowdsaleExecID:", crowdsaleExecID)
+    const networkInfo = await checkNetWorkByID(networkID)
+
+    if (networkInfo === null || !networkID) {
+      invalidNetworkIDAlert()
+      return Promise.reject('invalid networkID')
+    } else if (String(networkInfo) !== networkID) {
+      return Promise.reject('invalid networkID')
+    }
+
+    const crowdsaleExecID = CrowdsaleConfig.crowdsaleContractURL || getExecID()
     contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
 
-    let account
-    getCrowdsaleAssets(networkID)
-      .then(getCurrentAccount)
-      .then((_account) => { account = _account })
-      .catch(err => {
-        this.setState({ loading: false })
-        console.log(err)
-      })
-      .then(() => getCrowdsaleStrategy(contractStore.crowdsale.execID))
-      .then((strategy) => {
-        crowdsaleStore.setProperty('strategy', strategy)
-      })
-      .then(() => this.extractContractsData(account))
-      .catch(console.log)
+    if (!crowdsaleExecID) {
+      invalidCrowdsaleExecIDAlert()
+      return Promise.reject('invalid exec-id')
+    }
   }
 
-  extractContractsData = (account) => {
-    const { contractStore, crowdsaleStore } = this.props
-    //to do
+  getCrowdsale = async () => {
+    const { crowdsaleStore, contractStore, generalStore } = this.props
+
+    try {
+      await getCrowdsaleAssets(generalStore.networkID)
+      const strategy = await getCrowdsaleStrategy(contractStore.crowdsale.execID)
+      crowdsaleStore.setProperty('strategy', strategy)
+    } catch (err) {
+      return Promise.reject(err)
+    }
+  }
+
+  extractContractsData = async () => {
+    const { crowdsaleStore } = this.props
+    //todo
     /*if (!web3.utils.isAddress(crowdsaleAddr)) {
       this.setState({ loading: false })
       return invalidCrowdsaleAddrAlert()
     }*/
-
-    if (!contractStore.crowdsale.execID) {
-      this.setState({ loading: false })
-      return
-    }
 
     const targetPrefix = "idx"
     const targetSuffix = crowdsaleStore.contractTargetSuffix
     const target = `${targetPrefix}${targetSuffix}`
     console.log("target:", target)
 
-    attachToSpecificCrowdsaleContract(target)
-      .then((initCrowdsaleContract) => {
-        this.getFullCrowdsaleData(initCrowdsaleContract, contractStore.crowdsale.execID, account)
-          .then(() => this.setState({ loading: false }))
-          .catch(err => {
-            this.setState({ loading: false })
-            console.log(err)
-          })
-      })
-      .catch(err => {
-        this.setState({ loading: false })
-        console.log(err)
-      })
+    try {
+      const initCrowdsaleContract = await attachToSpecificCrowdsaleContract(target)
+      await this.getFullCrowdsaleData(initCrowdsaleContract)
+    } catch (err) {
+      return Promise.reject(err)
+    }
   }
 
-  getFullCrowdsaleData = (initCrowdsaleContract, crowdsaleExecID, account) => {
-    return getTokenData(initCrowdsaleContract, crowdsaleExecID, account)
-    .then(() => getCrowdsaleData(initCrowdsaleContract, crowdsaleExecID, account))
-    .then(() => initializeAccumulativeData())
-    .then(() => {
-      this.setState({ loading: false })
-    })
-    .catch(err => {
-      this.setState({ loading: false })
-      console.log(err)
-    })
+  getFullCrowdsaleData = async (initCrowdsaleContract) => {
+    const { execID } = this.props.contractStore.crowdsale
+
+    try {
+      const account = await getCurrentAccount()
+      await getTokenData(initCrowdsaleContract, execID, account)
+      await getCrowdsaleData(initCrowdsaleContract, execID)
+      await initializeAccumulativeData()
+    } catch (err) {
+      return Promise.reject(err)
+    }
   }
 
   goToContributePage = () => {
