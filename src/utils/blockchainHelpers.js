@@ -448,6 +448,20 @@ export const attachToSpecificCrowdsaleContract = async (contractName) => {
   }
 }
 
+export const getExecCallData = (execID) => {
+  const { web3 } = web3Store
+  const buySignature = web3.eth.abi.encodeFunctionSignature(`buy()`);
+  const execInterface = ["bytes32", "bytes"]
+  const execSignature = web3.eth.abi.encodeFunctionSignature(`exec(${execInterface.join(',')})`);
+  const execParams = [
+    execID,
+    buySignature
+  ]
+  const execEncodedParams = web3.eth.abi.encodeParameters(execInterface, execParams)
+  const execABIEncoded = execSignature + execEncodedParams.substr(2)
+  return execABIEncoded
+}
+
 //todo: targetName is redundant
 export let methodToExec = (contractName, methodName, targetName, getEncodedParams, params) => {
   const { web3 } = web3Store

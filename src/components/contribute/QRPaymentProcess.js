@@ -2,18 +2,18 @@ import React from 'react'
 import QRCode from 'qrcode.react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
-const QRPaymentProcess = ({ crowdsaleExecID }) => {
+const QRPaymentProcess = ({ registryExecAddr, txData }) => {
   return (
     <div>
       <div className="payment-process">
           <div className="payment-process-qr">
-            <QRCode value={crowdsaleExecID}></QRCode>
+            <QRCode value={registryExecAddr}></QRCode>
           </div>
         <p className="payment-process-hash">
-          { crowdsaleExecID }
+          { registryExecAddr }
         </p>
 
-        <CopyToClipboard text={crowdsaleExecID}>
+        <CopyToClipboard text={registryExecAddr}>
           <a href="" onClick={e => e.preventDefault()} className="payment-process-copy">Copy Address</a>
         </CopyToClipboard>
 
@@ -21,7 +21,7 @@ const QRPaymentProcess = ({ crowdsaleExecID }) => {
         <div className="payment-process-notation">
           <p className="payment-process-notation-title">Important</p>
           <p className="payment-process-notation-description">
-            Send ethers to the crowdsale address with a MethodID: 0xa6f2ae3a
+            Send ethers to the Auth-os RegistryExec smart-contract address with a data: { txData }
           </p>
         </div>
       </div>
