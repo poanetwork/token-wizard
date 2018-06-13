@@ -6,14 +6,18 @@ export function getQueryVariable(variable) {
   return queryString.parse(window.location.search)[variable]
 }
 
+export const isExecIDValid = (execID) => (/^0x[a-f0-9]{64}$/i).test(execID)
+
 export const getExecID = () => {
   const execID = getQueryVariable('exec-id')
-  return (/^0x[a-f0-9]{64}$/i).test(execID) ? execID : null
+  return isExecIDValid(execID) ? execID : null
 }
+
+export const isNetworkIDValid = (networkID) => /^[0-9]+$/.test(networkID)
 
 export const getNetworkID = () => {
   const networkID = getQueryVariable('networkID')
-  return /^[0-9]+$/.test(networkID) ? networkID : null
+  return isNetworkIDValid(networkID) ? networkID : null
 }
 
 export function setFlatFileContentToState(file) {
