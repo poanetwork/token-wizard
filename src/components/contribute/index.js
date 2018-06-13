@@ -8,7 +8,8 @@ import {
   attachToSpecificCrowdsaleContract,
   methodToExec,
   getCrowdsaleStrategy,
-  checkWeb3
+  checkWeb3,
+  getExecCallData
 } from '../../utils/blockchainHelpers'
 import {
   getTokenData,
@@ -426,7 +427,7 @@ export class Contribute extends React.Component {
     const minimumContributionDisplay = minimumContribution >= 0 ? `${minimumContribution} ${tokenTicker}` : 'You are not allowed'
 
     const QRPaymentProcessElement = contributeThrough === CONTRIBUTION_OPTIONS.QR && crowdsaleExecID ?
-      <QRPaymentProcess crowdsaleExecID={crowdsaleExecID} /> :
+      <QRPaymentProcess registryExecAddr={contractStore.registryExec.addr} txData={getExecCallData(crowdsaleExecID)} /> :
       null
 
     const rightColumnClasses = classNames('contribute-table-cell', 'contribute-table-cell_right', {

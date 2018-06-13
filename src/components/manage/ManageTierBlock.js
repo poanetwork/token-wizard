@@ -38,7 +38,7 @@ export const ManageTierBlock = inject('crowdsaleStore', 'tokenStore')(observer((
       const tierHasStarted = !isDateLaterThan()(dateToTimestamp(initialStartTime))(Date.now())
       const tierHasEnded = !isDateLaterThan()(dateToTimestamp(initialEndTime))(Date.now())
       const canEditDuration = canEditTiers && updatable && !tierHasEnded && !tierHasStarted
-      const canEditWhiteList = canEditTiers && updatable && !tierHasEnded
+      const canEditWhiteList = canEditTiers && !tierHasEnded
       const isWhitelistEnabled = whitelistEnabled === 'yes'
 
       return (
