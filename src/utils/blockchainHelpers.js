@@ -120,19 +120,17 @@ export function setExistingContractParams (abi, addr, setContractProperty) {
     })
 }
 
-export const deployInstance = (abi, bin, params) => {
+export const deployContract = (abi, bin, params) => {
   const deployOpts = {
-    data: '0x' + bin,
+    data: `0x${bin}`,
     arguments: params
   }
 
   return web3Store.web3.eth.getAccounts()
-    .then(accounts => deployInstanceInner(accounts, abi, deployOpts))
+    .then(accounts => deployContractInner(accounts, abi, deployOpts))
 }
 
-const deployInstanceInner = (accounts, abi, deployOpts) => {
-  console.log('abi', abi)
-
+const deployContractInner = (accounts, abi, deployOpts) => {
   const { web3 } = web3Store
   const objAbi = JSON.parse(JSON.stringify(abi))
   const contractInstance = new web3.eth.Contract(objAbi)
@@ -322,7 +320,7 @@ async function getAllApplicationsInstances () {
   console.log("registryExecContract:", registryExecContract)
   let promises = [];
   const crowdsales = []
-  //to do: length of applications
+  //todo: length of applications
   for (let i = 0; i < 1000; i++) {
     let promiseMintedCapped = new Promise((resolve, reject) => getApplicationInstance(registryExecContract, MINTED_CAPPED_APP_NAME, MINTED_CAPPED_APP_NAME_HASH, i, resolve, reject))
     let promiseDutchAuction = new Promise((resolve, reject) => getApplicationInstance(registryExecContract, DUTCH_APP_NAME, DUTCH_APP_NAME_HASH, i, resolve, reject))
@@ -346,7 +344,7 @@ async function getOwnerApplicationsInstances () {
   console.log("registryExecContract:", registryExecContract)
   let promises = [];
   const crowdsales = []
-  //to do: length of applications
+  //todo: length of applications
   for (let i = 0; i < 100; i++) {
     let promise = new Promise((resolve, reject) => {
       registryExecContract.methods.deployer_instances(account, i).call()
@@ -377,10 +375,26 @@ async function getOwnerApplicationsInstances () {
 }
 
 const getApplicationsInstance = async (execID) => {
-  if (!execID) return Promise.reject('invalid exec-id')
+  //todo: add here else if option for Dutch Auction
+  //if (!execID) return Promise.reject('invalid exec-id')
+  let targetContract
+  if (execID) {
+    targetContract = "registryExec"
+  } else {
+    if (contractStore.MintedCappedProxy) {
+      targetContract = "MintedCappedProxy"
+    }
+  }
+  console.log("targetContract:", targetContract)
 
-  const { methods } = await attachToSpecificCrowdsaleContract("registryExec")
-  return await methods.instance_info(execID).call()
+  const { methods } = await attachToSpecificCrowdsaleContract(targetContract)
+  console.log("methods:", methods)
+  if (execID) {
+    return await methods.instance_info(execID).call()
+  } else {
+    const appName = await methods.app_name().call()
+    return { app_name: appName }
+  }
 }
 
 export const getCrowdsaleStrategy = async (execID) => {
@@ -463,7 +477,7 @@ export const getExecCallData = (execID) => {
 }
 
 //todo: targetName is redundant
-export let methodToExec = (contractName, methodName, targetName, getEncodedParams, params) => {
+export let methodToExec = (contractName, methodName, getEncodedParams, params) => {
   const { web3 } = web3Store
   const methodParams = getEncodedParams(...params)
   console.log("methodParams:", methodParams)
@@ -485,10 +499,12 @@ export let methodToExec = (contractName, methodName, targetName, getEncodedParam
   console.log(contract)
 
   const { execID } = contractStore.crowdsale;
-  const paramsToExec = [
-    execID,
-    fullData
-  ]
+  let paramsToExec = []
+  if (contractName === "MintedCappedProxy") {
+    paramsToExec.push(fullData)
+  } else if (contractName === "registryExec") {
+    paramsToExec.push(execID, fullData)
+  }
 
   console.log("paramsToExec: ", paramsToExec)
 
@@ -498,37 +514,44 @@ export let methodToExec = (contractName, methodName, targetName, getEncodedParam
   return method;
 }
 
-export let methodToCreateAppInstance = (methodName, getEncodedParams, params, appName) => {
+export let methodToCreateAppInstance = (contractName, methodName, getEncodedParams, rawParams, appName) => {
   const { web3 } = web3Store
-  const methodParams = getEncodedParams(...params)
-  console.log("methodParams:", methodParams)
-
-  let methodSignature = web3.eth.abi.encodeFunctionSignature(methodName);
-  console.log(`methodSignature ${methodName}:`, methodSignature);
-
-  // let encodedParameters = web3.eth.abi.encodeParameters(["bytes"], [methodParams]);
-  // let fullData = methodSignature + encodedParameters.substr(2);
-
-  let fullData = methodSignature + methodParams.substr(2);
-  console.log("full calldata:", fullData);
-
-  const abiRegistryExec = contractStore.registryExec.abi || []
-  console.log("abiRegistryExec:", abiRegistryExec)
-  const addrRegistryExec = contractStore.registryExec.addr || {}
-  console.log("addrRegistryExec:", addrRegistryExec)
-  const registryExec = new web3.eth.Contract(toJS(abiRegistryExec), addrRegistryExec)
-  console.log(registryExec)
+  console.log("rawParams:", rawParams)
+  const abi = contractStore[contractName].abi || []
+  console.log("abi:", abi)
+  const addr = contractStore[contractName].addr || {}
+  console.log("addr:", addr)
+  const targetContract = new web3.eth.Contract(toJS(abi), addr)
+  console.log(targetContract)
 
   let appNameBytes = web3.utils.fromAscii(appName)
   let encodedAppName = web3.eth.abi.encodeParameter("bytes32", appNameBytes);
 
-  let paramsToCreateAppInstance = [
-    encodedAppName,
-    fullData
-  ]
-  console.log("paramsToCreateAppInstance: ", paramsToCreateAppInstance)
+  const { params, paramsEncoded } = getEncodedParams(...rawParams)
+  console.log("params:", params)
+  console.log("paramsEncoded:", paramsEncoded)
+  let paramsToInit
+  const { methods } = targetContract
+  let targetMethodName
+  if (contractName === "MintedCappedProxy") {
+    targetMethodName = "init"
+    paramsToInit = params
+  } else if (contractName === "registryExec") {
+    let methodSignature = web3.eth.abi.encodeFunctionSignature(methodName);
+    console.log(`methodSignature ${methodName}:`, methodSignature);
+    let fullData = methodSignature + paramsEncoded.substr(2);
+    console.log("full calldata:", fullData);
 
-  const method = registryExec.methods.createAppInstance(...paramsToCreateAppInstance)
+    targetMethodName = "createAppInstance"
+    paramsToInit = [
+      encodedAppName,
+      fullData
+    ]
+  }
+  console.log("paramsToInit: ", paramsToInit)
+  console.log("targetMethodName:", targetMethodName)
+
+  const method = methods[targetMethodName](...paramsToInit)
   console.log("method:", method)
 
   return method;

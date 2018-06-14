@@ -21,7 +21,7 @@ import {
   getUserMaxLimits,
   getUserMinLimits
 } from '../crowdsale/utils'
-import { countDecimalPlaces, getExecID, getNetworkID, toast } from '../../utils/utils'
+import { countDecimalPlaces, getExecID, getAddr, getNetworkID, toast } from '../../utils/utils'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import {
   contributionDisabledAlertInTime,
@@ -127,14 +127,18 @@ export class Contribute extends React.Component {
       return Promise.reject('invalid networkID')
     }
 
+    //todo: Dutch
     const crowdsaleExecID = CrowdsaleConfig.crowdsaleContractURL || getExecID()
+    const crowdsaleAddr = CrowdsaleConfig.crowdsaleContractURL || getAddr()
     contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
+    //contractStore.setContractProperty('MintedCappedProxy', 'addr', crowdsaleAddr)
 
     this.setState({ crowdsaleExecID })
 
-    if (!crowdsaleExecID) {
+    //todo: change to 2 alerts
+    if (!crowdsaleExecID && !crowdsaleAddr) {
       invalidCrowdsaleExecIDAlert()
-      return Promise.reject('invalid exec-id')
+      return Promise.reject('invalid exec-id or addr')
     }
   }
 
@@ -157,9 +161,11 @@ export class Contribute extends React.Component {
       web3
     })
 
+    //todo
     const targetPrefix = "idx"
     const targetSuffix = crowdsaleStore.contractTargetSuffix
     const target = `${targetPrefix}${targetSuffix}`
+    //const target = 'MintedCappedProxy'
 
     try {
       const initCrowdsaleContract = await attachToSpecificCrowdsaleContract(target)
@@ -281,19 +287,28 @@ export class Contribute extends React.Component {
     const { execID, account } = this.props.contractStore.crowdsale
     const { addr } = toJS(contractStore.abstractStorage)
 
+    //todo
     const targetPrefix = "idx"
     const targetSuffix = crowdsaleStore.contractTargetSuffix
     const target = `${targetPrefix}${targetSuffix}`
+    //const target = "MintedCappedProxy"
+
+    let params = []
+    if (execID) {
+      params.push(addr, execID)
+    }
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
 
     if (crowdsaleStore.isMintedCappedCrowdsale) {
-      const { tier_price } = await methods.getCurrentTierInfo(addr, execID).call()
+      const currentTierInfo = await methods.getCurrentTierInfo(...params).call()
+      const tier_price = currentTierInfo.tier_price ? currentTierInfo.tier_price : currentTierInfo[4]
       console.log('tier_price:', tier_price)
       crowdsalePageStore.setProperty('rate', tier_price) //should be one token in wei
 
     } else if (crowdsaleStore.isDutchAuction) {
-      const { current_rate } = await methods.getCrowdsaleStatus(addr, execID).call()
+      //todo: Dutch
+      const { current_rate } = await methods.getCrowdsaleStatus(...params).call()
       console.log('current_rate:', current_rate)
       crowdsalePageStore.setProperty('rate', current_rate) //should be one token in wei
     }
@@ -305,7 +320,7 @@ export class Contribute extends React.Component {
     const tokensToContribute = toBigNumber(contributeStore.tokensToContribute).times(rate)
     console.log('tokensToContribute:', tokensToContribute.toFixed())
 
-    const userLimits = await getUserMaxLimits(addr, execID, methods, account)
+    const userLimits = await getUserMaxLimits(...params, methods, account)
 
     return tokensToContribute.gt(userLimits) ? userLimits : tokensToContribute
   }
@@ -315,9 +330,11 @@ export class Contribute extends React.Component {
     const { execID, account } = this.props.contractStore.crowdsale
     const { addr } = toJS(contractStore.abstractStorage)
 
+    //todo
     const targetPrefix = "idx"
     const targetSuffix = crowdsaleStore.contractTargetSuffix
     const target = `${targetPrefix}${targetSuffix}`
+    //const target = 'MintedCappedProxy'
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
     const userMinLimits = await getUserMinLimits(addr, execID, methods, account)
@@ -351,12 +368,8 @@ export class Contribute extends React.Component {
 
     let methodInterface = [];
 
-    const targetPrefix = "sale"
-    const targetSuffix = crowdsaleStore.contractTargetSuffix
-    const target = `${targetPrefix}${targetSuffix}`
-
     let paramsToExec = [opts.value, methodInterface]
-    const method = methodToExec("registryExec", `buy()`, target, this.getBuyParams, paramsToExec)
+    const method = methodToExec("registryExec", `buy()`, this.getBuyParams, paramsToExec)
 
     const estimatedGas = await method.estimateGas(opts)
     console.log('estimatedGas:', estimatedGas)

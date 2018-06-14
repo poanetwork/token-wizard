@@ -14,14 +14,18 @@ import {
   initializeAccumulativeData,
   toBigNumber
 } from './utils'
-import { getExecID, getNetworkID } from '../../utils/utils'
+import { getExecID, getAddr, getNetworkID } from '../../utils/utils'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../../utils/constants'
 import { Loader } from '../Common/Loader'
 import { CrowdsaleConfig } from '../Common/config'
 import { inject, observer } from 'mobx-react'
-import { invalidCrowdsaleExecIDAlert, invalidNetworkIDAlert } from '../../utils/alerts'
+import {
+  invalidCrowdsaleExecIDAlert,
+  invalidCrowdsaleAddrAlert,
+  invalidNetworkIDAlert
+} from '../../utils/alerts'
 
 const { CROWDSALE_PAGE } = NAVIGATION_STEPS
 
@@ -70,12 +74,16 @@ export class Crowdsale extends React.Component {
       return Promise.reject('invalid networkID')
     }
 
+    //todo: change config to support exec-id and address
     const crowdsaleExecID = CrowdsaleConfig.crowdsaleContractURL || getExecID()
+    const crowdsaleAddr = CrowdsaleConfig.crowdsaleContractURL || getAddr()
     contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
+    //contractStore.setContractProperty('MintedCappedProxy', 'addr', crowdsaleAddr)
 
-    if (!crowdsaleExecID) {
+    //todo: change to 2 alerts
+    if (!crowdsaleExecID && !crowdsaleAddr) {
       invalidCrowdsaleExecIDAlert()
-      return Promise.reject('invalid exec-id')
+      return Promise.reject('invalid exec-id or addr')
     }
   }
 
@@ -94,10 +102,12 @@ export class Crowdsale extends React.Component {
   extractContractsData = async () => {
     const { crowdsaleStore } = this.props
 
+    //todo:
     const targetPrefix = "idx"
     const targetSuffix = crowdsaleStore.contractTargetSuffix
     const target = `${targetPrefix}${targetSuffix}`
     console.log("target:", target)
+    //const target = 'MintedCappedProxy'
 
     try {
       const initCrowdsaleContract = await attachToSpecificCrowdsaleContract(target)

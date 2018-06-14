@@ -353,7 +353,7 @@ describe('ManageForm', () => {
     expect(enabledSaveButton.exists()).toBeFalsy()
   })
 
-  //to do: test doesn't work
+  //todo: test doesn't work
   /*it('should call onSubmit', () => {
     MockDate.set(DATE.TIER_0.BEFORE_START_5_SEC_AFTER)
 

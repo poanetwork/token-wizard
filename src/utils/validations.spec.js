@@ -703,7 +703,7 @@ describe('validateTierEndDate', () => {
     expect(validationResult).toEqual(["Should be later than same tier's Start Time"])
   })
 
-  //to do: test doesn't work
+  //todo: test doesn't work
   /*it('should fail if endTime is after than next tier\'s startTime', () => {
     const values = {
       tiers: [

@@ -80,10 +80,6 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
 
   console.log("tierIndex:", tierIndex)
 
-  const targetPrefix = "saleManager"
-  const targetSuffix = crowdsaleStore.contractTargetSuffix
-  const target = `${targetPrefix}${targetSuffix}`
-
   let paramsToExec
   if (isMintedCappedCrowdsale) {
     paramsToExec = [ tierIndex, value, methodInterface ]
@@ -98,9 +94,8 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
   console.log("paramsToExec:", paramsToExec)
   console.log("methods[attribute]:", methods[attribute])
   console.log("methodInterface:", methodInterface)
-  console.log("target:", target)
 
-  const method = methodToExec("registryExec", `${methods[attribute]}(${methodInterface.join(',')})`, target, getParams, paramsToExec)
+  const method = methodToExec("registryExec", `${methods[attribute]}(${methodInterface.join(',')})`, getParams, paramsToExec)
   console.log("method:", method)
 
   return getCurrentAccount()
