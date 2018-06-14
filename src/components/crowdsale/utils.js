@@ -98,7 +98,7 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
     try {
       contributors = await getCrowdsaleUniqueBuyers(...params).call()
     } catch (e) {
-      console.log("e:", e)
+      console.log("e:", "###getCrowdsaleUniqueBuyers is not supported in Proxy yet###")
     }
     const { fromWei } = web3Store.web3.utils
 
@@ -187,7 +187,9 @@ export let getCrowdsaleTargetDates = (initCrowdsaleContract, execID) => {
           let crowdsaleStartDate = 0
           let crowdsaleEndDate = 0
           tiersStartAndEndDates.forEach((tierStartAndEndDates) => {
-            const tierDates = setTierDates(tierStartAndEndDates.tier_start, tierStartAndEndDates.tier_end)
+            const tier_start = tierStartAndEndDates.tier_start ? tierStartAndEndDates.tier_start : tierStartAndEndDates[0]
+            const tier_end = tierStartAndEndDates.tier_end ? tierStartAndEndDates.tier_end : tierStartAndEndDates[1]
+            const tierDates = setTierDates(tier_start, tier_end)
             crowdsaleStartDate = crowdsaleStartDate ? Math.min(crowdsaleStartDate, tierDates.startsAtMilliseconds) : tierDates.startsAtMilliseconds
             crowdsaleEndDate = Math.max(crowdsaleEndDate, tierDates.endsAtMilliseconds)
           })

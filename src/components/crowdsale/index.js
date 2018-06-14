@@ -132,12 +132,22 @@ export class Crowdsale extends React.Component {
 
   goToContributePage = () => {
     const { contractStore, generalStore } = this.props
+    const { crowdsale, MintedCappedProxy } = contractStore
     let queryStr = "";
     if (!CrowdsaleConfig.crowdsaleContractURL || !CrowdsaleConfig.networkID) {
-      if (contractStore.crowdsale.execID) {
-        queryStr = "?exec-id=" + contractStore.crowdsale.execID;
+      const crowdsaleParamVal = crowdsale.execID || (MintedCappedProxy ? MintedCappedProxy.addr : null)
+      if (crowdsaleParamVal) {
+        let crowdsaleParam
+        if (crowdsale.execID) {
+          crowdsaleParam = 'exec-id'
+        } else if (MintedCappedProxy) {
+          if (MintedCappedProxy.addr) {
+            crowdsaleParam = 'addr'
+          }
+        }
+        queryStr = `?${crowdsaleParam}=${crowdsaleParamVal}`
         if (generalStore.networkID) {
-          queryStr += "&networkID=" + generalStore.networkID;
+          queryStr += "&networkID=" + generalStore.networkID
         }
       }
     }
@@ -146,7 +156,8 @@ export class Crowdsale extends React.Component {
   }
 
   render() {
-    const { web3Store, tokenStore, crowdsalePageStore } = this.props
+    const { web3Store, tokenStore, crowdsalePageStore, contractStore } = this.props
+    const { MintedCappedProxy } = contractStore
     const { web3 } = web3Store
 
     const crowdsaleExecID = getContractStoreProperty('crowdsale','execID')
@@ -227,8 +238,8 @@ export class Crowdsale extends React.Component {
                   </div>
                   { contributorsBlock }
                 </div>
-                <p className="hash">{`${crowdsaleExecID}`}</p>
-                <p className="description">Crowdsale Execution ID</p>
+                <p className="hash">{`${crowdsaleExecID || (MintedCappedProxy && MintedCappedProxy.addr)}`}</p>
+                <p className="description">{crowdsaleExecID ? 'Crowdsale Execution ID' : 'Crowdsale Proxy Address'}</p>
               </div>
               <div className="right" style={{ width: '58%' }}>
                 <div className="hidden">

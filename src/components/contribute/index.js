@@ -9,7 +9,7 @@ import {
   methodToExec,
   getCrowdsaleStrategy,
   checkWeb3,
-  getExecCallData
+  getExecBuyCallData
 } from '../../utils/blockchainHelpers'
 import {
   getTokenData,
@@ -320,7 +320,7 @@ export class Contribute extends React.Component {
     const tokensToContribute = toBigNumber(contributeStore.tokensToContribute).times(rate)
     console.log('tokensToContribute:', tokensToContribute.toFixed())
 
-    const userLimits = await getUserMaxLimits(...params, methods, account)
+    const userLimits = await getUserMaxLimits(addr, execID, methods, account)
 
     return tokensToContribute.gt(userLimits) ? userLimits : tokensToContribute
   }
@@ -417,7 +417,7 @@ export class Contribute extends React.Component {
   render () {
     const { crowdsalePageStore, tokenStore, contractStore } = this.props
     const { tokenAmountOf } = crowdsalePageStore
-    const { crowdsale } = contractStore
+    const { crowdsale, MintedCappedProxy } = contractStore
 
     const { curAddr, contributeThrough, crowdsaleExecID, web3Available, toNextTick, nextTick, minimumContribution } = this.state
     const { days, hours, minutes, seconds } = toNextTick
@@ -440,7 +440,7 @@ export class Contribute extends React.Component {
     const minimumContributionDisplay = minimumContribution >= 0 ? `${minimumContribution} ${tokenTicker}` : 'You are not allowed'
 
     const QRPaymentProcessElement = contributeThrough === CONTRIBUTION_OPTIONS.QR && crowdsaleExecID ?
-      <QRPaymentProcess registryExecAddr={contractStore.registryExec.addr} txData={getExecCallData(crowdsaleExecID)} /> :
+      <QRPaymentProcess registryExecAddr={contractStore.registryExec.addr} txData={getExecBuyCallData(crowdsaleExecID)} /> :
       null
 
     const rightColumnClasses = classNames('contribute-table-cell', 'contribute-table-cell_right', {
@@ -468,8 +468,8 @@ export class Contribute extends React.Component {
               <p className="hashes-description">Current Account</p>
             </div>
             <div className="hashes-i">
-              <p className="hashes-title">{crowdsale && crowdsale.execID}</p>
-              <p className="hashes-description">Crowdsale Execution ID</p>
+              <p className="hashes-title">{(crowdsale && crowdsale.execID) || (MintedCappedProxy && MintedCappedProxy.addr)}</p>
+              <p className="hashes-description">{crowdsale ? crowdsale.execID ? 'Crowdsale Execution ID' : 'Crowdsale Proxy Address' : 'Crowdsale ID'}</p>
             </div>
             <div className="hashes-i">
               <p className="hashes-title">{tokenName}</p>
