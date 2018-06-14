@@ -6,7 +6,9 @@ import {
   successfulFinalizeAlert,
   successfulUpdateCrowdsaleAlert,
   warningOnFinalizeCrowdsale,
-  notTheOwner
+  notTheOwner,
+  invalidNetworkIDAlert,
+  invalidCrowdsaleExecIDAlert
 } from '../../utils/alerts'
 import {
   getCurrentAccount,
@@ -15,15 +17,15 @@ import {
   calculateGasLimit,
   attachToSpecificCrowdsaleContract,
   methodToExec,
-  getCrowdsaleStrategy
+  getCrowdsaleStrategy,
+  checkWeb3
 } from '../../utils/blockchainHelpers'
-import { dateToTimestamp, toast } from '../../utils/utils'
+import { isExecIDValid, isNetworkIDValid, toast } from '../../utils/utils'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import { getFieldsToUpdate, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
 import { getTiersLength, toBigNumber } from '../crowdsale/utils'
 import { updateGlobalMinContribution } from '../stepFour/utils'
-import { toJS } from 'mobx'
 import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import createDecorator from 'final-form-calculate'
@@ -31,7 +33,6 @@ import { FinalizeCrowdsaleStep } from './FinalizeCrowdsaleStep'
 import { ReservedTokensList } from './ReservedTokensList'
 import { ManageForm } from './ManageForm'
 import moment from 'moment'
-import { isDateLaterThan } from '../../utils/validations'
 
 @inject(
   'crowdsaleStore',
@@ -47,14 +48,20 @@ export class Manage extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      formPristine: true,
       loading: true,
       canFinalize: false,
       ownerCurrentUser: false,
-      initialGlobalMinCap: 0
+      crowdsaleHasEnded: true,
+      crowdsaleHasStarted: false,
+      crowdsaleIsUpdatable: false,
+      crowdsaleIsWhitelisted: false,
+      crowdsaleIsFinalized: false,
     }
 
-    this.initialTiers = []
+    this.initialValues = {
+      tiers: [],
+      minCap: 0
+    }
   }
 
   componentDidMount () {
@@ -62,28 +69,53 @@ export class Manage extends Component {
   }
 
   componentWillMount () {
-    const { crowdsaleStore, generalStore, match, tierStore } = this.props
-    const crowdsaleExecID = match.params.crowdsaleExecID
-    console.log("crowdsaleExecID:", crowdsaleExecID)
+    const { crowdsaleStore, generalStore, tierStore } = this.props
 
+    this.validateEnvironment()
+      .then(() => getCrowdsaleAssets(generalStore.networkID))
+      .then(() => this.checkOwner())
+      .then(() => getCrowdsaleStrategy(crowdsaleStore.execID))
+      .then((strategy) => crowdsaleStore.setProperty('strategy', strategy))
+      //.then((strategy) => crowdsaleStore.setProperty('strategy', CROWDSALE_STRATEGIES.DUTCH_AUCTION)) // todo
+      .then(() => this.extractContractsData())
+      .then(() => this.updateCrowdsaleStatus())
+      .then(() => {
+        this.initialValues.tiers = JSON.parse(JSON.stringify(tierStore.tiers))
+        this.initialValues.minCap = +tierStore.globalMinCap
+      })
+      .catch((err) => console.error(err))
+      .then(() => {
+        this.hideLoader()
+        if (!this.state.ownerCurrentUser) notTheOwner()
+      })
+  }
+
+  validateEnvironment = async () => {
+    const { generalStore, crowdsaleStore, contractStore, web3Store, match } = this.props
+
+    await checkWeb3()
+
+    if (!web3Store.web3) {
+      return Promise.reject('no web3 available')
+    }
+
+    const networkID = await getNetworkVersion()
+    generalStore.setProperty('networkID', networkID)
+
+    if (!isNetworkIDValid(networkID)) {
+      invalidNetworkIDAlert()
+      return Promise.reject('invalid networkID')
+    }
+
+    const { crowdsaleExecID } = match.params
     crowdsaleStore.setSelectedProperty('execID', crowdsaleExecID)
     crowdsaleStore.setProperty('execID', crowdsaleExecID)
+    contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
 
-    // networkID
-    getNetworkVersion().then(networkID => {
-      generalStore.setProperty('networkID', networkID)
-      getCrowdsaleAssets(networkID)
-        .then(_newState => { this.setState(_newState) })
-        .then(() => getCrowdsaleStrategy(crowdsaleExecID))
-        .then((strategy) => crowdsaleStore.setProperty('strategy', strategy))
-        //.then((strategy) => crowdsaleStore.setProperty('strategy', CROWDSALE_STRATEGIES.DUTCH_AUCTION)) // todo
-        .then(this.extractContractsData)
-        .then(() => {
-          this.initialTiers = JSON.parse(JSON.stringify(tierStore.tiers))
-          this.setState({ initialGlobalMinCap: tierStore.globalMinCap })
-          console.log("strategy:", crowdsaleStore.strategy)
-        })
-    })
+    if (!isExecIDValid(crowdsaleExecID)) {
+      invalidCrowdsaleExecIDAlert()
+      return Promise.reject('invalid exec-id')
+    }
   }
 
   componentWillUnmount () {
@@ -94,33 +126,28 @@ export class Manage extends Component {
   }
 
   checkOwner = async () => {
-    const { contractStore, web3Store, crowdsaleStore } = this.props
+    const { contractStore, crowdsaleStore } = this.props
 
     const targetPrefix = "idx"
     const targetSuffix = crowdsaleStore.contractTargetSuffix
     const target = `${targetPrefix}${targetSuffix}`
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
-    const { addr } = toJS(contractStore.abstractStorage)
-    const ownerAccount = await methods.getAdmin(addr, contractStore.crowdsale.execID).call()
-    const accounts = await web3Store.web3.eth.getAccounts()
+    const { addr } = contractStore.abstractStorage
+    const { execID } = crowdsaleStore
+    const ownerAccount = await methods.getAdmin(addr, execID).call()
+    const account = await getCurrentAccount()
 
-    const ownerCurrentUser = accounts[0] === ownerAccount
+    const ownerCurrentUser = account === ownerAccount
     this.setState({ ownerCurrentUser })
-
-    if (!ownerCurrentUser) notTheOwner()
+    contractStore.setContractProperty('crowdsale', 'account', account)
   }
 
   extractContractsData = async () => {
     try {
-      const { crowdsaleStore, contractStore, tierStore, match } = this.props
-      const { crowdsaleExecID } = match.params
-      const { addr: registryStorageAddr } = toJS(contractStore.abstractStorage)
-      const { isMintedCappedCrowdsale, isDutchAuction } = crowdsaleStore
-      const account = await getCurrentAccount()
-
-      contractStore.setContractProperty('crowdsale', 'account', account)
-      contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
+      const { crowdsaleStore, contractStore, tierStore } = this.props
+      const { addr: abstractStorageAddr } = contractStore.abstractStorage
+      const { isMintedCappedCrowdsale, isDutchAuction, execID } = crowdsaleStore
 
       const num_of_tiers = await getTiersLength()
       console.log("num_of_tiers:", num_of_tiers)
@@ -141,19 +168,19 @@ export class Manage extends Component {
         getTokensSold
       } = methods
 
-      const crowdsale = await getCrowdsaleInfo(registryStorageAddr, crowdsaleExecID).call()
-      const token = await getTokenInfo(registryStorageAddr, crowdsaleExecID).call()
+      const crowdsale = await getCrowdsaleInfo(abstractStorageAddr, execID).call()
+      const token = await getTokenInfo(abstractStorageAddr, execID).call()
 
       const tiers = []
       const reserved_tokens_info = []
 
       if (isMintedCappedCrowdsale) {
         for (let tier_num = 0; tier_num < num_of_tiers; tier_num++) {
-          const tier_data = await getCrowdsaleTier(registryStorageAddr, crowdsaleExecID, tier_num).call()
-          const tier_dates = await getTierStartAndEndDates(registryStorageAddr, crowdsaleExecID, tier_num).call()
+          const tier_data = await getCrowdsaleTier(abstractStorageAddr, execID, tier_num).call()
+          const tier_dates = await getTierStartAndEndDates(abstractStorageAddr, execID, tier_num).call()
 
           if (tier_data.whitelist_enabled) {
-            const { whitelist } = await getTierWhitelist(registryStorageAddr, crowdsaleExecID, tier_num).call()
+            const { whitelist } = await getTierWhitelist(abstractStorageAddr, execID, tier_num).call()
 
             console.log("whitelist:", whitelist)
 
@@ -162,7 +189,7 @@ export class Manage extends Component {
               const {
                 max_spend_remaining,
                 minimum_contribution
-              } = await getWhitelistStatus(registryStorageAddr, crowdsaleExecID, tier_num, whitelist_item_addr).call()
+              } = await getWhitelistStatus(abstractStorageAddr, execID, tier_num, whitelist_item_addr).call()
 
               if (max_spend_remaining > 0) {
                 if (!tier_data.whitelist) tier_data.whitelist = []
@@ -179,16 +206,16 @@ export class Manage extends Component {
           tiers.push(Object.assign(tier_data, tier_dates))
         }
 
-        const { _reserved_destinations: reserved_destinations } = await getReservedTokenDestinationList(registryStorageAddr, crowdsaleExecID).call()
+        const { _reserved_destinations } = await getReservedTokenDestinationList(abstractStorageAddr, execID).call()
 
-        if (reserved_destinations) {
-          for (let destination_index = 0; destination_index < reserved_destinations.length; destination_index++) {
-            const reserved_addr = reserved_destinations[destination_index]
+        if (_reserved_destinations) {
+          for (let destination_index = 0; destination_index < _reserved_destinations.length; destination_index++) {
+            const reserved_addr = _reserved_destinations[destination_index]
             const {
               num_tokens,
               num_percent,
               percent_decimals
-            } = await getReservedDestinationInfo(registryStorageAddr, crowdsaleExecID, reserved_addr).call()
+            } = await getReservedDestinationInfo(abstractStorageAddr, execID, reserved_addr).call()
 
             if (num_tokens > 0) {
               reserved_tokens_info.push({
@@ -209,10 +236,10 @@ export class Manage extends Component {
         }
 
       } else if (isDutchAuction) {
-        const tier_data = await getCrowdsaleStatus(registryStorageAddr, crowdsaleExecID).call()
-        const tier_dates = await getCrowdsaleStartAndEndTimes(registryStorageAddr, crowdsaleExecID).call()
-        const { num_whitelisted, whitelist } = await getCrowdsaleWhitelist(registryStorageAddr, crowdsaleExecID).call()
-        const tokens_sold = await getTokensSold(registryStorageAddr, crowdsaleExecID).call()
+        const tier_data = await getCrowdsaleStatus(abstractStorageAddr, execID).call()
+        const tier_dates = await getCrowdsaleStartAndEndTimes(abstractStorageAddr, execID).call()
+        const { num_whitelisted, whitelist } = await getCrowdsaleWhitelist(abstractStorageAddr, execID).call()
+        const tokens_sold = await getTokensSold(abstractStorageAddr, execID).call()
 
         if (num_whitelisted !== '0') {
           // TODO: remove this attribute overwrite after auth_os implement whitelist_enabled for Dutch Auction
@@ -223,7 +250,7 @@ export class Manage extends Component {
             const {
               max_spend_remaining,
               minimum_contribution
-            } = await getWhitelistStatus(registryStorageAddr, crowdsaleExecID, whitelist_item_addr).call()
+            } = await getWhitelistStatus(abstractStorageAddr, execID, whitelist_item_addr).call()
 
             if (max_spend_remaining > 0) {
               if (!tier_data.whitelist) tier_data.whitelist = []
@@ -246,13 +273,9 @@ export class Manage extends Component {
 
       tierStore.setGlobalMinCap(toBigNumber(crowdsale.minimum_contribution).div(`1e${token._token_decimals}`).toFixed())
 
-      await this.updateCrowdsaleStatus()
-
     } catch (err) {
-      console.error(err)
+      return Promise.reject(err)
     }
-
-    this.hideLoader()
   }
 
   hideLoader = (err) => {
@@ -274,21 +297,32 @@ export class Manage extends Component {
 
   setCrowdsaleInfo = async () => {
     const { contractStore, crowdsaleStore } = this.props
+    const { execID, selected } = crowdsaleStore
+    const { addr } = contractStore.abstractStorage
+    const { initialTiersValues } = selected
 
     const targetPrefix = "idx"
     const targetSuffix = crowdsaleStore.contractTargetSuffix
     const target = `${targetPrefix}${targetSuffix}`
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
-    const { addr } = toJS(contractStore.abstractStorage)
-    const { end_time } = await methods.getCrowdsaleStartAndEndTimes(addr, contractStore.crowdsale.execID).call()
+    const { getCrowdsaleStartAndEndTimes, getCrowdsaleInfo } = methods
+    const { _start_time, _end_time } = await getCrowdsaleStartAndEndTimes(addr, execID).call()
+    const { is_finalized } = await getCrowdsaleInfo(addr, execID).call()
 
-    console.log("crowdsaleStartAndEndTimes.end_time:", end_time)
-    this.setState({ crowdsaleHasEnded: end_time * 1000 <= Date.now() || crowdsaleStore.selected.finalized })
+    this.setState({
+      crowdsaleHasEnded: _end_time * 1000 <= Date.now(),
+      crowdsaleHasStarted: _start_time * 1000 >= Date.now(),
+      crowdsaleIsUpdatable: initialTiersValues.some(tier => tier.updatable),
+      crowdsaleIsWhitelisted: initialTiersValues.some(tier => tier.isWhitelisted),
+      crowdsaleIsFinalized: is_finalized
+    })
   }
 
   canFinalize = async () => {
     const { contractStore, crowdsaleStore } = this.props
+    const { addr } = contractStore.abstractStorage
+    const { execID } = crowdsaleStore
 
     const targetPrefix = "idx"
     const targetSuffix = crowdsaleStore.contractTargetSuffix
@@ -296,11 +330,10 @@ export class Manage extends Component {
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
     const { getCrowdsaleInfo, isCrowdsaleFull } = methods
-    const { addr } = toJS(contractStore.abstractStorage)
 
     try {
-      const { is_finalized } = await getCrowdsaleInfo(addr, contractStore.crowdsale.execID).call()
-      const { is_crowdsale_full } = await isCrowdsaleFull(addr, contractStore.crowdsale.execID).call()
+      const { is_finalized } = await getCrowdsaleInfo(addr, execID).call()
+      const { is_crowdsale_full } = await isCrowdsaleFull(addr, execID).call()
 
       if (is_finalized) {
         this.setState({ canFinalize: false })
@@ -389,50 +422,28 @@ export class Manage extends Component {
   canBeSaved = () => {
     const { crowdsaleHasEnded, ownerCurrentUser } = this.state
     const { tierStore, crowdsaleStore } = this.props
-    const { isMintedCappedCrowdsale, isDutchAuction, selected } = crowdsaleStore
-    const { updatable, initialTiersValues } = selected
-    const { globalMinCap } = tierStore
+    const { initialTiersValues } = crowdsaleStore.selected
+    const { globalMinCap, tiers, modifiedStoredWhitelist, individuallyValidTiers } = tierStore
 
     // TODO: review validations after this fix: https://github.com/final-form/react-final-form/issues/151
     // once done, can be replaced with _pristine_ state value
 
-    const isValidTier = tierStore.individuallyValidTiers
-    const validTiers = initialTiersValues.every(tier => isValidTier[tier.index])
-    const modifiedMinCap = globalMinCap ? !toBigNumber(this.state.initialGlobalMinCap).eq(globalMinCap) : false
+    const validTiers = initialTiersValues.every(tier => individuallyValidTiers[tier.index])
+    const fieldsToUpdate = validTiers ? getFieldsToUpdate(initialTiersValues, tiers) : []
+    const modifiedMinCap = globalMinCap ? !toBigNumber(this.initialValues.minCap).eq(globalMinCap) : false
+    const valuesChanged = modifiedStoredWhitelist || fieldsToUpdate.length > 0 || modifiedMinCap
+    const canSave = ownerCurrentUser && valuesChanged && !crowdsaleHasEnded
 
-    let fieldsToUpdate = []
-    if (initialTiersValues.length && validTiers) {
-      fieldsToUpdate = getFieldsToUpdate(initialTiersValues, tierStore.tiers)
-    }
-
-    let canSave = ownerCurrentUser && (tierStore.modifiedStoredWhitelist || fieldsToUpdate.length > 0 || modifiedMinCap) && !crowdsaleHasEnded
-
-    const canSaveObj = {
+    return {
       canSave,
       fieldsToUpdate,
       globalMinCap: modifiedMinCap ? globalMinCap : null
     }
-
-    return canSaveObj
   }
 
   saveDisplayed = () => {
-    const { crowdsaleHasEnded, ownerCurrentUser } = this.state
-    const { crowdsaleStore } = this.props
-    const { isDutchAuction, isMintedCappedCrowdsale } = crowdsaleStore
-    const { initialTiersValues } = crowdsaleStore.selected
-    const crowdsaleIsUpdatable = initialTiersValues.some(tier => tier.updatable)
-    const crowdsaleIsWhitelisted = initialTiersValues.some(tier => tier.isWhitelisted)
-    const crowdsaleHasStarted = initialTiersValues.length ? !isDateLaterThan()(dateToTimestamp(initialTiersValues[0].startTime))(Date.now()) : true
-    if (
-      !ownerCurrentUser
-      || crowdsaleHasEnded
-      || (isMintedCappedCrowdsale && !crowdsaleIsWhitelisted && !crowdsaleIsUpdatable)
-      || (isDutchAuction && !crowdsaleIsWhitelisted && crowdsaleHasStarted)
-    ) {
-      return false
-    }
-    return true
+    const { ownerCurrentUser, crowdsaleHasEnded, crowdsaleIsFinalized, canFinalize } = this.state
+    return ownerCurrentUser && !crowdsaleHasEnded && (!crowdsaleIsFinalized || !canFinalize)
   }
 
   saveCrowdsale = () => {
@@ -499,15 +510,20 @@ export class Manage extends Component {
   })
 
   render () {
-    const { canFinalize, ownerCurrentUser } = this.state
-    const { crowdsaleStore } = this.props
-    const { finalized } = crowdsaleStore.selected
+    const {
+      canFinalize,
+      ownerCurrentUser,
+      crowdsaleIsFinalized,
+      crowdsaleHasEnded,
+      crowdsaleIsWhitelisted,
+      loading
+    } = this.state
 
     return (
       <section className="manage">
 
         <FinalizeCrowdsaleStep
-          disabled={!ownerCurrentUser || finalized || !canFinalize}
+          disabled={!ownerCurrentUser || crowdsaleIsFinalized || !canFinalize}
           handleClick={this.finalizeCrowdsale}
         />
 
@@ -517,14 +533,12 @@ export class Manage extends Component {
           onSubmit={this.saveCrowdsale}
           mutators={{ ...arrayMutators }}
           decorators={[this.calculator]}
-          initialValues={{
-            tiers: this.initialTiers,
-            minCap: this.state.initialGlobalMinCap
-          }}
+          initialValues={{ ...this.initialValues }}
           component={ManageForm}
-          canEditTiers={ownerCurrentUser && !canFinalize && !finalized}
+          canEditTiers={ownerCurrentUser && !canFinalize && !crowdsaleIsFinalized}
+          canEditMinCap={ownerCurrentUser && !crowdsaleHasEnded && !crowdsaleIsWhitelisted}
           handleChange={this.updateTierStore}
-          canSave={this.canBeSaved().canSave}
+          canSave={loading ? null : this.canBeSaved().canSave}
           displaySave={this.saveDisplayed()}
         />
 
