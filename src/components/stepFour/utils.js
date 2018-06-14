@@ -395,7 +395,7 @@ export const setReservedTokensListMultiple = () => {
       const methodInterface = ["address[]","uint256[]","uint256[]","uint256[]"]
 
       let paramsToExec = [addrs, inTokens, inPercentageUnit, inPercentageDecimals, methodInterface]
-      const method = methodToExec("registryExec", `updateMultipleReservedTokens(${methodInterface.join(',')})`, "tokenManagerMintedCapped", getReservedTokensParams, paramsToExec)
+      const method = methodToExec("registryExec", `updateMultipleReservedTokens(${methodInterface.join(',')})`, getReservedTokensParams, paramsToExec)
 
       return method.estimateGas(opts)
         .then(estimatedGas => {
@@ -488,7 +488,7 @@ export const createCrowdsaleTiers = () => {
       const methodInterface = ["bytes32[]", "uint256[]", "uint256[]", "uint256[]", "bool[]", "bool[]"]
 
       let paramsToExec = [methodInterface]
-      const method = methodToExec("registryExec", `createCrowdsaleTiers(${methodInterface.join(',')})`, "saleManagerMintedCapped", getTiersParams, paramsToExec)
+      const method = methodToExec("registryExec", `createCrowdsaleTiers(${methodInterface.join(',')})`, getTiersParams, paramsToExec)
 
       let account = contractStore.crowdsale.account;
       const opts = { gasPrice: generalStore.gasPrice, from: account }
@@ -774,6 +774,8 @@ export function scrollToBottom () {
 }
 
 export function getDownloadName () {
+  const { crowdsale, MintedCappedProxy } = contractStore
+  const crowdsalePointer = crowdsale.execID || MintedCappedProxy.addr
   return new Promise(resolve => {
     const whenNetworkName = getNetworkVersion()
       .then((networkID) => {
@@ -785,7 +787,7 @@ export function getDownloadName () {
 
         return networkName
       })
-      .then((networkName) => `${DOWNLOAD_NAME}_${networkName}_${contractStore.crowdsale.execID}`)
+      .then((networkName) => `${DOWNLOAD_NAME}_${networkName}_${crowdsalePointer}`)
 
     resolve(whenNetworkName)
   })
@@ -891,6 +893,15 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
     crowdsaleWhitelistElements = tierWhitelistElements
   }
 
+  const getCrowdsaleID = () => {
+    //todo: Dutch
+    if (contractStore.crowdsale.execID) {
+      return { field: 'execID', value: 'Auth_os execution ID: ', parent: 'crowdsale' }
+    } else {
+      return { field: 'addr', value: 'Auth_os Crowdsale Proxy: ', parent: 'MintedCappedProxy' }
+    }
+  }
+
   return {
     common: [
       ...bigHeaderElements('*********TOKEN SETUP*********'),
@@ -921,7 +932,7 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
       { value: authOSContractString('provider'), parent: 'none', fileValue: getAddr("PROVIDER", networkID) },
       smallHeader('*********CROWDSALE***********'),
       { value: 'Auth_os application name: ', parent: 'none', fileValue: crowdsaleStore.appName },
-      { field: 'execID', value: 'Auth_os execution ID: ', parent: 'crowdsale' },
+      getCrowdsaleID(),
       { value: authOSContractString('MintedCappedIdx'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "IDX", networkID) },
       { value: authOSContractString('Sale'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE", networkID) },
       { value: authOSContractString('SaleManager'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE_MANAGER", networkID) },
