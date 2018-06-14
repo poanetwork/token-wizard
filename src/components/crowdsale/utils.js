@@ -209,14 +209,10 @@ let fillCrowdsalePageStoreDates = (startsAtMilliseconds, endsAtMilliseconds) => 
   console.log("endDate:", endsAtMilliseconds)
 }
 
-export let isFinalized = (initCrowdsaleContract, crowdsaleExecID) => {
-  const registryStorageObj = toJS(contractStore.abstractStorage)
-  let getCrowdsaleInfo = initCrowdsaleContract.methods.getCrowdsaleInfo(registryStorageObj.addr, crowdsaleExecID).call();
-
-  return getCrowdsaleInfo.then(crowdsaleInfo => {
-    let isFinalized = crowdsaleInfo.is_finalized;
-    return isFinalized;
-  })
+export const isFinalized = async ({ methods }, crowdsaleExecID) => {
+  const { addr } = contractStore.abstractStorage
+  const { is_finalized } = await methods.getCrowdsaleInfo(addr, crowdsaleExecID).call();
+  return is_finalized
 }
 
 export const getTiersLength = async () => {
