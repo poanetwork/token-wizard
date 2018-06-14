@@ -131,7 +131,7 @@ export class Contribute extends React.Component {
     const crowdsaleExecID = CrowdsaleConfig.crowdsaleContractURL || getExecID()
     const crowdsaleAddr = CrowdsaleConfig.crowdsaleContractURL || getAddr()
     contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
-    //contractStore.setContractProperty('MintedCappedProxy', 'addr', crowdsaleAddr)
+    contractStore.setContractProperty('MintedCappedProxy', 'addr', crowdsaleAddr)
 
     this.setState({ crowdsaleExecID })
 
@@ -161,11 +161,15 @@ export class Contribute extends React.Component {
       web3
     })
 
-    //todo
-    const targetPrefix = "idx"
-    const targetSuffix = crowdsaleStore.contractTargetSuffix
-    const target = `${targetPrefix}${targetSuffix}`
-    //const target = 'MintedCappedProxy'
+    //todo: Dutch
+    let target
+    if (contractStore.crowdsale.execID) {
+      const targetPrefix = "idx"
+      const targetSuffix = crowdsaleStore.contractTargetSuffix
+      target = `${targetPrefix}${targetSuffix}`
+    } else {
+      target = 'MintedCappedProxy'
+    }
 
     try {
       const initCrowdsaleContract = await attachToSpecificCrowdsaleContract(target)
@@ -287,11 +291,15 @@ export class Contribute extends React.Component {
     const { execID, account } = this.props.contractStore.crowdsale
     const { addr } = toJS(contractStore.abstractStorage)
 
-    //todo
-    const targetPrefix = "idx"
-    const targetSuffix = crowdsaleStore.contractTargetSuffix
-    const target = `${targetPrefix}${targetSuffix}`
-    //const target = "MintedCappedProxy"
+    //todo: Dutch
+    let target
+    if (contractStore.crowdsale.execID) {
+      const targetPrefix = "idx"
+      const targetSuffix = crowdsaleStore.contractTargetSuffix
+      target = `${targetPrefix}${targetSuffix}`
+    } else {
+      target = "MintedCappedProxy"
+    }
 
     let params = []
     if (execID) {
@@ -302,7 +310,7 @@ export class Contribute extends React.Component {
 
     if (crowdsaleStore.isMintedCappedCrowdsale) {
       const currentTierInfo = await methods.getCurrentTierInfo(...params).call()
-      const tier_price = currentTierInfo.tier_price ? currentTierInfo.tier_price : currentTierInfo[4]
+      const tier_price = currentTierInfo.tier_price || currentTierInfo[4]
       console.log('tier_price:', tier_price)
       crowdsalePageStore.setProperty('rate', tier_price) //should be one token in wei
 
@@ -327,14 +335,18 @@ export class Contribute extends React.Component {
 
   calculateMinContribution = async () => {
     const { crowdsaleStore, contractStore } = this.props
-    const { execID, account } = this.props.contractStore.crowdsale
+    const { execID, account } = contractStore.crowdsale
     const { addr } = toJS(contractStore.abstractStorage)
 
-    //todo
-    const targetPrefix = "idx"
-    const targetSuffix = crowdsaleStore.contractTargetSuffix
-    const target = `${targetPrefix}${targetSuffix}`
-    //const target = 'MintedCappedProxy'
+    //todo: Dutch
+    let target
+    if (contractStore.crowdsale.execID) {
+      const targetPrefix = "idx"
+      const targetSuffix = crowdsaleStore.contractTargetSuffix
+      target = `${targetPrefix}${targetSuffix}`
+    } else {
+      target = 'MintedCappedProxy'
+    }
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
     const userMinLimits = await getUserMinLimits(addr, execID, methods, account)
@@ -349,7 +361,7 @@ export class Contribute extends React.Component {
     }
 
     const { generalStore, crowdsaleStore, contractStore, crowdsalePageStore, tokenStore } = this.props
-    const { account } = contractStore.crowdsale
+    const { account, execID } = contractStore.crowdsale
 
     const weiToSend = await this.calculateWeiToSend()
     console.log('weiToSend:', weiToSend.toFixed())
@@ -369,7 +381,8 @@ export class Contribute extends React.Component {
     let methodInterface = [];
 
     let paramsToExec = [opts.value, methodInterface]
-    const method = methodToExec("registryExec", `buy()`, this.getBuyParams, paramsToExec)
+    const targetContractName = execID ? "registryExec" : "MintedCappedProxy"
+    const method = methodToExec(targetContractName, `buy()`, this.getBuyParams, paramsToExec)
 
     const estimatedGas = await method.estimateGas(opts)
     console.log('estimatedGas:', estimatedGas)

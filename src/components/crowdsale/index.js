@@ -78,7 +78,7 @@ export class Crowdsale extends React.Component {
     const crowdsaleExecID = CrowdsaleConfig.crowdsaleContractURL || getExecID()
     const crowdsaleAddr = CrowdsaleConfig.crowdsaleContractURL || getAddr()
     contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
-    //contractStore.setContractProperty('MintedCappedProxy', 'addr', crowdsaleAddr)
+    contractStore.setContractProperty('MintedCappedProxy', 'addr', crowdsaleAddr)
 
     //todo: change to 2 alerts
     if (!crowdsaleExecID && !crowdsaleAddr) {
@@ -100,14 +100,18 @@ export class Crowdsale extends React.Component {
   }
 
   extractContractsData = async () => {
-    const { crowdsaleStore } = this.props
+    const { crowdsaleStore, contractStore } = this.props
 
-    //todo:
-    const targetPrefix = "idx"
-    const targetSuffix = crowdsaleStore.contractTargetSuffix
-    const target = `${targetPrefix}${targetSuffix}`
-    console.log("target:", target)
-    //const target = 'MintedCappedProxy'
+    //todo: Dutch
+    let target
+    if (contractStore.crowdsale.execID) {
+      const targetPrefix = "idx"
+      const targetSuffix = crowdsaleStore.contractTargetSuffix
+      target = `${targetPrefix}${targetSuffix}`
+      console.log("target:", target)
+    } else {
+      target = 'MintedCappedProxy'
+    }
 
     try {
       const initCrowdsaleContract = await attachToSpecificCrowdsaleContract(target)
