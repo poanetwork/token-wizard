@@ -265,21 +265,22 @@ export class stepFour extends React.Component {
 
   goToCrowdsalePage = () => {
     const { contractStore } = this.props
-    const isValidContract = contractStore.crowdsale.execID
+    const crowdsalePointer = contractStore.MintedCappedProxy.addr || contractStore.crowdsale.execID
+    const queryPointerParam =  contractStore.MintedCappedProxy.addr ? 'addr' : contractStore.crowdsale.execID ? 'exec-id' : ''
 
-    if (!isValidContract) {
+    if (!crowdsalePointer) {
       return noContractDataAlert()
     }
 
     const crowdsalePage = '/crowdsale'
-    const url = `${crowdsalePage}?exec-id=${contractStore.crowdsale.execID}&networkID=${contractStore.crowdsale.networkID}`
+    const url = `${crowdsalePage}?${queryPointerParam}=${crowdsalePointer}&networkID=${contractStore.crowdsale.networkID}`
 
     if (!this.state.contractDownloaded) {
       this.downloadCrowdsaleInfo()
       this.contractDownloadSuccess()
     }
 
-    const newHistory = isValidContract ? url : crowdsalePage
+    const newHistory = crowdsalePointer ? url : crowdsalePage
 
     this.props.deploymentStore.resetDeploymentStep()
 

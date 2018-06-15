@@ -46,7 +46,7 @@ export const TRUNC_TO_DECIMALS = {
   DECIMALS18: -18
 }
 
-//to do: should be updated for 2.0
+//todo: should be updated for 2.0
 export const DEPLOYMENT_VALUES = {
   GAS_REQUIRED: {
     DEFAULT: 8044737,

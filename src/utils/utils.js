@@ -13,6 +13,12 @@ export const getExecID = () => {
   return isExecIDValid(execID) ? execID : null
 }
 
+//todo: check address input
+export const getAddr = () => {
+  const addr = getQueryVariable('addr')
+  console.log("getAddr:", addr)
+  return addr
+}
 export const isNetworkIDValid = (networkID) => /^[0-9]+$/.test(networkID)
 
 export const getNetworkID = () => {

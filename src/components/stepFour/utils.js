@@ -4,7 +4,8 @@ import {
   getNetworkVersion,
   sendTXToContract,
   methodToExec,
-  methodToCreateAppInstance
+  methodToCreateAppInstance,
+  deployContract
 } from '../../utils/blockchainHelpers'
 //import { noContractAlert } from '../../utils/alerts'
 import { countDecimalPlaces, toFixed } from '../../utils/utils'
@@ -27,11 +28,12 @@ import { toBigNumber } from '../crowdsale/utils'
 
 export const buildDeploymentSteps = (web3) => {
   let stepFnCorrelation = {
+    deployProxy,
     crowdsaleCreate: deployCrowdsale,
     token: initializeToken,
     setReservedTokens: setReservedTokensListMultiple,
-    updateGlobalMinContribution: updateGlobalMinContribution,
-    createCrowdsaleTiers: createCrowdsaleTiers,
+    updateGlobalMinContribution,
+    createCrowdsaleTiers,
     whitelist: addWhitelist,
     crowdsaleInit: initializeCrowdsale,
   }
@@ -56,6 +58,38 @@ export const buildDeploymentSteps = (web3) => {
   })
 
   return list
+}
+
+const getProxyParams = token => {
+  return [
+    "0x9996020c8864964688411b3d90ac27eb5b0937c7",
+    "0x3ad8aa4f87544323a9d1e5dd902f40c356527a7955687113db5f9a85ad579dc1",
+    "0xd6ebdab4b8c4123f8445efe724f779fff097cd51",
+    "0x4d696e74656443617070656443726f776473616c650000000000000000000000"
+  ]
+}
+
+//todo: deploy proxy contract
+export const deployProxy = () => {
+
+  return [
+    () => {
+      const binMintedCappedProxy = contractStore.MintedCappedProxy.bin || ''
+      const abiMintedCappedProxy = contractStore.MintedCappedProxy.abi || []
+      const paramsMintedCappedProxy = getProxyParams()
+
+      console.log('***Deploy Proxy contract***')
+
+      return deployContract(abiMintedCappedProxy, binMintedCappedProxy, paramsMintedCappedProxy)
+        .then(proxyAddr => {
+          console.log("contractStore:", contractStore)
+          contractStore.setContractProperty('MintedCappedProxy', 'addr', proxyAddr.toLowerCase())
+
+          deploymentStore.setAsSuccessful('deployProxy')
+          return Promise.resolve()
+        })
+    }
+  ]
 }
 
 const getCrowdSaleParams = (account, methodInterface) => {
@@ -88,7 +122,7 @@ const getCrowdSaleParams = (account, methodInterface) => {
   //tier 0 supply
   const supplyBN = toBigNumber(supply).times(`1e${tokenStore.decimals}`).toFixed()
 
-  let paramsCrowdsale = [
+  let crowdsaleParams = [
     walletAddress,
     formatDate(startTime),
     encodedTierName,
@@ -100,10 +134,10 @@ const getCrowdSaleParams = (account, methodInterface) => {
     account
   ]
 
-  console.log("paramsCrowdsale:", paramsCrowdsale)
+  console.log("crowdsaleParams:", crowdsaleParams)
 
-  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, paramsCrowdsale);
-  return encodedParameters;
+  let crowdsaleParamsEncoded = web3.eth.abi.encodeParameters(methodInterface, crowdsaleParams)
+  return { params: crowdsaleParams, paramsEncoded: crowdsaleParamsEncoded}
 }
 
 const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
@@ -137,7 +171,7 @@ const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
   //is Dutch Auction crowdsale whitelisted?
   const isWhitelisted = whitelistEnabled === 'yes'
 
-  let paramsCrowdsale = [
+  let crowdsaleParams = [
     walletAddress,
     tokenSupplyBN,
     crowdsaleSupplyBN,
@@ -149,10 +183,10 @@ const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
     account
   ]
 
-  console.log("paramsCrowdsale:", paramsCrowdsale)
+  console.log("crowdsaleParams:", crowdsaleParams)
 
-  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, paramsCrowdsale);
-  return encodedParameters;
+  let crowdsaleParamsEncoded = web3.eth.abi.encodeParameters(methodInterface, crowdsaleParams);
+  return { params: crowdsaleParams, paramsEncoded: crowdsaleParamsEncoded };
 }
 
 export const deployCrowdsale = (getParams, methodInterface, appName) => {
@@ -174,6 +208,7 @@ export const deployCrowdsale = (getParams, methodInterface, appName) => {
             const methodInterfaceStr = `init(${methodInterface.join(',')})`
 
             let method = methodToCreateAppInstance(
+              "registryExec",
               methodInterfaceStr,
               getParams,
               params,
@@ -274,12 +309,8 @@ export const initializeToken = () => {
         console.log("contractStore.crowdsale.account: ", contractStore.crowdsale.account)
         let account = contractStore.crowdsale.account;
 
-        const targetPrefix = "tokenManager"
-        const targetSuffix = crowdsaleStore.contractTargetSuffix
-        const target = `${targetPrefix}${targetSuffix}`
-
         let paramsToExec = [tokenStore, methodInterface]
-        const method = methodToExec("registryExec", `initCrowdsaleToken(${methodInterface.join(',')})`, target, getTokenParams, paramsToExec)
+        const method = methodToExec("registryExec", `initCrowdsaleToken(${methodInterface.join(',')})`, getTokenParams, paramsToExec)
 
         const opts = { gasPrice: generalStore.gasPrice, from: account }
         console.log("opts:", opts)
@@ -364,7 +395,7 @@ export const setReservedTokensListMultiple = () => {
       const methodInterface = ["address[]","uint256[]","uint256[]","uint256[]"]
 
       let paramsToExec = [addrs, inTokens, inPercentageUnit, inPercentageDecimals, methodInterface]
-      const method = methodToExec("registryExec", `updateMultipleReservedTokens(${methodInterface.join(',')})`, "tokenManagerMintedCapped", getReservedTokensParams, paramsToExec)
+      const method = methodToExec("registryExec", `updateMultipleReservedTokens(${methodInterface.join(',')})`, getReservedTokensParams, paramsToExec)
 
       return method.estimateGas(opts)
         .then(estimatedGas => {
@@ -390,12 +421,8 @@ export const initializeCrowdsale = () => {
 
         let account = contractStore.crowdsale.account;
 
-        const targetPrefix = "saleManager"
-        const targetSuffix = crowdsaleStore.contractTargetSuffix
-        const target = `${targetPrefix}${targetSuffix}`
-
         let paramsToExec = []
-        const method = methodToExec("registryExec", "initializeCrowdsale()", target, getInitializeCrowdsaleParams, paramsToExec)
+        const method = methodToExec("registryExec", "initializeCrowdsale()", getInitializeCrowdsaleParams, paramsToExec)
 
         const opts = { gasPrice: generalStore.gasPrice, from: account }
         console.log("opts:", opts)
@@ -461,7 +488,7 @@ export const createCrowdsaleTiers = () => {
       const methodInterface = ["bytes32[]", "uint256[]", "uint256[]", "uint256[]", "bool[]", "bool[]"]
 
       let paramsToExec = [methodInterface]
-      const method = methodToExec("registryExec", `createCrowdsaleTiers(${methodInterface.join(',')})`, "saleManagerMintedCapped", getTiersParams, paramsToExec)
+      const method = methodToExec("registryExec", `createCrowdsaleTiers(${methodInterface.join(',')})`, getTiersParams, paramsToExec)
 
       let account = contractStore.crowdsale.account;
       const opts = { gasPrice: generalStore.gasPrice, from: account }
@@ -546,24 +573,16 @@ export const addWhitelist = () => {
 
       let methodInterface
       let methodName
-      //to do: define target before if statement
-      let target
       if (crowdsaleStore.isMintedCappedCrowdsale) {
-        const targetPrefix = "saleManager"
-        const targetSuffix = crowdsaleStore.contractTargetSuffix
-        target = `${targetPrefix}${targetSuffix}`
         methodInterface = ["uint256", "address[]","uint256[]","uint256[]"]
         methodName = "whitelistMultiForTier"
       } else if (crowdsaleStore.isDutchAuction) {
-        const targetPrefix = "crowdsaleConsole"
-        const targetSuffix = crowdsaleStore.contractTargetSuffix
-        target = `${targetPrefix}${targetSuffix}`
         methodInterface = ["address[]","uint256[]","uint256[]"]
         methodName = "whitelistMulti"
       }
 
       let paramsToExec = [index, addrs, minCaps, maxCaps, methodInterface]
-      const method = methodToExec("registryExec", `${methodName}(${methodInterface.join(',')})`, target, getWhitelistsParams, paramsToExec)
+      const method = methodToExec("registryExec", `${methodName}(${methodInterface.join(',')})`, getWhitelistsParams, paramsToExec)
 
       return method.estimateGas(opts)
         .then(estimatedGas => {
@@ -589,12 +608,8 @@ export const updateGlobalMinContribution = () => {
 
     const methodInterface = ["uint256"]
 
-    const targetPrefix = "saleManager"
-    const targetSuffix = crowdsaleStore.contractTargetSuffix
-    const target = `${targetPrefix}${targetSuffix}`
-
     let paramsToExec = [methodInterface]
-    const method = methodToExec("registryExec", `updateGlobalMinContribution(${methodInterface.join(',')})`, target, getUpdateGlobalMinCapParams, paramsToExec)
+    const method = methodToExec("registryExec", `updateGlobalMinContribution(${methodInterface.join(',')})`, getUpdateGlobalMinCapParams, paramsToExec)
 
     let account = contractStore.crowdsale.account;
     const opts = { gasPrice: generalStore.gasPrice, from: account }
@@ -759,6 +774,8 @@ export function scrollToBottom () {
 }
 
 export function getDownloadName () {
+  const { crowdsale, MintedCappedProxy } = contractStore
+  const crowdsalePointer = crowdsale.execID || MintedCappedProxy.addr
   return new Promise(resolve => {
     const whenNetworkName = getNetworkVersion()
       .then((networkID) => {
@@ -770,7 +787,7 @@ export function getDownloadName () {
 
         return networkName
       })
-      .then((networkName) => `${DOWNLOAD_NAME}_${networkName}_${contractStore.crowdsale.execID}`)
+      .then((networkName) => `${DOWNLOAD_NAME}_${networkName}_${crowdsalePointer}`)
 
     resolve(whenNetworkName)
   })
@@ -876,6 +893,15 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
     crowdsaleWhitelistElements = tierWhitelistElements
   }
 
+  const getCrowdsaleID = () => {
+    //todo: Dutch
+    if (contractStore.crowdsale.execID) {
+      return { field: 'execID', value: 'Auth_os execution ID: ', parent: 'crowdsale' }
+    } else {
+      return { field: 'addr', value: 'Auth_os Crowdsale Proxy: ', parent: 'MintedCappedProxy' }
+    }
+  }
+
   return {
     common: [
       ...bigHeaderElements('*********TOKEN SETUP*********'),
@@ -906,7 +932,7 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
       { value: authOSContractString('provider'), parent: 'none', fileValue: getAddr("PROVIDER", networkID) },
       smallHeader('*********CROWDSALE***********'),
       { value: 'Auth_os application name: ', parent: 'none', fileValue: crowdsaleStore.appName },
-      { field: 'execID', value: 'Auth_os execution ID: ', parent: 'crowdsale' },
+      getCrowdsaleID(),
       { value: authOSContractString('MintedCappedIdx'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "IDX", networkID) },
       { value: authOSContractString('Sale'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE", networkID) },
       { value: authOSContractString('SaleManager'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE_MANAGER", networkID) },

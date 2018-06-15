@@ -9,7 +9,7 @@ import {
   methodToExec,
   getCrowdsaleStrategy,
   checkWeb3,
-  getExecCallData
+  getExecBuyCallData
 } from '../../utils/blockchainHelpers'
 import {
   getTokenData,
@@ -21,7 +21,7 @@ import {
   getUserMaxLimits,
   getUserMinLimits
 } from '../crowdsale/utils'
-import { countDecimalPlaces, getExecID, getNetworkID, toast } from '../../utils/utils'
+import { countDecimalPlaces, getExecID, getAddr, getNetworkID, toast } from '../../utils/utils'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import {
   contributionDisabledAlertInTime,
@@ -127,14 +127,18 @@ export class Contribute extends React.Component {
       return Promise.reject('invalid networkID')
     }
 
+    //todo: Dutch
     const crowdsaleExecID = CrowdsaleConfig.crowdsaleContractURL || getExecID()
+    const crowdsaleAddr = CrowdsaleConfig.crowdsaleContractURL || getAddr()
     contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
+    contractStore.setContractProperty('MintedCappedProxy', 'addr', crowdsaleAddr)
 
     this.setState({ crowdsaleExecID })
 
-    if (!crowdsaleExecID) {
+    //todo: change to 2 alerts
+    if (!crowdsaleExecID && !crowdsaleAddr) {
       invalidCrowdsaleExecIDAlert()
-      return Promise.reject('invalid exec-id')
+      return Promise.reject('invalid exec-id or addr')
     }
   }
 
@@ -157,9 +161,15 @@ export class Contribute extends React.Component {
       web3
     })
 
-    const targetPrefix = "idx"
-    const targetSuffix = crowdsaleStore.contractTargetSuffix
-    const target = `${targetPrefix}${targetSuffix}`
+    //todo: Dutch
+    let target
+    if (contractStore.crowdsale.execID) {
+      const targetPrefix = "idx"
+      const targetSuffix = crowdsaleStore.contractTargetSuffix
+      target = `${targetPrefix}${targetSuffix}`
+    } else {
+      target = 'MintedCappedProxy'
+    }
 
     try {
       const initCrowdsaleContract = await attachToSpecificCrowdsaleContract(target)
@@ -281,19 +291,32 @@ export class Contribute extends React.Component {
     const { execID, account } = this.props.contractStore.crowdsale
     const { addr } = toJS(contractStore.abstractStorage)
 
-    const targetPrefix = "idx"
-    const targetSuffix = crowdsaleStore.contractTargetSuffix
-    const target = `${targetPrefix}${targetSuffix}`
+    //todo: Dutch
+    let target
+    if (contractStore.crowdsale.execID) {
+      const targetPrefix = "idx"
+      const targetSuffix = crowdsaleStore.contractTargetSuffix
+      target = `${targetPrefix}${targetSuffix}`
+    } else {
+      target = "MintedCappedProxy"
+    }
+
+    let params = []
+    if (execID) {
+      params.push(addr, execID)
+    }
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
 
     if (crowdsaleStore.isMintedCappedCrowdsale) {
-      const { tier_price } = await methods.getCurrentTierInfo(addr, execID).call()
+      const currentTierInfo = await methods.getCurrentTierInfo(...params).call()
+      const tier_price = currentTierInfo.tier_price || currentTierInfo[4]
       console.log('tier_price:', tier_price)
       crowdsalePageStore.setProperty('rate', tier_price) //should be one token in wei
 
     } else if (crowdsaleStore.isDutchAuction) {
-      const { current_rate } = await methods.getCrowdsaleStatus(addr, execID).call()
+      //todo: Dutch
+      const { current_rate } = await methods.getCrowdsaleStatus(...params).call()
       console.log('current_rate:', current_rate)
       crowdsalePageStore.setProperty('rate', current_rate) //should be one token in wei
     }
@@ -312,12 +335,18 @@ export class Contribute extends React.Component {
 
   calculateMinContribution = async () => {
     const { crowdsaleStore, contractStore } = this.props
-    const { execID, account } = this.props.contractStore.crowdsale
+    const { execID, account } = contractStore.crowdsale
     const { addr } = toJS(contractStore.abstractStorage)
 
-    const targetPrefix = "idx"
-    const targetSuffix = crowdsaleStore.contractTargetSuffix
-    const target = `${targetPrefix}${targetSuffix}`
+    //todo: Dutch
+    let target
+    if (contractStore.crowdsale.execID) {
+      const targetPrefix = "idx"
+      const targetSuffix = crowdsaleStore.contractTargetSuffix
+      target = `${targetPrefix}${targetSuffix}`
+    } else {
+      target = 'MintedCappedProxy'
+    }
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
     const userMinLimits = await getUserMinLimits(addr, execID, methods, account)
@@ -332,7 +361,7 @@ export class Contribute extends React.Component {
     }
 
     const { generalStore, crowdsaleStore, contractStore, crowdsalePageStore, tokenStore } = this.props
-    const { account } = contractStore.crowdsale
+    const { account, execID } = contractStore.crowdsale
 
     const weiToSend = await this.calculateWeiToSend()
     console.log('weiToSend:', weiToSend.toFixed())
@@ -351,12 +380,9 @@ export class Contribute extends React.Component {
 
     let methodInterface = [];
 
-    const targetPrefix = "sale"
-    const targetSuffix = crowdsaleStore.contractTargetSuffix
-    const target = `${targetPrefix}${targetSuffix}`
-
     let paramsToExec = [opts.value, methodInterface]
-    const method = methodToExec("registryExec", `buy()`, target, this.getBuyParams, paramsToExec)
+    const targetContractName = execID ? "registryExec" : "MintedCappedProxy"
+    const method = methodToExec(targetContractName, `buy()`, this.getBuyParams, paramsToExec)
 
     const estimatedGas = await method.estimateGas(opts)
     console.log('estimatedGas:', estimatedGas)
@@ -404,7 +430,7 @@ export class Contribute extends React.Component {
   render () {
     const { crowdsalePageStore, tokenStore, contractStore } = this.props
     const { tokenAmountOf } = crowdsalePageStore
-    const { crowdsale } = contractStore
+    const { crowdsale, MintedCappedProxy } = contractStore
 
     const { curAddr, contributeThrough, crowdsaleExecID, web3Available, toNextTick, nextTick, minimumContribution } = this.state
     const { days, hours, minutes, seconds } = toNextTick
@@ -427,7 +453,7 @@ export class Contribute extends React.Component {
     const minimumContributionDisplay = minimumContribution >= 0 ? `${minimumContribution} ${tokenTicker}` : 'You are not allowed'
 
     const QRPaymentProcessElement = contributeThrough === CONTRIBUTION_OPTIONS.QR && crowdsaleExecID ?
-      <QRPaymentProcess registryExecAddr={contractStore.registryExec.addr} txData={getExecCallData(crowdsaleExecID)} /> :
+      <QRPaymentProcess registryExecAddr={contractStore.registryExec.addr} txData={getExecBuyCallData(crowdsaleExecID)} /> :
       null
 
     const rightColumnClasses = classNames('contribute-table-cell', 'contribute-table-cell_right', {
@@ -455,8 +481,8 @@ export class Contribute extends React.Component {
               <p className="hashes-description">Current Account</p>
             </div>
             <div className="hashes-i">
-              <p className="hashes-title">{crowdsale && crowdsale.execID}</p>
-              <p className="hashes-description">Crowdsale Execution ID</p>
+              <p className="hashes-title">{(crowdsale && crowdsale.execID) || (MintedCappedProxy && MintedCappedProxy.addr)}</p>
+              <p className="hashes-description">{crowdsale ? crowdsale.execID ? 'Crowdsale Execution ID' : 'Crowdsale Proxy Address' : 'Crowdsale ID'}</p>
             </div>
             <div className="hashes-i">
               <p className="hashes-title">{tokenName}</p>

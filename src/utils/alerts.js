@@ -42,6 +42,14 @@ export function invalidCrowdsaleExecIDAlert() {
   });
 }
 
+export function invalidCrowdsaleAddrAlert() {
+  sweetAlert2({
+    title: "Warning",
+    html: "Invalid crowdsale address is indicated in config and/or in query string.",
+    type: "warning"
+  });
+}
+
 export function invalidNetworkIDAlert() {
   sweetAlert2({
     title: "Warning",

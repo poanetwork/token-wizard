@@ -1,31 +1,57 @@
 import { contractStore } from './index'
 import { REACT_PREFIX } from '../utils/constants'
+import { setFlatFileContentToState } from '../utils/utils'
 
-export const getCrowdsaleAssets = (networkID) => {
-  getCrowdsaleAsset(`${REACT_PREFIX}ABSTRACT_STORAGE`, "abstractStorage", networkID)
-  getCrowdsaleAsset(`${REACT_PREFIX}REGISTRY_IDX`, "registryIdx", networkID)
-  getCrowdsaleAsset(`${REACT_PREFIX}REGISTRY_EXEC`, "registryExec", networkID)
-  getCrowdsaleAsset(`${REACT_PREFIX}PROVIDER`, "provider", networkID)
-  getCrowdsaleAsset(`${REACT_PREFIX}MINTED_CAPPED_IDX`, "idxMintedCapped", networkID)
-  getCrowdsaleAsset(`${REACT_PREFIX}MINTED_CAPPED_CROWDSALE`, "saleMintedCapped", networkID)
-  getCrowdsaleAsset(`${REACT_PREFIX}MINTED_CAPPED_CROWDSALE_MANAGER`, "saleManagerMintedCapped", networkID)
-  getCrowdsaleAsset(`${REACT_PREFIX}MINTED_CAPPED_TOKEN`, "tokenMintedCapped", networkID)
-  getCrowdsaleAsset(`${REACT_PREFIX}MINTED_CAPPED_TOKEN_MANAGER`, "tokenManagerMintedCapped", networkID)
-  getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_INIT_CROWDSALE`, "initCrowdsaleDutchAuction", networkID)
-  getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_TOKEN_CONSOLE`, "tokenConsoleDutchAuction", networkID)
-  getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_CROWDSALE_CONSOLE`, "crowdsaleConsoleDutchAuction", networkID)
-  getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_CROWDSALE_BUY_TOKENS`, "crowdsaleBuyTokensDutchAuction", networkID)
-  getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_TOKEN_TRANSFER`, "tokenTransfer", networkID)
-  getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_TOKEN_TRANSFER_FROM`, "tokenTransferFrom", networkID)
-  getCrowdsaleAsset(`${REACT_PREFIX}DUTCH_TOKEN_APPROVE`, "tokenApprove", networkID)
-  return Promise.resolve()
+export const getCrowdsaleAssets = async (networkID) => {
+  const whenProxy = getCrowdsaleAsset(null, "MintedCappedProxy", networkID)
+  const whenRegistry = getCrowdsaleAsset(`ABSTRACT_STORAGE`, "abstractStorage", networkID)
+  const whenRegistryIdx = getCrowdsaleAsset(`REGISTRY_IDX`, "registryIdx", networkID)
+  const whenRegistryExec = getCrowdsaleAsset(`REGISTRY_EXEC`, "registryExec", networkID)
+  const whenProvider = getCrowdsaleAsset(`PROVIDER`, "provider", networkID)
+  const whenMintedCappedIdx = getCrowdsaleAsset(`MINTED_CAPPED_IDX`, "idxMintedCapped", networkID)
+  const whenMintedCappedSale = getCrowdsaleAsset(`MINTED_CAPPED_CROWDSALE`, "saleMintedCapped", networkID)
+  const whenMintedCappedSaleManager = getCrowdsaleAsset(`MINTED_CAPPED_CROWDSALE_MANAGER`, "saleManagerMintedCapped", networkID)
+  const whenMintedCappedToken = getCrowdsaleAsset(`MINTED_CAPPED_TOKEN`, "tokenMintedCapped", networkID)
+  const whenMintedCappedTokenManager = getCrowdsaleAsset(`MINTED_CAPPED_TOKEN_MANAGER`, "tokenManagerMintedCapped", networkID)
+  const whenDutchInitCrowdsale = getCrowdsaleAsset(`DUTCH_INIT_CROWDSALE`, "initCrowdsaleDutchAuction", networkID)
+  const whenDutchTokenConsole = getCrowdsaleAsset(`DUTCH_TOKEN_CONSOLE`, "tokenConsoleDutchAuction", networkID)
+  const whenDutchCrowdsaleConsole = getCrowdsaleAsset(`DUTCH_CROWDSALE_CONSOLE`, "crowdsaleConsoleDutchAuction", networkID)
+  const whenDutchCrowdsaleBuyTokens = getCrowdsaleAsset(`DUTCH_CROWDSALE_BUY_TOKENS`, "crowdsaleBuyTokensDutchAuction", networkID)
+  const whenDutchTokenTransfer = getCrowdsaleAsset(`DUTCH_TOKEN_TRANSFER`, "tokenTransfer", networkID)
+  const whenDutchTokenTransferFrom = getCrowdsaleAsset(`DUTCH_TOKEN_TRANSFER_FROM`, "tokenTransferFrom", networkID)
+  const whenDutchTokenApprove = getCrowdsaleAsset(`DUTCH_TOKEN_APPROVE`, "tokenApprove", networkID)
+  const whenPromises = [
+    whenProxy,
+    whenRegistry,
+    whenRegistryIdx,
+    whenRegistryExec,
+    whenProvider,
+    whenMintedCappedIdx,
+    whenMintedCappedSale,
+    whenMintedCappedSaleManager,
+    whenMintedCappedToken,
+    whenMintedCappedTokenManager,
+    whenDutchInitCrowdsale,
+    whenDutchTokenConsole,
+    whenDutchCrowdsaleConsole,
+    whenDutchCrowdsaleBuyTokens,
+    whenDutchTokenTransfer,
+    whenDutchTokenTransferFrom,
+    whenDutchTokenApprove
+  ]
+  return Promise.all(whenPromises)
 }
 
-function getCrowdsaleAsset(contractName, stateProp, networkID) {
+async function getCrowdsaleAsset(contractName, stateProp, networkID) {
   console.log(contractName, stateProp, networkID)
+  const whenSrc = stateProp === "MintedCappedProxy" ? setFlatFileContentToState(`./contracts/${stateProp}.sol`) : Promise.resolve()
+  const whenBin = stateProp === "MintedCappedProxy" ? setFlatFileContentToState(`./contracts/${stateProp}.bin`) : Promise.resolve()
   let abi;
-  //to do
+  //todo
   switch (stateProp) {
+    case "MintedCappedProxy":
+      abi = [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"provider","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_amt","type":"uint256"}],"name":"approve","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getCrowdsaleMaxRaise","outputs":[{"name":"","type":"uint256"},{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_amt","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"proxy_admin","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getCrowdsaleInfo","outputs":[{"name":"","type":"uint256"},{"name":"","type":"address"},{"name":"","type":"uint256"},{"name":"","type":"bool"},{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_tier","type":"uint256"},{"name":"_buyer","type":"address"}],"name":"getWhitelistStatus","outputs":[{"name":"","type":"uint256"},{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getCrowdsaleTierList","outputs":[{"name":"","type":"bytes32[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getCrowdsaleStartAndEndTimes","outputs":[{"name":"","type":"uint256"},{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_calldata","type":"bytes"}],"name":"exec","outputs":[{"name":"success","type":"bool"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"registry_exec_id","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_amt","type":"uint256"}],"name":"decreaseApproval","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"app_name","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"app_storage","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_idx","type":"uint256"}],"name":"getTierStartAndEndDates","outputs":[{"name":"","type":"uint256"},{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"buy","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_amt","type":"uint256"}],"name":"transfer","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_idx","type":"uint256"}],"name":"getCrowdsaleTier","outputs":[{"name":"","type":"bytes32"},{"name":"","type":"uint256"},{"name":"","type":"uint256"},{"name":"","type":"uint256"},{"name":"","type":"bool"},{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"isCrowdsaleFull","outputs":[{"name":"","type":"bool"},{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_amt","type":"uint256"}],"name":"increaseApproval","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"app_exec_id","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"app_index","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"app_version","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"","type":"address"},{"name":"","type":"uint256"},{"name":"","type":"bytes32"},{"name":"","type":"uint256"},{"name":"","type":"uint256"},{"name":"","type":"uint256"},{"name":"","type":"bool"},{"name":"","type":"bool"},{"name":"","type":"address"}],"name":"init","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"},{"name":"_spender","type":"address"}],"name":"allowance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getTokensSold","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getCurrentTierInfo","outputs":[{"name":"","type":"bytes32"},{"name":"","type":"uint256"},{"name":"","type":"uint256"},{"name":"","type":"uint256"},{"name":"","type":"uint256"},{"name":"","type":"bool"},{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"_storage","type":"address"},{"name":"_registry_exec_id","type":"bytes32"},{"name":"_provider","type":"address"},{"name":"_app_name","type":"bytes32"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":true,"name":"execution_id","type":"bytes32"},{"indexed":false,"name":"message","type":"string"}],"name":"StorageException","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"amt","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"amt","type":"uint256"}],"name":"Approval","type":"event"}]
+      break;
     case "registryExec":
       abi = [{"constant":true,"inputs":[],"name":"provider","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"bytes32"}],"name":"deployed_by","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_deployer","type":"address"}],"name":"getDeployedLength","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_exec_id","type":"bytes32"}],"name":"setRegistryExecID","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"registry_exec_id","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_admin","type":"address"}],"name":"setAdmin","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"app_storage","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_exec_id","type":"bytes32"},{"name":"_calldata","type":"bytes"}],"name":"exec","outputs":[{"name":"success","type":"bool"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"bytes32"}],"name":"instance_info","outputs":[{"name":"current_provider","type":"address"},{"name":"current_registry_exec_id","type":"bytes32"},{"name":"app_exec_id","type":"bytes32"},{"name":"app_name","type":"bytes32"},{"name":"version_name","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"exec_admin","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getRegistryImplementation","outputs":[{"name":"indx","type":"address"},{"name":"implementation","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_provider","type":"address"}],"name":"setProvider","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_app_name","type":"bytes32"},{"name":"_init_calldata","type":"bytes"}],"name":"createAppInstance","outputs":[{"name":"exec_id","type":"bytes32"},{"name":"version","type":"bytes32"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"},{"name":"","type":"uint256"}],"name":"deployed_instances","outputs":[{"name":"current_provider","type":"address"},{"name":"current_registry_exec_id","type":"bytes32"},{"name":"app_exec_id","type":"bytes32"},{"name":"app_name","type":"bytes32"},{"name":"version_name","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"bytes32"},{"name":"","type":"uint256"}],"name":"app_instances","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_exec_id","type":"bytes32"}],"name":"getInstanceImplementation","outputs":[{"name":"index","type":"address"},{"name":"functions","type":"bytes4[]"},{"name":"implementations","type":"address[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_app_name","type":"bytes32"}],"name":"getInstances","outputs":[{"name":"","type":"bytes32[]"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"_exec_admin","type":"address"},{"name":"_app_storage","type":"address"},{"name":"_provider","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":true,"name":"creator","type":"address"},{"indexed":true,"name":"execution_id","type":"bytes32"},{"indexed":false,"name":"app_name","type":"bytes32"},{"indexed":false,"name":"version_name","type":"bytes32"}],"name":"AppInstanceCreated","type":"event"}]
       break;
@@ -39,14 +65,20 @@ function getCrowdsaleAsset(contractName, stateProp, networkID) {
       abi = []
       break;
   }
-  const addr = JSON.parse(process.env[`${contractName}_ADDRESS`] || {})[networkID]
+  const addr = contractName ? JSON.parse(process.env[`${REACT_PREFIX}${contractName}_ADDRESS`] || {})[networkID] : null
 
-  addContractsToState(abi, addr, stateProp)
+  console.log(abi, addr)
+
+  const [src, bin] = await Promise.all([whenSrc, whenBin])
+  addContractsToState(src, bin, abi, addr, stateProp)
+  Promise.resolve()
 }
 
-function addContractsToState(abi, addr, contract) {
+function addContractsToState(src, bin, abi, addr, contract) {
   contractStore.setContract(contract, {
-    abi,
-    addr
+    src,
+    bin,
+    abi: abi ? abi : contractStore[contract] ? contractStore[contract].abi : null,
+    addr: addr ? addr : contractStore[contract] ? contractStore[contract].addr : null
   });
 }

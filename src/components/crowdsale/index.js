@@ -14,14 +14,18 @@ import {
   initializeAccumulativeData,
   toBigNumber
 } from './utils'
-import { getExecID, getNetworkID } from '../../utils/utils'
+import { getExecID, getAddr, getNetworkID } from '../../utils/utils'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../../utils/constants'
 import { Loader } from '../Common/Loader'
 import { CrowdsaleConfig } from '../Common/config'
 import { inject, observer } from 'mobx-react'
-import { invalidCrowdsaleExecIDAlert, invalidNetworkIDAlert } from '../../utils/alerts'
+import {
+  invalidCrowdsaleExecIDAlert,
+  invalidCrowdsaleAddrAlert,
+  invalidNetworkIDAlert
+} from '../../utils/alerts'
 
 const { CROWDSALE_PAGE } = NAVIGATION_STEPS
 
@@ -70,12 +74,16 @@ export class Crowdsale extends React.Component {
       return Promise.reject('invalid networkID')
     }
 
+    //todo: change config to support exec-id and address
     const crowdsaleExecID = CrowdsaleConfig.crowdsaleContractURL || getExecID()
+    const crowdsaleAddr = CrowdsaleConfig.crowdsaleContractURL || getAddr()
     contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
+    contractStore.setContractProperty('MintedCappedProxy', 'addr', crowdsaleAddr)
 
-    if (!crowdsaleExecID) {
+    //todo: change to 2 alerts
+    if (!crowdsaleExecID && !crowdsaleAddr) {
       invalidCrowdsaleExecIDAlert()
-      return Promise.reject('invalid exec-id')
+      return Promise.reject('invalid exec-id or addr')
     }
   }
 
@@ -92,12 +100,18 @@ export class Crowdsale extends React.Component {
   }
 
   extractContractsData = async () => {
-    const { crowdsaleStore } = this.props
+    const { crowdsaleStore, contractStore } = this.props
 
-    const targetPrefix = "idx"
-    const targetSuffix = crowdsaleStore.contractTargetSuffix
-    const target = `${targetPrefix}${targetSuffix}`
-    console.log("target:", target)
+    //todo: Dutch
+    let target
+    if (contractStore.crowdsale.execID) {
+      const targetPrefix = "idx"
+      const targetSuffix = crowdsaleStore.contractTargetSuffix
+      target = `${targetPrefix}${targetSuffix}`
+      console.log("target:", target)
+    } else {
+      target = 'MintedCappedProxy'
+    }
 
     try {
       const initCrowdsaleContract = await attachToSpecificCrowdsaleContract(target)
@@ -122,12 +136,22 @@ export class Crowdsale extends React.Component {
 
   goToContributePage = () => {
     const { contractStore, generalStore } = this.props
+    const { crowdsale, MintedCappedProxy } = contractStore
     let queryStr = "";
     if (!CrowdsaleConfig.crowdsaleContractURL || !CrowdsaleConfig.networkID) {
-      if (contractStore.crowdsale.execID) {
-        queryStr = "?exec-id=" + contractStore.crowdsale.execID;
+      const crowdsaleParamVal = crowdsale.execID || (MintedCappedProxy ? MintedCappedProxy.addr : null)
+      if (crowdsaleParamVal) {
+        let crowdsaleParam
+        if (crowdsale.execID) {
+          crowdsaleParam = 'exec-id'
+        } else if (MintedCappedProxy) {
+          if (MintedCappedProxy.addr) {
+            crowdsaleParam = 'addr'
+          }
+        }
+        queryStr = `?${crowdsaleParam}=${crowdsaleParamVal}`
         if (generalStore.networkID) {
-          queryStr += "&networkID=" + generalStore.networkID;
+          queryStr += "&networkID=" + generalStore.networkID
         }
       }
     }
@@ -136,7 +160,8 @@ export class Crowdsale extends React.Component {
   }
 
   render() {
-    const { web3Store, tokenStore, crowdsalePageStore } = this.props
+    const { web3Store, tokenStore, crowdsalePageStore, contractStore } = this.props
+    const { MintedCappedProxy } = contractStore
     const { web3 } = web3Store
 
     const crowdsaleExecID = getContractStoreProperty('crowdsale','execID')
@@ -217,8 +242,8 @@ export class Crowdsale extends React.Component {
                   </div>
                   { contributorsBlock }
                 </div>
-                <p className="hash">{`${crowdsaleExecID}`}</p>
-                <p className="description">Crowdsale Execution ID</p>
+                <p className="hash">{`${crowdsaleExecID || (MintedCappedProxy && MintedCappedProxy.addr)}`}</p>
+                <p className="description">{crowdsaleExecID ? 'Crowdsale Execution ID' : 'Crowdsale Proxy Address'}</p>
               </div>
               <div className="right" style={{ width: '58%' }}>
                 <div className="hidden">

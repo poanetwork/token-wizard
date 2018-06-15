@@ -6,7 +6,7 @@ import { NAVIGATION_STEPS, CROWDSALE_STRATEGIES, CROWDSALE_STRATEGIES_DISPLAYNAM
 import { inject, observer } from 'mobx-react'
 const { CROWDSALE_STRATEGY } = NAVIGATION_STEPS;
 
-//to do: downloadStatus is not used
+//todo: downloadStatus is not used
 const ContinueButton = ({downloadStatus}) => {
   return (
     <Link to="/2">
