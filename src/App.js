@@ -46,7 +46,7 @@ class App extends Component {
                     ) : (
                       <Switch>
                         <Route exact path="/" component={crowdsaleAddr ? Crowdsale : Home}/>
-                        <Route exact path="/manage/:crowdsaleExecID" component={Manage}/>
+                        <Route exact path="/manage/:crowdsalePointer" component={Manage}/>
                         <Route path="/1" component={stepOne}/>
                         <Route path="/2" component={stepTwo}/>
                         <Route path="/3" component={stepThree}/>

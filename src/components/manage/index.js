@@ -18,7 +18,8 @@ import {
   attachToSpecificCrowdsaleContract,
   methodToExec,
   getCrowdsaleStrategy,
-  checkWeb3
+  checkWeb3,
+  isAddressValid
 } from '../../utils/blockchainHelpers'
 import { isExecIDValid, isNetworkIDValid, toast } from '../../utils/utils'
 import { getCrowdsaleAssets } from '../../stores/utils'
@@ -107,14 +108,21 @@ export class Manage extends Component {
       return Promise.reject('invalid networkID')
     }
 
-    const { crowdsaleExecID } = match.params
-    crowdsaleStore.setSelectedProperty('execID', crowdsaleExecID)
-    crowdsaleStore.setProperty('execID', crowdsaleExecID)
-    contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
+    const { crowdsalePointer } = match.params
+    if (isExecIDValid(crowdsalePointer)) {
+      crowdsaleStore.setSelectedProperty('execID', crowdsalePointer)
+      crowdsaleStore.setProperty('execID', crowdsalePointer)
+      contractStore.setContractProperty('crowdsale', 'execID', crowdsalePointer)
+    } else if (isAddressValid(crowdsalePointer)) {
+      crowdsaleStore.setSelectedProperty('addr', crowdsalePointer)
+      crowdsaleStore.setProperty('addr', crowdsalePointer)
+      contractStore.setContractProperty('MintedCappedProxy', 'addr', crowdsalePointer)
+    }
 
-    if (!isExecIDValid(crowdsaleExecID)) {
+    //todo: 2 alerts
+    if (!isExecIDValid(crowdsalePointer) && !isAddressValid(crowdsalePointer)) {
       invalidCrowdsaleExecIDAlert()
-      return Promise.reject('invalid exec-id')
+      return Promise.reject('invalid exec-id or proxy addr')
     }
   }
 
@@ -128,14 +136,26 @@ export class Manage extends Component {
   checkOwner = async () => {
     const { contractStore, crowdsaleStore } = this.props
 
-    const targetPrefix = "idx"
-    const targetSuffix = crowdsaleStore.contractTargetSuffix
-    const target = `${targetPrefix}${targetSuffix}`
+    //todo: Dutch
+    let target
+    if (crowdsaleStore.execID) {
+      const targetPrefix = "idx"
+      const targetSuffix = crowdsaleStore.contractTargetSuffix
+      target = `${targetPrefix}${targetSuffix}`
+    } else {
+      target = 'MintedCappedProxy'
+    }
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
     const { addr } = contractStore.abstractStorage
     const { execID } = crowdsaleStore
-    const ownerAccount = await methods.getAdmin(addr, execID).call()
+    let ownerAccount
+    //todo: Auth-os Proxy doesn't support getAdmin method
+    try {
+      ownerAccount = await methods.getAdmin(addr, execID).call()
+    } catch (e) {
+      console.log("###Auth-os Proxy contract doesn't support getAdmin method")
+    }
     const account = await getCurrentAccount()
 
     const ownerCurrentUser = account === ownerAccount
@@ -147,12 +167,20 @@ export class Manage extends Component {
     try {
       const { crowdsaleStore, contractStore, tierStore } = this.props
       const { addr: abstractStorageAddr } = contractStore.abstractStorage
-      const { isMintedCappedCrowdsale, isDutchAuction, execID } = crowdsaleStore
+      const { isMintedCappedCrowdsale, isDutchAuction, execID, contractTargetSuffix } = crowdsaleStore
 
       const num_of_tiers = await getTiersLength()
       console.log("num_of_tiers:", num_of_tiers)
 
-      const { methods } = await attachToSpecificCrowdsaleContract(`idx${crowdsaleStore.contractTargetSuffix}`)
+      //todo: Dutch
+      let target
+      if (execID) {
+        target = `idx${contractTargetSuffix}`
+      } else {
+        target = 'MintedCappedProxy'
+      }
+
+      const { methods } = await attachToSpecificCrowdsaleContract(target)
       const {
         getCrowdsaleInfo,
         getTokenInfo,
@@ -168,28 +196,108 @@ export class Manage extends Component {
         getTokensSold
       } = methods
 
-      const crowdsale = await getCrowdsaleInfo(abstractStorageAddr, execID).call()
-      const token = await getTokenInfo(abstractStorageAddr, execID).call()
+      let params = []
+      if (execID) {
+        params.push(abstractStorageAddr, execID)
+      }
+
+      let crowdsale = await getCrowdsaleInfo(...params).call()
+      if (crowdsale && !crowdsale.hasOwnProperty('wei_raised')) {
+        crowdsale.wei_raised = crowdsale[0]
+      }
+      if (crowdsale && !crowdsale.hasOwnProperty('team_wallet')) {
+        crowdsale.team_wallet = crowdsale[1]
+      }
+      if (crowdsale && !crowdsale.hasOwnProperty('minimum_contribution')) {
+        crowdsale.minimum_contribution = crowdsale[2]
+      }
+      if (crowdsale && !crowdsale.hasOwnProperty('is_initialized')) {
+        crowdsale.is_initialized = crowdsale[3]
+      }
+      if (crowdsale && !crowdsale.hasOwnProperty('is_finalized')) {
+        crowdsale.is_finalized = crowdsale[4]
+      }
+      let token
+      if (getTokenInfo) {
+        token = await getTokenInfo(...params).call()
+      } else {
+        //for Proxy
+        const token_name = await methods.name(...params).call()
+        const token_symbol = await methods.symbol(...params).call()
+        const token_decimals = await methods.decimals(...params).call()
+        const total_supply = await methods.totalSupply(...params).call()
+        token = {
+          token_name,
+          token_symbol,
+          token_decimals,
+          total_supply
+        }
+      }
 
       const tiers = []
       const reserved_tokens_info = []
 
       if (isMintedCappedCrowdsale) {
         for (let tier_num = 0; tier_num < num_of_tiers; tier_num++) {
-          const tier_data = await getCrowdsaleTier(abstractStorageAddr, execID, tier_num).call()
-          const tier_dates = await getTierStartAndEndDates(abstractStorageAddr, execID, tier_num).call()
+          let tier_data = await getCrowdsaleTier(...params, tier_num).call()
+          if (tier_data && !tier_data.hasOwnProperty('tier_name')) {
+            tier_data.tier_name = tier_data[0]
+          }
+          if (tier_data && !tier_data.hasOwnProperty('tier_sell_cap')) {
+            tier_data.tier_sell_cap = tier_data[1]
+          }
+          if (tier_data && !tier_data.hasOwnProperty('tier_price')) {
+            tier_data.tier_price = tier_data[2]
+          }
+          if (tier_data && !tier_data.hasOwnProperty('tier_duration')) {
+            tier_data.tier_duration = tier_data[3]
+          }
+          if (tier_data && !tier_data.hasOwnProperty('duration_is_modifiable')) {
+            tier_data.duration_is_modifiable = tier_data[4]
+          }
+          if (tier_data && !tier_data.hasOwnProperty('whitelist_enabled')) {
+            tier_data.whitelist_enabled = tier_data[5]
+          }
+
+          let tier_dates = await getTierStartAndEndDates(...params, tier_num).call()
+          if (tier_dates && !tier_dates.hasOwnProperty('tier_start')) {
+            tier_dates.tier_start = tier_dates[0]
+          }
+          if (tier_dates && !tier_dates.hasOwnProperty('tier_end')) {
+            tier_dates.tier_end = tier_dates[1]
+          }
 
           if (tier_data.whitelist_enabled) {
-            const { whitelist } = await getTierWhitelist(abstractStorageAddr, execID, tier_num).call()
+            let tierWhitelist
+            //todo
+            try {
+              tierWhitelist = await getTierWhitelist(...params, tier_num).call()
+            } catch(e) {
+              console.log("###Auth-os Proxy doesn't support getTierWhitelist method###")
+            }
+            if (tierWhitelist && !tierWhitelist.hasOwnProperty('num_whitelisted')) {
+              tierWhitelist.num_whitelisted = tierWhitelist[0]
+            }
+            if (tierWhitelist && !tierWhitelist.hasOwnProperty('whitelist')) {
+              tierWhitelist.whitelist = tierWhitelist[1]
+            }
+            const whitelist = (tierWhitelist && tierWhitelist.whitelist) || []
 
             console.log("whitelist:", whitelist)
 
             for (let whitelist_item_index = 0; whitelist_item_index < whitelist.length; whitelist_item_index++) {
               const whitelist_item_addr = whitelist[whitelist_item_index]
+              let whitelistStatus = await getWhitelistStatus(...params, tier_num, whitelist_item_addr).call()
+              if (whitelistStatus && !whitelistStatus.hasOwnProperty('minimum_purchase_amt')) {
+                whitelistStatus.minimum_purchase_amt = whitelistStatus[0]
+              }
+              if (whitelistStatus && !whitelistStatus.hasOwnProperty('max_spend_remaining')) {
+                whitelistStatus.max_spend_remaining = whitelistStatus[0]
+              }
               const {
                 max_spend_remaining,
-                minimum_contribution
-              } = await getWhitelistStatus(abstractStorageAddr, execID, tier_num, whitelist_item_addr).call()
+                minimum_purchase_amt: minimum_contribution
+              } = whitelistStatus
 
               if (max_spend_remaining > 0) {
                 if (!tier_data.whitelist) tier_data.whitelist = []
@@ -206,22 +314,48 @@ export class Manage extends Component {
           tiers.push(Object.assign(tier_data, tier_dates))
         }
 
-        const { _reserved_destinations } = await getReservedTokenDestinationList(abstractStorageAddr, execID).call()
+        //todo:
+        let reservedTokenDestinationList
+        try {
+          reservedTokenDestinationList = await getReservedTokenDestinationList(...params).call()
+          if (reservedTokenDestinationList && !reservedTokenDestinationList.hasOwnProperty('num_destinations')) {
+            reservedTokenDestinationList.num_destinations = reservedTokenDestinationList[0]
+          }
+          if (reservedTokenDestinationList && !reservedTokenDestinationList.hasOwnProperty('reserved_destinations')) {
+            reservedTokenDestinationList.reserved_destinations = reservedTokenDestinationList[0]
+          }
+        } catch (e) {
+          console.log("###Auth-os Proxy doesn't support getReservedTokenDestinationList method###")
+        }
 
-        if (_reserved_destinations) {
-          for (let destination_index = 0; destination_index < _reserved_destinations.length; destination_index++) {
-            const reserved_addr = _reserved_destinations[destination_index]
+        const reserved_destinations = (reservedTokenDestinationList && (reservedTokenDestinationList.reserved_destinations || reservedTokenDestinationList[1]))
+        if (reserved_destinations) {
+          for (let destination_index = 0; destination_index < reserved_destinations.length; destination_index++) {
+            const reserved_addr = reserved_destinations[destination_index]
+            let reservedDestinationInfo = await getReservedDestinationInfo(...params, reserved_addr).call()
+            if (reservedDestinationInfo && !reservedDestinationInfo.hasOwnProperty('destination_list_index')) {
+              reservedDestinationInfo.destination_list_index = reservedDestinationInfo[0]
+            }
+            if (reservedDestinationInfo && !reservedDestinationInfo.hasOwnProperty('num_tokens')) {
+              reservedDestinationInfo.num_tokens = reservedDestinationInfo[1]
+            }
+            if (reservedDestinationInfo && !reservedDestinationInfo.hasOwnProperty('num_percent')) {
+              reservedDestinationInfo.num_percent = reservedDestinationInfo[2]
+            }
+            if (reservedDestinationInfo && !reservedDestinationInfo.hasOwnProperty('percent_decimals')) {
+              reservedDestinationInfo.percent_decimals = reservedDestinationInfo[3]
+            }
             const {
               num_tokens,
               num_percent,
               percent_decimals
-            } = await getReservedDestinationInfo(abstractStorageAddr, execID, reserved_addr).call()
+            } = reservedDestinationInfo
 
             if (num_tokens > 0) {
               reserved_tokens_info.push({
                 addr: reserved_addr,
                 dim: "tokens",
-                val: toBigNumber(num_tokens).times(`1e-${token._token_decimals}`).toFixed()
+                val: toBigNumber(num_tokens).times(`1e-${token.token_decimals}`).toFixed()
               })
             }
 
@@ -236,13 +370,14 @@ export class Manage extends Component {
         }
 
       } else if (isDutchAuction) {
-        const tier_data = await getCrowdsaleStatus(abstractStorageAddr, execID).call()
-        const tier_dates = await getCrowdsaleStartAndEndTimes(abstractStorageAddr, execID).call()
-        const { num_whitelisted, whitelist } = await getCrowdsaleWhitelist(abstractStorageAddr, execID).call()
-        const tokens_sold = await getTokensSold(abstractStorageAddr, execID).call()
+        //todo: Dutch
+        const tier_data = await getCrowdsaleStatus(...params).call()
+        const tier_dates = await getCrowdsaleStartAndEndTimes(...params).call()
+        const { num_whitelisted, whitelist } = await getCrowdsaleWhitelist(...params).call()
+        const tokens_sold = await getTokensSold(...params).call()
 
         if (num_whitelisted !== '0') {
-          // TODO: remove this attribute overwrite after auth_os implement whitelist_enabled for Dutch Auction
+          // TODO: remove this attribute overwrite after Auth-os implement whitelist_enabled for Dutch Auction
           tier_data.whitelist_enabled = true
 
           for (let whitelist_item_index = 0; whitelist_item_index < whitelist.length; whitelist_item_index++) {
@@ -250,7 +385,7 @@ export class Manage extends Component {
             const {
               max_spend_remaining,
               minimum_contribution
-            } = await getWhitelistStatus(abstractStorageAddr, execID, whitelist_item_addr).call()
+            } = await getWhitelistStatus(...params, whitelist_item_addr).call()
 
             if (max_spend_remaining > 0) {
               if (!tier_data.whitelist) tier_data.whitelist = []
@@ -271,7 +406,7 @@ export class Manage extends Component {
 
       tiers.forEach((tier, index) => processTier(tier, crowdsale, token, reserved_tokens_info, index))
 
-      tierStore.setGlobalMinCap(toBigNumber(crowdsale.minimum_contribution).div(`1e${token._token_decimals}`).toFixed())
+      tierStore.setGlobalMinCap(toBigNumber(crowdsale.minimum_contribution).div(`1e${token.token_decimals}`).toFixed())
 
     } catch (err) {
       return Promise.reject(err)
@@ -301,18 +436,40 @@ export class Manage extends Component {
     const { addr } = contractStore.abstractStorage
     const { initialTiersValues } = selected
 
-    const targetPrefix = "idx"
-    const targetSuffix = crowdsaleStore.contractTargetSuffix
-    const target = `${targetPrefix}${targetSuffix}`
+    let params = []
+    if (execID) {
+      params.push(addr, execID)
+    }
+
+    //todo: Dutch
+    let target
+    if (crowdsaleStore.execID) {
+      const targetPrefix = "idx"
+      const targetSuffix = crowdsaleStore.contractTargetSuffix
+      target = `${targetPrefix}${targetSuffix}`
+    } else {
+      target = 'MintedCappedProxy'
+    }
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
     const { getCrowdsaleStartAndEndTimes, getCrowdsaleInfo } = methods
-    const { _start_time, _end_time } = await getCrowdsaleStartAndEndTimes(addr, execID).call()
-    const { is_finalized } = await getCrowdsaleInfo(addr, execID).call()
+    let crowdsaleStartAndEndTimes = await getCrowdsaleStartAndEndTimes(...params).call()
+    if (crowdsaleStartAndEndTimes && crowdsaleStartAndEndTimes.hasOwnProperty('start_time')) {
+      crowdsaleStartAndEndTimes.start_time = crowdsaleStartAndEndTimes[0]
+    }
+    if (crowdsaleStartAndEndTimes && crowdsaleStartAndEndTimes.hasOwnProperty('end_time')) {
+      crowdsaleStartAndEndTimes.end_time = crowdsaleStartAndEndTimes[1]
+    }
+    const { start_time, end_time } = await getCrowdsaleStartAndEndTimes(...params).call()
+    let crowdsaleInfo = await getCrowdsaleInfo(...params).call()
+    if (crowdsaleInfo && crowdsaleInfo.hasOwnProperty('is_finalized')) {
+      crowdsaleInfo.is_finalized = crowdsaleInfo[4]
+    }
+    const { is_finalized } = crowdsaleInfo
 
     this.setState({
-      crowdsaleHasEnded: _end_time * 1000 <= Date.now(),
-      crowdsaleHasStarted: _start_time * 1000 >= Date.now(),
+      crowdsaleHasEnded: end_time * 1000 <= Date.now(),
+      crowdsaleHasStarted: start_time * 1000 >= Date.now(),
       crowdsaleIsUpdatable: initialTiersValues.some(tier => tier.updatable),
       crowdsaleIsWhitelisted: initialTiersValues.some(tier => tier.isWhitelisted),
       crowdsaleIsFinalized: is_finalized
@@ -322,18 +479,37 @@ export class Manage extends Component {
   canFinalize = async () => {
     const { contractStore, crowdsaleStore } = this.props
     const { addr } = contractStore.abstractStorage
-    const { execID } = crowdsaleStore
+    const { execID, contractTargetSuffix } = crowdsaleStore
 
-    const targetPrefix = "idx"
-    const targetSuffix = crowdsaleStore.contractTargetSuffix
-    const target = `${targetPrefix}${targetSuffix}`
+    let params = []
+    if (execID) {
+      params.push(addr, execID)
+    }
+
+    //todo: Dutch
+    let target
+    if (execID) {
+      const targetPrefix = "idx"
+      const targetSuffix = contractTargetSuffix
+      target = `${targetPrefix}${targetSuffix}`
+    } else {
+      target = 'MintedCappedProxy'
+    }
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
     const { getCrowdsaleInfo, isCrowdsaleFull } = methods
 
     try {
-      const { is_finalized } = await getCrowdsaleInfo(addr, execID).call()
-      const { is_crowdsale_full } = await isCrowdsaleFull(addr, execID).call()
+      let crowdsaleInfo = await getCrowdsaleInfo(...params).call()
+      if (crowdsaleInfo && crowdsaleInfo.hasOwnProperty('is_finalized')) {
+        crowdsaleInfo.is_finalized = crowdsaleInfo[4]
+      }
+      const { is_finalized } = crowdsaleInfo
+      let _isCrowdsaleFull = await isCrowdsaleFull(...params).call()
+      if (_isCrowdsaleFull && _isCrowdsaleFull.hasOwnProperty('is_crowdsale_full')) {
+        _isCrowdsaleFull.is_crowdsale_full = _isCrowdsaleFull[0]
+      }
+      const { is_crowdsale_full } = _isCrowdsaleFull
 
       if (is_finalized) {
         this.setState({ canFinalize: false })
@@ -374,17 +550,20 @@ export class Manage extends Component {
                     const methodInterface = []
 
                     let methodName
-                    let targetPrefix
                     if (crowdsaleStore.isMintedCappedCrowdsale) {
                       methodName = "finalizeCrowdsaleAndToken"
-                      targetPrefix = "tokenManager"
                     } else if (crowdsaleStore.isDutchAuction) {
                       methodName = "finalizeCrowdsale"
-                      targetPrefix = "crowdsaleConsole"
                     }
 
                     let paramsToExec = [methodInterface]
-                    const method = methodToExec("registryExec", `${methodName}(${methodInterface.join(',')})`, this.getFinalizeCrowdsaleParams, paramsToExec)
+                    let targetContractName
+                    if (crowdsaleStore.execID) {
+                      targetContractName = 'registryExec'
+                    } else {
+                      targetContractName = 'MintedCappedProxy'
+                    }
+                    const method = methodToExec(targetContractName, `${methodName}(${methodInterface.join(',')})`, this.getFinalizeCrowdsaleParams, paramsToExec)
 
                     let opts = {
                       gasPrice: this.props.generalStore.gasPrice,

@@ -290,7 +290,6 @@ export function attachToContract (abi, addr) {
 }
 
 async function getAllApplicationsInstances () {
-  const { web3 } = web3Store
   const whenRegistryExecContract = attachToSpecificCrowdsaleContract("registryExec")
   //todo: check DUTCH_APP_NAME_HASH in .env when it will be ready from Auth-os side
   const {
@@ -488,7 +487,6 @@ export const getExecBuyCallData = (execID) => {
   return execABIEncoded
 }
 
-//todo: targetName is redundant
 export let methodToExec = (contractName, methodName, getEncodedParams, params) => {
   const { web3 } = web3Store
   const methodParams = getEncodedParams(...params)
@@ -645,4 +643,9 @@ export async function getAllCrowdsaleAddresses () {
   console.log("instances:", instances)
 
   return Promise.all(instances)
+}
+
+export const isAddressValid = (addr) => {
+  console.log("addr:", addr)
+  return (web3Store && web3Store.web3 && web3Store.web3.utils.isAddress(addr))
 }
