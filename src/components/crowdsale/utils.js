@@ -361,8 +361,8 @@ const getRate = async (addr, execID, methods) => {
 }
 
 const calculateMinContribution = async (method, decimals, naturalMinCap, isWhitelisted) => {
-  //todo
-  const { minimum_contribution, max_spend_remaining } = await method.call()
+  //todo: update for Proxy
+  const { minimum_purchase_amt: minimum_contribution, max_spend_remaining } = await method.call()
   const minimumContribution = toBigNumber(minimum_contribution).times(`1e-${decimals}`)
   const maximumContribution = toBigNumber(max_spend_remaining)
   if (isWhitelisted && maximumContribution.eq(0)) {
