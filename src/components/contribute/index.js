@@ -291,14 +291,15 @@ export class Contribute extends React.Component {
     const { execID, account } = this.props.contractStore.crowdsale
     const { addr } = toJS(contractStore.abstractStorage)
 
-    //todo: Dutch
     let target
     if (contractStore.crowdsale.execID) {
       const targetPrefix = "idx"
       const targetSuffix = crowdsaleStore.contractTargetSuffix
       target = `${targetPrefix}${targetSuffix}`
-    } else {
+    } else if (contractStore.MintedCappedProxy.addr) {
       target = "MintedCappedProxy"
+    } else if (contractStore.DutchProxy.addr) {
+      target = "DutchProxy"
     }
 
     let params = []
@@ -315,8 +316,8 @@ export class Contribute extends React.Component {
       crowdsalePageStore.setProperty('rate', tier_price) //should be one token in wei
 
     } else if (crowdsaleStore.isDutchAuction) {
-      //todo: Dutch
-      const { current_rate } = await methods.getCrowdsaleStatus(...params).call()
+      const crowdsaleStatus = await methods.getCrowdsaleStatus(...params).call()
+      const current_rate = crowdsaleStatus.current_rate || crowdsaleStatus[2]
       console.log('current_rate:', current_rate)
       crowdsalePageStore.setProperty('rate', current_rate) //should be one token in wei
     }
@@ -338,14 +339,15 @@ export class Contribute extends React.Component {
     const { execID, account } = contractStore.crowdsale
     const { addr } = toJS(contractStore.abstractStorage)
 
-    //todo: Dutch
     let target
     if (contractStore.crowdsale.execID) {
       const targetPrefix = "idx"
       const targetSuffix = crowdsaleStore.contractTargetSuffix
       target = `${targetPrefix}${targetSuffix}`
-    } else {
+    } else if (contractStore.MintedCappedProxy.addr) {
       target = 'MintedCappedProxy'
+    } else if (contractStore.DutchProxy.addr) {
+      target = 'DutchProxy'
     }
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)

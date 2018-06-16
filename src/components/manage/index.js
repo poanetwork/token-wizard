@@ -77,7 +77,6 @@ export class Manage extends Component {
       .then(() => this.checkOwner())
       .then(() => getCrowdsaleStrategy(crowdsaleStore.execID))
       .then((strategy) => crowdsaleStore.setProperty('strategy', strategy))
-      //.then((strategy) => crowdsaleStore.setProperty('strategy', CROWDSALE_STRATEGIES.DUTCH_AUCTION)) // todo
       .then(() => this.extractContractsData())
       .then(() => this.updateCrowdsaleStatus())
       .then(() => {
@@ -374,7 +373,13 @@ export class Manage extends Component {
         const tier_data = await getCrowdsaleStatus(...params).call()
         const tier_dates = await getCrowdsaleStartAndEndTimes(...params).call()
         const { num_whitelisted, whitelist } = await getCrowdsaleWhitelist(...params).call()
-        const tokens_sold = await getTokensSold(...params).call()
+        let tokens_sold = 0
+        //todo:
+        try {
+          tokens_sold = await getTokensSold(...params).call()
+        } catch(e) {
+          console.log("###Auth-os doesn't support getTokensSold for Dutch Auction###")
+        }
 
         if (num_whitelisted !== '0') {
           // TODO: remove this attribute overwrite after Auth-os implement whitelist_enabled for Dutch Auction

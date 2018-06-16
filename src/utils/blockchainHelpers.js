@@ -374,7 +374,6 @@ async function getOwnerApplicationsInstances () {
 }
 
 const getApplicationsInstance = async (execID) => {
-  //todo: add here else if option for Dutch Auction
   //if (!execID) return Promise.reject('invalid exec-id')
   let targetContract
   if (execID) {
@@ -382,6 +381,8 @@ const getApplicationsInstance = async (execID) => {
   } else {
     if (contractStore.MintedCappedProxy) {
       targetContract = "MintedCappedProxy"
+    } else if (contractStore.DutchProxy) {
+      targetContract = "DutchProxy"
     }
   }
   console.log("targetContract:", targetContract)
@@ -587,7 +588,7 @@ function getCrowdsaleTierList (initCrowdsaleContract, addr, execID) {
   return whenCrowdsaleTierList
 }
 
-//todo: it gets all instances crated by current user. We need to get all instances from all users. Should be implemented in Auth-os side.
+//todo: it gets all instances created by current user. We need to get all instances from all users. Should be implemented in Auth-os side.
 export async function getAllCrowdsaleAddresses () {
   const instances = await getAllApplicationsInstances()
   console.log("instances:", instances)
@@ -596,8 +597,7 @@ export async function getAllCrowdsaleAddresses () {
   const targetMintedCapped = `${targetPrefix}MintedCapped`
   const initCrowdsaleContractMintedCapped = await attachToSpecificCrowdsaleContract(targetMintedCapped)
 
-  //todo: initCrowdsale -> idx
-  const targetDutchAuction = `initCrowdsaleDutchAuction`
+  const targetDutchAuction = `${targetPrefix}Dutch`
   const initCrowdsaleContractDutchAuction = await attachToSpecificCrowdsaleContract(targetDutchAuction)
 
   const { addr } = toJS(contractStore.abstractStorage)

@@ -107,7 +107,13 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
       crowdsaleInfo.is_finalized = crowdsaleInfo[4]
     }
     const wei_raised = crowdsaleInfo.wei_raised ? crowdsaleInfo.wei_raised : crowdsaleInfo[0]
-    const tokensSold = await getTokensSold(...params).call()
+    let tokensSold = 0
+    //todo:
+    try {
+      tokensSold = await getTokensSold(...params).call()
+    } catch (e) {
+      console.log("e:", "###getTokensSold is not supported in Auth-os###")
+    }
     let contributors = 0
     //todo:
     try {
