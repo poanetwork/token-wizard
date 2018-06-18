@@ -27,7 +27,7 @@ export class TxProgressStatus extends Component {
 
   render () {
     const { tierStore } = this.props
-    const tiers = new Array(tierStore.tiers.length).fill(true)
+    const whitelisted = tierStore.tiers.map((tier, index) => index === 0 ? true : tier.whitelistEnabled === 'yes')
     const tableContent = this.txStatuses()
 
     return (
@@ -36,23 +36,27 @@ export class TxProgressStatus extends Component {
           <div className="container-fluid">
             <div className="table-row flex-table-header">
               <div className="text">Tx Name</div>
-              {tiers.map((value, index) => <div className="sm-text" key={index.toString()}>Tier {index + 1}</div>)}
+                {whitelisted.map((value, index) => value || index === 0
+                  ? <div className="sm-text" key={index.toString()}>Tier {index + 1}</div>
+                  : null
+                )}
             </div>
             <div className="scrollable-content">
               {tableContent.map(tx =>
                 tx.status.length
                   ? <div className="table-row datagrid" key={tx.name}>
-                    <div className="text">{TX_STEP_DESCRIPTION[tx.name]}</div>
-                    {tiers.map((value, index) => (
-                      <div className="sm-text" key={index.toString()}>
-                        {tx.status[index] === true
-                          ? <i className="material-icons">check</i>
-                          : tx.status[index] === false
-                            ? <i className="material-icons">access_time</i>
-                            : ''
-                        }
-                      </div>
-                    ))}
+                      <div className="text">{TX_STEP_DESCRIPTION[tx.name]}</div>
+                      {whitelisted.map((tierWhitelisted, index) => tierWhitelisted
+                        ? <div className="sm-text" key={index.toString()}>
+                            {tx.status[index] === true
+                              ? <i className="material-icons">check</i>
+                              : tx.status[index] === false
+                                ? <i className="material-icons">access_time</i>
+                                : ''
+                            }
+                          </div>
+                        : null
+                      )}
                   </div>
                   : null
               )}
