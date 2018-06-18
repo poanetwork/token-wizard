@@ -593,33 +593,35 @@ export const addWhitelist = () => {
   })
 }
 
-const getUpdateGlobalMinCapParams = (methodInterface) => {
+const getUpdateGlobalMinCapParams = (tierIndex, methodInterface) => {
   const { web3 } = web3Store
   let globalMinCap = toBigNumber(tierStore.globalMinCap).times(`1e${tokenStore.decimals}`).toFixed()
 
-  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [globalMinCap]);
+  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [tierIndex, globalMinCap]);
   return encodedParameters;
 }
 
 export const updateGlobalMinContribution = () => {
-  return [() => {
-    console.log('###updateGlobalMinContribution:###')
+  return tierStore.tiers.map((tier, index) => {
+    return () => {
+      console.log('###updateGlobalMinContribution:###')
 
-    const methodInterface = ["uint256"]
+      const methodInterface = ["uint256","uint256"]
 
-    let paramsToExec = [methodInterface]
-    const method = methodToExec("registryExec", `updateGlobalMinContribution(${methodInterface.join(',')})`, getUpdateGlobalMinCapParams, paramsToExec)
+      let paramsToExec = [index, methodInterface]
+      const method = methodToExec("registryExec", `updateTierMinimum(${methodInterface.join(',')})`, getUpdateGlobalMinCapParams, paramsToExec)
 
-    let account = contractStore.crowdsale.account;
-    const opts = { gasPrice: generalStore.gasPrice, from: account }
+      let account = contractStore.crowdsale.account;
+      const opts = { gasPrice: generalStore.gasPrice, from: account }
 
-    return method.estimateGas(opts)
-      .then(estimatedGas => {
-        opts.gasLimit = calculateGasLimit(estimatedGas)
-        return sendTXToContract(method.send(opts))
-      })
-      .then(() => deploymentStore.setAsSuccessful('updateGlobalMinContribution'))
-  }]
+      return method.estimateGas(opts)
+        .then(estimatedGas => {
+          opts.gasLimit = calculateGasLimit(estimatedGas)
+          return sendTXToContract(method.send(opts))
+        })
+        .then(() => deploymentStore.setAsSuccessful('updateGlobalMinContribution'))
+    }
+  })
 }
 
 export const handlerForFile = (content, type) => {

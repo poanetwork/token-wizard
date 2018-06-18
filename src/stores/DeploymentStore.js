@@ -29,7 +29,7 @@ class DeploymentStore {
       { name: 'crowdsaleCreate', dependsOnTiers: false, required: true },
       { name: 'token', dependsOnTiers: false, required: true },
       { name: 'setReservedTokens', dependsOnTiers: false, required: hasReservedToken },
-      { name: 'updateGlobalMinContribution', dependsOnTiers: false, required: globalMinCap > 0 },
+      { name: 'updateGlobalMinContribution', dependsOnTiers: true, required: globalMinCap > 0 },
       { name: 'createCrowdsaleTiers', dependsOnTiers: false, required: tiers.length > 1 },
       { name: 'whitelist', dependsOnTiers: true, required: hasWhitelist },
       { name: 'crowdsaleInit', dependsOnTiers: false, required: true },
@@ -46,7 +46,11 @@ class DeploymentStore {
     listOfTx.forEach(tx => {
       if (tx.required) {
         if (tx.dependsOnTiers) {
-          return this.txMap.set(tx.name, byTierWhitelistInitialValues)
+          if (tx.name === 'whitelist') {
+            return this.txMap.set(tx.name, byTierWhitelistInitialValues)
+          } else if (tx.aneme === 'updateGlobalMinContribution') {
+            return this.txMap.set(tx.name, [false])
+          }
         }
         return this.txMap.set(tx.name, [false])
       }
