@@ -339,16 +339,13 @@ async function getOwnerApplicationsInstances () {
   const whenAccount = accounts[0]
 
   const [registryExecContract, account] = await Promise.all([whenRegistryExecContract, whenAccount])
-  console.log("account:", account)
-  console.log("registryExecContract:", registryExecContract)
   let promises = [];
   const crowdsales = []
-  //todo: length of applications
-  for (let i = 0; i < 100; i++) {
+  const lengthOfUserApplications = await registryExecContract.methods.getDeployedLength(account).call()
+  for (let i = 0; i < lengthOfUserApplications; i++) {
     let promise = new Promise((resolve, reject) => {
-      registryExecContract.methods.deployer_instances(account, i).call()
+      registryExecContract.methods.deployed_instances(account, i).call()
       .then((deployer_instance) => {
-        //console.log("deployer_instance:", deployer_instance)
         let appName = removeTrailingNUL(web3.utils.toAscii(deployer_instance.app_name))
         let appNameLowerCase = appName.toLowerCase()
         if (
@@ -356,7 +353,7 @@ async function getOwnerApplicationsInstances () {
           || appNameLowerCase.includes(process.env[`${REACT_PREFIX}DUTCH_APP_NAME`].toLowerCase())) {
           crowdsales.push({
             appName: appName,
-            execID: deployer_instance.exec_id
+            execID: deployer_instance.app_exec_id
           })
         }
         resolve();
