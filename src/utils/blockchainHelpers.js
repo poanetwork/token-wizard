@@ -291,7 +291,6 @@ export function attachToContract (abi, addr) {
 
 async function getAllApplicationsInstances () {
   const whenRegistryExecContract = attachToSpecificCrowdsaleContract("registryExec")
-  //todo: check DUTCH_APP_NAME_HASH in .env when it will be ready from Auth-os side
   const {
     REACT_APP_MINTED_CAPPED_APP_NAME: MINTED_CAPPED_APP_NAME,
     REACT_APP_DUTCH_APP_NAME: DUTCH_APP_NAME,
