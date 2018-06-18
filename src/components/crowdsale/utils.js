@@ -107,14 +107,14 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
       crowdsaleInfo.is_finalized = crowdsaleInfo[4]
     }
     const wei_raised = crowdsaleInfo.wei_raised ? crowdsaleInfo.wei_raised : crowdsaleInfo[0]
-    const tokensSold = await getTokensSold(...params).call()
-    let contributors = 0
+    let tokensSold = 0
     //todo:
     try {
-      contributors = await getCrowdsaleUniqueBuyers(...params).call()
+      tokensSold = await getTokensSold(...params).call()
     } catch (e) {
-      console.log("e:", "###getCrowdsaleUniqueBuyers is not supported in Proxy yet###")
+      console.log("e:", "###getTokensSold is not supported in Auth-os###")
     }
+    const contributors = await getCrowdsaleUniqueBuyers(...params).call()
     const { fromWei } = web3Store.web3.utils
 
     crowdsalePageStore.setProperty('weiRaised', wei_raised)
@@ -362,13 +362,14 @@ const getRate = async (addr, execID, methods) => {
 
 const calculateMinContribution = async (method, decimals, naturalMinCap, isWhitelisted) => {
   //todo: update for Proxy
-  const { minimum_purchase_amt: minimum_contribution, max_spend_remaining } = await method.call()
+  const { minimum_contribution, minimum_purchase_amt, max_spend_remaining } = await method.call()
   const minimumContribution = toBigNumber(minimum_contribution).times(`1e-${decimals}`)
+  const minimumPurchaseAmt = toBigNumber(minimum_purchase_amt).times(`1e-${decimals}`)
   const maximumContribution = toBigNumber(max_spend_remaining)
   if (isWhitelisted && maximumContribution.eq(0)) {
     return -1
   }
-  return minimumContribution.gt(naturalMinCap) ? minimumContribution : naturalMinCap
+  return minimumContribution.gt(naturalMinCap) ? minimumContribution : minimumPurchaseAmt.gt(naturalMinCap) ? minimumPurchaseAmt : naturalMinCap
 }
 
 export const getUserMinLimits = async (addr, execID, methods, account) => {

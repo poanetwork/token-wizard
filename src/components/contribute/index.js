@@ -89,7 +89,6 @@ export class Contribute extends React.Component {
       .then(() => getCrowdsaleAssets(generalStore.networkID))
       .then(() => getCrowdsaleStrategy(this.state.crowdsaleExecID))
       .then((strategy) => crowdsaleStore.setProperty('strategy', strategy))
-      //.then((strategy) => crowdsaleStore.setProperty('strategy', CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE)) //todo
       .then(() => this.extractContractsData())
       .then(() => gasPriceStore.updateValues()
         .then(
@@ -102,7 +101,7 @@ export class Contribute extends React.Component {
   }
 
   validateEnvironment = async () => {
-    const { web3Store, generalStore, contractStore } = this.props
+    const { web3Store, generalStore, contractStore, crowdsaleStore } = this.props
 
     await checkWeb3()
 
@@ -127,11 +126,14 @@ export class Contribute extends React.Component {
       return Promise.reject('invalid networkID')
     }
 
-    //todo: Dutch
     const crowdsaleExecID = CrowdsaleConfig.crowdsaleContractURL || getExecID()
     const crowdsaleAddr = CrowdsaleConfig.crowdsaleContractURL || getAddr()
     contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
-    contractStore.setContractProperty('MintedCappedProxy', 'addr', crowdsaleAddr)
+    if (crowdsaleStore.isMintedCappedCrowdsale) {
+      contractStore.setContractProperty('MintedCappedProxy', 'addr', crowdsaleAddr)
+    } else if (crowdsaleStore.isDutchAuction) {
+      contractStore.setContractProperty('DutchProxy', 'addr', crowdsaleAddr)
+    }
 
     this.setState({ crowdsaleExecID })
 
@@ -161,14 +163,15 @@ export class Contribute extends React.Component {
       web3
     })
 
-    //todo: Dutch
     let target
     if (contractStore.crowdsale.execID) {
       const targetPrefix = "idx"
       const targetSuffix = crowdsaleStore.contractTargetSuffix
       target = `${targetPrefix}${targetSuffix}`
-    } else {
+    } else if (crowdsaleStore.isMintedCappedCrowdsale) {
       target = 'MintedCappedProxy'
+    } else if (crowdsaleStore.isDutchAuction) {
+      target = 'DutchProxy'
     }
 
     try {
@@ -291,14 +294,15 @@ export class Contribute extends React.Component {
     const { execID, account } = this.props.contractStore.crowdsale
     const { addr } = toJS(contractStore.abstractStorage)
 
-    //todo: Dutch
     let target
     if (contractStore.crowdsale.execID) {
       const targetPrefix = "idx"
       const targetSuffix = crowdsaleStore.contractTargetSuffix
       target = `${targetPrefix}${targetSuffix}`
-    } else {
+    } else if (contractStore.MintedCappedProxy.addr) {
       target = "MintedCappedProxy"
+    } else if (contractStore.DutchProxy.addr) {
+      target = "DutchProxy"
     }
 
     let params = []
@@ -315,8 +319,8 @@ export class Contribute extends React.Component {
       crowdsalePageStore.setProperty('rate', tier_price) //should be one token in wei
 
     } else if (crowdsaleStore.isDutchAuction) {
-      //todo: Dutch
-      const { current_rate } = await methods.getCrowdsaleStatus(...params).call()
+      const crowdsaleStatus = await methods.getCrowdsaleStatus(...params).call()
+      const current_rate = crowdsaleStatus.current_rate || crowdsaleStatus[2]
       console.log('current_rate:', current_rate)
       crowdsalePageStore.setProperty('rate', current_rate) //should be one token in wei
     }
@@ -338,14 +342,15 @@ export class Contribute extends React.Component {
     const { execID, account } = contractStore.crowdsale
     const { addr } = toJS(contractStore.abstractStorage)
 
-    //todo: Dutch
     let target
     if (contractStore.crowdsale.execID) {
       const targetPrefix = "idx"
       const targetSuffix = crowdsaleStore.contractTargetSuffix
       target = `${targetPrefix}${targetSuffix}`
-    } else {
+    } else if (contractStore.MintedCappedProxy.addr) {
       target = 'MintedCappedProxy'
+    } else if (contractStore.DutchProxy.addr) {
+      target = 'DutchProxy'
     }
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)

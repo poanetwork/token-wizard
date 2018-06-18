@@ -179,10 +179,10 @@ export class stepFour extends React.Component {
 
   handleContentByParent(content, index = 0) {
     const { parent } = content
-    //todo: Dutch
     switch (parent) {
       case 'crowdsale':
       case 'MintedCappedProxy':
+      case 'DutchProxy':
         return handlerForFile(content, this.props.contractStore[parent])
       case 'crowdsaleStore':
         return handlerForFile(content, this.props[parent])

@@ -102,15 +102,16 @@ export class Crowdsale extends React.Component {
   extractContractsData = async () => {
     const { crowdsaleStore, contractStore } = this.props
 
-    //todo: Dutch
     let target
     if (contractStore.crowdsale.execID) {
       const targetPrefix = "idx"
       const targetSuffix = crowdsaleStore.contractTargetSuffix
       target = `${targetPrefix}${targetSuffix}`
       console.log("target:", target)
-    } else {
+    } else if (contractStore.MintedCappedProxy.addr) {
       target = 'MintedCappedProxy'
+    } else if (contractStore.DutchProxy.addr) {
+      target = 'DutchProxy'
     }
 
     try {

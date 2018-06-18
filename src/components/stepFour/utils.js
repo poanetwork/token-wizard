@@ -69,7 +69,6 @@ const getProxyParams = token => {
   ]
 }
 
-//todo: deploy proxy contract
 export const deployProxy = () => {
 
   return [
@@ -894,12 +893,13 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
   }
 
   const getCrowdsaleID = () => {
-    //todo: Dutch
     console.log("contractStore:", contractStore)
     if (contractStore.crowdsale.execID) {
       return { field: 'execID', value: 'Auth-os execution ID: ', parent: 'crowdsale' }
-    } else {
+    } else if (contractStore.MintedCappedProxy.addr) {
       return { field: 'addr', value: authOSContractString('Crowdsale proxy'), parent: 'MintedCappedProxy' }
+    } else if (contractStore.DutchProxy.addr) {
+      return { field: 'addr', value: authOSContractString('Crowdsale proxy'), parent: 'DutchProxy' }
     }
   }
 

@@ -77,7 +77,6 @@ export class Manage extends Component {
       .then(() => this.checkOwner())
       .then(() => getCrowdsaleStrategy(crowdsaleStore.execID))
       .then((strategy) => crowdsaleStore.setProperty('strategy', strategy))
-      //.then((strategy) => crowdsaleStore.setProperty('strategy', CROWDSALE_STRATEGIES.DUTCH_AUCTION)) // todo
       .then(() => this.extractContractsData())
       .then(() => this.updateCrowdsaleStatus())
       .then(() => {
@@ -136,14 +135,15 @@ export class Manage extends Component {
   checkOwner = async () => {
     const { contractStore, crowdsaleStore } = this.props
 
-    //todo: Dutch
     let target
     if (crowdsaleStore.execID) {
       const targetPrefix = "idx"
       const targetSuffix = crowdsaleStore.contractTargetSuffix
       target = `${targetPrefix}${targetSuffix}`
-    } else {
+    } else if (crowdsaleStore.isMintedCappedCrowdsale) {
       target = 'MintedCappedProxy'
+    } else if (crowdsaleStore.isDutchAuction) {
+      target = 'DutchProxy'
     }
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
@@ -172,12 +172,13 @@ export class Manage extends Component {
       const num_of_tiers = await getTiersLength()
       console.log("num_of_tiers:", num_of_tiers)
 
-      //todo: Dutch
       let target
       if (execID) {
         target = `idx${contractTargetSuffix}`
-      } else {
+      } else if (crowdsaleStore.isMintedCappedCrowdsale) {
         target = 'MintedCappedProxy'
+      } else if (crowdsaleStore.isDutchAuction) {
+        target = 'DutchProxy'
       }
 
       const { methods } = await attachToSpecificCrowdsaleContract(target)
@@ -370,11 +371,18 @@ export class Manage extends Component {
         }
 
       } else if (isDutchAuction) {
-        //todo: Dutch
         const tier_data = await getCrowdsaleStatus(...params).call()
         const tier_dates = await getCrowdsaleStartAndEndTimes(...params).call()
-        const { num_whitelisted, whitelist } = await getCrowdsaleWhitelist(...params).call()
-        const tokens_sold = await getTokensSold(...params).call()
+        const crowdsaleWhitelist = await getCrowdsaleWhitelist(...params).call()
+        const num_whitelisted = crowdsaleWhitelist.num_whitelisted || crowdsaleWhitelist[0]
+        const whitelist = crowdsaleWhitelist.whitelist || crowdsaleWhitelist[1]
+        let tokens_sold = 0
+        //todo:
+        try {
+          tokens_sold = await getTokensSold(...params).call()
+        } catch(e) {
+          console.log("###Auth-os doesn't support getTokensSold for Dutch Auction###")
+        }
 
         if (num_whitelisted !== '0') {
           // TODO: remove this attribute overwrite after Auth-os implement whitelist_enabled for Dutch Auction
@@ -382,10 +390,9 @@ export class Manage extends Component {
 
           for (let whitelist_item_index = 0; whitelist_item_index < whitelist.length; whitelist_item_index++) {
             const whitelist_item_addr = whitelist[whitelist_item_index]
-            const {
-              max_spend_remaining,
-              minimum_contribution
-            } = await getWhitelistStatus(...params, whitelist_item_addr).call()
+            const whitelistStatus = await getWhitelistStatus(...params, whitelist_item_addr).call()
+            const max_spend_remaining = whitelistStatus.max_spend_remaining || whitelistStatus[1]
+            const minimum_contribution = whitelistStatus.minimum_purchase_amt || whitelistStatus[0]
 
             if (max_spend_remaining > 0) {
               if (!tier_data.whitelist) tier_data.whitelist = []
@@ -441,14 +448,15 @@ export class Manage extends Component {
       params.push(addr, execID)
     }
 
-    //todo: Dutch
     let target
     if (crowdsaleStore.execID) {
       const targetPrefix = "idx"
       const targetSuffix = crowdsaleStore.contractTargetSuffix
       target = `${targetPrefix}${targetSuffix}`
-    } else {
+    } else if (crowdsaleStore.isMintedCappedCrowdsale) {
       target = 'MintedCappedProxy'
+    } else if (crowdsaleStore.isDutchAuction) {
+      target = 'DutchProxy'
     }
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
@@ -486,14 +494,15 @@ export class Manage extends Component {
       params.push(addr, execID)
     }
 
-    //todo: Dutch
     let target
     if (execID) {
       const targetPrefix = "idx"
       const targetSuffix = contractTargetSuffix
       target = `${targetPrefix}${targetSuffix}`
-    } else {
+    } else if (crowdsaleStore.isMintedCappedCrowdsale) {
       target = 'MintedCappedProxy'
+    } else if (crowdsaleStore.isDutchAuction) {
+      target = 'DutchProxy'
     }
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)

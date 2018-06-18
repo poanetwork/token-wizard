@@ -13,14 +13,12 @@ class ContractStore {
   @observable saleManagerMintedCapped;
   @observable tokenMintedCapped;
   @observable tokenManagerMintedCapped;
-  @observable initCrowdsaleDutchAuction;
-  @observable crowdsaleConsoleDutchAuction;
-  @observable crowdsaleBuyTokensDutchAuction;
+  @observable idxDutch;
+  @observable saleDutch;
+  @observable saleManagerDutch;
+  @observable tokenDutch;
+  @observable tokenManagerDutch;
   @observable crowdsale;
-  @observable tokenTransfer;
-  @observable tokenTransferFrom;
-  @observable tokenApprove;
-  @observable tokenConsoleDutchAuction;
 
   constructor() {
     autosave(this, 'ContractStore')

@@ -339,16 +339,13 @@ async function getOwnerApplicationsInstances () {
   const whenAccount = accounts[0]
 
   const [registryExecContract, account] = await Promise.all([whenRegistryExecContract, whenAccount])
-  console.log("account:", account)
-  console.log("registryExecContract:", registryExecContract)
   let promises = [];
   const crowdsales = []
-  //todo: length of applications
-  for (let i = 0; i < 100; i++) {
+  const lengthOfUserApplications = await registryExecContract.methods.getDeployedLength(account).call()
+  for (let i = 0; i < lengthOfUserApplications; i++) {
     let promise = new Promise((resolve, reject) => {
-      registryExecContract.methods.deployer_instances(account, i).call()
+      registryExecContract.methods.deployed_instances(account, i).call()
       .then((deployer_instance) => {
-        //console.log("deployer_instance:", deployer_instance)
         let appName = removeTrailingNUL(web3.utils.toAscii(deployer_instance.app_name))
         let appNameLowerCase = appName.toLowerCase()
         if (
@@ -356,7 +353,7 @@ async function getOwnerApplicationsInstances () {
           || appNameLowerCase.includes(process.env[`${REACT_PREFIX}DUTCH_APP_NAME`].toLowerCase())) {
           crowdsales.push({
             appName: appName,
-            execID: deployer_instance.exec_id
+            execID: deployer_instance.app_exec_id
           })
         }
         resolve();
@@ -374,7 +371,6 @@ async function getOwnerApplicationsInstances () {
 }
 
 const getApplicationsInstance = async (execID) => {
-  //todo: add here else if option for Dutch Auction
   //if (!execID) return Promise.reject('invalid exec-id')
   let targetContract
   if (execID) {
@@ -382,6 +378,8 @@ const getApplicationsInstance = async (execID) => {
   } else {
     if (contractStore.MintedCappedProxy) {
       targetContract = "MintedCappedProxy"
+    } else if (contractStore.DutchProxy) {
+      targetContract = "DutchProxy"
     }
   }
   console.log("targetContract:", targetContract)
@@ -587,7 +585,7 @@ function getCrowdsaleTierList (initCrowdsaleContract, addr, execID) {
   return whenCrowdsaleTierList
 }
 
-//todo: it gets all instances crated by current user. We need to get all instances from all users. Should be implemented in Auth-os side.
+//todo: it gets all instances created by current user. We need to get all instances from all users. Should be implemented in Auth-os side.
 export async function getAllCrowdsaleAddresses () {
   const instances = await getAllApplicationsInstances()
   console.log("instances:", instances)
@@ -596,8 +594,7 @@ export async function getAllCrowdsaleAddresses () {
   const targetMintedCapped = `${targetPrefix}MintedCapped`
   const initCrowdsaleContractMintedCapped = await attachToSpecificCrowdsaleContract(targetMintedCapped)
 
-  //todo: initCrowdsale -> idx
-  const targetDutchAuction = `initCrowdsaleDutchAuction`
+  const targetDutchAuction = `${targetPrefix}Dutch`
   const initCrowdsaleContractDutchAuction = await attachToSpecificCrowdsaleContract(targetDutchAuction)
 
   const { addr } = toJS(contractStore.abstractStorage)
