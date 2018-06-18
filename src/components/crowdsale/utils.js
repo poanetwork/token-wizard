@@ -115,11 +115,11 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
       console.log("e:", "###getTokensSold is not supported in Auth-os###")
     }
     let contributors = 0
-    //todo:
+    //todo
     try {
       contributors = await getCrowdsaleUniqueBuyers(...params).call()
     } catch (e) {
-      console.log("e:", "###getCrowdsaleUniqueBuyers is not supported in Proxy yet###")
+      console.log("e:", "###getCrowdsaleUniqueBuyers was not supported in Proxy###")
     }
     const { fromWei } = web3Store.web3.utils
 

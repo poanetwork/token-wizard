@@ -69,7 +69,6 @@ const getProxyParams = token => {
   ]
 }
 
-//todo: deploy proxy contract
 export const deployProxy = () => {
 
   return [

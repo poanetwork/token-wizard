@@ -89,7 +89,6 @@ export class Contribute extends React.Component {
       .then(() => getCrowdsaleAssets(generalStore.networkID))
       .then(() => getCrowdsaleStrategy(this.state.crowdsaleExecID))
       .then((strategy) => crowdsaleStore.setProperty('strategy', strategy))
-      //.then((strategy) => crowdsaleStore.setProperty('strategy', CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE)) //todo
       .then(() => this.extractContractsData())
       .then(() => gasPriceStore.updateValues()
         .then(
@@ -102,7 +101,7 @@ export class Contribute extends React.Component {
   }
 
   validateEnvironment = async () => {
-    const { web3Store, generalStore, contractStore } = this.props
+    const { web3Store, generalStore, contractStore, crowdsaleStore } = this.props
 
     await checkWeb3()
 
@@ -127,11 +126,14 @@ export class Contribute extends React.Component {
       return Promise.reject('invalid networkID')
     }
 
-    //todo: Dutch
     const crowdsaleExecID = CrowdsaleConfig.crowdsaleContractURL || getExecID()
     const crowdsaleAddr = CrowdsaleConfig.crowdsaleContractURL || getAddr()
     contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
-    contractStore.setContractProperty('MintedCappedProxy', 'addr', crowdsaleAddr)
+    if (crowdsaleStore.isMintedCappedCrowdsale) {
+      contractStore.setContractProperty('MintedCappedProxy', 'addr', crowdsaleAddr)
+    } else if (crowdsaleStore.isDutchAuction) {
+      contractStore.setContractProperty('DutchProxy', 'addr', crowdsaleAddr)
+    }
 
     this.setState({ crowdsaleExecID })
 
@@ -161,14 +163,15 @@ export class Contribute extends React.Component {
       web3
     })
 
-    //todo: Dutch
     let target
     if (contractStore.crowdsale.execID) {
       const targetPrefix = "idx"
       const targetSuffix = crowdsaleStore.contractTargetSuffix
       target = `${targetPrefix}${targetSuffix}`
-    } else {
+    } else if (crowdsaleStore.isMintedCappedCrowdsale) {
       target = 'MintedCappedProxy'
+    } else if (crowdsaleStore.isDutchAuction) {
+      target = 'DutchProxy'
     }
 
     try {
