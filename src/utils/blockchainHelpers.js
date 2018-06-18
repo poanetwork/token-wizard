@@ -586,7 +586,6 @@ function getCrowdsaleTierList (initCrowdsaleContract, addr, execID) {
   return whenCrowdsaleTierList
 }
 
-//todo: it gets all instances created by current user. We need to get all instances from all users. Should be implemented in Auth-os side.
 export async function getAllCrowdsaleAddresses () {
   const instances = await getAllApplicationsInstances()
   const targetPrefix = "idx"
