@@ -147,6 +147,7 @@ export const TierBlock = ({ fields, ...props }) => {
               <GlobalMinCap
                 name={'minCap'}
                 errorStyle={inputErrorStyle}
+                decimals={props.decimals}
                 tierStore={props.tierStore}
                 side="left"
               />
