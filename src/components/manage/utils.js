@@ -22,7 +22,7 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
   const { decimals } = tokenStore
   const { isMintedCappedCrowdsale, isDutchAuction } = crowdsaleStore
   let methods = {
-    startTime: isDutchAuction ? 'setCrowdsaleStartAndDuration' : null, // startTime is not changed after migration to Auth_os in MintedCappedCrowdsale strategy
+    startTime: isDutchAuction ? 'setCrowdsaleStartAndDuration' : null, // startTime is not changed after migration to Auth-os in MintedCappedCrowdsale strategy
     endTime: isMintedCappedCrowdsale ? 'updateTierDuration' : isDutchAuction ? 'setCrowdsaleStartAndDuration' : null,
     whitelist: isMintedCappedCrowdsale ? 'whitelistMultiForTier' : isDutchAuction ? 'whitelistMulti' : null
   }
@@ -95,7 +95,14 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
   console.log("methods[attribute]:", methods[attribute])
   console.log("methodInterface:", methodInterface)
 
-  const method = methodToExec("registryExec", `${methods[attribute]}(${methodInterface.join(',')})`, getParams, paramsToExec)
+  let targetContractName
+  if (crowdsaleStore.execID) {
+    targetContractName = 'registryExec'
+  } else {
+    targetContractName = 'MintedCappedProxy'
+  }
+
+  const method = methodToExec(targetContractName, `${methods[attribute]}(${methodInterface.join(',')})`, getParams, paramsToExec)
   console.log("method:", method)
 
   return getCurrentAccount()
@@ -150,13 +157,29 @@ const crowdsaleData = (tier, crowdsale, token, reserved_tokens_info) => {
     tier_sell_cap,
     tokens_remaining,
     tokens_sold,
-    tier_name,
     whitelist,
     duration_is_modifiable,
     whitelist_enabled
   } = tier
+  let { tier_name } = tier
+  try {
+    tier_name = removeTrailingNUL(toAscii(tier_name))
+  } catch(e) {
+    console.log("###Token name is already in ASCII###")
+  }
   const { team_wallet, is_finalized } = crowdsale
-  const { _total_supply, _token_name, _token_symbol, _token_decimals } = token
+  const { total_supply, token_decimals } = token
+  let { token_name, token_symbol } = token
+  try {
+    token_name = removeTrailingNUL(toAscii(token_name))
+  } catch(e) {
+    console.log("###Token name is already in ASCII###")
+  }
+  try {
+    token_symbol = removeTrailingNUL(toAscii(token_symbol))
+  } catch(e) {
+    console.log("###Token name is already in ASCII###")
+  }
 
   return {
     wallet: team_wallet,
@@ -164,16 +187,16 @@ const crowdsaleData = (tier, crowdsale, token, reserved_tokens_info) => {
     end_time: isMintedCappedCrowdsale ? tier_end : end_time,
     rate: isMintedCappedCrowdsale ? tier_price : current_rate,
     max_sell_cap: isMintedCappedCrowdsale ? tier_sell_cap : toBigNumber(tokens_remaining).plus(tokens_sold || '0'),
-    name: isMintedCappedCrowdsale ? removeTrailingNUL(toAscii(tier_name)) : '',
+    name: isMintedCappedCrowdsale ? tier_name : '',
     updatable: isMintedCappedCrowdsale ? duration_is_modifiable : true,
     whitelist: whitelist || [],
     whitelisted: whitelist_enabled,
     finalized: is_finalized,
     crowdsale_token: {
-      name: removeTrailingNUL(toAscii(_token_name)),
-      ticker: removeTrailingNUL(toAscii(_token_symbol)),
-      supply: toBigNumber(_total_supply).div(`1e${_token_decimals}`),
-      decimals: _token_decimals,
+      name: token_name,
+      ticker: token_symbol,
+      supply: toBigNumber(total_supply).div(`1e${token_decimals}`),
+      decimals: token_decimals,
       reserved_accounts: reserved_tokens_info
     }
   }
@@ -204,7 +227,7 @@ export const processTier = (tier, crowdsale, token, reserved_tokens_info, tier_i
   const token_decimals = !isNaN(crowdsale_token.decimals) ? crowdsale_token.decimals : 0
   const max_cap_before_decimals = toBigNumber(max_sell_cap).div(`1e${token_decimals}`).toFixed()
   const rate = rate_in_wei > 0 ? toBigNumber(web3.utils.fromWei(rate_in_wei, 'ether')).pow(-1).dp(0).toFixed() : 0
-  // TODO: remove this filter after auth_os implement uniqueness for the whitelisted addresses (#871)
+  // TODO: remove this filter after Auth-os implement uniqueness for the whitelisted addresses (#871)
   const filtered_whitelist = [...new Set(whitelist.map(item => JSON.stringify(item)))].map(item => JSON.parse(item))
 
   const new_tier = {

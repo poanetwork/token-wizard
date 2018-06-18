@@ -797,7 +797,7 @@ const getAddr = (contractName, networkID) => {
   return JSON.parse(process.env[`${REACT_PREFIX}${contractName}_ADDRESS`] || {})[networkID]
 }
 
-const authOSContractString = (contrct) => {return `Auth_os ${contrct} address: `}
+const authOSContractString = (contrct) => {return `Auth-os ${contrct} address: `}
 
 const getCrowdsaleContractAddr = (strategy, contractName, networkID) => {
   switch(strategy) {
@@ -895,10 +895,11 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
 
   const getCrowdsaleID = () => {
     //todo: Dutch
+    console.log("contractStore:", contractStore)
     if (contractStore.crowdsale.execID) {
-      return { field: 'execID', value: 'Auth_os execution ID: ', parent: 'crowdsale' }
+      return { field: 'execID', value: 'Auth-os execution ID: ', parent: 'crowdsale' }
     } else {
-      return { field: 'addr', value: 'Auth_os Crowdsale Proxy: ', parent: 'MintedCappedProxy' }
+      return { field: 'addr', value: authOSContractString('Crowdsale proxy'), parent: 'MintedCappedProxy' }
     }
   }
 
@@ -924,14 +925,14 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
       ...footerElemets
     ],
     auth_os: [
-      ...bigHeaderElements('*******AUTH_OS METADATA******'),
+      ...bigHeaderElements('*******AUTH-OS METADATA******'),
       smallHeader('**********REGISTRY***********'),
       { value: authOSContractString('abstract storage'), parent: 'none', fileValue: getAddr("ABSTRACT_STORAGE", networkID) },
       { value: authOSContractString('registry idx'), parent: 'none', fileValue: getAddr("REGISTRY_IDX", networkID) },
       { value: authOSContractString('script executor'), parent: 'none', fileValue: getAddr("REGISTRY_EXEC", networkID) },
       { value: authOSContractString('provider'), parent: 'none', fileValue: getAddr("PROVIDER", networkID) },
       smallHeader('*********CROWDSALE***********'),
-      { value: 'Auth_os application name: ', parent: 'none', fileValue: crowdsaleStore.appName },
+      { value: 'Auth-os application name: ', parent: 'none', fileValue: crowdsaleStore.appName },
       getCrowdsaleID(),
       { value: authOSContractString('MintedCappedIdx'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "IDX", networkID) },
       { value: authOSContractString('Sale'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE", networkID) },

@@ -360,7 +360,7 @@ export class Contribute extends React.Component {
       return notAllowedContributor()
     }
 
-    const { generalStore, crowdsaleStore, contractStore, crowdsalePageStore, tokenStore } = this.props
+    const { generalStore, contractStore, crowdsalePageStore, tokenStore } = this.props
     const { account, execID } = contractStore.crowdsale
 
     const weiToSend = await this.calculateWeiToSend()

@@ -91,7 +91,22 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
     }
 
     const crowdsaleInfo = await getCrowdsaleInfo(...params).call()
-    const _wei_raised = crowdsaleInfo._wei_raised ? crowdsaleInfo._wei_raised : crowdsaleInfo[0]
+    if (crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('wei_raised')) {
+      crowdsaleInfo.wei_raised = crowdsaleInfo[0]
+    }
+    if (crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('team_wallet')) {
+      crowdsaleInfo.team_wallet = crowdsaleInfo[1]
+    }
+    if (crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('minimum_contribution')) {
+      crowdsaleInfo.minimum_contribution = crowdsaleInfo[2]
+    }
+    if (crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('is_initialized')) {
+      crowdsaleInfo.is_initialized = crowdsaleInfo[3]
+    }
+    if (crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('is_finalized')) {
+      crowdsaleInfo.is_finalized = crowdsaleInfo[4]
+    }
+    const wei_raised = crowdsaleInfo.wei_raised ? crowdsaleInfo.wei_raised : crowdsaleInfo[0]
     const tokensSold = await getTokensSold(...params).call()
     let contributors = 0
     //todo:
@@ -102,8 +117,8 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
     }
     const { fromWei } = web3Store.web3.utils
 
-    crowdsalePageStore.setProperty('weiRaised', _wei_raised)
-    crowdsalePageStore.setProperty('ethRaised', fromWei(_wei_raised, 'ether'))
+    crowdsalePageStore.setProperty('weiRaised', wei_raised)
+    crowdsalePageStore.setProperty('ethRaised', fromWei(wei_raised, 'ether'))
     crowdsalePageStore.setProperty('tokensSold', tokensSold)
     if (contributors) crowdsalePageStore.setProperty('contributors', contributors)
 
@@ -134,7 +149,7 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
         : 0
       console.log("remainingWEI:", remainingWEI.toFixed())
 
-      const maximumSellableTokensInWei = toBigNumber(_wei_raised).plus(remainingWEI).toFixed()
+      const maximumSellableTokensInWei = toBigNumber(wei_raised).plus(remainingWEI).toFixed()
       const maximumSellableTokensInETH = fromWei(maximumSellableTokensInWei, 'ether')
       console.log("maximumSellableTokensInETH:", maximumSellableTokensInETH)
       console.log("maximumSellableTokensInWei:", maximumSellableTokensInWei)
@@ -346,8 +361,8 @@ const getRate = async (addr, execID, methods) => {
 }
 
 const calculateMinContribution = async (method, decimals, naturalMinCap, isWhitelisted) => {
-  //todo
-  const { minimum_contribution, max_spend_remaining } = await method.call()
+  //todo: update for Proxy
+  const { minimum_purchase_amt: minimum_contribution, max_spend_remaining } = await method.call()
   const minimumContribution = toBigNumber(minimum_contribution).times(`1e-${decimals}`)
   const maximumContribution = toBigNumber(max_spend_remaining)
   if (isWhitelisted && maximumContribution.eq(0)) {

@@ -92,7 +92,7 @@ export class Home extends Component {
               <h1 className="title">Welcome to Token Wizard</h1>
               <p className="description">
               Token Wizard is a client side tool to create ERC20 token and crowdsale in five steps. It helps you to publish contracts on the Ethereum network, create a crowdsale page with stats. For participants, the wizard creates a page to contribute into the campaign.
-              <br/>Token Wizard is powered by <a href="https://github.com/auth-os/beta">Auth_os</a>.
+              <br/>Token Wizard is powered by <a href="https://github.com/auth-os/beta">Auth-os</a>.
               </p>
               <div className="buttons">
                 <Link to='/1'><span className="button button_fill">New crowdsale</span></Link>
@@ -127,7 +127,7 @@ export class Home extends Component {
                 <div className="step-icons step-icons_publish"></div>
                 <p className="title">{PUBLISH}</p>
                 <p className="description">
-                  Get artifacts to interact with Auth_os framework
+                  Get artifacts to interact with Auth-os framework
                 </p>
               </div>
               <div className="process-item">
