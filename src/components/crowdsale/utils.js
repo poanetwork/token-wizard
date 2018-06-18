@@ -368,13 +368,14 @@ const getRate = async (addr, execID, methods) => {
 
 const calculateMinContribution = async (method, decimals, naturalMinCap, isWhitelisted) => {
   //todo: update for Proxy
-  const { minimum_purchase_amt: minimum_contribution, max_spend_remaining } = await method.call()
+  const { minimum_contribution, minimum_purchase_amt, max_spend_remaining } = await method.call()
   const minimumContribution = toBigNumber(minimum_contribution).times(`1e-${decimals}`)
+  const minimumPurchaseAmt = toBigNumber(minimum_purchase_amt).times(`1e-${decimals}`)
   const maximumContribution = toBigNumber(max_spend_remaining)
   if (isWhitelisted && maximumContribution.eq(0)) {
     return -1
   }
-  return minimumContribution.gt(naturalMinCap) ? minimumContribution : naturalMinCap
+  return minimumContribution.gt(naturalMinCap) ? minimumContribution : minimumPurchaseAmt.gt(naturalMinCap) ? minimum_purchase_amt : naturalMinCap
 }
 
 export const getUserMinLimits = async (addr, execID, methods, account) => {
