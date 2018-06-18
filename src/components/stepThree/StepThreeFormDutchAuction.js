@@ -93,28 +93,16 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, prist
               )(value.price)}
             />
           </div>
-          <div className="input-block-container">
-            <Field
-              name="minCap"
-              component={InputField2}
-              validate={composeValidators(
-                isNonNegative(),
-                isDecimalPlacesNotGreaterThan()(props.decimals)
-              )}
-              disabled={values.tiers.some((tier) => { return tier.whitelistEnabled === 'yes'} )}
-              errorStyle={inputErrorStyle}
-              type="number"
-              side="left"
-              label={MIN_CAP}
-              description={DESCRIPTION.MIN_CAP}
-            />
-          </div>
         </div>
       </div>
 
       <FieldArray name="tiers">
         {({ fields }) => (
-          <DutchAuctionBlock fields={fields} decimals={props.decimals}/>
+          <DutchAuctionBlock
+            fields={fields}
+            decimals={props.decimals}
+            tierStore={props.tierStore}
+          />
         )}
       </FieldArray>
 

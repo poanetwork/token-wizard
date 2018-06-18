@@ -3,14 +3,21 @@ import { Field } from 'react-final-form'
 import { OnChange } from 'react-final-form-listeners'
 import { InputField2 } from './InputField2'
 import { WhitelistInputBlock } from './WhitelistInputBlock'
-import { composeValidators, isRequired, isMaxLength } from '../../utils/validations'
+import {
+  composeValidators,
+  isRequired,
+  isMaxLength,
+  isDecimalPlacesNotGreaterThan,
+  isNonNegative,
+} from '../../utils/validations'
 import { DESCRIPTION, TEXT_FIELDS } from '../../utils/constants'
 import { CrowdsaleStartTime } from './CrowdsaleStartTime'
 import { CrowdsaleEndTime } from './CrowdsaleEndTime'
 import { CrowdsaleRate } from './CrowdsaleRate'
 import { Supply } from './Supply'
+import { GlobalMinCap } from './GlobalMinCap'
 
-const { ALLOW_MODIFYING, CROWDSALE_SETUP_NAME, ENABLE_WHITELISTING } = TEXT_FIELDS
+const { ALLOW_MODIFYING, CROWDSALE_SETUP_NAME, ENABLE_WHITELISTING, MIN_CAP } = TEXT_FIELDS
 
 const inputErrorStyle = {
   color: 'red',
@@ -134,6 +141,14 @@ export const TierBlock = ({ fields, ...props }) => {
                 name={`${name}.supply`}
                 errorStyle={inputErrorStyle}
                 side="right"
+              />
+            </div>
+            <div className="input-block-container">
+              <GlobalMinCap
+                name={'minCap'}
+                errorStyle={inputErrorStyle}
+                tierStore={props.tierStore}
+                side="left"
               />
               {
                 /*
