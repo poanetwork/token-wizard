@@ -66,7 +66,7 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
       key={`whenWhitelistBlock_${tierInd}`}
       field={`tiers[${tierInd}].whitelistEnabled`}
       becomes={'yes'}
-      set="tiers[0].minCap"
+      set={`tiers[${tierInd}].minCap`}
       to={0}
     />)
   }
