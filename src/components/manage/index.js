@@ -315,7 +315,7 @@ export class Manage extends Component {
           tiers.push(Object.assign(tier_data, tier_dates))
         }
 
-        //todo:
+        //todo: Proxy
         let reservedTokenDestinationList
         try {
           reservedTokenDestinationList = await getReservedTokenDestinationList(...params).call()
@@ -372,22 +372,18 @@ export class Manage extends Component {
 
       } else if (isDutchAuction) {
         const tier_data = await getCrowdsaleStatus(...params).call()
+        if (tier_data && !tier_data.hasOwnProperty('is_whitelisted')) {
+          tier_data.whitelist_enabled = tier_data[5]
+        } else {
+          tier_data.whitelist_enabled = tier_data.is_whitelisted
+        }
         const tier_dates = await getCrowdsaleStartAndEndTimes(...params).call()
         const crowdsaleWhitelist = await getCrowdsaleWhitelist(...params).call()
         const num_whitelisted = crowdsaleWhitelist.num_whitelisted || crowdsaleWhitelist[0]
         const whitelist = crowdsaleWhitelist.whitelist || crowdsaleWhitelist[1]
-        let tokens_sold = 0
-        //todo:
-        try {
-          tokens_sold = await getTokensSold(...params).call()
-        } catch(e) {
-          console.log("###Auth-os doesn't support getTokensSold for Dutch Auction###")
-        }
+        const tokens_sold = await getTokensSold(...params).call()
 
-        if (num_whitelisted !== '0') {
-          // TODO: remove this attribute overwrite after Auth-os implement whitelist_enabled for Dutch Auction
-          tier_data.whitelist_enabled = true
-
+        if (tier_data.whitelist_enabled) {
           for (let whitelist_item_index = 0; whitelist_item_index < whitelist.length; whitelist_item_index++) {
             const whitelist_item_addr = whitelist[whitelist_item_index]
             const whitelistStatus = await getWhitelistStatus(...params, whitelist_item_addr).call()

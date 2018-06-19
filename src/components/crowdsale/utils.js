@@ -323,8 +323,8 @@ export const getUserMaxLimits = async (addr, execID, methods, account) => {
   } else if (crowdsaleStore.isDutchAuction) {
     const { getCrowdsaleWhitelist, getCrowdsaleStatus, getWhitelistStatus, decimals } = methods
     const crowdsaleWhitelist = await getCrowdsaleWhitelist(...params).call()
-    const num_whitelisted = crowdsaleWhitelist.num_whitelisted || crowdsaleWhitelist[0]
     const crowdsaleStatus = await getCrowdsaleStatus(...params).call()
+    const whitelist_enabled = crowdsaleStatus.is_whitelisted || crowdsaleStatus[6]
     const current_rate = crowdsaleStatus.current_rate || crowdsaleStatus[2]
     const tokens_remaining = crowdsaleStatus.tokens_remaining || crowdsaleStatus[5]
     const token_decimals = await decimals(...params).call()
@@ -332,7 +332,7 @@ export const getUserMaxLimits = async (addr, execID, methods, account) => {
     const currentRate = toBigNumber(current_rate).times(`1e-${token_decimals}`)
     const crowdsaleTokensRemaining = toBigNumber(tokens_remaining).times(currentRate)
 
-    if (num_whitelisted === '0') return crowdsaleTokensRemaining
+    if (!whitelist_enabled) return crowdsaleTokensRemaining
 
     const whitelistStatus = await getWhitelistStatus(...params, account).call()
     const max_spend_remaining = whitelistStatus.max_spend_remaining || whitelistStatus[1]
