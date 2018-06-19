@@ -291,7 +291,6 @@ export function attachToContract (abi, addr) {
 
 async function getAllApplicationsInstances () {
   const whenRegistryExecContract = attachToSpecificCrowdsaleContract("registryExec")
-  //todo: check DUTCH_APP_NAME_HASH in .env when it will be ready from Auth-os side
   const {
     REACT_APP_MINTED_CAPPED_APP_NAME: MINTED_CAPPED_APP_NAME,
     REACT_APP_DUTCH_APP_NAME: DUTCH_APP_NAME,
@@ -300,7 +299,7 @@ async function getAllApplicationsInstances () {
   } = process.env
 
   //todo: leave only appName. AppNameHash parameter should be removed in the future and calculated from appName
-  const getApplicationInstance = (registryExecContract, appName, appNameHash, i, resolve, reject) => {
+  const getApplicationInstance = async (registryExecContract, appName, appNameHash, i, resolve, reject) => {
     registryExecContract.methods.app_instances(appNameHash, i).call()
     .then((app_instance) => {
       console.log("app_instance:", app_instance)
@@ -319,8 +318,10 @@ async function getAllApplicationsInstances () {
   console.log("registryExecContract:", registryExecContract)
   let promises = [];
   const crowdsales = []
-  //todo: length of applications
-  for (let i = 0; i < 1000; i++) {
+  const appInstancesMintedCapped = await registryExecContract.methods.getInstances(MINTED_CAPPED_APP_NAME_HASH).call()
+  const appInstancesDutch = await registryExecContract.methods.getInstances(DUTCH_APP_NAME_HASH).call()
+  const allInstancesLength = appInstancesMintedCapped.length + appInstancesDutch.length
+  for (let i = 0; i < allInstancesLength; i++) {
     let promiseMintedCapped = new Promise((resolve, reject) => getApplicationInstance(registryExecContract, MINTED_CAPPED_APP_NAME, MINTED_CAPPED_APP_NAME_HASH, i, resolve, reject))
     let promiseDutchAuction = new Promise((resolve, reject) => getApplicationInstance(registryExecContract, DUTCH_APP_NAME, DUTCH_APP_NAME_HASH, i, resolve, reject))
     promises.push(promiseMintedCapped)
@@ -585,10 +586,8 @@ function getCrowdsaleTierList (initCrowdsaleContract, addr, execID) {
   return whenCrowdsaleTierList
 }
 
-//todo: it gets all instances created by current user. We need to get all instances from all users. Should be implemented in Auth-os side.
 export async function getAllCrowdsaleAddresses () {
   const instances = await getAllApplicationsInstances()
-  console.log("instances:", instances)
   const targetPrefix = "idx"
 
   const targetMintedCapped = `${targetPrefix}MintedCapped`
