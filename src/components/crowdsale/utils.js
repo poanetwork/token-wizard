@@ -369,7 +369,7 @@ const calculateMinContribution = async (method, decimals, naturalMinCap, isWhite
   if (isWhitelisted && maximumContribution.eq(0)) {
     return -1
   }
-  return minimumContribution.gt(naturalMinCap) ? minimumContribution : minimumPurchaseAmt.gt(naturalMinCap) ? minimum_purchase_amt : naturalMinCap
+  return minimumContribution.gt(naturalMinCap) ? minimumContribution : minimumPurchaseAmt.gt(naturalMinCap) ? minimumPurchaseAmt : naturalMinCap
 }
 
 export const getUserMinLimits = async (addr, execID, methods, account) => {
