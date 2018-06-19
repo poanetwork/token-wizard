@@ -4,7 +4,6 @@ exports[`CrowdsaleBlock Should render the component for the first Tier 1`] = `
 <Provider
   tierStore={
     TierStore {
-      "globalMinCap": "",
       "tiers": Array [
         Object {
           "endTime": "2018-03-09T00:00",
@@ -38,7 +37,6 @@ exports[`CrowdsaleBlock Should render the component for the first Tier 1`] = `
       num={0}
       tierStore={
         TierStore {
-          "globalMinCap": "",
           "tiers": Array [
             Object {
               "endTime": "2018-03-09T00:00",
@@ -398,7 +396,6 @@ exports[`CrowdsaleBlock Should render the component for the second Tier 1`] = `
 <Provider
   tierStore={
     TierStore {
-      "globalMinCap": "",
       "tiers": Array [
         Object {
           "endTime": "2018-03-09T00:00",
@@ -469,7 +466,6 @@ exports[`CrowdsaleBlock Should render the component for the second Tier 1`] = `
       num={1}
       tierStore={
         TierStore {
-          "globalMinCap": "",
           "tiers": Array [
             Object {
               "endTime": "2018-03-09T00:00",
@@ -866,7 +862,6 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
 <Provider
   tierStore={
     TierStore {
-      "globalMinCap": "",
       "tiers": Array [
         Object {
           "endTime": "2018-03-09T00:00",
@@ -974,7 +969,6 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
       num={1}
       tierStore={
         TierStore {
-          "globalMinCap": "",
           "tiers": Array [
             Object {
               "endTime": "2018-03-09T00:00",

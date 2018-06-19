@@ -26,7 +26,7 @@ import { getCrowdsaleAssets } from '../../stores/utils'
 import { getFieldsToUpdate, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
 import { getTiersLength, toBigNumber } from '../crowdsale/utils'
-import { updateGlobalMinContribution } from '../stepFour/utils'
+import { updateTierMinimum } from '../stepFour/utils'
 import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import createDecorator from 'final-form-calculate'
@@ -81,7 +81,7 @@ export class Manage extends Component {
       .then(() => this.updateCrowdsaleStatus())
       .then(() => {
         this.initialValues.tiers = JSON.parse(JSON.stringify(tierStore.tiers))
-        this.initialValues.minCap = +tierStore.globalMinCap
+        this.initialValues.minCap = +tierStore.tiers.minCap
       })
       .catch((err) => console.error(err))
       .then(() => {
@@ -411,10 +411,11 @@ export class Manage extends Component {
 
       console.log('tiers:', tiers)
 
-      tiers.forEach((tier, index) => processTier(tier, crowdsale, token, reserved_tokens_info, index))
-
-      tierStore.setGlobalMinCap(toBigNumber(crowdsale.minimum_contribution).div(`1e${token.token_decimals}`).toFixed())
-
+      tiers.forEach((tier, index) => {
+        processTier(tier, crowdsale, token, reserved_tokens_info, index)
+        const tierMinCap = toBigNumber(crowdsale.minimum_contribution).div(`1e${token.token_decimals}`).toFixed()
+        tierStore.setTierProperty(tierMinCap, 'minCap', index)
+      })
     } catch (err) {
       return Promise.reject(err)
     }
@@ -611,21 +612,19 @@ export class Manage extends Component {
     const { crowdsaleHasEnded, ownerCurrentUser } = this.state
     const { tierStore, crowdsaleStore } = this.props
     const { initialTiersValues } = crowdsaleStore.selected
-    const { globalMinCap, tiers, modifiedStoredWhitelist, individuallyValidTiers } = tierStore
+    const { tiers, modifiedStoredWhitelist, individuallyValidTiers } = tierStore
 
     // TODO: review validations after this fix: https://github.com/final-form/react-final-form/issues/151
     // once done, can be replaced with _pristine_ state value
 
     const validTiers = initialTiersValues.every(tier => individuallyValidTiers[tier.index])
     const fieldsToUpdate = validTiers ? getFieldsToUpdate(initialTiersValues, tiers) : []
-    const modifiedMinCap = globalMinCap ? !toBigNumber(this.initialValues.minCap).eq(globalMinCap) : false
-    const valuesChanged = modifiedStoredWhitelist || fieldsToUpdate.length > 0 || modifiedMinCap
+    const valuesChanged = modifiedStoredWhitelist || fieldsToUpdate.length > 0
     const canSave = ownerCurrentUser && valuesChanged && !crowdsaleHasEnded
 
     return {
       canSave,
-      fieldsToUpdate,
-      globalMinCap: modifiedMinCap ? globalMinCap : null
+      fieldsToUpdate
     }
   }
 
@@ -648,7 +647,6 @@ export class Manage extends Component {
           .reduce((promise, { key, newValue, tier }) => {
             return promise.then(() => updateTierAttribute(key, newValue, tier))
           }, Promise.resolve())
-          .then(() => canSaveObj.globalMinCap !== null ? updateGlobalMinContribution()[0]() : Promise.resolve())
           .then(() => {
             this.hideLoader()
             successfulUpdateCrowdsaleAlert()
@@ -668,8 +666,8 @@ export class Manage extends Component {
     const { tierStore } = this.props
     values.tiers.forEach((tier, index) => {
       tierStore.setTierProperty(tier.endTime, 'endTime', index)
+      tierStore.setTierProperty(tier.minCap, 'minCap', index)
     })
-    tierStore.setGlobalMinCap(values.minCap)
   }
 
   calculator = createDecorator({

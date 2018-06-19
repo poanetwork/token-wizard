@@ -20,16 +20,14 @@ class DeploymentStore {
     })
   }
 
-  @action initialize = (hasReservedToken, hasWhitelist, tiers, globalMinCap) => {
+  @action initialize = (hasReservedToken, hasWhitelist, tiers) => {
     console.log("hasReservedToken:", hasReservedToken)
     console.log("hasWhitelist:", hasWhitelist)
-    console.log("globalMinCap:", globalMinCap)
     const listOfTx = [
       //{ name: 'deployProxy', dependsOnTiers: false, required: true }, //todo
       { name: 'crowdsaleCreate', dependsOnTiers: false, required: true },
       { name: 'token', dependsOnTiers: false, required: true },
       { name: 'setReservedTokens', dependsOnTiers: false, required: hasReservedToken },
-      { name: 'updateGlobalMinContribution', dependsOnTiers: true, required: globalMinCap > 0 },
       { name: 'createCrowdsaleTiers', dependsOnTiers: false, required: tiers.length > 1 },
       { name: 'whitelist', dependsOnTiers: true, required: hasWhitelist },
       { name: 'crowdsaleInit', dependsOnTiers: false, required: true },
@@ -48,7 +46,7 @@ class DeploymentStore {
         if (tx.dependsOnTiers) {
           if (tx.name === 'whitelist') {
             return this.txMap.set(tx.name, byTierWhitelistInitialValues)
-          } else if (tx.aneme === 'updateGlobalMinContribution') {
+          } else if (tx.name === 'updateTierMinimum') {
             return this.txMap.set(tx.name, [false])
           }
         }
@@ -60,8 +58,8 @@ class DeploymentStore {
     this.logTxMap()
   }
 
-  @action initializePersonalized = (hasReservedToken, hasWhitelist, tiers, listOfTx, globalMinCap) => {
-    this.initialize(hasReservedToken, hasWhitelist, tiers, globalMinCap)
+  @action initializePersonalized = (hasReservedToken, hasWhitelist, tiers, listOfTx) => {
+    this.initialize(hasReservedToken, hasWhitelist, tiers)
     // TODO: based on listOfTx, modify this.txMap so it reflects the required amount of steps
   }
 

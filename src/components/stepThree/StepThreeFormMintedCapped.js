@@ -42,13 +42,13 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
   const handleOnChange = ({ values }) => {
     props.tierStore.updateWalletAddress(values.walletAddress, VALID)
     props.generalStore.setGasPrice(gweiToWei(values.gasPrice.price))
-    props.tierStore.setGlobalMinCap(values.minCap || 0)
 
     let totalSupply = 0
 
     values.tiers.forEach((tier, index) => {
       totalSupply += Number(tier.supply)
       props.tierStore.setTierProperty(tier.tier, 'tier', index)
+      props.tierStore.setTierProperty(tier.minCap, 'minCap', index)
       props.tierStore.setTierProperty(tier.updatable, 'updatable', index)
       props.tierStore.setTierProperty(tier.startTime, 'startTime', index)
       props.tierStore.setTierProperty(tier.endTime, 'endTime', index)
@@ -66,7 +66,7 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
       key={`whenWhitelistBlock_${tierInd}`}
       field={`tiers[${tierInd}].whitelistEnabled`}
       becomes={'yes'}
-      set="minCap"
+      set="tiers[0].minCap"
       to={0}
     />)
   }
@@ -121,7 +121,6 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
         {({ fields }) => (
           <TierBlock
             fields={fields}
-            minCap={values.minCap}
             decimals={props.decimals}
             tierStore={props.tierStore}
           />

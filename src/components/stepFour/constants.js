@@ -13,7 +13,6 @@ export const TX_STEP_DESCRIPTION = {
   crowdsaleCreate: "Create Crowdsale instance",
   token: "Initialize Token",
   setReservedTokens: "Register addresses for Reserved Tokens",
-  updateGlobalMinContribution: "Update global minimum contribution",
   createCrowdsaleTiers: "Add tiers to Crowdsale",
   whitelist: "Register whitelisted addresses",
   crowdsaleInit: "Initialize Crowdsale",

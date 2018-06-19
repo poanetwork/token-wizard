@@ -43,7 +43,8 @@ const tiers = [{
   tier: "Tier 1",
   whitelistEnabled: "yes",
   supply: "132",
-  rate: "123"
+  rate: "123",
+  minCap: "0"
 }, {
   whitelist: [
     { addr: "0x1dF62f291b2E969fB0849d99D9Ce41e2F137006e", min: 1234, max: 50505, stored: true },
@@ -63,7 +64,8 @@ const tiers = [{
   tier: "Tier 2",
   whitelistEnabled: "yes",
   supply: "156",
-  rate: "55"
+  rate: "55",
+  minCap: "0"
 }]
 
 const initialTiers = [{
@@ -84,7 +86,8 @@ const initialTiers = [{
   index: "0",
   addresses: {
     crowdsaleAddress: "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae"
-  }
+  },
+  minCap: "0"
 }, {
   whitelist: [
     { addr: "0x1dF62f291b2E969fB0849d99D9Ce41e2F137006e", min: 1234, max: 50505, stored: true },
@@ -108,7 +111,8 @@ const initialTiers = [{
   index: "1",
   addresses: {
     crowdsaleAddress: "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae"
-  }
+  },
+  minCap: "0"
 }]
 
 const validations = {
@@ -160,8 +164,7 @@ describe('ManageForm', () => {
             mutators={{ ...arrayMutators }}
             decorators={[jest.fn()]}
             initialValues={{
-              tiers: [],
-              minCap: 0
+              tiers: []
             }}
             component={ManageForm}
             {...manageFormProps}
@@ -186,8 +189,7 @@ describe('ManageForm', () => {
             mutators={{ ...arrayMutators }}
             decorators={[jest.fn()]}
             initialValues={{
-              tiers: initialTiers,
-              minCap: 0
+              tiers: initialTiers
             }}
             component={ManageForm}
             {...manageFormProps}
@@ -216,8 +218,7 @@ describe('ManageForm', () => {
             mutators={{ ...arrayMutators }}
             decorators={[jest.fn()]}
             initialValues={{
-              tiers: [],
-              minCap: 0
+              tiers: []
             }}
             component={ManageForm}
             {...manageFormProps}
@@ -242,8 +243,7 @@ describe('ManageForm', () => {
             mutators={{ ...arrayMutators }}
             decorators={[jest.fn()]}
             initialValues={{
-              tiers: initialTiers,
-              minCap: 0
+              tiers: initialTiers
             }}
             component={ManageForm}
             {...manageFormProps}
@@ -276,8 +276,7 @@ describe('ManageForm', () => {
             mutators={{ ...arrayMutators }}
             decorators={[jest.fn()]}
             initialValues={{
-              tiers: initialTiers,
-              minCap: 0
+              tiers: initialTiers
             }}
             component={ManageForm}
             {...manageFormProps}
@@ -307,8 +306,7 @@ describe('ManageForm', () => {
             mutators={{ ...arrayMutators }}
             decorators={[jest.fn()]}
             initialValues={{
-              tiers: initialTiers,
-              minCap: 0
+              tiers: initialTiers
             }}
             component={ManageForm}
             {...manageFormProps}
@@ -338,8 +336,7 @@ describe('ManageForm', () => {
             mutators={{ ...arrayMutators }}
             decorators={[jest.fn()]}
             initialValues={{
-              tiers: initialTiers,
-              minCap: 0
+              tiers: initialTiers
             }}
             component={ManageForm}
             {...manageFormProps}

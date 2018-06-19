@@ -36,12 +36,12 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, prist
   const handleOnChange = ({ values }) => {
     props.tierStore.updateWalletAddress(values.walletAddress, VALID)
     props.generalStore.setGasPrice(gweiToWei(values.gasPrice.price))
-    props.tierStore.setGlobalMinCap(values.minCap || 0)
 
     let totalSupply = 0
 
     values.tiers.forEach((tier, index) => {
       totalSupply += Number(tier.supply)
+      props.tierStore.setTierProperty(tier.minCap, 'minCap', index)
       props.tierStore.setTierProperty(tier.startTime, 'startTime', index)
       props.tierStore.setTierProperty(tier.endTime, 'endTime', index)
       props.tierStore.updateMinRate(tier.minRate, VALID, index)
@@ -59,7 +59,7 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, prist
       <WhenFieldChanges
         field="tiers[0].whitelistEnabled"
         becomes={'yes'}
-        set="minCap"
+        set="tiers[0].minCap"
         to={0}
       />
       <div>

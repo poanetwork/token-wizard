@@ -185,7 +185,7 @@ export const DutchAuctionBlock = inject('tierStore', 'tokenStore')(observer(({ t
           </div>
           <div className="input-block-container">
             <GlobalMinCap
-              name={'minCap'}
+              name={`${name}.minCap`}
               errorStyle={inputErrorStyle}
               decimals={props.decimals}
               tierStore={tierStore}

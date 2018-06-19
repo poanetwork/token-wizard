@@ -145,7 +145,7 @@ export const TierBlock = ({ fields, ...props }) => {
             </div>
             <div className="input-block-container">
               <GlobalMinCap
-                name={'minCap'}
+                name={`${name}.minCap`}
                 errorStyle={inputErrorStyle}
                 decimals={props.decimals}
                 tierStore={props.tierStore}
@@ -157,12 +157,12 @@ export const TierBlock = ({ fields, ...props }) => {
                   * But it worked for me to keep the error messages properly updated for the minCap field.
                   */
               }
-              <Field name="minCap" subscription={{}}>
+              <Field name={`${name}.minCap`} subscription={{}}>
                 {({ input: { onChange } }) => (
                   <OnChange name={`${name}.supply`}>
                     {() => {
                       onChange(0)
-                      onChange(props.minCap)
+                      onChange(props.tierStore.tiers[index].minCap)
                     }}
                   </OnChange>
                 )}
