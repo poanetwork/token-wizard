@@ -225,6 +225,7 @@ export const processTier = (tier, crowdsale, token, reserved_tokens_info, tier_i
     finalized,
     crowdsale_token
   } = crowdsaleData(tier, crowdsale, token, reserved_tokens_info)
+  console.log(crowdsaleData(tier, crowdsale, token, reserved_tokens_info))
   console.log("reserved_tokens_info:", crowdsale_token.reserved_accounts)
 
   const token_decimals = !isNaN(crowdsale_token.decimals) ? crowdsale_token.decimals : 0

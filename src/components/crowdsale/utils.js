@@ -303,7 +303,7 @@ export const getUserMaxLimits = async (addr, execID, methods, account) => {
   if (crowdsaleStore.isMintedCappedCrowdsale) {
     const { getCurrentTierInfo, getWhitelistStatus, decimals } = methods
     const currentTierInfo = await getCurrentTierInfo(...params).call()
-    const whitelist_enabled = currentTierInfo.whitelist_enabled || currentTierInfo[6]
+    const whitelist_enabled = currentTierInfo.whitelist_enabled || currentTierInfo[7]
     const tier_tokens_remaining = currentTierInfo.tier_tokens_remaining || currentTierInfo[3]
     const tier_price = currentTierInfo.tier_price || currentTierInfo[4]
     const tier_index = currentTierInfo.tier_index || currentTierInfo[1]

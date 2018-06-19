@@ -370,7 +370,7 @@ export class Manage extends Component {
       } else if (isDutchAuction) {
         const tier_data = await getCrowdsaleStatus(...params).call()
         if (tier_data && !tier_data.hasOwnProperty('is_whitelisted')) {
-          tier_data.whitelist_enabled = tier_data[5]
+          tier_data.whitelist_enabled = tier_data[6]
         } else {
           tier_data.whitelist_enabled = tier_data.is_whitelisted
         }
@@ -406,7 +406,7 @@ export class Manage extends Component {
 
       tiers.forEach((tier, index) => {
         processTier(tier, crowdsale, token, reserved_tokens_info, index)
-        const tierMinCap = toBigNumber(crowdsale.minimum_contribution).div(`1e${token.token_decimals}`).toFixed()
+        const tierMinCap = toBigNumber(tier.tier_min).div(`1e${token.token_decimals}`).toFixed()
         tierStore.setTierProperty(tierMinCap, 'minCap', index)
       })
     } catch (err) {
