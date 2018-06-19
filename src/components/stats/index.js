@@ -57,7 +57,7 @@ export class Stats extends Component {
         mintedCappedCrowdsales.forEach((_crowdsale) => {
           let ethRaised = web3.utils.fromWei(_crowdsale.crowdsaleInfo.wei_raised, "ether")
           mintedCappedEthRaised = mintedCappedEthRaised.plus(ethRaised)
-          mintedCappedMaxEthRaised = Math.max(maxEthRaised, ethRaised)
+          mintedCappedMaxEthRaised = Math.max(mintedCappedMaxEthRaised, ethRaised)
           mintedCappedContributorsAmount += Number(_crowdsale.crowdsaleContributors)
           let crowdsaleStart = _crowdsale.crowdsaleDates.start_time * 1000
           let crowdsaleEnd = _crowdsale.crowdsaleDates.end_time * 1000
@@ -95,7 +95,7 @@ export class Stats extends Component {
         dutchAuctionCrowdsales.forEach((_crowdsale) => {
           let ethRaised = web3.utils.fromWei(_crowdsale.crowdsaleInfo.wei_raised, "ether")
           dutchAuctionEthRaised = dutchAuctionEthRaised.plus(ethRaised)
-          dutchAuctionMaxEthRaised = Math.max(maxEthRaised, ethRaised)
+          dutchAuctionMaxEthRaised = Math.max(dutchAuctionMaxEthRaised, ethRaised)
           dutchAuctionContributorsAmount += Number(_crowdsale.crowdsaleContributors)
           let crowdsaleStart = _crowdsale.crowdsaleDates.start_time * 1000
           let crowdsaleEnd = _crowdsale.crowdsaleDates.end_time * 1000
