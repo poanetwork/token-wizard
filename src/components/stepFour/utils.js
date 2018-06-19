@@ -121,6 +121,9 @@ const getCrowdSaleParams = (account, methodInterface) => {
   //tier 0 supply
   const supplyBN = toBigNumber(supply).times(`1e${tokenStore.decimals}`).toFixed()
 
+  //tier 0 global min cap
+  const globalMinCapBN = toBigNumber(tierStore.globalMinCap).toFixed()
+
   let crowdsaleParams = [
     walletAddress,
     formatDate(startTime),
@@ -128,6 +131,7 @@ const getCrowdSaleParams = (account, methodInterface) => {
     oneTokenInWEI,
     durationBN,
     supplyBN,
+    globalMinCapBN,
     isWhitelisted,
     isUpdatable,
     account
@@ -451,25 +455,28 @@ const getTiersParams = (methodInterface) => {
   let supplyArr = []
   let tierNameArr = []
   let durationArr = []
-  for (let tierIndex = 1; tierIndex < tierStore.tiers.length; tierIndex++) {
-    let { updatable, whitelistEnabled, rate, supply, tier, startTime, endTime } = tierStore.tiers[tierIndex]
-    let duration = formatDate(endTime) - formatDate(startTime)
-    let tierNameBytes = web3.utils.fromAscii(tier)
-    let encodedTierName = web3.eth.abi.encodeParameter("bytes32", tierNameBytes);
+  let globalMinCapArr = []
+  tierStore.tiers.forEach((tier) => {
+    const { updatable, whitelistEnabled, rate, supply, tier: tierName, startTime, endTime } = tier
+    const duration = formatDate(endTime) - formatDate(startTime)
+    const tierNameBytes = web3.utils.fromAscii(tierName)
+    const encodedTierName = web3.eth.abi.encodeParameter("bytes32", tierNameBytes);
     const rateBN = new BigNumber(rate)
     const oneTokenInETH = rateBN.pow(-1).toFixed()
     durationArr.push(duration)
     tierNameArr.push(encodedTierName)
     rateArr.push(web3.utils.toWei(oneTokenInETH, 'ether'))
     supplyArr.push(toBigNumber(supply).times(`1e${tokenStore.decimals}`).toFixed())
+    globalMinCapArr.push(toBigNumber(tierStore.globalMinCap).toFixed())
     updatableArr.push(updatable === 'on')
     whitelistEnabledArr.push(whitelistEnabled === 'yes')
-  }
+  })
   let paramsTiers = [
     tierNameArr,
     durationArr,
     rateArr,
     supplyArr,
+    globalMinCapArr,
     updatableArr,
     whitelistEnabledArr
   ]
@@ -484,7 +491,7 @@ export const createCrowdsaleTiers = () => {
     () => {
       console.log('###createCrowdsaleTiers:###')
 
-      const methodInterface = ["bytes32[]", "uint256[]", "uint256[]", "uint256[]", "bool[]", "bool[]"]
+      const methodInterface = ["bytes32[]", "uint256[]", "uint256[]", "uint256[]", "uint256[]", "bool[]", "bool[]"]
 
       let paramsToExec = [methodInterface]
       const method = methodToExec("registryExec", `createCrowdsaleTiers(${methodInterface.join(',')})`, getTiersParams, paramsToExec)
