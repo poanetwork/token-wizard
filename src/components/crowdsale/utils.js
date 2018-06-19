@@ -97,14 +97,11 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
     if (crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('team_wallet')) {
       crowdsaleInfo.team_wallet = crowdsaleInfo[1]
     }
-    if (crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('minimum_contribution')) {
-      crowdsaleInfo.minimum_contribution = crowdsaleInfo[2]
-    }
     if (crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('is_initialized')) {
-      crowdsaleInfo.is_initialized = crowdsaleInfo[3]
+      crowdsaleInfo.is_initialized = crowdsaleInfo[2]
     }
     if (crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('is_finalized')) {
-      crowdsaleInfo.is_finalized = crowdsaleInfo[4]
+      crowdsaleInfo.is_finalized = crowdsaleInfo[3]
     }
     const wei_raised = crowdsaleInfo.wei_raised ? crowdsaleInfo.wei_raised : crowdsaleInfo[0]
     let tokensSold = 0
