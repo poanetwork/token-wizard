@@ -149,6 +149,7 @@ export const TierBlock = ({ fields, ...props }) => {
                 errorStyle={inputErrorStyle}
                 decimals={props.decimals}
                 tierStore={props.tierStore}
+                disabled={props.tierStore ? props.tierStore.tiers[index].whitelistEnabled === 'yes' : true}
                 side="left"
               />
               {

@@ -11,7 +11,6 @@ export const GlobalMinCap = ({ ...props }) => (
       isNonNegative(),
       isDecimalPlacesNotGreaterThan()(props.decimals)
     )}
-    disabled={props.tierStore ? props.tierStore.tiers.some((tier) => { return tier.whitelistEnabled === 'yes'} ) : true}
     type="number"
     label={props.label || TEXT_FIELDS.MIN_CAP}
     description={DESCRIPTION.MIN_CAP}
