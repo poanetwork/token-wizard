@@ -372,8 +372,10 @@ export class Manage extends Component {
 
       } else if (isDutchAuction) {
         const tier_data = await getCrowdsaleStatus(...params).call()
-        if (tier_data && !tier_data.hasOwnProperty('whitelist_enabled')) {
-          tier_data.is_whitelisted = tier_data[5]
+        if (tier_data && !tier_data.hasOwnProperty('is_whitelisted')) {
+          tier_data.whitelist_enabled = tier_data[5]
+        } else {
+          tier_data.whitelist_enabled = tier_data.is_whitelisted
         }
         const tier_dates = await getCrowdsaleStartAndEndTimes(...params).call()
         const crowdsaleWhitelist = await getCrowdsaleWhitelist(...params).call()
@@ -381,7 +383,7 @@ export class Manage extends Component {
         const whitelist = crowdsaleWhitelist.whitelist || crowdsaleWhitelist[1]
         const tokens_sold = await getTokensSold(...params).call()
 
-        if (tier_data.is_whitelisted) {
+        if (tier_data.whitelist_enabled) {
           for (let whitelist_item_index = 0; whitelist_item_index < whitelist.length; whitelist_item_index++) {
             const whitelist_item_addr = whitelist[whitelist_item_index]
             const whitelistStatus = await getWhitelistStatus(...params, whitelist_item_addr).call()
