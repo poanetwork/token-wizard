@@ -289,6 +289,21 @@ export function attachToContract (abi, addr) {
     })
 }
 
+//todo: leave only appName. AppNameHash parameter should be removed in the future and calculated from appName
+const getApplicationInstance = async (app_instances, appName, appNameHash, i) => {
+  try {
+    const execID = await app_instances(appNameHash, i).call()
+    console.log("app_instance:", execID)
+    return {
+      appName,
+      execID
+    }
+  } catch (err) {
+    console.error(err)
+    return null
+  }
+}
+
 async function getAllApplicationsInstances () {
   const whenRegistryExecContract = attachToSpecificCrowdsaleContract("registryExec")
   const {
@@ -298,39 +313,24 @@ async function getAllApplicationsInstances () {
     REACT_APP_DUTCH_APP_NAME_HASH: DUTCH_APP_NAME_HASH,
   } = process.env
 
-  //todo: leave only appName. AppNameHash parameter should be removed in the future and calculated from appName
-  const getApplicationInstance = async (registryExecContract, appName, appNameHash, i, resolve, reject) => {
-    registryExecContract.methods.app_instances(appNameHash, i).call()
-    .then((app_instance) => {
-      console.log("app_instance:", app_instance)
-      crowdsales.push({
-        appName: appName,
-        execID: app_instance
-      })
-      resolve();
-    })
-    .catch((err) => {
-      resolve();
-    })
-  }
-
   const registryExecContract = await whenRegistryExecContract
   console.log("registryExecContract:", registryExecContract)
-  let promises = [];
-  const crowdsales = []
-  const appInstancesMintedCapped = await registryExecContract.methods.getInstances(MINTED_CAPPED_APP_NAME_HASH).call()
-  const appInstancesDutch = await registryExecContract.methods.getInstances(DUTCH_APP_NAME_HASH).call()
-  const allInstancesLength = appInstancesMintedCapped.length + appInstancesDutch.length
-  for (let i = 0; i < allInstancesLength; i++) {
-    let promiseMintedCapped = new Promise((resolve, reject) => getApplicationInstance(registryExecContract, MINTED_CAPPED_APP_NAME, MINTED_CAPPED_APP_NAME_HASH, i, resolve, reject))
-    let promiseDutchAuction = new Promise((resolve, reject) => getApplicationInstance(registryExecContract, DUTCH_APP_NAME, DUTCH_APP_NAME_HASH, i, resolve, reject))
-    promises.push(promiseMintedCapped)
-    promises.push(promiseDutchAuction)
+  const { getInstances, app_instances } = registryExecContract.methods
+
+  const whenCrowdsales = []
+  const appInstancesMintedCapped = await getInstances(MINTED_CAPPED_APP_NAME_HASH).call()
+  const appInstancesDutch = await getInstances(DUTCH_APP_NAME_HASH).call()
+
+  for (let i = 0; i < appInstancesMintedCapped.length; i++) {
+    whenCrowdsales.push(getApplicationInstance(app_instances, MINTED_CAPPED_APP_NAME, MINTED_CAPPED_APP_NAME_HASH, i))
   }
-  return Promise.all(promises)
-    .then(() => {
-      return Promise.all(crowdsales)
-    })
+
+  for (let i = 0; i < appInstancesDutch.length; i++) {
+    whenCrowdsales.push(getApplicationInstance(app_instances, DUTCH_APP_NAME, DUTCH_APP_NAME_HASH, i))
+  }
+
+  return Promise.all(whenCrowdsales)
+    .then(crowdsales => crowdsales.filter(crowdsale => crowdsale !== null))
 }
 
 async function getOwnerApplicationsInstances () {
