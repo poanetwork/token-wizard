@@ -209,14 +209,11 @@ export class Manage extends Component {
       if (crowdsale && !crowdsale.hasOwnProperty('team_wallet')) {
         crowdsale.team_wallet = crowdsale[1]
       }
-      if (crowdsale && !crowdsale.hasOwnProperty('minimum_contribution')) {
-        crowdsale.minimum_contribution = crowdsale[2]
-      }
       if (crowdsale && !crowdsale.hasOwnProperty('is_initialized')) {
-        crowdsale.is_initialized = crowdsale[3]
+        crowdsale.is_initialized = crowdsale[2]
       }
       if (crowdsale && !crowdsale.hasOwnProperty('is_finalized')) {
-        crowdsale.is_finalized = crowdsale[4]
+        crowdsale.is_finalized = crowdsale[3]
       }
       let token
       if (getTokenInfo) {
