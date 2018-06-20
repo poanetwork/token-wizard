@@ -121,7 +121,7 @@ const getCrowdSaleParams = (account, methodInterface) => {
   const supplyBN = toBigNumber(supply).times(`1e${tokenStore.decimals}`).toFixed()
 
   //tier 0 global min cap
-  const minCapBN = toBigNumber(tierStore.tiers[0].minCap).toFixed()
+  const minCapBN = toBigNumber(tierStore.tiers[0].minCap).times(`1e${tokenStore.decimals}`).toFixed()
 
   let crowdsaleParams = [
     walletAddress,
