@@ -300,7 +300,7 @@ export const getUserMaxLimits = async (addr, execID, methods, account) => {
   if (crowdsaleStore.isMintedCappedCrowdsale) {
     const { getCurrentTierInfo, getWhitelistStatus, decimals } = methods
     const currentTierInfo = await getCurrentTierInfo(...params).call()
-    const whitelist_enabled = currentTierInfo.whitelist_enabled || currentTierInfo[7]
+    const is_whitelisted = currentTierInfo.is_whitelisted || currentTierInfo[7]
     const tier_tokens_remaining = currentTierInfo.tier_tokens_remaining || currentTierInfo[3]
     const tier_price = currentTierInfo.tier_price || currentTierInfo[4]
     const tier_index = currentTierInfo.tier_index || currentTierInfo[1]
@@ -309,19 +309,19 @@ export const getUserMaxLimits = async (addr, execID, methods, account) => {
     const currentRate = toBigNumber(tier_price).times(`1e-${token_decimals}`)
     const tierTokensRemaining = toBigNumber(tier_tokens_remaining).times(currentRate)
 
-    if (!whitelist_enabled) return tierTokensRemaining
+    if (!is_whitelisted) return tierTokensRemaining
 
     const whitelistStatus = await getWhitelistStatus(...params, tier_index, account).call()
-    const max_spend_remaining = whitelistStatus.max_spend_remaining || whitelistStatus[1]
-    const maxSpendRemaining = toBigNumber(max_spend_remaining)
+    const max_tokens_remaining = whitelistStatus.max_tokens_remaining || whitelistStatus[1]
+    const maxTokensRemaining = toBigNumber(max_tokens_remaining)
 
-    return tierTokensRemaining.lt(maxSpendRemaining) ? tierTokensRemaining : maxSpendRemaining
+    return tierTokensRemaining.lt(maxTokensRemaining) ? tierTokensRemaining : maxTokensRemaining
 
   } else if (crowdsaleStore.isDutchAuction) {
     const { getCrowdsaleWhitelist, getCrowdsaleStatus, getWhitelistStatus, decimals } = methods
     const crowdsaleWhitelist = await getCrowdsaleWhitelist(...params).call()
     const crowdsaleStatus = await getCrowdsaleStatus(...params).call()
-    const whitelist_enabled = crowdsaleStatus.is_whitelisted || crowdsaleStatus[6]
+    const is_whitelisted = crowdsaleStatus.is_whitelisted || crowdsaleStatus[6]
     const current_rate = crowdsaleStatus.current_rate || crowdsaleStatus[2]
     const tokens_remaining = crowdsaleStatus.tokens_remaining || crowdsaleStatus[5]
     const token_decimals = await decimals(...params).call()
@@ -329,13 +329,13 @@ export const getUserMaxLimits = async (addr, execID, methods, account) => {
     const currentRate = toBigNumber(current_rate).times(`1e-${token_decimals}`)
     const crowdsaleTokensRemaining = toBigNumber(tokens_remaining).times(currentRate)
 
-    if (!whitelist_enabled) return crowdsaleTokensRemaining
+    if (!is_whitelisted) return crowdsaleTokensRemaining
 
     const whitelistStatus = await getWhitelistStatus(...params, account).call()
-    const max_spend_remaining = whitelistStatus.max_spend_remaining || whitelistStatus[1]
-    const maxSpendRemaining = toBigNumber(max_spend_remaining)
+    const max_tokens_remaining = whitelistStatus.max_tokens_remaining || whitelistStatus[1]
+    const maxTokensRemaining = toBigNumber(max_tokens_remaining)
 
-    return crowdsaleTokensRemaining.lt(maxSpendRemaining) ? crowdsaleTokensRemaining : maxSpendRemaining
+    return crowdsaleTokensRemaining.lt(maxTokensRemaining) ? crowdsaleTokensRemaining : maxTokensRemaining
   }
 }
 
@@ -359,11 +359,13 @@ const getRate = async (addr, execID, methods) => {
 
 const calculateMinContribution = async (method, decimals, naturalMinCap, isWhitelisted) => {
   //todo: update for Proxy
-  const { minimum_contribution, minimum_purchase_amt, max_spend_remaining } = await method.call()
+  const { minimum_contribution, minimum_purchase_amt, max_tokens_remaining, max_purchase_remaining } = await method.call()
   const minimumContribution = toBigNumber(minimum_contribution).times(`1e-${decimals}`)
   const minimumPurchaseAmt = toBigNumber(minimum_purchase_amt).times(`1e-${decimals}`)
-  const maximumContribution = toBigNumber(max_spend_remaining)
-  if (isWhitelisted && maximumContribution.eq(0)) {
+  //todo:
+  const maximumContributionDutch = toBigNumber(max_tokens_remaining).times(`1e-${decimals}`)
+  const maximumContributionMintedCapped = toBigNumber(max_purchase_remaining).times(`1e-${decimals}`)
+  if (isWhitelisted && maximumContributionDutch.eq(0) && maximumContributionMintedCapped.eq(0)) {
     return -1
   }
   return minimumContribution.gt(naturalMinCap) ? minimumContribution : minimumPurchaseAmt.gt(naturalMinCap) ? minimumPurchaseAmt : naturalMinCap
@@ -392,10 +394,10 @@ export const getUserMinLimits = async (addr, execID, methods, account) => {
   if (crowdsaleStore.isMintedCappedCrowdsale) {
     const { getCurrentTierInfo, getWhitelistStatus, getCrowdsaleInfo } = methods
     const currentTierInfo = await getCurrentTierInfo(...params).call()
-    const whitelist_enabled = currentTierInfo.whitelist_enabled || currentTierInfo[6]
+    const is_whitelisted = currentTierInfo.is_whitelisted || currentTierInfo[7]
     const tier_index = currentTierInfo.tier_index || currentTierInfo[1]
 
-    if (!whitelist_enabled) {
+    if (!is_whitelisted) {
       if (owner_balance.gt('0')) return naturalMinCap
       return calculateMinContribution(getCrowdsaleInfo(...params), token_decimals, naturalMinCap)
     } else {
@@ -404,10 +406,11 @@ export const getUserMinLimits = async (addr, execID, methods, account) => {
     return calculateMinContribution(getWhitelistStatus(...params, tier_index, account), token_decimals, naturalMinCap, isWhitelisted)
 
   } else if (crowdsaleStore.isDutchAuction) {
-    const { getCrowdsaleWhitelist, getWhitelistStatus, getCrowdsaleInfo } = methods
-    const { num_whitelisted } = await getCrowdsaleWhitelist(...params).call()
+    const { getCrowdsaleStatus, getWhitelistStatus, getCrowdsaleInfo } = methods
+    const crowdsaleStatus = await getCrowdsaleStatus(...params).call()
+    const is_whitelisted = crowdsaleStatus.is_whitelisted || crowdsaleStatus[6]
 
-    if (num_whitelisted === '0') {
+    if (!is_whitelisted) {
       if (owner_balance.gt('0')) return naturalMinCap
       return calculateMinContribution(getCrowdsaleInfo(...params), token_decimals, naturalMinCap)
     } else {

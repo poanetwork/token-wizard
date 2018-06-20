@@ -248,13 +248,13 @@ export class Manage extends Component {
             tier_data.tier_price = tier_data[2]
           }
           if (tier_data && !tier_data.hasOwnProperty('tier_duration')) {
-            tier_data.tier_duration = tier_data[3]
+            tier_data.tier_duration = tier_data[4]
           }
           if (tier_data && !tier_data.hasOwnProperty('duration_is_modifiable')) {
-            tier_data.duration_is_modifiable = tier_data[4]
+            tier_data.duration_is_modifiable = tier_data[5]
           }
-          if (tier_data && !tier_data.hasOwnProperty('whitelist_enabled')) {
-            tier_data.whitelist_enabled = tier_data[5]
+          if (tier_data && !tier_data.hasOwnProperty('is_whitelisted')) {
+            tier_data.is_whitelisted = tier_data[6]
           }
 
           let tier_dates = await getTierStartAndEndDates(...params, tier_num).call()
@@ -265,9 +265,9 @@ export class Manage extends Component {
             tier_dates.tier_end = tier_dates[1]
           }
 
-          if (tier_data.whitelist_enabled) {
+          if (tier_data.is_whitelisted) {
             let tierWhitelist
-            //todo
+            //todo: Proxy
             try {
               tierWhitelist = await getTierWhitelist(...params, tier_num).call()
             } catch(e) {
@@ -289,21 +289,21 @@ export class Manage extends Component {
               if (whitelistStatus && !whitelistStatus.hasOwnProperty('minimum_purchase_amt')) {
                 whitelistStatus.minimum_purchase_amt = whitelistStatus[0]
               }
-              if (whitelistStatus && !whitelistStatus.hasOwnProperty('max_spend_remaining')) {
-                whitelistStatus.max_spend_remaining = whitelistStatus[0]
+              if (whitelistStatus && !whitelistStatus.hasOwnProperty('max_tokens_remaining')) {
+                whitelistStatus.max_tokens_remaining = whitelistStatus[0]
               }
               const {
-                max_spend_remaining,
+                max_tokens_remaining,
                 minimum_purchase_amt: minimum_contribution
               } = whitelistStatus
 
-              if (max_spend_remaining > 0) {
+              if (max_tokens_remaining > 0) {
                 if (!tier_data.whitelist) tier_data.whitelist = []
 
                 tier_data.whitelist.push({
                   addr: whitelist_item_addr,
                   min: minimum_contribution,
-                  max: max_spend_remaining
+                  max: max_tokens_remaining
                 })
               }
             }
@@ -370,9 +370,7 @@ export class Manage extends Component {
       } else if (isDutchAuction) {
         const tier_data = await getCrowdsaleStatus(...params).call()
         if (tier_data && !tier_data.hasOwnProperty('is_whitelisted')) {
-          tier_data.whitelist_enabled = tier_data[6]
-        } else {
-          tier_data.whitelist_enabled = tier_data.is_whitelisted
+          tier_data.is_whitelisted = tier_data[6]
         }
         const tier_dates = await getCrowdsaleStartAndEndTimes(...params).call()
         const crowdsaleWhitelist = await getCrowdsaleWhitelist(...params).call()
@@ -380,20 +378,20 @@ export class Manage extends Component {
         const whitelist = crowdsaleWhitelist.whitelist || crowdsaleWhitelist[1]
         const tokens_sold = await getTokensSold(...params).call()
 
-        if (tier_data.whitelist_enabled) {
+        if (tier_data.is_whitelisted) {
           for (let whitelist_item_index = 0; whitelist_item_index < whitelist.length; whitelist_item_index++) {
             const whitelist_item_addr = whitelist[whitelist_item_index]
             const whitelistStatus = await getWhitelistStatus(...params, whitelist_item_addr).call()
-            const max_spend_remaining = whitelistStatus.max_spend_remaining || whitelistStatus[1]
+            const max_tokens_remaining = whitelistStatus.max_tokens_remaining || whitelistStatus[1]
             const minimum_contribution = whitelistStatus.minimum_purchase_amt || whitelistStatus[0]
 
-            if (max_spend_remaining > 0) {
+            if (max_tokens_remaining > 0) {
               if (!tier_data.whitelist) tier_data.whitelist = []
 
               tier_data.whitelist.push({
                 addr: whitelist_item_addr,
                 min: minimum_contribution,
-                max: max_spend_remaining
+                max: max_tokens_remaining
               })
             }
           }

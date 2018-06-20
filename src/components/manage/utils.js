@@ -162,7 +162,7 @@ const crowdsaleData = (tier, crowdsale, token, reserved_tokens_info) => {
     tokens_sold,
     whitelist,
     duration_is_modifiable,
-    whitelist_enabled
+    is_whitelisted
   } = tier
   let { tier_name } = tier
   try {
@@ -193,7 +193,7 @@ const crowdsaleData = (tier, crowdsale, token, reserved_tokens_info) => {
     name: isMintedCappedCrowdsale ? tier_name : '',
     updatable: isMintedCappedCrowdsale ? duration_is_modifiable : true,
     whitelist: whitelist || [],
-    whitelisted: whitelist_enabled,
+    whitelisted: is_whitelisted,
     finalized: is_finalized,
     crowdsale_token: {
       name: token_name,
