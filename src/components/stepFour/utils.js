@@ -455,7 +455,8 @@ const getTiersParams = (methodInterface) => {
   let tierNameArr = []
   let durationArr = []
   let minCapArr = []
-  tierStore.tiers.forEach((tier) => {
+  const tiersExceptFirst = tierStore.tiers.slice(1)
+  tiersExceptFirst.forEach((tier) => {
     const { updatable, whitelistEnabled, rate, supply, tier: tierName, startTime, endTime } = tier
     const duration = formatDate(endTime) - formatDate(startTime)
     const tierNameBytes = web3.utils.fromAscii(tierName)
