@@ -300,7 +300,7 @@ export const getUserMaxLimits = async (addr, execID, methods, account) => {
   if (crowdsaleStore.isMintedCappedCrowdsale) {
     const { getCurrentTierInfo, getWhitelistStatus, decimals } = methods
     const currentTierInfo = await getCurrentTierInfo(...params).call()
-    const whitelist_enabled = currentTierInfo.whitelist_enabled || currentTierInfo[7]
+    const is_whitelisted = currentTierInfo.is_whitelisted || currentTierInfo[7]
     const tier_tokens_remaining = currentTierInfo.tier_tokens_remaining || currentTierInfo[3]
     const tier_price = currentTierInfo.tier_price || currentTierInfo[4]
     const tier_index = currentTierInfo.tier_index || currentTierInfo[1]
@@ -309,7 +309,7 @@ export const getUserMaxLimits = async (addr, execID, methods, account) => {
     const currentRate = toBigNumber(tier_price).times(`1e-${token_decimals}`)
     const tierTokensRemaining = toBigNumber(tier_tokens_remaining).times(currentRate)
 
-    if (!whitelist_enabled) return tierTokensRemaining
+    if (!is_whitelisted) return tierTokensRemaining
 
     const whitelistStatus = await getWhitelistStatus(...params, tier_index, account).call()
     const max_spend_remaining = whitelistStatus.max_spend_remaining || whitelistStatus[1]
@@ -320,7 +320,7 @@ export const getUserMaxLimits = async (addr, execID, methods, account) => {
   } else if (crowdsaleStore.isDutchAuction) {
     const { getCrowdsaleStatus, getWhitelistStatus, decimals } = methods
     const crowdsaleStatus = await getCrowdsaleStatus(...params).call()
-    const whitelist_enabled = crowdsaleStatus.is_whitelisted || crowdsaleStatus[6]
+    const is_whitelisted = crowdsaleStatus.is_whitelisted || crowdsaleStatus[6]
     const current_rate = crowdsaleStatus.current_rate || crowdsaleStatus[2]
     const tokens_remaining = crowdsaleStatus.tokens_remaining || crowdsaleStatus[5]
     const token_decimals = await decimals(...params).call()
@@ -328,7 +328,7 @@ export const getUserMaxLimits = async (addr, execID, methods, account) => {
     const currentRate = toBigNumber(current_rate).times(`1e-${token_decimals}`)
     const crowdsaleTokensRemaining = toBigNumber(tokens_remaining).times(currentRate)
 
-    if (!whitelist_enabled) return crowdsaleTokensRemaining
+    if (!is_whitelisted) return crowdsaleTokensRemaining
 
     const whitelistStatus = await getWhitelistStatus(...params, account).call()
     const max_spend_remaining = whitelistStatus.max_spend_remaining || whitelistStatus[1]
