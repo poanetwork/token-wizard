@@ -66,7 +66,7 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
           {props.aboutTier}
           <div className="input-block-container">
             <Field
-              name="minCap"
+              name="tiers[0].minCap"
               component={InputField2}
               validate={composeValidators(
                 isNonNegative(),

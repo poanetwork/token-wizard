@@ -24,11 +24,12 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
   let methods = {
     startTime: isDutchAuction ? 'setCrowdsaleStartAndDuration' : null, // startTime is not changed after migration to Auth-os in MintedCappedCrowdsale strategy
     endTime: isMintedCappedCrowdsale ? 'updateTierDuration' : isDutchAuction ? 'setCrowdsaleStartAndDuration' : null,
-    whitelist: isMintedCappedCrowdsale ? 'whitelistMultiForTier' : isDutchAuction ? 'whitelistMulti' : null
+    whitelist: isMintedCappedCrowdsale ? 'whitelistMultiForTier' : isDutchAuction ? 'whitelistMulti' : null,
+    minCap: 'updateTierMinimum'
   }
 
   let crowdsaleStartTime
-  if (attribute === 'startTime' || attribute === 'endTime' || attribute === 'supply' || attribute === 'whitelist') {
+  if (attribute === 'startTime' || attribute === 'endTime' || attribute === 'supply' || attribute === 'whitelist' || attribute === 'minCap') {
     if (attribute === 'startTime') {
       let { startTime, endTime } = tierStore.tiers[tierIndex]
       crowdsaleStartTime = toFixed(parseInt(Date.parse(value) / 1000, 10).toString())
@@ -69,6 +70,8 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
         methodInterface = ["address[]","uint256[]","uint256[]"]
         getParams = updateWhitelistParams
       }
+    } else if (attribute === 'minCap') {
+      //todo: minCap
     }
   }
 
@@ -222,6 +225,7 @@ export const processTier = (tier, crowdsale, token, reserved_tokens_info, tier_i
     finalized,
     crowdsale_token
   } = crowdsaleData(tier, crowdsale, token, reserved_tokens_info)
+  console.log(crowdsaleData(tier, crowdsale, token, reserved_tokens_info))
   console.log("reserved_tokens_info:", crowdsale_token.reserved_accounts)
 
   const token_decimals = !isNaN(crowdsale_token.decimals) ? crowdsale_token.decimals : 0
@@ -287,7 +291,7 @@ export const processTier = (tier, crowdsale, token, reserved_tokens_info, tier_i
 }
 
 export function getFieldsToUpdate(updatableTiers, tiers) {
-  const keys = Object.keys(updatableTiers[0]).filter(key => key === 'endTime' || key === 'whitelist')
+  const keys = Object.keys(updatableTiers[0]).filter(key => key === 'endTime' || key === 'whitelist' || key === 'minCap')
 
   return updatableTiers
     .reduce((toUpdate, updatableTier, index) => {

@@ -61,7 +61,7 @@ export class stepThree extends React.Component {
     const reservedCount = reservedTokenStore.tokens.length
     const hasWhitelist = tierStore.tiers.some((tier) => { return tier.whitelistEnabled === 'yes' })
 
-    deploymentStore.initialize(!!reservedCount, hasWhitelist, tierStore.tiers, tierStore.globalMinCap)
+    deploymentStore.initialize(!!reservedCount, hasWhitelist, tierStore.tiers)
 
     getNetworkVersion()
       .then(networkID => {
@@ -119,7 +119,6 @@ export class stepThree extends React.Component {
           decorators={[this.calculator]}
           initialValues={{
             walletAddress: web3Store.curAddress,
-            minCap: 0,
             gasPrice: gasPriceStore.gasPricesInGwei[0],
             whitelistEnabled: "no",
             tiers: this.initialTiers
@@ -134,8 +133,11 @@ export class stepThree extends React.Component {
           validate={(values) => {
             const errors = {}
             const maxSupply = tierStore.maxSupply
+            const minCapFromValues = values.tiers.reduce((sum, tier) => {
+              return sum + Number(tier.minCap)
+            }, 0)
             const minCap = maxSupply !== 0
-              ? isLessOrEqualThan('Should be less or equal than the supply of some tier')(maxSupply)(values.minCap)
+              ? isLessOrEqualThan('Should be less or equal than the supply of some tier')(maxSupply)(minCapFromValues)
               : undefined
 
             if (minCap) errors.minCap = minCap

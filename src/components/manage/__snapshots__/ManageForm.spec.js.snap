@@ -24,7 +24,6 @@ exports[`ManageForm should render for Dutch Auction 1`] = `
   }
   tierStore={
     TierStore {
-      "globalMinCap": "",
       "tiers": Array [],
       "validTiers": Array [],
     }
@@ -80,7 +79,6 @@ exports[`ManageForm should render for Dutch Auction 1`] = `
         handleChange={[Function]}
         initialValues={
           Object {
-            "minCap": 0,
             "tiers": Array [],
           }
         }
@@ -156,7 +154,6 @@ exports[`ManageForm should render for Dutch Auction 1`] = `
           hasValidationErrors={false}
           initialValues={
             Object {
-              "minCap": 0,
               "tiers": Array [],
             }
           }
@@ -184,7 +181,6 @@ exports[`ManageForm should render for Dutch Auction 1`] = `
           validating={false}
           values={
             Object {
-              "minCap": 0,
               "tiers": Array [],
             }
           }
@@ -268,7 +264,6 @@ exports[`ManageForm should render for Dutch Auction 1`] = `
             hasValidationErrors={false}
             initialValues={
               Object {
-                "minCap": 0,
                 "tiers": Array [],
               }
             }
@@ -310,7 +305,6 @@ exports[`ManageForm should render for Dutch Auction 1`] = `
             validating={false}
             values={
               Object {
-                "minCap": 0,
                 "tiers": Array [],
               }
             }
@@ -347,10 +341,10 @@ exports[`ManageForm should render the component with tiers 1`] = `
   }
   tierStore={
     TierStore {
-      "globalMinCap": "",
       "tiers": Array [
         Object {
           "endTime": "2018-04-17T00:00",
+          "minCap": "0",
           "rate": "123",
           "startTime": "2018-04-13T16:07",
           "supply": "132",
@@ -387,6 +381,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
         },
         Object {
           "endTime": "2018-04-21T00:00",
+          "minCap": "0",
           "rate": "55",
           "startTime": "2018-04-17T00:00",
           "supply": "156",
@@ -525,7 +520,6 @@ exports[`ManageForm should render the component with tiers 1`] = `
         handleChange={[Function]}
         initialValues={
           Object {
-            "minCap": 0,
             "tiers": Array [
               Object {
                 "addresses": Object {
@@ -535,6 +529,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                 "endTime": "2018-04-17T00:00",
                 "index": "0",
                 "isWhitelisted": "yes",
+                "minCap": "0",
                 "rate": "123",
                 "startTime": "2018-04-13T16:07",
                 "supply": "132",
@@ -575,6 +570,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                 "endTime": "2018-04-21T00:00",
                 "index": "1",
                 "isWhitelisted": "yes",
+                "minCap": "0",
                 "rate": "55",
                 "startTime": "2018-04-17T00:00",
                 "supply": "156",
@@ -677,7 +673,9 @@ exports[`ManageForm should render the component with tiers 1`] = `
           errors={
             Object {
               "minCap": Array [
+                "Please enter a valid number greater or equal than 0",
                 "Decimals should not exceed the amount of decimals specified",
+                "Should be less than or equal to 132",
               ],
               "tiers": undefined,
             }
@@ -719,7 +717,6 @@ exports[`ManageForm should render the component with tiers 1`] = `
           hasValidationErrors={true}
           initialValues={
             Object {
-              "minCap": 0,
               "tiers": Array [
                 Object {
                   "addresses": Object {
@@ -729,6 +726,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                   "endTime": "2018-04-17T00:00",
                   "index": "0",
                   "isWhitelisted": "yes",
+                  "minCap": "0",
                   "rate": "123",
                   "startTime": "2018-04-13T16:07",
                   "supply": "132",
@@ -769,6 +767,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                   "endTime": "2018-04-21T00:00",
                   "index": "1",
                   "isWhitelisted": "yes",
+                  "minCap": "0",
                   "rate": "55",
                   "startTime": "2018-04-17T00:00",
                   "supply": "156",
@@ -871,7 +870,6 @@ exports[`ManageForm should render the component with tiers 1`] = `
           validating={false}
           values={
             Object {
-              "minCap": 0,
               "tiers": Array [
                 Object {
                   "addresses": Object {
@@ -881,6 +879,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                   "endTime": "2018-04-17T00:00",
                   "index": "0",
                   "isWhitelisted": "yes",
+                  "minCap": "0",
                   "rate": "123",
                   "startTime": "2018-04-13T16:07",
                   "supply": "132",
@@ -921,6 +920,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                   "endTime": "2018-04-21T00:00",
                   "index": "1",
                   "isWhitelisted": "yes",
+                  "minCap": "0",
                   "rate": "55",
                   "startTime": "2018-04-17T00:00",
                   "supply": "156",
@@ -1038,7 +1038,9 @@ exports[`ManageForm should render the component with tiers 1`] = `
             errors={
               Object {
                 "minCap": Array [
+                  "Please enter a valid number greater or equal than 0",
                   "Decimals should not exceed the amount of decimals specified",
+                  "Should be less than or equal to 132",
                 ],
                 "tiers": undefined,
               }
@@ -1086,7 +1088,6 @@ exports[`ManageForm should render the component with tiers 1`] = `
             hasValidationErrors={true}
             initialValues={
               Object {
-                "minCap": 0,
                 "tiers": Array [
                   Object {
                     "addresses": Object {
@@ -1096,6 +1097,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                     "endTime": "2018-04-17T00:00",
                     "index": "0",
                     "isWhitelisted": "yes",
+                    "minCap": "0",
                     "rate": "123",
                     "startTime": "2018-04-13T16:07",
                     "supply": "132",
@@ -1136,6 +1138,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                     "endTime": "2018-04-21T00:00",
                     "index": "1",
                     "isWhitelisted": "yes",
+                    "minCap": "0",
                     "rate": "55",
                     "startTime": "2018-04-17T00:00",
                     "supply": "156",
@@ -1252,7 +1255,6 @@ exports[`ManageForm should render the component with tiers 1`] = `
             validating={false}
             values={
               Object {
-                "minCap": 0,
                 "tiers": Array [
                   Object {
                     "addresses": Object {
@@ -1262,6 +1264,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                     "endTime": "2018-04-17T00:00",
                     "index": "0",
                     "isWhitelisted": "yes",
+                    "minCap": "0",
                     "rate": "123",
                     "startTime": "2018-04-13T16:07",
                     "supply": "132",
@@ -1302,6 +1305,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                     "endTime": "2018-04-21T00:00",
                     "index": "1",
                     "isWhitelisted": "yes",
+                    "minCap": "0",
                     "rate": "55",
                     "startTime": "2018-04-17T00:00",
                     "supply": "156",
@@ -1430,7 +1434,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                   >
                     <Field
                       component={[Function]}
-                      disabled={false}
+                      disabled={true}
                       errorStyle={
                         Object {
                           "color": "red",
@@ -1447,10 +1451,9 @@ exports[`ManageForm should render the component with tiers 1`] = `
                       side="left"
                       type="number"
                       validate={[Function]}
-                      value={0}
                     >
                       <InputField2
-                        disabled={false}
+                        disabled={true}
                         errorStyle={
                           Object {
                             "color": "red",
@@ -1466,7 +1469,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                             "onBlur": [Function],
                             "onChange": [Function],
                             "onFocus": [Function],
-                            "value": 0,
+                            "value": "",
                           }
                         }
                         label="Contributor min cap"
@@ -1477,9 +1480,11 @@ exports[`ManageForm should render the component with tiers 1`] = `
                             "dirty": false,
                             "dirtySinceLastSubmit": false,
                             "error": Array [
+                              "Please enter a valid number greater or equal than 0",
                               "Decimals should not exceed the amount of decimals specified",
+                              "Should be less than or equal to 132",
                             ],
-                            "initial": 0,
+                            "initial": undefined,
                             "invalid": true,
                             "pristine": true,
                             "submitError": undefined,
@@ -1505,14 +1510,14 @@ exports[`ManageForm should render the component with tiers 1`] = `
                           <input
                             autoComplete="off"
                             className="input"
-                            disabled={false}
+                            disabled={true}
                             id="minCap"
                             name="minCap"
                             onBlur={[Function]}
                             onChange={[Function]}
                             onFocus={[Function]}
                             type="number"
-                            value={0}
+                            value=""
                           />
                           <p
                             className="description"
@@ -1546,6 +1551,32 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                 <p
                                   className="error"
                                   key="0"
+                                  style={
+                                    Object {
+                                      "color": "red",
+                                      "fontSize": "12px",
+                                      "fontWeight": "bold",
+                                      "height": "20px",
+                                      "width": "100%",
+                                    }
+                                  }
+                                />
+                                <p
+                                  className="error"
+                                  key="1"
+                                  style={
+                                    Object {
+                                      "color": "red",
+                                      "fontSize": "12px",
+                                      "fontWeight": "bold",
+                                      "height": "20px",
+                                      "width": "100%",
+                                    }
+                                  }
+                                />
+                                <p
+                                  className="error"
+                                  key="2"
                                   style={
                                     Object {
                                       "color": "red",
@@ -1624,7 +1655,9 @@ exports[`ManageForm should render the component with tiers 1`] = `
                   errors={
                     Object {
                       "minCap": Array [
+                        "Please enter a valid number greater or equal than 0",
                         "Decimals should not exceed the amount of decimals specified",
+                        "Should be less than or equal to 132",
                       ],
                       "tiers": undefined,
                     }
@@ -1649,6 +1682,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                           "endTime": "2018-04-17T00:00",
                           "index": "0",
                           "isWhitelisted": "yes",
+                          "minCap": "0",
                           "rate": "123",
                           "startTime": "2018-04-13T16:07",
                           "supply": "132",
@@ -1689,6 +1723,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                           "endTime": "2018-04-21T00:00",
                           "index": "1",
                           "isWhitelisted": "yes",
+                          "minCap": "0",
                           "rate": "55",
                           "startTime": "2018-04-17T00:00",
                           "supply": "156",
@@ -1779,6 +1814,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                           "endTime": "2018-04-17T00:00",
                           "index": "0",
                           "isWhitelisted": "yes",
+                          "minCap": "0",
                           "rate": "123",
                           "startTime": "2018-04-13T16:07",
                           "supply": "132",
@@ -1819,6 +1855,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                           "endTime": "2018-04-21T00:00",
                           "index": "1",
                           "isWhitelisted": "yes",
+                          "minCap": "0",
                           "rate": "55",
                           "startTime": "2018-04-17T00:00",
                           "supply": "156",
@@ -1920,7 +1957,6 @@ exports[`ManageForm should render the component with tiers 1`] = `
                   hasValidationErrors={true}
                   initialValues={
                     Object {
-                      "minCap": 0,
                       "tiers": Array [
                         Object {
                           "addresses": Object {
@@ -1930,6 +1966,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                           "endTime": "2018-04-17T00:00",
                           "index": "0",
                           "isWhitelisted": "yes",
+                          "minCap": "0",
                           "rate": "123",
                           "startTime": "2018-04-13T16:07",
                           "supply": "132",
@@ -1970,6 +2007,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                           "endTime": "2018-04-21T00:00",
                           "index": "1",
                           "isWhitelisted": "yes",
+                          "minCap": "0",
                           "rate": "55",
                           "startTime": "2018-04-17T00:00",
                           "supply": "156",
@@ -2071,7 +2109,6 @@ exports[`ManageForm should render the component with tiers 1`] = `
                   validating={false}
                   values={
                     Object {
-                      "minCap": 0,
                       "tiers": Array [
                         Object {
                           "addresses": Object {
@@ -2081,6 +2118,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                           "endTime": "2018-04-17T00:00",
                           "index": "0",
                           "isWhitelisted": "yes",
+                          "minCap": "0",
                           "rate": "123",
                           "startTime": "2018-04-13T16:07",
                           "supply": "132",
@@ -2121,6 +2159,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                           "endTime": "2018-04-21T00:00",
                           "index": "1",
                           "isWhitelisted": "yes",
+                          "minCap": "0",
                           "rate": "55",
                           "startTime": "2018-04-17T00:00",
                           "supply": "156",
@@ -2236,7 +2275,9 @@ exports[`ManageForm should render the component with tiers 1`] = `
                     errors={
                       Object {
                         "minCap": Array [
+                          "Please enter a valid number greater or equal than 0",
                           "Decimals should not exceed the amount of decimals specified",
+                          "Should be less than or equal to 132",
                         ],
                         "tiers": undefined,
                       }
@@ -2261,6 +2302,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                             "endTime": "2018-04-17T00:00",
                             "index": "0",
                             "isWhitelisted": "yes",
+                            "minCap": "0",
                             "rate": "123",
                             "startTime": "2018-04-13T16:07",
                             "supply": "132",
@@ -2301,6 +2343,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                             "endTime": "2018-04-21T00:00",
                             "index": "1",
                             "isWhitelisted": "yes",
+                            "minCap": "0",
                             "rate": "55",
                             "startTime": "2018-04-17T00:00",
                             "supply": "156",
@@ -2391,6 +2434,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                             "endTime": "2018-04-17T00:00",
                             "index": "0",
                             "isWhitelisted": "yes",
+                            "minCap": "0",
                             "rate": "123",
                             "startTime": "2018-04-13T16:07",
                             "supply": "132",
@@ -2431,6 +2475,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                             "endTime": "2018-04-21T00:00",
                             "index": "1",
                             "isWhitelisted": "yes",
+                            "minCap": "0",
                             "rate": "55",
                             "startTime": "2018-04-17T00:00",
                             "supply": "156",
@@ -2532,7 +2577,6 @@ exports[`ManageForm should render the component with tiers 1`] = `
                     hasValidationErrors={true}
                     initialValues={
                       Object {
-                        "minCap": 0,
                         "tiers": Array [
                           Object {
                             "addresses": Object {
@@ -2542,6 +2586,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                             "endTime": "2018-04-17T00:00",
                             "index": "0",
                             "isWhitelisted": "yes",
+                            "minCap": "0",
                             "rate": "123",
                             "startTime": "2018-04-13T16:07",
                             "supply": "132",
@@ -2582,6 +2627,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                             "endTime": "2018-04-21T00:00",
                             "index": "1",
                             "isWhitelisted": "yes",
+                            "minCap": "0",
                             "rate": "55",
                             "startTime": "2018-04-17T00:00",
                             "supply": "156",
@@ -2697,7 +2743,6 @@ exports[`ManageForm should render the component with tiers 1`] = `
                     validating={false}
                     values={
                       Object {
-                        "minCap": 0,
                         "tiers": Array [
                           Object {
                             "addresses": Object {
@@ -2707,6 +2752,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                             "endTime": "2018-04-17T00:00",
                             "index": "0",
                             "isWhitelisted": "yes",
+                            "minCap": "0",
                             "rate": "123",
                             "startTime": "2018-04-13T16:07",
                             "supply": "132",
@@ -2747,6 +2793,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                             "endTime": "2018-04-21T00:00",
                             "index": "1",
                             "isWhitelisted": "yes",
+                            "minCap": "0",
                             "rate": "55",
                             "startTime": "2018-04-17T00:00",
                             "supply": "156",
@@ -4217,7 +4264,6 @@ exports[`ManageForm should render the component without tiers 1`] = `
   }
   tierStore={
     TierStore {
-      "globalMinCap": "",
       "tiers": Array [],
       "validTiers": Array [],
     }
@@ -4273,7 +4319,6 @@ exports[`ManageForm should render the component without tiers 1`] = `
         handleChange={[Function]}
         initialValues={
           Object {
-            "minCap": 0,
             "tiers": Array [],
           }
         }
@@ -4349,7 +4394,6 @@ exports[`ManageForm should render the component without tiers 1`] = `
           hasValidationErrors={false}
           initialValues={
             Object {
-              "minCap": 0,
               "tiers": Array [],
             }
           }
@@ -4377,7 +4421,6 @@ exports[`ManageForm should render the component without tiers 1`] = `
           validating={false}
           values={
             Object {
-              "minCap": 0,
               "tiers": Array [],
             }
           }
@@ -4461,7 +4504,6 @@ exports[`ManageForm should render the component without tiers 1`] = `
             hasValidationErrors={false}
             initialValues={
               Object {
-                "minCap": 0,
                 "tiers": Array [],
               }
             }
@@ -4503,7 +4545,6 @@ exports[`ManageForm should render the component without tiers 1`] = `
             validating={false}
             values={
               Object {
-                "minCap": 0,
                 "tiers": Array [],
               }
             }

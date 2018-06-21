@@ -187,8 +187,9 @@ export class stepFour extends React.Component {
       case 'crowdsaleStore':
         return handlerForFile(content, this.props[parent])
       case 'tierStore': {
-        if (content.field === 'globalMinCap') {
-          return handlerForFile(content, this.props[parent])
+        if (content.field === 'minCap') {
+          index = (content.field === 'minCap') ? 0 : index
+          return handlerForFile(content, this.props[parent].tiers[index])
         } else {
           index = (content.field === 'walletAddress') ? 0 : index
           return handlerForFile(content, this.props[parent].tiers[index])
@@ -345,7 +346,7 @@ export class stepFour extends React.Component {
 
     // Publish page: Crowdsale setup block
     const crowdsaleSetupBlock = () => {
-      const { tiers, globalMinCap } = tierStore
+      const { tiers } = tierStore
       const firstTier = tiers[0]
       const { walletAddress, startTime } = firstTier
       const crowdsaleStartTimeStr = startTime ? startTime.split('T').join(' ') : ''
@@ -353,7 +354,6 @@ export class stepFour extends React.Component {
       const crowdsaleEndTimeStr = tiers[lasTierInd].endTime ? tiers[lasTierInd].endTime.split('T').join(' ') : ''
       const {
         WALLET_ADDRESS: PD_WALLET_ADDRESS,
-        GLOBAL_MIN_CAP: PD_GLOBAL_MIN_CAP,
         CROWDSALE_START_TIME: PD_CROWDSALE_START_TIME,
         CROWDSALE_END_TIME: PD_CROWDSALE_END_TIME
       } = PUBLISH_DESCRIPTION
@@ -361,7 +361,6 @@ export class stepFour extends React.Component {
         <div className='hidden'>
           <div className='hidden'>
             <DisplayField side='left' title={WALLET_ADDRESS} value={walletAddress} description={PD_WALLET_ADDRESS} />
-            <DisplayField side='right' title={GLOBAL_MIN_CAP} value={globalMinCap} description={PD_GLOBAL_MIN_CAP} />
           </div>
           <div className='hidden'>
             <DisplayField side='left' title={CROWDSALE_START_TIME} value={crowdsaleStartTimeStr} description={PD_CROWDSALE_START_TIME} />
@@ -373,7 +372,7 @@ export class stepFour extends React.Component {
 
     // Publish page: Tiers setup block
     const tiersSetupBlock = tierStore.tiers.map((tier, index) => {
-      const { rate, minRate, maxRate, startTime, endTime, updatable, whitelistEnabled, supply, tier: tierName } = tier
+      const { rate, minRate, maxRate, startTime, endTime, updatable, whitelistEnabled, supply, tier: tierName, minCap } = tier
       const {
         RATE: D_RATE,
         ALLOW_MODIFYING: D_ALLOW_MODIFYING
@@ -381,6 +380,7 @@ export class stepFour extends React.Component {
       const {
         TIER_START_TIME: PD_TIER_START_TIME,
         TIER_END_TIME: PD_TIER_END_TIME,
+        GLOBAL_MIN_CAP: PD_GLOBAL_MIN_CAP,
         HARD_CAP: PD_HARD_CAP,
         ENABLE_WHITELISTING: PD_ENABLE_WHITELISTING
       } = PUBLISH_DESCRIPTION
@@ -419,6 +419,9 @@ export class stepFour extends React.Component {
             <div className='hidden'>
               <DisplayField side='left' title={MAX_CAP} value={tierSupplyStr} description={PD_HARD_CAP} />
               <DisplayField side='right' title={ENABLE_WHITELISTING} value={tierIsWhitelisted} description={PD_ENABLE_WHITELISTING} />
+            </div>
+            <div className='hidden'>
+              <DisplayField side='left' title={GLOBAL_MIN_CAP} value={minCap} description={PD_GLOBAL_MIN_CAP} />
             </div>
           </div>
         </div>

@@ -3,12 +3,17 @@ import { Field } from 'react-final-form'
 import { OnChange } from 'react-final-form-listeners'
 import { InputField2 } from './InputField2'
 import { WhitelistInputBlock } from './WhitelistInputBlock'
-import { composeValidators, isRequired, isMaxLength } from '../../utils/validations'
+import {
+  composeValidators,
+  isRequired,
+  isMaxLength,
+} from '../../utils/validations'
 import { DESCRIPTION, TEXT_FIELDS } from '../../utils/constants'
 import { CrowdsaleStartTime } from './CrowdsaleStartTime'
 import { CrowdsaleEndTime } from './CrowdsaleEndTime'
 import { CrowdsaleRate } from './CrowdsaleRate'
 import { Supply } from './Supply'
+import { GlobalMinCap } from './GlobalMinCap'
 
 const { ALLOW_MODIFYING, CROWDSALE_SETUP_NAME, ENABLE_WHITELISTING } = TEXT_FIELDS
 
@@ -135,18 +140,28 @@ export const TierBlock = ({ fields, ...props }) => {
                 errorStyle={inputErrorStyle}
                 side="right"
               />
+            </div>
+            <div className="input-block-container">
+              <GlobalMinCap
+                name={`${name}.minCap`}
+                errorStyle={inputErrorStyle}
+                decimals={props.decimals}
+                tierStore={props.tierStore}
+                disabled={props.tierStore ? props.tierStore.tiers[index].whitelistEnabled === 'yes' : true}
+                side="left"
+              />
               {
                 /*
                   * TODO: REVIEW. I'm not sure about this approach.
                   * But it worked for me to keep the error messages properly updated for the minCap field.
                   */
               }
-              <Field name="minCap" subscription={{}}>
+              <Field name={`${name}.minCap`} subscription={{}}>
                 {({ input: { onChange } }) => (
                   <OnChange name={`${name}.supply`}>
                     {() => {
                       onChange(0)
-                      onChange(props.minCap)
+                      onChange(props.tierStore.tiers[index].minCap)
                     }}
                   </OnChange>
                 )}

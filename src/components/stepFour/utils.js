@@ -32,7 +32,6 @@ export const buildDeploymentSteps = (web3) => {
     crowdsaleCreate: deployCrowdsale,
     token: initializeToken,
     setReservedTokens: setReservedTokensListMultiple,
-    updateGlobalMinContribution,
     createCrowdsaleTiers,
     whitelist: addWhitelist,
     crowdsaleInit: initializeCrowdsale,
@@ -122,7 +121,7 @@ const getCrowdSaleParams = (account, methodInterface) => {
   const supplyBN = toBigNumber(supply).times(`1e${tokenStore.decimals}`).toFixed()
 
   //tier 0 global min cap
-  const globalMinCapBN = toBigNumber(tierStore.globalMinCap).toFixed()
+  const minCapBN = toBigNumber(tierStore.tiers[0].minCap).times(`1e${tokenStore.decimals}`).toFixed()
 
   let crowdsaleParams = [
     walletAddress,
@@ -131,7 +130,7 @@ const getCrowdSaleParams = (account, methodInterface) => {
     oneTokenInWEI,
     durationBN,
     supplyBN,
-    globalMinCapBN,
+    minCapBN,
     isWhitelisted,
     isUpdatable,
     account
@@ -455,8 +454,9 @@ const getTiersParams = (methodInterface) => {
   let supplyArr = []
   let tierNameArr = []
   let durationArr = []
-  let globalMinCapArr = []
-  tierStore.tiers.forEach((tier) => {
+  let minCapArr = []
+  const tiersExceptFirst = tierStore.tiers.slice(1)
+  tiersExceptFirst.forEach((tier) => {
     const { updatable, whitelistEnabled, rate, supply, tier: tierName, startTime, endTime } = tier
     const duration = formatDate(endTime) - formatDate(startTime)
     const tierNameBytes = web3.utils.fromAscii(tierName)
@@ -467,7 +467,7 @@ const getTiersParams = (methodInterface) => {
     tierNameArr.push(encodedTierName)
     rateArr.push(web3.utils.toWei(oneTokenInETH, 'ether'))
     supplyArr.push(toBigNumber(supply).times(`1e${tokenStore.decimals}`).toFixed())
-    globalMinCapArr.push(toBigNumber(tierStore.globalMinCap).toFixed())
+    minCapArr.push(toBigNumber(tier.minCap).toFixed())
     updatableArr.push(updatable === 'on')
     whitelistEnabledArr.push(whitelistEnabled === 'yes')
   })
@@ -476,7 +476,7 @@ const getTiersParams = (methodInterface) => {
     durationArr,
     rateArr,
     supplyArr,
-    globalMinCapArr,
+    minCapArr,
     updatableArr,
     whitelistEnabledArr
   ]
@@ -600,33 +600,35 @@ export const addWhitelist = () => {
   })
 }
 
-const getUpdateGlobalMinCapParams = (methodInterface) => {
+const getUpdateTierMinimumParams = (tierIndex, methodInterface) => {
   const { web3 } = web3Store
-  let globalMinCap = toBigNumber(tierStore.globalMinCap).times(`1e${tokenStore.decimals}`).toFixed()
+  const minCap = toBigNumber(tierStore.tiers[tierIndex].minCap).times(`1e${tokenStore.decimals}`).toFixed()
 
-  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [globalMinCap]);
+  const encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [tierIndex, minCap]);
   return encodedParameters;
 }
 
-export const updateGlobalMinContribution = () => {
-  return [() => {
-    console.log('###updateGlobalMinContribution:###')
+export const updateTierMinimum = () => {
+  return tierStore.tiers.map((tier, index) => {
+    return () => {
+      console.log('###updateTierMinimum:###')
 
-    const methodInterface = ["uint256"]
+      const methodInterface = ["uint256","uint256"]
 
-    let paramsToExec = [methodInterface]
-    const method = methodToExec("registryExec", `updateGlobalMinContribution(${methodInterface.join(',')})`, getUpdateGlobalMinCapParams, paramsToExec)
+      let paramsToExec = [index, methodInterface]
+      const method = methodToExec("registryExec", `updateTierMinimum(${methodInterface.join(',')})`, getUpdateTierMinimumParams, paramsToExec)
 
-    let account = contractStore.crowdsale.account;
-    const opts = { gasPrice: generalStore.gasPrice, from: account }
+      let account = contractStore.crowdsale.account;
+      const opts = { gasPrice: generalStore.gasPrice, from: account }
 
-    return method.estimateGas(opts)
-      .then(estimatedGas => {
-        opts.gasLimit = calculateGasLimit(estimatedGas)
-        return sendTXToContract(method.send(opts))
-      })
-      .then(() => deploymentStore.setAsSuccessful('updateGlobalMinContribution'))
-  }]
+      return method.estimateGas(opts)
+        .then(estimatedGas => {
+          opts.gasLimit = calculateGasLimit(estimatedGas)
+          return sendTXToContract(method.send(opts))
+        })
+        .then(() => deploymentStore.setAsSuccessful('updateTierMinimum'))
+    }
+  })
 }
 
 export const handlerForFile = (content, type) => {
@@ -853,12 +855,12 @@ const reservedTokensHeaderTableElements = () => {
 }
 
 export const SUMMARY_FILE_CONTENTS = (networkID) => {
-  let globalMinCapEl = []
+  let minCapEl = []
   let crowdsaleWhitelistElements = []
   let tierWhitelistElements = []
   if (tierStore.tiers.every((tier) => { return tier.whitelistEnabled !== "yes" })) {
-    globalMinCapEl = [
-      { field: 'globalMinCap', value: 'Crowdsale global min cap: ', parent: 'tierStore' }
+    minCapEl = [
+      { field: 'minCap', value: 'Crowdsale global min cap: ', parent: 'tierStore' }
     ]
   } else {
     tierWhitelistElements = [
@@ -922,7 +924,7 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
       ...bigHeaderElements('*******CROWDSALE SETUP*******'),
       { field: 'walletAddress', value: 'Multisig wallet address: ', parent: 'tierStore' },
       ...rates,
-      ...globalMinCapEl,
+      ...minCapEl,
       { field: 'supply', value: 'Crowdsale hard cap: ', parent: 'crowdsaleStore' },
       { field: 'startTime', value: 'Crowdsale start time: ', parent: 'tierStore' },
       { field: 'endTime', value: 'Crowdsale end time: ', parent: 'crowdsaleStore' },

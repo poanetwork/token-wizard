@@ -9,11 +9,6 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
       className="steps-content container"
     >
       <div
-        id="about_tier"
-      >
-        About Tier
-      </div>
-      <div
         className="hidden divisor"
       >
         <div
@@ -37,42 +32,6 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               style={undefined}
               type="text"
               value="Tier 1"
-            />
-            <p
-              className="description"
-            />
-            <p
-              style={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "10px",
-                  "width": "100%",
-                }
-              }
-            >
-              
-            </p>
-          </div>
-          <div
-            className="right"
-          >
-            <label
-              className="label"
-            >
-              Wallet Address
-            </label>
-            <input
-              className="input"
-              disabled={true}
-              onBlur={undefined}
-              onChange={undefined}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              style={undefined}
-              type="text"
-              value="0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1"
             />
             <p
               className="description"
@@ -406,42 +365,6 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               style={undefined}
               type="text"
               value="Tier 2"
-            />
-            <p
-              className="description"
-            />
-            <p
-              style={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "10px",
-                  "width": "100%",
-                }
-              }
-            >
-              
-            </p>
-          </div>
-          <div
-            className="right"
-          >
-            <label
-              className="label"
-            >
-              Wallet Address
-            </label>
-            <input
-              className="input"
-              disabled={true}
-              onBlur={undefined}
-              onChange={undefined}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              style={undefined}
-              type="text"
-              value="0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1"
             />
             <p
               className="description"
@@ -652,11 +575,6 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
       className="steps-content container"
     >
       <div
-        id="about_tier"
-      >
-        About Tier
-      </div>
-      <div
         className="hidden divisor"
       >
         <div
@@ -680,42 +598,6 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               style={undefined}
               type="text"
               value="Tier 1"
-            />
-            <p
-              className="description"
-            />
-            <p
-              style={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "10px",
-                  "width": "100%",
-                }
-              }
-            >
-              
-            </p>
-          </div>
-          <div
-            className="right"
-          >
-            <label
-              className="label"
-            >
-              Wallet Address
-            </label>
-            <input
-              className="input"
-              disabled={true}
-              onBlur={undefined}
-              onChange={undefined}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              style={undefined}
-              type="text"
-              value="0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1"
             />
             <p
               className="description"
@@ -1049,42 +931,6 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               style={undefined}
               type="text"
               value="Tier 2"
-            />
-            <p
-              className="description"
-            />
-            <p
-              style={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "10px",
-                  "width": "100%",
-                }
-              }
-            >
-              
-            </p>
-          </div>
-          <div
-            className="right"
-          >
-            <label
-              className="label"
-            >
-              Wallet Address
-            </label>
-            <input
-              className="input"
-              disabled={true}
-              onBlur={undefined}
-              onChange={undefined}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              style={undefined}
-              type="text"
-              value="0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1"
             />
             <p
               className="description"

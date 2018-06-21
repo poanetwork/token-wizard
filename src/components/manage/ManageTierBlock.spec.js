@@ -7,6 +7,7 @@ import { configure } from 'enzyme'
 import MockDate from 'mockdate'
 import { ManageTierBlock } from './ManageTierBlock'
 import CrowdsaleStore from '../../stores/CrowdsaleStore'
+import TokenStore from '../../stores/TokenStore'
 import { CROWDSALE_STRATEGIES } from '../../utils/constants'
 
 const DATE = {
@@ -36,7 +37,8 @@ const initialTiers = [{
   tier: "Tier 1",
   whitelistEnabled: "yes",
   supply: "132",
-  rate: "123"
+  rate: "123",
+  minCap: "0"
 }, {
   whitelist: [
     { addr: "0x1dF62f291b2E969fB0849d99D9Ce41e2F137006e", min: 1234, max: 50505, stored: true },
@@ -55,7 +57,8 @@ const initialTiers = [{
   updatable: false,
   tier: "Tier 2",
   supply: "156",
-  rate: "55"
+  rate: "55",
+  minCap: "0"
 }]
 
 configure({ adapter: new Adapter() })
@@ -63,6 +66,7 @@ configure({ adapter: new Adapter() })
 describe('ManageTierBlock', () => {
   it('should render the ManageTierBlock component with tiers for Minted Capped Crowdsale', () => {
     const crowdsaleStore = new CrowdsaleStore()
+    const tokenStore = new TokenStore()
     crowdsaleStore.setProperty('strategy', CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE)
 
     MockDate.set(DATE.TIER_0.ACTIVE)
@@ -79,7 +83,8 @@ describe('ManageTierBlock', () => {
       fields: fields,
       canEditTiers: false,
       aboutTier: <div id='about_tier'>About Tier</div>,
-      crowdsaleStore: crowdsaleStore
+      crowdsaleStore: crowdsaleStore,
+      tokenStore: tokenStore
     }
 
     expect(renderer.create(
@@ -96,6 +101,7 @@ describe('ManageTierBlock', () => {
 
   it('should render the ManageTierBlock component with tiers for Dutch Auction Crowdsale', () => {
     const crowdsaleStore = new CrowdsaleStore()
+    const tokenStore = new TokenStore()
     crowdsaleStore.setProperty('strategy', CROWDSALE_STRATEGIES.DUTCH_AUCTION)
 
     MockDate.set(DATE.TIER_0.ACTIVE)
@@ -112,7 +118,8 @@ describe('ManageTierBlock', () => {
       fields: fields,
       canEditTiers: false,
       aboutTier: <div id='about_tier'>About Tier</div>,
-      crowdsaleStore: crowdsaleStore
+      crowdsaleStore: crowdsaleStore,
+      tokenStore: tokenStore
     }
 
     expect(renderer.create(

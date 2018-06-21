@@ -15,7 +15,6 @@ class TierStore {
 
   @observable tiers
   @observable validTiers
-  @observable globalMinCap = ''
 
   constructor() {
     this.reset()
@@ -25,10 +24,6 @@ class TierStore {
   @action reset = () => {
     this.tiers = []
     this.validTiers = []
-  }
-
-  @action setGlobalMinCap = (minCap) => {
-    this.globalMinCap = minCap
   }
 
   @action addTier = (tier, validations) => {

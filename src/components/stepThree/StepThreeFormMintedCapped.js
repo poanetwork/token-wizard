@@ -11,14 +11,13 @@ import {
   isAddress,
   isDecimalPlacesNotGreaterThan,
   isGreaterOrEqualThan,
-  isNonNegative,
 } from '../../utils/validations'
 import { TEXT_FIELDS, VALIDATION_TYPES, VALIDATION_MESSAGES, DESCRIPTION, NAVIGATION_STEPS } from '../../utils/constants'
 import { TierBlock } from '../Common/TierBlock'
 
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS;
 const { VALID } = VALIDATION_TYPES
-const { MIN_CAP, WALLET_ADDRESS } = TEXT_FIELDS
+const { WALLET_ADDRESS } = TEXT_FIELDS
 
 const inputErrorStyle = {
   color: 'red',
@@ -42,13 +41,13 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
   const handleOnChange = ({ values }) => {
     props.tierStore.updateWalletAddress(values.walletAddress, VALID)
     props.generalStore.setGasPrice(gweiToWei(values.gasPrice.price))
-    props.tierStore.setGlobalMinCap(values.minCap || 0)
 
     let totalSupply = 0
 
     values.tiers.forEach((tier, index) => {
       totalSupply += Number(tier.supply)
       props.tierStore.setTierProperty(tier.tier, 'tier', index)
+      props.tierStore.setTierProperty(tier.minCap, 'minCap', index)
       props.tierStore.setTierProperty(tier.updatable, 'updatable', index)
       props.tierStore.setTierProperty(tier.startTime, 'startTime', index)
       props.tierStore.setTierProperty(tier.endTime, 'endTime', index)
@@ -66,7 +65,7 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
       key={`whenWhitelistBlock_${tierInd}`}
       field={`tiers[${tierInd}].whitelistEnabled`}
       becomes={'yes'}
-      set="minCap"
+      set={`tiers[${tierInd}].minCap`}
       to={0}
     />)
   }
@@ -114,22 +113,6 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
               )(value.price)}
             />
           </div>
-          <div className="input-block-container">
-            <Field
-              name="minCap"
-              component={InputField2}
-              validate={composeValidators(
-                isNonNegative(),
-                isDecimalPlacesNotGreaterThan()(props.decimals)
-              )}
-              disabled={values.tiers.some((tier) => { return tier.whitelistEnabled === 'yes'} )}
-              errorStyle={inputErrorStyle}
-              type="number"
-              side="left"
-              label={MIN_CAP}
-              description={DESCRIPTION.MIN_CAP}
-            />
-          </div>
         </div>
       </div>
 
@@ -137,7 +120,6 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
         {({ fields }) => (
           <TierBlock
             fields={fields}
-            minCap={values.minCap}
             decimals={props.decimals}
             tierStore={props.tierStore}
           />
