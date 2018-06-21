@@ -25,7 +25,7 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
     startTime: isDutchAuction ? 'setCrowdsaleStartAndDuration' : null, // startTime is not changed after migration to Auth-os in MintedCappedCrowdsale strategy
     endTime: isMintedCappedCrowdsale ? 'updateTierDuration' : isDutchAuction ? 'setCrowdsaleStartAndDuration' : null,
     whitelist: isMintedCappedCrowdsale ? 'whitelistMultiForTier' : isDutchAuction ? 'whitelistMulti' : null,
-    minCap: 'updateTierMinimum'
+    minCap: isMintedCappedCrowdsale ? 'updateTierMinimum' : null
   }
 
   let crowdsaleStartTime
@@ -60,7 +60,7 @@ export const updateTierAttribute = (attribute, value, tierIndex) => {
       value = value.reduce((toAdd, whitelist) => {
         toAdd[0].push(whitelist.addr)
         toAdd[1].push(toBigNumber(whitelist.min).times(`1e${decimals}`).toFixed())
-        toAdd[2].push(toBigNumber(whitelist.max).times(oneTokenInWEI).toFixed())
+        toAdd[2].push(toBigNumber(whitelist.max).times(`1e${decimals}`).toFixed())
         return toAdd
       }, [[], [], []])
       if (isMintedCappedCrowdsale) {
@@ -193,7 +193,7 @@ const crowdsaleData = (tier, crowdsale, token, reserved_tokens_info) => {
     name: isMintedCappedCrowdsale ? tier_name : '',
     updatable: isMintedCappedCrowdsale ? duration_is_modifiable : true,
     whitelist: whitelist || [],
-    whitelisted: is_whitelisted,
+    is_whitelisted,
     finalized: is_finalized,
     crowdsale_token: {
       name: token_name,
@@ -221,7 +221,7 @@ export const processTier = (tier, crowdsale, token, reserved_tokens_info, tier_i
     name,
     whitelist,
     updatable,
-    whitelisted,
+    is_whitelisted,
     finalized,
     crowdsale_token
   } = crowdsaleData(tier, crowdsale, token, reserved_tokens_info)
@@ -242,11 +242,11 @@ export const processTier = (tier, crowdsale, token, reserved_tokens_info, tier_i
     startTime: formatDate(start_time),
     endTime: formatDate(end_time),
     updatable,
-    whitelistEnabled: whitelisted ? 'yes' : 'no',
+    whitelistEnabled: is_whitelisted ? 'yes' : 'no',
     whitelist: filtered_whitelist.map(({ addr, min, max }) => ({
       addr,
       min: toBigNumber(min).div(`1e${token_decimals}`).toFixed(),
-      max: toBigNumber(web3.utils.fromWei(max, 'ether')).times(rate).dp(0, BigNumber.ROUND_CEIL).toFixed(),
+      max: toBigNumber(max).div(`1e${token_decimals}`).toFixed(),
       stored: true
     }))
   }
@@ -268,7 +268,7 @@ export const processTier = (tier, crowdsale, token, reserved_tokens_info, tier_i
     startTime: new_tier.startTime,
     endTime: new_tier.endTime,
     whitelist: new_tier.whitelist.slice(),
-    isWhitelisted: whitelisted,
+    isWhitelisted: is_whitelisted,
     supply: new_tier.supply,
     addresses: {
       crowdsaleAddress: contractStore.crowdsale.execID
