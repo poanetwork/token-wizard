@@ -391,10 +391,10 @@ export const getUserMinLimits = async (addr, execID, methods, account) => {
   if (crowdsaleStore.isMintedCappedCrowdsale) {
     const { getCurrentTierInfo, getWhitelistStatus, getCrowdsaleInfo } = methods
     const currentTierInfo = await getCurrentTierInfo(...params).call()
-    const whitelist_enabled = currentTierInfo.whitelist_enabled || currentTierInfo[6]
+    const is_whitelisted = currentTierInfo.is_whitelisted || currentTierInfo[7]
     const tier_index = currentTierInfo.tier_index || currentTierInfo[1]
 
-    if (!whitelist_enabled) {
+    if (!is_whitelisted) {
       if (owner_balance.gt('0')) return naturalMinCap
       return calculateMinContribution(getCrowdsaleInfo(...params), token_decimals, naturalMinCap)
     } else {
