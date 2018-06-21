@@ -121,7 +121,7 @@ const getCrowdSaleParams = (account, methodInterface) => {
   const supplyBN = toBigNumber(supply).times(`1e${tokenStore.decimals}`).toFixed()
 
   //tier 0 global min cap
-  const minCapBN = toBigNumber(tierStore.tiers[0].minCap).toFixed()
+  const minCapBN = toBigNumber(tierStore.tiers[0].minCap).times(`1e${tokenStore.decimals}`).toFixed()
 
   let crowdsaleParams = [
     walletAddress,
@@ -455,7 +455,8 @@ const getTiersParams = (methodInterface) => {
   let tierNameArr = []
   let durationArr = []
   let minCapArr = []
-  tierStore.tiers.forEach((tier) => {
+  const tiersExceptFirst = tierStore.tiers.slice(1)
+  tiersExceptFirst.forEach((tier) => {
     const { updatable, whitelistEnabled, rate, supply, tier: tierName, startTime, endTime } = tier
     const duration = formatDate(endTime) - formatDate(startTime)
     const tierNameBytes = web3.utils.fromAscii(tierName)

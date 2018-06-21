@@ -318,8 +318,7 @@ export const getUserMaxLimits = async (addr, execID, methods, account) => {
     return tierTokensRemaining.lt(maxTokensRemaining) ? tierTokensRemaining : maxTokensRemaining
 
   } else if (crowdsaleStore.isDutchAuction) {
-    const { getCrowdsaleWhitelist, getCrowdsaleStatus, getWhitelistStatus, decimals } = methods
-    const crowdsaleWhitelist = await getCrowdsaleWhitelist(...params).call()
+    const { getCrowdsaleStatus, getWhitelistStatus, decimals } = methods
     const crowdsaleStatus = await getCrowdsaleStatus(...params).call()
     const is_whitelisted = crowdsaleStatus.is_whitelisted || crowdsaleStatus[6]
     const current_rate = crowdsaleStatus.current_rate || crowdsaleStatus[2]

@@ -7,8 +7,6 @@ import {
   composeValidators,
   isRequired,
   isMaxLength,
-  isDecimalPlacesNotGreaterThan,
-  isNonNegative,
 } from '../../utils/validations'
 import { DESCRIPTION, TEXT_FIELDS } from '../../utils/constants'
 import { CrowdsaleStartTime } from './CrowdsaleStartTime'
@@ -17,7 +15,7 @@ import { CrowdsaleRate } from './CrowdsaleRate'
 import { Supply } from './Supply'
 import { GlobalMinCap } from './GlobalMinCap'
 
-const { ALLOW_MODIFYING, CROWDSALE_SETUP_NAME, ENABLE_WHITELISTING, MIN_CAP } = TEXT_FIELDS
+const { ALLOW_MODIFYING, CROWDSALE_SETUP_NAME, ENABLE_WHITELISTING } = TEXT_FIELDS
 
 const inputErrorStyle = {
   color: 'red',

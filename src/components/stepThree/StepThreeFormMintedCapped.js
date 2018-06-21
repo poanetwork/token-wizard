@@ -11,14 +11,13 @@ import {
   isAddress,
   isDecimalPlacesNotGreaterThan,
   isGreaterOrEqualThan,
-  isNonNegative,
 } from '../../utils/validations'
 import { TEXT_FIELDS, VALIDATION_TYPES, VALIDATION_MESSAGES, DESCRIPTION, NAVIGATION_STEPS } from '../../utils/constants'
 import { TierBlock } from '../Common/TierBlock'
 
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS;
 const { VALID } = VALIDATION_TYPES
-const { MIN_CAP, WALLET_ADDRESS } = TEXT_FIELDS
+const { WALLET_ADDRESS } = TEXT_FIELDS
 
 const inputErrorStyle = {
   color: 'red',

@@ -374,7 +374,6 @@ export class Manage extends Component {
         }
         const tier_dates = await getCrowdsaleStartAndEndTimes(...params).call()
         const crowdsaleWhitelist = await getCrowdsaleWhitelist(...params).call()
-        const num_whitelisted = crowdsaleWhitelist.num_whitelisted || crowdsaleWhitelist[0]
         const whitelist = crowdsaleWhitelist.whitelist || crowdsaleWhitelist[1]
         const tokens_sold = await getTokensSold(...params).call()
 
