@@ -312,10 +312,10 @@ export const getUserMaxLimits = async (addr, execID, methods, account) => {
     if (!is_whitelisted) return tierTokensRemaining
 
     const whitelistStatus = await getWhitelistStatus(...params, tier_index, account).call()
-    const max_spend_remaining = whitelistStatus.max_spend_remaining || whitelistStatus[1]
-    const maxSpendRemaining = toBigNumber(max_spend_remaining)
+    const max_tokens_remaining = whitelistStatus.max_tokens_remaining || whitelistStatus[1]
+    const maxTokensRemaining = toBigNumber(max_tokens_remaining)
 
-    return tierTokensRemaining.lt(maxSpendRemaining) ? tierTokensRemaining : maxSpendRemaining
+    return tierTokensRemaining.lt(maxTokensRemaining) ? tierTokensRemaining : maxTokensRemaining
 
   } else if (crowdsaleStore.isDutchAuction) {
     const { getCrowdsaleStatus, getWhitelistStatus, decimals } = methods
@@ -331,10 +331,10 @@ export const getUserMaxLimits = async (addr, execID, methods, account) => {
     if (!is_whitelisted) return crowdsaleTokensRemaining
 
     const whitelistStatus = await getWhitelistStatus(...params, account).call()
-    const max_spend_remaining = whitelistStatus.max_spend_remaining || whitelistStatus[1]
-    const maxSpendRemaining = toBigNumber(max_spend_remaining)
+    const max_tokens_remaining = whitelistStatus.max_tokens_remaining || whitelistStatus[1]
+    const maxTokensRemaining = toBigNumber(max_tokens_remaining)
 
-    return crowdsaleTokensRemaining.lt(maxSpendRemaining) ? crowdsaleTokensRemaining : maxSpendRemaining
+    return crowdsaleTokensRemaining.lt(maxTokensRemaining) ? crowdsaleTokensRemaining : maxTokensRemaining
   }
 }
 
@@ -358,11 +358,13 @@ const getRate = async (addr, execID, methods) => {
 
 const calculateMinContribution = async (method, decimals, naturalMinCap, isWhitelisted) => {
   //todo: update for Proxy
-  const { minimum_contribution, minimum_purchase_amt, max_spend_remaining } = await method.call()
+  const { minimum_contribution, minimum_purchase_amt, max_tokens_remaining, max_purchase_remaining } = await method.call()
   const minimumContribution = toBigNumber(minimum_contribution).times(`1e-${decimals}`)
   const minimumPurchaseAmt = toBigNumber(minimum_purchase_amt).times(`1e-${decimals}`)
-  const maximumContribution = toBigNumber(max_spend_remaining)
-  if (isWhitelisted && maximumContribution.eq(0)) {
+  //todo:
+  const maximumContributionDutch = toBigNumber(max_tokens_remaining).times(`1e-${decimals}`)
+  const maximumContributionMintedCapped = toBigNumber(max_purchase_remaining).times(`1e-${decimals}`)
+  if (isWhitelisted && maximumContributionDutch.eq(0) && maximumContributionMintedCapped.eq(0)) {
     return -1
   }
   return minimumContribution.gt(naturalMinCap) ? minimumContribution : minimumPurchaseAmt.gt(naturalMinCap) ? minimumPurchaseAmt : naturalMinCap
@@ -403,10 +405,11 @@ export const getUserMinLimits = async (addr, execID, methods, account) => {
     return calculateMinContribution(getWhitelistStatus(...params, tier_index, account), token_decimals, naturalMinCap, isWhitelisted)
 
   } else if (crowdsaleStore.isDutchAuction) {
-    const { getCrowdsaleWhitelist, getWhitelistStatus, getCrowdsaleInfo } = methods
-    const { num_whitelisted } = await getCrowdsaleWhitelist(...params).call()
+    const { getCrowdsaleStatus, getWhitelistStatus, getCrowdsaleInfo } = methods
+    const crowdsaleStatus = await getCrowdsaleStatus(...params).call()
+    const is_whitelisted = crowdsaleStatus.is_whitelisted || crowdsaleStatus[6]
 
-    if (num_whitelisted === '0') {
+    if (!is_whitelisted) {
       if (owner_balance.gt('0')) return naturalMinCap
       return calculateMinContribution(getCrowdsaleInfo(...params), token_decimals, naturalMinCap)
     } else {
