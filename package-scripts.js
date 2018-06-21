@@ -46,7 +46,6 @@ module.exports = {
         'bash ./scripts/start_ganache.sh',
         'cd ./submodules/auth-os-applications/',
         'git checkout -f master',
-        'git submodule update --init  --recursive --remote',
       ),
       MintedCappedCrowdsale: series(
         'nps test.prepare',
