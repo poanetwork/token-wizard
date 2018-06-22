@@ -5,11 +5,19 @@ import { CrowdsaleRate } from './../Common/CrowdsaleRate'
 import { Supply } from './../Common/Supply'
 import { TEXT_FIELDS } from '../../utils/constants'
 import { InputField } from '../Common/InputField'
-import { isDateLaterThan } from '../../utils/validations'
+import {
+  composeValidators,
+  isDateLaterThan,
+  isDecimalPlacesNotGreaterThan,
+  isLessOrEqualThan,
+  isNonNegative
+} from '../../utils/validations'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
 import { ReadOnlyWhitelistAddresses } from './ReadOnlyWhitelistAddresses'
 import classNames from 'classnames'
 import { inject, observer } from 'mobx-react'
+import { InputField2 } from '../Common/InputField2'
+import { Field } from 'react-final-form'
 
 const inputErrorStyle = {
   color: 'red',
@@ -33,12 +41,19 @@ export const ManageTierBlock = inject('crowdsaleStore', 'tokenStore')(observer((
     {fields.map((name, index) => {
       const currentTier = fields.value[index]
       const { tier } = currentTier
-      const { startTime: initialStartTime, endTime: initialEndTime, whitelistEnabled, updatable } = fields.initial[index]
+      const {
+        startTime: initialStartTime,
+        endTime: initialEndTime,
+        whitelistEnabled,
+        updatable,
+        supply
+      } = fields.initial[index]
 
       const tierHasStarted = !isDateLaterThan()(dateToTimestamp(initialStartTime))(Date.now())
       const tierHasEnded = !isDateLaterThan()(dateToTimestamp(initialEndTime))(Date.now())
       const canEditDuration = canEditTiers && updatable && !tierHasEnded && !tierHasStarted
       const canEditWhiteList = canEditTiers && !tierHasEnded
+      const canEditMinCap = canEditTiers && updatable && !tierHasEnded && !tierHasStarted
       const isWhitelistEnabled = whitelistEnabled === 'yes'
 
       return (
@@ -79,6 +94,23 @@ export const ManageTierBlock = inject('crowdsaleStore', 'tokenStore')(observer((
                   side="right"
                   disabled={true}
                   errorStyle={inputErrorStyle}
+                />
+              </div>
+
+              <div className="input-block-container">
+                <Field
+                  name={`${name}.minCap`}
+                  component={InputField2}
+                  validate={composeValidators(
+                    isNonNegative(),
+                    isDecimalPlacesNotGreaterThan()(tokenStore.decimals),
+                    isLessOrEqualThan(`Should be less than or equal to ${supply}`)(supply)
+                  )}
+                  disabled={!canEditMinCap}
+                  errorStyle={inputErrorStyle}
+                  type="number"
+                  side="left"
+                  label={TEXT_FIELDS.MIN_CAP}
                 />
               </div>
             </div>
