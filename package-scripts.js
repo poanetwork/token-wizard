@@ -52,6 +52,8 @@ module.exports = {
         'cd ./submodules/auth-os-applications/',
         'cd ./TokenWizard/crowdsale/MintedCappedCrowdsale/',
         'npm init -y',
+        'npm i',
+        'npm i authos-solidity',
         'nps test.deployContracts',
         'cd ../../../../../',
         'bash ./scripts/stop_ganache.sh'
@@ -61,6 +63,8 @@ module.exports = {
         'cd ./submodules/auth-os-applications/',
         'cd ./TokenWizard/crowdsale/DutchCrowdsale/',
         'npm init -y',
+        'npm i',
+        'npm i authos-solidity',
         'nps test.deployContracts',
         'cd ../../../../../',
         'bash ./scripts/stop_ganache.sh'
