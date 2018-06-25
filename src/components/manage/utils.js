@@ -22,56 +22,67 @@ const formatDate = timestamp => {
 export const updateTierAttribute = async (attribute, value, tierIndex) => {
   let methodInterface
   let getParams
-  let crowdsaleStartTime
-
   const { decimals } = tokenStore
   const { isMintedCappedCrowdsale, isDutchAuction } = crowdsaleStore
   const methods = {
+    startTime: isDutchAuction ? 'setCrowdsaleStartAndDuration' : null, // startTime is not changed after migration to Auth-os in MintedCappedCrowdsale strategy
     endTime: isMintedCappedCrowdsale ? 'updateTierDuration' : isDutchAuction ? 'setCrowdsaleStartAndDuration' : null,
     whitelist: isMintedCappedCrowdsale ? 'whitelistMultiForTier' : isDutchAuction ? 'whitelistMulti' : null,
     minCap: isMintedCappedCrowdsale ? 'updateTierMinimum' : isDutchAuction ? 'updateGlobalMinContribution' : null
   }
 
-  if (attribute === 'endTime') {
-    const { startTime, endTime } = tierStore.tiers[tierIndex]
-    const start = toFixed(new Date(startTime).getTime() / 1000)
-    const end = toFixed(new Date(endTime).getTime() / 1000)
-
-    value = toFixed((end - start) / 1000).toString()
-    methodInterface = ["uint256", "uint256"]
-
-    if (isMintedCappedCrowdsale) {
-      getParams = updateMintedCappedCrowdsaleDurationParams
-    } else if (isDutchAuction) {
-      getParams = updateDutchAuctionDurationParams
-      crowdsaleStartTime = toFixed(start / 1000).toString()
-    }
-
-  } else if (attribute === 'whitelist') {
-    value = value.reduce((toAdd, whitelist) => {
-      toAdd[0].push(whitelist.addr)
-      toAdd[1].push(toBigNumber(whitelist.min).times(`1e${decimals}`).toFixed())
-      toAdd[2].push(toBigNumber(whitelist.max).times(`1e${decimals}`).toFixed())
-      return toAdd
-    }, [[], [], []])
-
-    if (isMintedCappedCrowdsale) {
-      methodInterface = ["uint256", "address[]", "uint256[]", "uint256[]"]
-      getParams = updateTierWhitelistParams
-    } else if (isDutchAuction) {
-      methodInterface = ["address[]", "uint256[]", "uint256[]"]
-      getParams = updateWhitelistParams
-    }
-
-  } else if (attribute === 'minCap') {
-    value = toBigNumber(tierStore.tiers[tierIndex].minCap).times(`1e${tokenStore.decimals}`).toFixed()
-
-    if (isMintedCappedCrowdsale) {
+  let crowdsaleStartTime
+  if (attribute === 'startTime' || attribute === 'endTime' || attribute === 'supply' || attribute === 'whitelist' || attribute === 'minCap') {
+    if (attribute === 'startTime') {
+      let { startTime, endTime } = tierStore.tiers[tierIndex]
+      crowdsaleStartTime = toFixed(parseInt(Date.parse(value) / 1000, 10).toString())
+      const duration = new Date(endTime) - new Date(startTime)
+      const durationBN = (toBigNumber(duration) / 1000).toFixed()
       methodInterface = ["uint256","uint256"]
-      getParams = updateTierMinimumParams
-    } else if (isDutchAuction) {
-      methodInterface = ["uint256"]
-      getParams = updateMinimumParams
+      value = durationBN
+      getParams = updateDutchAuctionDurationParams
+    } else if (attribute === 'endTime') {
+      let { startTime, endTime } = tierStore.tiers[tierIndex]
+      console.log(startTime, endTime)
+      const duration = new Date(endTime) - new Date(startTime)
+      const durationBN = toBigNumber(duration).div(1000)
+      value = durationBN.toFixed()
+      methodInterface = ["uint256","uint256"]
+      if (isMintedCappedCrowdsale) {
+        getParams = updateMintedCappedCrowdsaleDurationParams
+      } else if (isDutchAuction) {
+        getParams = updateDutchAuctionDurationParams
+        crowdsaleStartTime = toFixed((new Date(startTime)).getTime() / 1000).toString()
+      }
+    } else if (attribute === 'whitelist')  {
+      // whitelist
+      const rate = tierStore.tiers[tierIndex].rate;
+      const rateBN = toBigNumber(rate)
+      const oneTokenInETH = rateBN.pow(-1).toFixed()
+      const oneTokenInWEI = web3Store.web3.utils.toWei(oneTokenInETH, 'ether')
+      value = value.reduce((toAdd, whitelist) => {
+        toAdd[0].push(whitelist.addr)
+        toAdd[1].push(toBigNumber(whitelist.min).times(`1e${decimals}`).toFixed())
+        toAdd[2].push(toBigNumber(whitelist.max).times(`1e${decimals}`).toFixed())
+        return toAdd
+      }, [[], [], []])
+      if (isMintedCappedCrowdsale) {
+        methodInterface = ["uint256","address[]","uint256[]","uint256[]"]
+        getParams = updateTierWhitelistParams
+      } else if (isDutchAuction) {
+        methodInterface = ["address[]","uint256[]","uint256[]"]
+        getParams = updateWhitelistParams
+      }
+    } else if (attribute === 'minCap') {
+      value = toBigNumber(tierStore.tiers[tierIndex].minCap).times(`1e${tokenStore.decimals}`).toFixed()
+
+      if (isMintedCappedCrowdsale) {
+        methodInterface = ["uint256", "uint256"]
+        getParams = updateTierMinimumParams
+      } else if (isDutchAuction) {
+        methodInterface = ["uint256"]
+        getParams = updateMinimumParams
+      }
     }
   }
 
@@ -84,15 +95,13 @@ export const updateTierAttribute = async (attribute, value, tierIndex) => {
   console.log("tierIndex:", tierIndex)
 
   let paramsToExec
-
   if (isMintedCappedCrowdsale) {
     paramsToExec = [ tierIndex, value, methodInterface ]
-
   } else if (isDutchAuction) {
-    if (attribute === 'endTime') {
-      paramsToExec = [crowdsaleStartTime, value, methodInterface]
+    if (attribute === 'whitelist') {
+      paramsToExec = [ value, methodInterface ]
     } else {
-      paramsToExec = [value, methodInterface]
+      paramsToExec = [ crowdsaleStartTime, value, methodInterface ]
     }
   }
 
@@ -100,9 +109,14 @@ export const updateTierAttribute = async (attribute, value, tierIndex) => {
   console.log("methods[attribute]:", methods[attribute])
   console.log("methodInterface:", methodInterface)
 
-  const targetContractName = crowdsaleStore.execID ? 'registryExec' : 'MintedCappedProxy'
-  const method = methodToExec(targetContractName, `${methods[attribute]}(${methodInterface.join(',')})`, getParams, paramsToExec)
+  let targetContractName
+  if (crowdsaleStore.execID) {
+    targetContractName = 'registryExec'
+  } else {
+    targetContractName = 'MintedCappedProxy'
+  }
 
+  const method = methodToExec(targetContractName, `${methods[attribute]}(${methodInterface.join(',')})`, getParams, paramsToExec)
   console.log("method:", method)
 
   const account = await getCurrentAccount()
