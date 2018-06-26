@@ -150,22 +150,6 @@ export const TierBlock = ({ fields, ...props }) => {
                 disabled={props.tierStore ? props.tierStore.tiers[index].whitelistEnabled === 'yes' : true}
                 side="left"
               />
-              {
-                /*
-                  * TODO: REVIEW. I'm not sure about this approach.
-                  * But it worked for me to keep the error messages properly updated for the minCap field.
-                  */
-              }
-              <Field name={`${name}.minCap`} subscription={{}}>
-                {({ input: { onChange } }) => (
-                  <OnChange name={`${name}.supply`}>
-                    {() => {
-                      onChange(0)
-                      onChange(props.tierStore.tiers[index].minCap)
-                    }}
-                  </OnChange>
-                )}
-              </Field>
             </div>
           </div>
           {
