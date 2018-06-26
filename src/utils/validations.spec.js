@@ -16,6 +16,7 @@ import {
   isPositive,
   isRequired,
   validateTierEndDate,
+  validateTierMinCap,
   validateTierStartDate,
   validateWhitelistMax,
   validateWhitelistMin,
@@ -724,4 +725,70 @@ describe('validateTierEndDate', () => {
 
     expect(validationResult).toEqual(["Should be same or previous than next tier's Start Time"])
   })*/
+})
+
+describe('validateTierMinCap', () => {
+  it(`should fail if minCap is greater than supply`, () => {
+    const values = {
+      tiers: [
+        {
+          supply: '150'
+        }
+      ]
+    }
+    const decimals = 0
+    const index = 0
+    const minCap = 300
+    const validationResult = validateTierMinCap(decimals)(index)(minCap, values)
+
+    expect(validationResult).toEqual([`Should be less or equal than tier's supply (${values.tiers[index].supply})`])
+  })
+
+  it(`should pass if minCap is less than supply`, () => {
+    const values = {
+      tiers: [
+        {
+          supply: '150'
+        }
+      ]
+    }
+    const decimals = 0
+    const index = 0
+    const minCap = 100
+    const validationResult = validateTierMinCap(decimals)(index)(minCap, values)
+
+    expect(validationResult).toBeUndefined()
+  })
+
+  it(`should fail if minCap decimals count is greater than specified`, () => {
+    const values = {
+      tiers: [
+        {
+          supply: '150'
+        }
+      ]
+    }
+    const decimals = 5
+    const index = 0
+    const minCap = 100.123456
+    const validationResult = validateTierMinCap(decimals)(index)(minCap, values)
+
+    expect(validationResult).toEqual([`Decimals should not exceed ${decimals} places`])
+  })
+
+  it(`should fail if minCap decimals count is greater than specified`, () => {
+    const values = {
+      tiers: [
+        {
+          supply: '150'
+        }
+      ]
+    }
+    const decimals = 5
+    const index = 0
+    const minCap = 100.12345
+    const validationResult = validateTierMinCap(decimals)(index)(minCap, values)
+
+    expect(validationResult).toBeUndefined()
+  })
 })
