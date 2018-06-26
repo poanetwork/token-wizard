@@ -10,10 +10,15 @@ import { DESCRIPTION, TEXT_FIELDS } from '../../utils/constants'
 export const MinCap = ({ ...props }) => (
   <Field
     component={InputField2}
-    validate={composeValidators(
-      isNonNegative(),
-      isDecimalPlacesNotGreaterThan()(props.decimals)
-    )}
+    validate={(value) => {
+      const errors = composeValidators(
+        isNonNegative(),
+        isDecimalPlacesNotGreaterThan(`Decimals should not exceed ${props.decimals} places`)(props.decimals),
+        isLessOrEqualThan(`Should be less or equal than tier's supply (${props.supply})`)(props.supply)
+      )(value)
+
+      if (errors) return errors.shift()
+    }}
     type="number"
     label={props.label || TEXT_FIELDS.MIN_CAP}
     description={DESCRIPTION.MIN_CAP}
