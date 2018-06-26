@@ -552,17 +552,6 @@ export const addWhitelist = () => {
       let minCaps = []
       let maxCaps = []
 
-      const { web3 } = web3Store
-      const { rate,  minRate } = tierStore.tiers[index]
-      let rateBN
-      if (crowdsaleStore.isMintedCappedCrowdsale) {
-        rateBN = new BigNumber(rate)
-      } else if (crowdsaleStore.isDutchAuction) {
-        rateBN = new BigNumber(minRate)
-      }
-      const oneTokenInETH = rateBN.pow(-1).toFixed()
-      const oneTokenInWEI = web3.utils.toWei(oneTokenInETH, 'ether')
-
       for (let i = 0; i < whitelist.length; i++) {
         addrs.push(whitelist[i].addr)
         let whitelistMin = toBigNumber(whitelist[i].min).times(`1e${tokenStore.decimals}`).toFixed() // in tokens, token do have decimals accounted
