@@ -188,6 +188,7 @@ export const DutchAuctionBlock = inject('tierStore', 'tokenStore')(observer(({ t
               name={`${name}.minCap`}
               errorStyle={inputErrorStyle}
               decimals={props.decimals}
+              supply={tierStore ? tierStore.tiers[index].supply : 0}
               disabled={tierStore ? tierStore.tiers[index].whitelistEnabled === 'yes' : true}
               side="left"
             />

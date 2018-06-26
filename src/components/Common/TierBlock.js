@@ -146,6 +146,7 @@ export const TierBlock = ({ fields, ...props }) => {
                 name={`${name}.minCap`}
                 errorStyle={inputErrorStyle}
                 decimals={props.decimals}
+                supply={props.tierStore.tiers[index].supply}
                 tierStore={props.tierStore}
                 disabled={props.tierStore ? props.tierStore.tiers[index].whitelistEnabled === 'yes' : true}
                 side="left"
