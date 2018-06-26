@@ -98,12 +98,11 @@ export const updateTierAttribute = async (attribute, value, tierIndex) => {
   if (isMintedCappedCrowdsale) {
     paramsToExec = [ tierIndex, value, methodInterface ]
   } else if (isDutchAuction) {
-    if (attribute === 'whitelist') {
-      paramsToExec = [ value, methodInterface ]
+    if (attribute === 'endTime') {
+      paramsToExec = [crowdsaleStartTime, value, methodInterface]
     } else {
-      paramsToExec = [ crowdsaleStartTime, value, methodInterface ]
-    }
-  }
+      paramsToExec = [value, methodInterface]
+    }  }
 
   console.log("paramsToExec:", paramsToExec)
   console.log("methods[attribute]:", methods[attribute])
