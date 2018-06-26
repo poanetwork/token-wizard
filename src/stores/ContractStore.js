@@ -15,9 +15,7 @@ class ContractStore {
   @observable tokenManagerMintedCapped;
   @observable idxDutch;
   @observable saleDutch;
-  @observable saleManagerDutch;
   @observable tokenDutch;
-  @observable tokenManagerDutch;
   @observable crowdsale;
 
   constructor() {

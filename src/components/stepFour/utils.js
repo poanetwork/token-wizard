@@ -884,7 +884,7 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
   let rates = []
   let crowdsaleIsModifiableEl = []
   let crowdsaleIsWhitelistedEl = []
-  if (crowdsaleStore.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION) {
+  if (crowdsaleStore.isDutchAuction) {
     rates = [
       { field: 'minRate', value: 'Crowdsale min rate: ', parent: 'tierStore' },
       { field: 'maxRate', value: 'Crowdsale max rate: ', parent: 'tierStore' },
@@ -910,6 +910,16 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
     } else if (contractStore.DutchProxy.addr) {
       return { field: 'addr', value: authOSContractString('Crowdsale proxy'), parent: 'DutchProxy' }
     }
+  }
+
+  const getManagers = () => {
+    if (crowdsaleStore.isDutchAuction) {
+      return [
+        { value: authOSContractString('SaleManager'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE_MANAGER", networkID) },
+        { value: authOSContractString('TokenManager'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "TOKEN_MANAGER", networkID) },
+      ]
+    }
+    return []
   }
 
   return {
@@ -945,9 +955,8 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
       getCrowdsaleID(),
       { value: authOSContractString('MintedCappedIdx'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "IDX", networkID) },
       { value: authOSContractString('Sale'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE", networkID) },
-      { value: authOSContractString('SaleManager'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE_MANAGER", networkID) },
       { value: authOSContractString('Token'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "TOKEN", networkID) },
-      { value: authOSContractString('TokenManager'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "TOKEN_MANAGER", networkID) },
+      ...getManagers,
       ...footerElemets
     ],
     files: {

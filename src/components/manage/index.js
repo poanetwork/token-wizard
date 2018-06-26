@@ -74,9 +74,9 @@ export class Manage extends Component {
 
     this.validateEnvironment()
       .then(() => getCrowdsaleAssets(generalStore.networkID))
-      .then(() => this.checkOwner())
       .then(() => getCrowdsaleStrategy(crowdsaleStore.execID))
       .then((strategy) => crowdsaleStore.setProperty('strategy', strategy))
+      .then(() => this.checkOwner())
       .then(() => this.extractContractsData())
       .then(() => this.updateCrowdsaleStatus())
       .then(() => {
