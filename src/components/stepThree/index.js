@@ -9,7 +9,6 @@ import { inject, observer } from "mobx-react";
 import { Loader } from '../Common/Loader'
 import { noGasPriceAvailable, warningOnMainnetAlert } from '../../utils/alerts'
 import { getStep3Component } from './utils'
-import { isLessOrEqualThan } from '../../utils/validations'
 import createDecorator from 'final-form-calculate'
 
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS;

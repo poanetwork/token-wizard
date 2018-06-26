@@ -1,6 +1,5 @@
 import React from 'react'
 import { Field } from 'react-final-form'
-import { OnChange } from 'react-final-form-listeners'
 import { InputField2 } from './InputField2'
 import { WhitelistInputBlock } from './WhitelistInputBlock'
 import {
