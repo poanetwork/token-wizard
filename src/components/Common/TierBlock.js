@@ -13,7 +13,7 @@ import { CrowdsaleStartTime } from './CrowdsaleStartTime'
 import { CrowdsaleEndTime } from './CrowdsaleEndTime'
 import { CrowdsaleRate } from './CrowdsaleRate'
 import { Supply } from './Supply'
-import { GlobalMinCap } from './GlobalMinCap'
+import { MinCap } from './MinCap'
 
 const { ALLOW_MODIFYING, CROWDSALE_SETUP_NAME, ENABLE_WHITELISTING } = TEXT_FIELDS
 
@@ -142,7 +142,7 @@ export const TierBlock = ({ fields, ...props }) => {
               />
             </div>
             <div className="input-block-container">
-              <GlobalMinCap
+              <MinCap
                 name={`${name}.minCap`}
                 errorStyle={inputErrorStyle}
                 decimals={props.decimals}
