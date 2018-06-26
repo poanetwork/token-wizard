@@ -130,20 +130,6 @@ export class stepThree extends React.Component {
           tierStore={tierStore}
           generalStore={generalStore}
           crowdsaleStore={crowdsaleStore}
-          validate={(values) => {
-            const errors = {}
-            const maxSupply = tierStore.maxSupply
-            const minCapFromValues = values.tiers.reduce((sum, tier) => {
-              return sum + Number(tier.minCap)
-            }, 0)
-            const minCap = maxSupply !== 0
-              ? isLessOrEqualThan('Should be less or equal than the supply of some tier')(maxSupply)(minCapFromValues)
-              : undefined
-
-            if (minCap) errors.minCap = minCap
-
-            return errors
-          }}
         />
         <Loader show={this.state.loading}/>
       </section>
