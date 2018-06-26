@@ -56,12 +56,12 @@ export class stepThree extends React.Component {
   }
 
   handleOnSubmit = () => {
-    const { tierStore, reservedTokenStore, deploymentStore } = this.props
+    const { tierStore, reservedTokenStore, deploymentStore, crowdsaleStore } = this.props
     const tiersCount = tierStore.tiers.length
     const reservedCount = reservedTokenStore.tokens.length
     const hasWhitelist = tierStore.tiers.some((tier) => { return tier.whitelistEnabled === 'yes' })
 
-    deploymentStore.initialize(!!reservedCount, hasWhitelist, tierStore.tiers)
+    deploymentStore.initialize(!!reservedCount, hasWhitelist, crowdsaleStore.isDutchAuction, tierStore.tiers)
 
     getNetworkVersion()
       .then(networkID => {

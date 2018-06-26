@@ -53,6 +53,24 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
     </button>
   )
 
+  const minCap = (
+    <Field
+      name="tiers[0].minCap"
+      component={InputField2}
+      validate={composeValidators(
+        isNonNegative(),
+        isDecimalPlacesNotGreaterThan()(tokenStore.decimals),
+        isLessOrEqualThan(`Should be less than or equal to ${minimum_supply}`)(minimum_supply)
+      )}
+      disabled={!canEditMinCap}
+      errorStyle={inputErrorStyle}
+      type="number"
+      side="left"
+      label={TEXT_FIELDS.MIN_CAP}
+      value={props.initialValues.minCap}
+    />
+  )
+
   return (
     <form onSubmit={handleSubmit}>
       <div className="steps">
@@ -65,24 +83,9 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
           />
           {props.aboutTier}
           <div className="input-block-container">
-            <Field
-              name="tiers[0].minCap"
-              component={InputField2}
-              validate={composeValidators(
-                isNonNegative(),
-                isDecimalPlacesNotGreaterThan()(tokenStore.decimals),
-                isLessOrEqualThan(`Should be less than or equal to ${minimum_supply}`)(minimum_supply)
-              )}
-              disabled={!canEditMinCap}
-              errorStyle={inputErrorStyle}
-              type="number"
-              side="left"
-              label={TEXT_FIELDS.MIN_CAP}
-              value={props.initialValues.minCap}
-            />
-
+            { crowdsaleStore.isDutchAuction ? minCap : null }
             <InputField
-              side='right'
+              side={ crowdsaleStore.isDutchAuction ? 'right' : 'left' }
               type='text'
               title={TEXT_FIELDS.WALLET_ADDRESS}
               value={tiers[0].walletAddress}
@@ -104,7 +107,6 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
           { displaySave ? saveButton : null }
         </div>
       </div>
-
     </form>
   )
 }))
