@@ -26,7 +26,6 @@ import { getCrowdsaleAssets } from '../../stores/utils'
 import { getFieldsToUpdate, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
 import { getTiersLength, toBigNumber } from '../crowdsale/utils'
-import { updateTierMinimum } from '../stepFour/utils'
 import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import createDecorator from 'final-form-calculate'
@@ -56,7 +55,7 @@ export class Manage extends Component {
       crowdsaleHasStarted: false,
       crowdsaleIsUpdatable: false,
       crowdsaleIsWhitelisted: false,
-      crowdsaleIsFinalized: false,
+      crowdsaleIsFinalized: false
     }
 
     this.initialValues = {
@@ -74,14 +73,14 @@ export class Manage extends Component {
 
     this.validateEnvironment()
       .then(() => getCrowdsaleAssets(generalStore.networkID))
-      .then(() => this.checkOwner())
       .then(() => getCrowdsaleStrategy(crowdsaleStore.execID))
       .then((strategy) => crowdsaleStore.setProperty('strategy', strategy))
+      .then(() => this.checkOwner())
       .then(() => this.extractContractsData())
       .then(() => this.updateCrowdsaleStatus())
       .then(() => {
         this.initialValues.tiers = JSON.parse(JSON.stringify(tierStore.tiers))
-        this.initialValues.minCap = +tierStore.tiers.minCap
+        this.initialValues.minCap = +tierStore.tiers[0].minCap
       })
       .catch((err) => console.error(err))
       .then(() => {
@@ -209,11 +208,23 @@ export class Manage extends Component {
       if (crowdsale && !crowdsale.hasOwnProperty('team_wallet')) {
         crowdsale.team_wallet = crowdsale[1]
       }
-      if (crowdsale && !crowdsale.hasOwnProperty('is_initialized')) {
-        crowdsale.is_initialized = crowdsale[2]
-      }
-      if (crowdsale && !crowdsale.hasOwnProperty('is_finalized')) {
-        crowdsale.is_finalized = crowdsale[3]
+      if (isMintedCappedCrowdsale) {
+        if (crowdsale && !crowdsale.hasOwnProperty('is_initialized')) {
+          crowdsale.is_initialized = crowdsale[2]
+        }
+        if (crowdsale && !crowdsale.hasOwnProperty('is_finalized')) {
+          crowdsale.is_finalized = crowdsale[3]
+        }
+      } else if (isDutchAuction) {
+        if (crowdsale && !crowdsale.hasOwnProperty('minimum_contribution')) {
+          crowdsale.minimum_contribution = crowdsale[2]
+        }
+        if (crowdsale && !crowdsale.hasOwnProperty('is_initialized')) {
+          crowdsale.is_initialized = crowdsale[3]
+        }
+        if (crowdsale && !crowdsale.hasOwnProperty('is_finalized')) {
+          crowdsale.is_finalized = crowdsale[4]
+        }
       }
       let token
       if (getTokenInfo) {
@@ -247,9 +258,14 @@ export class Manage extends Component {
           if (tier_data && !tier_data.hasOwnProperty('tier_price')) {
             tier_data.tier_price = tier_data[2]
           }
+          if (tier_data && !tier_data.hasOwnProperty('tier_min')) {
+            tier_data.tier_min = tier_data[3]
+          }
+
           if (tier_data && !tier_data.hasOwnProperty('tier_duration')) {
             tier_data.tier_duration = tier_data[4]
           }
+
           if (tier_data && !tier_data.hasOwnProperty('duration_is_modifiable')) {
             tier_data.duration_is_modifiable = tier_data[5]
           }
@@ -369,9 +385,14 @@ export class Manage extends Component {
 
       } else if (isDutchAuction) {
         const tier_data = await getCrowdsaleStatus(...params).call()
+
         if (tier_data && !tier_data.hasOwnProperty('is_whitelisted')) {
           tier_data.is_whitelisted = tier_data[6]
         }
+        if (tier_data && !tier_data.hasOwnProperty('min_cap')) {
+          tier_data.tier_min = crowdsale.minimum_contribution
+        }
+
         const tier_dates = await getCrowdsaleStartAndEndTimes(...params).call()
         const crowdsaleWhitelist = await getCrowdsaleWhitelist(...params).call()
         const whitelist = crowdsaleWhitelist.whitelist || crowdsaleWhitelist[1]
@@ -401,11 +422,7 @@ export class Manage extends Component {
 
       console.log('tiers:', tiers)
 
-      tiers.forEach((tier, index) => {
-        processTier(tier, crowdsale, token, reserved_tokens_info, index)
-        const tierMinCap = toBigNumber(tier.tier_min).div(`1e${token.token_decimals}`).toFixed()
-        tierStore.setTierProperty(tierMinCap, 'minCap', index)
-      })
+      tiers.forEach((tier, index) => processTier(crowdsale, token, reserved_tokens_info, tier, index))
     } catch (err) {
       return Promise.reject(err)
     }
@@ -527,11 +544,7 @@ export class Manage extends Component {
   }
 
   getFinalizeCrowdsaleParams = (methodInterface) => {
-    const { web3Store } = this.props
-    const { web3 } = web3Store
-
-    let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, []);
-    return encodedParameters;
+    return this.props.web3Store.web3.eth.abi.encodeParameters(methodInterface, [])
   }
 
   finalizeCrowdsale = () => {
@@ -598,24 +611,27 @@ export class Manage extends Component {
       .catch(console.error)
   }
 
-  canBeSaved = () => {
-    const { crowdsaleHasEnded, ownerCurrentUser } = this.state
-    const { tierStore, crowdsaleStore } = this.props
-    const { initialTiersValues } = crowdsaleStore.selected
-    const { tiers, modifiedStoredWhitelist, individuallyValidTiers } = tierStore
-
+  allTiersValid = () => {
     // TODO: review validations after this fix: https://github.com/final-form/react-final-form/issues/151
     // once done, can be replaced with _pristine_ state value
+    const { initialTiersValues } = this.props.crowdsaleStore.selected
+    const { individuallyValidTiers } = this.props.tierStore
 
-    const validTiers = initialTiersValues.every(tier => individuallyValidTiers[tier.index])
-    const fieldsToUpdate = validTiers ? getFieldsToUpdate(initialTiersValues, tiers) : []
-    const valuesChanged = modifiedStoredWhitelist || fieldsToUpdate.length > 0
-    const canSave = ownerCurrentUser && valuesChanged && !crowdsaleHasEnded
+    return initialTiersValues.every(tier => individuallyValidTiers[tier.index])
+  }
 
-    return {
-      canSave,
-      fieldsToUpdate
-    }
+  fieldsToUpdate = () => {
+    const { initialTiersValues } = this.props.crowdsaleStore.selected
+    const { tiers } = this.props.tierStore
+
+    return this.allTiersValid() ? getFieldsToUpdate(initialTiersValues, tiers) : []
+  }
+
+  canSave = () => {
+    const { loading, ownerCurrentUser, crowdsaleHasEnded } = this.state
+    const fieldsToUpdate = this.fieldsToUpdate()
+
+    return !loading && ownerCurrentUser && !!fieldsToUpdate.length && !crowdsaleHasEnded
   }
 
   saveDisplayed = () => {
@@ -624,16 +640,16 @@ export class Manage extends Component {
   }
 
   saveCrowdsale = () => {
-    const canSaveObj = this.canBeSaved()
-    if (!canSaveObj.canSave) return;
+    if (!this.canSave()) return;
 
     this.showLoader()
 
     this.updateCrowdsaleStatus()
       .then(() => {
-        console.log("fieldsToUpdate:", canSaveObj.fieldsToUpdate)
+        const fieldsToUpdate = this.fieldsToUpdate()
+        console.log("fieldsToUpdate:", fieldsToUpdate)
 
-        canSaveObj.fieldsToUpdate
+        fieldsToUpdate
           .reduce((promise, { key, newValue, tier }) => {
             return promise.then(() => updateTierAttribute(key, newValue, tier))
           }, Promise.resolve())
@@ -691,8 +707,7 @@ export class Manage extends Component {
       ownerCurrentUser,
       crowdsaleIsFinalized,
       crowdsaleHasEnded,
-      crowdsaleIsWhitelisted,
-      loading
+      crowdsaleIsWhitelisted
     } = this.state
 
     return (
@@ -714,7 +729,7 @@ export class Manage extends Component {
           canEditTiers={ownerCurrentUser && !canFinalize && !crowdsaleIsFinalized}
           canEditMinCap={ownerCurrentUser && !crowdsaleHasEnded && !crowdsaleIsWhitelisted}
           handleChange={this.updateTierStore}
-          canSave={loading ? null : this.canBeSaved().canSave}
+          canSave={this.canSave()}
           displaySave={this.saveDisplayed()}
         />
 

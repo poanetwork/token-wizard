@@ -15,9 +15,7 @@ export const getCrowdsaleAssets = async (networkID) => {
   const whenMintedCappedTokenManager = getCrowdsaleAsset(`MINTED_CAPPED_TOKEN_MANAGER`, "tokenManagerMintedCapped", networkID)
   const whenDutchIdx = getCrowdsaleAsset(`DUTCH_IDX`, "idxDutch", networkID)
   const whenDutchSale = getCrowdsaleAsset(`DUTCH_CROWDSALE`, "saleDutch", networkID)
-  const whenDutchSaleManager = getCrowdsaleAsset(`DUTCH_CROWDSALE_MANAGER`, "saleManagerDutch", networkID)
   const whenDutchToken = getCrowdsaleAsset(`DUTCH_TOKEN`, "tokenDutch", networkID)
-  const whenDutchTokenManager = getCrowdsaleAsset(`DUTCH_TOKEN_MANAGER`, "tokenManagerDutch", networkID)
   const whenPromises = [
     whenProxy,
     whenRegistry,
@@ -31,9 +29,7 @@ export const getCrowdsaleAssets = async (networkID) => {
     whenMintedCappedTokenManager,
     whenDutchIdx,
     whenDutchSale,
-    whenDutchSaleManager,
     whenDutchToken,
-    whenDutchTokenManager,
   ]
   return Promise.all(whenPromises)
 }

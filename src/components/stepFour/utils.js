@@ -32,6 +32,7 @@ export const buildDeploymentSteps = (web3) => {
     crowdsaleCreate: deployCrowdsale,
     token: initializeToken,
     setReservedTokens: setReservedTokensListMultiple,
+    updateGlobalMinContribution,
     createCrowdsaleTiers,
     whitelist: addWhitelist,
     crowdsaleInit: initializeCrowdsale,
@@ -467,7 +468,7 @@ const getTiersParams = (methodInterface) => {
     tierNameArr.push(encodedTierName)
     rateArr.push(web3.utils.toWei(oneTokenInETH, 'ether'))
     supplyArr.push(toBigNumber(supply).times(`1e${tokenStore.decimals}`).toFixed())
-    minCapArr.push(toBigNumber(tier.minCap).toFixed())
+    minCapArr.push(toBigNumber(tier.minCap).times(`1e${tokenStore.decimals}`).toFixed())
     updatableArr.push(updatable === 'on')
     whitelistEnabledArr.push(whitelistEnabled === 'yes')
   })
@@ -598,6 +599,32 @@ export const addWhitelist = () => {
         .then(() => deploymentStore.setAsSuccessful('whitelist'))
     }
   })
+}
+
+const getUpdateGlobalMinCapParams = (methodInterface) => {
+  let globalMinCap = toBigNumber(tierStore.tiers[0].minCap).times(`1e${tokenStore.decimals}`).toFixed()
+  return web3Store.web3.eth.abi.encodeParameters(methodInterface, [globalMinCap]);
+}
+
+export const updateGlobalMinContribution = () => {
+  return [() => {
+    console.log('###updateGlobalMinContribution:###')
+
+    const methodInterface = ["uint256"]
+
+    let paramsToExec = [methodInterface]
+    const method = methodToExec("registryExec", `updateGlobalMinContribution(${methodInterface.join(',')})`, getUpdateGlobalMinCapParams, paramsToExec)
+
+    let account = contractStore.crowdsale.account;
+    const opts = { gasPrice: generalStore.gasPrice, from: account }
+
+    return method.estimateGas(opts)
+      .then(estimatedGas => {
+        opts.gasLimit = calculateGasLimit(estimatedGas)
+        return sendTXToContract(method.send(opts))
+      })
+      .then(() => deploymentStore.setAsSuccessful('updateGlobalMinContribution'))
+  }]
 }
 
 const getUpdateTierMinimumParams = (tierIndex, methodInterface) => {
@@ -884,7 +911,7 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
   let rates = []
   let crowdsaleIsModifiableEl = []
   let crowdsaleIsWhitelistedEl = []
-  if (crowdsaleStore.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION) {
+  if (crowdsaleStore.isDutchAuction) {
     rates = [
       { field: 'minRate', value: 'Crowdsale min rate: ', parent: 'tierStore' },
       { field: 'maxRate', value: 'Crowdsale max rate: ', parent: 'tierStore' },
@@ -910,6 +937,16 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
     } else if (contractStore.DutchProxy.addr) {
       return { field: 'addr', value: authOSContractString('Crowdsale proxy'), parent: 'DutchProxy' }
     }
+  }
+
+  const getManagers = () => {
+    if (crowdsaleStore.isDutchAuction) {
+      return [
+        { value: authOSContractString('SaleManager'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE_MANAGER", networkID) },
+        { value: authOSContractString('TokenManager'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "TOKEN_MANAGER", networkID) },
+      ]
+    }
+    return []
   }
 
   return {
@@ -945,9 +982,8 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
       getCrowdsaleID(),
       { value: authOSContractString('MintedCappedIdx'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "IDX", networkID) },
       { value: authOSContractString('Sale'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE", networkID) },
-      { value: authOSContractString('SaleManager'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE_MANAGER", networkID) },
       { value: authOSContractString('Token'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "TOKEN", networkID) },
-      { value: authOSContractString('TokenManager'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "TOKEN_MANAGER", networkID) },
+      ...getManagers,
       ...footerElemets
     ],
     files: {
