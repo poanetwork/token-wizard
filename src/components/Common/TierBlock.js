@@ -1,6 +1,5 @@
 import React from 'react'
 import { Field } from 'react-final-form'
-import { OnChange } from 'react-final-form-listeners'
 import { InputField2 } from './InputField2'
 import { WhitelistInputBlock } from './WhitelistInputBlock'
 import {
@@ -13,7 +12,7 @@ import { CrowdsaleStartTime } from './CrowdsaleStartTime'
 import { CrowdsaleEndTime } from './CrowdsaleEndTime'
 import { CrowdsaleRate } from './CrowdsaleRate'
 import { Supply } from './Supply'
-import { GlobalMinCap } from './GlobalMinCap'
+import { MinCap } from './MinCap'
 
 const { ALLOW_MODIFYING, CROWDSALE_SETUP_NAME, ENABLE_WHITELISTING } = TEXT_FIELDS
 
@@ -142,30 +141,14 @@ export const TierBlock = ({ fields, ...props }) => {
               />
             </div>
             <div className="input-block-container">
-              <GlobalMinCap
+              <MinCap
                 name={`${name}.minCap`}
                 errorStyle={inputErrorStyle}
                 decimals={props.decimals}
-                tierStore={props.tierStore}
+                index={index}
                 disabled={props.tierStore ? props.tierStore.tiers[index].whitelistEnabled === 'yes' : true}
                 side="left"
               />
-              {
-                /*
-                  * TODO: REVIEW. I'm not sure about this approach.
-                  * But it worked for me to keep the error messages properly updated for the minCap field.
-                  */
-              }
-              <Field name={`${name}.minCap`} subscription={{}}>
-                {({ input: { onChange } }) => (
-                  <OnChange name={`${name}.supply`}>
-                    {() => {
-                      onChange(0)
-                      onChange(props.tierStore.tiers[index].minCap)
-                    }}
-                  </OnChange>
-                )}
-              </Field>
             </div>
           </div>
           {
