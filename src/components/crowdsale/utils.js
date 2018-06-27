@@ -371,17 +371,17 @@ const getRate = async (addr, execID, methods) => {
 const calculateMinContribution = async (method, decimals, naturalMinCap, isWhitelisted) => {
   //todo: update for Proxy
   const {
+    tier_min,
     minimum_contribution,
     minimum_purchase_amt,
     max_tokens_remaining,
     max_purchase_remaining
   } = await method.call()
-  const minimumContribution = toBigNumber(minimum_contribution).times(`1e-${decimals}`)
-  const minimumPurchaseAmt = toBigNumber(minimum_purchase_amt).times(`1e-${decimals}`)
+  const minimumContribution = toBigNumber(tier_min || minimum_contribution).times(`1e-${decimals}`) //global min cap
+  const minimumPurchaseAmt = toBigNumber(minimum_purchase_amt).times(`1e-${decimals}`) //whitelist min cap
   //todo:
-  const maximumContributionDutch = toBigNumber(max_tokens_remaining).times(`1e-${decimals}`)
-  const maximumContributionMintedCapped = toBigNumber(max_purchase_remaining).times(`1e-${decimals}`)
-  if (isWhitelisted && maximumContributionDutch.eq(0) && maximumContributionMintedCapped.eq(0)) {
+  const maximumContribution = toBigNumber(max_tokens_remaining || max_purchase_remaining).times(`1e-${decimals}`)
+  if ((isWhitelisted && maximumContribution.eq(0)) || !isFinite(naturalMinCap)) {
     return -1
   }
   return minimumContribution.gt(naturalMinCap)
@@ -410,24 +410,21 @@ export const getUserMinLimits = async (addr, execID, methods, account) => {
 
   rate.constructor.config({ DECIMAL_PLACES })
 
-  let isWhitelisted = false
   if (crowdsaleStore.isMintedCappedCrowdsale) {
-    const { getCurrentTierInfo, getWhitelistStatus, getCrowdsaleInfo } = methods
+    const { getCurrentTierInfo, getWhitelistStatus } = methods
     const currentTierInfo = await getCurrentTierInfo(...params).call()
     const is_whitelisted = currentTierInfo.is_whitelisted || currentTierInfo[7]
     const tier_index = currentTierInfo.tier_index || currentTierInfo[1]
 
     if (!is_whitelisted) {
       if (owner_balance.gt('0')) return naturalMinCap
-      return calculateMinContribution(getCrowdsaleInfo(...params), token_decimals, naturalMinCap)
-    } else {
-      isWhitelisted = true
+      return calculateMinContribution(getCurrentTierInfo(...params), token_decimals, naturalMinCap)
     }
     return calculateMinContribution(
       getWhitelistStatus(...params, tier_index, account),
       token_decimals,
       naturalMinCap,
-      isWhitelisted
+      is_whitelisted
     )
   } else if (crowdsaleStore.isDutchAuction) {
     const { getCrowdsaleStatus, getWhitelistStatus, getCrowdsaleInfo } = methods
@@ -437,14 +434,12 @@ export const getUserMinLimits = async (addr, execID, methods, account) => {
     if (!is_whitelisted) {
       if (owner_balance.gt('0')) return naturalMinCap
       return calculateMinContribution(getCrowdsaleInfo(...params), token_decimals, naturalMinCap)
-    } else {
-      isWhitelisted = true
     }
     return calculateMinContribution(
       getWhitelistStatus(...params, account),
       token_decimals,
       naturalMinCap,
-      isWhitelisted
+      is_whitelisted
     )
   }
 }

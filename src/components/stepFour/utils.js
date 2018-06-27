@@ -551,17 +551,6 @@ export const addWhitelist = () => {
       let minCaps = []
       let maxCaps = []
 
-      const { web3 } = web3Store
-      const { rate, minRate } = tierStore.tiers[index]
-      let rateBN
-      if (crowdsaleStore.isMintedCappedCrowdsale) {
-        rateBN = new BigNumber(rate)
-      } else if (crowdsaleStore.isDutchAuction) {
-        rateBN = new BigNumber(minRate)
-      }
-      const oneTokenInETH = rateBN.pow(-1).toFixed()
-      const oneTokenInWEI = web3.utils.toWei(oneTokenInETH, 'ether')
-
       for (let i = 0; i < whitelist.length; i++) {
         addrs.push(whitelist[i].addr)
         let whitelistMin = toBigNumber(whitelist[i].min)
@@ -901,52 +890,22 @@ const smallHeader = headerName => {
 }
 
 const whitelistHeaderTableElements = () => {
+  // prettier-ignore
   return [
-    {
-      value: '________________________________________________________________________________________________________',
-      parent: 'none',
-      fileValue: ''
-    },
-    {
-      value: '|                                            |                            |                            |',
-      parent: 'none',
-      fileValue: ''
-    },
-    {
-      value: '|                ADDRESS                     |     MIN CAP IN TOKENS      |     MAX CAP IN TOKENS      |',
-      parent: 'none',
-      fileValue: ''
-    },
-    {
-      value: '|____________________________________________|____________________________|____________________________|',
-      parent: 'none',
-      fileValue: ''
-    }
+    { value: '________________________________________________________________________________________________________', parent: 'none', fileValue: '' },
+    { value: '|                                            |                            |                            |', parent: 'none', fileValue: '' },
+    { value: '|                ADDRESS                     |     MIN CAP IN TOKENS      |     MAX CAP IN TOKENS      |', parent: 'none', fileValue: '' },
+    { value: '|____________________________________________|____________________________|____________________________|', parent: 'none', fileValue: '' },
   ]
 }
 
 const reservedTokensHeaderTableElements = () => {
+  // prettier-ignore
   return [
-    {
-      value: '_______________________________________________________________________________________________________',
-      parent: 'none',
-      fileValue: ''
-    },
-    {
-      value: '|                                            |                                                        |',
-      parent: 'none',
-      fileValue: ''
-    },
-    {
-      value: '|                ADDRESS                     |                        VALUE                           |',
-      parent: 'none',
-      fileValue: ''
-    },
-    {
-      value: '|____________________________________________|________________________________________________________|',
-      parent: 'none',
-      fileValue: ''
-    }
+    { value: '_______________________________________________________________________________________________________', parent: 'none', fileValue: '' },
+    { value: '|                                            |                                                        |', parent: 'none', fileValue: '' },
+    { value: '|                ADDRESS                     |                        VALUE                           |', parent: 'none', fileValue: '' },
+    { value: '|____________________________________________|________________________________________________________|', parent: 'none', fileValue: '' },
   ]
 }
 
@@ -1008,17 +967,10 @@ export const SUMMARY_FILE_CONTENTS = networkID => {
 
   const getManagers = () => {
     if (crowdsaleStore.isDutchAuction) {
+      // prettier-ignore
       return [
-        {
-          value: authOSContractString('SaleManager'),
-          parent: 'none',
-          fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, 'CROWDSALE_MANAGER', networkID)
-        },
-        {
-          value: authOSContractString('TokenManager'),
-          parent: 'none',
-          fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, 'TOKEN_MANAGER', networkID)
-        }
+        { value: authOSContractString('SaleManager'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE_MANAGER", networkID) },
+        { value: authOSContractString('TokenManager'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "TOKEN_MANAGER", networkID) },
       ]
     }
     return []
@@ -1045,39 +997,20 @@ export const SUMMARY_FILE_CONTENTS = networkID => {
       ...crowdsaleWhitelistElements,
       ...footerElemets
     ],
+    // prettier-ignore
     auth_os: [
       ...bigHeaderElements('*******AUTH-OS METADATA******'),
       smallHeader('**********REGISTRY***********'),
-      {
-        value: authOSContractString('abstract storage'),
-        parent: 'none',
-        fileValue: getAddr('ABSTRACT_STORAGE', networkID)
-      },
-      { value: authOSContractString('registry idx'), parent: 'none', fileValue: getAddr('REGISTRY_IDX', networkID) },
-      {
-        value: authOSContractString('script executor'),
-        parent: 'none',
-        fileValue: getAddr('REGISTRY_EXEC', networkID)
-      },
-      { value: authOSContractString('provider'), parent: 'none', fileValue: getAddr('PROVIDER', networkID) },
+      { value: authOSContractString('abstract storage'), parent: 'none', fileValue: getAddr("ABSTRACT_STORAGE", networkID) },
+      { value: authOSContractString('registry idx'), parent: 'none', fileValue: getAddr("REGISTRY_IDX", networkID) },
+      { value: authOSContractString('script executor'), parent: 'none', fileValue: getAddr("REGISTRY_EXEC", networkID) },
+      { value: authOSContractString('provider'), parent: 'none', fileValue: getAddr("PROVIDER", networkID) },
       smallHeader('*********CROWDSALE***********'),
       { value: 'Auth-os application name: ', parent: 'none', fileValue: crowdsaleStore.appName },
       getCrowdsaleID(),
-      {
-        value: authOSContractString('MintedCappedIdx'),
-        parent: 'none',
-        fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, 'IDX', networkID)
-      },
-      {
-        value: authOSContractString('Sale'),
-        parent: 'none',
-        fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, 'CROWDSALE', networkID)
-      },
-      {
-        value: authOSContractString('Token'),
-        parent: 'none',
-        fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, 'TOKEN', networkID)
-      },
+      { value: authOSContractString('MintedCappedIdx'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "IDX", networkID) },
+      { value: authOSContractString('Sale'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE", networkID) },
+      { value: authOSContractString('Token'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "TOKEN", networkID) },
       ...getManagers,
       ...footerElemets
     ],
