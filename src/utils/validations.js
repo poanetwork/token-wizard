@@ -149,3 +149,13 @@ export const validateTierEndDate  = (index) => (value, values) => {
 
   return composeValidators(...listOfValidations)(value)
 }
+
+export const validateTierMinCap = (decimals) => (index) => (value, values) => {
+  const listOfValidations = [
+    isNonNegative(),
+    isDecimalPlacesNotGreaterThan(`Decimals should not exceed ${decimals} places`)(decimals),
+    isLessOrEqualThan(`Should be less or equal than tier's supply (${values.tiers[index].supply})`)(values.tiers[index].supply)
+  ]
+
+  return composeValidators(...listOfValidations)(value)
+}

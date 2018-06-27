@@ -2,7 +2,7 @@ import React from 'react'
 import { Field } from 'react-final-form'
 import { InputField2 } from './InputField2'
 import { WhitelistInputBlock } from './WhitelistInputBlock'
-import { GlobalMinCap } from './GlobalMinCap'
+import { MinCap } from './MinCap'
 import {
   composeValidators,
   isDateInFuture,
@@ -184,10 +184,11 @@ export const DutchAuctionBlock = inject('tierStore', 'tokenStore')(observer(({ t
             </div>
           </div>
           <div className="input-block-container">
-            <GlobalMinCap
+            <MinCap
               name={`${name}.minCap`}
               errorStyle={inputErrorStyle}
               decimals={props.decimals}
+              index={index}
               disabled={tierStore ? tierStore.tiers[index].whitelistEnabled === 'yes' : true}
               side="left"
             />
