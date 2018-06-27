@@ -1,9 +1,9 @@
 import React from 'react'
-import Web3 from 'web3';
-import update from 'immutability-helper';
-import Dropzone from 'react-dropzone';
+import Web3 from 'web3'
+import update from 'immutability-helper'
+import Dropzone from 'react-dropzone'
 import Papa from 'papaparse'
-import '../../assets/stylesheets/application.css';
+import '../../assets/stylesheets/application.css'
 import { InputField } from './InputField'
 import { TEXT_FIELDS, VALIDATION_MESSAGES, VALIDATION_TYPES } from '../../utils/constants'
 import { WhitelistItem } from './WhitelistItem'
@@ -12,12 +12,12 @@ import { clearingWhitelist, whitelistImported } from '../../utils/alerts'
 import processWhitelist from '../../utils/processWhitelist'
 import { validateWhitelistMax, validateWhitelistMin } from '../../utils/validations'
 const { ADDRESS, MIN, MAX } = TEXT_FIELDS
-const {VALID, INVALID} = VALIDATION_TYPES;
+const { VALID, INVALID } = VALIDATION_TYPES
 
 @inject('tierStore')
 @observer
 export class WhitelistInputBlock extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       addr: '',
@@ -37,7 +37,7 @@ export class WhitelistInputBlock extends React.Component {
           pristine: true,
           valid: INVALID,
           errorMessage: VALIDATION_MESSAGES.REQUIRED
-        },
+        }
       }
     }
   }
@@ -47,27 +47,29 @@ export class WhitelistInputBlock extends React.Component {
     const crowdsaleNum = this.props.num
     const { addr, min, max } = this.state
 
-    this.setState(update(this.state, {
-      validation: {
-        address: {
-          pristine: { $set: false }
-        },
-        min: {
-          pristine: { $set: false }
-        },
-        max: {
-          pristine: { $set: false }
-        },
-      }
-    }))
+    this.setState(
+      update(this.state, {
+        validation: {
+          address: {
+            pristine: { $set: false }
+          },
+          min: {
+            pristine: { $set: false }
+          },
+          max: {
+            pristine: { $set: false }
+          }
+        }
+      })
+    )
 
     const {
       address: { valid: addrValid },
       min: { valid: minValid },
-      max: { valid: maxValid },
+      max: { valid: maxValid }
     } = this.state.validation
 
-    if (!addr || !min || !max ||  addrValid === INVALID || minValid === INVALID || maxValid === INVALID) {
+    if (!addr || !min || !max || addrValid === INVALID || minValid === INVALID || maxValid === INVALID) {
       return
     }
 
@@ -89,7 +91,7 @@ export class WhitelistInputBlock extends React.Component {
           pristine: true,
           valid: INVALID,
           errorMessage: VALIDATION_MESSAGES.REQUIRED
-        },
+        }
       }
     })
 
@@ -97,7 +99,7 @@ export class WhitelistInputBlock extends React.Component {
   }
 
   handleAddressChange = address => {
-    const isAddressValid = Web3.utils.isAddress(address) ? VALID : INVALID;
+    const isAddressValid = Web3.utils.isAddress(address) ? VALID : INVALID
 
     const newState = update(this.state, {
       addr: { $set: address },
@@ -106,10 +108,10 @@ export class WhitelistInputBlock extends React.Component {
           $set: {
             pristine: false,
             valid: isAddressValid
-          },
-        },
-      },
-    });
+          }
+        }
+      }
+    })
 
     this.setState(newState)
   }
@@ -121,19 +123,22 @@ export class WhitelistInputBlock extends React.Component {
       decimals: this.props.decimals
     })
 
-    return new Promise((resolve) => {
-      this.setState(update(this.state, {
-        min: { $set: min },
-        validation: {
-          min: {
-            $set: {
-              pristine: false,
-              valid: errorMessage ? INVALID : VALID,
-              errorMessage
+    return new Promise(resolve => {
+      this.setState(
+        update(this.state, {
+          min: { $set: min },
+          validation: {
+            min: {
+              $set: {
+                pristine: false,
+                valid: errorMessage ? INVALID : VALID,
+                errorMessage
+              }
             }
           }
-        }
-      }), resolve)
+        }),
+        resolve
+      )
     })
   }
 
@@ -144,35 +149,36 @@ export class WhitelistInputBlock extends React.Component {
       decimals: this.props.decimals
     })
 
-    return new Promise((resolve) => {
-      this.setState(update(this.state, {
-        max: { $set: max },
-        validation: {
-          max: {
-            $set: {
-              pristine: false,
-              valid: errorMessage ? INVALID : VALID,
-              errorMessage
+    return new Promise(resolve => {
+      this.setState(
+        update(this.state, {
+          max: { $set: max },
+          validation: {
+            max: {
+              $set: {
+                pristine: false,
+                valid: errorMessage ? INVALID : VALID,
+                errorMessage
+              }
             }
           }
-        }
-      }), resolve)
+        }),
+        resolve
+      )
     })
   }
 
   handleMinMaxChange = ({ min, max }) => {
     if (min !== undefined) {
-      this.handleMinChange({ min })
-        .then(() => {
-          if (!this.state.validation.max.pristine) this.handleMaxChange({ max: this.state.max })
-        })
+      this.handleMinChange({ min }).then(() => {
+        if (!this.state.validation.max.pristine) this.handleMaxChange({ max: this.state.max })
+      })
     }
 
     if (max !== undefined) {
-      this.handleMaxChange({ max })
-        .then(() => {
-          if (!this.state.validation.min.pristine) this.handleMinChange({ min: this.state.min })
-        })
+      this.handleMaxChange({ max }).then(() => {
+        if (!this.state.validation.min.pristine) this.handleMinChange({ min: this.state.min })
+      })
     }
   }
 
@@ -181,12 +187,15 @@ export class WhitelistInputBlock extends React.Component {
       Papa.parse(file, {
         skipEmptyLines: true,
         complete: results => {
-          const { called } = processWhitelist({
-            rows: results.data,
-            decimals: this.props.decimals
-          }, item => {
-            this.props.tierStore.addWhitelistItem(item, this.props.num)
-          })
+          const { called } = processWhitelist(
+            {
+              rows: results.data,
+              decimals: this.props.decimals
+            },
+            item => {
+              this.props.tierStore.addWhitelistItem(item, this.props.num)
+            }
+          )
 
           whitelistImported(called)
         }
@@ -197,15 +206,14 @@ export class WhitelistInputBlock extends React.Component {
   clearAll = () => {
     const { num, tierStore } = this.props
 
-    return clearingWhitelist()
-      .then(result => {
-        if (result.value) {
-          tierStore.emptyWhitelist(num)
-        }
-      })
+    return clearingWhitelist().then(result => {
+      if (result.value) {
+        tierStore.emptyWhitelist(num)
+      }
+    })
   }
 
-  render () {
+  render() {
     const { num, tierStore } = this.props
     const { whitelist } = tierStore.tiers[num]
 
@@ -232,8 +240,8 @@ export class WhitelistInputBlock extends React.Component {
         <div className="white-list-input-container">
           <div className="white-list-input-container-inner">
             <InputField
-              side='white-list-input-property white-list-input-property-left'
-              type='text'
+              side="white-list-input-property white-list-input-property-left"
+              type="text"
               title={ADDRESS}
               value={this.state.addr}
               onChange={e => this.handleAddressChange(e.target.value)}
@@ -243,8 +251,8 @@ export class WhitelistInputBlock extends React.Component {
               errorMessage="The inserted address is invalid"
             />
             <InputField
-              side='white-list-input-property white-list-input-property-middle'
-              type='number'
+              side="white-list-input-property white-list-input-property-middle"
+              type="number"
               title={MIN}
               value={this.state.min}
               onChange={e => this.handleMinMaxChange({ min: e.target.value })}
@@ -254,8 +262,8 @@ export class WhitelistInputBlock extends React.Component {
               errorMessage={this.state.validation.min.errorMessage}
             />
             <InputField
-              side='white-list-input-property white-list-input-property-right'
-              type='number'
+              side="white-list-input-property white-list-input-property-right"
+              type="number"
               title={MAX}
               value={this.state.max}
               onChange={e => this.handleMinMaxChange({ max: e.target.value })}
@@ -266,41 +274,31 @@ export class WhitelistInputBlock extends React.Component {
             />
           </div>
           <div className="plus-button-container">
-            <div
-              onClick={e => this.addWhitelistItem()}
-              className="button button_fill button_fill_plus"
-            />
+            <div onClick={e => this.addWhitelistItem()} className="button button_fill button_fill_plus" />
           </div>
         </div>
-        {whitelist && whitelist.map((item, index) =>
-          <WhitelistItem
-            key={`${num}-${item.addr}-${item.stored ? 0 : 1}`}
-            crowdsaleNum={num}
-            whitelistNum={index}
-            {...item}
-          />
-        )}
+        {whitelist &&
+          whitelist.map((item, index) => (
+            <WhitelistItem
+              key={`${num}-${item.addr}-${item.stored ? 0 : 1}`}
+              crowdsaleNum={num}
+              whitelistNum={index}
+              {...item}
+            />
+          ))}
 
         {/* Actions */}
         <div style={actionsStyle}>
-          {
-            whitelistEmpty ? null : (
-              <div className="clear-all-tokens" style={clearAllStyle} onClick={this.clearAll}>
-                <i className="fa fa-trash"></i>&nbsp;Clear All
-              </div>
-            )
-          }
+          {whitelistEmpty ? null : (
+            <div className="clear-all-tokens" style={clearAllStyle} onClick={this.clearAll}>
+              <i className="fa fa-trash" />&nbsp;Clear All
+            </div>
+          )}
 
-          <Dropzone
-            onDrop={this.onDrop}
-            accept=".csv"
-            style={dropzoneStyle}
-          >
-            <i className="fa fa-upload" title="Upload CSV"></i>&nbsp;
-            Upload CSV
+          <Dropzone onDrop={this.onDrop} accept=".csv" style={dropzoneStyle}>
+            <i className="fa fa-upload" title="Upload CSV" />&nbsp; Upload CSV
           </Dropzone>
         </div>
-
       </div>
     )
   }

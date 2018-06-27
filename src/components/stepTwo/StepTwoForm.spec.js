@@ -8,7 +8,7 @@ import CrowdsaleStore from '../../stores/CrowdsaleStore'
 import { CROWDSALE_STRATEGIES } from '../../utils/constants'
 
 configure({ adapter: new Adapter() })
-jest.mock('react-dropzone', () => () =><span>Dropzone</span>);
+jest.mock('react-dropzone', () => () => <span>Dropzone</span>)
 
 describe('StepTwoForm', () => {
   let crowdsaleStore

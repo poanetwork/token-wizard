@@ -6,7 +6,7 @@ import { InputField } from './InputField'
 const { VALID, INVALID } = VALIDATION_TYPES
 
 export class BigNumberInput extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -16,13 +16,13 @@ export class BigNumberInput extends Component {
     }
   }
 
-  componentWillReceiveProps (newProps) {
+  componentWillReceiveProps(newProps) {
     const { value, pristine, valid } = newProps
 
     this.setState({ value, pristine, valid })
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate(prevProps) {
     const { acceptEmpty, acceptFloat, minDecimals, maxDecimals, min, max } = prevProps
 
     if (
@@ -38,7 +38,7 @@ export class BigNumberInput extends Component {
     }
   }
 
-  validate = (value) => {
+  validate = value => {
     const { acceptEmpty, acceptFloat, minDecimals, maxDecimals, min, max } = this.props
     const newState = {
       pristine: false
@@ -47,7 +47,6 @@ export class BigNumberInput extends Component {
     if (isNaN(Number(value)) || isNaN(parseFloat(value))) {
       newState.value = ''
       newState.valid = acceptEmpty ? VALID : INVALID
-
     } else {
       const number = new BigNumber(value)
       const decimals = number.decimalPlaces()
@@ -61,7 +60,6 @@ export class BigNumberInput extends Component {
         if (isValid && minDecimals !== undefined) {
           isValid = decimals >= minDecimals
         }
-
       } else {
         isValid = !decimals
       }
@@ -101,7 +99,7 @@ export class BigNumberInput extends Component {
     this.validate(e.target.value)
   }
 
-  render () {
+  render() {
     const { value, pristine, valid } = this.state
     const { disabled, side, errorMessage, title, description } = this.props
 

@@ -18,4 +18,3 @@ export const WhenFieldChanges = ({ field, becomes, set, to }) => (
     )}
   </Field>
 )
-

@@ -11,10 +11,9 @@ const executeSequentially = (list, startAt = 0, cb = () => {}) => {
           cb(startAt + index)
           return fn()
         })
-        .catch((err) => Promise.reject([err, startAt + index]))
+        .catch(err => Promise.reject([err, startAt + index]))
     })
   }, Promise.resolve())
-
 }
 
 export default executeSequentially

@@ -15,4 +15,4 @@ export const CrowdsaleConfig = {
   showHeaderAndFooterInIframe: true
 };*/
 
-export const CrowdsaleConfig = {};
+export const CrowdsaleConfig = {}

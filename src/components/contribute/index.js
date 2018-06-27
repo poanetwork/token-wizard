@@ -82,21 +82,20 @@ export class Contribute extends React.Component {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const { gasPriceStore, generalStore, crowdsaleStore } = this.props
 
     this.validateEnvironment()
       .then(() => getCrowdsaleAssets(generalStore.networkID))
       .then(() => getCrowdsaleStrategy(this.state.crowdsaleExecID))
-      .then((strategy) => crowdsaleStore.setProperty('strategy', strategy))
+      .then(strategy => crowdsaleStore.setProperty('strategy', strategy))
       .then(() => this.extractContractsData())
-      .then(() => gasPriceStore.updateValues()
-        .then(
-          () => generalStore.setGasPrice(gasPriceStore.slow.price),
-          () => noGasPriceAvailable()
-        )
+      .then(() =>
+        gasPriceStore
+          .updateValues()
+          .then(() => generalStore.setGasPrice(gasPriceStore.slow.price), () => noGasPriceAvailable())
       )
-      .catch((err) => console.error(err))
+      .catch(err => console.error(err))
       .then(() => this.setState({ loading: false }))
   }
 
@@ -144,7 +143,7 @@ export class Contribute extends React.Component {
     }
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.clearTimeInterval()
   }
 
@@ -165,7 +164,7 @@ export class Contribute extends React.Component {
 
     let target
     if (contractStore.crowdsale.execID) {
-      const targetPrefix = "idx"
+      const targetPrefix = 'idx'
       const targetSuffix = crowdsaleStore.contractTargetSuffix
       target = `${targetPrefix}${targetSuffix}`
     } else if (crowdsaleStore.isMintedCappedCrowdsale) {
@@ -189,10 +188,9 @@ export class Contribute extends React.Component {
   }
 
   checkIsFinalized(initCrowdsaleContract, crowdsaleExecID) {
-    return isFinalized(initCrowdsaleContract, crowdsaleExecID)
-      .then(isFinalized => {
-        this.setState({ isFinalized })
-      })
+    return isFinalized(initCrowdsaleContract, crowdsaleExecID).then(isFinalized => {
+      this.setState({ isFinalized })
+    })
   }
 
   setTimers = () => {
@@ -204,7 +202,9 @@ export class Contribute extends React.Component {
     if (crowdsalePageStore.ticks.length) {
       nextTick = crowdsalePageStore.extractNextTick()
       millisecondsToNextTick = nextTick.time - Date.now()
-      const FIVE_MINUTES_BEFORE_TICK = moment(millisecondsToNextTick).subtract(5, 'minutes').valueOf()
+      const FIVE_MINUTES_BEFORE_TICK = moment(millisecondsToNextTick)
+        .subtract(5, 'minutes')
+        .valueOf()
       const ONE_DAY = 24 * 3600 * 1000
 
       if (FIVE_MINUTES_BEFORE_TICK < ONE_DAY) {
@@ -227,14 +227,12 @@ export class Contribute extends React.Component {
       }, 1000)
     }
 
-
     this.setState({
       nextTick,
       msToNextTick: millisecondsToNextTick,
       displaySeconds: false,
       timeInterval
     })
-
   }
 
   resetTimers = () => {
@@ -274,7 +272,7 @@ export class Contribute extends React.Component {
   contributeToTokensForWhitelistedCrowdsale = () => {
     const { crowdsalePageStore } = this.props
 
-    if (crowdsalePageStore.startDate > (new Date()).getTime()) {
+    if (crowdsalePageStore.startDate > new Date().getTime()) {
       this.setState({ loading: false })
       return contributionDisabledAlertInTime(crowdsalePageStore.startDate)
     }
@@ -285,8 +283,8 @@ export class Contribute extends React.Component {
   getBuyParams = (weiToSend, methodInterface) => {
     const { web3Store } = this.props
     const { web3 } = web3Store
-    let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, []);
-    return encodedParameters;
+    let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [])
+    return encodedParameters
   }
 
   calculateWeiToSend = async () => {
@@ -296,13 +294,13 @@ export class Contribute extends React.Component {
 
     let target
     if (contractStore.crowdsale.execID) {
-      const targetPrefix = "idx"
+      const targetPrefix = 'idx'
       const targetSuffix = crowdsaleStore.contractTargetSuffix
       target = `${targetPrefix}${targetSuffix}`
     } else if (contractStore.MintedCappedProxy.addr) {
-      target = "MintedCappedProxy"
+      target = 'MintedCappedProxy'
     } else if (contractStore.DutchProxy.addr) {
-      target = "DutchProxy"
+      target = 'DutchProxy'
     }
 
     let params = []
@@ -317,7 +315,6 @@ export class Contribute extends React.Component {
       const tier_price = currentTierInfo.tier_price || currentTierInfo[4]
       console.log('tier_price:', tier_price)
       crowdsalePageStore.setProperty('rate', tier_price) //should be one token in wei
-
     } else if (crowdsaleStore.isDutchAuction) {
       const crowdsaleStatus = await methods.getCrowdsaleStatus(...params).call()
       const current_rate = crowdsaleStatus.current_rate || crowdsaleStatus[2]
@@ -344,7 +341,7 @@ export class Contribute extends React.Component {
 
     let target
     if (contractStore.crowdsale.execID) {
-      const targetPrefix = "idx"
+      const targetPrefix = 'idx'
       const targetSuffix = crowdsaleStore.contractTargetSuffix
       target = `${targetPrefix}${targetSuffix}`
     } else if (contractStore.MintedCappedProxy.addr) {
@@ -383,10 +380,10 @@ export class Contribute extends React.Component {
     }
     console.log(opts)
 
-    let methodInterface = [];
+    let methodInterface = []
 
     let paramsToExec = [opts.value, methodInterface]
-    const targetContractName = execID ? "registryExec" : "MintedCappedProxy"
+    const targetContractName = execID ? 'registryExec' : 'MintedCappedProxy'
     const method = methodToExec(targetContractName, `buy()`, this.getBuyParams, paramsToExec)
 
     const estimatedGas = await method.estimateGas(opts)
@@ -424,7 +421,7 @@ export class Contribute extends React.Component {
     }
   }
 
-  updateContributeThrough = (contributeThrough) => {
+  updateContributeThrough = contributeThrough => {
     this.setState({ contributeThrough })
   }
 
@@ -432,12 +429,20 @@ export class Contribute extends React.Component {
     return +token > 0 && countDecimalPlaces(token) <= this.props.tokenStore.decimals
   }
 
-  render () {
+  render() {
     const { crowdsalePageStore, tokenStore, contractStore } = this.props
     const { tokenAmountOf } = crowdsalePageStore
     const { crowdsale, MintedCappedProxy } = contractStore
 
-    const { curAddr, contributeThrough, crowdsaleExecID, web3Available, toNextTick, nextTick, minimumContribution } = this.state
+    const {
+      curAddr,
+      contributeThrough,
+      crowdsaleExecID,
+      web3Available,
+      toNextTick,
+      nextTick,
+      minimumContribution
+    } = this.state
     const { days, hours, minutes, seconds } = toNextTick
 
     const { decimals, ticker, name } = tokenStore
@@ -449,88 +454,111 @@ export class Contribute extends React.Component {
     const maxCapBeforeDecimals = toBigNumber(maximumSellableTokens).div(`1e${tokenDecimals}`)
 
     //balance
-    const contributorBalance = tokenAmountOf ? toBigNumber(tokenAmountOf).div(`1e${tokenDecimals}`).toFixed() : '0'
+    const contributorBalance = tokenAmountOf
+      ? toBigNumber(tokenAmountOf)
+          .div(`1e${tokenDecimals}`)
+          .toFixed()
+      : '0'
 
     //total supply
     const totalSupply = maxCapBeforeDecimals.toFixed()
 
     //min contribution
-    const minimumContributionDisplay = minimumContribution >= 0 ? `${minimumContribution} ${tokenTicker}` : 'You are not allowed'
+    const minimumContributionDisplay =
+      minimumContribution >= 0 ? `${minimumContribution} ${tokenTicker}` : 'You are not allowed'
 
-    const QRPaymentProcessElement = contributeThrough === CONTRIBUTION_OPTIONS.QR && crowdsaleExecID ?
-      <QRPaymentProcess registryExecAddr={contractStore.registryExec.addr} txData={getExecBuyCallData(crowdsaleExecID)} /> :
-      null
+    const QRPaymentProcessElement =
+      contributeThrough === CONTRIBUTION_OPTIONS.QR && crowdsaleExecID ? (
+        <QRPaymentProcess
+          registryExecAddr={contractStore.registryExec.addr}
+          txData={getExecBuyCallData(crowdsaleExecID)}
+        />
+      ) : null
 
     const rightColumnClasses = classNames('contribute-table-cell', 'contribute-table-cell_right', {
       'qr-selected': contributeThrough === CONTRIBUTION_OPTIONS.QR
     })
 
-    return <div className="contribute container">
-      <div className="contribute-table">
-        <div className="contribute-table-cell contribute-table-cell_left">
-          <CountdownTimer
-            displaySeconds={this.state.displaySeconds}
-            nextTick={nextTick}
-            tiersLength={crowdsalePageStore && crowdsalePageStore.tiers.length}
-            days={days}
-            hours={hours}
-            minutes={minutes}
-            seconds={seconds}
-            msToNextTick={this.state.msToNextTick}
-            onComplete={this.resetTimers}
-            isFinalized={this.state.isFinalized}
-          />
-          <div className="hashes">
-            <div className="hashes-i">
-              <p className="hashes-title">{curAddr}</p>
-              <p className="hashes-description">Current Account</p>
+    return (
+      <div className="contribute container">
+        <div className="contribute-table">
+          <div className="contribute-table-cell contribute-table-cell_left">
+            <CountdownTimer
+              displaySeconds={this.state.displaySeconds}
+              nextTick={nextTick}
+              tiersLength={crowdsalePageStore && crowdsalePageStore.tiers.length}
+              days={days}
+              hours={hours}
+              minutes={minutes}
+              seconds={seconds}
+              msToNextTick={this.state.msToNextTick}
+              onComplete={this.resetTimers}
+              isFinalized={this.state.isFinalized}
+            />
+            <div className="hashes">
+              <div className="hashes-i">
+                <p className="hashes-title">{curAddr}</p>
+                <p className="hashes-description">Current Account</p>
+              </div>
+              <div className="hashes-i">
+                <p className="hashes-title">
+                  {(crowdsale && crowdsale.execID) || (MintedCappedProxy && MintedCappedProxy.addr)}
+                </p>
+                <p className="hashes-description">
+                  {crowdsale
+                    ? crowdsale.execID
+                      ? 'Crowdsale Execution ID'
+                      : 'Crowdsale Proxy Address'
+                    : 'Crowdsale ID'}
+                </p>
+              </div>
+              <div className="hashes-i">
+                <p className="hashes-title">{tokenName}</p>
+                <p className="hashes-description">Name</p>
+              </div>
+              <div className="hashes-i">
+                <p className="hashes-title">{tokenTicker}</p>
+                <p className="hashes-description">Ticker</p>
+              </div>
+              <div className="hashes-i">
+                <p className="hashes-title">
+                  {totalSupply} {tokenTicker}
+                </p>
+                <p className="hashes-description">Total Supply</p>
+              </div>
+              <div className="hashes-i">
+                <p className="hashes-title">{minimumContributionDisplay}</p>
+                <p className="hashes-description">Minimum Contribution</p>
+              </div>
             </div>
-            <div className="hashes-i">
-              <p className="hashes-title">{(crowdsale && crowdsale.execID) || (MintedCappedProxy && MintedCappedProxy.addr)}</p>
-              <p className="hashes-description">{crowdsale ? crowdsale.execID ? 'Crowdsale Execution ID' : 'Crowdsale Proxy Address' : 'Crowdsale ID'}</p>
-            </div>
-            <div className="hashes-i">
-              <p className="hashes-title">{tokenName}</p>
-              <p className="hashes-description">Name</p>
-            </div>
-            <div className="hashes-i">
-              <p className="hashes-title">{tokenTicker}</p>
-              <p className="hashes-description">Ticker</p>
-            </div>
-            <div className="hashes-i">
-              <p className="hashes-title">{totalSupply} {tokenTicker}</p>
-              <p className="hashes-description">Total Supply</p>
-            </div>
-            <div className="hashes-i">
-              <p className="hashes-title">{minimumContributionDisplay}</p>
-              <p className="hashes-description">Minimum Contribution</p>
-            </div>
-          </div>
-          <p className="contribute-title">Contribute page</p>
-          <p className="contribute-description">
-            {'Here you can contribute in the crowdsale campaign. At the moment, you need Metamask client to contribute into the crowdsale.'}
-          </p>
-        </div>
-        <div className={rightColumnClasses}>
-          <div className="balance">
-            <p className="balance-title">{contributorBalance} {tokenTicker}</p>
-            <p className="balance-description">Balance</p>
-            <p className="description">
-              Your balance in tokens.
+            <p className="contribute-title">Contribute page</p>
+            <p className="contribute-description">
+              {
+                'Here you can contribute in the crowdsale campaign. At the moment, you need Metamask client to contribute into the crowdsale.'
+              }
             </p>
           </div>
-          <Form
-            onSubmit={this.contributeToTokens}
-            component={ContributeForm}
-            contributeThrough={contributeThrough}
-            updateContributeThrough={this.updateContributeThrough}
-            web3Available={web3Available}
-            minimumContribution={minimumContribution}
-          />
-          {QRPaymentProcessElement}
+          <div className={rightColumnClasses}>
+            <div className="balance">
+              <p className="balance-title">
+                {contributorBalance} {tokenTicker}
+              </p>
+              <p className="balance-description">Balance</p>
+              <p className="description">Your balance in tokens.</p>
+            </div>
+            <Form
+              onSubmit={this.contributeToTokens}
+              component={ContributeForm}
+              contributeThrough={contributeThrough}
+              updateContributeThrough={this.updateContributeThrough}
+              web3Available={web3Available}
+              minimumContribution={minimumContribution}
+            />
+            {QRPaymentProcessElement}
+          </div>
         </div>
+        <Loader show={this.state.loading} />
       </div>
-      <Loader show={this.state.loading}></Loader>
-    </div>
+    )
   }
 }

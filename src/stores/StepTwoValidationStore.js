@@ -1,11 +1,10 @@
-import { observable, action } from 'mobx';
+import { observable, action } from 'mobx'
 import autosave from './autosave'
 
 class StepTwoValidationStore {
-
-  @observable name;
-  @observable ticker;
-  @observable decimals;
+  @observable name
+  @observable ticker
+  @observable decimals
 
   constructor() {
     this.name = 'EMPTY'
@@ -15,9 +14,10 @@ class StepTwoValidationStore {
     autosave(this, 'StepTwoValidationStore')
   }
 
-  @action property = (property, value) => {
+  @action
+  property = (property, value) => {
     this[property] = value
   }
 }
 
-export default StepTwoValidationStore;
+export default StepTwoValidationStore

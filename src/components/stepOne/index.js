@@ -1,28 +1,27 @@
 import React from 'react'
-import '../../assets/stylesheets/application.css';
-import { Link } from 'react-router-dom';
-import { StepNavigation } from '../Common/StepNavigation';
-import { NAVIGATION_STEPS, CROWDSALE_STRATEGIES, CROWDSALE_STRATEGIES_DISPLAYNAMES } from '../../utils/constants';
+import '../../assets/stylesheets/application.css'
+import { Link } from 'react-router-dom'
+import { StepNavigation } from '../Common/StepNavigation'
+import { NAVIGATION_STEPS, CROWDSALE_STRATEGIES, CROWDSALE_STRATEGIES_DISPLAYNAMES } from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
-const { CROWDSALE_STRATEGY } = NAVIGATION_STEPS;
+const { CROWDSALE_STRATEGY } = NAVIGATION_STEPS
 
 //todo: downloadStatus is not used
-const ContinueButton = ({downloadStatus}) => {
+const ContinueButton = ({ downloadStatus }) => {
   return (
     <Link to="/2">
       <span className="button button_fill">Continue</span>
     </Link>
-  );
-};
+  )
+}
 
 @inject('crowdsaleStore')
 @observer
 export class stepOne extends React.Component {
-
-  constructor (props) {
+  constructor(props) {
     super(props)
 
-    this.setStrategy(null, CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE);
+    this.setStrategy(null, CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE)
   }
 
   setStrategy = (event, strategy) => {
@@ -34,15 +33,13 @@ export class stepOne extends React.Component {
 
   render() {
     return (
-       <section className="steps steps_crowdsale-contract">
-       <StepNavigation activeStep={CROWDSALE_STRATEGY}/>
+      <section className="steps steps_crowdsale-contract">
+        <StepNavigation activeStep={CROWDSALE_STRATEGY} />
         <div className="steps-content container">
           <div className="about-step">
-            <div className="step-icons step-icons_crowdsale-contract"></div>
+            <div className="step-icons step-icons_crowdsale-contract" />
             <p className="title">{CROWDSALE_STRATEGY}</p>
-            <p className="description">
-              Select a strategy for your crowdsale.
-            </p>
+            <p className="description">Select a strategy for your crowdsale.</p>
           </div>
           <div className="radios" onChange={this.setStrategy}>
             <label className="radio">
@@ -58,16 +55,9 @@ export class stepOne extends React.Component {
               </span>
             </label>
             <label className="radio">
-              <input
-                type="radio"
-                defaultChecked={false}
-                name="contract-type"
-                id={CROWDSALE_STRATEGIES.DUTCH_AUCTION}
-              />
+              <input type="radio" defaultChecked={false} name="contract-type" id={CROWDSALE_STRATEGIES.DUTCH_AUCTION} />
               <span className="title">{CROWDSALE_STRATEGIES_DISPLAYNAMES.DUTCH_AUCTION}</span>
-              <span className="description">
-                An auction with descending price.
-              </span>
+              <span className="description">An auction with descending price.</span>
             </label>
           </div>
         </div>

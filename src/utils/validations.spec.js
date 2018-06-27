@@ -19,7 +19,7 @@ import {
   validateTierMinCap,
   validateTierStartDate,
   validateWhitelistMax,
-  validateWhitelistMin,
+  validateWhitelistMin
 } from './validations'
 import { VALIDATION_MESSAGES } from './constants'
 import MockDate from 'mockdate'
@@ -37,7 +37,7 @@ describe('validateWhitelistMin', () => {
     { value: { min: '5.123456', max: '11.123', decimals: '3' }, expected: 'Decimals should not exceed 3 places' },
     { value: { min: '25.123456', max: '11.123', decimals: '3' }, expected: 'Decimals should not exceed 3 places' },
     { value: { min: '25.123', max: '11.123', decimals: '3' }, expected: 'Should be less or equal than max' },
-    { value: { min: '5', max: '3', decimals: '0' }, expected: 'Should be less or equal than max' },
+    { value: { min: '5', max: '3', decimals: '0' }, expected: 'Should be less or equal than max' }
   ]
 
   testCases.forEach(testCase => {
@@ -63,7 +63,7 @@ describe('validateWhitelistMax', () => {
     { value: { min: '5.123', max: '11.123456', decimals: '3' }, expected: 'Decimals should not exceed 3 places' },
     { value: { min: '25.123', max: '11.123456', decimals: '3' }, expected: 'Decimals should not exceed 3 places' },
     { value: { min: '25.123', max: '11.123', decimals: '3' }, expected: 'Should be greater or equal than min' },
-    { value: { min: '5', max: '3', decimals: '0' }, expected: 'Should be greater or equal than min' },
+    { value: { min: '5', max: '3', decimals: '0' }, expected: 'Should be greater or equal than min' }
   ]
 
   testCases.forEach(testCase => {
@@ -82,7 +82,12 @@ describe('isMaxLength', () => {
     { value: 'ABC', errorMessage: undefined, comparedTo: 30, expected: undefined },
     { value: '', errorMessage: undefined, comparedTo: 30, expected: undefined },
     { value: 'ABCDEF', errorMessage: undefined, comparedTo: 3, expected: VALIDATION_MESSAGES.NAME },
-    { value: 'ABCDEF', errorMessage: 'Personalized error message', comparedTo: 3, expected: 'Personalized error message' },
+    {
+      value: 'ABCDEF',
+      errorMessage: 'Personalized error message',
+      comparedTo: 3,
+      expected: 'Personalized error message'
+    }
   ]
 
   testCases.forEach(testCase => {
@@ -97,7 +102,12 @@ describe('isMaxLength', () => {
 describe('isMatchingPattern', () => {
   const testCases = [
     { value: '123456789012354678901234567890', errorMessage: undefined, comparedTo: /^[0-9]*$/, expected: undefined },
-    { value: '123456789012354678901234567890', errorMessage: undefined, comparedTo: /^[0-9]{1,30}$/, expected: undefined },
+    {
+      value: '123456789012354678901234567890',
+      errorMessage: undefined,
+      comparedTo: /^[0-9]{1,30}$/,
+      expected: undefined
+    },
     { value: '1', errorMessage: undefined, comparedTo: /^[0-9]{1,30}$/, expected: undefined },
     { value: 'ABC', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]*$/, expected: undefined },
     { value: 'ABC123', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]*$/, expected: undefined },
@@ -107,11 +117,36 @@ describe('isMatchingPattern', () => {
     { value: '', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]*$/, expected: undefined },
     { value: '', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]+$/, expected: VALIDATION_MESSAGES.PATTERN },
     { value: '@', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]$/, expected: VALIDATION_MESSAGES.PATTERN },
-    { value: 'ABCDEF', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]{1,5}$/, expected: VALIDATION_MESSAGES.PATTERN },
-    { value: 'ABC@D', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]{1,5}$/, expected: VALIDATION_MESSAGES.PATTERN },
-    { value: 'ñandú', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]{1,5}$/, expected: VALIDATION_MESSAGES.PATTERN },
-    { value: 'ñandú', errorMessage: undefined, comparedTo: /^[a-zA-Z0-9]{1,5}$/, expected: VALIDATION_MESSAGES.PATTERN },
-    { value: 'ñandú', errorMessage: 'Personalized error message', comparedTo: /^[a-zA-Z0-9]{1,5}$/, expected: 'Personalized error message' },
+    {
+      value: 'ABCDEF',
+      errorMessage: undefined,
+      comparedTo: /^[a-zA-Z0-9]{1,5}$/,
+      expected: VALIDATION_MESSAGES.PATTERN
+    },
+    {
+      value: 'ABC@D',
+      errorMessage: undefined,
+      comparedTo: /^[a-zA-Z0-9]{1,5}$/,
+      expected: VALIDATION_MESSAGES.PATTERN
+    },
+    {
+      value: 'ñandú',
+      errorMessage: undefined,
+      comparedTo: /^[a-zA-Z0-9]{1,5}$/,
+      expected: VALIDATION_MESSAGES.PATTERN
+    },
+    {
+      value: 'ñandú',
+      errorMessage: undefined,
+      comparedTo: /^[a-zA-Z0-9]{1,5}$/,
+      expected: VALIDATION_MESSAGES.PATTERN
+    },
+    {
+      value: 'ñandú',
+      errorMessage: 'Personalized error message',
+      comparedTo: /^[a-zA-Z0-9]{1,5}$/,
+      expected: 'Personalized error message'
+    }
   ]
 
   testCases.forEach(testCase => {
@@ -135,7 +170,7 @@ describe('isPositive', () => {
     { value: '-1', errorMessage: undefined, expected: VALIDATION_MESSAGES.POSITIVE },
     { value: '-0.1', errorMessage: undefined, expected: VALIDATION_MESSAGES.POSITIVE },
     { value: '-100', errorMessage: undefined, expected: VALIDATION_MESSAGES.POSITIVE },
-    { value: '-100', errorMessage: 'Personalized error message', expected: 'Personalized error message' },
+    { value: '-100', errorMessage: 'Personalized error message', expected: 'Personalized error message' }
   ]
 
   testCases.forEach(testCase => {
@@ -159,7 +194,7 @@ describe('isNonNegative', () => {
     { value: '-1', errorMessage: undefined, expected: VALIDATION_MESSAGES.NON_NEGATIVE },
     { value: '-0.1', errorMessage: undefined, expected: VALIDATION_MESSAGES.NON_NEGATIVE },
     { value: '-100', errorMessage: undefined, expected: VALIDATION_MESSAGES.NON_NEGATIVE },
-    { value: '-100', errorMessage: 'Personalized error message', expected: 'Personalized error message' },
+    { value: '-100', errorMessage: 'Personalized error message', expected: 'Personalized error message' }
   ]
 
   testCases.forEach(testCase => {
@@ -179,9 +214,13 @@ describe('isAddress', () => {
     { value: '0x22d491bde2303f2f43325b2108d26f1eaba1e32b', errorMessage: undefined, expected: undefined },
     { value: '0xe11ba2b4d45eaed5996cd0823791e0c93114882d', errorMessage: undefined, expected: undefined },
     { value: '', errorMessage: undefined, expected: VALIDATION_MESSAGES.ADDRESS },
-    { value: '0xe11ba2b4d45eaED5996cd0823791e0c93114882d', errorMessage: undefined, expected: VALIDATION_MESSAGES.ADDRESS },
+    {
+      value: '0xe11ba2b4d45eaED5996cd0823791e0c93114882d',
+      errorMessage: undefined,
+      expected: VALIDATION_MESSAGES.ADDRESS
+    },
     { value: '0x123', errorMessage: undefined, expected: VALIDATION_MESSAGES.ADDRESS },
-    { value: '0x123', errorMessage: 'Personalized error message', expected: 'Personalized error message' },
+    { value: '0x123', errorMessage: 'Personalized error message', expected: 'Personalized error message' }
   ]
 
   testCases.forEach(testCase => {
@@ -206,7 +245,7 @@ describe('isRequired', () => {
     { value: undefined, errorMessage: undefined, expected: VALIDATION_MESSAGES.REQUIRED },
     { value: null, errorMessage: undefined, expected: VALIDATION_MESSAGES.REQUIRED },
     { value: '', errorMessage: undefined, expected: VALIDATION_MESSAGES.REQUIRED },
-    { value: '', errorMessage: 'Personalized error message', expected: 'Personalized error message' },
+    { value: '', errorMessage: 'Personalized error message', expected: 'Personalized error message' }
   ]
 
   testCases.forEach(testCase => {
@@ -228,14 +267,21 @@ describe('isDecimalPlacesNotGreaterThan', () => {
     { value: '1.12345', errorMessage: undefined, comparedTo: '5', expected: undefined },
     { value: '1.123456', errorMessage: undefined, comparedTo: '5', expected: VALIDATION_MESSAGES.DECIMAL_PLACES },
     { value: '1.1234567', errorMessage: undefined, comparedTo: '5', expected: VALIDATION_MESSAGES.DECIMAL_PLACES },
-    { value: '1.1234567', errorMessage: 'Personalized error message', comparedTo: '5', expected: 'Personalized error message' },
+    {
+      value: '1.1234567',
+      errorMessage: 'Personalized error message',
+      comparedTo: '5',
+      expected: 'Personalized error message'
+    }
   ]
 
   testCases.forEach(testCase => {
     const action = testCase.expected === undefined ? 'pass' : 'fail'
 
     it(`Should ${action} for '${testCase.value}'`, () => {
-      expect(isDecimalPlacesNotGreaterThan(testCase.errorMessage)(testCase.comparedTo)(testCase.value)).toBe(testCase.expected)
+      expect(isDecimalPlacesNotGreaterThan(testCase.errorMessage)(testCase.comparedTo)(testCase.value)).toBe(
+        testCase.expected
+      )
     })
   })
 })
@@ -251,10 +297,15 @@ describe('isLessOrEqualThan', () => {
     { value: '1000000000000000000', errorMessage: undefined, comparedTo: '1e18', expected: undefined },
     { value: '999999999999999999', errorMessage: undefined, comparedTo: '1e18', expected: undefined },
     { value: 'not-a-number', errorMessage: undefined, comparedTo: '1e18', expected: VALIDATION_MESSAGES.LESS_OR_EQUAL },
-    { value: '10000000000000000001', errorMessage: undefined, comparedTo: '1e18', expected: VALIDATION_MESSAGES.LESS_OR_EQUAL },
+    {
+      value: '10000000000000000001',
+      errorMessage: undefined,
+      comparedTo: '1e18',
+      expected: VALIDATION_MESSAGES.LESS_OR_EQUAL
+    },
     { value: '5.1', errorMessage: undefined, comparedTo: '5', expected: VALIDATION_MESSAGES.LESS_OR_EQUAL },
     { value: '6', errorMessage: undefined, comparedTo: '5', expected: VALIDATION_MESSAGES.LESS_OR_EQUAL },
-    { value: '6', errorMessage: 'Personalized error message', comparedTo: '5', expected: 'Personalized error message' },
+    { value: '6', errorMessage: 'Personalized error message', comparedTo: '5', expected: 'Personalized error message' }
   ]
 
   testCases.forEach(testCase => {
@@ -276,11 +327,21 @@ describe('isGreaterOrEqualThan', () => {
     { value: '50', errorMessage: undefined, comparedTo: undefined, expected: undefined },
     { value: '0.1', errorMessage: undefined, comparedTo: '0.1', expected: undefined },
     { value: '0.1234', errorMessage: undefined, comparedTo: '0.1', expected: undefined },
-    { value: 'not-a-number', errorMessage: undefined, comparedTo: '0.1', expected: VALIDATION_MESSAGES.GREATER_OR_EQUAL },
+    {
+      value: 'not-a-number',
+      errorMessage: undefined,
+      comparedTo: '0.1',
+      expected: VALIDATION_MESSAGES.GREATER_OR_EQUAL
+    },
     { value: '0.0001', errorMessage: undefined, comparedTo: '0.1', expected: VALIDATION_MESSAGES.GREATER_OR_EQUAL },
     { value: '0', errorMessage: undefined, comparedTo: '0.1', expected: VALIDATION_MESSAGES.GREATER_OR_EQUAL },
     { value: '-10', errorMessage: undefined, comparedTo: '0.1', expected: VALIDATION_MESSAGES.GREATER_OR_EQUAL },
-    { value: '-10', errorMessage: 'Personalized error message', comparedTo: '0.1', expected: 'Personalized error message' },
+    {
+      value: '-10',
+      errorMessage: 'Personalized error message',
+      comparedTo: '0.1',
+      expected: 'Personalized error message'
+    }
   ]
 
   testCases.forEach(testCase => {
@@ -303,7 +364,7 @@ describe('isInteger', () => {
     { value: '.12', errorMessage: undefined, expected: VALIDATION_MESSAGES.INTEGER },
     { value: 'abc', errorMessage: undefined, expected: VALIDATION_MESSAGES.INTEGER },
     { value: '0.12', errorMessage: undefined, expected: VALIDATION_MESSAGES.INTEGER },
-    { value: '0.12', errorMessage: 'Personalized error message', expected: 'Personalized error message' },
+    { value: '0.12', errorMessage: 'Personalized error message', expected: 'Personalized error message' }
   ]
 
   testCases.forEach(testCase => {
@@ -321,10 +382,10 @@ describe('Date/Time validations', () => {
     PLUS_5_MINUTES: 1520852700000,
     PLUS_10_DAYS: 1521716400000,
     MINUS_5_MINUTES: 1520852100000,
-    MINUS_10_DAYS: 1519988400000,
+    MINUS_10_DAYS: 1519988400000
   }
 
-  const getKeyByValue = (value) => Object.keys(TIMESTAMPS).find(key => TIMESTAMPS[key] === value)
+  const getKeyByValue = value => Object.keys(TIMESTAMPS).find(key => TIMESTAMPS[key] === value)
 
   beforeEach(() => {
     MockDate.set(TIMESTAMPS.CURRENT_TIME)
@@ -343,7 +404,7 @@ describe('Date/Time validations', () => {
         value: TIMESTAMPS.CURRENT_TIME,
         errorMessage: 'Personalized error message',
         expected: 'Personalized error message'
-      },
+      }
     ]
 
     testCases.forEach(testCase => {
@@ -392,13 +453,15 @@ describe('Date/Time validations', () => {
         errorMessage: 'Personalized error message',
         comparedTo: TIMESTAMPS.CURRENT_TIME,
         expected: 'Personalized error message'
-      },
+      }
     ]
 
     testCases.forEach(testCase => {
       const action = testCase.expected === undefined ? 'pass' : 'fail'
 
-      it(`Should ${action} for '${getKeyByValue(testCase.value)} compared to ${getKeyByValue(testCase.comparedTo)}'`, () => {
+      it(`Should ${action} for '${getKeyByValue(testCase.value)} compared to ${getKeyByValue(
+        testCase.comparedTo
+      )}'`, () => {
         expect(isDatePreviousThan(testCase.errorMessage)(testCase.comparedTo)(testCase.value)).toBe(testCase.expected)
       })
     })
@@ -441,14 +504,18 @@ describe('Date/Time validations', () => {
         errorMessage: 'Personalized error message',
         comparedTo: TIMESTAMPS.PLUS_10_DAYS,
         expected: 'Personalized error message'
-      },
+      }
     ]
 
     testCases.forEach(testCase => {
       const action = testCase.expected === undefined ? 'pass' : 'fail'
 
-      it(`Should ${action} for '${getKeyByValue(testCase.value)} compared to ${getKeyByValue(testCase.comparedTo)}'`, () => {
-        expect(isDateSameOrLaterThan(testCase.errorMessage)(testCase.comparedTo)(testCase.value)).toBe(testCase.expected)
+      it(`Should ${action} for '${getKeyByValue(testCase.value)} compared to ${getKeyByValue(
+        testCase.comparedTo
+      )}'`, () => {
+        expect(isDateSameOrLaterThan(testCase.errorMessage)(testCase.comparedTo)(testCase.value)).toBe(
+          testCase.expected
+        )
       })
     })
   })
@@ -490,13 +557,15 @@ describe('Date/Time validations', () => {
         errorMessage: 'Personalized error message',
         comparedTo: TIMESTAMPS.PLUS_10_DAYS,
         expected: 'Personalized error message'
-      },
+      }
     ]
 
     testCases.forEach(testCase => {
       const action = testCase.expected === undefined ? 'pass' : 'fail'
 
-      it(`Should ${action} for '${getKeyByValue(testCase.value)} compared to ${getKeyByValue(testCase.comparedTo)}'`, () => {
+      it(`Should ${action} for '${getKeyByValue(testCase.value)} compared to ${getKeyByValue(
+        testCase.comparedTo
+      )}'`, () => {
         expect(isDateLaterThan(testCase.errorMessage)(testCase.comparedTo)(testCase.value)).toBe(testCase.expected)
       })
     })
@@ -539,14 +608,18 @@ describe('Date/Time validations', () => {
         errorMessage: 'Personalized error message',
         comparedTo: TIMESTAMPS.MINUS_10_DAYS,
         expected: 'Personalized error message'
-      },
+      }
     ]
 
     testCases.forEach(testCase => {
       const action = testCase.expected === undefined ? 'pass' : 'fail'
 
-      it(`Should ${action} for '${getKeyByValue(testCase.value)} compared to ${getKeyByValue(testCase.comparedTo)}'`, () => {
-        expect(isDateSameOrPreviousThan(testCase.errorMessage)(testCase.comparedTo)(testCase.value)).toBe(testCase.expected)
+      it(`Should ${action} for '${getKeyByValue(testCase.value)} compared to ${getKeyByValue(
+        testCase.comparedTo
+      )}'`, () => {
+        expect(isDateSameOrPreviousThan(testCase.errorMessage)(testCase.comparedTo)(testCase.value)).toBe(
+          testCase.expected
+        )
       })
     })
   })
@@ -554,19 +627,13 @@ describe('Date/Time validations', () => {
 
 describe('composeValidators', () => {
   it('Should return an array of errors', () => {
-    const listOfErrors = composeValidators(
-      isRequired(),
-      isNonNegative(),
-    )(-123)
+    const listOfErrors = composeValidators(isRequired(), isNonNegative())(-123)
 
     expect(Array.isArray(listOfErrors)).toBeTruthy()
   })
 
   it('Should return "undefined" if there is no error', () => {
-    const listOfErrors = composeValidators(
-      isRequired(),
-      isNonNegative(),
-    )(123)
+    const listOfErrors = composeValidators(isRequired(), isNonNegative())(123)
 
     expect(listOfErrors).toBeUndefined()
   })
@@ -578,7 +645,7 @@ describe('validateTierStartDate', () => {
     PLUS_5_MINUTES: 1520852700000,
     PLUS_10_DAYS: 1521716400000,
     MINUS_5_MINUTES: 1520852100000,
-    MINUS_10_DAYS: 1519988400000,
+    MINUS_10_DAYS: 1519988400000
   }
 
   afterEach(() => {
@@ -590,12 +657,12 @@ describe('validateTierStartDate', () => {
       tiers: [
         {
           startTime: TIMESTAMPS.CURRENT_TIME,
-          endTime: TIMESTAMPS.PLUS_5_MINUTES,
+          endTime: TIMESTAMPS.PLUS_5_MINUTES
         },
         {
           startTime: TIMESTAMPS.PLUS_5_MINUTES,
-          endTime: TIMESTAMPS.PLUS_10_DAYS,
-        },
+          endTime: TIMESTAMPS.PLUS_10_DAYS
+        }
       ]
     }
 
@@ -606,17 +673,17 @@ describe('validateTierStartDate', () => {
     expect(validationResult).toEqual([VALIDATION_MESSAGES.DATE_IN_FUTURE])
   })
 
-  it('should fail if startTime is same or later than same tier\'s endTime', () => {
+  it("should fail if startTime is same or later than same tier's endTime", () => {
     const values = {
       tiers: [
         {
           startTime: TIMESTAMPS.PLUS_5_MINUTES,
-          endTime: TIMESTAMPS.PLUS_5_MINUTES,
+          endTime: TIMESTAMPS.PLUS_5_MINUTES
         },
         {
           startTime: TIMESTAMPS.PLUS_5_MINUTES,
-          endTime: TIMESTAMPS.PLUS_10_DAYS,
-        },
+          endTime: TIMESTAMPS.PLUS_10_DAYS
+        }
       ]
     }
 
@@ -627,17 +694,17 @@ describe('validateTierStartDate', () => {
     expect(validationResult).toEqual(["Should be previous than same tier's End Time"])
   })
 
-  it('should fail if startTime is before than previous tier\'s endTime', () => {
+  it("should fail if startTime is before than previous tier's endTime", () => {
     const values = {
       tiers: [
         {
           startTime: TIMESTAMPS.MINUS_5_MINUTES,
-          endTime: TIMESTAMPS.PLUS_5_MINUTES,
+          endTime: TIMESTAMPS.PLUS_5_MINUTES
         },
         {
           startTime: TIMESTAMPS.CURRENT_TIME,
-          endTime: TIMESTAMPS.PLUS_10_DAYS,
-        },
+          endTime: TIMESTAMPS.PLUS_10_DAYS
+        }
       ]
     }
 
@@ -655,7 +722,7 @@ describe('validateTierEndDate', () => {
     PLUS_5_MINUTES: 1520852700000,
     PLUS_10_DAYS: 1521716400000,
     MINUS_5_MINUTES: 1520852100000,
-    MINUS_10_DAYS: 1519988400000,
+    MINUS_10_DAYS: 1519988400000
   }
 
   afterEach(() => {
@@ -667,12 +734,12 @@ describe('validateTierEndDate', () => {
       tiers: [
         {
           startTime: TIMESTAMPS.MINUS_5_MINUTES,
-          endTime: TIMESTAMPS.CURRENT_TIME,
+          endTime: TIMESTAMPS.CURRENT_TIME
         },
         {
           startTime: TIMESTAMPS.PLUS_5_MINUTES,
-          endTime: TIMESTAMPS.PLUS_10_DAYS,
-        },
+          endTime: TIMESTAMPS.PLUS_10_DAYS
+        }
       ]
     }
 
@@ -683,17 +750,17 @@ describe('validateTierEndDate', () => {
     expect(validationResult).toEqual([VALIDATION_MESSAGES.DATE_IN_FUTURE])
   })
 
-  it('should fail if endTime is same or previous than same tier\'s startTime', () => {
+  it("should fail if endTime is same or previous than same tier's startTime", () => {
     const values = {
       tiers: [
         {
           startTime: TIMESTAMPS.PLUS_5_MINUTES,
-          endTime: TIMESTAMPS.CURRENT_TIME,
+          endTime: TIMESTAMPS.CURRENT_TIME
         },
         {
           startTime: TIMESTAMPS.PLUS_5_MINUTES,
-          endTime: TIMESTAMPS.PLUS_10_DAYS,
-        },
+          endTime: TIMESTAMPS.PLUS_10_DAYS
+        }
       ]
     }
 

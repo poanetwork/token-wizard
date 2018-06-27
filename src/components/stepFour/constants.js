@@ -9,12 +9,12 @@ export const DOWNLOAD_TYPE = {
 export const ADDR_BOX_LEN = 44
 
 export const TX_STEP_DESCRIPTION = {
-  deployProxy: "Deploy proxy contract",
-  crowdsaleCreate: "Create Crowdsale instance",
-  token: "Initialize Token",
-  setReservedTokens: "Register addresses for Reserved Tokens",
-  updateGlobalMinContribution: "Set Global MinCap",
-  createCrowdsaleTiers: "Add tiers to Crowdsale",
-  whitelist: "Register whitelisted addresses",
-  crowdsaleInit: "Initialize Crowdsale",
+  deployProxy: 'Deploy proxy contract',
+  crowdsaleCreate: 'Create Crowdsale instance',
+  token: 'Initialize Token',
+  setReservedTokens: 'Register addresses for Reserved Tokens',
+  updateGlobalMinContribution: 'Set Global MinCap',
+  createCrowdsaleTiers: 'Add tiers to Crowdsale',
+  whitelist: 'Register whitelisted addresses',
+  crowdsaleInit: 'Initialize Crowdsale'
 }

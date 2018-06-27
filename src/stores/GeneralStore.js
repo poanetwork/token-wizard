@@ -1,23 +1,24 @@
-import { observable, action } from 'mobx';
-import { GAS_PRICE } from '../utils/constants';
+import { observable, action } from 'mobx'
+import { GAS_PRICE } from '../utils/constants'
 import autosave from './autosave'
 
 class GeneralStore {
-
-  @observable networkID;
-  @observable gasPrice = GAS_PRICE.FAST.PRICE;
+  @observable networkID
+  @observable gasPrice = GAS_PRICE.FAST.PRICE
 
   constructor() {
     autosave(this, 'GeneralStore')
   }
 
-  @action setProperty = (property, value) => {
+  @action
+  setProperty = (property, value) => {
     this[property] = value
   }
 
-  @action setGasPrice = (gasPrice) => {
+  @action
+  setGasPrice = gasPrice => {
     this.gasPrice = gasPrice
   }
 }
 
-export default GeneralStore;
+export default GeneralStore

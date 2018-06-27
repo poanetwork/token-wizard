@@ -8,7 +8,7 @@ const { VALID, INVALID } = VALIDATION_TYPES
 
 @observer
 export class NumericInput extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -75,7 +75,6 @@ export class NumericInput extends Component {
     if (!isNaN(value)) {
       result.value = value
       result.valid = isValid ? VALID : INVALID
-
     }
 
     if (acceptEmpty && value === '') {
@@ -86,7 +85,7 @@ export class NumericInput extends Component {
     this.props.onValueUpdate(result)
   }
 
-  componentWillReceiveProps (newProps) {
+  componentWillReceiveProps(newProps) {
     this.setState({
       value: newProps.value,
       pristine: newProps.pristine,
@@ -94,7 +93,7 @@ export class NumericInput extends Component {
     })
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate(prevProps) {
     const { acceptEmpty, acceptFloat, maxDecimals, minDecimals, min, max } = this.props
 
     if (
@@ -110,7 +109,7 @@ export class NumericInput extends Component {
     }
   }
 
-  render () {
+  render() {
     const { value, pristine, valid } = this.state
     const { disabled, side, errorMessage, title, description } = this.props
 
@@ -118,7 +117,7 @@ export class NumericInput extends Component {
       <InputField
         disabled={disabled}
         side={side}
-        type='number'
+        type="number"
         errorMessage={errorMessage}
         value={value}
         pristine={pristine}

@@ -1,8 +1,8 @@
-import React from 'react';
-import { RadioInputField } from './RadioInputField';
-import renderer from 'react-test-renderer';
-import Adapter from 'enzyme-adapter-react-15';
-import { configure, mount } from 'enzyme';
+import React from 'react'
+import { RadioInputField } from './RadioInputField'
+import renderer from 'react-test-renderer'
+import Adapter from 'enzyme-adapter-react-15'
+import { configure, mount } from 'enzyme'
 
 configure({ adapter: new Adapter() })
 
@@ -15,11 +15,11 @@ test('Should render the component', () => {
       onChange={() => {}}
       description="Some Description"
     />
-  );
+  )
 
-  let tree = component.toJSON();
-  expect(tree).toMatchSnapshot();
-});
+  let tree = component.toJSON()
+  expect(tree).toMatchSnapshot()
+})
 
 test('Should render two inputs and check the first one', () => {
   const wrapper = mount(
@@ -30,7 +30,7 @@ test('Should render two inputs and check the first one', () => {
       onChange={() => {}}
       description="Some Description"
     />
-  );
+  )
 
   const inputs = wrapper.find('input[type="radio"]')
   expect(inputs.length).toBe(2)
@@ -53,9 +53,12 @@ test('The onChange callback is called when an item is selected', () => {
       onChange={onChangeCallback}
       description="Some Description"
     />
-  );
+  )
 
-  wrapper.find('input[type="radio"]').at(1).simulate('change')
+  wrapper
+    .find('input[type="radio"]')
+    .at(1)
+    .simulate('change')
 
   expect(onChangeCallback).toBeCalled()
 })
@@ -71,7 +74,7 @@ test('Should change the selected item when `selectedItem` changes', () => {
       onChange={onChangeCallback}
       description="Some Description"
     />
-  );
+  )
 
   let inputs = wrapper.find('input[type="radio"]')
   expect(inputs.length).toBe(2)

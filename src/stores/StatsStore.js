@@ -11,7 +11,7 @@ class StatsStore {
   @observable maxTiersAmount
   @observable maxEthRaised
 
-  constructor () {
+  constructor() {
     this.totalEthRaised = 0
     this.totalCrowdsales = 0
     this.percentageOfWhitelisted = 0
@@ -22,7 +22,8 @@ class StatsStore {
     this.maxEthRaised = 0
   }
 
-  @action setProperty = (property, value) => {
+  @action
+  setProperty = (property, value) => {
     this[property] = value
   }
 }

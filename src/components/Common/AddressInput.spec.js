@@ -12,7 +12,7 @@ describe('AddressInput', () => {
     const state = {
       walletAddress: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
       pristine: true,
-      valid: VALIDATION_TYPES.VALID,
+      valid: VALIDATION_TYPES.VALID
     }
     const component = renderer.create(
       <AddressInput
@@ -36,7 +36,7 @@ describe('AddressInput', () => {
     const state = {
       walletAddress: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
       pristine: true,
-      valid: VALIDATION_TYPES.VALID,
+      valid: VALIDATION_TYPES.VALID
     }
     const wrapper = mount(
       <AddressInput
@@ -59,7 +59,7 @@ describe('AddressInput', () => {
     expect(onChange).toHaveBeenCalledWith({
       address: newAddress,
       pristine: false,
-      valid: VALIDATION_TYPES.INVALID,
+      valid: VALIDATION_TYPES.INVALID
     })
   })
 
@@ -68,7 +68,7 @@ describe('AddressInput', () => {
     const state = {
       walletAddress: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
       pristine: true,
-      valid: VALIDATION_TYPES.VALID,
+      valid: VALIDATION_TYPES.VALID
     }
     const wrapper = mount(
       <AddressInput
@@ -91,7 +91,7 @@ describe('AddressInput', () => {
     expect(onChange).toHaveBeenCalledWith({
       address: newAddress,
       pristine: false,
-      valid: VALIDATION_TYPES.VALID,
+      valid: VALIDATION_TYPES.VALID
     })
   })
 })

@@ -34,18 +34,10 @@ import { ReservedTokensList } from './ReservedTokensList'
 import { ManageForm } from './ManageForm'
 import moment from 'moment'
 
-@inject(
-  'crowdsaleStore',
-  'web3Store',
-  'tierStore',
-  'contractStore',
-  'generalStore',
-  'tokenStore',
-  'gasPriceStore'
-)
+@inject('crowdsaleStore', 'web3Store', 'tierStore', 'contractStore', 'generalStore', 'tokenStore', 'gasPriceStore')
 @observer
 export class Manage extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       loading: true,
@@ -64,17 +56,17 @@ export class Manage extends Component {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     setTimeout(() => window.scrollTo(0, 0), 500)
   }
 
-  componentWillMount () {
+  componentWillMount() {
     const { crowdsaleStore, generalStore, tierStore } = this.props
 
     this.validateEnvironment()
       .then(() => getCrowdsaleAssets(generalStore.networkID))
       .then(() => getCrowdsaleStrategy(crowdsaleStore.execID))
-      .then((strategy) => crowdsaleStore.setProperty('strategy', strategy))
+      .then(strategy => crowdsaleStore.setProperty('strategy', strategy))
       .then(() => this.checkOwner())
       .then(() => this.extractContractsData())
       .then(() => this.updateCrowdsaleStatus())
@@ -82,7 +74,7 @@ export class Manage extends Component {
         this.initialValues.tiers = JSON.parse(JSON.stringify(tierStore.tiers))
         this.initialValues.minCap = +tierStore.tiers[0].minCap
       })
-      .catch((err) => console.error(err))
+      .catch(err => console.error(err))
       .then(() => {
         this.hideLoader()
         if (!this.state.ownerCurrentUser) notTheOwner()
@@ -124,7 +116,7 @@ export class Manage extends Component {
     }
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     const { tierStore, tokenStore, crowdsaleStore } = this.props
     tierStore.reset()
     tokenStore.reset()
@@ -136,7 +128,7 @@ export class Manage extends Component {
 
     let target
     if (crowdsaleStore.execID) {
-      const targetPrefix = "idx"
+      const targetPrefix = 'idx'
       const targetSuffix = crowdsaleStore.contractTargetSuffix
       target = `${targetPrefix}${targetSuffix}`
     } else if (crowdsaleStore.isMintedCappedCrowdsale) {
@@ -169,7 +161,7 @@ export class Manage extends Component {
       const { isMintedCappedCrowdsale, isDutchAuction, execID, contractTargetSuffix } = crowdsaleStore
 
       const num_of_tiers = await getTiersLength()
-      console.log("num_of_tiers:", num_of_tiers)
+      console.log('num_of_tiers:', num_of_tiers)
 
       let target
       if (execID) {
@@ -286,7 +278,7 @@ export class Manage extends Component {
             //todo: Proxy
             try {
               tierWhitelist = await getTierWhitelist(...params, tier_num).call()
-            } catch(e) {
+            } catch (e) {
               console.log("###Auth-os Proxy doesn't support getTierWhitelist method###")
             }
             if (tierWhitelist && !tierWhitelist.hasOwnProperty('num_whitelisted')) {
@@ -297,7 +289,7 @@ export class Manage extends Component {
             }
             const whitelist = (tierWhitelist && tierWhitelist.whitelist) || []
 
-            console.log("whitelist:", whitelist)
+            console.log('whitelist:', whitelist)
 
             for (let whitelist_item_index = 0; whitelist_item_index < whitelist.length; whitelist_item_index++) {
               const whitelist_item_addr = whitelist[whitelist_item_index]
@@ -308,10 +300,7 @@ export class Manage extends Component {
               if (whitelistStatus && !whitelistStatus.hasOwnProperty('max_tokens_remaining')) {
                 whitelistStatus.max_tokens_remaining = whitelistStatus[0]
               }
-              const {
-                max_tokens_remaining,
-                minimum_purchase_amt: minimum_contribution
-              } = whitelistStatus
+              const { max_tokens_remaining, minimum_purchase_amt: minimum_contribution } = whitelistStatus
 
               if (max_tokens_remaining > 0) {
                 if (!tier_data.whitelist) tier_data.whitelist = []
@@ -342,7 +331,9 @@ export class Manage extends Component {
           console.log("###Auth-os Proxy doesn't support getReservedTokenDestinationList method###")
         }
 
-        const reserved_destinations = (reservedTokenDestinationList && (reservedTokenDestinationList.reserved_destinations || reservedTokenDestinationList[1]))
+        const reserved_destinations =
+          reservedTokenDestinationList &&
+          (reservedTokenDestinationList.reserved_destinations || reservedTokenDestinationList[1])
         if (reserved_destinations) {
           for (let destination_index = 0; destination_index < reserved_destinations.length; destination_index++) {
             const reserved_addr = reserved_destinations[destination_index]
@@ -359,30 +350,29 @@ export class Manage extends Component {
             if (reservedDestinationInfo && !reservedDestinationInfo.hasOwnProperty('percent_decimals')) {
               reservedDestinationInfo.percent_decimals = reservedDestinationInfo[3]
             }
-            const {
-              num_tokens,
-              num_percent,
-              percent_decimals
-            } = reservedDestinationInfo
+            const { num_tokens, num_percent, percent_decimals } = reservedDestinationInfo
 
             if (num_tokens > 0) {
               reserved_tokens_info.push({
                 addr: reserved_addr,
-                dim: "tokens",
-                val: toBigNumber(num_tokens).times(`1e-${token.token_decimals}`).toFixed()
+                dim: 'tokens',
+                val: toBigNumber(num_tokens)
+                  .times(`1e-${token.token_decimals}`)
+                  .toFixed()
               })
             }
 
             if (num_percent > 0) {
               reserved_tokens_info.push({
                 addr: reserved_addr,
-                dim: "percentage",
-                val: toBigNumber(num_percent).times(`1e-${percent_decimals}`).toFixed()
+                dim: 'percentage',
+                val: toBigNumber(num_percent)
+                  .times(`1e-${percent_decimals}`)
+                  .toFixed()
               })
             }
           }
         }
-
       } else if (isDutchAuction) {
         const tier_data = await getCrowdsaleStatus(...params).call()
 
@@ -428,7 +418,7 @@ export class Manage extends Component {
     }
   }
 
-  hideLoader = (err) => {
+  hideLoader = err => {
     if (err) {
       console.log(err)
     }
@@ -458,7 +448,7 @@ export class Manage extends Component {
 
     let target
     if (crowdsaleStore.execID) {
-      const targetPrefix = "idx"
+      const targetPrefix = 'idx'
       const targetSuffix = crowdsaleStore.contractTargetSuffix
       target = `${targetPrefix}${targetSuffix}`
     } else if (crowdsaleStore.isMintedCappedCrowdsale) {
@@ -504,7 +494,7 @@ export class Manage extends Component {
 
     let target
     if (execID) {
-      const targetPrefix = "idx"
+      const targetPrefix = 'idx'
       const targetSuffix = contractTargetSuffix
       target = `${targetPrefix}${targetSuffix}`
     } else if (crowdsaleStore.isMintedCappedCrowdsale) {
@@ -543,7 +533,7 @@ export class Manage extends Component {
     }
   }
 
-  getFinalizeCrowdsaleParams = (methodInterface) => {
+  getFinalizeCrowdsaleParams = methodInterface => {
     return this.props.web3Store.web3.eth.abi.encodeParameters(methodInterface, [])
   }
 
@@ -553,59 +543,63 @@ export class Manage extends Component {
         const { crowdsaleStore } = this.props
 
         if (!crowdsaleStore.selected.finalized && this.state.canFinalize) {
-          warningOnFinalizeCrowdsale()
-            .then(result => {
-              if (result.value) {
-                this.showLoader()
+          warningOnFinalizeCrowdsale().then(result => {
+            if (result.value) {
+              this.showLoader()
 
-                getCurrentAccount()
-                  .then(account => {
-                    const methodInterface = []
+              getCurrentAccount().then(account => {
+                const methodInterface = []
 
-                    let methodName
-                    if (crowdsaleStore.isMintedCappedCrowdsale) {
-                      methodName = "finalizeCrowdsaleAndToken"
-                    } else if (crowdsaleStore.isDutchAuction) {
-                      methodName = "finalizeCrowdsale"
-                    }
+                let methodName
+                if (crowdsaleStore.isMintedCappedCrowdsale) {
+                  methodName = 'finalizeCrowdsaleAndToken'
+                } else if (crowdsaleStore.isDutchAuction) {
+                  methodName = 'finalizeCrowdsale'
+                }
 
-                    let paramsToExec = [methodInterface]
-                    let targetContractName
-                    if (crowdsaleStore.execID) {
-                      targetContractName = 'registryExec'
-                    } else {
-                      targetContractName = 'MintedCappedProxy'
-                    }
-                    const method = methodToExec(targetContractName, `${methodName}(${methodInterface.join(',')})`, this.getFinalizeCrowdsaleParams, paramsToExec)
+                let paramsToExec = [methodInterface]
+                let targetContractName
+                if (crowdsaleStore.execID) {
+                  targetContractName = 'registryExec'
+                } else {
+                  targetContractName = 'MintedCappedProxy'
+                }
+                const method = methodToExec(
+                  targetContractName,
+                  `${methodName}(${methodInterface.join(',')})`,
+                  this.getFinalizeCrowdsaleParams,
+                  paramsToExec
+                )
 
-                    let opts = {
-                      gasPrice: this.props.generalStore.gasPrice,
-                      from: account
-                    }
+                let opts = {
+                  gasPrice: this.props.generalStore.gasPrice,
+                  from: account
+                }
 
-                    method.estimateGas(opts)
-                      .then(estimatedGas => {
-                        console.log("estimatedGas:",estimatedGas)
-                        opts.gasLimit = calculateGasLimit(estimatedGas)
-                        return sendTXToContract(method.send(opts))
-                      })
-                      .then(() => {
-                        crowdsaleStore.setSelectedProperty('finalized', true)
-                        this.setState({ canFinalize: false }, () => {
-                          successfulFinalizeAlert().then(() => {
-                            this.setState({ loading: true })
-                            setTimeout(() => window.location.reload(), 500)
-                          })
-                        })
-                      })
-                      .catch((err) => {
-                        console.log(err)
-                        toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.FINALIZE_FAIL })
-                      })
-                      .then(this.hideLoader)
+                method
+                  .estimateGas(opts)
+                  .then(estimatedGas => {
+                    console.log('estimatedGas:', estimatedGas)
+                    opts.gasLimit = calculateGasLimit(estimatedGas)
+                    return sendTXToContract(method.send(opts))
                   })
-              }
-            })
+                  .then(() => {
+                    crowdsaleStore.setSelectedProperty('finalized', true)
+                    this.setState({ canFinalize: false }, () => {
+                      successfulFinalizeAlert().then(() => {
+                        this.setState({ loading: true })
+                        setTimeout(() => window.location.reload(), 500)
+                      })
+                    })
+                  })
+                  .catch(err => {
+                    console.log(err)
+                    toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.FINALIZE_FAIL })
+                  })
+                  .then(this.hideLoader)
+              })
+            }
+          })
         }
       })
       .catch(console.error)
@@ -640,14 +634,14 @@ export class Manage extends Component {
   }
 
   saveCrowdsale = () => {
-    if (!this.canSave()) return;
+    if (!this.canSave()) return
 
     this.showLoader()
 
     this.updateCrowdsaleStatus()
       .then(() => {
         const fieldsToUpdate = this.fieldsToUpdate()
-        console.log("fieldsToUpdate:", fieldsToUpdate)
+        console.log('fieldsToUpdate:', fieldsToUpdate)
 
         fieldsToUpdate
           .reduce((promise, { key, newValue, tier }) => {
@@ -661,7 +655,6 @@ export class Manage extends Component {
             this.hideLoader(err)
             toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED })
           })
-
       })
       .catch(error => {
         this.hideLoader(error)
@@ -683,12 +676,13 @@ export class Manage extends Component {
       const { tierStore } = this.props
       const newValue = {}
 
-
       if (tierStore.tiers[nextTierIndex]) {
         const currentEnd = moment(allValues.tiers[nextTierIndex].endTime)
         const currentStart = moment(allValues.tiers[nextTierIndex].startTime)
         const duration = moment.duration(currentEnd.diff(currentStart)).as('minutes')
-        const nextEnd = moment(value).add(duration, 'm').format('YYYY-MM-DDTHH:mm')
+        const nextEnd = moment(value)
+          .add(duration, 'm')
+          .format('YYYY-MM-DDTHH:mm')
 
         newValue[`tiers[${nextTierIndex}].startTime`] = value
         newValue[`tiers[${nextTierIndex}].endTime`] = nextEnd
@@ -701,7 +695,7 @@ export class Manage extends Component {
     }
   })
 
-  render () {
+  render() {
     const {
       canFinalize,
       ownerCurrentUser,
@@ -712,13 +706,12 @@ export class Manage extends Component {
 
     return (
       <section className="manage">
-
         <FinalizeCrowdsaleStep
           disabled={!ownerCurrentUser || crowdsaleIsFinalized || !canFinalize}
           handleClick={this.finalizeCrowdsale}
         />
 
-        <ReservedTokensList owner={ownerCurrentUser}/>
+        <ReservedTokensList owner={ownerCurrentUser} />
 
         <Form
           onSubmit={this.saveCrowdsale}
@@ -733,8 +726,7 @@ export class Manage extends Component {
           displaySave={this.saveDisplayed()}
         />
 
-        <Loader show={this.state.loading}/>
-
+        <Loader show={this.state.loading} />
       </section>
     )
   }

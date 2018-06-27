@@ -6,7 +6,7 @@ export function getQueryVariable(variable) {
   return queryString.parse(window.location.search)[variable]
 }
 
-export const isExecIDValid = (execID) => (/^0x[a-f0-9]{64}$/i).test(execID)
+export const isExecIDValid = execID => /^0x[a-f0-9]{64}$/i.test(execID)
 
 export const getExecID = () => {
   const execID = getQueryVariable('exec-id')
@@ -16,10 +16,10 @@ export const getExecID = () => {
 //todo: check address input
 export const getAddr = () => {
   const addr = getQueryVariable('addr')
-  console.log("getAddr:", addr)
+  console.log('getAddr:', addr)
   return addr
 }
-export const isNetworkIDValid = (networkID) => /^[0-9]+$/.test(networkID)
+export const isNetworkIDValid = networkID => /^[0-9]+$/.test(networkID)
 
 export const getNetworkID = () => {
   const networkID = getQueryVariable('networkID')
@@ -36,7 +36,7 @@ export function fetchFile(path) {
 
     rawFile.addEventListener('error', reject)
     rawFile.open('GET', path, true)
-    rawFile.onreadystatechange = function () {
+    rawFile.onreadystatechange = function() {
       if (rawFile.readyState === 4 && (rawFile.status === 200 || rawFile.status === 0)) {
         let allText = rawFile.responseText
         resolve(allText)
@@ -46,14 +46,14 @@ export function fetchFile(path) {
   })
 }
 
-export const findConstructor = (abi) => {
+export const findConstructor = abi => {
   let abiConstructor
 
   abi.forEach(abiObj => {
-    if (abiObj.type === "constructor") {
-      console.log(abiObj);
-      console.log(abiObj.inputs);
-      abiConstructor = abiObj.inputs;
+    if (abiObj.type === 'constructor') {
+      console.log(abiObj)
+      console.log(abiObj.inputs)
+      abiConstructor = abiObj.inputs
     }
   })
 
@@ -66,64 +66,66 @@ export const floorToDecimals = (n, input) => {
 
 const decimalAdjust = (type, inputNumber, exp) => {
   if (typeof exp === 'undefined' || +exp === 0) {
-    return Math[type](inputNumber);
+    return Math[type](inputNumber)
   }
-  inputNumber = +inputNumber;
-  exp = +exp;
-  let checkForNaN = isNaN(inputNumber) || !(typeof exp === 'number' && exp % 1 === 0);
+  inputNumber = +inputNumber
+  exp = +exp
+  let checkForNaN = isNaN(inputNumber) || !(typeof exp === 'number' && exp % 1 === 0)
   if (checkForNaN) {
-    return NaN;
+    return NaN
   }
-  inputNumber = inputNumber.toString().split('e');
-  inputNumber = Math[type](+(inputNumber[0] + 'e' + (inputNumber[1] ? (+inputNumber[1] - exp) : -exp)));
-  inputNumber = inputNumber.toString().split('e');
-  return +(inputNumber[0] + 'e' + (inputNumber[1] ? (+inputNumber[1] + exp) : exp));
+  inputNumber = inputNumber.toString().split('e')
+  inputNumber = Math[type](+(inputNumber[0] + 'e' + (inputNumber[1] ? +inputNumber[1] - exp : -exp)))
+  inputNumber = inputNumber.toString().split('e')
+  return +(inputNumber[0] + 'e' + (inputNumber[1] ? +inputNumber[1] + exp : exp))
 }
 
 if (!Math.floor10) {
   Math.floor10 = (value, exp) => decimalAdjust('floor', value, exp)
 }
 
-const getTimeAsNumber = (time) => new Date(time).getTime()
+const getTimeAsNumber = time => new Date(time).getTime()
 
-export const getStepClass = (step, activeStep) => step === activeStep ? "step-navigation step-navigation_active" : "step-navigation"
+export const getStepClass = (step, activeStep) =>
+  step === activeStep ? 'step-navigation step-navigation_active' : 'step-navigation'
 
-export const validateTier = (tier) => typeof tier === 'string' && tier.length > 0 && tier.length < 30
+export const validateTier = tier => typeof tier === 'string' && tier.length > 0 && tier.length < 30
 
-export const validateSupply = (supply) =>  isNaN(Number(supply)) === false && Number(supply) > 0
+export const validateSupply = supply => isNaN(Number(supply)) === false && Number(supply) > 0
 
-export const validateTime = (time) => getTimeAsNumber(time) > Date.now()
+export const validateTime = time => getTimeAsNumber(time) > Date.now()
 
 export const validateLaterTime = (laterTime, previousTime) => getTimeAsNumber(laterTime) > getTimeAsNumber(previousTime)
 
-export const validateLaterOrEqualTime = (laterTime, previousTime) => getTimeAsNumber(laterTime) >= getTimeAsNumber(previousTime)
+export const validateLaterOrEqualTime = (laterTime, previousTime) =>
+  getTimeAsNumber(laterTime) >= getTimeAsNumber(previousTime)
 
 export function toFixed(x) {
   if (Math.abs(x) < 1.0) {
-    let e = parseInt(x.toString().split('e-')[1], 10);
+    let e = parseInt(x.toString().split('e-')[1], 10)
     if (e) {
-      x *= Math.pow(10,e-1);
-      x = '0.' + (new Array(e)).join('0') + x.toString().substring(2);
+      x *= Math.pow(10, e - 1)
+      x = '0.' + new Array(e).join('0') + x.toString().substring(2)
     }
   } else {
-    let e = parseInt(x.toString().split('+')[1], 10);
+    let e = parseInt(x.toString().split('+')[1], 10)
     if (e > 20) {
-      e -= 20;
-      x /= Math.pow(10,e);
-      x += (new Array(e+1)).join('0');
+      e -= 20
+      x /= Math.pow(10, e)
+      x += new Array(e + 1).join('0')
     }
   }
-  return x;
+  return x
 }
 
 export const toast = {
   msg: {},
-  showToaster: function ({ type = TOAST.TYPE.INFO, message = '', options = {} }) {
+  showToaster: function({ type = TOAST.TYPE.INFO, message = '', options = {} }) {
     if (!message) {
       return
     }
 
-    this.msg[ type ](message, options)
+    this.msg[type](message, options)
   }
 }
 
@@ -158,7 +160,7 @@ export const countDecimalPlaces = num => {
   return Math.max(0, digitsAfterDecimal - adjust)
 }
 
-export const acceptPositiveIntegerOnly = (value) => {
+export const acceptPositiveIntegerOnly = value => {
   if (typeof value === 'number') value = String(value)
   if (typeof value !== 'string') return ''
 
@@ -167,4 +169,4 @@ export const acceptPositiveIntegerOnly = (value) => {
 
 export const removeTrailingNUL = ascii => ascii.replace(/\x00+/, '')
 
-export const dateToTimestamp = (date) => new Date(date).getTime()
+export const dateToTimestamp = date => new Date(date).getTime()

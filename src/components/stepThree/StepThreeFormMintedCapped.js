@@ -10,12 +10,18 @@ import {
   composeValidators,
   isAddress,
   isDecimalPlacesNotGreaterThan,
-  isGreaterOrEqualThan,
+  isGreaterOrEqualThan
 } from '../../utils/validations'
-import { TEXT_FIELDS, VALIDATION_TYPES, VALIDATION_MESSAGES, DESCRIPTION, NAVIGATION_STEPS } from '../../utils/constants'
+import {
+  TEXT_FIELDS,
+  VALIDATION_TYPES,
+  VALIDATION_MESSAGES,
+  DESCRIPTION,
+  NAVIGATION_STEPS
+} from '../../utils/constants'
 import { TierBlock } from '../Common/TierBlock'
 
-const { CROWDSALE_SETUP } = NAVIGATION_STEPS;
+const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 const { VALID } = VALIDATION_TYPES
 const { WALLET_ADDRESS } = TEXT_FIELDS
 
@@ -24,10 +30,17 @@ const inputErrorStyle = {
   fontWeight: 'bold',
   fontSize: '12px',
   width: '100%',
-  height: '20px',
+  height: '20px'
 }
 
-export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, pristine, mutators: { push }, ...props }) => {
+export const StepThreeFormMintedCapped = ({
+  handleSubmit,
+  values,
+  invalid,
+  pristine,
+  mutators: { push },
+  ...props
+}) => {
   const submitButtonClass = classnames('button', 'button_fill', {
     button_disabled: pristine || invalid
   })
@@ -53,27 +66,31 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
       props.tierStore.setTierProperty(tier.endTime, 'endTime', index)
       props.tierStore.updateRate(tier.rate, VALID, index)
       props.tierStore.setTierProperty(tier.supply, 'supply', index)
-      props.tierStore.setTierProperty(tier.whitelistEnabled, "whitelistEnabled", index)
+      props.tierStore.setTierProperty(tier.whitelistEnabled, 'whitelistEnabled', index)
       props.tierStore.validateTiers('supply', index)
     })
     props.crowdsaleStore.setProperty('supply', totalSupply)
     props.crowdsaleStore.setProperty('endTime', values.tiers[values.tiers.length - 1].endTime)
   }
 
-  const whenWhitelistBlock = (tierInd) => {
-    return (<WhenFieldChanges
-      key={`whenWhitelistBlock_${tierInd}`}
-      field={`tiers[${tierInd}].whitelistEnabled`}
-      becomes={'yes'}
-      set={`tiers[${tierInd}].minCap`}
-      to={0}
-    />)
+  const whenWhitelistBlock = tierInd => {
+    return (
+      <WhenFieldChanges
+        key={`whenWhitelistBlock_${tierInd}`}
+        field={`tiers[${tierInd}].whitelistEnabled`}
+        becomes={'yes'}
+        set={`tiers[${tierInd}].minCap`}
+        to={0}
+      />
+    )
   }
 
   const whenWhitelistsChanges = () => {
     return (
       <div>
-      { values.tiers.map((tier, ind) => { return whenWhitelistBlock(ind) }) }
+        {values.tiers.map((tier, ind) => {
+          return whenWhitelistBlock(ind)
+        })}
       </div>
     )
   }
@@ -84,7 +101,7 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
       <div>
         <div className="steps-content container">
           <div className="about-step">
-            <div className="step-icons step-icons_crowdsale-setup"/>
+            <div className="step-icons step-icons_crowdsale-setup" />
             <p className="title">{CROWDSALE_SETUP}</p>
             <p className="description">{DESCRIPTION.CROWDSALE_SETUP}</p>
           </div>
@@ -107,33 +124,31 @@ export const StepThreeFormMintedCapped = ({ handleSubmit, values, invalid, prist
               component={GasPriceInput}
               side="right"
               gasPrices={props.gasPricesInGwei}
-              validate={(value) => composeValidators(
-                isDecimalPlacesNotGreaterThan(VALIDATION_MESSAGES.DECIMAL_PLACES_9)(9),
-                isGreaterOrEqualThan(VALIDATION_MESSAGES.NUMBER_GREATER_THAN)(0.1)
-              )(value.price)}
+              validate={value =>
+                composeValidators(
+                  isDecimalPlacesNotGreaterThan(VALIDATION_MESSAGES.DECIMAL_PLACES_9)(9),
+                  isGreaterOrEqualThan(VALIDATION_MESSAGES.NUMBER_GREATER_THAN)(0.1)
+                )(value.price)
+              }
             />
           </div>
         </div>
       </div>
 
       <FieldArray name="tiers">
-        {({ fields }) => (
-          <TierBlock
-            fields={fields}
-            decimals={props.decimals}
-            tierStore={props.tierStore}
-          />
-        )}
+        {({ fields }) => <TierBlock fields={fields} decimals={props.decimals} tierStore={props.tierStore} />}
       </FieldArray>
 
       <div className="button-container">
         <div className="button button_fill_secondary" onClick={addTier}>
           Add Tier
         </div>
-        <span onClick={handleSubmit} className={submitButtonClass}>Continue</span>
+        <span onClick={handleSubmit} className={submitButtonClass}>
+          Continue
+        </span>
       </div>
 
-      <FormSpy subscription={{ values: true }} onChange={handleOnChange}/>
+      <FormSpy subscription={{ values: true }} onChange={handleOnChange} />
     </form>
   )
 }

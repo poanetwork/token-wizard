@@ -11,21 +11,21 @@ configure({ adapter: new Adapter() })
 describe('TokenName', () => {
   it(`should render TokenName component`, () => {
     const wrapper = renderer.create(
-      <Form onSubmit={jest.fn()} component={TokenName} errorStyle={{ color: 'red', fontWeight: 'bold', }}/>
+      <Form onSubmit={jest.fn()} component={TokenName} errorStyle={{ color: 'red', fontWeight: 'bold' }} />
     )
     expect(wrapper).toMatchSnapshot()
   })
 
   it(`should render TokenName component and its children`, () => {
     const wrapper = renderer.create(
-      <Form onSubmit={jest.fn()} component={TokenName} errorStyle={{ color: 'red', fontWeight: 'bold', }}/>
+      <Form onSubmit={jest.fn()} component={TokenName} errorStyle={{ color: 'red', fontWeight: 'bold' }} />
     )
     expect(wrapper).toMatchSnapshot()
   })
 
   it(`should give error if name is only spaces`, () => {
     const wrapper = mount(
-      <Form onSubmit={jest.fn()} component={TokenName} errorStyle={{ color: 'red', fontWeight: 'bold', }}/>
+      <Form onSubmit={jest.fn()} component={TokenName} errorStyle={{ color: 'red', fontWeight: 'bold' }} />
     )
     const input = wrapper.find('input[name="name"]')
     input.simulate('change', { target: { value: '               ' } })
@@ -35,7 +35,7 @@ describe('TokenName', () => {
 
   it(`should give error if name is empty`, () => {
     const wrapper = mount(
-      <Form onSubmit={jest.fn()} component={TokenName} errorStyle={{ color: 'red', fontWeight: 'bold', }}/>
+      <Form onSubmit={jest.fn()} component={TokenName} errorStyle={{ color: 'red', fontWeight: 'bold' }} />
     )
 
     const input = wrapper.find('input[name="name"]')
@@ -49,7 +49,7 @@ describe('TokenName', () => {
 
   it(`should give error if name is longer than 30 characters`, () => {
     const wrapper = mount(
-      <Form onSubmit={jest.fn()} component={TokenName} errorStyle={{ color: 'red', fontWeight: 'bold', }}/>
+      <Form onSubmit={jest.fn()} component={TokenName} errorStyle={{ color: 'red', fontWeight: 'bold' }} />
     )
     const input = wrapper.find('input[name="name"]')
     input.simulate('change', { target: { value: '1234567890132546789012345678901' } })

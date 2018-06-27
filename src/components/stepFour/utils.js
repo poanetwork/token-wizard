@@ -26,7 +26,7 @@ import {
 import { BigNumber } from 'bignumber.js'
 import { toBigNumber } from '../crowdsale/utils'
 
-export const buildDeploymentSteps = (web3) => {
+export const buildDeploymentSteps = web3 => {
   let stepFnCorrelation = {
     deployProxy,
     crowdsaleCreate: deployCrowdsale,
@@ -35,7 +35,7 @@ export const buildDeploymentSteps = (web3) => {
     updateGlobalMinContribution,
     createCrowdsaleTiers,
     whitelist: addWhitelist,
-    crowdsaleInit: initializeCrowdsale,
+    crowdsaleInit: initializeCrowdsale
   }
 
   let list = []
@@ -43,7 +43,7 @@ export const buildDeploymentSteps = (web3) => {
   deploymentStore.txMap.forEach((steps, name) => {
     const { isMintedCappedCrowdsale, isDutchAuction, crowdsaleDeployInterface, appName } = crowdsaleStore
     if (steps.length) {
-      if (name === "crowdsaleCreate") {
+      if (name === 'crowdsaleCreate') {
         let getParams
         if (isMintedCappedCrowdsale) {
           getParams = getCrowdSaleParams
@@ -62,15 +62,14 @@ export const buildDeploymentSteps = (web3) => {
 
 const getProxyParams = token => {
   return [
-    "0x9996020c8864964688411b3d90ac27eb5b0937c7",
-    "0x3ad8aa4f87544323a9d1e5dd902f40c356527a7955687113db5f9a85ad579dc1",
-    "0xd6ebdab4b8c4123f8445efe724f779fff097cd51",
-    "0x4d696e74656443617070656443726f776473616c650000000000000000000000"
+    '0x9996020c8864964688411b3d90ac27eb5b0937c7',
+    '0x3ad8aa4f87544323a9d1e5dd902f40c356527a7955687113db5f9a85ad579dc1',
+    '0xd6ebdab4b8c4123f8445efe724f779fff097cd51',
+    '0x4d696e74656443617070656443726f776473616c650000000000000000000000'
   ]
 }
 
 export const deployProxy = () => {
-
   return [
     () => {
       const binMintedCappedProxy = contractStore.MintedCappedProxy.bin || ''
@@ -79,14 +78,13 @@ export const deployProxy = () => {
 
       console.log('***Deploy Proxy contract***')
 
-      return deployContract(abiMintedCappedProxy, binMintedCappedProxy, paramsMintedCappedProxy)
-        .then(proxyAddr => {
-          console.log("contractStore:", contractStore)
-          contractStore.setContractProperty('MintedCappedProxy', 'addr', proxyAddr.toLowerCase())
+      return deployContract(abiMintedCappedProxy, binMintedCappedProxy, paramsMintedCappedProxy).then(proxyAddr => {
+        console.log('contractStore:', contractStore)
+        contractStore.setContractProperty('MintedCappedProxy', 'addr', proxyAddr.toLowerCase())
 
-          deploymentStore.setAsSuccessful('deployProxy')
-          return Promise.resolve()
-        })
+        deploymentStore.setAsSuccessful('deployProxy')
+        return Promise.resolve()
+      })
     }
   ]
 }
@@ -116,13 +114,17 @@ const getCrowdSaleParams = (account, methodInterface) => {
 
   // tie 0 name bytes32
   const tierNameBytes = web3.utils.fromAscii(tier)
-  const encodedTierName = web3.eth.abi.encodeParameter("bytes32", tierNameBytes)
+  const encodedTierName = web3.eth.abi.encodeParameter('bytes32', tierNameBytes)
 
   //tier 0 supply
-  const supplyBN = toBigNumber(supply).times(`1e${tokenStore.decimals}`).toFixed()
+  const supplyBN = toBigNumber(supply)
+    .times(`1e${tokenStore.decimals}`)
+    .toFixed()
 
   //tier 0 global min cap
-  const minCapBN = toBigNumber(tierStore.tiers[0].minCap).times(`1e${tokenStore.decimals}`).toFixed()
+  const minCapBN = toBigNumber(tierStore.tiers[0].minCap)
+    .times(`1e${tokenStore.decimals}`)
+    .toFixed()
 
   let crowdsaleParams = [
     walletAddress,
@@ -137,10 +139,10 @@ const getCrowdSaleParams = (account, methodInterface) => {
     account
   ]
 
-  console.log("crowdsaleParams:", crowdsaleParams)
+  console.log('crowdsaleParams:', crowdsaleParams)
 
   let crowdsaleParamsEncoded = web3.eth.abi.encodeParameters(methodInterface, crowdsaleParams)
-  return { params: crowdsaleParams, paramsEncoded: crowdsaleParamsEncoded}
+  return { params: crowdsaleParams, paramsEncoded: crowdsaleParamsEncoded }
 }
 
 const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
@@ -166,10 +168,14 @@ const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
   const durationBN = toBigNumber(duration).toFixed()
 
   //token supply
-  const tokenSupplyBN = toBigNumber(tokenStore.supply).times(`1e${tokenStore.decimals}`).toFixed()
+  const tokenSupplyBN = toBigNumber(tokenStore.supply)
+    .times(`1e${tokenStore.decimals}`)
+    .toFixed()
 
   //Dutch Auction crowdsale supply
-  const crowdsaleSupplyBN = toBigNumber(supply).times(`1e${tokenStore.decimals}`).toFixed()
+  const crowdsaleSupplyBN = toBigNumber(supply)
+    .times(`1e${tokenStore.decimals}`)
+    .toFixed()
 
   //is Dutch Auction crowdsale whitelisted?
   const isWhitelisted = whitelistEnabled === 'yes'
@@ -186,87 +192,80 @@ const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
     account
   ]
 
-  console.log("crowdsaleParams:", crowdsaleParams)
+  console.log('crowdsaleParams:', crowdsaleParams)
 
-  let crowdsaleParamsEncoded = web3.eth.abi.encodeParameters(methodInterface, crowdsaleParams);
-  return { params: crowdsaleParams, paramsEncoded: crowdsaleParamsEncoded };
+  let crowdsaleParamsEncoded = web3.eth.abi.encodeParameters(methodInterface, crowdsaleParams)
+  return { params: crowdsaleParams, paramsEncoded: crowdsaleParamsEncoded }
 }
 
 export const deployCrowdsale = (getParams, methodInterface, appName) => {
-  console.log("###deploy crowdsale###")
+  console.log('###deploy crowdsale###')
   const { web3 } = web3Store
   return [
     () => {
-      return getNetworkVersion()
-      .then((networkID) => {
+      return getNetworkVersion().then(networkID => {
         contractStore.setContractProperty('crowdsale', 'networkID', networkID)
 
-        return web3.eth.getAccounts()
-          .then((accounts) => accounts[0])
-          .then((account) => {
+        return web3.eth
+          .getAccounts()
+          .then(accounts => accounts[0])
+          .then(account => {
             contractStore.setContractProperty('crowdsale', 'account', account)
 
-            let params = [ account, methodInterface ];
+            let params = [account, methodInterface]
 
             const methodInterfaceStr = `init(${methodInterface.join(',')})`
 
-            let method = methodToCreateAppInstance(
-              "registryExec",
-              methodInterfaceStr,
-              getParams,
-              params,
-              appName
-            )
+            let method = methodToCreateAppInstance('registryExec', methodInterfaceStr, getParams, params, appName)
 
             const opts = { gasPrice: generalStore.gasPrice, from: account }
-            console.log("opts:", opts)
+            console.log('opts:', opts)
 
-            return method.estimateGas(opts)
-              .then(estimatedGas => {
-                opts.gasLimit = calculateGasLimit(estimatedGas)
-                return sendTXToContract(method.send(opts))
-                  .then((receipt) => {
-                    console.log("receipt:", receipt)
-                    let logs = receipt.logs;
-                    let events = receipt.events;
-                    if (events) {
-                      console.log("events:", events)
-                      if (events.ApplicationFinalization) {
-                        getExecutionIDFromEvent(events, "ApplicationFinalization");
-                      } else if (events.AppInstanceCreated) {
-                        getExecutionIDFromEvent(events, "AppInstanceCreated");
-                      } else if (events.ApplicationInitialized) {
-                        getExecutionIDFromEvent(events, "ApplicationInitialized");
+            return method.estimateGas(opts).then(estimatedGas => {
+              opts.gasLimit = calculateGasLimit(estimatedGas)
+              return sendTXToContract(method.send(opts))
+                .then(receipt => {
+                  console.log('receipt:', receipt)
+                  let logs = receipt.logs
+                  let events = receipt.events
+                  if (events) {
+                    console.log('events:', events)
+                    if (events.ApplicationFinalization) {
+                      getExecutionIDFromEvent(events, 'ApplicationFinalization')
+                    } else if (events.AppInstanceCreated) {
+                      getExecutionIDFromEvent(events, 'AppInstanceCreated')
+                    } else if (events.ApplicationInitialized) {
+                      getExecutionIDFromEvent(events, 'ApplicationInitialized')
+                    }
+                  } else if (logs) {
+                    console.log('logs:')
+                    console.log(logs)
+
+                    let lastLog = logs.reduce((log, current) => {
+                      console.log(log)
+                      console.log(current.topics)
+                      console.log(current.logIndex)
+                      if (!log) {
+                        return (log = current)
                       }
-                    } else if (logs) {
-                      console.log("logs:")
-                      console.log(logs)
-
-                      let lastLog = logs.reduce((log, current) => {
-                        console.log(log)
-                        console.log(current.topics)
-                        console.log(current.logIndex)
-                        if (!log) {
-                          return log = current;
-                        }
-                        if (current.logIndex > log.logIndex) {
-                          log = current;
-                        }
-                        return log
-                      }, 0)
-                      if (lastLog) {
-                        if (lastLog.topics) {
-                          if (lastLog.topics.length > 1) {
-                            let execID = lastLog.topics[2]
-                            console.log("exec_id", execID)
-                            contractStore.setContractProperty('crowdsale', 'execID', execID)
-                          }
+                      if (current.logIndex > log.logIndex) {
+                        log = current
+                      }
+                      return log
+                    }, 0)
+                    if (lastLog) {
+                      if (lastLog.topics) {
+                        if (lastLog.topics.length > 1) {
+                          let execID = lastLog.topics[2]
+                          console.log('exec_id', execID)
+                          contractStore.setContractProperty('crowdsale', 'execID', execID)
                         }
                       }
                     }
-                  })
-                  .then(() => deploymentStore.setAsSuccessful('crowdsaleCreate'))
-              })
+                  }
+                })
+                .then(() => deploymentStore.setAsSuccessful('crowdsaleCreate'))
+            })
           })
       })
     }
@@ -274,16 +273,15 @@ export const deployCrowdsale = (getParams, methodInterface, appName) => {
 }
 
 const getExecutionIDFromEvent = (events, eventName) => {
-  console.log("eventName:", events[eventName])
+  console.log('eventName:', events[eventName])
   if (events[eventName].returnValues) {
-    console.log("returnValues:", events[eventName].returnValues)
-    let exec_id;
-    if (events[eventName].returnValues.execution_id)
-      exec_id = events[eventName].returnValues.execution_id
+    console.log('returnValues:', events[eventName].returnValues)
+    let exec_id
+    if (events[eventName].returnValues.execution_id) exec_id = events[eventName].returnValues.execution_id
     else if (events[eventName].returnValues.exec_id) {
       exec_id = events[eventName].returnValues.exec_id
     }
-    console.log("execution_id", exec_id)
+    console.log('execution_id', exec_id)
     contractStore.setContractProperty('crowdsale', 'execID', exec_id)
   }
 }
@@ -291,38 +289,36 @@ const getExecutionIDFromEvent = (events, eventName) => {
 const getTokenParams = (token, methodInterface) => {
   const { web3 } = web3Store
 
-  let paramsToken = [
-    web3.utils.fromAscii(token.name),
-    web3.utils.fromAscii(token.ticker),
-    parseInt(token.decimals, 10)
-  ]
-  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsToken]);
-  return encodedParameters;
+  let paramsToken = [web3.utils.fromAscii(token.name), web3.utils.fromAscii(token.ticker), parseInt(token.decimals, 10)]
+  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsToken])
+  return encodedParameters
 }
 
 export const initializeToken = () => {
-  console.log("###initialize token###")
+  console.log('###initialize token###')
   return [
     () => {
-      return getNetworkVersion()
-      .then((networkID) => {
+      return getNetworkVersion().then(networkID => {
+        const methodInterface = ['bytes32', 'bytes32', 'uint256']
 
-        const methodInterface = ["bytes32","bytes32","uint256"]
-
-        console.log("contractStore.crowdsale.account: ", contractStore.crowdsale.account)
-        let account = contractStore.crowdsale.account;
+        console.log('contractStore.crowdsale.account: ', contractStore.crowdsale.account)
+        let account = contractStore.crowdsale.account
 
         let paramsToExec = [tokenStore, methodInterface]
-        const method = methodToExec("registryExec", `initCrowdsaleToken(${methodInterface.join(',')})`, getTokenParams, paramsToExec)
+        const method = methodToExec(
+          'registryExec',
+          `initCrowdsaleToken(${methodInterface.join(',')})`,
+          getTokenParams,
+          paramsToExec
+        )
 
         const opts = { gasPrice: generalStore.gasPrice, from: account }
-        console.log("opts:", opts)
+        console.log('opts:', opts)
 
-        return method.estimateGas(opts)
-        .then(estimatedGas => {
+        return method.estimateGas(opts).then(estimatedGas => {
           opts.gasLimit = calculateGasLimit(estimatedGas)
           return sendTXToContract(method.send(opts))
-            .then((receipt) => {
+            .then(receipt => {
               console.log(receipt)
             })
             .then(() => deploymentStore.setAsSuccessful('token'))
@@ -335,21 +331,16 @@ export const initializeToken = () => {
 const getReservedTokensParams = (addrs, inTokens, inPercentageUnit, inPercentageDecimals, methodInterface) => {
   const { web3 } = web3Store
 
-  let paramsReservedTokens = [
-    addrs,
-    inTokens,
-    inPercentageUnit,
-    inPercentageDecimals
-  ]
-  console.log("paramsReservedTokens:",paramsReservedTokens)
+  let paramsReservedTokens = [addrs, inTokens, inPercentageUnit, inPercentageDecimals]
+  console.log('paramsReservedTokens:', paramsReservedTokens)
 
-  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsReservedTokens]);
-  return encodedParameters;
+  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsReservedTokens])
+  return encodedParameters
 }
 
 export const setReservedTokensListMultiple = () => {
   console.log('###setReservedTokensListMultiple:###')
-  console.log("reservedTokenStore:", reservedTokenStore)
+  console.log('reservedTokenStore:', reservedTokenStore)
   return [
     () => {
       let map = {}
@@ -367,10 +358,14 @@ export const setReservedTokensListMultiple = () => {
           const obj = map[addr] ? map[addr] : {}
 
           if (reservedTokens[i].dim === 'tokens') {
-            obj.inTokens = toBigNumber(val).times(`1e${tokenStore.decimals}`).toFixed()
+            obj.inTokens = toBigNumber(val)
+              .times(`1e${tokenStore.decimals}`)
+              .toFixed()
           } else {
             obj.inPercentageDecimals = countDecimalPlaces(val)
-            obj.inPercentageUnit = toBigNumber(val).times(`1e${obj.inPercentageDecimals}`).toFixed()
+            obj.inPercentageUnit = toBigNumber(val)
+              .times(`1e${obj.inPercentageDecimals}`)
+              .toFixed()
           }
           map[addr] = obj
         }
@@ -392,59 +387,63 @@ export const setReservedTokensListMultiple = () => {
         if (inPercentageDecimals.length === 0) return Promise.resolve()
       }
 
-      let account = contractStore.crowdsale.account;
+      let account = contractStore.crowdsale.account
       const opts = { gasPrice: generalStore.gasPrice, from: account }
 
-      const methodInterface = ["address[]","uint256[]","uint256[]","uint256[]"]
+      const methodInterface = ['address[]', 'uint256[]', 'uint256[]', 'uint256[]']
 
       let paramsToExec = [addrs, inTokens, inPercentageUnit, inPercentageDecimals, methodInterface]
-      const method = methodToExec("registryExec", `updateMultipleReservedTokens(${methodInterface.join(',')})`, getReservedTokensParams, paramsToExec)
+      const method = methodToExec(
+        'registryExec',
+        `updateMultipleReservedTokens(${methodInterface.join(',')})`,
+        getReservedTokensParams,
+        paramsToExec
+      )
 
-      return method.estimateGas(opts)
+      return method
+        .estimateGas(opts)
         .then(estimatedGas => {
           opts.gasLimit = calculateGasLimit(estimatedGas)
           return sendTXToContract(method.send(opts))
         })
         .then(() => deploymentStore.setAsSuccessful('setReservedTokens'))
-    }]
+    }
+  ]
 }
 
-const getInitializeCrowdsaleParams = (token) => {
+const getInitializeCrowdsaleParams = token => {
   const { web3 } = web3Store
-  let encodedParameters = web3.eth.abi.encodeParameters([], []);
-  return encodedParameters;
+  let encodedParameters = web3.eth.abi.encodeParameters([], [])
+  return encodedParameters
 }
 
 export const initializeCrowdsale = () => {
-  console.log("###initialize crowdsale###")
+  console.log('###initialize crowdsale###')
   return [
     () => {
-      return getNetworkVersion()
-      .then((networkID) => {
-
-        let account = contractStore.crowdsale.account;
+      return getNetworkVersion().then(networkID => {
+        let account = contractStore.crowdsale.account
 
         let paramsToExec = []
-        const method = methodToExec("registryExec", "initializeCrowdsale()", getInitializeCrowdsaleParams, paramsToExec)
+        const method = methodToExec('registryExec', 'initializeCrowdsale()', getInitializeCrowdsaleParams, paramsToExec)
 
         const opts = { gasPrice: generalStore.gasPrice, from: account }
-        console.log("opts:", opts)
+        console.log('opts:', opts)
 
-        return method.estimateGas(opts)
-          .then(estimatedGas => {
-            opts.gasLimit = calculateGasLimit(estimatedGas)
-            return sendTXToContract(method.send(opts))
-              .then((receipt) => {
-                console.log(receipt)
-              })
-              .then(() => deploymentStore.setAsSuccessful('crowdsaleInit'))
-          })
+        return method.estimateGas(opts).then(estimatedGas => {
+          opts.gasLimit = calculateGasLimit(estimatedGas)
+          return sendTXToContract(method.send(opts))
+            .then(receipt => {
+              console.log(receipt)
+            })
+            .then(() => deploymentStore.setAsSuccessful('crowdsaleInit'))
+        })
       })
     }
   ]
 }
 
-const getTiersParams = (methodInterface) => {
+const getTiersParams = methodInterface => {
   const { web3 } = web3Store
 
   const formatDate = date => toFixed(parseInt(Date.parse(date) / 1000, 10).toString())
@@ -457,34 +456,34 @@ const getTiersParams = (methodInterface) => {
   let durationArr = []
   let minCapArr = []
   const tiersExceptFirst = tierStore.tiers.slice(1)
-  tiersExceptFirst.forEach((tier) => {
+  tiersExceptFirst.forEach(tier => {
     const { updatable, whitelistEnabled, rate, supply, tier: tierName, startTime, endTime } = tier
     const duration = formatDate(endTime) - formatDate(startTime)
     const tierNameBytes = web3.utils.fromAscii(tierName)
-    const encodedTierName = web3.eth.abi.encodeParameter("bytes32", tierNameBytes);
+    const encodedTierName = web3.eth.abi.encodeParameter('bytes32', tierNameBytes)
     const rateBN = new BigNumber(rate)
     const oneTokenInETH = rateBN.pow(-1).toFixed()
     durationArr.push(duration)
     tierNameArr.push(encodedTierName)
     rateArr.push(web3.utils.toWei(oneTokenInETH, 'ether'))
-    supplyArr.push(toBigNumber(supply).times(`1e${tokenStore.decimals}`).toFixed())
-    minCapArr.push(toBigNumber(tier.minCap).times(`1e${tokenStore.decimals}`).toFixed())
+    supplyArr.push(
+      toBigNumber(supply)
+        .times(`1e${tokenStore.decimals}`)
+        .toFixed()
+    )
+    minCapArr.push(
+      toBigNumber(tier.minCap)
+        .times(`1e${tokenStore.decimals}`)
+        .toFixed()
+    )
     updatableArr.push(updatable === 'on')
     whitelistEnabledArr.push(whitelistEnabled === 'yes')
   })
-  let paramsTiers = [
-    tierNameArr,
-    durationArr,
-    rateArr,
-    supplyArr,
-    minCapArr,
-    updatableArr,
-    whitelistEnabledArr
-  ]
-  console.log("paramsTiers:", paramsTiers)
+  let paramsTiers = [tierNameArr, durationArr, rateArr, supplyArr, minCapArr, updatableArr, whitelistEnabledArr]
+  console.log('paramsTiers:', paramsTiers)
 
-  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsTiers]);
-  return encodedParameters;
+  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsTiers])
+  return encodedParameters
 }
 
 export const createCrowdsaleTiers = () => {
@@ -492,15 +491,21 @@ export const createCrowdsaleTiers = () => {
     () => {
       console.log('###createCrowdsaleTiers:###')
 
-      const methodInterface = ["bytes32[]", "uint256[]", "uint256[]", "uint256[]", "uint256[]", "bool[]", "bool[]"]
+      const methodInterface = ['bytes32[]', 'uint256[]', 'uint256[]', 'uint256[]', 'uint256[]', 'bool[]', 'bool[]']
 
       let paramsToExec = [methodInterface]
-      const method = methodToExec("registryExec", `createCrowdsaleTiers(${methodInterface.join(',')})`, getTiersParams, paramsToExec)
+      const method = methodToExec(
+        'registryExec',
+        `createCrowdsaleTiers(${methodInterface.join(',')})`,
+        getTiersParams,
+        paramsToExec
+      )
 
-      let account = contractStore.crowdsale.account;
+      let account = contractStore.crowdsale.account
       const opts = { gasPrice: generalStore.gasPrice, from: account }
 
-      return method.estimateGas(opts)
+      return method
+        .estimateGas(opts)
         .then(estimatedGas => {
           opts.gasLimit = calculateGasLimit(estimatedGas)
           return sendTXToContract(method.send(opts))
@@ -513,25 +518,19 @@ export const createCrowdsaleTiers = () => {
 const getWhitelistsParams = (tierIndex, addrs, minCaps, maxCaps, methodInterface) => {
   const { web3 } = web3Store
 
-  const commonParams = [
-    addrs,
-    minCaps,
-    maxCaps
-  ]
+  const commonParams = [addrs, minCaps, maxCaps]
 
   let paramsWhitelist
   if (crowdsaleStore.isMintedCappedCrowdsale) {
-    paramsWhitelist = [
-      tierIndex, ...commonParams
-    ]
+    paramsWhitelist = [tierIndex, ...commonParams]
   } else if (crowdsaleStore.isDutchAuction) {
     paramsWhitelist = commonParams
   }
 
-  console.log("paramsWhitelist:", paramsWhitelist)
+  console.log('paramsWhitelist:', paramsWhitelist)
 
-  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsWhitelist]);
-  return encodedParameters;
+  let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [...paramsWhitelist])
+  return encodedParameters
 }
 
 export const addWhitelist = () => {
@@ -553,7 +552,7 @@ export const addWhitelist = () => {
       let maxCaps = []
 
       const { web3 } = web3Store
-      const { rate,  minRate } = tierStore.tiers[index]
+      const { rate, minRate } = tierStore.tiers[index]
       let rateBN
       if (crowdsaleStore.isMintedCappedCrowdsale) {
         rateBN = new BigNumber(rate)
@@ -565,8 +564,12 @@ export const addWhitelist = () => {
 
       for (let i = 0; i < whitelist.length; i++) {
         addrs.push(whitelist[i].addr)
-        let whitelistMin = toBigNumber(whitelist[i].min).times(`1e${tokenStore.decimals}`).toFixed() // in tokens, token do have decimals accounted
-        let whitelistMax = toBigNumber(whitelist[i].max).times(`1e${tokenStore.decimals}`).toFixed() // in tokens, token do have decimals accounted
+        let whitelistMin = toBigNumber(whitelist[i].min)
+          .times(`1e${tokenStore.decimals}`)
+          .toFixed() // in tokens, token do have decimals accounted
+        let whitelistMax = toBigNumber(whitelist[i].max)
+          .times(`1e${tokenStore.decimals}`)
+          .toFixed() // in tokens, token do have decimals accounted
         minCaps.push(whitelistMin ? whitelistMin.toString() : 0)
         maxCaps.push(whitelistMax ? whitelistMax.toString() : 0)
       }
@@ -575,23 +578,29 @@ export const addWhitelist = () => {
       console.log('minCaps:', minCaps)
       console.log('maxCaps:', maxCaps)
 
-      let account = contractStore.crowdsale.account;
+      let account = contractStore.crowdsale.account
       const opts = { gasPrice: generalStore.gasPrice, from: account }
 
       let methodInterface
       let methodName
       if (crowdsaleStore.isMintedCappedCrowdsale) {
-        methodInterface = ["uint256", "address[]","uint256[]","uint256[]"]
-        methodName = "whitelistMultiForTier"
+        methodInterface = ['uint256', 'address[]', 'uint256[]', 'uint256[]']
+        methodName = 'whitelistMultiForTier'
       } else if (crowdsaleStore.isDutchAuction) {
-        methodInterface = ["address[]","uint256[]","uint256[]"]
-        methodName = "whitelistMulti"
+        methodInterface = ['address[]', 'uint256[]', 'uint256[]']
+        methodName = 'whitelistMulti'
       }
 
       let paramsToExec = [index, addrs, minCaps, maxCaps, methodInterface]
-      const method = methodToExec("registryExec", `${methodName}(${methodInterface.join(',')})`, getWhitelistsParams, paramsToExec)
+      const method = methodToExec(
+        'registryExec',
+        `${methodName}(${methodInterface.join(',')})`,
+        getWhitelistsParams,
+        paramsToExec
+      )
 
-      return method.estimateGas(opts)
+      return method
+        .estimateGas(opts)
         .then(estimatedGas => {
           opts.gasLimit = calculateGasLimit(estimatedGas)
           return sendTXToContract(method.send(opts))
@@ -601,38 +610,50 @@ export const addWhitelist = () => {
   })
 }
 
-const getUpdateGlobalMinCapParams = (methodInterface) => {
-  let globalMinCap = toBigNumber(tierStore.tiers[0].minCap).times(`1e${tokenStore.decimals}`).toFixed()
-  return web3Store.web3.eth.abi.encodeParameters(methodInterface, [globalMinCap]);
+const getUpdateGlobalMinCapParams = methodInterface => {
+  let globalMinCap = toBigNumber(tierStore.tiers[0].minCap)
+    .times(`1e${tokenStore.decimals}`)
+    .toFixed()
+  return web3Store.web3.eth.abi.encodeParameters(methodInterface, [globalMinCap])
 }
 
 export const updateGlobalMinContribution = () => {
-  return [() => {
-    console.log('###updateGlobalMinContribution:###')
+  return [
+    () => {
+      console.log('###updateGlobalMinContribution:###')
 
-    const methodInterface = ["uint256"]
+      const methodInterface = ['uint256']
 
-    let paramsToExec = [methodInterface]
-    const method = methodToExec("registryExec", `updateGlobalMinContribution(${methodInterface.join(',')})`, getUpdateGlobalMinCapParams, paramsToExec)
+      let paramsToExec = [methodInterface]
+      const method = methodToExec(
+        'registryExec',
+        `updateGlobalMinContribution(${methodInterface.join(',')})`,
+        getUpdateGlobalMinCapParams,
+        paramsToExec
+      )
 
-    let account = contractStore.crowdsale.account;
-    const opts = { gasPrice: generalStore.gasPrice, from: account }
+      let account = contractStore.crowdsale.account
+      const opts = { gasPrice: generalStore.gasPrice, from: account }
 
-    return method.estimateGas(opts)
-      .then(estimatedGas => {
-        opts.gasLimit = calculateGasLimit(estimatedGas)
-        return sendTXToContract(method.send(opts))
-      })
-      .then(() => deploymentStore.setAsSuccessful('updateGlobalMinContribution'))
-  }]
+      return method
+        .estimateGas(opts)
+        .then(estimatedGas => {
+          opts.gasLimit = calculateGasLimit(estimatedGas)
+          return sendTXToContract(method.send(opts))
+        })
+        .then(() => deploymentStore.setAsSuccessful('updateGlobalMinContribution'))
+    }
+  ]
 }
 
 const getUpdateTierMinimumParams = (tierIndex, methodInterface) => {
   const { web3 } = web3Store
-  const minCap = toBigNumber(tierStore.tiers[tierIndex].minCap).times(`1e${tokenStore.decimals}`).toFixed()
+  const minCap = toBigNumber(tierStore.tiers[tierIndex].minCap)
+    .times(`1e${tokenStore.decimals}`)
+    .toFixed()
 
-  const encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [tierIndex, minCap]);
-  return encodedParameters;
+  const encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [tierIndex, minCap])
+  return encodedParameters
 }
 
 export const updateTierMinimum = () => {
@@ -640,15 +661,21 @@ export const updateTierMinimum = () => {
     return () => {
       console.log('###updateTierMinimum:###')
 
-      const methodInterface = ["uint256","uint256"]
+      const methodInterface = ['uint256', 'uint256']
 
       let paramsToExec = [index, methodInterface]
-      const method = methodToExec("registryExec", `updateTierMinimum(${methodInterface.join(',')})`, getUpdateTierMinimumParams, paramsToExec)
+      const method = methodToExec(
+        'registryExec',
+        `updateTierMinimum(${methodInterface.join(',')})`,
+        getUpdateTierMinimumParams,
+        paramsToExec
+      )
 
-      let account = contractStore.crowdsale.account;
+      let account = contractStore.crowdsale.account
       const opts = { gasPrice: generalStore.gasPrice, from: account }
 
-      return method.estimateGas(opts)
+      return method
+        .estimateGas(opts)
         .then(estimatedGas => {
           opts.gasLimit = calculateGasLimit(estimatedGas)
           return sendTXToContract(method.send(opts))
@@ -663,23 +690,23 @@ export const handlerForFile = (content, type) => {
   let suffix = ''
 
   if (checkIfTime) {
-    let timezoneOffset = (new Date()).getTimezoneOffset() / 60
+    let timezoneOffset = new Date().getTimezoneOffset() / 60
     let operator = timezoneOffset > 0 ? '-' : '+'
     suffix = ` (GMT ${operator} ${Math.abs(timezoneOffset)})`
   }
 
-  console.log("content:", content)
-  console.log("type:", type)
+  console.log('content:', content)
+  console.log('type:', type)
 
   if (content && type) {
-    if (content.field === "whitelist") {
+    if (content.field === 'whitelist') {
       let whitelistItems = []
       for (let i = 0; i < type.whitelist.length; i++) {
         let whiteListItem = type.whitelist[i]
         whitelistItems.push(whitelistTableItem(whiteListItem).join('\n'))
       }
       return whitelistItems
-    } else if (content.field === "tokens" && content.parent === "reservedTokenStore") {
+    } else if (content.field === 'tokens' && content.parent === 'reservedTokenStore') {
       let reservedTokensItems = []
       for (let i = 0; i < type.tokens.length; i++) {
         let reservedTokensItem = type.tokens[i]
@@ -691,30 +718,36 @@ export const handlerForFile = (content, type) => {
     }
   } else {
     if (!content) {
-      console.log("WARNING!: content is undefined")
+      console.log('WARNING!: content is undefined')
     }
     if (!type) {
-      console.log("WARNING!: type is undefined")
+      console.log('WARNING!: type is undefined')
     }
     return ''
   }
 }
 
-const whitelistTableItem = (whiteListItem) => {
+const whitelistTableItem = whiteListItem => {
   const valBoxLen = 28
   return [
     '|                                            |                            |                            |',
-    `|${fillWithSpaces(whiteListItem.addr, ADDR_BOX_LEN)}|${fillWithSpaces(whiteListItem.min, valBoxLen)}|${fillWithSpaces(whiteListItem.max, valBoxLen)}|`,
+    `|${fillWithSpaces(whiteListItem.addr, ADDR_BOX_LEN)}|${fillWithSpaces(
+      whiteListItem.min,
+      valBoxLen
+    )}|${fillWithSpaces(whiteListItem.max, valBoxLen)}|`,
     '|____________________________________________|____________________________|____________________________|'
   ]
 }
 
-const reservedTokensTableItem = (reservedTokensItem) => {
+const reservedTokensTableItem = reservedTokensItem => {
   const valBoxLen = 56
   const dim = reservedTokensItem.dim === 'percentage' ? '%' : 'tokens'
   return [
     '|                                            |                                                        |',
-    `|${fillWithSpaces(reservedTokensItem.addr, ADDR_BOX_LEN)}|${fillWithSpaces(`${reservedTokensItem.val} ${dim}`, valBoxLen)}|`,
+    `|${fillWithSpaces(reservedTokensItem.addr, ADDR_BOX_LEN)}|${fillWithSpaces(
+      `${reservedTokensItem.val} ${dim}`,
+      valBoxLen
+    )}|`,
     '|____________________________________________|________________________________________________________|'
   ]
 }
@@ -786,9 +819,11 @@ const addSrcToFile = (content, index, contractStore, tierStore) => {
 export const download = ({ data = {}, filename = '', type = '', zip = '' }) => {
   let file = !zip ? new Blob([data], { type: type }) : zip
 
-  if (window.navigator.msSaveOrOpenBlob) { // IE10+
+  if (window.navigator.msSaveOrOpenBlob) {
+    // IE10+
     window.navigator.msSaveOrOpenBlob(file, filename)
-  } else { // Others
+  } else {
+    // Others
     let a = document.createElement('a')
     let url = URL.createObjectURL(file)
 
@@ -797,23 +832,23 @@ export const download = ({ data = {}, filename = '', type = '', zip = '' }) => {
     document.body.appendChild(a)
     a.click()
 
-    setTimeout(function () {
+    setTimeout(function() {
       document.body.removeChild(a)
       window.URL.revokeObjectURL(url)
     }, 0)
   }
 }
 
-export function scrollToBottom () {
+export function scrollToBottom() {
   window.scrollTo(0, document.body.scrollHeight)
 }
 
-export function getDownloadName () {
+export function getDownloadName() {
   const { crowdsale, MintedCappedProxy } = contractStore
   const crowdsalePointer = crowdsale.execID || MintedCappedProxy.addr
   return new Promise(resolve => {
     const whenNetworkName = getNetworkVersion()
-      .then((networkID) => {
+      .then(networkID => {
         let networkName = getNetWorkNameById(networkID)
 
         if (!networkName) {
@@ -822,7 +857,7 @@ export function getDownloadName () {
 
         return networkName
       })
-      .then((networkName) => `${DOWNLOAD_NAME}_${networkName}_${crowdsalePointer}`)
+      .then(networkName => `${DOWNLOAD_NAME}_${networkName}_${crowdsalePointer}`)
 
     resolve(whenNetworkName)
   })
@@ -832,10 +867,12 @@ const getAddr = (contractName, networkID) => {
   return JSON.parse(process.env[`${REACT_PREFIX}${contractName}_ADDRESS`] || {})[networkID]
 }
 
-const authOSContractString = (contrct) => {return `Auth-os ${contrct} address: `}
+const authOSContractString = contrct => {
+  return `Auth-os ${contrct} address: `
+}
 
 const getCrowdsaleContractAddr = (strategy, contractName, networkID) => {
-  switch(strategy) {
+  switch (strategy) {
     case CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE:
       return JSON.parse(process.env[`${REACT_PREFIX}${MINTED_PREFIX}${contractName}_ADDRESS`] || {})[networkID]
     case CROWDSALE_STRATEGIES.DUTCH_AUCTION:
@@ -848,53 +885,87 @@ const getCrowdsaleContractAddr = (strategy, contractName, networkID) => {
 const footerElemets = [
   { value: '\n*****************************', parent: 'none', fileValue: '' },
   { value: '*****************************', parent: 'none', fileValue: '' },
-  { value: '*****************************', parent: 'none', fileValue: '\n' },
+  { value: '*****************************', parent: 'none', fileValue: '\n' }
 ]
 
-const bigHeaderElements = (headerName) => {
+const bigHeaderElements = headerName => {
   return [
     { value: '*****************************', parent: 'none', fileValue: '' },
     { value: headerName, parent: 'none', fileValue: '' },
-    { value: '*****************************', parent: 'none', fileValue: '\n' },
+    { value: '*****************************', parent: 'none', fileValue: '\n' }
   ]
 }
 
-const smallHeader = (headerName) => {
+const smallHeader = headerName => {
   return { value: headerName, parent: 'none', fileValue: '\n' }
 }
 
 const whitelistHeaderTableElements = () => {
   return [
-    { value: '________________________________________________________________________________________________________', parent: 'none', fileValue: '' },
-    { value: '|                                            |                            |                            |', parent: 'none', fileValue: '' },
-    { value: '|                ADDRESS                     |     MIN CAP IN TOKENS      |     MAX CAP IN TOKENS      |', parent: 'none', fileValue: '' },
-    { value: '|____________________________________________|____________________________|____________________________|', parent: 'none', fileValue: '' },
+    {
+      value: '________________________________________________________________________________________________________',
+      parent: 'none',
+      fileValue: ''
+    },
+    {
+      value: '|                                            |                            |                            |',
+      parent: 'none',
+      fileValue: ''
+    },
+    {
+      value: '|                ADDRESS                     |     MIN CAP IN TOKENS      |     MAX CAP IN TOKENS      |',
+      parent: 'none',
+      fileValue: ''
+    },
+    {
+      value: '|____________________________________________|____________________________|____________________________|',
+      parent: 'none',
+      fileValue: ''
+    }
   ]
 }
 
 const reservedTokensHeaderTableElements = () => {
   return [
-    { value: '_______________________________________________________________________________________________________', parent: 'none', fileValue: '' },
-    { value: '|                                            |                                                        |', parent: 'none', fileValue: '' },
-    { value: '|                ADDRESS                     |                        VALUE                           |', parent: 'none', fileValue: '' },
-    { value: '|____________________________________________|________________________________________________________|', parent: 'none', fileValue: '' },
+    {
+      value: '_______________________________________________________________________________________________________',
+      parent: 'none',
+      fileValue: ''
+    },
+    {
+      value: '|                                            |                                                        |',
+      parent: 'none',
+      fileValue: ''
+    },
+    {
+      value: '|                ADDRESS                     |                        VALUE                           |',
+      parent: 'none',
+      fileValue: ''
+    },
+    {
+      value: '|____________________________________________|________________________________________________________|',
+      parent: 'none',
+      fileValue: ''
+    }
   ]
 }
 
-export const SUMMARY_FILE_CONTENTS = (networkID) => {
+export const SUMMARY_FILE_CONTENTS = networkID => {
   let minCapEl = []
   let crowdsaleWhitelistElements = []
   let tierWhitelistElements = []
-  if (tierStore.tiers.every((tier) => { return tier.whitelistEnabled !== "yes" })) {
-    minCapEl = [
-      { field: 'minCap', value: 'Crowdsale global min cap: ', parent: 'tierStore' }
-    ]
+  if (
+    tierStore.tiers.every(tier => {
+      return tier.whitelistEnabled !== 'yes'
+    })
+  ) {
+    minCapEl = [{ field: 'minCap', value: 'Crowdsale global min cap: ', parent: 'tierStore' }]
   } else {
     tierWhitelistElements = [
       '\n',
       ...bigHeaderElements('*********WHITELIST***********'),
       ...whitelistHeaderTableElements(),
-      { field: 'whitelist', value: '', parent: 'tierStore' },
+      { field: 'whitelist', value: '', parent: 'tierStore' }
     ]
   }
 
@@ -904,7 +975,7 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
       '\n',
       ...bigHeaderElements('******RESERVED TOKENS********'),
       ...reservedTokensHeaderTableElements(),
-      { field: 'tokens', value: '', parent: 'reservedTokenStore' },
+      { field: 'tokens', value: '', parent: 'reservedTokenStore' }
     ]
   }
 
@@ -914,22 +985,18 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
   if (crowdsaleStore.isDutchAuction) {
     rates = [
       { field: 'minRate', value: 'Crowdsale min rate: ', parent: 'tierStore' },
-      { field: 'maxRate', value: 'Crowdsale max rate: ', parent: 'tierStore' },
+      { field: 'maxRate', value: 'Crowdsale max rate: ', parent: 'tierStore' }
     ]
 
-    crowdsaleIsModifiableEl = [
-      { value: 'Crowdsale\'s duration is modifiable: ', parent: 'none', fileValue: 'no' },
-    ]
+    crowdsaleIsModifiableEl = [{ value: "Crowdsale's duration is modifiable: ", parent: 'none', fileValue: 'no' }]
 
-    crowdsaleIsWhitelistedEl = [
-      { field: 'whitelistEnabled', value: 'Crowdsale is whitelisted: ', parent: 'tierStore' },
-    ]
+    crowdsaleIsWhitelistedEl = [{ field: 'whitelistEnabled', value: 'Crowdsale is whitelisted: ', parent: 'tierStore' }]
 
     crowdsaleWhitelistElements = tierWhitelistElements
   }
 
   const getCrowdsaleID = () => {
-    console.log("contractStore:", contractStore)
+    console.log('contractStore:', contractStore)
     if (contractStore.crowdsale.execID) {
       return { field: 'execID', value: 'Auth-os execution ID: ', parent: 'crowdsale' }
     } else if (contractStore.MintedCappedProxy.addr) {
@@ -942,8 +1009,16 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
   const getManagers = () => {
     if (crowdsaleStore.isDutchAuction) {
       return [
-        { value: authOSContractString('SaleManager'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE_MANAGER", networkID) },
-        { value: authOSContractString('TokenManager'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "TOKEN_MANAGER", networkID) },
+        {
+          value: authOSContractString('SaleManager'),
+          parent: 'none',
+          fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, 'CROWDSALE_MANAGER', networkID)
+        },
+        {
+          value: authOSContractString('TokenManager'),
+          parent: 'none',
+          fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, 'TOKEN_MANAGER', networkID)
+        }
       ]
     }
     return []
@@ -973,23 +1048,41 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
     auth_os: [
       ...bigHeaderElements('*******AUTH-OS METADATA******'),
       smallHeader('**********REGISTRY***********'),
-      { value: authOSContractString('abstract storage'), parent: 'none', fileValue: getAddr("ABSTRACT_STORAGE", networkID) },
-      { value: authOSContractString('registry idx'), parent: 'none', fileValue: getAddr("REGISTRY_IDX", networkID) },
-      { value: authOSContractString('script executor'), parent: 'none', fileValue: getAddr("REGISTRY_EXEC", networkID) },
-      { value: authOSContractString('provider'), parent: 'none', fileValue: getAddr("PROVIDER", networkID) },
+      {
+        value: authOSContractString('abstract storage'),
+        parent: 'none',
+        fileValue: getAddr('ABSTRACT_STORAGE', networkID)
+      },
+      { value: authOSContractString('registry idx'), parent: 'none', fileValue: getAddr('REGISTRY_IDX', networkID) },
+      {
+        value: authOSContractString('script executor'),
+        parent: 'none',
+        fileValue: getAddr('REGISTRY_EXEC', networkID)
+      },
+      { value: authOSContractString('provider'), parent: 'none', fileValue: getAddr('PROVIDER', networkID) },
       smallHeader('*********CROWDSALE***********'),
       { value: 'Auth-os application name: ', parent: 'none', fileValue: crowdsaleStore.appName },
       getCrowdsaleID(),
-      { value: authOSContractString('MintedCappedIdx'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "IDX", networkID) },
-      { value: authOSContractString('Sale'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE", networkID) },
-      { value: authOSContractString('Token'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "TOKEN", networkID) },
+      {
+        value: authOSContractString('MintedCappedIdx'),
+        parent: 'none',
+        fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, 'IDX', networkID)
+      },
+      {
+        value: authOSContractString('Sale'),
+        parent: 'none',
+        fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, 'CROWDSALE', networkID)
+      },
+      {
+        value: authOSContractString('Token'),
+        parent: 'none',
+        fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, 'TOKEN', networkID)
+      },
       ...getManagers,
       ...footerElemets
     ],
     files: {
-      order: [
-        'crowdsale'
-      ],
+      order: ['crowdsale'],
       crowdsale: {
         name: crowdsaleStore.appName,
         txt: [
@@ -999,7 +1092,7 @@ export const SUMMARY_FILE_CONTENTS = (networkID) => {
           { field: 'supply', value: 'Tier max cap: ', parent: 'tierStore' },
           { field: 'startTime', value: 'Tier start time: ', parent: 'tierStore' },
           { field: 'endTime', value: 'Tier end time: ', parent: 'tierStore' },
-          { field: 'updatable', value: 'Tier\'s duration is modifiable: ', parent: 'tierStore' },
+          { field: 'updatable', value: "Tier's duration is modifiable: ", parent: 'tierStore' },
           { field: 'whitelistEnabled', value: 'Tier is whitelisted: ', parent: 'tierStore' },
           ...tierWhitelistElements,
           ...footerElemets

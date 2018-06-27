@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Web3 from 'web3'
-import Dropzone from 'react-dropzone';
+import Dropzone from 'react-dropzone'
 import Papa from 'papaparse'
 import '../../assets/stylesheets/application.css'
 import { InputField } from './InputField'
@@ -8,7 +8,7 @@ import { RadioInputField } from './RadioInputField'
 import { TEXT_FIELDS, VALIDATION_TYPES } from '../../utils/constants'
 import update from 'immutability-helper'
 import ReservedTokensItem from './ReservedTokensItem'
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react'
 import { NumericInput } from './NumericInput'
 import { reservedTokensImported } from '../../utils/alerts'
 import processReservedTokens from '../../utils/processReservedTokens'
@@ -18,7 +18,7 @@ const { ADDRESS, DIMENSION, VALUE } = TEXT_FIELDS
 
 @observer
 export class ReservedTokensInputBlock extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -38,7 +38,7 @@ export class ReservedTokensInputBlock extends Component {
     }
   }
 
-  clearInput () {
+  clearInput() {
     this.setState({
       addr: '',
       dim: 'tokens',
@@ -55,16 +55,18 @@ export class ReservedTokensInputBlock extends Component {
   addReservedTokensItem = () => {
     const { addr, dim, val } = this.state
 
-    this.setState(update(this.state, {
-      validation: {
-        address: {
-          pristine: { $set: false }
-        },
-        value: {
-          pristine: { $set: false }
+    this.setState(
+      update(this.state, {
+        validation: {
+          address: {
+            pristine: { $set: false }
+          },
+          value: {
+            pristine: { $set: false }
+          }
         }
-      }
-    }))
+      })
+    )
 
     const validFields = this.state.validation.address.valid === VALID && this.state.validation.value.valid === VALID
 
@@ -72,22 +74,24 @@ export class ReservedTokensInputBlock extends Component {
       return
     }
 
-    this.setState(update(this.state, {
-      validation: {
-        address: {
-          $set: {
-            pristine: true,
-            valid: INVALID
-          }
-        },
-        value: {
-          $set: {
-            pristine: true,
-            valid: INVALID
+    this.setState(
+      update(this.state, {
+        validation: {
+          address: {
+            $set: {
+              pristine: true,
+              valid: INVALID
+            }
+          },
+          value: {
+            $set: {
+              pristine: true,
+              valid: INVALID
+            }
           }
         }
-      }
-    }))
+      })
+    )
 
     this.clearInput()
 
@@ -109,9 +113,9 @@ export class ReservedTokensInputBlock extends Component {
           $set: {
             pristine: false,
             valid: isAddressValid
-          },
-        },
-      },
+          }
+        }
+      }
     })
     newState.addr = address
 
@@ -139,12 +143,15 @@ export class ReservedTokensInputBlock extends Component {
       Papa.parse(file, {
         skipEmptyLines: true,
         complete: results => {
-          const { called } = processReservedTokens({
-            rows: results.data,
-            decimals: this.props.decimals
-          }, item => {
-            this.props.addReservedTokensItem(item)
-          })
+          const { called } = processReservedTokens(
+            {
+              rows: results.data,
+              decimals: this.props.decimals
+            },
+            item => {
+              this.props.addReservedTokensItem(item)
+            }
+          )
 
           reservedTokensImported(called)
         }
@@ -152,7 +159,7 @@ export class ReservedTokensInputBlock extends Component {
     })
   }
 
-  render () {
+  render() {
     const reservedTokensElements = this.props.tokens.map((token, index) => {
       return (
         <ReservedTokensItem
@@ -175,13 +182,13 @@ export class ReservedTokensInputBlock extends Component {
         min: !this.props.decimals ? 0 : Number(`1e-${this.props.decimals}`),
         maxDecimals: !this.props.decimals ? 0 : this.props.decimals,
         errorMessage: 'Value must be positive and decimals should not exceed the amount of decimals specified',
-        description: 'Value in tokens. Don\'t forget to click + button for each reserved token.'
+        description: "Value in tokens. Don't forget to click + button for each reserved token."
       }
     } else if (this.state.dim === 'percentage') {
       valueInputParams = {
         min: Number.MIN_VALUE,
         errorMessage: 'Value must be positive',
-        description: 'Value in percentage. Don\'t forget to click + button for each reserved token.'
+        description: "Value in percentage. Don't forget to click + button for each reserved token."
       }
     } else {
       console.error(`unrecognized dimension '${this.state.dim}'`)
@@ -239,28 +246,23 @@ export class ReservedTokensInputBlock extends Component {
             />
           </div>
           <div className="plus-button-container">
-            <div onClick={e => this.addReservedTokensItem()} className="button button_fill button_no_icon">Submit</div>
+            <div onClick={e => this.addReservedTokensItem()} className="button button_fill button_no_icon">
+              Submit
+            </div>
           </div>
         </div>
         {reservedTokensElements}
 
         {/* Actions */}
         <div style={actionsStyle}>
-          {
-            tokensListEmpty ? null : (
-              <div className="clear-all-tokens" style={clearAllStyle} onClick={this.props.clearAll}>
-                <i className="fa fa-trash"></i>&nbsp;Clear All
-              </div>
-            )
-          }
+          {tokensListEmpty ? null : (
+            <div className="clear-all-tokens" style={clearAllStyle} onClick={this.props.clearAll}>
+              <i className="fa fa-trash" />&nbsp;Clear All
+            </div>
+          )}
 
-          <Dropzone
-            onDrop={this.onDrop}
-            accept=".csv"
-            style={dropzoneStyle}
-          >
-            <i className="fa fa-upload" title="Upload CSV"></i>&nbsp;
-            Upload CSV
+          <Dropzone onDrop={this.onDrop} accept=".csv" style={dropzoneStyle}>
+            <i className="fa fa-upload" title="Upload CSV" />&nbsp; Upload CSV
           </Dropzone>
         </div>
       </div>

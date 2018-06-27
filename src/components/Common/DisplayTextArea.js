@@ -1,5 +1,5 @@
-import React from 'react';
-import '../../assets/stylesheets/application.css';
+import React from 'react'
+import '../../assets/stylesheets/application.css'
 
 export const DisplayTextArea = props => {
   return (
@@ -15,5 +15,5 @@ export const DisplayTextArea = props => {
       <pre>{props.value}</pre>
       <p className="description">{props.description}</p>
     </div>
-  );
-};
+  )
+}

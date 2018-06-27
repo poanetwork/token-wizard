@@ -6,7 +6,7 @@ import { InputField2 } from './InputField2'
 
 export const TokenName = ({ errorStyle }) => (
   <Field
-    validate={(value) => {
+    validate={value => {
       const errors = composeValidators(
         isRequired(),
         isMaxLength()(30),

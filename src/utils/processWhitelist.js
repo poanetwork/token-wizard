@@ -10,9 +10,9 @@ import { isAddress, validateWhitelistMin, validateWhitelistMax } from './validat
  * @param {Function} cb The function to be called with each valid item
  * @returns {Object} Object with a `called` property, indicating the number of times the callback was called
  */
-export default function ({ rows, decimals }, cb) {
+export default function({ rows, decimals }, cb) {
   let called = 0
-  rows.forEach((row) => {
+  rows.forEach(row => {
     if (row.length !== 3) return
 
     const [addr, min, max] = row
@@ -21,7 +21,8 @@ export default function ({ rows, decimals }, cb) {
       isAddress()(addr) ||
       validateWhitelistMin({ min, max, decimals }) ||
       validateWhitelistMax({ min, max, decimals })
-    ) return
+    )
+      return
 
     cb({ addr, min, max })
     called++
@@ -29,4 +30,3 @@ export default function ({ rows, decimals }, cb) {
 
   return { called }
 }
-

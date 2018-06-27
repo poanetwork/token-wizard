@@ -11,14 +11,14 @@ configure({ adapter: new Adapter() })
 describe('TokenDecimals', () => {
   it(`should render TokenDecimals component`, () => {
     const wrapper = renderer.create(
-      <Form onSubmit={jest.fn()} component={TokenDecimals} errorStyle={{ color: 'red', fontWeight: 'bold', }}/>
+      <Form onSubmit={jest.fn()} component={TokenDecimals} errorStyle={{ color: 'red', fontWeight: 'bold' }} />
     )
     expect(wrapper).toMatchSnapshot()
   })
 
   it(`should render TokenDecimals component and its children`, () => {
     const wrapper = renderer.create(
-      <Form onSubmit={jest.fn()} component={TokenDecimals} errorStyle={{ color: 'red', fontWeight: 'bold', }}/>
+      <Form onSubmit={jest.fn()} component={TokenDecimals} errorStyle={{ color: 'red', fontWeight: 'bold' }} />
     )
     expect(wrapper).toMatchSnapshot()
   })
@@ -28,7 +28,7 @@ describe('TokenDecimals', () => {
       <Form
         onSubmit={jest.fn()}
         component={TokenDecimals}
-        errorStyle={{ color: 'red', fontWeight: 'bold', }}
+        errorStyle={{ color: 'red', fontWeight: 'bold' }}
         disabled={true}
       />
     )
@@ -37,7 +37,7 @@ describe('TokenDecimals', () => {
 
   it(`should give error if decimals is empty`, () => {
     const wrapper = mount(
-      <Form onSubmit={jest.fn()} component={TokenDecimals} errorStyle={{ color: 'red', fontWeight: 'bold', }}/>
+      <Form onSubmit={jest.fn()} component={TokenDecimals} errorStyle={{ color: 'red', fontWeight: 'bold' }} />
     )
 
     const input = wrapper.find('input[name="decimals"]')
@@ -51,7 +51,7 @@ describe('TokenDecimals', () => {
 
   it(`should give error if decimals is greater than 18`, () => {
     const wrapper = mount(
-      <Form onSubmit={jest.fn()} component={TokenDecimals} errorStyle={{ color: 'red', fontWeight: 'bold', }}/>
+      <Form onSubmit={jest.fn()} component={TokenDecimals} errorStyle={{ color: 'red', fontWeight: 'bold' }} />
     )
     const input = wrapper.find('input[name="decimals"]')
     input.simulate('change', { target: { value: '21' } })

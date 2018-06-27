@@ -6,7 +6,7 @@ const defaultErrorStyles = {
   fontWeight: 'bold',
   fontSize: '12px',
   width: '100%',
-  height: '20px',
+  height: '20px'
 }
 
 export const Error = ({ name, errorStyle }) => (
@@ -18,13 +18,13 @@ export const Error = ({ name, errorStyle }) => (
 
       return (
         <span>
-        {
-          errors.length
+          {errors.length
             ? errors.map((error, index) => (
-              <p className="error" key={index} style={errorStyle || defaultErrorStyles}>{(!pristine || touched) && error}</p>
-            ))
-            : null
-        }
+                <p className="error" key={index} style={errorStyle || defaultErrorStyles}>
+                  {(!pristine || touched) && error}
+                </p>
+              ))
+            : null}
         </span>
       )
     }}

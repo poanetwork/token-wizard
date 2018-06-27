@@ -9,7 +9,7 @@ class DeploymentStore {
   @observable invalidAccount = false
 
   constructor() {
-    autosave(this, 'DeploymentStore', (store) => {
+    autosave(this, 'DeploymentStore', store => {
       const txMap = new Map()
       Object.keys(store.txMap).forEach(key => {
         txMap.set(key, store.txMap[key])
@@ -20,9 +20,10 @@ class DeploymentStore {
     })
   }
 
-  @action initialize = (hasReservedToken, hasWhitelist, isDutchAuction, tiers) => {
-    console.log("hasReservedToken:", hasReservedToken)
-    console.log("hasWhitelist:", hasWhitelist)
+  @action
+  initialize = (hasReservedToken, hasWhitelist, isDutchAuction, tiers) => {
+    console.log('hasReservedToken:', hasReservedToken)
+    console.log('hasWhitelist:', hasWhitelist)
     const listOfTx = [
       //{ name: 'deployProxy', dependsOnTiers: false, required: true }, //todo
       { name: 'crowdsaleCreate', dependsOnTiers: false, required: true },
@@ -31,9 +32,9 @@ class DeploymentStore {
       { name: 'updateGlobalMinContribution', dependsOnTiers: false, required: isDutchAuction },
       { name: 'createCrowdsaleTiers', dependsOnTiers: false, required: tiers.length > 1 },
       { name: 'whitelist', dependsOnTiers: true, required: hasWhitelist },
-      { name: 'crowdsaleInit', dependsOnTiers: false, required: true },
+      { name: 'crowdsaleInit', dependsOnTiers: false, required: true }
     ]
-    const byTierWhitelistInitialValues = tiers.map((tier) => {
+    const byTierWhitelistInitialValues = tiers.map(tier => {
       if (tier.whitelistEnabled === 'yes') {
         if (tier.whitelist.length > 0) {
           return false
@@ -59,17 +60,19 @@ class DeploymentStore {
     this.logTxMap()
   }
 
-  @action initializePersonalized = (hasReservedToken, hasWhitelist, tiers, listOfTx) => {
+  @action
+  initializePersonalized = (hasReservedToken, hasWhitelist, tiers, listOfTx) => {
     this.initialize(hasReservedToken, hasWhitelist, tiers)
     // TODO: based on listOfTx, modify this.txMap so it reflects the required amount of steps
   }
 
-  @action setAsSuccessful = (txName) => {
+  @action
+  setAsSuccessful = txName => {
     const txStatus = this.txMap.get(txName)
 
     if (!txStatus) return
 
-    const toBeUpdated = txStatus.findIndex((isSuccess) => {
+    const toBeUpdated = txStatus.findIndex(isSuccess => {
       if (isSuccess !== null) {
         return !isSuccess
       }
@@ -83,17 +86,20 @@ class DeploymentStore {
     this.logTxMap()
   }
 
-  @action setDeploymentStep = (index) => {
+  @action
+  setDeploymentStep = index => {
     this.deploymentStep = index
   }
 
-  @action setDeployerAccount = (account) => {
+  @action
+  setDeployerAccount = account => {
     if (!this.deployerAccount) {
       this.deployerAccount = account
     }
   }
 
-  @action handleAccountChange = (account) => {
+  @action
+  handleAccountChange = account => {
     if (!this.deployerAccount) {
       // If there is no deployment in progress, do nothing
       return
@@ -102,11 +108,13 @@ class DeploymentStore {
     this.invalidAccount = account !== this.deployerAccount
   }
 
-  @action resetDeploymentStep = () => {
+  @action
+  resetDeploymentStep = () => {
     this.deploymentStep = null
   }
 
-  @action setHasEnded(value) {
+  @action
+  setHasEnded(value) {
     this.hasEnded = value
   }
 
@@ -117,7 +125,7 @@ class DeploymentStore {
 
     this.txMap.forEach((txStatus, txName) => {
       const tiersStatuses = {}
-      txStatus.forEach((value, index) => tiersStatuses[`Tier ${index+1}`] = value)
+      txStatus.forEach((value, index) => (tiersStatuses[`Tier ${index + 1}`] = value))
       table.push({ txName, ...tiersStatuses })
     })
 
@@ -125,19 +133,19 @@ class DeploymentStore {
   }
 
   @computed
-  get deploymentHasFinished () {
+  get deploymentHasFinished() {
     return this.txMap.values().every(statuses => statuses.every(status => status))
   }
 
   @computed
-  get nextPendingTransaction () {
+  get nextPendingTransaction() {
     for (let [tx, txStatuses] of this.txMap) {
       if (txStatuses.some(status => !status)) return tx
     }
   }
 
   @computed
-  get deployInProgress () {
+  get deployInProgress() {
     return this.deploymentStep !== null
   }
 }

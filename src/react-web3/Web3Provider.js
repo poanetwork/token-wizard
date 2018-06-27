@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Web3 from 'web3'
 
-const ONE_SECOND = 1000;
+const ONE_SECOND = 1000
 
 class Web3Provider extends Component {
   constructor(props, context) {
@@ -14,14 +14,13 @@ class Web3Provider extends Component {
 
     this.web3 = null
     this.interval = null
-
   }
   render() {
     const { web3UnavailableScreen: Web3UnavailableScreen } = this.props
 
     if (window.web3) {
       if (!this.web3) {
-        this.web3 = new Web3(window.web3.currentProvider);
+        this.web3 = new Web3(window.web3.currentProvider)
         this.fetchAccounts()
       }
 
@@ -32,7 +31,7 @@ class Web3Provider extends Component {
   }
 
   componentDidMount() {
-    this.initPoll();
+    this.initPoll()
   }
 
   componentWillUnmount() {
@@ -46,34 +45,33 @@ class Web3Provider extends Component {
   }
 
   fetchAccounts = () => {
-    const { web3  } = this
+    const { web3 } = this
     const { onChangeAccount } = this.props
 
     if (!web3 || !web3.eth) {
       return
     }
 
-    return web3.eth.getAccounts()
-      .then(accounts => {
-        if (!accounts || !accounts.length) {
-          return
-        }
+    return web3.eth.getAccounts().then(accounts => {
+      if (!accounts || !accounts.length) {
+        return
+      }
 
-        let curr = this.state.selectedAccount
-        let next = accounts[0]
-        curr = curr && curr.toLowerCase()
-        next = next && next.toLowerCase()
+      let curr = this.state.selectedAccount
+      let next = accounts[0]
+      curr = curr && curr.toLowerCase()
+      next = next && next.toLowerCase()
 
-        const didChange = curr && next && (curr !== next)
+      const didChange = curr && next && curr !== next
 
-        if (didChange && typeof onChangeAccount === 'function') {
-          onChangeAccount(next)
-        }
+      if (didChange && typeof onChangeAccount === 'function') {
+        onChangeAccount(next)
+      }
 
-        this.setState({
-          selectedAccount: next || null
-        })
+      this.setState({
+        selectedAccount: next || null
       })
+    })
   }
 
   getChildContext() {
@@ -89,4 +87,4 @@ Web3Provider.childContextTypes = {
   selectedAccount: PropTypes.string
 }
 
-export default Web3Provider;
+export default Web3Provider

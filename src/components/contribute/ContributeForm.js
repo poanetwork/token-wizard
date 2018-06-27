@@ -11,63 +11,73 @@ import {
 } from '../../utils/validations'
 import classNames from 'classnames'
 
-export const ContributeForm = inject('contributeStore', 'tokenStore')
-(observer(({ contributeStore, tokenStore, handleSubmit, pristine, invalid, ...props}) => {
-  const { decimals } = tokenStore
-  const { contributeThrough, updateContributeThrough, web3Available } = props
+export const ContributeForm = inject('contributeStore', 'tokenStore')(
+  observer(({ contributeStore, tokenStore, handleSubmit, pristine, invalid, ...props }) => {
+    const { decimals } = tokenStore
+    const { contributeThrough, updateContributeThrough, web3Available } = props
 
-  const contributeButtonClasses = classNames('button', 'button_fill', {
-    'button_disabled': pristine || invalid
-  })
+    const contributeButtonClasses = classNames('button', 'button_fill', {
+      button_disabled: pristine || invalid
+    })
 
-  const ContributeButton = contributeThrough === CONTRIBUTION_OPTIONS.METAMASK ?
-    <a className={contributeButtonClasses} onClick={handleSubmit}>Contribute</a> : null
+    const ContributeButton =
+      contributeThrough === CONTRIBUTION_OPTIONS.METAMASK ? (
+        <a className={contributeButtonClasses} onClick={handleSubmit}>
+          Contribute
+        </a>
+      ) : null
 
-  const validateContribute = (value) => {
-    const decimalsErr = `Number of tokens to buy should be positive and should not exceed ${decimals} decimals.`
-    const minimumContributionErr = `Minimum valid contribution: ${props.minimumContribution}`
-    const errors = composeValidators(
-      isRequired(),
-      isDecimalPlacesNotGreaterThan(decimalsErr)(decimals),
-      isGreaterOrEqualThan(minimumContributionErr)(props.minimumContribution)
-    )(value)
-    if (errors) return errors.shift()
-  }
-
-  const tokensToContributeOnChange = ({ values }) => {
-    if (values && values.contribute !== undefined) {
-      contributeStore.setProperty('tokensToContribute', values.contribute)
+    const validateContribute = value => {
+      const decimalsErr = `Number of tokens to buy should be positive and should not exceed ${decimals} decimals.`
+      const minimumContributionErr = `Minimum valid contribution: ${props.minimumContribution}`
+      const errors = composeValidators(
+        isRequired(),
+        isDecimalPlacesNotGreaterThan(decimalsErr)(decimals),
+        isGreaterOrEqualThan(minimumContributionErr)(props.minimumContribution)
+      )(value)
+      if (errors) return errors.shift()
     }
-  }
 
-  return (
-    <form className="contribute-form" onSubmit={handleSubmit}>
-      <label className="contribute-form-label">Choose amount to contribute</label>
+    const tokensToContributeOnChange = ({ values }) => {
+      if (values && values.contribute !== undefined) {
+        contributeStore.setProperty('tokensToContribute', values.contribute)
+      }
+    }
 
-      <div className="contribute-form-input-container">
-        <Field
-          name="contribute"
-          component={InputField2}
-          validate={validateContribute}
-          placeholder="0"
-          inputClassName="contribute-form-input"
-        />
-        <FormSpy subscription={{ values: true }} onChange={tokensToContributeOnChange}/>
-        <div className="contribute-form-label">TOKENS</div>
-      </div>
+    return (
+      <form className="contribute-form" onSubmit={handleSubmit}>
+        <label className="contribute-form-label">Choose amount to contribute</label>
 
-      <div className="contribute-through-container">
-        <select value={contributeThrough} className="contribute-through" onChange={(e) => updateContributeThrough(e.target.value)}>
-          <option disabled={!web3Available} value={CONTRIBUTION_OPTIONS.METAMASK}>
-            Metamask {!web3Available ? ' (not available)' : null}</option>
-          <option value={CONTRIBUTION_OPTIONS.QR}>QR</option>
-        </select>
-        {ContributeButton}
-      </div>
+        <div className="contribute-form-input-container">
+          <Field
+            name="contribute"
+            component={InputField2}
+            validate={validateContribute}
+            placeholder="0"
+            inputClassName="contribute-form-input"
+          />
+          <FormSpy subscription={{ values: true }} onChange={tokensToContributeOnChange} />
+          <div className="contribute-form-label">TOKENS</div>
+        </div>
 
-      <p className="description">
-        Think twice before contributing to Crowdsales. Tokens will be deposited on a wallet you used to buy tokens.
-      </p>
-    </form>
-  )
-}))
+        <div className="contribute-through-container">
+          <select
+            value={contributeThrough}
+            className="contribute-through"
+            onChange={e => updateContributeThrough(e.target.value)}
+          >
+            <option disabled={!web3Available} value={CONTRIBUTION_OPTIONS.METAMASK}>
+              Metamask {!web3Available ? ' (not available)' : null}
+            </option>
+            <option value={CONTRIBUTION_OPTIONS.QR}>QR</option>
+          </select>
+          {ContributeButton}
+        </div>
+
+        <p className="description">
+          Think twice before contributing to Crowdsales. Tokens will be deposited on a wallet you used to buy tokens.
+        </p>
+      </form>
+    )
+  })
+)

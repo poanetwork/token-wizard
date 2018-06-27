@@ -1,5 +1,5 @@
-import React from 'react';
-import '../../assets/stylesheets/application.css';
+import React from 'react'
+import '../../assets/stylesheets/application.css'
 
 export const DisplayField = props => {
   return (
@@ -13,5 +13,5 @@ export const DisplayField = props => {
         <btn className="copy" data-clipboard-action="copy" data-clipboard-text={props.value} />
       </div>
     </div>
-  );
-};
+  )
+}

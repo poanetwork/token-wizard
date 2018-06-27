@@ -1,40 +1,40 @@
-import React from "react";
-import "../../assets/stylesheets/application.css";
+import React from 'react'
+import '../../assets/stylesheets/application.css'
 import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
-import { getNetworkVersion, getNetWorkNameById } from "../../utils/blockchainHelpers";
-import { StepNavigation } from "../Common/StepNavigation";
+import { getNetworkVersion, getNetWorkNameById } from '../../utils/blockchainHelpers'
+import { StepNavigation } from '../Common/StepNavigation'
 import { NAVIGATION_STEPS, CHAINS } from '../../utils/constants'
-import { inject, observer } from "mobx-react";
+import { inject, observer } from 'mobx-react'
 import { Loader } from '../Common/Loader'
 import { noGasPriceAvailable, warningOnMainnetAlert } from '../../utils/alerts'
 import { getStep3Component } from './utils'
 import createDecorator from 'final-form-calculate'
 
-const { CROWDSALE_SETUP } = NAVIGATION_STEPS;
+const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 
 @inject(
-  "contractStore",
-  "web3Store",
-  "tierStore",
-  "generalStore",
-  "gasPriceStore",
-  "reservedTokenStore",
-  "deploymentStore",
-  "tokenStore",
-  "crowdsaleStore"
+  'contractStore',
+  'web3Store',
+  'tierStore',
+  'generalStore',
+  'gasPriceStore',
+  'reservedTokenStore',
+  'deploymentStore',
+  'tokenStore',
+  'crowdsaleStore'
 )
 @observer
 export class stepThree extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
-      loading: true,
+      loading: true
     }
   }
 
-  componentWillMount () {
+  componentWillMount() {
     const { gasPriceStore, tierStore, web3Store } = this.props
 
     if (tierStore.tiers.length === 0) {
@@ -42,7 +42,8 @@ export class stepThree extends React.Component {
       this.initialTiers = JSON.parse(JSON.stringify(tierStore.tiers))
     }
 
-    gasPriceStore.updateValues()
+    gasPriceStore
+      .updateValues()
       .catch(() => noGasPriceAvailable())
       .then(() => {
         this.setState({ loading: false })
@@ -58,7 +59,9 @@ export class stepThree extends React.Component {
     const { tierStore, reservedTokenStore, deploymentStore, crowdsaleStore } = this.props
     const tiersCount = tierStore.tiers.length
     const reservedCount = reservedTokenStore.tokens.length
-    const hasWhitelist = tierStore.tiers.some((tier) => { return tier.whitelistEnabled === 'yes' })
+    const hasWhitelist = tierStore.tiers.some(tier => {
+      return tier.whitelistEnabled === 'yes'
+    })
 
     deploymentStore.initialize(!!reservedCount, hasWhitelist, crowdsaleStore.isDutchAuction, tierStore.tiers)
 
@@ -80,7 +83,13 @@ export class stepThree extends React.Component {
             }, 0)
           }
 
-          return warningOnMainnetAlert(tiersCount, priceSelected, reservedCount, whitelistCount, this.goToDeploymentStage)
+          return warningOnMainnetAlert(
+            tiersCount,
+            priceSelected,
+            reservedCount,
+            whitelistCount,
+            this.goToDeploymentStage
+          )
         }
 
         this.goToDeploymentStage()
@@ -105,13 +114,13 @@ export class stepThree extends React.Component {
     }
   })
 
-  render () {
+  render() {
     const { generalStore, tierStore, gasPriceStore, tokenStore, web3Store, crowdsaleStore } = this.props
     let stepThreeComponent = getStep3Component(crowdsaleStore.strategy)
 
     return (
       <section className="steps steps_crowdsale-contract" ref="three">
-        <StepNavigation activeStep={CROWDSALE_SETUP}/>
+        <StepNavigation activeStep={CROWDSALE_SETUP} />
         <Form
           onSubmit={this.handleOnSubmit}
           mutators={{ ...arrayMutators }}
@@ -119,7 +128,7 @@ export class stepThree extends React.Component {
           initialValues={{
             walletAddress: web3Store.curAddress,
             gasPrice: gasPriceStore.gasPricesInGwei[0],
-            whitelistEnabled: "no",
+            whitelistEnabled: 'no',
             tiers: this.initialTiers
           }}
           component={stepThreeComponent}
@@ -130,7 +139,7 @@ export class stepThree extends React.Component {
           generalStore={generalStore}
           crowdsaleStore={crowdsaleStore}
         />
-        <Loader show={this.state.loading}/>
+        <Loader show={this.state.loading} />
       </section>
     )
   }

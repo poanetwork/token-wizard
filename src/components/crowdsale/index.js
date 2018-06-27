@@ -21,35 +21,23 @@ import { NAVIGATION_STEPS } from '../../utils/constants'
 import { Loader } from '../Common/Loader'
 import { CrowdsaleConfig } from '../Common/config'
 import { inject, observer } from 'mobx-react'
-import {
-  invalidCrowdsaleExecIDAlert,
-  invalidCrowdsaleAddrAlert,
-  invalidNetworkIDAlert
-} from '../../utils/alerts'
+import { invalidCrowdsaleExecIDAlert, invalidCrowdsaleAddrAlert, invalidNetworkIDAlert } from '../../utils/alerts'
 
 const { CROWDSALE_PAGE } = NAVIGATION_STEPS
 
-@inject(
-  'contractStore',
-  'crowdsaleStore',
-  'crowdsalePageStore',
-  'web3Store',
-  'tierStore',
-  'tokenStore',
-  'generalStore'
-)
+@inject('contractStore', 'crowdsaleStore', 'crowdsalePageStore', 'web3Store', 'tierStore', 'tokenStore', 'generalStore')
 @observer
 export class Crowdsale extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = { loading: true }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.validateEnvironment()
       .then(() => this.getCrowdsale())
       .then(() => this.extractContractsData())
-      .catch((err) => console.error(err))
+      .catch(err => console.error(err))
       .then(() => this.setState({ loading: false }))
   }
 
@@ -104,10 +92,10 @@ export class Crowdsale extends React.Component {
 
     let target
     if (contractStore.crowdsale.execID) {
-      const targetPrefix = "idx"
+      const targetPrefix = 'idx'
       const targetSuffix = crowdsaleStore.contractTargetSuffix
       target = `${targetPrefix}${targetSuffix}`
-      console.log("target:", target)
+      console.log('target:', target)
     } else if (contractStore.MintedCappedProxy.addr) {
       target = 'MintedCappedProxy'
     } else if (contractStore.DutchProxy.addr) {
@@ -122,7 +110,7 @@ export class Crowdsale extends React.Component {
     }
   }
 
-  getFullCrowdsaleData = async (initCrowdsaleContract) => {
+  getFullCrowdsaleData = async initCrowdsaleContract => {
     const { execID } = this.props.contractStore.crowdsale
 
     try {
@@ -138,7 +126,7 @@ export class Crowdsale extends React.Component {
   goToContributePage = () => {
     const { contractStore, generalStore } = this.props
     const { crowdsale, MintedCappedProxy } = contractStore
-    let queryStr = "";
+    let queryStr = ''
     if (!CrowdsaleConfig.crowdsaleContractURL || !CrowdsaleConfig.networkID) {
       const crowdsaleParamVal = crowdsale.execID || (MintedCappedProxy ? MintedCappedProxy.addr : null)
       if (crowdsaleParamVal) {
@@ -152,12 +140,12 @@ export class Crowdsale extends React.Component {
         }
         queryStr = `?${crowdsaleParam}=${crowdsaleParamVal}`
         if (generalStore.networkID) {
-          queryStr += "&networkID=" + generalStore.networkID
+          queryStr += '&networkID=' + generalStore.networkID
         }
       }
     }
 
-    this.props.history.push('/contribute' + queryStr);
+    this.props.history.push('/contribute' + queryStr)
   }
 
   render() {
@@ -165,7 +153,7 @@ export class Crowdsale extends React.Component {
     const { MintedCappedProxy } = contractStore
     const { web3 } = web3Store
 
-    const crowdsaleExecID = getContractStoreProperty('crowdsale','execID')
+    const crowdsaleExecID = getContractStoreProperty('crowdsale', 'execID')
     const contributorsCount = crowdsalePageStore.contributors ? crowdsalePageStore.contributors.toString() : 0
 
     const rate = toBigNumber(crowdsalePageStore.rate)
@@ -182,7 +170,13 @@ export class Crowdsale extends React.Component {
 
     //price
     const rateInETH = toBigNumber(web3.utils.fromWei(rate.toFixed(), 'ether'))
-    const tokensPerETH = rateInETH > 0 ? rateInETH.pow(-1).decimalPlaces(0).toFixed() : 0
+    const tokensPerETH =
+      rateInETH > 0
+        ? rateInETH
+            .pow(-1)
+            .decimalPlaces(0)
+            .toFixed()
+        : 0
 
     //total supply
     const totalSupply = maxCapBeforeDecimals.toFixed()
@@ -190,22 +184,32 @@ export class Crowdsale extends React.Component {
     //goal in ETH
     const goalInETHTiers = toBigNumber(web3.utils.fromWei(maximumSellableTokensInWei.toFixed(), 'ether')).toFixed()
     const goalInETH = goalInETHTiers
-    const tokensClaimedRatio = goalInETH > 0 ? ethRaised.div(goalInETH).times(100).toFixed() : '0'
+    const tokensClaimedRatio =
+      goalInETH > 0
+        ? ethRaised
+            .div(goalInETH)
+            .times(100)
+            .toFixed()
+        : '0'
 
-    const contributorsBlock = <div className="right">
-      <p className="title">{`${contributorsCount}`}</p>
-      <p className="description">Contributors</p>
-    </div>
+    const contributorsBlock = (
+      <div className="right">
+        <p className="title">{`${contributorsCount}`}</p>
+        <p className="description">Contributors</p>
+      </div>
+    )
 
     return (
       <section className="steps steps_crowdsale-page">
-        <StepNavigation activeStep={CROWDSALE_PAGE}/>
+        <StepNavigation activeStep={CROWDSALE_PAGE} />
         <div className="steps-content container">
           <div className="about-step">
-            <div className="step-icons step-icons_crowdsale-page"/>
+            <div className="step-icons step-icons_crowdsale-page" />
             <p className="title">Crowdsale Page</p>
-            <p className="description">Page with statistics of crowdsale. Statistics for all tiers combined on the page.
-              Please press Ctrl-D to bookmark the page.</p>
+            <p className="description">
+              Page with statistics of crowdsale. Statistics for all tiers combined on the page. Please press Ctrl-D to
+              bookmark the page.
+            </p>
           </div>
           <div className="total-funds">
             <div className="hidden">
@@ -220,28 +224,28 @@ export class Crowdsale extends React.Component {
             </div>
           </div>
           <div className="total-funds-chart-container">
-            <div className="total-funds-chart-division"/>
-            <div className="total-funds-chart-division"/>
-            <div className="total-funds-chart-division"/>
-            <div className="total-funds-chart-division"/>
-            <div className="total-funds-chart-division"/>
-            <div className="total-funds-chart-division"/>
-            <div className="total-funds-chart-division"/>
-            <div className="total-funds-chart-division"/>
-            <div className="total-funds-chart-division"/>
+            <div className="total-funds-chart-division" />
+            <div className="total-funds-chart-division" />
+            <div className="total-funds-chart-division" />
+            <div className="total-funds-chart-division" />
+            <div className="total-funds-chart-division" />
+            <div className="total-funds-chart-division" />
+            <div className="total-funds-chart-division" />
+            <div className="total-funds-chart-division" />
+            <div className="total-funds-chart-division" />
             <div className="total-funds-chart">
-              <div className="total-funds-chart-active" style={{ width: `${tokensClaimedRatio}%` }}/>
+              <div className="total-funds-chart-active" style={{ width: `${tokensClaimedRatio}%` }} />
             </div>
           </div>
           <div className="total-funds-statistics">
             <div className="hidden">
-              <div className="left" style={{ width: '42% '}}>
+              <div className="left" style={{ width: '42% ' }}>
                 <div className="hidden">
                   <div className="left">
                     <p className="title">{`${tokensClaimed}`}</p>
                     <p className="description">Tokens Claimed</p>
                   </div>
-                  { contributorsBlock }
+                  {contributorsBlock}
                 </div>
                 <p className="hash">{`${crowdsaleExecID || (MintedCappedProxy && MintedCappedProxy.addr)}`}</p>
                 <p className="description">{crowdsaleExecID ? 'Crowdsale Execution ID' : 'Crowdsale Proxy Address'}</p>
@@ -262,7 +266,9 @@ export class Crowdsale extends React.Component {
           </div>
         </div>
         <div className="button-container">
-          <a onClick={this.goToContributePage} className="button button_fill">Contribute</a>
+          <a onClick={this.goToContributePage} className="button button_fill">
+            Contribute
+          </a>
         </div>
         <Loader show={this.state.loading} />
       </section>

@@ -6,7 +6,7 @@ import { InputField2 } from './InputField2'
 
 export const TokenTicker = ({ errorStyle }) => (
   <Field
-    validate={(value) => {
+    validate={value => {
       const errors = composeValidators(
         isRequired(),
         isMaxLength('Please enter a valid ticker between 1-5 characters')(5),
@@ -16,7 +16,7 @@ export const TokenTicker = ({ errorStyle }) => (
       if (errors) return errors.shift()
     }}
     component={InputField2}
-    parse={(value) => value || ''}
+    parse={value => value || ''}
     side="right"
     name="ticker"
     type="text"

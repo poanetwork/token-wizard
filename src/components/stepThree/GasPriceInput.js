@@ -12,7 +12,7 @@ class GasPriceInput extends Component {
     }
   }
 
-  handleNonCustomSelected = (value) => {
+  handleNonCustomSelected = value => {
     this.setState({
       isCustom: false
     })
@@ -30,24 +30,34 @@ class GasPriceInput extends Component {
     }
 
     this.setState(newState, () => {
-      input.onChange(Object.assign({}, {
-        id: GAS_PRICE.CUSTOM.ID,
-        price: this.state.customGasPrice
-      }))
+      input.onChange(
+        Object.assign(
+          {},
+          {
+            id: GAS_PRICE.CUSTOM.ID,
+            price: this.state.customGasPrice
+          }
+        )
+      )
     })
   }
 
-  handleCustomGasPriceChange = (value) => {
+  handleCustomGasPriceChange = value => {
     const { input } = this.props
 
     this.setState({
       customGasPrice: value
     })
 
-    input.onChange(Object.assign({}, {
-      id: GAS_PRICE.CUSTOM.ID,
-      price: value
-    }))
+    input.onChange(
+      Object.assign(
+        {},
+        {
+          id: GAS_PRICE.CUSTOM.ID,
+          price: value
+        }
+      )
+    )
   }
 
   render() {
@@ -55,7 +65,9 @@ class GasPriceInput extends Component {
 
     return (
       <div className={side}>
-        <label htmlFor={input.name} className="label">Gas Price</label>
+        <label htmlFor={input.name} className="label">
+          Gas Price
+        </label>
         {gasPrices.map((gasPrice, index) => (
           <div key={index} className="radios-inline">
             <label className="radio-inline">
@@ -77,11 +89,11 @@ class GasPriceInput extends Component {
             type="number"
             className="input"
             value={this.state.customGasPrice}
-            onChange={(e) => this.handleCustomGasPriceChange(e.target.value)}
+            onChange={e => this.handleCustomGasPriceChange(e.target.value)}
           />
         ) : null}
         <p className="description">Slow is cheap, fast is expensive</p>
-        <Error name={input.name}/>
+        <Error name={input.name} />
       </div>
     )
   }

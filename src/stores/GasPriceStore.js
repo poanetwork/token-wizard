@@ -14,25 +14,25 @@ class GasPriceStore {
   @observable block_time
   @observable health
 
-  constructor () {
+  constructor() {
     this.slow = {
       id: GAS_PRICE.SLOW.ID,
-      price: GAS_PRICE.SLOW.PRICE,
+      price: GAS_PRICE.SLOW.PRICE
     }
 
     this.standard = {
       id: GAS_PRICE.NORMAL.ID,
-      price: GAS_PRICE.NORMAL.PRICE,
+      price: GAS_PRICE.NORMAL.PRICE
     }
 
     this.fast = {
       id: GAS_PRICE.FAST.ID,
-      price: GAS_PRICE.FAST.PRICE,
+      price: GAS_PRICE.FAST.PRICE
     }
 
     this.instant = {
       id: GAS_PRICE.INSTANT.ID,
-      price: GAS_PRICE.INSTANT.PRICE,
+      price: GAS_PRICE.INSTANT.PRICE
     }
 
     this.custom = {
@@ -43,9 +43,16 @@ class GasPriceStore {
     autosave(this, 'GasPriceStore')
   }
 
-  @action setProperty = (property, value) => {
+  @action
+  setProperty = (property, value) => {
     if (this.hasOwnProperty(property)) {
-      if (property === 'standard' || property === 'slow' || property === 'fast' || property === 'instant' || property === 'custom') {
+      if (
+        property === 'standard' ||
+        property === 'slow' ||
+        property === 'fast' ||
+        property === 'instant' ||
+        property === 'custom'
+      ) {
         this[property].price = gweiToWei(value)
       } else {
         this[property] = value
@@ -53,55 +60,55 @@ class GasPriceStore {
     }
   }
 
-  @action updateValues = (param) => {
-    return gasPriceValues(param)
-      .then(oracle => {
-        for (let key in oracle) {
-          if (oracle.hasOwnProperty(key)) {
-            this.setProperty(key, oracle[key])
-          }
+  @action
+  updateValues = param => {
+    return gasPriceValues(param).then(oracle => {
+      for (let key in oracle) {
+        if (oracle.hasOwnProperty(key)) {
+          this.setProperty(key, oracle[key])
         }
-        return Promise.resolve()
-      })
+      }
+      return Promise.resolve()
+    })
   }
 
   @computed
-  get slowDescription () {
+  get slowDescription() {
     return `${GAS_PRICE.SLOW.DESCRIPTION} (${weiToGwei(this.slow.price)} GWei)`
   }
 
   @computed
-  get standardDescription () {
+  get standardDescription() {
     return `${GAS_PRICE.NORMAL.DESCRIPTION} (${weiToGwei(this.standard.price)} GWei)`
   }
 
   @computed
-  get fastDescription () {
+  get fastDescription() {
     return `${GAS_PRICE.FAST.DESCRIPTION} (${weiToGwei(this.fast.price)} GWei)`
   }
 
   @computed
-  get instantDescription () {
+  get instantDescription() {
     return `${GAS_PRICE.INSTANT.DESCRIPTION} (${weiToGwei(this.instant.price)} GWei)`
   }
 
   @computed
-  get customDescription () {
+  get customDescription() {
     return GAS_PRICE.CUSTOM.DESCRIPTION
   }
 
   @computed
-  get gasPrices () {
+  get gasPrices() {
     return [
       { ...this.slow, description: this.slowDescription },
       { ...this.standard, description: this.standardDescription },
       { ...this.fast, description: this.fastDescription },
-      { ...this.custom, description: this.customDescription },
+      { ...this.custom, description: this.customDescription }
     ]
   }
 
   @computed
-  get gasPricesInGwei () {
+  get gasPricesInGwei() {
     return this.gasPrices.map(gasPrice => ({
       ...gasPrice,
       price: weiToGwei(gasPrice.price)
