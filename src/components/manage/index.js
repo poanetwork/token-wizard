@@ -106,7 +106,7 @@ export class Manage extends Component {
     } else if (isAddressValid(crowdsalePointer)) {
       crowdsaleStore.setSelectedProperty('addr', crowdsalePointer)
       crowdsaleStore.setProperty('addr', crowdsalePointer)
-      contractStore.setContractProperty('MintedCappedProxy', 'addr', crowdsalePointer)
+      contractStore.setContractProperty(crowdsaleStore.proxyName, 'addr', crowdsalePointer)
     }
 
     //todo: 2 alerts
@@ -131,22 +131,14 @@ export class Manage extends Component {
       const targetPrefix = 'idx'
       const targetSuffix = crowdsaleStore.contractTargetSuffix
       target = `${targetPrefix}${targetSuffix}`
-    } else if (crowdsaleStore.isMintedCappedCrowdsale) {
-      target = 'MintedCappedProxy'
-    } else if (crowdsaleStore.isDutchAuction) {
-      target = 'DutchProxy'
+    } else {
+      target = crowdsaleStore.proxyName
     }
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
     const { addr } = contractStore.abstractStorage
     const { execID } = crowdsaleStore
-    let ownerAccount
-    //todo: Auth-os Proxy doesn't support getAdmin method
-    try {
-      ownerAccount = await methods.getAdmin(addr, execID).call()
-    } catch (e) {
-      console.log("###Auth-os Proxy contract doesn't support getAdmin method")
-    }
+    let ownerAccount = await methods.getAdmin(addr, execID).call()
     const account = await getCurrentAccount()
 
     const ownerCurrentUser = account === ownerAccount
@@ -166,10 +158,8 @@ export class Manage extends Component {
       let target
       if (execID) {
         target = `idx${contractTargetSuffix}`
-      } else if (crowdsaleStore.isMintedCappedCrowdsale) {
-        target = 'MintedCappedProxy'
-      } else if (crowdsaleStore.isDutchAuction) {
-        target = 'DutchProxy'
+      } else {
+        target = crowdsaleStore.proxyName
       }
 
       const { methods } = await attachToSpecificCrowdsaleContract(target)
@@ -274,13 +264,7 @@ export class Manage extends Component {
           }
 
           if (tier_data.is_whitelisted) {
-            let tierWhitelist
-            //todo: Proxy
-            try {
-              tierWhitelist = await getTierWhitelist(...params, tier_num).call()
-            } catch (e) {
-              console.log("###Auth-os Proxy doesn't support getTierWhitelist method###")
-            }
+            let tierWhitelist = await getTierWhitelist(...params, tier_num).call()
             if (tierWhitelist && !tierWhitelist.hasOwnProperty('num_whitelisted')) {
               tierWhitelist.num_whitelisted = tierWhitelist[0]
             }
@@ -317,18 +301,12 @@ export class Manage extends Component {
           tiers.push(Object.assign(tier_data, tier_dates))
         }
 
-        //todo: Proxy
-        let reservedTokenDestinationList
-        try {
-          reservedTokenDestinationList = await getReservedTokenDestinationList(...params).call()
-          if (reservedTokenDestinationList && !reservedTokenDestinationList.hasOwnProperty('num_destinations')) {
-            reservedTokenDestinationList.num_destinations = reservedTokenDestinationList[0]
-          }
-          if (reservedTokenDestinationList && !reservedTokenDestinationList.hasOwnProperty('reserved_destinations')) {
-            reservedTokenDestinationList.reserved_destinations = reservedTokenDestinationList[0]
-          }
-        } catch (e) {
-          console.log("###Auth-os Proxy doesn't support getReservedTokenDestinationList method###")
+        let reservedTokenDestinationList = await getReservedTokenDestinationList(...params).call()
+        if (reservedTokenDestinationList && !reservedTokenDestinationList.hasOwnProperty('num_destinations')) {
+          reservedTokenDestinationList.num_destinations = reservedTokenDestinationList[0]
+        }
+        if (reservedTokenDestinationList && !reservedTokenDestinationList.hasOwnProperty('reserved_destinations')) {
+          reservedTokenDestinationList.reserved_destinations = reservedTokenDestinationList[0]
         }
 
         const reserved_destinations =
@@ -451,10 +429,8 @@ export class Manage extends Component {
       const targetPrefix = 'idx'
       const targetSuffix = crowdsaleStore.contractTargetSuffix
       target = `${targetPrefix}${targetSuffix}`
-    } else if (crowdsaleStore.isMintedCappedCrowdsale) {
-      target = 'MintedCappedProxy'
-    } else if (crowdsaleStore.isDutchAuction) {
-      target = 'DutchProxy'
+    } else {
+      target = crowdsaleStore.proxyName
     }
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
@@ -497,10 +473,8 @@ export class Manage extends Component {
       const targetPrefix = 'idx'
       const targetSuffix = contractTargetSuffix
       target = `${targetPrefix}${targetSuffix}`
-    } else if (crowdsaleStore.isMintedCappedCrowdsale) {
-      target = 'MintedCappedProxy'
-    } else if (crowdsaleStore.isDutchAuction) {
-      target = 'DutchProxy'
+    } else {
+      target = crowdsaleStore.proxyName
     }
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
@@ -562,7 +536,7 @@ export class Manage extends Component {
                 if (crowdsaleStore.execID) {
                   targetContractName = 'registryExec'
                 } else {
-                  targetContractName = 'MintedCappedProxy'
+                  targetContractName = crowdsaleStore.proxyName
                 }
                 const method = methodToExec(
                   targetContractName,

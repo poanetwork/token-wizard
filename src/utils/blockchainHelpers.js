@@ -514,7 +514,7 @@ export let methodToExec = (contractName, methodName, getEncodedParams, params) =
 
   const { execID } = contractStore.crowdsale
   let paramsToExec = []
-  if (contractName === 'MintedCappedProxy') {
+  if (contractName === 'MintedCappedProxy' || contractName === 'DutchCappedProxy') {
     paramsToExec.push(fullData)
   } else if (contractName === 'registryExec') {
     paramsToExec.push(execID, fullData)
@@ -547,7 +547,7 @@ export let methodToCreateAppInstance = (contractName, methodName, getEncodedPara
   let paramsToInit
   const { methods } = targetContract
   let targetMethodName
-  if (contractName === 'MintedCappedProxy') {
+  if (contractName === 'MintedCappedProxy' || contractName === 'DutchProxy') {
     targetMethodName = 'init'
     paramsToInit = params
   } else if (contractName === 'registryExec') {
