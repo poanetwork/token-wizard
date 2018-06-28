@@ -7,7 +7,17 @@ import { removeTrailingNUL } from '../../utils/utils'
 
 BigNumber.config({ DECIMAL_PLACES: 18 })
 
-export const toBigNumber = value => (isNaN(value) || value === '' ? new BigNumber(0) : new BigNumber(value))
+export const toBigNumber = (value, force = true) => {
+  if (isNaN(value) || value === '' || value === null) {
+    if (force) {
+      return new BigNumber(0)
+    } else {
+      return undefined
+    }
+  } else {
+    return new BigNumber(value)
+  }
+}
 
 export let getTokenData = async (initCrowdsaleContract, execID, account) => {
   if (!initCrowdsaleContract) {
