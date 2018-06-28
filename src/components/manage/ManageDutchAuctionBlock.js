@@ -17,99 +17,100 @@ const inputErrorStyle = {
   fontWeight: 'bold',
   fontSize: '12px',
   width: '100%',
-  height: '20px',
+  height: '20px'
 }
 const { STRATEGY } = TEXT_FIELDS
 
-export const ManageDutchAuctionBlock = inject('crowdsaleStore', 'tokenStore')(observer(({
-  fields,
-  canEditTiers,
-  crowdsaleStore,
-  tokenStore,
-  aboutTier,
-  ...props
-}) => (
-  <div>
-    {fields.map((name, index) => {
-      const currentTier = fields.value[index]
-      const { endTime: initialEndTime, whitelistEnabled } = fields.initial[index]
+export const ManageDutchAuctionBlock = inject('crowdsaleStore', 'tokenStore')(
+  observer(({ fields, canEditTiers, crowdsaleStore, tokenStore, aboutTier, ...props }) => (
+    <div>
+      {fields.map((name, index) => {
+        const currentTier = fields.value[index]
+        const { endTime: initialEndTime, whitelistEnabled } = fields.initial[index]
 
-      const tierHasEnded = !isDateLaterThan()(dateToTimestamp(initialEndTime))(Date.now())
-      const canEditWhiteList = canEditTiers && !tierHasEnded
-      const isWhitelistEnabled = whitelistEnabled === 'yes'
+        const tierHasEnded = !isDateLaterThan()(dateToTimestamp(initialEndTime))(Date.now())
+        const canEditWhiteList = canEditTiers && !tierHasEnded
+        const isWhitelistEnabled = whitelistEnabled === 'yes'
 
-      return (
-        <div className="steps" key={index}>
-          <div className='steps-content container'>
-
-            <div className={classNames('hidden', { 'divisor': isWhitelistEnabled })}>
-              <div className="input-block-container">
-                <InputField side='left' type='text' title={STRATEGY} value={CROWDSALE_STRATEGIES_DISPLAYNAMES.DUTCH_AUCTION} disabled={true}/>
-              </div>
-
-              <div className="input-block-container">
-                <CrowdsaleStartTime
-                  name={`${name}.startTime`}
-                  index={index}
-                  disabled={true}
-                  side="left"
-                  description={DESCRIPTION.START_TIME_DUTCH_AUCTION}
-                  errorStyle={inputErrorStyle}
-                />
-                <CrowdsaleEndTime
-                  name={`${name}.endTime`}
-                  index={index}
-                  disabled={true}
-                  side="right"
-                  description={DESCRIPTION.END_TIME_DUTCH_AUCTION}
-                  errorStyle={inputErrorStyle}
-                />
-              </div>
-
-              <div className="input-block-container">
-                <CrowdsaleRate
-                  name={`${name}.rate`}
-                  side="left"
-                  label={TEXT_FIELDS.RATE}
-                  disabled={true}
-                  errorStyle={inputErrorStyle}
-                />
-                <Supply
-                  name={`${name}.supply`}
-                  side="right"
-                  label={TEXT_FIELDS.CROWDSALE_SUPPLY}
-                  description={DESCRIPTION.SUPPLY_DUTCH_AUCTION}
-                  disabled={true}
-                  errorStyle={inputErrorStyle}
-                />
-              </div>
-
-              <div className="input-block-container">
-                <Supply
-                  name={`token.supply`}
-                  value={tokenStore.supply}
-                  side="left"
-                  label={TEXT_FIELDS.TOKEN_SUPPLY}
-                  description={DESCRIPTION.TOKEN_SUPPLY}
-                  disabled={true}
-                  errorStyle={inputErrorStyle}
-                />
-              </div>
-            </div>
-            { isWhitelistEnabled ? (
-              <div>
-                <div className="section-title">
-                  <p className="title">Whitelist</p>
+        return (
+          <div className="steps" key={index}>
+            <div className="steps-content container">
+              <div className={classNames('hidden', { divisor: isWhitelistEnabled })}>
+                <div className="input-block-container">
+                  <InputField
+                    side="left"
+                    type="text"
+                    title={STRATEGY}
+                    value={CROWDSALE_STRATEGIES_DISPLAYNAMES.DUTCH_AUCTION}
+                    disabled={true}
+                  />
                 </div>
-                {canEditWhiteList
-                  ? <WhitelistInputBlock key={index.toString()} num={index} decimals={tokenStore.decimals}/>
-                  : <ReadOnlyWhitelistAddresses tier={currentTier}/>
-                }
+
+                <div className="input-block-container">
+                  <CrowdsaleStartTime
+                    name={`${name}.startTime`}
+                    index={index}
+                    disabled={true}
+                    side="left"
+                    description={DESCRIPTION.START_TIME_DUTCH_AUCTION}
+                    errorStyle={inputErrorStyle}
+                  />
+                  <CrowdsaleEndTime
+                    name={`${name}.endTime`}
+                    index={index}
+                    disabled={true}
+                    side="right"
+                    description={DESCRIPTION.END_TIME_DUTCH_AUCTION}
+                    errorStyle={inputErrorStyle}
+                  />
+                </div>
+
+                <div className="input-block-container">
+                  <CrowdsaleRate
+                    name={`${name}.rate`}
+                    side="left"
+                    label={TEXT_FIELDS.RATE}
+                    disabled={true}
+                    errorStyle={inputErrorStyle}
+                  />
+                  <Supply
+                    name={`${name}.supply`}
+                    side="right"
+                    label={TEXT_FIELDS.CROWDSALE_SUPPLY}
+                    description={DESCRIPTION.SUPPLY_DUTCH_AUCTION}
+                    disabled={true}
+                    errorStyle={inputErrorStyle}
+                  />
+                </div>
+
+                <div className="input-block-container">
+                  <Supply
+                    name={`token.supply`}
+                    value={tokenStore.supply}
+                    side="left"
+                    label={TEXT_FIELDS.TOKEN_SUPPLY}
+                    description={DESCRIPTION.TOKEN_SUPPLY}
+                    disabled={true}
+                    errorStyle={inputErrorStyle}
+                  />
+                </div>
               </div>
-            ) : null}
+              {isWhitelistEnabled ? (
+                <div>
+                  <div className="section-title">
+                    <p className="title">Whitelist</p>
+                  </div>
+                  {canEditWhiteList ? (
+                    <WhitelistInputBlock key={index.toString()} num={index} decimals={tokenStore.decimals} />
+                  ) : (
+                    <ReadOnlyWhitelistAddresses tier={currentTier} />
+                  )}
+                </div>
+              ) : null}
+            </div>
           </div>
-        </div>
-      )
-    })}
-  </div>
-)))
+        )
+      })}
+    </div>
+  ))
+)

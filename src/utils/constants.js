@@ -1,22 +1,22 @@
 export const REACT_PREFIX = 'REACT_APP_'
 
 export const EXCEPTIONS = {
-  storageException: "StorageException(bytes32,string)",
-  applicationException: "ApplicationException(address, bytes32, bytes)"
+  storageException: 'StorageException(bytes32,string)',
+  applicationException: 'ApplicationException(address, bytes32, bytes)'
 }
 
 export const CROWDSALE_STRATEGIES = {
-  MINTED_CAPPED_CROWDSALE: "white-list-with-cap",
-  DUTCH_AUCTION: "dutch-auction"
+  MINTED_CAPPED_CROWDSALE: 'white-list-with-cap',
+  DUTCH_AUCTION: 'dutch-auction'
 }
 
 export const CROWDSALE_STRATEGIES_DISPLAYNAMES = {
-  MINTED_CAPPED_CROWDSALE: "Whitelist with Cap",
-  DUTCH_AUCTION: "Dutch Auction"
+  MINTED_CAPPED_CROWDSALE: 'Whitelist with Cap',
+  DUTCH_AUCTION: 'Dutch Auction'
 }
 
 export const VALIDATION_TYPES = {
-  VALID: "VALIDATED",
+  VALID: 'VALIDATED',
   EMPTY: 'EMPTY',
   INVALID: 'INVALID'
 }
@@ -30,7 +30,7 @@ export const defaultTier = {
   endTime: '',
   walletAddress: '',
   updatable: 'off',
-  whitelist: [],
+  whitelist: []
 }
 
 export const defaultTierValidations = {
@@ -52,7 +52,6 @@ export const DEPLOYMENT_VALUES = {
     DEFAULT: 8044737,
     WHITELIST: 96040,
     RESERVED_TOKEN: 42220
-
   },
   TX_REQUIRED: {
     DEFAULT: 3,
@@ -93,7 +92,7 @@ export const GAS_PRICE = {
     URL: 'https://gasprice.poa.network'
   }
 }
-export const UNKNOWN = "Unknown"
+export const UNKNOWN = 'Unknown'
 export const CHAINS = {
   UNKNOWN: 'Unknown',
   MAINNET: 'Mainnet',
@@ -113,7 +112,6 @@ export const NAVIGATION_STEPS = {
   CROWDSALE_PAGE: 'Crowdsale Page'
 }
 
-
 export const VALIDATION_MESSAGES = {
   TIER: 'Please enter a valid tier name between 1-30 characters',
   NAME: 'Please enter a valid name between 1-30 characters',
@@ -125,9 +123,11 @@ export const VALIDATION_MESSAGES = {
   END_TIME: 'Please enter a valid date later than start time',
   MULTIPLE_TIERS_START_TIME: 'Please enter a valid date not less than the end time of the previous tier',
   EDITED_END_TIME: 'Please enter a valid date later than start time and previous than start time of next tier',
-  EDITED_START_TIME: 'Please enter a valid date later than now, less than end time and later than the end time of the previous tier',
+  EDITED_START_TIME:
+    'Please enter a valid date later than now, less than end time and later than the end time of the previous tier',
   RATE: 'Please enter a valid number greater than 0',
-  MIN_CAP: 'Value must be positive, decimals should not exceed the amount of decimals specified and min cap should be less or equal than the supply of some tier',
+  MIN_CAP:
+    'Value must be positive, decimals should not exceed the amount of decimals specified and min cap should be less or equal than the supply of some tier',
   POSITIVE: 'Please enter a valid number greater than 0',
   NON_NEGATIVE: 'Please enter a valid number greater or equal than 0',
   ADDRESS: 'Please enter a valid address',
@@ -228,29 +228,33 @@ export const initialStepTwoValues = {
     decimals: '',
     reservedTokens: [],
     reservedTokensElements: [],
-    reservedTokensInput: {dim: "tokens"}
+    reservedTokensInput: { dim: 'tokens' }
   }
 }
 
 export const intitialStepThreeValidations = {
-  validations: [{
-    tier: VALID,
-    startTime: VALID,
-    endTime: VALID,
-    walletAddress: EMPTY,
-    supply: VALID,
-    rate: EMPTY
-  }]
+  validations: [
+    {
+      tier: VALID,
+      startTime: VALID,
+      endTime: VALID,
+      walletAddress: EMPTY,
+      supply: VALID,
+      rate: EMPTY
+    }
+  ]
 }
 
 export const initialStepThreeValues = {
-  crowdsale: [{
-    tier: '',
-    startTime: '',
-    endTime: '',
-    walletAddress: '',
-    supply: ''
-  }]
+  crowdsale: [
+    {
+      tier: '',
+      startTime: '',
+      endTime: '',
+      walletAddress: '',
+      supply: ''
+    }
+  ]
 }
 
 export const CONTRIBUTION_OPTIONS = {

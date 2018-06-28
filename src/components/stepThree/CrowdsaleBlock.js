@@ -15,7 +15,7 @@ const { EMPTY, INVALID } = VALIDATION_TYPES
 @inject('tierStore')
 @observer
 export class CrowdsaleBlock extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     const { tierStore, num } = this.props
@@ -31,10 +31,11 @@ export class CrowdsaleBlock extends React.Component {
     }
   }
 
-  componentWillMount () {
+  componentWillMount() {
     const { tierStore, num } = this.props
     const defaultStartTime = 0 === num ? defaultCompanyStartDate() : this.tierEndTime(num - 1)
-    const defaultEndTime = 0 === num ? defaultCompanyEndDate(defaultStartTime) : defaultCompanyEndDate(this.tierEndTime(num - 1))
+    const defaultEndTime =
+      0 === num ? defaultCompanyEndDate(defaultStartTime) : defaultCompanyEndDate(this.tierEndTime(num - 1))
 
     const startTime = tierStore.tiers[num].startTime || defaultStartTime
     const endTime = tierStore.tiers[num].endTime || defaultEndTime
@@ -43,7 +44,7 @@ export class CrowdsaleBlock extends React.Component {
     tierStore.setTierProperty(endTime, 'endTime', num)
   }
 
-  tierEndTime = (index) => this.props.tierStore.tiers[index].endTime
+  tierEndTime = index => this.props.tierStore.tiers[index].endTime
 
   updateTierStore = (value, property) => {
     const { num, tierStore } = this.props
@@ -71,14 +72,14 @@ export class CrowdsaleBlock extends React.Component {
     tierStore.updateRate(value, valid, num)
   }
 
-  render () {
+  render() {
     const { num, tierStore } = this.props
     const whitelistInputBlock = (
       <div>
         <div className="section-title">
           <p className="title">Whitelist 2</p>
         </div>
-        <WhitelistInputBlock num={num}/>
+        <WhitelistInputBlock num={num} />
       </div>
     )
 

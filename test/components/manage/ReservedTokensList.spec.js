@@ -30,7 +30,6 @@ const tokenList = [
   }
 ]
 
-
 describe('DistributeTokensStep', () => {
   let reservedTokenStore
 

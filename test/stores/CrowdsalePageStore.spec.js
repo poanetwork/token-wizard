@@ -30,7 +30,7 @@ describe('CrowdsalePageStore', () => {
       { type: 'end', time: 1520971542000, order: 2 },
       { type: 'start', time: 1521489942000, order: 3 },
       { type: 'end', time: 1523563542000, order: 3 },
-      { type: 'end', time: 1552421142000, order: 4 },
+      { type: 'end', time: 1552421142000, order: 4 }
     ]
   })
 

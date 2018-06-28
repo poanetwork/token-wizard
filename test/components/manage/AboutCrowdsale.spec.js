@@ -13,13 +13,17 @@ describe('AboutCrowdsale', () => {
       name: 'MyToken',
       ticker: 'MTK',
       execID: '0x461451505864e9dfe45bac39478a4ed689d74a737c0c3308cb0c8607ca0c14bd',
-      networkID: '12648430',
+      networkID: '12648430'
     }
 
-    expect(renderer.create(
-      <StaticRouter location="testLocation" context={{}}>
-        <AboutCrowdsale {...aboutCrowdsaleParams} />
-      </StaticRouter>
-    ).toJSON()).toMatchSnapshot()
+    expect(
+      renderer
+        .create(
+          <StaticRouter location="testLocation" context={{}}>
+            <AboutCrowdsale {...aboutCrowdsaleParams} />
+          </StaticRouter>
+        )
+        .toJSON()
+    ).toMatchSnapshot()
   })
 })

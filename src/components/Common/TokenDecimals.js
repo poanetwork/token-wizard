@@ -7,11 +7,11 @@ import { acceptPositiveIntegerOnly } from '../../utils/utils'
 
 export const TokenDecimals = ({ disabled, errorStyle }) => (
   <Field
-    validate={(value) => {
+    validate={value => {
       const errors = composeValidators(
         isRequired(),
         isNonNegative(),
-        isLessOrEqualThan("Should not be greater than 18")(18)
+        isLessOrEqualThan('Should not be greater than 18')(18)
       )(value)
 
       if (errors) return errors.shift()

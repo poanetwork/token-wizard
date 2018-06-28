@@ -11,21 +11,21 @@ configure({ adapter: new Adapter() })
 describe('TokenTicker', () => {
   it(`should render TokenTicker component`, () => {
     const wrapper = renderer.create(
-      <Form onSubmit={jest.fn()} component={TokenTicker} errorStyle={{ color: 'red', fontWeight: 'bold', }}/>
+      <Form onSubmit={jest.fn()} component={TokenTicker} errorStyle={{ color: 'red', fontWeight: 'bold' }} />
     )
     expect(wrapper).toMatchSnapshot()
   })
 
   it(`should render TokenTicker component and its children`, () => {
     const wrapper = renderer.create(
-      <Form onSubmit={jest.fn()} component={TokenTicker} errorStyle={{ color: 'red', fontWeight: 'bold', }}/>
+      <Form onSubmit={jest.fn()} component={TokenTicker} errorStyle={{ color: 'red', fontWeight: 'bold' }} />
     )
     expect(wrapper).toMatchSnapshot()
   })
 
   it(`should give error if ticker name has other than alphanumeric characters`, () => {
     const wrapper = mount(
-      <Form onSubmit={jest.fn()} component={TokenTicker} errorStyle={{ color: 'red', fontWeight: 'bold', }}/>
+      <Form onSubmit={jest.fn()} component={TokenTicker} errorStyle={{ color: 'red', fontWeight: 'bold' }} />
     )
     const input = wrapper.find('input[name="ticker"]')
     input.simulate('change', { target: { value: 'AB@C8' } })
@@ -35,7 +35,7 @@ describe('TokenTicker', () => {
 
   it(`should give error if ticker name is empty`, () => {
     const wrapper = mount(
-      <Form onSubmit={jest.fn()} component={TokenTicker} errorStyle={{ color: 'red', fontWeight: 'bold', }}/>
+      <Form onSubmit={jest.fn()} component={TokenTicker} errorStyle={{ color: 'red', fontWeight: 'bold' }} />
     )
 
     const input = wrapper.find('input[name="ticker"]')
@@ -49,7 +49,7 @@ describe('TokenTicker', () => {
 
   it(`should give error if ticker name is longer than 5 characters`, () => {
     const wrapper = mount(
-      <Form onSubmit={jest.fn()} component={TokenTicker} errorStyle={{ color: 'red', fontWeight: 'bold', }}/>
+      <Form onSubmit={jest.fn()} component={TokenTicker} errorStyle={{ color: 'red', fontWeight: 'bold' }} />
     )
     const input = wrapper.find('input[name="ticker"]')
     input.simulate('change', { target: { value: '123456' } })

@@ -10,12 +10,18 @@ import {
   composeValidators,
   isAddress,
   isDecimalPlacesNotGreaterThan,
-  isGreaterOrEqualThan,
+  isGreaterOrEqualThan
 } from '../../utils/validations'
-import { TEXT_FIELDS, VALIDATION_TYPES, VALIDATION_MESSAGES, DESCRIPTION, NAVIGATION_STEPS } from '../../utils/constants'
+import {
+  TEXT_FIELDS,
+  VALIDATION_TYPES,
+  VALIDATION_MESSAGES,
+  DESCRIPTION,
+  NAVIGATION_STEPS
+} from '../../utils/constants'
 import { DutchAuctionBlock } from '../Common/DutchAuctionBlock'
 
-const { CROWDSALE_SETUP } = NAVIGATION_STEPS;
+const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 const { VALID } = VALIDATION_TYPES
 const { WALLET_ADDRESS } = TEXT_FIELDS
 
@@ -24,10 +30,17 @@ const inputErrorStyle = {
   fontWeight: 'bold',
   fontSize: '12px',
   width: '100%',
-  height: '20px',
+  height: '20px'
 }
 
-export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, pristine, mutators: { push }, ...props }) => {
+export const StepThreeFormDutchAuction = ({
+  handleSubmit,
+  values,
+  invalid,
+  pristine,
+  mutators: { push },
+  ...props
+}) => {
   const submitButtonClass = classnames('button', 'button_fill', {
     button_disabled: pristine || invalid
   })
@@ -46,7 +59,7 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, prist
       props.tierStore.updateMinRate(tier.minRate, VALID, index)
       props.tierStore.updateMaxRate(tier.maxRate, VALID, index)
       props.tierStore.setTierProperty(tier.supply, 'supply', index)
-      props.tierStore.setTierProperty(tier.whitelistEnabled, "whitelistEnabled", index)
+      props.tierStore.setTierProperty(tier.whitelistEnabled, 'whitelistEnabled', index)
       props.tierStore.validateTiers('supply', index)
     })
     props.crowdsaleStore.setProperty('supply', totalSupply)
@@ -55,16 +68,11 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, prist
 
   return (
     <form onSubmit={handleSubmit}>
-      <WhenFieldChanges
-        field="tiers[0].whitelistEnabled"
-        becomes={'yes'}
-        set="tiers[0].minCap"
-        to={0}
-      />
+      <WhenFieldChanges field="tiers[0].whitelistEnabled" becomes={'yes'} set="tiers[0].minCap" to={0} />
       <div>
         <div className="steps-content container">
           <div className="about-step">
-            <div className="step-icons step-icons_crowdsale-setup"/>
+            <div className="step-icons step-icons_crowdsale-setup" />
             <p className="title">{CROWDSALE_SETUP}</p>
             <p className="description">{DESCRIPTION.CROWDSALE_SETUP}</p>
           </div>
@@ -86,29 +94,28 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, values, invalid, prist
               component={GasPriceInput}
               side="right"
               gasPrices={props.gasPricesInGwei}
-              validate={(value) => composeValidators(
-                isDecimalPlacesNotGreaterThan(VALIDATION_MESSAGES.DECIMAL_PLACES_9)(9),
-                isGreaterOrEqualThan(VALIDATION_MESSAGES.NUMBER_GREATER_THAN)(0.1)
-              )(value.price)}
+              validate={value =>
+                composeValidators(
+                  isDecimalPlacesNotGreaterThan(VALIDATION_MESSAGES.DECIMAL_PLACES_9)(9),
+                  isGreaterOrEqualThan(VALIDATION_MESSAGES.NUMBER_GREATER_THAN)(0.1)
+                )(value.price)
+              }
             />
           </div>
         </div>
       </div>
 
       <FieldArray name="tiers">
-        {({ fields }) => (
-          <DutchAuctionBlock
-            fields={fields}
-            decimals={props.decimals}
-          />
-        )}
+        {({ fields }) => <DutchAuctionBlock fields={fields} decimals={props.decimals} />}
       </FieldArray>
 
       <div className="button-container">
-        <span onClick={handleSubmit} className={submitButtonClass}>Continue</span>
+        <span onClick={handleSubmit} className={submitButtonClass}>
+          Continue
+        </span>
       </div>
 
-      <FormSpy subscription={{ values: true }} onChange={handleOnChange}/>
+      <FormSpy subscription={{ values: true }} onChange={handleOnChange} />
     </form>
   )
 }

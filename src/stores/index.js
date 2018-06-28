@@ -1,10 +1,10 @@
 import storage from 'store2'
-import ContractStore from './ContractStore';
-import ReservedTokenStore from './ReservedTokenStore';
-import StepTwoValidationStore from './StepTwoValidationStore';
-import TierStore from './TierStore';
-import TokenStore from './TokenStore';
-import Web3Store from './Web3Store';
+import ContractStore from './ContractStore'
+import ReservedTokenStore from './ReservedTokenStore'
+import StepTwoValidationStore from './StepTwoValidationStore'
+import TierStore from './TierStore'
+import TokenStore from './TokenStore'
+import Web3Store from './Web3Store'
 import GeneralStore from './GeneralStore'
 import CrowdsalePageStore from './CrowdsalePageStore'
 import ContributeStore from './ContributeStore'
@@ -46,4 +46,4 @@ export {
   gasPriceStore,
   deploymentStore,
   statsStore
-};
+}

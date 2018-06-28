@@ -11,54 +11,77 @@ class CrowdsaleStore {
   @observable endTime
   @observable selected
 
-  constructor () {
+  constructor() {
     this.reset()
     autosave(this, 'CrowdsaleStore')
   }
 
   @computed
   get appName() {
-    if (this.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE) return process.env[`${REACT_PREFIX}MINTED_CAPPED_APP_NAME`];
-    else if (this.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION) return process.env[`${REACT_PREFIX}DUTCH_APP_NAME`];
-    return '';
+    if (this.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE)
+      return process.env[`${REACT_PREFIX}MINTED_CAPPED_APP_NAME`]
+    else if (this.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION) return process.env[`${REACT_PREFIX}DUTCH_APP_NAME`]
+    return ''
   }
 
   @computed
   get crowdsaleDeployInterface() {
-    const mintedCappedCrowdsaleDeployInterface = ["address","uint256","bytes32","uint256","uint256","uint256","uint256","bool","bool","address"]
-    const dutchAuctionCrowdsaleDeployInterface = ["address","uint256","uint256","uint256","uint256","uint256","uint256","bool","address"]
+    const mintedCappedCrowdsaleDeployInterface = [
+      'address',
+      'uint256',
+      'bytes32',
+      'uint256',
+      'uint256',
+      'uint256',
+      'uint256',
+      'bool',
+      'bool',
+      'address'
+    ]
+    const dutchAuctionCrowdsaleDeployInterface = [
+      'address',
+      'uint256',
+      'uint256',
+      'uint256',
+      'uint256',
+      'uint256',
+      'uint256',
+      'bool',
+      'address'
+    ]
     if (this.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE) return mintedCappedCrowdsaleDeployInterface
     else if (this.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION) return dutchAuctionCrowdsaleDeployInterface
     return []
   }
 
   @computed
-  get isDutchAuction () {
-    if (this.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE) return false;
-    else if (this.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION) return true;
-    return false;
+  get isDutchAuction() {
+    if (this.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE) return false
+    else if (this.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION) return true
+    return false
   }
 
   @computed
-  get isMintedCappedCrowdsale () {
-    if (this.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE) return true;
-    else if (this.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION) return false;
-    return false;
+  get isMintedCappedCrowdsale() {
+    if (this.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE) return true
+    else if (this.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION) return false
+    return false
   }
 
   @computed
   get contractTargetSuffix() {
     switch (this.strategy) {
       case CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE:
-        return "MintedCapped"
+        return 'MintedCapped'
       case CROWDSALE_STRATEGIES.DUTCH_AUCTION:
-        return "Dutch"
+        return 'Dutch'
       default:
-        return "MintedCapped"
+        return 'MintedCapped'
     }
   }
 
-  @action reset = () => {
+  @action
+  reset = () => {
     this.crowdsales = []
     this.selected = {
       updatable: false,
@@ -66,22 +89,26 @@ class CrowdsaleStore {
     }
   }
 
-  @action setCrowdsales = (crowdsales) => {
+  @action
+  setCrowdsales = crowdsales => {
     this.crowdsales = crowdsales
   }
 
-  @action setProperty = (property, value) => {
+  @action
+  setProperty = (property, value) => {
     this[property] = value
   }
 
-  @action setSelectedProperty = (property, value) => {
+  @action
+  setSelectedProperty = (property, value) => {
     const currentCrowdsale = Object.assign({}, this.selected)
 
     currentCrowdsale[property] = value
     this.selected = currentCrowdsale
   }
 
-  @action addInitialTierValues = (initialValues) => {
+  @action
+  addInitialTierValues = initialValues => {
     this.selected.initialTiersValues.push(initialValues)
   }
 }

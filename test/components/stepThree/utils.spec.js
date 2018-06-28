@@ -18,7 +18,11 @@ describe('defaultCompanyStartDate', () => {
   it('Should return a day 5 minutes in the future', () => {
     const startDate = defaultCompanyStartDate()
 
-    expect(moment().add(5, 'minutes').isSame(startDate)).toBeTruthy()
+    expect(
+      moment()
+        .add(5, 'minutes')
+        .isSame(startDate)
+    ).toBeTruthy()
   })
 })
 
@@ -35,6 +39,11 @@ describe('defaultComanyEndDate', () => {
     const startDate = defaultCompanyStartDate()
     const endDate = defaultCompanyEndDate(startDate)
 
-    expect(moment().add(4, 'days').startOf('day').isSame(endDate)).toBeTruthy()
+    expect(
+      moment()
+        .add(4, 'days')
+        .startOf('day')
+        .isSame(endDate)
+    ).toBeTruthy()
   })
 })

@@ -1,12 +1,12 @@
-import { observable, action } from 'mobx';
+import { observable, action } from 'mobx'
 
 class ContributeStore {
+  @observable tokensToContribute
 
-  @observable tokensToContribute;
-
-  @action setProperty = (property, value) => {
+  @action
+  setProperty = (property, value) => {
     this[property] = value
   }
 }
 
-export default ContributeStore;
+export default ContributeStore

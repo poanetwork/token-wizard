@@ -20,7 +20,7 @@ describe('processWhitelist function', () => {
     expect(cb.mock.calls[2]).toEqual([{ addr: rows[2][0], min: rows[2][1], max: rows[2][2] }])
   })
 
-  it('should ignore items that don\'t have 3 elements', () => {
+  it("should ignore items that don't have 3 elements", () => {
     // Given
     const rows = [
       ['1', '10'],
@@ -28,7 +28,7 @@ describe('processWhitelist function', () => {
       ['0x3333333333333333333333333333333333333333', '1'],
       ['0x4444444444444444444444444444444444444444'],
       [],
-      ['0x4444444444444444444444444444444444444444', '1', '10', '100'],
+      ['0x4444444444444444444444444444444444444444', '1', '10', '100']
     ]
     const cb = jest.fn()
 

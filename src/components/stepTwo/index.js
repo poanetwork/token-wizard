@@ -14,14 +14,14 @@ const { VALID, INVALID } = VALIDATION_TYPES
 @inject('tokenStore', 'crowdsaleStore', 'web3Store', 'reservedTokenStore')
 @observer
 export class stepTwo extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
       tokenValues: {
         name: this.props.tokenStore.name,
         ticker: this.props.tokenStore.ticker,
-        decimals: this.props.tokenStore.decimals || 0,
+        decimals: this.props.tokenStore.decimals || 0
       }
     }
   }
@@ -35,12 +35,11 @@ export class stepTwo extends Component {
   }
 
   clearReservedTokens = () => {
-    return clearingReservedTokens()
-      .then(result => {
-        if (result.value) {
-          this.props.reservedTokenStore.clearAll()
-        }
-      })
+    return clearingReservedTokens().then(result => {
+      if (result.value) {
+        this.props.reservedTokenStore.clearAll()
+      }
+    })
   }
 
   addReservedTokensItem = newToken => {
@@ -50,7 +49,7 @@ export class stepTwo extends Component {
   updateTokenStore = ({ values, errors }) => {
     const { tokenStore } = this.props
 
-    Object.keys(values).forEach((key) => {
+    Object.keys(values).forEach(key => {
       tokenStore.setProperty(key, values[key])
       tokenStore.updateValidity(key, errors[key] !== undefined ? INVALID : VALID)
     })
@@ -60,21 +59,20 @@ export class stepTwo extends Component {
     this.props.history.push('/3')
   }
 
-  render () {
-    const decimals = this.props.tokenStore.validToken.decimals === VALID && this.props.tokenStore.decimals >= 0
-      ? parseInt(this.props.tokenStore.decimals, 10)
-      : 0
+  render() {
+    const decimals =
+      this.props.tokenStore.validToken.decimals === VALID && this.props.tokenStore.decimals >= 0
+        ? parseInt(this.props.tokenStore.decimals, 10)
+        : 0
 
     return (
       <section className="steps steps_crowdsale-contract" ref="two">
-        <StepNavigation activeStep={TOKEN_SETUP}/>
+        <StepNavigation activeStep={TOKEN_SETUP} />
         <div className="steps-content container">
           <div className="about-step">
-            <div className="step-icons step-icons_token-setup"/>
+            <div className="step-icons step-icons_token-setup" />
             <p className="title">Token setup</p>
-            <p className="description">
-              Configure properties of your token. Created token will be ERC-20 compatible.
-            </p>
+            <p className="description">Configure properties of your token. Created token will be ERC-20 compatible.</p>
           </div>
           <Form
             onSubmit={this.onSubmit}
@@ -92,5 +90,6 @@ export class stepTwo extends Component {
           />
         </div>
       </section>
-    )}
+    )
+  }
 }

@@ -48,7 +48,11 @@ describe('BigNumberInput', () => {
     wrapper = () => wrapperMemo || (wrapperMemo = mount(React.createElement(BigNumberInput, bigNumberInputComponent)))
 
     inputMemo = undefined
-    input = () => inputMemo || (inputMemo = wrapper().find('input').at(0))
+    input = () =>
+      inputMemo ||
+      (inputMemo = wrapper()
+        .find('input')
+        .at(0))
   })
 
   it('Should render the component', () => {
@@ -67,7 +71,7 @@ describe('BigNumberInput', () => {
   })
 
   describe('paste event', () => {
-    [
+    ;[
       { value: '123', expected: 0 },
       { value: '0', expected: 0 },
       { value: '1e10', expected: 0 },
@@ -79,7 +83,7 @@ describe('BigNumberInput', () => {
       { value: '123e', expected: 1 },
       { value: '123e123123e12', expected: 1 },
       { value: '12345678901234567890abcd123', expected: 1 },
-      { value: '123abc123', expected: 1 },
+      { value: '123abc123', expected: 1 }
     ].forEach(testCase => {
       const action = testCase.expected ? 'fail' : 'pass'
 
@@ -93,7 +97,7 @@ describe('BigNumberInput', () => {
   })
 
   describe('key press event', () => {
-    [
+    ;[
       {
         value: '+',
         expected: 1,
@@ -158,7 +162,7 @@ describe('BigNumberInput', () => {
         value: 'j',
         expected: 1,
         props: { acceptFloat: true }
-      },
+      }
     ].forEach(testCase => {
       const action = testCase.expected ? 'pass' : 'fail'
 
@@ -179,13 +183,13 @@ describe('BigNumberInput', () => {
 
   describe('change event', () => {
     describe('special characters', () => {
-      [
+      ;[
         { value: 'abc', expected: INVALID },
         { value: '#@', expected: INVALID },
         { value: '~', expected: INVALID },
         { value: 'e', expected: INVALID },
         { value: '123e', expected: INVALID },
-        { value: '', expected: VALID },
+        { value: '', expected: VALID }
       ].forEach(testCase => {
         const action = testCase.expected === VALID ? 'pass' : 'fail'
 
@@ -205,7 +209,7 @@ describe('BigNumberInput', () => {
     })
 
     describe('with float', () => {
-      [
+      ;[
         { value: '123', expected: VALID },
         { value: '123e3', expected: VALID },
         { value: '123e-3', expected: VALID },
@@ -214,7 +218,7 @@ describe('BigNumberInput', () => {
         { value: '1.123', expected: VALID },
         { value: '1.12e12', expected: VALID },
         { value: '1e-18', expected: VALID },
-        { value: '1e-19', expected: INVALID },
+        { value: '1e-19', expected: INVALID }
       ].forEach(testCase => {
         const action = testCase.expected === VALID ? 'pass' : 'fail'
 
@@ -236,7 +240,7 @@ describe('BigNumberInput', () => {
     })
 
     describe('without float', () => {
-      [
+      ;[
         { value: '123', expected: VALID },
         { value: '123e-3', expected: INVALID },
         { value: '.123', expected: INVALID },
@@ -245,7 +249,7 @@ describe('BigNumberInput', () => {
         { value: '10000000000000000000', expected: INVALID },
         { value: '1000000000000000000', expected: VALID },
         { value: '1000000000000000001', expected: INVALID },
-        { value: '999999999999999999', expected: VALID },
+        { value: '999999999999999999', expected: VALID }
       ].forEach(testCase => {
         const action = testCase.expected === VALID ? 'pass' : 'fail'
 
@@ -265,14 +269,14 @@ describe('BigNumberInput', () => {
     })
 
     describe('with negative', () => {
-      [
+      ;[
         { value: '-123', expected: VALID },
         { value: '-123e3', expected: INVALID },
         { value: '-.123', expected: VALID },
         { value: '-0.123', expected: VALID },
         { value: '-1.123', expected: VALID },
         { value: '-10000000000000000000', expected: INVALID },
-        { value: '-99999', expected: VALID },
+        { value: '-99999', expected: VALID }
       ].forEach(testCase => {
         const action = testCase.expected === VALID ? 'pass' : 'fail'
 
@@ -293,60 +297,58 @@ describe('BigNumberInput', () => {
     })
 
     describe('without negative', () => {
-      [
-        { value: '-1', expected: INVALID },
-        { value: '0', expected: VALID },
-        { value: '15', expected: VALID },
-      ].forEach(testCase => {
-        const action = testCase.expected === VALID ? 'pass' : 'fail'
+      ;[{ value: '-1', expected: INVALID }, { value: '0', expected: VALID }, { value: '15', expected: VALID }].forEach(
+        testCase => {
+          const action = testCase.expected === VALID ? 'pass' : 'fail'
 
-        it(`Should ${action} for '${testCase.value}'`, () => {
-          bigNumberInputComponent.min = 0
-          changeMock.target.value = testCase.value
-          input().simulate(INPUT_EVENT.CHANGE, changeMock)
+          it(`Should ${action} for '${testCase.value}'`, () => {
+            bigNumberInputComponent.min = 0
+            changeMock.target.value = testCase.value
+            input().simulate(INPUT_EVENT.CHANGE, changeMock)
 
-          expect(bigNumberInputComponent.onChange).toHaveBeenCalledTimes(1)
-          expect(bigNumberInputComponent.onChange).toHaveBeenCalledWith({
-            value: new BigNumber(testCase.value).toFixed(),
-            pristine: false,
-            valid: testCase.expected
+            expect(bigNumberInputComponent.onChange).toHaveBeenCalledTimes(1)
+            expect(bigNumberInputComponent.onChange).toHaveBeenCalledWith({
+              value: new BigNumber(testCase.value).toFixed(),
+              pristine: false,
+              valid: testCase.expected
+            })
           })
-        })
-      })
+        }
+      )
     })
 
     describe('max and min decimals', () => {
-      [
+      ;[
         {
           value: '1e-5',
           expected: VALID,
-          props: { minDecimals: 0, maxDecimals: 10}
+          props: { minDecimals: 0, maxDecimals: 10 }
         },
         {
           value: '1e-5',
           expected: INVALID,
-          props: { minDecimals: 10, maxDecimals: 10}
+          props: { minDecimals: 10, maxDecimals: 10 }
         },
         {
           value: '0.0000157',
           expected: VALID,
-          props: { minDecimals: 0, maxDecimals: 10}
+          props: { minDecimals: 0, maxDecimals: 10 }
         },
         {
           value: '0.00000000000000001544',
           expected: INVALID,
-          props: { minDecimals: 0, maxDecimals: 10}
+          props: { minDecimals: 0, maxDecimals: 10 }
         },
         {
           value: '.6546465464654654',
           expected: VALID,
-          props: { minDecimals: 15, maxDecimals: 16}
+          props: { minDecimals: 15, maxDecimals: 16 }
         },
         {
           value: '.654657674646546778',
           expected: INVALID,
-          props: { minDecimals: 15, maxDecimals: 16}
-        },
+          props: { minDecimals: 15, maxDecimals: 16 }
+        }
       ].forEach(testCase => {
         const action = testCase.expected === VALID ? 'pass' : 'fail'
 

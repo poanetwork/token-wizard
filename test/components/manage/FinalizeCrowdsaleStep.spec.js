@@ -14,11 +14,15 @@ describe('FinalizeCrowdsaleStep', () => {
       handleClick: jest.fn()
     }
 
-    expect(renderer.create(
-      <StaticRouter location="testLocation" context={{}}>
-        <FinalizeCrowdsaleStep {...finalizeCrowdsaleStateParams} />
-      </StaticRouter>
-    ).toJSON()).toMatchSnapshot()
+    expect(
+      renderer
+        .create(
+          <StaticRouter location="testLocation" context={{}}>
+            <FinalizeCrowdsaleStep {...finalizeCrowdsaleStateParams} />
+          </StaticRouter>
+        )
+        .toJSON()
+    ).toMatchSnapshot()
   })
 
   it('should render the component with disabled button', () => {
@@ -27,11 +31,15 @@ describe('FinalizeCrowdsaleStep', () => {
       handleClick: jest.fn()
     }
 
-    expect(renderer.create(
-      <StaticRouter location="testLocation" context={{}}>
-        <FinalizeCrowdsaleStep {...finalizeCrowdsaleStateParams} />
-      </StaticRouter>
-    ).toJSON()).toMatchSnapshot()
+    expect(
+      renderer
+        .create(
+          <StaticRouter location="testLocation" context={{}}>
+            <FinalizeCrowdsaleStep {...finalizeCrowdsaleStateParams} />
+          </StaticRouter>
+        )
+        .toJSON()
+    ).toMatchSnapshot()
   })
 
   it('should call handleClick', () => {

@@ -1,21 +1,14 @@
-import React, {Component} from 'react'
-import { inject, observer } from 'mobx-react';
-import {
-  getCurrentAccount,
-  getAllCrowdsaleAddresses,
-  getNetworkVersion
-} from '../../utils/blockchainHelpers'
+import React, { Component } from 'react'
+import { inject, observer } from 'mobx-react'
+import { getCurrentAccount, getAllCrowdsaleAddresses, getNetworkVersion } from '../../utils/blockchainHelpers'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import { Loader } from '../Common/Loader'
 import { BigNumber } from 'bignumber.js'
 
-@inject(
-  'web3Store',
-  'statsStore'
-)
+@inject('web3Store', 'statsStore')
 @observer
 export class Stats extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.setState({
       loading: true
@@ -23,39 +16,39 @@ export class Stats extends Component {
     this.getStats(props)
   }
 
-  getStats = async (props) => {
+  getStats = async props => {
     const { web3Store, statsStore } = props
     const { web3 } = web3Store
     const networkID = await getNetworkVersion()
-    console.log("networkID:", networkID)
+    console.log('networkID:', networkID)
     getCrowdsaleAssets(networkID)
       .then(getCurrentAccount)
       .then(getAllCrowdsaleAddresses)
-      .then((crowdsaleInstances) => {
-        let totalEthRaised = new BigNumber("0")
-        let maxEthRaised = new BigNumber("0")
+      .then(crowdsaleInstances => {
+        let totalEthRaised = new BigNumber('0')
+        let maxEthRaised = new BigNumber('0')
         let totalContributorsAmount = 0
-        crowdsaleInstances.forEach((_crowdsale) => {
-          let ethRaised = web3.utils.fromWei(_crowdsale.crowdsaleInfo.wei_raised, "ether")
+        crowdsaleInstances.forEach(_crowdsale => {
+          let ethRaised = web3.utils.fromWei(_crowdsale.crowdsaleInfo.wei_raised, 'ether')
           totalEthRaised = totalEthRaised.plus(ethRaised)
           maxEthRaised = Math.max(maxEthRaised, ethRaised)
           totalContributorsAmount += Number(_crowdsale.crowdsaleContributors)
         })
 
-        const curDate = (new Date()).getTime()
+        const curDate = new Date().getTime()
 
-        const mintedCappedCrowdsales = crowdsaleInstances.filter((_crowdsale) => {
-          return _crowdsale.appName === process.env["REACT_APP_MINTED_CAPPED_APP_NAME"]
+        const mintedCappedCrowdsales = crowdsaleInstances.filter(_crowdsale => {
+          return _crowdsale.appName === process.env['REACT_APP_MINTED_CAPPED_APP_NAME']
         })
-        let mintedCappedEthRaised = new BigNumber("0")
-        let mintedCappedMaxEthRaised = new BigNumber("0")
+        let mintedCappedEthRaised = new BigNumber('0')
+        let mintedCappedMaxEthRaised = new BigNumber('0')
         let mintedCappedContributorsAmount = 0
         let mintedCappedOngoingCrowdsales = 0
         let mintedCappedFutureCrowdsales = 0
         let mintedCappedPastCrowdsales = 0
         let mintedCappedMaxTiersAmount = 0
-        mintedCappedCrowdsales.forEach((_crowdsale) => {
-          let ethRaised = web3.utils.fromWei(_crowdsale.crowdsaleInfo.wei_raised, "ether")
+        mintedCappedCrowdsales.forEach(_crowdsale => {
+          let ethRaised = web3.utils.fromWei(_crowdsale.crowdsaleInfo.wei_raised, 'ether')
           mintedCappedEthRaised = mintedCappedEthRaised.plus(ethRaised)
           mintedCappedMaxEthRaised = Math.max(mintedCappedMaxEthRaised, ethRaised)
           mintedCappedContributorsAmount += Number(_crowdsale.crowdsaleContributors)
@@ -73,27 +66,33 @@ export class Stats extends Component {
           mintedCappedMaxTiersAmount = Math.max(mintedCappedMaxTiersAmount, _crowdsale.crowdsaleTierList.length)
         })
 
-        const mintedCappedFinalizedCrowdsales = mintedCappedCrowdsales.filter((_crowdsale) => {
+        const mintedCappedFinalizedCrowdsales = mintedCappedCrowdsales.filter(_crowdsale => {
           return _crowdsale.crowdsaleInfo.is_finalized
         })
-        const mintedCappedPercentageOfFinalized = mintedCappedPastCrowdsales > 0 ? Math.round(mintedCappedFinalizedCrowdsales.length * 100 / mintedCappedPastCrowdsales * 100) / 100 : 0
+        const mintedCappedPercentageOfFinalized =
+          mintedCappedPastCrowdsales > 0
+            ? Math.round(((mintedCappedFinalizedCrowdsales.length * 100) / mintedCappedPastCrowdsales) * 100) / 100
+            : 0
 
-        const mintedCappedMultiTiersCrowdsales = mintedCappedCrowdsales.filter((_crowdsale) => {
+        const mintedCappedMultiTiersCrowdsales = mintedCappedCrowdsales.filter(_crowdsale => {
           return _crowdsale.crowdsaleTierList.length > 1
         })
-        const mintedCappedPercentageOfMultiTiers = mintedCappedCrowdsales.length > 0 ? Math.round(mintedCappedMultiTiersCrowdsales.length * 100 / mintedCappedCrowdsales.length * 100) / 100 : 0
+        const mintedCappedPercentageOfMultiTiers =
+          mintedCappedCrowdsales.length > 0
+            ? Math.round(((mintedCappedMultiTiersCrowdsales.length * 100) / mintedCappedCrowdsales.length) * 100) / 100
+            : 0
 
-        const dutchAuctionCrowdsales = crowdsaleInstances.filter((_crowdsale) => {
-          return _crowdsale.appName === process.env["REACT_APP_DUTCH_APP_NAME"]
+        const dutchAuctionCrowdsales = crowdsaleInstances.filter(_crowdsale => {
+          return _crowdsale.appName === process.env['REACT_APP_DUTCH_APP_NAME']
         })
-        let dutchAuctionEthRaised = new BigNumber("0")
-        let dutchAuctionMaxEthRaised = new BigNumber("0")
+        let dutchAuctionEthRaised = new BigNumber('0')
+        let dutchAuctionMaxEthRaised = new BigNumber('0')
         let dutchAuctionContributorsAmount = 0
         let dutchAuctionOngoingCrowdsales = 0
         let dutchAuctionFutureCrowdsales = 0
         let dutchAuctionPastCrowdsales = 0
-        dutchAuctionCrowdsales.forEach((_crowdsale) => {
-          let ethRaised = web3.utils.fromWei(_crowdsale.crowdsaleInfo.wei_raised, "ether")
+        dutchAuctionCrowdsales.forEach(_crowdsale => {
+          let ethRaised = web3.utils.fromWei(_crowdsale.crowdsaleInfo.wei_raised, 'ether')
           dutchAuctionEthRaised = dutchAuctionEthRaised.plus(ethRaised)
           dutchAuctionMaxEthRaised = Math.max(dutchAuctionMaxEthRaised, ethRaised)
           dutchAuctionContributorsAmount += Number(_crowdsale.crowdsaleContributors)
@@ -109,35 +108,38 @@ export class Stats extends Component {
           }
         })
 
-        const dutchAuctionFinalizedCrowdsales = dutchAuctionCrowdsales.filter((_crowdsale) => {
+        const dutchAuctionFinalizedCrowdsales = dutchAuctionCrowdsales.filter(_crowdsale => {
           return _crowdsale.crowdsaleInfo.is_finalized
         })
-        const dutchAuctionPercentageOfFinalized = dutchAuctionPastCrowdsales > 0 ? Math.round(dutchAuctionFinalizedCrowdsales.length * 100 / dutchAuctionPastCrowdsales * 100) / 100 : 0
+        const dutchAuctionPercentageOfFinalized =
+          dutchAuctionPastCrowdsales > 0
+            ? Math.round(((dutchAuctionFinalizedCrowdsales.length * 100) / dutchAuctionPastCrowdsales) * 100) / 100
+            : 0
 
-        console.log("crowdsaleInstances:", crowdsaleInstances)
+        console.log('crowdsaleInstances:', crowdsaleInstances)
 
-        statsStore.setProperty("totalEthRaised", totalEthRaised)
-        statsStore.setProperty("maxEthRaised", maxEthRaised)
-        statsStore.setProperty("totalCrowdsales", crowdsaleInstances.length)
-        statsStore.setProperty("totalContributorsAmount", totalContributorsAmount)
-        statsStore.setProperty("mintedCappedEthRaised", mintedCappedEthRaised)
-        statsStore.setProperty("dutchAuctionEthRaised", dutchAuctionEthRaised)
-        statsStore.setProperty("mintedCappedCrowdsales", mintedCappedCrowdsales.length)
-        statsStore.setProperty("dutchAuctionCrowdsales", dutchAuctionCrowdsales.length)
-        statsStore.setProperty("mintedCappedContributorsAmount", mintedCappedContributorsAmount)
-        statsStore.setProperty("dutchAuctionContributorsAmount", dutchAuctionContributorsAmount)
-        statsStore.setProperty("mintedCappedPercentageOfFinalized", mintedCappedPercentageOfFinalized)
-        statsStore.setProperty("dutchAuctionPercentageOfFinalized", dutchAuctionPercentageOfFinalized)
-        statsStore.setProperty("mintedCappedPercentageOfMultiTiers", mintedCappedPercentageOfMultiTiers)
-        statsStore.setProperty("mintedCappedMaxTiersAmount", mintedCappedMaxTiersAmount)
-        statsStore.setProperty("mintedCappedMaxEthRaised", mintedCappedMaxEthRaised)
-        statsStore.setProperty("dutchAuctionMaxEthRaised", dutchAuctionMaxEthRaised)
-        statsStore.setProperty("mintedCappedOngoingCrowdsales", mintedCappedOngoingCrowdsales)
-        statsStore.setProperty("mintedCappedFutureCrowdsales", mintedCappedFutureCrowdsales)
-        statsStore.setProperty("mintedCappedPastCrowdsales", mintedCappedPastCrowdsales)
-        statsStore.setProperty("dutchAuctionOngoingCrowdsales", dutchAuctionOngoingCrowdsales)
-        statsStore.setProperty("dutchAuctionFutureCrowdsales", dutchAuctionFutureCrowdsales)
-        statsStore.setProperty("dutchAuctionPastCrowdsales", dutchAuctionPastCrowdsales)
+        statsStore.setProperty('totalEthRaised', totalEthRaised)
+        statsStore.setProperty('maxEthRaised', maxEthRaised)
+        statsStore.setProperty('totalCrowdsales', crowdsaleInstances.length)
+        statsStore.setProperty('totalContributorsAmount', totalContributorsAmount)
+        statsStore.setProperty('mintedCappedEthRaised', mintedCappedEthRaised)
+        statsStore.setProperty('dutchAuctionEthRaised', dutchAuctionEthRaised)
+        statsStore.setProperty('mintedCappedCrowdsales', mintedCappedCrowdsales.length)
+        statsStore.setProperty('dutchAuctionCrowdsales', dutchAuctionCrowdsales.length)
+        statsStore.setProperty('mintedCappedContributorsAmount', mintedCappedContributorsAmount)
+        statsStore.setProperty('dutchAuctionContributorsAmount', dutchAuctionContributorsAmount)
+        statsStore.setProperty('mintedCappedPercentageOfFinalized', mintedCappedPercentageOfFinalized)
+        statsStore.setProperty('dutchAuctionPercentageOfFinalized', dutchAuctionPercentageOfFinalized)
+        statsStore.setProperty('mintedCappedPercentageOfMultiTiers', mintedCappedPercentageOfMultiTiers)
+        statsStore.setProperty('mintedCappedMaxTiersAmount', mintedCappedMaxTiersAmount)
+        statsStore.setProperty('mintedCappedMaxEthRaised', mintedCappedMaxEthRaised)
+        statsStore.setProperty('dutchAuctionMaxEthRaised', dutchAuctionMaxEthRaised)
+        statsStore.setProperty('mintedCappedOngoingCrowdsales', mintedCappedOngoingCrowdsales)
+        statsStore.setProperty('mintedCappedFutureCrowdsales', mintedCappedFutureCrowdsales)
+        statsStore.setProperty('mintedCappedPastCrowdsales', mintedCappedPastCrowdsales)
+        statsStore.setProperty('dutchAuctionOngoingCrowdsales', dutchAuctionOngoingCrowdsales)
+        statsStore.setProperty('dutchAuctionFutureCrowdsales', dutchAuctionFutureCrowdsales)
+        statsStore.setProperty('dutchAuctionPastCrowdsales', dutchAuctionPastCrowdsales)
 
         this.setState({
           loading: false
@@ -145,11 +147,11 @@ export class Stats extends Component {
       })
   }
 
-  valToStr = (val) => {
+  valToStr = val => {
     return val ? val.toString() : '0'
   }
 
-  render () {
+  render() {
     const { valToStr, props } = this
     const { statsStore } = props
     const {
@@ -174,7 +176,7 @@ export class Stats extends Component {
       dutchAuctionFutureCrowdsales,
       dutchAuctionPastCrowdsales,
       dutchAuctionMaxEthRaised,
-      dutchAuctionPercentageOfFinalized,
+      dutchAuctionPercentageOfFinalized
     } = statsStore
     const statsItem = (value, description) => {
       return (
@@ -189,23 +191,19 @@ export class Stats extends Component {
         <p className="title">Token Wizard statistics</p>
         <div className="stats-table">
           <div className="stats-table-cell">
+            <div className="stats-items">{statsItem(valToStr(totalCrowdsales), 'Total crowdsales amount')}</div>
+          </div>
+          <div className="stats-table-cell">
+            <div className="stats-items">{statsItem(valToStr(totalEthRaised), 'Total amount of eth raised')}</div>
+          </div>
+          <div className="stats-table-cell">
             <div className="stats-items">
-              { statsItem(valToStr(totalCrowdsales), "Total crowdsales amount") }
+              {statsItem(valToStr(totalContributorsAmount), 'Total contributors amount')}
             </div>
           </div>
           <div className="stats-table-cell">
             <div className="stats-items">
-              { statsItem(valToStr(totalEthRaised), "Total amount of eth raised") }
-            </div>
-          </div>
-          <div className="stats-table-cell">
-            <div className="stats-items">
-              { statsItem(valToStr(totalContributorsAmount), "Total contributors amount") }
-            </div>
-          </div>
-          <div className="stats-table-cell">
-            <div className="stats-items">
-              { statsItem(valToStr(maxEthRaised), "Max amount of eth raised in one crowdsale") }
+              {statsItem(valToStr(maxEthRaised), 'Max amount of eth raised in one crowdsale')}
             </div>
           </div>
         </div>
@@ -213,28 +211,28 @@ export class Stats extends Component {
         <div className="stats-table">
           <div className="stats-table-cell">
             <div className="stats-items">
-              { statsItem(valToStr(mintedCappedCrowdsales), "Crowdsales amount") }
-              { statsItem(valToStr(mintedCappedEthRaised), "Total amount of eth raised") }
-              { statsItem(valToStr(mintedCappedContributorsAmount), "Total contributors amount") }
+              {statsItem(valToStr(mintedCappedCrowdsales), 'Crowdsales amount')}
+              {statsItem(valToStr(mintedCappedEthRaised), 'Total amount of eth raised')}
+              {statsItem(valToStr(mintedCappedContributorsAmount), 'Total contributors amount')}
             </div>
           </div>
           <div className="stats-table-cell">
             <div className="stats-items">
-              { statsItem(valToStr(mintedCappedOngoingCrowdsales), "Ongoing crowdsales amount") }
-              { statsItem(valToStr(mintedCappedFutureCrowdsales), "Future crowdsales amount") }
-              { statsItem(valToStr(mintedCappedPastCrowdsales), "Past crowdsales amount") }
+              {statsItem(valToStr(mintedCappedOngoingCrowdsales), 'Ongoing crowdsales amount')}
+              {statsItem(valToStr(mintedCappedFutureCrowdsales), 'Future crowdsales amount')}
+              {statsItem(valToStr(mintedCappedPastCrowdsales), 'Past crowdsales amount')}
             </div>
           </div>
           <div className="stats-table-cell">
             <div className="stats-items">
-              { statsItem(valToStr(mintedCappedMaxEthRaised), "Max amount of eth raised in one crowdsale") }
-              { statsItem(valToStr(mintedCappedPercentageOfFinalized), "% of finalized crowdsales from ended") }
-              { statsItem(valToStr(mintedCappedPercentageOfMultiTiers), "% of crowdsales with multiple tiers") }
+              {statsItem(valToStr(mintedCappedMaxEthRaised), 'Max amount of eth raised in one crowdsale')}
+              {statsItem(valToStr(mintedCappedPercentageOfFinalized), '% of finalized crowdsales from ended')}
+              {statsItem(valToStr(mintedCappedPercentageOfMultiTiers), '% of crowdsales with multiple tiers')}
             </div>
           </div>
           <div className="stats-table-cell">
             <div className="stats-items">
-              { statsItem(valToStr(mintedCappedMaxTiersAmount), "Max tiers amount in one crowdsale") }
+              {statsItem(valToStr(mintedCappedMaxTiersAmount), 'Max tiers amount in one crowdsale')}
             </div>
           </div>
         </div>
@@ -242,27 +240,26 @@ export class Stats extends Component {
         <div className="stats-table">
           <div className="stats-table-cell">
             <div className="stats-items">
-              { statsItem(valToStr(dutchAuctionCrowdsales), "Crowdsales amount") }
-              { statsItem(valToStr(dutchAuctionEthRaised), "Total amount of eth raised") }
-              { statsItem(valToStr(dutchAuctionContributorsAmount), "Total contributors amount") }
+              {statsItem(valToStr(dutchAuctionCrowdsales), 'Crowdsales amount')}
+              {statsItem(valToStr(dutchAuctionEthRaised), 'Total amount of eth raised')}
+              {statsItem(valToStr(dutchAuctionContributorsAmount), 'Total contributors amount')}
             </div>
           </div>
           <div className="stats-table-cell">
             <div className="stats-items">
-              { statsItem(valToStr(dutchAuctionOngoingCrowdsales), "Ongoing crowdsales amount") }
-              { statsItem(valToStr(dutchAuctionFutureCrowdsales), "Future crowdsales amount") }
-              { statsItem(valToStr(dutchAuctionPastCrowdsales), "Past crowdsales amount") }
+              {statsItem(valToStr(dutchAuctionOngoingCrowdsales), 'Ongoing crowdsales amount')}
+              {statsItem(valToStr(dutchAuctionFutureCrowdsales), 'Future crowdsales amount')}
+              {statsItem(valToStr(dutchAuctionPastCrowdsales), 'Past crowdsales amount')}
             </div>
           </div>
           <div className="stats-table-cell">
             <div className="stats-items">
-              { statsItem(valToStr(dutchAuctionMaxEthRaised), "Max amount of eth raised in one crowdsale") }
-              { statsItem(valToStr(dutchAuctionPercentageOfFinalized), "% of finalized crowdsales from ended") }
+              {statsItem(valToStr(dutchAuctionMaxEthRaised), 'Max amount of eth raised in one crowdsale')}
+              {statsItem(valToStr(dutchAuctionPercentageOfFinalized), '% of finalized crowdsales from ended')}
             </div>
-
           </div>
         </div>
-        <Loader show={this.state ? this.state.loading : true}/>
+        <Loader show={this.state ? this.state.loading : true} />
       </div>
     )
   }

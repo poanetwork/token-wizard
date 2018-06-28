@@ -46,7 +46,11 @@ describe('NumericInput', () => {
     wrapper = () => wrapperMemo || (wrapperMemo = mount(React.createElement(NumericInput, numericInputComponent)))
 
     inputMemo = undefined
-    input = () => inputMemo || (inputMemo = wrapper().find('input').at(0))
+    input = () =>
+      inputMemo ||
+      (inputMemo = wrapper()
+        .find('input')
+        .at(0))
   })
 
   it('Should render the component', () => {

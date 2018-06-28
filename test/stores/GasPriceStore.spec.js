@@ -1,4 +1,4 @@
-import GasPriceStore  from '../../src/stores/GasPriceStore'
+import GasPriceStore from '../../src/stores/GasPriceStore'
 import { GAS_PRICE } from '../../src/utils/constants'
 import { gweiToWei, weiToGwei } from '../../src/utils/utils'
 
@@ -41,22 +41,22 @@ describe('GasPriceStore', () => {
     expect(gas.gasPrices[0]).toEqual({
       id: GAS_PRICE.SLOW.ID,
       price: GAS_PRICE.SLOW.PRICE,
-      description: gas.slowDescription,
+      description: gas.slowDescription
     })
     expect(gas.gasPrices[1]).toEqual({
       id: GAS_PRICE.NORMAL.ID,
       price: GAS_PRICE.NORMAL.PRICE,
-      description: gas.standardDescription,
+      description: gas.standardDescription
     })
     expect(gas.gasPrices[2]).toEqual({
       id: GAS_PRICE.FAST.ID,
       price: GAS_PRICE.FAST.PRICE,
-      description: gas.fastDescription,
+      description: gas.fastDescription
     })
     expect(gas.gasPrices[3]).toEqual({
       id: GAS_PRICE.CUSTOM.ID,
       price: GAS_PRICE.CUSTOM.PRICE,
-      description: gas.customDescription,
+      description: gas.customDescription
     })
   })
 
@@ -64,48 +64,48 @@ describe('GasPriceStore', () => {
     expect(gas.gasPricesInGwei[0]).toEqual({
       id: GAS_PRICE.SLOW.ID,
       price: weiToGwei(GAS_PRICE.SLOW.PRICE),
-      description: gas.slowDescription,
+      description: gas.slowDescription
     })
     expect(gas.gasPricesInGwei[1]).toEqual({
       id: GAS_PRICE.NORMAL.ID,
       price: weiToGwei(GAS_PRICE.NORMAL.PRICE),
-      description: gas.standardDescription,
+      description: gas.standardDescription
     })
     expect(gas.gasPricesInGwei[2]).toEqual({
       id: GAS_PRICE.FAST.ID,
       price: weiToGwei(GAS_PRICE.FAST.PRICE),
-      description: gas.fastDescription,
+      description: gas.fastDescription
     })
     expect(gas.gasPricesInGwei[3]).toEqual({
       id: GAS_PRICE.CUSTOM.ID,
       price: weiToGwei(GAS_PRICE.CUSTOM.PRICE),
-      description: gas.customDescription,
+      description: gas.customDescription
     })
   })
 
   it('should updates values with mocked data', () => {
     const gasPrice = require('../../src/utils/__mocks__/gasPrice.json')
 
-    return gas.updateValues()
-      .then(() => {
-        expect(gas.slow.price).toEqual(gweiToWei(gasPrice.slow))
-        expect(gas.standard.price).toEqual(gweiToWei(gasPrice.standard))
-        expect(gas.fast.price).toEqual(gweiToWei(gasPrice.fast))
-        expect(gas.instant.price).toEqual(gweiToWei(gasPrice.instant))
-        expect(gas.custom.price).toEqual(GAS_PRICE.CUSTOM.PRICE)
+    return gas.updateValues().then(() => {
+      expect(gas.slow.price).toEqual(gweiToWei(gasPrice.slow))
+      expect(gas.standard.price).toEqual(gweiToWei(gasPrice.standard))
+      expect(gas.fast.price).toEqual(gweiToWei(gasPrice.fast))
+      expect(gas.instant.price).toEqual(gweiToWei(gasPrice.instant))
+      expect(gas.custom.price).toEqual(GAS_PRICE.CUSTOM.PRICE)
 
-        expect(gas.block_number).toEqual(gasPrice.block_number)
-        expect(gas.block_time).toEqual(gasPrice.block_time)
-        expect(gas.health).toEqual(gasPrice.health)
-      })
+      expect(gas.block_number).toEqual(gasPrice.block_number)
+      expect(gas.block_time).toEqual(gasPrice.block_time)
+      expect(gas.health).toEqual(gasPrice.health)
+    })
   })
 
   it('should remain unchanged if a second call fails', () => {
     const gasPrice = require('../../src/utils/__mocks__/gasPrice.json')
 
-    return gas.updateValues()
+    return gas
+      .updateValues()
       .then(() => gas.updateValues('nonExisting'))
-      .catch((err) => {
+      .catch(err => {
         expect(err).toEqual('no data')
         expect(gas.slow.price).toEqual(gweiToWei(gasPrice.slow))
         expect(gas.standard.price).toEqual(gweiToWei(gasPrice.standard))
@@ -132,9 +132,8 @@ describe('GasPriceStore', () => {
 
     gas.setProperty('custom', CUSTOM_PRICE)
 
-    return gas.updateValues()
-      .then(() => {
-        expect(gas.custom.price).toEqual(gweiToWei(CUSTOM_PRICE))
-      })
+    return gas.updateValues().then(() => {
+      expect(gas.custom.price).toEqual(gweiToWei(CUSTOM_PRICE))
+    })
   })
 })

@@ -25,42 +25,44 @@ export const validateWhitelistMax = ({ min, max, decimals }) => {
   return listOfErrors ? listOfErrors.shift() : undefined
 }
 
-export const isMaxLength = (errorMsg = VALIDATION_MESSAGES.NAME) => (maxLength = 256) => (value) => {
+export const isMaxLength = (errorMsg = VALIDATION_MESSAGES.NAME) => (maxLength = 256) => value => {
   const isValid = typeof value === 'string' && value.length <= maxLength
   return isValid ? undefined : errorMsg
 }
 
-export const isMatchingPattern = (errorMsg = VALIDATION_MESSAGES.PATTERN) => (regex = /.*/) => (value) => {
+export const isMatchingPattern = (errorMsg = VALIDATION_MESSAGES.PATTERN) => (regex = /.*/) => value => {
   const isValid = regex.test(value)
   return isValid ? undefined : errorMsg
 }
 
-export const isPositive = (errorMsg = VALIDATION_MESSAGES.POSITIVE) => (value) => {
+export const isPositive = (errorMsg = VALIDATION_MESSAGES.POSITIVE) => value => {
   const isValid = value > 0
   return isValid ? undefined : errorMsg
 }
 
-export const isNonNegative = (errorMsg = VALIDATION_MESSAGES.NON_NEGATIVE) => (value) => {
+export const isNonNegative = (errorMsg = VALIDATION_MESSAGES.NON_NEGATIVE) => value => {
   const isValid = value >= 0
   return isValid ? undefined : errorMsg
 }
 
-export const isAddress = (errorMsg = VALIDATION_MESSAGES.ADDRESS) => (value) => {
+export const isAddress = (errorMsg = VALIDATION_MESSAGES.ADDRESS) => value => {
   const isValid = Web3.utils.isAddress(value)
   return isValid ? undefined : errorMsg
 }
 
-export const isRequired = (errorMsg = VALIDATION_MESSAGES.REQUIRED) => (value) => {
+export const isRequired = (errorMsg = VALIDATION_MESSAGES.REQUIRED) => value => {
   const isValid = value !== '' && value !== null && value !== undefined
   return isValid ? undefined : errorMsg
 }
 
-export const isDecimalPlacesNotGreaterThan = (errorMsg = VALIDATION_MESSAGES.DECIMAL_PLACES) => (decimalsCount) => (value) => {
+export const isDecimalPlacesNotGreaterThan = (
+  errorMsg = VALIDATION_MESSAGES.DECIMAL_PLACES
+) => decimalsCount => value => {
   const isValid = countDecimalPlaces(value) <= decimalsCount
   return isValid ? undefined : errorMsg
 }
 
-export const isLessOrEqualThan = (errorMsg = VALIDATION_MESSAGES.LESS_OR_EQUAL) => (maxValue = Infinity) => (value) => {
+export const isLessOrEqualThan = (errorMsg = VALIDATION_MESSAGES.LESS_OR_EQUAL) => (maxValue = Infinity) => value => {
   try {
     const max = new BigNumber(String(maxValue))
     const isValid = max.gte(value)
@@ -70,7 +72,9 @@ export const isLessOrEqualThan = (errorMsg = VALIDATION_MESSAGES.LESS_OR_EQUAL) 
   }
 }
 
-export const isGreaterOrEqualThan = (errorMsg = VALIDATION_MESSAGES.GREATER_OR_EQUAL) => (minValue = Number.MIN_VALUE) => (value) => {
+export const isGreaterOrEqualThan = (errorMsg = VALIDATION_MESSAGES.GREATER_OR_EQUAL) => (
+  minValue = Number.MIN_VALUE
+) => value => {
   try {
     const min = new BigNumber(String(minValue))
     const isValid = min.lte(value)
@@ -80,7 +84,7 @@ export const isGreaterOrEqualThan = (errorMsg = VALIDATION_MESSAGES.GREATER_OR_E
   }
 }
 
-export const isInteger = (errorMsg = VALIDATION_MESSAGES.INTEGER) => (value) => {
+export const isInteger = (errorMsg = VALIDATION_MESSAGES.INTEGER) => value => {
   try {
     const isValid = new BigNumber(value).isInteger()
     return isValid ? undefined : errorMsg
@@ -89,32 +93,32 @@ export const isInteger = (errorMsg = VALIDATION_MESSAGES.INTEGER) => (value) => 
   }
 }
 
-export const isDateInFuture = (errorMsg = VALIDATION_MESSAGES.DATE_IN_FUTURE) => (value) => {
+export const isDateInFuture = (errorMsg = VALIDATION_MESSAGES.DATE_IN_FUTURE) => value => {
   const isValid = validateTime(value)
   return isValid ? undefined : errorMsg
 }
 
-export const isDatePreviousThan = (errorMsg = VALIDATION_MESSAGES.DATE_IS_PREVIOUS) => (later) => (value) => {
+export const isDatePreviousThan = (errorMsg = VALIDATION_MESSAGES.DATE_IS_PREVIOUS) => later => value => {
   const isValid = validateLaterTime(later, value)
   return isValid ? undefined : errorMsg
 }
 
-export const isDateSameOrLaterThan = (errorMsg = VALIDATION_MESSAGES.DATE_IS_SAME_OR_LATER) => (previous) => (value) => {
+export const isDateSameOrLaterThan = (errorMsg = VALIDATION_MESSAGES.DATE_IS_SAME_OR_LATER) => previous => value => {
   const isValid = validateLaterOrEqualTime(value, previous)
   return isValid ? undefined : errorMsg
 }
 
-export const isDateLaterThan = (errorMsg = VALIDATION_MESSAGES.DATE_IS_LATER) => (previous) => (value) => {
+export const isDateLaterThan = (errorMsg = VALIDATION_MESSAGES.DATE_IS_LATER) => previous => value => {
   const isValid = validateLaterTime(value, previous)
   return isValid ? undefined : errorMsg
 }
 
-export const isDateSameOrPreviousThan = (errorMsg = VALIDATION_MESSAGES.DATE_IS_SAME_OR_PREVIOUS) => (later) => (value) => {
+export const isDateSameOrPreviousThan = (errorMsg = VALIDATION_MESSAGES.DATE_IS_SAME_OR_PREVIOUS) => later => value => {
   const isValid = validateLaterOrEqualTime(later, value)
   return isValid ? undefined : errorMsg
 }
 
-export const composeValidators = (...validators) => (value) => {
+export const composeValidators = (...validators) => value => {
   const errors = validators.reduce((errors, validator) => {
     const validation = validator(value)
 
@@ -126,35 +130,39 @@ export const composeValidators = (...validators) => (value) => {
   return errors.length ? errors : undefined
 }
 
-export const validateTierStartDate  = (index) => (value, values) => {
+export const validateTierStartDate = index => (value, values) => {
   const listOfValidations = [
     isRequired(),
     isDateInFuture(),
-    isDatePreviousThan("Should be previous than same tier's End Time")(values.tiers[index].endTime),
+    isDatePreviousThan("Should be previous than same tier's End Time")(values.tiers[index].endTime)
   ]
 
   if (index > 0) {
-    listOfValidations.push(isDateSameOrLaterThan("Should be same or later than previous tier's End Time")(values.tiers[index - 1].endTime))
+    listOfValidations.push(
+      isDateSameOrLaterThan("Should be same or later than previous tier's End Time")(values.tiers[index - 1].endTime)
+    )
   }
 
   return composeValidators(...listOfValidations)(value)
 }
 
-export const validateTierEndDate  = (index) => (value, values) => {
+export const validateTierEndDate = index => (value, values) => {
   const listOfValidations = [
     isRequired(),
     isDateInFuture(),
-    isDateLaterThan("Should be later than same tier's Start Time")(values.tiers[index].startTime),
+    isDateLaterThan("Should be later than same tier's Start Time")(values.tiers[index].startTime)
   ]
 
   return composeValidators(...listOfValidations)(value)
 }
 
-export const validateTierMinCap = (decimals) => (index) => (value, values) => {
+export const validateTierMinCap = decimals => index => (value, values) => {
   const listOfValidations = [
     isNonNegative(),
     isDecimalPlacesNotGreaterThan(`Decimals should not exceed ${decimals} places`)(decimals),
-    isLessOrEqualThan(`Should be less or equal than tier's supply (${values.tiers[index].supply})`)(values.tiers[index].supply)
+    isLessOrEqualThan(`Should be less or equal than tier's supply (${values.tiers[index].supply})`)(
+      values.tiers[index].supply
+    )
   ]
 
   return composeValidators(...listOfValidations)(value)

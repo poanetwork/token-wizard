@@ -14,32 +14,22 @@ const token = {
 
 describe('ReservedTokensItem', () => {
   it(`should render the component with delete button enabled`, () => {
-    const wrapper = mount(shallow(
-      <ReservedTokensItem
-        key={0}
-        num={0}
-        addr={token.addr}
-        dim={token.dim}
-        val={token.val}
-        readOnly={false}
-      />
-    ).get(0))
+    const wrapper = mount(
+      shallow(
+        <ReservedTokensItem key={0} num={0} addr={token.addr} dim={token.dim} val={token.val} readOnly={false} />
+      ).get(0)
+    )
 
     expect(wrapper).toMatchSnapshot()
     expect(wrapper.find('.reserved-tokens-item-empty')).toHaveLength(1)
   })
 
   it(`should render the component with no delete button`, () => {
-    const wrapper = mount(shallow(
-      <ReservedTokensItem
-        key={0}
-        num={0}
-        addr={token.addr}
-        dim={token.dim}
-        val={token.val}
-        readOnly={true}
-      />
-    ).get(0))
+    const wrapper = mount(
+      shallow(
+        <ReservedTokensItem key={0} num={0} addr={token.addr} dim={token.dim} val={token.val} readOnly={true} />
+      ).get(0)
+    )
 
     expect(wrapper).toMatchSnapshot()
     expect(wrapper.find('reserved-tokens-item-empty')).toHaveLength(0)

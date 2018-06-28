@@ -1,31 +1,31 @@
 import React from 'react'
-import QRCode from 'qrcode.react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import QRCode from 'qrcode.react'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 
 const QRPaymentProcess = ({ registryExecAddr, txData }) => {
   return (
     <div>
       <div className="payment-process">
-          <div className="payment-process-qr">
-            <QRCode value={registryExecAddr}></QRCode>
-          </div>
-        <p className="payment-process-hash">
-          { registryExecAddr }
-        </p>
+        <div className="payment-process-qr">
+          <QRCode value={registryExecAddr} />
+        </div>
+        <p className="payment-process-hash">{registryExecAddr}</p>
 
         <CopyToClipboard text={registryExecAddr}>
-          <a href="" onClick={e => e.preventDefault()} className="payment-process-copy">Copy Address</a>
+          <a href="" onClick={e => e.preventDefault()} className="payment-process-copy">
+            Copy Address
+          </a>
         </CopyToClipboard>
 
         {/* <div className="payment-process-loader">Waiting for payment</div> */}
         <div className="payment-process-notation">
           <p className="payment-process-notation-title">Important</p>
           <p className="payment-process-notation-description">
-            Send ethers to the Auth-os RegistryExec smart-contract address with a data: { txData }
+            Send ethers to the Auth-os RegistryExec smart-contract address with a data: {txData}
           </p>
         </div>
       </div>
-      { /* <div className="payment-process">
+      {/* <div className="payment-process">
         <div className="payment-process-success"></div>
         <p className="payment-process-description">
           Your Project tokens were sent to
@@ -34,9 +34,9 @@ const QRPaymentProcess = ({ registryExecAddr, txData }) => {
           0x6b0770d930bB22990c83fBBfcba6faB129AD7E385
         </p>
         <a href="#" className="payment-process-see">See it on the blockchain</a>
-      </div> */ }
+      </div> */}
     </div>
   )
 }
 
-export default QRPaymentProcess;
+export default QRPaymentProcess

@@ -1,6 +1,6 @@
-export { Footer } from './Footer';
-export { Header } from './Header';
-export { Home } from './Home';
+export { Footer } from './Footer'
+export { Header } from './Header'
+export { Home } from './Home'
 export { stepOne } from './stepOne'
 export { stepTwo } from './stepTwo'
 export { stepThree } from './stepThree'

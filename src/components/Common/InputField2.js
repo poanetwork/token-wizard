@@ -1,16 +1,18 @@
 import React from 'react'
 import { Error } from './Error'
 
-export const InputField2 = (props) => {
+export const InputField2 = props => {
   if (props.val) {
     props.input.value = props.val
   }
   return (
     <div className={props.side}>
-      <label htmlFor={props.input.name} className="label">{props.label}</label>
+      <label htmlFor={props.input.name} className="label">
+        {props.label}
+      </label>
       <input
         autoComplete="off"
-        className={props.inputClassName ? props.inputClassName : "input"}
+        className={props.inputClassName ? props.inputClassName : 'input'}
         type={props.type}
         disabled={props.disabled}
         placeholder={props.placeholder}
@@ -18,8 +20,7 @@ export const InputField2 = (props) => {
         {...props.input}
       />
       <p className="description">{props.description}</p>
-      <Error name={props.input.name} errorStyle={props.errorStyle}/>
+      <Error name={props.input.name} errorStyle={props.errorStyle} />
     </div>
   )
 }
-

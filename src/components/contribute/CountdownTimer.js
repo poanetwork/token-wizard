@@ -15,31 +15,28 @@ const CountdownTimer = ({
 }) => {
   const countdownClock = (
     <div>
-      {displaySeconds
-        ? null
-        : <div className="timer-i">
+      {displaySeconds ? null : (
+        <div className="timer-i">
           <div className="timer-count">{days}</div>
           <div className="timer-interval">Days</div>
         </div>
-      }
-      {displaySeconds
-        ? null
-        : <div className="timer-i">
+      )}
+      {displaySeconds ? null : (
+        <div className="timer-i">
           <div className="timer-count">{hours}</div>
           <div className="timer-interval">Hours</div>
         </div>
-      }
+      )}
       <div className="timer-i">
         <div className="timer-count">{minutes}</div>
         <div className="timer-interval">Mins</div>
       </div>
-      {!displaySeconds
-        ? null
-        : <div className="timer-i">
+      {!displaySeconds ? null : (
+        <div className="timer-i">
           <div className="timer-count">{seconds}</div>
           <div className="timer-interval">Secs</div>
         </div>
-      }
+      )}
     </div>
   )
 
@@ -77,9 +74,7 @@ const CountdownTimer = ({
           {isFinalized ? null : countdownClock}
           <div className="timer-i">
             <div className="timer-interval">
-              <strong>
-                { message }
-              </strong>
+              <strong>{message}</strong>
             </div>
           </div>
         </div>
@@ -87,6 +82,5 @@ const CountdownTimer = ({
     </div>
   )
 }
-
 
 export default CountdownTimer

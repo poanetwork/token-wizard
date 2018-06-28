@@ -10,9 +10,9 @@ import { composeValidators, isAddress, isDecimalPlacesNotGreaterThan, isPositive
  * @param {Function} cb The function to be called with each valid item
  * @returns {Object} Object with a `called` property, indicating the number of times the callback was called
  */
-export default function ({ rows, decimals }, cb) {
+export default function({ rows, decimals }, cb) {
   let called = 0
-  rows.forEach((row) => {
+  rows.forEach(row => {
     if (row.length !== 3) return
 
     let valueErrors = undefined
@@ -28,10 +28,7 @@ export default function ({ rows, decimals }, cb) {
         isDecimalPlacesNotGreaterThan(`Decimals should not exceed ${decimals} places`)(decimals)
       )(val)
     } else if (dim === 'percentage') {
-      valueErrors = composeValidators(
-        isRequired(),
-        isPositive()
-      )(val)
+      valueErrors = composeValidators(isRequired(), isPositive())(val)
     } else {
       return console.error(`unrecognized dimension '${dim}'`)
     }
@@ -45,4 +42,3 @@ export default function ({ rows, decimals }, cb) {
 
   return { called }
 }
-

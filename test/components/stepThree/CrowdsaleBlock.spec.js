@@ -23,7 +23,7 @@ describe('CrowdsaleBlock', () => {
     CLICK: 'click'
   }
 
-  const addCrowdsale = (num) => {
+  const addCrowdsale = num => {
     const newTier = Object.assign({}, defaultTier)
     const newTierValidations = Object.assign({}, defaultTierValidations)
 
@@ -48,7 +48,11 @@ describe('CrowdsaleBlock', () => {
 
     changeMock = { target: { value: '' } }
 
-    initialTierWrapper = mount(<Provider tierStore={tierStore}><CrowdsaleBlock num={0}/></Provider>)
+    initialTierWrapper = mount(
+      <Provider tierStore={tierStore}>
+        <CrowdsaleBlock num={0} />
+      </Provider>
+    )
   })
 
   it('Should render the component for the first Tier', () => {
@@ -57,7 +61,11 @@ describe('CrowdsaleBlock', () => {
 
   it('Should render the component for the second Tier', () => {
     addCrowdsale(1)
-    const wrapper = mount(<Provider tierStore={tierStore}><CrowdsaleBlock num={1}/></Provider>)
+    const wrapper = mount(
+      <Provider tierStore={tierStore}>
+        <CrowdsaleBlock num={1} />
+      </Provider>
+    )
 
     expect(toJson(wrapper)).toMatchSnapshot()
   })
@@ -65,46 +73,81 @@ describe('CrowdsaleBlock', () => {
   it('Should render the component for the second Tier with whitelist enabled', () => {
     addCrowdsale(1)
     tierStore.setTierProperty('yes', 'whitelistEnabled', 0)
-    const wrapper = mount(<Provider tierStore={tierStore}><CrowdsaleBlock num={1}/></Provider>)
+    const wrapper = mount(
+      <Provider tierStore={tierStore}>
+        <CrowdsaleBlock num={1} />
+      </Provider>
+    )
 
     expect(toJson(wrapper)).toMatchSnapshot()
   })
 
   it('Should set current time + 5 minutes in startTime (first tier)', () => {
     const expectedStartTime = moment(currentTime).add(5, 'minutes')
-    const startTimeValue = initialTierWrapper.find('input[type="datetime-local"]').at(0).props().value
+    const startTimeValue = initialTierWrapper
+      .find('input[type="datetime-local"]')
+      .at(0)
+      .props().value
 
     expect(expectedStartTime.isSame(startTimeValue)).toBeTruthy()
   })
 
   it('Should set endTime at the beginning of 4 days in the future of startTime (first tier)', () => {
-    const expectedEndTime = moment(currentTime).add(4, 'days').startOf('day')
-    const endTimeValue = initialTierWrapper.find('input[type="datetime-local"]').at(1).props().value
+    const expectedEndTime = moment(currentTime)
+      .add(4, 'days')
+      .startOf('day')
+    const endTimeValue = initialTierWrapper
+      .find('input[type="datetime-local"]')
+      .at(1)
+      .props().value
 
     expect(expectedEndTime.isSame(endTimeValue)).toBeTruthy()
   })
 
   it('Should set startTime at the same time as the end time of the previous tier (second tier)', () => {
     addCrowdsale(1)
-    const secondTierWrapper = mount(<Provider tierStore={tierStore}><CrowdsaleBlock num={1}/></Provider>)
-    const firstTierEndTimeValue = initialTierWrapper.find('input[type="datetime-local"]').at(1).props().value
-    const secondTierStartTimeValue = secondTierWrapper.find('input[type="datetime-local"]').at(0).props().value
+    const secondTierWrapper = mount(
+      <Provider tierStore={tierStore}>
+        <CrowdsaleBlock num={1} />
+      </Provider>
+    )
+    const firstTierEndTimeValue = initialTierWrapper
+      .find('input[type="datetime-local"]')
+      .at(1)
+      .props().value
+    const secondTierStartTimeValue = secondTierWrapper
+      .find('input[type="datetime-local"]')
+      .at(0)
+      .props().value
 
     expect(firstTierEndTimeValue).toBe(secondTierStartTimeValue)
   })
 
   it('Should give error if startTime of the second tier is previous to the endTime of the first tier', () => {
     addCrowdsale(1)
-    const secondTierWrapper = mount(<Provider tierStore={tierStore}><CrowdsaleBlock num={1}/></Provider>)
-    const firstTierEndTimeValue = initialTierWrapper.find('input[type="datetime-local"]').at(1).props().value
+    const secondTierWrapper = mount(
+      <Provider tierStore={tierStore}>
+        <CrowdsaleBlock num={1} />
+      </Provider>
+    )
+    const firstTierEndTimeValue = initialTierWrapper
+      .find('input[type="datetime-local"]')
+      .at(1)
+      .props().value
     const secondTierStartTime = secondTierWrapper.find('input[type="datetime-local"]').at(0)
 
-    changeMock.target.value = moment(firstTierEndTimeValue).subtract(1, 'days').toJSON()
+    changeMock.target.value = moment(firstTierEndTimeValue)
+      .subtract(1, 'days')
+      .toJSON()
     secondTierStartTime.simulate(INPUT_EVENT.CHANGE, changeMock)
 
     const secondTierStartTimeProps = secondTierWrapper.find('InputField[title="Start Time"]').props()
 
-    expect(moment(firstTierEndTimeValue).subtract(1, 'days').isSame(secondTierStartTimeProps.value)).toBeTruthy()
+    expect(
+      moment(firstTierEndTimeValue)
+        .subtract(1, 'days')
+        .isSame(secondTierStartTimeProps.value)
+    ).toBeTruthy()
     expect(secondTierStartTimeProps.valid).toBe(INVALID)
   })
 
@@ -142,6 +185,8 @@ describe('CrowdsaleBlock', () => {
     changeMock.target.value = 'The first Tier'
     tierName.simulate(INPUT_EVENT.CHANGE, changeMock)
 
-    expect(initialTierWrapper.find('InputField[title="Crowdsale setup name"]').props().value).toBe(changeMock.target.value)
+    expect(initialTierWrapper.find('InputField[title="Crowdsale setup name"]').props().value).toBe(
+      changeMock.target.value
+    )
   })
 })
