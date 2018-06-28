@@ -21,7 +21,14 @@ import {
   getUserMaxLimits,
   getUserMinLimits
 } from '../crowdsale/utils'
-import { countDecimalPlaces, getExecID, getAddr, getNetworkID, toast } from '../../utils/utils'
+import {
+  countDecimalPlaces,
+  getExecID,
+  getAddr,
+  getNetworkID,
+  toast,
+  truncateStringInTheMiddle
+} from '../../utils/utils'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import {
   contributionDisabledAlertInTime,
@@ -45,6 +52,8 @@ import moment from 'moment'
 import { BigNumber } from 'bignumber.js'
 import { Form } from 'react-final-form'
 import { ContributeForm } from './ContributeForm'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
+import ReactTooltip from 'react-tooltip'
 
 @inject(
   'contractStore',
@@ -479,6 +488,20 @@ export class Contribute extends React.Component {
       'qr-selected': contributeThrough === CONTRIBUTION_OPTIONS.QR
     })
 
+    const crowdsaleAddress = (crowdsale && crowdsale.execID) || (MintedCappedProxy && MintedCappedProxy.addr)
+    const crowdsaleAddressTruncated =
+      (crowdsale && truncateStringInTheMiddle(crowdsale.execID)) || (MintedCappedProxy && MintedCappedProxy.addr)
+    const crowdsaleAddressDescription = crowdsale
+      ? crowdsale.execID
+        ? 'Crowdsale Execution ID'
+        : 'Crowdsale Proxy Address'
+      : 'Crowdsale ID'
+    const crowdsaleAddressTooltip = crowdsale
+      ? crowdsale.execID
+        ? `Crowdsale execution ID to copy: ${crowdsaleAddress}`
+        : `Crowdsale proxy address to copy: ${crowdsaleAddress}`
+      : `Crowdsale ID ${crowdsaleAddress}`
+
     return (
       <div className="contribute container">
         <div className="contribute-table">
@@ -501,15 +524,12 @@ export class Contribute extends React.Component {
                 <p className="hashes-description">Current Account</p>
               </div>
               <div className="hashes-i">
-                <p className="hashes-title">
-                  {(crowdsale && crowdsale.execID) || (MintedCappedProxy && MintedCappedProxy.addr)}
-                </p>
-                <p className="hashes-description">
-                  {crowdsale
-                    ? crowdsale.execID
-                      ? 'Crowdsale Execution ID'
-                      : 'Crowdsale Proxy Address'
-                    : 'Crowdsale ID'}
+                <p className="hashes-title">{crowdsaleAddressTruncated}</p>
+                <p className="hashes-description_cp_address">
+                  {crowdsaleAddressDescription}
+                  <CopyToClipboard text={crowdsaleAddress}>
+                    <btn data-tip={crowdsaleAddressTooltip} className="copy" tool />
+                  </CopyToClipboard>
                 </p>
               </div>
               <div className="hashes-i">
@@ -557,6 +577,7 @@ export class Contribute extends React.Component {
             {QRPaymentProcessElement}
           </div>
         </div>
+        <ReactTooltip />
         <Loader show={this.state.loading} />
       </div>
     )

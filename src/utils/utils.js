@@ -170,3 +170,10 @@ export const acceptPositiveIntegerOnly = value => {
 export const removeTrailingNUL = ascii => ascii.replace(/\x00+/, '')
 
 export const dateToTimestamp = date => new Date(date).getTime()
+
+export const truncateStringInTheMiddle = (str, strLength = 50, strPositionStart = 24, strPositionEnd = 25) => {
+  if (typeof str === 'string' && str.length > strLength) {
+    return `${str.substr(0, strPositionStart)}...${str.substr(str.length - strPositionEnd, str.length)}`
+  }
+  return str
+}
