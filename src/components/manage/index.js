@@ -21,11 +21,11 @@ import {
   checkWeb3,
   isAddressValid
 } from '../../utils/blockchainHelpers'
-import { isExecIDValid, isNetworkIDValid, toast } from '../../utils/utils'
+import { isExecIDValid, isNetworkIDValid, toast, toBigNumber } from '../../utils/utils'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import { getFieldsToUpdate, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
-import { getTiersLength, toBigNumber } from '../crowdsale/utils'
+import { getTiersLength } from '../crowdsale/utils'
 import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import createDecorator from 'final-form-calculate'

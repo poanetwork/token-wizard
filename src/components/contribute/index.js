@@ -17,11 +17,10 @@ import {
   getCrowdsaleTargetDates,
   initializeAccumulativeData,
   isFinalized,
-  toBigNumber,
   getUserMaxLimits,
   getUserMinLimits
 } from '../crowdsale/utils'
-import { countDecimalPlaces, getExecID, getAddr, getNetworkID, toast } from '../../utils/utils'
+import { countDecimalPlaces, getExecID, getAddr, getNetworkID, toast, toBigNumber } from '../../utils/utils'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import {
   contributionDisabledAlertInTime,

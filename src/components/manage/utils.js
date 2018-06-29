@@ -9,8 +9,7 @@ import {
   reservedTokenStore
 } from '../../stores'
 import { VALIDATION_TYPES } from '../../utils/constants'
-import { removeTrailingNUL, toFixed } from '../../utils/utils'
-import { toBigNumber } from '../crowdsale/utils'
+import { removeTrailingNUL, toBigNumber, toFixed } from '../../utils/utils'
 import moment from 'moment'
 
 const { VALID } = VALIDATION_TYPES

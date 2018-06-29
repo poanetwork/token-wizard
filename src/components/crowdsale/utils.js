@@ -2,29 +2,8 @@ import { noContractAlert } from '../../utils/alerts'
 import { attachToSpecificCrowdsaleContract } from '../../utils/blockchainHelpers'
 import { contractStore, crowdsalePageStore, tokenStore, web3Store, crowdsaleStore } from '../../stores'
 import { toJS } from 'mobx'
+import { removeTrailingNUL, toBigNumber } from '../../utils/utils'
 import { BigNumber } from 'bignumber.js'
-import { removeTrailingNUL } from '../../utils/utils'
-
-BigNumber.config({ DECIMAL_PLACES: 18 })
-
-/**
- * Converts the value passed to a BigNumber instance
- * @param {*} value - A number representation
- * @param {boolean} [force=true] - If set to false will return 'undefined' when value is not a number or a string
- * representation of a number.
- * @returns {BigNumber|undefined}
- */
-export const toBigNumber = (value, force = true) => {
-  if (isNaN(value) || value === '' || value === null) {
-    if (force) {
-      return new BigNumber(0)
-    } else {
-      return undefined
-    }
-  } else {
-    return new BigNumber(value)
-  }
-}
 
 export let getTokenData = async (initCrowdsaleContract, execID, account) => {
   if (!initCrowdsaleContract) {
