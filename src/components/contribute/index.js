@@ -479,9 +479,11 @@ export class Contribute extends React.Component {
       'qr-selected': contributeThrough === CONTRIBUTION_OPTIONS.QR
     })
 
-    const crowdsaleAddress = (crowdsale && crowdsale.execID) || (contractStore[proxyName] && contractStore[proxyName].addr)
+    const crowdsaleAddress =
+      (crowdsale && crowdsale.execID) || (contractStore[proxyName] && contractStore[proxyName].addr)
     const crowdsaleAddressTruncated =
-      (crowdsale && truncateStringInTheMiddle(crowdsale.execID)) || (contractStore[proxyName] && contractStore[proxyName].addr)
+      (crowdsale && truncateStringInTheMiddle(crowdsale.execID)) ||
+      (contractStore[proxyName] && contractStore[proxyName].addr)
     const crowdsaleAddressDescription = crowdsale
       ? crowdsale.execID
         ? 'Crowdsale Execution ID'
