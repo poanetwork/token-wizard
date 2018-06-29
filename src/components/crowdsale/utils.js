@@ -360,17 +360,11 @@ const getRate = async (addr, execID, methods) => {
 
 const calculateMinContribution = async (method, decimals, naturalMinCap, isWhitelisted) => {
   //todo: update for Proxy
-  const {
-    tier_min,
-    minimum_contribution,
-    minimum_purchase_amt,
-    max_tokens_remaining,
-    max_purchase_remaining
-  } = await method.call()
+  const { tier_min, minimum_contribution, minimum_purchase_amt, max_tokens_remaining } = await method.call()
   const minimumContribution = toBigNumber(tier_min || minimum_contribution).times(`1e-${decimals}`) //global min cap
   const minimumPurchaseAmt = toBigNumber(minimum_purchase_amt).times(`1e-${decimals}`) //whitelist min cap
   //todo:
-  const maximumContribution = toBigNumber(max_tokens_remaining || max_purchase_remaining).times(`1e-${decimals}`)
+  const maximumContribution = toBigNumber(max_tokens_remaining).times(`1e-${decimals}`)
   if ((isWhitelisted && maximumContribution.eq(0)) || !isFinite(naturalMinCap)) {
     return -1
   }

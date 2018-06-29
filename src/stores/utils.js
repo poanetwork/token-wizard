@@ -1891,7 +1891,7 @@ async function getCrowdsaleAsset(contractName, stateProp, networkID) {
           name: 'getWhitelistStatus',
           outputs: [
             { name: 'minimum_purchase_amt', type: 'uint256' },
-            { name: 'max_purchase_remaining', type: 'uint256' }
+            { name: 'max_tokens_remaining', type: 'uint256' }
           ],
           payable: false,
           stateMutability: 'view',
