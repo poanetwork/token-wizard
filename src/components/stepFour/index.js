@@ -304,29 +304,25 @@ export class stepFour extends React.Component {
             <div className="hidden">
               <DisplayField
                 side='left'
-                title={'Wallet address'}
-                value={tierStore.tiers[0].walletAddress}
-                description="Where the money goes after investors transactions."
-              />
-              <DisplayField
-                side='right'
                 title={'RATE'}
                 value={tier.rate ? tier.rate : 0 + ' ETH'}
                 description={DESCRIPTION.RATE}
               />
+              <DisplayField
+                side='right'
+                title={'Max cap'}
+                value={tier.supply ? tier.supply : ''}
+                description="How many tokens will be sold on this tier."
+              />
             </div>
-            <DisplayField
-              side='left'
-              title={'Max cap'}
-              value={tier.supply ? tier.supply : ''}
-              description="How many tokens will be sold on this tier."
-            />
-            <DisplayField
-              side='right'
-              title={'Allow modifying'}
-              value={tier.updatable ? tier.updatable : 'off'}
-              description={DESCRIPTION.ALLOW_MODIFYING}
-            />
+            <div className="hidden">
+              <DisplayField
+                side='left'
+                title={'Allow modifying'}
+                value={tier.updatable ? tier.updatable : 'off'}
+                description={DESCRIPTION.ALLOW_MODIFYING}
+              />
+            </div>
           </div>
         </div>
       )
@@ -450,12 +446,25 @@ export class stepFour extends React.Component {
             </p>
           </div>
           <div className="hidden">
-            <div className="item">
-              <div className="publish-title-container">
-                <p className="publish-title" data-step="1">Crowdsale Contract</p>
+            <div className="publish-title-container">
+              <p className="publish-title" data-step="1">Crowdsale Contract</p>
+            </div>
+            <div className="hidden">
+              <div className="hidden">
+                <div className="left">
+                  <div className="display-container">
+                    <p className="label">Whitelist with cap</p>
+                    <p className="description">Crowdsale Contract</p>
+                  </div>
+                </div>
+
+                <DisplayField
+                  side='right'
+                  title={'Wallet address'}
+                  value={tierStore.tiers[0].walletAddress}
+                  description="Where the money goes after investors transactions."
+                />
               </div>
-              <p className="label">Whitelist with cap</p>
-              <p className="description">Crowdsale Contract</p>
             </div>
             <div className="publish-title-container">
               <p className="publish-title" data-step="2">Token Setup</p>
