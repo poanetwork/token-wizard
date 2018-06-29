@@ -9,6 +9,9 @@ import { CHAINS, MAX_GAS_PRICE, CROWDSALE_STRATEGIES, EXCEPTIONS, REACT_PREFIX }
 import { crowdsaleStore, generalStore, web3Store, contractStore } from '../stores'
 import { toJS } from 'mobx'
 import { removeTrailingNUL } from './utils'
+import logdown from 'logdown'
+
+const logger = logdown('TW:blockchainHelpers')
 
 const DEPLOY_CONTRACT = 1
 const CALL_METHOD = 2
@@ -30,7 +33,7 @@ export function checkWeb3() {
 
 const checkMetaMask = () => {
   const { web3 } = web3Store
-  console.log(web3.currentProvider)
+  logger.log(web3.currentProvider)
 
   if (!web3.currentProvider) {
     return noMetaMaskAlert()
@@ -49,7 +52,7 @@ const checkMetaMask = () => {
 }
 
 export function checkNetWorkByID(_networkIdFromGET) {
-  console.log(_networkIdFromGET)
+  logger.log(_networkIdFromGET)
 
   if (!_networkIdFromGET) return null
 
@@ -62,7 +65,7 @@ export function checkNetWorkByID(_networkIdFromGET) {
     networkNameFromNetwork = networkNameFromNetwork ? networkNameFromNetwork : CHAINS.UNKNOWN
 
     if (networkNameFromGET !== networkNameFromNetwork) {
-      console.log(networkNameFromGET + '!=' + networkNameFromNetwork)
+      logger.log(networkNameFromGET + '!=' + networkNameFromNetwork)
       return incorrectNetworkAlert(networkNameFromGET, networkNameFromNetwork)
     }
 
@@ -107,16 +110,16 @@ export function getNetworkVersion() {
 export function setExistingContractParams(abi, addr, setContractProperty) {
   attachToContract(abi, addr).then(crowdsaleContract => {
     crowdsaleContract.token.call(function(err, tokenAddr) {
-      if (err) return console.error(err)
+      if (err) return logger.error(err)
 
-      console.log('tokenAddr:', tokenAddr)
+      logger.log('tokenAddr:', tokenAddr)
       setContractProperty('token', 'addr', tokenAddr)
     })
 
     crowdsaleContract.multisigWallet.call(function(err, multisigWalletAddr) {
-      if (err) return console.error(err)
+      if (err) return logger.error(err)
 
-      console.log('multisigWalletAddr:', multisigWalletAddr)
+      logger.log('multisigWalletAddr:', multisigWalletAddr)
       setContractProperty('multisig', 'addr', multisigWalletAddr)
     })
   })
@@ -139,9 +142,9 @@ const deployContractInner = (accounts, abi, deployOpts) => {
 
   return deploy
     .estimateGas({ gas: MAX_GAS_PRICE })
-    .then(estimatedGas => estimatedGas, err => console.log('errrrrrrrrrrrrrrrrr', err))
+    .then(estimatedGas => estimatedGas, err => logger.error('estimate gas error', err))
     .then(estimatedGas => {
-      console.log('gas is estimated', estimatedGas)
+      logger.log('gas is estimated', estimatedGas)
       const sendOpts = {
         from: accounts[0],
         gasPrice: generalStore.gasPrice,
@@ -163,7 +166,7 @@ let sendTX = (method, type) => {
     method
       .on('error', error => {
         if (isMined) return
-        console.error(error)
+        logger.error(error)
         // https://github.com/poanetwork/token-wizard/issues/472
         if (
           !error.message.includes('Failed to check for transaction receipt') &&
@@ -193,7 +196,7 @@ let sendTX = (method, type) => {
 
           if (receipt) {
             if (receipt.blockNumber) {
-              console.log(`${typeDisplayName} ${txHash} is mined from polling of tx receipt`)
+              logger.log(`${typeDisplayName} ${txHash} is mined from polling of tx receipt`)
               isMined = true
               sendTXResponse(receipt, type)
                 .then(resolve)
@@ -206,7 +209,7 @@ let sendTX = (method, type) => {
           }
 
           function repeatPolling() {
-            console.log(`${typeDisplayName} ${txHash} is still pending. Polling of transaction once more`)
+            logger.log(`${typeDisplayName} ${txHash} is still pending. Polling of transaction once more`)
             setTimeout(() => checkTxMined(txHash, pollingReceiptCheck), 5000)
           }
         })
@@ -216,7 +219,7 @@ let sendTX = (method, type) => {
 
         const typeDisplayName = getTypeOfTxDisplayName(type)
 
-        console.log(`${typeDisplayName} ${txHash} is mined from Promise`)
+        logger.log(`${typeDisplayName} ${txHash} is mined from Promise`)
         isMined = true
 
         sendTXResponse(receipt, type)
@@ -228,7 +231,7 @@ let sendTX = (method, type) => {
 
 let checkEventTopics = obj => {
   const topics = obj.topics || obj.raw.topics
-  console.log('topics:', topics)
+  logger.log('topics:', topics)
   const { web3 } = web3Store
   if (topics.length > 0) {
     const eventEncoded = topics[0]
@@ -241,10 +244,10 @@ let checkEventTopics = obj => {
 }
 
 const sendTXResponse = (receipt, type) => {
-  console.log('receipt:')
-  console.log(receipt)
-  console.log('receipt.status:')
-  console.log(receipt.status)
+  logger.log('receipt:')
+  logger.log(receipt)
+  logger.log('receipt.status:')
+  logger.log(receipt.status)
   if (0 !== +receipt.status || null === receipt.status) {
     const logs = receipt.logs
     const events = receipt.events
@@ -255,7 +258,7 @@ const sendTXResponse = (receipt, type) => {
       })
     }
     const ev_logs = logs || eventsArr
-    console.log('ev_logs:', ev_logs)
+    logger.log('ev_logs:', ev_logs)
     if (ev_logs.some(checkEventTopics)) {
       return Promise.reject({ message: 0 })
     } else {
@@ -270,7 +273,7 @@ export const checkTxMined = (txHash, _pollingReceiptCheck) => {
   const { web3 } = web3Store
 
   web3.eth.getTransactionReceipt(txHash, (err, receipt) => {
-    if (receipt) console.log(receipt)
+    if (receipt) logger.log(receipt)
     _pollingReceiptCheck(err, receipt)
   })
 }
@@ -302,13 +305,13 @@ export function attachToContract(abi, addr) {
 const getApplicationInstance = async (app_instances, appName, appNameHash, i) => {
   try {
     const execID = await app_instances(appNameHash, i).call()
-    console.log('app_instance:', execID)
+    logger.log('app_instance:', execID)
     return {
       appName,
       execID
     }
   } catch (err) {
-    console.error(err)
+    logger.error(err)
     return null
   }
 }
@@ -323,7 +326,7 @@ async function getAllApplicationsInstances() {
   } = process.env
 
   const registryExecContract = await whenRegistryExecContract
-  console.log('registryExecContract:', registryExecContract)
+  logger.log('registryExecContract:', registryExecContract)
   const { getInstances, app_instances } = registryExecContract.methods
 
   const whenCrowdsales = []
@@ -393,10 +396,10 @@ const getApplicationsInstance = async execID => {
       targetContract = 'DutchProxy'
     }
   }
-  console.log('targetContract:', targetContract)
+  logger.log('targetContract:', targetContract)
 
   const { methods } = await attachToSpecificCrowdsaleContract(targetContract)
-  console.log('methods:', methods)
+  logger.log('methods:', methods)
   if (execID) {
     return await methods.instance_info(execID).call()
   } else {
@@ -420,14 +423,14 @@ export const getCrowdsaleStrategy = async execID => {
       return Promise.reject('no strategy defined')
     }
   } catch (err) {
-    console.error(err)
+    logger.error(err)
     return null
   }
 }
 
 export async function loadRegistryAddresses() {
   const crowdsales = await getOwnerApplicationsInstances()
-  console.log(crowdsales)
+  logger.log(crowdsales)
   crowdsaleStore.setCrowdsales(crowdsales)
 }
 
@@ -463,7 +466,7 @@ export const attachToSpecificCrowdsaleContract = async contractName => {
       return Promise.reject('no contract')
     }
 
-    console.log(`attach to ${contractName} contract`)
+    logger.log(`attach to ${contractName} contract`)
     return contractInstance
   } catch (err) {
     return Promise.reject(err)
@@ -494,23 +497,23 @@ export const getExecBuyCallData = execID => {
 export let methodToExec = (contractName, methodName, getEncodedParams, params) => {
   const { web3 } = web3Store
   const methodParams = getEncodedParams(...params)
-  console.log('methodParams:', methodParams)
+  logger.log('methodParams:', methodParams)
 
   let methodSignature = web3.eth.abi.encodeFunctionSignature(methodName)
-  console.log(`methodSignature ${methodName}:`, methodSignature)
+  logger.log(`methodSignature \`${methodName}\`: \`${methodSignature}\``)
 
   //let encodedParameters = web3.eth.abi.encodeParameters(["bytes"], [methodParams]);
   //let fullData = methodSignature + encodedParameters.substr(2);
 
   let fullData = methodSignature + methodParams.substr(2)
-  console.log('full calldata:', fullData)
+  logger.log('full calldata:', fullData)
 
   const abiContract = contractStore[contractName].abi || []
-  console.log('abiContract:', abiContract)
+  logger.log('abiContract:', abiContract)
   const addrContract = contractStore[contractName].addr || {}
-  console.log('addrContract:', addrContract)
+  logger.log('addrContract:', addrContract)
   const contract = new web3.eth.Contract(toJS(abiContract), addrContract)
-  console.log(contract)
+  logger.info(contract)
 
   const { execID } = contractStore.crowdsale
   let paramsToExec = []
@@ -520,30 +523,30 @@ export let methodToExec = (contractName, methodName, getEncodedParams, params) =
     paramsToExec.push(execID, fullData)
   }
 
-  console.log('paramsToExec: ', paramsToExec)
+  logger.log('paramsToExec: ', paramsToExec)
 
   const method = contract.methods.exec(...paramsToExec)
-  console.log('method:', method)
+  logger.log('method:', method)
 
   return method
 }
 
 export let methodToCreateAppInstance = (contractName, methodName, getEncodedParams, rawParams, appName) => {
   const { web3 } = web3Store
-  console.log('rawParams:', rawParams)
+  logger.log('rawParams:', rawParams)
   const abi = contractStore[contractName].abi || []
-  console.log('abi:', abi)
+  logger.log('abi:', abi)
   const addr = contractStore[contractName].addr || {}
-  console.log('addr:', addr)
+  logger.log('addr:', addr)
   const targetContract = new web3.eth.Contract(toJS(abi), addr)
-  console.log(targetContract)
+  logger.log(targetContract)
 
   let appNameBytes = web3.utils.fromAscii(appName)
   let encodedAppName = web3.eth.abi.encodeParameter('bytes32', appNameBytes)
 
   const { params, paramsEncoded } = getEncodedParams(...rawParams)
-  console.log('params:', params)
-  console.log('paramsEncoded:', paramsEncoded)
+  logger.log('params:', params)
+  logger.log('paramsEncoded:', paramsEncoded)
   let paramsToInit
   const { methods } = targetContract
   let targetMethodName
@@ -552,18 +555,18 @@ export let methodToCreateAppInstance = (contractName, methodName, getEncodedPara
     paramsToInit = params
   } else if (contractName === 'registryExec') {
     let methodSignature = web3.eth.abi.encodeFunctionSignature(methodName)
-    console.log(`methodSignature ${methodName}:`, methodSignature)
+    logger.log(`methodSignature \`${methodName}\`: \`${methodSignature}\``)
     let fullData = methodSignature + paramsEncoded.substr(2)
-    console.log('full calldata:', fullData)
+    logger.log('full calldata:', fullData)
 
     targetMethodName = 'createAppInstance'
     paramsToInit = [encodedAppName, fullData]
   }
-  console.log('paramsToInit: ', paramsToInit)
-  console.log('targetMethodName:', targetMethodName)
+  logger.log('paramsToInit: ', paramsToInit)
+  logger.log('targetMethodName:', targetMethodName)
 
   const method = methods[targetMethodName](...paramsToInit)
-  console.log('method:', method)
+  logger.log('method:', method)
 
   return method
 }
@@ -640,12 +643,12 @@ export async function getAllCrowdsaleAddresses() {
     instances[ind].crowdsaleTierList = crowdsaleTierList[ind]
   })
 
-  console.log('instances:', instances)
+  logger.log('instances:', instances)
 
   return Promise.all(instances)
 }
 
 export const isAddressValid = addr => {
-  console.log('addr:', addr)
+  logger.log('addr:', addr)
   return web3Store && web3Store.web3 && web3Store.web3.utils.isAddress(addr)
 }

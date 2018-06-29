@@ -22,6 +22,9 @@ import { Loader } from '../Common/Loader'
 import { CrowdsaleConfig } from '../Common/config'
 import { inject, observer } from 'mobx-react'
 import { invalidCrowdsaleExecIDAlert, invalidCrowdsaleAddrAlert, invalidNetworkIDAlert } from '../../utils/alerts'
+import logdown from 'logdown'
+
+const logger = logdown('TW:crowdsale')
 
 const { CROWDSALE_PAGE } = NAVIGATION_STEPS
 
@@ -37,7 +40,7 @@ export class Crowdsale extends React.Component {
     this.validateEnvironment()
       .then(() => this.getCrowdsale())
       .then(() => this.extractContractsData())
-      .catch(err => console.error(err))
+      .catch(err => logger.error(err))
       .then(() => this.setState({ loading: false }))
   }
 
@@ -95,7 +98,7 @@ export class Crowdsale extends React.Component {
       const targetPrefix = 'idx'
       const targetSuffix = crowdsaleStore.contractTargetSuffix
       target = `${targetPrefix}${targetSuffix}`
-      console.log('target:', target)
+      logger.log('target:', target)
     } else if (contractStore.MintedCappedProxy.addr) {
       target = 'MintedCappedProxy'
     } else if (contractStore.DutchProxy.addr) {

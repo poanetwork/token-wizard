@@ -4,6 +4,9 @@ import { contractStore, crowdsalePageStore, tokenStore, web3Store, crowdsaleStor
 import { toJS } from 'mobx'
 import { BigNumber } from 'bignumber.js'
 import { removeTrailingNUL } from '../../utils/utils'
+import logdown from 'logdown'
+
+const logger = logdown('TW:crowdsale:utils')
 
 BigNumber.config({ DECIMAL_PLACES: 18 })
 
@@ -39,9 +42,9 @@ export let getTokenData = async (initCrowdsaleContract, execID, account) => {
     tokenStore.setProperty('name', token_name)
     tokenStore.setProperty('ticker', token_ticker)
     tokenStore.setProperty('decimals', token_decimals)
-    console.log('token name:', token_name)
-    console.log('token ticker:', token_ticker)
-    console.log('token decimals: ' + token_decimals)
+    logger.log('token name:', token_name)
+    logger.log('token ticker:', token_ticker)
+    logger.log('token decimals: ' + token_decimals)
 
     if (crowdsaleStore.isMintedCappedCrowdsale) {
       token_total_supply = toBigNumber(token_total_supply)
@@ -50,7 +53,7 @@ export let getTokenData = async (initCrowdsaleContract, execID, account) => {
     }
 
     tokenStore.setProperty('supply', token_total_supply)
-    console.log('token supply:', token_total_supply)
+    logger.log('token supply:', token_total_supply)
 
     const tokenAmountOf = crowdsalePageStore.tokenAmountOf || 0
 
@@ -60,8 +63,8 @@ export let getTokenData = async (initCrowdsaleContract, execID, account) => {
         .plus(token_balance)
         .toFixed()
     )
-    console.log('balanceOf:', token_balance)
-    console.log('tokenAmountOf:', tokenAmountOf)
+    logger.log('balanceOf:', token_balance)
+    logger.log('tokenAmountOf:', tokenAmountOf)
   } catch (err) {
     return Promise.reject(err)
   }
@@ -113,7 +116,7 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
     try {
       tokensSold = await getTokensSold(...params).call()
     } catch (e) {
-      console.log('e:', '###getTokensSold is not supported in Auth-os###')
+      logger.log('e:', '###getTokensSold is not supported in Auth-os###')
     }
     const contributors = await getCrowdsaleUniqueBuyers(...params).call()
     const { fromWei } = web3Store.web3.utils
@@ -151,14 +154,14 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
             .multipliedBy(curRateBN)
             .integerValue(BigNumber.ROUND_CEIL)
         : 0
-      console.log('remainingWEI:', remainingWEI.toFixed())
+      logger.log('remainingWEI:', remainingWEI.toFixed())
 
       const maximumSellableTokensInWei = toBigNumber(wei_raised)
         .plus(remainingWEI)
         .toFixed()
       const maximumSellableTokensInETH = fromWei(maximumSellableTokensInWei, 'ether')
-      console.log('maximumSellableTokensInETH:', maximumSellableTokensInETH)
-      console.log('maximumSellableTokensInWei:', maximumSellableTokensInWei)
+      logger.log('maximumSellableTokensInETH:', maximumSellableTokensInETH)
+      logger.log('maximumSellableTokensInWei:', maximumSellableTokensInWei)
 
       crowdsalePageStore.setProperty('maximumSellableTokensInWei', maximumSellableTokensInWei)
     }
@@ -179,7 +182,7 @@ export let getCrowdsaleTargetDates = (initCrowdsaleContract, execID) => {
       reject('no contract')
     }
 
-    console.log(initCrowdsaleContract)
+    logger.log(initCrowdsaleContract)
 
     const registryStorageObj = toJS(contractStore.abstractStorage)
     const { addr } = registryStorageObj
@@ -193,7 +196,7 @@ export let getCrowdsaleTargetDates = (initCrowdsaleContract, execID) => {
     if (crowdsaleStore.isMintedCappedCrowdsale) {
       return getTiersLength()
         .then(tiersLength => {
-          console.log('tiersLength:', tiersLength)
+          logger.log('tiersLength:', tiersLength)
           let getTiersStartAndEndDates = []
           for (let ind = 0; ind < tiersLength; ind++) {
             let getTierStartAndEndDates = methods.getTierStartAndEndDates(...params, ind).call()
@@ -203,7 +206,7 @@ export let getCrowdsaleTargetDates = (initCrowdsaleContract, execID) => {
           return Promise.all(getTiersStartAndEndDates)
         })
         .then(tiersStartAndEndDates => {
-          console.log('tiersStartAndEndDates:', tiersStartAndEndDates)
+          logger.log('tiersStartAndEndDates:', tiersStartAndEndDates)
           let crowdsaleStartDate = 0
           let crowdsaleEndDate = 0
           tiersStartAndEndDates.forEach(tierStartAndEndDates => {
@@ -257,11 +260,11 @@ let setTierDates = (startTime, endTime) => {
 let fillCrowdsalePageStoreDates = (startsAtMilliseconds, endsAtMilliseconds) => {
   if (!crowdsalePageStore.startDate || crowdsalePageStore.startDate > startsAtMilliseconds)
     crowdsalePageStore.startDate = startsAtMilliseconds
-  console.log('startDate:' + startsAtMilliseconds)
+  logger.log('startDate:' + startsAtMilliseconds)
 
   if (!crowdsalePageStore.endDate || crowdsalePageStore.endDate < endsAtMilliseconds)
     crowdsalePageStore.setProperty('endDate', endsAtMilliseconds)
-  console.log('endDate:', endsAtMilliseconds)
+  logger.log('endDate:', endsAtMilliseconds)
 }
 
 export const isFinalized = async ({ methods }, crowdsaleExecID) => {

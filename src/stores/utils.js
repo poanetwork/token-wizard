@@ -1,6 +1,9 @@
 import { contractStore } from './index'
 import { REACT_PREFIX } from '../utils/constants'
 import { setFlatFileContentToState } from '../utils/utils'
+import logdown from 'logdown'
+
+const logger = logdown('TW:stores:utils')
 
 export const getCrowdsaleAssets = async networkID => {
   const whenProxy = getCrowdsaleAsset(null, 'MintedCappedProxy', networkID)
@@ -43,7 +46,7 @@ export const getCrowdsaleAssets = async networkID => {
 }
 
 async function getCrowdsaleAsset(contractName, stateProp, networkID) {
-  console.log(contractName, stateProp, networkID)
+  logger.log(contractName, stateProp, networkID)
   const whenSrc =
     stateProp === 'MintedCappedProxy' ? setFlatFileContentToState(`./contracts/${stateProp}.sol`) : Promise.resolve()
   const whenBin =
@@ -1226,7 +1229,7 @@ async function getCrowdsaleAsset(contractName, stateProp, networkID) {
   }
   const addr = contractName ? JSON.parse(process.env[`${REACT_PREFIX}${contractName}_ADDRESS`] || {})[networkID] : null
 
-  console.log(abi, addr)
+  logger.log(abi, addr)
 
   const [src, bin] = await Promise.all([whenSrc, whenBin])
   addContractsToState(src, bin, abi, addr, stateProp)

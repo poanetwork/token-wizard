@@ -1,6 +1,9 @@
 import { TOAST } from './constants'
 import queryString from 'query-string'
 import { CrowdsaleConfig } from '../components/Common/config'
+import logdown from 'logdown'
+
+const logger = logdown('TW:utils:utils')
 
 export function getQueryVariable(variable) {
   return queryString.parse(window.location.search)[variable]
@@ -16,7 +19,7 @@ export const getExecID = () => {
 //todo: check address input
 export const getAddr = () => {
   const addr = getQueryVariable('addr')
-  console.log('getAddr:', addr)
+  logger.log('getAddr:', addr)
   return addr
 }
 export const isNetworkIDValid = networkID => /^[0-9]+$/.test(networkID)
@@ -51,8 +54,8 @@ export const findConstructor = abi => {
 
   abi.forEach(abiObj => {
     if (abiObj.type === 'constructor') {
-      console.log(abiObj)
-      console.log(abiObj.inputs)
+      logger.log(abiObj)
+      logger.log(abiObj.inputs)
       abiConstructor = abiObj.inputs
     }
   })

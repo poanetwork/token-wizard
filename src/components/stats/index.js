@@ -4,6 +4,9 @@ import { getCurrentAccount, getAllCrowdsaleAddresses, getNetworkVersion } from '
 import { getCrowdsaleAssets } from '../../stores/utils'
 import { Loader } from '../Common/Loader'
 import { BigNumber } from 'bignumber.js'
+import logdown from 'logdown'
+
+const logger = logdown('TW:stats')
 
 @inject('web3Store', 'statsStore')
 @observer
@@ -20,7 +23,7 @@ export class Stats extends Component {
     const { web3Store, statsStore } = props
     const { web3 } = web3Store
     const networkID = await getNetworkVersion()
-    console.log('networkID:', networkID)
+    logger.log('networkID:', networkID)
     getCrowdsaleAssets(networkID)
       .then(getCurrentAccount)
       .then(getAllCrowdsaleAddresses)
@@ -116,7 +119,7 @@ export class Stats extends Component {
             ? Math.round(((dutchAuctionFinalizedCrowdsales.length * 100) / dutchAuctionPastCrowdsales) * 100) / 100
             : 0
 
-        console.log('crowdsaleInstances:', crowdsaleInstances)
+        logger.log('crowdsaleInstances:', crowdsaleInstances)
 
         statsStore.setProperty('totalEthRaised', totalEthRaised)
         statsStore.setProperty('maxEthRaised', maxEthRaised)
