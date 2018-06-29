@@ -214,7 +214,7 @@ export class Crowdsale extends React.Component {
           <div className="total-funds">
             <div className="hidden">
               <div className="left">
-                <p className="total-funds-title">{`${ethRaised}`} ETH</p>
+                <p className="total-funds-title">{`${ethRaised.toFixed()}`} ETH</p>
                 <p className="total-funds-description">Total Raised Funds</p>
               </div>
               <div className="right">
