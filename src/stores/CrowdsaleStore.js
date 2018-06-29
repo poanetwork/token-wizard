@@ -25,6 +25,16 @@ class CrowdsaleStore {
   }
 
   @computed
+  get proxyName() {
+    if (this.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE) {
+      return 'MintedCappedProxy'
+    } else if (this.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION) {
+      return 'DutchProxy'
+    }
+    return ''
+  }
+
+  @computed
   get crowdsaleDeployInterface() {
     const mintedCappedCrowdsaleDeployInterface = [
       'address',

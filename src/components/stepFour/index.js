@@ -15,7 +15,6 @@ import {
   DESCRIPTION,
   NAVIGATION_STEPS,
   TOAST,
-  CROWDSALE_STRATEGIES,
   CROWDSALE_STRATEGIES_DISPLAYNAMES,
   TEXT_FIELDS,
   PUBLISH_DESCRIPTION
@@ -240,7 +239,7 @@ export class stepFour extends React.Component {
 
         zip.file(`${name}_data.txt`, commonHeader.join('\n'))
 
-        if (crowdsaleStore.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE) {
+        if (crowdsaleStore.isMintedCappedCrowdsale) {
           for (let tier = 0; tier < tiersCount; tier++) {
             const txtFilename = `${orderNumber(prefix++)}_tier`
             const tierNumber = tier
@@ -265,9 +264,9 @@ export class stepFour extends React.Component {
   }
 
   goToCrowdsalePage = () => {
-    const { contractStore } = this.props
-    const crowdsalePointer = contractStore.MintedCappedProxy.addr || contractStore.crowdsale.execID
-    const queryPointerParam = contractStore.MintedCappedProxy.addr
+    const { contractStore, crowdsaleStore } = this.props
+    const crowdsalePointer = contractStore[crowdsaleStore.proxyName].addr || contractStore.crowdsale.execID
+    const queryPointerParam = contractStore[crowdsaleStore.proxyName].addr
       ? 'addr'
       : contractStore.crowdsale.execID
         ? 'exec-id'
