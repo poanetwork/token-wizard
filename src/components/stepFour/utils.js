@@ -7,8 +7,7 @@ import {
   methodToCreateAppInstance,
   deployContract
 } from '../../utils/blockchainHelpers'
-//import { noContractAlert } from '../../utils/alerts'
-import { countDecimalPlaces, toFixed } from '../../utils/utils'
+import { countDecimalPlaces, toBigNumber, toFixed } from '../../utils/utils'
 import { CROWDSALE_STRATEGIES } from '../../utils/constants'
 import { DOWNLOAD_NAME, MINTED_PREFIX, DUTCH_PREFIX, ADDR_BOX_LEN } from './constants'
 import { REACT_PREFIX } from '../../utils/constants'
@@ -23,8 +22,6 @@ import {
   tokenStore,
   web3Store
 } from '../../stores'
-import { BigNumber } from 'bignumber.js'
-import { toBigNumber } from '../crowdsale/utils'
 import logdown from 'logdown'
 
 const logger = logdown('TW:stepFour:utils')
@@ -65,25 +62,25 @@ export const buildDeploymentSteps = web3 => {
 
 const getProxyParams = token => {
   return [
-    '0x9996020c8864964688411b3d90ac27eb5b0937c7',
-    '0x3ad8aa4f87544323a9d1e5dd902f40c356527a7955687113db5f9a85ad579dc1',
+    contractStore.abstractStorage.addr,
+    process.env['REACT_APP_REGISTRY_EXEC_ID'],
     '0xd6ebdab4b8c4123f8445efe724f779fff097cd51',
-    '0x4d696e74656443617070656443726f776473616c650000000000000000000000'
+    process.env['REACT_APP_MINTED_CAPPED_APP_NAME_HASH']
   ]
 }
 
 export const deployProxy = () => {
+  //todo: Dutch proxy
   return [
     () => {
-      const binMintedCappedProxy = contractStore.MintedCappedProxy.bin || ''
-      const abiMintedCappedProxy = contractStore.MintedCappedProxy.abi || []
-      const paramsMintedCappedProxy = getProxyParams()
+      const binProxy = contractStore[crowdsaleStore.proxyName].bin || ''
+      const abiProxy = contractStore[crowdsaleStore.proxyName].abi || []
+      const paramsProxy = getProxyParams()
 
       logger.log('***Deploy Proxy contract***')
 
-      return deployContract(abiMintedCappedProxy, binMintedCappedProxy, paramsMintedCappedProxy).then(proxyAddr => {
-        logger.log('contractStore:', contractStore)
-        contractStore.setContractProperty('MintedCappedProxy', 'addr', proxyAddr.toLowerCase())
+      return deployContract(abiProxy, binProxy, paramsProxy).then(proxyAddr => {
+        contractStore.setContractProperty(crowdsaleStore.proxyName, 'addr', proxyAddr.toLowerCase())
 
         deploymentStore.setAsSuccessful('deployProxy')
         return Promise.resolve()
@@ -96,11 +93,10 @@ const getCrowdSaleParams = (account, methodInterface) => {
   const { web3 } = web3Store
   const { walletAddress, whitelistEnabled, updatable, supply, tier, startTime, endTime, rate } = tierStore.tiers[0]
 
-  BigNumber.config({ DECIMAL_PLACES: 18 })
   logger.log(tierStore.tiers[0])
 
   //tier 0 oneTokenInWEI
-  const rateBN = new BigNumber(rate)
+  const rateBN = toBigNumber(rate)
   const oneTokenInETH = rateBN.pow(-1).toFixed()
   const oneTokenInWEI = web3.utils.toWei(oneTokenInETH, 'ether')
 
@@ -152,16 +148,15 @@ const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
   const { web3 } = web3Store
   const { walletAddress, supply, startTime, endTime, minRate, maxRate, whitelistEnabled } = tierStore.tiers[0]
 
-  BigNumber.config({ DECIMAL_PLACES: 18 })
   logger.log(tierStore.tiers[0])
 
   //Dutch Auction crowdsale minOneTokenInWEI
-  const minRateBN = new BigNumber(minRate)
+  const minRateBN = toBigNumber(minRate)
   const minOneTokenInETH = minRateBN.pow(-1).toFixed()
   const minOneTokenInWEI = web3.utils.toWei(minOneTokenInETH, 'ether')
 
   //Dutch Auction crowdsale maxOneTokenInWEI
-  const maxRateBN = new BigNumber(maxRate)
+  const maxRateBN = toBigNumber(maxRate)
   const maxOneTokenInETH = maxRateBN.pow(-1).toFixed()
   const maxOneTokenInWEI = web3.utils.toWei(maxOneTokenInETH, 'ether')
 
@@ -183,6 +178,9 @@ const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
   //is Dutch Auction crowdsale whitelisted?
   const isWhitelisted = whitelistEnabled === 'yes'
 
+  //todo: burnExcess
+  const burnExcess = true
+
   let crowdsaleParams = [
     walletAddress,
     tokenSupplyBN,
@@ -192,7 +190,8 @@ const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
     durationBN,
     formatDate(startTime),
     isWhitelisted,
-    account
+    account,
+    burnExcess
   ]
 
   logger.log('crowdsaleParams:', crowdsaleParams)
@@ -464,7 +463,7 @@ const getTiersParams = methodInterface => {
     const duration = formatDate(endTime) - formatDate(startTime)
     const tierNameBytes = web3.utils.fromAscii(tierName)
     const encodedTierName = web3.eth.abi.encodeParameter('bytes32', tierNameBytes)
-    const rateBN = new BigNumber(rate)
+    const rateBN = toBigNumber(rate)
     const oneTokenInETH = rateBN.pow(-1).toFixed()
     durationArr.push(duration)
     tierNameArr.push(encodedTierName)
@@ -836,8 +835,8 @@ export function scrollToBottom() {
 }
 
 export function getDownloadName() {
-  const { crowdsale, MintedCappedProxy } = contractStore
-  const crowdsalePointer = crowdsale.execID || MintedCappedProxy.addr
+  const { crowdsale } = contractStore
+  const crowdsalePointer = crowdsale.execID || contractStore[crowdsaleStore.proxyName].addr
   return new Promise(resolve => {
     const whenNetworkName = getNetworkVersion()
       .then(networkID => {
@@ -961,10 +960,8 @@ export const SUMMARY_FILE_CONTENTS = networkID => {
     logger.log('contractStore:', contractStore)
     if (contractStore.crowdsale.execID) {
       return { field: 'execID', value: 'Auth-os execution ID: ', parent: 'crowdsale' }
-    } else if (contractStore.MintedCappedProxy.addr) {
-      return { field: 'addr', value: authOSContractString('Crowdsale proxy'), parent: 'MintedCappedProxy' }
-    } else if (contractStore.DutchProxy.addr) {
-      return { field: 'addr', value: authOSContractString('Crowdsale proxy'), parent: 'DutchProxy' }
+    } else {
+      return { field: 'addr', value: authOSContractString('Crowdsale proxy'), parent: crowdsaleStore.proxyName }
     }
   }
 

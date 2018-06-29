@@ -17,11 +17,18 @@ import {
   getCrowdsaleTargetDates,
   initializeAccumulativeData,
   isFinalized,
-  toBigNumber,
   getUserMaxLimits,
   getUserMinLimits
 } from '../crowdsale/utils'
-import { countDecimalPlaces, getExecID, getAddr, getNetworkID, toast } from '../../utils/utils'
+import {
+  countDecimalPlaces,
+  getExecID,
+  getAddr,
+  getNetworkID,
+  toast,
+  toBigNumber,
+  truncateStringInTheMiddle
+} from '../../utils/utils'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import {
   contributionDisabledAlertInTime,
@@ -45,6 +52,8 @@ import moment from 'moment'
 import { BigNumber } from 'bignumber.js'
 import { Form } from 'react-final-form'
 import { ContributeForm } from './ContributeForm'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
+import ReactTooltip from 'react-tooltip'
 import logdown from 'logdown'
 
 const logger = logdown('TW:contribute')
@@ -131,11 +140,7 @@ export class Contribute extends React.Component {
     const crowdsaleExecID = CrowdsaleConfig.crowdsaleContractURL || getExecID()
     const crowdsaleAddr = CrowdsaleConfig.crowdsaleContractURL || getAddr()
     contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
-    if (crowdsaleStore.isMintedCappedCrowdsale) {
-      contractStore.setContractProperty('MintedCappedProxy', 'addr', crowdsaleAddr)
-    } else if (crowdsaleStore.isDutchAuction) {
-      contractStore.setContractProperty('DutchProxy', 'addr', crowdsaleAddr)
-    }
+    contractStore.setContractProperty(crowdsaleStore.proxyName, 'addr', crowdsaleAddr)
 
     this.setState({ crowdsaleExecID })
 
@@ -170,10 +175,8 @@ export class Contribute extends React.Component {
       const targetPrefix = 'idx'
       const targetSuffix = crowdsaleStore.contractTargetSuffix
       target = `${targetPrefix}${targetSuffix}`
-    } else if (crowdsaleStore.isMintedCappedCrowdsale) {
-      target = 'MintedCappedProxy'
-    } else if (crowdsaleStore.isDutchAuction) {
-      target = 'DutchProxy'
+    } else {
+      target = crowdsaleStore.proxyName
     }
 
     try {
@@ -300,10 +303,8 @@ export class Contribute extends React.Component {
       const targetPrefix = 'idx'
       const targetSuffix = crowdsaleStore.contractTargetSuffix
       target = `${targetPrefix}${targetSuffix}`
-    } else if (contractStore.MintedCappedProxy.addr) {
-      target = 'MintedCappedProxy'
-    } else if (contractStore.DutchProxy.addr) {
-      target = 'DutchProxy'
+    } else {
+      target = crowdsaleStore.proxyName
     }
 
     let params = []
@@ -347,10 +348,8 @@ export class Contribute extends React.Component {
       const targetPrefix = 'idx'
       const targetSuffix = crowdsaleStore.contractTargetSuffix
       target = `${targetPrefix}${targetSuffix}`
-    } else if (contractStore.MintedCappedProxy.addr) {
-      target = 'MintedCappedProxy'
-    } else if (contractStore.DutchProxy.addr) {
-      target = 'DutchProxy'
+    } else {
+      target = crowdsaleStore.proxyName
     }
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
@@ -365,7 +364,7 @@ export class Contribute extends React.Component {
       return notAllowedContributor()
     }
 
-    const { generalStore, contractStore, crowdsalePageStore, tokenStore } = this.props
+    const { generalStore, contractStore, crowdsalePageStore, tokenStore, crowdsaleStore } = this.props
     const { account, execID } = contractStore.crowdsale
 
     const weiToSend = await this.calculateWeiToSend()
@@ -386,7 +385,7 @@ export class Contribute extends React.Component {
     let methodInterface = []
 
     let paramsToExec = [opts.value, methodInterface]
-    const targetContractName = execID ? 'registryExec' : 'MintedCappedProxy'
+    const targetContractName = execID ? 'registryExec' : crowdsaleStore.proxyName
     const method = methodToExec(targetContractName, `buy()`, this.getBuyParams, paramsToExec)
 
     const estimatedGas = await method.estimateGas(opts)
@@ -433,9 +432,10 @@ export class Contribute extends React.Component {
   }
 
   render() {
-    const { crowdsalePageStore, tokenStore, contractStore } = this.props
+    const { crowdsalePageStore, tokenStore, contractStore, crowdsaleStore } = this.props
     const { tokenAmountOf } = crowdsalePageStore
-    const { crowdsale, MintedCappedProxy } = contractStore
+    const { crowdsale } = contractStore
+    const { proxyName } = crowdsaleStore
 
     const {
       curAddr,
@@ -482,6 +482,22 @@ export class Contribute extends React.Component {
       'qr-selected': contributeThrough === CONTRIBUTION_OPTIONS.QR
     })
 
+    const crowdsaleAddress =
+      (crowdsale && crowdsale.execID) || (contractStore[proxyName] && contractStore[proxyName].addr)
+    const crowdsaleAddressTruncated =
+      (crowdsale && truncateStringInTheMiddle(crowdsale.execID)) ||
+      (contractStore[proxyName] && contractStore[proxyName].addr)
+    const crowdsaleAddressDescription = crowdsale
+      ? crowdsale.execID
+        ? 'Crowdsale Execution ID'
+        : 'Crowdsale Proxy Address'
+      : 'Crowdsale ID'
+    const crowdsaleAddressTooltip = crowdsale
+      ? crowdsale.execID
+        ? `Crowdsale execution ID to copy: ${crowdsaleAddress}`
+        : `Crowdsale proxy address to copy: ${crowdsaleAddress}`
+      : `Crowdsale ID ${crowdsaleAddress}`
+
     return (
       <div className="contribute container">
         <div className="contribute-table">
@@ -504,15 +520,12 @@ export class Contribute extends React.Component {
                 <p className="hashes-description">Current Account</p>
               </div>
               <div className="hashes-i">
-                <p className="hashes-title">
-                  {(crowdsale && crowdsale.execID) || (MintedCappedProxy && MintedCappedProxy.addr)}
-                </p>
-                <p className="hashes-description">
-                  {crowdsale
-                    ? crowdsale.execID
-                      ? 'Crowdsale Execution ID'
-                      : 'Crowdsale Proxy Address'
-                    : 'Crowdsale ID'}
+                <p className="hashes-title">{crowdsaleAddressTruncated}</p>
+                <p className="hashes-description_cp_address">
+                  {crowdsaleAddressDescription}
+                  <CopyToClipboard text={crowdsaleAddress}>
+                    <btn data-tip={crowdsaleAddressTooltip} className="copy" tool />
+                  </CopyToClipboard>
                 </p>
               </div>
               <div className="hashes-i">
@@ -560,6 +573,7 @@ export class Contribute extends React.Component {
             {QRPaymentProcessElement}
           </div>
         </div>
+        <ReactTooltip />
         <Loader show={this.state.loading} />
       </div>
     )

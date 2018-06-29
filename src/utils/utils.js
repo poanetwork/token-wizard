@@ -1,6 +1,7 @@
 import { TOAST } from './constants'
 import queryString from 'query-string'
 import { CrowdsaleConfig } from '../components/Common/config'
+import { BigNumber } from 'bignumber.js'
 import logdown from 'logdown'
 
 const logger = logdown('TW:utils:utils')
@@ -173,3 +174,31 @@ export const acceptPositiveIntegerOnly = value => {
 export const removeTrailingNUL = ascii => ascii.replace(/\x00+/, '')
 
 export const dateToTimestamp = date => new Date(date).getTime()
+
+export const truncateStringInTheMiddle = (str, strLength = 50, strPositionStart = 24, strPositionEnd = 25) => {
+  if (typeof str === 'string' && str.length > strLength) {
+    return `${str.substr(0, strPositionStart)}...${str.substr(str.length - strPositionEnd, str.length)}`
+  }
+  return str
+}
+
+/**
+ * Converts the value passed to a BigNumber instance
+ * @param {*} value - A number representation
+ * @param {boolean} [force=true] - If set to false will return 'undefined' when value is not a number or a string
+ * representation of a number.
+ * @returns {BigNumber|undefined}
+ */
+export const toBigNumber = (value, force = true) => {
+  BigNumber.set({ DECIMAL_PLACES: 18 })
+
+  if (isNaN(value) || value === '' || value === null) {
+    if (force) {
+      return new BigNumber(0)
+    } else {
+      return undefined
+    }
+  } else {
+    return new BigNumber(value)
+  }
+}

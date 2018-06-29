@@ -9,8 +9,7 @@ import {
   reservedTokenStore
 } from '../../stores'
 import { VALIDATION_TYPES } from '../../utils/constants'
-import { removeTrailingNUL, toFixed } from '../../utils/utils'
-import { toBigNumber } from '../crowdsale/utils'
+import { removeTrailingNUL, toBigNumber, toFixed } from '../../utils/utils'
 import moment from 'moment'
 import logdown from 'logdown'
 
@@ -134,7 +133,7 @@ export const updateTierAttribute = async (attribute, value, tierIndex) => {
   if (crowdsaleStore.execID) {
     targetContractName = 'registryExec'
   } else {
-    targetContractName = 'MintedCappedProxy'
+    targetContractName = crowdsaleStore.proxyName
   }
 
   const method = methodToExec(

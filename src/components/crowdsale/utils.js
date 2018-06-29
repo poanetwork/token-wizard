@@ -2,15 +2,11 @@ import { noContractAlert } from '../../utils/alerts'
 import { attachToSpecificCrowdsaleContract } from '../../utils/blockchainHelpers'
 import { contractStore, crowdsalePageStore, tokenStore, web3Store, crowdsaleStore } from '../../stores'
 import { toJS } from 'mobx'
+import { removeTrailingNUL, toBigNumber } from '../../utils/utils'
 import { BigNumber } from 'bignumber.js'
-import { removeTrailingNUL } from '../../utils/utils'
 import logdown from 'logdown'
 
 const logger = logdown('TW:crowdsale:utils')
-
-BigNumber.config({ DECIMAL_PLACES: 18 })
-
-export const toBigNumber = value => (isNaN(value) || value === '' ? new BigNumber(0) : new BigNumber(value))
 
 export let getTokenData = async (initCrowdsaleContract, execID, account) => {
   if (!initCrowdsaleContract) {
@@ -111,13 +107,7 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
       crowdsaleInfo.is_finalized = crowdsaleInfo[3]
     }
     const wei_raised = crowdsaleInfo.wei_raised ? crowdsaleInfo.wei_raised : crowdsaleInfo[0]
-    let tokensSold = 0
-    //todo:
-    try {
-      tokensSold = await getTokensSold(...params).call()
-    } catch (e) {
-      logger.log('e:', '###getTokensSold is not supported in Auth-os###')
-    }
+    let tokensSold = await getTokensSold(...params).call()
     const contributors = await getCrowdsaleUniqueBuyers(...params).call()
     const { fromWei } = web3Store.web3.utils
 
@@ -286,7 +276,7 @@ export const getTiersLength = async () => {
     if (crowdsale.execID) {
       targetContractName = `idx${crowdsaleStore.contractTargetSuffix}`
     } else {
-      targetContractName = `MintedCappedProxy`
+      targetContractName = crowdsaleStore.proxyName
     }
     const { methods } = await attachToSpecificCrowdsaleContract(targetContractName)
     const { getCrowdsaleTierList } = methods
