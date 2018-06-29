@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react'
 import { getCurrentAccount, getAllCrowdsaleAddresses, getNetworkVersion } from '../../utils/blockchainHelpers'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import { Loader } from '../Common/Loader'
-import { BigNumber } from 'bignumber.js'
+import { toBigNumber } from '../../utils/utils'
 
 @inject('web3Store', 'statsStore')
 @observer
@@ -25,8 +25,8 @@ export class Stats extends Component {
       .then(getCurrentAccount)
       .then(getAllCrowdsaleAddresses)
       .then(crowdsaleInstances => {
-        let totalEthRaised = new BigNumber('0')
-        let maxEthRaised = new BigNumber('0')
+        let totalEthRaised = toBigNumber('0')
+        let maxEthRaised = toBigNumber('0')
         let totalContributorsAmount = 0
         crowdsaleInstances.forEach(_crowdsale => {
           let ethRaised = web3.utils.fromWei(_crowdsale.crowdsaleInfo.wei_raised, 'ether')
@@ -40,8 +40,8 @@ export class Stats extends Component {
         const mintedCappedCrowdsales = crowdsaleInstances.filter(_crowdsale => {
           return _crowdsale.appName === process.env['REACT_APP_MINTED_CAPPED_APP_NAME']
         })
-        let mintedCappedEthRaised = new BigNumber('0')
-        let mintedCappedMaxEthRaised = new BigNumber('0')
+        let mintedCappedEthRaised = toBigNumber('0')
+        let mintedCappedMaxEthRaised = toBigNumber('0')
         let mintedCappedContributorsAmount = 0
         let mintedCappedOngoingCrowdsales = 0
         let mintedCappedFutureCrowdsales = 0
@@ -85,8 +85,8 @@ export class Stats extends Component {
         const dutchAuctionCrowdsales = crowdsaleInstances.filter(_crowdsale => {
           return _crowdsale.appName === process.env['REACT_APP_DUTCH_APP_NAME']
         })
-        let dutchAuctionEthRaised = new BigNumber('0')
-        let dutchAuctionMaxEthRaised = new BigNumber('0')
+        let dutchAuctionEthRaised = toBigNumber('0')
+        let dutchAuctionMaxEthRaised = toBigNumber('0')
         let dutchAuctionContributorsAmount = 0
         let dutchAuctionOngoingCrowdsales = 0
         let dutchAuctionFutureCrowdsales = 0
