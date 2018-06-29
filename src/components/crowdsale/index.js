@@ -197,7 +197,7 @@ export class Crowdsale extends React.Component {
       </div>
     )
 
-    // prettier-ignore
+    const proxy = contractStore[proxyName]
     return (
       <section className="steps steps_crowdsale-page">
         <StepNavigation activeStep={CROWDSALE_PAGE} />
@@ -246,7 +246,7 @@ export class Crowdsale extends React.Component {
                   </div>
                   {contributorsBlock}
                 </div>
-                <p className="hash">{`${crowdsaleExecID || (contractStore[proxyName] && contractStore[proxyName].addr)}`}</p>
+                <p className="hash">{`${crowdsaleExecID || (proxy && proxy.addr)}`}</p>
                 <p className="description">{crowdsaleExecID ? 'Crowdsale Execution ID' : 'Crowdsale Proxy Address'}</p>
               </div>
               <div className="right" style={{ width: '58%' }}>

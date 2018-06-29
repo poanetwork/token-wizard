@@ -46,1618 +46,1525 @@ export const getCrowdsaleAssets = async networkID => {
 
 async function getCrowdsaleAsset(contractName, stateProp, networkID) {
   console.log(contractName, stateProp, networkID)
-  // prettier-ignore
   const whenSrc =
-    stateProp === 'MintedCappedProxy' || stateProp === 'DutchProxy' ? setFlatFileContentToState(`./contracts/${stateProp}.sol`) : Promise.resolve()
-  // prettier-ignore
+    stateProp === 'MintedCappedProxy' || stateProp === 'DutchProxy'
+      ? setFlatFileContentToState(`./contracts/${stateProp}.sol`)
+      : Promise.resolve()
   const whenBin =
-    stateProp === 'MintedCappedProxy' || stateProp === 'DutchProxy' ? setFlatFileContentToState(`./contracts/${stateProp}.bin`) : Promise.resolve()
+    stateProp === 'MintedCappedProxy' || stateProp === 'DutchProxy'
+      ? setFlatFileContentToState(`./contracts/${stateProp}.bin`)
+      : Promise.resolve()
   let abi
-  // prettier-ignore
   switch (stateProp) {
     case 'MintedCappedProxy':
       abi = [
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"name",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'name',
+          outputs: [
             {
-              "name":"",
-              "type":"string"
+              name: '',
+              type: 'string'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"provider",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'provider',
+          outputs: [
             {
-              "name":"",
-              "type":"address"
+              name: '',
+              type: 'address'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":false,
-          "inputs":[
+          constant: false,
+          inputs: [
             {
-              "name":"_spender",
-              "type":"address"
+              name: '_spender',
+              type: 'address'
             },
             {
-              "name":"_amt",
-              "type":"uint256"
+              name: '_amt',
+              type: 'uint256'
             }
           ],
-          "name":"approve",
-          "outputs":[
+          name: 'approve',
+          outputs: [
             {
-              "name":"",
-              "type":"bool"
+              name: '',
+              type: 'bool'
             }
           ],
-          "payable":false,
-          "stateMutability":"nonpayable",
-          "type":"function"
+          payable: false,
+          stateMutability: 'nonpayable',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"totalSupply",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'totalSupply',
+          outputs: [
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"getCrowdsaleMaxRaise",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'getCrowdsaleMaxRaise',
+          outputs: [
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":false,
-          "inputs":[
+          constant: false,
+          inputs: [
             {
-              "name":"_from",
-              "type":"address"
+              name: '_from',
+              type: 'address'
             },
             {
-              "name":"_to",
-              "type":"address"
+              name: '_to',
+              type: 'address'
             },
             {
-              "name":"_amt",
-              "type":"uint256"
+              name: '_amt',
+              type: 'uint256'
             }
           ],
-          "name":"transferFrom",
-          "outputs":[
+          name: 'transferFrom',
+          outputs: [
             {
-              "name":"",
-              "type":"bool"
+              name: '',
+              type: 'bool'
             }
           ],
-          "payable":false,
-          "stateMutability":"nonpayable",
-          "type":"function"
+          payable: false,
+          stateMutability: 'nonpayable',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"proxy_admin",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'proxy_admin',
+          outputs: [
             {
-              "name":"",
-              "type":"address"
+              name: '',
+              type: 'address'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"getCrowdsaleInfo",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'getCrowdsaleInfo',
+          outputs: [
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"address"
+              name: '',
+              type: 'address'
             },
             {
-              "name":"",
-              "type":"bool"
+              name: '',
+              type: 'bool'
             },
             {
-              "name":"",
-              "type":"bool"
+              name: '',
+              type: 'bool'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"decimals",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'decimals',
+          outputs: [
             {
-              "name":"",
-              "type":"uint8"
+              name: '',
+              type: 'uint8'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
+          constant: true,
+          inputs: [
             {
-              "name":"_tier",
-              "type":"uint256"
+              name: '_tier',
+              type: 'uint256'
             },
             {
-              "name":"_buyer",
-              "type":"address"
+              name: '_buyer',
+              type: 'address'
             }
           ],
-          "name":"getWhitelistStatus",
-          "outputs":[
+          name: 'getWhitelistStatus',
+          outputs: [
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"getCrowdsaleTierList",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'getCrowdsaleTierList',
+          outputs: [
             {
-              "name":"",
-              "type":"bytes32[]"
+              name: '',
+              type: 'bytes32[]'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"getCrowdsaleStartAndEndTimes",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'getCrowdsaleStartAndEndTimes',
+          outputs: [
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":false,
-          "inputs":[
+          constant: false,
+          inputs: [
             {
-              "name":"_calldata",
-              "type":"bytes"
+              name: '_calldata',
+              type: 'bytes'
             }
           ],
-          "name":"exec",
-          "outputs":[
+          name: 'exec',
+          outputs: [
             {
-              "name":"success",
-              "type":"bool"
+              name: 'success',
+              type: 'bool'
             }
           ],
-          "payable":true,
-          "stateMutability":"payable",
-          "type":"function"
+          payable: true,
+          stateMutability: 'payable',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"registry_exec_id",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'registry_exec_id',
+          outputs: [
             {
-              "name":"",
-              "type":"bytes32"
+              name: '',
+              type: 'bytes32'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":false,
-          "inputs":[
+          constant: false,
+          inputs: [
             {
-              "name":"_spender",
-              "type":"address"
+              name: '_spender',
+              type: 'address'
             },
             {
-              "name":"_amt",
-              "type":"uint256"
+              name: '_amt',
+              type: 'uint256'
             }
           ],
-          "name":"decreaseApproval",
-          "outputs":[
+          name: 'decreaseApproval',
+          outputs: [
             {
-              "name":"",
-              "type":"bool"
+              name: '',
+              type: 'bool'
             }
           ],
-          "payable":false,
-          "stateMutability":"nonpayable",
-          "type":"function"
+          payable: false,
+          stateMutability: 'nonpayable',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"app_name",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'app_name',
+          outputs: [
             {
-              "name":"",
-              "type":"bytes32"
+              name: '',
+              type: 'bytes32'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"getAdmin",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'getAdmin',
+          outputs: [
             {
-              "name":"",
-              "type":"address"
+              name: '',
+              type: 'address'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
+          constant: true,
+          inputs: [
             {
-              "name":"_owner",
-              "type":"address"
+              name: '_owner',
+              type: 'address'
             }
           ],
-          "name":"balanceOf",
-          "outputs":[
+          name: 'balanceOf',
+          outputs: [
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"getReservedTokenDestinationList",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'getReservedTokenDestinationList',
+          outputs: [
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"address[]"
+              name: '',
+              type: 'address[]'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"app_storage",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'app_storage',
+          outputs: [
             {
-              "name":"",
-              "type":"address"
+              name: '',
+              type: 'address'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"symbol",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'symbol',
+          outputs: [
             {
-              "name":"",
-              "type":"string"
+              name: '',
+              type: 'string'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
+          constant: true,
+          inputs: [
             {
-              "name":"_idx",
-              "type":"uint256"
+              name: '_idx',
+              type: 'uint256'
             }
           ],
-          "name":"getTierStartAndEndDates",
-          "outputs":[
+          name: 'getTierStartAndEndDates',
+          outputs: [
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":false,
-          "inputs":[
-
-          ],
-          "name":"buy",
-          "outputs":[
-
-          ],
-          "payable":true,
-          "stateMutability":"payable",
-          "type":"function"
+          constant: false,
+          inputs: [],
+          name: 'buy',
+          outputs: [],
+          payable: true,
+          stateMutability: 'payable',
+          type: 'function'
         },
         {
-          "constant":false,
-          "inputs":[
+          constant: false,
+          inputs: [
             {
-              "name":"_to",
-              "type":"address"
+              name: '_to',
+              type: 'address'
             },
             {
-              "name":"_amt",
-              "type":"uint256"
+              name: '_amt',
+              type: 'uint256'
             }
           ],
-          "name":"transfer",
-          "outputs":[
+          name: 'transfer',
+          outputs: [
             {
-              "name":"",
-              "type":"bool"
+              name: '',
+              type: 'bool'
             }
           ],
-          "payable":false,
-          "stateMutability":"nonpayable",
-          "type":"function"
+          payable: false,
+          stateMutability: 'nonpayable',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
+          constant: true,
+          inputs: [
             {
-              "name":"_idx",
-              "type":"uint256"
+              name: '_idx',
+              type: 'uint256'
             }
           ],
-          "name":"getCrowdsaleTier",
-          "outputs":[
+          name: 'getCrowdsaleTier',
+          outputs: [
             {
-              "name":"",
-              "type":"bytes32"
+              name: '',
+              type: 'bytes32'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"bool"
+              name: '',
+              type: 'bool'
             },
             {
-              "name":"",
-              "type":"bool"
+              name: '',
+              type: 'bool'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
+          constant: true,
+          inputs: [
             {
-              "name":"_destination",
-              "type":"address"
+              name: '_destination',
+              type: 'address'
             }
           ],
-          "name":"getReservedDestinationInfo",
-          "outputs":[
+          name: 'getReservedDestinationInfo',
+          outputs: [
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"isCrowdsaleFull",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'isCrowdsaleFull',
+          outputs: [
             {
-              "name":"",
-              "type":"bool"
+              name: '',
+              type: 'bool'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":false,
-          "inputs":[
+          constant: false,
+          inputs: [
             {
-              "name":"_spender",
-              "type":"address"
+              name: '_spender',
+              type: 'address'
             },
             {
-              "name":"_amt",
-              "type":"uint256"
+              name: '_amt',
+              type: 'uint256'
             }
           ],
-          "name":"increaseApproval",
-          "outputs":[
+          name: 'increaseApproval',
+          outputs: [
             {
-              "name":"",
-              "type":"bool"
+              name: '',
+              type: 'bool'
             }
           ],
-          "payable":false,
-          "stateMutability":"nonpayable",
-          "type":"function"
+          payable: false,
+          stateMutability: 'nonpayable',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"app_exec_id",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'app_exec_id',
+          outputs: [
             {
-              "name":"",
-              "type":"bytes32"
+              name: '',
+              type: 'bytes32'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"app_index",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'app_index',
+          outputs: [
             {
-              "name":"",
-              "type":"address"
+              name: '',
+              type: 'address'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"app_version",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'app_version',
+          outputs: [
             {
-              "name":"",
-              "type":"bytes32"
+              name: '',
+              type: 'bytes32'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
+          constant: true,
+          inputs: [
             {
-              "name":"_owner",
-              "type":"address"
+              name: '_owner',
+              type: 'address'
             },
             {
-              "name":"_spender",
-              "type":"address"
+              name: '_spender',
+              type: 'address'
             }
           ],
-          "name":"allowance",
-          "outputs":[
+          name: 'allowance',
+          outputs: [
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"getTokensSold",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'getTokensSold',
+          outputs: [
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"getCurrentTierInfo",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'getCurrentTierInfo',
+          outputs: [
             {
-              "name":"",
-              "type":"bytes32"
+              name: '',
+              type: 'bytes32'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"bool"
+              name: '',
+              type: 'bool'
             },
             {
-              "name":"",
-              "type":"bool"
+              name: '',
+              type: 'bool'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
+          constant: true,
+          inputs: [
             {
-              "name":"_tier_idx",
-              "type":"uint256"
+              name: '_tier_idx',
+              type: 'uint256'
             }
           ],
-          "name":"getTierWhitelist",
-          "outputs":[
+          name: 'getTierWhitelist',
+          outputs: [
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"address[]"
+              name: '',
+              type: 'address[]'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":false,
-          "inputs":[
+          constant: false,
+          inputs: [
             {
-              "name":"",
-              "type":"address"
+              name: '',
+              type: 'address'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"bytes32"
+              name: '',
+              type: 'bytes32'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"bool"
+              name: '',
+              type: 'bool'
             },
             {
-              "name":"",
-              "type":"bool"
+              name: '',
+              type: 'bool'
             },
             {
-              "name":"",
-              "type":"address"
+              name: '',
+              type: 'address'
             }
           ],
-          "name":"init",
-          "outputs":[
-
-          ],
-          "payable":false,
-          "stateMutability":"nonpayable",
-          "type":"function"
+          name: 'init',
+          outputs: [],
+          payable: false,
+          stateMutability: 'nonpayable',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"getCrowdsaleUniqueBuyers",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'getCrowdsaleUniqueBuyers',
+          outputs: [
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "inputs":[
+          inputs: [
             {
-              "name":"_storage",
-              "type":"address"
+              name: '_storage',
+              type: 'address'
             },
             {
-              "name":"_registry_exec_id",
-              "type":"bytes32"
+              name: '_registry_exec_id',
+              type: 'bytes32'
             },
             {
-              "name":"_provider",
-              "type":"address"
+              name: '_provider',
+              type: 'address'
             },
             {
-              "name":"_app_name",
-              "type":"bytes32"
+              name: '_app_name',
+              type: 'bytes32'
             }
           ],
-          "payable":false,
-          "stateMutability":"nonpayable",
-          "type":"constructor"
+          payable: false,
+          stateMutability: 'nonpayable',
+          type: 'constructor'
         },
         {
-          "payable":true,
-          "stateMutability":"payable",
-          "type":"fallback"
+          payable: true,
+          stateMutability: 'payable',
+          type: 'fallback'
         },
         {
-          "anonymous":false,
-          "inputs":[
+          anonymous: false,
+          inputs: [
             {
-              "indexed":true,
-              "name":"execution_id",
-              "type":"bytes32"
+              indexed: true,
+              name: 'execution_id',
+              type: 'bytes32'
             },
             {
-              "indexed":false,
-              "name":"message",
-              "type":"string"
+              indexed: false,
+              name: 'message',
+              type: 'string'
             }
           ],
-          "name":"StorageException",
-          "type":"event"
+          name: 'StorageException',
+          type: 'event'
         },
         {
-          "anonymous":false,
-          "inputs":[
+          anonymous: false,
+          inputs: [
             {
-              "indexed":true,
-              "name":"from",
-              "type":"address"
+              indexed: true,
+              name: 'from',
+              type: 'address'
             },
             {
-              "indexed":true,
-              "name":"to",
-              "type":"address"
+              indexed: true,
+              name: 'to',
+              type: 'address'
             },
             {
-              "indexed":false,
-              "name":"amt",
-              "type":"uint256"
+              indexed: false,
+              name: 'amt',
+              type: 'uint256'
             }
           ],
-          "name":"Transfer",
-          "type":"event"
+          name: 'Transfer',
+          type: 'event'
         },
         {
-          "anonymous":false,
-          "inputs":[
+          anonymous: false,
+          inputs: [
             {
-              "indexed":true,
-              "name":"owner",
-              "type":"address"
+              indexed: true,
+              name: 'owner',
+              type: 'address'
             },
             {
-              "indexed":true,
-              "name":"spender",
-              "type":"address"
+              indexed: true,
+              name: 'spender',
+              type: 'address'
             },
             {
-              "indexed":false,
-              "name":"amt",
-              "type":"uint256"
+              indexed: false,
+              name: 'amt',
+              type: 'uint256'
             }
           ],
-          "name":"Approval",
-          "type":"event"
+          name: 'Approval',
+          type: 'event'
         }
       ]
       break
     case 'DutchProxy':
       abi = [
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"name",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'name',
+          outputs: [
             {
-              "name":"",
-              "type":"string"
+              name: '',
+              type: 'string'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"provider",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'provider',
+          outputs: [
             {
-              "name":"",
-              "type":"address"
+              name: '',
+              type: 'address'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":false,
-          "inputs":[
+          constant: false,
+          inputs: [
             {
-              "name":"_spender",
-              "type":"address"
+              name: '_spender',
+              type: 'address'
             },
             {
-              "name":"_amt",
-              "type":"uint256"
+              name: '_amt',
+              type: 'uint256'
             }
           ],
-          "name":"approve",
-          "outputs":[
+          name: 'approve',
+          outputs: [
             {
-              "name":"",
-              "type":"bool"
+              name: '',
+              type: 'bool'
             }
           ],
-          "payable":false,
-          "stateMutability":"nonpayable",
-          "type":"function"
+          payable: false,
+          stateMutability: 'nonpayable',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"totalSupply",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'totalSupply',
+          outputs: [
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":false,
-          "inputs":[
+          constant: false,
+          inputs: [
             {
-              "name":"_from",
-              "type":"address"
+              name: '_from',
+              type: 'address'
             },
             {
-              "name":"_to",
-              "type":"address"
+              name: '_to',
+              type: 'address'
             },
             {
-              "name":"_amt",
-              "type":"uint256"
+              name: '_amt',
+              type: 'uint256'
             }
           ],
-          "name":"transferFrom",
-          "outputs":[
+          name: 'transferFrom',
+          outputs: [
             {
-              "name":"",
-              "type":"bool"
+              name: '',
+              type: 'bool'
             }
           ],
-          "payable":false,
-          "stateMutability":"nonpayable",
-          "type":"function"
+          payable: false,
+          stateMutability: 'nonpayable',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"proxy_admin",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'proxy_admin',
+          outputs: [
             {
-              "name":"",
-              "type":"address"
+              name: '',
+              type: 'address'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"getCrowdsaleInfo",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'getCrowdsaleInfo',
+          outputs: [
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"address"
+              name: '',
+              type: 'address'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"bool"
+              name: '',
+              type: 'bool'
             },
             {
-              "name":"",
-              "type":"bool"
+              name: '',
+              type: 'bool'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"decimals",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'decimals',
+          outputs: [
             {
-              "name":"",
-              "type":"uint8"
+              name: '',
+              type: 'uint8'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"getCrowdsaleWhitelist",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'getCrowdsaleWhitelist',
+          outputs: [
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"address[]"
+              name: '',
+              type: 'address[]'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"getCrowdsaleStartAndEndTimes",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'getCrowdsaleStartAndEndTimes',
+          outputs: [
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":false,
-          "inputs":[
+          constant: false,
+          inputs: [
             {
-              "name":"_calldata",
-              "type":"bytes"
+              name: '_calldata',
+              type: 'bytes'
             }
           ],
-          "name":"exec",
-          "outputs":[
+          name: 'exec',
+          outputs: [
             {
-              "name":"success",
-              "type":"bool"
+              name: 'success',
+              type: 'bool'
             }
           ],
-          "payable":true,
-          "stateMutability":"payable",
-          "type":"function"
+          payable: true,
+          stateMutability: 'payable',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"registry_exec_id",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'registry_exec_id',
+          outputs: [
             {
-              "name":"",
-              "type":"bytes32"
+              name: '',
+              type: 'bytes32'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"getCrowdsaleStatus",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'getCrowdsaleStatus',
+          outputs: [
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"bool"
+              name: '',
+              type: 'bool'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":false,
-          "inputs":[
+          constant: false,
+          inputs: [
             {
-              "name":"_spender",
-              "type":"address"
+              name: '_spender',
+              type: 'address'
             },
             {
-              "name":"_amt",
-              "type":"uint256"
+              name: '_amt',
+              type: 'uint256'
             }
           ],
-          "name":"decreaseApproval",
-          "outputs":[
+          name: 'decreaseApproval',
+          outputs: [
             {
-              "name":"",
-              "type":"bool"
+              name: '',
+              type: 'bool'
             }
           ],
-          "payable":false,
-          "stateMutability":"nonpayable",
-          "type":"function"
+          payable: false,
+          stateMutability: 'nonpayable',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"app_name",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'app_name',
+          outputs: [
             {
-              "name":"",
-              "type":"bytes32"
+              name: '',
+              type: 'bytes32'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"getAdmin",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'getAdmin',
+          outputs: [
             {
-              "name":"",
-              "type":"address"
+              name: '',
+              type: 'address'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
+          constant: true,
+          inputs: [
             {
-              "name":"_owner",
-              "type":"address"
+              name: '_owner',
+              type: 'address'
             }
           ],
-          "name":"balanceOf",
-          "outputs":[
+          name: 'balanceOf',
+          outputs: [
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"app_storage",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'app_storage',
+          outputs: [
             {
-              "name":"",
-              "type":"address"
+              name: '',
+              type: 'address'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"symbol",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'symbol',
+          outputs: [
             {
-              "name":"",
-              "type":"string"
+              name: '',
+              type: 'string'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":false,
-          "inputs":[
-
-          ],
-          "name":"buy",
-          "outputs":[
-
-          ],
-          "payable":true,
-          "stateMutability":"payable",
-          "type":"function"
+          constant: false,
+          inputs: [],
+          name: 'buy',
+          outputs: [],
+          payable: true,
+          stateMutability: 'payable',
+          type: 'function'
         },
         {
-          "constant":false,
-          "inputs":[
+          constant: false,
+          inputs: [
             {
-              "name":"_to",
-              "type":"address"
+              name: '_to',
+              type: 'address'
             },
             {
-              "name":"_amt",
-              "type":"uint256"
+              name: '_amt',
+              type: 'uint256'
             }
           ],
-          "name":"transfer",
-          "outputs":[
+          name: 'transfer',
+          outputs: [
             {
-              "name":"",
-              "type":"bool"
+              name: '',
+              type: 'bool'
             }
           ],
-          "payable":false,
-          "stateMutability":"nonpayable",
-          "type":"function"
+          payable: false,
+          stateMutability: 'nonpayable',
+          type: 'function'
         },
         {
-          "constant":false,
-          "inputs":[
+          constant: false,
+          inputs: [
             {
-              "name":"",
-              "type":"address"
+              name: '',
+              type: 'address'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"bool"
+              name: '',
+              type: 'bool'
             },
             {
-              "name":"",
-              "type":"address"
+              name: '',
+              type: 'address'
             }
           ],
-          "name":"init",
-          "outputs":[
-
-          ],
-          "payable":false,
-          "stateMutability":"nonpayable",
-          "type":"function"
+          name: 'init',
+          outputs: [],
+          payable: false,
+          stateMutability: 'nonpayable',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"isCrowdsaleFull",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'isCrowdsaleFull',
+          outputs: [
             {
-              "name":"",
-              "type":"bool"
+              name: '',
+              type: 'bool'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":false,
-          "inputs":[
+          constant: false,
+          inputs: [
             {
-              "name":"_spender",
-              "type":"address"
+              name: '_spender',
+              type: 'address'
             },
             {
-              "name":"_amt",
-              "type":"uint256"
+              name: '_amt',
+              type: 'uint256'
             }
           ],
-          "name":"increaseApproval",
-          "outputs":[
+          name: 'increaseApproval',
+          outputs: [
             {
-              "name":"",
-              "type":"bool"
+              name: '',
+              type: 'bool'
             }
           ],
-          "payable":false,
-          "stateMutability":"nonpayable",
-          "type":"function"
+          payable: false,
+          stateMutability: 'nonpayable',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"app_exec_id",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'app_exec_id',
+          outputs: [
             {
-              "name":"",
-              "type":"bytes32"
+              name: '',
+              type: 'bytes32'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
+          constant: true,
+          inputs: [
             {
-              "name":"_buyer",
-              "type":"address"
+              name: '_buyer',
+              type: 'address'
             }
           ],
-          "name":"getWhitelistStatus",
-          "outputs":[
+          name: 'getWhitelistStatus',
+          outputs: [
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             },
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"app_index",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'app_index',
+          outputs: [
             {
-              "name":"",
-              "type":"address"
+              name: '',
+              type: 'address'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"app_version",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'app_version',
+          outputs: [
             {
-              "name":"",
-              "type":"bytes32"
+              name: '',
+              type: 'bytes32'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
+          constant: true,
+          inputs: [
             {
-              "name":"_owner",
-              "type":"address"
+              name: '_owner',
+              type: 'address'
             },
             {
-              "name":"_spender",
-              "type":"address"
+              name: '_spender',
+              type: 'address'
             }
           ],
-          "name":"allowance",
-          "outputs":[
+          name: 'allowance',
+          outputs: [
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "constant":true,
-          "inputs":[
-
-          ],
-          "name":"getTokensSold",
-          "outputs":[
+          constant: true,
+          inputs: [],
+          name: 'getTokensSold',
+          outputs: [
             {
-              "name":"",
-              "type":"uint256"
+              name: '',
+              type: 'uint256'
             }
           ],
-          "payable":false,
-          "stateMutability":"view",
-          "type":"function"
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
         },
         {
-          "inputs":[
+          inputs: [
             {
-              "name":"_storage",
-              "type":"address"
+              name: '_storage',
+              type: 'address'
             },
             {
-              "name":"_registry_exec_id",
-              "type":"bytes32"
+              name: '_registry_exec_id',
+              type: 'bytes32'
             },
             {
-              "name":"_provider",
-              "type":"address"
+              name: '_provider',
+              type: 'address'
             },
             {
-              "name":"_app_name",
-              "type":"bytes32"
+              name: '_app_name',
+              type: 'bytes32'
             }
           ],
-          "payable":false,
-          "stateMutability":"nonpayable",
-          "type":"constructor"
+          payable: false,
+          stateMutability: 'nonpayable',
+          type: 'constructor'
         },
         {
-          "payable":true,
-          "stateMutability":"payable",
-          "type":"fallback"
+          payable: true,
+          stateMutability: 'payable',
+          type: 'fallback'
         },
         {
-          "anonymous":false,
-          "inputs":[
+          anonymous: false,
+          inputs: [
             {
-              "indexed":true,
-              "name":"execution_id",
-              "type":"bytes32"
+              indexed: true,
+              name: 'execution_id',
+              type: 'bytes32'
             },
             {
-              "indexed":false,
-              "name":"message",
-              "type":"string"
+              indexed: false,
+              name: 'message',
+              type: 'string'
             }
           ],
-          "name":"StorageException",
-          "type":"event"
+          name: 'StorageException',
+          type: 'event'
         },
         {
-          "anonymous":false,
-          "inputs":[
+          anonymous: false,
+          inputs: [
             {
-              "indexed":true,
-              "name":"from",
-              "type":"address"
+              indexed: true,
+              name: 'from',
+              type: 'address'
             },
             {
-              "indexed":true,
-              "name":"to",
-              "type":"address"
+              indexed: true,
+              name: 'to',
+              type: 'address'
             },
             {
-              "indexed":false,
-              "name":"amt",
-              "type":"uint256"
+              indexed: false,
+              name: 'amt',
+              type: 'uint256'
             }
           ],
-          "name":"Transfer",
-          "type":"event"
+          name: 'Transfer',
+          type: 'event'
         },
         {
-          "anonymous":false,
-          "inputs":[
+          anonymous: false,
+          inputs: [
             {
-              "indexed":true,
-              "name":"owner",
-              "type":"address"
+              indexed: true,
+              name: 'owner',
+              type: 'address'
             },
             {
-              "indexed":true,
-              "name":"spender",
-              "type":"address"
+              indexed: true,
+              name: 'spender',
+              type: 'address'
             },
             {
-              "indexed":false,
-              "name":"amt",
-              "type":"uint256"
+              indexed: false,
+              name: 'amt',
+              type: 'uint256'
             }
           ],
-          "name":"Approval",
-          "type":"event"
+          name: 'Approval',
+          type: 'event'
         }
       ]
       break
