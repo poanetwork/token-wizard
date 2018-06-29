@@ -1,7 +1,6 @@
 import Web3 from 'web3'
-import { BigNumber } from 'bignumber.js'
 import { VALIDATION_MESSAGES } from './constants'
-import { countDecimalPlaces, validateLaterOrEqualTime, validateLaterTime, validateTime } from './utils'
+import { countDecimalPlaces, toBigNumber, validateLaterOrEqualTime, validateLaterTime, validateTime } from './utils'
 
 export const validateWhitelistMin = ({ min, max, decimals }) => {
   const listOfErrors = composeValidators(
@@ -64,8 +63,8 @@ export const isDecimalPlacesNotGreaterThan = (
 
 export const isLessOrEqualThan = (errorMsg = VALIDATION_MESSAGES.LESS_OR_EQUAL) => (maxValue = Infinity) => value => {
   try {
-    const max = new BigNumber(String(maxValue))
-    const isValid = max.gte(value)
+    const max = toBigNumber(String(maxValue), false)
+    const isValid = max && max.gte(value)
     return isValid ? undefined : errorMsg
   } catch (e) {
     return errorMsg
@@ -76,8 +75,8 @@ export const isGreaterOrEqualThan = (errorMsg = VALIDATION_MESSAGES.GREATER_OR_E
   minValue = Number.MIN_VALUE
 ) => value => {
   try {
-    const min = new BigNumber(String(minValue))
-    const isValid = min.lte(value)
+    const min = toBigNumber(String(minValue), false)
+    const isValid = min && min.lte(value)
     return isValid ? undefined : errorMsg
   } catch (e) {
     return errorMsg
@@ -86,7 +85,7 @@ export const isGreaterOrEqualThan = (errorMsg = VALIDATION_MESSAGES.GREATER_OR_E
 
 export const isInteger = (errorMsg = VALIDATION_MESSAGES.INTEGER) => value => {
   try {
-    const isValid = new BigNumber(value).isInteger()
+    const isValid = toBigNumber(value, false).isInteger()
     return isValid ? undefined : errorMsg
   } catch (e) {
     return errorMsg

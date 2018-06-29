@@ -7,8 +7,7 @@ import {
   methodToCreateAppInstance,
   deployContract
 } from '../../utils/blockchainHelpers'
-//import { noContractAlert } from '../../utils/alerts'
-import { countDecimalPlaces, toFixed } from '../../utils/utils'
+import { countDecimalPlaces, toBigNumber, toFixed } from '../../utils/utils'
 import { CROWDSALE_STRATEGIES } from '../../utils/constants'
 import { DOWNLOAD_NAME, MINTED_PREFIX, DUTCH_PREFIX, ADDR_BOX_LEN } from './constants'
 import { REACT_PREFIX } from '../../utils/constants'
@@ -23,8 +22,6 @@ import {
   tokenStore,
   web3Store
 } from '../../stores'
-import { BigNumber } from 'bignumber.js'
-import { toBigNumber } from '../crowdsale/utils'
 
 export const buildDeploymentSteps = web3 => {
   let stepFnCorrelation = {
@@ -93,11 +90,10 @@ const getCrowdSaleParams = (account, methodInterface) => {
   const { web3 } = web3Store
   const { walletAddress, whitelistEnabled, updatable, supply, tier, startTime, endTime, rate } = tierStore.tiers[0]
 
-  BigNumber.config({ DECIMAL_PLACES: 18 })
   console.log(tierStore.tiers[0])
 
   //tier 0 oneTokenInWEI
-  const rateBN = new BigNumber(rate)
+  const rateBN = toBigNumber(rate)
   const oneTokenInETH = rateBN.pow(-1).toFixed()
   const oneTokenInWEI = web3.utils.toWei(oneTokenInETH, 'ether')
 
@@ -149,16 +145,15 @@ const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
   const { web3 } = web3Store
   const { walletAddress, supply, startTime, endTime, minRate, maxRate, whitelistEnabled } = tierStore.tiers[0]
 
-  BigNumber.config({ DECIMAL_PLACES: 18 })
   console.log(tierStore.tiers[0])
 
   //Dutch Auction crowdsale minOneTokenInWEI
-  const minRateBN = new BigNumber(minRate)
+  const minRateBN = toBigNumber(minRate)
   const minOneTokenInETH = minRateBN.pow(-1).toFixed()
   const minOneTokenInWEI = web3.utils.toWei(minOneTokenInETH, 'ether')
 
   //Dutch Auction crowdsale maxOneTokenInWEI
-  const maxRateBN = new BigNumber(maxRate)
+  const maxRateBN = toBigNumber(maxRate)
   const maxOneTokenInETH = maxRateBN.pow(-1).toFixed()
   const maxOneTokenInWEI = web3.utils.toWei(maxOneTokenInETH, 'ether')
 
@@ -461,7 +456,7 @@ const getTiersParams = methodInterface => {
     const duration = formatDate(endTime) - formatDate(startTime)
     const tierNameBytes = web3.utils.fromAscii(tierName)
     const encodedTierName = web3.eth.abi.encodeParameter('bytes32', tierNameBytes)
-    const rateBN = new BigNumber(rate)
+    const rateBN = toBigNumber(rate)
     const oneTokenInETH = rateBN.pow(-1).toFixed()
     durationArr.push(duration)
     tierNameArr.push(encodedTierName)
