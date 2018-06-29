@@ -1,6 +1,7 @@
 import { TOAST } from './constants'
 import queryString from 'query-string'
 import { CrowdsaleConfig } from '../components/Common/config'
+import { BigNumber } from 'bignumber.js'
 
 export function getQueryVariable(variable) {
   return queryString.parse(window.location.search)[variable]
@@ -176,4 +177,25 @@ export const truncateStringInTheMiddle = (str, strLength = 50, strPositionStart 
     return `${str.substr(0, strPositionStart)}...${str.substr(str.length - strPositionEnd, str.length)}`
   }
   return str
+}
+
+/**
+ * Converts the value passed to a BigNumber instance
+ * @param {*} value - A number representation
+ * @param {boolean} [force=true] - If set to false will return 'undefined' when value is not a number or a string
+ * representation of a number.
+ * @returns {BigNumber|undefined}
+ */
+export const toBigNumber = (value, force = true) => {
+  BigNumber.set({ DECIMAL_PLACES: 18 })
+
+  if (isNaN(value) || value === '' || value === null) {
+    if (force) {
+      return new BigNumber(0)
+    } else {
+      return undefined
+    }
+  } else {
+    return new BigNumber(value)
+  }
 }

@@ -19,7 +19,7 @@ import {
   validateTierMinCap,
   validateTierStartDate,
   validateWhitelistMax,
-  validateWhitelistMin,
+  validateWhitelistMin
 } from '../../src/utils/validations'
 import { VALIDATION_MESSAGES } from '../../src/utils/constants'
 import MockDate from 'mockdate'
@@ -362,8 +362,8 @@ describe('isInteger', () => {
     { value: '5.1', errorMessage: undefined, expected: VALIDATION_MESSAGES.INTEGER },
     { value: '1e-4', errorMessage: undefined, expected: VALIDATION_MESSAGES.INTEGER },
     { value: '.12', errorMessage: undefined, expected: VALIDATION_MESSAGES.INTEGER },
-    { value: 'abc', errorMessage: undefined, expected: VALIDATION_MESSAGES.INTEGER },
     { value: '0.12', errorMessage: undefined, expected: VALIDATION_MESSAGES.INTEGER },
+    { value: 'abc', errorMessage: 'Personalized error message', expected: 'Personalized error message' },
     { value: '0.12', errorMessage: 'Personalized error message', expected: 'Personalized error message' }
   ]
 

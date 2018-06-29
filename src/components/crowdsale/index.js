@@ -7,14 +7,8 @@ import {
   attachToSpecificCrowdsaleContract,
   getCrowdsaleStrategy
 } from '../../utils/blockchainHelpers'
-import {
-  getContractStoreProperty,
-  getCrowdsaleData,
-  getTokenData,
-  initializeAccumulativeData,
-  toBigNumber
-} from './utils'
-import { getExecID, getAddr, getNetworkID } from '../../utils/utils'
+import { getContractStoreProperty, getCrowdsaleData, getTokenData, initializeAccumulativeData } from './utils'
+import { getExecID, getAddr, getNetworkID, toBigNumber } from '../../utils/utils'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../../utils/constants'

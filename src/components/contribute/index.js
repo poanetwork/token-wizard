@@ -17,7 +17,6 @@ import {
   getCrowdsaleTargetDates,
   initializeAccumulativeData,
   isFinalized,
-  toBigNumber,
   getUserMaxLimits,
   getUserMinLimits
 } from '../crowdsale/utils'
@@ -27,6 +26,7 @@ import {
   getAddr,
   getNetworkID,
   toast,
+  toBigNumber,
   truncateStringInTheMiddle
 } from '../../utils/utils'
 import { getCrowdsaleAssets } from '../../stores/utils'
