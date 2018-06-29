@@ -42,7 +42,7 @@ export class Crowdsale extends React.Component {
   }
 
   validateEnvironment = async () => {
-    const { generalStore, contractStore, web3Store } = this.props
+    const { generalStore, web3Store, contractStore } = this.props
 
     await checkWeb3()
 
@@ -64,15 +64,7 @@ export class Crowdsale extends React.Component {
 
     //todo: change config to support exec-id and address
     const crowdsaleExecID = CrowdsaleConfig.crowdsaleContractURL || getExecID()
-    const crowdsaleAddr = CrowdsaleConfig.crowdsaleContractURL || getAddr()
     contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
-    contractStore.setContractProperty('MintedCappedProxy', 'addr', crowdsaleAddr)
-
-    //todo: change to 2 alerts
-    if (!crowdsaleExecID && !crowdsaleAddr) {
-      invalidCrowdsaleExecIDAlert()
-      return Promise.reject('invalid exec-id or addr')
-    }
   }
 
   getCrowdsale = async () => {
@@ -82,6 +74,13 @@ export class Crowdsale extends React.Component {
       await getCrowdsaleAssets(generalStore.networkID)
       const strategy = await getCrowdsaleStrategy(contractStore.crowdsale.execID)
       crowdsaleStore.setProperty('strategy', strategy)
+      const crowdsaleAddr = CrowdsaleConfig.crowdsaleContractURL || getAddr()
+      contractStore.setContractProperty(crowdsaleStore.proxyName, 'addr', crowdsaleAddr)
+      //todo: change to 2 alerts
+      if (!contractStore.crowdsale.execID && !crowdsaleAddr) {
+        invalidCrowdsaleExecIDAlert()
+        return Promise.reject('invalid exec-id or addr')
+      }
     } catch (err) {
       return Promise.reject(err)
     }
@@ -91,15 +90,13 @@ export class Crowdsale extends React.Component {
     const { crowdsaleStore, contractStore } = this.props
 
     let target
-    if (contractStore.crowdsale.execID) {
+    if (contractStore.crowdsale && contractStore.crowdsale.execID) {
       const targetPrefix = 'idx'
       const targetSuffix = crowdsaleStore.contractTargetSuffix
       target = `${targetPrefix}${targetSuffix}`
       console.log('target:', target)
-    } else if (contractStore.MintedCappedProxy.addr) {
-      target = 'MintedCappedProxy'
-    } else if (contractStore.DutchProxy.addr) {
-      target = 'DutchProxy'
+    } else {
+      target = crowdsaleStore.proxyName
     }
 
     try {
@@ -124,17 +121,18 @@ export class Crowdsale extends React.Component {
   }
 
   goToContributePage = () => {
-    const { contractStore, generalStore } = this.props
-    const { crowdsale, MintedCappedProxy } = contractStore
+    const { contractStore, generalStore, crowdsaleStore } = this.props
+    const { crowdsale } = contractStore
+    const { proxyName } = crowdsaleStore
     let queryStr = ''
     if (!CrowdsaleConfig.crowdsaleContractURL || !CrowdsaleConfig.networkID) {
-      const crowdsaleParamVal = crowdsale.execID || (MintedCappedProxy ? MintedCappedProxy.addr : null)
+      const crowdsaleParamVal = crowdsale.execID || (contractStore[proxyName] ? contractStore[proxyName].addr : null)
       if (crowdsaleParamVal) {
         let crowdsaleParam
         if (crowdsale.execID) {
           crowdsaleParam = 'exec-id'
-        } else if (MintedCappedProxy) {
-          if (MintedCappedProxy.addr) {
+        } else {
+          if (contractStore[proxyName].addr) {
             crowdsaleParam = 'addr'
           }
         }
@@ -149,9 +147,9 @@ export class Crowdsale extends React.Component {
   }
 
   render() {
-    const { web3Store, tokenStore, crowdsalePageStore, contractStore } = this.props
-    const { MintedCappedProxy } = contractStore
+    const { web3Store, tokenStore, crowdsalePageStore, contractStore, crowdsaleStore } = this.props
     const { web3 } = web3Store
+    const { proxyName } = crowdsaleStore
 
     const crowdsaleExecID = getContractStoreProperty('crowdsale', 'execID')
     const contributorsCount = crowdsalePageStore.contributors ? crowdsalePageStore.contributors.toString() : 0
@@ -199,6 +197,7 @@ export class Crowdsale extends React.Component {
       </div>
     )
 
+    const proxy = contractStore[proxyName]
     return (
       <section className="steps steps_crowdsale-page">
         <StepNavigation activeStep={CROWDSALE_PAGE} />
@@ -214,7 +213,7 @@ export class Crowdsale extends React.Component {
           <div className="total-funds">
             <div className="hidden">
               <div className="left">
-                <p className="total-funds-title">{`${ethRaised}`} ETH</p>
+                <p className="total-funds-title">{`${ethRaised.toFixed()}`} ETH</p>
                 <p className="total-funds-description">Total Raised Funds</p>
               </div>
               <div className="right">
@@ -247,7 +246,7 @@ export class Crowdsale extends React.Component {
                   </div>
                   {contributorsBlock}
                 </div>
-                <p className="hash">{`${crowdsaleExecID || (MintedCappedProxy && MintedCappedProxy.addr)}`}</p>
+                <p className="hash">{`${crowdsaleExecID || (proxy && proxy.addr)}`}</p>
                 <p className="description">{crowdsaleExecID ? 'Crowdsale Execution ID' : 'Crowdsale Proxy Address'}</p>
               </div>
               <div className="right" style={{ width: '58%' }}>

@@ -108,13 +108,7 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
       crowdsaleInfo.is_finalized = crowdsaleInfo[3]
     }
     const wei_raised = crowdsaleInfo.wei_raised ? crowdsaleInfo.wei_raised : crowdsaleInfo[0]
-    let tokensSold = 0
-    //todo:
-    try {
-      tokensSold = await getTokensSold(...params).call()
-    } catch (e) {
-      console.log('e:', '###getTokensSold is not supported in Auth-os###')
-    }
+    let tokensSold = await getTokensSold(...params).call()
     const contributors = await getCrowdsaleUniqueBuyers(...params).call()
     const { fromWei } = web3Store.web3.utils
 
@@ -283,7 +277,7 @@ export const getTiersLength = async () => {
     if (crowdsale.execID) {
       targetContractName = `idx${crowdsaleStore.contractTargetSuffix}`
     } else {
-      targetContractName = `MintedCappedProxy`
+      targetContractName = crowdsaleStore.proxyName
     }
     const { methods } = await attachToSpecificCrowdsaleContract(targetContractName)
     const { getCrowdsaleTierList } = methods

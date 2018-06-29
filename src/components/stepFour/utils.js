@@ -62,25 +62,25 @@ export const buildDeploymentSteps = web3 => {
 
 const getProxyParams = token => {
   return [
-    '0x9996020c8864964688411b3d90ac27eb5b0937c7',
-    '0x3ad8aa4f87544323a9d1e5dd902f40c356527a7955687113db5f9a85ad579dc1',
+    contractStore.abstractStorage.addr,
+    process.env['REACT_APP_REGISTRY_EXEC_ID'],
     '0xd6ebdab4b8c4123f8445efe724f779fff097cd51',
-    '0x4d696e74656443617070656443726f776473616c650000000000000000000000'
+    process.env['REACT_APP_MINTED_CAPPED_APP_NAME_HASH']
   ]
 }
 
 export const deployProxy = () => {
+  //todo: Dutch proxy
   return [
     () => {
-      const binMintedCappedProxy = contractStore.MintedCappedProxy.bin || ''
-      const abiMintedCappedProxy = contractStore.MintedCappedProxy.abi || []
-      const paramsMintedCappedProxy = getProxyParams()
+      const binProxy = contractStore[crowdsaleStore.proxyName].bin || ''
+      const abiProxy = contractStore[crowdsaleStore.proxyName].abi || []
+      const paramsProxy = getProxyParams()
 
       console.log('***Deploy Proxy contract***')
 
-      return deployContract(abiMintedCappedProxy, binMintedCappedProxy, paramsMintedCappedProxy).then(proxyAddr => {
-        console.log('contractStore:', contractStore)
-        contractStore.setContractProperty('MintedCappedProxy', 'addr', proxyAddr.toLowerCase())
+      return deployContract(abiProxy, binProxy, paramsProxy).then(proxyAddr => {
+        contractStore.setContractProperty(crowdsaleStore.proxyName, 'addr', proxyAddr.toLowerCase())
 
         deploymentStore.setAsSuccessful('deployProxy')
         return Promise.resolve()
@@ -833,8 +833,8 @@ export function scrollToBottom() {
 }
 
 export function getDownloadName() {
-  const { crowdsale, MintedCappedProxy } = contractStore
-  const crowdsalePointer = crowdsale.execID || MintedCappedProxy.addr
+  const { crowdsale } = contractStore
+  const crowdsalePointer = crowdsale.execID || contractStore[crowdsaleStore.proxyName].addr
   return new Promise(resolve => {
     const whenNetworkName = getNetworkVersion()
       .then(networkID => {
@@ -958,10 +958,8 @@ export const SUMMARY_FILE_CONTENTS = networkID => {
     console.log('contractStore:', contractStore)
     if (contractStore.crowdsale.execID) {
       return { field: 'execID', value: 'Auth-os execution ID: ', parent: 'crowdsale' }
-    } else if (contractStore.MintedCappedProxy.addr) {
-      return { field: 'addr', value: authOSContractString('Crowdsale proxy'), parent: 'MintedCappedProxy' }
-    } else if (contractStore.DutchProxy.addr) {
-      return { field: 'addr', value: authOSContractString('Crowdsale proxy'), parent: 'DutchProxy' }
+    } else {
+      return { field: 'addr', value: authOSContractString('Crowdsale proxy'), parent: crowdsaleStore.proxyName }
     }
   }
 

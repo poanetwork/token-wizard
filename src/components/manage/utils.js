@@ -132,7 +132,7 @@ export const updateTierAttribute = async (attribute, value, tierIndex) => {
   if (crowdsaleStore.execID) {
     targetContractName = 'registryExec'
   } else {
-    targetContractName = 'MintedCappedProxy'
+    targetContractName = crowdsaleStore.proxyName
   }
 
   const method = methodToExec(
