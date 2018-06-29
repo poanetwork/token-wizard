@@ -1145,25 +1145,6 @@ async function getCrowdsaleAsset(contractName, stateProp, networkID) {
         },
         {
           constant: true,
-          inputs: [
-            { name: '_wallet', type: 'address' },
-            { name: '_total_supply', type: 'uint256' },
-            { name: '_max_amount_to_sell', type: 'uint256' },
-            { name: '_starting_rate', type: 'uint256' },
-            { name: '_ending_rate', type: 'uint256' },
-            { name: '_duration', type: 'uint256' },
-            { name: '_start_time', type: 'uint256' },
-            { name: '_sale_is_whitelisted', type: 'bool' },
-            { name: '_admin', type: 'address' }
-          ],
-          name: 'init',
-          outputs: [],
-          payable: false,
-          stateMutability: 'view',
-          type: 'function'
-        },
-        {
-          constant: true,
           inputs: [{ name: '_storage', type: 'address' }, { name: '_exec_id', type: 'bytes32' }],
           name: 'getAdmin',
           outputs: [{ name: '', type: 'address' }],
@@ -1196,6 +1177,26 @@ async function getCrowdsaleAsset(contractName, stateProp, networkID) {
         },
         {
           constant: true,
+          inputs: [
+            { name: '_wallet', type: 'address' },
+            { name: '_total_supply', type: 'uint256' },
+            { name: '_max_amount_to_sell', type: 'uint256' },
+            { name: '_starting_rate', type: 'uint256' },
+            { name: '_ending_rate', type: 'uint256' },
+            { name: '_duration', type: 'uint256' },
+            { name: '_start_time', type: 'uint256' },
+            { name: '_sale_is_whitelisted', type: 'bool' },
+            { name: '_admin', type: 'address' },
+            { name: '_burn_excess', type: 'bool' }
+          ],
+          name: 'init',
+          outputs: [],
+          payable: false,
+          stateMutability: 'view',
+          type: 'function'
+        },
+        {
+          constant: true,
           inputs: [{ name: '_storage', type: 'address' }, { name: '_exec_id', type: 'bytes32' }],
           name: 'getCrowdsaleInfo',
           outputs: [
@@ -1203,7 +1204,8 @@ async function getCrowdsaleAsset(contractName, stateProp, networkID) {
             { name: 'team_wallet', type: 'address' },
             { name: 'minimum_contribution', type: 'uint256' },
             { name: 'is_initialized', type: 'bool' },
-            { name: 'is_finalized', type: 'bool' }
+            { name: 'is_finalized', type: 'bool' },
+            { name: 'burn_excess', type: 'bool' }
           ],
           payable: false,
           stateMutability: 'view',
