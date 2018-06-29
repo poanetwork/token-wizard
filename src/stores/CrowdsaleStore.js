@@ -57,7 +57,8 @@ class CrowdsaleStore {
       'uint256',
       'uint256',
       'bool',
-      'address'
+      'address',
+      'bool'
     ]
     if (this.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE) return mintedCappedCrowdsaleDeployInterface
     else if (this.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION) return dutchAuctionCrowdsaleDeployInterface
