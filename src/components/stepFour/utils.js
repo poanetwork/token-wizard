@@ -175,6 +175,9 @@ const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
   //is Dutch Auction crowdsale whitelisted?
   const isWhitelisted = whitelistEnabled === 'yes'
 
+  //todo: burnExcess
+  const burnExcess = true
+
   let crowdsaleParams = [
     walletAddress,
     tokenSupplyBN,
@@ -184,7 +187,8 @@ const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
     durationBN,
     formatDate(startTime),
     isWhitelisted,
-    account
+    account,
+    burnExcess
   ]
 
   console.log('crowdsaleParams:', crowdsaleParams)
