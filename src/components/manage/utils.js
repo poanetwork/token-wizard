@@ -182,7 +182,7 @@ const updateMinimumParams = (minCap, methodInterface) => {
 }
 
 const crowdsaleData = (tier, crowdsale, token, reserved_tokens_info) => {
-  const { isMintedCappedCrowdsale } = crowdsaleStore
+  const { isDutchAuction, isMintedCappedCrowdsale } = crowdsaleStore
   const { toAscii } = web3Store.web3.utils
   const {
     start_time,
@@ -191,6 +191,8 @@ const crowdsaleData = (tier, crowdsale, token, reserved_tokens_info) => {
     tier_end,
     current_rate,
     tier_price,
+    start_rate,
+    end_rate,
     tier_sell_cap,
     tier_min,
     tokens_remaining,
@@ -228,6 +230,8 @@ const crowdsaleData = (tier, crowdsale, token, reserved_tokens_info) => {
     start_time: isMintedCappedCrowdsale ? tier_start : start_time,
     end_time: isMintedCappedCrowdsale ? tier_end : end_time,
     rate: isMintedCappedCrowdsale ? tier_price : current_rate,
+    min_rate: isDutchAuction ? start_rate : '',
+    max_rate: isDutchAuction ? end_rate : '',
     max_sell_cap: isMintedCappedCrowdsale
       ? tier_sell_cap
       : toBigNumber(tokens_remaining)
@@ -260,12 +264,22 @@ export const processTier = (crowdsale, token, reserved_tokens_info, tier, tier_i
   logger.log('token:', token)
 
   const { web3 } = web3Store
+  const toToken = wei =>
+    wei > 0
+      ? toBigNumber(web3.utils.fromWei(wei, 'ether'))
+          .pow(-1)
+          .dp(0)
+          .toFixed()
+      : '0'
+
   const _crowdsaleData = crowdsaleData(tier, crowdsale, token, reserved_tokens_info)
   const {
     wallet,
     start_time,
     end_time,
     rate: rate_in_wei,
+    min_rate,
+    max_rate,
     max_sell_cap,
     min_cap,
     name,
@@ -282,13 +296,10 @@ export const processTier = (crowdsale, token, reserved_tokens_info, tier, tier_i
   const max_cap_before_decimals = toBigNumber(max_sell_cap)
     .div(`1e${token_decimals}`)
     .toFixed()
-  const rate =
-    rate_in_wei > 0
-      ? toBigNumber(web3.utils.fromWei(rate_in_wei, 'ether'))
-          .pow(-1)
-          .dp(0)
-          .toFixed()
-      : 0
+  const rate = toToken(rate_in_wei)
+  const minRate = toToken(min_rate)
+  const maxRate = toToken(max_rate)
+
   // TODO: remove this filter after Auth-os implement uniqueness for the whitelisted addresses (#871)
   const filtered_whitelist = [...new Set(whitelist.map(item => JSON.stringify(item)))].map(item => JSON.parse(item))
 
@@ -296,6 +307,8 @@ export const processTier = (crowdsale, token, reserved_tokens_info, tier, tier_i
     tier: name,
     walletAddress: wallet,
     rate,
+    minRate,
+    maxRate,
     supply: max_cap_before_decimals || 0,
     minCap: min_cap,
     startTime: formatDate(start_time),
