@@ -207,7 +207,7 @@ const crowdsaleData = (tier, crowdsale, token, reserved_tokens_info) => {
     logger.log('###Token name is already in ASCII###')
   }
 
-  const { team_wallet, is_finalized } = crowdsale
+  const { team_wallet, is_finalized, burn_excess } = crowdsale
   const { total_supply, token_decimals } = token
   let { token_name, token_symbol } = token
 
@@ -241,6 +241,7 @@ const crowdsaleData = (tier, crowdsale, token, reserved_tokens_info) => {
     whitelist: whitelist || [],
     is_whitelisted,
     finalized: is_finalized,
+    burn_excess,
     crowdsale_token: {
       name: token_name,
       ticker: token_symbol,
@@ -273,7 +274,8 @@ export const processTier = (crowdsale, token, reserved_tokens_info, tier, tier_i
     updatable,
     is_whitelisted,
     finalized,
-    crowdsale_token
+    crowdsale_token,
+    burn_excess
   } = _crowdsaleData
   logger.log(_crowdsaleData)
   logger.log('reserved_tokens_info:', crowdsale_token.reserved_accounts)
@@ -344,6 +346,7 @@ export const processTier = (crowdsale, token, reserved_tokens_info, tier, tier_i
 
   crowdsaleStore.addInitialTierValues(initial_tier_values)
   crowdsaleStore.setSelectedProperty('finalized', finalized)
+  crowdsaleStore.setSelectedProperty('burn_excess', burn_excess ? 'yes' : 'no')
   crowdsaleStore.setSelectedProperty('updatable', crowdsaleStore.selected.updatable || updatable)
 
   crowdsale_token.reserved_accounts.forEach(reservedTokenStore.addToken)
