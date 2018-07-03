@@ -54,6 +54,9 @@ import { Form } from 'react-final-form'
 import { ContributeForm } from './ContributeForm'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import ReactTooltip from 'react-tooltip'
+import logdown from 'logdown'
+
+const logger = logdown('TW:contribute')
 
 @inject(
   'contractStore',
@@ -104,7 +107,7 @@ export class Contribute extends React.Component {
           .updateValues()
           .then(() => generalStore.setGasPrice(gasPriceStore.slow.price), () => noGasPriceAvailable())
       )
-      .catch(err => console.error(err))
+      .catch(err => logger.error(err))
       .then(() => this.setState({ loading: false }))
   }
 
@@ -186,7 +189,7 @@ export class Contribute extends React.Component {
       await this.calculateMinContribution()
       await this.setTimers()
     } catch (err) {
-      console.error(err)
+      logger.error(err)
     }
   }
 
@@ -314,21 +317,21 @@ export class Contribute extends React.Component {
     if (crowdsaleStore.isMintedCappedCrowdsale) {
       const currentTierInfo = await methods.getCurrentTierInfo(...params).call()
       const tier_price = currentTierInfo.tier_price || currentTierInfo[4]
-      console.log('tier_price:', tier_price)
+      logger.log('tier_price:', tier_price)
       crowdsalePageStore.setProperty('rate', tier_price) //should be one token in wei
     } else if (crowdsaleStore.isDutchAuction) {
       const crowdsaleStatus = await methods.getCrowdsaleStatus(...params).call()
       const current_rate = crowdsaleStatus.current_rate || crowdsaleStatus[2]
-      console.log('current_rate:', current_rate)
+      logger.log('current_rate:', current_rate)
       crowdsalePageStore.setProperty('rate', current_rate) //should be one token in wei
     }
 
     // rate is from contract. It is already in wei. How much 1 token costs in wei.
     const rate = toBigNumber(crowdsalePageStore.rate)
-    console.log('rate:', rate.toFixed())
+    logger.log('rate:', rate.toFixed())
 
     const tokensToContribute = toBigNumber(contributeStore.tokensToContribute).times(rate)
-    console.log('tokensToContribute:', tokensToContribute.toFixed())
+    logger.log('tokensToContribute:', tokensToContribute.toFixed())
 
     const userLimits = await getUserMaxLimits(addr, execID, methods, account)
 
@@ -365,7 +368,7 @@ export class Contribute extends React.Component {
     const { account, execID } = contractStore.crowdsale
 
     const weiToSend = await this.calculateWeiToSend()
-    console.log('weiToSend:', weiToSend.toFixed())
+    logger.log('weiToSend:', weiToSend.toFixed())
 
     if (weiToSend.eq('0')) {
       this.setState({ loading: false })
@@ -377,7 +380,7 @@ export class Contribute extends React.Component {
       value: weiToSend.integerValue(BigNumber.ROUND_CEIL),
       gasPrice: generalStore.gasPrice
     }
-    console.log(opts)
+    logger.log(opts)
 
     let methodInterface = []
 
@@ -386,7 +389,7 @@ export class Contribute extends React.Component {
     const method = methodToExec(targetContractName, `buy()`, this.getBuyParams, paramsToExec)
 
     const estimatedGas = await method.estimateGas(opts)
-    console.log('estimatedGas:', estimatedGas)
+    logger.log('estimatedGas:', estimatedGas)
 
     opts.gasLimit = calculateGasLimit(estimatedGas)
 
@@ -399,7 +402,7 @@ export class Contribute extends React.Component {
     sendTXToContract(method.send(opts))
       .then(() => successfulContributionAlert(tokensToContribute))
       .catch(err => {
-        console.error(err)
+        logger.error(err)
         return toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED })
       })
       .then(() => this.setState({ loading: false }))

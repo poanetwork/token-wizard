@@ -18,6 +18,8 @@ if (storage.has('DeploymentStore') && storage.get('DeploymentStore').deploymentS
   localStorage.clear()
 }
 
+localStorage.debug = 'TW*'
+
 const generalStore = new GeneralStore()
 const crowdsalePageStore = new CrowdsalePageStore()
 const contractStore = new ContractStore()

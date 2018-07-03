@@ -3,6 +3,9 @@ import { observable } from 'mobx'
 import { getNetworkID } from '../utils/utils'
 import { CrowdsaleConfig } from '../components/Common/config'
 import { CHAINS, REACT_PREFIX } from '../utils/constants'
+import logdown from 'logdown'
+
+const logger = logdown('TW:stores:Web3')
 
 class Web3Store {
   @observable web3
@@ -34,7 +37,7 @@ class Web3Store {
     let web3 = window.web3
     if (typeof web3 === 'undefined') {
       // no web3, use fallback
-      console.error('Please use a web3 browser')
+      logger.error('Please use a web3 browser')
       const devEnvironment = process.env.NODE_ENV === 'development'
       if (devEnvironment) {
         web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))

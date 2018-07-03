@@ -10,6 +10,9 @@ import { TOAST, NAVIGATION_STEPS } from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
 import { checkWeb3, getNetworkVersion } from '../../utils/blockchainHelpers'
 import { getCrowdsaleAssets } from '../../stores/utils'
+import logdown from 'logdown'
+
+const logger = logdown('TW:home')
 
 const { CROWDSALE_STRATEGY, TOKEN_SETUP, CROWDSALE_SETUP, PUBLISH, CROWDSALE_PAGE } = NAVIGATION_STEPS
 
@@ -47,7 +50,7 @@ export class Home extends Component {
           })
         },
         e => {
-          console.error('Error downloading contracts', e)
+          logger.error('Error downloading contracts', e)
           toast.showToaster({
             type: TOAST.TYPE.ERROR,
             message:
@@ -73,7 +76,7 @@ export class Home extends Component {
         })
       },
       e => {
-        console.error('There was a problem loading the crowdsale addresses from the registry', e)
+        logger.error('There was a problem loading the crowdsale addresses from the registry', e)
         this.setState({
           loading: false
         })

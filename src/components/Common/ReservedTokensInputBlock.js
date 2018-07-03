@@ -12,6 +12,9 @@ import { observer } from 'mobx-react'
 import { NumericInput } from './NumericInput'
 import { reservedTokensImported } from '../../utils/alerts'
 import processReservedTokens from '../../utils/processReservedTokens'
+import logdown from 'logdown'
+
+const logger = logdown('TW:ReservedTokensInputBlock')
 
 const { VALID, INVALID } = VALIDATION_TYPES
 const { ADDRESS, DIMENSION, VALUE } = TEXT_FIELDS
@@ -191,7 +194,7 @@ export class ReservedTokensInputBlock extends Component {
         description: "Value in percentage. Don't forget to click + button for each reserved token."
       }
     } else {
-      console.error(`unrecognized dimension '${this.state.dim}'`)
+      logger.error(`unrecognized dimension '${this.state.dim}'`)
     }
 
     const actionsStyle = {

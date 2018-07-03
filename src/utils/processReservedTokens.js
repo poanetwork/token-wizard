@@ -1,4 +1,7 @@
 import { composeValidators, isAddress, isDecimalPlacesNotGreaterThan, isPositive, isRequired } from './validations'
+import logdown from 'logdown'
+
+const logger = logdown('TW:processReservedTokens')
 
 /**
  * Execute a callback with each valid whitelist item in the given list
@@ -30,7 +33,7 @@ export default function({ rows, decimals }, cb) {
     } else if (dim === 'percentage') {
       valueErrors = composeValidators(isRequired(), isPositive())(val)
     } else {
-      return console.error(`unrecognized dimension '${dim}'`)
+      return logger.error(`unrecognized dimension '${dim}'`)
     }
 
     if (isAddress()(addr) || valueErrors) return

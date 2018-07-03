@@ -33,6 +33,9 @@ import { FinalizeCrowdsaleStep } from './FinalizeCrowdsaleStep'
 import { ReservedTokensList } from './ReservedTokensList'
 import { ManageForm } from './ManageForm'
 import moment from 'moment'
+import logdown from 'logdown'
+
+const logger = logdown('TW:manage')
 
 @inject('crowdsaleStore', 'web3Store', 'tierStore', 'contractStore', 'generalStore', 'tokenStore', 'gasPriceStore')
 @observer
@@ -74,7 +77,7 @@ export class Manage extends Component {
         this.initialValues.tiers = JSON.parse(JSON.stringify(tierStore.tiers))
         this.initialValues.minCap = +tierStore.tiers[0].minCap
       })
-      .catch(err => console.error(err))
+      .catch(err => logger.error(err))
       .then(() => {
         this.hideLoader()
         if (!this.state.ownerCurrentUser) notTheOwner()
@@ -153,7 +156,7 @@ export class Manage extends Component {
       const { isMintedCappedCrowdsale, isDutchAuction, execID, contractTargetSuffix } = crowdsaleStore
 
       const num_of_tiers = await getTiersLength()
-      console.log('num_of_tiers:', num_of_tiers)
+      logger.log('num_of_tiers:', num_of_tiers)
 
       let target
       if (execID) {
@@ -273,7 +276,7 @@ export class Manage extends Component {
             }
             const whitelist = (tierWhitelist && tierWhitelist.whitelist) || []
 
-            console.log('whitelist:', whitelist)
+            logger.log('whitelist:', whitelist)
 
             for (let whitelist_item_index = 0; whitelist_item_index < whitelist.length; whitelist_item_index++) {
               const whitelist_item_addr = whitelist[whitelist_item_index]
@@ -388,7 +391,7 @@ export class Manage extends Component {
         tiers.push(Object.assign(tier_data, tier_dates, tokens_sold))
       }
 
-      console.log('tiers:', tiers)
+      logger.log('tiers:', tiers)
 
       tiers.forEach((tier, index) => processTier(crowdsale, token, reserved_tokens_info, tier, index))
     } catch (err) {
@@ -398,7 +401,7 @@ export class Manage extends Component {
 
   hideLoader = err => {
     if (err) {
-      console.log(err)
+      logger.log(err)
     }
     this.setState({ loading: false })
   }
@@ -502,7 +505,7 @@ export class Manage extends Component {
         })
       }
     } catch (e) {
-      console.error(e)
+      logger.error(e)
       this.setState({ canFinalize: false })
     }
   }
@@ -553,7 +556,7 @@ export class Manage extends Component {
                 method
                   .estimateGas(opts)
                   .then(estimatedGas => {
-                    console.log('estimatedGas:', estimatedGas)
+                    logger.log('estimatedGas:', estimatedGas)
                     opts.gasLimit = calculateGasLimit(estimatedGas)
                     return sendTXToContract(method.send(opts))
                   })
@@ -567,7 +570,7 @@ export class Manage extends Component {
                     })
                   })
                   .catch(err => {
-                    console.log(err)
+                    logger.log(err)
                     toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.FINALIZE_FAIL })
                   })
                   .then(this.hideLoader)
@@ -576,7 +579,7 @@ export class Manage extends Component {
           })
         }
       })
-      .catch(console.error)
+      .catch(logger.error)
   }
 
   allTiersValid = () => {
@@ -615,7 +618,7 @@ export class Manage extends Component {
     this.updateCrowdsaleStatus()
       .then(() => {
         const fieldsToUpdate = this.fieldsToUpdate()
-        console.log('fieldsToUpdate:', fieldsToUpdate)
+        logger.log('fieldsToUpdate:', fieldsToUpdate)
 
         fieldsToUpdate
           .reduce((promise, { key, newValue, tier }) => {

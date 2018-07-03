@@ -3,6 +3,10 @@ import { defaultTier, defaultTierValidations, VALIDATION_TYPES } from '../utils/
 import { validateTime, validateSupply, validateLaterTime, validateLaterOrEqualTime, validateTier } from '../utils/utils'
 import autosave from './autosave'
 import { defaultCompanyEndDate, defaultCompanyStartDate } from '../components/stepThree/utils'
+import logdown from 'logdown'
+
+const logger = logdown('TW:stores:Tier')
+
 const { VALID, INVALID } = VALIDATION_TYPES
 
 class TierStore {
@@ -161,12 +165,12 @@ class TierStore {
 
     const isValid = this.validTiers.every((tier, index) => {
       return Object.keys(tier).every(key => {
-        console.log('key', key, this.validTiers[index][key])
+        logger.log('key', key, this.validTiers[index][key])
         return this.validTiers[index][key] === VALID
       })
     })
 
-    console.log('isValid', isValid)
+    logger.log('isValid', isValid)
 
     return isValid
   }
