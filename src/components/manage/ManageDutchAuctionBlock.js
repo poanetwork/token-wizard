@@ -65,10 +65,15 @@ export const ManageDutchAuctionBlock = inject('crowdsaleStore', 'tokenStore')(
                 </div>
 
                 <div className="input-block-container">
+                  <CrowdsaleRate name={`${name}.minRate`} side="left" label={TEXT_FIELDS.MIN_RATE} disabled={true} />
+                  <CrowdsaleRate name={`${name}.maxRate`} side="right" label={TEXT_FIELDS.MAX_RATE} disabled={true} />
+                </div>
+
+                <div className="input-block-container">
                   <CrowdsaleRate
                     name={`${name}.rate`}
                     side="left"
-                    label={TEXT_FIELDS.RATE}
+                    label={TEXT_FIELDS.CURRENT_RATE}
                     disabled={true}
                     errorStyle={inputErrorStyle}
                   />

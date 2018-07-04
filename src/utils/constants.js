@@ -191,6 +191,7 @@ export const TEXT_FIELDS = {
   SUPPLY_SHORT: 'Supply',
   DECIMALS: 'Decimals',
   RATE: 'Rate',
+  CURRENT_RATE: 'Current Rate',
   MIN_RATE: 'Min Rate',
   MAX_RATE: 'Max Rate',
   WALLET_ADDRESS: 'Wallet Address',

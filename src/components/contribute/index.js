@@ -524,7 +524,7 @@ export class Contribute extends React.Component {
                 <p className="hashes-description_cp_address">
                   {crowdsaleAddressDescription}
                   <CopyToClipboard text={crowdsaleAddress}>
-                    <btn data-tip={crowdsaleAddressTooltip} className="copy" tool />
+                    <btn data-tip={crowdsaleAddressTooltip} className="copy" />
                   </CopyToClipboard>
                 </p>
               </div>

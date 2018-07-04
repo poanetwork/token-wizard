@@ -421,7 +421,7 @@ export class Manage extends Component {
 
   setCrowdsaleInfo = async () => {
     const { contractStore, crowdsaleStore } = this.props
-    const { execID, selected } = crowdsaleStore
+    const { execID, selected, isMintedCappedCrowdsale, isDutchAuction } = crowdsaleStore
     const { addr } = contractStore.abstractStorage
     const { initialTiersValues } = selected
 
@@ -450,7 +450,10 @@ export class Manage extends Component {
     }
     const { start_time, end_time } = await getCrowdsaleStartAndEndTimes(...params).call()
     let crowdsaleInfo = await getCrowdsaleInfo(...params).call()
-    if (crowdsaleInfo && crowdsaleInfo.hasOwnProperty('is_finalized')) {
+
+    if (isMintedCappedCrowdsale && crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('is_finalized')) {
+      crowdsaleInfo.is_finalized = crowdsaleInfo[3]
+    } else if (isDutchAuction && crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('is_finalized')) {
       crowdsaleInfo.is_finalized = crowdsaleInfo[4]
     }
     const { is_finalized } = crowdsaleInfo
@@ -497,12 +500,11 @@ export class Manage extends Component {
         _isCrowdsaleFull.is_crowdsale_full = _isCrowdsaleFull[0]
       }
       const { is_crowdsale_full } = _isCrowdsaleFull
+      const { crowdsaleHasEnded } = this.state
 
       if (is_finalized) {
         this.setState({ canFinalize: false })
       } else {
-        const { crowdsaleHasEnded } = this.state
-
         this.setState({
           canFinalize: crowdsaleHasEnded || is_crowdsale_full
         })
@@ -687,7 +689,7 @@ export class Manage extends Component {
     return (
       <section className="manage">
         <FinalizeCrowdsaleStep
-          disabled={!ownerCurrentUser || crowdsaleIsFinalized || !canFinalize}
+          disabled={!ownerCurrentUser || crowdsaleIsFinalized || !canFinalize || crowdsaleHasEnded}
           handleClick={this.finalizeCrowdsale}
         />
 
@@ -700,7 +702,7 @@ export class Manage extends Component {
           initialValues={{ ...this.initialValues }}
           component={ManageForm}
           canEditTiers={ownerCurrentUser && !canFinalize && !crowdsaleIsFinalized}
-          canEditMinCap={ownerCurrentUser && !crowdsaleHasEnded && !crowdsaleIsWhitelisted}
+          canEditMinCap={ownerCurrentUser && !crowdsaleHasEnded && !crowdsaleIsWhitelisted && !crowdsaleIsFinalized}
           handleChange={this.updateTierStore}
           canSave={this.canSave()}
           displaySave={this.saveDisplayed()}
