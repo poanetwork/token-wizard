@@ -30,7 +30,8 @@ export const defaultTier = {
   endTime: '',
   walletAddress: '',
   updatable: 'off',
-  whitelist: []
+  whitelist: [],
+  minCap: '0'
 }
 
 export const defaultTierValidations = {
