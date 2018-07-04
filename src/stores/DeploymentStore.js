@@ -28,7 +28,7 @@ class DeploymentStore {
     logger.log('hasReservedToken:', hasReservedToken)
     logger.log('hasWhitelist:', hasWhitelist)
     const listOfTx = [
-      //{ name: 'deployProxy', dependsOnTiers: false, required: true }, //todo
+      { name: 'deployProxy', dependsOnTiers: false, required: true }, //todo
       { name: 'crowdsaleCreate', dependsOnTiers: false, required: true },
       { name: 'token', dependsOnTiers: false, required: true },
       { name: 'setReservedTokens', dependsOnTiers: false, required: hasReservedToken },

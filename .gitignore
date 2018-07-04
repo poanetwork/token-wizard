@@ -22,7 +22,6 @@ yarn-debug.log*
 yarn-error.log*
 debug.log*
 
-public/contracts/
 .env
 
 .idea

@@ -534,6 +534,7 @@ export let methodToExec = (contractName, methodName, getEncodedParams, params) =
 export let methodToCreateAppInstance = (contractName, methodName, getEncodedParams, rawParams, appName) => {
   const { web3 } = web3Store
   logger.log('rawParams:', rawParams)
+  logger.log('contractName:', contractName)
   const abi = contractStore[contractName].abi || []
   logger.log('abi:', abi)
   const addr = contractStore[contractName].addr || {}

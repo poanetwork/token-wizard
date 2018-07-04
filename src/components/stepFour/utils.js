@@ -70,7 +70,6 @@ const getProxyParams = token => {
 }
 
 export const deployProxy = () => {
-  //todo: Dutch proxy
   return [
     () => {
       const binProxy = contractStore[crowdsaleStore.proxyName].bin || ''
@@ -218,7 +217,13 @@ export const deployCrowdsale = (getParams, methodInterface, appName) => {
 
             const methodInterfaceStr = `init(${methodInterface.join(',')})`
 
-            let method = methodToCreateAppInstance('registryExec', methodInterfaceStr, getParams, params, appName)
+            let method = methodToCreateAppInstance(
+              crowdsaleStore.proxyName,
+              methodInterfaceStr,
+              getParams,
+              params,
+              appName
+            )
 
             const opts = { gasPrice: generalStore.gasPrice, from: account }
             logger.log('opts:', opts)
@@ -308,7 +313,7 @@ export const initializeToken = () => {
 
         let paramsToExec = [tokenStore, methodInterface]
         const method = methodToExec(
-          'registryExec',
+          crowdsaleStore.proxyName,
           `initCrowdsaleToken(${methodInterface.join(',')})`,
           getTokenParams,
           paramsToExec
@@ -396,7 +401,7 @@ export const setReservedTokensListMultiple = () => {
 
       let paramsToExec = [addrs, inTokens, inPercentageUnit, inPercentageDecimals, methodInterface]
       const method = methodToExec(
-        'registryExec',
+        crowdsaleStore.proxyName,
         `updateMultipleReservedTokens(${methodInterface.join(',')})`,
         getReservedTokensParams,
         paramsToExec
@@ -427,7 +432,12 @@ export const initializeCrowdsale = () => {
         let account = contractStore.crowdsale.account
 
         let paramsToExec = []
-        const method = methodToExec('registryExec', 'initializeCrowdsale()', getInitializeCrowdsaleParams, paramsToExec)
+        const method = methodToExec(
+          crowdsaleStore.proxyName,
+          'initializeCrowdsale()',
+          getInitializeCrowdsaleParams,
+          paramsToExec
+        )
 
         const opts = { gasPrice: generalStore.gasPrice, from: account }
         logger.log('opts:', opts)
@@ -497,7 +507,7 @@ export const createCrowdsaleTiers = () => {
 
       let paramsToExec = [methodInterface]
       const method = methodToExec(
-        'registryExec',
+        crowdsaleStore.proxyName,
         `createCrowdsaleTiers(${methodInterface.join(',')})`,
         getTiersParams,
         paramsToExec
@@ -584,7 +594,7 @@ export const addWhitelist = () => {
 
       let paramsToExec = [index, addrs, minCaps, maxCaps, methodInterface]
       const method = methodToExec(
-        'registryExec',
+        crowdsaleStore.proxyName,
         `${methodName}(${methodInterface.join(',')})`,
         getWhitelistsParams,
         paramsToExec
@@ -617,7 +627,7 @@ export const updateGlobalMinContribution = () => {
 
       let paramsToExec = [methodInterface]
       const method = methodToExec(
-        'registryExec',
+        crowdsaleStore.proxyName,
         `updateGlobalMinContribution(${methodInterface.join(',')})`,
         getUpdateGlobalMinCapParams,
         paramsToExec
@@ -656,7 +666,7 @@ export const updateTierMinimum = () => {
 
       let paramsToExec = [index, methodInterface]
       const method = methodToExec(
-        'registryExec',
+        crowdsaleStore.proxyName,
         `updateTierMinimum(${methodInterface.join(',')})`,
         getUpdateTierMinimumParams,
         paramsToExec
