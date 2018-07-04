@@ -445,14 +445,10 @@ export class Manage extends Component {
     const { start_time, end_time } = await getCrowdsaleStartAndEndTimes(...params).call()
     let crowdsaleInfo = await getCrowdsaleInfo(...params).call()
 
-    if (isMintedCappedCrowdsale) {
-      if (crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('is_finalized')) {
-        crowdsaleInfo.is_finalized = crowdsaleInfo[3]
-      }
-    } else if (isDutchAuction) {
-      if (crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('is_finalized')) {
-        crowdsaleInfo.is_finalized = crowdsaleInfo[4]
-      }
+    if (isMintedCappedCrowdsale && crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('is_finalized')) {
+      crowdsaleInfo.is_finalized = crowdsaleInfo[3]
+    } else if (isDutchAuction && crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('is_finalized')) {
+      crowdsaleInfo.is_finalized = crowdsaleInfo[4]
     }
     const { is_finalized } = crowdsaleInfo
 
