@@ -98,6 +98,17 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
                   disabled={true}
                 />
               </div>
+              {crowdsaleStore.isDutchAuction ? (
+                <div className="input-block-container">
+                  <InputField
+                    side="left"
+                    type="text"
+                    title={TEXT_FIELDS.BURN_EXCESS}
+                    value={crowdsaleStore.selected.burn_excess}
+                    disabled={true}
+                  />
+                </div>
+              ) : null}
             </div>
           </div>
           <FieldArray name="tiers">

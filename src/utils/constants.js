@@ -166,7 +166,8 @@ export const DESCRIPTION = {
   WALLET: `Where the money goes after contributors transactions. Immediately after each transaction. We
                         recommend to setup a multisig wallet with hardware based signers.`,
   CROWDSALE_SETUP: `The most important and exciting part of the crowdsale process. Here you can
-              define parameters of your crowdsale campaign.`
+              define parameters of your crowdsale campaign.`,
+  BURN_EXCESS: `Whether the unsold tokens will be burnt on finalization, or be sent to the team wallet`
 }
 
 export const PUBLISH_DESCRIPTION = {
@@ -211,7 +212,8 @@ export const TEXT_FIELDS = {
   ALLOW_MODIFYING: 'Allow modifying',
   ENABLE_WHITELISTING: 'Enable whitelisting',
   GAS_PRICE: 'Gas Price',
-  STRATEGY: 'Crowdsale Type'
+  STRATEGY: 'Crowdsale Type',
+  BURN_EXCESS: 'Burn Excess'
 }
 
 export const intitialStepTwoValidations = {

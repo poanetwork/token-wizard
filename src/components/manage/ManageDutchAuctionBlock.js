@@ -19,7 +19,6 @@ const inputErrorStyle = {
   width: '100%',
   height: '20px'
 }
-const { STRATEGY } = TEXT_FIELDS
 
 export const ManageDutchAuctionBlock = inject('crowdsaleStore', 'tokenStore')(
   observer(({ fields, canEditTiers, crowdsaleStore, tokenStore, aboutTier, ...props }) => (
@@ -40,7 +39,7 @@ export const ManageDutchAuctionBlock = inject('crowdsaleStore', 'tokenStore')(
                   <InputField
                     side="left"
                     type="text"
-                    title={STRATEGY}
+                    title={TEXT_FIELDS.STRATEGY}
                     value={CROWDSALE_STRATEGIES_DISPLAYNAMES.DUTCH_AUCTION}
                     disabled={true}
                   />

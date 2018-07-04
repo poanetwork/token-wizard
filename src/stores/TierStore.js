@@ -108,6 +108,12 @@ class TierStore {
   }
 
   @action
+  updateBurnExcess = (value, validity) => {
+    this.tiers[0].burnExcess = value
+    this.validTiers[0].burnExcess = validity
+  }
+
+  @action
   validateEditedTier = (property, index) => {
     switch (property) {
       case 'endTime':

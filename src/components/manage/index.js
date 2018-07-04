@@ -210,6 +210,9 @@ export class Manage extends Component {
         if (crowdsale && !crowdsale.hasOwnProperty('is_finalized')) {
           crowdsale.is_finalized = crowdsale[4]
         }
+        if (crowdsale && !crowdsale.hasOwnProperty('burn_excess')) {
+          crowdsale.burn_excess = crowdsale[5]
+        }
       }
       let token
       if (getTokenInfo) {
