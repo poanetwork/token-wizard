@@ -686,7 +686,7 @@ export class Manage extends Component {
     return (
       <section className="manage">
         <FinalizeCrowdsaleStep
-          disabled={!ownerCurrentUser || crowdsaleIsFinalized || !canFinalize || crowdsaleHasEnded}
+          disabled={!ownerCurrentUser || crowdsaleIsFinalized || !canFinalize}
           handleClick={this.finalizeCrowdsale}
         />
 
