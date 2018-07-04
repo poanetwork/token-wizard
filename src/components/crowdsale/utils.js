@@ -134,6 +134,8 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
       const current_rate = chooseRateForDutchAuction(crowdsaleStatus)
 
       crowdsalePageStore.setProperty('rate', current_rate) //should be one token in wei
+      crowdsalePageStore.setProperty('startRate', crowdsaleStatus.start_rate)
+      crowdsalePageStore.setProperty('endRate', crowdsaleStatus.end_rate)
       crowdsalePageStore.setProperty('maximumSellableTokens', max_sellable)
 
       const tokenRemainingBN = toBigNumber(crowdsaleStatus.tokens_remaining)

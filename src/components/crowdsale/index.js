@@ -146,12 +146,14 @@ export class Crowdsale extends React.Component {
   render() {
     const { web3Store, tokenStore, crowdsalePageStore, contractStore, crowdsaleStore } = this.props
     const { web3 } = web3Store
-    const { proxyName } = crowdsaleStore
+    const { proxyName, isMintedCappedCrowdsale } = crowdsaleStore
 
     const crowdsaleExecID = getContractStoreProperty('crowdsale', 'execID')
     const contributorsCount = crowdsalePageStore.contributors ? crowdsalePageStore.contributors.toString() : 0
 
     const rate = toBigNumber(crowdsalePageStore.rate)
+    const startRate = toBigNumber(crowdsalePageStore.startRate || 0)
+    const endRate = toBigNumber(crowdsalePageStore.endRate || 0)
     const tokenDecimals = toBigNumber(tokenStore.decimals)
     const maximumSellableTokens = toBigNumber(crowdsalePageStore.maximumSellableTokens)
     const maximumSellableTokensInWei = toBigNumber(crowdsalePageStore.maximumSellableTokensInWei)
@@ -163,15 +165,20 @@ export class Crowdsale extends React.Component {
     const tokensClaimedTiers = tokensSold.div(`1e${tokenDecimals}`).toFixed()
     const tokensClaimed = tokensClaimedTiers
 
-    //price
-    const rateInETH = toBigNumber(web3.utils.fromWei(rate.toFixed(), 'ether'))
-    const tokensPerETH =
-      rateInETH > 0
-        ? rateInETH
+    //prices
+    const toToken = inETH =>
+      inETH > 0
+        ? inETH
             .pow(-1)
             .decimalPlaces(0)
             .toFixed()
         : 0
+    const rateInETH = toBigNumber(web3.utils.fromWei(rate.toFixed(), 'ether'))
+    const startRateInETH = toBigNumber(web3.utils.fromWei(startRate.toFixed(), 'ether'))
+    const endRateInETH = toBigNumber(web3.utils.fromWei(endRate.toFixed(), 'ether'))
+    const currentRatePerETH = toToken(rateInETH)
+    const startRatePerETH = toToken(startRateInETH)
+    const endRatePerETH = toToken(endRateInETH)
 
     //total supply
     const totalSupply = maxCapBeforeDecimals.toFixed()
@@ -187,10 +194,63 @@ export class Crowdsale extends React.Component {
             .toFixed()
         : '0'
 
-    const contributorsBlock = (
-      <div className="right">
-        <p className="title">{`${contributorsCount}`}</p>
-        <p className="description">Contributors</p>
+    const crowdsaleSummary = isMintedCappedCrowdsale ? (
+      <div>
+        <div className="left" style={{ width: '42% ' }}>
+          <div className="hidden">
+            <div className="left">
+              <p className="title">{tokensClaimed}</p>
+              <p className="description">Tokens Claimed</p>
+            </div>
+            <div className="right">
+              <p className="title">{contributorsCount}</p>
+              <p className="description">Contributors</p>
+            </div>
+          </div>
+        </div>
+        <div className="right" style={{ width: '58%' }}>
+          <div className="hidden">
+            <div className="left">
+              <p className="title">{currentRatePerETH}</p>
+              <p className="description">Price (Tokens/ETH)</p>
+            </div>
+            <div className="right">
+              <p className="title">{totalSupply}</p>
+              <p className="description">Total Supply</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    ) : (
+      <div>
+        <div className="left" style={{ width: '100%' }}>
+          <div className="left" style={{ width: '33%' }}>
+            <p className="title">{tokensClaimed}</p>
+            <p className="description">Tokens Claimed</p>
+          </div>
+          <div className="left" style={{ width: '33%' }}>
+            <p className="title">{contributorsCount}</p>
+            <p className="description">Contributors</p>
+          </div>
+          <div className="left" style={{ width: '33%' }}>
+            <p className="title">{totalSupply}</p>
+            <p className="description">Total Supply</p>
+          </div>
+        </div>
+        <div className="left" style={{ width: '100%' }}>
+          <div className="left" style={{ width: '33%' }}>
+            <p className="title">{startRatePerETH}</p>
+            <p className="description">Start Rate (Tokens/ETH)</p>
+          </div>
+          <div className="left" style={{ width: '33%' }}>
+            <p className="title">{currentRatePerETH}</p>
+            <p className="description">Current Rate (Tokens/ETH)</p>
+          </div>
+          <div className="left" style={{ width: '33%' }}>
+            <p className="title">{endRatePerETH}</p>
+            <p className="description">End Rate (Tokens/ETH)</p>
+          </div>
+        </div>
       </div>
     )
 
@@ -235,28 +295,10 @@ export class Crowdsale extends React.Component {
           </div>
           <div className="total-funds-statistics">
             <div className="hidden">
-              <div className="left" style={{ width: '42% ' }}>
-                <div className="hidden">
-                  <div className="left">
-                    <p className="title">{`${tokensClaimed}`}</p>
-                    <p className="description">Tokens Claimed</p>
-                  </div>
-                  {contributorsBlock}
-                </div>
-                <p className="hash">{`${crowdsaleExecID || (proxy && proxy.addr)}`}</p>
+              {crowdsaleSummary}
+              <div className="left">
+                <p className="hash">{crowdsaleExecID || (proxy && proxy.addr)}</p>
                 <p className="description">{crowdsaleExecID ? 'Crowdsale Execution ID' : 'Crowdsale Proxy Address'}</p>
-              </div>
-              <div className="right" style={{ width: '58%' }}>
-                <div className="hidden">
-                  <div className="left">
-                    <p className="title">{`${tokensPerETH}`}</p>
-                    <p className="description">Price (Tokens/ETH)</p>
-                  </div>
-                  <div className="right">
-                    <p className="title">{`${totalSupply}`}</p>
-                    <p className="description">Total Supply</p>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
