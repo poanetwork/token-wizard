@@ -951,6 +951,7 @@ export const SUMMARY_FILE_CONTENTS = networkID => {
   let rates = []
   let crowdsaleIsModifiableEl = []
   let crowdsaleIsWhitelistedEl = []
+  let burn = []
   if (crowdsaleStore.isDutchAuction) {
     rates = [
       { field: 'minRate', value: 'Crowdsale min rate: ', parent: 'tierStore' },
@@ -962,6 +963,8 @@ export const SUMMARY_FILE_CONTENTS = networkID => {
     crowdsaleIsWhitelistedEl = [{ field: 'whitelistEnabled', value: 'Crowdsale is whitelisted: ', parent: 'tierStore' }]
 
     crowdsaleWhitelistElements = tierWhitelistElements
+
+    burn = [{ field: 'burnExcess', value: 'Burn Excess: ', parent: 'tierStore' }]
   }
 
   const getCrowdsaleID = () => {
@@ -995,6 +998,7 @@ export const SUMMARY_FILE_CONTENTS = networkID => {
       '\n',
       ...bigHeaderElements('*******CROWDSALE SETUP*******'),
       { field: 'walletAddress', value: 'Multisig wallet address: ', parent: 'tierStore' },
+      ...burn,
       ...rates,
       ...minCapEl,
       { field: 'supply', value: 'Crowdsale hard cap: ', parent: 'crowdsaleStore' },
