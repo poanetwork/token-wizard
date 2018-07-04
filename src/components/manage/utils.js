@@ -11,8 +11,10 @@ import {
 import { VALIDATION_TYPES } from '../../utils/constants'
 import { removeTrailingNUL, toBigNumber, toFixed } from '../../utils/utils'
 import moment from 'moment'
+import logdown from 'logdown'
 
 const { VALID } = VALIDATION_TYPES
+const logger = logdown('TW:manage:utils')
 
 const formatDate = timestamp => {
   return moment(timestamp * 1000).format('YYYY-MM-DDTHH:mm')
@@ -48,7 +50,7 @@ export const updateTierAttribute = async (attribute, value, tierIndex) => {
       getParams = updateDutchAuctionDurationParams
     } else if (attribute === 'endTime') {
       let { startTime, endTime } = tierStore.tiers[tierIndex]
-      console.log(startTime, endTime)
+      logger.log(startTime, endTime)
       const duration = new Date(endTime) - new Date(startTime)
       const durationBN = toBigNumber(duration).div(1000)
       value = durationBN.toFixed()
@@ -104,13 +106,13 @@ export const updateTierAttribute = async (attribute, value, tierIndex) => {
     }
   }
 
-  console.log('crowdsaleStartTime:', crowdsaleStartTime)
-  console.log('value:', value)
+  logger.log('crowdsaleStartTime:', crowdsaleStartTime)
+  logger.log('value:', value)
 
-  console.log('attribute:', attribute)
-  console.log('methods[attribute]:', methods[attribute])
+  logger.log('attribute:', attribute)
+  logger.log('methods[attribute]:', methods[attribute])
 
-  console.log('tierIndex:', tierIndex)
+  logger.log('tierIndex:', tierIndex)
 
   let paramsToExec
   if (isMintedCappedCrowdsale) {
@@ -123,9 +125,9 @@ export const updateTierAttribute = async (attribute, value, tierIndex) => {
     }
   }
 
-  console.log('paramsToExec:', paramsToExec)
-  console.log('methods[attribute]:', methods[attribute])
-  console.log('methodInterface:', methodInterface)
+  logger.log('paramsToExec:', paramsToExec)
+  logger.log('methods[attribute]:', methods[attribute])
+  logger.log('methodInterface:', methodInterface)
 
   let targetContractName
   if (crowdsaleStore.execID) {
@@ -140,7 +142,7 @@ export const updateTierAttribute = async (attribute, value, tierIndex) => {
     getParams,
     paramsToExec
   )
-  console.log('method:', method)
+  logger.log('method:', method)
 
   const account = await getCurrentAccount()
   const opts = { gasPrice: generalStore.gasPrice, from: account }
@@ -150,37 +152,37 @@ export const updateTierAttribute = async (attribute, value, tierIndex) => {
 }
 
 const updateMintedCappedCrowdsaleDurationParams = (tierIndex, duration, methodInterface) => {
-  console.log(tierIndex, duration)
+  logger.log(tierIndex, duration)
   return web3Store.web3.eth.abi.encodeParameters(methodInterface, [tierIndex, duration])
 }
 
 const updateDutchAuctionDurationParams = (startTime, duration, methodInterface) => {
-  console.log(startTime, duration)
+  logger.log(startTime, duration)
   return web3Store.web3.eth.abi.encodeParameters(methodInterface, [startTime, duration])
 }
 
 const updateTierWhitelistParams = (tierIndex, [addr, min, max], methodInterface) => {
-  console.log(tierIndex, addr, min, max, methodInterface)
+  logger.log(tierIndex, addr, min, max, methodInterface)
   return web3Store.web3.eth.abi.encodeParameters(methodInterface, [tierIndex, addr, min, max])
 }
 
 const updateWhitelistParams = ([addr, min, max], methodInterface) => {
-  console.log(addr, min, max, methodInterface)
+  logger.log(addr, min, max, methodInterface)
   return web3Store.web3.eth.abi.encodeParameters(methodInterface, [addr, min, max])
 }
 
 const updateTierMinimumParams = (tierIndex, minCap, methodInterface) => {
-  console.log(tierIndex, minCap, methodInterface)
+  logger.log(tierIndex, minCap, methodInterface)
   return web3Store.web3.eth.abi.encodeParameters(methodInterface, [tierIndex, minCap])
 }
 
 const updateMinimumParams = (minCap, methodInterface) => {
-  console.log(minCap, methodInterface)
+  logger.log(minCap, methodInterface)
   return web3Store.web3.eth.abi.encodeParameters(methodInterface, [minCap])
 }
 
 const crowdsaleData = (tier, crowdsale, token, reserved_tokens_info) => {
-  const { isMintedCappedCrowdsale } = crowdsaleStore
+  const { isDutchAuction, isMintedCappedCrowdsale } = crowdsaleStore
   const { toAscii } = web3Store.web3.utils
   const {
     start_time,
@@ -189,6 +191,8 @@ const crowdsaleData = (tier, crowdsale, token, reserved_tokens_info) => {
     tier_end,
     current_rate,
     tier_price,
+    start_rate,
+    end_rate,
     tier_sell_cap,
     tier_min,
     tokens_remaining,
@@ -202,7 +206,7 @@ const crowdsaleData = (tier, crowdsale, token, reserved_tokens_info) => {
   try {
     tier_name = removeTrailingNUL(toAscii(tier_name))
   } catch (e) {
-    console.log('###Token name is already in ASCII###')
+    logger.log('###Token name is already in ASCII###')
   }
 
   const { team_wallet, is_finalized } = crowdsale
@@ -212,13 +216,13 @@ const crowdsaleData = (tier, crowdsale, token, reserved_tokens_info) => {
   try {
     token_name = removeTrailingNUL(toAscii(token_name))
   } catch (e) {
-    console.log('###Token name is already in ASCII###')
+    logger.log('###Token name is already in ASCII###')
   }
 
   try {
     token_symbol = removeTrailingNUL(toAscii(token_symbol))
   } catch (e) {
-    console.log('###Token name is already in ASCII###')
+    logger.log('###Token name is already in ASCII###')
   }
 
   return {
@@ -226,6 +230,8 @@ const crowdsaleData = (tier, crowdsale, token, reserved_tokens_info) => {
     start_time: isMintedCappedCrowdsale ? tier_start : start_time,
     end_time: isMintedCappedCrowdsale ? tier_end : end_time,
     rate: isMintedCappedCrowdsale ? tier_price : current_rate,
+    min_rate: isDutchAuction ? start_rate : '',
+    max_rate: isDutchAuction ? end_rate : '',
     max_sell_cap: isMintedCappedCrowdsale
       ? tier_sell_cap
       : toBigNumber(tokens_remaining)
@@ -252,18 +258,28 @@ const crowdsaleData = (tier, crowdsale, token, reserved_tokens_info) => {
 }
 
 export const processTier = (crowdsale, token, reserved_tokens_info, tier, tier_index) => {
-  console.log('tier:', tier)
-  console.log('reserved_tokens_info:', reserved_tokens_info)
-  console.log('crowdsale:', crowdsale)
-  console.log('token:', token)
+  logger.log('tier:', tier)
+  logger.log('reserved_tokens_info:', reserved_tokens_info)
+  logger.log('crowdsale:', crowdsale)
+  logger.log('token:', token)
 
   const { web3 } = web3Store
+  const toToken = wei =>
+    wei > 0
+      ? toBigNumber(web3.utils.fromWei(wei, 'ether'))
+          .pow(-1)
+          .dp(0)
+          .toFixed()
+      : '0'
+
   const _crowdsaleData = crowdsaleData(tier, crowdsale, token, reserved_tokens_info)
   const {
     wallet,
     start_time,
     end_time,
     rate: rate_in_wei,
+    min_rate,
+    max_rate,
     max_sell_cap,
     min_cap,
     name,
@@ -273,20 +289,17 @@ export const processTier = (crowdsale, token, reserved_tokens_info, tier, tier_i
     finalized,
     crowdsale_token
   } = _crowdsaleData
-  console.log(_crowdsaleData)
-  console.log('reserved_tokens_info:', crowdsale_token.reserved_accounts)
+  logger.log(_crowdsaleData)
+  logger.log('reserved_tokens_info:', crowdsale_token.reserved_accounts)
 
   const token_decimals = !isNaN(crowdsale_token.decimals) ? crowdsale_token.decimals : 0
   const max_cap_before_decimals = toBigNumber(max_sell_cap)
     .div(`1e${token_decimals}`)
     .toFixed()
-  const rate =
-    rate_in_wei > 0
-      ? toBigNumber(web3.utils.fromWei(rate_in_wei, 'ether'))
-          .pow(-1)
-          .dp(0)
-          .toFixed()
-      : 0
+  const rate = toToken(rate_in_wei)
+  const minRate = toToken(min_rate)
+  const maxRate = toToken(max_rate)
+
   // TODO: remove this filter after Auth-os implement uniqueness for the whitelisted addresses (#871)
   const filtered_whitelist = [...new Set(whitelist.map(item => JSON.stringify(item)))].map(item => JSON.parse(item))
 
@@ -294,6 +307,8 @@ export const processTier = (crowdsale, token, reserved_tokens_info, tier, tier_i
     tier: name,
     walletAddress: wallet,
     rate,
+    minRate,
+    maxRate,
     supply: max_cap_before_decimals || 0,
     minCap: min_cap,
     startTime: formatDate(start_time),

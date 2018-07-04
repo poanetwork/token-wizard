@@ -1,18 +1,21 @@
 import Clipboard from 'clipboard'
+import logdown from 'logdown'
+
+const logger = logdown('TW:utils:copy')
 
 export function copy(cls) {
   var clipboard = new Clipboard('.' + cls)
 
   clipboard.on('success', function(e) {
-    console.info('Action:', e.action)
-    console.info('Text:', e.text)
-    console.info('Trigger:', e.trigger)
+    logger.info('Action:', e.action)
+    logger.info('Text:', e.text)
+    logger.info('Trigger:', e.trigger)
 
     e.clearSelection()
   })
 
   clipboard.on('error', function(e) {
-    console.error('Action:', e.action)
-    console.error('Trigger:', e.trigger)
+    logger.error('Action:', e.action)
+    logger.error('Trigger:', e.trigger)
   })
 }

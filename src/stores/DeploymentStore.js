@@ -1,5 +1,8 @@
 import { action, computed, observable } from 'mobx'
 import autosave from './autosave'
+import logdown from 'logdown'
+
+const logger = logdown('TW:stores:deployment')
 
 class DeploymentStore {
   @observable txMap = new Map()
@@ -22,8 +25,8 @@ class DeploymentStore {
 
   @action
   initialize = (hasReservedToken, hasWhitelist, isDutchAuction, tiers) => {
-    console.log('hasReservedToken:', hasReservedToken)
-    console.log('hasWhitelist:', hasWhitelist)
+    logger.log('hasReservedToken:', hasReservedToken)
+    logger.log('hasWhitelist:', hasWhitelist)
     const listOfTx = [
       //{ name: 'deployProxy', dependsOnTiers: false, required: true }, //todo
       { name: 'crowdsaleCreate', dependsOnTiers: false, required: true },
@@ -129,7 +132,7 @@ class DeploymentStore {
       table.push({ txName, ...tiersStatuses })
     })
 
-    console.table(table)
+    logger.table(table)
   }
 
   @computed

@@ -10,6 +10,9 @@ import { Loader } from '../Common/Loader'
 import { noGasPriceAvailable, warningOnMainnetAlert } from '../../utils/alerts'
 import { getStep3Component } from './utils'
 import createDecorator from 'final-form-calculate'
+import logdown from 'logdown'
+
+const logger = logdown('TW:stepThree')
 
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 
@@ -95,7 +98,7 @@ export class stepThree extends React.Component {
         this.goToDeploymentStage()
       })
       .catch(error => {
-        console.error(error)
+        logger.error(error)
       })
   }
 

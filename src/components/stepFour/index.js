@@ -33,6 +33,9 @@ import executeSequentially from '../../utils/executeSequentially'
 import { PreventRefresh } from '../Common/PreventRefresh'
 import cancelDeploy from '../../utils/cancelDeploy'
 import PropTypes from 'prop-types'
+import logdown from 'logdown'
+
+const logger = logdown('TW:stepFour')
 
 const { PUBLISH, CROWDSALE_STRATEGY, TOKEN_SETUP, CROWDSALE_SETUP } = NAVIGATION_STEPS
 const {
@@ -150,7 +153,7 @@ export class stepFour extends React.Component {
       toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED })
     }
 
-    console.error([failedAt, err])
+    logger.error([failedAt, err])
   }
 
   skipTransaction = () => {
@@ -225,8 +228,8 @@ export class stepFour extends React.Component {
 
     contractsKeys.forEach(key => {
       if (contractStore.hasOwnProperty(key)) {
-        console.log(files[key])
-        console.log(contractStore[key])
+        logger.log(files[key])
+        logger.log(contractStore[key])
         const { txt, name } = files[key]
 
         const authOS = fileContents.auth_os
