@@ -132,6 +132,7 @@ export class stepThree extends React.Component {
             walletAddress: web3Store.curAddress,
             gasPrice: gasPriceStore.gasPricesInGwei[0],
             whitelistEnabled: 'no',
+            burnExcess: 'no',
             tiers: this.initialTiers
           }}
           component={stepThreeComponent}
