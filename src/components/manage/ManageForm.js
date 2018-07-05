@@ -47,12 +47,13 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
       const minimum_supply = tiers.reduce((min, tier) => (tier.supply < min ? tier.supply : min), Infinity)
 
       // Build disable class to use in the submit button
+      const disable = invalid || !canSave
       const submitButtonClass = classNames('no_arrow', 'button', 'button_fill', 'button_no_border', {
-        button_disabled: submitting || pristine || invalid || !canSave
+        button_disabled: disable
       })
 
       const saveButton = (
-        <button type="submit" disabled={submitting || pristine || invalid} className={submitButtonClass}>
+        <button type="submit" disabled={disable} className={submitButtonClass}>
           Save
         </button>
       )
