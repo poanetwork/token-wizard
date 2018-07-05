@@ -229,7 +229,7 @@ export const initialStepTwoValues = {
     name: '',
     supply: 0,
     ticker: '',
-    decimals: '',
+    decimals: '18',
     reservedTokens: [],
     reservedTokensElements: [],
     reservedTokensInput: { dim: 'tokens' }

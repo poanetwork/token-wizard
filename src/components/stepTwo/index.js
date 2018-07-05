@@ -3,7 +3,7 @@ import '../../assets/stylesheets/application.css'
 import { checkWeb3 } from '../../utils/blockchainHelpers'
 import { StepNavigation } from '../Common/StepNavigation'
 import { clearingReservedTokens } from '../../utils/alerts'
-import { NAVIGATION_STEPS, VALIDATION_TYPES } from '../../utils/constants'
+import { NAVIGATION_STEPS, VALIDATION_TYPES, initialStepTwoValues } from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
 import { Form } from 'react-final-form'
 import { StepTwoForm } from './StepTwoForm'
@@ -21,7 +21,7 @@ export class stepTwo extends Component {
       tokenValues: {
         name: this.props.tokenStore.name,
         ticker: this.props.tokenStore.ticker,
-        decimals: this.props.tokenStore.decimals || 0
+        decimals: this.props.tokenStore.decimals || initialStepTwoValues.token.decimals
       }
     }
   }
