@@ -50,45 +50,7 @@ export function fetchFile(path) {
   })
 }
 
-export const findConstructor = abi => {
-  let abiConstructor
-
-  abi.forEach(abiObj => {
-    if (abiObj.type === 'constructor') {
-      logger.log(abiObj)
-      logger.log(abiObj.inputs)
-      abiConstructor = abiObj.inputs
-    }
-  })
-
-  return abiConstructor
-}
-
-export const floorToDecimals = (n, input) => {
-  return toFixed(Math.floor10(input, n)).toString()
-}
-
-const decimalAdjust = (type, inputNumber, exp) => {
-  if (typeof exp === 'undefined' || +exp === 0) {
-    return Math[type](inputNumber)
-  }
-  inputNumber = +inputNumber
-  exp = +exp
-  let checkForNaN = isNaN(inputNumber) || !(typeof exp === 'number' && exp % 1 === 0)
-  if (checkForNaN) {
-    return NaN
-  }
-  inputNumber = inputNumber.toString().split('e')
-  inputNumber = Math[type](+(inputNumber[0] + 'e' + (inputNumber[1] ? +inputNumber[1] - exp : -exp)))
-  inputNumber = inputNumber.toString().split('e')
-  return +(inputNumber[0] + 'e' + (inputNumber[1] ? +inputNumber[1] + exp : exp))
-}
-
-if (!Math.floor10) {
-  Math.floor10 = (value, exp) => decimalAdjust('floor', value, exp)
-}
-
-const getTimeAsNumber = time => new Date(time).getTime()
+export const dateToTimestamp = date => new Date(date).getTime()
 
 export const getStepClass = (step, activeStep) =>
   step === activeStep ? 'step-navigation step-navigation_active' : 'step-navigation'
@@ -97,12 +59,12 @@ export const validateTier = tier => typeof tier === 'string' && tier.length > 0 
 
 export const validateSupply = supply => isNaN(Number(supply)) === false && Number(supply) > 0
 
-export const validateTime = time => getTimeAsNumber(time) > Date.now()
+export const validateTime = time => dateToTimestamp(time) > Date.now()
 
-export const validateLaterTime = (laterTime, previousTime) => getTimeAsNumber(laterTime) > getTimeAsNumber(previousTime)
+export const validateLaterTime = (laterTime, previousTime) => dateToTimestamp(laterTime) > dateToTimestamp(previousTime)
 
 export const validateLaterOrEqualTime = (laterTime, previousTime) =>
-  getTimeAsNumber(laterTime) >= getTimeAsNumber(previousTime)
+  dateToTimestamp(laterTime) >= dateToTimestamp(previousTime)
 
 export function toFixed(x) {
   if (Math.abs(x) < 1.0) {
@@ -173,8 +135,6 @@ export const acceptPositiveIntegerOnly = value => {
 
 export const removeTrailingNUL = ascii => ascii.replace(/\x00+/, '')
 
-export const dateToTimestamp = date => new Date(date).getTime()
-
 export const truncateStringInTheMiddle = (str, strLength = 50, strPositionStart = 24, strPositionEnd = 25) => {
   if (typeof str === 'string' && str.length > strLength) {
     return `${str.substr(0, strPositionStart)}...${str.substr(str.length - strPositionEnd, str.length)}`
@@ -201,4 +161,14 @@ export const toBigNumber = (value, force = true) => {
   } else {
     return new BigNumber(value)
   }
+}
+
+/**
+ * Returns current rate or 0 if crowdsale hasn't started yet
+ * @param rate - Current rate retrieved from contracts
+ * @param crowdsale_start_time - Start Time in milliseconds
+ * @returns {string}
+ */
+export function getCrowdsaleCurrentRate(rate, crowdsale_start_time) {
+  return crowdsale_start_time > Date.now() ? '0' : rate
 }

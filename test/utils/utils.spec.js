@@ -1,4 +1,9 @@
-import { countDecimalPlaces, acceptPositiveIntegerOnly, truncateStringInTheMiddle } from '../../src/utils/utils'
+import {
+  countDecimalPlaces,
+  acceptPositiveIntegerOnly,
+  truncateStringInTheMiddle,
+  getCrowdsaleCurrentRate
+} from '../../src/utils/utils'
 
 describe('countDecimalPlaces', () => {
   let testsValues = [
@@ -94,6 +99,31 @@ describe('truncateStringInTheMiddle', () => {
 
     it(`Should ${action} for '${testCase.value}'`, () => {
       expect(truncateStringInTheMiddle(testCase.value)).toBe(testCase.expected)
+    })
+  })
+})
+
+describe('getCrowdsaleCurrentRate', () => {
+  const testCases = [
+    {
+      rate: '123',
+      crowdsale_start_time: Date.now() - 3600,
+      expected: '123'
+    },
+    {
+      rate: '123',
+      crowdsale_start_time: Date.now(),
+      expected: '123'
+    },
+    {
+      rate: '123',
+      crowdsale_start_time: Date.now() + 3600,
+      expected: '0'
+    }
+  ]
+  testCases.forEach(testCase => {
+    it(`Should return ${testCase.expected}`, () => {
+      expect(getCrowdsaleCurrentRate(testCase.rate, testCase.crowdsale_start_time)).toBe(testCase.expected)
     })
   })
 })
