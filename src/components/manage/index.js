@@ -210,6 +210,9 @@ export class Manage extends Component {
         if (crowdsale && !crowdsale.hasOwnProperty('is_finalized')) {
           crowdsale.is_finalized = crowdsale[4]
         }
+        if (crowdsale && !crowdsale.hasOwnProperty('burn_excess')) {
+          crowdsale.burn_excess = crowdsale[5]
+        }
       }
       let token
       if (getTokenInfo) {
@@ -686,7 +689,7 @@ export class Manage extends Component {
     return (
       <section className="manage">
         <FinalizeCrowdsaleStep
-          disabled={!ownerCurrentUser || crowdsaleIsFinalized || !canFinalize}
+          disabled={!ownerCurrentUser || crowdsaleIsFinalized || !canFinalize || crowdsaleHasEnded}
           handleClick={this.finalizeCrowdsale}
         />
 
@@ -699,7 +702,7 @@ export class Manage extends Component {
           initialValues={{ ...this.initialValues }}
           component={ManageForm}
           canEditTiers={ownerCurrentUser && !canFinalize && !crowdsaleIsFinalized}
-          canEditMinCap={ownerCurrentUser && !crowdsaleHasEnded && !crowdsaleIsWhitelisted}
+          canEditMinCap={ownerCurrentUser && !crowdsaleHasEnded && !crowdsaleIsWhitelisted && !crowdsaleIsFinalized}
           handleChange={this.updateTierStore}
           canSave={this.canSave()}
           displaySave={this.saveDisplayed()}

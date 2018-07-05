@@ -145,7 +145,16 @@ const getCrowdSaleParams = (account, methodInterface) => {
 
 const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
   const { web3 } = web3Store
-  const { walletAddress, supply, startTime, endTime, minRate, maxRate, whitelistEnabled } = tierStore.tiers[0]
+  const {
+    walletAddress,
+    supply,
+    startTime,
+    endTime,
+    minRate,
+    maxRate,
+    whitelistEnabled,
+    burnExcess
+  } = tierStore.tiers[0]
 
   logger.log(tierStore.tiers[0])
 
@@ -177,8 +186,7 @@ const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
   //is Dutch Auction crowdsale whitelisted?
   const isWhitelisted = whitelistEnabled === 'yes'
 
-  //todo: burnExcess
-  const burnExcess = true
+  const mustBurnExcess = burnExcess === 'yes'
 
   let crowdsaleParams = [
     walletAddress,
@@ -190,7 +198,7 @@ const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
     formatDate(startTime),
     isWhitelisted,
     account,
-    burnExcess
+    mustBurnExcess
   ]
 
   logger.log('crowdsaleParams:', crowdsaleParams)
@@ -953,6 +961,7 @@ export const SUMMARY_FILE_CONTENTS = networkID => {
   let rates = []
   let crowdsaleIsModifiableEl = []
   let crowdsaleIsWhitelistedEl = []
+  let burn = []
   if (crowdsaleStore.isDutchAuction) {
     rates = [
       { field: 'minRate', value: 'Crowdsale min rate: ', parent: 'tierStore' },
@@ -964,6 +973,8 @@ export const SUMMARY_FILE_CONTENTS = networkID => {
     crowdsaleIsWhitelistedEl = [{ field: 'whitelistEnabled', value: 'Crowdsale is whitelisted: ', parent: 'tierStore' }]
 
     crowdsaleWhitelistElements = tierWhitelistElements
+
+    burn = [{ field: 'burnExcess', value: 'Burn Excess: ', parent: 'tierStore' }]
   }
 
   const getCrowdsaleID = () => {
@@ -997,6 +1008,7 @@ export const SUMMARY_FILE_CONTENTS = networkID => {
       '\n',
       ...bigHeaderElements('*******CROWDSALE SETUP*******'),
       { field: 'walletAddress', value: 'Multisig wallet address: ', parent: 'tierStore' },
+      ...burn,
       ...rates,
       ...minCapEl,
       { field: 'supply', value: 'Crowdsale hard cap: ', parent: 'crowdsaleStore' },

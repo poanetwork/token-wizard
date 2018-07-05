@@ -23,7 +23,7 @@ import { DutchAuctionBlock } from '../Common/DutchAuctionBlock'
 
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 const { VALID } = VALIDATION_TYPES
-const { WALLET_ADDRESS } = TEXT_FIELDS
+const { WALLET_ADDRESS, BURN_EXCESS } = TEXT_FIELDS
 
 const inputErrorStyle = {
   color: 'red',
@@ -33,20 +33,14 @@ const inputErrorStyle = {
   height: '20px'
 }
 
-export const StepThreeFormDutchAuction = ({
-  handleSubmit,
-  values,
-  invalid,
-  pristine,
-  mutators: { push },
-  ...props
-}) => {
+export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, pristine, ...props }) => {
   const submitButtonClass = classnames('button', 'button_fill', {
     button_disabled: pristine || invalid
   })
 
   const handleOnChange = ({ values }) => {
     props.tierStore.updateWalletAddress(values.walletAddress, VALID)
+    props.tierStore.updateBurnExcess(values.burnExcess, VALID)
     props.generalStore.setGasPrice(gweiToWei(values.gasPrice.price))
 
     let totalSupply = 0
@@ -80,15 +74,49 @@ export const StepThreeFormDutchAuction = ({
             <p className="title">Global settings</p>
           </div>
           <div className="input-block-container">
-            <Field
-              name="walletAddress"
-              component={InputField2}
-              validate={isAddress()}
-              errorStyle={inputErrorStyle}
-              side="left"
-              label={WALLET_ADDRESS}
-              description={DESCRIPTION.WALLET}
-            />
+            <div className="left">
+              <div>
+                <Field
+                  name="walletAddress"
+                  component={InputField2}
+                  validate={isAddress()}
+                  errorStyle={inputErrorStyle}
+                  label={WALLET_ADDRESS}
+                  description={DESCRIPTION.WALLET}
+                />
+              </div>
+              <div>
+                <Field
+                  name="burnExcess"
+                  render={({ input }) => (
+                    <div>
+                      <label className="label">{BURN_EXCESS}</label>
+                      <div className="radios-inline">
+                        <label className="radio-inline">
+                          <input
+                            type="radio"
+                            checked={input.value === 'yes'}
+                            value="yes"
+                            onChange={() => input.onChange('yes')}
+                          />
+                          <span className="title">yes</span>
+                        </label>
+                        <label className="radio-inline">
+                          <input
+                            type="radio"
+                            checked={input.value === 'no'}
+                            value="no"
+                            onChange={() => input.onChange('no')}
+                          />
+                          <span className="title">no</span>
+                        </label>
+                      </div>
+                      <p className="description">{DESCRIPTION.BURN_EXCESS}</p>
+                    </div>
+                  )}
+                />
+              </div>
+            </div>
             <Field
               name="gasPrice"
               component={GasPriceInput}
