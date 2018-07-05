@@ -453,7 +453,7 @@ export class Contribute extends React.Component {
     const { proxyName } = crowdsaleStore
 
     const { curAddr, contributeThrough, web3Available, toNextTick, nextTick, minimumContribution } = this.state
-    const crowdsaleExecID = contractStore.crowdsale && contractStore.crowdsale.execID
+    const crowdsaleExecID = crowdsale && crowdsale.execID
     const { days, hours, minutes, seconds } = toNextTick
 
     const { decimals, ticker, name } = tokenStore
@@ -477,11 +477,12 @@ export class Contribute extends React.Component {
     //min contribution
     const minimumContributionDisplay =
       minimumContribution >= 0 ? `${minimumContribution} ${tokenTicker}` : 'You are not allowed'
-
     const registryExecAddr =
       contractStore.registryExec && contractStore.registryExec.addr ? contractStore.registryExec.addr : ''
+
     const QRPaymentProcessElement =
-      contributeThrough === CONTRIBUTION_OPTIONS.QR && crowdsaleExecID ? (
+      contributeThrough === CONTRIBUTION_OPTIONS.QR &&
+      (crowdsaleExecID || (contractStore[proxyName] && contractStore[proxyName].addr)) ? (
         <QRPaymentProcess registryExecAddr={registryExecAddr} txData={getExecBuyCallData(crowdsaleExecID)} />
       ) : null
 
