@@ -21,6 +21,8 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
     ({
       handleSubmit,
       invalid,
+      pristine,
+      submitting,
       handleChange,
       canSave,
       tokenStore,
@@ -42,19 +44,16 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
         height: '20px'
       }
 
-      // const button_disabled = (pristine || invalid) && !canSave -- use once canSave TO-DO is done
-      const button_disabled = invalid || !canSave
-
       const minimum_supply = tiers.reduce((min, tier) => (tier.supply < min ? tier.supply : min), Infinity)
 
+      // Build disable class to use in the submit button
+      const disable = invalid || !canSave
+      const submitButtonClass = classNames('no_arrow', 'button', 'button_fill', 'button_no_border', {
+        button_disabled: disable
+      })
+
       const saveButton = (
-        <button
-          type="submit"
-          className={classNames('no_arrow', 'button', 'button_fill', {
-            button_disabled: button_disabled
-          })}
-          style={{ border: 'none' }}
-        >
+        <button type="submit" disabled={disable} className={submitButtonClass}>
           Save
         </button>
       )
