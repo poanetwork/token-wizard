@@ -35,7 +35,7 @@ interface ISale {
 interface IToken {
   function name() external view returns (string);
   function symbol() external view returns (string);
-  function decimals() external view returns (uint);
+  function decimals() external view returns (uint8);
   function totalSupply() external view returns (uint);
   function balanceOf(address) external view returns (uint);
   function allowance(address, address) external view returns (uint);
@@ -60,7 +60,7 @@ interface TokenIdx {
 // File: contracts/IDutchCrowdsale.sol
 
 interface IDutchCrowdsale {
-  function init(address, uint, uint, uint, uint, uint, uint, bool, address) external;
+  function init(address, uint, uint, uint, uint, uint, uint, bool, address, bool) external;
 }
 
 // File: authos-solidity/contracts/interfaces/StorageInterface.sol
@@ -156,7 +156,7 @@ library StringUtils {
 contract SaleProxy is ISale, Proxy {
 
   // Allows a sender to purchase tokens from the active sale
-  function buy() public payable {
+  function buy() external payable {
     if (address(app_storage).call.value(msg.value)(abi.encodeWithSelector(
       EXEC_SEL, msg.sender, app_exec_id, msg.data
     )) == false) checkErrors(); // Call failed - emit errors
@@ -262,65 +262,65 @@ contract TokenProxy is IToken, AdminProxy {
   using StringUtils for bytes32;
 
   // Returns the name of the token
-  function name() public view returns (string) {
+  function name() external view returns (string) {
     return TokenIdx(app_index).name(app_storage, app_exec_id).toStr();
   }
 
   // Returns the symbol of the token
-  function symbol() public view returns (string) {
+  function symbol() external view returns (string) {
     return TokenIdx(app_index).symbol(app_storage, app_exec_id).toStr();
   }
 
   // Returns the number of decimals the token has
-  function decimals() public view returns (uint8) {
+  function decimals() external view returns (uint8) {
     return TokenIdx(app_index).decimals(app_storage, app_exec_id);
   }
 
   // Returns the total supply of the token
-  function totalSupply() public view returns (uint) {
+  function totalSupply() external view returns (uint) {
     return TokenIdx(app_index).totalSupply(app_storage, app_exec_id);
   }
 
   // Returns the token balance of the owner
-  function balanceOf(address _owner) public view returns (uint) {
+  function balanceOf(address _owner) external view returns (uint) {
     return TokenIdx(app_index).balanceOf(app_storage, app_exec_id, _owner);
   }
 
   // Returns the number of tokens allowed by the owner to be spent by the spender
-  function allowance(address _owner, address _spender) public view returns (uint) {
+  function allowance(address _owner, address _spender) external view returns (uint) {
     return TokenIdx(app_index).allowance(app_storage, app_exec_id, _owner, _spender);
   }
 
   // Executes a transfer, sending tokens to the recipient
-  function transfer(address _to, uint _amt) public returns (bool) {
+  function transfer(address _to, uint _amt) external returns (bool) {
     app_storage.exec(msg.sender, app_exec_id, msg.data);
     emit Transfer(msg.sender, _to, _amt);
     return true;
   }
 
   // Executes a transferFrom, transferring tokens from the _from account by using an allowed amount
-  function transferFrom(address _from, address _to, uint _amt) public returns (bool) {
+  function transferFrom(address _from, address _to, uint _amt) external returns (bool) {
     app_storage.exec(msg.sender, app_exec_id, msg.data);
     emit Transfer(_from, _to, _amt);
     return true;
   }
 
   // Approve a spender for a given amount
-  function approve(address _spender, uint _amt) public returns (bool) {
+  function approve(address _spender, uint _amt) external returns (bool) {
     app_storage.exec(msg.sender, app_exec_id, msg.data);
     emit Approval(msg.sender, _spender, _amt);
     return true;
   }
 
   // Increase the amount approved for the spender
-  function increaseApproval(address _spender, uint _amt) public returns (bool) {
+  function increaseApproval(address _spender, uint _amt) external returns (bool) {
     app_storage.exec(msg.sender, app_exec_id, msg.data);
     emit Approval(msg.sender, _spender, _amt);
     return true;
   }
 
   // Decrease the amount approved for the spender, to a minimum of 0
-  function decreaseApproval(address _spender, uint _amt) public returns (bool) {
+  function decreaseApproval(address _spender, uint _amt) external returns (bool) {
     app_storage.exec(msg.sender, app_exec_id, msg.data);
     emit Approval(msg.sender, _spender, _amt);
     return true;
@@ -334,7 +334,7 @@ contract DutchProxy is IDutchCrowdsale, TokenProxy {
     Proxy(_storage, _registry_exec_id, _provider, _app_name) { }
 
   // Constructor - creates a new instance of the application in storage, and sets this proxy's exec id
-  function init(address, uint, uint, uint, uint, uint, uint, bool, address, bool) public {
+  function init(address, uint, uint, uint, uint, uint, uint, bool, address, bool) external {
     require(msg.sender == proxy_admin && app_exec_id == 0 && app_name != 0);
     (app_exec_id, app_version) = app_storage.createInstance(
       msg.sender, app_name, provider, registry_exec_id, msg.data
@@ -354,7 +354,7 @@ contract DutchProxy is IDutchCrowdsale, TokenProxy {
     if (!success) checkErrors();
 
     // Transfer any returned wei back to the sender
-    address(msg.sender).transfer(address(this).balance);
+    msg.sender.transfer(address(this).balance);
   }
 
   // Checks data returned by an application and returns whether or not the execution changed state
