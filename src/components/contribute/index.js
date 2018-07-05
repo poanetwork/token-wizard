@@ -478,12 +478,11 @@ export class Contribute extends React.Component {
     const minimumContributionDisplay =
       minimumContribution >= 0 ? `${minimumContribution} ${tokenTicker}` : 'You are not allowed'
 
+    const registryExecAddr =
+      contractStore.registryExec && contractStore.registryExec.addr ? contractStore.registryExec.addr : ''
     const QRPaymentProcessElement =
       contributeThrough === CONTRIBUTION_OPTIONS.QR && crowdsaleExecID ? (
-        <QRPaymentProcess
-          registryExecAddr={contractStore.registryExec.addr}
-          txData={getExecBuyCallData(crowdsaleExecID)}
-        />
+        <QRPaymentProcess registryExecAddr={registryExecAddr} txData={getExecBuyCallData(crowdsaleExecID)} />
       ) : null
 
     const rightColumnClasses = classNames('contribute-table-cell', 'contribute-table-cell_right', {
