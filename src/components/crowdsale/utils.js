@@ -2,7 +2,7 @@ import { noContractAlert } from '../../utils/alerts'
 import { attachToSpecificCrowdsaleContract } from '../../utils/blockchainHelpers'
 import { contractStore, crowdsalePageStore, tokenStore, web3Store, crowdsaleStore } from '../../stores'
 import { toJS } from 'mobx'
-import { removeTrailingNUL, toBigNumber } from '../../utils/utils'
+import { getCrowdsaleCurrentRate, removeTrailingNUL, toBigNumber } from '../../utils/utils'
 import { BigNumber } from 'bignumber.js'
 import logdown from 'logdown'
 
@@ -81,7 +81,9 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
       getCurrentTierInfo,
       getCrowdsaleMaxRaise,
       getCrowdsaleStatus,
-      isCrowdsaleFull
+      isCrowdsaleFull,
+      getTierStartAndEndDates,
+      getCrowdsaleStartAndEndTimes
     } = initCrowdsaleContract.methods
 
     let params = []
@@ -118,8 +120,9 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
       const crowdsaleMaxRaise = await getCrowdsaleMaxRaise(...params).call()
       const total_sell_cap = crowdsaleMaxRaise.total_sell_cap || crowdsaleMaxRaise[1]
       const wei_raise_cap = crowdsaleMaxRaise.wei_raise_cap || crowdsaleMaxRaise[0]
+      const { tier_start } = await getTierStartAndEndDates(...params, 0).call()
 
-      crowdsalePageStore.setProperty('rate', tier_price) //should be one token in wei
+      crowdsalePageStore.setProperty('rate', getCrowdsaleCurrentRate(tier_price, tier_start * 1000)) //should be one token in wei
       crowdsalePageStore.setProperty('maximumSellableTokens', total_sell_cap)
       crowdsalePageStore.setProperty('maximumSellableTokensInWei', wei_raise_cap)
     }
@@ -127,8 +130,9 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
     if (crowdsaleStore.isDutchAuction) {
       const { current_rate, start_rate, end_rate, tokens_remaining } = await getCrowdsaleStatus(...params).call()
       const { max_sellable } = await isCrowdsaleFull(...params).call()
+      const { start_time } = await getCrowdsaleStartAndEndTimes(...params).call()
 
-      crowdsalePageStore.setProperty('rate', current_rate) //should be one token in wei
+      crowdsalePageStore.setProperty('rate', getCrowdsaleCurrentRate(current_rate, start_time * 1000)) //should be one token in wei
       crowdsalePageStore.setProperty('startRate', start_rate)
       crowdsalePageStore.setProperty('endRate', end_rate)
       crowdsalePageStore.setProperty('maximumSellableTokens', max_sellable)

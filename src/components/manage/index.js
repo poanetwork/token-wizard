@@ -151,7 +151,7 @@ export class Manage extends Component {
 
   extractContractsData = async () => {
     try {
-      const { crowdsaleStore, contractStore, tierStore } = this.props
+      const { crowdsaleStore, contractStore } = this.props
       const { addr: abstractStorageAddr } = contractStore.abstractStorage
       const { isMintedCappedCrowdsale, isDutchAuction, execID, contractTargetSuffix } = crowdsaleStore
 
@@ -438,13 +438,6 @@ export class Manage extends Component {
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
     const { getCrowdsaleStartAndEndTimes, getCrowdsaleInfo } = methods
-    let crowdsaleStartAndEndTimes = await getCrowdsaleStartAndEndTimes(...params).call()
-    if (crowdsaleStartAndEndTimes && crowdsaleStartAndEndTimes.hasOwnProperty('start_time')) {
-      crowdsaleStartAndEndTimes.start_time = crowdsaleStartAndEndTimes[0]
-    }
-    if (crowdsaleStartAndEndTimes && crowdsaleStartAndEndTimes.hasOwnProperty('end_time')) {
-      crowdsaleStartAndEndTimes.end_time = crowdsaleStartAndEndTimes[1]
-    }
     const { start_time, end_time } = await getCrowdsaleStartAndEndTimes(...params).call()
     let crowdsaleInfo = await getCrowdsaleInfo(...params).call()
 

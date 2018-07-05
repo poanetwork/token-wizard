@@ -9,7 +9,7 @@ import {
   reservedTokenStore
 } from '../../stores'
 import { VALIDATION_TYPES } from '../../utils/constants'
-import { removeTrailingNUL, toBigNumber, toFixed } from '../../utils/utils'
+import { getCrowdsaleCurrentRate, removeTrailingNUL, toBigNumber, toFixed } from '../../utils/utils'
 import moment from 'moment'
 import logdown from 'logdown'
 
@@ -225,11 +225,14 @@ const crowdsaleData = (tier, crowdsale, token, reserved_tokens_info) => {
     logger.log('###Token name is already in ASCII###')
   }
 
+  const rate = isMintedCappedCrowdsale ? tier_price : current_rate
+  const startTime = isMintedCappedCrowdsale ? tier_start : start_time
+
   return {
     wallet: team_wallet,
-    start_time: isMintedCappedCrowdsale ? tier_start : start_time,
+    start_time: startTime,
     end_time: isMintedCappedCrowdsale ? tier_end : end_time,
-    rate: isMintedCappedCrowdsale ? tier_price : current_rate,
+    rate: getCrowdsaleCurrentRate(rate, startTime * 1000),
     min_rate: isDutchAuction ? start_rate : '',
     max_rate: isDutchAuction ? end_rate : '',
     max_sell_cap: isMintedCappedCrowdsale
