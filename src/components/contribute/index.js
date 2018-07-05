@@ -481,7 +481,8 @@ export class Contribute extends React.Component {
     const registryExecAddr =
       contractStore.registryExec && contractStore.registryExec.addr ? contractStore.registryExec.addr : ''
     const QRPaymentProcessElement =
-      contributeThrough === CONTRIBUTION_OPTIONS.QR && crowdsaleExecID ? (
+      contributeThrough === CONTRIBUTION_OPTIONS.QR &&
+      (crowdsaleExecID || (contractStore[proxyName] && contractStore[proxyName].addr)) ? (
         <QRPaymentProcess registryExecAddr={registryExecAddr} txData={getExecBuyCallData(crowdsaleExecID)} />
       ) : null
 
