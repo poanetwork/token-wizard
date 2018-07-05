@@ -258,7 +258,8 @@ export class stepFour extends React.Component {
     })
 
     zip.generateAsync({ type: DOWNLOAD_TYPE.blob }).then(content => {
-      getDownloadName().then(downloadName => download({ zip: content, filename: downloadName }))
+      const downloadName = getDownloadName()
+      download({ zip: content, filename: downloadName })
     })
   }
 

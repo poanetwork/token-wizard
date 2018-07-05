@@ -5,7 +5,9 @@ import {
   checkNetWorkByID,
   checkWeb3,
   attachToSpecificCrowdsaleContract,
-  getCrowdsaleStrategy
+  attachToSpecificCrowdsaleContractByAddr,
+  getCrowdsaleStrategy,
+  getCrowdsaleStrategyByName
 } from '../../utils/blockchainHelpers'
 import { getContractStoreProperty, getCrowdsaleData, getTokenData, initializeAccumulativeData } from './utils'
 import { getExecID, getAddr, getNetworkID, toBigNumber } from '../../utils/utils'
@@ -69,9 +71,20 @@ export class Crowdsale extends React.Component {
 
     try {
       await getCrowdsaleAssets(generalStore.networkID)
-      const strategy = await getCrowdsaleStrategy(contractStore.crowdsale.execID)
-      crowdsaleStore.setProperty('strategy', strategy)
       const crowdsaleAddr = CrowdsaleConfig.crowdsaleContractURL || getAddr()
+      let strategy
+      if (contractStore.crowdsale.execID) {
+        strategy = await getCrowdsaleStrategy(contractStore.crowdsale.execID)
+      } else {
+        //note: we can use contractStore.MintedCappedProxy.abi for both strategies, because app_exec_id property exists in both strategies
+        const proxyContract = await attachToSpecificCrowdsaleContractByAddr(
+          crowdsaleAddr,
+          contractStore.MintedCappedProxy.abi
+        )
+        const appName = await proxyContract.methods.app_name().call()
+        strategy = await getCrowdsaleStrategyByName(appName)
+      }
+      crowdsaleStore.setProperty('strategy', strategy)
       contractStore.setContractProperty(crowdsaleStore.proxyName, 'addr', crowdsaleAddr)
       //todo: change to 2 alerts
       if (!contractStore.crowdsale.execID && !crowdsaleAddr) {
@@ -91,10 +104,11 @@ export class Crowdsale extends React.Component {
       const targetPrefix = 'idx'
       const targetSuffix = crowdsaleStore.contractTargetSuffix
       target = `${targetPrefix}${targetSuffix}`
-      logger.log('target:', target)
     } else {
       target = crowdsaleStore.proxyName
     }
+
+    logger.log('target:', target)
 
     try {
       const initCrowdsaleContract = await attachToSpecificCrowdsaleContract(target)

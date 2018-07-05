@@ -16,8 +16,10 @@ import {
   sendTXToContract,
   calculateGasLimit,
   attachToSpecificCrowdsaleContract,
+  attachToSpecificCrowdsaleContractByAddr,
   methodToExec,
   getCrowdsaleStrategy,
+  getCrowdsaleStrategyByName,
   checkWeb3,
   isAddressValid
 } from '../../utils/blockchainHelpers'
@@ -64,28 +66,45 @@ export class Manage extends Component {
   }
 
   componentWillMount() {
-    const { crowdsaleStore, generalStore, tierStore } = this.props
-
-    this.validateEnvironment()
-      .then(() => getCrowdsaleAssets(generalStore.networkID))
-      .then(() => getCrowdsaleStrategy(crowdsaleStore.execID))
-      .then(strategy => crowdsaleStore.setProperty('strategy', strategy))
-      .then(() => this.checkOwner())
-      .then(() => this.extractContractsData())
-      .then(() => this.updateCrowdsaleStatus())
-      .then(() => {
-        this.initialValues.tiers = JSON.parse(JSON.stringify(tierStore.tiers))
-        this.initialValues.minCap = +tierStore.tiers[0].minCap
-      })
-      .catch(err => logger.error(err))
-      .then(() => {
-        this.hideLoader()
-        if (!this.state.ownerCurrentUser) notTheOwner()
-      })
+    this.preparePage()
   }
 
-  validateEnvironment = async () => {
-    const { generalStore, crowdsaleStore, contractStore, web3Store, match } = this.props
+  preparePage = async () => {
+    const { crowdsaleStore, generalStore, tierStore, contractStore, match } = this.props
+    const { crowdsalePointer } = match.params
+    try {
+      await this.validateEnvironment(crowdsalePointer)
+      await getCrowdsaleAssets(generalStore.networkID)
+      let strategy
+      if (crowdsaleStore.execID) {
+        strategy = await getCrowdsaleStrategy(crowdsaleStore.execID)
+      } else {
+        //note: we can use contractStore.MintedCappedProxy.abi for both strategies, because app_exec_id property exists in both strategies
+        const proxyContract = await attachToSpecificCrowdsaleContractByAddr(
+          crowdsaleStore.addr,
+          contractStore.MintedCappedProxy.abi
+        )
+        const appName = await proxyContract.methods.app_name().call()
+        strategy = await getCrowdsaleStrategyByName(appName)
+      }
+      crowdsaleStore.setProperty('strategy', strategy)
+      if (isAddressValid(crowdsalePointer)) {
+        contractStore.setContractProperty(crowdsaleStore.proxyName, 'addr', crowdsalePointer)
+      }
+      await this.checkOwner()
+      await this.extractContractsData()
+      await this.updateCrowdsaleStatus()
+      this.initialValues.tiers = JSON.parse(JSON.stringify(tierStore.tiers))
+      this.initialValues.minCap = +tierStore.tiers[0].minCap
+      this.hideLoader()
+      if (!this.state.ownerCurrentUser) notTheOwner()
+    } catch (err) {
+      logger.error(err)
+    }
+  }
+
+  validateEnvironment = async crowdsalePointer => {
+    const { generalStore, crowdsaleStore, contractStore, web3Store } = this.props
 
     await checkWeb3()
 
@@ -101,7 +120,6 @@ export class Manage extends Component {
       return Promise.reject('invalid networkID')
     }
 
-    const { crowdsalePointer } = match.params
     if (isExecIDValid(crowdsalePointer)) {
       crowdsaleStore.setSelectedProperty('execID', crowdsalePointer)
       crowdsaleStore.setProperty('execID', crowdsalePointer)
@@ -109,7 +127,6 @@ export class Manage extends Component {
     } else if (isAddressValid(crowdsalePointer)) {
       crowdsaleStore.setSelectedProperty('addr', crowdsalePointer)
       crowdsaleStore.setProperty('addr', crowdsalePointer)
-      contractStore.setContractProperty(crowdsaleStore.proxyName, 'addr', crowdsalePointer)
     }
 
     //todo: 2 alerts
@@ -141,7 +158,11 @@ export class Manage extends Component {
     const { methods } = await attachToSpecificCrowdsaleContract(target)
     const { addr } = contractStore.abstractStorage
     const { execID } = crowdsaleStore
-    let ownerAccount = await methods.getAdmin(addr, execID).call()
+    let params = []
+    if (execID) {
+      params.push(addr, execID)
+    }
+    let ownerAccount = await methods.getAdmin(...params).call()
     const account = await getCurrentAccount()
 
     const ownerCurrentUser = account === ownerAccount
@@ -151,7 +172,7 @@ export class Manage extends Component {
 
   extractContractsData = async () => {
     try {
-      const { crowdsaleStore, contractStore, tierStore } = this.props
+      const { crowdsaleStore, contractStore } = this.props
       const { addr: abstractStorageAddr } = contractStore.abstractStorage
       const { isMintedCappedCrowdsale, isDutchAuction, execID, contractTargetSuffix } = crowdsaleStore
 
@@ -312,15 +333,16 @@ export class Manage extends Component {
           reservedTokenDestinationList.num_destinations = reservedTokenDestinationList[0]
         }
         if (reservedTokenDestinationList && !reservedTokenDestinationList.hasOwnProperty('reserved_destinations')) {
-          reservedTokenDestinationList.reserved_destinations = reservedTokenDestinationList[0]
+          reservedTokenDestinationList.reserved_destinations = reservedTokenDestinationList[1]
         }
 
-        const reserved_destinations =
-          reservedTokenDestinationList &&
-          (reservedTokenDestinationList.reserved_destinations || reservedTokenDestinationList[1])
-        if (reserved_destinations) {
-          for (let destination_index = 0; destination_index < reserved_destinations.length; destination_index++) {
-            const reserved_addr = reserved_destinations[destination_index]
+        if (reservedTokenDestinationList.reserved_destinations) {
+          for (
+            let destination_index = 0;
+            destination_index < reservedTokenDestinationList.reserved_destinations.length;
+            destination_index++
+          ) {
+            const reserved_addr = reservedTokenDestinationList.reserved_destinations[destination_index]
             let reservedDestinationInfo = await getReservedDestinationInfo(...params, reserved_addr).call()
             if (reservedDestinationInfo && !reservedDestinationInfo.hasOwnProperty('destination_list_index')) {
               reservedDestinationInfo.destination_list_index = reservedDestinationInfo[0]
