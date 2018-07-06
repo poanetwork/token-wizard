@@ -28,14 +28,15 @@ class DeploymentStore {
     logger.log('hasReservedToken:', hasReservedToken)
     logger.log('hasWhitelist:', hasWhitelist)
     const listOfTx = [
-      { name: 'deployProxy', dependsOnTiers: false, required: true }, //todo
+      { name: 'deployProxy', dependsOnTiers: false, required: true },
       { name: 'crowdsaleCreate', dependsOnTiers: false, required: true },
       { name: 'token', dependsOnTiers: false, required: true },
       { name: 'setReservedTokens', dependsOnTiers: false, required: hasReservedToken },
       { name: 'updateGlobalMinContribution', dependsOnTiers: false, required: isDutchAuction },
       { name: 'createCrowdsaleTiers', dependsOnTiers: false, required: tiers.length > 1 },
       { name: 'whitelist', dependsOnTiers: true, required: hasWhitelist },
-      { name: 'crowdsaleInit', dependsOnTiers: false, required: true }
+      { name: 'crowdsaleInit', dependsOnTiers: false, required: true },
+      { name: 'trackProxy', dependsOnTiers: false, required: true }
     ]
     const byTierWhitelistInitialValues = tiers.map(tier => {
       if (tier.whitelistEnabled === 'yes') {

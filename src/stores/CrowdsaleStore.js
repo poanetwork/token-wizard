@@ -25,6 +25,15 @@ class CrowdsaleStore {
   }
 
   @computed
+  get appNameHash() {
+    if (this.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE)
+      return process.env[`${REACT_PREFIX}MINTED_CAPPED_APP_NAME_HASH`]
+    else if (this.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION)
+      return process.env[`${REACT_PREFIX}DUTCH_APP_NAME_HASH`]
+    return ''
+  }
+
+  @computed
   get proxyName() {
     if (this.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE) {
       return 'MintedCappedProxy'

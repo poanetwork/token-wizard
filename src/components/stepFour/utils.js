@@ -23,6 +23,7 @@ import {
   web3Store
 } from '../../stores'
 import logdown from 'logdown'
+import { toJS } from 'mobx'
 
 const logger = logdown('TW:stepFour:utils')
 
@@ -35,7 +36,8 @@ export const buildDeploymentSteps = web3 => {
     updateGlobalMinContribution,
     createCrowdsaleTiers,
     whitelist: addWhitelist,
-    crowdsaleInit: initializeCrowdsale
+    crowdsaleInit: initializeCrowdsale,
+    trackProxy
   }
 
   let list = []
@@ -65,7 +67,7 @@ const getProxyParams = account => {
     contractStore.abstractStorage.addr,
     process.env['REACT_APP_REGISTRY_EXEC_ID'],
     '0x5eadd1456ce64247b48bac2e53605b4a934c53fd',
-    process.env['REACT_APP_MINTED_CAPPED_APP_NAME_HASH']
+    crowdsaleStore.appNameHash
   ]
 }
 
@@ -680,6 +682,34 @@ export const updateTierMinimum = () => {
         .then(() => deploymentStore.setAsSuccessful('updateTierMinimum'))
     }
   })
+}
+
+export const trackProxy = () => {
+  const { web3 } = web3Store
+  return [
+    () => {
+      logger.log('###trackProxy:###')
+      console.log('contractStore:', contractStore)
+
+      let account = contractStore.crowdsale.account
+      const opts = { gasPrice: generalStore.gasPrice, from: account }
+
+      const targetContract = new web3.eth.Contract(
+        toJS(contractStore.ProxiesRegistry.abi),
+        contractStore.ProxiesRegistry.addr
+      )
+      console.log('contractStore[crowdsaleStore.proxyName].addr:', contractStore[crowdsaleStore.proxyName].addr)
+      const method = targetContract.methods.trackCrowdsale(contractStore[crowdsaleStore.proxyName].addr)
+
+      return method
+        .estimateGas(opts)
+        .then(estimatedGas => {
+          opts.gasLimit = calculateGasLimit(estimatedGas)
+          return sendTXToContract(method.send(opts))
+        })
+        .then(() => deploymentStore.setAsSuccessful('trackProxy'))
+    }
+  ]
 }
 
 export const handlerForFile = (content, type) => {

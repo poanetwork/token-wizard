@@ -344,6 +344,46 @@ async function getAllApplicationsInstances() {
   return Promise.all(whenCrowdsales).then(crowdsales => crowdsales.filter(crowdsale => crowdsale !== null))
 }
 
+async function getOwnerApplicationsInstancesForProxy() {
+  const { web3 } = web3Store
+  const whenProxiesRegistryContract = attachToSpecificCrowdsaleContract('ProxiesRegistry')
+  const accounts = await web3.eth.getAccounts()
+  const whenAccount = accounts[0]
+
+  const [proxiesRegistryContract, account] = await Promise.all([whenProxiesRegistryContract, whenAccount])
+  let promises = []
+  const crowdsales = []
+  const lengthOfUserApplications = await proxiesRegistryContract.methods.countCrowdsalesForUser(account).call()
+  const userApplications = await proxiesRegistryContract.methods.getCrowdsalesForUser(account).call()
+  userApplications.forEach((proxyAddr, i) => {
+    let promise = new Promise(async (resolve, reject) => {
+      const abi = contractStore.MintedCappedProxy.abi // we can use minted caped proxy ABI for minted capped and Dutch acution
+      try {
+        const contractInstance = await attachToContract(abi, proxyAddr)
+        const app_name = await contractInstance.methods.app_name().call()
+        const appName = removeTrailingNUL(web3.utils.toAscii(app_name))
+        const appNameLowerCase = appName.toLowerCase()
+        if (
+          appNameLowerCase.includes(process.env[`${REACT_PREFIX}MINTED_CAPPED_APP_NAME`].toLowerCase()) ||
+          appNameLowerCase.includes(process.env[`${REACT_PREFIX}DUTCH_APP_NAME`].toLowerCase())
+        ) {
+          crowdsales.push({
+            appName: appName,
+            execID: proxyAddr
+          })
+        }
+        resolve()
+      } catch (err) {
+        resolve()
+      }
+    })
+    promises.push(promise)
+  })
+  return Promise.all(promises).then(() => {
+    return Promise.all(crowdsales)
+  })
+}
+
 async function getOwnerApplicationsInstances() {
   const { web3 } = web3Store
   const whenRegistryExecContract = attachToSpecificCrowdsaleContract('registryExec')
@@ -448,7 +488,7 @@ export const getCrowdsaleStrategyByName = async appName => {
 }
 
 export async function loadRegistryAddresses() {
-  const crowdsales = await getOwnerApplicationsInstances()
+  const crowdsales = await getOwnerApplicationsInstancesForProxy()
   logger.log(crowdsales)
   crowdsaleStore.setCrowdsales(crowdsales)
 }
@@ -552,7 +592,7 @@ export let methodToExec = (contractName, methodName, getEncodedParams, params) =
 
   const { execID } = contractStore.crowdsale
   let paramsToExec = []
-  if (contractName === 'MintedCappedProxy' || contractName === 'DutchCappedProxy') {
+  if (contractName === 'MintedCappedProxy' || contractName === 'DutchProxy') {
     paramsToExec.push(fullData)
   } else if (contractName === 'registryExec') {
     paramsToExec.push(execID, fullData)
