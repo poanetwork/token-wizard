@@ -63,10 +63,6 @@ export const updateTierAttribute = async (attribute, value, tierIndex) => {
       }
     } else if (attribute === 'whitelist') {
       // whitelist
-      const rate = tierStore.tiers[tierIndex].rate
-      const rateBN = toBigNumber(rate)
-      const oneTokenInETH = rateBN.pow(-1).toFixed()
-      const oneTokenInWEI = web3Store.web3.utils.toWei(oneTokenInETH, 'ether')
       value = value.reduce(
         (toAdd, whitelist) => {
           toAdd[0].push(whitelist.addr)

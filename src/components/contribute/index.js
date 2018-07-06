@@ -6,8 +6,10 @@ import {
   sendTXToContract,
   calculateGasLimit,
   attachToSpecificCrowdsaleContract,
+  attachToSpecificCrowdsaleContractByAddr,
   methodToExec,
   getCrowdsaleStrategy,
+  getCrowdsaleStrategyByName,
   checkWeb3,
   getExecBuyCallData
 } from '../../utils/blockchainHelpers'
@@ -80,7 +82,6 @@ export class Contribute extends React.Component {
       pristineTokenInput: true,
       web3Available: false,
       contributeThrough: CONTRIBUTION_OPTIONS.QR,
-      crowdsaleExecID: '',
       toNextTick: {
         days: 0,
         hours: 0,
@@ -95,24 +96,47 @@ export class Contribute extends React.Component {
   }
 
   componentDidMount() {
-    const { gasPriceStore, generalStore, crowdsaleStore } = this.props
-
-    this.validateEnvironment()
-      .then(() => getCrowdsaleAssets(generalStore.networkID))
-      .then(() => getCrowdsaleStrategy(this.state.crowdsaleExecID))
-      .then(strategy => crowdsaleStore.setProperty('strategy', strategy))
-      .then(() => this.extractContractsData())
-      .then(() =>
-        gasPriceStore
-          .updateValues()
-          .then(() => generalStore.setGasPrice(gasPriceStore.slow.price), () => noGasPriceAvailable())
-      )
-      .catch(err => logger.error(err))
-      .then(() => this.setState({ loading: false }))
+    this.preparePage()
   }
 
-  validateEnvironment = async () => {
-    const { web3Store, generalStore, contractStore, crowdsaleStore } = this.props
+  preparePage = async () => {
+    const { gasPriceStore, generalStore, crowdsaleStore, contractStore } = this.props
+    const crowdsaleExecID = CrowdsaleConfig.crowdsaleContractURL || getExecID()
+    contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
+    const crowdsaleAddr = CrowdsaleConfig.crowdsaleContractURL || getAddr()
+    try {
+      await this.validateEnvironment(crowdsaleExecID, crowdsaleAddr)
+      await getCrowdsaleAssets(generalStore.networkID)
+
+      let strategy
+      if (crowdsaleExecID) {
+        strategy = await getCrowdsaleStrategy(crowdsaleExecID)
+      } else {
+        //note: we can use contractStore.MintedCappedProxy.abi for both strategies, because app_exec_id property exists in both strategies
+        const proxyContract = await attachToSpecificCrowdsaleContractByAddr(
+          crowdsaleAddr,
+          contractStore.MintedCappedProxy.abi
+        )
+        const appName = await proxyContract.methods.app_name().call()
+        strategy = await getCrowdsaleStrategyByName(appName)
+      }
+      crowdsaleStore.setProperty('strategy', strategy)
+      contractStore.setContractProperty(crowdsaleStore.proxyName, 'addr', crowdsaleAddr)
+
+      await this.extractContractsData()
+
+      await gasPriceStore
+        .updateValues()
+        .then(() => generalStore.setGasPrice(gasPriceStore.slow.price), () => noGasPriceAvailable())
+
+      this.setState({ loading: false })
+    } catch (err) {
+      logger.error(err)
+    }
+  }
+
+  validateEnvironment = async (crowdsaleExecID, crowdsaleAddr) => {
+    const { web3Store, generalStore } = this.props
 
     await checkWeb3()
 
@@ -137,13 +161,6 @@ export class Contribute extends React.Component {
       return Promise.reject('invalid networkID')
     }
 
-    const crowdsaleExecID = CrowdsaleConfig.crowdsaleContractURL || getExecID()
-    const crowdsaleAddr = CrowdsaleConfig.crowdsaleContractURL || getAddr()
-    contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
-    contractStore.setContractProperty(crowdsaleStore.proxyName, 'addr', crowdsaleAddr)
-
-    this.setState({ crowdsaleExecID })
-
     //todo: change to 2 alerts
     if (!crowdsaleExecID && !crowdsaleAddr) {
       invalidCrowdsaleExecIDAlert()
@@ -158,8 +175,6 @@ export class Contribute extends React.Component {
   extractContractsData = async () => {
     const { contractStore, web3Store, crowdsaleStore } = this.props
     const { web3 } = web3Store
-
-    const { crowdsaleExecID } = this.state
 
     const account = await getCurrentAccount()
 
@@ -178,7 +193,7 @@ export class Contribute extends React.Component {
     } else {
       target = crowdsaleStore.proxyName
     }
-
+    const crowdsaleExecID = contractStore.crowdsale && contractStore.crowdsale.execID
     try {
       const initCrowdsaleContract = await attachToSpecificCrowdsaleContract(target)
       await initializeAccumulativeData()
@@ -437,15 +452,8 @@ export class Contribute extends React.Component {
     const { crowdsale } = contractStore
     const { proxyName } = crowdsaleStore
 
-    const {
-      curAddr,
-      contributeThrough,
-      crowdsaleExecID,
-      web3Available,
-      toNextTick,
-      nextTick,
-      minimumContribution
-    } = this.state
+    const { curAddr, contributeThrough, web3Available, toNextTick, nextTick, minimumContribution } = this.state
+    const crowdsaleExecID = contractStore.crowdsale && contractStore.crowdsale.execID
     const { days, hours, minutes, seconds } = toNextTick
 
     const { decimals, ticker, name } = tokenStore
@@ -470,12 +478,12 @@ export class Contribute extends React.Component {
     const minimumContributionDisplay =
       minimumContribution >= 0 ? `${minimumContribution} ${tokenTicker}` : 'You are not allowed'
 
+    const registryExecAddr =
+      contractStore.registryExec && contractStore.registryExec.addr ? contractStore.registryExec.addr : ''
     const QRPaymentProcessElement =
-      contributeThrough === CONTRIBUTION_OPTIONS.QR && crowdsaleExecID ? (
-        <QRPaymentProcess
-          registryExecAddr={contractStore.registryExec.addr}
-          txData={getExecBuyCallData(crowdsaleExecID)}
-        />
+      contributeThrough === CONTRIBUTION_OPTIONS.QR &&
+      (crowdsaleExecID || (contractStore[proxyName] && contractStore[proxyName].addr)) ? (
+        <QRPaymentProcess registryExecAddr={registryExecAddr} txData={getExecBuyCallData(crowdsaleExecID)} />
       ) : null
 
     const rightColumnClasses = classNames('contribute-table-cell', 'contribute-table-cell_right', {

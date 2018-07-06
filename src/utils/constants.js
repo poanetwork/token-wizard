@@ -61,7 +61,7 @@ export const DEPLOYMENT_VALUES = {
   }
 }
 
-export const MAX_GAS_PRICE = 4016260
+export const MAX_GAS_PRICE = 4374900
 
 export const GAS_PRICE = {
   SLOW: {

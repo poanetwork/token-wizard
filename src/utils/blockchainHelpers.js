@@ -428,6 +428,25 @@ export const getCrowdsaleStrategy = async execID => {
   }
 }
 
+export const getCrowdsaleStrategyByName = async appName => {
+  try {
+    const { REACT_APP_MINTED_CAPPED_APP_NAME, REACT_APP_DUTCH_APP_NAME } = process.env
+    const { toAscii } = web3Store.web3.utils
+    const app_name_lower_case = removeTrailingNUL(toAscii(appName)).toLowerCase()
+
+    if (app_name_lower_case.includes(REACT_APP_MINTED_CAPPED_APP_NAME.toLowerCase())) {
+      return CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE
+    } else if (app_name_lower_case.includes(REACT_APP_DUTCH_APP_NAME.toLowerCase())) {
+      return CROWDSALE_STRATEGIES.DUTCH_AUCTION
+    } else {
+      return Promise.reject('no strategy defined')
+    }
+  } catch (err) {
+    logger.error(err)
+    return null
+  }
+}
+
 export async function loadRegistryAddresses() {
   const crowdsales = await getOwnerApplicationsInstances()
   logger.log(crowdsales)
@@ -467,6 +486,22 @@ export const attachToSpecificCrowdsaleContract = async contractName => {
     }
 
     logger.log(`attach to ${contractName} contract`)
+    return contractInstance
+  } catch (err) {
+    return Promise.reject(err)
+  }
+}
+
+export const attachToSpecificCrowdsaleContractByAddr = async (addr, abi) => {
+  try {
+    const contractInstance = await attachToContract(abi, addr)
+
+    if (!contractInstance) {
+      noContractAlert()
+      return Promise.reject('no contract')
+    }
+
+    logger.log(`attach to contract with address ${addr}`)
     return contractInstance
   } catch (err) {
     return Promise.reject(err)

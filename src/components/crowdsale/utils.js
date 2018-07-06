@@ -362,11 +362,26 @@ const getRate = async (addr, execID, methods) => {
 }
 
 const calculateMinContribution = async (method, decimals, naturalMinCap, isWhitelisted) => {
-  //todo: update for Proxy
-  const { tier_min, minimum_contribution, minimum_purchase_amt, max_tokens_remaining } = await method.call()
+  const crowdsaleData = await method.call()
+  let { tier_min, minimum_contribution, minimum_purchase_amt, max_tokens_remaining } = crowdsaleData
+  if (!tier_min) {
+    if (method._method.name == 'getCurrentTierInfo') {
+      tier_min = crowdsaleData[5]
+    }
+  }
+  if (!minimum_contribution) {
+    if (method._method.name == 'getCrowdsaleInfo') {
+      minimum_contribution = crowdsaleData[2]
+    }
+  }
+  if (!minimum_purchase_amt && !max_tokens_remaining) {
+    if (method._method.name == 'getWhitelistStatus') {
+      minimum_purchase_amt = crowdsaleData[0]
+      max_tokens_remaining = crowdsaleData[1]
+    }
+  }
   const minimumContribution = toBigNumber(tier_min || minimum_contribution).times(`1e-${decimals}`) //global min cap
   const minimumPurchaseAmt = toBigNumber(minimum_purchase_amt).times(`1e-${decimals}`) //whitelist min cap
-  //todo:
   const maximumContribution = toBigNumber(max_tokens_remaining).times(`1e-${decimals}`)
   if ((isWhitelisted && maximumContribution.eq(0)) || !isFinite(naturalMinCap)) {
     return -1
