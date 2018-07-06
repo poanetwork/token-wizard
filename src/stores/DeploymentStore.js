@@ -24,7 +24,7 @@ class DeploymentStore {
   }
 
   @action
-  initialize = (hasReservedToken, hasWhitelist, isDutchAuction, tiers) => {
+  initialize = (hasReservedToken, hasWhitelist, isDutchAuction, tiers, hasMinCap = false) => {
     logger.log('hasReservedToken:', hasReservedToken)
     logger.log('hasWhitelist:', hasWhitelist)
     const listOfTx = [
@@ -32,7 +32,7 @@ class DeploymentStore {
       { name: 'crowdsaleCreate', dependsOnTiers: false, required: true },
       { name: 'token', dependsOnTiers: false, required: true },
       { name: 'setReservedTokens', dependsOnTiers: false, required: hasReservedToken },
-      { name: 'updateGlobalMinContribution', dependsOnTiers: false, required: isDutchAuction },
+      { name: 'updateGlobalMinContribution', dependsOnTiers: false, required: isDutchAuction && hasMinCap },
       { name: 'createCrowdsaleTiers', dependsOnTiers: false, required: tiers.length > 1 },
       { name: 'whitelist', dependsOnTiers: true, required: hasWhitelist },
       { name: 'crowdsaleInit', dependsOnTiers: false, required: true },
