@@ -54,7 +54,8 @@ const {
   END_TIME,
   ALLOW_MODIFYING,
   ENABLE_WHITELISTING,
-  MAX_CAP
+  MAX_CAP,
+  BURN_EXCESS
 } = TEXT_FIELDS
 const {
   MINTED_CAPPED_CROWDSALE: MINTED_CAPPED_CROWDSALE_DN,
@@ -257,7 +258,8 @@ export class stepFour extends React.Component {
     })
 
     zip.generateAsync({ type: DOWNLOAD_TYPE.blob }).then(content => {
-      getDownloadName().then(downloadName => download({ zip: content, filename: downloadName }))
+      const downloadName = getDownloadName()
+      download({ zip: content, filename: downloadName })
     })
   }
 
@@ -359,7 +361,7 @@ export class stepFour extends React.Component {
     const crowdsaleSetupBlock = () => {
       const { tiers } = tierStore
       const firstTier = tiers[0]
-      const { walletAddress, startTime } = firstTier
+      const { walletAddress, startTime, burnExcess } = firstTier
       const crowdsaleStartTimeStr = startTime ? startTime.split('T').join(' ') : ''
       const lasTierInd = tiers.length - 1
       const crowdsaleEndTimeStr = tiers[lasTierInd].endTime ? tiers[lasTierInd].endTime.split('T').join(' ') : ''
@@ -372,6 +374,9 @@ export class stepFour extends React.Component {
         <div className="hidden">
           <div className="hidden">
             <DisplayField side="left" title={WALLET_ADDRESS} value={walletAddress} description={PD_WALLET_ADDRESS} />
+            {isDutchAuction ? (
+              <DisplayField side="right" title={BURN_EXCESS} value={burnExcess} description={DESCRIPTION.BURN_EXCESS} />
+            ) : null}
           </div>
           <div className="hidden">
             <DisplayField

@@ -60,31 +60,37 @@ export const buildDeploymentSteps = web3 => {
   return list
 }
 
-const getProxyParams = token => {
+const getProxyParams = account => {
   return [
     contractStore.abstractStorage.addr,
     process.env['REACT_APP_REGISTRY_EXEC_ID'],
-    '0xd6ebdab4b8c4123f8445efe724f779fff097cd51',
+    '0x5eadd1456ce64247b48bac2e53605b4a934c53fd',
     process.env['REACT_APP_MINTED_CAPPED_APP_NAME_HASH']
   ]
 }
 
 export const deployProxy = () => {
-  //todo: Dutch proxy
+  const { web3 } = web3Store
   return [
     () => {
-      const binProxy = contractStore[crowdsaleStore.proxyName].bin || ''
-      const abiProxy = contractStore[crowdsaleStore.proxyName].abi || []
-      const paramsProxy = getProxyParams()
+      return web3.eth
+        .getAccounts()
+        .then(accounts => accounts[0])
+        .then(account => {
+          contractStore.setContractProperty('crowdsale', 'account', account)
+          const binProxy = contractStore[crowdsaleStore.proxyName].bin || ''
+          const abiProxy = contractStore[crowdsaleStore.proxyName].abi || []
+          const paramsProxy = getProxyParams(account)
 
-      logger.log('***Deploy Proxy contract***')
+          logger.log('***Deploy Proxy contract***')
 
-      return deployContract(abiProxy, binProxy, paramsProxy).then(proxyAddr => {
-        contractStore.setContractProperty(crowdsaleStore.proxyName, 'addr', proxyAddr.toLowerCase())
+          return deployContract(abiProxy, binProxy, paramsProxy).then(proxyAddr => {
+            contractStore.setContractProperty(crowdsaleStore.proxyName, 'addr', proxyAddr.toLowerCase())
 
-        deploymentStore.setAsSuccessful('deployProxy')
-        return Promise.resolve()
-      })
+            deploymentStore.setAsSuccessful('deployProxy')
+            return Promise.resolve()
+          })
+        })
     }
   ]
 }
@@ -146,7 +152,16 @@ const getCrowdSaleParams = (account, methodInterface) => {
 
 const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
   const { web3 } = web3Store
-  const { walletAddress, supply, startTime, endTime, minRate, maxRate, whitelistEnabled } = tierStore.tiers[0]
+  const {
+    walletAddress,
+    supply,
+    startTime,
+    endTime,
+    minRate,
+    maxRate,
+    whitelistEnabled,
+    burnExcess
+  } = tierStore.tiers[0]
 
   logger.log(tierStore.tiers[0])
 
@@ -178,8 +193,7 @@ const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
   //is Dutch Auction crowdsale whitelisted?
   const isWhitelisted = whitelistEnabled === 'yes'
 
-  //todo: burnExcess
-  const burnExcess = true
+  const mustBurnExcess = burnExcess === 'yes'
 
   let crowdsaleParams = [
     walletAddress,
@@ -191,34 +205,41 @@ const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
     formatDate(startTime),
     isWhitelisted,
     account,
-    burnExcess
+    mustBurnExcess
   ]
-
-  logger.log('crowdsaleParams:', crowdsaleParams)
 
   let crowdsaleParamsEncoded = web3.eth.abi.encodeParameters(methodInterface, crowdsaleParams)
   return { params: crowdsaleParams, paramsEncoded: crowdsaleParamsEncoded }
 }
 
 export const deployCrowdsale = (getParams, methodInterface, appName) => {
-  logger.log('###deploy crowdsale###')
+  //todo: remove when Proxy
   const { web3 } = web3Store
+  logger.log('###deploy crowdsale###')
   return [
     () => {
       return getNetworkVersion().then(networkID => {
         contractStore.setContractProperty('crowdsale', 'networkID', networkID)
-
+        //todo: remove when Proxy
         return web3.eth
           .getAccounts()
           .then(accounts => accounts[0])
           .then(account => {
             contractStore.setContractProperty('crowdsale', 'account', account)
+            //todo: uncomment when Proxy
+            //const account = contractStore.crowdsale.account
 
             let params = [account, methodInterface]
 
             const methodInterfaceStr = `init(${methodInterface.join(',')})`
 
-            let method = methodToCreateAppInstance('registryExec', methodInterfaceStr, getParams, params, appName)
+            let method = methodToCreateAppInstance(
+              'registryExec' /*crowdsaleStore.proxyName*/,
+              methodInterfaceStr,
+              getParams,
+              params,
+              appName
+            )
 
             const opts = { gasPrice: generalStore.gasPrice, from: account }
             logger.log('opts:', opts)
@@ -300,31 +321,30 @@ export const initializeToken = () => {
   logger.log('###initialize token###')
   return [
     () => {
-      return getNetworkVersion().then(networkID => {
-        const methodInterface = ['bytes32', 'bytes32', 'uint256']
+      const methodInterface = ['bytes32', 'bytes32', 'uint256']
 
-        logger.log('contractStore.crowdsale.account: ', contractStore.crowdsale.account)
-        let account = contractStore.crowdsale.account
+      logger.log('contractStore.crowdsale.account: ', contractStore.crowdsale.account)
+      let account = contractStore.crowdsale.account
 
-        let paramsToExec = [tokenStore, methodInterface]
-        const method = methodToExec(
-          'registryExec',
-          `initCrowdsaleToken(${methodInterface.join(',')})`,
-          getTokenParams,
-          paramsToExec
-        )
+      let paramsToExec = [tokenStore, methodInterface]
+      const method = methodToExec(
+        'registryExec',
+        //crowdsaleStore.proxyName,
+        `initCrowdsaleToken(${methodInterface.join(',')})`,
+        getTokenParams,
+        paramsToExec
+      )
 
-        const opts = { gasPrice: generalStore.gasPrice, from: account }
-        logger.log('opts:', opts)
+      const opts = { gasPrice: generalStore.gasPrice, from: account }
+      logger.log('opts:', opts)
 
-        return method.estimateGas(opts).then(estimatedGas => {
-          opts.gasLimit = calculateGasLimit(estimatedGas)
-          return sendTXToContract(method.send(opts))
-            .then(receipt => {
-              logger.log(receipt)
-            })
-            .then(() => deploymentStore.setAsSuccessful('token'))
-        })
+      return method.estimateGas(opts).then(estimatedGas => {
+        opts.gasLimit = calculateGasLimit(estimatedGas)
+        return sendTXToContract(method.send(opts))
+          .then(receipt => {
+            logger.log(receipt)
+          })
+          .then(() => deploymentStore.setAsSuccessful('token'))
       })
     }
   ]
@@ -397,6 +417,7 @@ export const setReservedTokensListMultiple = () => {
       let paramsToExec = [addrs, inTokens, inPercentageUnit, inPercentageDecimals, methodInterface]
       const method = methodToExec(
         'registryExec',
+        //crowdsaleStore.proxyName,
         `updateMultipleReservedTokens(${methodInterface.join(',')})`,
         getReservedTokensParams,
         paramsToExec
@@ -423,23 +444,27 @@ export const initializeCrowdsale = () => {
   logger.log('###initialize crowdsale###')
   return [
     () => {
-      return getNetworkVersion().then(networkID => {
-        let account = contractStore.crowdsale.account
+      const account = contractStore.crowdsale.account
 
-        let paramsToExec = []
-        const method = methodToExec('registryExec', 'initializeCrowdsale()', getInitializeCrowdsaleParams, paramsToExec)
+      let paramsToExec = []
+      const method = methodToExec(
+        'registryExec',
+        //crowdsaleStore.proxyName,
+        'initializeCrowdsale()',
+        getInitializeCrowdsaleParams,
+        paramsToExec
+      )
 
-        const opts = { gasPrice: generalStore.gasPrice, from: account }
-        logger.log('opts:', opts)
+      const opts = { gasPrice: generalStore.gasPrice, from: account }
+      logger.log('opts:', opts)
 
-        return method.estimateGas(opts).then(estimatedGas => {
-          opts.gasLimit = calculateGasLimit(estimatedGas)
-          return sendTXToContract(method.send(opts))
-            .then(receipt => {
-              logger.log(receipt)
-            })
-            .then(() => deploymentStore.setAsSuccessful('crowdsaleInit'))
-        })
+      return method.estimateGas(opts).then(estimatedGas => {
+        opts.gasLimit = calculateGasLimit(estimatedGas)
+        return sendTXToContract(method.send(opts))
+          .then(receipt => {
+            logger.log(receipt)
+          })
+          .then(() => deploymentStore.setAsSuccessful('crowdsaleInit'))
       })
     }
   ]
@@ -498,6 +523,7 @@ export const createCrowdsaleTiers = () => {
       let paramsToExec = [methodInterface]
       const method = methodToExec(
         'registryExec',
+        //crowdsaleStore.proxyName,
         `createCrowdsaleTiers(${methodInterface.join(',')})`,
         getTiersParams,
         paramsToExec
@@ -585,6 +611,7 @@ export const addWhitelist = () => {
       let paramsToExec = [index, addrs, minCaps, maxCaps, methodInterface]
       const method = methodToExec(
         'registryExec',
+        //crowdsaleStore.proxyName,
         `${methodName}(${methodInterface.join(',')})`,
         getWhitelistsParams,
         paramsToExec
@@ -618,6 +645,7 @@ export const updateGlobalMinContribution = () => {
       let paramsToExec = [methodInterface]
       const method = methodToExec(
         'registryExec',
+        //crowdsaleStore.proxyName,
         `updateGlobalMinContribution(${methodInterface.join(',')})`,
         getUpdateGlobalMinCapParams,
         paramsToExec
@@ -657,6 +685,7 @@ export const updateTierMinimum = () => {
       let paramsToExec = [index, methodInterface]
       const method = methodToExec(
         'registryExec',
+        //crowdsaleStore.proxyName,
         `updateTierMinimum(${methodInterface.join(',')})`,
         getUpdateTierMinimumParams,
         paramsToExec
@@ -837,21 +866,14 @@ export function scrollToBottom() {
 export function getDownloadName() {
   const { crowdsale } = contractStore
   const crowdsalePointer = crowdsale.execID || contractStore[crowdsaleStore.proxyName].addr
-  return new Promise(resolve => {
-    const whenNetworkName = getNetworkVersion()
-      .then(networkID => {
-        let networkName = getNetWorkNameById(networkID)
+  const networkID = contractStore.crowdsale.networkID
+  let networkName = getNetWorkNameById(networkID)
 
-        if (!networkName) {
-          networkName = String(networkID)
-        }
+  if (!networkName) {
+    networkName = String(networkID)
+  }
 
-        return networkName
-      })
-      .then(networkName => `${DOWNLOAD_NAME}_${networkName}_${crowdsalePointer}`)
-
-    resolve(whenNetworkName)
-  })
+  return `${DOWNLOAD_NAME}_${networkName}_${crowdsalePointer}`
 }
 
 const getAddr = (contractName, networkID) => {
@@ -943,6 +965,7 @@ export const SUMMARY_FILE_CONTENTS = networkID => {
   let rates = []
   let crowdsaleIsModifiableEl = []
   let crowdsaleIsWhitelistedEl = []
+  let burn = []
   if (crowdsaleStore.isDutchAuction) {
     rates = [
       { field: 'minRate', value: 'Crowdsale min rate: ', parent: 'tierStore' },
@@ -954,6 +977,8 @@ export const SUMMARY_FILE_CONTENTS = networkID => {
     crowdsaleIsWhitelistedEl = [{ field: 'whitelistEnabled', value: 'Crowdsale is whitelisted: ', parent: 'tierStore' }]
 
     crowdsaleWhitelistElements = tierWhitelistElements
+
+    burn = [{ field: 'burnExcess', value: 'Burn Excess: ', parent: 'tierStore' }]
   }
 
   const getCrowdsaleID = () => {
@@ -987,6 +1012,7 @@ export const SUMMARY_FILE_CONTENTS = networkID => {
       '\n',
       ...bigHeaderElements('*******CROWDSALE SETUP*******'),
       { field: 'walletAddress', value: 'Multisig wallet address: ', parent: 'tierStore' },
+      ...burn,
       ...rates,
       ...minCapEl,
       { field: 'supply', value: 'Crowdsale hard cap: ', parent: 'crowdsaleStore' },

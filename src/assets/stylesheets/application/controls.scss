@@ -26,6 +26,10 @@
     }
   }
 
+  &_no_border {
+    border: none;
+  }
+
   &_no_icon {
     padding-left: 15px !important;
     background-image: none !important;
