@@ -21,7 +21,7 @@ import {
   checkWeb3,
   isAddressValid
 } from '../../utils/blockchainHelpers'
-import { isExecIDValid, isNetworkIDValid, toast, toBigNumber } from '../../utils/utils'
+import { getCrowdsaleCurrentRate, isExecIDValid, isNetworkIDValid, toast, toBigNumber } from '../../utils/utils'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import { getFieldsToUpdate, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
@@ -74,7 +74,12 @@ export class Manage extends Component {
       .then(() => this.extractContractsData())
       .then(() => this.updateCrowdsaleStatus())
       .then(() => {
-        this.initialValues.tiers = JSON.parse(JSON.stringify(tierStore.tiers))
+        const tiers = JSON.parse(JSON.stringify(tierStore.tiers))
+        this.initialValues.tiers = tiers.map(tier => {
+          const startTime = new Date(tier.startTime)
+          tier.rate = getCrowdsaleCurrentRate(tier.rate, startTime.getTime())
+          return tier
+        })
         this.initialValues.minCap = +tierStore.tiers[0].minCap
       })
       .catch(err => logger.error(err))
