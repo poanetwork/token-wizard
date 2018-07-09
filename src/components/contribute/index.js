@@ -57,6 +57,7 @@ import { ContributeForm } from './ContributeForm'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import ReactTooltip from 'react-tooltip'
 import logdown from 'logdown'
+import { DEPLOYMENT_VALUES } from '../../utils/constants'
 
 const logger = logdown('TW:contribute')
 
@@ -403,7 +404,13 @@ export class Contribute extends React.Component {
     const targetContractName = execID ? 'registryExec' : crowdsaleStore.proxyName
     const method = methodToExec(targetContractName, `buy()`, this.getBuyParams, paramsToExec)
 
-    const estimatedGas = await method.estimateGas(opts)
+    let estimatedGas
+    try {
+      estimatedGas = await method.estimateGas(opts)
+    } catch (e) {
+      console.log(e)
+      estimatedGas = DEPLOYMENT_VALUES.BUY
+    }
     logger.log('estimatedGas:', estimatedGas)
 
     opts.gasLimit = calculateGasLimit(estimatedGas)
