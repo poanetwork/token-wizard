@@ -66,7 +66,7 @@ const getProxyParams = account => {
   return [
     contractStore.abstractStorage.addr,
     process.env['REACT_APP_REGISTRY_EXEC_ID'],
-    '0x5eadd1456ce64247b48bac2e53605b4a934c53fd',
+    JSON.parse(process.env['REACT_APP_PROXY_PROVIDER'] || {})[contractStore.crowdsale.networkID],
     crowdsaleStore.appNameHash
   ]
 }
@@ -75,24 +75,27 @@ export const deployProxy = () => {
   const { web3 } = web3Store
   return [
     () => {
-      return web3.eth
-        .getAccounts()
-        .then(accounts => accounts[0])
-        .then(account => {
-          contractStore.setContractProperty('crowdsale', 'account', account)
-          const binProxy = contractStore[crowdsaleStore.proxyName].bin || ''
-          const abiProxy = contractStore[crowdsaleStore.proxyName].abi || []
-          const paramsProxy = getProxyParams(account)
+      return getNetworkVersion().then(networkID => {
+        contractStore.setContractProperty('crowdsale', 'networkID', networkID)
+        return web3.eth
+          .getAccounts()
+          .then(accounts => accounts[0])
+          .then(account => {
+            contractStore.setContractProperty('crowdsale', 'account', account)
+            const binProxy = contractStore[crowdsaleStore.proxyName].bin || ''
+            const abiProxy = contractStore[crowdsaleStore.proxyName].abi || []
+            const paramsProxy = getProxyParams(account)
 
-          logger.log('***Deploy Proxy contract***')
+            logger.log('***Deploy Proxy contract***')
 
-          return deployContract(abiProxy, binProxy, paramsProxy).then(proxyAddr => {
-            contractStore.setContractProperty(crowdsaleStore.proxyName, 'addr', proxyAddr.toLowerCase())
+            return deployContract(abiProxy, binProxy, paramsProxy).then(proxyAddr => {
+              contractStore.setContractProperty(crowdsaleStore.proxyName, 'addr', proxyAddr.toLowerCase())
 
-            deploymentStore.setAsSuccessful('deployProxy')
-            return Promise.resolve()
+              deploymentStore.setAsSuccessful('deployProxy')
+              return Promise.resolve()
+            })
           })
-        })
+      })
     }
   ]
 }
@@ -218,64 +221,61 @@ export const deployCrowdsale = (getParams, methodInterface, appName) => {
   logger.log('###deploy crowdsale###')
   return [
     () => {
-      return getNetworkVersion().then(networkID => {
-        contractStore.setContractProperty('crowdsale', 'networkID', networkID)
-        const account = contractStore.crowdsale.account
+      const account = contractStore.crowdsale.account
 
-        let params = [account, methodInterface]
+      let params = [account, methodInterface]
 
-        const methodInterfaceStr = `init(${methodInterface.join(',')})`
+      const methodInterfaceStr = `init(${methodInterface.join(',')})`
 
-        let method = methodToCreateAppInstance(crowdsaleStore.proxyName, methodInterfaceStr, getParams, params, appName)
+      let method = methodToCreateAppInstance(crowdsaleStore.proxyName, methodInterfaceStr, getParams, params, appName)
 
-        const opts = { gasPrice: generalStore.gasPrice, from: account }
-        logger.log('opts:', opts)
+      const opts = { gasPrice: generalStore.gasPrice, from: account }
+      logger.log('opts:', opts)
 
-        return method.estimateGas(opts).then(estimatedGas => {
-          opts.gasLimit = calculateGasLimit(estimatedGas)
-          return sendTXToContract(method.send(opts))
-            .then(receipt => {
-              logger.log('receipt:', receipt)
-              let logs = receipt.logs
-              let events = receipt.events
-              if (events) {
-                logger.log('events:', events)
-                if (events.ApplicationFinalization) {
-                  getExecutionIDFromEvent(events, 'ApplicationFinalization')
-                } else if (events.AppInstanceCreated) {
-                  getExecutionIDFromEvent(events, 'AppInstanceCreated')
-                } else if (events.ApplicationInitialized) {
-                  getExecutionIDFromEvent(events, 'ApplicationInitialized')
+      return method.estimateGas(opts).then(estimatedGas => {
+        opts.gasLimit = calculateGasLimit(estimatedGas)
+        return sendTXToContract(method.send(opts))
+          .then(receipt => {
+            logger.log('receipt:', receipt)
+            let logs = receipt.logs
+            let events = receipt.events
+            if (events) {
+              logger.log('events:', events)
+              if (events.ApplicationFinalization) {
+                getExecutionIDFromEvent(events, 'ApplicationFinalization')
+              } else if (events.AppInstanceCreated) {
+                getExecutionIDFromEvent(events, 'AppInstanceCreated')
+              } else if (events.ApplicationInitialized) {
+                getExecutionIDFromEvent(events, 'ApplicationInitialized')
+              }
+            } else if (logs) {
+              logger.log('logs:')
+              logger.log(logs)
+
+              let lastLog = logs.reduce((log, current) => {
+                logger.log(log)
+                logger.log(current.topics)
+                logger.log(current.logIndex)
+                if (!log) {
+                  return (log = current)
                 }
-              } else if (logs) {
-                logger.log('logs:')
-                logger.log(logs)
-
-                let lastLog = logs.reduce((log, current) => {
-                  logger.log(log)
-                  logger.log(current.topics)
-                  logger.log(current.logIndex)
-                  if (!log) {
-                    return (log = current)
-                  }
-                  if (current.logIndex > log.logIndex) {
-                    log = current
-                  }
-                  return log
-                }, 0)
-                if (lastLog) {
-                  if (lastLog.topics) {
-                    if (lastLog.topics.length > 1) {
-                      let execID = lastLog.topics[2]
-                      logger.log('exec_id', execID)
-                      contractStore.setContractProperty('crowdsale', 'execID', execID)
-                    }
+                if (current.logIndex > log.logIndex) {
+                  log = current
+                }
+                return log
+              }, 0)
+              if (lastLog) {
+                if (lastLog.topics) {
+                  if (lastLog.topics.length > 1) {
+                    let execID = lastLog.topics[2]
+                    logger.log('exec_id', execID)
+                    contractStore.setContractProperty('crowdsale', 'execID', execID)
                   }
                 }
               }
-            })
-            .then(() => deploymentStore.setAsSuccessful('crowdsaleCreate'))
-        })
+            }
+          })
+          .then(() => deploymentStore.setAsSuccessful('crowdsaleCreate'))
       })
     }
   ]
