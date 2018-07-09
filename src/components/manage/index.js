@@ -745,6 +745,7 @@ export class Manage extends Component {
           handleChange={this.updateTierStore}
           canSave={this.canSave()}
           displaySave={this.saveDisplayed()}
+          crowdsalePointer={this.props.match.params.crowdsalePointer}
         />
 
         <Loader show={this.state.loading} />
