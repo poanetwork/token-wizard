@@ -309,7 +309,7 @@ export class Manage extends Component {
                 whitelistStatus.minimum_purchase_amt = whitelistStatus[0]
               }
               if (whitelistStatus && !whitelistStatus.hasOwnProperty('max_tokens_remaining')) {
-                whitelistStatus.max_tokens_remaining = whitelistStatus[0]
+                whitelistStatus.max_tokens_remaining = whitelistStatus[1]
               }
               const { max_tokens_remaining, minimum_purchase_amt: minimum_contribution } = whitelistStatus
 
