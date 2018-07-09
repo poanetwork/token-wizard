@@ -118,11 +118,7 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
     const wei_raised = crowdsaleInfo.wei_raised
     let tokensSold = await getTokensSold(...params).call()
     console.log('tokensSold:', tokensSold)
-    //todo; proxy
-    let contributors = 0
-    try {
-      contributors = await getCrowdsaleUniqueBuyers(...params).call()
-    } catch (e) {}
+    const contributors = await getCrowdsaleUniqueBuyers(...params).call()
     const { fromWei } = web3Store.web3.utils
     crowdsalePageStore.setProperty('weiRaised', wei_raised)
     crowdsalePageStore.setProperty('ethRaised', fromWei(wei_raised, 'ether'))
