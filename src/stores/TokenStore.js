@@ -1,5 +1,5 @@
 import { observable, action, computed } from 'mobx'
-import { VALIDATION_TYPES } from '../utils/constants'
+import { defaultTokenValues, defaultTokenValidations, VALIDATION_TYPES } from '../utils/constants'
 import autosave from './autosave'
 const { EMPTY, VALID, INVALID } = VALIDATION_TYPES
 
@@ -20,14 +20,24 @@ class TokenStore {
   reset = () => {
     this.name = undefined
     this.ticker = undefined
-    this.supply = 0
     this.decimals = undefined
+    this.supply = 0
     this.validToken = {
       name: EMPTY,
       ticker: EMPTY,
       decimals: EMPTY
     }
     this.reservedTokensInput = {}
+  }
+
+  @action
+  setToken = (token, validations) => {
+    this.name = token.name
+    this.ticker = token.ticker
+    this.decimals = token.decimals
+    this.supply = token.supply
+    this.validToken = validations
+    this.reservedTokensInput = token.reservedTokensInput
   }
 
   @action
@@ -51,6 +61,36 @@ class TokenStore {
         this.validToken[key] = INVALID
       }
     })
+  }
+
+  @action
+  addTokenSetup = () => {
+    const newToken = Object.assign({}, defaultTokenValues)
+    const newTokenValidations = Object.assign({}, defaultTokenValidations)
+
+    this.setToken(newToken, newTokenValidations)
+  }
+
+  @computed
+  get isEmpty() {
+    return (
+      !this.name ||
+      !this.ticker ||
+      !this.decimals ||
+      !this.supply ||
+      !(this.reservedTokensInput && this.reservedTokensInput.length > 0)
+    )
+  }
+
+  @computed
+  get getToken() {
+    return {
+      name: this.name,
+      ticker: this.ticker,
+      decimals: this.decimals,
+      supply: this.supply,
+      reservedTokensInput: this.reservedTokensInput
+    }
   }
 
   // Getters
