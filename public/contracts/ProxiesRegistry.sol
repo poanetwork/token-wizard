@@ -1,5 +1,7 @@
 pragma solidity ^0.4.24;
 
+// File: openzeppelin-solidity/contracts/ownership/Ownable.sol
+
 /**
  * @title Ownable
  * @dev The Ownable contract has an owner address, and provides basic authorization control
@@ -34,9 +36,6 @@ contract Ownable {
 
   /**
    * @dev Allows the current owner to relinquish control of the contract.
-   * @notice Renouncing to ownership will leave the contract without an owner.
-   * It will not be possible to call the functions with the `onlyOwner`
-   * modifier anymore.
    */
   function renounceOwnership() public onlyOwner {
     emit OwnershipRenounced(owner);
@@ -62,21 +61,19 @@ contract Ownable {
   }
 }
 
+// File: contracts/ProxiesRegistry.sol
+
 contract AbstractProxy {
   bytes32 public app_exec_id;
   function getAdmin() external view returns (address);
 }
 
-contract MintedCappedIdx {
-    function getAdmin(address, bytes32) external view returns (address);
-}
-
-contract DutchIdx {
+contract AbstractIdx {
     function getAdmin(address, bytes32) external view returns (address);
 }
 
 /**
- * Registry of contracts deployed from Token Wizard 2.0.
+ * Registry of Proxy smart-contracts deployed from Token Wizard 2.0.
  */
 contract TokenWizardProxiesRegistry is Ownable {
   address public abstractStorageAddr;
@@ -120,9 +117,9 @@ contract TokenWizardProxiesRegistry is Ownable {
     require(proxyAddress != address(0));
     require(msg.sender == proxy.getAdmin());
     bytes32 appExecID = proxy.app_exec_id();
-    require(mintedCappedIdx.getAdmin(abstractStorageAddr, appExecID) != address(0) || dutchIdx.getAdmin(abstractStorageAddr, appExecID) != address(0));
-    MintedCappedIdx mintedCappedIdx = MintedCappedIdx(mintedCappedIdxAddr);
-    DutchIdx dutchIdx = DutchIdx(dutchIdxAddr);
+    AbstractIdx mintedCappedIdx = AbstractIdx(mintedCappedIdxAddr);
+    AbstractIdx dutchIdx = AbstractIdx(dutchIdxAddr);
+    require(mintedCappedIdx.getAdmin(abstractStorageAddr, appExecID) == msg.sender || dutchIdx.getAdmin(abstractStorageAddr, appExecID) == msg.sender);
     for (uint i = 0; i < deployedCrowdsalesByUser[msg.sender].length; i++) {
         require(deployedCrowdsalesByUser[msg.sender][i].proxyAddress != proxyAddress);
         require(deployedCrowdsalesByUser[msg.sender][i].execID != appExecID);
@@ -136,9 +133,9 @@ contract TokenWizardProxiesRegistry is Ownable {
   }
   
   function getCrowdsalesForUser(address deployer) public view returns (address[]) {
-      address[] storage proxies;
+      address[] memory proxies = new address[](deployedCrowdsalesByUser[deployer].length);
       for (uint k = 0; k < deployedCrowdsalesByUser[deployer].length; k++) {
-          proxies.push(deployedCrowdsalesByUser[deployer][k].proxyAddress);
+          proxies[k] = deployedCrowdsalesByUser[deployer][k].proxyAddress;
       }
       return proxies;
   }
