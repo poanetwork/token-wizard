@@ -351,6 +351,8 @@ export class Contribute extends React.Component {
 
     const userLimits = await getUserMaxLimits(addr, execID, methods, account)
 
+    logger.log('userLimits:', userLimits.toString())
+
     return tokensToContribute.gt(userLimits) ? userLimits : tokensToContribute
   }
 
