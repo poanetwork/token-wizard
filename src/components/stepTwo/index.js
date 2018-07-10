@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import '../../assets/stylesheets/application.css'
 import { checkWeb3 } from '../../utils/blockchainHelpers'
 import { StepNavigation } from '../Common/StepNavigation'
+import { Loader } from '../Common/Loader'
 import { clearingReservedTokens } from '../../utils/alerts'
 import { NAVIGATION_STEPS, VALIDATION_TYPES, initialStepTwoValues } from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
@@ -18,32 +19,41 @@ export class stepTwo extends Component {
     super(props)
 
     this.state = {
-      tokenValues: {
-        name: this.props.tokenStore.name,
-        ticker: this.props.tokenStore.ticker,
-        decimals: this.props.tokenStore.decimals || initialStepTwoValues.token.decimals
-      }
+      loading: true
     }
   }
 
-  componentDidMount() {
-    checkWeb3(this.props.web3Store.web3)
+  async componentDidMount() {
+    const { tokenStore, web3Store } = this.props
+    await checkWeb3(web3Store.web3)
+
+    if (tokenStore.isEmpty) {
+      tokenStore.addTokenSetup()
+      this.tokenValues = tokenStore.getToken
+    }
+
+    this.setState({ loading: false })
   }
 
   removeReservedToken = index => {
-    this.props.reservedTokenStore.removeToken(index)
+    const { reservedTokenStore } = this.props
+
+    reservedTokenStore.removeToken(index)
   }
 
-  clearReservedTokens = () => {
-    return clearingReservedTokens().then(result => {
-      if (result.value) {
-        this.props.reservedTokenStore.clearAll()
-      }
-    })
+  clearReservedTokens = async () => {
+    const { reservedTokenStore } = this.props
+
+    let result = await clearingReservedTokens()
+    if (result && result.value) {
+      reservedTokenStore.clearAll()
+    }
   }
 
   addReservedTokensItem = newToken => {
-    this.props.reservedTokenStore.addToken(newToken)
+    const { reservedTokenStore } = this.props
+
+    reservedTokenStore.addToken(newToken)
   }
 
   updateTokenStore = ({ values, errors }) => {
@@ -60,10 +70,9 @@ export class stepTwo extends Component {
   }
 
   render() {
+    const { reservedTokenStore, crowdsaleStore, tokenStore } = this.props
     const decimals =
-      this.props.tokenStore.validToken.decimals === VALID && this.props.tokenStore.decimals >= 0
-        ? parseInt(this.props.tokenStore.decimals, 10)
-        : 0
+      tokenStore.validToken.decimals === VALID && tokenStore.decimals >= 0 ? parseInt(tokenStore.decimals, 10) : 0
 
     return (
       <section className="steps steps_crowdsale-contract" ref="two">
@@ -76,19 +85,20 @@ export class stepTwo extends Component {
           </div>
           <Form
             onSubmit={this.onSubmit}
-            initialValues={this.state.tokenValues}
+            initialValues={this.tokenValues}
             component={StepTwoForm}
-            disableDecimals={!!this.props.reservedTokenStore.tokens.length}
+            disableDecimals={!!reservedTokenStore.tokens.length}
             updateTokenStore={this.updateTokenStore}
-            tokens={this.props.reservedTokenStore.tokens}
+            tokens={reservedTokenStore.tokens}
             decimals={decimals}
             addReservedTokensItem={this.addReservedTokensItem}
             removeReservedToken={this.removeReservedToken}
             clearAll={this.clearReservedTokens}
             id="tokenData"
-            crowdsaleStore={this.props.crowdsaleStore}
+            crowdsaleStore={crowdsaleStore}
           />
         </div>
+        <Loader show={this.state.loading} />
       </section>
     )
   }
