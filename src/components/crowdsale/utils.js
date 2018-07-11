@@ -365,17 +365,17 @@ const calculateMinContribution = async (method, decimals, naturalMinCap, isWhite
   const crowdsaleData = await method.call()
   let { tier_min, minimum_contribution, minimum_purchase_amt, max_tokens_remaining } = crowdsaleData
   if (!tier_min) {
-    if (method._method.name == 'getCurrentTierInfo') {
+    if (method._method.name === 'getCurrentTierInfo') {
       tier_min = crowdsaleData[5]
     }
   }
   if (!minimum_contribution) {
-    if (method._method.name == 'getCrowdsaleInfo') {
+    if (method._method.name === 'getCrowdsaleInfo') {
       minimum_contribution = crowdsaleData[2]
     }
   }
   if (!minimum_purchase_amt && !max_tokens_remaining) {
-    if (method._method.name == 'getWhitelistStatus') {
+    if (method._method.name === 'getWhitelistStatus') {
       minimum_purchase_amt = crowdsaleData[0]
       max_tokens_remaining = crowdsaleData[1]
     }
