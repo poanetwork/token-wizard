@@ -18,6 +18,7 @@ export const InputField = props => {
     <div className={props.side}>
       <label className="label">{props.title}</label>
       <input
+        id={props.name}
         disabled={props.disabled}
         type={props.type}
         className="input"
