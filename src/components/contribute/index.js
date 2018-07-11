@@ -474,9 +474,10 @@ export class Contribute extends React.Component {
     //total supply
     const totalSupply = maxCapBeforeDecimals.toFixed()
 
-    //min contribution
     const minimumContributionDisplay =
-      minimumContribution >= 0 ? `${minimumContribution} ${tokenTicker}` : 'You are not allowed'
+      minimumContribution >= 0 && isFinite(minimumContribution)
+        ? `${minimumContribution} ${tokenTicker}`
+        : 'You are not allowed'
 
     const registryExecAddr =
       contractStore.registryExec && contractStore.registryExec.addr ? contractStore.registryExec.addr : ''
@@ -574,6 +575,7 @@ export class Contribute extends React.Component {
               onSubmit={this.contributeToTokens}
               component={ContributeForm}
               contributeThrough={contributeThrough}
+              isFinalized={this.state.isFinalized}
               updateContributeThrough={this.updateContributeThrough}
               web3Available={web3Available}
               minimumContribution={minimumContribution}

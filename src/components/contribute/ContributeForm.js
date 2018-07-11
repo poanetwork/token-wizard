@@ -29,7 +29,9 @@ export const ContributeForm = inject('contributeStore', 'tokenStore')(
 
     const validateContribute = value => {
       const decimalsErr = `Number of tokens to buy should be positive and should not exceed ${decimals} decimals.`
-      const minimumContributionErr = `Minimum valid contribution: ${props.minimumContribution}`
+      const minimumContributionErr = isFinite(props.minimumContribution)
+        ? `Minimum valid contribution: ${props.minimumContribution}`
+        : `You are not allowed`
       const errors = composeValidators(
         isRequired(),
         isDecimalPlacesNotGreaterThan(decimalsErr)(decimals),
