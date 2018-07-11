@@ -19,6 +19,7 @@ import {
   getCrowdsaleTargetDates,
   initializeAccumulativeData,
   isFinalized,
+  isEnded,
   getUserMaxLimits,
   getUserMinLimits
 } from '../crowdsale/utils'
@@ -91,7 +92,8 @@ export class Contribute extends React.Component {
       nextTick: {},
       msToNextTick: 0,
       displaySeconds: false,
-      isFinalized: false
+      isFinalized: false,
+      isEnded: false
     }
   }
 
@@ -175,7 +177,6 @@ export class Contribute extends React.Component {
   extractContractsData = async () => {
     const { contractStore, web3Store, crowdsaleStore } = this.props
     const { web3 } = web3Store
-
     const account = await getCurrentAccount()
 
     contractStore.setContractProperty('crowdsale', 'account', account)
@@ -201,6 +202,7 @@ export class Contribute extends React.Component {
       await getCrowdsaleData(initCrowdsaleContract, crowdsaleExecID, account, crowdsaleStore)
       await getCrowdsaleTargetDates(initCrowdsaleContract, crowdsaleExecID)
       await this.checkIsFinalized(initCrowdsaleContract, crowdsaleExecID)
+      await this.checkIsEnded(initCrowdsaleContract, crowdsaleExecID)
       await this.calculateMinContribution()
       await this.setTimers()
     } catch (err) {
@@ -211,6 +213,12 @@ export class Contribute extends React.Component {
   checkIsFinalized(initCrowdsaleContract, crowdsaleExecID) {
     return isFinalized(initCrowdsaleContract, crowdsaleExecID).then(isFinalized => {
       this.setState({ isFinalized })
+    })
+  }
+
+  checkIsEnded = async (initCrowdsaleContract, crowdsaleExecID) => {
+    return isEnded(initCrowdsaleContract, crowdsaleExecID).then(isEnded => {
+      this.setState({ isEnded })
     })
   }
 
@@ -475,7 +483,7 @@ export class Contribute extends React.Component {
     const totalSupply = maxCapBeforeDecimals.toFixed()
 
     const minimumContributionDisplay =
-      minimumContribution >= 0 && isFinite(minimumContribution)
+      minimumContribution >= 0 && isFinite(minimumContribution) && !this.state.isEnded
         ? `${minimumContribution} ${tokenTicker}`
         : 'You are not allowed'
 
@@ -576,6 +584,7 @@ export class Contribute extends React.Component {
               component={ContributeForm}
               contributeThrough={contributeThrough}
               isFinalized={this.state.isFinalized}
+              isEnded={this.state.isEnded}
               updateContributeThrough={this.updateContributeThrough}
               web3Available={web3Available}
               minimumContribution={minimumContribution}

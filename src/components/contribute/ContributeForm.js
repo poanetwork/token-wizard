@@ -12,19 +12,20 @@ import {
 import classNames from 'classnames'
 
 export const ContributeForm = inject('contributeStore', 'tokenStore')(
-  observer(({ contributeStore, tokenStore, handleSubmit, pristine, invalid, ...props }) => {
+  observer(({ contributeStore, tokenStore, handleSubmit, pristine, invalid, isEnded, ...props }) => {
     const { decimals } = tokenStore
     const { contributeThrough, updateContributeThrough, web3Available } = props
 
-    const contributeButtonClasses = classNames('button', 'button_fill', {
-      button_disabled: pristine || invalid
+    const buttonDisabled = pristine || invalid || isEnded
+    const contributeButtonClasses = classNames('button', 'button_fill', 'button_no_border', {
+      button_disabled: buttonDisabled
     })
 
     const ContributeButton =
       contributeThrough === CONTRIBUTION_OPTIONS.METAMASK ? (
-        <a className={contributeButtonClasses} onClick={handleSubmit}>
+        <button className={contributeButtonClasses} onClick={handleSubmit} disabled={buttonDisabled}>
           Contribute
-        </a>
+        </button>
       ) : null
 
     const validateContribute = value => {

@@ -267,6 +267,16 @@ export const isFinalized = async ({ methods }, crowdsaleExecID) => {
   return is_finalized
 }
 
+export const isEnded = async ({ methods }, crowdsaleExecID) => {
+  const { addr } = contractStore.abstractStorage
+  let params = []
+  if (crowdsaleExecID) {
+    params.push(addr, crowdsaleExecID)
+  }
+  const { end_time } = await methods.getCrowdsaleStartAndEndTimes(...params).call()
+  return end_time * 1000 <= Date.now()
+}
+
 export const getTiersLength = async () => {
   if (crowdsaleStore.isDutchAuction) return 1
 
