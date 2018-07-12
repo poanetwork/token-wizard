@@ -4,7 +4,13 @@ import '../../assets/stylesheets/application.css'
 export const RadioInputField = props => {
   const inputs = props.items.map((item, index) => (
     <label className="radio-inline" key={index}>
-      <input type="radio" checked={props.selectedItem === item.value} onChange={props.onChange} value={item.value} />
+      <input
+        type="radio"
+        id={item.value}
+        checked={props.selectedItem === item.value}
+        onChange={props.onChange}
+        value={item.value}
+      />
       <span className="title">{item.label}</span>
     </label>
   ))

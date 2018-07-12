@@ -55,7 +55,14 @@ export const ManageTierBlock = inject('crowdsaleStore', 'tokenStore')(
             <div className="steps-content container">
               <div className={classNames('hidden', { divisor: isWhitelistEnabled })}>
                 <div className="input-block-container">
-                  <InputField side="left" type="text" title={CROWDSALE_SETUP_NAME} value={tier} disabled={true} />
+                  <InputField
+                    side="left"
+                    type="text"
+                    title={CROWDSALE_SETUP_NAME}
+                    name={`${name}.crowdsale_name`}
+                    value={tier}
+                    disabled={true}
+                  />
                 </div>
 
                 <div className="input-block-container">

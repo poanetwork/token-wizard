@@ -28,6 +28,7 @@ export const TierBlock = ({ fields, ...props }) => {
           <div className="hidden">
             <div className="input-block-container">
               <Field
+                id={`${name}.tier`}
                 name={`${name}.tier`}
                 validate={value => {
                   const errors = composeValidators(isRequired(), isMaxLength()(30))(value)
@@ -45,6 +46,7 @@ export const TierBlock = ({ fields, ...props }) => {
 
             <div className="input-block-container">
               <Field
+                id={`${name}.updatable`}
                 name={`${name}.updatable`}
                 render={({ input }) => (
                   <div className="left">
@@ -52,6 +54,7 @@ export const TierBlock = ({ fields, ...props }) => {
                     <div className="radios-inline">
                       <label className="radio-inline">
                         <input
+                          id={`${name}.allow_modifying_on`}
                           type="radio"
                           checked={input.value === 'on'}
                           onChange={() => input.onChange('on')}
@@ -61,6 +64,7 @@ export const TierBlock = ({ fields, ...props }) => {
                       </label>
                       <label className="radio-inline">
                         <input
+                          id={`${name}.allow_modifying_off`}
                           type="radio"
                           checked={input.value === 'off'}
                           value="off"
@@ -82,6 +86,7 @@ export const TierBlock = ({ fields, ...props }) => {
                     <div className="radios-inline">
                       <label className="radio-inline">
                         <input
+                          id={`${name}.enable_whitelisting_yes`}
                           type="radio"
                           checked={input.value === 'yes'}
                           value="yes"
@@ -91,6 +96,7 @@ export const TierBlock = ({ fields, ...props }) => {
                       </label>
                       <label className="radio-inline">
                         <input
+                          id={`${name}.enable_whitelisting_no`}
                           type="radio"
                           checked={input.value === 'no'}
                           value="no"

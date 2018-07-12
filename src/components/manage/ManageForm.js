@@ -93,6 +93,7 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
                   side={crowdsaleStore.isDutchAuction ? 'right' : 'left'}
                   type="text"
                   title={TEXT_FIELDS.WALLET_ADDRESS}
+                  name="walletAddress"
                   value={tiers[0].walletAddress}
                   disabled={true}
                 />
