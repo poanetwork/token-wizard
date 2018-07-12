@@ -71,25 +71,51 @@ class TokenStore {
     this.setToken(newToken, newTokenValidations)
   }
 
-  @computed
-  get isEmpty() {
-    return (
-      !this.name ||
-      !this.ticker ||
-      !this.decimals ||
-      !this.supply ||
-      !(this.reservedTokensInput && this.reservedTokensInput.length > 0)
-    )
+  @action
+  checkIsEmptyMinted = () => {
+    return !this.name || !this.ticker || !this.decimals
   }
 
-  @computed
-  get getToken() {
+  @action
+  checkIsEmptyDutch = () => {
+    return !this.name || !this.ticker || !this.decimals || !this.supply
+  }
+
+  @action
+  isEmpty = crowdsaleStore => {
+    if (crowdsaleStore.isDutchAuction) {
+      return this.checkIsEmptyDutch()
+    } else {
+      return this.checkIsEmptyMinted()
+    }
+  }
+
+  @action
+  getTokenMinted = () => {
+    return {
+      name: this.name,
+      ticker: this.ticker,
+      decimals: this.decimals
+    }
+  }
+
+  @action
+  getTokenDutch = () => {
     return {
       name: this.name,
       ticker: this.ticker,
       decimals: this.decimals,
       supply: this.supply,
       reservedTokensInput: this.reservedTokensInput
+    }
+  }
+
+  @action
+  getToken = crowdsaleStore => {
+    if (crowdsaleStore.isDutchAuction) {
+      return this.getTokenDutch()
+    } else {
+      return this.getTokenMinted()
     }
   }
 
