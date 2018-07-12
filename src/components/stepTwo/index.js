@@ -4,7 +4,7 @@ import { checkWeb3 } from '../../utils/blockchainHelpers'
 import { StepNavigation } from '../Common/StepNavigation'
 import { Loader } from '../Common/Loader'
 import { clearingReservedTokens } from '../../utils/alerts'
-import { NAVIGATION_STEPS, VALIDATION_TYPES, initialStepTwoValues } from '../../utils/constants'
+import { NAVIGATION_STEPS, VALIDATION_TYPES } from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
 import { Form } from 'react-final-form'
 import { StepTwoForm } from './StepTwoForm'
@@ -24,13 +24,14 @@ export class stepTwo extends Component {
   }
 
   async componentDidMount() {
-    const { tokenStore, web3Store } = this.props
+    const { tokenStore, web3Store, crowdsaleStore } = this.props
     await checkWeb3(web3Store.web3)
 
-    if (tokenStore.isEmpty) {
+    if (tokenStore.isEmpty(crowdsaleStore)) {
       tokenStore.addTokenSetup()
-      this.tokenValues = tokenStore.getToken
     }
+
+    this.tokenValues = tokenStore.getToken(crowdsaleStore)
 
     this.setState({ loading: false })
   }

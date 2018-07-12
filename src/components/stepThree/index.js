@@ -42,8 +42,8 @@ export class stepThree extends React.Component {
 
     if (tierStore.tiers.length === 0) {
       tierStore.addCrowdsale(web3Store.curAddress)
-      this.initialTiers = JSON.parse(JSON.stringify(tierStore.tiers))
     }
+    this.initialTiers = JSON.parse(JSON.stringify(tierStore.tiers))
 
     gasPriceStore
       .updateValues()
