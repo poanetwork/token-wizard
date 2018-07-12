@@ -12,11 +12,11 @@ import {
 import classNames from 'classnames'
 
 export const ContributeForm = inject('contributeStore', 'tokenStore')(
-  observer(({ contributeStore, tokenStore, handleSubmit, pristine, invalid, isEnded, ...props }) => {
+  observer(({ contributeStore, tokenStore, handleSubmit, pristine, invalid, isEnded, isFinalized, ...props }) => {
     const { decimals } = tokenStore
     const { contributeThrough, updateContributeThrough, web3Available } = props
 
-    const buttonDisabled = pristine || invalid || isEnded
+    const buttonDisabled = pristine || invalid || isEnded || isFinalized
     const contributeButtonClasses = classNames('button', 'button_fill', 'button_no_border', {
       button_disabled: buttonDisabled
     })
@@ -28,11 +28,15 @@ export const ContributeForm = inject('contributeStore', 'tokenStore')(
         </button>
       ) : null
 
+    const canContribute = !(isEnded || isFinalized)
+
+    console.log(`Can contribute ${canContribute}`)
     const validateContribute = value => {
       const decimalsErr = `Number of tokens to buy should be positive and should not exceed ${decimals} decimals.`
-      const minimumContributionErr = isFinite(props.minimumContribution)
-        ? `Minimum valid contribution: ${props.minimumContribution}`
-        : `You are not allowed`
+      const minimumContributionErr =
+        isFinite(props.minimumContribution) && canContribute
+          ? `Minimum valid contribution: ${props.minimumContribution}`
+          : `You are not allowed`
       const errors = composeValidators(
         isRequired(),
         isDecimalPlacesNotGreaterThan(decimalsErr)(decimals),

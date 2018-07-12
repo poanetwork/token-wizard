@@ -482,8 +482,9 @@ export class Contribute extends React.Component {
     //total supply
     const totalSupply = maxCapBeforeDecimals.toFixed()
 
+    const canContribute = !(this.state.isEnded || this.state.isFinalized)
     const minimumContributionDisplay =
-      minimumContribution >= 0 && isFinite(minimumContribution) && !this.state.isEnded
+      minimumContribution >= 0 && isFinite(minimumContribution) && canContribute
         ? `${minimumContribution} ${tokenTicker}`
         : 'You are not allowed'
 
