@@ -217,24 +217,20 @@ export const TEXT_FIELDS = {
   BURN_EXCESS: 'Burn Excess'
 }
 
-export const intitialStepTwoValidations = {
-  validations: {
-    name: EMPTY,
-    decimals: EMPTY,
-    ticker: EMPTY
-  }
+export const defaultTokenValidations = {
+  name: EMPTY,
+  ticker: EMPTY,
+  decimals: EMPTY
 }
 
-export const initialStepTwoValues = {
-  token: {
-    name: '',
-    supply: 0,
-    ticker: '',
-    decimals: '',
-    reservedTokens: [],
-    reservedTokensElements: [],
-    reservedTokensInput: { dim: 'tokens' }
-  }
+export const defaultTokenValues = {
+  name: '',
+  ticker: '',
+  decimals: '18',
+  supply: 0,
+  reservedTokens: [],
+  reservedTokensElements: [],
+  reservedTokensInput: { dim: 'tokens' }
 }
 
 export const intitialStepThreeValidations = {

@@ -1,10 +1,4 @@
-import {
-  incorrectNetworkAlert,
-  noMetaMaskAlert,
-  MetaMaskIsLockedAlert,
-  invalidNetworkIDAlert,
-  noContractAlert
-} from './alerts'
+import { incorrectNetworkAlert, noMetaMaskAlert, MetaMaskIsLockedAlert, noContractAlert } from './alerts'
 import { CHAINS, MAX_GAS_PRICE, CROWDSALE_STRATEGIES, EXCEPTIONS, REACT_PREFIX } from './constants'
 import { crowdsaleStore, generalStore, web3Store, contractStore } from '../stores'
 import { toJS } from 'mobx'
@@ -16,64 +10,70 @@ const logger = logdown('TW:blockchainHelpers')
 const DEPLOY_CONTRACT = 1
 const CALL_METHOD = 2
 
-export function checkWeb3() {
+export const checkWeb3 = async () => {
   const { web3 } = web3Store
 
-  if (!web3) {
-    setTimeout(function() {
-      web3Store.getWeb3(web3 => {
-        if (!web3) return noMetaMaskAlert()
-        checkMetaMask()
+  if (web3) {
+    await checkMetaMask()
+  } else {
+    setTimeout(() => {
+      web3Store.getWeb3(async web3 => {
+        if (!web3) {
+          return noMetaMaskAlert()
+        }
+        await checkMetaMask()
       })
     }, 500)
-  } else {
-    checkMetaMask()
   }
 }
 
-const checkMetaMask = () => {
+const checkMetaMask = async () => {
   const { web3 } = web3Store
-  logger.log(web3.currentProvider)
 
-  if (!web3.currentProvider) {
+  if (!web3 || !web3.currentProvider || !web3.currentProvider.isMetaMask) {
     return noMetaMaskAlert()
   }
 
-  if (web3.currentProvider.isMetaMask) {
-    web3.eth
-      .getAccounts()
-      .then(accounts => {
-        if (accounts.length === 0) return MetaMaskIsLockedAlert()
-      })
-      .catch(err => {
-        return MetaMaskIsLockedAlert()
-      })
+  logger.log(web3.currentProvider)
+
+  try {
+    let accounts = await web3.eth.getAccounts()
+    if (!accounts || accounts.length === 0) {
+      throw new Error(`There is no accounts`)
+    }
+  } catch (err) {
+    logger.error(err)
+    return MetaMaskIsLockedAlert()
   }
 }
 
-export function checkNetWorkByID(_networkIdFromGET) {
+export const checkNetWorkByID = async _networkIdFromGET => {
+  if (!_networkIdFromGET) {
+    return null
+  }
   logger.log(_networkIdFromGET)
 
-  if (!_networkIdFromGET) return null
-
   const { web3 } = web3Store
+  if (!web3) {
+    return null
+  }
+
   let networkNameFromGET = getNetWorkNameById(_networkIdFromGET)
   networkNameFromGET = networkNameFromGET ? networkNameFromGET : CHAINS.UNKNOWN
 
-  return web3.eth.net.getId().then(_networkIdFromNetwork => {
-    let networkNameFromNetwork = getNetWorkNameById(_networkIdFromNetwork)
-    networkNameFromNetwork = networkNameFromNetwork ? networkNameFromNetwork : CHAINS.UNKNOWN
+  let _networkIdFromNetwork = await web3.eth.net.getId()
+  let networkNameFromNetwork = getNetWorkNameById(_networkIdFromNetwork)
+  networkNameFromNetwork = networkNameFromNetwork ? networkNameFromNetwork : CHAINS.UNKNOWN
 
-    if (networkNameFromGET !== networkNameFromNetwork) {
-      logger.log(networkNameFromGET + '!=' + networkNameFromNetwork)
-      return incorrectNetworkAlert(networkNameFromGET, networkNameFromNetwork)
-    }
+  if (networkNameFromGET !== networkNameFromNetwork) {
+    logger.log(`${networkNameFromGET}!=${networkNameFromNetwork}`)
+    return incorrectNetworkAlert(networkNameFromGET, networkNameFromNetwork)
+  }
 
-    return _networkIdFromNetwork
-  })
+  return _networkIdFromNetwork
 }
 
-export function getNetWorkNameById(_id) {
+export const getNetWorkNameById = _id => {
   switch (parseInt(_id, 10)) {
     case 1:
       return CHAINS.MAINNET
@@ -98,16 +98,16 @@ export const calculateGasLimit = (estimatedGas = 0) => {
   return !estimatedGas || estimatedGas > MAX_GAS_PRICE ? MAX_GAS_PRICE : estimatedGas + 100000
 }
 
-export function getNetworkVersion() {
+export const getNetworkVersion = () => {
   const { web3 } = web3Store
 
-  if (web3.eth.net && web3.eth.net.getId) {
+  if (web3 && web3.eth && web3.eth.net && web3.eth.net.getId) {
     return web3.eth.net.getId()
   }
   return Promise.resolve(null)
 }
 
-export function setExistingContractParams(abi, addr, setContractProperty) {
+export const setExistingContractParams = (abi, addr, setContractProperty) => {
   attachToContract(abi, addr).then(crowdsaleContract => {
     crowdsaleContract.token.call(function(err, tokenAddr) {
       if (err) return logger.error(err)
