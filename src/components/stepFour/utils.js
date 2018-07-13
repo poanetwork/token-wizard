@@ -689,7 +689,7 @@ export const trackProxy = () => {
   return [
     () => {
       logger.log('###trackProxy:###')
-      console.log('contractStore:', contractStore)
+      logger.log('contractStore:', contractStore)
 
       let account = contractStore.crowdsale.account
       const opts = { gasPrice: generalStore.gasPrice, from: account }
@@ -698,7 +698,7 @@ export const trackProxy = () => {
         toJS(contractStore.ProxiesRegistry.abi),
         contractStore.ProxiesRegistry.addr
       )
-      console.log('contractStore[crowdsaleStore.proxyName].addr:', contractStore[crowdsaleStore.proxyName].addr)
+      logger.log('contractStore[crowdsaleStore.proxyName].addr:', contractStore[crowdsaleStore.proxyName].addr)
       const method = targetContract.methods.trackCrowdsale(contractStore[crowdsaleStore.proxyName].addr)
 
       return method

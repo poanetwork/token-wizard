@@ -410,7 +410,7 @@ export class Contribute extends React.Component {
     try {
       estimatedGas = await method.estimateGas(opts)
     } catch (e) {
-      console.log(e)
+      logger.error(e)
       estimatedGas = DEPLOYMENT_VALUES.GAS_REQUIRED.BUY
     }
     logger.log('estimatedGas:', estimatedGas)

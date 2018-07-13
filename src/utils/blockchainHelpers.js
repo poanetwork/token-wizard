@@ -346,34 +346,28 @@ async function getAllApplicationsInstances() {
 
 async function getOwnerApplicationsInstancesForProxy() {
   const { web3 } = web3Store
-  const whenProxiesRegistryContract = attachToSpecificCrowdsaleContract('ProxiesRegistry')
+  const proxiesRegistryContract = await attachToSpecificCrowdsaleContract('ProxiesRegistry')
   const accounts = await web3.eth.getAccounts()
-  const whenAccount = accounts[0]
 
-  const [proxiesRegistryContract, account] = await Promise.all([whenProxiesRegistryContract, whenAccount])
-  let promises = []
+  const promises = []
   const crowdsales = []
-  const lengthOfUserApplications = await proxiesRegistryContract.methods.countCrowdsalesForUser(account).call()
-  const userApplications = await proxiesRegistryContract.methods.getCrowdsalesForUser(account).call()
-  userApplications.forEach((proxyAddr, i) => {
+  const proxyAddrs = await proxiesRegistryContract.methods.getCrowdsalesForUser(accounts[0]).call()
+  const mintedCapped = process.env[`${REACT_PREFIX}MINTED_CAPPED_APP_NAME`].toLowerCase()
+  const dutchAuction = process.env[`${REACT_PREFIX}DUTCH_APP_NAME`].toLowerCase()
+  proxyAddrs.forEach(proxyAddr => {
     let promise = new Promise(async (resolve, reject) => {
       const abi = contractStore.MintedCappedProxy.abi // we can use minted caped proxy ABI for minted capped and Dutch acution
       try {
         const contractInstance = await attachToContract(abi, proxyAddr)
-        const app_name = await contractInstance.methods.app_name().call()
-        const appName = removeTrailingNUL(web3.utils.toAscii(app_name))
+        const contractAppName = await contractInstance.methods.app_name().call()
+        const appName = removeTrailingNUL(web3.utils.toAscii(contractAppName))
         const appNameLowerCase = appName.toLowerCase()
-        if (
-          appNameLowerCase.includes(process.env[`${REACT_PREFIX}MINTED_CAPPED_APP_NAME`].toLowerCase()) ||
-          appNameLowerCase.includes(process.env[`${REACT_PREFIX}DUTCH_APP_NAME`].toLowerCase())
-        ) {
-          crowdsales.push({
-            appName: appName,
-            execID: proxyAddr
-          })
+        if (appNameLowerCase.includes(mintedCapped) || appNameLowerCase.includes(dutchAuction)) {
+          crowdsales.push({ appName, execID: proxyAddr })
         }
         resolve()
-      } catch (err) {
+      } catch (error) {
+        logger.error(error)
         resolve()
       }
     })
@@ -386,18 +380,16 @@ async function getOwnerApplicationsInstancesForProxy() {
 
 async function getOwnerApplicationsInstances() {
   const { web3 } = web3Store
-  const whenRegistryExecContract = attachToSpecificCrowdsaleContract('registryExec')
+  const registryExecContract = await attachToSpecificCrowdsaleContract('registryExec')
   const accounts = await web3.eth.getAccounts()
-  const whenAccount = accounts[0]
 
-  const [registryExecContract, account] = await Promise.all([whenRegistryExecContract, whenAccount])
   let promises = []
   const crowdsales = []
-  const lengthOfUserApplications = await registryExecContract.methods.getDeployedLength(account).call()
+  const lengthOfUserApplications = await registryExecContract.methods.getDeployedLength(accounts[0]).call()
   for (let i = 0; i < lengthOfUserApplications; i++) {
     let promise = new Promise((resolve, reject) => {
       registryExecContract.methods
-        .deployed_instances(account, i)
+        .deployed_instances(accounts[0], i)
         .call()
         .then(deployer_instance => {
           let appName = removeTrailingNUL(web3.utils.toAscii(deployer_instance.app_name))
@@ -406,10 +398,7 @@ async function getOwnerApplicationsInstances() {
             appNameLowerCase.includes(process.env[`${REACT_PREFIX}MINTED_CAPPED_APP_NAME`].toLowerCase()) ||
             appNameLowerCase.includes(process.env[`${REACT_PREFIX}DUTCH_APP_NAME`].toLowerCase())
           ) {
-            crowdsales.push({
-              appName: appName,
-              execID: deployer_instance.app_exec_id
-            })
+            crowdsales.push({ appName, execID: deployer_instance.app_exec_id })
           }
           resolve()
         })
