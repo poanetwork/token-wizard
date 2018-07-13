@@ -95,7 +95,8 @@ class TokenStore {
     return {
       name: this.name,
       ticker: this.ticker,
-      decimals: this.decimals
+      decimals: this.decimals,
+      reservedTokensInput: this.reservedTokensInput
     }
   }
 
@@ -105,8 +106,7 @@ class TokenStore {
       name: this.name,
       ticker: this.ticker,
       decimals: this.decimals,
-      supply: this.supply,
-      reservedTokensInput: this.reservedTokensInput
+      supply: this.supply
     }
   }
 
