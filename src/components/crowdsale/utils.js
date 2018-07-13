@@ -274,6 +274,12 @@ let fillCrowdsalePageStoreDates = (startsAtMilliseconds, endsAtMilliseconds) => 
   logger.log('endDate:', endsAtMilliseconds)
 }
 
+/**
+ * Check if a crowdsale is finalized
+ * @param methods
+ * @param crowdsaleExecID
+ * @returns {Promise<*>}
+ */
 export const isFinalized = async ({ methods }, crowdsaleExecID) => {
   const { addr } = contractStore.abstractStorage
   let params = []
@@ -284,6 +290,12 @@ export const isFinalized = async ({ methods }, crowdsaleExecID) => {
   return is_finalized
 }
 
+/**
+ * Check if a crowdsale is ended
+ * @param methods
+ * @param crowdsaleExecID
+ * @returns {Promise<boolean>}
+ */
 export const isEnded = async ({ methods }, crowdsaleExecID) => {
   const { addr } = contractStore.abstractStorage
   let params = []
@@ -292,6 +304,22 @@ export const isEnded = async ({ methods }, crowdsaleExecID) => {
   }
   const { end_time } = await methods.getCrowdsaleStartAndEndTimes(...params).call()
   return end_time * 1000 <= Date.now()
+}
+
+/**
+ * Check if a crowdsale is sold out
+ * @param methods
+ * @param crowdsaleExecID
+ * @returns {Promise<*>}
+ */
+export const isSoldOut = async ({ methods }, crowdsaleExecID) => {
+  const { addr } = contractStore.abstractStorage
+  let params = []
+  if (crowdsaleExecID) {
+    params.push(addr, crowdsaleExecID)
+  }
+  const isCrowdsaleFull = await methods.isCrowdsaleFull(...params).call()
+  return isCrowdsaleFull && isCrowdsaleFull[0]
 }
 
 export const getTiersLength = async () => {
