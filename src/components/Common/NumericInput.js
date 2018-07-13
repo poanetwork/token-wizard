@@ -111,12 +111,13 @@ export class NumericInput extends Component {
 
   render() {
     const { value, pristine, valid } = this.state
-    const { disabled, side, errorMessage, title, description } = this.props
+    const { disabled, side, errorMessage, title, description, name } = this.props
 
     return (
       <InputField
         disabled={disabled}
         side={side}
+        name={name}
         type="number"
         errorMessage={errorMessage}
         value={value}
