@@ -221,6 +221,7 @@ export class ReservedTokensInputBlock extends Component {
               side="reserved-tokens-input-property reserved-tokens-input-property-left"
               type="text"
               title={ADDRESS}
+              name={ADDRESS}
               value={this.state.addr}
               onChange={e => this.handleAddressChange(e.target.value)}
               description="Address where to send reserved tokens."
@@ -240,6 +241,7 @@ export class ReservedTokensInputBlock extends Component {
             <NumericInput
               side="reserved-tokens-input-property reserved-tokens-input-property-right"
               title={VALUE}
+              name={VALUE}
               value={this.state.val}
               pristine={this.state.validation.value.pristine}
               valid={this.state.validation.value.valid}

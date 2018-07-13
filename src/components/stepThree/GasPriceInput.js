@@ -72,6 +72,7 @@ class GasPriceInput extends Component {
           <div key={index} className="radios-inline">
             <label className="radio-inline">
               <input
+                id={gasPrice.id}
                 type="radio"
                 checked={input.value.id === gasPrice.id}
                 onChange={() => {
@@ -86,6 +87,7 @@ class GasPriceInput extends Component {
         ))}
         {this.state.isCustom ? (
           <input
+            id="customGasPrice"
             type="number"
             className="input"
             value={this.state.customGasPrice}

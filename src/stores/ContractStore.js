@@ -4,6 +4,7 @@ import autosave from './autosave'
 class ContractStore {
   @observable MintedCappedProxy
   @observable DutchProxy
+  @observable ProxiesRegistry
   @observable abstractStorage
   @observable registryIdx
   @observable provider

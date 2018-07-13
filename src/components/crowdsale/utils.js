@@ -98,17 +98,26 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
     if (crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('team_wallet')) {
       crowdsaleInfo.team_wallet = crowdsaleInfo[1]
     }
-    if (crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('is_initialized')) {
-      crowdsaleInfo.is_initialized = crowdsaleInfo[2]
+    if (crowdsaleStore.isMintedCappedCrowdsale) {
+      if (crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('is_initialized')) {
+        crowdsaleInfo.is_initialized = crowdsaleInfo[2]
+      }
+      if (crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('is_finalized')) {
+        crowdsaleInfo.is_finalized = crowdsaleInfo[3]
+      }
+    } else if (crowdsaleStore.isDutchAuction) {
+      if (crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('is_initialized')) {
+        crowdsaleInfo.is_initialized = crowdsaleInfo[3]
+      }
+      if (crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('is_finalized')) {
+        crowdsaleInfo.is_finalized = crowdsaleInfo[4]
+      }
     }
-    if (crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('is_finalized')) {
-      crowdsaleInfo.is_finalized = crowdsaleInfo[3]
-    }
-    const wei_raised = crowdsaleInfo.wei_raised ? crowdsaleInfo.wei_raised : crowdsaleInfo[0]
+    const wei_raised = crowdsaleInfo.wei_raised
     let tokensSold = await getTokensSold(...params).call()
+    logger.log('tokensSold:', tokensSold)
     const contributors = await getCrowdsaleUniqueBuyers(...params).call()
     const { fromWei } = web3Store.web3.utils
-
     crowdsalePageStore.setProperty('weiRaised', wei_raised)
     crowdsalePageStore.setProperty('ethRaised', fromWei(wei_raised, 'ether'))
     crowdsalePageStore.setProperty('tokensSold', tokensSold)
@@ -128,9 +137,15 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
     }
 
     if (crowdsaleStore.isDutchAuction) {
-      const { current_rate, start_rate, end_rate, tokens_remaining } = await getCrowdsaleStatus(...params).call()
-      const { max_sellable } = await isCrowdsaleFull(...params).call()
-      const { start_time } = await getCrowdsaleStartAndEndTimes(...params).call()
+      const crowdsaleStatus = await getCrowdsaleStatus(...params).call()
+      crowdsaleStatus.start_rate = crowdsaleStatus.start_rate || crowdsaleStatus[0]
+      crowdsaleStatus.end_rate = crowdsaleStatus.end_rate || crowdsaleStatus[1]
+      crowdsaleStatus.current_rate = crowdsaleStatus.current_rate || crowdsaleStatus[2]
+      crowdsaleStatus.time_remaining = crowdsaleStatus.time_remaining || crowdsaleStatus[4]
+      const tokens_remaining = crowdsaleStatus.tokens_remaining || crowdsaleStatus[5]
+      const _isCrowdsaleFull = await isCrowdsaleFull(...params).call()
+      const max_sellable = _isCrowdsaleFull.max_sellable || _isCrowdsaleFull[1]
+      const current_rate = chooseRateForDutchAuction(crowdsaleStatus)
 
       crowdsalePageStore.setProperty('rate', getCrowdsaleCurrentRate(current_rate, start_time * 1000)) //should be one token in wei
       crowdsalePageStore.setProperty('startRate', start_rate)
@@ -220,6 +235,8 @@ export let getCrowdsaleTargetDates = (initCrowdsaleContract, execID) => {
         .getCrowdsaleStartAndEndTimes(...params)
         .call()
         .then(crowdsaleStartAndEndTimes => {
+          crowdsaleStartAndEndTimes.start_time = crowdsaleStartAndEndTimes.start_time || crowdsaleStartAndEndTimes[0]
+          crowdsaleStartAndEndTimes.end_time = crowdsaleStartAndEndTimes.end_time || crowdsaleStartAndEndTimes[1]
           const tierDates = setTierDates(crowdsaleStartAndEndTimes.start_time, crowdsaleStartAndEndTimes.end_time)
 
           fillCrowdsalePageStoreDates(tierDates.startsAtMilliseconds, tierDates.endsAtMilliseconds)
@@ -320,7 +337,7 @@ export const getUserMaxLimits = async (addr, execID, methods, account) => {
 
     const whitelistStatus = await getWhitelistStatus(...params, tier_index, account).call()
     const max_tokens_remaining = whitelistStatus.max_tokens_remaining || whitelistStatus[1]
-    const maxTokensRemaining = toBigNumber(max_tokens_remaining)
+    const maxTokensRemaining = toBigNumber(max_tokens_remaining).times(currentRate)
 
     return tierTokensRemaining.lt(maxTokensRemaining) ? tierTokensRemaining : maxTokensRemaining
   } else if (crowdsaleStore.isDutchAuction) {
@@ -338,7 +355,7 @@ export const getUserMaxLimits = async (addr, execID, methods, account) => {
 
     const whitelistStatus = await getWhitelistStatus(...params, account).call()
     const max_tokens_remaining = whitelistStatus.max_tokens_remaining || whitelistStatus[1]
-    const maxTokensRemaining = toBigNumber(max_tokens_remaining)
+    const maxTokensRemaining = toBigNumber(max_tokens_remaining).times(currentRate)
 
     return crowdsaleTokensRemaining.lt(maxTokensRemaining) ? crowdsaleTokensRemaining : maxTokensRemaining
   }

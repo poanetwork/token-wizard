@@ -30,6 +30,7 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
       crowdsaleStore,
       displaySave,
       canEditMinCap,
+      crowdsalePointer,
       ...props
     }) => {
       const { tiers } = props.initialValues
@@ -83,7 +84,7 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
               <AboutCrowdsale
                 name={tokenStore.name}
                 ticker={tokenStore.ticker}
-                execID={crowdsaleStore.execID}
+                crowdsalePointer={crowdsalePointer}
                 networkID={generalStore.networkID}
               />
               {props.aboutTier}
@@ -93,6 +94,7 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
                   side={crowdsaleStore.isDutchAuction ? 'right' : 'left'}
                   type="text"
                   title={TEXT_FIELDS.WALLET_ADDRESS}
+                  name="walletAddress"
                   value={tiers[0].walletAddress}
                   disabled={true}
                 />
