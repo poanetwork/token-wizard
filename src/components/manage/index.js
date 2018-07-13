@@ -309,7 +309,7 @@ export class Manage extends Component {
                 whitelistStatus.minimum_purchase_amt = whitelistStatus[0]
               }
               if (whitelistStatus && !whitelistStatus.hasOwnProperty('max_tokens_remaining')) {
-                whitelistStatus.max_tokens_remaining = whitelistStatus[0]
+                whitelistStatus.max_tokens_remaining = whitelistStatus[1]
               }
               const { max_tokens_remaining, minimum_purchase_amt: minimum_contribution } = whitelistStatus
 
@@ -382,6 +382,18 @@ export class Manage extends Component {
       } else if (isDutchAuction) {
         const tier_data = await getCrowdsaleStatus(...params).call()
 
+        if (tier_data && !tier_data.hasOwnProperty('start_rate')) {
+          tier_data.start_rate = tier_data[0]
+        }
+        if (tier_data && !tier_data.hasOwnProperty('end_rate')) {
+          tier_data.end_rate = tier_data[1]
+        }
+        if (tier_data && !tier_data.hasOwnProperty('current_rate')) {
+          tier_data.current_rate = tier_data[2]
+        }
+        if (tier_data && !tier_data.hasOwnProperty('tokens_remaining')) {
+          tier_data.tokens_remaining = tier_data[5]
+        }
         if (tier_data && !tier_data.hasOwnProperty('is_whitelisted')) {
           tier_data.is_whitelisted = tier_data[6]
         }
@@ -390,6 +402,12 @@ export class Manage extends Component {
         }
 
         const tier_dates = await getCrowdsaleStartAndEndTimes(...params).call()
+        if (tier_dates && !tier_dates.hasOwnProperty('start_time')) {
+          tier_dates.start_time = tier_dates[0]
+        }
+        if (tier_dates && !tier_dates.hasOwnProperty('end_time')) {
+          tier_dates.end_time = tier_dates[1]
+        }
         const crowdsaleWhitelist = await getCrowdsaleWhitelist(...params).call()
         const whitelist = crowdsaleWhitelist.whitelist || crowdsaleWhitelist[1]
         const tokens_sold = await getTokensSold(...params).call()
@@ -464,13 +482,12 @@ export class Manage extends Component {
     const { methods } = await attachToSpecificCrowdsaleContract(target)
     const { getCrowdsaleStartAndEndTimes, getCrowdsaleInfo } = methods
     let crowdsaleStartAndEndTimes = await getCrowdsaleStartAndEndTimes(...params).call()
-    if (crowdsaleStartAndEndTimes && crowdsaleStartAndEndTimes.hasOwnProperty('start_time')) {
+    if (crowdsaleStartAndEndTimes && !crowdsaleStartAndEndTimes.hasOwnProperty('start_time')) {
       crowdsaleStartAndEndTimes.start_time = crowdsaleStartAndEndTimes[0]
     }
-    if (crowdsaleStartAndEndTimes && crowdsaleStartAndEndTimes.hasOwnProperty('end_time')) {
+    if (crowdsaleStartAndEndTimes && !crowdsaleStartAndEndTimes.hasOwnProperty('end_time')) {
       crowdsaleStartAndEndTimes.end_time = crowdsaleStartAndEndTimes[1]
     }
-    const { start_time, end_time } = await getCrowdsaleStartAndEndTimes(...params).call()
     let crowdsaleInfo = await getCrowdsaleInfo(...params).call()
 
     if (isMintedCappedCrowdsale && crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('is_finalized')) {
@@ -481,8 +498,8 @@ export class Manage extends Component {
     const { is_finalized } = crowdsaleInfo
 
     this.setState({
-      crowdsaleHasEnded: end_time * 1000 <= Date.now(),
-      crowdsaleHasStarted: start_time * 1000 >= Date.now(),
+      crowdsaleHasEnded: crowdsaleStartAndEndTimes.end_time * 1000 <= Date.now(),
+      crowdsaleHasStarted: crowdsaleStartAndEndTimes.start_time * 1000 >= Date.now(),
       crowdsaleIsUpdatable: initialTiersValues.some(tier => tier.updatable),
       crowdsaleIsWhitelisted: initialTiersValues.some(tier => tier.isWhitelisted),
       crowdsaleIsFinalized: is_finalized
@@ -513,12 +530,12 @@ export class Manage extends Component {
 
     try {
       let crowdsaleInfo = await getCrowdsaleInfo(...params).call()
-      if (crowdsaleInfo && crowdsaleInfo.hasOwnProperty('is_finalized')) {
+      if (crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('is_finalized')) {
         crowdsaleInfo.is_finalized = crowdsaleInfo[4]
       }
       const { is_finalized } = crowdsaleInfo
       let _isCrowdsaleFull = await isCrowdsaleFull(...params).call()
-      if (_isCrowdsaleFull && _isCrowdsaleFull.hasOwnProperty('is_crowdsale_full')) {
+      if (_isCrowdsaleFull && !_isCrowdsaleFull.hasOwnProperty('is_crowdsale_full')) {
         _isCrowdsaleFull.is_crowdsale_full = _isCrowdsaleFull[0]
       }
       const { is_crowdsale_full } = _isCrowdsaleFull
@@ -728,6 +745,7 @@ export class Manage extends Component {
           handleChange={this.updateTierStore}
           canSave={this.canSave()}
           displaySave={this.saveDisplayed()}
+          crowdsalePointer={this.props.match.params.crowdsalePointer}
         />
 
         <Loader show={this.state.loading} />

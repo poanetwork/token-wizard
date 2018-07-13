@@ -57,6 +57,7 @@ import { ContributeForm } from './ContributeForm'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import ReactTooltip from 'react-tooltip'
 import logdown from 'logdown'
+import { DEPLOYMENT_VALUES } from '../../utils/constants'
 
 const logger = logdown('TW:contribute')
 
@@ -350,6 +351,8 @@ export class Contribute extends React.Component {
 
     const userLimits = await getUserMaxLimits(addr, execID, methods, account)
 
+    logger.log('userLimits:', userLimits.toString())
+
     return tokensToContribute.gt(userLimits) ? userLimits : tokensToContribute
   }
 
@@ -403,7 +406,13 @@ export class Contribute extends React.Component {
     const targetContractName = execID ? 'registryExec' : crowdsaleStore.proxyName
     const method = methodToExec(targetContractName, `buy()`, this.getBuyParams, paramsToExec)
 
-    const estimatedGas = await method.estimateGas(opts)
+    let estimatedGas
+    try {
+      estimatedGas = await method.estimateGas(opts)
+    } catch (e) {
+      logger.error(e)
+      estimatedGas = DEPLOYMENT_VALUES.GAS_REQUIRED.BUY
+    }
     logger.log('estimatedGas:', estimatedGas)
 
     opts.gasLimit = calculateGasLimit(estimatedGas)
@@ -453,7 +462,7 @@ export class Contribute extends React.Component {
     const { proxyName } = crowdsaleStore
 
     const { curAddr, contributeThrough, web3Available, toNextTick, nextTick, minimumContribution } = this.state
-    const crowdsaleExecID = contractStore.crowdsale && contractStore.crowdsale.execID
+    const crowdsaleExecID = crowdsale && crowdsale.execID
     const { days, hours, minutes, seconds } = toNextTick
 
     const { decimals, ticker, name } = tokenStore
@@ -477,13 +486,17 @@ export class Contribute extends React.Component {
     //min contribution
     const minimumContributionDisplay =
       minimumContribution >= 0 ? `${minimumContribution} ${tokenTicker}` : 'You are not allowed'
-
     const registryExecAddr =
       contractStore.registryExec && contractStore.registryExec.addr ? contractStore.registryExec.addr : ''
+
+    const crowdsaleProxyAddr = contractStore[proxyName] && contractStore[proxyName].addr
     const QRPaymentProcessElement =
-      contributeThrough === CONTRIBUTION_OPTIONS.QR &&
-      (crowdsaleExecID || (contractStore[proxyName] && contractStore[proxyName].addr)) ? (
-        <QRPaymentProcess registryExecAddr={registryExecAddr} txData={getExecBuyCallData(crowdsaleExecID)} />
+      contributeThrough === CONTRIBUTION_OPTIONS.QR && (crowdsaleExecID || crowdsaleProxyAddr) ? (
+        <QRPaymentProcess
+          crowdsaleProxyAddr={crowdsaleProxyAddr}
+          registryExecAddr={registryExecAddr}
+          txData={getExecBuyCallData(crowdsaleExecID)}
+        />
       ) : null
 
     const rightColumnClasses = classNames('contribute-table-cell', 'contribute-table-cell_right', {

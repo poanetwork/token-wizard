@@ -16,5 +16,6 @@ export const TX_STEP_DESCRIPTION = {
   updateGlobalMinContribution: 'Set Global MinCap',
   createCrowdsaleTiers: 'Add tiers to Crowdsale',
   whitelist: 'Register whitelisted addresses',
-  crowdsaleInit: 'Initialize Crowdsale'
+  crowdsaleInit: 'Initialize Crowdsale',
+  trackProxy: 'Add Proxy contract to registry'
 }
