@@ -29,8 +29,7 @@ export const ContributeForm = inject('contributeStore', 'tokenStore')(
       ) : null
 
     const canContribute = !(isEnded || isFinalized)
-
-    console.log(`Can contribute ${canContribute}`)
+    
     const validateContribute = value => {
       const decimalsErr = `Number of tokens to buy should be positive and should not exceed ${decimals} decimals.`
       const minimumContributionErr =
