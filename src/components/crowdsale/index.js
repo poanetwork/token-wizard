@@ -226,7 +226,7 @@ export class Crowdsale extends React.Component {
           <div className="hidden">
             <div className="left">
               <p className="title">{currentRatePerETH}</p>
-              <p className="description">Price (Tokens/ETH)</p>
+              <p className="description">Rate (Tokens/ETH)</p>
             </div>
             <div className="right">
               <p className="title">{totalSupply}</p>
