@@ -162,13 +162,3 @@ export const toBigNumber = (value, force = true) => {
     return new BigNumber(value)
   }
 }
-
-/**
- * Returns current rate or 0 if crowdsale hasn't started yet
- * @param rate - Current rate retrieved from contracts
- * @param crowdsale_start_time - Start Time in milliseconds
- * @returns {string}
- */
-export function getCrowdsaleCurrentRate(rate, crowdsale_start_time) {
-  return crowdsale_start_time > Date.now() ? '0' : rate
-}
