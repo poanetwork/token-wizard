@@ -348,34 +348,28 @@ async function getOwnerApplicationsInstancesForProxy() {
   const { web3 } = web3Store
   const proxiesRegistryContract = await attachToSpecificCrowdsaleContract('ProxiesRegistry')
   const accounts = await web3.eth.getAccounts()
+  const execIDs = await proxiesRegistryContract.methods.getCrowdsalesForUser(accounts[0]).call()
 
-  const promises = []
-  const crowdsales = []
-  const proxyAddrs = await proxiesRegistryContract.methods.getCrowdsalesForUser(accounts[0]).call()
+  const { abi } = contractStore.MintedCappedProxy
   const mintedCapped = process.env[`${REACT_PREFIX}MINTED_CAPPED_APP_NAME`].toLowerCase()
   const dutchAuction = process.env[`${REACT_PREFIX}DUTCH_APP_NAME`].toLowerCase()
-  proxyAddrs.forEach(proxyAddr => {
-    let promise = new Promise(async (resolve, reject) => {
-      const abi = contractStore.MintedCappedProxy.abi // we can use minted caped proxy ABI for minted capped and Dutch acution
-      try {
-        const contractInstance = await attachToContract(abi, proxyAddr)
-        const contractAppName = await contractInstance.methods.app_name().call()
-        const appName = removeTrailingNUL(web3.utils.toAscii(contractAppName))
-        const appNameLowerCase = appName.toLowerCase()
-        if (appNameLowerCase.includes(mintedCapped) || appNameLowerCase.includes(dutchAuction)) {
-          crowdsales.push({ appName, execID: proxyAddr })
-        }
-        resolve()
-      } catch (error) {
-        logger.error(error)
-        resolve()
+  const contracts = []
+
+  for (const execID of execIDs) {
+    try {
+      const contractInstance = await attachToContract(abi, execID)
+      const contractAppName = await contractInstance.methods.app_name().call()
+      const appName = removeTrailingNUL(web3.utils.toAscii(contractAppName)).toLowerCase()
+
+      if (appName.includes(mintedCapped) || appName.includes(dutchAuction)) {
+        contracts.push({ appName, execID })
       }
-    })
-    promises.push(promise)
-  })
-  return Promise.all(promises).then(() => {
-    return Promise.all(crowdsales)
-  })
+    } catch (error) {
+      logger.error(error)
+    }
+  }
+
+  return contracts.reverse()
 }
 
 async function getOwnerApplicationsInstances() {
