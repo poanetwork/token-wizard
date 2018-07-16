@@ -7,6 +7,8 @@ class CrowdsalePageStore {
   @observable ethRaised
   @observable weiRaised
   @observable rate
+  @observable startRate
+  @observable endRate
   @observable tokensSold
   @observable tokenAmountOf
   @observable tiers = []
