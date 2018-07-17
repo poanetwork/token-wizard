@@ -501,7 +501,7 @@ export class Contribute extends React.Component {
       minimumContribution >= 0 ? `${minimumContribution} ${tokenTicker}` : 'You are not allowed'
     //max contribution
     const maximumContributionDisplay =
-      maximumContribution >= 0 ? `${maximumContribution} ${tokenTicker}` : 'You are not allowed'
+      maximumContribution > 0 ? `${maximumContribution} ${tokenTicker}` : 'You are not allowed'
 
     const registryExecAddr =
       contractStore.registryExec && contractStore.registryExec.addr ? contractStore.registryExec.addr : ''
