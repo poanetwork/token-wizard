@@ -20,6 +20,7 @@ import {
   initializeAccumulativeData,
   isFinalized,
   getUserMaxLimits,
+  getUserMinLimits,
   getUserMaxContribution,
   getUserMinContribution
 } from '../crowdsale/utils'
@@ -372,7 +373,7 @@ export class Contribute extends React.Component {
     }
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
-    const userMinLimits = await getUserMinContribution(addr, execID, methods, account)
+    const userMinLimits = await getUserMinLimits(addr, execID, methods, account)
     const userMaxLimits = await getUserMaxContribution(addr, execID, methods, account)
 
     this.setState({
@@ -580,11 +581,11 @@ export class Contribute extends React.Component {
                 </p>
                 <p className="hashes-description">Total Supply</p>
               </div>
-              <div className="hashes-i left">
+              <div className="hashes-i">
                 <p className="hashes-title">{minimumContributionDisplay}</p>
                 <p className="hashes-description">Minimum Contribution</p>
               </div>
-              <div className="hashes-i right">
+              <div className="hashes-i">
                 <p className="hashes-title">{maximumContributionDisplay}</p>
                 <p className="hashes-description">Maximum Contribution</p>
               </div>
