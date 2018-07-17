@@ -286,10 +286,18 @@ export const isFinalized = async ({ methods }, crowdsaleExecID) => {
   if (crowdsaleExecID) {
     params.push(addr, crowdsaleExecID)
   }
-  const crowdsaleInfo = await methods.getCrowdsaleInfo(...params).call()
-  //Value is finalized is the index #3
-  logger.log(`Crowdsale Info - Is finalized`, crowdsaleInfo[3])
-  return crowdsaleInfo[3]
+  const crowdsale = await methods.getCrowdsaleInfo(...params).call()
+  const { isMintedCappedCrowdsale, isDutchAuction } = crowdsaleStore
+  let isFinalized = false
+  if (isMintedCappedCrowdsale) {
+    //Value is finalized is the index #3
+    isFinalized = crowdsale[3]
+  } else if (isDutchAuction) {
+    //Value is finalized is the index #4
+    isFinalized = crowdsale[4]
+  }
+  logger.log(`Crowdsale Info: Is finalized`, isFinalized)
+  return isFinalized
 }
 
 /**
@@ -305,8 +313,8 @@ export const isEnded = async ({ methods }, crowdsaleExecID) => {
     params.push(addr, crowdsaleExecID)
   }
   const crowdsaleStartAndEndTimes = await methods.getCrowdsaleStartAndEndTimes(...params).call()
-  logger.log(`Crowdsale start time`, crowdsaleStartAndEndTimes[0])
-  logger.log(`Crowdsale end time`, crowdsaleStartAndEndTimes[1])
+  logger.log(`Crowdsale start time:`, crowdsaleStartAndEndTimes[0])
+  logger.log(`Crowdsale end time::`, crowdsaleStartAndEndTimes[1])
   const end_time = crowdsaleStartAndEndTimes[1]
   return end_time * 1000 <= Date.now()
 }
