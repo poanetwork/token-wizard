@@ -21,8 +21,7 @@ import {
   isFinalized,
   getUserMaxLimits,
   getUserMinLimits,
-  getUserMaxContribution,
-  getUserMinContribution
+  getUserMaxContribution
 } from '../crowdsale/utils'
 import {
   countDecimalPlaces,
