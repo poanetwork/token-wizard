@@ -286,8 +286,10 @@ export const isFinalized = async ({ methods }, crowdsaleExecID) => {
   if (crowdsaleExecID) {
     params.push(addr, crowdsaleExecID)
   }
-  const { is_finalized } = await methods.getCrowdsaleInfo(...params).call()
-  return is_finalized
+  const crowdsaleInfo = await methods.getCrowdsaleInfo(...params).call()
+  //Value is finalized is the index #3
+  logger.log(`Crowdsale Info - Is finalized`, crowdsaleInfo[3])
+  return crowdsaleInfo[3]
 }
 
 /**
@@ -302,7 +304,10 @@ export const isEnded = async ({ methods }, crowdsaleExecID) => {
   if (crowdsaleExecID) {
     params.push(addr, crowdsaleExecID)
   }
-  const { end_time } = await methods.getCrowdsaleStartAndEndTimes(...params).call()
+  const crowdsaleStartAndEndTimes = await methods.getCrowdsaleStartAndEndTimes(...params).call()
+  logger.log(`Crowdsale start time`, crowdsaleStartAndEndTimes[0])
+  logger.log(`Crowdsale end time`, crowdsaleStartAndEndTimes[1])
+  const end_time = crowdsaleStartAndEndTimes[1]
   return end_time * 1000 <= Date.now()
 }
 
