@@ -462,3 +462,119 @@ export const getUserMinLimits = async (addr, execID, methods, account) => {
     )
   }
 }
+
+/**
+ * Get user max contribution token
+ * @param addr
+ * @param execID
+ * @param methods
+ * @param account
+ * @returns {Promise<BigNumber>}
+ */
+export const getUserMaxContribution = async (addr, execID, methods, account) => {
+  let params = []
+  if (execID) {
+    params.push(addr, execID)
+  }
+  if (crowdsaleStore.isMintedCappedCrowdsale) {
+    const { getCurrentTierInfo, getWhitelistStatus, decimals } = methods
+    const currentTierInfo = await getCurrentTierInfo(...params).call()
+
+    //get properties
+    const isWhitelisted = currentTierInfo.is_whitelisted || currentTierInfo[7]
+    const tierTokensRemaining = currentTierInfo.tier_tokens_remaining || currentTierInfo[3]
+    const tierIndex = currentTierInfo.tier_index || currentTierInfo[1]
+
+    const tokenDecimals = await decimals(...params).call()
+    const tierTokensRemainingTimes = toBigNumber(tierTokensRemaining).times(`1e-${tokenDecimals}`)
+    if (!isWhitelisted) {
+      return tierTokensRemainingTimes
+    }
+
+    const whitelistStatus = await getWhitelistStatus(...params, tierIndex, account).call()
+    const maxTokensRemaining = whitelistStatus.max_tokens_remaining || whitelistStatus[1]
+    const maxTokensRemainingWithTimes = toBigNumber(maxTokensRemaining).times(`1e-${tokenDecimals}`)
+
+    return tierTokensRemainingTimes.lt(maxTokensRemainingWithTimes)
+      ? tierTokensRemainingTimes
+      : maxTokensRemainingWithTimes
+  } else if (crowdsaleStore.isDutchAuction) {
+    const { getCrowdsaleStatus, getWhitelistStatus, decimals } = methods
+    const crowdsaleStatus = await getCrowdsaleStatus(...params).call()
+
+    //get properties
+    const isWhitelisted = crowdsaleStatus.is_whitelisted || crowdsaleStatus[6]
+    const tokensRemaining = crowdsaleStatus.tokens_remaining || crowdsaleStatus[5]
+    const tokenDecimals = await decimals(...params).call()
+
+    const crowdsaleTokensRemaining = toBigNumber(tokensRemaining).times(`1e-${tokenDecimals}`)
+
+    if (!isWhitelisted) {
+      return crowdsaleTokensRemaining
+    }
+
+    const whitelistStatus = await getWhitelistStatus(...params, account).call()
+    const maxTokensRemaining = whitelistStatus.max_tokens_remaining || whitelistStatus[1]
+    const maxTokensRemainingTimes = toBigNumber(maxTokensRemaining).times(`1e-${tokenDecimals}`)
+
+    return crowdsaleTokensRemaining.lt(maxTokensRemainingTimes) ? crowdsaleTokensRemaining : maxTokensRemainingTimes
+  }
+}
+
+/**
+ * Get user min contribution token
+ * @param addr
+ * @param execID
+ * @param methods
+ * @param account
+ * @returns {Promise<*>}
+ */
+export const getUserMinContribution = async (addr, execID, methods, account) => {
+  const { decimals } = methods
+  let params = []
+  if (execID) {
+    params.push(addr, execID)
+  }
+
+  //Check max contribution if is zero
+  let userMaxContribution = await getUserMaxContribution(addr, execID, methods, account)
+  if (+userMaxContribution === 0) {
+    return 0
+  }
+
+  const tokenDecimals = await decimals(...params).call()
+  const rate = await getRate(addr, execID, methods)
+  const { DECIMAL_PLACES } = rate.constructor.config()
+
+  rate.constructor.config({ DECIMAL_PLACES: +tokenDecimals })
+  const minimumByRate = rate.pow(-1)
+  const minimumByDecimals = toBigNumber(`1e-${tokenDecimals}`)
+  const naturalMinCap = minimumByRate.gt(minimumByDecimals) ? minimumByRate : minimumByDecimals
+  rate.constructor.config({ DECIMAL_PLACES })
+
+  if (crowdsaleStore.isMintedCappedCrowdsale) {
+    const { getCurrentTierInfo, getWhitelistStatus } = methods
+    const currentTierInfo = await getCurrentTierInfo(...params).call()
+    const isWhitelisted = currentTierInfo.is_whitelisted || currentTierInfo[7]
+    const tierIndex = currentTierInfo.tier_index || currentTierInfo[1]
+
+    if (!isWhitelisted) {
+      return calculateMinContribution(getCurrentTierInfo(...params), tokenDecimals, naturalMinCap)
+    }
+    return calculateMinContribution(
+      getWhitelistStatus(...params, tierIndex, account),
+      tokenDecimals,
+      naturalMinCap,
+      isWhitelisted
+    )
+  } else if (crowdsaleStore.isDutchAuction) {
+    const { getCrowdsaleStatus, getWhitelistStatus, getCrowdsaleInfo } = methods
+    const crowdsaleStatus = await getCrowdsaleStatus(...params).call()
+    const isWhitelisted = crowdsaleStatus.is_whitelisted || crowdsaleStatus[6]
+
+    if (!isWhitelisted) {
+      return calculateMinContribution(getCrowdsaleInfo(...params), tokenDecimals, naturalMinCap)
+    }
+    return calculateMinContribution(getWhitelistStatus(...params, account), tokenDecimals, naturalMinCap, isWhitelisted)
+  }
+}
