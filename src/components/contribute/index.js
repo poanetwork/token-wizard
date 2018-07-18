@@ -19,6 +19,8 @@ import {
   getCrowdsaleTargetDates,
   initializeAccumulativeData,
   isFinalized,
+  isEnded,
+  isSoldOut,
   getUserMaxLimits,
   getUserMinLimits
 } from '../crowdsale/utils'
@@ -92,7 +94,9 @@ export class Contribute extends React.Component {
       nextTick: {},
       msToNextTick: 0,
       displaySeconds: false,
-      isFinalized: false
+      isFinalized: false,
+      isEnded: false,
+      isSoldOut: false
     }
   }
 
@@ -176,7 +180,6 @@ export class Contribute extends React.Component {
   extractContractsData = async () => {
     const { contractStore, web3Store, crowdsaleStore } = this.props
     const { web3 } = web3Store
-
     const account = await getCurrentAccount()
 
     contractStore.setContractProperty('crowdsale', 'account', account)
@@ -202,6 +205,8 @@ export class Contribute extends React.Component {
       await getCrowdsaleData(initCrowdsaleContract, crowdsaleExecID, account, crowdsaleStore)
       await getCrowdsaleTargetDates(initCrowdsaleContract, crowdsaleExecID)
       await this.checkIsFinalized(initCrowdsaleContract, crowdsaleExecID)
+      await this.checkIsEnded(initCrowdsaleContract, crowdsaleExecID)
+      await this.checkIsSoldOut(initCrowdsaleContract, crowdsaleExecID)
       await this.calculateMinContribution()
       await this.setTimers()
     } catch (err) {
@@ -209,10 +214,16 @@ export class Contribute extends React.Component {
     }
   }
 
-  checkIsFinalized(initCrowdsaleContract, crowdsaleExecID) {
-    return isFinalized(initCrowdsaleContract, crowdsaleExecID).then(isFinalized => {
-      this.setState({ isFinalized })
-    })
+  async checkIsFinalized(initCrowdsaleContract, crowdsaleExecID) {
+    this.setState({ isFinalized: await isFinalized(initCrowdsaleContract, crowdsaleExecID) })
+  }
+
+  checkIsEnded = async (initCrowdsaleContract, crowdsaleExecID) => {
+    this.setState({ isEnded: await isEnded(initCrowdsaleContract, crowdsaleExecID) })
+  }
+
+  checkIsSoldOut = async (initCrowdsaleContract, crowdsaleExecID) => {
+    this.setState({ isSoldOut: await isSoldOut(initCrowdsaleContract, crowdsaleExecID) })
   }
 
   setTimers = () => {
@@ -483,9 +494,12 @@ export class Contribute extends React.Component {
     //total supply
     const totalSupply = maxCapBeforeDecimals.toFixed()
 
-    //min contribution
+    const canContribute = !(this.state.isEnded || this.state.isFinalized || this.state.isSoldOut)
     const minimumContributionDisplay =
-      minimumContribution >= 0 ? `${minimumContribution} ${tokenTicker}` : 'You are not allowed'
+      minimumContribution >= 0 && isFinite(minimumContribution) && canContribute
+        ? `${minimumContribution} ${tokenTicker}`
+        : 'You are not allowed'
+
     const registryExecAddr =
       contractStore.registryExec && contractStore.registryExec.addr ? contractStore.registryExec.addr : ''
 
@@ -587,6 +601,9 @@ export class Contribute extends React.Component {
               onSubmit={this.contributeToTokens}
               component={ContributeForm}
               contributeThrough={contributeThrough}
+              isFinalized={this.state.isFinalized}
+              isEnded={this.state.isEnded}
+              isSoldOut={this.state.isSoldOut}
               updateContributeThrough={this.updateContributeThrough}
               web3Available={web3Available}
               minimumContribution={minimumContribution}

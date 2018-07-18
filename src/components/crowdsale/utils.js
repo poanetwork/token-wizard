@@ -271,14 +271,68 @@ let fillCrowdsalePageStoreDates = (startsAtMilliseconds, endsAtMilliseconds) => 
   logger.log('endDate:', endsAtMilliseconds)
 }
 
+/**
+ * Check if a crowdsale is finalized
+ * @param methods
+ * @param crowdsaleExecID
+ * @returns {Promise<*>}
+ */
 export const isFinalized = async ({ methods }, crowdsaleExecID) => {
   const { addr } = contractStore.abstractStorage
   let params = []
   if (crowdsaleExecID) {
     params.push(addr, crowdsaleExecID)
   }
-  const { is_finalized } = await methods.getCrowdsaleInfo(...params).call()
-  return is_finalized
+  const crowdsale = await methods.getCrowdsaleInfo(...params).call()
+  const { isMintedCappedCrowdsale, isDutchAuction } = crowdsaleStore
+  let isFinalized = false
+  if (isMintedCappedCrowdsale) {
+    //Value is finalized is the index #3
+    isFinalized = crowdsale.is_finalized || crowdsale[3]
+  } else if (isDutchAuction) {
+    //Value is finalized is the index #4
+    isFinalized = crowdsale.is_finalized || crowdsale[4]
+  }
+  logger.log(`Crowdsale Info: Is finalized`, isFinalized)
+  return isFinalized
+}
+
+/**
+ * Check if a crowdsale is ended
+ * @param methods
+ * @param crowdsaleExecID
+ * @returns {Promise<boolean>}
+ */
+export const isEnded = async ({ methods }, crowdsaleExecID) => {
+  const { addr } = contractStore.abstractStorage
+  let params = []
+  if (crowdsaleExecID) {
+    params.push(addr, crowdsaleExecID)
+  }
+  const crowdsaleStartAndEndTimes = await methods.getCrowdsaleStartAndEndTimes(...params).call()
+  logger.log(`Crowdsale start time:`, crowdsaleStartAndEndTimes[0])
+  logger.log(`Crowdsale end time::`, crowdsaleStartAndEndTimes[1])
+  const end_time = crowdsaleStartAndEndTimes.end_time || crowdsaleStartAndEndTimes[1]
+  return end_time * 1000 <= Date.now()
+}
+
+/**
+ * Check if a crowdsale is sold out
+ * @param methods
+ * @param crowdsaleExecID
+ * @returns {Promise<*>}
+ */
+export const isSoldOut = async ({ methods }, crowdsaleExecID) => {
+  const { addr } = contractStore.abstractStorage
+  let params = []
+  if (crowdsaleExecID) {
+    params.push(addr, crowdsaleExecID)
+  }
+  const isCrowdsaleFull = await methods.isCrowdsaleFull(...params).call()
+  if (isCrowdsaleFull && !isCrowdsaleFull.hasOwnProperty('is_crowdsale_full')) {
+    isCrowdsaleFull.is_crowdsale_full = isCrowdsaleFull[0]
+  }
+  return isCrowdsaleFull.is_crowdsale_full
 }
 
 export const getTiersLength = async () => {
@@ -379,17 +433,17 @@ const calculateMinContribution = async (method, decimals, naturalMinCap, isWhite
   const crowdsaleData = await method.call()
   let { tier_min, minimum_contribution, minimum_purchase_amt, max_tokens_remaining } = crowdsaleData
   if (!tier_min) {
-    if (method._method.name == 'getCurrentTierInfo') {
+    if (method._method.name === 'getCurrentTierInfo') {
       tier_min = crowdsaleData[5]
     }
   }
   if (!minimum_contribution) {
-    if (method._method.name == 'getCrowdsaleInfo') {
+    if (method._method.name === 'getCrowdsaleInfo') {
       minimum_contribution = crowdsaleData[2]
     }
   }
   if (!minimum_purchase_amt && !max_tokens_remaining) {
-    if (method._method.name == 'getWhitelistStatus') {
+    if (method._method.name === 'getWhitelistStatus') {
       minimum_purchase_amt = crowdsaleData[0]
       max_tokens_remaining = crowdsaleData[1]
     }

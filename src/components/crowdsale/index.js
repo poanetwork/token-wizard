@@ -17,7 +17,7 @@ import { NAVIGATION_STEPS } from '../../utils/constants'
 import { Loader } from '../Common/Loader'
 import { CrowdsaleConfig } from '../Common/config'
 import { inject, observer } from 'mobx-react'
-import { invalidCrowdsaleExecIDAlert, invalidCrowdsaleAddrAlert, invalidNetworkIDAlert } from '../../utils/alerts'
+import { invalidCrowdsaleExecIDAlert, invalidNetworkIDAlert } from '../../utils/alerts'
 import logdown from 'logdown'
 
 const logger = logdown('TW:crowdsale')
