@@ -520,3 +520,29 @@ export const getUserMaxContribution = async (addr, execID, methods, account) => 
     return crowdsaleTokensRemaining.lt(maxTokensRemainingTimes) ? crowdsaleTokensRemaining : maxTokensRemainingTimes
   }
 }
+
+/**
+ * Check if crowdsale is full, related to an account
+ * @param addr
+ * @param execID
+ * @param methods
+ * @param account
+ * @returns {Promise<*|boolean>}
+ */
+export const isCrowdSaleFull = async (addr, execID, methods, account) => {
+  let params = []
+  if (execID) {
+    params.push(addr, execID)
+  }
+
+  const { isCrowdsaleFull } = methods
+  let isCrowdsaleFullInstance = await isCrowdsaleFull(...params).call()
+  const userMaxContribution = await getUserMaxContribution(addr, execID, methods, account)
+
+  const isCrowdsaleFullValue = isCrowdsaleFullInstance.is_crowdsale_full || isCrowdsaleFullInstance[0]
+  const checkIfCrowdsaleIsFull = isCrowdsaleFullValue || userMaxContribution.toFixed() == 0
+
+  logger.log(`Crowdsale is full`, checkIfCrowdsaleIsFull)
+
+  return checkIfCrowdsaleIsFull
+}

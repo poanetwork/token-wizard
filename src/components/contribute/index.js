@@ -21,7 +21,8 @@ import {
   isFinalized,
   getUserMaxLimits,
   getUserMinLimits,
-  getUserMaxContribution
+  getUserMaxContribution,
+  isCrowdSaleFull
 } from '../crowdsale/utils'
 import {
   countDecimalPlaces,
@@ -374,11 +375,19 @@ export class Contribute extends React.Component {
     const { methods } = await attachToSpecificCrowdsaleContract(target)
     const userMinLimits = await getUserMinLimits(addr, execID, methods, account)
     const userMaxLimits = await getUserMaxContribution(addr, execID, methods, account)
+    const checkIfCrowdSaleIsfull = await isCrowdSaleFull(addr, execID, methods, account)
 
-    this.setState({
-      minimumContribution: userMinLimits.toFixed(),
-      maximumContribution: userMaxLimits.toFixed()
-    })
+    if (checkIfCrowdSaleIsfull) {
+      this.setState({
+        minimumContribution: -1,
+        maximumContribution: -1
+      })
+    } else {
+      this.setState({
+        minimumContribution: userMinLimits.toFixed(),
+        maximumContribution: userMaxLimits.toFixed()
+      })
+    }
   }
 
   contributeToTokensForWhitelistedCrowdsaleInternal = async () => {
@@ -501,7 +510,7 @@ export class Contribute extends React.Component {
       minimumContribution >= 0 ? `${minimumContribution} ${tokenTicker}` : 'You are not allowed'
     //max contribution
     const maximumContributionDisplay =
-      maximumContribution > 0 ? `${maximumContribution} ${tokenTicker}` : 'You are not allowed'
+      maximumContribution >= 0 ? `${maximumContribution} ${tokenTicker}` : 'You are not allowed'
 
     const registryExecAddr =
       contractStore.registryExec && contractStore.registryExec.addr ? contractStore.registryExec.addr : ''
