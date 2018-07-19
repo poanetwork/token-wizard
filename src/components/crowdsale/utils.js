@@ -513,3 +513,44 @@ export const getUserMinLimits = async (addr, execID, methods, account) => {
     )
   }
 }
+
+/**
+ * Get user balance
+ * @param addr
+ * @param execID
+ * @param account
+ * @returns {Promise<BigNumber>}
+ */
+export const getUserBalance = async (addr, execID, account) => {
+  const crowdsaleContract = await getInitCrowdsale()
+  const { balanceOf, decimals } = crowdsaleContract.methods
+
+  let params = []
+  if (execID) {
+    params.push(addr, execID)
+  }
+
+  let ownerBalance = await balanceOf(...params, account).call()
+
+  const tokenDecimals = await decimals(...params).call()
+  ownerBalance = toBigNumber(ownerBalance).times(`1e-${tokenDecimals}`)
+
+  return ownerBalance
+}
+
+/**
+ * Get init crowdSale
+ * @returns {Promise<*>}
+ */
+export const getInitCrowdsale = async () => {
+  let target
+  if (contractStore.crowdsale.execID) {
+    const targetPrefix = 'idx'
+    const targetSuffix = crowdsaleStore.contractTargetSuffix
+    target = `${targetPrefix}${targetSuffix}`
+  } else {
+    target = crowdsaleStore.proxyName
+  }
+
+  return await attachToSpecificCrowdsaleContract(target)
+}

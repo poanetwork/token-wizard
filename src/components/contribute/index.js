@@ -22,7 +22,8 @@ import {
   isEnded,
   isSoldOut,
   getUserMaxLimits,
-  getUserMinLimits
+  getUserMinLimits,
+  getUserBalance
 } from '../crowdsale/utils'
 import {
   countDecimalPlaces,
@@ -214,7 +215,7 @@ export class Contribute extends React.Component {
     }
   }
 
-  async checkIsFinalized(initCrowdsaleContract, crowdsaleExecID) {
+  checkIsFinalized = async (initCrowdsaleContract, crowdsaleExecID) => {
     this.setState({ isFinalized: await isFinalized(initCrowdsaleContract, crowdsaleExecID) })
   }
 
@@ -395,7 +396,7 @@ export class Contribute extends React.Component {
 
     const { generalStore, contractStore, crowdsalePageStore, tokenStore, crowdsaleStore } = this.props
     const { account, execID } = contractStore.crowdsale
-
+    const { addr } = toJS(contractStore.abstractStorage)
     const weiToSend = await this.calculateWeiToSend()
     logger.log('weiToSend:', weiToSend.toFixed())
 
@@ -431,11 +432,19 @@ export class Contribute extends React.Component {
     const { DECIMAL_PLACES } = weiToSend.constructor.config()
     weiToSend.constructor.config({ DECIMAL_PLACES: +tokenStore.decimals })
 
-    const tokensToContribute = weiToSend.div(crowdsalePageStore.rate).toFixed()
     weiToSend.constructor.config({ DECIMAL_PLACES })
 
+    const userBalanceBeforeBuy = await getUserBalance(addr, execID, account)
+    logger.log(`User balance before buy`, userBalanceBeforeBuy.toFixed())
+
     sendTXToContract(method.send(opts))
-      .then(() => successfulContributionAlert(tokensToContribute))
+      .then(async () => {
+        const userBalanceAfterBuy = await getUserBalance(addr, execID, account)
+        logger.log(`User balance after buy`, userBalanceAfterBuy.toFixed())
+
+        const tokensContributed = userBalanceAfterBuy.minus(userBalanceBeforeBuy).toFixed()
+        successfulContributionAlert(tokensContributed)
+      })
       .catch(err => {
         logger.error(err)
         return toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED })
