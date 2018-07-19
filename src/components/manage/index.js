@@ -526,26 +526,58 @@ export class Manage extends Component {
     }
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
-    const { getCrowdsaleInfo, isCrowdsaleFull } = methods
+    const { getCrowdsaleInfo, isCrowdsaleFull, getCurrentTierInfo, getTierStartAndEndDates } = methods
 
     try {
+      //Check crowdSale is finalized
       let crowdsaleInfo = await getCrowdsaleInfo(...params).call()
       if (crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('is_finalized')) {
         crowdsaleInfo.is_finalized = crowdsaleInfo[4]
       }
       const { is_finalized } = crowdsaleInfo
+
+      //Check crowdSale is full
       let _isCrowdsaleFull = await isCrowdsaleFull(...params).call()
       if (_isCrowdsaleFull && !_isCrowdsaleFull.hasOwnProperty('is_crowdsale_full')) {
         _isCrowdsaleFull.is_crowdsale_full = _isCrowdsaleFull[0]
       }
       const { is_crowdsale_full } = _isCrowdsaleFull
+
+      //Check has ended
       const { crowdsaleHasEnded } = this.state
+
+      //Check if Minted, is in lastTier and is not ended this tier
+      const { isMintedCappedCrowdsale } = crowdsaleStore
+      let mintedCappedWithLastTierAllSold = false
+
+      //Check if is minted capped strategy
+      if (isMintedCappedCrowdsale) {
+        let currentTier = await getCurrentTierInfo(...params).call()
+        const numOfTiers = await getTiersLength()
+
+        //Get tier index, tokens remaining and actual tier
+        const tierIndex = currentTier.tier_index || currentTier[1]
+        const tierTokensRemaining = currentTier.tier_tokens_remaining || currentTier[3]
+        const actualTier = +tierIndex + 1
+
+        //Check if tier is finish
+        let tierDates = await getTierStartAndEndDates(...params, tierIndex).call()
+        if (tierDates && !tierDates.hasOwnProperty('tier_end')) {
+          tierDates.tier_end = tierDates[1]
+        }
+        const tierIsEnded = tierDates.tier_end * 1000 <= Date.now()
+
+        //Check if is lastTier , if lastTier is not ended, if tokens remaining is zero in last tier
+        mintedCappedWithLastTierAllSold = numOfTiers == actualTier && !tierIsEnded && tierTokensRemaining == 0
+
+        logger.log(`Minted with last tier sold, can finalize`, mintedCappedWithLastTierAllSold)
+      }
 
       if (is_finalized) {
         this.setState({ canFinalize: false })
       } else {
         this.setState({
-          canFinalize: crowdsaleHasEnded || is_crowdsale_full
+          canFinalize: crowdsaleHasEnded || is_crowdsale_full || mintedCappedWithLastTierAllSold
         })
       }
     } catch (e) {
