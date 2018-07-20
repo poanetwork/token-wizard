@@ -526,7 +526,7 @@ export class Manage extends Component {
     }
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
-    const { getCrowdsaleInfo, isCrowdsaleFull, getCurrentTierInfo, getTierStartAndEndDates } = methods
+    const { getCrowdsaleInfo, isCrowdsaleFull, getCurrentTierInfo } = methods
 
     try {
       //Check crowdSale is finalized
@@ -560,15 +560,8 @@ export class Manage extends Component {
         const tierTokensRemaining = currentTier.tier_tokens_remaining || currentTier[3]
         const actualTier = +tierIndex + 1
 
-        //Check if tier is finish
-        let tierDates = await getTierStartAndEndDates(...params, tierIndex).call()
-        if (tierDates && !tierDates.hasOwnProperty('tier_end')) {
-          tierDates.tier_end = tierDates[1]
-        }
-        const tierIsEnded = tierDates.tier_end * 1000 <= Date.now()
-
-        //Check if is lastTier , if lastTier is not ended, if tokens remaining is zero in last tier
-        mintedCappedWithLastTierAllSold = numOfTiers == actualTier && !tierIsEnded && tierTokensRemaining == 0
+        //Check if is lastTier, if tokens remaining is zero in last tier
+        mintedCappedWithLastTierAllSold = numOfTiers == actualTier && tierTokensRemaining == 0
 
         logger.log(`Minted with last tier sold, can finalize`, mintedCappedWithLastTierAllSold)
       }
