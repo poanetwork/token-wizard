@@ -515,13 +515,13 @@ export const getUserMinLimits = async (addr, execID, methods, account) => {
 }
 
 /**
- * Get user balance
+ * Get user balance by params
  * @param addr
  * @param execID
  * @param account
  * @returns {Promise<BigNumber>}
  */
-export const getUserBalance = async (addr, execID, account) => {
+export const getUserBalanceByParams = async (addr, execID, account) => {
   const crowdsaleContract = await getInitCrowdsale()
   const { balanceOf, decimals } = crowdsaleContract.methods
 
@@ -536,6 +536,24 @@ export const getUserBalance = async (addr, execID, account) => {
   ownerBalance = toBigNumber(ownerBalance).times(`1e-${tokenDecimals}`)
 
   return ownerBalance
+}
+
+/**
+ * Get user balance by contract
+ * @returns {string}
+ */
+export const getUserBalanceByStore = () => {
+  const { tokenAmountOf } = crowdsalePageStore
+  const { decimals } = tokenStore
+
+  const tokenDecimals = !isNaN(decimals) ? decimals : 0
+
+  //balance
+  return tokenAmountOf
+    ? toBigNumber(tokenAmountOf)
+        .div(`1e${tokenDecimals}`)
+        .toFixed()
+    : '0'
 }
 
 /**

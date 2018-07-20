@@ -23,7 +23,8 @@ import {
   isSoldOut,
   getUserMaxLimits,
   getUserMinLimits,
-  getUserBalance
+  getUserBalanceByStore,
+  getUserBalanceByParams
 } from '../crowdsale/utils'
 import {
   countDecimalPlaces,
@@ -434,15 +435,17 @@ export class Contribute extends React.Component {
 
     weiToSend.constructor.config({ DECIMAL_PLACES })
 
-    const userBalanceBeforeBuy = await getUserBalance(addr, execID, account)
-    logger.log(`User balance before buy`, userBalanceBeforeBuy.toFixed())
+    const userBalanceBeforeBuy = getUserBalanceByStore()
+    logger.log(`User balance before buy`, userBalanceBeforeBuy)
 
     sendTXToContract(method.send(opts))
       .then(async () => {
-        const userBalanceAfterBuy = await getUserBalance(addr, execID, account)
+        const userBalanceAfterBuy = await getUserBalanceByParams(addr, execID, account)
         logger.log(`User balance after buy`, userBalanceAfterBuy.toFixed())
 
-        const tokensContributed = userBalanceAfterBuy.minus(userBalanceBeforeBuy).toFixed()
+        const tokensContributed = userBalanceAfterBuy.minus(toBigNumber(userBalanceBeforeBuy)).toFixed()
+        logger.log(`Tokens to contributed`, tokensContributed)
+
         successfulContributionAlert(tokensContributed)
       })
       .catch(err => {
