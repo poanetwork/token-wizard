@@ -635,8 +635,8 @@ export const getUserBalanceByStore = () => {
   //balance
   return tokenAmountOf
     ? toBigNumber(tokenAmountOf)
-      .div(`1e${tokenDecimals}`)
-      .toFixed()
+        .div(`1e${tokenDecimals}`)
+        .toFixed()
     : '0'
 }
 
