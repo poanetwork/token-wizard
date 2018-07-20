@@ -515,6 +515,90 @@ export const getUserMinLimits = async (addr, execID, methods, account) => {
 }
 
 /**
+ * Get user max contribution token
+ * @param addr
+ * @param execID
+ * @param methods
+ * @param account
+ * @returns {Promise<BigNumber>}
+ */
+export const getUserMaxContribution = async (addr, execID, methods, account) => {
+  let params = []
+  if (execID) {
+    params.push(addr, execID)
+  }
+  if (crowdsaleStore.isMintedCappedCrowdsale) {
+    const { getCurrentTierInfo, getWhitelistStatus, decimals } = methods
+    const currentTierInfo = await getCurrentTierInfo(...params).call()
+
+    //get properties
+    const isWhitelisted = currentTierInfo.is_whitelisted || currentTierInfo[7]
+    const tierTokensRemaining = currentTierInfo.tier_tokens_remaining || currentTierInfo[3]
+    const tierIndex = currentTierInfo.tier_index || currentTierInfo[1]
+
+    const tokenDecimals = await decimals(...params).call()
+    const tierTokensRemainingTimes = toBigNumber(tierTokensRemaining).times(`1e-${tokenDecimals}`)
+    if (!isWhitelisted) {
+      return tierTokensRemainingTimes
+    }
+
+    const whitelistStatus = await getWhitelistStatus(...params, tierIndex, account).call()
+    const maxTokensRemaining = whitelistStatus.max_tokens_remaining || whitelistStatus[1]
+    const maxTokensRemainingWithTimes = toBigNumber(maxTokensRemaining).times(`1e-${tokenDecimals}`)
+
+    return tierTokensRemainingTimes.lt(maxTokensRemainingWithTimes)
+      ? tierTokensRemainingTimes
+      : maxTokensRemainingWithTimes
+  } else if (crowdsaleStore.isDutchAuction) {
+    const { getCrowdsaleStatus, getWhitelistStatus, decimals } = methods
+    const crowdsaleStatus = await getCrowdsaleStatus(...params).call()
+
+    //get properties
+    const isWhitelisted = crowdsaleStatus.is_whitelisted || crowdsaleStatus[6]
+    const tokensRemaining = crowdsaleStatus.tokens_remaining || crowdsaleStatus[5]
+    const tokenDecimals = await decimals(...params).call()
+
+    const crowdsaleTokensRemaining = toBigNumber(tokensRemaining).times(`1e-${tokenDecimals}`)
+
+    if (!isWhitelisted) {
+      return crowdsaleTokensRemaining
+    }
+
+    const whitelistStatus = await getWhitelistStatus(...params, account).call()
+    const maxTokensRemaining = whitelistStatus.max_tokens_remaining || whitelistStatus[1]
+    const maxTokensRemainingTimes = toBigNumber(maxTokensRemaining).times(`1e-${tokenDecimals}`)
+
+    return crowdsaleTokensRemaining.lt(maxTokensRemainingTimes) ? crowdsaleTokensRemaining : maxTokensRemainingTimes
+  }
+}
+
+/**
+ * Check if crowdsale is full, related to an account
+ * @param addr
+ * @param execID
+ * @param methods
+ * @param account
+ * @returns {Promise<*|boolean>}
+ */
+export const isCrowdSaleFull = async (addr, execID, methods, account) => {
+  let params = []
+  if (execID) {
+    params.push(addr, execID)
+  }
+
+  const { isCrowdsaleFull } = methods
+  let isCrowdsaleFullInstance = await isCrowdsaleFull(...params).call()
+  const userMaxContribution = await getUserMaxContribution(addr, execID, methods, account)
+
+  const isCrowdsaleFullValue = isCrowdsaleFullInstance.is_crowdsale_full || isCrowdsaleFullInstance[0]
+  const checkIfCrowdsaleIsFull = isCrowdsaleFullValue || userMaxContribution.toFixed() == 0
+
+  logger.log(`Crowdsale is full`, checkIfCrowdsaleIsFull)
+
+  return checkIfCrowdsaleIsFull
+}
+
+/**
  * Get user balance by params
  * @param addr
  * @param execID
@@ -551,8 +635,8 @@ export const getUserBalanceByStore = () => {
   //balance
   return tokenAmountOf
     ? toBigNumber(tokenAmountOf)
-        .div(`1e${tokenDecimals}`)
-        .toFixed()
+      .div(`1e${tokenDecimals}`)
+      .toFixed()
     : '0'
 }
 

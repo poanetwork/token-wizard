@@ -23,6 +23,8 @@ import {
   isSoldOut,
   getUserMaxLimits,
   getUserMinLimits,
+  getUserMaxContribution,
+  isCrowdSaleFull,
   getUserBalanceByStore,
   getUserBalanceByParams
 } from '../crowdsale/utils'
@@ -209,7 +211,7 @@ export class Contribute extends React.Component {
       await this.checkIsFinalized(initCrowdsaleContract, crowdsaleExecID)
       await this.checkIsEnded(initCrowdsaleContract, crowdsaleExecID)
       await this.checkIsSoldOut(initCrowdsaleContract, crowdsaleExecID)
-      await this.calculateMinContribution()
+      await this.calculateContribution()
       await this.setTimers()
     } catch (err) {
       logger.error(err)
@@ -369,7 +371,7 @@ export class Contribute extends React.Component {
     return tokensToContribute.gt(userLimits) ? userLimits : tokensToContribute
   }
 
-  calculateMinContribution = async () => {
+  calculateContribution = async () => {
     const { crowdsaleStore, contractStore } = this.props
     const { execID, account } = contractStore.crowdsale
     const { addr } = toJS(contractStore.abstractStorage)
@@ -385,8 +387,20 @@ export class Contribute extends React.Component {
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
     const userMinLimits = await getUserMinLimits(addr, execID, methods, account)
+    const userMaxLimits = await getUserMaxContribution(addr, execID, methods, account)
+    const checkIfCrowdSaleIsfull = await isCrowdSaleFull(addr, execID, methods, account)
 
-    this.setState({ minimumContribution: userMinLimits.toFixed() })
+    if (checkIfCrowdSaleIsfull) {
+      this.setState({
+        minimumContribution: -1,
+        maximumContribution: -1
+      })
+    } else {
+      this.setState({
+        minimumContribution: userMinLimits.toFixed(),
+        maximumContribution: userMaxLimits.toFixed()
+      })
+    }
   }
 
   contributeToTokensForWhitelistedCrowdsaleInternal = async () => {
@@ -484,7 +498,15 @@ export class Contribute extends React.Component {
     const { crowdsale } = contractStore
     const { proxyName } = crowdsaleStore
 
-    const { curAddr, contributeThrough, web3Available, toNextTick, nextTick, minimumContribution } = this.state
+    const {
+      curAddr,
+      contributeThrough,
+      web3Available,
+      toNextTick,
+      nextTick,
+      minimumContribution,
+      maximumContribution
+    } = this.state
     const crowdsaleExecID = crowdsale && crowdsale.execID
     const { days, hours, minutes, seconds } = toNextTick
 
@@ -507,9 +529,15 @@ export class Contribute extends React.Component {
     const totalSupply = maxCapBeforeDecimals.toFixed()
 
     const canContribute = !(this.state.isEnded || this.state.isFinalized || this.state.isSoldOut)
+    //min contribution
     const minimumContributionDisplay =
       minimumContribution >= 0 && isFinite(minimumContribution) && canContribute
         ? `${minimumContribution} ${tokenTicker}`
+        : 'You are not allowed'
+    //max contribution
+    const maximumContributionDisplay =
+      maximumContribution >= 0 && isFinite(maximumContribution) && canContribute
+        ? `${maximumContribution} ${tokenTicker}`
         : 'You are not allowed'
 
     const registryExecAddr =
@@ -592,6 +620,10 @@ export class Contribute extends React.Component {
               <div className="hashes-i">
                 <p className="hashes-title">{minimumContributionDisplay}</p>
                 <p className="hashes-description">Minimum Contribution</p>
+              </div>
+              <div className="hashes-i">
+                <p className="hashes-title">{maximumContributionDisplay}</p>
+                <p className="hashes-description">Maximum Contribution</p>
               </div>
             </div>
             <p className="contribute-title">Contribute page</p>
