@@ -27,14 +27,20 @@ module.exports = {
         ncp('./build/index.html ./build/stats.html')
       )
     },
+    dev: {
+      default: series(
+
+
+      )
+    },
 
     test: {
       default: series(
         'npm run installWeb3',
         'npm run testContractsMintedCappedCrowdsale',
         'npm run testContractsDutchAuction',
-        'npm run e2eMintedCappedCrowdsale',
-        'npm run e2eDutchAuction'
+        'npm run e2eMinted',
+        'npm run e2eDutch'
       ),
       deployContracts: series(
         'npm install truffle',
@@ -74,53 +80,64 @@ module.exports = {
       ),
       e2e: {
         default: series(
+          'nps test.e2e.Minted',
+          'nps test.e2e.Dutch'
         ),
         Minted: series(
           'nps test.e2e.prepareMinted',
           'cd submodules/token-wizard-test-automation',
           'npm run e2eMinted',
+          'cd ../../',
           'nps test.e2e.stop'
         ),
         MintedUI: series(
           'nps test.e2e.prepareMinted',
           'cd submodules/token-wizard-test-automation',
           'npm run e2eMintedUI',
+          'cd ../../',
           'nps test.e2e.stop'
         ),
         MintedWhitelist: series(
           'nps test.e2e.prepareMinted',
           'cd submodules/token-wizard-test-automation',
           'npm run e2eMintedWhitelist',
+          'cd ../../',
           'nps test.e2e.stop'
         ),
         MintedMincap: series(
           'nps test.e2e.prepareMinted',
           'cd submodules/token-wizard-test-automation',
           'npm run e2eMintedMincap',
+          'cd ../../',
           'nps test.e2e.stop'
         ),
         Dutch: series(
           'nps test.e2e.prepareDutch',
           'cd submodules/token-wizard-test-automation',
           'npm run e2eDutch',
+          'cd ../../',
           'nps test.e2e.stop'
         ),
         DutchUI: series(
           'nps test.e2e.prepareDutch',
           'cd submodules/token-wizard-test-automation',
           'npm run e2eDutchUI',
-          'nps test.e2e.stop'
+          'cd ../../',
+          'nps test.e2e.stop',
+
         ),
         DutchWhitelist: series(
           'nps test.e2e.prepareDutch',
           'cd submodules/token-wizard-test-automation',
           'npm run e2eDutchWhitelist',
+          'cd ../../',
           'nps test.e2e.stop'
         ),
         DutchMincap: series(
           'nps test.e2e.prepareDutch',
           'cd submodules/token-wizard-test-automation',
           'npm run e2eDutchMincap',
+          'cd ../../',
           'nps test.e2e.stop'
         ),
         prepareMinted: series(
@@ -155,7 +172,6 @@ module.exports = {
         ),
         start: 'PORT=3000 BROWSER=none node scripts/start.js &',
         stop: series(
-          'cd ../../',
           'bash ./scripts/stop_ganache.sh',
           'kill ` lsof -t -i:3000`'
         )

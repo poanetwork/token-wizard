@@ -124,26 +124,24 @@
   "scripts": {
     "installWeb3": "cd submodules/poa-web3-1.0 && npm install && cd ../../ && npm install --no-save submodules/poa-web3-1.0/packages/web3",
     "start": "npm run installWeb3 && node scripts/start.js",
+
     "dev": "nps dev",
-    "dev:fast": "nps dev.fast",
+
     "deployRegistry": "node scripts/deployRegistry.js",
     "build": "nps build",
     "sass:watch": "gulp watch",
     "sass:update": "gulp sass",
-    "test": "nps test",
-    "testContractsDutchAuction": "nps test.DutchAuction",
-    "testContractsMintedCappedCrowdsale": "nps test.MintedCappedCrowdsale",
-    "test:dapp": "jest --env=jsdom -w='2'",
-    "e2e-prepare-start": "nps test.e2e.prepare",
-    "e2e-start": "nps test.e2e.start",
     "delay": "node ./node_modules/npm-delay 30000",
-    "test:e2e": "nps test.e2e",
-    "coveralls": "jest --env=jsdom --coverage -w='2' && cat coverage/lcov.info | coveralls",
-    "generateContracts": "nps contracts.generate",
-    "compileContracts": "nps contracts.compile",
     "lint": "eslint src",
     "ganache": "ganache-cli -d -i 12648430",
     "precommit": "pretty-quick staged",
+
+    "coveralls": "jest --env=jsdom --coverage -w='2' && cat coverage/lcov.info | coveralls",
+    "test:e2e": "nps test.e2e",
+    "test:dapp": "jest --env=jsdom -w='2'",
+    "test": "nps test",
+    "testContractsDutchAuction": "nps test.DutchAuction",
+    "testContractsMintedCappedCrowdsale": "nps test.MintedCappedCrowdsale",
     "e2eMinted": "nps test.e2e.Minted",
     "e2eMintedUI": "nps test.e2e.MintedUI",
     "e2eMintedWhitelist": "nps test.e2e.MintedWhitelist",
@@ -151,7 +149,10 @@
     "e2eDutch": "nps test.e2e.Dutch",
     "e2eDutchUI": "nps test.e2e.DutchUI",
     "e2eDutchWhitelist": "nps test.e2e.DutchWhitelist",
-    "e2eDutchMincap": "nps test.e2e.DutchMincap"
+    "e2eDutchMincap": "nps test.e2e.DutchMincap",
+    "prepareMinted": "nps test.e2e.prepareMinted",
+    "prepareDutch": "nps test.e2e.prepareDutch",
+    "stop":"nps test.e2e.stop"
   },
   "jest": {
     "collectCoverageFrom": [
