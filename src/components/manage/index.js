@@ -27,7 +27,7 @@ import { isExecIDValid, isNetworkIDValid, toast, toBigNumber } from '../../utils
 import { getCrowdsaleAssets } from '../../stores/utils'
 import { getFieldsToUpdate, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
-import { getTiersLength } from '../crowdsale/utils'
+import { getTiersLength, getCurrentTierInfoCustom } from '../crowdsale/utils'
 import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import createDecorator from 'final-form-calculate'
@@ -525,8 +525,9 @@ export class Manage extends Component {
       target = crowdsaleStore.proxyName
     }
 
-    const { methods } = await attachToSpecificCrowdsaleContract(target)
-    const { getCrowdsaleInfo, isCrowdsaleFull, getCurrentTierInfo } = methods
+    const initCrowdsaleContract = await attachToSpecificCrowdsaleContract(target)
+    const { methods } = initCrowdsaleContract
+    const { getCrowdsaleInfo, isCrowdsaleFull } = methods
 
     try {
       //Check crowdSale is finalized
@@ -552,7 +553,7 @@ export class Manage extends Component {
 
       //Check if is minted capped strategy
       if (isMintedCappedCrowdsale) {
-        let currentTier = await getCurrentTierInfo(...params).call()
+        let currentTier = await getCurrentTierInfoCustom(initCrowdsaleContract, execID)
         const numOfTiers = await getTiersLength()
 
         //Get tier index, tokens remaining and actual tier
