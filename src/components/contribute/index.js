@@ -24,7 +24,8 @@ import {
   getUserMaxLimits,
   getUserMinLimits,
   getUserMaxContribution,
-  isCrowdSaleFull
+  isCrowdSaleFull,
+  getCurrentTierInfoCustom
 } from '../crowdsale/utils'
 import {
   countDecimalPlaces,
@@ -341,10 +342,11 @@ export class Contribute extends React.Component {
       params.push(addr, execID)
     }
 
-    const { methods } = await attachToSpecificCrowdsaleContract(target)
+    const initCrowdsaleContract = await attachToSpecificCrowdsaleContract(target)
+    const { methods } = initCrowdsaleContract
 
     if (crowdsaleStore.isMintedCappedCrowdsale) {
-      const currentTierInfo = await methods.getCurrentTierInfo(...params).call()
+      const currentTierInfo = await getCurrentTierInfoCustom(initCrowdsaleContract, execID)
       const tier_price = currentTierInfo.tier_price || currentTierInfo[4]
       logger.log('tier_price:', tier_price)
       crowdsalePageStore.setProperty('rate', tier_price) //should be one token in wei
@@ -362,7 +364,7 @@ export class Contribute extends React.Component {
     const tokensToContribute = toBigNumber(contributeStore.tokensToContribute).times(rate)
     logger.log('tokensToContribute:', tokensToContribute.toFixed())
 
-    const userLimits = await getUserMaxLimits(addr, execID, methods, account)
+    const userLimits = await getUserMaxLimits()
 
     logger.log('userLimits:', userLimits.toString())
 
@@ -384,8 +386,8 @@ export class Contribute extends React.Component {
     }
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
-    const userMinLimits = await getUserMinLimits(addr, execID, methods, account)
-    const userMaxLimits = await getUserMaxContribution(addr, execID, methods, account)
+    const userMinLimits = await getUserMinLimits()
+    const userMaxLimits = await getUserMaxContribution()
     const checkIfCrowdSaleIsfull = await isCrowdSaleFull(addr, execID, methods, account)
 
     if (checkIfCrowdSaleIsfull) {
