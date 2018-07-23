@@ -142,7 +142,7 @@ module.exports = {
           'bash ./scripts/start_ganache.sh',
           'cd ./submodules/auth-os-applications',
           'git checkout -f e2e',
-          'cd ./TokenWizard/crowdsale/MintedCappedCrowdsale',
+          'cd ./TokenWizard/crowdsale/DutchCrowdsale',
           'npm install',
           'npm i authos-solidity',
           'nps test.deployContracts',
