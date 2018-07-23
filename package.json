@@ -124,9 +124,9 @@
   "scripts": {
     "installWeb3": "cd submodules/poa-web3-1.0 && npm install && cd ../../ && npm install --no-save submodules/poa-web3-1.0/packages/web3",
     "start": "npm run installWeb3 && node scripts/start.js",
-
     "dev": "nps dev",
-
+    "dev:minted": "nps dev.Minted",
+    "dev:dutch": "nps dev.Dutch",
     "deployRegistry": "node scripts/deployRegistry.js",
     "build": "nps build",
     "sass:watch": "gulp watch",
@@ -135,7 +135,6 @@
     "lint": "eslint src",
     "ganache": "ganache-cli -d -i 12648430",
     "precommit": "pretty-quick staged",
-
     "coveralls": "jest --env=jsdom --coverage -w='2' && cat coverage/lcov.info | coveralls",
     "test:e2e": "nps test.e2e",
     "test:dapp": "jest --env=jsdom -w='2'",
@@ -150,9 +149,7 @@
     "e2eDutchUI": "nps test.e2e.DutchUI",
     "e2eDutchWhitelist": "nps test.e2e.DutchWhitelist",
     "e2eDutchMincap": "nps test.e2e.DutchMincap",
-    "prepareMinted": "nps test.e2e.prepareMinted",
-    "prepareDutch": "nps test.e2e.prepareDutch",
-    "stop":"nps test.e2e.stop"
+    "stop": "nps test.e2e.stop"
   },
   "jest": {
     "collectCoverageFrom": [
