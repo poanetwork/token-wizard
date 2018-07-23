@@ -77,41 +77,49 @@ module.exports = {
         ),
         Minted: series(
           'nps test.e2e.prepareMinted',
+          'cd submodules/token-wizard-test-automation',
           'npm run e2eMinted',
           'nps test.e2e.stop'
         ),
         MintedUI: series(
           'nps test.e2e.prepareMinted',
+          'cd submodules/token-wizard-test-automation',
           'npm run e2eMintedUI',
           'nps test.e2e.stop'
         ),
         MintedWhitelist: series(
           'nps test.e2e.prepareMinted',
+          'cd submodules/token-wizard-test-automation',
           'npm run e2eMintedWhitelist',
           'nps test.e2e.stop'
         ),
         MintedMincap: series(
           'nps test.e2e.prepareMinted',
+          'cd submodules/token-wizard-test-automation',
           'npm run e2eMintedMincap',
           'nps test.e2e.stop'
         ),
         Dutch: series(
           'nps test.e2e.prepareDutch',
+          'cd submodules/token-wizard-test-automation',
           'npm run e2eDutch',
           'nps test.e2e.stop'
         ),
         DutchUI: series(
           'nps test.e2e.prepareDutch',
+          'cd submodules/token-wizard-test-automation',
           'npm run e2eDutchUI',
           'nps test.e2e.stop'
         ),
         DutchWhitelist: series(
           'nps test.e2e.prepareDutch',
+          'cd submodules/token-wizard-test-automation',
           'npm run e2eDutchWhitelist',
           'nps test.e2e.stop'
         ),
         DutchMincap: series(
           'nps test.e2e.prepareDutch',
+          'cd submodules/token-wizard-test-automation',
           'npm run e2eDutchMincap',
           'nps test.e2e.stop'
         ),
