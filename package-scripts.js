@@ -157,7 +157,7 @@ module.exports = {
         stop: series(
           'cd ../../',
           'bash ./scripts/stop_ganache.sh',
-          'kill `lsof -t -i:3000`'
+          'kill ` lsof -t -i:3000`'
         )
       }
     }
