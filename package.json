@@ -133,8 +133,6 @@
     "test": "nps test",
     "testContractsDutchAuction": "nps test.DutchAuction",
     "testContractsMintedCappedCrowdsale": "nps test.MintedCappedCrowdsale",
-    "e2eDutchAuction": "nps test.e2e.DutchAuction",
-    "e2eMintedCappedCrowdsale": "nps test.e2e.MintedCappedCrowdsale",
     "test:dapp": "jest --env=jsdom -w='2'",
     "e2e-prepare-start": "nps test.e2e.prepare",
     "e2e-start": "nps test.e2e.start",
@@ -145,7 +143,15 @@
     "compileContracts": "nps contracts.compile",
     "lint": "eslint src",
     "ganache": "ganache-cli -d -i 12648430",
-    "precommit": "pretty-quick staged"
+    "precommit": "pretty-quick staged",
+    "e2eMinted": "nps test.e2e.Minted",
+    "e2eMintedUI": "nps test.e2e.MintedUI",
+    "e2eMintedWhitelist": "nps test.e2e.MintedWhitelist",
+    "e2eMintedMincap": "nps test.e2e.MintedMincap",
+    "e2eDutch": "nps test.e2e.Dutch",
+    "e2eDutchUI": "nps test.e2e.DutchUI",
+    "e2eDutchWhitelist": "nps test.e2e.DutchWhitelist",
+    "e2eDutchMincap": "nps test.e2e.DutchMincap"
   },
   "jest": {
     "collectCoverageFrom": [
