@@ -78,7 +78,6 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
       getCrowdsaleInfo,
       getTokensSold,
       getCrowdsaleUniqueBuyers,
-      getCurrentTierInfo,
       getCrowdsaleMaxRaise,
       getCrowdsaleStatus,
       isCrowdsaleFull
@@ -122,7 +121,7 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
     if (contributors) crowdsalePageStore.setProperty('contributors', contributors)
 
     if (crowdsaleStore.isMintedCappedCrowdsale) {
-      const currentTierInfo = await getCurrentTierInfo(...params).call()
+      const currentTierInfo = await getCurrentTierInfoCustom(initCrowdsaleContract, execID)
       const tier_price = currentTierInfo.tier_price || currentTierInfo[4]
       const crowdsaleMaxRaise = await getCrowdsaleMaxRaise(...params).call()
       const total_sell_cap = crowdsaleMaxRaise.total_sell_cap || crowdsaleMaxRaise[1]
@@ -366,14 +365,20 @@ export const getContractStoreProperty = (contract, property) => {
   return text === undefined ? '' : text
 }
 
-export const getUserMaxLimits = async (addr, execID, methods, account) => {
-  let params = []
-  if (execID) {
-    params.push(addr, execID)
-  }
-  if (crowdsaleStore.isMintedCappedCrowdsale) {
-    const { getCurrentTierInfo, getWhitelistStatus, decimals } = methods
-    const currentTierInfo = await getCurrentTierInfo(...params).call()
+export const getUserMaxLimits = async () => {
+  let {
+    params,
+    execID,
+    account,
+    methods,
+    initCrowdsaleContract,
+    isDutchAuction,
+    isMintedCappedCrowdsale
+  } = await getInitializeDataFromContractStore()
+
+  if (isMintedCappedCrowdsale) {
+    const { getWhitelistStatus, decimals } = methods
+    const currentTierInfo = await getCurrentTierInfoCustom(initCrowdsaleContract, execID)
     const is_whitelisted = currentTierInfo.is_whitelisted || currentTierInfo[7]
     const tier_tokens_remaining = currentTierInfo.tier_tokens_remaining || currentTierInfo[3]
     const tier_price = currentTierInfo.tier_price || currentTierInfo[4]
@@ -383,14 +388,16 @@ export const getUserMaxLimits = async (addr, execID, methods, account) => {
     const currentRate = toBigNumber(tier_price).times(`1e-${token_decimals}`)
     const tierTokensRemaining = toBigNumber(tier_tokens_remaining).times(currentRate)
 
-    if (!is_whitelisted) return tierTokensRemaining
+    if (!is_whitelisted) {
+      return tierTokensRemaining
+    }
 
     const whitelistStatus = await getWhitelistStatus(...params, tier_index, account).call()
     const max_tokens_remaining = whitelistStatus.max_tokens_remaining || whitelistStatus[1]
     const maxTokensRemaining = toBigNumber(max_tokens_remaining).times(currentRate)
 
     return tierTokensRemaining.lt(maxTokensRemaining) ? tierTokensRemaining : maxTokensRemaining
-  } else if (crowdsaleStore.isDutchAuction) {
+  } else if (isDutchAuction) {
     const { getCrowdsaleStatus, getWhitelistStatus, decimals } = methods
     const crowdsaleStatus = await getCrowdsaleStatus(...params).call()
     const is_whitelisted = crowdsaleStatus.is_whitelisted || crowdsaleStatus[6]
@@ -401,7 +408,9 @@ export const getUserMaxLimits = async (addr, execID, methods, account) => {
     const currentRate = toBigNumber(current_rate).times(`1e-${token_decimals}`)
     const crowdsaleTokensRemaining = toBigNumber(tokens_remaining).times(currentRate)
 
-    if (!is_whitelisted) return crowdsaleTokensRemaining
+    if (!is_whitelisted) {
+      return crowdsaleTokensRemaining
+    }
 
     const whitelistStatus = await getWhitelistStatus(...params, account).call()
     const max_tokens_remaining = whitelistStatus.max_tokens_remaining || whitelistStatus[1]
@@ -411,16 +420,21 @@ export const getUserMaxLimits = async (addr, execID, methods, account) => {
   }
 }
 
-const getRate = async (addr, execID, methods) => {
-  let params = []
-  if (execID) {
-    params.push(addr, execID)
-  }
-  if (crowdsaleStore.isMintedCappedCrowdsale) {
-    const currentTierInfo = await methods.getCurrentTierInfo(...params).call()
+const getRate = async () => {
+  let {
+    params,
+    execID,
+    methods,
+    initCrowdsaleContract,
+    isDutchAuction,
+    isMintedCappedCrowdsale
+  } = await getInitializeDataFromContractStore()
+
+  if (isMintedCappedCrowdsale) {
+    const currentTierInfo = await getCurrentTierInfoCustom(initCrowdsaleContract, execID)
     const tier_price = currentTierInfo.tier_price || currentTierInfo[4]
     return toBigNumber(tier_price)
-  } else if (crowdsaleStore.isDutchAuction) {
+  } else if (isDutchAuction) {
     const crowdsaleStatus = await methods.getCrowdsaleStatus(...params).call()
     const current_rate = crowdsaleStatus.current_rate || crowdsaleStatus[2]
     return toBigNumber(current_rate)
@@ -430,20 +444,20 @@ const getRate = async (addr, execID, methods) => {
 }
 
 const calculateMinContribution = async (method, decimals, naturalMinCap, isWhitelisted) => {
-  const crowdsaleData = await method.call()
+  const crowdsaleData = method instanceof Promise ? await method : await method.call()
   let { tier_min, minimum_contribution, minimum_purchase_amt, max_tokens_remaining } = crowdsaleData
   if (!tier_min) {
-    if (method._method.name === 'getCurrentTierInfo') {
+    if (method && method.name === 'getCurrentTierInfo') {
       tier_min = crowdsaleData[5]
     }
   }
   if (!minimum_contribution) {
-    if (method._method.name === 'getCrowdsaleInfo') {
+    if (method && method.name === 'getCrowdsaleInfo') {
       minimum_contribution = crowdsaleData[2]
     }
   }
   if (!minimum_purchase_amt && !max_tokens_remaining) {
-    if (method._method.name === 'getWhitelistStatus') {
+    if (method && method.name === 'getWhitelistStatus') {
       minimum_purchase_amt = crowdsaleData[0]
       max_tokens_remaining = crowdsaleData[1]
     }
@@ -461,15 +475,22 @@ const calculateMinContribution = async (method, decimals, naturalMinCap, isWhite
       : naturalMinCap
 }
 
-export const getUserMinLimits = async (addr, execID, methods, account) => {
+export const getUserMinLimits = async () => {
+  let {
+    params,
+    execID,
+    account,
+    methods,
+    initCrowdsaleContract,
+    isDutchAuction,
+    isMintedCappedCrowdsale
+  } = await getInitializeDataFromContractStore()
+
   const { decimals, balanceOf } = methods
-  let params = []
-  if (execID) {
-    params.push(addr, execID)
-  }
+
   const token_decimals = await decimals(...params).call()
   const owner_balance = toBigNumber(await balanceOf(...params, account).call())
-  const rate = await getRate(addr, execID, methods)
+  const rate = await getRate()
   const { DECIMAL_PLACES } = rate.constructor.config()
 
   rate.constructor.config({ DECIMAL_PLACES: +token_decimals })
@@ -480,15 +501,21 @@ export const getUserMinLimits = async (addr, execID, methods, account) => {
 
   rate.constructor.config({ DECIMAL_PLACES })
 
-  if (crowdsaleStore.isMintedCappedCrowdsale) {
-    const { getCurrentTierInfo, getWhitelistStatus } = methods
-    const currentTierInfo = await getCurrentTierInfo(...params).call()
+  if (isMintedCappedCrowdsale) {
+    const { getWhitelistStatus } = methods
+    const currentTierInfo = await getCurrentTierInfoCustom(initCrowdsaleContract, execID)
     const is_whitelisted = currentTierInfo.is_whitelisted || currentTierInfo[7]
     const tier_index = currentTierInfo.tier_index || currentTierInfo[1]
 
     if (!is_whitelisted) {
-      if (owner_balance.gt('0')) return naturalMinCap
-      return calculateMinContribution(getCurrentTierInfo(...params), token_decimals, naturalMinCap)
+      if (owner_balance.gt('0')) {
+        return naturalMinCap
+      }
+      return calculateMinContribution(
+        getCurrentTierInfoCustom(initCrowdsaleContract, execID),
+        token_decimals,
+        naturalMinCap
+      )
     }
     return calculateMinContribution(
       getWhitelistStatus(...params, tier_index, account),
@@ -496,13 +523,15 @@ export const getUserMinLimits = async (addr, execID, methods, account) => {
       naturalMinCap,
       is_whitelisted
     )
-  } else if (crowdsaleStore.isDutchAuction) {
+  } else if (isDutchAuction) {
     const { getCrowdsaleStatus, getWhitelistStatus, getCrowdsaleInfo } = methods
     const crowdsaleStatus = await getCrowdsaleStatus(...params).call()
     const is_whitelisted = crowdsaleStatus.is_whitelisted || crowdsaleStatus[6]
 
     if (!is_whitelisted) {
-      if (owner_balance.gt('0')) return naturalMinCap
+      if (owner_balance.gt('0')) {
+        return naturalMinCap
+      }
       return calculateMinContribution(getCrowdsaleInfo(...params), token_decimals, naturalMinCap)
     }
     return calculateMinContribution(
@@ -522,14 +551,20 @@ export const getUserMinLimits = async (addr, execID, methods, account) => {
  * @param account
  * @returns {Promise<BigNumber>}
  */
-export const getUserMaxContribution = async (addr, execID, methods, account) => {
-  let params = []
-  if (execID) {
-    params.push(addr, execID)
-  }
-  if (crowdsaleStore.isMintedCappedCrowdsale) {
-    const { getCurrentTierInfo, getWhitelistStatus, decimals } = methods
-    const currentTierInfo = await getCurrentTierInfo(...params).call()
+export const getUserMaxContribution = async () => {
+  let {
+    params,
+    execID,
+    account,
+    methods,
+    initCrowdsaleContract,
+    isDutchAuction,
+    isMintedCappedCrowdsale
+  } = await getInitializeDataFromContractStore()
+
+  if (isMintedCappedCrowdsale) {
+    const { getWhitelistStatus, decimals } = methods
+    const currentTierInfo = await getCurrentTierInfoCustom(initCrowdsaleContract, execID)
 
     //get properties
     const isWhitelisted = currentTierInfo.is_whitelisted || currentTierInfo[7]
@@ -549,7 +584,7 @@ export const getUserMaxContribution = async (addr, execID, methods, account) => 
     return tierTokensRemainingTimes.lt(maxTokensRemainingWithTimes)
       ? tierTokensRemainingTimes
       : maxTokensRemainingWithTimes
-  } else if (crowdsaleStore.isDutchAuction) {
+  } else if (isDutchAuction) {
     const { getCrowdsaleStatus, getWhitelistStatus, decimals } = methods
     const crowdsaleStatus = await getCrowdsaleStatus(...params).call()
 
@@ -588,7 +623,7 @@ export const isCrowdSaleFull = async (addr, execID, methods, account) => {
 
   const { isCrowdsaleFull } = methods
   let isCrowdsaleFullInstance = await isCrowdsaleFull(...params).call()
-  const userMaxContribution = await getUserMaxContribution(addr, execID, methods, account)
+  const userMaxContribution = await getUserMaxContribution()
 
   const isCrowdsaleFullValue = isCrowdsaleFullInstance.is_crowdsale_full || isCrowdsaleFullInstance[0]
   const checkIfCrowdsaleIsFull = isCrowdsaleFullValue || userMaxContribution.toFixed() == 0
@@ -596,4 +631,109 @@ export const isCrowdSaleFull = async (addr, execID, methods, account) => {
   logger.log(`Crowdsale is full`, checkIfCrowdsaleIsFull)
 
   return checkIfCrowdsaleIsFull
+}
+
+/**
+ * Get current tier information
+ * @param initCrowdsaleContract
+ * @param execID
+ * @returns {Promise}
+ */
+export const getCurrentTierInfoCustom = async (initCrowdsaleContract, execID) => {
+  if (!initCrowdsaleContract) {
+    return null
+  }
+
+  const registryStorageObj = toJS(contractStore.abstractStorage)
+  const { addr } = registryStorageObj
+  const { methods } = initCrowdsaleContract
+
+  let params = []
+  if (execID) {
+    params.push(addr, execID)
+  }
+
+  if (crowdsaleStore.isMintedCappedCrowdsale) {
+    // Get tiers length
+    let tiersLength = await getTiersLength()
+    logger.log('Tiers Length:', tiersLength)
+
+    // Get start and end dates
+    let getTiersStartAndEndDates = []
+    for (let ind = 0; ind < tiersLength; ind++) {
+      let getTierStartAndEndDates = methods.getTierStartAndEndDates(...params, ind).call()
+      getTiersStartAndEndDates.push(getTierStartAndEndDates)
+    }
+    let tiersStartAndEndDates = await Promise.all(getTiersStartAndEndDates)
+    logger.log('Tiers:', tiersStartAndEndDates)
+
+    // Get index of actual tier
+    let tierIndex = -1
+    tiersStartAndEndDates.forEach((tier, key) => {
+      const tierStart = tier.tier_start || tier[0]
+      const tierEnd = tier.tier_end || tier[1]
+
+      logger.log('Tier index', key)
+      if (tierEnd * 1000 >= Date.now() && tierStart * 1000 <= Date.now()) {
+        tierIndex = key
+      }
+    })
+
+    // Get tier
+    if (tierIndex >= 0) {
+      let tierData = await methods.getCrowdsaleTier(...params, tierIndex).call()
+      logger.log('Tier data', tierData)
+      return tierData
+    } else {
+      return null
+    }
+  } else if (crowdsaleStore.isDutchAuction) {
+    let crowdsaleStartAndEndTimes = await methods.getCrowdsaleStartAndEndTimes(...params).call()
+
+    let startTime = crowdsaleStartAndEndTimes.start_time || crowdsaleStartAndEndTimes[0]
+    let endTime = crowdsaleStartAndEndTimes.end_time || crowdsaleStartAndEndTimes[1]
+
+    if (startTime * 1000 >= Date.now() && endTime * 1000 <= Date.now()) {
+      let tierData = await methods.getCrowdsaleTier(...params, 0).call()
+      logger.log('Tier data', tierData)
+      return tierData
+    } else {
+      return null
+    }
+  } else {
+    return null
+  }
+}
+
+/**
+ * Get data to initialize methods
+ * @returns {Promise<{params: Array, execID: ContractStore.crowdsale.execID, addr: ContractStore.abstractStorage.addr, methods, initCrowdsaleContract: *}>}
+ */
+export const getInitializeDataFromContractStore = async () => {
+  const { abstractStorage, crowdsale } = contractStore
+  const { execID, account } = crowdsale
+  let targetContractName
+  if (execID) {
+    targetContractName = `idx${crowdsaleStore.contractTargetSuffix}`
+  } else {
+    targetContractName = crowdsaleStore.proxyName
+  }
+  const initCrowdsaleContract = await attachToSpecificCrowdsaleContract(targetContractName)
+  const { methods } = initCrowdsaleContract
+  const { addr } = toJS(abstractStorage)
+  let params = []
+  if (execID) {
+    params.push(addr, execID)
+  }
+
+  return {
+    params: params,
+    execID: execID,
+    account: account,
+    addr: addr,
+    methods: methods,
+    initCrowdsaleContract: initCrowdsaleContract,
+    isDutchAuction: crowdsaleStore.isDutchAuction,
+    isMintedCappedCrowdsale: crowdsaleStore.isMintedCappedCrowdsale
+  }
 }
