@@ -27,6 +27,7 @@ module.exports = {
         ncp('./build/index.html ./build/stats.html')
       )
     },
+
     test: {
       default: series(
         'npm run installWeb3',
@@ -48,8 +49,9 @@ module.exports = {
         'git checkout -f master',
       ),
       MintedCappedCrowdsale: series(
-        'nps test.prepare',
-        'cd ./submodules/auth-os-applications/',
+        'bash ./scripts/start_ganache.sh',
+        'cd ./submodules/auth-os-applications',
+        'git checkout -f e2e',
         'cd ./TokenWizard/crowdsale/MintedCappedCrowdsale/',
         'npm init -y',
         'npm i',
@@ -59,8 +61,9 @@ module.exports = {
         'bash ./scripts/stop_ganache.sh'
       ),
       DutchAuction: series(
-        'nps test.prepare',
-        'cd ./submodules/auth-os-applications/',
+        'bash ./scripts/start_ganache.sh',
+        'cd ./submodules/auth-os-applications',
+        'git checkout -f e2e',
         'cd ./TokenWizard/crowdsale/DutchCrowdsale/',
         'npm init -y',
         'npm i',
@@ -72,9 +75,50 @@ module.exports = {
       e2e: {
         default: series(
         ),
-        MintedCappedCrowdsale: series(
-          'nps test.e2e.prepare',
+        Minted: series(
+          'nps test.e2e.prepareMinted',
+          'npm run e2eMinted',
+          'nps test.e2e.stop'
+        ),
+        MintedUI: series(
+          'nps test.e2e.prepareMinted',
+          'npm run e2eMintedUI',
+          'nps test.e2e.stop'
+        ),
+        MintedWhitelist: series(
+          'nps test.e2e.prepareMinted',
+          'npm run e2eMintedWhitelist',
+          'nps test.e2e.stop'
+        ),
+        MintedMincap: series(
+          'nps test.e2e.prepareMinted',
+          'npm run e2eMintedMincap',
+          'nps test.e2e.stop'
+        ),
+        Dutch: series(
+          'nps test.e2e.prepareDutch',
+          'npm run e2eDutch',
+          'nps test.e2e.stop'
+        ),
+        DutchUI: series(
+          'nps test.e2e.prepareDutch',
+          'npm run e2eDutchUI',
+          'nps test.e2e.stop'
+        ),
+        DutchWhitelist: series(
+          'nps test.e2e.prepareDutch',
+          'npm run e2eDutchWhitelist',
+          'nps test.e2e.stop'
+        ),
+        DutchMincap: series(
+          'nps test.e2e.prepareDutch',
+          'npm run e2eDutchMincap',
+          'nps test.e2e.stop'
+        ),
+        prepareMinted: series(
+          'bash ./scripts/start_ganache.sh',
           'cd ./submodules/auth-os-applications',
+          'git checkout -f e2e',
           'cd ./TokenWizard/crowdsale/MintedCappedCrowdsale',
           'npm install',
           'npm i authos-solidity',
@@ -84,16 +128,13 @@ module.exports = {
           'nps test.e2e.start',
           'npm run delay',
           'cd submodules/token-wizard-test-automation',
-          'npm install',
-          'npm run e2eMinted',
-          'cd ../../',
-          'bash ./scripts/stop_ganache.sh',
-          'kill `lsof -t -i:3000`'
+          'npm install'
         ),
-        DutchAuction: series(
-          'nps test.e2e.prepare',
+        prepareDutch: series(
+          'bash ./scripts/start_ganache.sh',
           'cd ./submodules/auth-os-applications',
-          'cd ./TokenWizard/crowdsale/DutchCrowdsale',
+          'git checkout -f e2e',
+          'cd ./TokenWizard/crowdsale/MintedCappedCrowdsale',
           'npm install',
           'npm i authos-solidity',
           'nps test.deployContracts',
@@ -102,18 +143,14 @@ module.exports = {
           'nps test.e2e.start',
           'npm run delay',
           'cd submodules/token-wizard-test-automation',
-          'npm install',
-          'npm run e2eDutch',
+          'npm install'
+        ),
+        start: 'PORT=3000 BROWSER=none node scripts/start.js &',
+        stop: series(
           'cd ../../',
           'bash ./scripts/stop_ganache.sh',
           'kill `lsof -t -i:3000`'
-        ),
-        prepare: series(
-          'bash ./scripts/start_ganache.sh',
-          'cd ./submodules/auth-os-applications',
-          'git checkout -f e2e'
-        ),
-        start: 'PORT=3000 BROWSER=none node scripts/start.js &'
+        )
       }
     }
   }
