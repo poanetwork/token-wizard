@@ -35,7 +35,8 @@ import {
   getNetworkID,
   toast,
   toBigNumber,
-  truncateStringInTheMiddle
+  truncateStringInTheMiddle,
+  sleep
 } from '../../utils/utils'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import {
@@ -454,6 +455,7 @@ export class Contribute extends React.Component {
 
     sendTXToContract(method.send(opts))
       .then(async () => {
+        await sleep(5000)
         const userBalanceAfterBuy = await getUserBalanceByParams(addr, execID, account)
         logger.log(`User balance after buy`, userBalanceAfterBuy.toFixed())
 
