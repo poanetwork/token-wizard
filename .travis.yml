@@ -40,11 +40,13 @@ script:
   - if [ $TEST_SUITE == 'e2eDutchUI' ]; then npm run e2eDutchUI; fi
   - if [ $TEST_SUITE == 'e2eDutchWhitelist' ]; then npm run e2eDutchWhitelist; fi
   - if [ $TEST_SUITE == 'e2eDutchMincap' ]; then npm run e2eDutchMincap; fi
+  - if [ $TEST_SUITE == 'reactComponentTests' ]; then  npm run lint && npm run coveralls; fi
   - if [ $TEST_SUITE == 'contractsMinted' ]; then  npm run testContractsMintedCappedCrowdsale; fi
   - if [ $TEST_SUITE == 'contractsDutch' ]; then  npm run testContractsDutchAuction; fi
 
 after_script:
   - sudo kill `sudo lsof -t -i:8545`
+
 
 after_success:
   - bash <(curl -s https://copilot.blackducksoftware.com/ci/travis/scripts/upload)
