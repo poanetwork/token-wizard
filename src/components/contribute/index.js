@@ -35,8 +35,7 @@ import {
   getNetworkID,
   toast,
   toBigNumber,
-  truncateStringInTheMiddle,
-  sleep
+  truncateStringInTheMiddle
 } from '../../utils/utils'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import {
@@ -65,6 +64,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 import ReactTooltip from 'react-tooltip'
 import logdown from 'logdown'
 import { DEPLOYMENT_VALUES } from '../../utils/constants'
+let promiseRetry = require('promise-retry')
 
 const logger = logdown('TW:contribute')
 
@@ -455,8 +455,18 @@ export class Contribute extends React.Component {
 
     sendTXToContract(method.send(opts))
       .then(async () => {
-        await sleep(5000)
-        const userBalanceAfterBuy = await getUserBalanceByParams(addr, execID, account)
+        let userBalanceAfterBuy
+        await promiseRetry(async retry => {
+          userBalanceAfterBuy = await getUserBalanceByParams(addr, execID, account)
+          if (userBalanceAfterBuy.eq(toBigNumber(userBalanceBeforeBuy))) {
+            retry()
+          }
+        })
+
+        if (!userBalanceAfterBuy) {
+          throw new Error(`Is not a big numnber instance`)
+        }
+
         logger.log(`User balance after buy`, userBalanceAfterBuy.toFixed())
 
         const tokensContributed = userBalanceAfterBuy.minus(toBigNumber(userBalanceBeforeBuy)).toFixed()
