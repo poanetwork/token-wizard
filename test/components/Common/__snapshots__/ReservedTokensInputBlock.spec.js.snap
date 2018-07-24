@@ -21,6 +21,7 @@ exports[`percentage 1`] = `
         <input
           className="input"
           disabled={undefined}
+          id="Address"
           onBlur={undefined}
           onChange={[Function]}
           onKeyPress={undefined}
@@ -63,6 +64,7 @@ exports[`percentage 1`] = `
           >
             <input
               checked={true}
+              id="tokens"
               onChange={[Function]}
               type="radio"
               value="tokens"
@@ -78,6 +80,7 @@ exports[`percentage 1`] = `
           >
             <input
               checked={false}
+              id="percentage"
               onChange={[Function]}
               type="radio"
               value="percentage"
@@ -106,6 +109,7 @@ exports[`percentage 1`] = `
         <input
           className="input"
           disabled={undefined}
+          id="Value"
           onBlur={undefined}
           onChange={[Function]}
           onKeyPress={[Function]}

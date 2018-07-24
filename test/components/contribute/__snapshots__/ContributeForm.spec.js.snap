@@ -69,7 +69,7 @@ exports[`ContributeForm should render ContributeForm component 1`] = `
         disabled={false}
         value="metamask"
       >
-        Metamask 
+        Metamask
       </option>
       <option
         value="qr"
@@ -77,12 +77,13 @@ exports[`ContributeForm should render ContributeForm component 1`] = `
         QR
       </option>
     </select>
-    <a
-      className="button button_fill button_disabled"
+    <button
+      className="button button_fill button_no_border button_disabled"
+      disabled={true}
       onClick={[Function]}
     >
       Contribute
-    </a>
+    </button>
   </div>
   <p
     className="description"
@@ -161,7 +162,7 @@ exports[`ContributeForm should render ContributeForm component and its children 
         disabled={false}
         value="metamask"
       >
-        Metamask 
+        Metamask
       </option>
       <option
         value="qr"
