@@ -180,12 +180,13 @@ exports[`StepTwoForm should render StepTwoForm for Dutch Auction Crowdsale 1`] =
   <div
     className="button-container"
   >
-    <a
-      className="button button_fill"
-      onClick={[Function]}
+    <button
+      className="button button_fill button_no_border button_disabled"
+      disabled={true}
+      type="submit"
     >
       Continue
-    </a>
+    </button>
   </div>
 </form>
 `;
@@ -355,6 +356,7 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
             <input
               className="input"
               disabled={undefined}
+              id="Address"
               onBlur={undefined}
               onChange={[Function]}
               onKeyPress={undefined}
@@ -397,6 +399,7 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
               >
                 <input
                   checked={true}
+                  id="tokens"
                   onChange={[Function]}
                   type="radio"
                   value="tokens"
@@ -412,6 +415,7 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
               >
                 <input
                   checked={false}
+                  id="percentage"
                   onChange={[Function]}
                   type="radio"
                   value="percentage"
@@ -440,6 +444,7 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
             <input
               className="input"
               disabled={undefined}
+              id="Value"
               onBlur={undefined}
               onChange={[Function]}
               onKeyPress={[Function]}
@@ -494,12 +499,13 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
   <div
     className="button-container"
   >
-    <a
-      className="button button_fill"
-      onClick={[Function]}
+    <button
+      className="button button_fill button_no_border button_disabled"
+      disabled={true}
+      type="submit"
     >
       Continue
-    </a>
+    </button>
   </div>
 </form>
 `;

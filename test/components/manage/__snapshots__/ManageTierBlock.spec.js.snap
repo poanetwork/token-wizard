@@ -48,6 +48,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
                 }
               }
             >
+              
             </p>
           </div>
         </div>
@@ -449,6 +450,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
                 }
               }
             >
+              
             </p>
           </div>
         </div>
@@ -750,6 +752,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
                 }
               }
             >
+              
             </p>
           </div>
         </div>
@@ -1151,6 +1154,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
                 }
               }
             >
+              
             </p>
           </div>
         </div>
