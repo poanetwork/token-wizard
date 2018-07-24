@@ -244,10 +244,8 @@ let checkEventTopics = obj => {
 }
 
 const sendTXResponse = (receipt, type) => {
-  logger.log('receipt:')
-  logger.log(receipt)
-  logger.log('receipt.status:')
-  logger.log(receipt.status)
+  logger.log('receipt:', receipt)
+  logger.log('receipt.status:', receipt.status)
   if (0 !== +receipt.status || null === receipt.status) {
     const logs = receipt.logs
     const events = receipt.events
@@ -273,7 +271,7 @@ export const checkTxMined = (txHash, _pollingReceiptCheck) => {
   const { web3 } = web3Store
 
   web3.eth.getTransactionReceipt(txHash, (err, receipt) => {
-    if (receipt) logger.log(receipt)
+    if (receipt) logger.log(`transaction mined`, receipt)
     _pollingReceiptCheck(err, receipt)
   })
 }
