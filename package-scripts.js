@@ -85,28 +85,26 @@ module.exports = {
           'git checkout -f master',
         ),
         MintedCappedCrowdsale: series(
-          'bash ./scripts/start_ganache.sh',
+          'nps test.prepare',
           'cd ./submodules/auth-os-applications',
-          'git checkout -f e2e',
           'cd ./TokenWizard/crowdsale/MintedCappedCrowdsale/',
           'npm init -y',
           'npm i',
           'npm i authos-solidity',
           'nps test.deployContracts',
           'cd ../../../../../',
-          'bash ./scripts/stop_ganache.sh'
+          'nps test.e2e.stop'
         ),
         DutchAuction: series(
-          'bash ./scripts/start_ganache.sh',
+          'nps test.prepare',
           'cd ./submodules/auth-os-applications',
-          'git checkout -f e2e',
           'cd ./TokenWizard/crowdsale/DutchCrowdsale/',
           'npm init -y',
           'npm i',
           'npm i authos-solidity',
           'nps test.deployContracts',
           'cd ../../../../../',
-          'bash ./scripts/stop_ganache.sh'
+          'nps test.e2e.stop'
         ),
         e2e: {
           default: series(
