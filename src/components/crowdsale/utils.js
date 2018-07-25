@@ -66,14 +66,24 @@ export let getTokenData = async (initCrowdsaleContract, execID, account) => {
   }
 }
 
-export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
+export let getCrowdsaleData = async () => {
+  let {
+    params,
+    execID,
+    methods,
+    initCrowdsaleContract,
+    isDutchAuction,
+    isMintedCappedCrowdsale
+  } = await getInitializeDataFromContractStore()
+
   if (!initCrowdsaleContract) {
     noContractAlert()
     return Promise.reject('no contract')
   }
 
+  logger.log(`Crowdsale Data params`, params)
+
   try {
-    const { addr } = contractStore.abstractStorage
     const {
       getCrowdsaleInfo,
       getTokensSold,
@@ -81,12 +91,7 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
       getCrowdsaleMaxRaise,
       getCrowdsaleStatus,
       isCrowdsaleFull
-    } = initCrowdsaleContract.methods
-
-    let params = []
-    if (execID) {
-      params.push(addr, execID)
-    }
+    } = methods
 
     const crowdsaleInfo = await getCrowdsaleInfo(...params).call()
     if (crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('wei_raised')) {
@@ -95,14 +100,14 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
     if (crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('team_wallet')) {
       crowdsaleInfo.team_wallet = crowdsaleInfo[1]
     }
-    if (crowdsaleStore.isMintedCappedCrowdsale) {
+    if (isMintedCappedCrowdsale) {
       if (crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('is_initialized')) {
         crowdsaleInfo.is_initialized = crowdsaleInfo[2]
       }
       if (crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('is_finalized')) {
         crowdsaleInfo.is_finalized = crowdsaleInfo[3]
       }
-    } else if (crowdsaleStore.isDutchAuction) {
+    } else if (isDutchAuction) {
       if (crowdsaleInfo && !crowdsaleInfo.hasOwnProperty('is_initialized')) {
         crowdsaleInfo.is_initialized = crowdsaleInfo[3]
       }
@@ -120,8 +125,11 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
     crowdsalePageStore.setProperty('tokensSold', tokensSold)
     if (contributors) crowdsalePageStore.setProperty('contributors', contributors)
 
-    if (crowdsaleStore.isMintedCappedCrowdsale) {
+    if (isMintedCappedCrowdsale) {
+      logger.log(`Initcrowdsalecontract`, initCrowdsaleContract)
+      logger.log(`ExecId`, execID)
       const currentTierInfo = await getCurrentTierInfoCustom(initCrowdsaleContract, execID)
+      logger.log(`Current tier info`, currentTierInfo)
       const tier_price = currentTierInfo.tier_price || currentTierInfo[4]
       const crowdsaleMaxRaise = await getCrowdsaleMaxRaise(...params).call()
       const total_sell_cap = crowdsaleMaxRaise.total_sell_cap || crowdsaleMaxRaise[1]
@@ -132,7 +140,7 @@ export let getCrowdsaleData = async (initCrowdsaleContract, execID) => {
       crowdsalePageStore.setProperty('maximumSellableTokensInWei', wei_raise_cap)
     }
 
-    if (crowdsaleStore.isDutchAuction) {
+    if (isDutchAuction) {
       const crowdsaleStatus = await getCrowdsaleStatus(...params).call()
       crowdsaleStatus.start_rate = crowdsaleStatus.start_rate || crowdsaleStatus[0]
       crowdsaleStatus.end_rate = crowdsaleStatus.end_rate || crowdsaleStatus[1]
@@ -634,14 +642,14 @@ export const isCrowdSaleFull = async (addr, execID, methods, account) => {
 }
 
 /**
- * Get current tier information
+ * Get current tier information or the last tier
  * @param initCrowdsaleContract
  * @param execID
  * @returns {Promise}
  */
 export const getCurrentTierInfoCustom = async (initCrowdsaleContract, execID) => {
   if (!initCrowdsaleContract) {
-    return null
+    return {}
   }
 
   const registryStorageObj = toJS(contractStore.abstractStorage)
@@ -673,11 +681,16 @@ export const getCurrentTierInfoCustom = async (initCrowdsaleContract, execID) =>
       const tierStart = tier.tier_start || tier[0]
       const tierEnd = tier.tier_end || tier[1]
 
-      logger.log('Tier index', key)
       if (tierEnd * 1000 >= Date.now() && tierStart * 1000 <= Date.now()) {
         tierIndex = key
       }
     })
+
+    // Search for last and set as default tier
+    if (tierIndex < 0 && tiersStartAndEndDates.length > 0) {
+      tierIndex = tiersStartAndEndDates.length - 1
+    }
+    logger.log('Tier index', tierIndex)
 
     // Get tier
     if (tierIndex >= 0) {
@@ -685,23 +698,14 @@ export const getCurrentTierInfoCustom = async (initCrowdsaleContract, execID) =>
       logger.log('Tier data', tierData)
       return tierData
     } else {
-      return null
+      return {}
     }
   } else if (crowdsaleStore.isDutchAuction) {
-    let crowdsaleStartAndEndTimes = await methods.getCrowdsaleStartAndEndTimes(...params).call()
-
-    let startTime = crowdsaleStartAndEndTimes.start_time || crowdsaleStartAndEndTimes[0]
-    let endTime = crowdsaleStartAndEndTimes.end_time || crowdsaleStartAndEndTimes[1]
-
-    if (startTime * 1000 >= Date.now() && endTime * 1000 <= Date.now()) {
-      let tierData = await methods.getCrowdsaleTier(...params, 0).call()
-      logger.log('Tier data', tierData)
-      return tierData
-    } else {
-      return null
-    }
+    let tierData = await methods.getCrowdsaleTier(...params, 0).call()
+    logger.log('Tier data', tierData)
+    return tierData
   } else {
-    return null
+    return {}
   }
 }
 
