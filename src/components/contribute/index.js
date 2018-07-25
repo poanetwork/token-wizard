@@ -25,6 +25,8 @@ import {
   getUserMinLimits,
   getUserMaxContribution,
   isCrowdSaleFull,
+  getUserBalanceByStore,
+  getUserBalanceByParams,
   getCurrentTierInfoCustom
 } from '../crowdsale/utils'
 import {
@@ -63,6 +65,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 import ReactTooltip from 'react-tooltip'
 import logdown from 'logdown'
 import { DEPLOYMENT_VALUES } from '../../utils/constants'
+let promiseRetry = require('promise-retry')
 
 const logger = logdown('TW:contribute')
 
@@ -219,7 +222,7 @@ export class Contribute extends React.Component {
     }
   }
 
-  async checkIsFinalized(initCrowdsaleContract, crowdsaleExecID) {
+  checkIsFinalized = async (initCrowdsaleContract, crowdsaleExecID) => {
     this.setState({ isFinalized: await isFinalized(initCrowdsaleContract, crowdsaleExecID) })
   }
 
@@ -413,7 +416,7 @@ export class Contribute extends React.Component {
 
     const { generalStore, contractStore, crowdsalePageStore, tokenStore, crowdsaleStore } = this.props
     const { account, execID } = contractStore.crowdsale
-
+    const { addr } = toJS(contractStore.abstractStorage)
     const weiToSend = await this.calculateWeiToSend()
     logger.log('weiToSend:', weiToSend.toFixed())
 
@@ -449,11 +452,32 @@ export class Contribute extends React.Component {
     const { DECIMAL_PLACES } = weiToSend.constructor.config()
     weiToSend.constructor.config({ DECIMAL_PLACES: +tokenStore.decimals })
 
-    const tokensToContribute = weiToSend.div(crowdsalePageStore.rate).toFixed()
     weiToSend.constructor.config({ DECIMAL_PLACES })
 
+    const userBalanceBeforeBuy = getUserBalanceByStore()
+    logger.log(`User balance before buy`, userBalanceBeforeBuy)
+
     sendTXToContract(method.send(opts))
-      .then(() => successfulContributionAlert(tokensToContribute))
+      .then(async () => {
+        let userBalanceAfterBuy
+        await promiseRetry(async retry => {
+          userBalanceAfterBuy = await getUserBalanceByParams(addr, execID, account)
+          if (userBalanceAfterBuy.eq(toBigNumber(userBalanceBeforeBuy))) {
+            retry()
+          }
+        })
+
+        if (!userBalanceAfterBuy) {
+          throw new Error(`Is not a big numnber instance`)
+        }
+
+        logger.log(`User balance after buy`, userBalanceAfterBuy.toFixed())
+
+        const tokensContributed = userBalanceAfterBuy.minus(toBigNumber(userBalanceBeforeBuy)).toFixed()
+        logger.log(`Tokens to contributed`, tokensContributed)
+
+        successfulContributionAlert(tokensContributed)
+      })
       .catch(err => {
         logger.error(err)
         return toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED })

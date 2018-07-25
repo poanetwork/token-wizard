@@ -27,54 +27,17 @@ module.exports = {
         ncp('./build/index.html ./build/stats.html')
       )
     },
-    test: {
+    dev: {
       default: series(
-        'npm run installWeb3',
-        'npm run testContractsMintedCappedCrowdsale',
-        'npm run testContractsDutchAuction',
-        'npm run e2eMintedCappedCrowdsale',
-        'npm run e2eDutchAuction'
+        'git submodule update --init --recursive --remote',
+        'npm run installWeb3'
       ),
-      deployContracts: series(
-        'npm install truffle',
-        'npm install solc',
-        './node_modules/.bin/truffle compile',
-        './node_modules/.bin/truffle migrate --network development',
-        './node_modules/.bin/truffle test --network development'
-      ),
-      prepare: series(
-        'bash ./scripts/start_ganache.sh',
-        'cd ./submodules/auth-os-applications/',
-        'git checkout -f master',
-      ),
-      MintedCappedCrowdsale: series(
-        'nps test.prepare',
-        'cd ./submodules/auth-os-applications/',
-        'cd ./TokenWizard/crowdsale/MintedCappedCrowdsale/',
-        'npm init -y',
-        'npm i',
-        'npm i authos-solidity',
-        'nps test.deployContracts',
-        'cd ../../../../../',
-        'bash ./scripts/stop_ganache.sh'
-      ),
-      DutchAuction: series(
-        'nps test.prepare',
-        'cd ./submodules/auth-os-applications/',
-        'cd ./TokenWizard/crowdsale/DutchCrowdsale/',
-        'npm init -y',
-        'npm i',
-        'npm i authos-solidity',
-        'nps test.deployContracts',
-        'cd ../../../../../',
-        'bash ./scripts/stop_ganache.sh'
-      ),
-      e2e: {
+      Minted: {
         default: series(
-        ),
-        MintedCappedCrowdsale: series(
-          'nps test.e2e.prepare',
+          'nps test.e2e.stop',
+          'bash ./scripts/start_ganache.sh',
           'cd ./submodules/auth-os-applications',
+          'git checkout -f e2e',
           'cd ./TokenWizard/crowdsale/MintedCappedCrowdsale',
           'npm install',
           'npm i authos-solidity',
@@ -82,39 +45,166 @@ module.exports = {
           'cp .env ../../../../../.env',
           'cd ../../../../../',
           'nps test.e2e.start',
-          'npm run delay',
-          'cd submodules/token-wizard-test-automation',
-          'npm install',
+        )
+      },
+        Dutch: {
+          default: series(
+            'nps test.e2e.stop',
+            'bash ./scripts/start_ganache.sh',
+            'cd ./submodules/auth-os-applications',
+            'git checkout -f e2e',
+            'cd ./TokenWizard/crowdsale/DutchCrowdsale',
+            'npm install',
+            'npm i authos-solidity',
+            'nps test.deployContracts',
+            'cp .env ../../../../../.env',
+            'cd ../../../../../',
+            'nps test.e2e.start',
+          ),
+        }
+      },
+
+      test: {
+        default: series(
+          'npm run installWeb3',
+          'npm run testContractsMintedCappedCrowdsale',
+          'npm run testContractsDutchAuction',
           'npm run e2eMinted',
-          'cd ../../',
-          'bash ./scripts/stop_ganache.sh',
-          'kill `lsof -t -i:3000`'
+          'npm run e2eDutch'
         ),
-        DutchAuction: series(
-          'nps test.e2e.prepare',
-          'cd ./submodules/auth-os-applications',
-          'cd ./TokenWizard/crowdsale/DutchCrowdsale',
-          'npm install',
-          'npm i authos-solidity',
-          'nps test.deployContracts',
-          'cp .env ../../../../../.env',
-          'cd ../../../../../',
-          'nps test.e2e.start',
-          'npm run delay',
-          'cd submodules/token-wizard-test-automation',
-          'npm install',
-          'npm run e2eDutch',
-          'cd ../../',
-          'bash ./scripts/stop_ganache.sh',
-          'kill `lsof -t -i:3000`'
+        deployContracts: series(
+          'npm install truffle',
+          'npm install solc',
+          './node_modules/.bin/truffle compile',
+          './node_modules/.bin/truffle migrate --network development',
+          './node_modules/.bin/truffle test --network development'
         ),
         prepare: series(
           'bash ./scripts/start_ganache.sh',
-          'cd ./submodules/auth-os-applications',
-          'git checkout -f e2e'
+          'cd ./submodules/auth-os-applications/',
+          'git checkout -f master',
         ),
-        start: 'PORT=3000 BROWSER=none node scripts/start.js &'
+        MintedCappedCrowdsale: series(
+          'nps test.prepare',
+          'cd ./submodules/auth-os-applications',
+          'cd ./TokenWizard/crowdsale/MintedCappedCrowdsale/',
+          'npm init -y',
+          'npm i',
+          'npm i authos-solidity',
+          'nps test.deployContracts',
+          'cd ../../../../../',
+          'nps test.e2e.stop'
+        ),
+        DutchAuction: series(
+          'nps test.prepare',
+          'cd ./submodules/auth-os-applications',
+          'cd ./TokenWizard/crowdsale/DutchCrowdsale/',
+          'npm init -y',
+          'npm i',
+          'npm i authos-solidity',
+          'nps test.deployContracts',
+          'cd ../../../../../',
+          'nps test.e2e.stop'
+        ),
+        e2e: {
+          default: series(
+            'nps test.e2e.Minted',
+            'nps test.e2e.Dutch'
+          ),
+          Minted: series(
+            'nps test.e2e.prepareMinted',
+            'cd submodules/token-wizard-test-automation',
+            'npm run e2eMinted',
+            'cd ../../',
+            'nps test.e2e.stop'
+          ),
+          MintedUI: series(
+            'nps test.e2e.prepareMinted',
+            'cd submodules/token-wizard-test-automation',
+            'npm run e2eMintedUI',
+            'cd ../../',
+            'nps test.e2e.stop'
+          ),
+          MintedWhitelist: series(
+            'nps test.e2e.prepareMinted',
+            'cd submodules/token-wizard-test-automation',
+            'npm run e2eMintedWhitelist',
+            'cd ../../',
+            'nps test.e2e.stop'
+          ),
+          MintedMincap: series(
+            'nps test.e2e.prepareMinted',
+            'cd submodules/token-wizard-test-automation',
+            'npm run e2eMintedMincap',
+            'cd ../../',
+            'nps test.e2e.stop'
+          ),
+          Dutch: series(
+            'nps test.e2e.prepareDutch',
+            'cd submodules/token-wizard-test-automation',
+            'npm run e2eDutch',
+            'cd ../../',
+            'nps test.e2e.stop'
+          ),
+          DutchUI: series(
+            'nps test.e2e.prepareDutch',
+            'cd submodules/token-wizard-test-automation',
+            'npm run e2eDutchUI',
+            'cd ../../',
+            'nps test.e2e.stop',
+          ),
+          DutchWhitelist: series(
+            'nps test.e2e.prepareDutch',
+            'cd submodules/token-wizard-test-automation',
+            'npm run e2eDutchWhitelist',
+            'cd ../../',
+            'nps test.e2e.stop'
+          ),
+          DutchMincap: series(
+            'nps test.e2e.prepareDutch',
+            'cd submodules/token-wizard-test-automation',
+            'npm run e2eDutchMincap',
+            'cd ../../',
+            'nps test.e2e.stop'
+          ),
+          prepareMinted: series(
+            'bash ./scripts/start_ganache.sh',
+            'cd ./submodules/auth-os-applications',
+            'git checkout -f e2e',
+            'cd ./TokenWizard/crowdsale/MintedCappedCrowdsale',
+            'npm install',
+            'npm i authos-solidity',
+            'nps test.deployContracts',
+            'cp .env ../../../../../.env',
+            'cd ../../../../../',
+            'nps test.e2e.start',
+            'npm run delay',
+            'cd submodules/token-wizard-test-automation',
+            'npm install'
+          ),
+          prepareDutch: series(
+            'nps test.e2e.stop',
+            'bash ./scripts/start_ganache.sh',
+            'cd ./submodules/auth-os-applications',
+            'git checkout -f e2e',
+            'cd ./TokenWizard/crowdsale/DutchCrowdsale',
+            'npm install',
+            'npm i authos-solidity',
+            'nps test.deployContracts',
+            'cp .env ../../../../../.env',
+            'cd ../../../../../',
+            'nps test.e2e.start',
+            'npm run delay',
+            'cd submodules/token-wizard-test-automation',
+            'npm install'
+          ),
+          start: 'PORT=3000 BROWSER=none node scripts/start.js &',
+          stop: series(
+            'bash ./scripts/stop_ganache.sh',
+            'bash ./scripts/stop_port3000.sh'
+          )
+        }
       }
     }
   }
-}
+
