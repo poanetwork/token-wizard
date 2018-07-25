@@ -2,6 +2,7 @@ import { getNetWorkNameById } from '../../src/utils/blockchainHelpers'
 
 
 
+
 describe('blockchainHelpers', () => {
   describe('getNetWorkNameById', () => {
     it('should work for the mainnet', () => {
