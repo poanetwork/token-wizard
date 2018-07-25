@@ -10,8 +10,9 @@ import {
   isDatePreviousThan,
   isDateSameOrLaterThan,
   isDateSameOrPreviousThan,
-  isGreaterOrEqualThan,
   isInteger,
+  isLessThan,
+  isGreaterThan,
   isLessOrEqualThan,
   isPositive,
   isRequired
@@ -104,7 +105,7 @@ export const DutchAuctionBlock = inject('tierStore', 'tokenStore')(
                     const errors = composeValidators(
                       isPositive(),
                       isInteger(),
-                      isLessOrEqualThan('Should be less than or equal to Max Rate')(allValues.tiers[index].maxRate),
+                      isLessThan('Should be less than Max Rate')(allValues.tiers[index].maxRate),
                       isLessOrEqualThan('Should be less than or equal to 1 quintillion (10^18)')('1e18')
                     )(value)
 
@@ -123,9 +124,7 @@ export const DutchAuctionBlock = inject('tierStore', 'tokenStore')(
                     const errors = composeValidators(
                       isPositive(),
                       isInteger(),
-                      isGreaterOrEqualThan('Should be greater than or equal to Min Rate')(
-                        allValues.tiers[index].minRate
-                      ),
+                      isGreaterThan('Should be greater than Min Rate')(allValues.tiers[index].minRate),
                       isLessOrEqualThan('Should less than or equal to 1 quintillion (10^18)')('1e18')
                     )(value)
 
