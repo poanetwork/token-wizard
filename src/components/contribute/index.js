@@ -330,7 +330,7 @@ export class Contribute extends React.Component {
 
   calculateWeiToSend = async () => {
     const { crowdsalePageStore, crowdsaleStore, contractStore, contributeStore } = this.props
-    const { execID, account } = this.props.contractStore.crowdsale
+    const { execID } = this.props.contractStore.crowdsale
     const { addr } = toJS(contractStore.abstractStorage)
 
     let target
@@ -414,9 +414,8 @@ export class Contribute extends React.Component {
       return notAllowedContributor()
     }
 
-    const { generalStore, contractStore, crowdsalePageStore, tokenStore, crowdsaleStore } = this.props
+    const { generalStore, contractStore, tokenStore, crowdsaleStore } = this.props
     const { account, execID } = contractStore.crowdsale
-    const { addr } = toJS(contractStore.abstractStorage)
     const weiToSend = await this.calculateWeiToSend()
     logger.log('weiToSend:', weiToSend.toFixed())
 

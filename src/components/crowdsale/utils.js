@@ -650,7 +650,7 @@ export const isCrowdSaleFull = async (addr, execID, methods, account) => {
  * @returns {Promise<BigNumber>}
  */
 export const getUserBalance = async () => {
-  let { params, account, methods, initCrowdsaleContract } = await getInitializeDataFromContractStore()
+  let { params, account, methods } = await getInitializeDataFromContractStore()
   const { balanceOf, decimals } = methods
 
   let ownerBalance = await balanceOf(...params, account).call()
