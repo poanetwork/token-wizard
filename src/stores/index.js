@@ -13,6 +13,9 @@ import GasPriceStore from './GasPriceStore'
 import DeploymentStore from './DeploymentStore'
 import StatsStore from './StatsStore'
 
+//let localStorageMock = 1;
+//Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+
 // Clear local storage if there is no incomplete deployment
 if (storage.has('DeploymentStore') && storage.get('DeploymentStore').deploymentStep === null) {
   localStorage.clear()
