@@ -193,6 +193,8 @@ export class Contribute extends React.Component {
     })
 
     let target
+
+    logger.log(`Crowdsale Exec Id`, contractStore.crowdsale.execID)
     if (contractStore.crowdsale.execID) {
       const targetPrefix = 'idx'
       const targetSuffix = crowdsaleStore.contractTargetSuffix
@@ -205,7 +207,7 @@ export class Contribute extends React.Component {
       const initCrowdsaleContract = await attachToSpecificCrowdsaleContract(target)
       await initializeAccumulativeData()
       await getTokenData(initCrowdsaleContract, crowdsaleExecID, account)
-      await getCrowdsaleData(initCrowdsaleContract, crowdsaleExecID, account, crowdsaleStore)
+      await getCrowdsaleData()
       await getCrowdsaleTargetDates(initCrowdsaleContract, crowdsaleExecID)
       await this.checkIsFinalized(initCrowdsaleContract, crowdsaleExecID)
       await this.checkIsEnded(initCrowdsaleContract, crowdsaleExecID)
