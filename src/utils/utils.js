@@ -162,3 +162,12 @@ export const toBigNumber = (value, force = true) => {
     return new BigNumber(value)
   }
 }
+
+/**
+ * Sleep function like C
+ * @param ms
+ * @returns {Promise}
+ */
+export const sleep = async ms => {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
