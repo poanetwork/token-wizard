@@ -454,18 +454,19 @@ const getRate = async () => {
 const calculateMinContribution = async (method, decimals, naturalMinCap, isWhitelisted) => {
   const crowdsaleData = method instanceof Promise ? await method : await method.call()
   let { tier_min, minimum_contribution, minimum_purchase_amt, max_tokens_remaining } = crowdsaleData
+
   if (!tier_min) {
-    if (method && method.name === 'getCurrentTierInfo') {
+    if (method instanceof Promise) {
       tier_min = crowdsaleData[5]
     }
   }
   if (!minimum_contribution) {
-    if (method && method.name === 'getCrowdsaleInfo') {
+    if (!(method instanceof Promise) && method._method.name === 'getCrowdsaleInfo') {
       minimum_contribution = crowdsaleData[2]
     }
   }
-  if (!minimum_purchase_amt && !max_tokens_remaining) {
-    if (method && method.name === 'getWhitelistStatus') {
+  if (!(method instanceof Promise) && !minimum_purchase_amt && !max_tokens_remaining) {
+    if (method._method.name === 'getWhitelistStatus') {
       minimum_purchase_amt = crowdsaleData[0]
       max_tokens_remaining = crowdsaleData[1]
     }
@@ -694,9 +695,24 @@ export const getCurrentTierInfoCustom = async (initCrowdsaleContract, execID) =>
 
     // Get tier
     if (tierIndex >= 0) {
-      let tierData = await methods.getCrowdsaleTier(...params, tierIndex).call()
-      logger.log('Tier data', tierData)
-      return tierData
+      const { getCrowdsaleTier, getCurrentTierInfo } = methods
+      let crowdSaleTierData = await getCrowdsaleTier(...params, tierIndex).call()
+      logger.log('Crowdsale Tier Data', crowdSaleTierData)
+
+      const currentTierData = await getCurrentTierInfo(...params).call()
+      logger.log('Current Tier Data', currentTierData)
+
+      //The response of the getCrowdsaleTier function is different that getCurrentTierInfo , so we need to rebuilded
+      return {
+        0: crowdSaleTierData[0],
+        1: tierIndex,
+        2: currentTierData[2],
+        3: currentTierData[3],
+        4: crowdSaleTierData[2],
+        5: crowdSaleTierData[3],
+        6: crowdSaleTierData[5],
+        7: crowdSaleTierData[6]
+      }
     } else {
       return {}
     }
