@@ -26,7 +26,7 @@ import {
   getUserMaxContribution,
   isCrowdSaleFull,
   getUserBalanceByStore,
-  getUserBalanceByParams,
+  getUserBalance,
   getCurrentTierInfoCustom
 } from '../crowdsale/utils'
 import {
@@ -461,7 +461,7 @@ export class Contribute extends React.Component {
       .then(async () => {
         let userBalanceAfterBuy
         await promiseRetry(async retry => {
-          userBalanceAfterBuy = await getUserBalanceByParams(addr, execID, account)
+          userBalanceAfterBuy = await getUserBalance()
           if (userBalanceAfterBuy.eq(toBigNumber(userBalanceBeforeBuy))) {
             retry()
           }
