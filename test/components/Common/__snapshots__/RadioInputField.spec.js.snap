@@ -17,6 +17,7 @@ exports[`Should render the component 1`] = `
     >
       <input
         checked={true}
+        id="item-1"
         onChange={[Function]}
         type="radio"
         value="item-1"
@@ -32,6 +33,7 @@ exports[`Should render the component 1`] = `
     >
       <input
         checked={false}
+        id="item-2"
         onChange={[Function]}
         type="radio"
         value="item-2"

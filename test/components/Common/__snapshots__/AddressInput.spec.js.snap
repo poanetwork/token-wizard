@@ -12,6 +12,7 @@ exports[`AddressInput Should render the component 1`] = `
   <input
     className="input"
     disabled={undefined}
+    id={undefined}
     onBlur={undefined}
     onChange={[Function]}
     onKeyPress={undefined}
