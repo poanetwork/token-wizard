@@ -1,5 +1,6 @@
 import { observable, action } from 'mobx'
 import autosave from './autosave'
+import { computed } from 'mobx/lib/mobx'
 
 class ReservedTokenStore {
   @observable tokens
@@ -51,6 +52,11 @@ class ReservedTokenStore {
 
       return false
     })
+  }
+
+  @computed
+  get validateLength() {
+    return this.tokens.length < 20
   }
 }
 
