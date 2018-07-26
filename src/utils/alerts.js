@@ -278,3 +278,19 @@ export function notAllowedContributor() {
     type: 'info'
   })
 }
+
+export function noMoreReservedSlotAvailable() {
+  return sweetAlert2({
+    title: 'No more reserved tokens available',
+    html: `You're not able to reserve more tokens. The maximum allowed is 20`,
+    type: 'info'
+  })
+}
+
+export function noMoreReservedSlotAvailableCSV(count) {
+  return sweetAlert2({
+    title: 'You reach the limit of reserved tokens',
+    html: `You're not able to reserve more tokens. Only ${count} reserved address of the file could be added`,
+    type: 'info'
+  })
+}
