@@ -1,4 +1,5 @@
 import { composeValidators, isAddress, isDecimalPlacesNotGreaterThan, isPositive, isRequired } from './validations'
+import { reservedTokenStore } from '../stores'
 import logdown from 'logdown'
 
 const logger = logdown('TW:processReservedTokens')
@@ -15,8 +16,17 @@ const logger = logdown('TW:processReservedTokens')
  */
 export default function({ rows, decimals }, cb) {
   let called = 0
-  rows.forEach(row => {
-    if (row.length !== 3) return
+  let reservedTokenLengthError = false
+  for (let row of rows) {
+    if (row.length !== 3) {
+      continue
+    }
+
+    let validLength = reservedTokenStore.validateLength
+    if (!validLength) {
+      reservedTokenLengthError = true
+      break
+    }
 
     let valueErrors = undefined
     let [addr, dim, val] = row
@@ -33,15 +43,21 @@ export default function({ rows, decimals }, cb) {
     } else if (dim === 'percentage') {
       valueErrors = composeValidators(isRequired(), isPositive())(val)
     } else {
-      return logger.error(`unrecognized dimension '${dim}'`)
+      logger.error(`unrecognized dimension '${dim}'`)
+      break
     }
 
-    if (isAddress()(addr) || valueErrors) return
+    if (isAddress()(addr) || valueErrors) {
+      break
+    }
 
     cb({ addr, dim, val })
 
     called++
-  })
+  }
 
-  return { called }
+  return {
+    called: called,
+    reservedTokenLengthError: reservedTokenLengthError
+  }
 }
