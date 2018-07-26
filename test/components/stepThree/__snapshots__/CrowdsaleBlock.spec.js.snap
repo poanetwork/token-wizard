@@ -7,6 +7,7 @@ exports[`CrowdsaleBlock Should render the component for the first Tier 1`] = `
       "tiers": Array [
         Object {
           "endTime": "2018-03-09T00:00",
+          "minCap": "0",
           "rate": "",
           "startTime": "2018-03-05T11:05",
           "supply": "",
@@ -40,6 +41,7 @@ exports[`CrowdsaleBlock Should render the component for the first Tier 1`] = `
           "tiers": Array [
             Object {
               "endTime": "2018-03-09T00:00",
+              "minCap": "0",
               "rate": "",
               "startTime": "2018-03-05T11:05",
               "supply": "",
@@ -155,6 +157,7 @@ exports[`CrowdsaleBlock Should render the component for the first Tier 1`] = `
                   >
                     <input
                       checked={false}
+                      id="on"
                       onChange={[Function]}
                       type="radio"
                       value="on"
@@ -171,6 +174,7 @@ exports[`CrowdsaleBlock Should render the component for the first Tier 1`] = `
                   >
                     <input
                       checked={true}
+                      id="off"
                       onChange={[Function]}
                       type="radio"
                       value="off"
@@ -399,6 +403,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier 1`] = `
       "tiers": Array [
         Object {
           "endTime": "2018-03-09T00:00",
+          "minCap": "0",
           "rate": "",
           "startTime": "2018-03-05T11:05",
           "supply": "",
@@ -410,6 +415,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier 1`] = `
         },
         Object {
           "endTime": "2018-03-13T00:00",
+          "minCap": "0",
           "rate": "",
           "startTime": "2018-03-09T00:00",
           "supply": "",
@@ -421,6 +427,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier 1`] = `
         },
         Object {
           "endTime": "",
+          "minCap": "0",
           "rate": "",
           "startTime": "",
           "supply": "",
@@ -469,6 +476,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier 1`] = `
           "tiers": Array [
             Object {
               "endTime": "2018-03-09T00:00",
+              "minCap": "0",
               "rate": "",
               "startTime": "2018-03-05T11:05",
               "supply": "",
@@ -480,6 +488,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier 1`] = `
             },
             Object {
               "endTime": "2018-03-13T00:00",
+              "minCap": "0",
               "rate": "",
               "startTime": "2018-03-09T00:00",
               "supply": "",
@@ -491,6 +500,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier 1`] = `
             },
             Object {
               "endTime": "",
+              "minCap": "0",
               "rate": "",
               "startTime": "",
               "supply": "",
@@ -621,6 +631,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier 1`] = `
                   >
                     <input
                       checked={false}
+                      id="on"
                       onChange={[Function]}
                       type="radio"
                       value="on"
@@ -637,6 +648,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier 1`] = `
                   >
                     <input
                       checked={true}
+                      id="off"
                       onChange={[Function]}
                       type="radio"
                       value="off"
@@ -865,6 +877,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
       "tiers": Array [
         Object {
           "endTime": "2018-03-09T00:00",
+          "minCap": "0",
           "rate": "",
           "startTime": "2018-03-05T11:05",
           "supply": "",
@@ -876,6 +889,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
         },
         Object {
           "endTime": "2018-03-13T00:00",
+          "minCap": "0",
           "rate": "",
           "startTime": "2018-03-09T00:00",
           "supply": "",
@@ -887,6 +901,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
         },
         Object {
           "endTime": "",
+          "minCap": "0",
           "rate": "",
           "startTime": "",
           "supply": "",
@@ -897,6 +912,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
         },
         Object {
           "endTime": "",
+          "minCap": "0",
           "rate": "",
           "startTime": "",
           "supply": "",
@@ -908,6 +924,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
         },
         Object {
           "endTime": "",
+          "minCap": "0",
           "rate": "",
           "startTime": "",
           "supply": "",
@@ -972,6 +989,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
           "tiers": Array [
             Object {
               "endTime": "2018-03-09T00:00",
+              "minCap": "0",
               "rate": "",
               "startTime": "2018-03-05T11:05",
               "supply": "",
@@ -983,6 +1001,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
             },
             Object {
               "endTime": "2018-03-13T00:00",
+              "minCap": "0",
               "rate": "",
               "startTime": "2018-03-09T00:00",
               "supply": "",
@@ -994,6 +1013,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
             },
             Object {
               "endTime": "",
+              "minCap": "0",
               "rate": "",
               "startTime": "",
               "supply": "",
@@ -1004,6 +1024,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
             },
             Object {
               "endTime": "",
+              "minCap": "0",
               "rate": "",
               "startTime": "",
               "supply": "",
@@ -1015,6 +1036,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
             },
             Object {
               "endTime": "",
+              "minCap": "0",
               "rate": "",
               "startTime": "",
               "supply": "",
@@ -1161,6 +1183,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
                   >
                     <input
                       checked={false}
+                      id="on"
                       onChange={[Function]}
                       type="radio"
                       value="on"
@@ -1177,6 +1200,7 @@ exports[`CrowdsaleBlock Should render the component for the second Tier with whi
                   >
                     <input
                       checked={true}
+                      id="off"
                       onChange={[Function]}
                       type="radio"
                       value="off"

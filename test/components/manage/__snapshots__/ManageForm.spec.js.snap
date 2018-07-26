@@ -1433,11 +1433,11 @@ exports[`ManageForm should render the component with tiers 1`] = `
                       <Link
                         className="crowdsale-page-link"
                         replace={false}
-                        to="/crowdsale/?exec-id=undefined&networkID=undefined"
+                        to="/crowdsale/?undefined=undefined&networkID=undefined"
                       >
                         <a
                           className="crowdsale-page-link"
-                          href="/crowdsale/?exec-id=undefined&networkID=undefined"
+                          href="/crowdsale/?undefined=undefined&networkID=undefined"
                           onClick={[Function]}
                         >
                           Crowdsale page
@@ -1450,6 +1450,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                   >
                     <InputField
                       disabled={true}
+                      name="walletAddress"
                       side="left"
                       title="Wallet Address"
                       type="text"
@@ -1465,6 +1466,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                         <input
                           className="input"
                           disabled={true}
+                          id="walletAddress"
                           type="text"
                         />
                         <p
@@ -1947,11 +1949,9 @@ exports[`ManageForm should render the component with tiers 1`] = `
                       "unshift": [Function],
                     }
                   }
-                  pristine={true}
                   reset={[Function]}
                   submitFailed={false}
                   submitSucceeded={false}
-                  submitting={false}
                   touched={
                     Object {
                       "tiers": false,
@@ -2575,11 +2575,9 @@ exports[`ManageForm should render the component with tiers 1`] = `
                         "unshift": [Function],
                       }
                     }
-                    pristine={true}
                     reset={[Function]}
                     submitFailed={false}
                     submitSucceeded={false}
-                    submitting={false}
                     tokenStore={
                       TokenStore {
                         "decimals": undefined,
@@ -2761,6 +2759,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                             >
                               <InputField
                                 disabled={true}
+                                name="tiers[0].crowdsale_name"
                                 side="left"
                                 title="Crowdsale setup name"
                                 type="text"
@@ -2777,6 +2776,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                   <input
                                     className="input"
                                     disabled={true}
+                                    id="tiers[0].crowdsale_name"
                                     type="text"
                                     value="Tier 1"
                                   />
@@ -3561,6 +3561,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                             >
                               <InputField
                                 disabled={true}
+                                name="tiers[1].crowdsale_name"
                                 side="left"
                                 title="Crowdsale setup name"
                                 type="text"
@@ -3577,6 +3578,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                   <input
                                     className="input"
                                     disabled={true}
+                                    id="tiers[1].crowdsale_name"
                                     type="text"
                                     value="Tier 2"
                                   />
@@ -4364,12 +4366,8 @@ exports[`ManageForm should render the component with tiers 1`] = `
                   className="button-container"
                 >
                   <button
-                    className="no_arrow button button_fill button_disabled"
-                    style={
-                      Object {
-                        "border": "none",
-                      }
-                    }
+                    className="no_arrow button button_fill button_no_border button_disabled"
+                    disabled={true}
                     type="submit"
                   >
                     Save

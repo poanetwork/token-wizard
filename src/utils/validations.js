@@ -61,10 +61,30 @@ export const isDecimalPlacesNotGreaterThan = (
   return isValid ? undefined : errorMsg
 }
 
+export const isLessThan = (errorMsg = VALIDATION_MESSAGES.LESS) => (maxValue = Infinity) => value => {
+  try {
+    const max = toBigNumber(String(maxValue), false)
+    const isValid = max && max.gt(value)
+    return isValid ? undefined : errorMsg
+  } catch (e) {
+    return errorMsg
+  }
+}
+
 export const isLessOrEqualThan = (errorMsg = VALIDATION_MESSAGES.LESS_OR_EQUAL) => (maxValue = Infinity) => value => {
   try {
     const max = toBigNumber(String(maxValue), false)
     const isValid = max && max.gte(value)
+    return isValid ? undefined : errorMsg
+  } catch (e) {
+    return errorMsg
+  }
+}
+
+export const isGreaterThan = (errorMsg = VALIDATION_MESSAGES.GREATER) => (minValue = Number.MIN_VALUE) => value => {
+  try {
+    const min = toBigNumber(String(minValue), false)
+    const isValid = min && min.lt(value)
     return isValid ? undefined : errorMsg
   } catch (e) {
     return errorMsg
