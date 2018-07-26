@@ -24,6 +24,7 @@ export const StepTwoForm = ({
   tokens,
   decimals,
   addReservedTokensItem,
+  validateReservedTokensList,
   removeReservedToken,
   clearAll,
   crowdsaleStore,
@@ -46,6 +47,7 @@ export const StepTwoForm = ({
         decimals={decimals}
         addReservedTokensItem={addReservedTokensItem}
         removeReservedToken={removeReservedToken}
+        validateReservedTokensList={validateReservedTokensList}
         clearAll={clearAll}
       />
     </div>
