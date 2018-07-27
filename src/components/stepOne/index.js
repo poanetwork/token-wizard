@@ -2,20 +2,20 @@ import React from 'react'
 import '../../assets/stylesheets/application.css'
 import { Link } from 'react-router-dom'
 import { StepNavigation } from '../Common/StepNavigation'
-import { NAVIGATION_STEPS, CROWDSALE_STRATEGIES, CROWDSALE_STRATEGIES_DISPLAYNAMES } from '../../utils/constants'
+import {
+  NAVIGATION_STEPS,
+  CROWDSALE_STRATEGIES,
+  CROWDSALE_STRATEGIES_DISPLAYNAMES,
+  DOWNLOAD_STATUS
+} from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
+import classNames from 'classnames'
+import logdown from 'logdown'
+
+const logger = logdown('TW:components:stepOne')
 const { CROWDSALE_STRATEGY } = NAVIGATION_STEPS
 
-//todo: downloadStatus is not used
-const ContinueButton = ({ downloadStatus }) => {
-  return (
-    <Link to="/2">
-      <span className="button button_fill">Continue</span>
-    </Link>
-  )
-}
-
-@inject('crowdsaleStore')
+@inject('crowdsaleStore', 'contractStore')
 @observer
 export class stepOne extends React.Component {
   constructor(props) {
@@ -32,6 +32,14 @@ export class stepOne extends React.Component {
   }
 
   render() {
+    const { contractStore } = this.props
+
+    let status = contractStore.downloadStatus === DOWNLOAD_STATUS.SUCCESS && localStorage.length > 0
+    logger.log('Contract store status', status)
+    const submitButtonClass = classNames('button', 'button_fill', 'button_no_border', {
+      button_disabled: !status
+    })
+
     return (
       <section className="steps steps_crowdsale-contract">
         <StepNavigation activeStep={CROWDSALE_STRATEGY} />
@@ -62,7 +70,11 @@ export class stepOne extends React.Component {
           </div>
         </div>
         <div className="button-container">
-          <ContinueButton />
+          <Link to="/2">
+            <button disabled={!status} className={submitButtonClass}>
+              Continue
+            </button>
+          </Link>
         </div>
       </section>
     )

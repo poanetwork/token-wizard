@@ -18,6 +18,7 @@ class ContractStore {
   @observable saleDutch
   @observable tokenDutch
   @observable crowdsale
+  @observable downloadStatus
 
   constructor() {
     autosave(this, 'ContractStore')
@@ -33,6 +34,11 @@ class ContractStore {
     let newContract = Object.assign({}, this[contractName])
     newContract[property] = value
     this[contractName] = newContract
+  }
+
+  @action
+  setProperty = (property, value) => {
+    this[property] = value
   }
 }
 

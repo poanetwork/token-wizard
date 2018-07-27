@@ -283,3 +283,9 @@ export const TOAST = {
     time: 10000
   }
 }
+
+export const DOWNLOAD_STATUS = {
+  PENDING: 'pending',
+  SUCCESS: 'success',
+  FAILURE: 'failure'
+}
