@@ -12,7 +12,7 @@ import { inject, observer } from 'mobx-react'
 import classNames from 'classnames'
 import logdown from 'logdown'
 
-const logger = logdown('TW:manage:utils')
+const logger = logdown('TW:components:stepOne')
 const { CROWDSALE_STRATEGY } = NAVIGATION_STEPS
 
 @inject('crowdsaleStore', 'contractStore')
