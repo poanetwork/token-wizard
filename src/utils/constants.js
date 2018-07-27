@@ -281,3 +281,9 @@ export const TOAST = {
     time: 10000
   }
 }
+
+/**
+ * Limit for reserved addresses, validated in the contract
+ * @type {number}
+ */
+export const LIMIT_RESERVED_ADDRESSES = 20
