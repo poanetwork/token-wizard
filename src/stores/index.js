@@ -12,7 +12,9 @@ import CrowdsaleStore from './CrowdsaleStore'
 import GasPriceStore from './GasPriceStore'
 import DeploymentStore from './DeploymentStore'
 import StatsStore from './StatsStore'
-
+import localStorageMock from './localStorageMock.js'
+//for Jest unit tests
+if (!window.localStorage) Object.defineProperty(window, 'localStorage', { value: localStorageMock })
 // Clear local storage if there is no incomplete deployment
 if (storage.has('DeploymentStore') && storage.get('DeploymentStore').deploymentStep === null) {
   localStorage.clear()

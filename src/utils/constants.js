@@ -135,7 +135,9 @@ export const VALIDATION_MESSAGES = {
   ADDRESS: 'Please enter a valid address',
   REQUIRED: 'This field is required',
   DECIMAL_PLACES: 'Decimals should not exceed the amount of decimals specified',
+  LESS: 'Should be less than the specified value',
   LESS_OR_EQUAL: 'Should be less or equal than the specified value',
+  GREATER: 'Should be greater than the specified value',
   GREATER_OR_EQUAL: 'Should be greater or equal than the specified value',
   INTEGER: 'Should be integer',
   DATE_IN_FUTURE: 'Should be set in the future',
@@ -282,8 +284,15 @@ export const TOAST = {
   }
 }
 
+export const DOWNLOAD_STATUS = {
+  PENDING: 'pending',
+  SUCCESS: 'success',
+  FAILURE: 'failure'
+}
+
 /**
  * Limit for reserved addresses, validated in the contract
  * @type {number}
  */
 export const LIMIT_RESERVED_ADDRESSES = 20
+

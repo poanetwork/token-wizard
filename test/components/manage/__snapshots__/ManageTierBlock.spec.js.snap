@@ -25,6 +25,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
             <input
               className="input"
               disabled={true}
+              id="tiers[0].0.crowdsale_name"
               onBlur={undefined}
               onChange={undefined}
               onKeyPress={undefined}
@@ -426,6 +427,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
             <input
               className="input"
               disabled={true}
+              id="tiers[1].1.crowdsale_name"
               onBlur={undefined}
               onChange={undefined}
               onKeyPress={undefined}
@@ -727,6 +729,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
             <input
               className="input"
               disabled={true}
+              id="tiers[0].0.crowdsale_name"
               onBlur={undefined}
               onChange={undefined}
               onKeyPress={undefined}
@@ -1128,6 +1131,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
             <input
               className="input"
               disabled={true}
+              id="tiers[1].1.crowdsale_name"
               onBlur={undefined}
               onChange={undefined}
               onKeyPress={undefined}
