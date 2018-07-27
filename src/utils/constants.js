@@ -295,4 +295,3 @@ export const DOWNLOAD_STATUS = {
  * @type {number}
  */
 export const LIMIT_RESERVED_ADDRESSES = 20
-
