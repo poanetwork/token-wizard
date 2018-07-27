@@ -290,7 +290,7 @@ export function noMoreReservedSlotAvailable() {
 export function noMoreReservedSlotAvailableCSV(count) {
   return sweetAlert2({
     title: 'You reach the limit of reserved tokens',
-    html: `You're not able to reserve more tokens. Only ${count} reserved address of the file could be added`,
+    html: `You're not able to reserve more tokens. Only ${count} reserved addresses of the file could be added`,
     type: 'info'
   })
 }
