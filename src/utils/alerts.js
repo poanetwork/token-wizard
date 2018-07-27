@@ -1,6 +1,6 @@
 import sweetAlert2 from 'sweetalert2'
 import { weiToGwei } from './utils'
-import { DEPLOYMENT_VALUES } from './constants'
+import { DEPLOYMENT_VALUES, LIMIT_RESERVED_ADDRESSES } from './constants'
 
 export function noMetaMaskAlert() {
   sweetAlert2({
@@ -282,7 +282,7 @@ export function notAllowedContributor() {
 export function noMoreReservedSlotAvailable() {
   return sweetAlert2({
     title: 'No more reserved tokens available',
-    html: `You're not able to reserve more tokens. The maximum allowed is 20`,
+    html: `You're not able to reserve more tokens. The maximum allowed is ${LIMIT_RESERVED_ADDRESSES}`,
     type: 'info'
   })
 }
