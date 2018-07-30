@@ -124,7 +124,7 @@ export class Crowdsale extends React.Component {
     try {
       const account = await getCurrentAccount()
       await getTokenData(initCrowdsaleContract, execID, account)
-      await getCrowdsaleData(initCrowdsaleContract, execID)
+      await getCrowdsaleData()
       await initializeAccumulativeData()
     } catch (err) {
       return Promise.reject(err)

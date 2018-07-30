@@ -26,7 +26,8 @@ import {
   getUserMaxContribution,
   isCrowdSaleFull,
   getUserBalanceByStore,
-  getUserBalanceByParams
+  getUserBalance,
+  getCurrentTierInfoCustom
 } from '../crowdsale/utils'
 import {
   countDecimalPlaces,
@@ -195,6 +196,8 @@ export class Contribute extends React.Component {
     })
 
     let target
+
+    logger.log(`Crowdsale Exec Id`, contractStore.crowdsale.execID)
     if (contractStore.crowdsale.execID) {
       const targetPrefix = 'idx'
       const targetSuffix = crowdsaleStore.contractTargetSuffix
@@ -207,7 +210,7 @@ export class Contribute extends React.Component {
       const initCrowdsaleContract = await attachToSpecificCrowdsaleContract(target)
       await initializeAccumulativeData()
       await getTokenData(initCrowdsaleContract, crowdsaleExecID, account)
-      await getCrowdsaleData(initCrowdsaleContract, crowdsaleExecID, account, crowdsaleStore)
+      await getCrowdsaleData()
       await getCrowdsaleTargetDates(initCrowdsaleContract, crowdsaleExecID)
       await this.checkIsFinalized(initCrowdsaleContract, crowdsaleExecID)
       await this.checkIsEnded(initCrowdsaleContract, crowdsaleExecID)
@@ -327,7 +330,7 @@ export class Contribute extends React.Component {
 
   calculateWeiToSend = async () => {
     const { crowdsalePageStore, crowdsaleStore, contractStore, contributeStore } = this.props
-    const { execID, account } = this.props.contractStore.crowdsale
+    const { execID } = this.props.contractStore.crowdsale
     const { addr } = toJS(contractStore.abstractStorage)
 
     let target
@@ -344,10 +347,11 @@ export class Contribute extends React.Component {
       params.push(addr, execID)
     }
 
-    const { methods } = await attachToSpecificCrowdsaleContract(target)
+    const initCrowdsaleContract = await attachToSpecificCrowdsaleContract(target)
+    const { methods } = initCrowdsaleContract
 
     if (crowdsaleStore.isMintedCappedCrowdsale) {
-      const currentTierInfo = await methods.getCurrentTierInfo(...params).call()
+      const currentTierInfo = await getCurrentTierInfoCustom(initCrowdsaleContract, execID)
       const tier_price = currentTierInfo.tier_price || currentTierInfo[4]
       logger.log('tier_price:', tier_price)
       crowdsalePageStore.setProperty('rate', tier_price) //should be one token in wei
@@ -365,7 +369,7 @@ export class Contribute extends React.Component {
     const tokensToContribute = toBigNumber(contributeStore.tokensToContribute).times(rate)
     logger.log('tokensToContribute:', tokensToContribute.toFixed())
 
-    const userLimits = await getUserMaxLimits(addr, execID, methods, account)
+    const userLimits = await getUserMaxLimits()
 
     logger.log('userLimits:', userLimits.toString())
 
@@ -387,8 +391,8 @@ export class Contribute extends React.Component {
     }
 
     const { methods } = await attachToSpecificCrowdsaleContract(target)
-    const userMinLimits = await getUserMinLimits(addr, execID, methods, account)
-    const userMaxLimits = await getUserMaxContribution(addr, execID, methods, account)
+    const userMinLimits = await getUserMinLimits()
+    const userMaxLimits = await getUserMaxContribution()
     const checkIfCrowdSaleIsfull = await isCrowdSaleFull(addr, execID, methods, account)
 
     if (checkIfCrowdSaleIsfull) {
@@ -410,9 +414,8 @@ export class Contribute extends React.Component {
       return notAllowedContributor()
     }
 
-    const { generalStore, contractStore, crowdsalePageStore, tokenStore, crowdsaleStore } = this.props
+    const { generalStore, contractStore, tokenStore, crowdsaleStore } = this.props
     const { account, execID } = contractStore.crowdsale
-    const { addr } = toJS(contractStore.abstractStorage)
     const weiToSend = await this.calculateWeiToSend()
     logger.log('weiToSend:', weiToSend.toFixed())
 
@@ -457,7 +460,7 @@ export class Contribute extends React.Component {
       .then(async () => {
         let userBalanceAfterBuy
         await promiseRetry(async retry => {
-          userBalanceAfterBuy = await getUserBalanceByParams(addr, execID, account)
+          userBalanceAfterBuy = await getUserBalance()
           if (userBalanceAfterBuy.eq(toBigNumber(userBalanceBeforeBuy))) {
             retry()
           }
