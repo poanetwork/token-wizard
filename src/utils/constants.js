@@ -289,3 +289,9 @@ export const DOWNLOAD_STATUS = {
   SUCCESS: 'success',
   FAILURE: 'failure'
 }
+
+/**
+ * Limit for reserved addresses, validated in the contract
+ * @type {number}
+ */
+export const LIMIT_RESERVED_ADDRESSES = 20

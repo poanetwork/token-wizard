@@ -10,7 +10,7 @@ import update from 'immutability-helper'
 import ReservedTokensItem from './ReservedTokensItem'
 import { observer } from 'mobx-react'
 import { NumericInput } from './NumericInput'
-import { reservedTokensImported } from '../../utils/alerts'
+import { reservedTokensImported, noMoreReservedSlotAvailableCSV } from '../../utils/alerts'
 import processReservedTokens from '../../utils/processReservedTokens'
 import logdown from 'logdown'
 
@@ -55,8 +55,14 @@ export class ReservedTokensInputBlock extends Component {
     })
   }
 
-  addReservedTokensItem = () => {
+  addReservedTokensItem = async () => {
     const { addr, dim, val } = this.state
+    let validateReservedTokensListLength = await this.props.validateReservedTokensList()
+    logger.log('Validate reserved token list length', validateReservedTokensListLength)
+    if (!validateReservedTokensListLength) {
+      this.clearInput()
+      return
+    }
 
     this.setState(
       update(this.state, {
@@ -146,7 +152,7 @@ export class ReservedTokensInputBlock extends Component {
       Papa.parse(file, {
         skipEmptyLines: true,
         complete: results => {
-          const { called } = processReservedTokens(
+          const { called, reservedTokenLengthError } = processReservedTokens(
             {
               rows: results.data,
               decimals: this.props.decimals
@@ -156,7 +162,11 @@ export class ReservedTokensInputBlock extends Component {
             }
           )
 
-          reservedTokensImported(called)
+          if (reservedTokenLengthError) {
+            noMoreReservedSlotAvailableCSV(called)
+          } else {
+            reservedTokensImported(called)
+          }
         }
       })
     })

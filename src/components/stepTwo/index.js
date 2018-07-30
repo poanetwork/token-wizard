@@ -3,14 +3,17 @@ import '../../assets/stylesheets/application.css'
 import { checkWeb3 } from '../../utils/blockchainHelpers'
 import { StepNavigation } from '../Common/StepNavigation'
 import { Loader } from '../Common/Loader'
-import { clearingReservedTokens } from '../../utils/alerts'
+import { clearingReservedTokens, noMoreReservedSlotAvailable } from '../../utils/alerts'
 import { NAVIGATION_STEPS, VALIDATION_TYPES } from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
 import { Form } from 'react-final-form'
 import { StepTwoForm } from './StepTwoForm'
+import logdown from 'logdown'
 
 const { TOKEN_SETUP } = NAVIGATION_STEPS
 const { VALID, INVALID } = VALIDATION_TYPES
+
+const logger = logdown('TW:stepTwo:index')
 
 @inject('tokenStore', 'crowdsaleStore', 'web3Store', 'reservedTokenStore')
 @observer
@@ -49,6 +52,16 @@ export class stepTwo extends Component {
     if (result && result.value) {
       reservedTokenStore.clearAll()
     }
+  }
+
+  validateReservedTokensList = async () => {
+    const { reservedTokenStore } = this.props
+
+    let result = reservedTokenStore.validateLength
+    if (!result) {
+      await noMoreReservedSlotAvailable()
+    }
+    return result
   }
 
   addReservedTokensItem = newToken => {
@@ -93,6 +106,7 @@ export class stepTwo extends Component {
             tokens={reservedTokenStore.tokens}
             decimals={decimals}
             addReservedTokensItem={this.addReservedTokensItem}
+            validateReservedTokensList={this.validateReservedTokensList}
             removeReservedToken={this.removeReservedToken}
             clearAll={this.clearReservedTokens}
             id="tokenData"
