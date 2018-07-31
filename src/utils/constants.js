@@ -304,4 +304,4 @@ export const LIMIT_RESERVED_ADDRESSES = 20
  * Limit for whitelisted addresses
  * @type {number}
  */
-export const LIMIT_WHITELISTED_ADDRESSES = 2
+export const LIMIT_WHITELISTED_ADDRESSES = 50
