@@ -8,12 +8,22 @@ import { isAddress, validateWhitelistMin, validateWhitelistMax } from './validat
  * `[address, min, max]`, for example: `['0x1234567890123456789012345678901234567890', '1', '10']`
  * @param {Number} whitelistInformation.decimals Amount of decimals allowed for the min and max values
  * @param {Function} cb The function to be called with each valid item
+ * @param {Function} cbValidation The function to be called to validate length
  * @returns {Object} Object with a `called` property, indicating the number of times the callback was called
  */
-export default function({ rows, decimals }, cb) {
+export default function({ rows, decimals }, cb, cbValidation) {
   let called = 0
-  rows.forEach(row => {
-    if (row.length !== 3) return
+  let whitelistedAddressLengthError = false
+  for (let row of rows) {
+    let validLength = cbValidation()
+    if (!validLength) {
+      whitelistedAddressLengthError = true
+      break
+    }
+
+    if (row.length !== 3) {
+      continue
+    }
 
     const [addr, min, max] = row
 
@@ -21,12 +31,16 @@ export default function({ rows, decimals }, cb) {
       isAddress()(addr) ||
       validateWhitelistMin({ min, max, decimals }) ||
       validateWhitelistMax({ min, max, decimals })
-    )
-      return
+    ) {
+      continue
+    }
 
     cb({ addr, min, max })
     called++
-  })
+  }
 
-  return { called }
+  return {
+    called: called,
+    whitelistedAddressLengthError: whitelistedAddressLengthError
+  }
 }
