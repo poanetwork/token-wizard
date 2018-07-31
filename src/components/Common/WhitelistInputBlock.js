@@ -8,9 +8,17 @@ import { InputField } from './InputField'
 import { TEXT_FIELDS, VALIDATION_MESSAGES, VALIDATION_TYPES } from '../../utils/constants'
 import { WhitelistItem } from './WhitelistItem'
 import { inject, observer } from 'mobx-react'
-import { clearingWhitelist, whitelistImported } from '../../utils/alerts'
+import {
+  clearingWhitelist,
+  whitelistImported,
+  noMoreWhitelistedSlotAvailable,
+  noMoreWhitelistedSlotAvailableCSV
+} from '../../utils/alerts'
 import processWhitelist from '../../utils/processWhitelist'
 import { validateWhitelistMax, validateWhitelistMin } from '../../utils/validations'
+import logdown from 'logdown'
+
+const logger = logdown('TW:WhitelistInputBlock')
 const { ADDRESS, MIN, MAX } = TEXT_FIELDS
 const { VALID, INVALID } = VALIDATION_TYPES
 
@@ -42,10 +50,27 @@ export class WhitelistInputBlock extends React.Component {
     }
   }
 
-  addWhitelistItem = () => {
+  validateWhitelistedAddressList = async tierIndex => {
+    const { tierStore } = this.props
+
+    let result = tierStore.validateWhitelistedAddressLength(tierIndex)
+    if (!result) {
+      await noMoreWhitelistedSlotAvailable()
+    }
+    return result
+  }
+
+  addWhitelistItem = async () => {
     const { tierStore } = this.props
     const crowdsaleNum = this.props.num
     const { addr, min, max } = this.state
+
+    let validateWhitelistedLength = await this.validateWhitelistedAddressList(crowdsaleNum)
+    logger.log('Validate whitelisted address list length', validateWhitelistedLength)
+    if (!validateWhitelistedLength) {
+      this.clearInput()
+      return
+    }
 
     this.setState(
       update(this.state, {
@@ -183,23 +208,39 @@ export class WhitelistInputBlock extends React.Component {
   }
 
   onDrop = (acceptedFiles, rejectedFiles) => {
+    const { decimals, tierStore, num } = this.props
     acceptedFiles.forEach(file => {
       Papa.parse(file, {
         skipEmptyLines: true,
         complete: results => {
-          const { called } = processWhitelist(
+          const { called, whitelistedAddressLengthError } = processWhitelist(
             {
               rows: results.data,
-              decimals: this.props.decimals
+              decimals: decimals
             },
             item => {
-              this.props.tierStore.addWhitelistItem(item, this.props.num)
+              tierStore.addWhitelistItem(item, num)
+            },
+            () => {
+              return tierStore.validateWhitelistedAddressLength(num)
             }
           )
 
-          whitelistImported(called)
+          if (whitelistedAddressLengthError) {
+            noMoreWhitelistedSlotAvailableCSV(called)
+          } else {
+            whitelistImported(called)
+          }
         }
       })
+    })
+  }
+
+  clearInput() {
+    this.setState({
+      addr: '',
+      min: '',
+      max: ''
     })
   }
 
