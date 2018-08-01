@@ -21,6 +21,7 @@ import {
   isFinalized,
   isEnded,
   isSoldOut,
+  isTierSoldOut,
   getUserMaxLimits,
   getUserMinLimits,
   getUserMaxContribution,
@@ -102,7 +103,9 @@ export class Contribute extends React.Component {
       displaySeconds: false,
       isFinalized: false,
       isEnded: false,
-      isSoldOut: false
+      isSoldOut: false,
+      isTierSoldOut: false,
+      clockAltMessage: ''
     }
   }
 
@@ -135,6 +138,14 @@ export class Contribute extends React.Component {
       contractStore.setContractProperty(crowdsaleStore.proxyName, 'addr', crowdsaleAddr)
 
       await this.extractContractsData()
+
+      if (this.state.isTierSoldOut) {
+        if (this.state.isSoldOut) {
+          this.resetTimers()
+        } else {
+          this.setState({ clockAltMessage: 'Tier sold out' })
+        }
+      }
 
       await gasPriceStore
         .updateValues()
@@ -215,8 +226,9 @@ export class Contribute extends React.Component {
       await this.checkIsFinalized(initCrowdsaleContract, crowdsaleExecID)
       await this.checkIsEnded(initCrowdsaleContract, crowdsaleExecID)
       await this.checkIsSoldOut(initCrowdsaleContract, crowdsaleExecID)
+      await this.checkIsTierSoldOut(initCrowdsaleContract, crowdsaleExecID)
       await this.calculateContribution()
-      await this.setTimers()
+      this.setTimers()
     } catch (err) {
       logger.error(err)
     }
@@ -232,6 +244,10 @@ export class Contribute extends React.Component {
 
   checkIsSoldOut = async (initCrowdsaleContract, crowdsaleExecID) => {
     this.setState({ isSoldOut: await isSoldOut(initCrowdsaleContract, crowdsaleExecID) })
+  }
+
+  checkIsTierSoldOut = async (initCrowdsaleContract, crowdsaleExecID) => {
+    this.setState({ isTierSoldOut: await isTierSoldOut(initCrowdsaleContract, crowdsaleExecID) })
   }
 
   setTimers = () => {
@@ -603,6 +619,7 @@ export class Contribute extends React.Component {
               msToNextTick={this.state.msToNextTick}
               onComplete={this.resetTimers}
               isFinalized={this.state.isFinalized}
+              altMessage={this.state.clockAltMessage}
             />
             <div className="hashes">
               <div className="hashes-i">
@@ -663,6 +680,7 @@ export class Contribute extends React.Component {
               isFinalized={this.state.isFinalized}
               isEnded={this.state.isEnded}
               isSoldOut={this.state.isSoldOut}
+              isTierSoldOut={this.state.isTierSoldOut}
               updateContributeThrough={this.updateContributeThrough}
               web3Available={web3Available}
               minimumContribution={minimumContribution}
