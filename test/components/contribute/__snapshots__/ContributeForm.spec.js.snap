@@ -1,5 +1,341 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ContributeForm Should set as disabled the contribute button if isTierSoldOut === true 1`] = `
+<Provider
+  contributeStore={ContributeStore {}}
+  tokenStore={
+    TokenStore {
+      "decimals": undefined,
+      "name": undefined,
+      "reservedTokensInput": Object {},
+      "supply": 0,
+      "ticker": undefined,
+      "validToken": Object {
+        "decimals": "EMPTY",
+        "name": "EMPTY",
+        "ticker": "EMPTY",
+      },
+    }
+  }
+>
+  <ReactFinalForm
+    component={[Function]}
+    contributeThrough="metamask"
+    isTierSoldOut={true}
+    onSubmit={[Function]}
+    updateContributeThrough={[Function]}
+    web3Available={true}
+  >
+    <inject-_class-with-contributeStore-tokenStore
+      __versions={
+        Object {
+          "final-form": "4.6.1",
+          "react-final-form": "3.4.0",
+        }
+      }
+      batch={[Function]}
+      blur={[Function]}
+      change={[Function]}
+      contributeThrough="metamask"
+      dirty={false}
+      dirtySinceLastSubmit={false}
+      errors={
+        Object {
+          "contribute": "This field is required",
+        }
+      }
+      focus={[Function]}
+      form={
+        Object {
+          "batch": [Function],
+          "blur": [Function],
+          "change": [Function],
+          "focus": [Function],
+          "getFieldState": [Function],
+          "getRegisteredFields": [Function],
+          "getState": [Function],
+          "initialize": [Function],
+          "isValidationPaused": [Function],
+          "mutators": Object {},
+          "pauseValidation": [Function],
+          "registerField": [Function],
+          "reset": [Function],
+          "resumeValidation": [Function],
+          "setConfig": [Function],
+          "submit": [Function],
+          "subscribe": [Function],
+        }
+      }
+      handleSubmit={[Function]}
+      hasSubmitErrors={false}
+      hasValidationErrors={true}
+      initialize={[Function]}
+      invalid={true}
+      isTierSoldOut={true}
+      mutators={Object {}}
+      pristine={true}
+      reset={[Function]}
+      submitFailed={false}
+      submitSucceeded={false}
+      submitting={false}
+      touched={
+        Object {
+          "contribute": false,
+        }
+      }
+      updateContributeThrough={[Function]}
+      valid={false}
+      validating={false}
+      values={Object {}}
+      visited={
+        Object {
+          "contribute": false,
+        }
+      }
+      web3Available={true}
+    >
+      <_class
+        __versions={
+          Object {
+            "final-form": "4.6.1",
+            "react-final-form": "3.4.0",
+          }
+        }
+        batch={[Function]}
+        blur={[Function]}
+        change={[Function]}
+        contributeStore={ContributeStore {}}
+        contributeThrough="metamask"
+        dirty={false}
+        dirtySinceLastSubmit={false}
+        errors={
+          Object {
+            "contribute": "This field is required",
+          }
+        }
+        focus={[Function]}
+        form={
+          Object {
+            "batch": [Function],
+            "blur": [Function],
+            "change": [Function],
+            "focus": [Function],
+            "getFieldState": [Function],
+            "getRegisteredFields": [Function],
+            "getState": [Function],
+            "initialize": [Function],
+            "isValidationPaused": [Function],
+            "mutators": Object {},
+            "pauseValidation": [Function],
+            "registerField": [Function],
+            "reset": [Function],
+            "resumeValidation": [Function],
+            "setConfig": [Function],
+            "submit": [Function],
+            "subscribe": [Function],
+          }
+        }
+        handleSubmit={[Function]}
+        hasSubmitErrors={false}
+        hasValidationErrors={true}
+        initialize={[Function]}
+        invalid={true}
+        isTierSoldOut={true}
+        mutators={Object {}}
+        pristine={true}
+        reset={[Function]}
+        submitFailed={false}
+        submitSucceeded={false}
+        submitting={false}
+        tokenStore={
+          TokenStore {
+            "decimals": undefined,
+            "name": undefined,
+            "reservedTokensInput": Object {},
+            "supply": 0,
+            "ticker": undefined,
+            "validToken": Object {
+              "decimals": "EMPTY",
+              "name": "EMPTY",
+              "ticker": "EMPTY",
+            },
+          }
+        }
+        touched={
+          Object {
+            "contribute": false,
+          }
+        }
+        updateContributeThrough={[Function]}
+        valid={false}
+        validating={false}
+        values={Object {}}
+        visited={
+          Object {
+            "contribute": false,
+          }
+        }
+        web3Available={true}
+      >
+        <form
+          className="contribute-form"
+          onSubmit={[Function]}
+        >
+          <label
+            className="contribute-form-label"
+          >
+            Choose amount to contribute
+          </label>
+          <div
+            className="contribute-form-input-container"
+          >
+            <Field
+              component={[Function]}
+              format={[Function]}
+              inputClassName="contribute-form-input"
+              name="contribute"
+              parse={[Function]}
+              placeholder="0"
+              validate={[Function]}
+            >
+              <InputField2
+                input={
+                  Object {
+                    "name": "contribute",
+                    "onBlur": [Function],
+                    "onChange": [Function],
+                    "onFocus": [Function],
+                    "value": "",
+                  }
+                }
+                inputClassName="contribute-form-input"
+                meta={
+                  Object {
+                    "active": false,
+                    "data": Object {},
+                    "dirty": false,
+                    "dirtySinceLastSubmit": false,
+                    "error": "This field is required",
+                    "initial": undefined,
+                    "invalid": true,
+                    "pristine": true,
+                    "submitError": undefined,
+                    "submitFailed": false,
+                    "submitSucceeded": false,
+                    "touched": false,
+                    "valid": false,
+                    "visited": false,
+                  }
+                }
+                placeholder="0"
+              >
+                <div>
+                  <label
+                    className="label"
+                    htmlFor="contribute"
+                  />
+                  <input
+                    autoComplete="off"
+                    className="contribute-form-input"
+                    id="contribute"
+                    name="contribute"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder="0"
+                    value=""
+                  />
+                  <p
+                    className="description"
+                  />
+                  <Error
+                    name="contribute"
+                  >
+                    <Field
+                      format={[Function]}
+                      name="contribute"
+                      parse={[Function]}
+                      render={[Function]}
+                      subscription={
+                        Object {
+                          "error": true,
+                          "pristine": true,
+                          "touched": true,
+                        }
+                      }
+                    >
+                      <span>
+                        <p
+                          className="error"
+                          key="0"
+                          style={
+                            Object {
+                              "color": "red",
+                              "fontSize": "12px",
+                              "fontWeight": "bold",
+                              "height": "20px",
+                              "width": "100%",
+                            }
+                          }
+                        />
+                      </span>
+                    </Field>
+                  </Error>
+                </div>
+              </InputField2>
+            </Field>
+            <FormSpy
+              onChange={[Function]}
+              subscription={
+                Object {
+                  "values": true,
+                }
+              }
+            />
+            <div
+              className="contribute-form-label"
+            >
+              TOKENS
+            </div>
+          </div>
+          <div
+            className="contribute-through-container"
+          >
+            <select
+              className="contribute-through"
+              onChange={[Function]}
+              value="metamask"
+            >
+              <option
+                disabled={false}
+                value="metamask"
+              />
+              <option
+                value="qr"
+              >
+                QR
+              </option>
+            </select>
+            <button
+              className="button button_fill button_no_border button_disabled"
+              disabled={true}
+              onClick={[Function]}
+            >
+              Contribute
+            </button>
+          </div>
+          <p
+            className="description"
+          >
+            Think twice before contributing to Crowdsales. Tokens will be deposited on a wallet you used to buy tokens.
+          </p>
+        </form>
+      </_class>
+    </inject-_class-with-contributeStore-tokenStore>
+  </ReactFinalForm>
+</Provider>
+`;
+
 exports[`ContributeForm should render ContributeForm component 1`] = `
 <form
   className="contribute-form"
