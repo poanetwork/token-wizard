@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import '../../assets/stylesheets/application.css'
-import { Link } from 'react-router-dom'
 import CrowdsalesList from '../Common/CrowdsalesList'
 import { Loader } from '../Common/Loader'
 import { loadRegistryAddresses } from '../../utils/blockchainHelpers'
@@ -11,12 +10,13 @@ import { inject, observer } from 'mobx-react'
 import { checkWeb3, getNetworkVersion } from '../../utils/blockchainHelpers'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import logdown from 'logdown'
+import storage from 'store2'
 
 const logger = logdown('TW:home')
 
 const { CROWDSALE_STRATEGY, TOKEN_SETUP, CROWDSALE_SETUP, PUBLISH, CROWDSALE_PAGE } = NAVIGATION_STEPS
 
-@inject('web3Store', 'generalStore', 'contractStore')
+@inject('web3Store', 'generalStore', 'contractStore', 'crowdsaleStore')
 @observer
 export class Home extends Component {
   constructor(props) {
@@ -77,8 +77,21 @@ export class Home extends Component {
     )
   }
 
+  goNextStep() {
+    // Clear local storage if there is no incomplete deployment
+    if (storage.has('DeploymentStore') && storage.get('DeploymentStore').deploymentStep === null) {
+      logger.log('Clear storage')
+
+      // Clear store data
+      let { crowdsaleStore } = this.props
+      crowdsaleStore.reset()
+    }
+
+    this.props.history.push('1')
+  }
+
   onClick = crowdsaleAddress => {
-    this.props.history.push('/manage/' + crowdsaleAddress)
+    this.props.history.push(`manage/${crowdsaleAddress}`)
   }
 
   hideModal = () => {
@@ -99,9 +112,9 @@ export class Home extends Component {
                 <br />Token Wizard is powered by <a href="https://github.com/auth-os/beta">Auth-os</a>.
               </p>
               <div className="buttons">
-                <Link to="/1">
-                  <span className="button button_fill">New crowdsale</span>
-                </Link>
+                <button onClick={() => this.goNextStep()} className="button button_fill button_no_border">
+                  New crowdsale
+                </button>
                 <div onClick={() => this.chooseContract()} className="button button_outline">
                   Choose Crowdsale
                 </div>
