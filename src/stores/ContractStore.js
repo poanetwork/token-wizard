@@ -21,6 +21,7 @@ class ContractStore {
   @observable downloadStatus
 
   constructor() {
+    this.reset()
     autosave(this, 'ContractStore')
   }
 
@@ -39,6 +40,27 @@ class ContractStore {
   @action
   setProperty = (property, value) => {
     this[property] = value
+  }
+
+  @action
+  reset = () => {
+    this.MintedCappedProxy = undefined
+    this.DutchProxy = undefined
+    this.ProxiesRegistry = undefined
+    this.abstractStorage = undefined
+    this.registryIdx = undefined
+    this.provider = undefined
+    this.registryExec = undefined
+    this.idxMintedCapped = undefined
+    this.saleMintedCapped = undefined
+    this.saleManagerMintedCapped = undefined
+    this.tokenMintedCapped = undefined
+    this.tokenManagerMintedCapped = undefined
+    this.idxDutch = undefined
+    this.saleDutch = undefined
+    this.tokenDutch = undefined
+    this.crowdsale = undefined
+    this.downloadStatus = undefined
   }
 }
 
