@@ -11,7 +11,8 @@ const CountdownTimer = ({
   seconds,
   msToNextTick,
   onComplete,
-  isFinalized
+  isFinalized,
+  altMessage
 }) => {
   const countdownClock = (
     <div>
@@ -75,6 +76,7 @@ const CountdownTimer = ({
           <div className="timer-i">
             <div className="timer-interval">
               <strong>{message}</strong>
+              {altMessage ? <div className="timer__altMessage">{altMessage}</div> : null}
             </div>
           </div>
         </div>

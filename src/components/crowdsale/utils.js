@@ -342,6 +342,25 @@ export const isSoldOut = async ({ methods }, crowdsaleExecID) => {
   return isCrowdsaleFull.is_crowdsale_full
 }
 
+/**
+ * Checks if a tier is sold out
+ * @param initCrowdsaleContract
+ * @param crowdsaleExecID
+ * @returns {Promise<Boolean>}
+ */
+export const isTierSoldOut = async (initCrowdsaleContract, crowdsaleExecID) => {
+  const { isMintedCappedCrowdsale, isDutchAuction } = crowdsaleStore
+
+  if (isMintedCappedCrowdsale) {
+    const currentTierInfo = await getCurrentTierInfoCustom(initCrowdsaleContract, crowdsaleExecID)
+    const tierTokensRemaining = toBigNumber(currentTierInfo.tier_tokens_remaining || currentTierInfo[3])
+
+    return tierTokensRemaining.eq(0)
+  } else if (isDutchAuction) {
+    return await isSoldOut(initCrowdsaleContract, crowdsaleExecID)
+  }
+}
+
 export const getTiersLength = async () => {
   if (crowdsaleStore.isDutchAuction) return 1
 

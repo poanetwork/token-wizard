@@ -396,3 +396,99 @@ exports[`CountdownTimer Should render the component when the crowdsale was final
   </div>
 </div>
 `;
+
+exports[`CountdownTimer Should render the component with alternative message 1`] = `
+<div
+  className="timer-container"
+>
+  <div
+    style={
+      Object {
+        "marginLeft": "-20px",
+        "marginTop": "-20px",
+      }
+    }
+  >
+    <ReactCountdownClock
+      alpha={0.9}
+      color="#733EAB"
+      font="Arial"
+      fontSize="auto"
+      onComplete={[Function]}
+      paused={false}
+      seconds={30.445}
+      showMilliseconds={false}
+      size={270}
+      timeFormat="hms"
+    />
+  </div>
+  <div
+    className="timer"
+  >
+    <div
+      className="timer-inner"
+    >
+      <div>
+        <div
+          className="timer-i"
+        >
+          <div
+            className="timer-count"
+          >
+            1
+          </div>
+          <div
+            className="timer-interval"
+          >
+            Days
+          </div>
+        </div>
+        <div
+          className="timer-i"
+        >
+          <div
+            className="timer-count"
+          >
+            4
+          </div>
+          <div
+            className="timer-interval"
+          >
+            Hours
+          </div>
+        </div>
+        <div
+          className="timer-i"
+        >
+          <div
+            className="timer-count"
+          >
+            45
+          </div>
+          <div
+            className="timer-interval"
+          >
+            Mins
+          </div>
+        </div>
+      </div>
+      <div
+        className="timer-i"
+      >
+        <div
+          className="timer-interval"
+        >
+          <strong>
+            to start of tier 1 of 2
+          </strong>
+          <div
+            className="timer__altMessage"
+          >
+            Alternative Message
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

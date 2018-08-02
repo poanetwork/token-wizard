@@ -101,6 +101,30 @@ describe('CountdownTimer', () => {
     expect(wrapper).toMatchSnapshot()
   })
 
+  it(`Should render the component with alternative message`, () => {
+    const altMessage = 'Alternative Message'
+
+    const wrapper = shallow(
+      <CountdownTimer
+        displaySeconds={false}
+        nextTick={{ type: 'start', order: 1 }}
+        tiersLength={2}
+        days={1}
+        hours={4}
+        minutes={45}
+        seconds={30}
+        msToNextTick={30445}
+        onComplete={jest.fn()}
+        isFinalized={false}
+        altMessage={altMessage}
+      />
+    )
+    expect(wrapper).toMatchSnapshot()
+
+    const altMessageText = wrapper.find('.timer__altMessage').text()
+    expect(altMessageText).toBe(altMessage)
+  })
+
   it(`Should stop countdown if crowdsale was finalized`, () => {
     const wrapper = shallow(
       <CountdownTimer
