@@ -7,6 +7,7 @@ class GeneralStore {
   @observable gasPrice = GAS_PRICE.FAST.PRICE
 
   constructor() {
+    this.reset()
     autosave(this, 'GeneralStore')
   }
 
@@ -18,6 +19,12 @@ class GeneralStore {
   @action
   setGasPrice = gasPrice => {
     this.gasPrice = gasPrice
+  }
+
+  @action
+  reset = () => {
+    this.networkID = undefined
+    this.gasPrice = GAS_PRICE.FAST.PRICE
   }
 }
 

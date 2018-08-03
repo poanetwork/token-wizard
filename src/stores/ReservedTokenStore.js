@@ -59,6 +59,11 @@ class ReservedTokenStore {
   get validateLength() {
     return this.tokens.length < LIMIT_RESERVED_ADDRESSES
   }
+
+  @action
+  reset = () => {
+    this.tokens = []
+  }
 }
 
 export default ReservedTokenStore
