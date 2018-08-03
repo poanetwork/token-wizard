@@ -16,7 +16,18 @@ const logger = logdown('TW:home')
 
 const { CROWDSALE_STRATEGY, TOKEN_SETUP, CROWDSALE_SETUP, PUBLISH, CROWDSALE_PAGE } = NAVIGATION_STEPS
 
-@inject('web3Store', 'generalStore', 'contractStore', 'crowdsaleStore')
+@inject(
+  'web3Store',
+  'generalStore',
+  'contractStore',
+  'crowdsaleStore',
+  'gasPriceStore',
+  'deploymentStore',
+  'reservedTokenStore',
+  'stepTwoValidationStore',
+  'tierStore',
+  'tokenStore'
+)
 @observer
 export class Home extends Component {
   constructor(props) {
@@ -30,64 +41,94 @@ export class Home extends Component {
     contractStore.setProperty('downloadStatus', DOWNLOAD_STATUS.PENDING)
   }
 
-  componentDidMount() {
-    let { generalStore, web3Store, contractStore } = this.props
-    checkWeb3(web3Store.web3)
-
-    getNetworkVersion()
-      .then(networkID => {
-        generalStore.setProperty('networkID', networkID)
-        getCrowdsaleAssets(networkID)
-      })
-      .then(
-        () => {
-          contractStore.setProperty('downloadStatus', DOWNLOAD_STATUS.SUCCESS)
-        },
-        e => {
-          logger.error('Error downloading contracts', e)
-          toast.showToaster({
-            type: TOAST.TYPE.ERROR,
-            message:
-              'The contracts could not be downloaded.Please try to refresh the page. If the problem persists, try again later.'
-          })
-
-          contractStore.setProperty('downloadStatus', DOWNLOAD_STATUS.FAILURE)
-        }
-      )
+  async componentDidMount() {
+    let { web3Store } = this.props
+    await checkWeb3(web3Store.web3)
   }
 
-  chooseContract = () => {
+  async chooseContract() {
     this.setState({
       loading: true
     })
 
-    loadRegistryAddresses().then(
-      () => {
-        this.setState({
-          loading: false,
-          showModal: true
-        })
-      },
-      e => {
-        logger.error('There was a problem loading the crowdsale addresses from the registry', e)
-        this.setState({
-          loading: false
-        })
-      }
-    )
+    try {
+      await loadRegistryAddresses()
+      this.setState({
+        loading: false,
+        showModal: true
+      })
+    } catch (e) {
+      logger.error('There was a problem loading the crowdsale addresses from the registry', e)
+      this.setState({
+        loading: false
+      })
+    }
   }
 
-  goNextStep() {
-    // Clear local storage if there is no incomplete deployment
+  async goNextStep() {
+    // Clear local storage if there is no incomplete deployment, and reload
     if (storage.has('DeploymentStore') && storage.get('DeploymentStore').deploymentStep === null) {
-      logger.log('Clear storage')
+      this.clearStorage()
+      await this.reloadStorage()
+    }
+    this.props.history.push('1')
+  }
 
-      // Clear store data
-      let { crowdsaleStore } = this.props
-      crowdsaleStore.reset()
+  async reloadStorage() {
+    let { generalStore, contractStore } = this.props
+
+    try {
+      // General store, check network
+      let networkID = await getNetworkVersion()
+      generalStore.setProperty('networkID', networkID)
+
+      // Contract store, get contract and abi
+      await getCrowdsaleAssets(networkID)
+      contractStore.setProperty('downloadStatus', DOWNLOAD_STATUS.SUCCESS)
+    } catch (e) {
+      logger.error('Error downloading contracts', e)
+      toast.showToaster({
+        type: TOAST.TYPE.ERROR,
+        message:
+          'The contracts could not be downloaded.Please try to refresh the page. If the problem persists, try again later.'
+      })
+      contractStore.setProperty('downloadStatus', DOWNLOAD_STATUS.FAILURE)
+    }
+  }
+
+  clearStorage() {
+    // Generate of stores to clear
+    const toArray = ({
+      generalStore,
+      contractStore,
+      crowdsaleStore,
+      gasPriceStore,
+      deploymentStore,
+      reservedTokenStore,
+      stepTwoValidationStore,
+      tierStore,
+      tokenStore
+    }) => {
+      return [
+        generalStore,
+        contractStore,
+        crowdsaleStore,
+        gasPriceStore,
+        deploymentStore,
+        reservedTokenStore,
+        stepTwoValidationStore,
+        tierStore,
+        tokenStore
+      ]
     }
 
-    this.props.history.push('1')
+    const storesToClear = toArray(this.props)
+    for (let storeToClear of storesToClear) {
+      if (typeof storeToClear.reset === 'function') {
+        logger.log('Store to be cleared:', storeToClear.constructor.name)
+        storeToClear.reset()
+      }
+    }
   }
 
   onClick = crowdsaleAddress => {
