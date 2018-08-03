@@ -4,9 +4,9 @@ describe('processWhitelist function', () => {
   it('should call the callback for each whitelist item', () => {
     // Given
     const rows = [
-      ['0x1111111111111111111111111111111111111111', '1', '10'],
-      ['0x2222222222222222222222222222222222222222', '1', '10'],
-      ['0x3333333333333333333333333333333333333333', '1', '10']
+      ['0x49d915966F1f2AdE697Ef7587615D2CF6A8A374e', '1', '10'],
+      ['0x9F3cA66c22eAc286017b785ed63183859b4183DC', '1', '10'],
+      ['0x871c98FFA5b44873aE2fa4BFD190Cd42F63907Da', '1', '10']
     ]
     const cb = jest.fn()
 
@@ -28,7 +28,8 @@ describe('processWhitelist function', () => {
       ['0x3333333333333333333333333333333333333333', '1'],
       ['0x4444444444444444444444444444444444444444'],
       [],
-      ['0x4444444444444444444444444444444444444444', '1', '10', '100']
+      ['0x4444444444444444444444444444444444444444', '1', '10', '100'],
+      ['0x49d915966F1f2AdE697Ef7587615D2CF6A8A374e', '1', '10'] //valid value
     ]
     const cb = jest.fn()
 
@@ -36,7 +37,7 @@ describe('processWhitelist function', () => {
     processWhitelist({ rows, decimals: 3 }, cb)
 
     // Then
-    expect(cb).toHaveBeenCalledTimes(0)
+    expect(cb).toHaveBeenCalledTimes(1)
   })
 
   it('should return the number of times the callback was called', () => {
@@ -61,7 +62,8 @@ describe('processWhitelist function', () => {
       ['0x1111111111111111111111111111111111111111', 'foo', '10'],
       ['0x2222222222222222222222222222222222222222', '1', 'bar'],
       ['0x3333333333333333333333333333333333333333', '', '10'],
-      ['0x4444444444444444444444444444444444444444', '1', '']
+      ['0x4444444444444444444444444444444444444444', '1', ''],
+      ['0x49d915966F1f2AdE697Ef7587615D2CF6A8A374e', '1', '10'] //valid value
     ]
     const cb = jest.fn()
 
@@ -69,7 +71,7 @@ describe('processWhitelist function', () => {
     const { called } = processWhitelist({ rows, decimals: 3 }, cb)
 
     // Then
-    expect(called).toBe(0)
+    expect(called).toBe(1)
   })
 
   it('should ignore invalid addresses', () => {
@@ -78,7 +80,8 @@ describe('processWhitelist function', () => {
       ['0x123456789012345678901234567890123456789', '1', '10'], // 41 characters
       ['0x12345678901234567890123456789012345678901', '1', '10'], // 43 characters
       ['0x90F8bf6A479f320ead074411a4B0e7944Ea8c9CG', '1', '10'], // invalid character
-      ['0x90F8bf6A479f320ead074411a4B0e7944Ea8c9c1', '1', '10'] // invalid checksum
+      ['0x90F8bf6A479f320ead074411a4B0e7944Ea8c9c1', '1', '10'], // invalid checksum
+      ['0x49d915966F1f2AdE697Ef7587615D2CF6A8A374e', '1', '10'] //valid value
     ]
     const cb = jest.fn()
 
@@ -86,17 +89,18 @@ describe('processWhitelist function', () => {
     const { called } = processWhitelist({ rows, decimals: 3 }, cb)
 
     // Then
-    expect(called).toBe(0)
+    expect(called).toBe(1)
   })
 
   it('should reject invalid decimals', () => {
     // Given
     const rows = [
+      ['0x4444444444444444444444444444444444444444', '10.123456', '10.123456'],
+      ['0x9F3cA66c22eAc286017b785ed63183859b4183DC', '10', '10.123456'],
       ['0x1111111111111111111111111111111111111111', '10', '10.1'],
       ['0x3333333333333333333333333333333333333333', '10.1234', '10'],
-      ['0x2222222222222222222222222222222222222222', '10.12', '10.123'],
-      ['0x4444444444444444444444444444444444444444', '10.123456', '10.123456']
-    ]
+      ['0x2222222222222222222222222222222222222222', '10.12', '10.123']
+     ]
     const cb = jest.fn()
 
     // When

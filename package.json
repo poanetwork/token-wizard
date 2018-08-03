@@ -151,7 +151,7 @@
     "e2eDutchWhitelist": "nps test.e2e.DutchWhitelist",
     "e2eDutchMincap": "nps test.e2e.DutchMincap",
     "stop": "nps test.e2e.stop",
-    "c": "jest --env=jsdom  processReservedTokens.spec.js "
+    "c": "jest --env=jsdom  processWhitelist.spec.js "
   },
   "jest": {
     "collectCoverageFrom": [
