@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InputField2 should render InputField2 component 1`] = `
+<div>
+  <label
+    className="label"
+    htmlFor="name"
+  />
+  <input
+    autoComplete="off"
+    className="input"
+    id="name"
+    name="name"
+    type="text"
+  />
+  <p
+    className="description"
+  />
+  <Error
+    name="name"
+  />
+</div>
+`;
