@@ -1,5 +1,5 @@
 import { observable, action, computed } from 'mobx'
-import { defaultTier, defaultTierValidations, VALIDATION_TYPES } from '../utils/constants'
+import { defaultTier, defaultTierValidations, VALIDATION_TYPES, LIMIT_WHITELISTED_ADDRESSES } from '../utils/constants'
 import { validateTime, validateSupply, validateLaterTime, validateLaterOrEqualTime, validateTier } from '../utils/utils'
 import autosave from './autosave'
 import { defaultCompanyEndDate, defaultCompanyStartDate } from '../components/stepThree/utils'
@@ -306,6 +306,15 @@ class TierStore {
   @computed
   get modifiedStoredWhitelist() {
     return this.tiers.some(tier => tier.whitelist.some(item => !item.stored))
+  }
+
+  /**
+   * Validate whitelisted for a given tier
+   * @param tierIndex
+   * @returns {boolean}
+   */
+  validateWhitelistedAddressLength(tierIndex) {
+    return this.tiers[tierIndex].whitelist.length < LIMIT_WHITELISTED_ADDRESSES
   }
 }
 

@@ -1,6 +1,6 @@
 import sweetAlert2 from 'sweetalert2'
 import { weiToGwei } from './utils'
-import { DEPLOYMENT_VALUES, LIMIT_RESERVED_ADDRESSES } from './constants'
+import { DEPLOYMENT_VALUES, LIMIT_RESERVED_ADDRESSES, LIMIT_WHITELISTED_ADDRESSES } from './constants'
 
 export function noMetaMaskAlert() {
   sweetAlert2({
@@ -290,7 +290,23 @@ export function noMoreReservedSlotAvailable() {
 export function noMoreReservedSlotAvailableCSV(count) {
   return sweetAlert2({
     title: 'You reach the limit of reserved tokens',
-    html: `You're not able to reserve more tokens. Only ${count} reserved addresses of the file could be added`,
+    html: `You're not able to reserve more tokens. Only ${count} reserved addresses of the file could be added. The maximum allowed is ${LIMIT_RESERVED_ADDRESSES}`,
+    type: 'info'
+  })
+}
+
+export function noMoreWhitelistedSlotAvailable() {
+  return sweetAlert2({
+    title: 'Maximum limit of addresses reached',
+    html: `You're not able to add more addresses to the whitelist. The maximum allowed is ${LIMIT_WHITELISTED_ADDRESSES}`,
+    type: 'info'
+  })
+}
+
+export function noMoreWhitelistedSlotAvailableCSV(count) {
+  return sweetAlert2({
+    title: 'Maximum limit of addresses reached',
+    html: `You're not able to add more addresses to the whitelist. Only ${count} addresses of the file could be added. The maximum allowed is ${LIMIT_WHITELISTED_ADDRESSES}`,
     type: 'info'
   })
 }

@@ -284,6 +284,10 @@ export const TOAST = {
   }
 }
 
+/**
+ * Mobx status save contracts to localstorage
+ * @type {{PENDING: string, SUCCESS: string, FAILURE: string}}
+ */
 export const DOWNLOAD_STATUS = {
   PENDING: 'pending',
   SUCCESS: 'success',
@@ -295,3 +299,9 @@ export const DOWNLOAD_STATUS = {
  * @type {number}
  */
 export const LIMIT_RESERVED_ADDRESSES = 20
+
+/**
+ * Limit for whitelisted addresses
+ * @type {number}
+ */
+export const LIMIT_WHITELISTED_ADDRESSES = 50
