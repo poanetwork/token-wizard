@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CrowdsaleStartTime should render CrowdsaleStartTime component 1`] = `
+<div
+  className={undefined}
+>
+  <label
+    className="label"
+    htmlFor="CrowdsaleStartTime"
+  >
+    Start Time
+  </label>
+  <input
+    autoComplete="off"
+    className="input"
+    disabled={false}
+    id="CrowdsaleStartTime"
+    name="CrowdsaleStartTime"
+    placeholder={undefined}
+    type="datetime-local"
+    value="08/02/2018"
+  />
+  <p
+    className="description"
+  >
+    Date and time when the tier starts. Can't be in the past from the current moment.
+  </p>
+  <span>
+    <p
+      className="error"
+      style={
+        Object {
+          "color": "red",
+          "fontSize": "12px",
+          "fontWeight": "bold",
+          "height": "20px",
+          "width": "100%",
+        }
+      }
+    />
+  </span>
+</div>
+`;
