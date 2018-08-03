@@ -1,24 +1,24 @@
 import React from 'react'
-import { CrowdsaleRate } from '../../../src/components/Common/CrowdsaleRate'
+import { Supply } from '../../../src/components/Common/Supply'
 import { Form } from 'react-final-form'
 import Adapter from 'enzyme-adapter-react-15'
 import { configure, mount, shallow } from 'enzyme'
 import renderer from 'react-test-renderer'
 
 configure({ adapter: new Adapter() })
-const DECRIPTION_RATE = `Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens`
-const LABEL_RATE = `Rate`
-describe('CrowdsaleRate ', () => {
-  it(`should render CrowdsaleRate component`, () => {
+const DECRIPTION = `How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers`
+const LABEL = `Supply`
+describe('Supply ', () => {
+  it(`should render Supply component`, () => {
     let input = {
-      name: 'CrowdsaleRate',
+      name: 'Supply',
       disabled: false,
       value: '1234'
     }
     const wrapper = renderer.create(
       <Form
         onSubmit={jest.fn()}
-        component={CrowdsaleRate}
+        component={Supply}
         disabled={false}
         validate={{}}
         input={input}
@@ -26,23 +26,23 @@ describe('CrowdsaleRate ', () => {
     )
     expect(wrapper).toMatchSnapshot()
   })
-  it(`should be label ${LABEL_RATE}`, () => {
+  it(`should be label ${LABEL}`, () => {
     const wrapper = mount(
       <Form
-        onSubmit={jest.fn()} component={CrowdsaleRate} validate={{}}
+        onSubmit={jest.fn()} component={Supply} validate={{}}
       />
     )
     let lab = wrapper.find('label')
-    expect(lab.text()).toBe(LABEL_RATE)
+    expect(lab.text()).toBe(LABEL)
   })
-  it(`should be decription ${DECRIPTION_RATE}`, () => {
+  it(`should be decription ${DECRIPTION}`, () => {
     const wrapper = mount(
       <Form
-        onSubmit={jest.fn()} component={CrowdsaleRate} validate={{}}
+        onSubmit={jest.fn()} component={Supply} validate={{}}
       />
     )
     let lab = wrapper.find('p[className="description"]')
-    expect(lab.text()).toBe(DECRIPTION_RATE)
+    expect(lab.text()).toBe(DECRIPTION)
   })
   it(`should give error if empty`, () => {})
   it(`should give error if not positive`, () => {})

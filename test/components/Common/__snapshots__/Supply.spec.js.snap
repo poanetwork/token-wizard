@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Supply  should render Supply component 1`] = `
+<div
+  className={undefined}
+>
+  <label
+    className="label"
+    htmlFor="Supply"
+  >
+    Supply
+  </label>
+  <input
+    autoComplete="off"
+    className="input"
+    disabled={false}
+    id="Supply"
+    name="Supply"
+    placeholder={undefined}
+    type="text"
+    value="1234"
+  />
+  <p
+    className="description"
+  >
+    How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
+  </p>
+  <span>
+    <p
+      className="error"
+      style={
+        Object {
+          "color": "red",
+          "fontSize": "12px",
+          "fontWeight": "bold",
+          "height": "20px",
+          "width": "100%",
+        }
+      }
+    />
+  </span>
+</div>
+`;
