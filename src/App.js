@@ -16,11 +16,10 @@ import {
 } from './components/index'
 import NoWeb3 from './components/Common/NoWeb3'
 import IncompleteDeploy from './components/IncompleteDeploy'
-import { getAddr } from './utils/utils'
+import { getAddr, toast } from './utils/utils'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import AlertContainer from 'react-alert'
 import { TOAST } from './utils/constants'
-import { toast } from './utils/utils'
 import { Web3Provider } from './react-web3'
 
 @inject('deploymentStore')
