@@ -310,3 +310,11 @@ export function noMoreWhitelistedSlotAvailableCSV(count) {
     type: 'info'
   })
 }
+
+export function notEnoughSupplyForTotalMax(count) {
+  return sweetAlert2({
+    title: `Max supply available reached`,
+    html: `You have reached tier's supply available. There where added <strong>${count} addresses</strong>. If you want to add more, increase the tier's Supply.`,
+    type: 'info'
+  })
+}

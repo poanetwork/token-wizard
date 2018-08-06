@@ -12,10 +12,11 @@ import {
   clearingWhitelist,
   whitelistImported,
   noMoreWhitelistedSlotAvailable,
-  noMoreWhitelistedSlotAvailableCSV
+  noMoreWhitelistedSlotAvailableCSV,
+  notEnoughSupplyForTotalMax
 } from '../../utils/alerts'
 import processWhitelist from '../../utils/processWhitelist'
-import { validateWhitelistMax, validateWhitelistMin } from '../../utils/validations'
+import { isLessOrEqualThan, validateWhitelistMax, validateWhitelistMin } from '../../utils/validations'
 import logdown from 'logdown'
 
 const logger = logdown('TW:WhitelistInputBlock')
@@ -213,21 +214,32 @@ export class WhitelistInputBlock extends React.Component {
       Papa.parse(file, {
         skipEmptyLines: true,
         complete: results => {
-          const { called, whitelistedAddressLengthError } = processWhitelist(
+          // filters out the already added addresses
+          const rows = results.data.reduce((rows, row) => {
+            if (!tierStore.whitelistAddressAlreadyAdded(num, row[0])) rows.push(row)
+            return rows
+          }, [])
+
+          const { called, whitelistedAddressLengthError, maxExceedsSupplyRemaining } = processWhitelist(
             {
-              rows: results.data,
-              decimals: decimals
+              rows,
+              decimals
             },
             item => {
               tierStore.addWhitelistItem(item, num)
             },
             () => {
               return tierStore.validateWhitelistedAddressLength(num)
+            },
+            max => {
+              return isLessOrEqualThan()(tierStore.tiersSupplyRemaining[num])(max)
             }
           )
 
           if (whitelistedAddressLengthError) {
             noMoreWhitelistedSlotAvailableCSV(called)
+          } else if (maxExceedsSupplyRemaining) {
+            notEnoughSupplyForTotalMax(called)
           } else {
             whitelistImported(called)
           }
