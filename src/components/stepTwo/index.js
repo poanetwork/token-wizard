@@ -54,12 +54,12 @@ export class stepTwo extends Component {
     }
   }
 
-  validateReservedTokensList = async () => {
+  validateReservedTokensList = () => {
     const { reservedTokenStore } = this.props
 
     let result = reservedTokenStore.validateLength
     if (!result) {
-      await noMoreReservedSlotAvailable()
+      noMoreReservedSlotAvailable()
     }
     return result
   }

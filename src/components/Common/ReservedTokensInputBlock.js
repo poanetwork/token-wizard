@@ -55,11 +55,12 @@ export class ReservedTokensInputBlock extends Component {
     })
   }
 
-  addReservedTokensItem = async () => {
+  addReservedTokensItem = () => {
     const { addr, dim, val } = this.state
-    let validateReservedTokensListLength = await this.props.validateReservedTokensList()
-    logger.log('Validate reserved token list length', validateReservedTokensListLength)
-    if (!validateReservedTokensListLength) {
+
+    let response = this.props.validateReservedTokensList
+    logger.log('Validate reserved token list length', response)
+    if (!response) {
       this.clearInput()
       return
     }
@@ -261,7 +262,7 @@ export class ReservedTokensInputBlock extends Component {
             />
           </div>
           <div className="plus-button-container">
-            <div onClick={e => this.addReservedTokensItem()} className="button button_fill button_no_icon">
+            <div onClick={this.addReservedTokensItem} className="button button_fill button_no_icon">
               Submit
             </div>
           </div>

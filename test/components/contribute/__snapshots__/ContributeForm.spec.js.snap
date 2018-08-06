@@ -5,7 +5,7 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
   contributeStore={ContributeStore {}}
   tokenStore={
     TokenStore {
-      "decimals": undefined,
+      "decimals": 18,
       "name": undefined,
       "reservedTokensInput": Object {},
       "supply": 0,
@@ -149,7 +149,7 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
         submitting={false}
         tokenStore={
           TokenStore {
-            "decimals": undefined,
+            "decimals": 18,
             "name": undefined,
             "reservedTokensInput": Object {},
             "supply": 0,
