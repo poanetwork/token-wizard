@@ -51,6 +51,12 @@ export class WhitelistInputBlock extends React.Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.supply !== this.props.supply && !this.state.validation.max.pristine) {
+      this.handleMaxChange({ max: this.state.max })
+    }
+  }
+
   validateWhitelistedAddressList = async tierIndex => {
     const { tierStore } = this.props
 
@@ -143,11 +149,13 @@ export class WhitelistInputBlock extends React.Component {
   }
 
   handleMinChange = ({ min }) => {
-    const errorMessage = validateWhitelistMin({
-      min,
-      max: this.state.max,
-      decimals: this.props.decimals
-    })
+    const errorMessage =
+      !this.state.validation.max.pristine &&
+      validateWhitelistMin({
+        min,
+        max: this.state.max,
+        decimals: this.props.decimals
+      })
 
     return new Promise(resolve => {
       this.setState(
@@ -169,11 +177,19 @@ export class WhitelistInputBlock extends React.Component {
   }
 
   handleMaxChange = ({ max }) => {
-    const errorMessage = validateWhitelistMax({
-      min: this.state.min,
-      max,
-      decimals: this.props.decimals
-    })
+    let errorMessage =
+      !this.state.validation.max.pristine &&
+      validateWhitelistMax({
+        min: this.state.min,
+        max,
+        decimals: this.props.decimals
+      })
+
+    if (typeof errorMessage === 'undefined') {
+      const { tierStore, num } = this.props
+      const tierSupplyRemaining = tierStore.tiersSupplyRemaining[num]
+      errorMessage = isLessOrEqualThan(`Exceeds supply remaining (${tierSupplyRemaining})`)(tierSupplyRemaining)(max)
+    }
 
     return new Promise(resolve => {
       this.setState(

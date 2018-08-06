@@ -200,7 +200,7 @@ export const DutchAuctionBlock = inject('tierStore', 'tokenStore')(
                 <div className="section-title">
                   <p className="title">Whitelist</p>
                 </div>
-                <WhitelistInputBlock num={index} decimals={props.decimals} />
+                <WhitelistInputBlock num={index} decimals={props.decimals} supply={tierStore.tiers[index].supply} />
               </div>
             ) : null}
           </div>

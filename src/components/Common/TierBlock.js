@@ -142,7 +142,7 @@ export const TierBlock = ({ fields, ...props }) => {
               <div className="section-title">
                 <p className="title">Whitelist</p>
               </div>
-              <WhitelistInputBlock num={index} decimals={props.decimals} />
+              <WhitelistInputBlock num={index} decimals={props.decimals} supply={props.tierStore.tiers[index].supply} />
             </div>
           ) : null}
         </div>
