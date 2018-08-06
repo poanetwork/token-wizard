@@ -2,13 +2,13 @@ import React from 'react'
 import { Field } from 'react-final-form'
 import { InputField2 } from './InputField2'
 import { WhitelistInputBlock } from './WhitelistInputBlock'
-import { composeValidators, isRequired, isMaxLength } from '../../utils/validations'
+import { composeValidators, isGreaterOrEqualThan, isMaxLength, isPositive, isRequired } from '../../utils/validations'
 import { DESCRIPTION, TEXT_FIELDS } from '../../utils/constants'
 import { CrowdsaleStartTime } from './CrowdsaleStartTime'
 import { CrowdsaleEndTime } from './CrowdsaleEndTime'
 import { CrowdsaleRate } from './CrowdsaleRate'
-import { Supply } from './Supply'
 import { MinCap } from './MinCap'
+import { acceptPositiveIntegerOnly } from '../../utils/utils'
 
 const { ALLOW_MODIFYING, CROWDSALE_SETUP_NAME, ENABLE_WHITELISTING } = TEXT_FIELDS
 
@@ -124,7 +124,30 @@ export const TierBlock = ({ fields, ...props }) => {
 
             <div className="input-block-container">
               <CrowdsaleRate name={`${name}.rate`} errorStyle={inputErrorStyle} side="left" />
-              <Supply name={`${name}.supply`} errorStyle={inputErrorStyle} side="right" />
+              <Field
+                name={`${name}.supply`}
+                component={InputField2}
+                validate={(value, values) => {
+                  const { tierStore } = props
+                  const listOfValidations = [isPositive()]
+
+                  if (values.tiers[index].whitelistEnabled === 'yes') {
+                    const maxCapSum = tierStore.whitelistMaxCapSum[index]
+                    listOfValidations.push(
+                      isGreaterOrEqualThan(`Can't be less than sum of whitelist's maxCap: ${maxCapSum}`)(maxCapSum)
+                    )
+                  }
+
+                  const errors = composeValidators(...listOfValidations)(value)
+                  if (errors) return errors.shift()
+                }}
+                parse={acceptPositiveIntegerOnly}
+                errorStyle={inputErrorStyle}
+                type="text"
+                side="right"
+                label={TEXT_FIELDS.SUPPLY_SHORT}
+                description={DESCRIPTION.SUPPLY}
+              />
             </div>
             <div className="input-block-container">
               <MinCap

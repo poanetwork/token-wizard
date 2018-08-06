@@ -316,18 +316,28 @@ class TierStore {
   }
 
   /**
+   * Returns a list of the sum of maxCap of whitelisted addresses per tier
+   * @returns {Array.<string>}
+   */
+  @computed
+  get whitelistMaxCapSum() {
+    return this.tiers
+      .map(tier => tier.whitelist.reduce((total, account) => total.plus(account.max), toBigNumber(0)))
+      .map(maxCapBigNumber => maxCapBigNumber.toFixed())
+  }
+
+  /**
    * Returns a list of remaining supply per tier.
    * Iterates over every tier and subtract the sum of whitelisted addresses' maxCap from tier's supply
    * @returns {Array.<string>}
    */
   @computed
   get tiersSupplyRemaining() {
-    return this.tiers.map(tier => {
-      const whitelistMaxSum = tier.whitelist.reduce((total, account) => total.plus(account.max), toBigNumber(0))
-      return toBigNumber(tier.supply)
-        .minus(whitelistMaxSum)
+    return this.tiers.map((tier, index) =>
+      toBigNumber(tier.supply)
+        .minus(this.whitelistMaxCapSum[index])
         .toFixed()
-    })
+    )
   }
 
   /**
