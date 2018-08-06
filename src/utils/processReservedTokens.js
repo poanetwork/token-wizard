@@ -44,11 +44,11 @@ export default function({ rows, decimals }, cb) {
       valueErrors = composeValidators(isRequired(), isPositive())(val)
     } else {
       logger.error(`unrecognized dimension '${dim}'`)
-      break
+      continue
     }
 
     if (isAddress()(addr) || valueErrors) {
-      break
+      continue
     }
 
     cb({ addr, dim, val })
