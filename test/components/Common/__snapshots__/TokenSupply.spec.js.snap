@@ -1,21 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TokenDecimals should render TokenDecimals component 1`] = `
+exports[`TokenSupply should render TokenDecimals component 1`] = `
 <div
-  className="left"
+  className="right"
 >
   <label
     className="label"
-    htmlFor="decimals"
+    htmlFor="supply"
   >
-    Decimals
+    Supply
   </label>
   <input
     autoComplete="off"
     className="input"
     disabled={undefined}
-    id="decimals"
-    name="decimals"
+    id="supply"
+    name="supply"
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
@@ -26,7 +26,7 @@ exports[`TokenDecimals should render TokenDecimals component 1`] = `
   <p
     className="description"
   >
-    Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous).
+    The total supply of the token
   </p>
   <span>
     <p
@@ -42,22 +42,22 @@ exports[`TokenDecimals should render TokenDecimals component 1`] = `
 </div>
 `;
 
-exports[`TokenDecimals should render TokenDecimals component and its children 1`] = `
+exports[`TokenSupply should render TokenSupply component and its children 1`] = `
 <div
-  className="left"
+  className="right"
 >
   <label
     className="label"
-    htmlFor="decimals"
+    htmlFor="supply"
   >
-    Decimals
+    Supply
   </label>
   <input
     autoComplete="off"
     className="input"
     disabled={undefined}
-    id="decimals"
-    name="decimals"
+    id="supply"
+    name="supply"
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
@@ -68,7 +68,7 @@ exports[`TokenDecimals should render TokenDecimals component and its children 1`
   <p
     className="description"
   >
-    Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous).
+    The total supply of the token
   </p>
   <span>
     <p
@@ -84,7 +84,7 @@ exports[`TokenDecimals should render TokenDecimals component and its children 1`
 </div>
 `;
 
-exports[`TokenDecimals should render TokenDecimals component and its children, with input field disabled 1`] = `
+exports[`TokenSupply should render TokenSupply component and its children, with input field disabled 1`] = `
 <ReactFinalForm
   component={[Function]}
   disabled={true}
@@ -96,7 +96,7 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
   }
   onSubmit={[Function]}
 >
-  <TokenDecimals
+  <TokenSupply
     __versions={
       Object {
         "final-form": "4.6.1",
@@ -117,7 +117,7 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
     }
     errors={
       Object {
-        "decimals": "This field is required",
+        "supply": "Please enter a valid number greater than 0",
       }
     }
     focus={[Function]}
@@ -155,7 +155,7 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
     submitting={false}
     touched={
       Object {
-        "decimals": false,
+        "supply": false,
       }
     }
     valid={false}
@@ -163,14 +163,13 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
     values={Object {}}
     visited={
       Object {
-        "decimals": false,
+        "supply": false,
       }
     }
   >
     <Field
       component={[Function]}
-      description="Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous)."
-      disabled={true}
+      description="The total supply of the token"
       errorStyle={
         Object {
           "color": "red",
@@ -178,16 +177,15 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
         }
       }
       format={[Function]}
-      label="Decimals"
-      name="decimals"
+      label="Supply"
+      name="supply"
       parse={[Function]}
-      side="left"
+      side="right"
       type="text"
       validate={[Function]}
     >
       <InputField2
-        description="Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous)."
-        disabled={true}
+        description="The total supply of the token"
         errorStyle={
           Object {
             "color": "red",
@@ -196,21 +194,21 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
         }
         input={
           Object {
-            "name": "decimals",
+            "name": "supply",
             "onBlur": [Function],
             "onChange": [Function],
             "onFocus": [Function],
             "value": "",
           }
         }
-        label="Decimals"
+        label="Supply"
         meta={
           Object {
             "active": false,
             "data": Object {},
             "dirty": false,
             "dirtySinceLastSubmit": false,
-            "error": "This field is required",
+            "error": "Please enter a valid number greater than 0",
             "initial": undefined,
             "invalid": true,
             "pristine": true,
@@ -222,24 +220,23 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
             "visited": false,
           }
         }
-        side="left"
+        side="right"
         type="text"
       >
         <div
-          className="left"
+          className="right"
         >
           <label
             className="label"
-            htmlFor="decimals"
+            htmlFor="supply"
           >
-            Decimals
+            Supply
           </label>
           <input
             autoComplete="off"
             className="input"
-            disabled={true}
-            id="decimals"
-            name="decimals"
+            id="supply"
+            name="supply"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -249,7 +246,7 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
           <p
             className="description"
           >
-            Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous).
+            The total supply of the token
           </p>
           <Error
             errorStyle={
@@ -258,11 +255,11 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
                 "fontWeight": "bold",
               }
             }
-            name="decimals"
+            name="supply"
           >
             <Field
               format={[Function]}
-              name="decimals"
+              name="supply"
               parse={[Function]}
               render={[Function]}
               subscription={
@@ -290,6 +287,6 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
         </div>
       </InputField2>
     </Field>
-  </TokenDecimals>
+  </TokenSupply>
 </ReactFinalForm>
 `;
