@@ -110,7 +110,12 @@ export const ManageTierBlock = inject('crowdsaleStore', 'tokenStore')(
                     <p className="title">Whitelist</p>
                   </div>
                   {canEditWhiteList ? (
-                    <WhitelistInputBlock key={index.toString()} num={index} decimals={tokenStore.decimals} />
+                    <WhitelistInputBlock
+                      key={index.toString()}
+                      num={index}
+                      decimals={tokenStore.decimals}
+                      supply={currentTier.supply}
+                    />
                   ) : (
                     <ReadOnlyWhitelistAddresses tier={currentTier} />
                   )}

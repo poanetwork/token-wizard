@@ -356,4 +356,34 @@ describe('TierStore', () => {
 
     expect(tierStore.modifiedStoredWhitelist).toBeTruthy()
   })
+
+  it('Should return maxCap sum from whitelisted addresses for all tiers', () => {
+    tierStore.setTierProperty(whitelist, 'whitelist', 0)
+    expect(tierStore.whitelistMaxCapSum).toEqual(['505050'])
+
+    tierStore.addTier({ whitelist: [] })
+    tierStore.setTierProperty(whitelist, 'whitelist', 1)
+    expect(tierStore.whitelistMaxCapSum).toEqual(['505050', '505050'])
+  })
+
+  it(`Should return the remaining supply available after adding addresses to the tier's whitelist`, () => {
+    tierStore.setTierProperty(whitelist, 'whitelist', 0)
+    tierStore.setTierProperty('505550', 'supply', 0)
+    expect(tierStore.tiersSupplyRemaining).toEqual(['500'])
+
+    tierStore.addTier({ whitelist: [] })
+    tierStore.setTierProperty(whitelist, 'whitelist', 1)
+    tierStore.setTierProperty('505900', 'supply', 1)
+    expect(tierStore.tiersSupplyRemaining).toEqual(['500', '850'])
+  })
+
+  it(`Should return true if an address was already added to a tier`, () => {
+    tierStore.setTierProperty(whitelist, 'whitelist', 0)
+    expect(tierStore.whitelistAddressAlreadyAdded(0, whitelist[3].addr)).toBe(true)
+  })
+
+  it(`Should return false if an address is not in the list of whitelisted addresses`, () => {
+    tierStore.setTierProperty(whitelist, 'whitelist', 0)
+    expect(tierStore.whitelistAddressAlreadyAdded(0, '0x1293871293872148623495781263489713264782')).toBe(false)
+  })
 })

@@ -15,7 +15,8 @@ import {
   isGreaterThan,
   isLessOrEqualThan,
   isPositive,
-  isRequired
+  isRequired,
+  isGreaterOrEqualThan
 } from '../../utils/validations'
 import { DESCRIPTION, TEXT_FIELDS } from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
@@ -139,12 +140,21 @@ export const DutchAuctionBlock = inject('tierStore', 'tokenStore')(
                 <Field
                   name={`${name}.supply`}
                   component={InputField2}
-                  validate={value => {
+                  validate={(value, values) => {
                     const { supply } = tokenStore
-                    const errors = composeValidators(
+                    const listOfValidations = [
                       isPositive(),
                       isLessOrEqualThan(`Should not be greater than Token's total supply: ${supply}`)(supply)
-                    )(value)
+                    ]
+
+                    if (values.tiers[index].whitelistEnabled === 'yes') {
+                      const maxCapSum = tierStore.whitelistMaxCapSum[index]
+                      listOfValidations.push(
+                        isGreaterOrEqualThan(`Can't be less than sum of whitelist's maxCap: ${maxCapSum}`)(maxCapSum)
+                      )
+                    }
+
+                    const errors = composeValidators(...listOfValidations)(value)
                     if (errors) return errors.shift()
                   }}
                   parse={acceptPositiveIntegerOnly}
@@ -200,7 +210,7 @@ export const DutchAuctionBlock = inject('tierStore', 'tokenStore')(
                 <div className="section-title">
                   <p className="title">Whitelist</p>
                 </div>
-                <WhitelistInputBlock num={index} decimals={props.decimals} />
+                <WhitelistInputBlock num={index} decimals={props.decimals} supply={tierStore.tiers[index].supply} />
               </div>
             ) : null}
           </div>

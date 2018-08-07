@@ -112,7 +112,7 @@ export class stepThree extends React.Component {
       const { tierStore } = this.props
       const newValue = {}
 
-      if (tierStore.tiers[nextTierIndex]) {
+      if (tierStore.tiers.length >= nextTierIndex + 1) {
         newValue[`tiers[${nextTierIndex}].startTime`] = value
       }
 

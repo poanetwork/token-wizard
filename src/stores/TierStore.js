@@ -1,6 +1,13 @@
 import { observable, action, computed } from 'mobx'
 import { defaultTier, defaultTierValidations, VALIDATION_TYPES, LIMIT_WHITELISTED_ADDRESSES } from '../utils/constants'
-import { validateTime, validateSupply, validateLaterTime, validateLaterOrEqualTime, validateTier } from '../utils/utils'
+import {
+  validateTime,
+  validateSupply,
+  validateLaterTime,
+  validateLaterOrEqualTime,
+  validateTier,
+  toBigNumber
+} from '../utils/utils'
 import autosave from './autosave'
 import { defaultCompanyEndDate, defaultCompanyStartDate } from '../components/stepThree/utils'
 import logdown from 'logdown'
@@ -309,12 +316,48 @@ class TierStore {
   }
 
   /**
+   * Returns a list of the sum of maxCap of whitelisted addresses per tier
+   * @returns {Array.<string>}
+   */
+  @computed
+  get whitelistMaxCapSum() {
+    return this.tiers
+      .map(tier => tier.whitelist.reduce((total, account) => total.plus(account.max), toBigNumber(0)))
+      .map(maxCapBigNumber => maxCapBigNumber.toFixed())
+  }
+
+  /**
+   * Returns a list of remaining supply per tier.
+   * Iterates over every tier and subtract the sum of whitelisted addresses' maxCap from tier's supply
+   * @returns {Array.<string>}
+   */
+  @computed
+  get tiersSupplyRemaining() {
+    return this.tiers.map((tier, index) =>
+      toBigNumber(tier.supply)
+        .minus(this.whitelistMaxCapSum[index])
+        .toFixed()
+    )
+  }
+
+  /**
    * Validate whitelisted for a given tier
    * @param tierIndex
    * @returns {boolean}
    */
   validateWhitelistedAddressLength(tierIndex) {
     return this.tiers[tierIndex].whitelist.length < LIMIT_WHITELISTED_ADDRESSES
+  }
+
+  /**
+   * Checks whether a whitelist address was already added to a specific tier
+   * @param {Number} tierIndex
+   * @param {String} whitelistAddress
+   * @returns {Boolean}
+   */
+  whitelistAddressAlreadyAdded(tierIndex, whitelistAddress) {
+    whitelistAddress = whitelistAddress.toLowerCase()
+    return this.tiers[tierIndex].whitelist.some(whitelist => whitelist.addr.toLowerCase() === whitelistAddress)
   }
 }
 
