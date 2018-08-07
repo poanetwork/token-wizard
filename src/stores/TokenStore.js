@@ -73,12 +73,12 @@ class TokenStore {
 
   @action
   checkIsEmptyMinted = () => {
-    return !this.name || !this.ticker || !this.decimals
+    return !this.name && !this.ticker && !this.decimals
   }
 
   @action
   checkIsEmptyDutch = () => {
-    return !this.name || !this.ticker || !this.decimals || !this.supply
+    return !this.name && !this.ticker && !this.decimals && !this.supply
   }
 
   @action
