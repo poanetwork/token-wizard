@@ -57,10 +57,10 @@ export class stepTwo extends Component {
     reservedTokenStore.removeToken(index)
   }
 
-  clearReservedTokens = () => {
+  clearReservedTokens = async () => {
     const { reservedTokenStore } = this.props
 
-    let result = clearingReservedTokens()
+    let result = await clearingReservedTokens()
     if (result && result.value) {
       reservedTokenStore.clearAll()
     }
