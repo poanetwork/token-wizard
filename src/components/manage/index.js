@@ -553,16 +553,16 @@ export class Manage extends Component {
 
       //Check if is minted capped strategy
       if (isMintedCappedCrowdsale) {
-        let currentTier = await getCurrentTierInfoCustom(initCrowdsaleContract, execID)
+        const currentTier = await getCurrentTierInfoCustom(initCrowdsaleContract, execID)
         const numOfTiers = await getTiersLength()
 
         //Get tier index, tokens remaining and actual tier
-        const tierIndex = currentTier.tier_index || currentTier[1]
-        const tierTokensRemaining = currentTier.tier_tokens_remaining || currentTier[3]
-        const actualTier = +tierIndex + 1
+        const tierIndex = toBigNumber(currentTier.tier_index || currentTier[1])
+        const tierTokensRemaining = toBigNumber(currentTier.tier_tokens_remaining || currentTier[3])
+        const actualTier = tierIndex.plus(1)
 
         //Check if is lastTier, if tokens remaining is zero in last tier
-        mintedCappedWithLastTierAllSold = numOfTiers == actualTier && tierTokensRemaining == 0
+        mintedCappedWithLastTierAllSold = actualTier.eq(numOfTiers) && tierTokensRemaining.eq(0)
 
         logger.log(`Minted with last tier sold, can finalize`, mintedCappedWithLastTierAllSold)
       }
