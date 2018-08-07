@@ -106,6 +106,7 @@ export class stepTwo extends Component {
 
   render() {
     const { reservedTokenStore, crowdsaleStore, tokenStore } = this.props
+    const { isMintedCappedCrowdsale } = crowdsaleStore
     const decimals =
       tokenStore.validToken.decimals === VALID && tokenStore.decimals >= 0 ? parseInt(tokenStore.decimals, 10) : 0
 
@@ -124,7 +125,7 @@ export class stepTwo extends Component {
             initialValues={this.state.tokenValues}
             reload={this.state.reload}
             component={StepTwoForm}
-            disableDecimals={!!reservedTokenStore.tokens.length}
+            disableDecimals={isMintedCappedCrowdsale && !!reservedTokenStore.tokens.length}
             updateTokenStore={this.updateTokenStore}
             tokens={reservedTokenStore.tokens}
             decimals={decimals}
