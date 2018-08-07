@@ -9,6 +9,8 @@ import { inject, observer } from 'mobx-react'
 import { Form } from 'react-final-form'
 import { StepTwoForm } from './StepTwoForm'
 import logdown from 'logdown'
+import { sleep } from '../../utils/utils'
+import setFieldTouched from 'final-form-set-field-touched'
 
 const { TOKEN_SETUP } = NAVIGATION_STEPS
 const { VALID, INVALID } = VALIDATION_TYPES
@@ -19,25 +21,34 @@ const logger = logdown('TW:stepTwo:index')
 @inject('tokenStore', 'crowdsaleStore', 'web3Store', 'reservedTokenStore')
 @observer
 export class stepTwo extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      loading: true
-    }
+  state = {
+    loading: false,
+    tokenValues: {},
+    reload: false
   }
 
   async componentDidMount() {
-    const { tokenStore, web3Store, crowdsaleStore } = this.props
+    const { web3Store } = this.props
     await checkWeb3(web3Store.web3)
 
+    this.setState({ loading: true })
+    const tokenValues = await this.load()
+    logger.log('Token Values', tokenValues)
+    this.setState({ loading: false, tokenValues })
+  }
+
+  load = async () => {
+    const { tokenStore, crowdsaleStore } = this.props
+
+    await sleep(1000)
     if (tokenStore.isEmpty(crowdsaleStore)) {
       tokenStore.addTokenSetup()
+    } else {
+      this.setState({
+        reload: true
+      })
     }
-
-    this.tokenValues = tokenStore.getToken(crowdsaleStore)
-
-    this.setState({ loading: false })
+    return tokenStore.getToken(crowdsaleStore)
   }
 
   removeReservedToken = index => {
@@ -46,13 +57,14 @@ export class stepTwo extends Component {
     reservedTokenStore.removeToken(index)
   }
 
-  clearReservedTokens = async () => {
+  clearReservedTokens = () => {
     const { reservedTokenStore } = this.props
 
-    let result = await clearingReservedTokens()
+    let result = clearingReservedTokens()
     if (result && result.value) {
       reservedTokenStore.clearAll()
     }
+    return result
   }
 
   validateReservedTokensList = () => {
@@ -71,6 +83,11 @@ export class stepTwo extends Component {
     reservedTokenStore.addToken(newToken)
   }
 
+  /**
+   * Callback to update the token store
+   * @param values
+   * @param errors
+   */
   updateTokenStore = ({ values, errors }) => {
     const { tokenStore } = this.props
 
@@ -80,6 +97,9 @@ export class stepTwo extends Component {
     })
   }
 
+  /**
+   * Goto to the step 3 on submit
+   */
   onSubmit = () => {
     this.props.history.push('/3')
   }
@@ -99,8 +119,10 @@ export class stepTwo extends Component {
             <p className="description">Configure properties of your token. Created token will be ERC-20 compatible.</p>
           </div>
           <Form
+            mutators={{ setFieldTouched }}
             onSubmit={this.onSubmit}
-            initialValues={this.tokenValues}
+            initialValues={this.state.tokenValues}
+            reload={this.state.reload}
             component={StepTwoForm}
             disableDecimals={!!reservedTokenStore.tokens.length}
             updateTokenStore={this.updateTokenStore}
