@@ -3,7 +3,7 @@ import { Provider } from 'mobx-react'
 import { Form } from 'react-final-form'
 import ContributeStore from '../../../src/stores/ContributeStore'
 import TokenStore from '../../../src/stores/TokenStore'
-import { ContributeForm } from '../../../src/components/contribute//ContributeForm'
+import { ContributeForm } from '../../../src/components/contribute/ContributeForm'
 import renderer from 'react-test-renderer'
 import Adapter from 'enzyme-adapter-react-15'
 import { configure, mount, shallow } from 'enzyme'
@@ -116,5 +116,25 @@ describe('ContributeForm', () => {
 
     expect(updateContributeThrough).toHaveBeenCalledTimes(1)
     expect(updateContributeThrough).toHaveBeenCalledWith(CONTRIBUTION_OPTIONS.QR)
+  })
+
+  it(`Should set as disabled the contribute button if isTierSoldOut === true`, () => {
+    const wrapper = mount(
+      <Provider contributeStore={contributeStore} tokenStore={tokenStore}>
+        <Form
+          onSubmit={jest.fn()}
+          component={ContributeForm}
+          contributeThrough={CONTRIBUTION_OPTIONS.METAMASK}
+          updateContributeThrough={jest.fn()}
+          isTierSoldOut={true}
+          web3Available={true}
+        />
+      </Provider>
+    )
+
+    expect(wrapper).toMatchSnapshot()
+
+    const contributeButton = wrapper.find('.button.button_fill.button_no_border.button_disabled')
+    expect(contributeButton.is('[disabled]')).toBeTruthy()
   })
 })

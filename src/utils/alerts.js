@@ -297,7 +297,7 @@ export function noMoreReservedSlotAvailableCSV(count) {
 
 export function noMoreWhitelistedSlotAvailable() {
   return sweetAlert2({
-    title: 'No more addresses available',
+    title: 'Maximum limit of addresses reached',
     html: `You're not able to add more addresses to the whitelist. The maximum allowed is ${LIMIT_WHITELISTED_ADDRESSES}`,
     type: 'info'
   })
@@ -305,7 +305,7 @@ export function noMoreWhitelistedSlotAvailable() {
 
 export function noMoreWhitelistedSlotAvailableCSV(count) {
   return sweetAlert2({
-    title: 'You reach the limit of addresses',
+    title: 'Maximum limit of addresses reached',
     html: `You're not able to add more addresses to the whitelist. Only ${count} addresses of the file could be added. The maximum allowed is ${LIMIT_WHITELISTED_ADDRESSES}`,
     type: 'info'
   })
