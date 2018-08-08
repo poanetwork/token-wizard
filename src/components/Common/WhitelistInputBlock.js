@@ -10,12 +10,13 @@ import { WhitelistItem } from './WhitelistItem'
 import { inject, observer } from 'mobx-react'
 import {
   clearingWhitelist,
-  whitelistImported,
+  maxCapExceedsSupply,
   noMoreWhitelistedSlotAvailable,
-  noMoreWhitelistedSlotAvailableCSV
+  noMoreWhitelistedSlotAvailableCSV,
+  whitelistImported
 } from '../../utils/alerts'
 import processWhitelist from '../../utils/processWhitelist'
-import { validateWhitelistMax, validateWhitelistMin } from '../../utils/validations'
+import { isLessOrEqualThan, validateWhitelistMax, validateWhitelistMin } from '../../utils/validations'
 import logdown from 'logdown'
 
 const logger = logdown('TW:WhitelistInputBlock')
@@ -223,7 +224,7 @@ export class WhitelistInputBlock extends React.Component {
       Papa.parse(file, {
         skipEmptyLines: true,
         complete: results => {
-          const { called, whitelistedAddressLengthError } = processWhitelist(
+          const { called, whitelistedAddressLengthError, maxCapExceedsSupplyError } = processWhitelist(
             {
               rows: results.data,
               decimals: decimals
@@ -233,11 +234,14 @@ export class WhitelistInputBlock extends React.Component {
             },
             () => {
               return tierStore.validateWhitelistedAddressLength(num)
-            }
+            },
+            isLessOrEqualThan()(tierStore.tiers[num].supply)
           )
 
           if (whitelistedAddressLengthError) {
             noMoreWhitelistedSlotAvailableCSV(called)
+          } else if (maxCapExceedsSupplyError) {
+            maxCapExceedsSupply(called)
           } else {
             whitelistImported(called)
           }
