@@ -213,30 +213,24 @@ describe('processWhitelist function', () => {
       expect(called).toBe(addressCount)
     })
 
-    it(`should add addresses up to max supply available`, () => {
+    it(`should add addresses whose maxCap is not greater than 1000`, () => {
       // Given
       const { rows } = require('./helpers/whitelist-addresses')
+      const { supply } = tierStore.tiers[0]
+      const lessOrEqualThanSupply = isLessOrEqualThan()(supply)
+      const validAddressesCount = rows.filter(({ max }) => lessOrEqualThanSupply(max) === undefined).length
 
-      const maxAddressCount = 5
-      const supply = rows
-        .slice(0, maxAddressCount)
-        .reduce((supply, row) => supply.plus(row[2]), toBigNumber(0))
-        .toFixed()
-      tierStore.setTierProperty(supply, 'supply', 0)
+      tierStore.setTierProperty(1000, 'supply', 0)
 
-      const cb = jest.fn(item => {
-        tierStore.addWhitelistItem(item, 0)
-      })
+      const cb = jest.fn(item => tierStore.addWhitelistItem(item, 0))
       const cbValidation = jest.fn(() => tierStore.validateWhitelistedAddressLength(0))
-      const cbSupplyValidation = jest.fn(max => {
-        return isLessOrEqualThan()(tierStore.tiersSupplyRemaining[0])(max)
-      })
+      const cbSupplyValidation = jest.fn(max => lessOrEqualThanSupply(max))
 
       // When
       const { called } = processWhitelist({ rows, decimals: 3 }, cb, cbValidation, cbSupplyValidation)
 
       // Then
-      expect(called).toBe(maxAddressCount)
+      expect(called).toBe(validAddressesCount)
     })
   })
 })

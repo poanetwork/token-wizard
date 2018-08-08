@@ -9,11 +9,13 @@ import { isAddress, validateWhitelistMin, validateWhitelistMax } from './validat
  * @param {Number} whitelistInformation.decimals Amount of decimals allowed for the min and max values
  * @param {Function} cb The function to be called with each valid item
  * @param {Function} cbValidation The function to be called to validate length
+ * @param {Function} cbSupplyValidation Called to validate that maxCap does not exceeds tier's supply
  * @returns {Object} Object with a `called` property, indicating the number of times the callback was called
  */
-export default function({ rows, decimals }, cb, cbValidation) {
+export default function({ rows, decimals }, cb, cbValidation, cbSupplyValidation) {
   let called = 0
   let whitelistedAddressLengthError = false
+  let maxCapExceedsSupplyError
   for (let row of rows) {
     let validLength = cbValidation()
     if (!validLength) {
@@ -27,10 +29,13 @@ export default function({ rows, decimals }, cb, cbValidation) {
 
     const [addr, min, max] = row
 
+    maxCapExceedsSupplyError = typeof cbSupplyValidation(max) !== 'undefined'
+
     if (
       isAddress()(addr) ||
       validateWhitelistMin({ min, max, decimals }) ||
-      validateWhitelistMax({ min, max, decimals })
+      validateWhitelistMax({ min, max, decimals }) ||
+      maxCapExceedsSupplyError
     ) {
       continue
     }
@@ -41,6 +46,7 @@ export default function({ rows, decimals }, cb, cbValidation) {
 
   return {
     called: called,
-    whitelistedAddressLengthError: whitelistedAddressLengthError
+    whitelistedAddressLengthError: whitelistedAddressLengthError,
+    maxCapExceedsSupplyError
   }
 }
