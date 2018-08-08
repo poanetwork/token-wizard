@@ -64,6 +64,15 @@ class ReservedTokenStore {
   reset = () => {
     this.tokens = []
   }
+
+  @action
+  applyDecimalsToTokens = (decimals = 0) => {
+    for (let i = 0; i < this.tokens.length; i++) {
+      if (this.tokens && this.tokens[i] && this.tokens[i].val) {
+        this.tokens[i].val = parseFloat(this.tokens[i].val).toFixed(decimals)
+      }
+    }
+  }
 }
 
 export default ReservedTokenStore
