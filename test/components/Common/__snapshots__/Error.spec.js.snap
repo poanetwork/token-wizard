@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Error  should render Error component 1`] = `
+<span>
+  <p
+    className="error"
+    style={
+      Object {
+        "color": "red",
+        "fontSize": "12px",
+        "fontWeight": "bold",
+        "height": "20px",
+        "width": "100%",
+      }
+    }
+  />
+</span>
+`;

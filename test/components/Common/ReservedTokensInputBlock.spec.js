@@ -15,6 +15,7 @@ describe('ReservedTokensInputBlock', () => {
   let addCallback
   let removeCallback
   let clearAllCallback
+  let validateReservedTokensList;
   let decimals
   let wrapperMemo, wrapper
   let addressInputMemo, addressInput
@@ -47,6 +48,7 @@ describe('ReservedTokensInputBlock', () => {
     addCallback = jest.fn()
     removeCallback = jest.fn()
     clearAllCallback = jest.fn()
+    validateReservedTokensList = jest.fn(() => { return true;})
     decimals = 3
 
     wrapperMemo = undefined
@@ -58,6 +60,7 @@ describe('ReservedTokensInputBlock', () => {
           decimals={decimals}
           addReservedTokensItem={addCallback}
           removeReservedToken={removeCallback}
+          validateReservedTokensList={validateReservedTokensList}
           clearAll={clearAllCallback}
         />
       ))
@@ -92,6 +95,7 @@ describe('ReservedTokensInputBlock', () => {
             decimals={decimals}
             addReservedTokensItem={addCallback}
             removeReservedToken={removeCallback}
+            validateReservedTokensList={validateReservedTokensList}
           />
         ))
     })
@@ -403,11 +407,12 @@ describe('ReservedTokensInputBlock', () => {
             .childAt(0)
             .simulate('click')
 
-          const { value } = testCase
+          const { value, expected } = testCase
           value.val = testCase.value.val === '' ? '' : parseFloat(testCase.value.val)
 
-          if (testCase.expect) {
+          if ( expected ) {
             expect(addCallback).toHaveBeenCalledWith(value)
+           // console.log(wrapper.prop('validateReservedTokensList'))
           }
           expect(addCallback).toHaveBeenCalledTimes(callTimes)
         })

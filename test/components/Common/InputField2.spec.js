@@ -1,18 +1,19 @@
 import React from 'react'
 import {InputField2} from '../../../src/components/Common/InputField2'
-import { Form } from 'react-final-form'
+import {Form} from 'react-final-form'
 import renderer from 'react-test-renderer'
 import Adapter from 'enzyme-adapter-react-15'
-import { configure, mount, shallow } from 'enzyme'
+import {configure, mount, shallow} from 'enzyme'
 
-configure({ adapter: new Adapter() })
+configure({adapter: new Adapter()})
 
 describe('InputField2', () => {
   it(`should render InputField2 component`, () => {
+
     const wrapper = shallow(
-      <InputField2
+      < InputField2
         input={{
-          name: 'name',
+          name: "name",
           type: 'text'
         }}
       />
@@ -28,7 +29,7 @@ describe('InputField2', () => {
       <Form
         onSubmit={jest.fn()}
         component={InputField2}
-        errorStyle={{ color: 'red', fontWeight: 'bold'}}
+        errorStyle={{color: 'red', fontWeight: 'bold'}}
         input={input}
       />
     )
@@ -55,4 +56,6 @@ describe('InputField2', () => {
     wrapper.find('input').simulate('change', { target: { defaultValue: val }})
     expect(wrapper.find('input').props().defaultValue).toBe(val)
   })
+
 })
+
