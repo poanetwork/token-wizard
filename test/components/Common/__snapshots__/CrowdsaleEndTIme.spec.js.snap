@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CrowdsaleEndTime should render CrowdsaleEndTime component 1`] = `
+exports[`CrowdsaleEndTime  should render CrowdsaleEndTime component 1`] = `
 <div
   className={undefined}
 >
   <label
     className="label"
-    htmlFor="CrowdsaleEndTime"
+    htmlFor="name"
   >
     End Time
   </label>
@@ -14,11 +14,14 @@ exports[`CrowdsaleEndTime should render CrowdsaleEndTime component 1`] = `
     autoComplete="off"
     className="input"
     disabled={false}
-    id="CrowdsaleEndTime"
-    name="CrowdsaleEndTime"
+    id="name"
+    name="name"
+    onBlur={[Function]}
+    onChange={[Function]}
+    onFocus={[Function]}
     placeholder={undefined}
     type="datetime-local"
-    value="13"
+    value=""
   />
   <p
     className="description"
@@ -31,10 +34,67 @@ exports[`CrowdsaleEndTime should render CrowdsaleEndTime component 1`] = `
       style={
         Object {
           "color": "red",
-          "fontSize": "12px",
           "fontWeight": "bold",
-          "height": "20px",
-          "width": "100%",
+        }
+      }
+    />
+    <p
+      className="error"
+      style={
+        Object {
+          "color": "red",
+          "fontWeight": "bold",
+        }
+      }
+    />
+    <p
+      className="error"
+      style={
+        Object {
+          "color": "red",
+          "fontWeight": "bold",
+        }
+      }
+    />
+  </span>
+</div>
+`;
+
+exports[`CrowdsaleEndTime  should render CrowdsaleEndTime component if field is disabled 1`] = `
+<div
+  className={undefined}
+>
+  <label
+    className="label"
+    htmlFor="name"
+  >
+    End Time
+  </label>
+  <input
+    autoComplete="off"
+    className="input"
+    disabled={true}
+    id="name"
+    name="name"
+    onBlur={[Function]}
+    onChange={[Function]}
+    onFocus={[Function]}
+    placeholder={undefined}
+    type="datetime-local"
+    value=""
+  />
+  <p
+    className="description"
+  >
+    Date and time when the tier ends. Can be only in the future.
+  </p>
+  <span>
+    <p
+      className="error"
+      style={
+        Object {
+          "color": "red",
+          "fontWeight": "bold",
         }
       }
     />
