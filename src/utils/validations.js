@@ -1,14 +1,8 @@
 import Web3 from 'web3'
-import {VALIDATION_MESSAGES} from './constants'
-import {
-  countDecimalPlaces,
-  toBigNumber,
-  validateLaterOrEqualTime,
-  validateLaterTime,
-  validateTime
-} from './utils'
+import { VALIDATION_MESSAGES } from './constants'
+import { countDecimalPlaces, toBigNumber, validateLaterOrEqualTime, validateLaterTime, validateTime } from './utils'
 
-export const validateWhitelistMin = ({min, max, decimals}) => {
+export const validateWhitelistMin = ({ min, max, decimals }) => {
   const listOfErrors = composeValidators(
     isRequired(),
     isNonNegative(),
@@ -19,7 +13,7 @@ export const validateWhitelistMin = ({min, max, decimals}) => {
   return listOfErrors ? listOfErrors.shift() : undefined
 }
 
-export const validateWhitelistMax = ({min, max, decimals}) => {
+export const validateWhitelistMax = ({ min, max, decimals }) => {
   const listOfErrors = composeValidators(
     isRequired(),
     isNonNegative(),
@@ -60,7 +54,9 @@ export const isRequired = (errorMsg = VALIDATION_MESSAGES.REQUIRED) => value => 
   return isValid ? undefined : errorMsg
 }
 
-export const isDecimalPlacesNotGreaterThan = (errorMsg = VALIDATION_MESSAGES.DECIMAL_PLACES) => decimalsCount => value => {
+export const isDecimalPlacesNotGreaterThan = (
+  errorMsg = VALIDATION_MESSAGES.DECIMAL_PLACES
+) => decimalsCount => value => {
   const isValid = countDecimalPlaces(value) <= decimalsCount
   return isValid ? undefined : errorMsg
 }
@@ -70,8 +66,7 @@ export const isLessThan = (errorMsg = VALIDATION_MESSAGES.LESS) => (maxValue = I
     const max = toBigNumber(String(maxValue), false)
     const isValid = max && max.gt(value)
     return isValid ? undefined : errorMsg
-  }
-  catch (e) {
+  } catch (e) {
     return errorMsg
   }
 }
@@ -81,8 +76,7 @@ export const isLessOrEqualThan = (errorMsg = VALIDATION_MESSAGES.LESS_OR_EQUAL) 
     const max = toBigNumber(String(maxValue), false)
     const isValid = max && max.gte(value)
     return isValid ? undefined : errorMsg
-  }
-  catch (e) {
+  } catch (e) {
     return errorMsg
   }
 }
@@ -92,19 +86,19 @@ export const isGreaterThan = (errorMsg = VALIDATION_MESSAGES.GREATER) => (minVal
     const min = toBigNumber(String(minValue), false)
     const isValid = min && min.lt(value)
     return isValid ? undefined : errorMsg
-  }
-  catch (e) {
+  } catch (e) {
     return errorMsg
   }
 }
 
-export const isGreaterOrEqualThan = (errorMsg = VALIDATION_MESSAGES.GREATER_OR_EQUAL) => (minValue = Number.MIN_VALUE) => value => {
+export const isGreaterOrEqualThan = (errorMsg = VALIDATION_MESSAGES.GREATER_OR_EQUAL) => (
+  minValue = Number.MIN_VALUE
+) => value => {
   try {
     const min = toBigNumber(String(minValue), false)
     const isValid = min && min.lte(value)
     return isValid ? undefined : errorMsg
-  }
-  catch (e) {
+  } catch (e) {
     return errorMsg
   }
 }
@@ -113,8 +107,7 @@ export const isInteger = (errorMsg = VALIDATION_MESSAGES.INTEGER) => value => {
   try {
     const isValid = toBigNumber(value, false).isInteger()
     return isValid ? undefined : errorMsg
-  }
-  catch (e) {
+  } catch (e) {
     return errorMsg
   }
 }
