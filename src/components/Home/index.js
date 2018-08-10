@@ -30,12 +30,13 @@ const { CROWDSALE_STRATEGY, TOKEN_SETUP, CROWDSALE_SETUP, PUBLISH, CROWDSALE_PAG
 )
 @observer
 export class Home extends Component {
+  state = {
+    showModal: false,
+    loading: false
+  }
+
   constructor(props) {
     super(props)
-    this.state = {
-      showModal: false,
-      loading: false
-    }
 
     let { contractStore } = this.props
     contractStore.setProperty('downloadStatus', DOWNLOAD_STATUS.PENDING)
@@ -46,7 +47,7 @@ export class Home extends Component {
     await checkWeb3(web3Store.web3)
   }
 
-  async chooseContract() {
+  chooseContract = async () => {
     this.setState({
       loading: true
     })
@@ -65,13 +66,15 @@ export class Home extends Component {
     }
   }
 
-  async goNextStep() {
+  goNextStep = async () => {
     // Clear local storage if there is no incomplete deployment, and reload
-    if (storage.has('DeploymentStore') && storage.get('DeploymentStore').deploymentStep === null) {
+    if (storage.has('DeploymentStore') && storage.get('DeploymentStore').deploymentStep) {
+      this.props.history.push('/')
+    } else {
       this.clearStorage()
       await this.reloadStorage()
+      this.props.history.push('1')
     }
-    this.props.history.push('1')
   }
 
   async reloadStorage() {
