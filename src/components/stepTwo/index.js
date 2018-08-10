@@ -13,6 +13,7 @@ import logdown from 'logdown'
 const { TOKEN_SETUP } = NAVIGATION_STEPS
 const { VALID, INVALID } = VALIDATION_TYPES
 
+// eslint-disable-next-line no-unused-vars
 const logger = logdown('TW:stepTwo:index')
 
 @inject('tokenStore', 'crowdsaleStore', 'web3Store', 'reservedTokenStore')
@@ -54,12 +55,12 @@ export class stepTwo extends Component {
     }
   }
 
-  validateReservedTokensList = async () => {
+  validateReservedTokensList = () => {
     const { reservedTokenStore } = this.props
 
     let result = reservedTokenStore.validateLength
     if (!result) {
-      await noMoreReservedSlotAvailable()
+      noMoreReservedSlotAvailable()
     }
     return result
   }

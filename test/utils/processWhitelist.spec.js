@@ -1,4 +1,8 @@
 import processWhitelist from '../../src/utils/processWhitelist'
+import TierStore from '../../src/stores/TierStore'
+import { defaultTier, defaultTierValidations, LIMIT_WHITELISTED_ADDRESSES } from '../../src/utils/constants'
+import { isLessOrEqualThan } from '../../src/utils/validations'
+import { toBigNumber } from '../../src/utils/utils'
 
 describe('processWhitelist function', () => {
   it('should call the callback for each whitelist item', () => {
@@ -9,9 +13,14 @@ describe('processWhitelist function', () => {
       ['0x871c98FFA5b44873aE2fa4BFD190Cd42F63907Da', '1', '10']
     ]
     const cb = jest.fn()
+    const cbValidation = jest.fn()
+    const cbSupplyValidation = jest.fn()
+
+    cbValidation.mockReturnValue(true)
+    cbSupplyValidation.mockReturnValue(undefined)
 
     // When
-    processWhitelist({ rows, decimals: 3 }, cb)
+    processWhitelist({ rows, decimals: 3 }, cb, cbValidation, cbSupplyValidation)
 
     // Then
     expect(cb).toHaveBeenCalledTimes(3)
@@ -32,9 +41,14 @@ describe('processWhitelist function', () => {
       ['0x49d915966F1f2AdE697Ef7587615D2CF6A8A374e', '1', '10'] //valid value
     ]
     const cb = jest.fn()
+    const cbValidation = jest.fn()
+    const cbSupplyValidation = jest.fn()
+
+    cbValidation.mockReturnValue(true)
+    cbSupplyValidation.mockReturnValue(undefined)
 
     // When
-    processWhitelist({ rows, decimals: 3 }, cb)
+    processWhitelist({ rows, decimals: 3 }, cb, cbValidation, cbSupplyValidation)
 
     // Then
     expect(cb).toHaveBeenCalledTimes(1)
@@ -48,9 +62,14 @@ describe('processWhitelist function', () => {
       ['0x3333333333333333333333333333333333333333', '1', '10']
     ]
     const cb = jest.fn()
+    const cbValidation = jest.fn()
+    const cbSupplyValidation = jest.fn()
+
+    cbValidation.mockReturnValue(true)
+    cbSupplyValidation.mockReturnValue(undefined)
 
     // When
-    const { called } = processWhitelist({ rows, decimals: 3 }, cb)
+    const { called } = processWhitelist({ rows, decimals: 3 }, cb, cbValidation, cbSupplyValidation)
 
     // Then
     expect(called).toBe(3)
@@ -66,9 +85,14 @@ describe('processWhitelist function', () => {
       ['0x49d915966F1f2AdE697Ef7587615D2CF6A8A374e', '1', '10'] //valid value
     ]
     const cb = jest.fn()
+    const cbValidation = jest.fn()
+    const cbSupplyValidation = jest.fn()
+
+    cbValidation.mockReturnValue(true)
+    cbSupplyValidation.mockReturnValue(undefined)
 
     // When
-    const { called } = processWhitelist({ rows, decimals: 3 }, cb)
+    const { called } = processWhitelist({ rows, decimals: 3 }, cb, cbValidation, cbSupplyValidation)
 
     // Then
     expect(called).toBe(1)
@@ -84,9 +108,14 @@ describe('processWhitelist function', () => {
       ['0x49d915966F1f2AdE697Ef7587615D2CF6A8A374e', '1', '10'] //valid value
     ]
     const cb = jest.fn()
+    const cbValidation = jest.fn()
+    const cbSupplyValidation = jest.fn()
+
+    cbValidation.mockReturnValue(true)
+    cbSupplyValidation.mockReturnValue(undefined)
 
     // When
-    const { called } = processWhitelist({ rows, decimals: 3 }, cb)
+    const { called } = processWhitelist({ rows, decimals: 3 }, cb, cbValidation, cbSupplyValidation)
 
     // Then
     expect(called).toBe(1)
@@ -102,9 +131,14 @@ describe('processWhitelist function', () => {
       ['0x2222222222222222222222222222222222222222', '10.12', '10.123']
      ]
     const cb = jest.fn()
+    const cbValidation = jest.fn()
+    const cbSupplyValidation = jest.fn()
+
+    cbValidation.mockReturnValue(true)
+    cbSupplyValidation.mockReturnValue(undefined)
 
     // When
-    const { called } = processWhitelist({ rows, decimals: 3 }, cb)
+    const { called } = processWhitelist({ rows, decimals: 3 }, cb, cbValidation, cbSupplyValidation)
 
     // Then
     expect(called).toBe(2)
@@ -121,11 +155,86 @@ describe('processWhitelist function', () => {
       ['0x4444444444444444444444444444444444444444', '10.124', '10.125']
     ]
     const cb = jest.fn()
+    const cbValidation = jest.fn()
+    const cbSupplyValidation = jest.fn()
+
+    cbValidation.mockReturnValue(true)
+    cbSupplyValidation.mockReturnValue(undefined)
 
     // When
-    const { called } = processWhitelist({ rows, decimals: 3 }, cb)
+    const { called } = processWhitelist({ rows, decimals: 3 }, cb, cbValidation, cbSupplyValidation)
 
     // Then
     expect(called).toBe(3)
+  })
+
+  describe('TierStore interaction', () => {
+    let tierStore
+
+    beforeEach(() => {
+      tierStore = new TierStore()
+      tierStore.addTier(defaultTier, defaultTierValidations)
+    })
+
+    afterEach(() => {
+      tierStore.reset()
+    })
+
+    it(`should add up to LIMIT_WHITELISTED_ADDRESSES`, () => {
+      // Given
+      const { rows } = require('./helpers/whitelist-addresses')
+
+      const cb = jest.fn(item => {
+        tierStore.addWhitelistItem(item, 0)
+      })
+      const cbValidation = jest.fn(() => tierStore.validateWhitelistedAddressLength(0))
+      const cbSupplyValidation = jest.fn()
+      cbSupplyValidation.mockReturnValue(undefined)
+
+      // When
+      const { called } = processWhitelist({ rows, decimals: 3 }, cb, cbValidation, cbSupplyValidation)
+
+      // Then
+      expect(called).toBe(LIMIT_WHITELISTED_ADDRESSES)
+    })
+
+    it(`should add all valid addresses if addresses count is less than LIMIT_WHITELISTED_ADDRESSES`, () => {
+      // Given
+      const addressCount = 24
+      const rows = require('./helpers/whitelist-addresses').rows.slice(0, addressCount)
+
+      const cb = jest.fn(item => {
+        tierStore.addWhitelistItem(item, 0)
+      })
+      const cbValidation = jest.fn(() => tierStore.validateWhitelistedAddressLength(0))
+      const cbSupplyValidation = jest.fn()
+      cbSupplyValidation.mockReturnValue(undefined)
+
+      // When
+      const { called } = processWhitelist({ rows, decimals: 3 }, cb, cbValidation, cbSupplyValidation)
+
+      // Then
+      expect(called).toBe(addressCount)
+    })
+
+    it(`should add addresses whose maxCap is not greater than 1000`, () => {
+      // Given
+      const { rows } = require('./helpers/whitelist-addresses')
+      const { supply } = tierStore.tiers[0]
+      const lessOrEqualThanSupply = isLessOrEqualThan()(supply)
+      const validAddressesCount = rows.filter(({ max }) => lessOrEqualThanSupply(max) === undefined).length
+
+      tierStore.setTierProperty(1000, 'supply', 0)
+
+      const cb = jest.fn(item => tierStore.addWhitelistItem(item, 0))
+      const cbValidation = jest.fn(() => tierStore.validateWhitelistedAddressLength(0))
+      const cbSupplyValidation = jest.fn(max => lessOrEqualThanSupply(max))
+
+      // When
+      const { called } = processWhitelist({ rows, decimals: 3 }, cb, cbValidation, cbSupplyValidation)
+
+      // Then
+      expect(called).toBe(validAddressesCount)
+    })
   })
 })
