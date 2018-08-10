@@ -37,7 +37,7 @@ export class stepTwo extends Component {
     this.setState({ loading: false, tokenValues })
   }
 
-  load = async () => {
+  async load() {
     const { tokenStore, crowdsaleStore, reservedTokenStore } = this.props
 
     await sleep(1000)
