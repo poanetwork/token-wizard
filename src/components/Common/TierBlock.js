@@ -124,7 +124,12 @@ export const TierBlock = ({ fields, ...props }) => {
 
             <div className="input-block-container">
               <CrowdsaleRate name={`${name}.rate`} errorStyle={inputErrorStyle} side="left" />
-              <Supply name={`${name}.supply`} errorStyle={inputErrorStyle} side="right" />
+              <Supply
+                name={`${name}.supply`}
+                errorStyle={inputErrorStyle}
+                side="right"
+                disabled={props.tierStore && props.tierStore.tiers[index].whitelist.length}
+              />
             </div>
             <div className="input-block-container">
               <MinCap

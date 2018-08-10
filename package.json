@@ -196,5 +196,11 @@
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm precommit",
+      "pre-push": "npm test:dapp:web3"
+    }
   }
 }

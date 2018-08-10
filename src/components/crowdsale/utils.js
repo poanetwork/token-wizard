@@ -654,7 +654,7 @@ export const isCrowdSaleFull = async (addr, execID, methods, account) => {
   const userMaxContribution = await getUserMaxContribution()
 
   const isCrowdsaleFullValue = isCrowdsaleFullInstance.is_crowdsale_full || isCrowdsaleFullInstance[0]
-  const checkIfCrowdsaleIsFull = isCrowdsaleFullValue || userMaxContribution.toFixed() == 0
+  const checkIfCrowdsaleIsFull = isCrowdsaleFullValue || userMaxContribution.eq(0)
 
   logger.log(`Crowdsale is full`, checkIfCrowdsaleIsFull)
 

@@ -10,12 +10,13 @@ import { WhitelistItem } from './WhitelistItem'
 import { inject, observer } from 'mobx-react'
 import {
   clearingWhitelist,
-  whitelistImported,
+  maxCapExceedsSupply,
   noMoreWhitelistedSlotAvailable,
-  noMoreWhitelistedSlotAvailableCSV
+  noMoreWhitelistedSlotAvailableCSV,
+  whitelistImported
 } from '../../utils/alerts'
 import processWhitelist from '../../utils/processWhitelist'
-import { validateWhitelistMax, validateWhitelistMin } from '../../utils/validations'
+import { isLessOrEqualThan, validateWhitelistMax, validateWhitelistMin } from '../../utils/validations'
 import logdown from 'logdown'
 
 const logger = logdown('TW:WhitelistInputBlock')
@@ -142,11 +143,13 @@ export class WhitelistInputBlock extends React.Component {
   }
 
   handleMinChange = ({ min }) => {
-    const errorMessage = validateWhitelistMin({
-      min,
-      max: this.state.max,
-      decimals: this.props.decimals
-    })
+    const errorMessage =
+      !this.state.validation.max.pristine &&
+      validateWhitelistMin({
+        min,
+        max: this.state.max,
+        decimals: this.props.decimals
+      })
 
     return new Promise(resolve => {
       this.setState(
@@ -168,11 +171,19 @@ export class WhitelistInputBlock extends React.Component {
   }
 
   handleMaxChange = ({ max }) => {
-    const errorMessage = validateWhitelistMax({
-      min: this.state.min,
-      max,
-      decimals: this.props.decimals
-    })
+    let errorMessage =
+      !this.state.validation.max.pristine &&
+      validateWhitelistMax({
+        min: this.state.min,
+        max,
+        decimals: this.props.decimals
+      })
+
+    if (typeof errorMessage === 'undefined') {
+      const { tierStore, num } = this.props
+      const { supply } = tierStore.tiers[num]
+      errorMessage = isLessOrEqualThan(`Exceeds supply (${supply})`)(supply)(max)
+    }
 
     return new Promise(resolve => {
       this.setState(
@@ -213,7 +224,7 @@ export class WhitelistInputBlock extends React.Component {
       Papa.parse(file, {
         skipEmptyLines: true,
         complete: results => {
-          const { called, whitelistedAddressLengthError } = processWhitelist(
+          const { called, whitelistedAddressLengthError, maxCapExceedsSupplyError } = processWhitelist(
             {
               rows: results.data,
               decimals: decimals
@@ -223,11 +234,14 @@ export class WhitelistInputBlock extends React.Component {
             },
             () => {
               return tierStore.validateWhitelistedAddressLength(num)
-            }
+            },
+            isLessOrEqualThan()(tierStore.tiers[num].supply)
           )
 
           if (whitelistedAddressLengthError) {
             noMoreWhitelistedSlotAvailableCSV(called)
+          } else if (maxCapExceedsSupplyError) {
+            maxCapExceedsSupply(called)
           } else {
             whitelistImported(called)
           }

@@ -236,8 +236,8 @@ let checkEventTopics = obj => {
   if (topics.length > 0) {
     const eventEncoded = topics[0]
     if (
-      eventEncoded == web3.utils.sha3(EXCEPTIONS.storageException) ||
-      eventEncoded == web3.utils.sha3(EXCEPTIONS.applicationException)
+      eventEncoded === web3.utils.sha3(EXCEPTIONS.storageException) ||
+      eventEncoded === web3.utils.sha3(EXCEPTIONS.applicationException)
     )
       return true
   }
@@ -376,6 +376,7 @@ async function getOwnerApplicationsInstancesForProxy() {
   })
 }
 
+// eslint-disable-next-line no-unused-vars
 async function getOwnerApplicationsInstances() {
   const { web3 } = web3Store
   const registryExecContract = await attachToSpecificCrowdsaleContract('registryExec')
