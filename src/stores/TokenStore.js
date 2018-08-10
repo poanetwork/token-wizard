@@ -73,12 +73,14 @@ class TokenStore {
 
   @action
   checkIsEmptyMinted = () => {
-    return !this.name && !this.ticker && !this.decimals
+    // The decimal field is not checked, because it has a default value
+    return !this.name && !this.ticker
   }
 
   @action
   checkIsEmptyDutch = () => {
-    return !this.name && !this.ticker && !this.decimals && !this.supply
+    // The decimal field is not checked, because it has a default value
+    return !this.name && !this.ticker && !this.supply
   }
 
   @action
