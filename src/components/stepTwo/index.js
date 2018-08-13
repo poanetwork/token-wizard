@@ -9,7 +9,7 @@ import { inject, observer } from 'mobx-react'
 import { Form } from 'react-final-form'
 import { StepTwoForm } from './StepTwoForm'
 import logdown from 'logdown'
-import { sleep } from '../../utils/utils'
+import { sleep, toBigNumber } from '../../utils/utils'
 import setFieldTouched from 'final-form-set-field-touched'
 
 const { TOKEN_SETUP } = NAVIGATION_STEPS
@@ -110,7 +110,9 @@ export class stepTwo extends Component {
     const { reservedTokenStore, crowdsaleStore, tokenStore } = this.props
     const { isMintedCappedCrowdsale } = crowdsaleStore
     const decimals =
-      tokenStore.validToken.decimals === VALID && tokenStore.decimals >= 0 ? parseInt(tokenStore.decimals, 10) : 0
+      tokenStore.validToken.decimals === VALID && tokenStore.decimals >= 0
+        ? toBigNumber(tokenStore.decimals).toFixed()
+        : 0
 
     return (
       <section className="steps steps_crowdsale-contract" ref="two">
