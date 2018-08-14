@@ -33,7 +33,8 @@ export class stepThree extends React.Component {
   state = {
     loading: false,
     reload: false,
-    initialTiers: []
+    initialTiers: [],
+    burnExcess: 'no'
   }
 
   async componentDidMount() {
@@ -41,7 +42,7 @@ export class stepThree extends React.Component {
     await checkWeb3(web3Store.web3)
 
     this.setState({ loading: true })
-    const initialTiers = await this.load()
+    const { initialTiers, burnExcess } = await this.load()
 
     try {
       await gasPriceStore.updateValues()
@@ -49,12 +50,16 @@ export class stepThree extends React.Component {
       noGasPriceAvailable()
     }
 
-    this.setState({ loading: false, initialTiers: initialTiers })
+    this.setState({
+      loading: false,
+      initialTiers: initialTiers,
+      burnExcess: burnExcess
+    })
     window.scrollTo(0, 0)
   }
 
   async load() {
-    const { tierStore, web3Store } = this.props
+    const { tierStore, generalStore, web3Store } = this.props
 
     await sleep(1000)
 
@@ -63,7 +68,10 @@ export class stepThree extends React.Component {
       tierStore.addCrowdsale(web3Store.curAddress)
     }
 
-    return JSON.parse(JSON.stringify(tierStore.tiers))
+    return {
+      initialTiers: JSON.parse(JSON.stringify(tierStore.tiers)),
+      burnExcess: generalStore.burnExcess
+    }
   }
 
   goToDeploymentStage = () => {
@@ -157,7 +165,7 @@ export class stepThree extends React.Component {
             walletAddress: web3Store.curAddress,
             gasPrice: gasPriceStore.gasPricesInGwei[0],
             whitelistEnabled: 'no',
-            burnExcess: 'no',
+            burnExcess: this.state.burnExcess,
             tiers: this.state.initialTiers
           }}
           component={stepThreeComponent}
