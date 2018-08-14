@@ -4,8 +4,8 @@ import { FieldArray } from 'react-final-form-arrays'
 import { WhenFieldChanges } from '../Common/WhenFieldChanges'
 import { InputField2 } from '../Common/InputField2'
 import GasPriceInput from './GasPriceInput'
+import { ButtonContinue } from '../Common/ButtonContinue'
 import { gweiToWei } from '../../utils/utils'
-import classnames from 'classnames'
 import {
   composeValidators,
   isAddress,
@@ -38,17 +38,26 @@ export const StepThreeFormMintedCapped = ({
   values,
   invalid,
   pristine,
+  submitting,
+  errors,
   mutators: { push },
   ...props
 }) => {
-  const submitButtonClass = classnames('button', 'button_fill', {
-    button_disabled: pristine || invalid
-  })
+  const status = !(submitting || invalid)
 
   const addTier = () => {
     props.addCrowdsale()
     const lastTier = props.tierStore.tiers[props.tierStore.tiers.length - 1]
     push('tiers', JSON.parse(JSON.stringify(lastTier)))
+  }
+
+  /**
+   * Set gas type selected on gas price input
+   * @param value
+   */
+  const updateGasTypeSelected = value => {
+    const { generalStore } = props
+    generalStore.setGasTypeSelected(value)
   }
 
   const handleOnChange = ({ values }) => {
@@ -69,8 +78,10 @@ export const StepThreeFormMintedCapped = ({
       props.tierStore.setTierProperty(tier.whitelistEnabled, 'whitelistEnabled', index)
       props.tierStore.validateTiers('supply', index)
     })
+    const endTime =
+      values && values.tiers && values.tiers.length > 0 ? values.tiers[values.tiers.length - 1].endTime : null
     props.crowdsaleStore.setProperty('supply', totalSupply)
-    props.crowdsaleStore.setProperty('endTime', values.tiers[values.tiers.length - 1].endTime)
+    props.crowdsaleStore.setProperty('endTime', endTime)
   }
 
   const whenWhitelistBlock = tierInd => {
@@ -114,6 +125,7 @@ export const StepThreeFormMintedCapped = ({
               component={InputField2}
               validate={isAddress()}
               errorStyle={inputErrorStyle}
+              value={values.walletAddress}
               side="left"
               label={WALLET_ADDRESS}
               description={DESCRIPTION.WALLET}
@@ -124,6 +136,7 @@ export const StepThreeFormMintedCapped = ({
               component={GasPriceInput}
               side="right"
               gasPrices={props.gasPricesInGwei}
+              updateGasTypeSelected={updateGasTypeSelected}
               validate={value =>
                 composeValidators(
                   isDecimalPlacesNotGreaterThan(VALIDATION_MESSAGES.DECIMAL_PLACES_9)(9),
@@ -143,9 +156,7 @@ export const StepThreeFormMintedCapped = ({
         <div className="button button_fill_secondary" onClick={addTier}>
           Add Tier
         </div>
-        <span onClick={handleSubmit} className={submitButtonClass}>
-          Continue
-        </span>
+        <ButtonContinue onClick={handleSubmit} status={status} />
       </div>
 
       <FormSpy subscription={{ values: true }} onChange={handleOnChange} />
