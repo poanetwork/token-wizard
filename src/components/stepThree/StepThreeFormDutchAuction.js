@@ -4,8 +4,8 @@ import { FieldArray } from 'react-final-form-arrays'
 import { WhenFieldChanges } from '../Common/WhenFieldChanges'
 import { InputField2 } from '../Common/InputField2'
 import GasPriceInput from './GasPriceInput'
+import { ButtonContinue } from '../Common/ButtonContinue'
 import { gweiToWei } from '../../utils/utils'
-import classnames from 'classnames'
 import {
   composeValidators,
   isAddress,
@@ -33,10 +33,17 @@ const inputErrorStyle = {
   height: '20px'
 }
 
-export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, pristine, ...props }) => {
-  const submitButtonClass = classnames('button', 'button_fill', {
-    button_disabled: pristine || invalid
-  })
+export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, submitting, pristine, ...props }) => {
+  const status = !(submitting || invalid)
+
+  /**
+   * Set gas type selected on gas price input
+   * @param value
+   */
+  const updateGasTypeSelected = value => {
+    const { generalStore } = props
+    generalStore.setGasTypeSelected(value)
+  }
 
   const handleOnChange = ({ values }) => {
     props.tierStore.updateWalletAddress(values.walletAddress, VALID)
@@ -125,6 +132,7 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, pristine, ...
               component={GasPriceInput}
               side="right"
               gasPrices={props.gasPricesInGwei}
+              updateGasTypeSelected={updateGasTypeSelected}
               validate={value =>
                 composeValidators(
                   isDecimalPlacesNotGreaterThan(VALIDATION_MESSAGES.DECIMAL_PLACES_9)(9),
@@ -141,9 +149,7 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, pristine, ...
       </FieldArray>
 
       <div className="button-container">
-        <span onClick={handleSubmit} className={submitButtonClass}>
-          Continue
-        </span>
+        <ButtonContinue onClick={handleSubmit} status={status} />
       </div>
 
       <FormSpy subscription={{ values: true }} onChange={handleOnChange} />
