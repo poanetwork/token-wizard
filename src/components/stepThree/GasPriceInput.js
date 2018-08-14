@@ -1,14 +1,28 @@
 import React, { Component } from 'react'
 import { GAS_PRICE } from '../../utils/constants'
+import { objectKeysToLowerCase } from '../../utils/utils'
 import { Error } from '../Common/Error'
+import { inject, observer } from 'mobx-react'
 
+@inject('generalStore')
+@observer
 class GasPriceInput extends Component {
-  constructor(props) {
-    super(props)
+  state = {
+    isCustom: false,
+    customGasPrice: 0,
+    gasTypeSelected: {}
+  }
 
-    this.state = {
-      isCustom: false,
-      customGasPrice: undefined
+  async componentDidMount() {
+    const { generalStore } = this.props
+    const gasTypeSelected = objectKeysToLowerCase(generalStore.getGasTypeSelected)
+    this.setState({ gasTypeSelected: gasTypeSelected })
+
+    if (gasTypeSelected.id === GAS_PRICE.CUSTOM.ID) {
+      this.setState({
+        isCustom: true,
+        customGasPrice: gasTypeSelected.price
+      })
     }
   }
 
@@ -16,36 +30,44 @@ class GasPriceInput extends Component {
     this.setState({
       isCustom: false
     })
-    this.props.input.onChange(value)
+
+    const gasTypeSelected = objectKeysToLowerCase(value)
+    this.handleGasType(gasTypeSelected)
+    this.props.input.onChange(gasTypeSelected)
   }
 
   handleCustomSelected = () => {
-    const { input, gasPrices } = this.props
+    this.setState({
+      isCustom: true
+    })
 
-    const newState = { isCustom: true }
-
-    if (this.state.customGasPrice === undefined) {
-      const slow = gasPrices.find(gasPrice => gasPrice.id === GAS_PRICE.SLOW.ID)
-      newState.customGasPrice = slow.price
+    let gasTypeSelected = objectKeysToLowerCase(GAS_PRICE.CUSTOM)
+    if (this.state.customGasPrice) {
+      gasTypeSelected.price = this.state.customGasPrice
     }
 
-    this.setState(newState, () => {
-      input.onChange(
-        Object.assign(
-          {},
-          {
-            id: GAS_PRICE.CUSTOM.ID,
-            price: this.state.customGasPrice
-          }
-        )
-      )
+    this.handleGasType(gasTypeSelected)
+    this.props.input.onChange(gasTypeSelected)
+  }
+
+  handleGasType = value => {
+    const { updateGasTypeSelected } = this.props
+
+    updateGasTypeSelected(value)
+    this.setState({
+      gasTypeSelected: value
     })
   }
 
   handleCustomGasPriceChange = value => {
-    const { input } = this.props
+    const { updateGasTypeSelected, input } = this.props
 
+    let gasTypeSelected = this.state.gasTypeSelected
+    gasTypeSelected.price = value
+
+    updateGasTypeSelected(gasTypeSelected)
     this.setState({
+      gasTypeSelected: gasTypeSelected,
       customGasPrice: value
     })
 
@@ -60,9 +82,12 @@ class GasPriceInput extends Component {
     )
   }
 
+  compareChecked = value => {
+    return new String(this.state.gasTypeSelected.id).valueOf() === new String(value).valueOf()
+  }
+
   render() {
     const { input, side, gasPrices } = this.props
-
     return (
       <div className={side}>
         <label htmlFor={input.name} className="label">
@@ -74,11 +99,13 @@ class GasPriceInput extends Component {
               <input
                 id={gasPrice.id}
                 type="radio"
-                checked={input.value.id === gasPrice.id}
-                onChange={() => {
+                value={gasPrice.id}
+                checked={this.compareChecked(gasPrice.id)}
+                name="gas-price"
+                onChange={e => {
                   gasPrice.id !== GAS_PRICE.CUSTOM.ID
                     ? this.handleNonCustomSelected(gasPrice)
-                    : this.handleCustomSelected()
+                    : this.handleCustomSelected(e.target.value)
                 }}
               />
               <span className="title">{gasPrice.description}</span>
@@ -91,7 +118,10 @@ class GasPriceInput extends Component {
             type="number"
             className="input"
             value={this.state.customGasPrice}
-            onChange={e => this.handleCustomGasPriceChange(e.target.value)}
+            name="gas-price-custom-value"
+            onChange={e => {
+              this.handleCustomGasPriceChange(e.target.value)
+            }}
           />
         ) : null}
         <p className="description">Slow is cheap, fast is expensive</p>
