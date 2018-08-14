@@ -45,6 +45,12 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, submitting, p
     generalStore.setGasTypeSelected(value)
   }
 
+  const handleBurnExcessChange = (value, input) => {
+    const { generalStore } = props
+    generalStore.setBurnExcess(value)
+    input.onChange(value)
+  }
+
   const handleOnChange = ({ values }) => {
     props.tierStore.updateWalletAddress(values.walletAddress, VALID)
     props.tierStore.updateBurnExcess(values.burnExcess, VALID)
@@ -107,7 +113,7 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, submitting, p
                             type="radio"
                             checked={input.value === 'yes'}
                             value="yes"
-                            onChange={() => input.onChange('yes')}
+                            onChange={e => handleBurnExcessChange(e.target.value, input)}
                           />
                           <span className="title">yes</span>
                         </label>
@@ -116,7 +122,7 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, submitting, p
                             type="radio"
                             checked={input.value === 'no'}
                             value="no"
-                            onChange={() => input.onChange('no')}
+                            onChange={e => handleBurnExcessChange(e.target.value, input)}
                           />
                           <span className="title">no</span>
                         </label>

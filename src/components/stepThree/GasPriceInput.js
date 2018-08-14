@@ -83,6 +83,7 @@ class GasPriceInput extends Component {
   }
 
   compareChecked = value => {
+    // eslint-disable-next-line
     return new String(this.state.gasTypeSelected.id).valueOf() === new String(value).valueOf()
   }
 
