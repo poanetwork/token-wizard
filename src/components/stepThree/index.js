@@ -2,7 +2,7 @@ import React from 'react'
 import '../../assets/stylesheets/application.css'
 import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
-import { getNetworkVersion, getNetWorkNameById } from '../../utils/blockchainHelpers'
+import { getNetworkVersion, getNetWorkNameById, checkWeb3 } from '../../utils/blockchainHelpers'
 import { StepNavigation } from '../Common/StepNavigation'
 import { NAVIGATION_STEPS, CHAINS } from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
@@ -11,6 +11,7 @@ import { noGasPriceAvailable, warningOnMainnetAlert } from '../../utils/alerts'
 import { getStep3Component } from './utils'
 import createDecorator from 'final-form-calculate'
 import logdown from 'logdown'
+import { sleep } from '../../utils/utils'
 
 const logger = logdown('TW:stepThree')
 
@@ -29,29 +30,40 @@ const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 )
 @observer
 export class stepThree extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      loading: true
-    }
+  state = {
+    loading: false,
+    reload: false,
+    initialTiers: []
   }
 
-  componentWillMount() {
-    const { gasPriceStore, tierStore, web3Store } = this.props
+  async componentDidMount() {
+    const { web3Store, gasPriceStore } = this.props
+    await checkWeb3(web3Store.web3)
+
+    this.setState({ loading: true })
+    const initialTiers = await this.load()
+
+    try {
+      await gasPriceStore.updateValues()
+    } catch (error) {
+      noGasPriceAvailable()
+    }
+
+    this.setState({ loading: false, initialTiers: initialTiers })
+    window.scrollTo(0, 0)
+  }
+
+  async load() {
+    const { tierStore, web3Store } = this.props
+
+    await sleep(1000)
 
     if (tierStore.tiers.length === 0) {
+      logger.log('Web3store', web3Store)
       tierStore.addCrowdsale(web3Store.curAddress)
     }
-    this.initialTiers = JSON.parse(JSON.stringify(tierStore.tiers))
 
-    gasPriceStore
-      .updateValues()
-      .catch(() => noGasPriceAvailable())
-      .then(() => {
-        this.setState({ loading: false })
-        window.scrollTo(0, 0)
-      })
+    return JSON.parse(JSON.stringify(tierStore.tiers))
   }
 
   goToDeploymentStage = () => {
@@ -121,6 +133,16 @@ export class stepThree extends React.Component {
   })
 
   render() {
+    if (this.state.initialTiers.length === 0) {
+      //Not render the form until tiers are setup
+      return (
+        <section className="steps steps_crowdsale-contract" ref="three">
+          <StepNavigation activeStep={CROWDSALE_SETUP} />
+          <Loader show={this.state.loading} />
+        </section>
+      )
+    }
+
     const { generalStore, tierStore, gasPriceStore, tokenStore, web3Store, crowdsaleStore } = this.props
     let stepThreeComponent = getStep3Component(crowdsaleStore.strategy)
 
@@ -136,7 +158,7 @@ export class stepThree extends React.Component {
             gasPrice: gasPriceStore.gasPricesInGwei[0],
             whitelistEnabled: 'no',
             burnExcess: 'no',
-            tiers: this.initialTiers
+            tiers: this.state.initialTiers
           }}
           component={stepThreeComponent}
           addCrowdsale={tierStore.addCrowdsale}
