@@ -6,6 +6,7 @@ class GeneralStore {
   @observable networkID
   @observable gasPrice = GAS_PRICE.FAST.PRICE
   @observable gasTypeSelected
+  @observable burnExcess
 
   constructor() {
     this.reset()
@@ -28,10 +29,16 @@ class GeneralStore {
   }
 
   @action
+  setBurnExcess = burnExcess => {
+    this.burnExcess = burnExcess
+  }
+
+  @action
   reset = () => {
     this.networkID = undefined
     this.gasPrice = GAS_PRICE.FAST.PRICE
     this.gasTypeSelected = GAS_PRICE.SLOW
+    this.burnExcess = 'no'
   }
 
   // Getters
