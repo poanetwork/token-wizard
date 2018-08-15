@@ -334,7 +334,6 @@ class TierStore {
   validateWhitelistedAddressLength(tierIndex) {
     return this.tiers[tierIndex].whitelist.length < LIMIT_WHITELISTED_ADDRESSES
   }
-
 }
 
 export default TierStore
