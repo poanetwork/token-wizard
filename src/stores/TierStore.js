@@ -335,13 +335,6 @@ class TierStore {
     return this.tiers[tierIndex].whitelist.length < LIMIT_WHITELISTED_ADDRESSES
   }
 
-  getTiers(crowdsaleStore) {
-    if (crowdsaleStore.isDutchAuction) {
-      return JSON.parse(JSON.stringify(this.tiers))[0]
-    } else {
-      return JSON.parse(JSON.stringify(this.tiers))
-    }
-  }
 }
 
 export default TierStore
