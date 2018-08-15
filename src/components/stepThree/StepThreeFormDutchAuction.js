@@ -63,6 +63,9 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, submitting, p
     if (reload) {
       const tiers = values && values.tiers ? values.tiers : []
       tiers.forEach((tier, index) => {
+        form.mutators.setFieldTouched(`tiers[${index}].tier`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].updatable`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].whitelistEnabled`, true)
         form.mutators.setFieldTouched(`tiers[${index}].startTime`, true)
         form.mutators.setFieldTouched(`tiers[${index}].endTime`, true)
         form.mutators.setFieldTouched(`tiers[${index}].minRate`, true)
