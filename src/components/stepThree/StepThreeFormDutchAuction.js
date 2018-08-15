@@ -33,7 +33,7 @@ const inputErrorStyle = {
   height: '20px'
 }
 
-export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, submitting, pristine, ...props }) => {
+export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, submitting, pristine, form, reload, ...props }) => {
   const status = !(submitting || invalid)
 
   /**
@@ -45,13 +45,36 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, submitting, p
     generalStore.setGasTypeSelected(value)
   }
 
+  const handleValidateGasPrice = value => {
+    const errors = composeValidators(
+      isDecimalPlacesNotGreaterThan(VALIDATION_MESSAGES.DECIMAL_PLACES_9)(9),
+      isGreaterOrEqualThan(VALIDATION_MESSAGES.NUMBER_GREATER_THAN)(0.1)
+    )(value.price)
+    if (errors) return errors.shift()
+  }
+
   const handleBurnExcessChange = (value, input) => {
     const { generalStore } = props
     generalStore.setBurnExcess(value)
     input.onChange(value)
   }
 
-  const handleOnChange = ({ values }) => {
+  const setFieldAsTouched = ({ values, errors }) => {
+    if (reload) {
+      const tiers = values && values.tiers ? values.tiers : []
+      tiers.forEach((tier, index) => {
+        form.mutators.setFieldTouched(`tiers[${index}].startTime`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].endTime`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].minRate`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].maxRate`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].supply`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].minCap`, true)
+      })
+      form.mutators.setFieldTouched(`gasPrice`, true)
+    }
+  }
+
+  const handleOnChange = ({ values, errors }) => {
     props.tierStore.updateWalletAddress(values.walletAddress, VALID)
     props.tierStore.updateBurnExcess(values.burnExcess, VALID)
     props.generalStore.setGasPrice(gweiToWei(values.gasPrice.price))
@@ -74,6 +97,9 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, submitting, p
     const endTime = tiers.length > 0 ? tiers[tiers.length - 1].endTime : null
     props.crowdsaleStore.setProperty('supply', totalSupply)
     props.crowdsaleStore.setProperty('endTime', endTime)
+
+    // Set fields as touched
+    setFieldAsTouched({ values, errors })
   }
 
   return (
@@ -139,12 +165,7 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, submitting, p
               side="right"
               gasPrices={props.gasPricesInGwei}
               updateGasTypeSelected={updateGasTypeSelected}
-              validate={value =>
-                composeValidators(
-                  isDecimalPlacesNotGreaterThan(VALIDATION_MESSAGES.DECIMAL_PLACES_9)(9),
-                  isGreaterOrEqualThan(VALIDATION_MESSAGES.NUMBER_GREATER_THAN)(0.1)
-                )(value.price)
-              }
+              validate={value => handleValidateGasPrice(value)}
             />
           </div>
         </div>
