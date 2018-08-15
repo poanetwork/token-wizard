@@ -59,7 +59,7 @@ export class stepThree extends React.Component {
   }
 
   async load() {
-    const { tierStore, generalStore, web3Store } = this.props
+    const { tierStore, generalStore, web3Store, crowdsaleStore } = this.props
 
     await sleep(1000)
 
@@ -68,8 +68,11 @@ export class stepThree extends React.Component {
       tierStore.addCrowdsale(web3Store.curAddress)
     }
 
+    let initialTiers = []
+    initialTiers.push(tierStore.getTiers(crowdsaleStore))
+
     return {
-      initialTiers: JSON.parse(JSON.stringify(tierStore.tiers)),
+      initialTiers: initialTiers,
       burnExcess: generalStore.burnExcess
     }
   }
