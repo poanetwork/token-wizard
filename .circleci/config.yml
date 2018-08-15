@@ -1,0 +1,41 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image:  circleci/node:latest-browsers
+
+    working_directory: ~/
+
+    steps:
+       - git submodule update --init --recursive --remote
+       - npm run installWeb3
+
+  e2eMintedUI:
+    docker:
+      - image:  circleci/node:latest-browsers
+    steps:
+      - npm run e2eMintedUI
+
+  e2eMintedWhitelist:
+      docker:
+        - image:  circleci/node:latest-browsers
+      steps:
+        - npm run e2eMintedWhitelist
+
+  workflows:
+    version: 2
+    test:
+      jobs:
+        - build
+
+        - e2eMintedUI:
+            requires:
+              - build
+
+        - e2eMintedWhitelist
+            requires:
+              - build
+
+
+
+
