@@ -12,5 +12,5 @@
 	branch = e2e-wizard2.0
 [submodule "submodules/auth-os-applications"]
 	path = submodules/auth-os-applications
-	url = https://github.com/dennis00010011b/auth-os-applications/
+	url = https://github.com/poanetwork/auth-os-applications/
 	branch = master
