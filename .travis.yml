@@ -15,7 +15,10 @@ env:
   - TEST_SUITE=e2eDutchMincap
   - TEST_SUITE=reactComponentTests
   - TEST_SUITE=contractsMinted
-  - TEST_SUITE=contractsDutch
+  - TEST_SUITE=contractsDutchPart1
+  - TEST_SUITE=contractsDutchPart2
+  - TEST_SUITE=contractsDutchPart3
+  - TEST_SUITE=contractsDutchPart4
 
 install:
 
@@ -42,7 +45,10 @@ script:
   - if [ $TEST_SUITE == 'e2eDutchMincap' ]; then npm run e2eDutchMincap; fi
   - if [ $TEST_SUITE == 'reactComponentTests' ]; then  npm run lint && npm run coveralls; fi
   - if [ $TEST_SUITE == 'contractsMinted' ]; then  npm run testContractsMintedCappedCrowdsale; fi
-  - if [ $TEST_SUITE == 'contractsDutch' ]; then  npm run testContractsDutchAuction; fi
+  - if [ $TEST_SUITE == 'contractsDutchPart1' ]; then  npm run testContractsDutchPart1; fi
+  - if [ $TEST_SUITE == 'contractsDutchPart2' ]; then  npm run testContractsDutchPart2; fi
+  - if [ $TEST_SUITE == 'contractsDutchPart3' ]; then  npm run testContractsDutchPart3; fi
+  - if [ $TEST_SUITE == 'contractsDutchPart4' ]; then  npm run testContractsDutchPart4; fi
 
 after_script:
   - sudo kill `sudo lsof -t -i:8545`
