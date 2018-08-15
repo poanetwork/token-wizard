@@ -48,7 +48,7 @@ script:
   - if [ $TEST_SUITE == 'contractsDutchPart1' ]; then  npm run testContractsDutchPart1; fi
   - if [ $TEST_SUITE == 'contractsDutchPart2' ]; then  npm run testContractsDutchPart2; fi
   - if [ $TEST_SUITE == 'contractsDutchPart3' ]; then  npm run testContractsDutchPart3; fi
-  - if [ $TEST_SUITE == 'contractsDutchPart3' ]; then  npm run testContractsDutchPart4; fi
+  - if [ $TEST_SUITE == 'contractsDutchPart4' ]; then  npm run testContractsDutchPart4; fi
 
 after_script:
   - sudo kill `sudo lsof -t -i:8545`
