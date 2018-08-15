@@ -40,7 +40,9 @@ export const StepThreeFormMintedCapped = ({
   pristine,
   submitting,
   errors,
-  mutators: { push },
+  mutators: { push, setFieldTouched },
+  form,
+  reload,
   ...props
 }) => {
   const status = !(submitting || invalid)
@@ -58,6 +60,32 @@ export const StepThreeFormMintedCapped = ({
   const updateGasTypeSelected = value => {
     const { generalStore } = props
     generalStore.setGasTypeSelected(value)
+  }
+
+  const handleValidateGasPrice = value => {
+    const errors = composeValidators(
+      isDecimalPlacesNotGreaterThan(VALIDATION_MESSAGES.DECIMAL_PLACES_9)(9),
+      isGreaterOrEqualThan(VALIDATION_MESSAGES.NUMBER_GREATER_THAN)(0.1)
+    )(value.price)
+    if (errors) return errors.shift()
+  }
+
+  const setFieldAsTouched = ({ values, errors }) => {
+    if (reload) {
+      const tiers = values && values.tiers ? values.tiers : []
+      tiers.forEach((tier, index) => {
+        form.mutators.setFieldTouched(`tiers[${index}].tier`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].updatable`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].whitelistEnabled`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].startTime`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].endTime`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].minRate`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].maxRate`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].supply`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].minCap`, true)
+      })
+      form.mutators.setFieldTouched(`gasPrice`, true)
+    }
   }
 
   const handleOnChange = ({ values }) => {
@@ -82,6 +110,9 @@ export const StepThreeFormMintedCapped = ({
       values && values.tiers && values.tiers.length > 0 ? values.tiers[values.tiers.length - 1].endTime : null
     props.crowdsaleStore.setProperty('supply', totalSupply)
     props.crowdsaleStore.setProperty('endTime', endTime)
+
+    // Set fields as touched
+    setFieldAsTouched({ values, errors })
   }
 
   const whenWhitelistBlock = tierInd => {
@@ -137,12 +168,7 @@ export const StepThreeFormMintedCapped = ({
               side="right"
               gasPrices={props.gasPricesInGwei}
               updateGasTypeSelected={updateGasTypeSelected}
-              validate={value =>
-                composeValidators(
-                  isDecimalPlacesNotGreaterThan(VALIDATION_MESSAGES.DECIMAL_PLACES_9)(9),
-                  isGreaterOrEqualThan(VALIDATION_MESSAGES.NUMBER_GREATER_THAN)(0.1)
-                )(value.price)
-              }
+              validate={value => handleValidateGasPrice(value)}
             />
           </div>
         </div>
