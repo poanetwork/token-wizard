@@ -73,8 +73,13 @@ export class stepThree extends React.Component {
       })
     }
 
-    let initialTiers = []
-    initialTiers.push(tierStore.getTiers(crowdsaleStore))
+    let initialTiers
+
+    if (crowdsaleStore.isDutchAuction) {
+      initialTiers = [JSON.parse(JSON.stringify(tierStore.tiers))[0]]
+    } else {
+      initialTiers = JSON.parse(JSON.stringify(tierStore.tiers))
+    }
 
     return {
       initialTiers: initialTiers,
