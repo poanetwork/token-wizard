@@ -21,6 +21,14 @@ const inputErrorStyle = {
 }
 
 export const TierBlock = ({ fields, ...props }) => {
+  const onChangeWhitelisted = (value, input, index) => {
+    //Clear whitelist
+    if (props.tierStore) {
+      props.tierStore.emptyWhitelist(index)
+    }
+    return input.onChange(value)
+  }
+
   return (
     <div>
       {fields.map((name, index) => (
@@ -90,7 +98,7 @@ export const TierBlock = ({ fields, ...props }) => {
                           type="radio"
                           checked={input.value === 'yes'}
                           value="yes"
-                          onChange={() => input.onChange('yes')}
+                          onChange={() => onChangeWhitelisted('yes', input, index)}
                         />
                         <span className="title">yes</span>
                       </label>
@@ -100,7 +108,7 @@ export const TierBlock = ({ fields, ...props }) => {
                           type="radio"
                           checked={input.value === 'no'}
                           value="no"
-                          onChange={() => input.onChange('no')}
+                          onChange={() => onChangeWhitelisted('no', input, index)}
                         />
                         <span className="title">no</span>
                       </label>
@@ -128,7 +136,10 @@ export const TierBlock = ({ fields, ...props }) => {
                 name={`${name}.supply`}
                 errorStyle={inputErrorStyle}
                 side="right"
-                disabled={props.tierStore && props.tierStore.tiers[index].whitelist.length}
+                disabled={
+                  (props.tierStore && props.tierStore.tiers[index].whitelistEnabled === 'yes') ||
+                  (props.tierStore && props.tierStore.tiers[index].whitelist.length)
+                }
               />
             </div>
             <div className="input-block-container">
