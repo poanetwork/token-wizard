@@ -12,6 +12,7 @@ import { getStep3Component } from './utils'
 import createDecorator from 'final-form-calculate'
 import logdown from 'logdown'
 import { sleep } from '../../utils/utils'
+import setFieldTouched from 'final-form-set-field-touched'
 
 const logger = logdown('TW:stepThree')
 
@@ -66,6 +67,10 @@ export class stepThree extends React.Component {
     if (tierStore.tiers.length === 0) {
       logger.log('Web3store', web3Store)
       tierStore.addCrowdsale(web3Store.curAddress)
+    } else {
+      this.setState({
+        reload: true
+      })
     }
 
     let initialTiers = []
@@ -162,7 +167,7 @@ export class stepThree extends React.Component {
         <StepNavigation activeStep={CROWDSALE_SETUP} />
         <Form
           onSubmit={this.handleOnSubmit}
-          mutators={{ ...arrayMutators }}
+          mutators={{ ...arrayMutators, setFieldTouched }}
           decorators={[this.calculator]}
           initialValues={{
             walletAddress: web3Store.curAddress,
@@ -178,6 +183,7 @@ export class stepThree extends React.Component {
           tierStore={tierStore}
           generalStore={generalStore}
           crowdsaleStore={crowdsaleStore}
+          reload={this.state.reload}
         />
         <Loader show={this.state.loading} />
       </section>
