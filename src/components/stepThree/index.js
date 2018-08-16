@@ -35,7 +35,8 @@ export class stepThree extends React.Component {
     loading: false,
     reload: false,
     initialTiers: [],
-    burnExcess: 'no'
+    burnExcess: 'no',
+    gasTypeSelected: {}
   }
 
   async componentDidMount() {
@@ -43,7 +44,7 @@ export class stepThree extends React.Component {
     await checkWeb3(web3Store.web3)
 
     this.setState({ loading: true })
-    const { initialTiers, burnExcess } = await this.load()
+    const { initialTiers, burnExcess, gasTypeSelected } = await this.load()
 
     try {
       await gasPriceStore.updateValues()
@@ -54,7 +55,8 @@ export class stepThree extends React.Component {
     this.setState({
       loading: false,
       initialTiers: initialTiers,
-      burnExcess: burnExcess
+      burnExcess: burnExcess,
+      gasTypeSelected: gasTypeSelected
     })
     window.scrollTo(0, 0)
   }
@@ -83,7 +85,8 @@ export class stepThree extends React.Component {
 
     return {
       initialTiers: initialTiers,
-      burnExcess: generalStore.burnExcess
+      burnExcess: generalStore.burnExcess,
+      gasTypeSelected: generalStore.getGasTypeSelected
     }
   }
 
@@ -176,7 +179,7 @@ export class stepThree extends React.Component {
           decorators={[this.calculator]}
           initialValues={{
             walletAddress: web3Store.curAddress,
-            gasPrice: gasPriceStore.gasPricesInGwei[0],
+            gasPrice: this.state.gasTypeSelected,
             whitelistEnabled: 'no',
             burnExcess: this.state.burnExcess,
             tiers: this.state.initialTiers
