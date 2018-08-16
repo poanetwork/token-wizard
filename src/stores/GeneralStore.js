@@ -1,6 +1,7 @@
 import { observable, action, computed } from 'mobx'
 import { GAS_PRICE } from '../utils/constants'
 import autosave from './autosave'
+import { objectKeysToLowerCase } from '../utils/utils'
 
 class GeneralStore {
   @observable networkID
@@ -37,14 +38,14 @@ class GeneralStore {
   reset = () => {
     this.networkID = undefined
     this.gasPrice = GAS_PRICE.FAST.PRICE
-    this.gasTypeSelected = GAS_PRICE.SLOW
+    this.gasTypeSelected = objectKeysToLowerCase(GAS_PRICE.SLOW)
     this.burnExcess = 'no'
   }
 
   // Getters
   @computed
   get getGasTypeSelected() {
-    return this.gasTypeSelected || GAS_PRICE.SLOW
+    return this.gasTypeSelected || objectKeysToLowerCase(GAS_PRICE.SLOW)
   }
 }
 
