@@ -78,6 +78,7 @@ export const StepThreeFormMintedCapped = ({
         form.mutators.setFieldTouched(`tiers[${index}].updatable`, true)
         form.mutators.setFieldTouched(`tiers[${index}].whitelistEnabled`, true)
         form.mutators.setFieldTouched(`tiers[${index}].startTime`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].rate`, true)
         form.mutators.setFieldTouched(`tiers[${index}].endTime`, true)
         form.mutators.setFieldTouched(`tiers[${index}].minRate`, true)
         form.mutators.setFieldTouched(`tiers[${index}].maxRate`, true)
