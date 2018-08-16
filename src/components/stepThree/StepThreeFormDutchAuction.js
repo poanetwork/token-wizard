@@ -67,6 +67,7 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, submitting, p
         form.mutators.setFieldTouched(`tiers[${index}].updatable`, true)
         form.mutators.setFieldTouched(`tiers[${index}].whitelistEnabled`, true)
         form.mutators.setFieldTouched(`tiers[${index}].startTime`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].rate`, true)
         form.mutators.setFieldTouched(`tiers[${index}].endTime`, true)
         form.mutators.setFieldTouched(`tiers[${index}].minRate`, true)
         form.mutators.setFieldTouched(`tiers[${index}].maxRate`, true)
@@ -163,6 +164,7 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, submitting, p
               </div>
             </div>
             <Field
+              id="gasPrice"
               name="gasPrice"
               component={GasPriceInput}
               side="right"
