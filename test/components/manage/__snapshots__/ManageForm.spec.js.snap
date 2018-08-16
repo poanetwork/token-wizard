@@ -21,9 +21,9 @@ exports[`ManageForm should render for Dutch Auction 1`] = `
       "burnExcess": "no",
       "gasPrice": 15000000000,
       "gasTypeSelected": Object {
-        "DESCRIPTION": "Safe and Cheap",
-        "ID": "slow",
-        "PRICE": 5000000000,
+        "description": "Safe and Cheap",
+        "id": "slow",
+        "price": 5000000000,
       },
       "networkID": undefined,
     }
@@ -263,9 +263,9 @@ exports[`ManageForm should render for Dutch Auction 1`] = `
                 "burnExcess": "no",
                 "gasPrice": 15000000000,
                 "gasTypeSelected": Object {
-                  "DESCRIPTION": "Safe and Cheap",
-                  "ID": "slow",
-                  "PRICE": 5000000000,
+                  "description": "Safe and Cheap",
+                  "id": "slow",
+                  "price": 5000000000,
                 },
                 "networkID": undefined,
               }
@@ -350,9 +350,9 @@ exports[`ManageForm should render the component with tiers 1`] = `
       "burnExcess": "no",
       "gasPrice": 15000000000,
       "gasTypeSelected": Object {
-        "DESCRIPTION": "Safe and Cheap",
-        "ID": "slow",
-        "PRICE": 5000000000,
+        "description": "Safe and Cheap",
+        "id": "slow",
+        "price": 5000000000,
       },
       "networkID": undefined,
     }
@@ -1113,9 +1113,9 @@ exports[`ManageForm should render the component with tiers 1`] = `
                 "burnExcess": "no",
                 "gasPrice": 15000000000,
                 "gasTypeSelected": Object {
-                  "DESCRIPTION": "Safe and Cheap",
-                  "ID": "slow",
-                  "PRICE": 5000000000,
+                  "description": "Safe and Cheap",
+                  "id": "slow",
+                  "price": 5000000000,
                 },
                 "networkID": undefined,
               }
@@ -4428,9 +4428,9 @@ exports[`ManageForm should render the component without tiers 1`] = `
       "burnExcess": "no",
       "gasPrice": 15000000000,
       "gasTypeSelected": Object {
-        "DESCRIPTION": "Safe and Cheap",
-        "ID": "slow",
-        "PRICE": 5000000000,
+        "description": "Safe and Cheap",
+        "id": "slow",
+        "price": 5000000000,
       },
       "networkID": undefined,
     }
@@ -4670,9 +4670,9 @@ exports[`ManageForm should render the component without tiers 1`] = `
                 "burnExcess": "no",
                 "gasPrice": 15000000000,
                 "gasTypeSelected": Object {
-                  "DESCRIPTION": "Safe and Cheap",
-                  "ID": "slow",
-                  "PRICE": 5000000000,
+                  "description": "Safe and Cheap",
+                  "id": "slow",
+                  "price": 5000000000,
                 },
                 "networkID": undefined,
               }
