@@ -71,15 +71,7 @@ class GasPriceInput extends Component {
       customGasPrice: value
     })
 
-    input.onChange(
-      Object.assign(
-        {},
-        {
-          id: GAS_PRICE.CUSTOM.ID,
-          price: value
-        }
-      )
-    )
+    input.onChange(gasTypeSelected)
   }
 
   compareChecked = value => {
