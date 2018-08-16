@@ -44,7 +44,7 @@ class GeneralStore {
   // Getters
   @computed
   get getGasTypeSelected() {
-    return this.gasTypeSelected
+    return this.gasTypeSelected || GAS_PRICE.SLOW
   }
 }
 
