@@ -69,6 +69,14 @@ export const DutchAuctionBlock = inject('tierStore', 'tokenStore')(
       return composeValidators(...listOfValidations)(value)
     }
 
+    const onChangeWhitelisted = (value, input, index) => {
+      //Clear whitelist
+      if (tierStore) {
+        tierStore.emptyWhitelist(index)
+      }
+      return input.onChange(value)
+    }
+
     return (
       <div>
         {fields.map((name, index) => (
@@ -153,7 +161,10 @@ export const DutchAuctionBlock = inject('tierStore', 'tokenStore')(
                   side="left"
                   label={SUPPLY_SHORT}
                   description={DESCRIPTION.SUPPLY}
-                  disabled={tierStore && tierStore.tiers[index].whitelist.length}
+                  disabled={
+                    (tierStore && tierStore.tiers[index].whitelistEnabled === 'yes') ||
+                    (tierStore && tierStore.tiers[index].whitelist.length)
+                  }
                 />
                 <Field
                   name={`${name}.whitelistEnabled`}
@@ -166,7 +177,7 @@ export const DutchAuctionBlock = inject('tierStore', 'tokenStore')(
                             type="radio"
                             checked={input.value === 'yes'}
                             value="yes"
-                            onChange={() => input.onChange('yes')}
+                            onChange={() => onChangeWhitelisted('yes', input, index)}
                           />
                           <span className="title">yes</span>
                         </label>
@@ -175,7 +186,7 @@ export const DutchAuctionBlock = inject('tierStore', 'tokenStore')(
                             type="radio"
                             checked={input.value === 'no'}
                             value="no"
-                            onChange={() => input.onChange('no')}
+                            onChange={() => onChangeWhitelisted('no', input, index)}
                           />
                           <span className="title">no</span>
                         </label>
