@@ -156,6 +156,14 @@ export class stepThree extends React.Component {
     }
   })
 
+  updateGasTypeSelected = value => {
+    const { generalStore } = this.props
+    this.setState({
+      gasTypeSelected: value
+    })
+    generalStore.setGasTypeSelected(value)
+  }
+
   render() {
     if (this.state.initialTiers.length === 0) {
       //Not render the form until tiers are setup
@@ -188,6 +196,7 @@ export class stepThree extends React.Component {
           addCrowdsale={tierStore.addCrowdsale}
           gasPricesInGwei={gasPriceStore.gasPricesInGwei}
           decimals={tokenStore.decimals}
+          updateGasTypeSelected={this.updateGasTypeSelected}
           tierStore={tierStore}
           generalStore={generalStore}
           crowdsaleStore={crowdsaleStore}

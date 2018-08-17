@@ -41,8 +41,8 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, submitting, p
    * @param value
    */
   const updateGasTypeSelected = value => {
-    const { generalStore } = props
-    generalStore.setGasTypeSelected(value)
+    const { updateGasTypeSelected } = props
+    updateGasTypeSelected(value)
   }
 
   const handleValidateGasPrice = value => {

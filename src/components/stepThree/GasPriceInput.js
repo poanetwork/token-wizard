@@ -27,16 +27,27 @@ class GasPriceInput extends Component {
   }
 
   handleNonCustomSelected = value => {
+    const { input } = this.props
     this.setState({
       isCustom: false
     })
 
     const gasTypeSelected = objectKeysToLowerCase(value)
     this.handleGasType(gasTypeSelected)
-    this.props.input.onChange(gasTypeSelected)
+
+    input.onChange(
+      Object.assign(
+        {},
+        {
+          id: gasTypeSelected.id,
+          price: gasTypeSelected.price
+        }
+      )
+    )
   }
 
   handleCustomSelected = () => {
+    const { input } = this.props
     this.setState({
       isCustom: true
     })
@@ -47,7 +58,15 @@ class GasPriceInput extends Component {
     }
 
     this.handleGasType(gasTypeSelected)
-    this.props.input.onChange(gasTypeSelected)
+    input.onChange(
+      Object.assign(
+        {},
+        {
+          id: gasTypeSelected.id,
+          price: gasTypeSelected.price
+        }
+      )
+    )
   }
 
   handleGasType = value => {
@@ -71,7 +90,15 @@ class GasPriceInput extends Component {
       customGasPrice: value
     })
 
-    input.onChange(gasTypeSelected)
+    input.onChange(
+      Object.assign(
+        {},
+        {
+          id: gasTypeSelected.id,
+          price: value
+        }
+      )
+    )
   }
 
   compareChecked = value => {
