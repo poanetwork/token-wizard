@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import '../../assets/stylesheets/application.css'
 import {
   buildDeploymentSteps,
@@ -10,7 +10,7 @@ import {
   scrollToBottom,
   SUMMARY_FILE_CONTENTS
 } from './utils'
-import { noContractDataAlert, successfulDeployment, skippingTransaction } from '../../utils/alerts'
+import { noContractDataAlert, successfulDeployment, skippingTransaction, networkChanged } from '../../utils/alerts'
 import {
   DESCRIPTION,
   NAVIGATION_STEPS,
@@ -34,6 +34,8 @@ import { PreventRefresh } from '../Common/PreventRefresh'
 import cancelDeploy from '../../utils/cancelDeploy'
 import PropTypes from 'prop-types'
 import logdown from 'logdown'
+import { getNetworkVersion } from '../../utils/blockchainHelpers'
+let promiseRetry = require('promise-retry')
 
 const logger = logdown('TW:stepFour')
 
@@ -69,10 +71,11 @@ const {
   'tokenStore',
   'web3Store',
   'deploymentStore',
+  'generalStore',
   'crowdsaleStore'
 )
 @observer
-export class stepFour extends React.Component {
+export class stepFour extends Component {
   constructor(props, context) {
     super(props)
     this.state = {
@@ -100,7 +103,7 @@ export class stepFour extends React.Component {
     toast.showToaster({ message: TOAST.MESSAGE.CONTRACT_DOWNLOAD_SUCCESS, options })
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     scrollToBottom()
     copy('copy')
     if (!this.props.deploymentStore.hasEnded) {
@@ -111,6 +114,16 @@ export class stepFour extends React.Component {
     if (!this.props.deploymentStore.invalidAccount) {
       this.deployCrowdsale()
     }
+
+    await promiseRetry(async retry => {
+      const networkChangedResult = await this.checkNetworkChanged()
+      if (networkChangedResult) {
+        this.hideModal()
+        await networkChanged()
+        this.showModal()
+        retry()
+      }
+    })
   }
 
   deployCrowdsale = () => {
@@ -152,6 +165,13 @@ export class stepFour extends React.Component {
     }
 
     logger.error([failedAt, err])
+  }
+
+  checkNetworkChanged = async () => {
+    const { generalStore } = this.props
+    const networkIDFromNifty = await getNetworkVersion()
+    const networkIDFromStore = generalStore.networkID
+    return networkIDFromNifty !== networkIDFromStore
   }
 
   skipTransaction = () => {
