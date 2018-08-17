@@ -9,7 +9,7 @@ import { inject, observer } from 'mobx-react'
 class GasPriceInput extends Component {
   state = {
     isCustom: false,
-    customGasPrice: 0,
+    customGasPrice: 0.1,
     gasTypeSelected: {}
   }
 
@@ -35,18 +35,10 @@ class GasPriceInput extends Component {
     const gasTypeSelected = objectKeysToLowerCase(value)
     this.handleGasType(gasTypeSelected)
 
-    input.onChange(
-      Object.assign(
-        {},
-        {
-          id: gasTypeSelected.id,
-          price: gasTypeSelected.price
-        }
-      )
-    )
+    input.onChange(gasTypeSelected)
   }
 
-  handleCustomSelected = () => {
+  handleCustomSelected = value => {
     const { input } = this.props
     this.setState({
       isCustom: true
