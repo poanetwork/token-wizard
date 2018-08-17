@@ -65,7 +65,7 @@ export const StepThreeFormMintedCapped = ({
   const handleValidateGasPrice = value => {
     const errors = composeValidators(
       isDecimalPlacesNotGreaterThan(VALIDATION_MESSAGES.DECIMAL_PLACES_9)(9),
-      isGreaterOrEqualThan(VALIDATION_MESSAGES.NUMBER_GREATER_THAN)(0.1)
+      isGreaterOrEqualThan(VALIDATION_MESSAGES.NUMBER_GREATER_OR_EQUAL_THAN)(0.1)
     )(value.price)
     if (errors) return errors.shift()
   }
