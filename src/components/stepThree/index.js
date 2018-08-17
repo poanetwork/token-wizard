@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import '../../assets/stylesheets/application.css'
 import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
@@ -30,7 +30,7 @@ const { CROWDSALE_SETUP } = NAVIGATION_STEPS
   'crowdsaleStore'
 )
 @observer
-export class stepThree extends React.Component {
+export class stepThree extends Component {
   state = {
     loading: false,
     reload: false,
