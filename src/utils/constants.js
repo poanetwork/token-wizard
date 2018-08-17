@@ -147,7 +147,8 @@ export const VALIDATION_MESSAGES = {
   DATE_IS_SAME_OR_PREVIOUS: 'Should be same or previous than specified time',
   PATTERN: 'Should match the specified pattern',
   DECIMAL_PLACES_9: 'Should not have more than 9 decimals',
-  NUMBER_GREATER_THAN: 'Should be greater than 0.1'
+  NUMBER_GREATER_THAN: 'Should be greater than 0.1',
+  NUMBER_GREATER_OR_EQUAL_THAN: 'Should be greater or equal than 0.1'
 }
 
 //descriptions of input fields
