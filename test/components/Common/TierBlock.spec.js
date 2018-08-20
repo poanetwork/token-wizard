@@ -22,18 +22,23 @@ describe('TierBlock ', () => {
     if (0 === num) {
       newTier.whitelistEnabled = 'no'
       newTier.walletAddress = '0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1'
+      newTier.endTime = 1234
     }
 
     tierStore.addTier(newTier, newTierValidations)
   }
 
+ // tiers[index].endTime
+
   it(`should render TierBlock component`, () => {
     addCrowdsale(0)
     const wrapper = renderer.create(
       <Form
+        index={0}
         onSubmit={jest.fn()}
         tierStore={tierStore}
         component={TierBlock}
+        initialValues={tierStore}
         fields={fields}
         disabled={false}
         decimals={18}

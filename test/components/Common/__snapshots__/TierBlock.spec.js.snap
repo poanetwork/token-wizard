@@ -1,3 +1,476 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TierBlock  should render TierBlock component 1`] = `<div />`;
+exports[`TierBlock  should render TierBlock component 1`] = `
+<div>
+  <div
+    className="steps-content container"
+    style={
+      Object {
+        "marginTop": "40px",
+      }
+    }
+  >
+    <div
+      className="hidden"
+    >
+      <div
+        className="input-block-container"
+      >
+        <div
+          className="left"
+        >
+          <label
+            className="label"
+            htmlFor="tierblock,0.tier"
+          >
+            Crowdsale setup name
+          </label>
+          <input
+            autoComplete="off"
+            className="input"
+            disabled={undefined}
+            id="tierblock,0.tier"
+            name="tierblock,0.tier"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder={undefined}
+            type="text"
+            value=""
+          />
+          <p
+            className="description"
+          >
+            Name of a tier, e.g. PrePreCrowdsale, PreCrowdsale, Crowdsale with bonus A, Crowdsale with bonus B, etc. We simplified that and will increment a number after each tier.
+          </p>
+          <span>
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "20px",
+                  "width": "100%",
+                }
+              }
+            />
+          </span>
+        </div>
+      </div>
+      <div
+        className="input-block-container"
+      >
+        <div
+          className="left"
+        >
+          <label
+            className="label"
+          >
+            Allow modifying
+          </label>
+          <div
+            className="radios-inline"
+          >
+            <label
+              className="radio-inline"
+            >
+              <input
+                checked={false}
+                id="tierblock,0.allow_modifying_on"
+                onChange={[Function]}
+                type="radio"
+                value="on"
+              />
+              <span
+                className="title"
+              >
+                on
+              </span>
+            </label>
+            <label
+              className="radio-inline"
+            >
+              <input
+                checked={false}
+                id="tierblock,0.allow_modifying_off"
+                onChange={[Function]}
+                type="radio"
+                value="off"
+              />
+              <span
+                className="title"
+              >
+                off
+              </span>
+            </label>
+          </div>
+          <p
+            className="description"
+          >
+            If it's enabled, a creator of the crowdsale can modify crowdsale duration after publishing.
+          </p>
+        </div>
+        <div
+          className="right"
+        >
+          <label
+            className="label"
+          >
+            Enable whitelisting
+          </label>
+          <div
+            className="radios-inline"
+          >
+            <label
+              className="radio-inline"
+            >
+              <input
+                checked={false}
+                id="tierblock,0.enable_whitelisting_yes"
+                onChange={[Function]}
+                type="radio"
+                value="yes"
+              />
+              <span
+                className="title"
+              >
+                yes
+              </span>
+            </label>
+            <label
+              className="radio-inline"
+            >
+              <input
+                checked={false}
+                id="tierblock,0.enable_whitelisting_no"
+                onChange={[Function]}
+                type="radio"
+                value="no"
+              />
+              <span
+                className="title"
+              >
+                no
+              </span>
+            </label>
+          </div>
+          <p
+            className="description"
+          >
+            Enables whitelisting. If disabled, anyone can participate in the crowdsale.
+          </p>
+        </div>
+      </div>
+      <div
+        className="input-block-container"
+      >
+        <div
+          className="left"
+        >
+          <label
+            className="label"
+            htmlFor="tierblock,0.startTime"
+          >
+            Start Time
+          </label>
+          <input
+            autoComplete="off"
+            className="input"
+            disabled={false}
+            id="tierblock,0.startTime"
+            name="tierblock,0.startTime"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder={undefined}
+            type="datetime-local"
+            value=""
+          />
+          <p
+            className="description"
+          >
+            Date and time when the tier starts. Can't be in the past from the current moment.
+          </p>
+          <span>
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "20px",
+                  "width": "100%",
+                }
+              }
+            />
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "20px",
+                  "width": "100%",
+                }
+              }
+            />
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "20px",
+                  "width": "100%",
+                }
+              }
+            />
+          </span>
+        </div>
+        <div
+          className="right"
+        >
+          <label
+            className="label"
+            htmlFor="tierblock,0.endTime"
+          >
+            End Time
+          </label>
+          <input
+            autoComplete="off"
+            className="input"
+            disabled={undefined}
+            id="tierblock,0.endTime"
+            name="tierblock,0.endTime"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder={undefined}
+            type="datetime-local"
+            value=""
+          />
+          <p
+            className="description"
+          >
+            Date and time when the tier ends. Can be only in the future.
+          </p>
+          <span>
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "20px",
+                  "width": "100%",
+                }
+              }
+            />
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "20px",
+                  "width": "100%",
+                }
+              }
+            />
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "20px",
+                  "width": "100%",
+                }
+              }
+            />
+          </span>
+        </div>
+      </div>
+      <div
+        className="input-block-container"
+      >
+        <div
+          className="left"
+        >
+          <label
+            className="label"
+            htmlFor="tierblock,0.rate"
+          >
+            Rate
+          </label>
+          <input
+            autoComplete="off"
+            className="input"
+            disabled={undefined}
+            id="tierblock,0.rate"
+            name="tierblock,0.rate"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder={undefined}
+            type="text"
+            value=""
+          />
+          <p
+            className="description"
+          >
+            Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
+          </p>
+          <span>
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "20px",
+                  "width": "100%",
+                }
+              }
+            />
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "20px",
+                  "width": "100%",
+                }
+              }
+            />
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "20px",
+                  "width": "100%",
+                }
+              }
+            />
+          </span>
+        </div>
+        <div
+          className="right"
+        >
+          <label
+            className="label"
+            htmlFor="tierblock,0.supply"
+          >
+            Supply
+          </label>
+          <input
+            autoComplete="off"
+            className="input"
+            disabled={0}
+            id="tierblock,0.supply"
+            name="tierblock,0.supply"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder={undefined}
+            type="text"
+            value=""
+          />
+          <p
+            className="description"
+          >
+            How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
+          </p>
+          <span>
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "20px",
+                  "width": "100%",
+                }
+              }
+            />
+          </span>
+        </div>
+      </div>
+      <div
+        className="input-block-container"
+      >
+        <div
+          className="left"
+        >
+          <label
+            className="label"
+            htmlFor="tierblock,0.minCap"
+          >
+            Contributor min cap
+          </label>
+          <input
+            autoComplete="off"
+            className="input"
+            disabled={false}
+            id="tierblock,0.minCap"
+            name="tierblock,0.minCap"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder={undefined}
+            type="text"
+            value=""
+          />
+          <p
+            className="description"
+          >
+            Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1
+                           and a user already has 1 token from a previous transaction, they can buy any amount they want.
+          </p>
+          <span>
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "20px",
+                  "width": "100%",
+                }
+              }
+            />
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "20px",
+                  "width": "100%",
+                }
+              }
+            />
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
