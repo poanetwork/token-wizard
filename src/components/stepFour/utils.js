@@ -65,7 +65,7 @@ export const buildDeploymentSteps = web3 => {
 const getProxyParams = account => {
   return [
     contractStore.abstractStorage.addr,
-    process.env['REACT_APP_REGISTRY_EXEC_ID'],
+    JSON.parse(process.env['REACT_APP_REGISTRY_EXEC_ID'] || {})[contractStore.crowdsale.networkID],
     JSON.parse(process.env['REACT_APP_PROXY_PROVIDER_ADDRESS'] || {})[contractStore.crowdsale.networkID],
     crowdsaleStore.appNameHash
   ]
