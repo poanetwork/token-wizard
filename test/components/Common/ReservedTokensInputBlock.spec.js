@@ -49,7 +49,6 @@ describe('ReservedTokensInputBlock', () => {
     removeCallback = jest.fn()
     validateCallback = jest.fn()
     clearAllCallback = jest.fn()
-    validateReservedTokensList = jest.fn(() => { return true;})
     decimals = 3
 
     wrapperMemo = undefined
@@ -97,7 +96,6 @@ describe('ReservedTokensInputBlock', () => {
             addReservedTokensItem={addCallback}
             validateReservedTokensList={validateCallback}
             removeReservedToken={removeCallback}
-            validateReservedTokensList={validateReservedTokensList}
           />
         ))
     })
@@ -414,7 +412,6 @@ describe('ReservedTokensInputBlock', () => {
 
           if (expected) {
             expect(addCallback).toHaveBeenCalledWith(value)
-           // console.log(wrapper.prop('validateReservedTokensList'))
           }
           expect(addCallback).toHaveBeenCalledTimes(callTimes)
         })
