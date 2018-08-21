@@ -87,7 +87,7 @@ export const GAS_PRICE = {
   },
   CUSTOM: {
     ID: 'custom',
-    PRICE: 0,
+    PRICE: 0.1,
     DESCRIPTION: 'Custom'
   },
   API: {
