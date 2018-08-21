@@ -158,9 +158,6 @@ export class stepThree extends React.Component {
 
   updateGasTypeSelected = value => {
     const { generalStore } = this.props
-    this.setState({
-      gasTypeSelected: value
-    })
     generalStore.setGasTypeSelected(value)
   }
 
