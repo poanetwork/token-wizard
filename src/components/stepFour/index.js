@@ -10,7 +10,13 @@ import {
   scrollToBottom,
   SUMMARY_FILE_CONTENTS
 } from './utils'
-import { noContractDataAlert, successfulDeployment, skippingTransaction, networkChanged } from '../../utils/alerts'
+import {
+  noContractDataAlert,
+  successfulDeployment,
+  skippingTransaction,
+  networkChanged,
+  deployHasEnded
+} from '../../utils/alerts'
 import {
   DESCRIPTION,
   NAVIGATION_STEPS,
@@ -88,7 +94,9 @@ export class stepFour extends Component {
 
     const { deploymentStore } = props
 
-    if (!deploymentStore.deployInProgress) {
+    logger.log(`Deployment progress`, deploymentStore.deployInProgress)
+    logger.log(`Deployment has ended`, deploymentStore.hasEnded)
+    if (!deploymentStore.deployInProgress && !deploymentStore.hasEnded) {
       deploymentStore.setDeploymentStep(0)
       deploymentStore.setDeployerAccount(context.selectedAccount)
     }
@@ -105,17 +113,13 @@ export class stepFour extends Component {
   }
 
   async componentDidMount() {
-    scrollToBottom()
-    copy('copy')
-    if (!this.props.deploymentStore.hasEnded) {
-      this.showModal()
-    }
+    const { deploymentStore } = this.props
 
-    // If user reloads with an invalid account, don't start the deploy automatically
-    if (!this.props.deploymentStore.invalidAccount) {
-      this.deployCrowdsale()
+    // Check if deploy has ended
+    if (deploymentStore.hasEnded) {
+      return await deployHasEnded()
     }
-
+    // Check if network has changed
     await promiseRetry(async retry => {
       const networkChangedResult = await this.checkNetworkChanged()
       if (networkChangedResult) {
@@ -125,6 +129,17 @@ export class stepFour extends Component {
         retry()
       }
     })
+
+    scrollToBottom()
+    copy('copy')
+    if (!deploymentStore.hasEnded) {
+      this.showModal()
+    }
+
+    // If user reloads with an invalid account, don't start the deploy automatically
+    if (!deploymentStore.invalidAccount) {
+      this.deployCrowdsale()
+    }
   }
 
   deployCrowdsale = () => {
@@ -172,7 +187,9 @@ export class stepFour extends Component {
     const { generalStore } = this.props
     const networkIDFromNifty = await getNetworkVersion()
     const networkIDFromStore = generalStore.networkID
-    return networkIDFromNifty !== networkIDFromStore
+    logger.log(`Network id from store`, networkIDFromStore)
+    logger.log(`Network id from nifty wallet`, networkIDFromNifty)
+    return +networkIDFromNifty !== +networkIDFromStore
   }
 
   skipTransaction = () => {

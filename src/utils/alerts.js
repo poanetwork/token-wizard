@@ -326,3 +326,11 @@ export function networkChanged() {
     type: 'warning'
   })
 }
+
+export function deployHasEnded() {
+  return sweetAlert2({
+    title: 'Deploy ended',
+    html: 'The deploy is finished',
+    type: 'info'
+  })
+}
