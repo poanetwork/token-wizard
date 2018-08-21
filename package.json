@@ -154,8 +154,7 @@
     "e2eDutchUI": "nps test.e2e.DutchUI",
     "e2eDutchWhitelist": "nps test.e2e.DutchWhitelist",
     "e2eDutchMincap": "nps test.e2e.DutchMincap",
-    "stop": "nps test.e2e.stop",
-    "c": "jest --env=jsdom InputField2.spec.js "
+    "stop": "nps test.e2e.stop"
   },
   "jest": {
     "collectCoverageFrom": [

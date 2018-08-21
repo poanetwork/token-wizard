@@ -13,7 +13,6 @@ describe('DisplayTextArea ', () => {
   it(`should render DisplayTextArea component`, () => {
     const wrapper = shallow(
       <DisplayTextArea
-        key={key}
         label={label}
         description={description}
         value={value}
