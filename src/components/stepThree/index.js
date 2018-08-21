@@ -44,13 +44,14 @@ export class stepThree extends Component {
     await checkWeb3(web3Store.web3)
 
     this.setState({ loading: true })
-    const { initialTiers, burnExcess, gasTypeSelected } = await this.load()
 
     try {
       await gasPriceStore.updateValues()
     } catch (error) {
       noGasPriceAvailable()
     }
+
+    const { initialTiers, burnExcess, gasTypeSelected } = await this.load()
 
     this.setState({
       loading: false,
@@ -62,7 +63,7 @@ export class stepThree extends Component {
   }
 
   async load() {
-    const { tierStore, generalStore, web3Store, crowdsaleStore } = this.props
+    const { tierStore, generalStore, web3Store, crowdsaleStore, gasPriceStore } = this.props
 
     await sleep(1000)
 
@@ -81,6 +82,10 @@ export class stepThree extends Component {
       initialTiers = [JSON.parse(JSON.stringify(tierStore.tiers))[0]]
     } else {
       initialTiers = JSON.parse(JSON.stringify(tierStore.tiers))
+    }
+
+    if (!generalStore.getGasTypeSelected) {
+      generalStore.setGasTypeSelected(gasPriceStore.gasPricesInGwei[0])
     }
 
     return {
