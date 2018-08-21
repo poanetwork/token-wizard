@@ -1,0 +1,96 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MinCap  should render MinCap component 1`] = `
+<div
+  className={undefined}
+>
+  <label
+    className="label"
+    htmlFor="mincap"
+  >
+    Contributor min cap
+  </label>
+  <input
+    autoComplete="off"
+    className="input"
+    disabled={false}
+    id="mincap"
+    name="mincap"
+    onBlur={[Function]}
+    onChange={[Function]}
+    onFocus={[Function]}
+    placeholder={undefined}
+    type="text"
+    value=""
+  />
+  <p
+    className="description"
+  >
+    Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1
+                   and a user already has 1 token from a previous transaction, they can buy any amount they want.
+  </p>
+  <span>
+    <p
+      className="error"
+      style={
+        Object {
+          "color": "red",
+          "fontWeight": "bold",
+        }
+      }
+    />
+    <p
+      className="error"
+      style={
+        Object {
+          "color": "red",
+          "fontWeight": "bold",
+        }
+      }
+    />
+  </span>
+</div>
+`;
+
+exports[`MinCap  should render MinCap component if field is disabled 1`] = `
+<div
+  className={undefined}
+>
+  <label
+    className="label"
+    htmlFor="mincap"
+  >
+    Contributor min cap
+  </label>
+  <input
+    autoComplete="off"
+    className="input"
+    disabled={true}
+    id="mincap"
+    name="mincap"
+    onBlur={[Function]}
+    onChange={[Function]}
+    onFocus={[Function]}
+    placeholder={undefined}
+    type="text"
+    value=""
+  />
+  <p
+    className="description"
+  >
+    Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1
+                   and a user already has 1 token from a previous transaction, they can buy any amount they want.
+  </p>
+  <span>
+    <p
+      className="error"
+      style={
+        Object {
+          "color": "red",
+          "fontWeight": "bold",
+        }
+      }
+    />
+  </span>
+</div>
+`;

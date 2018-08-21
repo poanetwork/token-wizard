@@ -1,0 +1,2311 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CrowdsaleList  should render CrowdsaleList component 1`] = `
+<inject-CrowdsalesList-with-crowdsaleStore-web3Store
+  crowdsaleStore={
+    CrowdsaleStore {
+      "crowdsales": Array [
+        Injector {
+          "context": undefined,
+          "execID": "0xcCca436070962a1A884b88E8506C2C750E342BEA",
+          "props": undefined,
+          "refs": Object {},
+          "storeRef": [Function],
+          "updater": Object {
+            "enqueueCallback": [Function],
+            "enqueueForceUpdate": [Function],
+            "enqueueReplaceState": [Function],
+            "enqueueSetState": [Function],
+            "isMounted": [Function],
+          },
+        },
+        Injector {
+          "context": undefined,
+          "execID": "0x9726cdb82358972b7a17260e7897C8de02d584e6",
+          "props": undefined,
+          "refs": Object {},
+          "storeRef": [Function],
+          "updater": Object {
+            "enqueueCallback": [Function],
+            "enqueueForceUpdate": [Function],
+            "enqueueReplaceState": [Function],
+            "enqueueSetState": [Function],
+            "isMounted": [Function],
+          },
+        },
+      ],
+      "endTime": undefined,
+      "maximumSellableTokens": undefined,
+      "maximumSellableTokensInWei": undefined,
+      "selected": Object {
+        "initialTiersValues": Array [],
+        "updatable": false,
+      },
+      "strategy": undefined,
+      "supply": undefined,
+    }
+  }
+  onClick={[Function]}
+  web3Store={
+    Web3Store {
+      "accounts": undefined,
+      "curAddress": undefined,
+      "getInfuraLink": [Function],
+      "getWeb3": [Function],
+      "web3": Web3 {
+        "BatchRequest": [Function],
+        "_provider": HttpProvider {
+          "connected": false,
+          "headers": undefined,
+          "host": "https://sokol.poa.network",
+          "timeout": 0,
+        },
+        "_requestManager": RequestManager {
+          "provider": HttpProvider {
+            "connected": false,
+            "headers": undefined,
+            "host": "https://sokol.poa.network",
+            "timeout": 0,
+          },
+          "providers": Object {
+            "HttpProvider": [Function],
+            "IpcProvider": [Function],
+            "WebsocketProvider": [Function],
+          },
+          "subscriptions": Object {},
+        },
+        "bzz": Bzz {
+          "currentProvider": null,
+          "download": [Function],
+          "givenProvider": null,
+          "isAvailable": [Function],
+          "pick": Object {
+            "data": [Function],
+            "directory": [Function],
+            "file": [Function],
+          },
+          "upload": [Function],
+        },
+        "currentProvider": HttpProvider {
+          "connected": false,
+          "headers": undefined,
+          "host": "https://sokol.poa.network",
+          "timeout": 0,
+        },
+        "eth": Eth {
+          "BatchRequest": [Function],
+          "Contract": [Function],
+          "Iban": [Function],
+          "_provider": HttpProvider {
+            "connected": false,
+            "headers": undefined,
+            "host": "https://sokol.poa.network",
+            "timeout": 0,
+          },
+          "_requestManager": RequestManager {
+            "provider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "providers": Object {
+              "HttpProvider": [Function],
+              "IpcProvider": [Function],
+              "WebsocketProvider": [Function],
+            },
+            "subscriptions": Object {},
+          },
+          "abi": ABICoder {
+            "_types": Array [
+              SolidityTypeAddress {
+                "_inputFormatter": [Function],
+                "_outputFormatter": [Function],
+              },
+              SolidityTypeBool {
+                "_inputFormatter": [Function],
+                "_outputFormatter": [Function],
+              },
+              SolidityTypeInt {
+                "_inputFormatter": [Function],
+                "_outputFormatter": [Function],
+              },
+              SolidityTypeUInt {
+                "_inputFormatter": [Function],
+                "_outputFormatter": [Function],
+              },
+              SolidityTypeDynamicBytes {
+                "_inputFormatter": [Function],
+                "_outputFormatter": [Function],
+              },
+              SolidityTypeBytes {
+                "_inputFormatter": [Function],
+                "_outputFormatter": [Function],
+              },
+              SolidityTypeString {
+                "_inputFormatter": [Function],
+                "_outputFormatter": [Function],
+              },
+            ],
+          },
+          "accounts": Accounts {
+            "_ethereumCall": Object {
+              "getGasPrice": [Function],
+              "getId": [Function],
+              "getTransactionCount": [Function],
+            },
+            "_provider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "_requestManager": RequestManager {
+              "provider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "providers": Object {
+                "HttpProvider": [Function],
+                "IpcProvider": [Function],
+                "WebsocketProvider": [Function],
+              },
+              "subscriptions": Object {},
+            },
+            "currentProvider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "givenProvider": null,
+            "providers": Object {
+              "HttpProvider": [Function],
+              "IpcProvider": [Function],
+              "WebsocketProvider": [Function],
+            },
+            "setProvider": [Function],
+            "wallet": Wallet {
+              "_accounts": [Circular],
+              "defaultKeyName": "web3js_wallet",
+              "length": 0,
+            },
+          },
+          "call": [Function],
+          "clearSubscriptions": [Function],
+          "compile": Object {
+            "lll": [Function],
+            "serpent": [Function],
+            "solidity": [Function],
+          },
+          "currentProvider": HttpProvider {
+            "connected": false,
+            "headers": undefined,
+            "host": "https://sokol.poa.network",
+            "timeout": 0,
+          },
+          "defaultAccount": null,
+          "defaultBlock": "latest",
+          "estimateGas": [Function],
+          "extend": [Function],
+          "getAccounts": [Function],
+          "getBalance": [Function],
+          "getBlock": [Function],
+          "getBlockNumber": [Function],
+          "getBlockTransactionCount": [Function],
+          "getBlockUncleCount": [Function],
+          "getCode": [Function],
+          "getCoinbase": [Function],
+          "getCompilers": [Function],
+          "getGasPrice": [Function],
+          "getHashrate": [Function],
+          "getPastLogs": [Function],
+          "getProtocolVersion": [Function],
+          "getStorageAt": [Function],
+          "getTransaction": [Function],
+          "getTransactionCount": [Function],
+          "getTransactionFromBlock": [Function],
+          "getTransactionReceipt": [Function],
+          "getUncle": [Function],
+          "getWork": [Function],
+          "givenProvider": null,
+          "isMining": [Function],
+          "isSyncing": [Function],
+          "net": Net {
+            "BatchRequest": [Function],
+            "_provider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "_requestManager": RequestManager {
+              "provider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "providers": Object {
+                "HttpProvider": [Function],
+                "IpcProvider": [Function],
+                "WebsocketProvider": [Function],
+              },
+              "subscriptions": Object {},
+            },
+            "currentProvider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "extend": [Function],
+            "getId": [Function],
+            "getNetworkType": [Function],
+            "getPeerCount": [Function],
+            "givenProvider": null,
+            "isListening": [Function],
+            "providers": Object {
+              "HttpProvider": [Function],
+              "IpcProvider": [Function],
+              "WebsocketProvider": [Function],
+            },
+            "setProvider": [Function],
+          },
+          "personal": Personal {
+            "BatchRequest": [Function],
+            "_provider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "_requestManager": RequestManager {
+              "provider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "providers": Object {
+                "HttpProvider": [Function],
+                "IpcProvider": [Function],
+                "WebsocketProvider": [Function],
+              },
+              "subscriptions": Object {},
+            },
+            "currentProvider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "defaultAccount": null,
+            "defaultBlock": "latest",
+            "ecRecover": [Function],
+            "extend": [Function],
+            "getAccounts": [Function],
+            "givenProvider": null,
+            "importRawKey": [Function],
+            "lockAccount": [Function],
+            "net": Net {
+              "BatchRequest": [Function],
+              "_provider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "_requestManager": RequestManager {
+                "provider": HttpProvider {
+                  "connected": false,
+                  "headers": undefined,
+                  "host": "https://sokol.poa.network",
+                  "timeout": 0,
+                },
+                "providers": Object {
+                  "HttpProvider": [Function],
+                  "IpcProvider": [Function],
+                  "WebsocketProvider": [Function],
+                },
+                "subscriptions": Object {},
+              },
+              "currentProvider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "extend": [Function],
+              "getId": [Function],
+              "getPeerCount": [Function],
+              "givenProvider": null,
+              "isListening": [Function],
+              "providers": Object {
+                "HttpProvider": [Function],
+                "IpcProvider": [Function],
+                "WebsocketProvider": [Function],
+              },
+              "setProvider": [Function],
+            },
+            "newAccount": [Function],
+            "providers": Object {
+              "HttpProvider": [Function],
+              "IpcProvider": [Function],
+              "WebsocketProvider": [Function],
+            },
+            "sendTransaction": [Function],
+            "setProvider": [Function],
+            "sign": [Function],
+            "unlockAccount": [Function],
+          },
+          "providers": Object {
+            "HttpProvider": [Function],
+            "IpcProvider": [Function],
+            "WebsocketProvider": [Function],
+          },
+          "sendSignedTransaction": [Function],
+          "sendTransaction": [Function],
+          "setProvider": [Function],
+          "sign": [Function],
+          "signTransaction": [Function],
+          "submitWork": [Function],
+          "subscribe": [Function],
+        },
+        "extend": [Function],
+        "givenProvider": null,
+        "providers": Object {
+          "HttpProvider": [Function],
+          "IpcProvider": [Function],
+          "WebsocketProvider": [Function],
+        },
+        "setProvider": [Function],
+        "shh": Shh {
+          "BatchRequest": [Function],
+          "_provider": HttpProvider {
+            "connected": false,
+            "headers": undefined,
+            "host": "https://sokol.poa.network",
+            "timeout": 0,
+          },
+          "_requestManager": RequestManager {
+            "provider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "providers": Object {
+              "HttpProvider": [Function],
+              "IpcProvider": [Function],
+              "WebsocketProvider": [Function],
+            },
+            "subscriptions": Object {},
+          },
+          "addPrivateKey": [Function],
+          "addSymKey": [Function],
+          "clearSubscriptions": [Function],
+          "currentProvider": HttpProvider {
+            "connected": false,
+            "headers": undefined,
+            "host": "https://sokol.poa.network",
+            "timeout": 0,
+          },
+          "deleteKeyPair": [Function],
+          "deleteMessageFilter": [Function],
+          "deleteSymKey": [Function],
+          "extend": [Function],
+          "generateSymKeyFromPassword": [Function],
+          "getFilterMessages": [Function],
+          "getInfo": [Function],
+          "getPrivateKey": [Function],
+          "getPublicKey": [Function],
+          "getSymKey": [Function],
+          "getVersion": [Function],
+          "givenProvider": null,
+          "hasKeyPair": [Function],
+          "hasSymKey": [Function],
+          "markTrustedPeer": [Function],
+          "net": Net {
+            "BatchRequest": [Function],
+            "_provider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "_requestManager": RequestManager {
+              "provider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "providers": Object {
+                "HttpProvider": [Function],
+                "IpcProvider": [Function],
+                "WebsocketProvider": [Function],
+              },
+              "subscriptions": Object {},
+            },
+            "currentProvider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "extend": [Function],
+            "getId": [Function],
+            "getPeerCount": [Function],
+            "givenProvider": null,
+            "isListening": [Function],
+            "providers": Object {
+              "HttpProvider": [Function],
+              "IpcProvider": [Function],
+              "WebsocketProvider": [Function],
+            },
+            "setProvider": [Function],
+          },
+          "newKeyPair": [Function],
+          "newMessageFilter": [Function],
+          "newSymKey": [Function],
+          "post": [Function],
+          "providers": Object {
+            "HttpProvider": [Function],
+            "IpcProvider": [Function],
+            "WebsocketProvider": [Function],
+          },
+          "setMaxMessageSize": [Function],
+          "setMinPoW": [Function],
+          "setProvider": [Function],
+          "subscribe": [Function],
+        },
+        "utils": Object {
+          "BN": [Function],
+          "_": [Function],
+          "_fireError": [Function],
+          "_jsonInterfaceMethodToString": [Function],
+          "asciiToHex": [Function],
+          "bytesToHex": [Function],
+          "checkAddressChecksum": [Function],
+          "fromAscii": [Function],
+          "fromDecimal": [Function],
+          "fromUtf8": [Function],
+          "fromWei": [Function],
+          "hexToAscii": [Function],
+          "hexToBytes": [Function],
+          "hexToNumber": [Function],
+          "hexToNumberString": [Function],
+          "hexToString": [Function],
+          "hexToUtf8": [Function],
+          "isAddress": [Function],
+          "isBN": [Function],
+          "isBigNumber": [Function],
+          "isHex": [Function],
+          "isHexStrict": [Function],
+          "keccak256": [Function],
+          "leftPad": [Function],
+          "numberToHex": [Function],
+          "padLeft": [Function],
+          "padRight": [Function],
+          "randomHex": [Function],
+          "rightPad": [Function],
+          "sha3": [Function],
+          "soliditySha3": [Function],
+          "stringToHex": [Function],
+          "toAscii": [Function],
+          "toBN": [Function],
+          "toChecksumAddress": [Function],
+          "toDecimal": [Function],
+          "toHex": [Function],
+          "toTwosComplement": [Function],
+          "toUtf8": [Function],
+          "toWei": [Function],
+          "unitMap": Object {
+            "Gwei": "1000000000",
+            "Kwei": "1000",
+            "Mwei": "1000000",
+            "babbage": "1000",
+            "ether": "1000000000000000000",
+            "femtoether": "1000",
+            "finney": "1000000000000000",
+            "gether": "1000000000000000000000000000",
+            "grand": "1000000000000000000000",
+            "gwei": "1000000000",
+            "kether": "1000000000000000000000",
+            "kwei": "1000",
+            "lovelace": "1000000",
+            "mether": "1000000000000000000000000",
+            "micro": "1000000000000",
+            "microether": "1000000000000",
+            "milli": "1000000000000000",
+            "milliether": "1000000000000000",
+            "mwei": "1000000",
+            "nano": "1000000000",
+            "nanoether": "1000000000",
+            "noether": "0",
+            "picoether": "1000000",
+            "shannon": "1000000000",
+            "szabo": "1000000000000",
+            "tether": "1000000000000000000000000000000",
+            "wei": "1",
+          },
+          "utf8ToHex": [Function],
+        },
+        "version": "1.0.0-beta.27",
+      },
+    }
+  }
+>
+  <CrowdsalesList
+    crowdsaleStore={
+      CrowdsaleStore {
+        "crowdsales": Array [
+          Injector {
+            "context": undefined,
+            "execID": "0xcCca436070962a1A884b88E8506C2C750E342BEA",
+            "props": undefined,
+            "refs": Object {},
+            "storeRef": [Function],
+            "updater": Object {
+              "enqueueCallback": [Function],
+              "enqueueForceUpdate": [Function],
+              "enqueueReplaceState": [Function],
+              "enqueueSetState": [Function],
+              "isMounted": [Function],
+            },
+          },
+          Injector {
+            "context": undefined,
+            "execID": "0x9726cdb82358972b7a17260e7897C8de02d584e6",
+            "props": undefined,
+            "refs": Object {},
+            "storeRef": [Function],
+            "updater": Object {
+              "enqueueCallback": [Function],
+              "enqueueForceUpdate": [Function],
+              "enqueueReplaceState": [Function],
+              "enqueueSetState": [Function],
+              "isMounted": [Function],
+            },
+          },
+        ],
+        "endTime": undefined,
+        "maximumSellableTokens": undefined,
+        "maximumSellableTokensInWei": undefined,
+        "selected": Object {
+          "initialTiersValues": Array [],
+          "updatable": false,
+        },
+        "strategy": undefined,
+        "supply": undefined,
+      }
+    }
+    onClick={[Function]}
+    web3Store={
+      Web3Store {
+        "accounts": undefined,
+        "curAddress": undefined,
+        "getInfuraLink": [Function],
+        "getWeb3": [Function],
+        "web3": Web3 {
+          "BatchRequest": [Function],
+          "_provider": HttpProvider {
+            "connected": false,
+            "headers": undefined,
+            "host": "https://sokol.poa.network",
+            "timeout": 0,
+          },
+          "_requestManager": RequestManager {
+            "provider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "providers": Object {
+              "HttpProvider": [Function],
+              "IpcProvider": [Function],
+              "WebsocketProvider": [Function],
+            },
+            "subscriptions": Object {},
+          },
+          "bzz": Bzz {
+            "currentProvider": null,
+            "download": [Function],
+            "givenProvider": null,
+            "isAvailable": [Function],
+            "pick": Object {
+              "data": [Function],
+              "directory": [Function],
+              "file": [Function],
+            },
+            "upload": [Function],
+          },
+          "currentProvider": HttpProvider {
+            "connected": false,
+            "headers": undefined,
+            "host": "https://sokol.poa.network",
+            "timeout": 0,
+          },
+          "eth": Eth {
+            "BatchRequest": [Function],
+            "Contract": [Function],
+            "Iban": [Function],
+            "_provider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "_requestManager": RequestManager {
+              "provider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "providers": Object {
+                "HttpProvider": [Function],
+                "IpcProvider": [Function],
+                "WebsocketProvider": [Function],
+              },
+              "subscriptions": Object {},
+            },
+            "abi": ABICoder {
+              "_types": Array [
+                SolidityTypeAddress {
+                  "_inputFormatter": [Function],
+                  "_outputFormatter": [Function],
+                },
+                SolidityTypeBool {
+                  "_inputFormatter": [Function],
+                  "_outputFormatter": [Function],
+                },
+                SolidityTypeInt {
+                  "_inputFormatter": [Function],
+                  "_outputFormatter": [Function],
+                },
+                SolidityTypeUInt {
+                  "_inputFormatter": [Function],
+                  "_outputFormatter": [Function],
+                },
+                SolidityTypeDynamicBytes {
+                  "_inputFormatter": [Function],
+                  "_outputFormatter": [Function],
+                },
+                SolidityTypeBytes {
+                  "_inputFormatter": [Function],
+                  "_outputFormatter": [Function],
+                },
+                SolidityTypeString {
+                  "_inputFormatter": [Function],
+                  "_outputFormatter": [Function],
+                },
+              ],
+            },
+            "accounts": Accounts {
+              "_ethereumCall": Object {
+                "getGasPrice": [Function],
+                "getId": [Function],
+                "getTransactionCount": [Function],
+              },
+              "_provider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "_requestManager": RequestManager {
+                "provider": HttpProvider {
+                  "connected": false,
+                  "headers": undefined,
+                  "host": "https://sokol.poa.network",
+                  "timeout": 0,
+                },
+                "providers": Object {
+                  "HttpProvider": [Function],
+                  "IpcProvider": [Function],
+                  "WebsocketProvider": [Function],
+                },
+                "subscriptions": Object {},
+              },
+              "currentProvider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "givenProvider": null,
+              "providers": Object {
+                "HttpProvider": [Function],
+                "IpcProvider": [Function],
+                "WebsocketProvider": [Function],
+              },
+              "setProvider": [Function],
+              "wallet": Wallet {
+                "_accounts": [Circular],
+                "defaultKeyName": "web3js_wallet",
+                "length": 0,
+              },
+            },
+            "call": [Function],
+            "clearSubscriptions": [Function],
+            "compile": Object {
+              "lll": [Function],
+              "serpent": [Function],
+              "solidity": [Function],
+            },
+            "currentProvider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "defaultAccount": null,
+            "defaultBlock": "latest",
+            "estimateGas": [Function],
+            "extend": [Function],
+            "getAccounts": [Function],
+            "getBalance": [Function],
+            "getBlock": [Function],
+            "getBlockNumber": [Function],
+            "getBlockTransactionCount": [Function],
+            "getBlockUncleCount": [Function],
+            "getCode": [Function],
+            "getCoinbase": [Function],
+            "getCompilers": [Function],
+            "getGasPrice": [Function],
+            "getHashrate": [Function],
+            "getPastLogs": [Function],
+            "getProtocolVersion": [Function],
+            "getStorageAt": [Function],
+            "getTransaction": [Function],
+            "getTransactionCount": [Function],
+            "getTransactionFromBlock": [Function],
+            "getTransactionReceipt": [Function],
+            "getUncle": [Function],
+            "getWork": [Function],
+            "givenProvider": null,
+            "isMining": [Function],
+            "isSyncing": [Function],
+            "net": Net {
+              "BatchRequest": [Function],
+              "_provider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "_requestManager": RequestManager {
+                "provider": HttpProvider {
+                  "connected": false,
+                  "headers": undefined,
+                  "host": "https://sokol.poa.network",
+                  "timeout": 0,
+                },
+                "providers": Object {
+                  "HttpProvider": [Function],
+                  "IpcProvider": [Function],
+                  "WebsocketProvider": [Function],
+                },
+                "subscriptions": Object {},
+              },
+              "currentProvider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "extend": [Function],
+              "getId": [Function],
+              "getNetworkType": [Function],
+              "getPeerCount": [Function],
+              "givenProvider": null,
+              "isListening": [Function],
+              "providers": Object {
+                "HttpProvider": [Function],
+                "IpcProvider": [Function],
+                "WebsocketProvider": [Function],
+              },
+              "setProvider": [Function],
+            },
+            "personal": Personal {
+              "BatchRequest": [Function],
+              "_provider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "_requestManager": RequestManager {
+                "provider": HttpProvider {
+                  "connected": false,
+                  "headers": undefined,
+                  "host": "https://sokol.poa.network",
+                  "timeout": 0,
+                },
+                "providers": Object {
+                  "HttpProvider": [Function],
+                  "IpcProvider": [Function],
+                  "WebsocketProvider": [Function],
+                },
+                "subscriptions": Object {},
+              },
+              "currentProvider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "defaultAccount": null,
+              "defaultBlock": "latest",
+              "ecRecover": [Function],
+              "extend": [Function],
+              "getAccounts": [Function],
+              "givenProvider": null,
+              "importRawKey": [Function],
+              "lockAccount": [Function],
+              "net": Net {
+                "BatchRequest": [Function],
+                "_provider": HttpProvider {
+                  "connected": false,
+                  "headers": undefined,
+                  "host": "https://sokol.poa.network",
+                  "timeout": 0,
+                },
+                "_requestManager": RequestManager {
+                  "provider": HttpProvider {
+                    "connected": false,
+                    "headers": undefined,
+                    "host": "https://sokol.poa.network",
+                    "timeout": 0,
+                  },
+                  "providers": Object {
+                    "HttpProvider": [Function],
+                    "IpcProvider": [Function],
+                    "WebsocketProvider": [Function],
+                  },
+                  "subscriptions": Object {},
+                },
+                "currentProvider": HttpProvider {
+                  "connected": false,
+                  "headers": undefined,
+                  "host": "https://sokol.poa.network",
+                  "timeout": 0,
+                },
+                "extend": [Function],
+                "getId": [Function],
+                "getPeerCount": [Function],
+                "givenProvider": null,
+                "isListening": [Function],
+                "providers": Object {
+                  "HttpProvider": [Function],
+                  "IpcProvider": [Function],
+                  "WebsocketProvider": [Function],
+                },
+                "setProvider": [Function],
+              },
+              "newAccount": [Function],
+              "providers": Object {
+                "HttpProvider": [Function],
+                "IpcProvider": [Function],
+                "WebsocketProvider": [Function],
+              },
+              "sendTransaction": [Function],
+              "setProvider": [Function],
+              "sign": [Function],
+              "unlockAccount": [Function],
+            },
+            "providers": Object {
+              "HttpProvider": [Function],
+              "IpcProvider": [Function],
+              "WebsocketProvider": [Function],
+            },
+            "sendSignedTransaction": [Function],
+            "sendTransaction": [Function],
+            "setProvider": [Function],
+            "sign": [Function],
+            "signTransaction": [Function],
+            "submitWork": [Function],
+            "subscribe": [Function],
+          },
+          "extend": [Function],
+          "givenProvider": null,
+          "providers": Object {
+            "HttpProvider": [Function],
+            "IpcProvider": [Function],
+            "WebsocketProvider": [Function],
+          },
+          "setProvider": [Function],
+          "shh": Shh {
+            "BatchRequest": [Function],
+            "_provider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "_requestManager": RequestManager {
+              "provider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "providers": Object {
+                "HttpProvider": [Function],
+                "IpcProvider": [Function],
+                "WebsocketProvider": [Function],
+              },
+              "subscriptions": Object {},
+            },
+            "addPrivateKey": [Function],
+            "addSymKey": [Function],
+            "clearSubscriptions": [Function],
+            "currentProvider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "deleteKeyPair": [Function],
+            "deleteMessageFilter": [Function],
+            "deleteSymKey": [Function],
+            "extend": [Function],
+            "generateSymKeyFromPassword": [Function],
+            "getFilterMessages": [Function],
+            "getInfo": [Function],
+            "getPrivateKey": [Function],
+            "getPublicKey": [Function],
+            "getSymKey": [Function],
+            "getVersion": [Function],
+            "givenProvider": null,
+            "hasKeyPair": [Function],
+            "hasSymKey": [Function],
+            "markTrustedPeer": [Function],
+            "net": Net {
+              "BatchRequest": [Function],
+              "_provider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "_requestManager": RequestManager {
+                "provider": HttpProvider {
+                  "connected": false,
+                  "headers": undefined,
+                  "host": "https://sokol.poa.network",
+                  "timeout": 0,
+                },
+                "providers": Object {
+                  "HttpProvider": [Function],
+                  "IpcProvider": [Function],
+                  "WebsocketProvider": [Function],
+                },
+                "subscriptions": Object {},
+              },
+              "currentProvider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "extend": [Function],
+              "getId": [Function],
+              "getPeerCount": [Function],
+              "givenProvider": null,
+              "isListening": [Function],
+              "providers": Object {
+                "HttpProvider": [Function],
+                "IpcProvider": [Function],
+                "WebsocketProvider": [Function],
+              },
+              "setProvider": [Function],
+            },
+            "newKeyPair": [Function],
+            "newMessageFilter": [Function],
+            "newSymKey": [Function],
+            "post": [Function],
+            "providers": Object {
+              "HttpProvider": [Function],
+              "IpcProvider": [Function],
+              "WebsocketProvider": [Function],
+            },
+            "setMaxMessageSize": [Function],
+            "setMinPoW": [Function],
+            "setProvider": [Function],
+            "subscribe": [Function],
+          },
+          "utils": Object {
+            "BN": [Function],
+            "_": [Function],
+            "_fireError": [Function],
+            "_jsonInterfaceMethodToString": [Function],
+            "asciiToHex": [Function],
+            "bytesToHex": [Function],
+            "checkAddressChecksum": [Function],
+            "fromAscii": [Function],
+            "fromDecimal": [Function],
+            "fromUtf8": [Function],
+            "fromWei": [Function],
+            "hexToAscii": [Function],
+            "hexToBytes": [Function],
+            "hexToNumber": [Function],
+            "hexToNumberString": [Function],
+            "hexToString": [Function],
+            "hexToUtf8": [Function],
+            "isAddress": [Function],
+            "isBN": [Function],
+            "isBigNumber": [Function],
+            "isHex": [Function],
+            "isHexStrict": [Function],
+            "keccak256": [Function],
+            "leftPad": [Function],
+            "numberToHex": [Function],
+            "padLeft": [Function],
+            "padRight": [Function],
+            "randomHex": [Function],
+            "rightPad": [Function],
+            "sha3": [Function],
+            "soliditySha3": [Function],
+            "stringToHex": [Function],
+            "toAscii": [Function],
+            "toBN": [Function],
+            "toChecksumAddress": [Function],
+            "toDecimal": [Function],
+            "toHex": [Function],
+            "toTwosComplement": [Function],
+            "toUtf8": [Function],
+            "toWei": [Function],
+            "unitMap": Object {
+              "Gwei": "1000000000",
+              "Kwei": "1000",
+              "Mwei": "1000000",
+              "babbage": "1000",
+              "ether": "1000000000000000000",
+              "femtoether": "1000",
+              "finney": "1000000000000000",
+              "gether": "1000000000000000000000000000",
+              "grand": "1000000000000000000000",
+              "gwei": "1000000000",
+              "kether": "1000000000000000000000",
+              "kwei": "1000",
+              "lovelace": "1000000",
+              "mether": "1000000000000000000000000",
+              "micro": "1000000000000",
+              "microether": "1000000000000",
+              "milli": "1000000000000000",
+              "milliether": "1000000000000000",
+              "mwei": "1000000",
+              "nano": "1000000000",
+              "nanoether": "1000000000",
+              "noether": "0",
+              "picoether": "1000000",
+              "shannon": "1000000000",
+              "szabo": "1000000000000",
+              "tether": "1000000000000000000000000000000",
+              "wei": "1",
+            },
+            "utf8ToHex": [Function],
+          },
+          "version": "1.0.0-beta.27",
+        },
+      }
+    }
+  >
+    <div
+      className="flex-table"
+    >
+      <div
+        className="container-fluid"
+      >
+        <div
+          className="table-row flex-table-header"
+        >
+          <div
+            className="text"
+          >
+            Address
+          </div>
+        </div>
+        <div
+          className="scrollable-content"
+        >
+          <div
+            className="table-row clickable "
+            key="0"
+            onClick={[Function]}
+          >
+            <div
+              className="text"
+            >
+              0xcCca436070962a1A884b88E8506C2C750E342BEA
+            </div>
+          </div>
+          <div
+            className="table-row clickable "
+            key="1"
+            onClick={[Function]}
+          >
+            <div
+              className="text"
+            >
+              0x9726cdb82358972b7a17260e7897C8de02d584e6
+            </div>
+          </div>
+        </div>
+        <div
+          className="steps"
+        >
+          <div
+            className="button button_disabled"
+            onClick={[Function]}
+          >
+            Continue
+          </div>
+        </div>
+      </div>
+    </div>
+  </CrowdsalesList>
+</inject-CrowdsalesList-with-crowdsaleStore-web3Store>
+`;
+
+exports[`CrowdsaleList  should render if list is empty   1`] = `
+<inject-CrowdsalesList-with-crowdsaleStore-web3Store
+  crowdsaleStore={
+    CrowdsaleStore {
+      "crowdsales": Array [
+        Object {
+          "execID": "0xcCca436070962a1A884b88E8506C2C750E342BEA",
+          "refs": Object {},
+          "updater": Object {},
+        },
+        Object {
+          "execID": "0x9726cdb82358972b7a17260e7897C8de02d584e6",
+          "refs": Object {},
+          "updater": Object {},
+        },
+      ],
+      "endTime": undefined,
+      "maximumSellableTokens": undefined,
+      "maximumSellableTokensInWei": undefined,
+      "selected": Object {
+        "initialTiersValues": Array [],
+        "updatable": false,
+      },
+      "strategy": undefined,
+      "supply": undefined,
+    }
+  }
+  web3Store={
+    Web3Store {
+      "accounts": undefined,
+      "curAddress": undefined,
+      "getInfuraLink": [Function],
+      "getWeb3": [Function],
+      "web3": Web3 {
+        "BatchRequest": [Function],
+        "_provider": HttpProvider {
+          "connected": false,
+          "headers": undefined,
+          "host": "https://sokol.poa.network",
+          "timeout": 0,
+        },
+        "_requestManager": RequestManager {
+          "provider": HttpProvider {
+            "connected": false,
+            "headers": undefined,
+            "host": "https://sokol.poa.network",
+            "timeout": 0,
+          },
+          "providers": Object {
+            "HttpProvider": [Function],
+            "IpcProvider": [Function],
+            "WebsocketProvider": [Function],
+          },
+          "subscriptions": Object {},
+        },
+        "bzz": Bzz {
+          "currentProvider": null,
+          "download": [Function],
+          "givenProvider": null,
+          "isAvailable": [Function],
+          "pick": Object {
+            "data": [Function],
+            "directory": [Function],
+            "file": [Function],
+          },
+          "upload": [Function],
+        },
+        "currentProvider": HttpProvider {
+          "connected": false,
+          "headers": undefined,
+          "host": "https://sokol.poa.network",
+          "timeout": 0,
+        },
+        "eth": Eth {
+          "BatchRequest": [Function],
+          "Contract": [Function],
+          "Iban": [Function],
+          "_provider": HttpProvider {
+            "connected": false,
+            "headers": undefined,
+            "host": "https://sokol.poa.network",
+            "timeout": 0,
+          },
+          "_requestManager": RequestManager {
+            "provider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "providers": Object {
+              "HttpProvider": [Function],
+              "IpcProvider": [Function],
+              "WebsocketProvider": [Function],
+            },
+            "subscriptions": Object {},
+          },
+          "abi": ABICoder {
+            "_types": Array [
+              SolidityTypeAddress {
+                "_inputFormatter": [Function],
+                "_outputFormatter": [Function],
+              },
+              SolidityTypeBool {
+                "_inputFormatter": [Function],
+                "_outputFormatter": [Function],
+              },
+              SolidityTypeInt {
+                "_inputFormatter": [Function],
+                "_outputFormatter": [Function],
+              },
+              SolidityTypeUInt {
+                "_inputFormatter": [Function],
+                "_outputFormatter": [Function],
+              },
+              SolidityTypeDynamicBytes {
+                "_inputFormatter": [Function],
+                "_outputFormatter": [Function],
+              },
+              SolidityTypeBytes {
+                "_inputFormatter": [Function],
+                "_outputFormatter": [Function],
+              },
+              SolidityTypeString {
+                "_inputFormatter": [Function],
+                "_outputFormatter": [Function],
+              },
+            ],
+          },
+          "accounts": Accounts {
+            "_ethereumCall": Object {
+              "getGasPrice": [Function],
+              "getId": [Function],
+              "getTransactionCount": [Function],
+            },
+            "_provider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "_requestManager": RequestManager {
+              "provider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "providers": Object {
+                "HttpProvider": [Function],
+                "IpcProvider": [Function],
+                "WebsocketProvider": [Function],
+              },
+              "subscriptions": Object {},
+            },
+            "currentProvider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "givenProvider": null,
+            "providers": Object {
+              "HttpProvider": [Function],
+              "IpcProvider": [Function],
+              "WebsocketProvider": [Function],
+            },
+            "setProvider": [Function],
+            "wallet": Wallet {
+              "_accounts": [Circular],
+              "defaultKeyName": "web3js_wallet",
+              "length": 0,
+            },
+          },
+          "call": [Function],
+          "clearSubscriptions": [Function],
+          "compile": Object {
+            "lll": [Function],
+            "serpent": [Function],
+            "solidity": [Function],
+          },
+          "currentProvider": HttpProvider {
+            "connected": false,
+            "headers": undefined,
+            "host": "https://sokol.poa.network",
+            "timeout": 0,
+          },
+          "defaultAccount": null,
+          "defaultBlock": "latest",
+          "estimateGas": [Function],
+          "extend": [Function],
+          "getAccounts": [Function],
+          "getBalance": [Function],
+          "getBlock": [Function],
+          "getBlockNumber": [Function],
+          "getBlockTransactionCount": [Function],
+          "getBlockUncleCount": [Function],
+          "getCode": [Function],
+          "getCoinbase": [Function],
+          "getCompilers": [Function],
+          "getGasPrice": [Function],
+          "getHashrate": [Function],
+          "getPastLogs": [Function],
+          "getProtocolVersion": [Function],
+          "getStorageAt": [Function],
+          "getTransaction": [Function],
+          "getTransactionCount": [Function],
+          "getTransactionFromBlock": [Function],
+          "getTransactionReceipt": [Function],
+          "getUncle": [Function],
+          "getWork": [Function],
+          "givenProvider": null,
+          "isMining": [Function],
+          "isSyncing": [Function],
+          "net": Net {
+            "BatchRequest": [Function],
+            "_provider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "_requestManager": RequestManager {
+              "provider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "providers": Object {
+                "HttpProvider": [Function],
+                "IpcProvider": [Function],
+                "WebsocketProvider": [Function],
+              },
+              "subscriptions": Object {},
+            },
+            "currentProvider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "extend": [Function],
+            "getId": [Function],
+            "getNetworkType": [Function],
+            "getPeerCount": [Function],
+            "givenProvider": null,
+            "isListening": [Function],
+            "providers": Object {
+              "HttpProvider": [Function],
+              "IpcProvider": [Function],
+              "WebsocketProvider": [Function],
+            },
+            "setProvider": [Function],
+          },
+          "personal": Personal {
+            "BatchRequest": [Function],
+            "_provider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "_requestManager": RequestManager {
+              "provider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "providers": Object {
+                "HttpProvider": [Function],
+                "IpcProvider": [Function],
+                "WebsocketProvider": [Function],
+              },
+              "subscriptions": Object {},
+            },
+            "currentProvider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "defaultAccount": null,
+            "defaultBlock": "latest",
+            "ecRecover": [Function],
+            "extend": [Function],
+            "getAccounts": [Function],
+            "givenProvider": null,
+            "importRawKey": [Function],
+            "lockAccount": [Function],
+            "net": Net {
+              "BatchRequest": [Function],
+              "_provider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "_requestManager": RequestManager {
+                "provider": HttpProvider {
+                  "connected": false,
+                  "headers": undefined,
+                  "host": "https://sokol.poa.network",
+                  "timeout": 0,
+                },
+                "providers": Object {
+                  "HttpProvider": [Function],
+                  "IpcProvider": [Function],
+                  "WebsocketProvider": [Function],
+                },
+                "subscriptions": Object {},
+              },
+              "currentProvider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "extend": [Function],
+              "getId": [Function],
+              "getPeerCount": [Function],
+              "givenProvider": null,
+              "isListening": [Function],
+              "providers": Object {
+                "HttpProvider": [Function],
+                "IpcProvider": [Function],
+                "WebsocketProvider": [Function],
+              },
+              "setProvider": [Function],
+            },
+            "newAccount": [Function],
+            "providers": Object {
+              "HttpProvider": [Function],
+              "IpcProvider": [Function],
+              "WebsocketProvider": [Function],
+            },
+            "sendTransaction": [Function],
+            "setProvider": [Function],
+            "sign": [Function],
+            "unlockAccount": [Function],
+          },
+          "providers": Object {
+            "HttpProvider": [Function],
+            "IpcProvider": [Function],
+            "WebsocketProvider": [Function],
+          },
+          "sendSignedTransaction": [Function],
+          "sendTransaction": [Function],
+          "setProvider": [Function],
+          "sign": [Function],
+          "signTransaction": [Function],
+          "submitWork": [Function],
+          "subscribe": [Function],
+        },
+        "extend": [Function],
+        "givenProvider": null,
+        "providers": Object {
+          "HttpProvider": [Function],
+          "IpcProvider": [Function],
+          "WebsocketProvider": [Function],
+        },
+        "setProvider": [Function],
+        "shh": Shh {
+          "BatchRequest": [Function],
+          "_provider": HttpProvider {
+            "connected": false,
+            "headers": undefined,
+            "host": "https://sokol.poa.network",
+            "timeout": 0,
+          },
+          "_requestManager": RequestManager {
+            "provider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "providers": Object {
+              "HttpProvider": [Function],
+              "IpcProvider": [Function],
+              "WebsocketProvider": [Function],
+            },
+            "subscriptions": Object {},
+          },
+          "addPrivateKey": [Function],
+          "addSymKey": [Function],
+          "clearSubscriptions": [Function],
+          "currentProvider": HttpProvider {
+            "connected": false,
+            "headers": undefined,
+            "host": "https://sokol.poa.network",
+            "timeout": 0,
+          },
+          "deleteKeyPair": [Function],
+          "deleteMessageFilter": [Function],
+          "deleteSymKey": [Function],
+          "extend": [Function],
+          "generateSymKeyFromPassword": [Function],
+          "getFilterMessages": [Function],
+          "getInfo": [Function],
+          "getPrivateKey": [Function],
+          "getPublicKey": [Function],
+          "getSymKey": [Function],
+          "getVersion": [Function],
+          "givenProvider": null,
+          "hasKeyPair": [Function],
+          "hasSymKey": [Function],
+          "markTrustedPeer": [Function],
+          "net": Net {
+            "BatchRequest": [Function],
+            "_provider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "_requestManager": RequestManager {
+              "provider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "providers": Object {
+                "HttpProvider": [Function],
+                "IpcProvider": [Function],
+                "WebsocketProvider": [Function],
+              },
+              "subscriptions": Object {},
+            },
+            "currentProvider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "extend": [Function],
+            "getId": [Function],
+            "getPeerCount": [Function],
+            "givenProvider": null,
+            "isListening": [Function],
+            "providers": Object {
+              "HttpProvider": [Function],
+              "IpcProvider": [Function],
+              "WebsocketProvider": [Function],
+            },
+            "setProvider": [Function],
+          },
+          "newKeyPair": [Function],
+          "newMessageFilter": [Function],
+          "newSymKey": [Function],
+          "post": [Function],
+          "providers": Object {
+            "HttpProvider": [Function],
+            "IpcProvider": [Function],
+            "WebsocketProvider": [Function],
+          },
+          "setMaxMessageSize": [Function],
+          "setMinPoW": [Function],
+          "setProvider": [Function],
+          "subscribe": [Function],
+        },
+        "utils": Object {
+          "BN": [Function],
+          "_": [Function],
+          "_fireError": [Function],
+          "_jsonInterfaceMethodToString": [Function],
+          "asciiToHex": [Function],
+          "bytesToHex": [Function],
+          "checkAddressChecksum": [Function],
+          "fromAscii": [Function],
+          "fromDecimal": [Function],
+          "fromUtf8": [Function],
+          "fromWei": [Function],
+          "hexToAscii": [Function],
+          "hexToBytes": [Function],
+          "hexToNumber": [Function],
+          "hexToNumberString": [Function],
+          "hexToString": [Function],
+          "hexToUtf8": [Function],
+          "isAddress": [Function],
+          "isBN": [Function],
+          "isBigNumber": [Function],
+          "isHex": [Function],
+          "isHexStrict": [Function],
+          "keccak256": [Function],
+          "leftPad": [Function],
+          "numberToHex": [Function],
+          "padLeft": [Function],
+          "padRight": [Function],
+          "randomHex": [Function],
+          "rightPad": [Function],
+          "sha3": [Function],
+          "soliditySha3": [Function],
+          "stringToHex": [Function],
+          "toAscii": [Function],
+          "toBN": [Function],
+          "toChecksumAddress": [Function],
+          "toDecimal": [Function],
+          "toHex": [Function],
+          "toTwosComplement": [Function],
+          "toUtf8": [Function],
+          "toWei": [Function],
+          "unitMap": Object {
+            "Gwei": "1000000000",
+            "Kwei": "1000",
+            "Mwei": "1000000",
+            "babbage": "1000",
+            "ether": "1000000000000000000",
+            "femtoether": "1000",
+            "finney": "1000000000000000",
+            "gether": "1000000000000000000000000000",
+            "grand": "1000000000000000000000",
+            "gwei": "1000000000",
+            "kether": "1000000000000000000000",
+            "kwei": "1000",
+            "lovelace": "1000000",
+            "mether": "1000000000000000000000000",
+            "micro": "1000000000000",
+            "microether": "1000000000000",
+            "milli": "1000000000000000",
+            "milliether": "1000000000000000",
+            "mwei": "1000000",
+            "nano": "1000000000",
+            "nanoether": "1000000000",
+            "noether": "0",
+            "picoether": "1000000",
+            "shannon": "1000000000",
+            "szabo": "1000000000000",
+            "tether": "1000000000000000000000000000000",
+            "wei": "1",
+          },
+          "utf8ToHex": [Function],
+        },
+        "version": "1.0.0-beta.27",
+      },
+    }
+  }
+>
+  <CrowdsalesList
+    crowdsaleStore={
+      CrowdsaleStore {
+        "crowdsales": Array [
+          Object {
+            "execID": "0xcCca436070962a1A884b88E8506C2C750E342BEA",
+            "refs": Object {},
+            "updater": Object {},
+          },
+          Object {
+            "execID": "0x9726cdb82358972b7a17260e7897C8de02d584e6",
+            "refs": Object {},
+            "updater": Object {},
+          },
+        ],
+        "endTime": undefined,
+        "maximumSellableTokens": undefined,
+        "maximumSellableTokensInWei": undefined,
+        "selected": Object {
+          "initialTiersValues": Array [],
+          "updatable": false,
+        },
+        "strategy": undefined,
+        "supply": undefined,
+      }
+    }
+    web3Store={
+      Web3Store {
+        "accounts": undefined,
+        "curAddress": undefined,
+        "getInfuraLink": [Function],
+        "getWeb3": [Function],
+        "web3": Web3 {
+          "BatchRequest": [Function],
+          "_provider": HttpProvider {
+            "connected": false,
+            "headers": undefined,
+            "host": "https://sokol.poa.network",
+            "timeout": 0,
+          },
+          "_requestManager": RequestManager {
+            "provider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "providers": Object {
+              "HttpProvider": [Function],
+              "IpcProvider": [Function],
+              "WebsocketProvider": [Function],
+            },
+            "subscriptions": Object {},
+          },
+          "bzz": Bzz {
+            "currentProvider": null,
+            "download": [Function],
+            "givenProvider": null,
+            "isAvailable": [Function],
+            "pick": Object {
+              "data": [Function],
+              "directory": [Function],
+              "file": [Function],
+            },
+            "upload": [Function],
+          },
+          "currentProvider": HttpProvider {
+            "connected": false,
+            "headers": undefined,
+            "host": "https://sokol.poa.network",
+            "timeout": 0,
+          },
+          "eth": Eth {
+            "BatchRequest": [Function],
+            "Contract": [Function],
+            "Iban": [Function],
+            "_provider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "_requestManager": RequestManager {
+              "provider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "providers": Object {
+                "HttpProvider": [Function],
+                "IpcProvider": [Function],
+                "WebsocketProvider": [Function],
+              },
+              "subscriptions": Object {},
+            },
+            "abi": ABICoder {
+              "_types": Array [
+                SolidityTypeAddress {
+                  "_inputFormatter": [Function],
+                  "_outputFormatter": [Function],
+                },
+                SolidityTypeBool {
+                  "_inputFormatter": [Function],
+                  "_outputFormatter": [Function],
+                },
+                SolidityTypeInt {
+                  "_inputFormatter": [Function],
+                  "_outputFormatter": [Function],
+                },
+                SolidityTypeUInt {
+                  "_inputFormatter": [Function],
+                  "_outputFormatter": [Function],
+                },
+                SolidityTypeDynamicBytes {
+                  "_inputFormatter": [Function],
+                  "_outputFormatter": [Function],
+                },
+                SolidityTypeBytes {
+                  "_inputFormatter": [Function],
+                  "_outputFormatter": [Function],
+                },
+                SolidityTypeString {
+                  "_inputFormatter": [Function],
+                  "_outputFormatter": [Function],
+                },
+              ],
+            },
+            "accounts": Accounts {
+              "_ethereumCall": Object {
+                "getGasPrice": [Function],
+                "getId": [Function],
+                "getTransactionCount": [Function],
+              },
+              "_provider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "_requestManager": RequestManager {
+                "provider": HttpProvider {
+                  "connected": false,
+                  "headers": undefined,
+                  "host": "https://sokol.poa.network",
+                  "timeout": 0,
+                },
+                "providers": Object {
+                  "HttpProvider": [Function],
+                  "IpcProvider": [Function],
+                  "WebsocketProvider": [Function],
+                },
+                "subscriptions": Object {},
+              },
+              "currentProvider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "givenProvider": null,
+              "providers": Object {
+                "HttpProvider": [Function],
+                "IpcProvider": [Function],
+                "WebsocketProvider": [Function],
+              },
+              "setProvider": [Function],
+              "wallet": Wallet {
+                "_accounts": [Circular],
+                "defaultKeyName": "web3js_wallet",
+                "length": 0,
+              },
+            },
+            "call": [Function],
+            "clearSubscriptions": [Function],
+            "compile": Object {
+              "lll": [Function],
+              "serpent": [Function],
+              "solidity": [Function],
+            },
+            "currentProvider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "defaultAccount": null,
+            "defaultBlock": "latest",
+            "estimateGas": [Function],
+            "extend": [Function],
+            "getAccounts": [Function],
+            "getBalance": [Function],
+            "getBlock": [Function],
+            "getBlockNumber": [Function],
+            "getBlockTransactionCount": [Function],
+            "getBlockUncleCount": [Function],
+            "getCode": [Function],
+            "getCoinbase": [Function],
+            "getCompilers": [Function],
+            "getGasPrice": [Function],
+            "getHashrate": [Function],
+            "getPastLogs": [Function],
+            "getProtocolVersion": [Function],
+            "getStorageAt": [Function],
+            "getTransaction": [Function],
+            "getTransactionCount": [Function],
+            "getTransactionFromBlock": [Function],
+            "getTransactionReceipt": [Function],
+            "getUncle": [Function],
+            "getWork": [Function],
+            "givenProvider": null,
+            "isMining": [Function],
+            "isSyncing": [Function],
+            "net": Net {
+              "BatchRequest": [Function],
+              "_provider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "_requestManager": RequestManager {
+                "provider": HttpProvider {
+                  "connected": false,
+                  "headers": undefined,
+                  "host": "https://sokol.poa.network",
+                  "timeout": 0,
+                },
+                "providers": Object {
+                  "HttpProvider": [Function],
+                  "IpcProvider": [Function],
+                  "WebsocketProvider": [Function],
+                },
+                "subscriptions": Object {},
+              },
+              "currentProvider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "extend": [Function],
+              "getId": [Function],
+              "getNetworkType": [Function],
+              "getPeerCount": [Function],
+              "givenProvider": null,
+              "isListening": [Function],
+              "providers": Object {
+                "HttpProvider": [Function],
+                "IpcProvider": [Function],
+                "WebsocketProvider": [Function],
+              },
+              "setProvider": [Function],
+            },
+            "personal": Personal {
+              "BatchRequest": [Function],
+              "_provider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "_requestManager": RequestManager {
+                "provider": HttpProvider {
+                  "connected": false,
+                  "headers": undefined,
+                  "host": "https://sokol.poa.network",
+                  "timeout": 0,
+                },
+                "providers": Object {
+                  "HttpProvider": [Function],
+                  "IpcProvider": [Function],
+                  "WebsocketProvider": [Function],
+                },
+                "subscriptions": Object {},
+              },
+              "currentProvider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "defaultAccount": null,
+              "defaultBlock": "latest",
+              "ecRecover": [Function],
+              "extend": [Function],
+              "getAccounts": [Function],
+              "givenProvider": null,
+              "importRawKey": [Function],
+              "lockAccount": [Function],
+              "net": Net {
+                "BatchRequest": [Function],
+                "_provider": HttpProvider {
+                  "connected": false,
+                  "headers": undefined,
+                  "host": "https://sokol.poa.network",
+                  "timeout": 0,
+                },
+                "_requestManager": RequestManager {
+                  "provider": HttpProvider {
+                    "connected": false,
+                    "headers": undefined,
+                    "host": "https://sokol.poa.network",
+                    "timeout": 0,
+                  },
+                  "providers": Object {
+                    "HttpProvider": [Function],
+                    "IpcProvider": [Function],
+                    "WebsocketProvider": [Function],
+                  },
+                  "subscriptions": Object {},
+                },
+                "currentProvider": HttpProvider {
+                  "connected": false,
+                  "headers": undefined,
+                  "host": "https://sokol.poa.network",
+                  "timeout": 0,
+                },
+                "extend": [Function],
+                "getId": [Function],
+                "getPeerCount": [Function],
+                "givenProvider": null,
+                "isListening": [Function],
+                "providers": Object {
+                  "HttpProvider": [Function],
+                  "IpcProvider": [Function],
+                  "WebsocketProvider": [Function],
+                },
+                "setProvider": [Function],
+              },
+              "newAccount": [Function],
+              "providers": Object {
+                "HttpProvider": [Function],
+                "IpcProvider": [Function],
+                "WebsocketProvider": [Function],
+              },
+              "sendTransaction": [Function],
+              "setProvider": [Function],
+              "sign": [Function],
+              "unlockAccount": [Function],
+            },
+            "providers": Object {
+              "HttpProvider": [Function],
+              "IpcProvider": [Function],
+              "WebsocketProvider": [Function],
+            },
+            "sendSignedTransaction": [Function],
+            "sendTransaction": [Function],
+            "setProvider": [Function],
+            "sign": [Function],
+            "signTransaction": [Function],
+            "submitWork": [Function],
+            "subscribe": [Function],
+          },
+          "extend": [Function],
+          "givenProvider": null,
+          "providers": Object {
+            "HttpProvider": [Function],
+            "IpcProvider": [Function],
+            "WebsocketProvider": [Function],
+          },
+          "setProvider": [Function],
+          "shh": Shh {
+            "BatchRequest": [Function],
+            "_provider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "_requestManager": RequestManager {
+              "provider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "providers": Object {
+                "HttpProvider": [Function],
+                "IpcProvider": [Function],
+                "WebsocketProvider": [Function],
+              },
+              "subscriptions": Object {},
+            },
+            "addPrivateKey": [Function],
+            "addSymKey": [Function],
+            "clearSubscriptions": [Function],
+            "currentProvider": HttpProvider {
+              "connected": false,
+              "headers": undefined,
+              "host": "https://sokol.poa.network",
+              "timeout": 0,
+            },
+            "deleteKeyPair": [Function],
+            "deleteMessageFilter": [Function],
+            "deleteSymKey": [Function],
+            "extend": [Function],
+            "generateSymKeyFromPassword": [Function],
+            "getFilterMessages": [Function],
+            "getInfo": [Function],
+            "getPrivateKey": [Function],
+            "getPublicKey": [Function],
+            "getSymKey": [Function],
+            "getVersion": [Function],
+            "givenProvider": null,
+            "hasKeyPair": [Function],
+            "hasSymKey": [Function],
+            "markTrustedPeer": [Function],
+            "net": Net {
+              "BatchRequest": [Function],
+              "_provider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "_requestManager": RequestManager {
+                "provider": HttpProvider {
+                  "connected": false,
+                  "headers": undefined,
+                  "host": "https://sokol.poa.network",
+                  "timeout": 0,
+                },
+                "providers": Object {
+                  "HttpProvider": [Function],
+                  "IpcProvider": [Function],
+                  "WebsocketProvider": [Function],
+                },
+                "subscriptions": Object {},
+              },
+              "currentProvider": HttpProvider {
+                "connected": false,
+                "headers": undefined,
+                "host": "https://sokol.poa.network",
+                "timeout": 0,
+              },
+              "extend": [Function],
+              "getId": [Function],
+              "getPeerCount": [Function],
+              "givenProvider": null,
+              "isListening": [Function],
+              "providers": Object {
+                "HttpProvider": [Function],
+                "IpcProvider": [Function],
+                "WebsocketProvider": [Function],
+              },
+              "setProvider": [Function],
+            },
+            "newKeyPair": [Function],
+            "newMessageFilter": [Function],
+            "newSymKey": [Function],
+            "post": [Function],
+            "providers": Object {
+              "HttpProvider": [Function],
+              "IpcProvider": [Function],
+              "WebsocketProvider": [Function],
+            },
+            "setMaxMessageSize": [Function],
+            "setMinPoW": [Function],
+            "setProvider": [Function],
+            "subscribe": [Function],
+          },
+          "utils": Object {
+            "BN": [Function],
+            "_": [Function],
+            "_fireError": [Function],
+            "_jsonInterfaceMethodToString": [Function],
+            "asciiToHex": [Function],
+            "bytesToHex": [Function],
+            "checkAddressChecksum": [Function],
+            "fromAscii": [Function],
+            "fromDecimal": [Function],
+            "fromUtf8": [Function],
+            "fromWei": [Function],
+            "hexToAscii": [Function],
+            "hexToBytes": [Function],
+            "hexToNumber": [Function],
+            "hexToNumberString": [Function],
+            "hexToString": [Function],
+            "hexToUtf8": [Function],
+            "isAddress": [Function],
+            "isBN": [Function],
+            "isBigNumber": [Function],
+            "isHex": [Function],
+            "isHexStrict": [Function],
+            "keccak256": [Function],
+            "leftPad": [Function],
+            "numberToHex": [Function],
+            "padLeft": [Function],
+            "padRight": [Function],
+            "randomHex": [Function],
+            "rightPad": [Function],
+            "sha3": [Function],
+            "soliditySha3": [Function],
+            "stringToHex": [Function],
+            "toAscii": [Function],
+            "toBN": [Function],
+            "toChecksumAddress": [Function],
+            "toDecimal": [Function],
+            "toHex": [Function],
+            "toTwosComplement": [Function],
+            "toUtf8": [Function],
+            "toWei": [Function],
+            "unitMap": Object {
+              "Gwei": "1000000000",
+              "Kwei": "1000",
+              "Mwei": "1000000",
+              "babbage": "1000",
+              "ether": "1000000000000000000",
+              "femtoether": "1000",
+              "finney": "1000000000000000",
+              "gether": "1000000000000000000000000000",
+              "grand": "1000000000000000000000",
+              "gwei": "1000000000",
+              "kether": "1000000000000000000000",
+              "kwei": "1000",
+              "lovelace": "1000000",
+              "mether": "1000000000000000000000000",
+              "micro": "1000000000000",
+              "microether": "1000000000000",
+              "milli": "1000000000000000",
+              "milliether": "1000000000000000",
+              "mwei": "1000000",
+              "nano": "1000000000",
+              "nanoether": "1000000000",
+              "noether": "0",
+              "picoether": "1000000",
+              "shannon": "1000000000",
+              "szabo": "1000000000000",
+              "tether": "1000000000000000000000000000000",
+              "wei": "1",
+            },
+            "utf8ToHex": [Function],
+          },
+          "version": "1.0.0-beta.27",
+        },
+      }
+    }
+  >
+    <div
+      className="flex-table"
+    >
+      <div
+        className="container-fluid"
+      >
+        <div
+          className="table-row flex-table-header"
+        >
+          <div
+            className="text"
+          >
+            Address
+          </div>
+        </div>
+        <div
+          className="scrollable-content"
+        >
+          <div
+            className="table-row clickable "
+            key="0"
+            onClick={[Function]}
+          >
+            <div
+              className="text"
+            >
+              0xcCca436070962a1A884b88E8506C2C750E342BEA
+            </div>
+          </div>
+          <div
+            className="table-row clickable "
+            key="1"
+            onClick={[Function]}
+          >
+            <div
+              className="text"
+            >
+              0x9726cdb82358972b7a17260e7897C8de02d584e6
+            </div>
+          </div>
+        </div>
+        <div
+          className="steps"
+        >
+          <div
+            className="button button_disabled"
+            onClick={[Function]}
+          >
+            Continue
+          </div>
+        </div>
+      </div>
+    </div>
+  </CrowdsalesList>
+</inject-CrowdsalesList-with-crowdsaleStore-web3Store>
+`;

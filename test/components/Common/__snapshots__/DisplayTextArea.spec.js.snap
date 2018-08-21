@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DisplayTextArea  should render DisplayTextArea component 1`] = `
+<div
+  className="item"
+>
+  <div>
+    <div
+      className="display-container"
+    >
+      <p
+        className="label"
+      >
+        Label
+      </p>
+    </div>
+    <div
+      className="copy-area-container"
+    >
+      <btn
+        className="copy"
+        data-clipboard-action="copy"
+        data-clipboard-text="Value"
+      />
+    </div>
+  </div>
+  <pre>
+    Value
+  </pre>
+  <p
+    className="description"
+  >
+    Description
+  </p>
+</div>
+`;
