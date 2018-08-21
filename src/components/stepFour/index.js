@@ -76,14 +76,15 @@ const {
 )
 @observer
 export class stepFour extends Component {
+  state = {
+    contractDownloaded: false,
+    modal: false,
+    preventRefresh: true,
+    transactionFailed: false
+  }
+
   constructor(props, context) {
     super(props)
-    this.state = {
-      contractDownloaded: false,
-      modal: false,
-      preventRefresh: true,
-      transactionFailed: false
-    }
 
     const { deploymentStore } = props
 
