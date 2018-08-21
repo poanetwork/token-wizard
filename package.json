@@ -155,7 +155,7 @@
     "e2eDutchWhitelist": "nps test.e2e.DutchWhitelist",
     "e2eDutchMincap": "nps test.e2e.DutchMincap",
     "stop": "nps test.e2e.stop",
-     "c": "jest TierBlock.spec.js "
+    "c": "jest --env=jsdom CrowdsaleStartTime.spec.js "
   },
   "jest": {
     "collectCoverageFrom": [

@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CrowdsaleEndTime  should render CrowdsaleEndTime component 1`] = `
+exports[`CrowdsaleEndTime Rendering should render CrowdsaleEndTime component 1`] = `
 <div
   className={undefined}
 >
   <label
     className="label"
-    htmlFor="name"
+    htmlFor="tiers[0].endTime"
   >
     End Time
   </label>
@@ -14,14 +14,14 @@ exports[`CrowdsaleEndTime  should render CrowdsaleEndTime component 1`] = `
     autoComplete="off"
     className="input"
     disabled={false}
-    id="name"
-    name="name"
+    id="tiers[0].endTime"
+    name="tiers[0].endTime"
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
     placeholder={undefined}
     type="datetime-local"
-    value=""
+    value={1521716400000}
   />
   <p
     className="description"
@@ -38,35 +38,17 @@ exports[`CrowdsaleEndTime  should render CrowdsaleEndTime component 1`] = `
         }
       }
     />
-    <p
-      className="error"
-      style={
-        Object {
-          "color": "red",
-          "fontWeight": "bold",
-        }
-      }
-    />
-    <p
-      className="error"
-      style={
-        Object {
-          "color": "red",
-          "fontWeight": "bold",
-        }
-      }
-    />
   </span>
 </div>
 `;
 
-exports[`CrowdsaleEndTime  should render CrowdsaleEndTime component if field is disabled 1`] = `
+exports[`CrowdsaleEndTime Rendering should render CrowdsaleEndTime component if field is disabled 1`] = `
 <div
   className={undefined}
 >
   <label
     className="label"
-    htmlFor="name"
+    htmlFor="tiers[0].endTime"
   >
     End Time
   </label>
@@ -74,14 +56,14 @@ exports[`CrowdsaleEndTime  should render CrowdsaleEndTime component if field is 
     autoComplete="off"
     className="input"
     disabled={true}
-    id="name"
-    name="name"
+    id="tiers[0].endTime"
+    name="tiers[0].endTime"
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
     placeholder={undefined}
     type="datetime-local"
-    value=""
+    value={1521716400000}
   />
   <p
     className="description"

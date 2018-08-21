@@ -30,7 +30,7 @@ describe('CrowdsaleStartTime ', () => {
     expect(wrapper).toMatchSnapshot()
   })
 
-  it(`should render MinCap component if field is disabled`, () => {
+  it(`should render CrowdsaleStartTime component if field is disabled`, () => {
     const wrapper = renderer.create(
       <Form
         onSubmit={jest.fn()}
