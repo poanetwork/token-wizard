@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CrowdsaleStartTime Rendering should render CrowdsaleStartTime component 1`] = `
+<div
+  className={undefined}
+>
+  <label
+    className="label"
+    htmlFor="tiers[0].startTime"
+  >
+    Start Time
+  </label>
+  <input
+    autoComplete="off"
+    className="input"
+    disabled={false}
+    id="tiers[0].startTime"
+    name="tiers[0].startTime"
+    onBlur={[Function]}
+    onChange={[Function]}
+    onFocus={[Function]}
+    placeholder={undefined}
+    type="datetime-local"
+    value={1520852700000}
+  />
+  <p
+    className="description"
+  >
+    Date and time when the tier starts. Can't be in the past from the current moment.
+  </p>
+  <span>
+    <p
+      className="error"
+      style={
+        Object {
+          "color": "red",
+          "fontWeight": "bold",
+        }
+      }
+    />
+  </span>
+</div>
+`;
+
+exports[`CrowdsaleStartTime Rendering should render CrowdsaleStartTime component if field is disabled 1`] = `
+<div
+  className={undefined}
+>
+  <label
+    className="label"
+    htmlFor="tiers[0].startTime"
+  >
+    Start Time
+  </label>
+  <input
+    autoComplete="off"
+    className="input"
+    disabled={true}
+    id="tiers[0].startTime"
+    name="tiers[0].startTime"
+    onBlur={[Function]}
+    onChange={[Function]}
+    onFocus={[Function]}
+    placeholder={undefined}
+    type="datetime-local"
+    value={1520852700000}
+  />
+  <p
+    className="description"
+  >
+    Date and time when the tier starts. Can't be in the past from the current moment.
+  </p>
+  <span>
+    <p
+      className="error"
+      style={
+        Object {
+          "color": "red",
+          "fontWeight": "bold",
+        }
+      }
+    />
+  </span>
+</div>
+`;
