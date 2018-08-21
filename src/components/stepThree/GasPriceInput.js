@@ -9,7 +9,7 @@ import { inject, observer } from 'mobx-react'
 class GasPriceInput extends Component {
   state = {
     isCustom: false,
-    customGasPrice: 0.1,
+    customGasPrice: GAS_PRICE.CUSTOM.PRICE,
     gasTypeSelected: {}
   }
 
