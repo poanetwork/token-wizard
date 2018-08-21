@@ -31,22 +31,4 @@ describe('InputField2 ', () => {
     expect(wrapper.find('Error').props().name).toBe(input.name)
   })
 
-  it(`should be able to set value `, () => {
-    const val = 13
-    let input = {
-      name: 'CustomName',
-      type: 'text',
-    }
-    const wrapper = mount(
-      <Form
-        onSubmit={jest.fn()}
-        component={InputField2}
-        errorStyle={{color: 'red', fontWeight: 'bold'}}
-        input={input}
-        disabled={false}
-        val={val}
-      />
-    )
-    expect(wrapper.find('input').props().value).toBe(val)
-  })
 })
