@@ -8,7 +8,7 @@ import {
   warningOnFinalizeCrowdsale,
   notTheOwner,
   invalidNetworkIDAlert,
-  invalidCrowdsaleExecIDAlert
+  invalidCrowdsaleExecIDProxyAlert
 } from '../../utils/alerts'
 import {
   getCurrentAccount,
@@ -127,11 +127,8 @@ export class Manage extends Component {
     } else if (isAddressValid(crowdsalePointer)) {
       crowdsaleStore.setSelectedProperty('addr', crowdsalePointer)
       crowdsaleStore.setProperty('addr', crowdsalePointer)
-    }
-
-    //todo: 2 alerts
-    if (!isExecIDValid(crowdsalePointer) && !isAddressValid(crowdsalePointer)) {
-      invalidCrowdsaleExecIDAlert()
+    } else {
+      invalidCrowdsaleExecIDProxyAlert()
       return Promise.reject('invalid exec-id or proxy addr')
     }
   }
