@@ -23,7 +23,7 @@ import {
   checkWeb3,
   isAddressValid
 } from '../../utils/blockchainHelpers'
-import { isExecIDValid, isNetworkIDValid, toast, toBigNumber } from '../../utils/utils'
+import { isExecIDValid, isNetworkIDValid, toast, toBigNumber, clearStorage } from '../../utils/utils'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import { getFieldsToUpdate, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
@@ -39,7 +39,18 @@ import logdown from 'logdown'
 
 const logger = logdown('TW:manage')
 
-@inject('crowdsaleStore', 'web3Store', 'tierStore', 'contractStore', 'generalStore', 'tokenStore', 'gasPriceStore')
+@inject(
+  'crowdsaleStore',
+  'web3Store',
+  'tierStore',
+  'contractStore',
+  'reservedTokenStore',
+  'stepTwoValidationStore',
+  'generalStore',
+  'tokenStore',
+  'gasPriceStore',
+  'deploymentStore'
+)
 @observer
 export class Manage extends Component {
   constructor(props) {
@@ -65,8 +76,9 @@ export class Manage extends Component {
     setTimeout(() => window.scrollTo(0, 0), 500)
   }
 
-  componentWillMount() {
-    this.preparePage()
+  async componentWillMount() {
+    clearStorage(this.props)
+    await this.preparePage()
   }
 
   preparePage = async () => {
