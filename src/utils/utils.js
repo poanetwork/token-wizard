@@ -3,6 +3,7 @@ import queryString from 'query-string'
 import { CrowdsaleConfig } from '../components/Common/config'
 import { BigNumber } from 'bignumber.js'
 import logdown from 'logdown'
+import Web3 from 'web3'
 
 const logger = logdown('TW:utils:utils')
 
@@ -12,17 +13,36 @@ export function getQueryVariable(variable) {
 
 export const isExecIDValid = execID => /^0x[a-f0-9]{64}$/i.test(execID)
 
-export const getExecID = () => {
-  const execID = getQueryVariable('exec-id')
+export const isAddressValid = address => Web3.utils.isAddress(address)
+
+export const _getExecID = () => {
+  const execID = getQueryVariableExecId()
+  logger.log('getExecID:', execID)
   return isExecIDValid(execID) ? execID : null
 }
 
-//todo: check address input
-export const getAddr = () => {
-  const addr = getQueryVariable('addr')
-  logger.log('getAddr:', addr)
-  return addr
+export const getExecID = () => {
+  return CrowdsaleConfig.crowdsaleContractURL || _getExecID()
 }
+
+export const _getAddr = () => {
+  const addr = getQueryVariableAddr()
+  logger.log('getAddr:', addr)
+  return isAddressValid(addr) ? addr : null
+}
+
+export const getAddr = () => {
+  return CrowdsaleConfig.crowdsaleContractURL || _getAddr()
+}
+
+export const getQueryVariableAddr = () => {
+  return getQueryVariable('addr')
+}
+
+export const getQueryVariableExecId = () => {
+  return getQueryVariable('exec-id')
+}
+
 export const isNetworkIDValid = networkID => /^[0-9]+$/.test(networkID)
 
 export const getNetworkID = () => {
