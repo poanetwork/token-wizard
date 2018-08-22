@@ -43,6 +43,22 @@ export function invalidCrowdsaleExecIDAlert() {
   })
 }
 
+export function invalidCrowdsaleExecIDProxyAlert() {
+  sweetAlert2({
+    title: 'Warning',
+    html: 'Invalid crowdsale exec-id or proxy address indicated in config and/or in query string.',
+    type: 'warning'
+  })
+}
+
+export function invalidCrowdsaleProxyAlert() {
+  sweetAlert2({
+    title: 'Warning',
+    html: 'Invalid crowdsale proxy address is indicated in config and/or in query string.',
+    type: 'warning'
+  })
+}
+
 export function invalidCrowdsaleAddrAlert() {
   sweetAlert2({
     title: 'Warning',
