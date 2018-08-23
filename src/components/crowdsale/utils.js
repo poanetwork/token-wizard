@@ -6,7 +6,7 @@ import {
 } from '../../utils/blockchainHelpers'
 import { contractStore, crowdsalePageStore, tokenStore, web3Store, crowdsaleStore } from '../../stores'
 import { toJS } from 'mobx'
-import { _getAddr, _getExecID, removeTrailingNUL, toBigNumber } from '../../utils/utils'
+import { _getAddr, _getExecID, isAddressValid, removeTrailingNUL, toBigNumber } from '../../utils/utils'
 import { BigNumber } from 'bignumber.js'
 import logdown from 'logdown'
 import { CrowdsaleConfig } from '../Common/config'
@@ -819,7 +819,7 @@ export const getInitializeDataFromContractStore = async () => {
 }
 
 export const getExecID = () => {
-  return CrowdsaleConfig.crowdsaleContractURL || _getExecID()
+  return CrowdsaleConfig.execID || _getExecID()
 }
 
 export const getAddr = async () => {
@@ -827,8 +827,8 @@ export const getAddr = async () => {
     let address
 
     // First: add the contract config if exist
-    if (CrowdsaleConfig && CrowdsaleConfig.crowdsaleContractURL) {
-      address = CrowdsaleConfig.crowdsaleContractURL
+    if (CrowdsaleConfig && CrowdsaleConfig.proxyAddress) {
+      address = isAddressValid(CrowdsaleConfig.proxyAddress)
     } else {
       address = _getAddr()
     }

@@ -144,7 +144,7 @@ export class Crowdsale extends React.Component {
     const { crowdsale } = contractStore
     const { proxyName } = crowdsaleStore
     let queryStr = ''
-    if (!CrowdsaleConfig.crowdsaleContractURL || !CrowdsaleConfig.networkID) {
+    if (!CrowdsaleConfig.proxyAddress || !CrowdsaleConfig.networkID) {
       const crowdsaleParamVal = crowdsale.execID || (contractStore[proxyName] ? contractStore[proxyName].addr : null)
       if (crowdsaleParamVal) {
         let crowdsaleParam
