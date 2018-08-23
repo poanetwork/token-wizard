@@ -500,8 +500,8 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
     className="button-container"
   >
     <button
-      className="button button_fill button_no_border button_disabled"
-      disabled={true}
+      className="button button_fill button_no_border"
+      disabled={false}
       type="submit"
     >
       Continue

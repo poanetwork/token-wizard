@@ -2,6 +2,7 @@ import { observable, action } from 'mobx'
 import autosave from './autosave'
 import { computed } from 'mobx'
 import { LIMIT_RESERVED_ADDRESSES } from '../utils/constants'
+import { toBigNumber } from '../utils/utils'
 
 class ReservedTokenStore {
   @observable tokens
@@ -63,6 +64,21 @@ class ReservedTokenStore {
   @action
   reset = () => {
     this.tokens = []
+  }
+
+  @action
+  applyDecimalsToTokens = (decimals = 0) => {
+    const decimalsInt = +decimals
+    if (decimalsInt > 18 || decimalsInt < 0) {
+      return
+    }
+
+    for (let i = 0; i < this.tokens.length; i++) {
+      if (this.tokens && this.tokens[i] && this.tokens[i].val) {
+        const decimalsBN = toBigNumber(this.tokens[i].val)
+        this.tokens[i].val = decimalsBN.toFixed(+decimalsInt)
+      }
+    }
   }
 }
 
