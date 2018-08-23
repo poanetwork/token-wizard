@@ -99,6 +99,7 @@ export class Manage extends Component {
       this.hideLoader()
       if (!this.state.ownerCurrentUser) notTheOwner()
     } catch (err) {
+      this.hideLoader()
       logger.error(err)
     }
   }
