@@ -9,8 +9,15 @@ import {
   getCrowdsaleStrategy,
   getCrowdsaleStrategyByName
 } from '../../utils/blockchainHelpers'
-import { getContractStoreProperty, getCrowdsaleData, getTokenData, initializeAccumulativeData } from './utils'
-import { getExecID, getAddr, getNetworkID, toBigNumber, isExecIDValid, isAddressValid } from '../../utils/utils'
+import {
+  getExecID,
+  getAddr,
+  getContractStoreProperty,
+  getCrowdsaleData,
+  getTokenData,
+  initializeAccumulativeData
+} from './utils'
+import { getNetworkID, toBigNumber, isExecIDValid, isAddressValid } from '../../utils/utils'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../../utils/constants'
@@ -71,8 +78,7 @@ export class Crowdsale extends React.Component {
 
     try {
       await getCrowdsaleAssets(generalStore.networkID)
-      const crowdsaleAddr = getAddr()
-
+      const crowdsaleAddr = await getAddr()
       if (!isExecIDValid(contractStore.crowdsale.execID) && contractStore.crowdsale.execID) {
         invalidCrowdsaleExecIDAlert()
         return Promise.reject('invalid exec-id')

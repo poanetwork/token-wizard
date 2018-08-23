@@ -1,10 +1,15 @@
 import { noContractAlert } from '../../utils/alerts'
-import { attachToSpecificCrowdsaleContract } from '../../utils/blockchainHelpers'
+import {
+  attachToSpecificCrowdsaleContract,
+  attachToSpecificCrowdsaleContractByAddr,
+  getCrowdsaleStrategyByName
+} from '../../utils/blockchainHelpers'
 import { contractStore, crowdsalePageStore, tokenStore, web3Store, crowdsaleStore } from '../../stores'
 import { toJS } from 'mobx'
-import { removeTrailingNUL, toBigNumber } from '../../utils/utils'
+import { _getAddr, _getExecID, removeTrailingNUL, toBigNumber } from '../../utils/utils'
 import { BigNumber } from 'bignumber.js'
 import logdown from 'logdown'
+import { CrowdsaleConfig } from '../Common/config'
 
 const logger = logdown('TW:crowdsale:utils')
 
@@ -811,4 +816,57 @@ export const getInitializeDataFromContractStore = async () => {
     isDutchAuction: crowdsaleStore.isDutchAuction,
     isMintedCappedCrowdsale: crowdsaleStore.isMintedCappedCrowdsale
   }
+}
+
+export const getExecID = () => {
+  return CrowdsaleConfig.crowdsaleContractURL || _getExecID()
+}
+
+export const getAddr = async () => {
+  try {
+    let address
+
+    // First: add the contract config if exist
+    if (CrowdsaleConfig && CrowdsaleConfig.crowdsaleContractURL) {
+      address = CrowdsaleConfig.crowdsaleContractURL
+    } else {
+      address = _getAddr()
+    }
+
+    // Second: get the addr and validate if is a valid address
+    if (!address) {
+      sendAddressError(`There is no addr`)
+    }
+
+    // Exist a race condition between clear the storage an initialize data from contract, so ...
+    const proxyContract = await attachToSpecificCrowdsaleContractByAddr(address, contractStore.MintedCappedProxy.abi)
+    const appName = await proxyContract.methods.app_name().call()
+    const strategy = await getCrowdsaleStrategyByName(appName)
+    crowdsaleStore.setProperty('strategy', strategy)
+    contractStore.setContractProperty(crowdsaleStore.proxyName, 'addr', address)
+
+    // Third: validate if the app exec id exist
+    const { methods } = await getInitializeDataFromContractStore()
+    const { app_exec_id, getAdmin } = methods
+    const appExecIdVar = await app_exec_id().call()
+
+    if (!appExecIdVar) {
+      sendAddressError(`There is no app exec id`)
+    }
+
+    // Four: validate that exec id that exec-id of this Proxy smart-contract exists in Auth-os registry
+    let ownerAccount = await getAdmin().call()
+    if (!ownerAccount) {
+      sendAddressError(`There is no owner account `)
+    }
+
+    return address
+  } catch (e) {
+    sendAddressError(e)
+  }
+}
+
+export const sendAddressError = message => {
+  logger.log('Error getting address', message)
+  return Promise.reject(message)
 }

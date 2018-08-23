@@ -28,12 +28,12 @@ import {
   isCrowdSaleFull,
   getUserBalanceByStore,
   getUserBalance,
-  getCurrentTierInfoCustom
+  getCurrentTierInfoCustom,
+  getExecID,
+  getAddr
 } from '../crowdsale/utils'
 import {
   countDecimalPlaces,
-  getExecID,
-  getAddr,
   getNetworkID,
   toast,
   toBigNumber,
@@ -120,10 +120,12 @@ export class Contribute extends React.Component {
     const { gasPriceStore, generalStore, crowdsaleStore, contractStore } = this.props
     const crowdsaleExecID = getExecID()
     contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
-    const crowdsaleAddr = getAddr()
+
     try {
-      await this.validateEnvironment(crowdsaleExecID, crowdsaleAddr)
       await getCrowdsaleAssets(generalStore.networkID)
+      const crowdsaleAddr = await getAddr()
+
+      await this.validateEnvironment(crowdsaleExecID, crowdsaleAddr)
 
       let strategy
       if (crowdsaleExecID) {
