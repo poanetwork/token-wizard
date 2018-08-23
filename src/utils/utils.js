@@ -3,6 +3,7 @@ import queryString from 'query-string'
 import { CrowdsaleConfig } from '../components/Common/config'
 import { BigNumber } from 'bignumber.js'
 import logdown from 'logdown'
+import Web3 from 'web3'
 
 const logger = logdown('TW:utils:utils')
 
@@ -17,12 +18,18 @@ export const getExecID = () => {
   return isExecIDValid(execID) ? execID : null
 }
 
-//todo: check address input
+/**
+ * Get address from query param
+ * @returns {null}
+ */
 export const getAddr = () => {
   const addr = getQueryVariable('addr')
-  logger.log('getAddr:', addr)
-  return addr
+  const addressIsValid = Web3.utils.isAddress(addr)
+  logger.log('Obtain address from query:', addr)
+  logger.log('Check if address is valid:', addressIsValid)
+  return addressIsValid ? addr : null
 }
+
 export const isNetworkIDValid = networkID => /^[0-9]+$/.test(networkID)
 
 export const getNetworkID = () => {

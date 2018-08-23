@@ -477,7 +477,7 @@ export const getCrowdsaleStrategyByName = async appName => {
 
 export async function loadRegistryAddresses() {
   const crowdsales = await getOwnerApplicationsInstancesForProxy()
-  logger.log(crowdsales)
+  logger.log('Crowdsales', crowdsales)
   crowdsaleStore.setCrowdsales(crowdsales)
 }
 
