@@ -1,4 +1,4 @@
-import { noContractAlert } from '../../utils/alerts'
+import { invalidCrowdsaleProxyAlert, noContractAlert } from '../../utils/alerts'
 import {
   attachToSpecificCrowdsaleContract,
   attachToSpecificCrowdsaleContractByAddr,
@@ -835,7 +835,7 @@ export const getAddr = async () => {
 
     // Second: get the addr and validate if is a valid address
     if (!address) {
-      sendAddressError(`There is no addr`)
+      return sendAddressError(`There is no addr`)
     }
 
     // Exist a race condition between clear the storage an initialize data from contract, so ...
@@ -851,13 +851,13 @@ export const getAddr = async () => {
     const appExecIdVar = await app_exec_id().call()
 
     if (!appExecIdVar) {
-      sendAddressError(`There is no app exec id`)
+      return sendAddressError(`There is no app exec id`)
     }
 
     // Four: validate that exec id that exec-id of this Proxy smart-contract exists in Auth-os registry
     let ownerAccount = await getAdmin().call()
     if (!ownerAccount) {
-      sendAddressError(`There is no owner account `)
+      return sendAddressError(`There is no owner account `)
     }
 
     return address
@@ -868,5 +868,6 @@ export const getAddr = async () => {
 
 export const sendAddressError = message => {
   logger.log('Error getting address', message)
+  invalidCrowdsaleProxyAlert()
   return Promise.reject(message)
 }

@@ -17,14 +17,14 @@ import {
   getTokenData,
   initializeAccumulativeData
 } from './utils'
-import { getNetworkID, toBigNumber, isExecIDValid, isAddressValid } from '../../utils/utils'
+import { getNetworkID, toBigNumber, isExecIDValid } from '../../utils/utils'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../../utils/constants'
 import { Loader } from '../Common/Loader'
 import { CrowdsaleConfig } from '../Common/config'
 import { inject, observer } from 'mobx-react'
-import { invalidCrowdsaleExecIDAlert, invalidNetworkIDAlert, invalidCrowdsaleProxyAlert } from '../../utils/alerts'
+import { invalidCrowdsaleExecIDAlert, invalidNetworkIDAlert } from '../../utils/alerts'
 import logdown from 'logdown'
 
 const logger = logdown('TW:crowdsale')
@@ -79,14 +79,10 @@ export class Crowdsale extends React.Component {
     try {
       await getCrowdsaleAssets(generalStore.networkID)
       const crowdsaleAddr = await getAddr()
+
       if (!isExecIDValid(contractStore.crowdsale.execID) && contractStore.crowdsale.execID) {
         invalidCrowdsaleExecIDAlert()
         return Promise.reject('invalid exec-id')
-      }
-
-      if (!isAddressValid(crowdsaleAddr) && !contractStore.crowdsale.execID) {
-        invalidCrowdsaleProxyAlert()
-        return Promise.reject('invalid proxy addr')
       }
 
       let strategy
