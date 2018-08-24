@@ -10,14 +10,14 @@ import {
   getCrowdsaleStrategyByName
 } from '../../utils/blockchainHelpers'
 import { getContractStoreProperty, getCrowdsaleData, getTokenData, initializeAccumulativeData } from './utils'
-import { getExecID, getAddr, getNetworkID, toBigNumber } from '../../utils/utils'
+import { getExecID, getAddr, getNetworkID, toBigNumber, isExecIDValid, isAddressValid } from '../../utils/utils'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { NAVIGATION_STEPS } from '../../utils/constants'
 import { Loader } from '../Common/Loader'
 import { CrowdsaleConfig } from '../Common/config'
 import { inject, observer } from 'mobx-react'
-import { invalidCrowdsaleExecIDAlert, invalidNetworkIDAlert } from '../../utils/alerts'
+import { invalidCrowdsaleExecIDAlert, invalidNetworkIDAlert, invalidCrowdsaleProxyAlert } from '../../utils/alerts'
 import logdown from 'logdown'
 
 const logger = logdown('TW:crowdsale')
@@ -62,7 +62,7 @@ export class Crowdsale extends React.Component {
     }
 
     //todo: change config to support exec-id and address
-    const crowdsaleExecID = CrowdsaleConfig.crowdsaleContractURL || getExecID()
+    const crowdsaleExecID = getExecID()
     contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
   }
 
@@ -71,7 +71,18 @@ export class Crowdsale extends React.Component {
 
     try {
       await getCrowdsaleAssets(generalStore.networkID)
-      const crowdsaleAddr = CrowdsaleConfig.crowdsaleContractURL || getAddr()
+      const crowdsaleAddr = getAddr()
+
+      if (!isExecIDValid(contractStore.crowdsale.execID) && contractStore.crowdsale.execID) {
+        invalidCrowdsaleExecIDAlert()
+        return Promise.reject('invalid exec-id')
+      }
+
+      if (!isAddressValid(crowdsaleAddr) && !contractStore.crowdsale.execID) {
+        invalidCrowdsaleProxyAlert()
+        return Promise.reject('invalid proxy addr')
+      }
+
       let strategy
       if (contractStore.crowdsale.execID) {
         strategy = await getCrowdsaleStrategy(contractStore.crowdsale.execID)
@@ -86,11 +97,6 @@ export class Crowdsale extends React.Component {
       }
       crowdsaleStore.setProperty('strategy', strategy)
       contractStore.setContractProperty(crowdsaleStore.proxyName, 'addr', crowdsaleAddr)
-      //todo: change to 2 alerts
-      if (!contractStore.crowdsale.execID && !crowdsaleAddr) {
-        invalidCrowdsaleExecIDAlert()
-        return Promise.reject('invalid exec-id or addr')
-      }
     } catch (err) {
       return Promise.reject(err)
     }

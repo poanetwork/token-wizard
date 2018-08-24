@@ -37,7 +37,9 @@ import {
   getNetworkID,
   toast,
   toBigNumber,
-  truncateStringInTheMiddle
+  truncateStringInTheMiddle,
+  isAddressValid,
+  isExecIDValid
 } from '../../utils/utils'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import {
@@ -48,7 +50,8 @@ import {
   noMoreTokensAvailable,
   notAllowedContributor,
   invalidCrowdsaleExecIDAlert,
-  invalidNetworkIDAlert
+  invalidNetworkIDAlert,
+  invalidCrowdsaleProxyAlert
 } from '../../utils/alerts'
 import { Loader } from '../Common/Loader'
 import { CrowdsaleConfig } from '../Common/config'
@@ -115,9 +118,9 @@ export class Contribute extends React.Component {
 
   preparePage = async () => {
     const { gasPriceStore, generalStore, crowdsaleStore, contractStore } = this.props
-    const crowdsaleExecID = CrowdsaleConfig.crowdsaleContractURL || getExecID()
+    const crowdsaleExecID = getExecID()
     contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
-    const crowdsaleAddr = CrowdsaleConfig.crowdsaleContractURL || getAddr()
+    const crowdsaleAddr = getAddr()
     try {
       await this.validateEnvironment(crowdsaleExecID, crowdsaleAddr)
       await getCrowdsaleAssets(generalStore.networkID)
@@ -153,17 +156,28 @@ export class Contribute extends React.Component {
 
       this.setState({ loading: false })
     } catch (err) {
+      this.setState({ loading: false })
       logger.error(err)
     }
   }
 
   validateEnvironment = async (crowdsaleExecID, crowdsaleAddr) => {
-    const { web3Store, generalStore } = this.props
+    const { web3Store, generalStore, contractStore } = this.props
 
     await checkWeb3()
 
     if (!web3Store.web3) {
       return Promise.reject('no web3 available')
+    }
+
+    if (!isExecIDValid(crowdsaleExecID) && contractStore.crowdsale.execID) {
+      invalidCrowdsaleExecIDAlert()
+      return Promise.reject('invalid exec-id')
+    }
+
+    if (!isAddressValid(crowdsaleAddr) && !contractStore.crowdsale.execID) {
+      invalidCrowdsaleProxyAlert()
+      return Promise.reject('invalid proxy addr')
     }
 
     this.setState({
@@ -181,12 +195,6 @@ export class Contribute extends React.Component {
       return Promise.reject('invalid networkID')
     } else if (String(networkInfo) !== networkID) {
       return Promise.reject('invalid networkID')
-    }
-
-    //todo: change to 2 alerts
-    if (!crowdsaleExecID && !crowdsaleAddr) {
-      invalidCrowdsaleExecIDAlert()
-      return Promise.reject('invalid exec-id or addr')
     }
   }
 
