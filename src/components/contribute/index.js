@@ -669,7 +669,7 @@ export class Contribute extends React.Component {
             <p className="contribute-title">Contribute page</p>
             <p className="contribute-description">
               {
-                'Here you can contribute in the crowdsale campaign. At the moment, you need Metamask client to contribute into the crowdsale.'
+                'Here you can contribute in the crowdsale campaign. At the moment, you need Nifty wallet client to contribute into the crowdsale.'
               }
             </p>
           </div>

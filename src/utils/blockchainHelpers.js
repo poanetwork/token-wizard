@@ -485,7 +485,7 @@ export let getCurrentAccount = () => {
   const { web3 } = web3Store
   return new Promise((resolve, reject) => {
     if (!web3) {
-      reject('no MetaMask')
+      reject('no Nifty wallet')
     }
     web3.eth.getAccounts().then(accounts => {
       if (accounts.length === 0) {

@@ -83,7 +83,7 @@ export const ContributeForm = inject('contributeStore', 'tokenStore')(
             onChange={e => updateContributeThrough(e.target.value)}
           >
             <option disabled={!web3Available} value={CONTRIBUTION_OPTIONS.METAMASK}>
-              Metamask {!web3Available ? ' (not available)' : null}
+              Nifty wallet {!web3Available ? ' (not available)' : null}
             </option>
             <option value={CONTRIBUTION_OPTIONS.QR}>QR</option>
           </select>
