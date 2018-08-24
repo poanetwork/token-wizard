@@ -9,20 +9,20 @@ module.exports = {
         'npm install',
         'cd ../../',
         'npm install',
-        'cd submodules/poa-web3-1.0','npm install', 'cd ../../',
+        'cd submodules/poa-web3-1.0',
+        'npm install',
+        'cd ../../',
         'npm install --no-save submodules/poa-web3-1.0/packages/web3',
         'node scripts/build.js',
         ncp('./build/index.html ./build/invest.html'),
         ncp('./build/index.html ./build/crowdsale.html'),
         ncp('./build/index.html ./build/manage.html'),
-        ncp('./build/index.html ./build/stats.html')
+        ncp('./build/index.html ./build/stats.html'),
+        'bash ./scripts/generateProxyContracts.sh'
       )
     },
     dev: {
-      default: series(
-        'git submodule update --init --recursive --remote',
-        'npm run installWeb3'
-      ),
+      default: series('git submodule update --init --recursive --remote', 'npm run installWeb3'),
       Minted: {
         default: series(
           'nps test.e2e.stop',
@@ -80,7 +80,7 @@ module.exports = {
         'cd ./TokenWizard/crowdsale/MintedCappedCrowdsale/',
         'npm init -y',
         'npm i',
-        'npm i authos-solidity',
+        'npm i authos-solidity'
       ),
       prepareForDutch: series(
         'bash ./scripts/stop_ganache.sh',
@@ -140,10 +140,7 @@ module.exports = {
         'nps test.e2e.stop'
       ),
       e2e: {
-        default: series(
-          'nps test.e2e.Minted',
-          'nps test.e2e.Dutch'
-        ),
+        default: series('nps test.e2e.Minted', 'nps test.e2e.Dutch'),
         Minted: series(
           'nps test.e2e.prepareMinted',
           'cd submodules/token-wizard-test-automation',
@@ -184,7 +181,7 @@ module.exports = {
           'cd submodules/token-wizard-test-automation',
           'npm run e2eDutchUI',
           'cd ../../',
-          'nps test.e2e.stop',
+          'nps test.e2e.stop'
         ),
         DutchWhitelist: series(
           'nps test.e2e.prepareDutch',
@@ -232,12 +229,8 @@ module.exports = {
           'npm install'
         ),
         start: 'PORT=3000 BROWSER=none node scripts/start.js &',
-        stop: series(
-          'bash ./scripts/stop_ganache.sh',
-          'bash ./scripts/stop_port3000.sh'
-        )
+        stop: series('bash ./scripts/stop_ganache.sh', 'bash ./scripts/stop_port3000.sh')
       }
     }
   }
 }
-
