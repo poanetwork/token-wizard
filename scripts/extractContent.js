@@ -5,7 +5,7 @@ const extractContent = fileName => {
   fs.readFile('../public/contracts/' + fileName + '.json', (err, file) => {
     if (err) throw err
     fs.writeFileSync('../public/contracts/' + fileName + '.abi', JSON.stringify(JSON.parse(file.toString()).abi))
-    fs.writeFileSync('../public/contracts/' + fileName + '.bin', JSON.parse(file.toString()).bytecode)
+    fs.writeFileSync('../public/contracts/' + fileName + '.bin', JSON.parse(file.toString()).bytecode.replace('0x', ''))
   })
 }
 
