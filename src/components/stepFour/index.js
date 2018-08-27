@@ -10,13 +10,7 @@ import {
   scrollToBottom,
   SUMMARY_FILE_CONTENTS
 } from './utils'
-import {
-  noContractDataAlert,
-  successfulDeployment,
-  skippingTransaction,
-  networkChanged,
-  deployHasEnded
-} from '../../utils/alerts'
+import { noContractDataAlert, successfulDeployment, skippingTransaction, deployHasEnded } from '../../utils/alerts'
 import {
   DESCRIPTION,
   NAVIGATION_STEPS,
@@ -26,7 +20,7 @@ import {
   PUBLISH_DESCRIPTION
 } from '../../utils/constants'
 import { DOWNLOAD_TYPE } from './constants'
-import { toast } from '../../utils/utils'
+import { getNetworkID, toast } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { DisplayField } from '../Common/DisplayField'
 import { TxProgressStatus } from '../Common/TxProgressStatus'
@@ -40,8 +34,8 @@ import { PreventRefresh } from '../Common/PreventRefresh'
 import cancelDeploy from '../../utils/cancelDeploy'
 import PropTypes from 'prop-types'
 import logdown from 'logdown'
-import { getNetworkVersion } from '../../utils/blockchainHelpers'
-let promiseRetry = require('promise-retry')
+import { checkNetWorkByID, getNetworkVersion } from '../../utils/blockchainHelpers'
+import { CrowdsaleConfig } from '../Common/config'
 
 const logger = logdown('TW:stepFour')
 
@@ -113,22 +107,22 @@ export class stepFour extends Component {
   }
 
   async componentDidMount() {
-    const { deploymentStore } = this.props
+    const { deploymentStore, generalStore } = this.props
+
+    // Check if network has changed
+    const networkID = generalStore.networkID || CrowdsaleConfig.networkID || getNetworkID()
+    generalStore.setProperty('networkID', networkID)
+
+    const networkInfo = await checkNetWorkByID(networkID)
+
+    if (!networkInfo) {
+      return Promise.reject('invalid networkID')
+    }
 
     // Check if deploy has ended
     if (deploymentStore.hasEnded) {
       return await deployHasEnded()
     }
-    // Check if network has changed
-    await promiseRetry(async retry => {
-      const networkChangedResult = await this.checkNetworkChanged()
-      if (networkChangedResult) {
-        this.hideModal()
-        await networkChanged()
-        this.showModal()
-        retry()
-      }
-    })
 
     scrollToBottom()
     copy('copy')
