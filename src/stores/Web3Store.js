@@ -1,5 +1,5 @@
 import Web3 from 'web3'
-import { observable } from 'mobx'
+import { observable, action } from 'mobx'
 import { getNetworkID } from '../utils/utils'
 import { CrowdsaleConfig } from '../components/Common/config'
 import { CHAINS, REACT_PREFIX } from '../utils/constants'
@@ -12,18 +12,23 @@ class Web3Store {
   @observable curAddress
   @observable accounts
 
-  constructor(strategies) {
+  constructor() {
     this.getWeb3(web3 => {
       if (web3) {
         this.web3 = web3
         web3.eth.getAccounts().then(accounts => {
           this.accounts = accounts
           if (accounts.length > 0) {
-            this.curAddress = accounts[0]
+            this.setProperty('curAddress', accounts[0])
           }
         })
       }
     })
+  }
+
+  @action
+  setProperty = (property, value) => {
+    this[property] = value
   }
 
   getInfuraLink = network => {
@@ -72,7 +77,7 @@ class Web3Store {
     } else {
       // window.web3 == web3 most of the time. Don't override the provided,
       // web3, just wrap it in your Web3.
-      var myWeb3 = new Web3(web3.currentProvider)
+      let myWeb3 = new Web3(web3.currentProvider)
 
       cb(myWeb3, false)
       return myWeb3

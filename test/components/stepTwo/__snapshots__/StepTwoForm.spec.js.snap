@@ -183,6 +183,7 @@ exports[`StepTwoForm should render StepTwoForm for Dutch Auction Crowdsale 1`] =
     <button
       className="button button_fill button_no_border button_disabled"
       disabled={true}
+      onClick={undefined}
       type="submit"
     >
       Continue
@@ -502,6 +503,7 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
     <button
       className="button button_fill button_no_border"
       disabled={false}
+      onClick={undefined}
       type="submit"
     >
       Continue
