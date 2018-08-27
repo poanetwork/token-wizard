@@ -131,9 +131,7 @@ class GasPriceInput extends Component {
             className="input"
             value={this.state.customGasPrice}
             name="gas-price-custom-value"
-            onChange={e => {
-              this.handleCustomGasPriceChange(e.target.value)
-            }}
+            onChange={e => this.handleCustomGasPriceChange(e.target.value)}
           />
         ) : null}
         <p className="description">Slow is cheap, fast is expensive</p>

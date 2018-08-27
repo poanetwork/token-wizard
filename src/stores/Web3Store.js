@@ -68,7 +68,7 @@ class Web3Store {
             infuraLink = this.getInfuraLink(CHAINS.MAINNET)
             break
         }
-        let httpProvider = new Web3.providers.HttpProvider(infuraLink)
+        const httpProvider = new Web3.providers.HttpProvider(infuraLink)
         web3 = new Web3(httpProvider)
       }
 
@@ -77,7 +77,7 @@ class Web3Store {
     } else {
       // window.web3 == web3 most of the time. Don't override the provided,
       // web3, just wrap it in your Web3.
-      let myWeb3 = new Web3(web3.currentProvider)
+      const myWeb3 = new Web3(web3.currentProvider)
 
       cb(myWeb3, false)
       return myWeb3
