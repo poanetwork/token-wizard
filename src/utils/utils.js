@@ -21,18 +21,10 @@ export const _getExecID = () => {
   return isExecIDValid(execID) ? execID : null
 }
 
-export const getExecID = () => {
-  return CrowdsaleConfig.crowdsaleContractURL || _getExecID()
-}
-
 export const _getAddr = () => {
   const addr = getQueryVariableAddr()
   logger.log('getAddr:', addr)
   return isAddressValid(addr) ? addr : null
-}
-
-export const getAddr = () => {
-  return CrowdsaleConfig.crowdsaleContractURL || _getAddr()
 }
 
 export const getQueryVariableAddr = () => {
