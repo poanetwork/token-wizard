@@ -11,7 +11,7 @@ export default class NoWeb3 extends Component {
               <p className="description">
                 You don't have
                 <a href="https://chrome.google.com/webstore/detail/nifty-wallet/jbdaocneiiinmjbjlgalhcelgbejmnid">
-                  Nifty walletweb3
+                  Nifty wallet
                 </a>
                 installed. Check Token Wizard GitHub for{' '}
                 <a href="https://github.com/poanetwork/token-wizard" target="blank">
