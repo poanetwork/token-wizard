@@ -1,12 +1,12 @@
 import sweetAlert2 from 'sweetalert2'
 import { weiToGwei } from './utils'
 import { DEPLOYMENT_VALUES, LIMIT_RESERVED_ADDRESSES, LIMIT_WHITELISTED_ADDRESSES } from './constants'
-
 export function noMetaMaskAlert() {
   sweetAlert2({
     title: 'Warning',
     html:
-      "You don't have Nifty wallet installed. Check Token Wizard GitHub for <a href='https://github.com/poanetwork/token-wizard' target='blank'>the instruction</a>.",
+      "You don't have  <a href='https://chrome.google.com/webstore/detail/nifty-wallet/jbdaocneiiinmjbjlgalhcelgbejmnid'>" +
+      "Nifty wallet </a> installed. Check Token Wizard GitHub for <a href='https://github.com/poanetwork/token-wizard' target='blank'>the instruction</a>.",
     type: 'warning'
   })
 }

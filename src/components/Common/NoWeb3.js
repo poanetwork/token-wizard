@@ -9,7 +9,11 @@ export default class NoWeb3 extends Component {
             <div className="container">
               <h1 className="title">Nifty wallet Not Found</h1>
               <p className="description">
-                You don't have Nifty wallet installed. Check Token Wizard GitHub for{' '}
+                You don't have
+                <a href="https://chrome.google.com/webstore/detail/nifty-wallet/jbdaocneiiinmjbjlgalhcelgbejmnid">
+                  Nifty walletweb3
+                </a>
+                installed. Check Token Wizard GitHub for{' '}
                 <a href="https://github.com/poanetwork/token-wizard" target="blank">
                   the instruction
                 </a>.
