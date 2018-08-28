@@ -405,7 +405,7 @@ exports[`ContributeForm should render ContributeForm component 1`] = `
         disabled={false}
         value="metamask"
       >
-        Metamask 
+        Wallet 
       </option>
       <option
         value="qr"
@@ -498,7 +498,7 @@ exports[`ContributeForm should render ContributeForm component and its children 
         disabled={false}
         value="metamask"
       >
-        Metamask 
+        Wallet 
       </option>
       <option
         value="qr"
