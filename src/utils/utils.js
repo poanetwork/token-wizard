@@ -15,13 +15,13 @@ export const isExecIDValid = execID => /^0x[a-f0-9]{64}$/i.test(execID)
 
 export const isAddressValid = address => Web3.utils.isAddress(address)
 
-export const _getExecID = () => {
+export const getExecIDFromQuery = () => {
   const execID = getQueryVariableExecId()
   logger.log('getExecID:', execID)
   return isExecIDValid(execID) ? execID : null
 }
 
-export const _getAddr = () => {
+export const getAddrFromQuery = () => {
   const addr = getQueryVariableAddr()
   logger.log('getAddr:', addr)
   return isAddressValid(addr) ? addr : null
