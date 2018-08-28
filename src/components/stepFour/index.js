@@ -34,8 +34,10 @@ import { PreventRefresh } from '../Common/PreventRefresh'
 import cancelDeploy from '../../utils/cancelDeploy'
 import PropTypes from 'prop-types'
 import logdown from 'logdown'
-import { checkNetWorkByID, getNetworkVersion } from '../../utils/blockchainHelpers'
+import { checkNetWorkByID } from '../../utils/blockchainHelpers'
 import { CrowdsaleConfig } from '../Common/config'
+import { ButtonContinue } from '../Common/ButtonContinue'
+import classNames from 'classnames'
 
 const logger = logdown('TW:stepFour')
 
@@ -175,15 +177,6 @@ export class stepFour extends Component {
     }
 
     logger.error([failedAt, err])
-  }
-
-  checkNetworkChanged = async () => {
-    const { generalStore } = this.props
-    const networkIDFromNifty = await getNetworkVersion()
-    const networkIDFromStore = generalStore.networkID
-    logger.log(`Network id from store`, networkIDFromStore)
-    logger.log(`Network id from nifty wallet`, networkIDFromNifty)
-    return +networkIDFromNifty !== +networkIDFromStore
   }
 
   skipTransaction = () => {
@@ -521,6 +514,10 @@ export class stepFour extends Component {
       />
     )
 
+    const submitButtonClass = classNames('button', 'button_fill_secondary', 'button_no_border', {
+      button_disabled: !deploymentStore.hasEnded
+    })
+
     const strategyName = isMintedCappedCrowdsale ? MINTED_CAPPED_CROWDSALE_DN : isDutchAuction ? DUTCH_AUCTION_DN : ''
 
     return (
@@ -560,12 +557,14 @@ export class stepFour extends Component {
           </div>
         </div>
         <div className="button-container">
-          <div onClick={this.downloadContractButton} className="button button_fill_secondary">
+          <button
+            onClick={this.downloadContractButton}
+            disabled={!deploymentStore.hasEnded}
+            className={submitButtonClass}
+          >
             Download File
-          </div>
-          <a onClick={this.goToCrowdsalePage} className="button button_fill">
-            Continue
-          </a>
+          </button>
+          <ButtonContinue onClick={this.goToCrowdsalePage} status={deploymentStore.hasEnded} />
         </div>
         <ModalContainer title={'Tx Status'} showModal={this.state.modal}>
           {modalContent}
