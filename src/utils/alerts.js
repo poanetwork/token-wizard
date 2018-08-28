@@ -6,7 +6,7 @@ export function noMetaMaskAlert() {
     title: 'Warning',
     html:
       "You don't have  <a href='https://chrome.google.com/webstore/detail/nifty-wallet/jbdaocneiiinmjbjlgalhcelgbejmnid'>" +
-      "Nifty wallet </a> installed. Check Token Wizard GitHub for <a href='https://github.com/poanetwork/token-wizard' target='blank'>the instruction</a>.",
+      "a Wallet </a> installed. Check Token Wizard GitHub for <a href='https://github.com/poanetwork/token-wizard' target='blank'>the instruction</a>.",
     type: 'warning'
   })
 }
@@ -14,7 +14,7 @@ export function noMetaMaskAlert() {
 export function MetaMaskIsLockedAlert() {
   sweetAlert2({
     title: 'Warning',
-    html: 'You signed out from Nifty wallet. Open Nifty wallet extension and sign in.',
+    html: 'You signed out from your Wallet. Open your Wallet extension and sign in.',
     type: 'warning'
   })
 }
@@ -103,7 +103,7 @@ export function incorrectNetworkAlert(correctNetworkName, incorrectNetworkName) 
       correctNetworkName +
       ' network</b>. But you are connected to <b>' +
       incorrectNetworkName +
-      ' network</b>. Please, change connection in Nifty wallet extension.',
+      ' network</b>. Please, change connection in your Wallet extension.',
     type: 'warning'
   })
 }
@@ -125,7 +125,7 @@ export function warningOnMainnetAlert(tiersCount, priceSelected, reservedCount, 
 
   sweetAlert2({
     title: 'Warning',
-    html: `You are about to sign ${estimatedTxsCount} TXs. You will see an individual Nifty wallet windows for each of it.
+    html: `You are about to sign ${estimatedTxsCount} TXs. You will see an individual Wallet windows for each of it.
      Please don't open two or more instances of Wizard in one browser. Token Wizard will create ${tiersCount}-tier(s)
      crowdsale for you. The total cost will be around ${estimatedCost.toFixed(2)} ETH. Are you sure you want to
      proceed?`,
