@@ -7,9 +7,13 @@ export default class NoWeb3 extends Component {
         <section className="home">
           <div className="crowdsale">
             <div className="container">
-              <h1 className="title">MetaMask Not Found</h1>
+              <h1 className="title">Wallet Not Found</h1>
               <p className="description">
-                You don't have MetaMask installed. Check Token Wizard GitHub for{' '}
+                You don't have
+                <a href="https://chrome.google.com/webstore/detail/nifty-wallet/jbdaocneiiinmjbjlgalhcelgbejmnid">
+                  a Wallet
+                </a>
+                installed. Check Token Wizard GitHub for{' '}
                 <a href="https://github.com/poanetwork/token-wizard" target="blank">
                   the instruction
                 </a>.

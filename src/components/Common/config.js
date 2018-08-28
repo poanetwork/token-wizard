@@ -10,9 +10,10 @@
 }
 
 export const CrowdsaleConfig = {
-  crowdsaleContractURL: '0x338f47C1AA1DBdB56DfEA17cc376C0b21f4fbDa2',
   networkID: networks.sokolPOA,
-  showHeaderAndFooterInIframe: true
+  showHeaderAndFooterInIframe: true,
+  execID: '',
+  proxyAddress: '0xf638119be6229634b3c2f7e234bfe38b368016d5'
 };*/
 
 export const CrowdsaleConfig = {}

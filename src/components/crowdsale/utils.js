@@ -6,7 +6,7 @@ import {
 } from '../../utils/blockchainHelpers'
 import { contractStore, crowdsalePageStore, tokenStore, web3Store, crowdsaleStore } from '../../stores'
 import { toJS } from 'mobx'
-import { _getAddr, _getExecID, removeTrailingNUL, toBigNumber } from '../../utils/utils'
+import { getAddrFromQuery, getExecIDFromQuery, isAddressValid, removeTrailingNUL, toBigNumber } from '../../utils/utils'
 import { BigNumber } from 'bignumber.js'
 import logdown from 'logdown'
 import { CrowdsaleConfig } from '../Common/config'
@@ -819,7 +819,7 @@ export const getInitializeDataFromContractStore = async () => {
 }
 
 export const getExecID = () => {
-  return CrowdsaleConfig.crowdsaleContractURL || _getExecID()
+  return CrowdsaleConfig.execID || getExecIDFromQuery()
 }
 
 export const getAddr = async () => {
@@ -827,15 +827,15 @@ export const getAddr = async () => {
     let address
 
     // First: add the contract config if exist
-    if (CrowdsaleConfig && CrowdsaleConfig.crowdsaleContractURL) {
-      address = CrowdsaleConfig.crowdsaleContractURL
+    if (CrowdsaleConfig && CrowdsaleConfig.proxyAddress) {
+      address = isAddressValid(CrowdsaleConfig.proxyAddress)
     } else {
-      address = _getAddr()
+      address = getAddrFromQuery()
     }
 
     // Second: get the addr and validate if is a valid address
     if (!address) {
-      return sendAddressError(`There is no addr`)
+      return handleAddressError(`There is no addr`)
     }
 
     // Exist a race condition between clear the storage an initialize data from contract, so ...
@@ -851,22 +851,22 @@ export const getAddr = async () => {
     const appExecIdVar = await app_exec_id().call()
 
     if (!appExecIdVar) {
-      return sendAddressError(`There is no app exec id`)
+      return handleAddressError(`There is no app exec id`)
     }
 
     // Four: validate that exec id that exec-id of this Proxy smart-contract exists in Auth-os registry
     let ownerAccount = await getAdmin().call()
     if (!ownerAccount) {
-      return sendAddressError(`There is no owner account `)
+      return handleAddressError(`There is no owner account `)
     }
 
     return address
   } catch (e) {
-    sendAddressError(e)
+    handleAddressError(e)
   }
 }
 
-export const sendAddressError = message => {
+export const handleAddressError = message => {
   logger.log('Error getting address', message)
   invalidCrowdsaleProxyAlert()
   return Promise.reject(message)
