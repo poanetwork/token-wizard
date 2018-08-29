@@ -1,0 +1,1 @@
+Contains all the CSS files from external libraries and frameworks: Bootstrap, jQuery, etc.
