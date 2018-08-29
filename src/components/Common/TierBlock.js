@@ -137,7 +137,8 @@ export const TierBlock = ({ fields, ...props }) => {
                 errorStyle={inputErrorStyle}
                 side="right"
                 disabled={
-                  (props.tierStore && props.tierStore.tiers[index].whitelistEnabled === 'yes') ||
+                  props.tierStore &&
+                  props.tierStore.tiers[index].whitelistEnabled === 'yes' &&
                   (props.tierStore && props.tierStore.tiers[index].whitelist.length)
                 }
               />
