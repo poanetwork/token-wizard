@@ -30,9 +30,9 @@ class App extends Component {
   componentWillMount() {
     const uiversion = getQueryVariable('uiversion')
 
-    if (uiversion == 2) {
+    if (uiversion === '2') {
       require('./assets/stylesheets/styles.css')
-    } else if (uiversion == 1) {
+    } else if (uiversion === '1') {
       require('./assets/stylesheets/application_styles.css')
     } else {
       require('./assets/stylesheets/application_styles.css')
