@@ -67,7 +67,7 @@ export const checkNetWorkByID = async _networkIdFromGET => {
 
   if (networkNameFromGET !== networkNameFromNetwork) {
     logger.log(`${networkNameFromGET}!=${networkNameFromNetwork}`)
-    return incorrectNetworkAlert(networkNameFromGET, networkNameFromNetwork)
+    return await incorrectNetworkAlert(networkNameFromGET, networkNameFromNetwork)
   }
 
   return _networkIdFromNetwork

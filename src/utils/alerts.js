@@ -334,3 +334,19 @@ export function maxCapExceedsSupply(count) {
     type: 'info'
   })
 }
+
+export function networkChanged() {
+  return sweetAlert2({
+    title: 'Network changed',
+    html: 'The network id was modified, please set up nifty wallet with the network id which you started',
+    type: 'warning'
+  })
+}
+
+export function deployHasEnded() {
+  return sweetAlert2({
+    title: 'Deploy ended',
+    html: 'The deploy is finished',
+    type: 'info'
+  })
+}
