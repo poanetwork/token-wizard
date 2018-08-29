@@ -347,33 +347,29 @@ async function getOwnerApplicationsInstancesForProxy() {
   const proxiesRegistryContract = await attachToSpecificCrowdsaleContract('ProxiesRegistry')
   const accounts = await web3.eth.getAccounts()
 
-  const promises = []
-  const crowdsales = []
-  const proxyAddrs = await proxiesRegistryContract.methods.getCrowdsalesForUser(accounts[0]).call()
+  const proxyAddress = await proxiesRegistryContract.methods.getCrowdsalesForUser(accounts[0]).call()
   const mintedCapped = process.env[`${REACT_PREFIX}MINTED_CAPPED_APP_NAME`].toLowerCase()
   const dutchAuction = process.env[`${REACT_PREFIX}DUTCH_APP_NAME`].toLowerCase()
-  proxyAddrs.forEach(proxyAddr => {
-    let promise = new Promise(async (resolve, reject) => {
-      const abi = contractStore.MintedCappedProxy.abi // we can use minted caped proxy ABI for minted capped and Dutch acution
-      try {
-        const contractInstance = await attachToContract(abi, proxyAddr)
-        const contractAppName = await contractInstance.methods.app_name().call()
-        const appName = removeTrailingNUL(web3.utils.toAscii(contractAppName))
-        const appNameLowerCase = appName.toLowerCase()
-        if (appNameLowerCase.includes(mintedCapped) || appNameLowerCase.includes(dutchAuction)) {
-          crowdsales.push({ appName, execID: proxyAddr })
-        }
-        resolve()
-      } catch (error) {
-        logger.error(error)
-        resolve()
+
+  const whenCrowdsales = proxyAddress.map(async proxyAddr => {
+    const abi = contractStore.MintedCappedProxy.abi // we can use minted caped proxy ABI for minted capped and Dutch auction
+    try {
+      const contractInstance = await attachToContract(abi, proxyAddr)
+      const contractAppName = await contractInstance.methods.app_name().call()
+      const appName = removeTrailingNUL(web3.utils.toAscii(contractAppName))
+      const appNameLowerCase = appName.toLowerCase()
+      if (appNameLowerCase.includes(mintedCapped) || appNameLowerCase.includes(dutchAuction)) {
+        return { appName, execID: proxyAddr }
       }
-    })
-    promises.push(promise)
+    } catch (error) {
+      logger.error(error)
+    }
+    return null
   })
-  return Promise.all(promises).then(() => {
-    return Promise.all(crowdsales)
-  })
+
+  const crowdsales = await Promise.all(whenCrowdsales)
+
+  return crowdsales.filter(crowdsale => crowdsale).reverse()
 }
 
 // eslint-disable-next-line no-unused-vars
