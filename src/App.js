@@ -16,7 +16,7 @@ import {
 } from './components/index'
 import NoWeb3 from './components/Common/NoWeb3'
 import IncompleteDeploy from './components/IncompleteDeploy'
-import { getAddr, toast } from './utils/utils'
+import { getAddrFromQuery, toast } from './utils/utils'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import AlertContainer from 'react-alert'
 import { TOAST } from './utils/constants'
@@ -27,7 +27,7 @@ import { Web3Provider } from './react-web3'
 class App extends Component {
   render() {
     const { deploymentStore } = this.props
-    let crowdsaleAddr = getAddr()
+    let crowdsaleAddr = getAddrFromQuery()
 
     return (
       <Router>
