@@ -10,13 +10,7 @@ import {
   scrollToBottom,
   SUMMARY_FILE_CONTENTS
 } from './utils'
-import {
-  noContractDataAlert,
-  successfulDeployment,
-  skippingTransaction,
-  networkChanged,
-  deployHasEnded
-} from '../../utils/alerts'
+import { noContractDataAlert, successfulDeployment, skippingTransaction, deployHasEnded } from '../../utils/alerts'
 import {
   DESCRIPTION,
   NAVIGATION_STEPS,
@@ -26,7 +20,7 @@ import {
   PUBLISH_DESCRIPTION
 } from '../../utils/constants'
 import { DOWNLOAD_TYPE } from './constants'
-import { toast } from '../../utils/utils'
+import { getNetworkID, toast } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { DisplayField } from '../Common/DisplayField'
 import { TxProgressStatus } from '../Common/TxProgressStatus'
@@ -40,8 +34,10 @@ import { PreventRefresh } from '../Common/PreventRefresh'
 import cancelDeploy from '../../utils/cancelDeploy'
 import PropTypes from 'prop-types'
 import logdown from 'logdown'
-import { getNetworkVersion } from '../../utils/blockchainHelpers'
-let promiseRetry = require('promise-retry')
+import { checkNetWorkByID } from '../../utils/blockchainHelpers'
+import { CrowdsaleConfig } from '../Common/config'
+import { ButtonContinue } from '../Common/ButtonContinue'
+import classNames from 'classnames'
 
 const logger = logdown('TW:stepFour')
 
@@ -113,22 +109,21 @@ export class stepFour extends Component {
   }
 
   async componentDidMount() {
-    const { deploymentStore } = this.props
+    const { deploymentStore, generalStore } = this.props
 
+    // Check if network has changed
+    const networkID = generalStore.networkID || CrowdsaleConfig.networkID || getNetworkID()
+    generalStore.setProperty('networkID', networkID)
+
+    const networkInfo = await checkNetWorkByID(networkID)
+
+    if (!networkInfo) {
+      return Promise.reject('invalid networkID')
+    }
     // Check if deploy has ended
     if (deploymentStore.hasEnded) {
       return await deployHasEnded()
     }
-    // Check if network has changed
-    await promiseRetry(async retry => {
-      const networkChangedResult = await this.checkNetworkChanged()
-      if (networkChangedResult) {
-        this.hideModal()
-        await networkChanged()
-        this.showModal()
-        retry()
-      }
-    })
 
     scrollToBottom()
     copy('copy')
@@ -527,6 +522,10 @@ export class stepFour extends Component {
       />
     )
 
+    const submitButtonClass = classNames('button', 'button_fill_secondary', 'button_no_border', {
+      button_disabled: !deploymentStore.hasEnded
+    })
+
     const strategyName = isMintedCappedCrowdsale ? MINTED_CAPPED_CROWDSALE_DN : isDutchAuction ? DUTCH_AUCTION_DN : ''
 
     return (
@@ -566,12 +565,14 @@ export class stepFour extends Component {
           </div>
         </div>
         <div className="button-container">
-          <div onClick={this.downloadContractButton} className="button button_fill_secondary">
+          <button
+            onClick={this.downloadContractButton}
+            disabled={!deploymentStore.hasEnded}
+            className={submitButtonClass}
+          >
             Download File
-          </div>
-          <a onClick={this.goToCrowdsalePage} className="button button_fill">
-            Continue
-          </a>
+          </button>
+          <ButtonContinue onClick={this.goToCrowdsalePage} status={deploymentStore.hasEnded} />
         </div>
         <ModalContainer title={'Tx Status'} showModal={this.state.modal}>
           {modalContent}

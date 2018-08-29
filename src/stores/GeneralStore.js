@@ -4,7 +4,7 @@ import autosave from './autosave'
 
 class GeneralStore {
   @observable networkID
-  @observable gasPrice = GAS_PRICE.SLOW.PRICE
+  @observable gasPrice
   @observable gasTypeSelected
   @observable burnExcess
 
