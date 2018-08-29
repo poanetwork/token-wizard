@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
-import './assets/stylesheets/application.css'
 import {
   Header,
   Footer,
@@ -16,19 +15,34 @@ import {
 } from './components/index'
 import NoWeb3 from './components/Common/NoWeb3'
 import IncompleteDeploy from './components/IncompleteDeploy'
-import { getAddrFromQuery, toast } from './utils/utils'
+import { getQueryVariable } from './utils/utils'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import AlertContainer from 'react-alert'
 import { TOAST } from './utils/constants'
+import { toast } from './utils/utils'
 import { Web3Provider } from './react-web3'
+
+// import './assets/stylesheets/application.css'
 
 @inject('deploymentStore')
 @observer
 class App extends Component {
+  componentWillMount() {
+    const uiversion = getQueryVariable('uiversion')
+
+    if (uiversion == 2) {
+      require('./assets/stylesheets/styles.css')
+    } else if (uiversion == 1) {
+      require('./assets/stylesheets/application_styles.css')
+    } else {
+      require('./assets/stylesheets/application_styles.css')
+      require('./assets/stylesheets/styles.css')
+    }
+  }
   render() {
     const { deploymentStore } = this.props
-    let crowdsaleAddr = getAddrFromQuery()
 
+    var crowdsaleAddr = getQueryVariable('addr')
     return (
       <Router>
         <div>

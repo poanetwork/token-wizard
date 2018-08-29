@@ -1,5 +1,5 @@
 import React from 'react'
-import '../../assets/stylesheets/application.css'
+
 import { VALIDATION_TYPES } from '../../utils/constants'
 const { INVALID } = VALIDATION_TYPES
 

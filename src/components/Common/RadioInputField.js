@@ -1,5 +1,4 @@
 import React from 'react'
-import '../../assets/stylesheets/application.css'
 
 export const RadioInputField = props => {
   const inputs = props.items.map((item, index) => (

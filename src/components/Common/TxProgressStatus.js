@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { inject, observer } from 'mobx-react'
-import '../../assets/stylesheets/application.css'
+import { observer, inject } from 'mobx-react'
+
 import { TX_STEP_DESCRIPTION } from '../stepFour/constants'
 import classNames from 'classnames'
 

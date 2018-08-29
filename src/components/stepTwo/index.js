@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import '../../assets/stylesheets/application.css'
 import { checkWeb3 } from '../../utils/blockchainHelpers'
 import { StepNavigation } from '../Common/StepNavigation'
 import { Loader } from '../Common/Loader'

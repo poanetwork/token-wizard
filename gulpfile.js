@@ -19,6 +19,19 @@ gulp.task("sass", function () {
     .pipe(gulp.dest("src/assets/stylesheets/"));
 });
 
+gulp.task("sass_v2.0", function () {
+  return gulp.src(["src/assets/stylesheets/v2.0/*.scss"])
+    .pipe(sassGlob())
+    .pipe(sass().on("error", sass.logError))
+    .pipe(autoprefixer({
+      remove: false
+    }))
+    .pipe(uglifycss({
+      "uglyComments": true
+    }))
+    .pipe(gulp.dest("src/assets/stylesheets/"));
+});
+
 gulp.task("watch", function () {
-  gulp.watch("src/assets/stylesheets/**/*.scss", ["sass"]);
+  gulp.watch("src/assets/stylesheets/**/*.scss", ["sass", "sass_v2.0"]);
 });

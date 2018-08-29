@@ -1,5 +1,5 @@
 import React from 'react'
-import '../../assets/stylesheets/application.css'
+
 import { getStepClass } from '../../utils/utils'
 import { NAVIGATION_STEPS } from '../../utils/constants'
 const { CROWDSALE_STRATEGY, TOKEN_SETUP, CROWDSALE_SETUP, PUBLISH, CROWDSALE_PAGE } = NAVIGATION_STEPS

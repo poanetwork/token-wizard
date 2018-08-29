@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import '../../assets/stylesheets/application.css'
 import {
   buildDeploymentSteps,
   getOptimizationFlagByStore,
