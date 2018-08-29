@@ -1,0 +1,1 @@
+Page-specific styles, For example: for the home page you can have a _home.scss.

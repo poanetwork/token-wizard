@@ -1,0 +1,1 @@
+Some styles for the main sections of the layout (header, footer, and so on). It can also contain the _grid file for the grid system used to build the layout.
