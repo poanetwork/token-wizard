@@ -8,7 +8,6 @@ import { Provider } from 'mobx-react'
 import { REACT_PREFIX } from './utils/constants'
 import * as stores from './stores'
 import 'airbnb-js-shims'
-import 'font-awesome/css/font-awesome.css'
 
 useStrict(true)
 

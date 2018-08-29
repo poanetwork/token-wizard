@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Web3 from 'web3'
 import Dropzone from 'react-dropzone'
 import Papa from 'papaparse'
-import '../../assets/stylesheets/application.css'
+
 import { InputField } from './InputField'
 import { RadioInputField } from './RadioInputField'
 import { TEXT_FIELDS, VALIDATION_TYPES } from '../../utils/constants'

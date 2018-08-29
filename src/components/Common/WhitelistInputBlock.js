@@ -3,7 +3,7 @@ import Web3 from 'web3'
 import update from 'immutability-helper'
 import Dropzone from 'react-dropzone'
 import Papa from 'papaparse'
-import '../../assets/stylesheets/application.css'
+
 import { InputField } from './InputField'
 import { TEXT_FIELDS, VALIDATION_MESSAGES, VALIDATION_TYPES } from '../../utils/constants'
 import { WhitelistItem } from './WhitelistItem'

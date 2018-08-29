@@ -1,5 +1,4 @@
 import React from 'react'
-import '../../assets/stylesheets/application.css'
 
 export const ModalContainer = props => {
   if (props.showModal)

@@ -1,5 +1,5 @@
 import React from 'react'
-import '../../assets/stylesheets/application.css'
+
 import { inject, observer } from 'mobx-react'
 import classNames from 'classnames'
 import ReactTooltip from 'react-tooltip'

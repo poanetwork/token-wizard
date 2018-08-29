@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import '../../assets/stylesheets/application.css'
 import { Link } from 'react-router-dom'
 import CrowdsalesList from '../Common/CrowdsalesList'
 import { Loader } from '../Common/Loader'

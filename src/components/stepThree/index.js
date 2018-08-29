@@ -1,5 +1,5 @@
 import React from 'react'
-import '../../assets/stylesheets/application.css'
+
 import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import { getNetworkVersion, getNetWorkNameById } from '../../utils/blockchainHelpers'

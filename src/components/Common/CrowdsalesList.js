@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import '../../assets/stylesheets/application.css'
+
 import { inject, observer } from 'mobx-react'
 
 @inject('crowdsaleStore', 'web3Store')

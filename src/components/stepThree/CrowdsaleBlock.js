@@ -1,5 +1,5 @@
 import React from 'react'
-import '../../assets/stylesheets/application.css'
+
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
 import { defaultCompanyStartDate, defaultCompanyEndDate } from './utils'
 import { InputField } from '../Common/InputField'
