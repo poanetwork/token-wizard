@@ -162,7 +162,8 @@ export const DutchAuctionBlock = inject('tierStore', 'tokenStore')(
                   label={SUPPLY_SHORT}
                   description={DESCRIPTION.SUPPLY}
                   disabled={
-                    (tierStore && tierStore.tiers[index].whitelistEnabled === 'yes') ||
+                    tierStore &&
+                    tierStore.tiers[index].whitelistEnabled === 'yes' &&
                     (tierStore && tierStore.tiers[index].whitelist.length)
                   }
                 />
