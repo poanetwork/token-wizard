@@ -28,6 +28,8 @@ import { Web3Provider } from './react-web3'
 @observer
 class App extends Component {
   componentWillMount() {
+    // temporary code to switch ui styling versions
+    // obviously delete this when we get the v2.0 up and running
     const uiversion = getQueryVariable('uiversion')
 
     if (uiversion === '2') {
@@ -41,12 +43,12 @@ class App extends Component {
   }
   render() {
     const { deploymentStore } = this.props
-
     var crowdsaleAddr = getQueryVariable('addr')
+
     return (
       <Router>
         <div>
-          <Header />
+          {/* <Header />  */}
 
           <Switch>
             <Route exact path="/crowdsale" component={Crowdsale} />
@@ -74,7 +76,7 @@ class App extends Component {
             </Route>
           </Switch>
 
-          <Footer />
+          {/* <Footer /> */}
           <AlertContainer ref={a => (toast.msg = a)} {...TOAST.DEFAULT_OPTIONS} />
         </div>
       </Router>

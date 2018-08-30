@@ -88,7 +88,7 @@ export class Home extends Component {
   render() {
     return (
       <div>
-        <section className="home">
+        <section className="hm-Home">
           <div className="crowdsale">
             <div className="container">
               <h1 className="title">Welcome to Token Wizard</h1>
