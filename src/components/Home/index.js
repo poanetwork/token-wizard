@@ -10,6 +10,7 @@ import { inject, observer } from 'mobx-react'
 import { checkWeb3, getNetworkVersion } from '../../utils/blockchainHelpers'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import logdown from 'logdown'
+import { LogoPrimary } from '../LogoPrimary/index'
 
 const logger = logdown('TW:home')
 
@@ -87,18 +88,25 @@ export class Home extends Component {
   render() {
     return (
       <div>
-        <section className="home _hm-Home">
-          <div className="crowdsale">
-            <div className="container">
-              <h1 className="title">Welcome to Token Wizard</h1>
-              <p className="description">
-                Token Wizard is a client side tool to create ERC20 token and crowdsale in five steps. It helps you to
-                publish contracts on the Ethereum network, create a crowdsale page with stats. For participants, the
-                wizard creates a page to contribute into the campaign.
-                <br />Token Wizard is powered by <a href="https://github.com/auth-os/beta">Auth-os</a>.
-              </p>
-              <div className="buttons">
-                <Link to="/1">
+        <section className="hm-Home">
+          <div className="hm-Home_Top">
+            <LogoPrimary />
+          </div>
+          <div className="hm-Home_MainInfoContainer">
+            <div className="hm-Home_MainInfo">
+              <div className="hm-Home_MainInfoTextContainer">
+                <h1 className="hm-Home_MainInfoTitle">Welcome to Token Wizard</h1>
+                <p className="hm-Home_MainInfoDescription">
+                  Token Wizard is a client side tool to create ERC20 token and crowdsale in five steps. It helps you to
+                  publish contracts on the Ethereum network, create a crowdsale page with stats. For participants, the
+                  wizard creates a page to contribute into the campaign.
+                </p>
+                <p className="hm-Home_MainInfoPoweredBy">
+                  Token Wizard is powered by <a href="https://github.com/auth-os/beta">Auth-os</a>.
+                </p>
+              </div>
+              <div className="hm-Home_MainInfoButtonContainer">
+                <Link className="hm-Home_BtnNew" to="/1">
                   <span className="button button_fill">New crowdsale</span>
                 </Link>
                 <div onClick={() => this.chooseContract()} className="button button_outline">
@@ -107,6 +115,7 @@ export class Home extends Component {
               </div>
             </div>
           </div>
+          {/*
           <div className="process">
             <div className="container">
               <div className="process-item">
@@ -145,7 +154,7 @@ export class Home extends Component {
           >
             <CrowdsalesList onClick={this.onClick} />
           </ModalContainer>
-          <Loader show={this.state.loading} />
+          <Loader show={this.state.loading} />*/}
         </section>
       </div>
     )

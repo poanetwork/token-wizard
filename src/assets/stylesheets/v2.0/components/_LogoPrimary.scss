@@ -1,0 +1,9 @@
+.sw-LogoPrimary {
+    @include image-retina('#{ $base-images-path }/LogoPrimary/logo', 'png');
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: contain;
+    display: block;
+    height: 64px;
+    width: 126px;
+}

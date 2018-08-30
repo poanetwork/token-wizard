@@ -1,18 +1,6 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
-import {
-  Header,
-  Footer,
-  Home,
-  Manage,
-  stepOne,
-  stepTwo,
-  stepThree,
-  stepFour,
-  Crowdsale,
-  Contribute,
-  Stats
-} from './components/index'
+import { Home, Manage, stepOne, stepTwo, stepThree, stepFour, Crowdsale, Contribute, Stats } from './components/index'
 import NoWeb3 from './components/Common/NoWeb3'
 import IncompleteDeploy from './components/IncompleteDeploy'
 import { getQueryVariable } from './utils/utils'
@@ -48,7 +36,7 @@ class App extends Component {
     return (
       <Router>
         <div>
-          <Header />
+          {/* <Header /> */}
 
           <Switch>
             <Route exact path="/crowdsale" component={Crowdsale} />
@@ -76,7 +64,7 @@ class App extends Component {
             </Route>
           </Switch>
 
-          <Footer />
+          {/* <Footer /> */}
           <AlertContainer ref={a => (toast.msg = a)} {...TOAST.DEFAULT_OPTIONS} />
         </div>
       </Router>
