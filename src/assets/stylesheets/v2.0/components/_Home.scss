@@ -1,0 +1,12 @@
+.hm-Home {
+    // background-image: url('#{ $base-images-path }/Home/background.jpg');
+    @include image-retina('#{ $base-images-path }/Home/background', 'jpg');
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+}
