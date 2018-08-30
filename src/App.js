@@ -48,7 +48,7 @@ class App extends Component {
     return (
       <Router>
         <div>
-          {/* <Header />  */}
+          <Header />
 
           <Switch>
             <Route exact path="/crowdsale" component={Crowdsale} />
@@ -76,7 +76,7 @@ class App extends Component {
             </Route>
           </Switch>
 
-          {/* <Footer /> */}
+          <Footer />
           <AlertContainer ref={a => (toast.msg = a)} {...TOAST.DEFAULT_OPTIONS} />
         </div>
       </Router>
