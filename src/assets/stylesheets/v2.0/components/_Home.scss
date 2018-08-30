@@ -1,12 +1,93 @@
 .hm-Home {
-    // background-image: url('#{ $base-images-path }/Home/background.jpg');
     @include image-retina('#{ $base-images-path }/Home/background', 'jpg');
     background-position: 50% 50%;
     background-repeat: no-repeat;
     background-size: cover;
     bottom: 0;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
     left: 0;
     position: fixed;
     right: 0;
     top: 0;
+}
+
+.hm-Home_Top {
+    max-width: 1366px;
+    padding: 38px 0 0 42px;
+}
+
+.hm-Home_MainInfoContainer {
+    display: flex;
+    flex-flow: column-reverse;
+    flex-grow: 1;
+    padding-bottom: 34px;
+}
+
+.hm-Home_MainInfo {
+    align-self: center;
+    background-color: $brand-primary;
+    color: #fff;
+    display: flex;
+    max-width: 1200px;
+    padding: 23px 85px 31px 33px
+}
+
+.hm-Home_MainInfoButtonContainer {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    justify-content: center;
+    padding-left: 230px;
+
+    & .hm-Home_BtnNew {
+        width: 230px;
+    }
+}
+
+.hm-Home_MainInfoTitle {
+    font-size: 36px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0 0 15px;
+}
+
+.hm-Home_MainInfoDescription {
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1.56;
+    margin: 0 0 45px;
+}
+
+.hm-Home_MainInfoPoweredBy {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.75;
+    margin: 0;
+
+    & a {
+        color: #fff;
+        text-decoration: none;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+}
+
+.hm-Home_BtnNew {
+    background-color: $brand-secondary;
+    border-radius: 4px;
+    box-shadow: 0 12px 22px 0 rgba(0, 0, 0, 0.24);
+    color: #fff;
+    display: block;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 50px;
+    text-align: center;
+    text-decoration: none;
+    &:hover {
+        background-color: darken($brand-secondary, 10%);
+    }
 }
