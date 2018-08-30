@@ -547,7 +547,6 @@ export class stepFour extends React.Component {
             {tiersSetupBlock}
             {this.renderContractSource('src')}
             {this.renderContractSource('abi')}
-            {this.renderContractSource('bin')}
           </div>
         </div>
         <div className="button-container">
