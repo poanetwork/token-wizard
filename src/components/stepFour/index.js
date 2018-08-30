@@ -8,7 +8,7 @@ import {
   handleContractsForFile,
   handlerForFile,
   scrollToBottom,
-  SUMMARY_FILE_CONTENTS
+  summaryFileContents
 } from './utils'
 import { noContractDataAlert, successfulDeployment, skippingTransaction } from '../../utils/alerts'
 import {
@@ -217,7 +217,7 @@ export class stepFour extends React.Component {
   downloadCrowdsaleInfo = () => {
     const { contractStore, crowdsaleStore } = this.props
     const zip = new JSZip()
-    const fileContents = SUMMARY_FILE_CONTENTS(contractStore.crowdsale.networkID)
+    const fileContents = summaryFileContents(contractStore.crowdsale.networkID)
     let files = fileContents.files
     const tiersCount = isObservableArray(this.props.tierStore.tiers) ? this.props.tierStore.tiers.length : 1
     const contractsKeys = files.order

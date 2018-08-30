@@ -940,7 +940,7 @@ const reservedTokensHeaderTableElements = () => {
   ]
 }
 
-export const SUMMARY_FILE_CONTENTS = networkID => {
+export const summaryFileContents = networkID => {
   let minCapEl = []
   let crowdsaleWhitelistElements = []
   let tierWhitelistElements = []
@@ -1008,6 +1008,11 @@ export const SUMMARY_FILE_CONTENTS = networkID => {
     return []
   }
 
+  const isDutchStrategy = crowdsaleStore.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION
+  const labelIdx = isDutchStrategy ? 'DutchIdx' : 'MintedCappedIdx'
+  const labelCrowdsale = isDutchStrategy ? 'Dutch Crowdsale' : 'Sale'
+  const labelToken = isDutchStrategy ? 'Dutch Token' : 'Token'
+
   return {
     common: [
       ...bigHeaderElements('*********TOKEN SETUP*********'),
@@ -1041,9 +1046,9 @@ export const SUMMARY_FILE_CONTENTS = networkID => {
       smallHeader('*********CROWDSALE***********'),
       { value: 'Auth-os application name: ', parent: 'none', fileValue: crowdsaleStore.appName },
       getCrowdsaleID(),
-      { value: authOSContractString('MintedCappedIdx'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "IDX", networkID) },
-      { value: authOSContractString('Sale'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE", networkID) },
-      { value: authOSContractString('Token'), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "TOKEN", networkID) },
+      { value: authOSContractString(labelIdx), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "IDX", networkID) },
+      { value: authOSContractString(labelCrowdsale), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE", networkID) },
+      { value: authOSContractString(labelToken), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "TOKEN", networkID) },
       ...getManagers,
       ...footerElemets
     ],
