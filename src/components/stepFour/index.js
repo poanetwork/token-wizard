@@ -34,7 +34,7 @@ import { PreventRefresh } from '../Common/PreventRefresh'
 import cancelDeploy from '../../utils/cancelDeploy'
 import PropTypes from 'prop-types'
 import logdown from 'logdown'
-import { checkNetWorkByID } from '../../utils/blockchainHelpers'
+import { checkNetWorkByID, getNetworkVersion } from '../../utils/blockchainHelpers'
 import { CrowdsaleConfig } from '../Common/config'
 import { ButtonContinue } from '../Common/ButtonContinue'
 import classNames from 'classnames'
@@ -120,7 +120,6 @@ export class stepFour extends Component {
     if (!networkInfo) {
       return Promise.reject('invalid networkID')
     }
-
     // Check if deploy has ended
     if (deploymentStore.hasEnded) {
       return await deployHasEnded()
@@ -177,6 +176,15 @@ export class stepFour extends Component {
     }
 
     logger.error([failedAt, err])
+  }
+
+  checkNetworkChanged = async () => {
+    const { generalStore } = this.props
+    const networkIDFromNifty = await getNetworkVersion()
+    const networkIDFromStore = generalStore.networkID
+    logger.log(`Network id from store`, networkIDFromStore)
+    logger.log(`Network id from nifty wallet`, networkIDFromNifty)
+    return +networkIDFromNifty !== +networkIDFromStore
   }
 
   skipTransaction = () => {

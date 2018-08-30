@@ -198,3 +198,38 @@ export const objectKeysToLowerCase = input => {
     return newObj
   }, {})
 }
+
+export const clearStorage = props => {
+  // Generate of stores to clear
+  const toArray = ({
+    generalStore,
+    contractStore,
+    crowdsaleStore,
+    gasPriceStore,
+    deploymentStore,
+    reservedTokenStore,
+    stepTwoValidationStore,
+    tierStore,
+    tokenStore
+  }) => {
+    return [
+      generalStore,
+      contractStore,
+      crowdsaleStore,
+      gasPriceStore,
+      deploymentStore,
+      reservedTokenStore,
+      stepTwoValidationStore,
+      tierStore,
+      tokenStore
+    ]
+  }
+
+  const storesToClear = toArray(props)
+  for (let storeToClear of storesToClear) {
+    if (typeof storeToClear.reset === 'function') {
+      logger.log('Store to be cleared:', storeToClear.constructor.name)
+      storeToClear.reset()
+    }
+  }
+}
