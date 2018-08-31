@@ -1012,6 +1012,8 @@ export const summaryFileContents = networkID => {
   const labelIdx = isDutchStrategy ? 'DutchIdx' : 'MintedCappedIdx'
   const labelCrowdsale = isDutchStrategy ? 'Dutch Crowdsale' : 'Sale'
   const labelToken = isDutchStrategy ? 'Dutch Token' : 'Token'
+  const labelSaleManager = isDutchStrategy ? 'Dutch Crowdsale manager' : 'Sale manager'
+  const labelTokenManager = isDutchStrategy ? 'Dutch Token  manager' : 'Token manager'
 
   return {
     common: [
@@ -1049,6 +1051,8 @@ export const summaryFileContents = networkID => {
       { value: authOSContractString(labelIdx), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "IDX", networkID) },
       { value: authOSContractString(labelCrowdsale), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE", networkID) },
       { value: authOSContractString(labelToken), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "TOKEN", networkID) },
+      { value: authOSContractString(labelSaleManager), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "CROWDSALE_MANAGER", networkID) },
+      { value: authOSContractString(labelTokenManager), parent: 'none', fileValue: getCrowdsaleContractAddr(crowdsaleStore.strategy, "TOKEN_MANAGER", networkID) },
       ...getManagers,
       ...footerElemets
     ],
