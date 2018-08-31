@@ -100,7 +100,7 @@ export const deployProxy = () => {
   ]
 }
 
-const getCrowdSaleParams = (account, methodInterface) => {
+export const getCrowdSaleParams = (account, methodInterface) => {
   const { web3 } = web3Store
   const { walletAddress, whitelistEnabled, updatable, supply, tier, startTime, endTime, rate } = tierStore.tiers[0]
 
@@ -155,7 +155,7 @@ const getCrowdSaleParams = (account, methodInterface) => {
   return { params: crowdsaleParams, paramsEncoded: crowdsaleParamsEncoded }
 }
 
-const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
+export const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
   const { web3 } = web3Store
   const {
     walletAddress,
