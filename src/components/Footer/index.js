@@ -1,5 +1,4 @@
 import React from 'react'
-import '../../assets/stylesheets/application.css'
 import { Link } from 'react-router-dom'
 import moment from 'moment'
 import { displayHeaderAndFooterInIframe } from '../../utils/utils'

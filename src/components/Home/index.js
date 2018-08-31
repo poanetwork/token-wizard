@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import '../../assets/stylesheets/application.css'
 import { Link } from 'react-router-dom'
 import CrowdsalesList from '../Common/CrowdsalesList'
 import { Loader } from '../Common/Loader'
@@ -88,7 +87,7 @@ export class Home extends Component {
   render() {
     return (
       <div>
-        <section className="home">
+        <section className="home _hm-Home">
           <div className="crowdsale">
             <div className="container">
               <h1 className="title">Welcome to Token Wizard</h1>

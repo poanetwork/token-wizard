@@ -1,0 +1,23 @@
+@mixin image-retina($filename, $extension) {
+
+    background-image: url($filename + '.' + $extension);
+
+    @media  (-webkit-min-device-pixel-ratio: 2),
+            (-moz-min-device-pixel-ratio: 2),
+            (min-resolution: 192dpi),
+            (min-resolution: 2dppx) {
+        & {
+            background-image: url($filename + '@2x.' + $extension);
+        }
+    }
+
+    @media  (-webkit-min-device-pixel-ratio: 3),
+            (-moz-min-device-pixel-ratio: 3),
+            (min-resolution: 288dpi),
+            (min-resolution: 3dppx) {
+        & {
+            background-image: url($filename + '@3x.' + $extension);
+        }
+    }
+
+}
