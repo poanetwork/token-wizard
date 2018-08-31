@@ -4,6 +4,12 @@
     background-repeat: no-repeat;
     background-size: contain;
     display: block;
-    height: 64px;
-    width: 126px;
+    height: 58px;
+    width: 114px;
+
+    @media (min-width: $breakpoint-lg) {
+        height: 64px;
+        width: 126px;
+    }
+
 }
