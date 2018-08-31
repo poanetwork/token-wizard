@@ -546,7 +546,6 @@ export class stepFour extends React.Component {
             {crowdsaleSetupBlock()}
             {tiersSetupBlock}
             {this.renderContractSource('src')}
-            {this.renderContractSource('abi')}
           </div>
         </div>
         <div className="button-container">
