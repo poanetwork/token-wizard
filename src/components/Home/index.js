@@ -2,12 +2,11 @@ import React, { Component } from 'react'
 import '../../assets/stylesheets/application.css'
 import CrowdsalesList from '../Common/CrowdsalesList'
 import { Loader } from '../Common/Loader'
-import { loadRegistryAddresses } from '../../utils/blockchainHelpers'
 import { ModalContainer } from '../Common/ModalContainer'
 import { toast, clearStorage } from '../../utils/utils'
 import { TOAST, NAVIGATION_STEPS, DOWNLOAD_STATUS } from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
-import { checkWeb3, getNetworkVersion } from '../../utils/blockchainHelpers'
+import { loadRegistryAddresses, checkWeb3, getNetworkVersion } from '../../utils/blockchainHelpers'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import logdown from 'logdown'
 import storage from 'store2'
@@ -38,12 +37,12 @@ export class Home extends Component {
   constructor(props) {
     super(props)
 
-    let { contractStore } = this.props
+    const { contractStore } = this.props
     contractStore.setProperty('downloadStatus', DOWNLOAD_STATUS.PENDING)
   }
 
   async componentDidMount() {
-    let { web3Store } = this.props
+    const { web3Store } = this.props
     await checkWeb3(web3Store.web3)
   }
 
@@ -53,6 +52,8 @@ export class Home extends Component {
     })
 
     try {
+      clearStorage(this.props)
+      await this.reloadStorage()
       await loadRegistryAddresses()
       this.setState({
         showModal: true
