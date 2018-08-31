@@ -9,7 +9,7 @@
 [submodule "submodules/token-wizard-test-automation"]
 	path = submodules/token-wizard-test-automation
 	url = https://github.com/poanetwork/token-wizard-test-automation
-	branch = e2e-wizard2.0
+	branch = 2.0-newDesign
 [submodule "submodules/auth-os-applications"]
 	path = submodules/auth-os-applications
 	url = https://github.com/poanetwork/auth-os-applications/
