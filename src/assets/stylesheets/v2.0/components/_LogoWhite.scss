@@ -1,0 +1,15 @@
+.sw-LogoWhite {
+    background-image: url('#{ $base-images-path}/LogoWhite/logo.svg');
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: contain;
+    display: block;
+    height: 49px;
+    width: 102px;
+
+    @media (min-width: $breakpoint-md) {
+        height: 64px;
+        width: 126px;
+    }
+
+}

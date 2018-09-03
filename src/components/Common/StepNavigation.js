@@ -2,10 +2,13 @@ import React from 'react'
 
 import { getStepClass } from '../../utils/utils'
 import { NAVIGATION_STEPS } from '../../utils/constants'
+import { LogoWhite } from '../LogoWhite/index'
+
 const { CROWDSALE_STRATEGY, TOKEN_SETUP, CROWDSALE_SETUP, PUBLISH, CROWDSALE_PAGE } = NAVIGATION_STEPS
 
 export const StepNavigation = ({ activeStep }) => (
-  <div className="steps-navigation">
+  <div className="st-CrowdSaleSteps">
+    <LogoWhite />
     <div className="container">
       <div className={getStepClass(CROWDSALE_STRATEGY, activeStep)}>{CROWDSALE_STRATEGY}</div>
       <div className={getStepClass(TOKEN_SETUP, activeStep)}>{TOKEN_SETUP}</div>
