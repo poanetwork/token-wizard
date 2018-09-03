@@ -3,9 +3,7 @@ import '../../assets/stylesheets/application.css'
 import {
   buildDeploymentSteps,
   download,
-  getCrowdSaleParams,
   getDownloadName,
-  getDutchAuctionCrowdSaleParams,
   handleConstantForFile,
   handleContractsForFile,
   handlerForFile,
@@ -342,7 +340,7 @@ export class stepFour extends React.Component {
 
   render() {
     const { tierStore, tokenStore, deploymentStore, crowdsaleStore, contractStore } = this.props
-    const { isMintedCappedCrowdsale, isDutchAuction, crowdsaleDeployInterface } = crowdsaleStore
+    const { isMintedCappedCrowdsale, isDutchAuction } = crowdsaleStore
 
     // Publish page: Token setup block
     const tokenSetupBlock = () => {
@@ -513,11 +511,11 @@ export class stepFour extends React.Component {
 
     const strategyName = isMintedCappedCrowdsale ? MINTED_CAPPED_CROWDSALE_DN : isDutchAuction ? DUTCH_AUCTION_DN : ''
 
-    const encodedParams = isMintedCappedCrowdsale ? getCrowdSaleParams : getDutchAuctionCrowdSaleParams
-    const ABIEncodedParameters = contractStore.crowdsale ? (
+    const { abiEncoded } = contractStore[crowdsaleStore.proxyName]
+    const ABIEncodedParameters = abiEncoded ? (
       <DisplayTextArea
         label="Crowdsale Proxy Contract ABI-encoded parameters"
-        value={encodedParams(contractStore.crowdsale.account, crowdsaleDeployInterface).paramsEncoded}
+        value={abiEncoded}
         description="Encoded ABI Parameters"
       />
     ) : null

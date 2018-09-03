@@ -91,6 +91,9 @@ export const deployProxy = () => {
             return deployContract(abiProxy, binProxy, paramsProxy).then(proxyAddr => {
               contractStore.setContractProperty(crowdsaleStore.proxyName, 'addr', proxyAddr.toLowerCase())
 
+              const encoded = web3.eth.abi.encodeParameters(['address', 'bytes32', 'address', 'bytes32'], paramsProxy)
+              contractStore.setContractProperty(crowdsaleStore.proxyName, 'abiEncoded', encoded.slice(2))
+
               deploymentStore.setAsSuccessful('deployProxy')
               return Promise.resolve()
             })
