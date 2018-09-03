@@ -88,7 +88,7 @@ export class Home extends Component {
   render() {
     return (
       <div>
-        <section className="hm-Home">
+        <section className={`hm-Home ${this.state.showModal ? 'background-blur' : ''}`}>
           <div className="hm-Home_Scroll">
             <div className="hm-Home_Top">
               <LogoPrimary />
@@ -118,16 +118,16 @@ export class Home extends Component {
             </div>
           </div>
         </section>
-        {/* <ModalContainer
+        <ModalContainer
           title={'Crowdsale List'}
           description={`The list of your updatable crowdsales. Choose crowdsale address, click Continue and you'll be
         able to update the parameters of crowdsale.`}
-          // hideModal={this.hideModal}
-          // showModal={this.state.showModal}
-          showModal={true}
+          hideModal={this.hideModal}
+          showModal={this.state.showModal}
+          // showModal={true}
         >
           <CrowdsalesList onClick={this.onClick} />
-        </ModalContainer> */}
+        </ModalContainer>
         <Loader show={this.state.loading} />
       </div>
     )

@@ -1,0 +1,11 @@
+.sw-EmptyContentTextOnly {
+    font-size: 18px;
+    line-height: 1.5;
+    margin: 0;
+    text-align: center;
+    word-wrap: break-word;
+
+    @media (min-width: $breakpoint-md) {
+        padding-top: 40px;
+    }
+}
