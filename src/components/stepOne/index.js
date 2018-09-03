@@ -41,7 +41,7 @@ export class stepOne extends React.Component {
     })
 
     return (
-      <section className="steps steps_crowdsale-contract">
+      <section className="st-StepsSection">
         <StepNavigation activeStep={CROWDSALE_STRATEGY} />
         <div className="steps-content container">
           <div className="about-step">
