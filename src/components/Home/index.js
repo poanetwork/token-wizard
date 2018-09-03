@@ -124,7 +124,6 @@ export class Home extends Component {
         able to update the parameters of crowdsale.`}
           hideModal={this.hideModal}
           showModal={this.state.showModal}
-          // showModal={true}
         >
           <CrowdsalesList onClick={this.onClick} />
         </ModalContainer>
