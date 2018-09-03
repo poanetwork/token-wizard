@@ -2,7 +2,7 @@
 
 body {
     -webkit-font-smoothing: antialiased;
-    color: #4a4a4a;
+    color: $base-text-color;
     font-family: Nunito, sans-serif;
-    font-size: 16px;
+    font-size: $base-font-size;
 }
