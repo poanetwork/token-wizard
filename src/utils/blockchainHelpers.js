@@ -52,7 +52,7 @@ export const checkNetWorkByID = async _networkIdFromGET => {
     if (!_networkIdFromGET) {
       return handleNetworkError(`There is no network`)
     }
-    logger.log(_networkIdFromGET)
+    logger.log('Network id', _networkIdFromGET)
 
     const { web3 } = web3Store
     if (!web3) {

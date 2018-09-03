@@ -122,10 +122,12 @@ export class Contribute extends React.Component {
     contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
 
     try {
+      await this.validateEnvironment()
+
       await getCrowdsaleAssets(generalStore.networkID)
       const crowdsaleAddr = await getAddr()
 
-      await this.validateEnvironment(crowdsaleExecID, crowdsaleAddr)
+      await this.validateParams(crowdsaleExecID, crowdsaleAddr)
 
       let strategy
       if (crowdsaleExecID) {
@@ -163,23 +165,13 @@ export class Contribute extends React.Component {
     }
   }
 
-  validateEnvironment = async (crowdsaleExecID, crowdsaleAddr) => {
-    const { web3Store, generalStore, contractStore } = this.props
+  validateEnvironment = async () => {
+    const { web3Store, generalStore } = this.props
 
     await checkWeb3()
 
     if (!web3Store.web3) {
       return Promise.reject('no web3 available')
-    }
-
-    if (!isExecIDValid(crowdsaleExecID) && contractStore.crowdsale.execID) {
-      invalidCrowdsaleExecIDAlert()
-      return Promise.reject('invalid exec-id')
-    }
-
-    if (!isAddressValid(crowdsaleAddr) && !contractStore.crowdsale.execID) {
-      invalidCrowdsaleProxyAlert()
-      return Promise.reject('invalid proxy addr')
     }
 
     this.setState({
@@ -197,6 +189,20 @@ export class Contribute extends React.Component {
       return Promise.reject('invalid networkID')
     } else if (String(networkInfo) !== networkID) {
       return Promise.reject('invalid networkID')
+    }
+  }
+
+  validateParams = async (crowdsaleExecID, crowdsaleAddr) => {
+    const { contractStore } = this.props
+
+    if (!isExecIDValid(crowdsaleExecID) && contractStore.crowdsale.execID) {
+      invalidCrowdsaleExecIDAlert()
+      return Promise.reject('invalid exec-id')
+    }
+
+    if (!isAddressValid(crowdsaleAddr) && !contractStore.crowdsale.execID) {
+      invalidCrowdsaleProxyAlert()
+      return Promise.reject('invalid proxy addr')
     }
   }
 
