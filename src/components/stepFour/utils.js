@@ -1012,8 +1012,9 @@ export const summaryFileContents = networkID => {
   const labelIdx = isDutchStrategy ? 'DutchIdx' : 'MintedCappedIdx'
   const labelCrowdsale = isDutchStrategy ? 'Dutch Crowdsale' : 'Sale'
   const labelToken = isDutchStrategy ? 'Dutch Token' : 'Token'
-  const labelSaleManager = isDutchStrategy ? 'Dutch Crowdsale manager' : 'Sale manager'
-  const labelTokenManager = isDutchStrategy ? 'Dutch Token  manager' : 'Token manager'
+  // Dutch strategy has no managers smart-contracts
+  const labelSaleManager = 'Sale manager'
+  const labelTokenManager = 'Token manager'
 
   const getCrowdsaleENV = () => {
     if (crowdsaleStore.isMintedCappedCrowdsale) {
