@@ -153,9 +153,11 @@ $hm-Home_Btn-width: 230px;
 
 .hm-Home_BtnNew {
     background-color: $brand-secondary;
+    border: 1px solid $brand-secondary;
     border-radius: 4px;
     box-shadow: 0 12px 22px 0 rgba(0, 0, 0, 0.24);
     color: #fff;
+    cursor: pointer;
     display: block;
     font-size: 20px;
     font-weight: 600;
@@ -167,6 +169,7 @@ $hm-Home_Btn-width: 230px;
     width: $hm-Home_Btn-width;
     &:hover {
         background-color: darken($brand-secondary, 10%);
+        border-color: darken($brand-secondary, 10%);
     }
 
     @media (min-width: $breakpoint-md) {
