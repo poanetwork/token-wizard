@@ -184,7 +184,10 @@ export const PUBLISH_DESCRIPTION = {
   TIER_START_TIME: 'Date and time when the tier starts.',
   TIER_END_TIME: 'Date and time when the tier ends.',
   HARD_CAP: 'How many tokens will be sold on this tier.',
-  ENABLE_WHITELISTING: 'Is whitelist enabled on this tier?'
+  ENABLE_WHITELISTING: 'Is whitelist enabled on this tier?',
+  COMPILER_VERSION: 'Compiler Version',
+  CONTRACT_NAME: 'Crowdsale contract name',
+  COMPILING_OPTIMIZATION: 'Optimization in compiling'
 }
 
 export const TEXT_FIELDS = {
@@ -216,7 +219,10 @@ export const TEXT_FIELDS = {
   ENABLE_WHITELISTING: 'Enable whitelisting',
   GAS_PRICE: 'Gas Price',
   STRATEGY: 'Crowdsale Type',
-  BURN_EXCESS: 'Burn Excess'
+  BURN_EXCESS: 'Burn Excess',
+  COMPILER_VERSION: 'Compiler Version',
+  CONTRACT_NAME: 'Contract Name',
+  COMPILING_OPTIMIZATION: 'Optimized'
 }
 
 export const defaultTokenValidations = {
