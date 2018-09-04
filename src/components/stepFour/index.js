@@ -20,7 +20,7 @@ import {
   PUBLISH_DESCRIPTION,
   CROWDSALE_STRATEGIES
 } from '../../utils/constants'
-import { DOWNLOAD_TYPE } from './constants'
+import { CONTRACT_SETTINGS, DOWNLOAD_TYPE } from './constants'
 import { getNetworkID, toast } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { DisplayField } from '../Common/DisplayField'
@@ -61,7 +61,10 @@ const {
   ALLOW_MODIFYING,
   ENABLE_WHITELISTING,
   MAX_CAP,
-  BURN_EXCESS
+  BURN_EXCESS,
+  COMPILER_VERSION,
+  CONTRACT_NAME,
+  COMPILING_OPTIMIZATION
 } = TEXT_FIELDS
 const {
   MINTED_CAPPED_CROWDSALE: MINTED_CAPPED_CROWDSALE_DN,
@@ -364,8 +367,35 @@ export class stepFour extends Component {
     return <DisplayTextArea label={label} value={value} description={label} />
   }
 
+  configurationBlock = () => {
+    const { crowdsaleStore } = this.props
+    const {
+      COMPILER_VERSION: PD_COMPILER_VERSION,
+      CONTRACT_NAME: PD_CONTRACT_NAME,
+      COMPILING_OPTIMIZATION: PD_COMPILING_OPTIMIZATION
+    } = PUBLISH_DESCRIPTION
+    const { OPTIMIZATION, COMPILER_VERSION: PRAGMA } = CONTRACT_SETTINGS
+    return (
+      <div className="hidden">
+        <DisplayField side="left" title={COMPILER_VERSION} value={PRAGMA} description={PD_COMPILER_VERSION} />
+        <DisplayField
+          side="right"
+          title={CONTRACT_NAME}
+          value={crowdsaleStore.proxyName}
+          description={PD_CONTRACT_NAME}
+        />
+        <DisplayField
+          side="left"
+          title={COMPILING_OPTIMIZATION}
+          value={OPTIMIZATION}
+          description={PD_COMPILING_OPTIMIZATION}
+        />
+      </div>
+    )
+  }
+
   render() {
-    const { tierStore, tokenStore, deploymentStore, crowdsaleStore } = this.props
+    const { tierStore, tokenStore, deploymentStore, crowdsaleStore, contractStore } = this.props
     const { isMintedCappedCrowdsale, isDutchAuction } = crowdsaleStore
 
     // Publish page: Token setup block
@@ -541,6 +571,15 @@ export class stepFour extends Component {
 
     const strategyName = isMintedCappedCrowdsale ? MINTED_CAPPED_CROWDSALE_DN : isDutchAuction ? DUTCH_AUCTION_DN : ''
 
+    const { abiEncoded } = contractStore[crowdsaleStore.proxyName]
+    const ABIEncodedParameters = abiEncoded ? (
+      <DisplayTextArea
+        label="Crowdsale Proxy Contract ABI-encoded parameters"
+        value={abiEncoded}
+        description="Encoded ABI Parameters"
+      />
+    ) : null
+
     return (
       <section className="steps steps_publish">
         <StepNavigation activeStep={PUBLISH} />
@@ -575,7 +614,9 @@ export class stepFour extends Component {
             </div>
             {crowdsaleSetupBlock()}
             {tiersSetupBlock}
+            {this.configurationBlock()}
             {this.renderContractSource('src')}
+            {ABIEncodedParameters}
           </div>
         </div>
         <div className="button-container">

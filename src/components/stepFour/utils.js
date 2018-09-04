@@ -91,6 +91,9 @@ export const deployProxy = () => {
             return deployContract(abiProxy, binProxy, paramsProxy).then(proxyAddr => {
               contractStore.setContractProperty(crowdsaleStore.proxyName, 'addr', proxyAddr.toLowerCase())
 
+              const encoded = web3.eth.abi.encodeParameters(['address', 'bytes32', 'address', 'bytes32'], paramsProxy)
+              contractStore.setContractProperty(crowdsaleStore.proxyName, 'abiEncoded', encoded.slice(2))
+
               deploymentStore.setAsSuccessful('deployProxy')
               return Promise.resolve()
             })
@@ -100,7 +103,7 @@ export const deployProxy = () => {
   ]
 }
 
-const getCrowdSaleParams = (account, methodInterface) => {
+export const getCrowdSaleParams = (account, methodInterface) => {
   const { web3 } = web3Store
   const { walletAddress, whitelistEnabled, updatable, supply, tier, startTime, endTime, rate } = tierStore.tiers[0]
 
@@ -155,7 +158,7 @@ const getCrowdSaleParams = (account, methodInterface) => {
   return { params: crowdsaleParams, paramsEncoded: crowdsaleParamsEncoded }
 }
 
-const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
+export const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
   const { web3 } = web3Store
   const {
     walletAddress,
