@@ -380,7 +380,7 @@ exports[`TierBlock  should render TierBlock component 1`] = `
           <input
             autoComplete="off"
             className="input"
-            disabled={0}
+            disabled={false}
             id="tierblock,0.supply"
             name="tierblock,0.supply"
             onBlur={[Function]}

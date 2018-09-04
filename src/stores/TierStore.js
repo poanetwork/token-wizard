@@ -103,14 +103,32 @@ class TierStore {
 
   @action
   updateWalletAddress = (value, validity) => {
-    this.tiers[0].walletAddress = value
-    this.validTiers[0].walletAddress = validity
+    if (this.tiers.length > 0) {
+      this.tiers[0].walletAddress = value
+    } else {
+      this.tiers.push({ walletAddress: value })
+    }
+
+    if (this.validTiers.length > 0) {
+      this.validTiers[0].walletAddress = validity
+    } else {
+      this.validTiers.push({ walletAddress: validity })
+    }
   }
 
   @action
   updateBurnExcess = (value, validity) => {
-    this.tiers[0].burnExcess = value
-    this.validTiers[0].burnExcess = validity
+    if (this.tiers.length > 0) {
+      this.tiers[0].burnExcess = value
+    } else {
+      this.tiers.push({ burnExcess: value })
+    }
+
+    if (this.validTiers[0].length > 0) {
+      this.validTiers[0].burnExcess = validity
+    } else {
+      this.validTiers.push({ burnExcess: validity })
+    }
   }
 
   @action

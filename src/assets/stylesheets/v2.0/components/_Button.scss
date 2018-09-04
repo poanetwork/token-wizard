@@ -3,6 +3,8 @@ $sw-Button-height: 40px;
 @mixin btn-common($bg-color, $darken: 10%) {
     background-color: $bg-color;
     border-color: $bg-color;
+    border-style: solid;
+
     &:focus,
     &.active,
     &:hover {

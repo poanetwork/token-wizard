@@ -107,6 +107,11 @@ class CrowdsaleStore {
       updatable: false,
       initialTiersValues: []
     }
+    this.strategy = undefined
+    this.maximumSellableTokens = undefined
+    this.maximumSellableTokensInWei = undefined
+    this.supply = undefined
+    this.endTime = undefined
   }
 
   @action

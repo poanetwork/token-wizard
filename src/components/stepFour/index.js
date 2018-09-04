@@ -1,5 +1,4 @@
-import React from 'react'
-
+import React, { Component } from 'react'
 import {
   buildDeploymentSteps,
   download,
@@ -8,19 +7,20 @@ import {
   handleContractsForFile,
   handlerForFile,
   scrollToBottom,
-  SUMMARY_FILE_CONTENTS
+  summaryFileContents
 } from './utils'
-import { noContractDataAlert, successfulDeployment, skippingTransaction } from '../../utils/alerts'
+import { noContractDataAlert, successfulDeployment, skippingTransaction, deployHasEnded } from '../../utils/alerts'
 import {
   DESCRIPTION,
   NAVIGATION_STEPS,
   TOAST,
   CROWDSALE_STRATEGIES_DISPLAYNAMES,
   TEXT_FIELDS,
-  PUBLISH_DESCRIPTION
+  PUBLISH_DESCRIPTION,
+  CROWDSALE_STRATEGIES
 } from '../../utils/constants'
-import { DOWNLOAD_TYPE } from './constants'
-import { toast } from '../../utils/utils'
+import { CONTRACT_SETTINGS, DOWNLOAD_TYPE } from './constants'
+import { getNetworkID, toast } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { DisplayField } from '../Common/DisplayField'
 import { TxProgressStatus } from '../Common/TxProgressStatus'
@@ -34,6 +34,11 @@ import { PreventRefresh } from '../Common/PreventRefresh'
 import cancelDeploy from '../../utils/cancelDeploy'
 import PropTypes from 'prop-types'
 import logdown from 'logdown'
+import { checkNetWorkByID } from '../../utils/blockchainHelpers'
+import { CrowdsaleConfig } from '../Common/config'
+import { ButtonContinue } from '../Common/ButtonContinue'
+import classNames from 'classnames'
+import { DisplayTextArea } from '../Common/DisplayTextArea'
 
 const logger = logdown('TW:stepFour')
 
@@ -55,7 +60,10 @@ const {
   ALLOW_MODIFYING,
   ENABLE_WHITELISTING,
   MAX_CAP,
-  BURN_EXCESS
+  BURN_EXCESS,
+  COMPILER_VERSION,
+  CONTRACT_NAME,
+  COMPILING_OPTIMIZATION
 } = TEXT_FIELDS
 const {
   MINTED_CAPPED_CROWDSALE: MINTED_CAPPED_CROWDSALE_DN,
@@ -69,22 +77,26 @@ const {
   'tokenStore',
   'web3Store',
   'deploymentStore',
+  'generalStore',
   'crowdsaleStore'
 )
 @observer
-export class stepFour extends React.Component {
+export class stepFour extends Component {
+  state = {
+    contractDownloaded: false,
+    modal: false,
+    preventRefresh: true,
+    transactionFailed: false
+  }
+
   constructor(props, context) {
     super(props)
-    this.state = {
-      contractDownloaded: false,
-      modal: false,
-      preventRefresh: true,
-      transactionFailed: false
-    }
 
     const { deploymentStore } = props
 
-    if (!deploymentStore.deployInProgress) {
+    logger.log(`Deployment progress`, deploymentStore.deployInProgress)
+    logger.log(`Deployment has ended`, deploymentStore.hasEnded)
+    if (!deploymentStore.deployInProgress && !deploymentStore.hasEnded) {
       deploymentStore.setDeploymentStep(0)
       deploymentStore.setDeployerAccount(context.selectedAccount)
     }
@@ -100,15 +112,33 @@ export class stepFour extends React.Component {
     toast.showToaster({ message: TOAST.MESSAGE.CONTRACT_DOWNLOAD_SUCCESS, options })
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    const { deploymentStore, generalStore } = this.props
+
+    // Check if network has changed
+    const networkID = generalStore.networkID || CrowdsaleConfig.networkID || getNetworkID()
+    generalStore.setProperty('networkID', networkID)
+
+    logger.log('Check network by id', networkID)
+    const networkInfo = await checkNetWorkByID(networkID)
+
+    logger.log('Network id returned', networkInfo)
+    if (!networkInfo) {
+      return Promise.reject('invalid networkID')
+    }
+    // Check if deploy has ended
+    if (deploymentStore.hasEnded) {
+      return await deployHasEnded()
+    }
+
     scrollToBottom()
     copy('copy')
-    if (!this.props.deploymentStore.hasEnded) {
+    if (!deploymentStore.hasEnded) {
       this.showModal()
     }
 
     // If user reloads with an invalid account, don't start the deploy automatically
-    if (!this.props.deploymentStore.invalidAccount) {
+    if (!deploymentStore.invalidAccount) {
       this.deployCrowdsale()
     }
   }
@@ -217,7 +247,7 @@ export class stepFour extends React.Component {
   downloadCrowdsaleInfo = () => {
     const { contractStore, crowdsaleStore } = this.props
     const zip = new JSZip()
-    const fileContents = SUMMARY_FILE_CONTENTS(contractStore.crowdsale.networkID)
+    const fileContents = summaryFileContents(contractStore.crowdsale.networkID)
     let files = fileContents.files
     const tiersCount = isObservableArray(this.props.tierStore.tiers) ? this.props.tierStore.tiers.length : 1
     const contractsKeys = files.order
@@ -253,6 +283,9 @@ export class stepFour extends React.Component {
         }
       }
     })
+
+    const fileName = crowdsaleStore.isMintedCappedCrowdsale ? 'MintedCappedProxy.sol' : 'DutchProxy.sol'
+    zip.file(fileName, this.getContractBySourceType('src'))
 
     zip.generateAsync({ type: DOWNLOAD_TYPE.blob }).then(content => {
       const downloadName = getDownloadName()
@@ -318,8 +351,57 @@ export class stepFour extends React.Component {
     )
   }
 
+  getContractBySourceType = sourceType => {
+    const { crowdsaleStore, contractStore } = this.props
+    const parseContent = content => (isObservableArray(content) ? JSON.stringify(content.slice()) : content)
+
+    return crowdsaleStore.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE
+      ? parseContent(contractStore.MintedCappedProxy[sourceType])
+      : parseContent(contractStore.DutchProxy[sourceType])
+  }
+
+  renderContractSource = sourceType => {
+    const sourceTypeName = {
+      abi: 'ABI',
+      bin: 'Creation Code',
+      src: 'Source Code'
+    }
+
+    const label = `Crowdsale Proxy Contract ${sourceTypeName[sourceType]}`
+    const value = this.getContractBySourceType(sourceType)
+
+    return <DisplayTextArea label={label} value={value} description={label} />
+  }
+
+  configurationBlock = () => {
+    const { crowdsaleStore } = this.props
+    const {
+      COMPILER_VERSION: PD_COMPILER_VERSION,
+      CONTRACT_NAME: PD_CONTRACT_NAME,
+      COMPILING_OPTIMIZATION: PD_COMPILING_OPTIMIZATION
+    } = PUBLISH_DESCRIPTION
+    const { OPTIMIZATION, COMPILER_VERSION: PRAGMA } = CONTRACT_SETTINGS
+    return (
+      <div className="hidden">
+        <DisplayField side="left" title={COMPILER_VERSION} value={PRAGMA} description={PD_COMPILER_VERSION} />
+        <DisplayField
+          side="right"
+          title={CONTRACT_NAME}
+          value={crowdsaleStore.proxyName}
+          description={PD_CONTRACT_NAME}
+        />
+        <DisplayField
+          side="left"
+          title={COMPILING_OPTIMIZATION}
+          value={OPTIMIZATION}
+          description={PD_COMPILING_OPTIMIZATION}
+        />
+      </div>
+    )
+  }
+
   render() {
-    const { tierStore, tokenStore, deploymentStore, crowdsaleStore } = this.props
+    const { tierStore, tokenStore, deploymentStore, crowdsaleStore, contractStore } = this.props
     const { isMintedCappedCrowdsale, isDutchAuction } = crowdsaleStore
 
     // Publish page: Token setup block
@@ -489,7 +571,20 @@ export class stepFour extends React.Component {
       />
     )
 
+    const submitButtonClass = classNames('button', 'button_fill_secondary', 'button_no_border', {
+      button_disabled: !deploymentStore.hasEnded
+    })
+
     const strategyName = isMintedCappedCrowdsale ? MINTED_CAPPED_CROWDSALE_DN : isDutchAuction ? DUTCH_AUCTION_DN : ''
+
+    const { abiEncoded } = contractStore[crowdsaleStore.proxyName]
+    const ABIEncodedParameters = abiEncoded ? (
+      <DisplayTextArea
+        label="Crowdsale Proxy Contract ABI-encoded parameters"
+        value={abiEncoded}
+        description="Encoded ABI Parameters"
+      />
+    ) : null
 
     return (
       <section className="steps steps_publish">
@@ -525,15 +620,20 @@ export class stepFour extends React.Component {
             </div>
             {crowdsaleSetupBlock()}
             {tiersSetupBlock}
+            {this.configurationBlock()}
+            {this.renderContractSource('src')}
+            {ABIEncodedParameters}
           </div>
         </div>
         <div className="button-container">
-          <div onClick={this.downloadContractButton} className="button button_fill_secondary">
+          <button
+            onClick={this.downloadContractButton}
+            disabled={!deploymentStore.hasEnded}
+            className={submitButtonClass}
+          >
             Download File
-          </div>
-          <a onClick={this.goToCrowdsalePage} className="button button_fill">
-            Continue
-          </a>
+          </button>
+          <ButtonContinue onClick={this.goToCrowdsalePage} status={deploymentStore.hasEnded} />
         </div>
         <ModalContainer title={'Tx Status'} showModal={this.state.modal}>
           {modalContent}

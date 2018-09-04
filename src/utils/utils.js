@@ -183,3 +183,53 @@ export const toBigNumber = (value, force = true) => {
 export const sleep = async ms => {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
+
+export const objectKeysToLowerCase = input => {
+  if (typeof input !== 'object') {
+    return input
+  }
+  if (Array.isArray(input)) {
+    return input.map(objectKeysToLowerCase)
+  }
+  return Object.keys(input).reduce((newObj, key) => {
+    let val = input[key]
+    let newVal = typeof val === 'object' ? objectKeysToLowerCase(val) : val
+    newObj[key.toLowerCase()] = newVal
+    return newObj
+  }, {})
+}
+
+export const clearStorage = props => {
+  // Generate of stores to clear
+  const toArray = ({
+    generalStore,
+    contractStore,
+    crowdsaleStore,
+    gasPriceStore,
+    deploymentStore,
+    reservedTokenStore,
+    stepTwoValidationStore,
+    tierStore,
+    tokenStore
+  }) => {
+    return [
+      generalStore,
+      contractStore,
+      crowdsaleStore,
+      gasPriceStore,
+      deploymentStore,
+      reservedTokenStore,
+      stepTwoValidationStore,
+      tierStore,
+      tokenStore
+    ]
+  }
+
+  const storesToClear = toArray(props)
+  for (let storeToClear of storesToClear) {
+    if (typeof storeToClear.reset === 'function') {
+      logger.log('Store to be cleared:', storeToClear.constructor.name)
+      storeToClear.reset()
+    }
+  }
+}

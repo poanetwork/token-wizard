@@ -6,7 +6,7 @@ import { TokenDecimals } from '../Common/TokenDecimals'
 import { TokenSupply } from '../Common/TokenSupply'
 import { ReservedTokensInputBlock } from '../Common/ReservedTokensInputBlock'
 import { CROWDSALE_STRATEGIES } from '../../utils/constants'
-import classNames from 'classnames'
+import { ButtonContinue } from '../Common/ButtonContinue'
 
 const errorStyle = {
   color: 'red',
@@ -30,12 +30,12 @@ export const StepTwoForm = ({
   crowdsaleStore,
   invalid,
   pristine,
-  submitting
+  submitting,
+  mutators: { setFieldTouched },
+  reload,
+  form
 }) => {
-  // Build disable class to use in the submit button
-  const submitButtonClass = classNames('button', 'button_fill', 'button_no_border', {
-    button_disabled: submitting || pristine || invalid
-  })
+  const status = !(submitting || invalid)
 
   const reservedTokens = (
     <div>
@@ -53,6 +53,20 @@ export const StepTwoForm = ({
     </div>
   )
 
+  const setFieldAsTouched = ({ values, errors }) => {
+    if (reload) {
+      form.mutators.setFieldTouched('name', true)
+      form.mutators.setFieldTouched('ticker', true)
+      form.mutators.setFieldTouched('decimals', true)
+      form.mutators.setFieldTouched('supply', true)
+    }
+  }
+
+  const onChangeForm = ({ values, errors }) => {
+    updateTokenStore({ values, errors })
+    setFieldAsTouched({ values, errors })
+  }
+
   return (
     <form id={id} onSubmit={handleSubmit}>
       <div className="hidden">
@@ -66,12 +80,10 @@ export const StepTwoForm = ({
       {crowdsaleStore.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE ? reservedTokens : null}
 
       <div className="button-container">
-        <button type="submit" disabled={submitting || pristine || invalid} className={submitButtonClass}>
-          Continue
-        </button>
+        <ButtonContinue type="submit" status={status} />
       </div>
 
-      <FormSpy onChange={updateTokenStore} />
+      <FormSpy onChange={onChangeForm} />
     </form>
   )
 }

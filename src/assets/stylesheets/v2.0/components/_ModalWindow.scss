@@ -3,18 +3,26 @@
     background-color: rgba(#404040, 0.5);
     bottom: 0;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: normal;
     left: 0;
+    overflow: auto;
     position: fixed;
     right: 0;
     top: 0;
     z-index: $z-index-max;
+
+    @media (min-height: 640px) {
+        justify-content: center;
+    }
+
 }
 
 .sw-ModalWindow {
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 9px 13px 0 rgba(0, 0, 0, 0.16), 0 0 9px 0 rgba(0, 0, 0, 0.04);
+    height: 640px;
     max-height: 640px;
     max-width: 95%;
     padding: 17px $sw-ModalWindow-horizontal-padding-xs 30px;
@@ -22,6 +30,7 @@
 
     @media (min-width: $breakpoint-md) {
         height: 480px;
+        max-height: 480px;
         padding: 16px 25px 30px;
         width: 750px;
     }

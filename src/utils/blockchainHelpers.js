@@ -48,29 +48,39 @@ const checkMetaMask = async () => {
 }
 
 export const checkNetWorkByID = async _networkIdFromGET => {
-  if (!_networkIdFromGET) {
-    return null
+  try {
+    if (!_networkIdFromGET) {
+      return handleNetworkError(`There is no network`)
+    }
+    logger.log('Network id', _networkIdFromGET)
+
+    const { web3 } = web3Store
+    if (!web3) {
+      return handleNetworkError(`There is no web3`)
+    }
+
+    let networkNameFromGET = getNetWorkNameById(_networkIdFromGET)
+    networkNameFromGET = networkNameFromGET ? networkNameFromGET : CHAINS.UNKNOWN
+
+    let _networkIdFromNetwork = await getNetworkVersion()
+
+    let networkNameFromNetwork = getNetWorkNameById(_networkIdFromNetwork)
+    networkNameFromNetwork = networkNameFromNetwork ? networkNameFromNetwork : CHAINS.UNKNOWN
+
+    if (networkNameFromGET !== networkNameFromNetwork) {
+      logger.log(`${networkNameFromGET}!=${networkNameFromNetwork}`)
+      return await incorrectNetworkAlert(networkNameFromGET, networkNameFromNetwork)
+    }
+
+    return _networkIdFromNetwork
+  } catch (err) {
+    handleNetworkError(err)
   }
-  logger.log(_networkIdFromGET)
+}
 
-  const { web3 } = web3Store
-  if (!web3) {
-    return null
-  }
-
-  let networkNameFromGET = getNetWorkNameById(_networkIdFromGET)
-  networkNameFromGET = networkNameFromGET ? networkNameFromGET : CHAINS.UNKNOWN
-
-  let _networkIdFromNetwork = await web3.eth.net.getId()
-  let networkNameFromNetwork = getNetWorkNameById(_networkIdFromNetwork)
-  networkNameFromNetwork = networkNameFromNetwork ? networkNameFromNetwork : CHAINS.UNKNOWN
-
-  if (networkNameFromGET !== networkNameFromNetwork) {
-    logger.log(`${networkNameFromGET}!=${networkNameFromNetwork}`)
-    return incorrectNetworkAlert(networkNameFromGET, networkNameFromNetwork)
-  }
-
-  return _networkIdFromNetwork
+export const handleNetworkError = message => {
+  logger.log('Error getting network id', message)
+  return Promise.reject(message)
 }
 
 export const getNetWorkNameById = _id => {
@@ -347,33 +357,31 @@ async function getOwnerApplicationsInstancesForProxy() {
   const proxiesRegistryContract = await attachToSpecificCrowdsaleContract('ProxiesRegistry')
   const accounts = await web3.eth.getAccounts()
 
-  const promises = []
-  const crowdsales = []
-  const proxyAddrs = await proxiesRegistryContract.methods.getCrowdsalesForUser(accounts[0]).call()
+  logger.log('Account address', accounts[0])
+  const proxyAddress = await proxiesRegistryContract.methods.getCrowdsalesForUser(accounts[0]).call()
   const mintedCapped = process.env[`${REACT_PREFIX}MINTED_CAPPED_APP_NAME`].toLowerCase()
   const dutchAuction = process.env[`${REACT_PREFIX}DUTCH_APP_NAME`].toLowerCase()
-  proxyAddrs.forEach(proxyAddr => {
-    let promise = new Promise(async (resolve, reject) => {
-      const abi = contractStore.MintedCappedProxy.abi // we can use minted caped proxy ABI for minted capped and Dutch acution
-      try {
-        const contractInstance = await attachToContract(abi, proxyAddr)
-        const contractAppName = await contractInstance.methods.app_name().call()
-        const appName = removeTrailingNUL(web3.utils.toAscii(contractAppName))
-        const appNameLowerCase = appName.toLowerCase()
-        if (appNameLowerCase.includes(mintedCapped) || appNameLowerCase.includes(dutchAuction)) {
-          crowdsales.push({ appName, execID: proxyAddr })
-        }
-        resolve()
-      } catch (error) {
-        logger.error(error)
-        resolve()
+
+  logger.log('Proxy address', proxyAddress)
+  const whenCrowdsales = proxyAddress.map(async proxyAddr => {
+    const abi = contractStore.MintedCappedProxy.abi // we can use minted caped proxy ABI for minted capped and Dutch auction
+    try {
+      const contractInstance = await attachToContract(abi, proxyAddr)
+      const contractAppName = await contractInstance.methods.app_name().call()
+      const appName = removeTrailingNUL(web3.utils.toAscii(contractAppName))
+      const appNameLowerCase = appName.toLowerCase()
+      if (appNameLowerCase.includes(mintedCapped) || appNameLowerCase.includes(dutchAuction)) {
+        return { appName, execID: proxyAddr }
       }
-    })
-    promises.push(promise)
+    } catch (error) {
+      logger.error(error)
+    }
+    return null
   })
-  return Promise.all(promises).then(() => {
-    return Promise.all(crowdsales)
-  })
+
+  const crowdsales = await Promise.all(whenCrowdsales)
+
+  return crowdsales.filter(crowdsale => crowdsale).reverse()
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -477,7 +485,7 @@ export const getCrowdsaleStrategyByName = async appName => {
 
 export async function loadRegistryAddresses() {
   const crowdsales = await getOwnerApplicationsInstancesForProxy()
-  logger.log(crowdsales)
+  logger.log('Crowdsales', crowdsales)
   crowdsaleStore.setCrowdsales(crowdsales)
 }
 

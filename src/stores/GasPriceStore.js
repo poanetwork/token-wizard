@@ -15,31 +15,7 @@ class GasPriceStore {
   @observable health
 
   constructor() {
-    this.slow = {
-      id: GAS_PRICE.SLOW.ID,
-      price: GAS_PRICE.SLOW.PRICE
-    }
-
-    this.standard = {
-      id: GAS_PRICE.NORMAL.ID,
-      price: GAS_PRICE.NORMAL.PRICE
-    }
-
-    this.fast = {
-      id: GAS_PRICE.FAST.ID,
-      price: GAS_PRICE.FAST.PRICE
-    }
-
-    this.instant = {
-      id: GAS_PRICE.INSTANT.ID,
-      price: GAS_PRICE.INSTANT.PRICE
-    }
-
-    this.custom = {
-      id: GAS_PRICE.CUSTOM.ID,
-      price: GAS_PRICE.CUSTOM.PRICE
-    }
-
+    this.reset()
     autosave(this, 'GasPriceStore')
   }
 
@@ -113,6 +89,38 @@ class GasPriceStore {
       ...gasPrice,
       price: weiToGwei(gasPrice.price)
     }))
+  }
+
+  @action
+  reset = () => {
+    this.slow = {
+      id: GAS_PRICE.SLOW.ID,
+      price: GAS_PRICE.SLOW.PRICE
+    }
+
+    this.standard = {
+      id: GAS_PRICE.NORMAL.ID,
+      price: GAS_PRICE.NORMAL.PRICE
+    }
+
+    this.fast = {
+      id: GAS_PRICE.FAST.ID,
+      price: GAS_PRICE.FAST.PRICE
+    }
+
+    this.instant = {
+      id: GAS_PRICE.INSTANT.ID,
+      price: GAS_PRICE.INSTANT.PRICE
+    }
+
+    this.custom = {
+      id: GAS_PRICE.CUSTOM.ID,
+      price: GAS_PRICE.CUSTOM.PRICE
+    }
+
+    this.block_number = undefined
+    this.block_time = undefined
+    this.health = undefined
   }
 }
 
