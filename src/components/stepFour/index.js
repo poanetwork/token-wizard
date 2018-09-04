@@ -17,7 +17,8 @@ import {
   TOAST,
   CROWDSALE_STRATEGIES_DISPLAYNAMES,
   TEXT_FIELDS,
-  PUBLISH_DESCRIPTION
+  PUBLISH_DESCRIPTION,
+  CROWDSALE_STRATEGIES
 } from '../../utils/constants'
 import { DOWNLOAD_TYPE } from './constants'
 import { toast } from '../../utils/utils'
@@ -34,6 +35,7 @@ import { PreventRefresh } from '../Common/PreventRefresh'
 import cancelDeploy from '../../utils/cancelDeploy'
 import PropTypes from 'prop-types'
 import logdown from 'logdown'
+import { DisplayTextArea } from '../Common/DisplayTextArea'
 
 const logger = logdown('TW:stepFour')
 
@@ -318,6 +320,24 @@ export class stepFour extends React.Component {
     )
   }
 
+  renderContractSource = sourceType => {
+    const { crowdsaleStore, contractStore } = this.props
+    const sourceTypeName = {
+      abi: 'ABI',
+      bin: 'Creation Code',
+      src: 'Source Code'
+    }
+    const parseContent = content => (isObservableArray(content) ? JSON.stringify(content.slice()) : content)
+
+    const label = `Crowdsale Proxy Contract ${sourceTypeName[sourceType]}`
+    const value =
+      crowdsaleStore.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE
+        ? parseContent(contractStore.MintedCappedProxy[sourceType])
+        : parseContent(contractStore.DutchProxy[sourceType])
+
+    return <DisplayTextArea label={label} value={value} description={label} />
+  }
+
   render() {
     const { tierStore, tokenStore, deploymentStore, crowdsaleStore } = this.props
     const { isMintedCappedCrowdsale, isDutchAuction } = crowdsaleStore
@@ -525,6 +545,7 @@ export class stepFour extends React.Component {
             </div>
             {crowdsaleSetupBlock()}
             {tiersSetupBlock}
+            {this.renderContractSource('src')}
           </div>
         </div>
         <div className="button-container">
