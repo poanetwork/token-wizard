@@ -9,7 +9,7 @@ import {
 } from '../../utils/blockchainHelpers'
 import { countDecimalPlaces, toBigNumber, toFixed } from '../../utils/utils'
 import { CROWDSALE_STRATEGIES } from '../../utils/constants'
-import { DOWNLOAD_NAME, MINTED_PREFIX, DUTCH_PREFIX, ADDR_BOX_LEN } from './constants'
+import { DOWNLOAD_NAME, MINTED_PREFIX, DUTCH_PREFIX, ADDR_BOX_LEN, CONTRACT_SETTINGS } from './constants'
 import { REACT_PREFIX } from '../../utils/constants'
 import { isObservableArray } from 'mobx'
 import {
@@ -1071,6 +1071,8 @@ export const summaryFileContents = networkID => {
     }
   }
 
+  const { abiEncoded } = contractStore[crowdsaleStore.proxyName]
+  const { OPTIMIZATION, COMPILER_VERSION } = CONTRACT_SETTINGS
   return {
     common: [
       ...bigHeaderElements('*********TOKEN SETUP*********'),
@@ -1091,6 +1093,12 @@ export const summaryFileContents = networkID => {
       ...crowdsaleIsModifiableEl,
       ...crowdsaleIsWhitelistedEl,
       ...crowdsaleWhitelistElements,
+      '\n',
+      ...bigHeaderElements('**********METADATA***********'),
+      { field: 'proxyName', value: 'Contract name: ', parent: 'crowdsaleStore' },
+      { value: 'Compiler version: ', parent: 'none', fileValue: COMPILER_VERSION },
+      { value: 'Optimized: ', parent: 'none', fileValue: OPTIMIZATION },
+      { value: 'Encoded ABI parameterse: ', parent: 'none', fileValue: abiEncoded },
       ...footerElemets
     ],
     // prettier-ignore
