@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import '../../assets/stylesheets/application.css'
 import {
   buildDeploymentSteps,
@@ -10,7 +10,7 @@ import {
   scrollToBottom,
   summaryFileContents
 } from './utils'
-import { noContractDataAlert, successfulDeployment, skippingTransaction } from '../../utils/alerts'
+import { noContractDataAlert, successfulDeployment, skippingTransaction, deployHasEnded } from '../../utils/alerts'
 import {
   DESCRIPTION,
   NAVIGATION_STEPS,
@@ -21,7 +21,7 @@ import {
   CROWDSALE_STRATEGIES
 } from '../../utils/constants'
 import { CONTRACT_SETTINGS, DOWNLOAD_TYPE } from './constants'
-import { toast } from '../../utils/utils'
+import { getNetworkID, toast } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { DisplayField } from '../Common/DisplayField'
 import { TxProgressStatus } from '../Common/TxProgressStatus'
@@ -35,6 +35,10 @@ import { PreventRefresh } from '../Common/PreventRefresh'
 import cancelDeploy from '../../utils/cancelDeploy'
 import PropTypes from 'prop-types'
 import logdown from 'logdown'
+import { checkNetWorkByID } from '../../utils/blockchainHelpers'
+import { CrowdsaleConfig } from '../Common/config'
+import { ButtonContinue } from '../Common/ButtonContinue'
+import classNames from 'classnames'
 import { DisplayTextArea } from '../Common/DisplayTextArea'
 
 const logger = logdown('TW:stepFour')
@@ -74,22 +78,26 @@ const {
   'tokenStore',
   'web3Store',
   'deploymentStore',
+  'generalStore',
   'crowdsaleStore'
 )
 @observer
-export class stepFour extends React.Component {
+export class stepFour extends Component {
+  state = {
+    contractDownloaded: false,
+    modal: false,
+    preventRefresh: true,
+    transactionFailed: false
+  }
+
   constructor(props, context) {
     super(props)
-    this.state = {
-      contractDownloaded: false,
-      modal: false,
-      preventRefresh: true,
-      transactionFailed: false
-    }
 
     const { deploymentStore } = props
 
-    if (!deploymentStore.deployInProgress) {
+    logger.log(`Deployment progress`, deploymentStore.deployInProgress)
+    logger.log(`Deployment has ended`, deploymentStore.hasEnded)
+    if (!deploymentStore.deployInProgress && !deploymentStore.hasEnded) {
       deploymentStore.setDeploymentStep(0)
       deploymentStore.setDeployerAccount(context.selectedAccount)
     }
@@ -105,15 +113,33 @@ export class stepFour extends React.Component {
     toast.showToaster({ message: TOAST.MESSAGE.CONTRACT_DOWNLOAD_SUCCESS, options })
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    const { deploymentStore, generalStore } = this.props
+
+    // Check if network has changed
+    const networkID = generalStore.networkID || CrowdsaleConfig.networkID || getNetworkID()
+    generalStore.setProperty('networkID', networkID)
+
+    logger.log('Check network by id', networkID)
+    const networkInfo = await checkNetWorkByID(networkID)
+
+    logger.log('Network id returned', networkInfo)
+    if (!networkInfo) {
+      return Promise.reject('invalid networkID')
+    }
+    // Check if deploy has ended
+    if (deploymentStore.hasEnded) {
+      return await deployHasEnded()
+    }
+
     scrollToBottom()
     copy('copy')
-    if (!this.props.deploymentStore.hasEnded) {
+    if (!deploymentStore.hasEnded) {
       this.showModal()
     }
 
     // If user reloads with an invalid account, don't start the deploy automatically
-    if (!this.props.deploymentStore.invalidAccount) {
+    if (!deploymentStore.invalidAccount) {
       this.deployCrowdsale()
     }
   }
@@ -546,6 +572,10 @@ export class stepFour extends React.Component {
       />
     )
 
+    const submitButtonClass = classNames('button', 'button_fill_secondary', 'button_no_border', {
+      button_disabled: !deploymentStore.hasEnded
+    })
+
     const strategyName = isMintedCappedCrowdsale ? MINTED_CAPPED_CROWDSALE_DN : isDutchAuction ? DUTCH_AUCTION_DN : ''
 
     const { abiEncoded } = contractStore[crowdsaleStore.proxyName]
@@ -597,12 +627,14 @@ export class stepFour extends React.Component {
           </div>
         </div>
         <div className="button-container">
-          <div onClick={this.downloadContractButton} className="button button_fill_secondary">
+          <button
+            onClick={this.downloadContractButton}
+            disabled={!deploymentStore.hasEnded}
+            className={submitButtonClass}
+          >
             Download File
-          </div>
-          <a onClick={this.goToCrowdsalePage} className="button button_fill">
-            Continue
-          </a>
+          </button>
+          <ButtonContinue onClick={this.goToCrowdsalePage} status={deploymentStore.hasEnded} />
         </div>
         <ModalContainer title={'Tx Status'} showModal={this.state.modal}>
           {modalContent}

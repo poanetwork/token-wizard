@@ -12,6 +12,7 @@ class DeploymentStore {
   @observable invalidAccount = false
 
   constructor() {
+    this.reset()
     autosave(this, 'DeploymentStore', store => {
       const txMap = new Map()
       Object.keys(store.txMap).forEach(key => {
@@ -152,6 +153,15 @@ class DeploymentStore {
   @computed
   get deployInProgress() {
     return this.deploymentStep !== null
+  }
+
+  @action
+  reset = () => {
+    this.txMap = new Map()
+    this.deploymentStep = null
+    this.hasEnded = false
+    this.deployerAccount = null
+    this.invalidAccount = false
   }
 }
 

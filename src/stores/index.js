@@ -1,4 +1,3 @@
-import storage from 'store2'
 import ContractStore from './ContractStore'
 import ReservedTokenStore from './ReservedTokenStore'
 import StepTwoValidationStore from './StepTwoValidationStore'
@@ -14,10 +13,8 @@ import DeploymentStore from './DeploymentStore'
 import StatsStore from './StatsStore'
 import localStorageMock from './localStorageMock.js'
 //for Jest unit tests
-if (!window.localStorage) Object.defineProperty(window, 'localStorage', { value: localStorageMock })
-// Clear local storage if there is no incomplete deployment
-if (storage.has('DeploymentStore') && storage.get('DeploymentStore').deploymentStep === null) {
-  localStorage.clear()
+if (!window.localStorage) {
+  Object.defineProperty(window, 'localStorage', { value: localStorageMock })
 }
 
 localStorage.debug = 'TW*'

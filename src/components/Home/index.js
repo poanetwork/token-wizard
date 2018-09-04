@@ -1,84 +1,107 @@
 import React, { Component } from 'react'
 import '../../assets/stylesheets/application.css'
-import { Link } from 'react-router-dom'
 import CrowdsalesList from '../Common/CrowdsalesList'
 import { Loader } from '../Common/Loader'
-import { loadRegistryAddresses } from '../../utils/blockchainHelpers'
 import { ModalContainer } from '../Common/ModalContainer'
-import { toast } from '../../utils/utils'
+import { toast, clearStorage } from '../../utils/utils'
 import { TOAST, NAVIGATION_STEPS, DOWNLOAD_STATUS } from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
-import { checkWeb3, getNetworkVersion } from '../../utils/blockchainHelpers'
+import { loadRegistryAddresses, checkWeb3, getNetworkVersion } from '../../utils/blockchainHelpers'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import logdown from 'logdown'
+import storage from 'store2'
 
 const logger = logdown('TW:home')
 
 const { CROWDSALE_STRATEGY, TOKEN_SETUP, CROWDSALE_SETUP, PUBLISH, CROWDSALE_PAGE } = NAVIGATION_STEPS
 
-@inject('web3Store', 'generalStore', 'contractStore')
+@inject(
+  'web3Store',
+  'generalStore',
+  'contractStore',
+  'crowdsaleStore',
+  'gasPriceStore',
+  'deploymentStore',
+  'reservedTokenStore',
+  'stepTwoValidationStore',
+  'tierStore',
+  'tokenStore'
+)
 @observer
 export class Home extends Component {
+  state = {
+    showModal: false,
+    loading: false
+  }
+
   constructor(props) {
     super(props)
-    this.state = {
-      showModal: false,
-      loading: false
-    }
 
-    let { contractStore } = this.props
+    const { contractStore } = this.props
     contractStore.setProperty('downloadStatus', DOWNLOAD_STATUS.PENDING)
   }
 
-  componentDidMount() {
-    let { generalStore, web3Store, contractStore } = this.props
-    checkWeb3(web3Store.web3)
-
-    getNetworkVersion()
-      .then(networkID => {
-        generalStore.setProperty('networkID', networkID)
-        getCrowdsaleAssets(networkID)
-      })
-      .then(
-        () => {
-          contractStore.setProperty('downloadStatus', DOWNLOAD_STATUS.SUCCESS)
-        },
-        e => {
-          logger.error('Error downloading contracts', e)
-          toast.showToaster({
-            type: TOAST.TYPE.ERROR,
-            message:
-              'The contracts could not be downloaded.Please try to refresh the page. If the problem persists, try again later.'
-          })
-
-          contractStore.setProperty('downloadStatus', DOWNLOAD_STATUS.FAILURE)
-        }
-      )
+  async componentDidMount() {
+    const { web3Store } = this.props
+    await checkWeb3(web3Store.web3)
   }
 
-  chooseContract = () => {
+  chooseContract = async () => {
     this.setState({
       loading: true
     })
 
-    loadRegistryAddresses().then(
-      () => {
-        this.setState({
-          loading: false,
-          showModal: true
-        })
-      },
-      e => {
-        logger.error('There was a problem loading the crowdsale addresses from the registry', e)
-        this.setState({
-          loading: false
-        })
-      }
-    )
+    try {
+      clearStorage(this.props)
+      await this.reloadStorage()
+      await loadRegistryAddresses()
+      this.setState({
+        showModal: true
+      })
+    } catch (e) {
+      logger.error('There was a problem loading the crowdsale addresses from the registry', e)
+    }
+
+    this.setState({
+      loading: false
+    })
+  }
+
+  goNextStep = async () => {
+    // Clear local storage if there is no incomplete deployment, and reload
+    if (storage.has('DeploymentStore') && storage.get('DeploymentStore').deploymentStep) {
+      this.props.history.push('/')
+    } else {
+      clearStorage(this.props)
+      await this.reloadStorage()
+      this.props.history.push('1')
+    }
+  }
+
+  async reloadStorage() {
+    let { generalStore, contractStore } = this.props
+
+    try {
+      // General store, check network
+      let networkID = await getNetworkVersion()
+      generalStore.setProperty('networkID', networkID)
+
+      // Contract store, get contract and abi
+      await getCrowdsaleAssets(networkID)
+      contractStore.setProperty('downloadStatus', DOWNLOAD_STATUS.SUCCESS)
+    } catch (e) {
+      logger.error('Error downloading contracts', e)
+      toast.showToaster({
+        type: TOAST.TYPE.ERROR,
+        message:
+          'The contracts could not be downloaded.Please try to refresh the page. If the problem persists, try again later.'
+      })
+      contractStore.setProperty('downloadStatus', DOWNLOAD_STATUS.FAILURE)
+    }
   }
 
   onClick = crowdsaleAddress => {
-    this.props.history.push('/manage/' + crowdsaleAddress)
+    this.props.history.push(`manage/${crowdsaleAddress}`)
   }
 
   hideModal = () => {
@@ -99,9 +122,9 @@ export class Home extends Component {
                 <br />Token Wizard is powered by <a href="https://github.com/auth-os/beta">Auth-os</a>.
               </p>
               <div className="buttons">
-                <Link to="/1">
-                  <span className="button button_fill">New crowdsale</span>
-                </Link>
+                <button onClick={() => this.goNextStep()} className="button button_fill button_no_border">
+                  New crowdsale
+                </button>
                 <div onClick={() => this.chooseContract()} className="button button_outline">
                   Choose Crowdsale
                 </div>
