@@ -4,8 +4,8 @@ import { FieldArray } from 'react-final-form-arrays'
 import { WhenFieldChanges } from '../Common/WhenFieldChanges'
 import { InputField2 } from '../Common/InputField2'
 import GasPriceInput from './GasPriceInput'
+import { ButtonContinue } from '../Common/ButtonContinue'
 import { gweiToWei } from '../../utils/utils'
-import classnames from 'classnames'
 import {
   composeValidators,
   isAddress,
@@ -33,12 +33,52 @@ const inputErrorStyle = {
   height: '20px'
 }
 
-export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, pristine, ...props }) => {
-  const submitButtonClass = classnames('button', 'button_fill', {
-    button_disabled: pristine || invalid
-  })
+export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, submitting, pristine, form, reload, ...props }) => {
+  const status = !(submitting || invalid)
 
-  const handleOnChange = ({ values }) => {
+  /**
+   * Set gas type selected on gas price input
+   * @param value
+   */
+  const updateGasTypeSelected = value => {
+    const { updateGasTypeSelected } = props
+    updateGasTypeSelected(value)
+  }
+
+  const handleValidateGasPrice = value => {
+    const errors = composeValidators(
+      isDecimalPlacesNotGreaterThan(VALIDATION_MESSAGES.DECIMAL_PLACES_9)(9),
+      isGreaterOrEqualThan(VALIDATION_MESSAGES.NUMBER_GREATER_OR_EQUAL_THAN)(0.1)
+    )(value.price)
+    if (errors) return errors.shift()
+  }
+
+  const handleBurnExcessChange = (value, input) => {
+    const { generalStore } = props
+    generalStore.setBurnExcess(value)
+    input.onChange(value)
+  }
+
+  const setFieldAsTouched = ({ values, errors }) => {
+    if (reload) {
+      const tiers = values && values.tiers ? values.tiers : []
+      tiers.forEach((tier, index) => {
+        form.mutators.setFieldTouched(`tiers[${index}].tier`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].updatable`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].whitelistEnabled`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].startTime`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].rate`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].endTime`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].minRate`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].maxRate`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].supply`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].minCap`, true)
+      })
+      form.mutators.setFieldTouched(`gasPrice`, true)
+    }
+  }
+
+  const handleOnChange = ({ values, errors }) => {
     props.tierStore.updateWalletAddress(values.walletAddress, VALID)
     props.tierStore.updateBurnExcess(values.burnExcess, VALID)
     props.generalStore.setGasPrice(gweiToWei(values.gasPrice.price))
@@ -61,6 +101,9 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, pristine, ...
     const endTime = tiers.length > 0 ? tiers[tiers.length - 1].endTime : null
     props.crowdsaleStore.setProperty('supply', totalSupply)
     props.crowdsaleStore.setProperty('endTime', endTime)
+
+    // Set fields as touched
+    setFieldAsTouched({ values, errors })
   }
 
   return (
@@ -100,7 +143,7 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, pristine, ...
                             type="radio"
                             checked={input.value === 'yes'}
                             value="yes"
-                            onChange={() => input.onChange('yes')}
+                            onChange={e => handleBurnExcessChange(e.target.value, input)}
                           />
                           <span className="title">yes</span>
                         </label>
@@ -109,7 +152,7 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, pristine, ...
                             type="radio"
                             checked={input.value === 'no'}
                             value="no"
-                            onChange={() => input.onChange('no')}
+                            onChange={e => handleBurnExcessChange(e.target.value, input)}
                           />
                           <span className="title">no</span>
                         </label>
@@ -121,16 +164,13 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, pristine, ...
               </div>
             </div>
             <Field
+              id="gasPrice"
               name="gasPrice"
               component={GasPriceInput}
               side="right"
               gasPrices={props.gasPricesInGwei}
-              validate={value =>
-                composeValidators(
-                  isDecimalPlacesNotGreaterThan(VALIDATION_MESSAGES.DECIMAL_PLACES_9)(9),
-                  isGreaterOrEqualThan(VALIDATION_MESSAGES.NUMBER_GREATER_THAN)(0.1)
-                )(value.price)
-              }
+              updateGasTypeSelected={updateGasTypeSelected}
+              validate={value => handleValidateGasPrice(value)}
             />
           </div>
         </div>
@@ -141,9 +181,7 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, pristine, ...
       </FieldArray>
 
       <div className="button-container">
-        <span onClick={handleSubmit} className={submitButtonClass}>
-          Continue
-        </span>
+        <ButtonContinue onClick={handleSubmit} status={status} />
       </div>
 
       <FormSpy subscription={{ values: true }} onChange={handleOnChange} />
