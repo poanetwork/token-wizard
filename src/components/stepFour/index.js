@@ -339,7 +339,7 @@ export class stepFour extends React.Component {
   }
 
   render() {
-    const { tierStore, tokenStore, deploymentStore, crowdsaleStore } = this.props
+    const { tierStore, tokenStore, deploymentStore, crowdsaleStore, contractStore } = this.props
     const { isMintedCappedCrowdsale, isDutchAuction } = crowdsaleStore
 
     // Publish page: Token setup block
@@ -511,6 +511,15 @@ export class stepFour extends React.Component {
 
     const strategyName = isMintedCappedCrowdsale ? MINTED_CAPPED_CROWDSALE_DN : isDutchAuction ? DUTCH_AUCTION_DN : ''
 
+    const { abiEncoded } = contractStore[crowdsaleStore.proxyName]
+    const ABIEncodedParameters = abiEncoded ? (
+      <DisplayTextArea
+        label="Crowdsale Proxy Contract ABI-encoded parameters"
+        value={abiEncoded}
+        description="Encoded ABI Parameters"
+      />
+    ) : null
+
     return (
       <section className="steps steps_publish">
         <StepNavigation activeStep={PUBLISH} />
@@ -546,6 +555,7 @@ export class stepFour extends React.Component {
             {crowdsaleSetupBlock()}
             {tiersSetupBlock}
             {this.renderContractSource('src')}
+            {ABIEncodedParameters}
           </div>
         </div>
         <div className="button-container">
