@@ -259,6 +259,9 @@ export class stepFour extends React.Component {
       }
     })
 
+    const fileName = crowdsaleStore.isMintedCappedCrowdsale ? 'MintedCappedProxy.sol' : 'DutchProxy.sol'
+    zip.file(fileName, this.getContractBySourceType('src'))
+
     zip.generateAsync({ type: DOWNLOAD_TYPE.blob }).then(content => {
       const downloadName = getDownloadName()
       download({ zip: content, filename: downloadName })
@@ -323,20 +326,24 @@ export class stepFour extends React.Component {
     )
   }
 
-  renderContractSource = sourceType => {
+  getContractBySourceType = sourceType => {
     const { crowdsaleStore, contractStore } = this.props
+    const parseContent = content => (isObservableArray(content) ? JSON.stringify(content.slice()) : content)
+
+    return crowdsaleStore.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE
+      ? parseContent(contractStore.MintedCappedProxy[sourceType])
+      : parseContent(contractStore.DutchProxy[sourceType])
+  }
+
+  renderContractSource = sourceType => {
     const sourceTypeName = {
       abi: 'ABI',
       bin: 'Creation Code',
       src: 'Source Code'
     }
-    const parseContent = content => (isObservableArray(content) ? JSON.stringify(content.slice()) : content)
 
     const label = `Crowdsale Proxy Contract ${sourceTypeName[sourceType]}`
-    const value =
-      crowdsaleStore.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE
-        ? parseContent(contractStore.MintedCappedProxy[sourceType])
-        : parseContent(contractStore.DutchProxy[sourceType])
+    const value = this.getContractBySourceType(sourceType)
 
     return <DisplayTextArea label={label} value={value} description={label} />
   }
