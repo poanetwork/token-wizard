@@ -46,6 +46,16 @@
   &:not(.sw-FlexTable_Head):hover {
     background-color: rgba(155, 155, 155, 0.4);
   }
+
+  &:not(.sw-FlexTable_Head).selected {
+    color: #fff;
+    background-color: $brand-secondary;
+  }
+
+}
+
+.sw-FlexTable_Row-selectable {
+  cursor: pointer;
 }
 
 .sw-FlexTable_Td {
@@ -55,9 +65,11 @@
 
 // special / unique cases
 .sw-FlexTable_Body-crowdsale {
-  height: 305px;
+  max-height: 305px;
+  min-height: 305px;
 
   @media (min-width: $breakpoint-md) {
-    height: 230px;
+    max-height: 230px;
+    min-height: 230px;
   }
 }

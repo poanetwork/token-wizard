@@ -41,7 +41,8 @@ export default class CrowdsalesList extends Component {
           <div className="sw-FlexTable_Body sw-FlexTable_Body-scrollable sw-FlexTable_Body-crowdsale m-b-15">
             {crowdsaleStore.crowdsales.map((crowdsale, index) => (
               <div
-                className={`sw-FlexTable_Row ${this.state.selectedRow === index ? 'selected' : ''}`}
+                className={`sw-FlexTable_Row sw-FlexTable_Row-selectable
+                ${this.state.selectedRow === index ? 'selected' : ''}`}
                 key={index.toString()}
                 onClick={() => this.selectCrowdsale(index, crowdsale.execID)}
               >
