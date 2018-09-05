@@ -22,15 +22,13 @@
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 9px 13px 0 rgba(0, 0, 0, 0.16), 0 0 9px 0 rgba(0, 0, 0, 0.04);
-    height: 640px;
-    max-height: 640px;
+    min-height: 640px;
     max-width: 95%;
     padding: 17px $sw-ModalWindow-horizontal-padding-xs 30px;
     position: relative;
 
     @media (min-width: $breakpoint-md) {
-        height: 480px;
-        max-height: 480px;
+        min-height: 480px;
         padding: 16px 25px 30px;
         width: 750px;
     }
