@@ -1098,7 +1098,7 @@ export const summaryFileContents = networkID => {
       { field: 'proxyName', value: 'Contract name: ', parent: 'crowdsaleStore' },
       { value: 'Compiler version: ', parent: 'none', fileValue: COMPILER_VERSION },
       { value: 'Optimized: ', parent: 'none', fileValue: OPTIMIZATION },
-      { value: 'Encoded ABI parameterse: ', parent: 'none', fileValue: abiEncoded },
+      { value: 'Encoded ABI parameters: ', parent: 'none', fileValue: abiEncoded },
       ...footerElemets
     ],
     // prettier-ignore
