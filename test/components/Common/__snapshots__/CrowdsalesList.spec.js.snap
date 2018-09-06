@@ -1117,57 +1117,58 @@ exports[`CrowdsaleList  should render CrowdsaleList component 1`] = `
       }
     }
   >
-    <div
-      className="flex-table"
-    >
+    <div>
       <div
-        className="container-fluid"
+        className="sw-FlexTable"
       >
         <div
-          className="table-row flex-table-header"
+          className="sw-FlexTable_Head sw-FlexTable_Row"
         >
           <div
-            className="text"
+            className="sw-FlexTable_Td"
           >
             Address
           </div>
         </div>
         <div
-          className="scrollable-content"
+          className="sw-FlexTable_Body sw-FlexTable_Body-scrollable sw-FlexTable_Body-crowdsale m-b-15"
         >
           <div
-            className="table-row clickable "
+            className="sw-FlexTable_Row sw-FlexTable_Row-selectable
+                          "
             key="0"
             onClick={[Function]}
           >
             <div
-              className="text"
+              className="sw-FlexTable_Td"
             >
               0xcCca436070962a1A884b88E8506C2C750E342BEA
             </div>
           </div>
           <div
-            className="table-row clickable "
+            className="sw-FlexTable_Row sw-FlexTable_Row-selectable
+                          "
             key="1"
             onClick={[Function]}
           >
             <div
-              className="text"
+              className="sw-FlexTable_Td"
             >
               0x9726cdb82358972b7a17260e7897C8de02d584e6
             </div>
           </div>
         </div>
-        <div
-          className="steps"
+      </div>
+      <div
+        className="sw-ModalWindow_ButtonsContainer sw-ModalWindow_ButtonsContainer-right"
+      >
+        <button
+          className="sw-Button sw-Button-secondary"
+          disabled={true}
+          onClick={[Function]}
         >
-          <div
-            className="button button_disabled"
-            onClick={[Function]}
-          >
-            Continue
-          </div>
-        </div>
+          Continue
+        </button>
       </div>
     </div>
   </CrowdsalesList>
@@ -2253,57 +2254,58 @@ exports[`CrowdsaleList  should render if list is empty   1`] = `
       }
     }
   >
-    <div
-      className="flex-table"
-    >
+    <div>
       <div
-        className="container-fluid"
+        className="sw-FlexTable"
       >
         <div
-          className="table-row flex-table-header"
+          className="sw-FlexTable_Head sw-FlexTable_Row"
         >
           <div
-            className="text"
+            className="sw-FlexTable_Td"
           >
             Address
           </div>
         </div>
         <div
-          className="scrollable-content"
+          className="sw-FlexTable_Body sw-FlexTable_Body-scrollable sw-FlexTable_Body-crowdsale m-b-15"
         >
           <div
-            className="table-row clickable "
+            className="sw-FlexTable_Row sw-FlexTable_Row-selectable
+                          "
             key="0"
             onClick={[Function]}
           >
             <div
-              className="text"
+              className="sw-FlexTable_Td"
             >
               0xcCca436070962a1A884b88E8506C2C750E342BEA
             </div>
           </div>
           <div
-            className="table-row clickable "
+            className="sw-FlexTable_Row sw-FlexTable_Row-selectable
+                          "
             key="1"
             onClick={[Function]}
           >
             <div
-              className="text"
+              className="sw-FlexTable_Td"
             >
               0x9726cdb82358972b7a17260e7897C8de02d584e6
             </div>
           </div>
         </div>
-        <div
-          className="steps"
+      </div>
+      <div
+        className="sw-ModalWindow_ButtonsContainer sw-ModalWindow_ButtonsContainer-right"
+      >
+        <button
+          className="sw-Button sw-Button-secondary"
+          disabled={true}
+          onClick={[Function]}
         >
-          <div
-            className="button button_disabled"
-            onClick={[Function]}
-          >
-            Continue
-          </div>
-        </div>
+          Continue
+        </button>
       </div>
     </div>
   </CrowdsalesList>
