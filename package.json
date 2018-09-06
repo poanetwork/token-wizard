@@ -125,11 +125,12 @@
   },
   "scripts": {
     "installWeb3": "cd submodules/poa-web3-1.0 && npm install && cd ../../ && npm install --no-save submodules/poa-web3-1.0/packages/web3",
-    "start": "npm run installWeb3 && bash ./scripts/generateProxyContracts.sh && node scripts/start.js",
+    "start": "npm run installWeb3 && bash ./scripts/generateProxyContracts.sh && npm run moveTruffleConfig && node scripts/start.js",
     "dev": "nps dev",
     "dev:minted": "nps dev.Minted",
     "dev:dutch": "nps dev.Dutch",
     "deployRegistry": "node scripts/deployRegistry.js",
+    "moveTruffleConfig": "node scripts/moveTruffleConfig.js",
     "build": "nps build",
     "sass:watch": "gulp watch",
     "sass:update": "gulp sass",
