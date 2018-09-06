@@ -1,82 +1,29 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Loader  should render Loader component with class name 'loading container' 1`] = `
+exports[`Loader  should render Loader 1`] = `
 <div
-  className="loading-container"
+  className="sw-FullscreenBackdrop"
 >
   <div
-    className="loading"
-  />
-  <div
-    className="loading-text-container"
+    className="sw-Loader"
   >
     <div
-      className="loading-text"
-    >
-      Do not refresh the webpage
-    </div>
-  </div>
-  <div
-    className="loading-progress"
-  >
-    <div
-      className="loading-i"
+      className="sw-Loader_AnimatedItem"
     />
     <div
-      className="loading-i"
+      className="sw-Loader_AnimatedItem"
     />
     <div
-      className="loading-i"
+      className="sw-Loader_AnimatedItem"
     />
     <div
-      className="loading-i"
+      className="sw-Loader_AnimatedItem"
     />
     <div
-      className="loading-i"
+      className="sw-Loader_AnimatedItem"
     />
     <div
-      className="loading-i"
-    />
-  </div>
-</div>
-`;
-
-exports[`Loader  should render Loader component with class name 'loading container' 2`] = `
-<div
-  className="loading-container notdisplayed"
->
-  <div
-    className="loading"
-  />
-  <div
-    className="loading-text-container"
-  >
-    <div
-      className="loading-text"
-    >
-      Do not refresh the webpage
-    </div>
-  </div>
-  <div
-    className="loading-progress"
-  >
-    <div
-      className="loading-i"
-    />
-    <div
-      className="loading-i"
-    />
-    <div
-      className="loading-i"
-    />
-    <div
-      className="loading-i"
-    />
-    <div
-      className="loading-i"
-    />
-    <div
-      className="loading-i"
+      className="sw-Loader_AnimatedItem"
     />
   </div>
 </div>
