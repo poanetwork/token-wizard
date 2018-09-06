@@ -27,6 +27,7 @@
     "gulp-uglifycss": "^1.0.6",
     "gulp-util": "^3.0.8",
     "husky": "0.14.3",
+    "jest-localstorage-mock": "^2.2.0",
     "markdown-toc": "^1.2.0",
     "mobx-react-devtools": "^4.2.15",
     "mockdate": "^2.0.2",
@@ -167,7 +168,8 @@
       "src/**/*.{js,jsx}"
     ],
     "setupFiles": [
-      "<rootDir>/config/polyfills.js"
+      "<rootDir>/config/polyfills.js",
+      "jest-localstorage-mock"
     ],
     "testMatch": [
       "<rootDir>/test/**/__tests__/**/*.js?(x)",
