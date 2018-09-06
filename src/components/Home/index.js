@@ -2,18 +2,16 @@ import React, { Component } from 'react'
 import CrowdsalesList from '../Common/CrowdsalesList'
 import { Loader } from '../Common/Loader'
 import { ModalContainer } from '../Common/ModalContainer'
-import { toast, clearStorage } from '../../utils/utils'
-import { TOAST, NAVIGATION_STEPS, DOWNLOAD_STATUS } from '../../utils/constants'
+import { clearStorage, toast } from '../../utils/utils'
+import { DOWNLOAD_STATUS, TOAST } from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
-import { loadRegistryAddresses, checkWeb3, getNetworkVersion } from '../../utils/blockchainHelpers'
+import { checkWeb3, getNetworkVersion, loadRegistryAddresses } from '../../utils/blockchainHelpers'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import logdown from 'logdown'
 import storage from 'store2'
 import { LogoPrimary } from '../LogoPrimary/index'
 
 const logger = logdown('TW:home')
-
-const { CROWDSALE_STRATEGY, TOKEN_SETUP, CROWDSALE_SETUP, PUBLISH, CROWDSALE_PAGE } = NAVIGATION_STEPS
 
 @inject(
   'web3Store',
@@ -67,17 +65,31 @@ export class Home extends Component {
     })
   }
 
+  navigateTo = (location, params = '') => {
+    const path =
+      {
+        home: '/',
+        stepOne: '1',
+        manage: 'manage'
+      }[location] || null
+
+    if (path === null) {
+      throw new Error(`invalid location specified: ${location}`)
+    }
+
+    this.props.history.push(`${path}${params}`)
+  }
+
   goNextStep = async () => {
     // Clear local storage if there is no incomplete deployment, and reload
     if (storage.has('DeploymentStore') && storage.get('DeploymentStore').deploymentStep) {
-      this.props.history.push('/')
+      this.navigateTo('home')
     } else {
       clearStorage(this.props)
       await this.reloadStorage()
-      this.props.history.push('1')
+      this.navigateTo('stepOne')
     }
   }
-
   async reloadStorage() {
     let { generalStore, contractStore } = this.props
 
@@ -94,14 +106,14 @@ export class Home extends Component {
       toast.showToaster({
         type: TOAST.TYPE.ERROR,
         message:
-          'The contracts could not be downloaded.Please try to refresh the page. If the problem persists, try again later.'
+          'The contracts could not be downloaded. Please try to refresh the page. If the problem persists, try again later.'
       })
       contractStore.setProperty('downloadStatus', DOWNLOAD_STATUS.FAILURE)
     }
   }
 
   onClick = crowdsaleAddress => {
-    this.props.history.push(`manage/${crowdsaleAddress}`)
+    this.navigateTo('manage', `/${crowdsaleAddress}`)
   }
 
   hideModal = () => {
