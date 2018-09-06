@@ -1,81 +1,116 @@
 import React, { Component } from 'react'
-import '../../assets/stylesheets/application.css'
-import { Link } from 'react-router-dom'
 import CrowdsalesList from '../Common/CrowdsalesList'
 import { Loader } from '../Common/Loader'
-import { loadRegistryAddresses } from '../../utils/blockchainHelpers'
 import { ModalContainer } from '../Common/ModalContainer'
-import { toast } from '../../utils/utils'
-import { TOAST, NAVIGATION_STEPS, DOWNLOAD_STATUS } from '../../utils/constants'
+import { clearStorage, toast } from '../../utils/utils'
+import { DOWNLOAD_STATUS, TOAST } from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
-import { checkWeb3, getNetworkVersion } from '../../utils/blockchainHelpers'
+import { checkWeb3, getNetworkVersion, loadRegistryAddresses } from '../../utils/blockchainHelpers'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import logdown from 'logdown'
+import storage from 'store2'
 import { LogoPrimary } from '../LogoPrimary/index'
 
 const logger = logdown('TW:home')
 
-const { CROWDSALE_STRATEGY, TOKEN_SETUP, CROWDSALE_SETUP, PUBLISH, CROWDSALE_PAGE } = NAVIGATION_STEPS
-
-@inject('web3Store', 'generalStore', 'contractStore')
+@inject(
+  'web3Store',
+  'generalStore',
+  'contractStore',
+  'crowdsaleStore',
+  'gasPriceStore',
+  'deploymentStore',
+  'reservedTokenStore',
+  'stepTwoValidationStore',
+  'tierStore',
+  'tokenStore'
+)
 @observer
 export class Home extends Component {
+  state = {
+    showModal: false,
+    loading: false
+  }
+
   constructor(props) {
     super(props)
-    this.state = {
-      showModal: false,
-      loading: false
-    }
 
-    let { contractStore } = this.props
+    const { contractStore } = this.props
     contractStore.setProperty('downloadStatus', DOWNLOAD_STATUS.PENDING)
   }
 
-  componentDidMount() {
-    let { generalStore, web3Store, contractStore } = this.props
-    checkWeb3(web3Store.web3)
-
-    getNetworkVersion()
-      .then(networkID => {
-        generalStore.setProperty('networkID', networkID)
-        getCrowdsaleAssets(networkID)
-      })
-      .then(
-        () => {
-          contractStore.setProperty('downloadStatus', DOWNLOAD_STATUS.SUCCESS)
-        },
-        e => {
-          logger.error('Error downloading contracts', e)
-          toast.showToaster({
-            type: TOAST.TYPE.ERROR,
-            message:
-              'The contracts could not be downloaded.Please try to refresh the page. If the problem persists, try again later.'
-          })
-
-          contractStore.setProperty('downloadStatus', DOWNLOAD_STATUS.FAILURE)
-        }
-      )
+  async componentDidMount() {
+    const { web3Store } = this.props
+    await checkWeb3(web3Store.web3)
   }
 
-  chooseContract = () => {
+  chooseContract = async () => {
     this.setState({
       loading: true
     })
 
-    loadRegistryAddresses().then(
-      () => {
-        this.setState({
-          loading: false,
-          showModal: true
-        })
-      },
-      e => {
-        logger.error('There was a problem loading the crowdsale addresses from the registry', e)
-        this.setState({
-          loading: false
-        })
-      }
-    )
+    try {
+      clearStorage(this.props)
+      await this.reloadStorage()
+      await loadRegistryAddresses()
+      this.setState({
+        showModal: true
+      })
+    } catch (e) {
+      logger.error('There was a problem loading the crowdsale addresses from the registry', e)
+    }
+
+    this.setState({
+      loading: false
+    })
+  }
+
+  navigateTo = (location, params = '') => {
+    const path =
+      {
+        home: '/',
+        stepOne: '1',
+        manage: 'manage'
+      }[location] || null
+
+    if (path === null) {
+      throw new Error(`invalid location specified: ${location}`)
+    }
+
+    this.props.history.push(`${path}${params}`)
+  }
+
+  goNextStep = async () => {
+    // Clear local storage if there is no incomplete deployment, and reload
+    if (storage.has('DeploymentStore') && storage.get('DeploymentStore').deploymentStep) {
+      this.navigateTo('home')
+    } else {
+      clearStorage(this.props)
+      await this.reloadStorage()
+      this.navigateTo('stepOne')
+    }
+  }
+
+  async reloadStorage() {
+    let { generalStore, contractStore } = this.props
+
+    try {
+      // General store, check network
+      let networkID = await getNetworkVersion()
+      generalStore.setProperty('networkID', networkID)
+
+      // Contract store, get contract and abi
+      await getCrowdsaleAssets(networkID)
+      contractStore.setProperty('downloadStatus', DOWNLOAD_STATUS.SUCCESS)
+    } catch (e) {
+      logger.error('Error downloading contracts', e)
+      toast.showToaster({
+        type: TOAST.TYPE.ERROR,
+        message:
+          'The contracts could not be downloaded.Please try to refresh the page. If the problem persists, try again later.'
+      })
+      contractStore.setProperty('downloadStatus', DOWNLOAD_STATUS.FAILURE)
+    }
   }
 
   onClick = crowdsaleAddress => {
@@ -108,9 +143,9 @@ export class Home extends Component {
                   </p>
                 </div>
                 <div className="hm-Home_MainInfoButtonContainer">
-                  <Link className="hm-Home_BtnNew" to="/1">
+                  <button onClick={() => this.goNextStep()} className="hm-Home_BtnNew">
                     New crowdsale
-                  </Link>
+                  </button>
                   <div onClick={() => this.chooseContract()} className="hm-Home_BtnChoose">
                     Choose Crowdsale
                   </div>
@@ -125,6 +160,7 @@ export class Home extends Component {
         able to update the parameters of crowdsale.`}
           hideModal={this.hideModal}
           showModal={this.state.showModal}
+          title={'Crowdsale List'}
         >
           <CrowdsalesList onClick={this.onClick} />
         </ModalContainer>
