@@ -1,0 +1,75 @@
+
+
+.sw-FlexTable {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  // little gradient to indicate when there's some content overflow
+  &:after {
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0) 16%, #ffffff);
+    content: '';
+    height: 100%;
+    position: absolute;
+    right: -#{ $sw-ModalWindow-horizontal-padding-xs };
+    top: 0;
+    width: 80px;
+    z-index: 12;
+    @media (min-width: $breakpoint-md) {
+      display: none;
+    }
+  }
+}
+
+.sw-FlexTable_Head {
+  font-weight: 700;
+}
+
+.sw-FlexTable_Body-scrollable {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  max-width: 100%;
+  min-height: auto;
+  overflow: auto;
+}
+
+.sw-FlexTable_Row {
+  display: flex;
+  min-height: min-content;
+  min-width: max-content;
+  padding: 14px 10px;
+
+  &:not(.sw-FlexTable_Head):nth-child(odd) {
+    background-color: rgba(155, 155, 155, 0.2);
+  }
+
+  &:not(.sw-FlexTable_Head):hover {
+    background-color: rgba(155, 155, 155, 0.4);
+  }
+
+  &:not(.sw-FlexTable_Head).selected {
+    color: #fff;
+    background-color: $brand-secondary;
+  }
+
+}
+
+.sw-FlexTable_Row-selectable {
+  cursor: pointer;
+}
+
+.sw-FlexTable_Td {
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+// special / unique cases
+.sw-FlexTable_Body-crowdsale {
+  max-height: 305px;
+  min-height: 305px;
+
+  @media (min-width: $breakpoint-md) {
+    max-height: 230px;
+    min-height: 230px;
+  }
+}

@@ -19,3 +19,8 @@ export const TX_STEP_DESCRIPTION = {
   crowdsaleInit: 'Initialize Crowdsale',
   trackProxy: 'Add Proxy contract to registry'
 }
+
+export const CONTRACT_SETTINGS = {
+  OPTIMIZATION: 'Yes',
+  COMPILER_VERSION: '0.4.24'
+}

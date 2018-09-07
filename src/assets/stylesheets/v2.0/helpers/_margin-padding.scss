@@ -1,0 +1,36 @@
+// default margin / padding helpers
+$base-loop-increment: 5;
+
+@for $i from 0 through 10 {
+
+    $loop-increment: $i * $base-loop-increment;
+
+    // margin
+    .m-t-#{ $loop-increment } {
+        margin-top: #{ $loop-increment }px;
+    }
+    .m-b-#{ $loop-increment } {
+        margin-bottom: #{ $loop-increment }px;
+    }
+    .m-r-#{ $loop-increment } {
+        margin-right: #{ $loop-increment }px;
+    }
+    .m-l-#{ $loop-increment } {
+        margin-left: #{ $loop-increment }px;
+    }
+
+    // padding
+    .p-t-#{ $loop-increment } {
+        padding-top: #{ $loop-increment }px;
+    }
+    .p-b-#{ $loop-increment } {
+        padding-bottom: #{ $loop-increment }px;
+    }
+    .p-r-#{ $loop-increment } {
+        padding-right: #{ $loop-increment }px;
+    }
+    .p-l-#{ $loop-increment } {
+        padding-left: #{ $loop-increment }px;
+    }
+
+}

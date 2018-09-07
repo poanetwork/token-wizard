@@ -1,0 +1,16 @@
+.background-blur {
+    animation-duration: 0.25s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: 1;
+    animation-name: sw-ModalAnimation_in;
+    animation-timing-function: linear;
+}
+
+@keyframes sw-ModalAnimation_in {
+    0% {
+        filter: blur(0);
+    }
+    100% {
+        filter: blur(2px);
+    }
+}

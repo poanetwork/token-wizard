@@ -33,38 +33,42 @@ export default class CrowdsalesList extends Component {
     const { selectedCrowdsale } = this.state
 
     const crowdsalesList = (
-      <div className="container-fluid">
-        <div className="table-row flex-table-header">
-          <div className="text">Address</div>
+      <div>
+        <div className="sw-FlexTable">
+          <div className="sw-FlexTable_Head sw-FlexTable_Row">
+            <div className="sw-FlexTable_Td">Address</div>
+          </div>
+          <div className="sw-FlexTable_Body sw-FlexTable_Body-scrollable sw-FlexTable_Body-crowdsale m-b-15">
+            {crowdsaleStore.crowdsales.map((crowdsale, index) => (
+              <div
+                className={`sw-FlexTable_Row sw-FlexTable_Row-selectable
+                ${this.state.selectedRow === index ? 'selected' : ''}`}
+                key={index.toString()}
+                onClick={() => this.selectCrowdsale(index, crowdsale.execID)}
+              >
+                <div className="sw-FlexTable_Td">{crowdsale.execID}</div>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="scrollable-content">
-          {crowdsaleStore.crowdsales.map((crowdsale, index) => (
-            <div
-              className={`table-row clickable ${this.state.selectedRow === index ? 'selected' : ''}`}
-              key={index.toString()}
-              onClick={() => this.selectCrowdsale(index, crowdsale.execID)}
-            >
-              <div className="text">{crowdsale.execID}</div>
-            </div>
-          ))}
-        </div>
-        <div className="steps">
-          <div
-            className={`button button_${selectedCrowdsale ? 'fill' : 'disabled'}`}
+        <div className="sw-ModalWindow_ButtonsContainer sw-ModalWindow_ButtonsContainer-right">
+          <button
+            className={`sw-Button sw-Button-secondary`}
+            disabled={!selectedCrowdsale}
             onClick={() => selectedCrowdsale && onClick(selectedCrowdsale)}
           >
             Continue
-          </div>
+          </button>
         </div>
       </div>
     )
 
     const noCrowdsalesMsg = (
-      <div>
-        No crowdsales found for address <strong>{this.state.account}</strong>
-      </div>
+      <p className="sw-EmptyContentTextOnly">
+        No crowdsales found for address <span className="text-bold">{this.state.account}</span>
+      </p>
     )
 
-    return <div className="flex-table">{crowdsaleStore.crowdsales.length ? crowdsalesList : noCrowdsalesMsg}</div>
+    return crowdsaleStore.crowdsales.length ? crowdsalesList : noCrowdsalesMsg
   }
 }

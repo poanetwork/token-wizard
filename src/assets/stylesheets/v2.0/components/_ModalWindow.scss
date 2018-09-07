@@ -1,0 +1,89 @@
+.sw-ModalWindowBackdrop {
+    align-items: center;
+    background-color: rgba(#404040, 0.5);
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: normal;
+    left: 0;
+    overflow: auto;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: $z-index-max;
+
+    @media (min-height: 640px) {
+        justify-content: center;
+    }
+
+}
+
+.sw-ModalWindow {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 9px 13px 0 rgba(0, 0, 0, 0.16), 0 0 9px 0 rgba(0, 0, 0, 0.04);
+    min-height: 640px;
+    max-width: 95%;
+    padding: 17px $sw-ModalWindow-horizontal-padding-xs 30px;
+    position: relative;
+
+    @media (min-width: $breakpoint-md) {
+        min-height: 480px;
+        padding: 16px 25px 30px;
+        width: 750px;
+    }
+
+    @media (min-width: $breakpoint-xl) {
+        width: 925px;
+    }
+
+}
+
+.sw-ModalWindow_Title {
+    border-bottom: 1px solid $base-border-color;
+    color: #000;
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0 0 15px;
+    padding: 0 0 15px;
+    position: relative;
+
+    @media (min-width: $breakpoint-md) {
+        font-size: 30px;
+    }
+
+}
+
+.sw-ModalWindow_CloseButton {
+    $dimensions: 21px;
+
+    background-image: url('#{ $base-images-path }/ModalWindow/icon-close.svg');
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: contain;
+    cursor: pointer;
+    height: $dimensions;
+    position: absolute;
+    right: 0;
+    top: 4px;
+    width: $dimensions;
+
+    @media (min-width: $breakpoint-md) {
+        top: 7px;
+    }
+}
+
+.sw-ModalWindow_description {
+    font-size: 14px;
+    line-height: 1.29;
+    margin: 0 0 15px;
+}
+
+.sw-ModalWindow_ButtonsContainer {
+    display: flex;
+}
+
+.sw-ModalWindow_ButtonsContainer-right {
+    justify-content: flex-end;
+}

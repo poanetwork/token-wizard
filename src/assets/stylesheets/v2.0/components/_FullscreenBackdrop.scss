@@ -1,0 +1,29 @@
+.sw-FullscreenBackdrop {
+    animation-duration: 0.25s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: 1;
+    animation-name: sw-FullscreenBackdrop_in;
+    animation-timing-function: linear;
+    background-color: #{ $fullscreen-backdrop-color };
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: $z-index-max;
+}
+
+.sw-FullscreenBackdrop-CenterItems {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+@keyframes sw-FullscreenBackdrop_in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
