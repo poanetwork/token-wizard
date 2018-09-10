@@ -66,8 +66,12 @@ export function fetchFile(path) {
 
 export const dateToTimestamp = date => new Date(date).getTime()
 
-export const getStepClass = (step, activeStep) =>
-  step === activeStep ? 'step-navigation step-navigation_active' : 'step-navigation'
+export const isStepActive = (stepsTextArray, stepText, activeStepText) => {
+  const stepIndex = stepsTextArray.indexOf(stepText)
+  const activeStepIndex = stepsTextArray.indexOf(activeStepText)
+
+  return stepIndex <= activeStepIndex ? 'active' : ''
+}
 
 export const validateTier = tier => typeof tier === 'string' && tier.length > 0 && tier.length < 30
 
