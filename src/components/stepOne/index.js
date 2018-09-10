@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
 import { StepNavigation } from '../Common/StepNavigation'
 import { inject, observer } from 'mobx-react'
 import { ButtonContinue } from '../Common/ButtonContinue'
@@ -58,6 +57,26 @@ export class stepOne extends Component {
     logger.log('CrowdsaleStore strategy selected:', strategy)
   }
 
+  navigateTo = (location, params = '') => {
+    const path =
+      {
+        home: '/',
+        stepOne: '1',
+        stepTwo: '2',
+        manage: 'manage'
+      }[location] || null
+
+    if (path === null) {
+      throw new Error(`invalid location specified: ${location}`)
+    }
+
+    this.props.history.push(`${path}${params}`)
+  }
+
+  goNextStep = async () => {
+    this.navigateTo('stepTwo')
+  }
+
   /**
    * Render method for stepOne component
    * @returns {*}
@@ -72,10 +91,12 @@ export class stepOne extends Component {
         <section className="lo-MenuBarAndContent">
           <StepNavigation activeStep={CROWDSALE_STRATEGY} />
           <div className="st-StepContent">
-            <div className="about-step">
-              <div className="step-icons step-icons_crowdsale-contract" />
-              <p className="title">{CROWDSALE_STRATEGY}</p>
-              <p className="description">Select a strategy for your crowdsale.</p>
+            <div className="st-StepContent_Info">
+              <div className="st-StepContent_InfoIcon st-StepContent_InfoIcon-step1" />
+              <div className="st-StepContentInfo_InfoText">
+                <h1 className="st-StepContent_InfoTitle">{CROWDSALE_STRATEGY}</h1>
+                <p className="st-StepContent_InfoDescription">Select a strategy for your crowdsale.</p>
+              </div>
             </div>
             <div className="radios">
               <label className="radio">
@@ -106,11 +127,9 @@ export class stepOne extends Component {
                 <span className="description">An auction with descending price.</span>
               </label>
             </div>
-          </div>
-          <div className="button-container">
-            <Link to="/2">
-              <ButtonContinue status={status} />
-            </Link>
+            {/* <Link to="/2"> */}
+            <ButtonContinue status={status} onClick={() => this.goNextStep()} />
+            {/* </Link> */}
           </div>
         </section>
         <Loader show={this.state.loading} />
