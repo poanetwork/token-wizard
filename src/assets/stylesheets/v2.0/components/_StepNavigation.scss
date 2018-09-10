@@ -1,0 +1,59 @@
+$st-StepNavigation_Step-dimensions: 24px;
+$st-StepNavigation_Step-background: #995cff;
+$st-StepNavigation_Step-background-active: #8ce1d7;
+$st-StepNavigation_StepLine-width: 40px;
+
+.st-StepNavigation {
+    align-items: center;
+    background-color: $brand-primary;
+    display: flex;
+    flex-direction: column;
+    height: 300px;
+    justify-content: top;
+    padding: 24px 10px 0;
+}
+
+.st-StepNavigation_Container {
+    display: flex;
+}
+
+.st-StepNavigation_StepContainer {
+    align-items: center;
+    display: flex;
+    position: relative;
+}
+
+.st-StepNavigation_StepCircle {
+    background-color: $st-StepNavigation_Step-background;
+    border-radius: 50%;
+    box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
+    height: $st-StepNavigation_Step-dimensions;
+    width: $st-StepNavigation_Step-dimensions;
+
+    .active & {
+        background-color: $st-StepNavigation_Step-background-active;
+        box-shadow: 0 8px 11px 0 rgba(0, 0, 0, 0.16), 0 0 8px 0 rgba(0, 0, 0, 0.04);
+    }
+}
+
+.st-StepNavigation_StepLine {
+    background-color: $st-StepNavigation_Step-background;
+
+    box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
+    height: 1px;
+    width: $st-StepNavigation_StepLine-width;
+
+    .active & {
+        background-color: $st-StepNavigation_Step-background-active;
+    }
+}
+
+.st-StepNavigation_Step {
+
+
+
+}
+
+.st-StepNavigation_StepText {
+    display: none;
+}
