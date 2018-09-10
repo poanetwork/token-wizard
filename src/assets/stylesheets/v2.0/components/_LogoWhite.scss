@@ -7,13 +7,19 @@
     height: 49px;
     width: 102px;
 
+    .st-StepNavigation & {
+        margin-bottom: 37px;
+    }
+
     @media (min-width: $breakpoint-md) {
         height: 64px;
         width: 126px;
     }
 
-    .st-StepNavigation & {
-        margin-bottom: 37px;
+    @media (min-width: $breakpoint-xl) {
+        .st-StepNavigation & {
+            margin-bottom: 43px;
+        }
     }
 
 }
