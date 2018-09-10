@@ -2541,7 +2541,10 @@ async function getCrowdsaleAsset(contractName, stateProp, networkID) {
       abi = []
       break
   }
-  const addr = contractName ? JSON.parse(process.env[`${REACT_PREFIX}${contractName}_ADDRESS`] || {})[networkID] : null
+
+  const addr = contractName
+    ? JSON.parse(process.env[`${REACT_PREFIX}${contractName}_ADDRESS`] || '{}')[networkID]
+    : null
 
   logger.log(abi, addr)
 
