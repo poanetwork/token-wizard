@@ -4,7 +4,10 @@ $st-StepContent_Icon-dimensions-lg: 100px;
 .st-StepContent {
     background-color: #fff;
     box-shadow: 0 9px 13px 0 rgba(0, 0, 0, 0.16), 0 0 9px 0 rgba(0, 0, 0, 0.04);
-    margin: -130px 12px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: -130px 12px 36px;
     padding: 25px 10px 29px;
 
     @media (min-width: $breakpoint-xl) {
@@ -78,4 +81,9 @@ $st-StepContent_Icon-dimensions-lg: 100px;
     @media (min-width: $breakpoint-xl) {
         font-size: 18px;
     }
+}
+
+.st-StepContent_Buttons {
+    display: flex;
+    justify-content: flex-end;
 }

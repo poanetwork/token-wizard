@@ -95,7 +95,7 @@ export class stepOne extends Component {
               <div className="st-StepContent_InfoIcon st-StepContent_InfoIcon-step1" />
               <div className="st-StepContentInfo_InfoText">
                 <h1 className="st-StepContent_InfoTitle">{CROWDSALE_STRATEGY}</h1>
-                <p className="st-StepContent_InfoDescription">Select a strategy for your crowdsale.</p>
+                <p className="st-StepContent_InfoDescription">Select a strategy for your crowdsale contract.</p>
               </div>
             </div>
             <div className="radios">
@@ -127,9 +127,9 @@ export class stepOne extends Component {
                 <span className="description">An auction with descending price.</span>
               </label>
             </div>
-            {/* <Link to="/2"> */}
-            <ButtonContinue status={status} onClick={() => this.goNextStep()} />
-            {/* </Link> */}
+            <div className="st-StepContent_Buttons">
+              <ButtonContinue status={status} onClick={() => this.goNextStep()} />
+            </div>
           </div>
         </section>
         <Loader show={this.state.loading} />
