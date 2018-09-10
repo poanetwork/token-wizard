@@ -1,0 +1,8 @@
+.lo-MenuBarAndContent {
+    display: flex;
+    flex-direction: column;
+
+    @media (min-width: $breakpoint-xl) {
+        flex-direction: row;
+    }
+}

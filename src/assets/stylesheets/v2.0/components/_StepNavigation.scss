@@ -8,19 +8,36 @@ $st-StepNavigation_StepLine-width: 40px;
     background-color: $brand-primary;
     display: flex;
     flex-direction: column;
-    height: 300px;
+    min-height: 300px;
     justify-content: top;
     padding: 24px 10px 0;
+
+    @media (min-width: $breakpoint-xl) {
+        align-items: flex-start;
+        min-height: 0;
+        min-width: 350px;
+        padding: 34px 0 0 32px;
+    }
+
 }
 
 .st-StepNavigation_Container {
     display: flex;
+
+    @media (min-width: $breakpoint-xl) {
+        flex-direction: column;
+    }
 }
 
 .st-StepNavigation_StepContainer {
     align-items: center;
     display: flex;
     position: relative;
+
+    @media (min-width: $breakpoint-xl) {
+        flex-direction: column;
+    }
+
 }
 
 .st-StepNavigation_StepCircle {
@@ -46,14 +63,31 @@ $st-StepNavigation_StepLine-width: 40px;
     .active & {
         background-color: $st-StepNavigation_Step-background-active;
     }
-}
 
-.st-StepNavigation_Step {
-
-
-
+    @media (min-width: $breakpoint-xl) {
+        height: $st-StepNavigation_StepLine-width;
+        width: 1px;
+    }
 }
 
 .st-StepNavigation_StepText {
+    align-items: center;
+    color: $st-StepNavigation_Step-background;
     display: none;
+    font-size: 18px;
+    font-weight: 300;
+    height: 24px;
+    left: $st-StepNavigation_Step-dimensions + 13;
+    line-height: 1.2;
+    position: absolute;
+    white-space: nowrap;
+
+    .active & {
+        color: #fff;
+    }
+
+    @media (min-width: $breakpoint-xl) {
+        display: flex;
+    }
+
 }

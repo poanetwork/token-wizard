@@ -68,50 +68,53 @@ export class stepOne extends Component {
     let status = (contractStore && contractStore.downloadStatus === DOWNLOAD_STATUS.SUCCESS) || localStorage.length > 0
 
     return (
-      <section className="st-StepsSection">
-        <StepNavigation activeStep={CROWDSALE_STRATEGY} />
-        <div className="steps-content container">
-          <div className="about-step">
-            <div className="step-icons step-icons_crowdsale-contract" />
-            <p className="title">{CROWDSALE_STRATEGY}</p>
-            <p className="description">Select a strategy for your crowdsale.</p>
+      <div>
+        <section className="lo-MenuBarAndContent">
+          <StepNavigation activeStep={CROWDSALE_STRATEGY} />
+          <div className="st-StepContent">
+            <div className="about-step">
+              <div className="step-icons step-icons_crowdsale-contract" />
+              <p className="title">{CROWDSALE_STRATEGY}</p>
+              <p className="description">Select a strategy for your crowdsale.</p>
+            </div>
+            <div className="radios">
+              <label className="radio">
+                <input
+                  id={MINTED_CAPPED_CROWDSALE}
+                  value={MINTED_CAPPED_CROWDSALE}
+                  name="contract-type"
+                  type="radio"
+                  checked={this.state.strategy === MINTED_CAPPED_CROWDSALE}
+                  onChange={this.handleChange}
+                />
+                <span className="title">{CROWDSALE_STRATEGIES_DISPLAYNAMES.MINTED_CAPPED_CROWDSALE}</span>
+                <span className="description">
+                  Modern crowdsale strategy with multiple tiers, whitelists, and limits. Recommended for every
+                  crowdsale.
+                </span>
+              </label>
+              <label className="radio">
+                <input
+                  id={DUTCH_AUCTION}
+                  value={DUTCH_AUCTION}
+                  name="contract-type"
+                  type="radio"
+                  checked={this.state.strategy === DUTCH_AUCTION}
+                  onChange={this.handleChange}
+                />
+                <span className="title">{CROWDSALE_STRATEGIES_DISPLAYNAMES.DUTCH_AUCTION}</span>
+                <span className="description">An auction with descending price.</span>
+              </label>
+            </div>
           </div>
-          <div className="radios">
-            <label className="radio">
-              <input
-                id={MINTED_CAPPED_CROWDSALE}
-                value={MINTED_CAPPED_CROWDSALE}
-                name="contract-type"
-                type="radio"
-                checked={this.state.strategy === MINTED_CAPPED_CROWDSALE}
-                onChange={this.handleChange}
-              />
-              <span className="title">{CROWDSALE_STRATEGIES_DISPLAYNAMES.MINTED_CAPPED_CROWDSALE}</span>
-              <span className="description">
-                Modern crowdsale strategy with multiple tiers, whitelists, and limits. Recommended for every crowdsale.
-              </span>
-            </label>
-            <label className="radio">
-              <input
-                id={DUTCH_AUCTION}
-                value={DUTCH_AUCTION}
-                name="contract-type"
-                type="radio"
-                checked={this.state.strategy === DUTCH_AUCTION}
-                onChange={this.handleChange}
-              />
-              <span className="title">{CROWDSALE_STRATEGIES_DISPLAYNAMES.DUTCH_AUCTION}</span>
-              <span className="description">An auction with descending price.</span>
-            </label>
+          <div className="button-container">
+            <Link to="/2">
+              <ButtonContinue status={status} />
+            </Link>
           </div>
-        </div>
-        <div className="button-container">
-          <Link to="/2">
-            <ButtonContinue status={status} />
-          </Link>
-        </div>
+        </section>
         <Loader show={this.state.loading} />
-      </section>
+      </div>
     )
   }
 }
