@@ -33,6 +33,9 @@ describe('Home', () => {
     tokenStore,
     web3Store
   }
+  const history = {
+    push: jest.fn()
+  }
 
   it(`should render Home screen`, () => {
     // Given
@@ -53,7 +56,7 @@ describe('Home', () => {
     // Given
     const wrapper = mount(
       <MemoryRouter initialEntries={['/']}>
-        <Home {...stores} />
+        <Home {...stores} history={history} />
       </MemoryRouter>
     )
     const homeComponent = wrapper.find('Home')
@@ -69,26 +72,28 @@ describe('Home', () => {
     expect(navigateToHandler).toHaveBeenCalledWith('home')
   })
 
-  // TODO: this tests should be working after reviewing / fixing issues with getCrowdsaleAssets method in Home component
-  // it(`should navigate to StepOne`, () => {
-  //   // Given
-  //   const wrapper = mount(
-  //     <MemoryRouter initialEntries={['/']}>
-  //       <Home {...stores} />
-  //     </MemoryRouter>
-  //   )
-  //   const homeComponent = wrapper.find('Home')
-  //   const navigateToHandler = jest.spyOn(homeComponent.instance(), 'navigateTo')
-  //   wrapper.update()
-  //   storage.clearAll()
-  //
-  //   // When
-  //   homeComponent.find('.hm-Home_BtnNew').simulate('click')
-  //
-  //   // Then
-  //   expect(navigateToHandler).toHaveBeenCalledTimes(1)
-  //   expect(navigateToHandler).toHaveBeenCalledWith('stepOne')
-  // })
+  it(`should navigate to StepOne`, async () => {
+    // Given
+    const wrapper = mount(
+      <MemoryRouter initialEntries={['/']}>
+        <Home {...stores} history={history} />
+      </MemoryRouter>
+    )
+    const homeComponent = wrapper.find('Home')
+    const homeInstance = homeComponent.instance()
+    const reloadStorageHandler = jest.spyOn(homeInstance, 'reloadStorage').mockImplementation(() => Promise.resolve())
+    const navigateToHandler = jest.spyOn(homeInstance, 'navigateTo')
+    wrapper.update()
+    storage.clearAll()
+
+    // When
+    homeComponent.find('.hm-Home_BtnNew').simulate('click')
+
+    // Then
+    await expect(reloadStorageHandler).toHaveBeenCalledTimes(1)
+    expect(navigateToHandler).toHaveBeenCalledTimes(1)
+    expect(navigateToHandler).toHaveBeenCalledWith('stepOne')
+  })
 
   it(`navigateTo should fail if receives invalid params`, () => {
     // Given
