@@ -1,4 +1,4 @@
-@media (min-width: $breakpoint-md) {
+// @media (min-width: $breakpoint-md) {
     html,
     body,
     #root,
@@ -6,4 +6,4 @@
     div[data-reactroot] > div:first-child {
         height: 100%;
     }
-}
+// }
