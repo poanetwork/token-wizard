@@ -73,6 +73,7 @@ $st-StepNavigation_StepLine-width: 40px;
 .st-StepNavigation_StepText {
     align-items: center;
     color: $st-StepNavigation_Step-background;
+    cursor: default;
     display: none;
     font-size: 18px;
     font-weight: 300;
