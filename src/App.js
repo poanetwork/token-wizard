@@ -20,12 +20,14 @@ class App extends Component {
     // obviously delete this when we get the v2.0 up and running
     const uiversion = getQueryVariable('uiversion')
 
-    if (uiversion === '2') {
+    if (uiversion === '12') {
+      require('./assets/stylesheets/application_styles.css')
       require('./assets/stylesheets/styles.css')
     } else if (uiversion === '1') {
       require('./assets/stylesheets/application_styles.css')
+    } else if (uiversion === '2') {
+      require('./assets/stylesheets/styles.css')
     } else {
-      require('./assets/stylesheets/application_styles.css')
       require('./assets/stylesheets/styles.css')
     }
   }
