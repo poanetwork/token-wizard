@@ -16,21 +16,25 @@ export const InputField = props => {
 
   return (
     <div className={props.side}>
-      <label className="label">{props.title}</label>
+      <div className="sw-FormControlBlock_TitleAndInfo">
+        <label className="sw-FormControlBlock_Label">{props.title}</label>
+        <span className="sw-FormControlBlock_Info">
+          <span className="sw-FormControlBlock_Tooltip">{props.description}</span>
+        </span>
+      </div>
       <input
-        id={props.name}
+        className="sw-FormControlBlock_TextInput"
         disabled={props.disabled}
-        type={props.type}
-        className="input"
+        id={props.name}
         onBlur={props.onBlur}
-        value={props.value}
-        style={props.style}
         onChange={props.onChange}
         onKeyPress={props.onKeyPress}
         onPaste={props.onPaste}
+        style={props.style}
+        type={props.type}
+        value={props.value}
       />
-      <p className="description">{props.description}</p>
-      {props.pristine ? <p style={errorStyle} className="error" /> : <p style={errorStyle}>{error}</p>}
+      {props.pristine ? '' : <p className="sw-FormControlBlock_Error">{error}</p>}
     </div>
   )
 }
