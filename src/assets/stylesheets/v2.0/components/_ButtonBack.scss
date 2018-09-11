@@ -1,0 +1,19 @@
+.sw-ButtonBack {
+    background: none;
+    border: none;
+    color: $base-text-color-light;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    padding: 0;
+    text-decoration: underline;
+
+    &:hover {
+        text-decoration: none;
+    }
+
+    .st-StepContent_Buttons & {
+        margin-right: 25px;
+    }
+}
