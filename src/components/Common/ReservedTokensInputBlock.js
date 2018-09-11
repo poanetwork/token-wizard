@@ -225,7 +225,7 @@ export class ReservedTokensInputBlock extends Component {
     }
 
     return (
-      <div className="reserved-tokens-container">
+      <div className="sw-BorderedBlock">
         <div className="reserved-tokens-input-container">
           <div className="reserved-tokens-input-container-inner">
             <InputField

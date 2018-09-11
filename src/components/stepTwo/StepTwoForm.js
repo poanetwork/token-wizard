@@ -1,12 +1,13 @@
 import React from 'react'
-import { FormSpy } from 'react-final-form'
-import { TokenName } from '../Common/TokenName'
-import { TokenTicker } from '../Common/TokenTicker'
-import { TokenDecimals } from '../Common/TokenDecimals'
-import { TokenSupply } from '../Common/TokenSupply'
-import { ReservedTokensInputBlock } from '../Common/ReservedTokensInputBlock'
-import { CROWDSALE_STRATEGIES } from '../../utils/constants'
+import { ButtonBack } from '../Common/ButtonBack'
 import { ButtonContinue } from '../Common/ButtonContinue'
+import { CROWDSALE_STRATEGIES } from '../../utils/constants'
+import { FormSpy } from 'react-final-form'
+import { ReservedTokensInputBlock } from '../Common/ReservedTokensInputBlock'
+import { TokenDecimals } from '../Common/TokenDecimals'
+import { TokenName } from '../Common/TokenName'
+import { TokenSupply } from '../Common/TokenSupply'
+import { TokenTicker } from '../Common/TokenTicker'
 
 const errorStyle = {
   color: 'red',
@@ -33,22 +34,21 @@ export const StepTwoForm = ({
   submitting,
   mutators: { setFieldTouched },
   reload,
-  form
+  form,
+  history
 }) => {
   const status = !(submitting || invalid)
 
   const reservedTokens = (
     <div>
-      <div className="reserved-tokens-title">
-        <p className="title">Reserved tokens</p>
-      </div>
+      <h2 className="sw-BorderedBlockTitle">Reserved tokens</h2>
       <ReservedTokensInputBlock
-        tokens={tokens}
-        decimals={decimals}
         addReservedTokensItem={addReservedTokensItem}
-        removeReservedToken={removeReservedToken}
-        validateReservedTokensList={validateReservedTokensList}
         clearAll={clearAll}
+        decimals={decimals}
+        removeReservedToken={removeReservedToken}
+        tokens={tokens}
+        validateReservedTokensList={validateReservedTokensList}
       />
     </div>
   )
@@ -67,6 +67,25 @@ export const StepTwoForm = ({
     setFieldAsTouched({ values, errors })
   }
 
+  const navigateTo = (location, params = '') => {
+    const path =
+      {
+        home: '/',
+        stepOne: '1',
+        manage: 'manage'
+      }[location] || null
+
+    if (path === null) {
+      throw new Error(`invalid location specified: ${location}`)
+    }
+
+    history.push(`${path}${params}`)
+  }
+
+  const goBack = async () => {
+    navigateTo('stepOne')
+  }
+
   return (
     <form id={id} onSubmit={handleSubmit}>
       <div className="hidden">
@@ -78,12 +97,11 @@ export const StepTwoForm = ({
         ) : null}
       </div>
       {crowdsaleStore.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE ? reservedTokens : null}
-
-      <div className="button-container">
+      <FormSpy onChange={onChangeForm} />
+      <div className="st-StepContent_Buttons">
+        <ButtonBack onClick={goBack} />
         <ButtonContinue type="submit" status={status} />
       </div>
-
-      <FormSpy onChange={onChangeForm} />
     </form>
   )
 }

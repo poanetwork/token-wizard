@@ -114,34 +114,41 @@ export class stepTwo extends Component {
         : 0
 
     return (
-      <section className="lo-MenuBarAndContent" ref="two">
-        <StepNavigation activeStep={TOKEN_SETUP} />
-        <div className="st-StepContent">
-          <div className="about-step">
-            <div className="step-icons step-icons_token-setup" />
-            <p className="title">Token setup</p>
-            <p className="description">Configure properties of your token. Created token will be ERC-20 compatible.</p>
+      <div>
+        <section className="lo-MenuBarAndContent" ref="two">
+          <StepNavigation activeStep={TOKEN_SETUP} />
+          <div className="st-StepContent">
+            <div className="st-StepContent_Info">
+              <div className="st-StepContent_InfoIcon st-StepContent_InfoIcon-step2" />
+              <div className="st-StepContentInfo_InfoText">
+                <h1 className="st-StepContent_InfoTitle">Token setup</h1>
+                <p className="st-StepContent_InfoDescription">
+                  Configure properties of your token. Created token will be ERC-20 compatible.
+                </p>
+              </div>
+            </div>
+            <Form
+              addReservedTokensItem={this.addReservedTokensItem}
+              clearAll={this.clearReservedTokens}
+              component={StepTwoForm}
+              crowdsaleStore={crowdsaleStore}
+              decimals={decimals}
+              disableDecimals={isMintedCappedCrowdsale && !!reservedTokenStore.tokens.length}
+              id="tokenData"
+              initialValues={this.state.tokenValues}
+              mutators={{ setFieldTouched }}
+              onSubmit={this.onSubmit}
+              reload={this.state.reload}
+              removeReservedToken={this.removeReservedToken}
+              tokens={reservedTokenStore.tokens}
+              updateTokenStore={this.updateTokenStore}
+              validateReservedTokensList={this.validateReservedTokensList}
+              history={this.props.history}
+            />
           </div>
-          <Form
-            mutators={{ setFieldTouched }}
-            onSubmit={this.onSubmit}
-            initialValues={this.state.tokenValues}
-            reload={this.state.reload}
-            component={StepTwoForm}
-            disableDecimals={isMintedCappedCrowdsale && !!reservedTokenStore.tokens.length}
-            updateTokenStore={this.updateTokenStore}
-            tokens={reservedTokenStore.tokens}
-            decimals={decimals}
-            addReservedTokensItem={this.addReservedTokensItem}
-            validateReservedTokensList={this.validateReservedTokensList}
-            removeReservedToken={this.removeReservedToken}
-            clearAll={this.clearReservedTokens}
-            id="tokenData"
-            crowdsaleStore={crowdsaleStore}
-          />
-        </div>
+        </section>
         <Loader show={this.state.loading} />
-      </section>
+      </div>
     )
   }
 }

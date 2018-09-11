@@ -38,8 +38,6 @@ class App extends Component {
     return (
       <Router>
         <div>
-          {/* <Header /> */}
-
           <Switch>
             <Route exact path="/crowdsale" component={Crowdsale} />
             <Route exact path="/contribute" component={Contribute} />
@@ -65,8 +63,6 @@ class App extends Component {
               </Web3Provider>
             </Route>
           </Switch>
-
-          {/* <Footer /> */}
           <AlertContainer ref={a => (toast.msg = a)} {...TOAST.DEFAULT_OPTIONS} />
         </div>
       </Router>
