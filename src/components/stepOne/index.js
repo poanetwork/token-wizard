@@ -98,33 +98,47 @@ export class stepOne extends Component {
                 <p className="st-StepContent_InfoDescription">Select a strategy for your crowdsale contract.</p>
               </div>
             </div>
-            <div className="radios">
-              <label className="radio">
+            <div className="sw-RadioItems">
+              <label className="sw-RadioItems_Item">
                 <input
-                  id={MINTED_CAPPED_CROWDSALE}
-                  value={MINTED_CAPPED_CROWDSALE}
-                  name="contract-type"
-                  type="radio"
                   checked={this.state.strategy === MINTED_CAPPED_CROWDSALE}
+                  className="sw-RadioItems_InputRadio"
+                  id={MINTED_CAPPED_CROWDSALE}
+                  name="contract-type"
                   onChange={this.handleChange}
+                  type="radio"
+                  value={MINTED_CAPPED_CROWDSALE}
                 />
-                <span className="title">{CROWDSALE_STRATEGIES_DISPLAYNAMES.MINTED_CAPPED_CROWDSALE}</span>
-                <span className="description">
-                  Modern crowdsale strategy with multiple tiers, whitelists, and limits. Recommended for every
-                  crowdsale.
+                <span className="sw-RadioItems_ItemContent">
+                  <span className="sw-RadioItems_ItemContentText">
+                    <span className="sw-RadioItems_ItemTitle">
+                      {CROWDSALE_STRATEGIES_DISPLAYNAMES.MINTED_CAPPED_CROWDSALE}
+                    </span>
+                    <span className="sw-RadioItems_ItemDescription">
+                      Modern crowdsale strategy with multiple tiers, whitelists, and limits. Recommended for every
+                      crowdsale.
+                    </span>
+                  </span>
+                  <span className="sw-RadioItems_Radio" />
                 </span>
               </label>
-              <label className="radio">
+              <label className="sw-RadioItems_Item">
                 <input
-                  id={DUTCH_AUCTION}
-                  value={DUTCH_AUCTION}
-                  name="contract-type"
-                  type="radio"
                   checked={this.state.strategy === DUTCH_AUCTION}
+                  className="sw-RadioItems_InputRadio"
+                  id={DUTCH_AUCTION}
+                  name="contract-type"
                   onChange={this.handleChange}
+                  type="radio"
+                  value={DUTCH_AUCTION}
                 />
-                <span className="title">{CROWDSALE_STRATEGIES_DISPLAYNAMES.DUTCH_AUCTION}</span>
-                <span className="description">An auction with descending price.</span>
+                <span className="sw-RadioItems_ItemContent">
+                  <span className="sw-RadioItems_ItemContentText">
+                    <span className="sw-RadioItems_ItemTitle">{CROWDSALE_STRATEGIES_DISPLAYNAMES.DUTCH_AUCTION}</span>
+                    <span className="sw-RadioItems_ItemDescription">An auction with descending price.</span>
+                  </span>
+                  <span className="sw-RadioItems_Radio" />
+                </span>
               </label>
             </div>
             <div className="st-StepContent_Buttons">
