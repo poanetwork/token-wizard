@@ -7,13 +7,9 @@ $st-StepContent_Icon-dimensions-lg: 100px;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    justify-content: space-between;
+    justify-content: flex-start;
     margin: -130px 12px 36px;
     padding: 25px 10px 29px;
-
-    @media (min-width: $breakpoint-md) {
-        justify-content: flex-start;
-    }
 
     @media (min-width: $breakpoint-xl) {
         border-radius: 4px;
@@ -91,8 +87,5 @@ $st-StepContent_Icon-dimensions-lg: 100px;
 .st-StepContent_Buttons {
     display: flex;
     justify-content: flex-end;
-
-    @media (min-width: $breakpoint-md) {
-        margin-top: auto;
-    }
+    margin-top: auto;
 }

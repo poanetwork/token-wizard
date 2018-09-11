@@ -1,10 +1,7 @@
 .lo-MenuBarAndContent {
     display: flex;
     flex-direction: column;
-
-    @media (min-width: $breakpoint-md) {
-        min-height: 100%;
-    }
+    min-height: 100%;
 
     @media (min-width: $breakpoint-xl) {
         flex-direction: row;
