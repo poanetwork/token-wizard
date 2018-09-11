@@ -6,12 +6,14 @@ $st-StepContent_Icon-dimensions-lg: 100px;
     box-shadow: 0 9px 13px 0 rgba(0, 0, 0, 0.16), 0 0 9px 0 rgba(0, 0, 0, 0.04);
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
     justify-content: space-between;
     margin: -130px 12px 36px;
     padding: 25px 10px 29px;
 
     @media (min-width: $breakpoint-xl) {
         border-radius: 4px;
+        justify-content: flex-start;
         margin: 34px 36px 34px -90px;
         padding: 41px 52px 41px 50px;
     }
@@ -86,4 +88,8 @@ $st-StepContent_Icon-dimensions-lg: 100px;
 .st-StepContent_Buttons {
     display: flex;
     justify-content: flex-end;
+
+    @media (min-width: $breakpoint-xl) {
+        margin-top: auto;
+    }
 }

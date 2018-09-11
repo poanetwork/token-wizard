@@ -1,0 +1,92 @@
+$sw-RadioItems_Radio-dimensions: 24px;
+
+.sw-RadioItems {
+    .st-StepContent & {
+        margin-bottom: 27px;
+    }
+}
+
+.sw-RadioItems_Item {
+    cursor: pointer;
+    display: block;
+    margin-bottom: 13px;
+    position: relative;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.sw-RadioItems_InputRadio {
+    position: absolute;
+    visibility: hidden;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+
+    &:checked + .sw-RadioItems_ItemContent {
+        border-color: $brand-secondary;
+        box-shadow: 0 9px 18px 4px rgba(148, 148, 148, 0.2), inset 0 0 2px $brand-secondary;
+
+        & .sw-RadioItems_Radio {
+            background-image: url('#{ $base-images-path }/RadioItems/radio-checked.svg');
+        }
+    }
+
+}
+
+.sw-RadioItems_ItemContent {
+    align-items: center;
+    background-color: #fff;
+    border-radius: 5px;
+    border: solid 1px $base-border-color;
+    box-shadow: 0 9px 18px 4px rgba(224, 224, 224, 0.2);
+    display: flex;
+    padding: 12px 22px 10px 15px;
+    transition: border 0.15s linear, box-shadow 0.20s linear;
+    z-index: 1;
+
+    &:hover {
+        border-color: darken($base-border-color, 5%);
+    }
+
+    @media (min-width: $breakpoint-xl) {
+        padding: 13px 34px 12px 35px;
+    }
+}
+
+.sw-RadioItems_ItemContentText {
+    flex-grow: 1;
+    padding-right: 17px;
+}
+
+.sw-RadioItems_ItemTitle {
+    font-size: 20px;
+    font-weight: 600;
+    color: #000;
+    display: block;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.sw-RadioItems_ItemDescription {
+    display: block;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: normal;
+    line-height: 1.43;
+    margin: 0;
+
+    @media (min-width: $breakpoint-xl) {
+        font-size: 16px;
+    }
+}
+
+.sw-RadioItems_Radio {
+    background-image: url('#{ $base-images-path }/RadioItems/radio-unchecked.svg');
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    flex-shrink: 0;
+    height: $sw-RadioItems_Radio-dimensions;
+    width: $sw-RadioItems_Radio-dimensions;
+}
