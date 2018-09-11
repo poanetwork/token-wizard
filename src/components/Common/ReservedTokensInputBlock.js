@@ -226,10 +226,10 @@ export class ReservedTokensInputBlock extends Component {
 
     return (
       <div className="sw-BorderedBlock">
-        <div className="reserved-tokens-input-container">
-          <div className="reserved-tokens-input-container-inner">
+        <div>
+          <div>
             <InputField
-              side="reserved-tokens-input-property reserved-tokens-input-property-left"
+              side="sw-FormControlBlock"
               type="text"
               title={ADDRESS}
               name={ADDRESS}
