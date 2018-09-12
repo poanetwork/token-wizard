@@ -151,7 +151,7 @@ export const acceptPositiveIntegerOnly = value => {
   return String(value).match(/^(\d*)/)[1]
 }
 
-export const removeTrailingNUL = ascii => ascii.replace(/\x00+/, '')
+export const removeTrailingNUL = ascii => ascii.replace(/\x00+$/, '')
 
 export const truncateStringInTheMiddle = (str, strLength = 50, strPositionStart = 24, strPositionEnd = 25) => {
   if (typeof str === 'string' && str.length > strLength) {
