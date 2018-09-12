@@ -26,5 +26,3 @@ debug.log*
 
 .idea
 travis.sh
-public/contracts/DutchProxy*
-public/contracts/MintedCappedProxy*

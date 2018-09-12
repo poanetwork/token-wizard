@@ -8,7 +8,8 @@ import {
   handleContractsForFile,
   handlerForFile,
   scrollToBottom,
-  summaryFileContents
+  summaryFileContents,
+  getOptimizationFlagByStore
 } from './utils'
 import { noContractDataAlert, successfulDeployment, skippingTransaction, deployHasEnded } from '../../utils/alerts'
 import {
@@ -381,7 +382,8 @@ export class stepFour extends Component {
       CONTRACT_NAME: PD_CONTRACT_NAME,
       COMPILING_OPTIMIZATION: PD_COMPILING_OPTIMIZATION
     } = PUBLISH_DESCRIPTION
-    const { OPTIMIZATION, COMPILER_VERSION: PRAGMA } = CONTRACT_SETTINGS
+    const { COMPILER_VERSION: PRAGMA } = CONTRACT_SETTINGS
+    const optimizationFlag = getOptimizationFlagByStore(crowdsaleStore)
     return (
       <div className="hidden">
         <DisplayField side="left" title={COMPILER_VERSION} value={PRAGMA} description={PD_COMPILER_VERSION} />
@@ -394,7 +396,7 @@ export class stepFour extends Component {
         <DisplayField
           side="left"
           title={COMPILING_OPTIMIZATION}
-          value={OPTIMIZATION}
+          value={optimizationFlag}
           description={PD_COMPILING_OPTIMIZATION}
         />
       </div>
