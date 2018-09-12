@@ -9,7 +9,7 @@ import {
 } from '../../utils/blockchainHelpers'
 import { countDecimalPlaces, toBigNumber, toFixed } from '../../utils/utils'
 import { CROWDSALE_STRATEGIES } from '../../utils/constants'
-import { DOWNLOAD_NAME, MINTED_PREFIX, DUTCH_PREFIX, ADDR_BOX_LEN, CONTRACT_SETTINGS } from './constants'
+import { DOWNLOAD_NAME, MINTED_PREFIX, DUTCH_PREFIX, ADDR_BOX_LEN } from './constants'
 import { REACT_PREFIX } from '../../utils/constants'
 import { isObservableArray } from 'mobx'
 import {
@@ -1072,7 +1072,7 @@ export const summaryFileContents = networkID => {
   }
 
   const { abiEncoded } = contractStore[crowdsaleStore.proxyName]
-  const { COMPILER_VERSION } = CONTRACT_SETTINGS
+  const versionFlag = getVersionFlagByStore(crowdsaleStore)
   const optimizationFlag = getOptimizationFlagByStore(crowdsaleStore)
 
   return {
@@ -1098,7 +1098,7 @@ export const summaryFileContents = networkID => {
       '\n',
       ...bigHeaderElements('**********METADATA***********'),
       { field: 'proxyName', value: 'Contract name: ', parent: 'crowdsaleStore' },
-      { value: 'Compiler version: ', parent: 'none', fileValue: COMPILER_VERSION },
+      { value: 'Compiler version: ', parent: 'none', fileValue: versionFlag },
       { value: 'Optimized: ', parent: 'none', fileValue: optimizationFlag },
       { value: 'Encoded ABI parameters: ', parent: 'none', fileValue: abiEncoded },
       ...footerElemets
@@ -1153,6 +1153,28 @@ export const getPragmaVersion = async strategy => {
   return firstLine.match(/(?:\^0|\d*)\.(?:0|\d*)\.(?:0|\d*)/gi) || '0.4.24'
 }
 
+export const getVersionFlagByStrategy = strategy => {
+  const strategiesAllowed = getStrategies()
+  if (!strategiesAllowed.includes(strategy)) {
+    throw new Error('Strategy not exist')
+  }
+
+  //Check path by enviroment variable
+  let constants
+  try {
+    if (['development', 'test'].includes(process.env.NODE_ENV)) {
+      constants = require(`json-loader!../../../public/metadata/${strategy}TruffleVersions.json`)
+    } else {
+      constants = require(`json-loader!../../../build/metadata/${strategy}TruffleVersions.json`)
+    }
+  } catch (err) {
+    logger.log('Error require truffle version', err)
+  }
+  const { solcVersion } = constants
+
+  return solcVersion
+}
+
 export const getOptimizationFlagByStrategy = strategy => {
   const strategiesAllowed = getStrategies()
   if (!strategiesAllowed.includes(strategy)) {
@@ -1184,4 +1206,15 @@ export const getOptimizationFlagByStore = crowdsaleStore => {
     strategy = 'MintedCapped'
   }
   return getOptimizationFlagByStrategy(strategy)
+}
+
+export const getVersionFlagByStore = crowdsaleStore => {
+  let strategy
+  if (crowdsaleStore.isDutchAuction) {
+    strategy = 'Dutch'
+  }
+  if (crowdsaleStore.isMintedCappedCrowdsale) {
+    strategy = 'MintedCapped'
+  }
+  return getVersionFlagByStrategy(strategy)
 }
