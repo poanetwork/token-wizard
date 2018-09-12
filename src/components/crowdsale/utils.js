@@ -220,7 +220,7 @@ export let getCrowdsaleTargetDates = (initCrowdsaleContract, execID) => {
           return Promise.all(getTiersStartAndEndDates)
         })
         .then(tiersStartAndEndDates => {
-          logger.log('tiersStartAndEndDates:', tiersStartAndEndDates)
+          logger.log('tiersStartAndEndDates:', JSON.stringify(tiersStartAndEndDates))
           let crowdsaleStartDate = 0
           let crowdsaleEndDate = 0
           tiersStartAndEndDates.forEach(tierStartAndEndDates => {

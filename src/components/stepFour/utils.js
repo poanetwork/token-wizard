@@ -7,7 +7,13 @@ import {
   methodToCreateAppInstance,
   deployContract
 } from '../../utils/blockchainHelpers'
-import { countDecimalPlaces, toBigNumber, toFixed } from '../../utils/utils'
+import {
+  countDecimalPlaces,
+  toBigNumber,
+  toFixed,
+  convertDateToUTCTimezone,
+  convertDateToTimezoneToDisplay
+} from '../../utils/utils'
 import { CROWDSALE_STRATEGIES } from '../../utils/constants'
 import { DOWNLOAD_NAME, MINTED_PREFIX, DUTCH_PREFIX, ADDR_BOX_LEN, CONTRACT_SETTINGS } from './constants'
 import { REACT_PREFIX } from '../../utils/constants'
@@ -27,17 +33,17 @@ import { toJS } from 'mobx'
 
 const logger = logdown('TW:stepFour:utils')
 
-export const buildDeploymentSteps = web3 => {
+export const buildDeploymentSteps = (web3, deploymentStore) => {
   let stepFnCorrelation = {
-    deployProxy,
+    deployProxy: deployProxy,
     crowdsaleCreate: deployCrowdsale,
     token: initializeToken,
     setReservedTokens: setReservedTokensListMultiple,
-    updateGlobalMinContribution,
-    createCrowdsaleTiers,
+    updateGlobalMinContribution: updateGlobalMinContribution,
+    createCrowdsaleTiers: createCrowdsaleTiers,
     whitelist: addWhitelist,
     crowdsaleInit: initializeCrowdsale,
-    trackProxy
+    trackProxy: trackProxy
   }
 
   let list = []
@@ -45,6 +51,7 @@ export const buildDeploymentSteps = web3 => {
   deploymentStore.txMap.forEach((steps, name) => {
     const { isMintedCappedCrowdsale, isDutchAuction, crowdsaleDeployInterface, appName } = crowdsaleStore
     if (steps.length) {
+      logger.log('Step name:', name)
       if (name === 'crowdsaleCreate') {
         let getParams
         if (isMintedCappedCrowdsale) {
@@ -107,8 +114,11 @@ export const getCrowdSaleParams = (account, methodInterface) => {
   const { web3 } = web3Store
   const { walletAddress, whitelistEnabled, updatable, supply, tier, startTime, endTime, rate } = tierStore.tiers[0]
 
-  logger.log(tierStore.tiers[0])
+  const startTimeToUTC = convertDateToUTCTimezone(startTime)
+  const endTimeToUTC = convertDateToUTCTimezone(endTime)
 
+  tierStore.setTierProperty(startTimeToUTC, 'startTime', 0)
+  tierStore.setTierProperty(endTimeToUTC, 'endTime', 0)
   //tier 0 oneTokenInWEI
   const rateBN = toBigNumber(rate)
   const oneTokenInETH = rateBN.pow(-1).toFixed()
@@ -116,7 +126,7 @@ export const getCrowdSaleParams = (account, methodInterface) => {
 
   //tier 0 duration
   const formatDate = date => toFixed(parseInt(Date.parse(date) / 1000, 10).toString())
-  const duration = formatDate(endTime) - formatDate(startTime)
+  const duration = formatDate(endTimeToUTC) - formatDate(startTimeToUTC)
   const durationBN = toBigNumber(duration).toFixed()
 
   //is tier whitelisted?
@@ -141,7 +151,7 @@ export const getCrowdSaleParams = (account, methodInterface) => {
 
   let crowdsaleParams = [
     walletAddress,
-    formatDate(startTime),
+    formatDate(startTimeToUTC),
     encodedTierName,
     oneTokenInWEI,
     durationBN,
@@ -469,8 +479,16 @@ const getTiersParams = methodInterface => {
   let durationArr = []
   let minCapArr = []
   const tiersExceptFirst = tierStore.tiers.slice(1)
-  tiersExceptFirst.forEach(tier => {
-    const { updatable, whitelistEnabled, rate, supply, tier: tierName, startTime, endTime } = tier
+  tiersExceptFirst.forEach((tier, index) => {
+    const { updatable, whitelistEnabled, rate, supply, tier: tierName } = tier
+    let { startTime, endTime } = tier
+
+    startTime = convertDateToUTCTimezone(startTime)
+    endTime = convertDateToUTCTimezone(endTime)
+
+    tierStore.setTierProperty(startTime, 'startTime', index + 1)
+    tierStore.setTierProperty(endTime, 'endTime', index + 1)
+
     const duration = formatDate(endTime) - formatDate(startTime)
     const tierNameBytes = web3.utils.fromAscii(tierName)
     const encodedTierName = web3.eth.abi.encodeParameter('bytes32', tierNameBytes)
@@ -717,12 +735,10 @@ export const trackProxy = () => {
 
 export const handlerForFile = (content, type) => {
   const checkIfTime = content.field === 'startTime' || content.field === 'endTime'
-  let suffix = ''
+  let value = type[content.field]
 
   if (checkIfTime) {
-    let timezoneOffset = new Date().getTimezoneOffset() / 60
-    let operator = timezoneOffset > 0 ? '-' : '+'
-    suffix = ` (GMT ${operator} ${Math.abs(timezoneOffset)})`
+    value = convertDateToTimezoneToDisplay(type[content.field])
   }
 
   logger.log('content:', content)
@@ -744,7 +760,7 @@ export const handlerForFile = (content, type) => {
       }
       return reservedTokensItems.join('\n')
     } else {
-      return `${content.value}${type[content.field]}${suffix}`
+      return `${content.value}${value}`
     }
   } else {
     if (!content) {

@@ -1,4 +1,5 @@
 import { observable, action } from 'mobx'
+import { convertDateObjectToLocalTimezone } from '../utils/utils'
 
 class CrowdsalePageStore {
   @observable maximumSellableTokens
@@ -36,19 +37,24 @@ class CrowdsalePageStore {
     // assumes that list is sorted
     this.ticks = this.tiers
       .reduce((ticks, tier, index) => {
-        const previousTickIndex = ticks.findIndex(tick => tick.type === 'end' && tick.time === tier.startDate)
+        let startDate = tier.startDate
+        let endDate = tier.endDate
+        const previousTickIndex = ticks.findIndex(tick => tick.type === 'end' && tick.time === startDate)
+
+        startDate = convertDateObjectToLocalTimezone(startDate)
+        endDate = convertDateObjectToLocalTimezone(endDate)
 
         if (previousTickIndex === -1) {
           ticks.push({
             type: 'start',
-            time: tier.startDate,
+            time: startDate,
             order: index + 1
           })
         }
 
         ticks.push({
           type: 'end',
-          time: tier.endDate,
+          time: endDate,
           order: index + 1
         })
 

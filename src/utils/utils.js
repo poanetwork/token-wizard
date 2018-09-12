@@ -4,6 +4,7 @@ import { CrowdsaleConfig } from '../components/Common/config'
 import { BigNumber } from 'bignumber.js'
 import logdown from 'logdown'
 import Web3 from 'web3'
+import moment from 'moment'
 
 const logger = logdown('TW:utils:utils')
 
@@ -232,4 +233,22 @@ export const clearStorage = props => {
       storeToClear.reset()
     }
   }
+}
+
+export const convertDateToUTCTimezone = dateToConvert => {
+  return moment(dateToConvert)
+    .utc()
+    .format('YYYY-MM-DD[T]HH:mm')
+}
+
+export const convertDateToTimezoneToDisplay = dateToConvert => {
+  return moment(dateToConvert).format('YYYY-MM-DD HH:mm (z ZZ)')
+}
+
+export const convertDateObjectToLocalTimezone = dateToConvert => {
+  const offset = moment().utcOffset()
+  const dateConvertUnix = moment(dateToConvert)
+    .add('minutes', offset)
+    .unix()
+  return dateConvertUnix * 1000
 }
