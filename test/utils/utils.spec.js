@@ -1,4 +1,13 @@
-import { countDecimalPlaces, acceptPositiveIntegerOnly, truncateStringInTheMiddle } from '../../src/utils/utils'
+import {
+  acceptPositiveIntegerOnly,
+  countDecimalPlaces,
+  objectKeysToLowerCase,
+  removeTrailingNUL,
+  toBigNumber,
+  truncateStringInTheMiddle,
+  validateSupply,
+  validateTier
+} from '../../src/utils/utils'
 
 describe('countDecimalPlaces', () => {
   let testsValues = [
@@ -94,6 +103,137 @@ describe('truncateStringInTheMiddle', () => {
 
     it(`Should ${action} for '${testCase.value}'`, () => {
       expect(truncateStringInTheMiddle(testCase.value)).toBe(testCase.expected)
+    })
+  })
+})
+
+describe('removeTrailingNUL', () => {
+  const testCases = [
+    { value: 'My Token\x00\x00\x00   ', expected: 'My Token\x00\x00\x00   ' },
+    { value: 'My Token\x00\x00\x00', expected: 'My Token' },
+    { value: '\x00My Token\x00\x00\x00', expected: '\x00My Token' },
+    { value: 'My Token', expected: 'My Token' }
+  ]
+
+  testCases.forEach(testCase => {
+    it(`should only remove trailing NULs for ${JSON.stringify(testCase.value)}`, () => {
+      expect(removeTrailingNUL(testCase.value)).toBe(testCase.expected)
+    })
+  })
+})
+
+describe('toBigNumber', () => {
+  it(`should force a 0 BigNumber instance to be returned for an invalid argument`, () => {
+    // Given
+    const invalidValue = 'invalid value'
+
+    // When
+    const bn = toBigNumber(invalidValue)
+
+    // Then
+    expect(bn._isBigNumber).toBeTruthy()
+    expect(bn.toFixed()).toBe('0')
+  })
+
+  it(`should return undefined if its not forced`, () => {
+    // Given
+    const invalidValue = 'invalid value'
+
+    // When
+    const bn = toBigNumber(invalidValue, false)
+
+    // Then
+    expect(bn).toBeUndefined()
+  })
+
+  it(`should return a BigNumber instance for '1e123'`, () => {
+    // Given
+    const stringNumericValue = '1e123'
+
+    // When
+    const bn = toBigNumber(stringNumericValue)
+
+    // Then
+    expect(bn._isBigNumber).toBeTruthy()
+  })
+
+  it(`should return a BigNumber instance for a number 2.231`, () => {
+    // Given
+    const numericValue = 2.231
+
+    // When
+    const bn = toBigNumber(numericValue)
+
+    // Then
+    expect(bn._isBigNumber).toBeTruthy()
+  })
+})
+
+describe('objectKeysToLowerCase', () => {
+  it(`should return an object with all keys in lower case`, () => {
+    // Given
+    const collection = [
+      {
+        KEY_UPPERCASED: ['thing', 'Another thing'],
+        KEY_Mixed: 'a value'
+      },
+      ['this is a mixed thing', { KEY: 'will it cast this key as well?' }],
+      {
+        ANOTHER_KEY: 'text'
+      }
+    ]
+    const expectedResult = [
+      {
+        key_uppercased: ['thing', 'Another thing'],
+        key_mixed: 'a value'
+      },
+      ['this is a mixed thing', { key: 'will it cast this key as well?' }],
+      { another_key: 'text' }
+    ]
+
+    // When
+    const collectionToLowercase = objectKeysToLowerCase(collection)
+
+    // Then
+    expect(JSON.stringify(collectionToLowercase)).toBe(JSON.stringify(expectedResult))
+  })
+})
+
+describe('validateTier', () => {
+  const testCases = [
+    { value: 'really long string that will not pass the validation', expected: false },
+    { value: 'short string', expected: true },
+    { value: '01234567890123456789012345678', expected: true },
+    { value: '012345678901234567890123456789', expected: false },
+    { value: '0123456789012345678901234567890', expected: false },
+    { value: '', expected: false }
+  ]
+
+  testCases.forEach(({ value, expected }) => {
+    const action = expected ? 'pass' : 'fail'
+
+    it(`should ${action} for '${value}'`, () => {
+      expect(validateTier(value)).toBe(expected)
+    })
+  })
+})
+
+describe('validateSupply', () => {
+  const testCases = [
+    { value: 123, expected: true },
+    { value: 0, expected: false },
+    { value: '0', expected: false },
+    { value: '', expected: false },
+    { value: 'abc', expected: false },
+    { value: '0xf4', expected: true },
+    { value: '0x0', expected: false }
+  ]
+
+  testCases.forEach(({ value, expected }) => {
+    const action = expected ? 'pass' : 'fail'
+
+    it(`should ${action} for '${value}'`, () => {
+      expect(validateSupply(value)).toBe(expected)
     })
   })
 })
