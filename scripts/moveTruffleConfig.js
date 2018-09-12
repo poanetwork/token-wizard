@@ -1,6 +1,10 @@
-const copyFile = require('./helpers/utils')
+/**
+ * Script that move truffle config to a public folder
+ */
 
-const directory = process.argv.slice(2)[0]
+const { copyFile } = require('./helpers/utils')
+
+const directory = process.argv.slice(2)[0] || 'public'
 
 const copyStrategy = strategy => {
   try {
