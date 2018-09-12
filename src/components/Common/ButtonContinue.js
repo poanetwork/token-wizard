@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import classNames from 'classnames'
 
 export class ButtonContinue extends Component {
   /**
@@ -8,13 +7,10 @@ export class ButtonContinue extends Component {
    */
   render() {
     const { status, type, onClick } = this.props
-    const submitButtonClass = classNames('button', 'button_fill', 'button_no_border', {
-      button_disabled: !status
-    })
 
     return (
-      <button onClick={onClick} type={type} disabled={!status} className={submitButtonClass}>
-        Continue
+      <button onClick={onClick} type={type} disabled={!status} className={`sw-ButtonPrimaryGradient`}>
+        <span className={`sw-ButtonPrimaryGradient_Text`}>Continue</span>
       </button>
     )
   }

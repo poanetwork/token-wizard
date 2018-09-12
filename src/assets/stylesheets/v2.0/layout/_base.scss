@@ -1,0 +1,10 @@
+html,
+body,
+#root,
+div[data-reactroot],
+div[data-reactroot]>div:first-child,
+html.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown),
+body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
+    // swal2-shown above are for when sweet alert is showing
+    height: 100%;
+}

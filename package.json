@@ -158,9 +158,17 @@
     "stop": "nps test.e2e.stop"
   },
   "jest": {
-    "collectCoverageFrom": [ "src/**/*.{js,jsx}" ],
-    "setupFiles": [ "<rootDir>/config/polyfills.js", "jest-localstorage-mock" ],
-    "testMatch": [ "<rootDir>/test/**/__tests__/**/*.js?(x)", "<rootDir>/test/**/?(*.)(spec|test).js?(x)" ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}"
+    ],
+    "setupFiles": [
+      "<rootDir>/config/polyfills.js",
+      "jest-localstorage-mock"
+    ],
+    "testMatch": [
+      "<rootDir>/test/**/__tests__/**/*.js?(x)",
+      "<rootDir>/test/**/?(*.)(spec|test).js?(x)"
+    ],
     "testEnvironment": "node",
     "testURL": "http://localhost",
     "transform": {
@@ -168,15 +176,28 @@
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
       "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
-    "transformIgnorePatterns": [ "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$" ],
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$"
+    ],
     "moduleNameMapper": {
       "^react-native$": "react-native-web"
     },
-    "moduleFileExtensions": [ "web.js", "js", "json", "web.jsx", "jsx", "node" ],
-    "snapshotSerializers": [ "enzyme-to-json/serializer" ]
+    "moduleFileExtensions": [
+      "web.js",
+      "js",
+      "json",
+      "web.jsx",
+      "jsx",
+      "node"
+    ],
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ]
   },
   "babel": {
-    "presets": [ "react-app" ]
+    "presets": [
+      "react-app"
+    ]
   },
   "eslintConfig": {
     "extends": "react-app"

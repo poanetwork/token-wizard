@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`IncompleteDeploys should render CheckIncompleteDeploys 1`] = `
+<div>
+  <section
+    className="home"
+  >
+    <div
+      className="crowdsale"
+    >
+      <div
+        className="container"
+      >
+        <h1
+          className="title"
+        >
+          Welcome to Token Wizard
+        </h1>
+        <p
+          className="description"
+        >
+          You have an incomplete deploy.
+        </p>
+        <div
+          className="buttons"
+        >
+          <button
+            className="button button_fill"
+            onClick={[Function]}
+          >
+            Resume
+          </button>
+          <button
+            className="button button_outline"
+            onClick={[Function]}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+`;

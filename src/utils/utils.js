@@ -64,8 +64,12 @@ export function fetchFile(path) {
 
 export const dateToTimestamp = date => new Date(date).getTime()
 
-export const getStepClass = (step, activeStep) =>
-  step === activeStep ? 'step-navigation step-navigation_active' : 'step-navigation'
+export const isStepActive = (stepsTextArray, stepText, activeStepText) => {
+  const stepIndex = stepsTextArray.indexOf(stepText)
+  const activeStepIndex = stepsTextArray.indexOf(activeStepText)
+
+  return stepIndex <= activeStepIndex ? 'active' : ''
+}
 
 export const validateTier = tier => typeof tier === 'string' && tier.length > 0 && tier.length < 30
 
@@ -145,7 +149,7 @@ export const acceptPositiveIntegerOnly = value => {
   return String(value).match(/^(\d*)/)[1]
 }
 
-export const removeTrailingNUL = ascii => ascii.replace(/\x00+/, '')
+export const removeTrailingNUL = ascii => ascii.replace(/\x00+$/, '')
 
 export const truncateStringInTheMiddle = (str, strLength = 50, strPositionStart = 24, strPositionEnd = 25) => {
   if (typeof str === 'string' && str.length > strLength) {

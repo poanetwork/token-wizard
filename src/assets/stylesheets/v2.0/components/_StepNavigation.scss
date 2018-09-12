@@ -1,0 +1,93 @@
+$st-StepNavigation_Step-dimensions: 24px;
+$st-StepNavigation_Step-background: #995cff;
+$st-StepNavigation_Step-background-active: #8ce1d7;
+$st-StepNavigation_StepLine-width: 40px;
+
+.st-StepNavigation {
+    align-items: center;
+    background-color: $brand-primary;
+    display: flex;
+    flex-direction: column;
+    min-height: 300px;
+    justify-content: top;
+    padding: 24px 10px 0;
+
+    @media (min-width: $breakpoint-xl) {
+        align-items: flex-start;
+        min-height: 0;
+        min-width: 350px;
+        padding: 34px 0 0 32px;
+    }
+
+}
+
+.st-StepNavigation_Container {
+    display: flex;
+
+    @media (min-width: $breakpoint-xl) {
+        flex-direction: column;
+    }
+}
+
+.st-StepNavigation_StepContainer {
+    align-items: center;
+    display: flex;
+    position: relative;
+
+    @media (min-width: $breakpoint-xl) {
+        flex-direction: column;
+    }
+
+}
+
+.st-StepNavigation_StepCircle {
+    background-color: $st-StepNavigation_Step-background;
+    border-radius: 50%;
+    box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
+    height: $st-StepNavigation_Step-dimensions;
+    width: $st-StepNavigation_Step-dimensions;
+
+    .active & {
+        background-color: $st-StepNavigation_Step-background-active;
+        box-shadow: 0 8px 11px 0 rgba(0, 0, 0, 0.16), 0 0 8px 0 rgba(0, 0, 0, 0.04);
+    }
+}
+
+.st-StepNavigation_StepLine {
+    background-color: $st-StepNavigation_Step-background;
+    box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
+    height: 1px;
+    width: $st-StepNavigation_StepLine-width;
+
+    .active & {
+        background-color: $st-StepNavigation_Step-background-active;
+    }
+
+    @media (min-width: $breakpoint-xl) {
+        height: $st-StepNavigation_StepLine-width;
+        width: 1px;
+    }
+}
+
+.st-StepNavigation_StepText {
+    align-items: center;
+    color: $st-StepNavigation_Step-background;
+    cursor: default;
+    display: none;
+    font-size: 18px;
+    font-weight: 300;
+    height: 24px;
+    left: $st-StepNavigation_Step-dimensions + 13;
+    line-height: 1.2;
+    position: absolute;
+    white-space: nowrap;
+
+    .active & {
+        color: #fff;
+    }
+
+    @media (min-width: $breakpoint-xl) {
+        display: flex;
+    }
+
+}

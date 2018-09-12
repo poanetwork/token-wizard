@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
-import { Home, Manage, stepOne, stepTwo, stepThree, stepFour, Crowdsale, Contribute, Stats } from './components/index'
+import { Home, Manage, StepOne, stepTwo, stepThree, stepFour, Crowdsale, Contribute, Stats } from './components/index'
 import NoWeb3 from './components/Common/NoWeb3'
 import IncompleteDeploy from './components/IncompleteDeploy'
 import { getAddrFromQuery, toast } from './utils/utils'
@@ -20,12 +20,14 @@ class App extends Component {
     // obviously delete this when we get the v2.0 up and running
     const uiversion = getQueryVariable('uiversion')
 
-    if (uiversion === '2') {
+    if (uiversion === '12') {
+      require('./assets/stylesheets/application_styles.css')
       require('./assets/stylesheets/styles.css')
     } else if (uiversion === '1') {
       require('./assets/stylesheets/application_styles.css')
+    } else if (uiversion === '2') {
+      require('./assets/stylesheets/styles.css')
     } else {
-      require('./assets/stylesheets/application_styles.css')
       require('./assets/stylesheets/styles.css')
     }
   }
@@ -54,7 +56,7 @@ class App extends Component {
                     <Switch>
                       <Route exact path="/" component={crowdsaleAddr ? Crowdsale : Home} />
                       <Route exact path="/manage/:crowdsalePointer" component={Manage} />
-                      <Route path="/1" component={stepOne} />
+                      <Route path="/1" component={StepOne} />
                       <Route path="/2" component={stepTwo} />
                       <Route path="/3" component={stepThree} />
                     </Switch>

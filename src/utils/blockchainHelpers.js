@@ -39,7 +39,7 @@ const checkMetaMask = async () => {
   try {
     let accounts = await web3.eth.getAccounts()
     if (!accounts || accounts.length === 0) {
-      throw new Error(`There is no accounts`)
+      throw new Error(`There are no accounts`)
     }
   } catch (err) {
     logger.error(err)
