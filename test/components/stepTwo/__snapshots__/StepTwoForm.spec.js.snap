@@ -181,12 +181,16 @@ exports[`StepTwoForm should render StepTwoForm for Dutch Auction Crowdsale 1`] =
     className="button-container"
   >
     <button
-      className="button button_fill button_no_border button_disabled"
+      className="sw-ButtonPrimaryGradient"
       disabled={true}
       onClick={undefined}
       type="submit"
     >
-      Continue
+      <span
+        className="sw-ButtonPrimaryGradient_Text"
+      >
+        Continue
+      </span>
     </button>
   </div>
 </form>
@@ -501,12 +505,16 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
     className="button-container"
   >
     <button
-      className="button button_fill button_no_border"
+      className="sw-ButtonPrimaryGradient"
       disabled={false}
       onClick={undefined}
       type="submit"
     >
-      Continue
+      <span
+        className="sw-ButtonPrimaryGradient_Text"
+      >
+        Continue
+      </span>
     </button>
   </div>
 </form>
