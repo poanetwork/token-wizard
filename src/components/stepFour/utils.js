@@ -1170,7 +1170,7 @@ export const getVersionFlagByStrategy = strategy => {
   } catch (err) {
     logger.log('Error require truffle version', err)
   }
-  const { solcVersion } = constants
+  const { solcVersion = '0.4.24' } = constants
 
   return solcVersion
 }
