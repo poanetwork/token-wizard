@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
-import { Home, Manage, stepOne, stepTwo, stepThree, stepFour, Crowdsale, Contribute, Stats } from './components/index'
+import { Home, Manage, StepOne, stepTwo, stepThree, stepFour, Crowdsale, Contribute, Stats } from './components/index'
 import NoWeb3 from './components/Common/NoWeb3'
 import IncompleteDeploy from './components/IncompleteDeploy'
 import { getAddrFromQuery, toast } from './utils/utils'
@@ -56,7 +56,7 @@ class App extends Component {
                     <Switch>
                       <Route exact path="/" component={crowdsaleAddr ? Crowdsale : Home} />
                       <Route exact path="/manage/:crowdsalePointer" component={Manage} />
-                      <Route path="/1" component={stepOne} />
+                      <Route path="/1" component={StepOne} />
                       <Route path="/2" component={stepTwo} />
                       <Route path="/3" component={stepThree} />
                     </Switch>
