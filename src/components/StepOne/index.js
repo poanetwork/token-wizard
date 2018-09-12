@@ -25,8 +25,8 @@ export class StepOne extends Component {
   }
 
   async componentDidMount() {
-    const { crowdsaleStore, web3Store } = this.props
-    await checkWeb3(web3Store.web3)
+    const { crowdsaleStore } = this.props
+    await checkWeb3()
 
     this.setState({ loading: true })
     logger.log('CrowdsaleStore strategy', crowdsaleStore.strategy)
