@@ -12,13 +12,13 @@ import {
 import logdown from 'logdown'
 import { Loader } from '../Common/Loader'
 
-const logger = logdown('TW:stepOne')
+const logger = logdown('TW:StepOne')
 const { CROWDSALE_STRATEGY } = NAVIGATION_STEPS
 const { MINTED_CAPPED_CROWDSALE, DUTCH_AUCTION } = CROWDSALE_STRATEGIES
 
 @inject('crowdsaleStore', 'contractStore', 'web3Store')
 @observer
-export class stepOne extends Component {
+export class StepOne extends Component {
   state = {
     loading: false,
     strategy: null
