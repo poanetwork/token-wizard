@@ -1,5 +1,7 @@
 const fs = require('fs')
 
+const directory = process.argv.slice(2)[0]
+
 const copyFile = (source, target, cb) => {
   let cbCalled = false
 
@@ -31,7 +33,7 @@ const copyStrategy = strategy => {
       throw new Error('Strategy doesnt exist')
     }
     const originPath = `${__dirname}/../submodules/auth-os-applications/TokenWizard/crowdsale/${strategy}Crowdsale/truffle.js`
-    const destinyPath = `${__dirname}/../public/metadata/${strategy}CrowdsaleTruffle.js`
+    const destinyPath = `${__dirname}/../${directory}/metadata/${strategy}CrowdsaleTruffle.js`
 
     copyFile(originPath, destinyPath, err => {
       if (err) {

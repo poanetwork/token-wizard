@@ -1158,7 +1158,18 @@ export const getOptimizationFlagByStrategy = strategy => {
   if (!strategiesAllowed.includes(strategy)) {
     throw new Error('Strategy not exist')
   }
-  const constants = require(`../../../public/metadata/${strategy}CrowdsaleTruffle.js`)
+
+  //Check path by enviroment variable
+  let constants
+  try {
+    if (['development', 'test'].includes(process.env.NODE_ENV)) {
+      constants = require(`../../../public/metadata/${strategy}CrowdsaleTruffle.js`)
+    } else {
+      constants = require(`../../../build/metadata/${strategy}CrowdsaleTruffle.js`)
+    }
+  } catch (err) {
+    logger.log('Error require truffle config', err)
+  }
   const { solc } = constants
 
   return solc && solc.optimizer && solc.optimizer.enabled ? 'Yes' : 'No'

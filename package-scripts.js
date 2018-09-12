@@ -19,7 +19,7 @@ module.exports = {
         ncp('./build/index.html ./build/manage.html'),
         ncp('./build/index.html ./build/stats.html'),
         'bash ./scripts/generateProxyContracts.sh',
-        'npm run moveTruffleConfig'
+        'npm run moveTruffleConfigBuild'
       )
     },
     dev: {
@@ -27,7 +27,7 @@ module.exports = {
         'git submodule update --init --recursive --remote',
         'npm run installWeb3',
         'bash ./scripts/generateProxyContracts.sh',
-        'npm run moveTruffleConfig'
+        'npm run moveTruffleConfigPublic'
       ),
       Minted: {
         default: series(
