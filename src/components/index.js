@@ -1,7 +1,7 @@
 export { Footer } from './Footer'
 export { Header } from './Header'
 export { Home } from './Home'
-export { stepOne } from './stepOne'
+export { StepOne } from './StepOne'
 export { stepTwo } from './stepTwo'
 export { stepThree } from './stepThree'
 export { stepFour } from './stepFour'
