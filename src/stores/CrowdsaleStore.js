@@ -96,7 +96,7 @@ class CrowdsaleStore {
       case CROWDSALE_STRATEGIES.DUTCH_AUCTION:
         return 'Dutch'
       default:
-        return 'MintedCapped'
+        return ''
     }
   }
 
