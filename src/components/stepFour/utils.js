@@ -27,7 +27,7 @@ import { toJS } from 'mobx'
 
 const logger = logdown('TW:stepFour:utils')
 
-export const buildDeploymentSteps = web3 => {
+export const buildDeploymentSteps = () => {
   let stepFnCorrelation = {
     deployProxy,
     crowdsaleCreate: deployCrowdsale,

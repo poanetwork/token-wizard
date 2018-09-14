@@ -152,9 +152,8 @@ export class stepFour extends Component {
 
   resumeContractDeployment = () => {
     const { deploymentStore } = this.props
-    const { web3 } = this.context
     const startAt = deploymentStore.deploymentStep ? deploymentStore.deploymentStep : 0
-    const deploymentSteps = buildDeploymentSteps(web3)
+    const deploymentSteps = buildDeploymentSteps()
 
     executeSequentially(deploymentSteps, startAt, index => {
       deploymentStore.setDeploymentStep(index)
