@@ -242,7 +242,6 @@ export class ReservedTokensInputBlock extends Component {
             value={this.state.addr}
           />
           <RadioInputField
-            extraClassName="reserved-tokens-input-property reserved-tokens-input-property-middle"
             items={[{ label: 'Tokens', value: 'tokens' }, { label: 'Percentage', value: 'percentage' }]}
             onChange={e => this.updateReservedTokenInput(e.target.value, 'dim')}
             selectedItem={this.state.dim}
@@ -254,18 +253,14 @@ export class ReservedTokensInputBlock extends Component {
             acceptFloat={true}
             name={VALUE}
             onValueUpdate={this.handleValueChange}
+            placeholder="Enter here"
             pristine={this.state.validation.value.pristine}
-            side="reserved-tokens-input-property reserved-tokens-input-property-right"
             title={VALUE}
             valid={this.state.validation.value.valid}
             value={this.state.val}
+            onClick={this.addReservedTokensItem}
             {...valueInputParams}
           />
-          <div className="plus-button-container">
-            <div onClick={this.addReservedTokensItem} className="button button_fill button_no_icon">
-              Submit
-            </div>
-          </div>
         </div>
         {reservedTokensElements}
 
