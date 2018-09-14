@@ -4,14 +4,6 @@ import { VALIDATION_TYPES } from '../../utils/constants'
 const { INVALID } = VALIDATION_TYPES
 
 export const InputField = props => {
-  const errorStyle = {
-    color: 'red',
-    fontWeight: 'bold',
-    fontSize: '12px',
-    width: '100%',
-    height: '10px'
-  }
-
   const error = props.valid === INVALID ? props.errorMessage : ''
 
   return (
