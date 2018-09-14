@@ -19,7 +19,7 @@ const logger = logdown('TW:stepTwo:index')
 
 @inject('tokenStore', 'crowdsaleStore', 'web3Store', 'reservedTokenStore')
 @observer
-export class stepTwo extends Component {
+export class StepTwo extends Component {
   state = {
     loading: false,
     tokenValues: {},
