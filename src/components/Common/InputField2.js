@@ -13,10 +13,10 @@ export const InputField2 = props => {
       <input
         autoComplete="off"
         className={props.inputClassName ? props.inputClassName : 'input'}
-        type={props.type}
         disabled={props.disabled}
-        placeholder={props.placeholder}
         id={props.input.name}
+        placeholder={props.placeholder}
+        type={props.type}
         {...props.input}
       />
       <p className="description">{props.description}</p>

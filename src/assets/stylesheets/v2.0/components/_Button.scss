@@ -1,4 +1,4 @@
-$sw-Button-height: 40px;
+$sw-Button-height: 40px !default;
 
 @mixin btn-common($bg-color, $darken: 10%) {
     background-color: $bg-color;

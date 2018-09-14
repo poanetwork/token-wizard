@@ -9,7 +9,7 @@ export class ButtonBack extends Component {
     const { onClick } = this.props
 
     return (
-      <button onClick={onClick} className={`sw-ButtonBack`}>
+      <button onClick={onClick} type="button" className={`sw-ButtonBack`}>
         Back
       </button>
     )

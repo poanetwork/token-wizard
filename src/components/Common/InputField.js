@@ -7,12 +7,12 @@ export const InputField = props => {
   const error = props.valid === INVALID ? props.errorMessage : ''
 
   return (
-    <div className={props.side}>
+    <div className={`sw-FormControlBlock ${props.extraClassName}`}>
       <div className="sw-FormControlBlock_TitleAndInfo">
         <label className="sw-FormControlBlock_Label">{props.title}</label>
-        <span className="sw-FormControlBlock_Info">
+        <div className="sw-FormControlBlock_Info" tabIndex="-1">
           <span className="sw-FormControlBlock_Tooltip">{props.description}</span>
-        </span>
+        </div>
       </div>
       <input
         className="sw-FormControlBlock_TextInput"
@@ -22,11 +22,12 @@ export const InputField = props => {
         onChange={props.onChange}
         onKeyPress={props.onKeyPress}
         onPaste={props.onPaste}
+        placeholder={props.placeholder}
         style={props.style}
         type={props.type}
         value={props.value}
       />
-      {props.pristine ? '' : <p className="sw-FormControlBlock_Error">{error}</p>}
+      {props.pristine ? '' : <div className="sw-FormControlBlock_Error">{error}</div>}
     </div>
   )
 }
