@@ -416,12 +416,12 @@ export class stepFour extends Component {
       const { TOKEN_TICKER: D_TOKEN_TICKER } = DESCRIPTION
 
       return (
-        <div className="hidden">
-          <div className="hidden">
+        <div>
+          <div>
             <DisplayField side="left" title={NAME} value={tokenNameStr} description={PD_TOKEN_NAME} />
             <DisplayField side="right" title={TICKER} value={ticker ? ticker : ''} description={D_TOKEN_TICKER} />
           </div>
-          <div className="hidden">
+          <div>
             <DisplayField side="left" title={DECIMALS} value={tokenDecimalsStr} description={PD_TOKEN_DECIMALS} />
             <DisplayField
               side="right"
@@ -448,14 +448,14 @@ export class stepFour extends Component {
         CROWDSALE_END_TIME: PD_CROWDSALE_END_TIME
       } = PUBLISH_DESCRIPTION
       return (
-        <div className="hidden">
-          <div className="hidden">
+        <div>
+          <div>
             <DisplayField side="left" title={WALLET_ADDRESS} value={walletAddress} description={PD_WALLET_ADDRESS} />
             {isDutchAuction ? (
               <DisplayField side="right" title={BURN_EXCESS} value={burnExcess} description={DESCRIPTION.BURN_EXCESS} />
             ) : null}
           </div>
-          <div className="hidden">
+          <div>
             <DisplayField
               side="left"
               title={CROWDSALE_START_TIME}
@@ -502,7 +502,7 @@ export class stepFour extends Component {
         <DisplayField side="left" title={RATE} value={tierRateStr} description={D_RATE} />
       )
       const dutchAuctionCrowdsaleRateBlock = (
-        <div className="hidden">
+        <div>
           <DisplayField side="left" title={MIN_RATE} value={tierMinRateStr} description={D_RATE} />
           <DisplayField side="right" title={MAX_RATE} value={tierMaxRateStr} description={D_RATE} />
         </div>
@@ -522,12 +522,12 @@ export class stepFour extends Component {
               {tierName} Setup
             </p>
           </div>
-          <div className="hidden">
-            <div className="hidden">
+          <div>
+            <div>
               <DisplayField side="left" title={START_TIME} value={tierStartTimeStr} description={PD_TIER_START_TIME} />
               <DisplayField side="right" title={END_TIME} value={tierEndTimeStr} description={PD_TIER_END_TIME} />
             </div>
-            <div className="hidden">
+            <div>
               {isMintedCappedCrowdsale
                 ? mintedCappedCrowdsaleRateBlock
                 : isDutchAuction
@@ -535,7 +535,7 @@ export class stepFour extends Component {
                   : null}
               {allowModifyingBlock}
             </div>
-            <div className="hidden">
+            <div>
               <DisplayField side="left" title={MAX_CAP} value={tierSupplyStr} description={PD_HARD_CAP} />
               <DisplayField
                 side="right"
@@ -544,7 +544,7 @@ export class stepFour extends Component {
                 description={PD_ENABLE_WHITELISTING}
               />
             </div>
-            <div className="hidden">
+            <div>
               <DisplayField side="left" title={GLOBAL_MIN_CAP} value={minCap} description={PD_GLOBAL_MIN_CAP} />
             </div>
           </div>
@@ -596,7 +596,7 @@ export class stepFour extends Component {
               On this step we provide you artifacts about your token and crowdsale contracts.
             </p>
           </div>
-          <div className="hidden">
+          <div>
             <div className="item">
               <div className="publish-title-container">
                 <p className="publish-title" data-step="1">

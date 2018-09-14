@@ -1,5 +1,5 @@
-$sw-ButtonContinue-gradient-start: #8035b7;
-$sw-ButtonContinue-gradient-end: #5a2da5;
+$sw-ButtonContinue-gradient-start: #8035b7 !default;
+$sw-ButtonContinue-gradient-end: #5a2da5 !default;
 
 .sw-ButtonContinue {
     background-image: linear-gradient(101deg, $sw-ButtonContinue-gradient-start, $sw-ButtonContinue-gradient-end);

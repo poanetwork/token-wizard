@@ -2,23 +2,28 @@ import React from 'react'
 
 export const RadioInputField = props => {
   const inputs = props.items.map((item, index) => (
-    <label className="radio-inline" key={index}>
+    <label className="sw-FormControlBlock_RadioButtonLabel" key={index}>
       <input
-        type="radio"
-        id={item.value}
         checked={props.selectedItem === item.value}
+        className="sw-FormControlBlock_RadioButtonInput"
+        id={item.value}
         onChange={props.onChange}
+        type="radio"
         value={item.value}
       />
-      <span className="title">{item.label}</span>
+      <span className="sw-FormControlBlock_RadioButton">{item.label}</span>
     </label>
   ))
 
   return (
-    <div className={props.extraClassName}>
-      <label className="label">{props.title}</label>
-      <div className="radios-inline">{inputs}</div>
-      <p className="description">{props.description}</p>
+    <div className={`sw-FormControlBlock ${props.extraClassName}`}>
+      <div className="sw-FormControlBlock_TitleAndInfo">
+        <label className="sw-FormControlBlock_Label">{props.title}</label>
+        <div className="sw-FormControlBlock_Info" tabIndex="-1">
+          <span className="sw-FormControlBlock_Tooltip">{props.description}</span>
+        </div>
+      </div>
+      <div className="sw-FormControlBlock_RadioButtonsContainer">{inputs}</div>
     </div>
   )
 }
