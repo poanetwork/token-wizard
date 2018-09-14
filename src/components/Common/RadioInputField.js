@@ -16,7 +16,7 @@ export const RadioInputField = props => {
   ))
 
   return (
-    <div className={`sw-FormControlBlock ${props.extraClassName}`}>
+    <div className={`sw-FormControlBlock ${props.extraClassName ? props.extraClassName : ''}`}>
       <div className="sw-FormControlBlock_TitleAndInfo">
         <label className="sw-FormControlBlock_Label">{props.title}</label>
         <div className="sw-FormControlBlock_Info" tabIndex="-1">

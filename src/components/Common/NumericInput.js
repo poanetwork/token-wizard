@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { InputField } from './InputField'
 import { VALIDATION_TYPES } from '../../utils/constants'
 import { countDecimalPlaces } from '../../utils/utils'
 import { observer } from 'mobx-react'
@@ -111,24 +110,34 @@ export class NumericInput extends Component {
 
   render() {
     const { value, pristine, valid } = this.state
-    const { disabled, side, errorMessage, title, description, name } = this.props
+    const { disabled, errorMessage, title, description, name, placeholder, onClick, extraClassName } = this.props
+
+    const error = valid === INVALID ? <div className="sw-FormControlBlock_Error">{errorMessage}</div> : ''
 
     return (
-      <InputField
-        disabled={disabled}
-        side={side}
-        name={name}
-        type="number"
-        errorMessage={errorMessage}
-        value={value}
-        pristine={pristine}
-        valid={valid}
-        title={title}
-        onKeyPress={this.onKeyPress}
-        onChange={this.onChange}
-        onPaste={this.onPaste}
-        description={description}
-      />
+      <div className={`sw-FormControlBlock ${extraClassName ? extraClassName : ''}`}>
+        <div className="sw-FormControlBlock_TitleAndInfo">
+          <label className="sw-FormControlBlock_Label">{title}</label>
+          <div className="sw-FormControlBlock_Info" tabIndex="-1">
+            <span className="sw-FormControlBlock_Tooltip">{description}</span>
+          </div>
+        </div>
+        <div className="sw-FormControlBlock_TextInputAndButtonHorizontal">
+          <input
+            className="sw-FormControlBlock_TextInput"
+            disabled={disabled}
+            id={name}
+            onChange={this.onChange}
+            onKeyPress={this.onKeyPress}
+            onPaste={this.onPaste}
+            placeholder={placeholder}
+            type="number"
+            value={value}
+          />
+          <div onClick={onClick} className="sw-FormControlBlock_ButtonPlus" />
+        </div>
+        {pristine ? '' : error}
+      </div>
     )
   }
 }

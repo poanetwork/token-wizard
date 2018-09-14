@@ -4,10 +4,10 @@ import { VALIDATION_TYPES } from '../../utils/constants'
 const { INVALID } = VALIDATION_TYPES
 
 export const InputField = props => {
-  const error = props.valid === INVALID ? props.errorMessage : ''
+  const error = props.valid === INVALID ? <div className="sw-FormControlBlock_Error">{props.errorMessage}</div> : ''
 
   return (
-    <div className={`sw-FormControlBlock ${props.extraClassName}`}>
+    <div className={`sw-FormControlBlock ${props.extraClassName ? props.extraClassName : ''}`}>
       <div className="sw-FormControlBlock_TitleAndInfo">
         <label className="sw-FormControlBlock_Label">{props.title}</label>
         <div className="sw-FormControlBlock_Info" tabIndex="-1">
@@ -27,7 +27,7 @@ export const InputField = props => {
         type={props.type}
         value={props.value}
       />
-      {props.pristine ? '' : <div className="sw-FormControlBlock_Error">{error}</div>}
+      {props.pristine ? '' : error}
     </div>
   )
 }

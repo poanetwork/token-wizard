@@ -1,10 +1,14 @@
 $sw-FormControlBlock_Info-dimensions: 13px !default;
-$sw-FormControlBlock_RadioButton-height: 40px;
+$sw-FormControlBlock_RadioButton-height: 40px !default;
+$sw-FormControlBlock_TextInput-height: 40px !default;
+$sw-FormControlBlock_ButtonPlus-height: 30px !default;
 
 .sw-FormControlBlock {
     display: flex;
     flex-direction: column;
     margin-bottom: 18px;
+    position: relative;
+    z-index: 1;
 }
 
 .sw-FormControlBlock_TitleAndInfo {
@@ -74,12 +78,17 @@ $sw-FormControlBlock_RadioButton-height: 40px;
     color: #000;
     font-size: 14px;
     font-weight: 400;
-    height: 40px;
+    height: $sw-FormControlBlock_TextInput-height;
     outline: none;
     padding: 0 13px;
 
     &:focus {
         border-color: darken($base-border-color, 10%);
+    }
+
+    .sw-FormControlBlock_TextInputAndButtonHorizontal & {
+        flex-grow: 1;
+        margin-right: 14px;
     }
 }
 
@@ -129,6 +138,25 @@ $sw-FormControlBlock_RadioButton-height: 40px;
         background-color: $brand-secondary;
         border-color: $brand-secondary;
         color: #fff;
+    }
+}
+
+.sw-FormControlBlock_TextInputAndButtonHorizontal {
+    align-items: center;
+    display: flex;
+}
+
+.sw-FormControlBlock_ButtonPlus {
+    height: $sw-FormControlBlock_ButtonPlus-height;
+    width: $sw-FormControlBlock_ButtonPlus-height;
+    background-image: url('#{ $base-images-path }/FormControlBlock/ico-plus.svg');
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    flex-shrink: 0;
+
+    .sw-FormControlBlock_TextInputAndButtonHorizontal & {
+        margin-right: 15px;
     }
 }
 
