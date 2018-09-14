@@ -49,7 +49,6 @@ export class stepOne extends React.Component {
       this.getCrowdsaleAsset("CrowdsaleWhiteListWithCap", "crowdsale"),
       this.getCrowdsaleAsset("CrowdsaleWhiteListWithCapToken", "token"),
       this.getCrowdsaleAsset("CrowdsaleWhiteListWithCapPricingStrategy", "pricingStrategy"),
-      this.getCrowdsaleAsset("CrowdsaleWhiteListWithCapPricingStrategy", "pricingStrategy"),
       this.getCrowdsaleAsset("FinalizeAgent", "finalizeAgent"),
       this.getCrowdsaleAsset("NullFinalizeAgent", "nullFinalizeAgent"),
       this.getCrowdsaleAsset("Registry", "registry")
