@@ -228,40 +228,38 @@ export class ReservedTokensInputBlock extends Component {
 
     return (
       <div className="sw-BorderedBlock">
-        <div>
-          <InputField
-            description="Address where to send reserved tokens."
-            errorMessage="The inserted address is invalid"
-            name={ADDRESS}
-            onChange={e => this.handleAddressChange(e.target.value)}
-            placeholder="Enter here"
-            pristine={this.state.validation.address.pristine}
-            title={ADDRESS}
-            type="text"
-            valid={this.state.validation.address.valid}
-            value={this.state.addr}
-          />
-          <RadioInputField
-            items={[{ label: 'Tokens', value: 'tokens' }, { label: 'Percentage', value: 'percentage' }]}
-            onChange={e => this.updateReservedTokenInput(e.target.value, 'dim')}
-            selectedItem={this.state.dim}
-            title={DIMENSION}
-            description="Fixed amount or % of crowdsaled tokens. Will be deposited to the account after finalization
-               of the crowdsale."
-          />
-          <NumericInput
-            acceptFloat={true}
-            name={VALUE}
-            onValueUpdate={this.handleValueChange}
-            placeholder="Enter here"
-            pristine={this.state.validation.value.pristine}
-            title={VALUE}
-            valid={this.state.validation.value.valid}
-            value={this.state.val}
-            onClick={this.addReservedTokensItem}
-            {...valueInputParams}
-          />
-        </div>
+        <InputField
+          description="Address where to send reserved tokens."
+          errorMessage="The inserted address is invalid"
+          name={ADDRESS}
+          onChange={e => this.handleAddressChange(e.target.value)}
+          placeholder="Enter here"
+          pristine={this.state.validation.address.pristine}
+          title={ADDRESS}
+          type="text"
+          valid={this.state.validation.address.valid}
+          value={this.state.addr}
+        />
+        <RadioInputField
+          items={[{ label: 'Tokens', value: 'tokens' }, { label: 'Percentage', value: 'percentage' }]}
+          onChange={e => this.updateReservedTokenInput(e.target.value, 'dim')}
+          selectedItem={this.state.dim}
+          title={DIMENSION}
+          description="Fixed amount or % of crowdsaled tokens. Will be deposited to the account after finalization
+              of the crowdsale."
+        />
+        <NumericInput
+          acceptFloat={true}
+          name={VALUE}
+          onValueUpdate={this.handleValueChange}
+          placeholder="Enter here"
+          pristine={this.state.validation.value.pristine}
+          title={VALUE}
+          valid={this.state.validation.value.valid}
+          value={this.state.val}
+          onClick={this.addReservedTokensItem}
+          {...valueInputParams}
+        />
         {reservedTokensElements}
 
         {/* Actions */}

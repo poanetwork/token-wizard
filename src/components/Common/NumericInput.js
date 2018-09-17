@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import { VALIDATION_TYPES } from '../../utils/constants'
 import { countDecimalPlaces } from '../../utils/utils'
 import { observer } from 'mobx-react'
+import { FormControlTitle } from '../Common/FormControlTitle'
+import { TextField } from '../Common/TextField'
+import { FormError } from '../Common/FormError'
 
 const { VALID, INVALID } = VALIDATION_TYPES
 
@@ -112,19 +115,13 @@ export class NumericInput extends Component {
     const { value, pristine, valid } = this.state
     const { disabled, errorMessage, title, description, name, placeholder, onClick, extraClassName } = this.props
 
-    const error = valid === INVALID ? <div className="sw-FormControlBlock_Error">{errorMessage}</div> : ''
+    const error = valid === INVALID ? <FormError errorMessage={errorMessage} /> : ''
 
     return (
-      <div className={`sw-FormControlBlock ${extraClassName ? extraClassName : ''}`}>
-        <div className="sw-FormControlBlock_TitleAndInfo">
-          <label className="sw-FormControlBlock_Label">{title}</label>
-          <div className="sw-FormControlBlock_Info" tabIndex="-1">
-            <span className="sw-FormControlBlock_Tooltip">{description}</span>
-          </div>
-        </div>
-        <div className="sw-FormControlBlock_TextInputAndButtonHorizontal">
-          <input
-            className="sw-FormControlBlock_TextInput"
+      <div className={`sw-NumericInput ${extraClassName ? extraClassName : ''}`}>
+        <FormControlTitle title={title} description={description} />
+        <div className="sw-NumericInput_InputAndButtonContainer">
+          <TextField
             disabled={disabled}
             id={name}
             onChange={this.onChange}
@@ -134,7 +131,7 @@ export class NumericInput extends Component {
             type="number"
             value={value}
           />
-          <div onClick={onClick} className="sw-FormControlBlock_ButtonPlus" />
+          <div onClick={onClick} className="sw-NumericInput_ButtonPlus" />
         </div>
         {pristine ? '' : error}
       </div>

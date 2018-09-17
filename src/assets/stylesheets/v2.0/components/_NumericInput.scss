@@ -1,0 +1,24 @@
+$sw-NumericInput_ButtonPlus-height: 30px !default;
+
+.sw-NumericInput {
+    @include form-control-block-common();
+}
+
+.sw-NumericInput_InputAndButtonContainer {
+    align-items: center;
+    display: flex;
+}
+
+.sw-NumericInput_ButtonPlus {
+    height: $sw-NumericInput_ButtonPlus-height;
+    width: $sw-NumericInput_ButtonPlus-height;
+    background-image: url('#{ $base-images-path }/FormControlBlock/ico-plus.svg');
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    flex-shrink: 0;
+
+    .sw-NumericInput_InputAndButtonContainer & {
+        margin-right: 15px;
+    }
+}

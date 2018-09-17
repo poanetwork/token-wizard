@@ -3,7 +3,12 @@
     border-radius: 5px;
     border: solid 1px $base-border-color;
     box-shadow: 0 9px 18px 4px rgba(224, 224, 224, 0.2);
+    margin-bottom: 28px;
     padding: 19px 20px 31px 18px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
 
     @media (min-width: $breakpoint-xl) {
         padding: 34px 36px 29px 35px;

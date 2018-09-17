@@ -1,0 +1,24 @@
+$sw-TextField-height: 40px !default;
+
+.sw-TextField {
+    @include placeholder-color(#9b9b9b);
+    @include placeholder-font-size(italic);
+    background-color: #fff;
+    border-radius: 5px;
+    border: solid 1px $base-border-color;
+    color: #000;
+    font-size: 14px;
+    font-weight: 400;
+    height: $sw-TextField-height;
+    outline: none;
+    padding: 0 13px;
+
+    &:focus {
+        border-color: darken($base-border-color, 10%);
+    }
+
+    .sw-NumericInput_InputAndButtonContainer & {
+        flex-grow: 1;
+        margin-right: 14px;
+    }
+}
