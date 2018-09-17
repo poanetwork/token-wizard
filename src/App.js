@@ -1,14 +1,27 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
 import { Home, Manage, StepOne, StepTwo, stepThree, stepFour, Crowdsale, Contribute, Stats } from './components/index'
+import {
+  Home,
+  Manage,
+  StepOne,
+  StepTwo,
+  stepThree,
+  stepFour,
+  Crowdsale,
+  Contribute,
+  Stats,
+  Crowdsales
+} from './components/index'
 import NoWeb3 from './components/Common/NoWeb3'
 import IncompleteDeploy from './components/IncompleteDeploy'
-import { getQueryVariable } from './utils/utils'
+import { getAddrFromQuery, toast } from './utils/utils'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import AlertContainer from 'react-alert'
 import { TOAST } from './utils/constants'
 import { toast } from './utils/utils'
 import { Web3Provider } from './react-web3'
+import { getQueryVariable } from './utils/utils'
 
 // import './assets/stylesheets/application.css'
 
@@ -33,7 +46,7 @@ class App extends Component {
   }
   render() {
     const { deploymentStore } = this.props
-    var crowdsaleAddr = getQueryVariable('addr')
+    let crowdsaleAddr = getAddrFromQuery()
 
     return (
       <Router>
@@ -42,6 +55,7 @@ class App extends Component {
             <Route exact path="/crowdsale" component={Crowdsale} />
             <Route exact path="/contribute" component={Contribute} />
             <Route exact path="/stats" component={Stats} />
+            <Route exact path="/crowdsales" component={Crowdsales} />
             <Route>
               <Web3Provider onChangeAccount={deploymentStore.handleAccountChange} web3UnavailableScreen={NoWeb3}>
                 <Switch>
