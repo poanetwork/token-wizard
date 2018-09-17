@@ -233,11 +233,28 @@ export const clearStorage = props => {
 
   const storesToClear = toArray(props)
   for (let storeToClear of storesToClear) {
-    if (typeof storeToClear.reset === 'function') {
+    if (storeToClear && typeof storeToClear.reset === 'function') {
       logger.log('Store to be cleared:', storeToClear.constructor.name)
       storeToClear.reset()
     }
   }
+}
+
+export const navigateTo = (props, location, params = '') => {
+  const path =
+    {
+      home: '/',
+      stepOne: '1',
+      stepTwo: '2',
+      manage: 'manage',
+      crowdsales: 'crowdsales'
+    }[location] || null
+
+  if (path === null) {
+    throw new Error(`invalid location specified: ${location}`)
+  }
+
+  props.history.push(`${path}${params}`)
 }
 
 export const convertDateToLocalTimezoneInUnix = dateToConvert => {

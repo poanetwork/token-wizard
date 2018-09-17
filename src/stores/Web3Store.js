@@ -16,12 +16,15 @@ class Web3Store {
     this.getWeb3(web3 => {
       if (web3) {
         this.web3 = web3
-        web3.eth.getAccounts().then(accounts => {
-          this.accounts = accounts
-          if (accounts.length > 0) {
-            this.setProperty('curAddress', accounts[0])
-          }
-        })
+        web3.eth
+          .getAccounts()
+          .then(accounts => {
+            this.accounts = accounts
+            if (accounts.length > 0) {
+              this.setProperty('curAddress', accounts[0])
+            }
+          })
+          .catch(err => console.log(err))
       }
     })
   }
@@ -71,17 +74,15 @@ class Web3Store {
         const httpProvider = new Web3.providers.HttpProvider(infuraLink)
         web3 = new Web3(httpProvider)
       }
-
-      cb(web3, false)
-      return web3
     } else {
       // window.web3 == web3 most of the time. Don't override the provided,
       // web3, just wrap it in your Web3.
-      const myWeb3 = new Web3(web3.currentProvider)
-
-      cb(myWeb3, false)
-      return myWeb3
+      web3 = new Web3(web3.currentProvider)
     }
+
+    cb(web3, false)
+
+    return web3
   }
 }
 
