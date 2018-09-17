@@ -1,6 +1,7 @@
 import { incorrectNetworkAlert, noMetaMaskAlert, MetaMaskIsLockedAlert, noContractAlert } from './alerts'
 import { CHAINS, MAX_GAS_PRICE, CROWDSALE_STRATEGIES, EXCEPTIONS, REACT_PREFIX } from './constants'
 import { crowdsaleStore, generalStore, web3Store, contractStore } from '../stores'
+import { Web3Error } from './errors'
 import { toJS } from 'mobx'
 import { removeTrailingNUL } from './utils'
 import logdown from 'logdown'
@@ -24,6 +25,64 @@ export const checkWeb3 = async () => {
         await checkMetaMask()
       })
     }, 500)
+  }
+}
+
+export const checkWeb3ForErrors = async () => {
+  const { web3 } = web3Store
+
+  try {
+    if (web3) {
+      await checkMetaMaskErrors()
+    } else {
+      setTimeout(() => {
+        web3Store.getWeb3(async web3 => {
+          if (!web3) {
+            throw new Web3Error({
+              code: 1,
+              message: 'No web3'
+            })
+          }
+          await checkMetaMaskErrors()
+        })
+      }, 500)
+    }
+
+    return true
+  } catch (err) {
+    logger.log('Web3 && metamask', err)
+    const { code } = err
+
+    switch (code) {
+      case 1:
+      case 2:
+        await noMetaMaskAlert()
+        break
+      case 3:
+        await MetaMaskIsLockedAlert()
+        break
+      default:
+    }
+    throw err
+  }
+}
+
+const checkMetaMaskErrors = async () => {
+  const { web3 } = web3Store
+
+  if (!web3 || !web3.currentProvider || !web3.currentProvider.isMetaMask) {
+    throw new Web3Error({
+      code: 2,
+      message: 'No wallet enabled'
+    })
+  }
+
+  let accounts = await web3.eth.getAccounts()
+  if (!accounts || accounts.length === 0) {
+    throw new Web3Error({
+      code: 3,
+      message: 'No accounts'
+    })
   }
 }
 
