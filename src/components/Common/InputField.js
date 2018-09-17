@@ -1,21 +1,18 @@
 import React from 'react'
-
+import { FormControlTitle } from '../Common/FormControlTitle'
+import { TextField } from '../Common/TextField'
 import { VALIDATION_TYPES } from '../../utils/constants'
+import { FormError } from '../Common/FormError'
+
 const { INVALID } = VALIDATION_TYPES
 
 export const InputField = props => {
-  const error = props.valid === INVALID ? <div className="sw-FormControlBlock_Error">{props.errorMessage}</div> : ''
+  const error = props.valid === INVALID ? <FormError errorMessage={props.errorMessage} /> : ''
 
   return (
-    <div className={`sw-FormControlBlock ${props.extraClassName ? props.extraClassName : ''}`}>
-      <div className="sw-FormControlBlock_TitleAndInfo">
-        <label className="sw-FormControlBlock_Label">{props.title}</label>
-        <div className="sw-FormControlBlock_Info" tabIndex="-1">
-          <span className="sw-FormControlBlock_Tooltip">{props.description}</span>
-        </div>
-      </div>
-      <input
-        className="sw-FormControlBlock_TextInput"
+    <div className={`sw-InputField ${props.extraClassName ? props.extraClassName : ''}`}>
+      <FormControlTitle title={props.title} description={props.description} />
+      <TextField
         disabled={props.disabled}
         id={props.name}
         onBlur={props.onBlur}

@@ -1,16 +1,17 @@
 import React from 'react'
 import { Error } from './Error'
+import { FormControlTitle } from '../Common/FormControlTitle'
+import { TextField } from '../Common/TextField'
 
 export const InputField2 = props => {
   if (props.val) {
     props.input.value = props.val
   }
+
   return (
-    <div className={props.side}>
-      <label htmlFor={props.input.name} className="label">
-        {props.label}
-      </label>
-      <input
+    <div className={`sw-InputField ${props.extraClassName ? props.extraClassName : ''}`}>
+      <FormControlTitle title={props.label} description={props.description} />
+      <TextField
         autoComplete="off"
         className={props.inputClassName ? props.inputClassName : 'input'}
         disabled={props.disabled}
@@ -19,8 +20,7 @@ export const InputField2 = props => {
         type={props.type}
         {...props.input}
       />
-      <p className="description">{props.description}</p>
-      <Error name={props.input.name} errorStyle={props.errorStyle} />
+      <Error name={props.input.name} />
     </div>
   )
 }

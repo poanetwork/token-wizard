@@ -88,10 +88,14 @@ export const StepTwoForm = ({
 
   return (
     <form id={id} onSubmit={handleSubmit}>
-      <TokenName errorStyle={errorStyle} />
-      <TokenTicker errorStyle={errorStyle} />
-      <TokenDecimals disabled={disableDecimals} errorStyle={errorStyle} />
-      {crowdsaleStore.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION ? <TokenSupply errorStyle={errorStyle} /> : null}
+      <div className="sw-BorderedBlock">
+        <TokenName />
+        <TokenTicker />
+        <TokenDecimals disabled={disableDecimals} />
+        {crowdsaleStore.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION ? (
+          <TokenSupply errorStyle={errorStyle} />
+        ) : null}
+      </div>
       {crowdsaleStore.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE ? reservedTokens : null}
       <FormSpy onChange={onChangeForm} />
       <div className="st-StepContent_Buttons">

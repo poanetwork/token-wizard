@@ -15,6 +15,5 @@ export const TokenSupply = ({ errorStyle }) => (
     type="text"
     description={DESCRIPTION.TOKEN_SUPPLY}
     label={TEXT_FIELDS.SUPPLY_SHORT}
-    errorStyle={errorStyle}
   />
 )

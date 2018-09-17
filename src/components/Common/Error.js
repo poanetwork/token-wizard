@@ -1,14 +1,6 @@
 import React from 'react'
 import { Field } from 'react-final-form'
 
-const defaultErrorStyles = {
-  color: 'red',
-  fontWeight: 'bold',
-  fontSize: '12px',
-  width: '100%',
-  height: '20px'
-}
-
 export const Error = ({ name, errorStyle }) => (
   <Field
     name={name}
@@ -17,15 +9,15 @@ export const Error = ({ name, errorStyle }) => (
       const errors = [].concat(error)
 
       return (
-        <span>
+        <div>
           {errors.length
             ? errors.map((error, index) => (
-                <p className="error" key={index} style={errorStyle || defaultErrorStyles}>
+                <div className="sw-Error" key={index}>
                   {(!pristine || touched) && error}
-                </p>
+                </div>
               ))
             : null}
-        </span>
+        </div>
       )
     }}
   />

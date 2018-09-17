@@ -1,0 +1,46 @@
+$sw-RadioInputField_Button-height: 40px !default;
+
+.sw-RadioInputField {
+    @include form-control-block-common();
+}
+
+.sw-RadioInputField_ButtonsContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.sw-RadioInputField_Label {
+    position: relative;
+}
+
+.sw-RadioInputField_Input {
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    visibility: hidden;
+    z-index: 2;
+}
+
+.sw-RadioInputField_Button {
+    border-radius: 6px;
+    border: solid 1px $base-border-color;
+    color: #4a4a4a;
+    cursor: pointer;
+    display: block;
+    font-size: 16px;
+    font-weight: 400;
+    height: $sw-RadioInputField_Button-height;
+    line-height: $sw-RadioInputField_Button-height;
+    padding: 0 30px;
+    position: relative;
+    text-align: center;
+    z-index: 1;
+
+    .sw-RadioInputField_Input:checked + & {
+        background-color: $brand-secondary;
+        border-color: $brand-secondary;
+        color: #fff;
+    }
+}
