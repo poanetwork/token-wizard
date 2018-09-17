@@ -1,48 +1,42 @@
 import React, { Component } from 'react'
-
+import { ButtonContinue } from './ButtonContinue'
 import { inject, observer } from 'mobx-react'
+import { navigateTo } from '../../utils/utils'
 
 @inject('crowdsaleStore', 'web3Store')
 @observer
 export default class CrowdsalesList extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      account: null,
-      selectedCrowdsale: '',
-      selectedRow: null
-    }
-  }
-
-  componentDidMount() {
-    this.props.web3Store.web3.eth
-      .getAccounts()
-      .then(accounts => accounts[0])
-      .then(account => this.setState({ account }))
+  state = {
+    selectedRow: null,
+    selectedCrowdsale: null
   }
 
   selectCrowdsale = (index, contractAddress) => {
     this.setState({
-      selectedCrowdsale: contractAddress,
-      selectedRow: index
+      selectedRow: index,
+      selectedCrowdsale: contractAddress
     })
   }
 
-  render() {
-    const { crowdsaleStore, onClick } = this.props
-    const { selectedCrowdsale } = this.state
+  onClick = crowdsaleAddress => {
+    navigateTo(this.props, 'manage', `/${crowdsaleAddress}`)
+  }
 
-    const crowdsalesList = (
+  render() {
+    const { selectedRow, selectedCrowdsale } = this.state
+    const { crowdsales } = this.props
+
+    return (
       <div>
         <div className="sw-FlexTable">
           <div className="sw-FlexTable_Head sw-FlexTable_Row">
             <div className="sw-FlexTable_Td">Address</div>
           </div>
           <div className="sw-FlexTable_Body sw-FlexTable_Body-scrollable sw-FlexTable_Body-crowdsale m-b-15">
-            {crowdsaleStore.crowdsales.map((crowdsale, index) => (
+            {crowdsales.map((crowdsale, index) => (
               <div
                 className={`sw-FlexTable_Row sw-FlexTable_Row-selectable
-                ${this.state.selectedRow === index ? 'selected' : ''}`}
+                ${selectedRow === index ? 'selected' : ''}`}
                 key={index.toString()}
                 onClick={() => this.selectCrowdsale(index, crowdsale.execID)}
               >
@@ -52,23 +46,12 @@ export default class CrowdsalesList extends Component {
           </div>
         </div>
         <div className="sw-ModalWindow_ButtonsContainer sw-ModalWindow_ButtonsContainer-right">
-          <button
-            className={`sw-Button sw-Button-secondary`}
-            disabled={!selectedCrowdsale}
-            onClick={() => selectedCrowdsale && onClick(selectedCrowdsale)}
-          >
-            Continue
-          </button>
+          <ButtonContinue
+            status={selectedCrowdsale}
+            onClick={() => selectedCrowdsale && this.onClick(selectedCrowdsale)}
+          />
         </div>
       </div>
     )
-
-    const noCrowdsalesMsg = (
-      <p className="sw-EmptyContentTextOnly">
-        No crowdsales found for address <span className="text-bold">{this.state.account}</span>
-      </p>
-    )
-
-    return crowdsaleStore.crowdsales.length ? crowdsalesList : noCrowdsalesMsg
   }
 }
