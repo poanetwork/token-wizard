@@ -8,7 +8,9 @@ import {
   handleContractsForFile,
   handlerForFile,
   scrollToBottom,
-  summaryFileContents
+  summaryFileContents,
+  getOptimizationFlagByStore,
+  getVersionFlagByStore
 } from './utils'
 import { noContractDataAlert, successfulDeployment, skippingTransaction, deployHasEnded } from '../../utils/alerts'
 import {
@@ -20,7 +22,7 @@ import {
   PUBLISH_DESCRIPTION,
   CROWDSALE_STRATEGIES
 } from '../../utils/constants'
-import { CONTRACT_SETTINGS, DOWNLOAD_TYPE } from './constants'
+import { DOWNLOAD_TYPE } from './constants'
 import { getNetworkID, toast, convertDateToTimezoneToDisplay } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { DisplayField } from '../Common/DisplayField'
@@ -381,10 +383,12 @@ export class stepFour extends Component {
       CONTRACT_NAME: PD_CONTRACT_NAME,
       COMPILING_OPTIMIZATION: PD_COMPILING_OPTIMIZATION
     } = PUBLISH_DESCRIPTION
-    const { OPTIMIZATION, COMPILER_VERSION: PRAGMA } = CONTRACT_SETTINGS
+    const optimizationFlag = getOptimizationFlagByStore(crowdsaleStore)
+    const versionFlag = getVersionFlagByStore(crowdsaleStore)
+
     return (
       <div className="hidden">
-        <DisplayField side="left" title={COMPILER_VERSION} value={PRAGMA} description={PD_COMPILER_VERSION} />
+        <DisplayField side="left" title={COMPILER_VERSION} value={versionFlag} description={PD_COMPILER_VERSION} />
         <DisplayField
           side="right"
           title={CONTRACT_NAME}
@@ -394,7 +398,7 @@ export class stepFour extends Component {
         <DisplayField
           side="left"
           title={COMPILING_OPTIMIZATION}
-          value={OPTIMIZATION}
+          value={optimizationFlag}
           description={PD_COMPILING_OPTIMIZATION}
         />
       </div>

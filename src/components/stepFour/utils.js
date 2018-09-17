@@ -15,7 +15,7 @@ import {
   convertDateToTimezoneToDisplay
 } from '../../utils/utils'
 import { CROWDSALE_STRATEGIES } from '../../utils/constants'
-import { DOWNLOAD_NAME, MINTED_PREFIX, DUTCH_PREFIX, ADDR_BOX_LEN, CONTRACT_SETTINGS } from './constants'
+import { DOWNLOAD_NAME, MINTED_PREFIX, DUTCH_PREFIX, ADDR_BOX_LEN } from './constants'
 import { REACT_PREFIX } from '../../utils/constants'
 import { isObservableArray } from 'mobx'
 import {
@@ -1088,7 +1088,9 @@ export const summaryFileContents = networkID => {
   }
 
   const { abiEncoded } = contractStore[crowdsaleStore.proxyName]
-  const { OPTIMIZATION, COMPILER_VERSION } = CONTRACT_SETTINGS
+  const versionFlag = getVersionFlagByStore(crowdsaleStore)
+  const optimizationFlag = getOptimizationFlagByStore(crowdsaleStore)
+
   return {
     common: [
       ...bigHeaderElements('*********TOKEN SETUP*********'),
@@ -1112,8 +1114,8 @@ export const summaryFileContents = networkID => {
       '\n',
       ...bigHeaderElements('**********METADATA***********'),
       { field: 'proxyName', value: 'Contract name: ', parent: 'crowdsaleStore' },
-      { value: 'Compiler version: ', parent: 'none', fileValue: COMPILER_VERSION },
-      { value: 'Optimized: ', parent: 'none', fileValue: OPTIMIZATION },
+      { value: 'Compiler version: ', parent: 'none', fileValue: versionFlag },
+      { value: 'Optimized: ', parent: 'none', fileValue: optimizationFlag },
       { value: 'Encoded ABI parameters: ', parent: 'none', fileValue: abiEncoded },
       ...footerElemets
     ],
@@ -1151,4 +1153,84 @@ export const summaryFileContents = networkID => {
       }
     }
   }
+}
+
+export const getStrategies = () => {
+  return ['Dutch', 'MintedCapped']
+}
+
+export const getPragmaVersion = async strategy => {
+  const strategiesAllowed = getStrategies()
+  if (!strategiesAllowed.includes(strategy)) {
+    throw new Error('Strategy not exist')
+  }
+  const contractFile = await (await fetch(`./contracts/${strategy}Proxy.sol`)).text()
+  const firstLine = contractFile.split('\n')[0]
+  return firstLine.match(/(?:\^0|\d*)\.(?:0|\d*)\.(?:0|\d*)/gi) || '0.4.24'
+}
+
+export const getVersionFlagByStrategy = strategy => {
+  const strategiesAllowed = getStrategies()
+  if (!strategiesAllowed.includes(strategy)) {
+    throw new Error('Strategy not exist')
+  }
+
+  //Check path by enviroment variable
+  let constants
+  try {
+    if (['development', 'test'].includes(process.env.NODE_ENV)) {
+      constants = require(`json-loader!../../../public/metadata/${strategy}TruffleVersions.json`)
+    } else {
+      constants = require(`json-loader!../../../build/metadata/${strategy}TruffleVersions.json`)
+    }
+  } catch (err) {
+    logger.log('Error require truffle version', err)
+  }
+  const { solcVersion = '0.4.24' } = constants
+
+  return solcVersion
+}
+
+export const getOptimizationFlagByStrategy = strategy => {
+  const strategiesAllowed = getStrategies()
+  if (!strategiesAllowed.includes(strategy)) {
+    throw new Error('Strategy not exist')
+  }
+
+  //Check path by enviroment variable
+  let constants
+  try {
+    if (['development', 'test'].includes(process.env.NODE_ENV)) {
+      constants = require(`../../../public/metadata/${strategy}CrowdsaleTruffle.js`)
+    } else {
+      constants = require(`../../../build/metadata/${strategy}CrowdsaleTruffle.js`)
+    }
+  } catch (err) {
+    logger.log('Error require truffle config', err)
+  }
+  const { solc } = constants
+
+  return solc && solc.optimizer && solc.optimizer.enabled ? 'Yes' : 'No'
+}
+
+export const getOptimizationFlagByStore = crowdsaleStore => {
+  let strategy
+  if (crowdsaleStore.isDutchAuction) {
+    strategy = 'Dutch'
+  }
+  if (crowdsaleStore.isMintedCappedCrowdsale) {
+    strategy = 'MintedCapped'
+  }
+  return getOptimizationFlagByStrategy(strategy)
+}
+
+export const getVersionFlagByStore = crowdsaleStore => {
+  let strategy
+  if (crowdsaleStore.isDutchAuction) {
+    strategy = 'Dutch'
+  }
+  if (crowdsaleStore.isMintedCappedCrowdsale) {
+    strategy = 'MintedCapped'
+  }
+  return getVersionFlagByStrategy(strategy)
 }

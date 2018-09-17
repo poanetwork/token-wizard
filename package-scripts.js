@@ -18,14 +18,18 @@ module.exports = {
         ncp('./build/index.html ./build/crowdsale.html'),
         ncp('./build/index.html ./build/manage.html'),
         ncp('./build/index.html ./build/stats.html'),
-        'bash ./scripts/generateProxyContracts.sh'
+        'bash ./scripts/generateProxyContracts.sh',
+        'npm run moveTruffleConfigBuild',
+        'npm run moveSolcVersionOutputBuild'
       )
     },
     dev: {
       default: series(
         'git submodule update --init --recursive --remote',
         'npm run installWeb3',
-        'bash ./scripts/generateProxyContracts.sh'
+        'bash ./scripts/generateProxyContracts.sh',
+        'npm run moveTruffleConfigPublic',
+        'npm run moveSolcVersionOutputPublic'
       ),
       Minted: {
         default: series(
