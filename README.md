@@ -35,6 +35,10 @@ __Deploying on POA's Sokol or Main network is much faster then using Ethereum's 
 
  For a guide on how to connect to the POA network using MetaMask see [here](https://github.com/poanetwork/token-wizard/wiki/Connecting-to-POA-Networks).
 
+## Security Audit
+
+https://github.com/peppersec/public-audit-reports/blob/master/POA-Networks-Wizard-audit-report.md by PepperSec
+
 ## Token Wizard DApp Wiki
 - [Introduction](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Introduction)
 - [Demo](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Demo)
@@ -52,7 +56,6 @@ __Deploying on POA's Sokol or Main network is much faster then using Ethereum's 
 - [Pull Request Policy](https://github.com/poanetwork/token-wizard/wiki/Pull-Request-Policy)
 ### Managing your Crowdsale
 - [Methods for Management](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Managing-Crowdsale)
-
 
 ## Support
 
