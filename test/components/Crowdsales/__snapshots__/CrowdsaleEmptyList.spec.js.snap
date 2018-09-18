@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CrowdsaleEmptyList should render screen with mount without throwing an error 1`] = `
+<span
+  className="text-bold"
+>
+  test account
+</span>
+`;
+
+exports[`CrowdsaleEmptyList should render screen with render without account and without throwing an error 1`] = `
+<span
+  class="text-bold"
+>
+  
+</span>
+`;
+
+exports[`CrowdsaleEmptyList should render screen with render without throwing an error 1`] = `
+<span
+  class="text-bold"
+>
+  test account
+</span>
+`;
+
+exports[`CrowdsaleEmptyList should render screen with shallow without throwing an error 1`] = `
+<span
+  className="text-bold"
+>
+  test account
+</span>
+`;
