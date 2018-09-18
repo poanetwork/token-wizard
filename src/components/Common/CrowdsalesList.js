@@ -19,7 +19,7 @@ export default class CrowdsalesList extends Component {
   }
 
   onClick = crowdsaleAddress => {
-    navigateTo(this.props, 'manage', `/${crowdsaleAddress}`)
+    navigateTo(this.props.history, 'manage', `/${crowdsaleAddress}`)
   }
 
   render() {

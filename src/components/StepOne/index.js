@@ -4,20 +4,16 @@ import { inject, observer } from 'mobx-react'
 import { ButtonContinue } from '../Common/ButtonContinue'
 import { checkWeb3ForErrors } from '../../utils/blockchainHelpers'
 import { reloadStorage } from '../Home/utils'
-import {
-  NAVIGATION_STEPS,
-  CROWDSALE_STRATEGIES,
-  CROWDSALE_STRATEGIES_DISPLAYNAMES,
-  DOWNLOAD_STATUS
-} from '../../utils/constants'
+import { NAVIGATION_STEPS, CROWDSALE_STRATEGIES, DOWNLOAD_STATUS } from '../../utils/constants'
 import { clearStorage, navigateTo } from '../../utils/utils'
+import { strategies } from '../../utils/strategies'
 import { Loader } from '../Common/Loader'
 import logdown from 'logdown'
 import { StrategyItem } from './StrategyItem'
 
 const logger = logdown('TW:StepOne')
 const { CROWDSALE_STRATEGY } = NAVIGATION_STEPS
-const { MINTED_CAPPED_CROWDSALE, DUTCH_AUCTION } = CROWDSALE_STRATEGIES
+const { MINTED_CAPPED_CROWDSALE } = CROWDSALE_STRATEGIES
 
 @inject('crowdsaleStore', 'contractStore', 'web3Store', 'generalStore')
 @observer
@@ -57,8 +53,12 @@ export class StepOne extends Component {
     }
   }
 
-  goNextStep = async () => {
-    navigateTo(this.props, 'stepTwo')
+  goNextStep = () => {
+    try {
+      navigateTo(this.props.history, 'stepTwo')
+    } catch (err) {
+      logger.log('Error to navigate', err)
+    }
   }
 
   handleChange = e => {
@@ -77,19 +77,6 @@ export class StepOne extends Component {
     const status =
       (contractStore && contractStore.downloadStatus === DOWNLOAD_STATUS.SUCCESS) || localStorage.length > 0
 
-    const strategies = [
-      {
-        type: MINTED_CAPPED_CROWDSALE,
-        display: CROWDSALE_STRATEGIES_DISPLAYNAMES.MINTED_CAPPED_CROWDSALE,
-        description:
-          'Modern crowdsale strategy with multiple tiers, whitelists, and limits. Recommended for every crowdsale.'
-      },
-      {
-        type: DUTCH_AUCTION,
-        display: CROWDSALE_STRATEGIES_DISPLAYNAMES.DUTCH_AUCTION,
-        description: 'An auction with descending price.'
-      }
-    ]
     return (
       <div>
         <section className="lo-MenuBarAndContent">
