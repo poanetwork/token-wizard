@@ -4,14 +4,14 @@ import { configure, mount } from 'enzyme'
 import renderer from 'react-test-renderer'
 import { MemoryRouter } from 'react-router'
 import { StepOne } from '../../../src/components/StepOne/index'
-import { crowdsaleStore, contractStore, web3Store } from '../../../src/stores'
+import { crowdsaleStore, contractStore, generalStore, web3Store } from '../../../src/stores'
 import { CROWDSALE_STRATEGIES } from '../../../src/utils/constants'
 
 configure({ adapter: new Adapter() })
 
 describe('StepOne', () => {
   const history = { push: jest.fn() }
-  const stores = { crowdsaleStore, contractStore, web3Store }
+  const stores = { crowdsaleStore, generalStore, contractStore, web3Store }
   const { MINTED_CAPPED_CROWDSALE, DUTCH_AUCTION } = CROWDSALE_STRATEGIES
 
   it(`should render StepOne screen`, () => {
@@ -37,7 +37,7 @@ describe('StepOne', () => {
       </MemoryRouter>
     )
     const stepOneComponent = wrapper.find('StepOne')
-    const navigateToHandler = jest.spyOn(stepOneComponent.instance(), 'navigateTo')
+    const navigateToHandler = jest.spyOn(stepOneComponent.instance(), 'goNextStep')
     wrapper.update()
 
     // When
@@ -45,7 +45,7 @@ describe('StepOne', () => {
 
     // Then
     expect(navigateToHandler).toHaveBeenCalledTimes(1)
-    expect(navigateToHandler).toHaveBeenCalledWith('stepTwo')
+    expect(navigateToHandler).toHaveBeenCalledWith()
   })
 
   it(`should switch to DutchAuction Strategy`, () => {

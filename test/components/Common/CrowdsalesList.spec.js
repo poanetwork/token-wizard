@@ -23,7 +23,7 @@ describe('CrowdsaleList ', () => {
   const web3Store = new Web3Store()
   web3Store.web3 = new Web3(new Web3.providers.HttpProvider('https://sokol.poa.network'))
 
-  const wrapper = mount(<CrowdsalesList web3Store={web3Store} crowdsaleStore={crowdsaleStore} onClick={jest.fn()} />)
+  const wrapper = mount(<CrowdsalesList web3Store={web3Store} crowdsales={crowdsaleStore.crowdsales} crowdsaleStore={crowdsaleStore} />)
   it(`should render CrowdsaleList component`, () => {
     expect(wrapper).toMatchSnapshot()
   })
@@ -60,7 +60,7 @@ describe('CrowdsaleList ', () => {
   })
   it(`should render if list is empty  `, () => {
     const crowdsaleStore = new CrowdsaleStore()
-    const wrapper = mount(<CrowdsalesList web3Store={web3Store} crowdsaleStore={crowdsaleStore} />)
+    const wrapper = mount(<CrowdsalesList web3Store={web3Store} crowdsales={crowdsaleStore.crowdsales} crowdsaleStore={crowdsaleStore} />)
     expect(wrapper).toMatchSnapshot()
   })
 })

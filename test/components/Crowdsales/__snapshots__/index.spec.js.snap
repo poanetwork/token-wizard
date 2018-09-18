@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Crowdsales should render screen with mount without throwing an error 1`] = `null`;
+
+exports[`Crowdsales should render screen with render without throwing an error 1`] = `null`;
+
+exports[`Crowdsales should render screen with shallow without throwing an error 1`] = `null`;
