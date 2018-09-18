@@ -155,8 +155,9 @@ export class stepFour extends Component {
     const startAt = deploymentStore.deploymentStep ? deploymentStore.deploymentStep : 0
     const deploymentSteps = buildDeploymentSteps()
 
-    executeSequentially(deploymentSteps, startAt, index => {
+    executeSequentially(deploymentSteps, startAt, (index, txHash) => {
       deploymentStore.setDeploymentStep(index)
+      deploymentStore.setDeploymentStepTxHash(index, txHash)
     })
       .then(() => {
         this.hideModal()
