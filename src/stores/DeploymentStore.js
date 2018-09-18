@@ -39,10 +39,11 @@ class DeploymentStore {
       { name: 'crowdsaleInit', dependsOnTiers: false, required: true },
       { name: 'trackProxy', dependsOnTiers: false, required: true }
     ]
+    const initialTxStatus = { status: false, txHash: '' }
     const byTierWhitelistInitialValues = tiers.map(tier => {
       if (tier.whitelistEnabled === 'yes') {
         if (tier.whitelist.length > 0) {
-          return false
+          return initialTxStatus
         }
       }
       return null
@@ -54,10 +55,10 @@ class DeploymentStore {
           if (tx.name === 'whitelist') {
             return this.txMap.set(tx.name, byTierWhitelistInitialValues)
           } else if (tx.name === 'updateTierMinimum') {
-            return this.txMap.set(tx.name, [false])
+            return this.txMap.set(tx.name, [initialTxStatus])
           }
         }
-        return this.txMap.set(tx.name, [false])
+        return this.txMap.set(tx.name, [initialTxStatus])
       }
       this.txMap.set(tx.name, [])
     })
@@ -78,14 +79,14 @@ class DeploymentStore {
     if (!txStatus) return
 
     // eslint-disable-next-line array-callback-return
-    const toBeUpdated = txStatus.findIndex(isSuccess => {
-      if (isSuccess !== null) {
-        return !isSuccess
+    const toBeUpdated = txStatus.findIndex(({ status }) => {
+      if (status !== null) {
+        return !status
       }
     })
 
     if (toBeUpdated !== -1) {
-      txStatus[toBeUpdated] = true
+      txStatus[toBeUpdated].status = true
       this.txMap.set(txName, txStatus)
     }
 
@@ -95,6 +96,25 @@ class DeploymentStore {
   @action
   setDeploymentStep = index => {
     this.deploymentStep = index
+  }
+
+  @action
+  setDeploymentStepTxHash = (overallIndex, txHash) => {
+    let activeSteps = []
+    this.txMap.forEach((steps, name) => {
+      steps.forEach((step, index) => {
+        activeSteps = activeSteps.concat({ name, innerIndex: index, ...step })
+      })
+    })
+
+    if (!activeSteps.length) return
+
+    const currentStep = activeSteps[overallIndex]
+    const txStatuses = this.txMap.get(currentStep.name).map((txStatus, index) => {
+      if (currentStep.innerIndex === index) txStatus.txHash = txHash
+      return txStatus
+    })
+    this.txMap.set(currentStep.name, txStatuses)
   }
 
   @action
@@ -131,7 +151,7 @@ class DeploymentStore {
 
     this.txMap.forEach((txStatus, txName) => {
       const tiersStatuses = {}
-      txStatus.forEach((value, index) => (tiersStatuses[`Tier ${index + 1}`] = value))
+      txStatus.forEach(({ status }, index) => (tiersStatuses[`Tier ${index + 1}`] = status))
       table.push({ txName, ...tiersStatuses })
     })
 
@@ -140,13 +160,13 @@ class DeploymentStore {
 
   @computed
   get deploymentHasFinished() {
-    return this.txMap.values().every(statuses => statuses.every(status => status))
+    return this.txMap.values().every(statuses => statuses.every(({ status }) => status))
   }
 
   @computed
   get nextPendingTransaction() {
     for (let [tx, txStatuses] of this.txMap) {
-      if (txStatuses.some(status => !status)) return tx
+      if (txStatuses.some(({ status }) => !status)) return tx
     }
   }
 
