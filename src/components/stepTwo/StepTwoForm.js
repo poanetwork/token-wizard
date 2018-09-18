@@ -9,14 +9,6 @@ import { TokenName } from '../Common/TokenName'
 import { TokenSupply } from '../Common/TokenSupply'
 import { TokenTicker } from '../Common/TokenTicker'
 
-const errorStyle = {
-  color: 'red',
-  fontWeight: 'bold',
-  fontSize: '12px',
-  width: '100%',
-  height: '20px'
-}
-
 export const StepTwoForm = ({
   id,
   handleSubmit,
@@ -88,7 +80,7 @@ export const StepTwoForm = ({
 
   return (
     <form id={id} onSubmit={handleSubmit}>
-      <div className="sw-BorderedBlock">
+      <div className="sw-BorderedBlock sw-BorderedBlock-3columns">
         <TokenName />
         <TokenTicker />
         <TokenDecimals disabled={disableDecimals} />

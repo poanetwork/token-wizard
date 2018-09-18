@@ -11,6 +11,23 @@
     }
 
     @media (min-width: $breakpoint-xl) {
-        padding: 34px 36px 29px 35px;
+        padding: 34px 36px 49px 35px;
+    }
+
+    &.sw-BorderedBlock-3columns {
+        @media (min-width: $breakpoint-xl) {
+            display: grid;
+            grid-column-gap: 39px;
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+    }
+
+    &.sw-BorderedBlock-3x1columns {
+        @media (min-width: $breakpoint-xl) {
+            display: grid;
+            grid-column-gap: 39px;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: auto auto auto;
+        }
     }
 }

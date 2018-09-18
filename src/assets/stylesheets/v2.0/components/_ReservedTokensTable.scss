@@ -18,6 +18,13 @@ $sw-ReservedTokensTable-gradient-width: 45px;
             display: none;
         }
     }
+
+    &.sw-BorderedBlock_Column-1_1Row_2 {
+        @media (min-width: $breakpoint-xl) {
+            grid-column-start: 1;
+            grid-column-end: 5;
+        }
+    }
 }
 
 .sw-ReservedTokensTable_Inner {

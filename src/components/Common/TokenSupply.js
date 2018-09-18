@@ -5,7 +5,7 @@ import { Field } from 'react-final-form'
 import { InputField2 } from './InputField2'
 import { acceptPositiveIntegerOnly } from '../../utils/utils'
 
-export const TokenSupply = ({ errorStyle }) => (
+export const TokenSupply = () => (
   <Field
     validate={isPositive()}
     component={InputField2}

@@ -176,7 +176,9 @@ export class ReservedTokensInputBlock extends Component {
   }
 
   render() {
-    const reservedTokensElements = <ReservedTokensTable {...this.props} />
+    const reservedTokensElements = (
+      <ReservedTokensTable extraClassName="sw-BorderedBlock_Column-1_1Row_2" {...this.props} />
+    )
     const tokensListEmpty = this.props.tokens.length === 0
     let valueInputParams = null
 
@@ -197,10 +199,6 @@ export class ReservedTokensInputBlock extends Component {
       logger.error(`unrecognized dimension '${this.state.dim}'`)
     }
 
-    const actionsStyle = {
-      textAlign: 'right'
-    }
-
     const clearAllStyle = {
       display: 'inline-block',
       cursor: 'pointer'
@@ -214,8 +212,9 @@ export class ReservedTokensInputBlock extends Component {
     }
 
     return (
-      <div className="sw-BorderedBlock">
+      <div className="sw-BorderedBlock sw-BorderedBlock-3x1columns">
         <InputField
+          extraClassName="sw-BorderedBlock_Column-1_3Row_1"
           description="Address where to send reserved tokens."
           errorMessage="The inserted address is invalid"
           name={ADDRESS}
@@ -228,6 +227,7 @@ export class ReservedTokensInputBlock extends Component {
           value={this.state.addr}
         />
         <RadioInputField
+          extraClassName="sw-BorderedBlock_Column-2_3Row_1"
           items={[{ label: 'Tokens', value: 'tokens' }, { label: 'Percentage', value: 'percentage' }]}
           onChange={e => this.updateReservedTokenInput(e.target.value, 'dim')}
           selectedItem={this.state.dim}
@@ -237,19 +237,20 @@ export class ReservedTokensInputBlock extends Component {
         />
         <NumericInput
           acceptFloat={true}
+          extraClassName="sw-BorderedBlock_Column-3_3Row_1"
           name={VALUE}
+          onClick={this.addReservedTokensItem}
           onValueUpdate={this.handleValueChange}
           placeholder="Enter here"
           pristine={this.state.validation.value.pristine}
           title={VALUE}
           valid={this.state.validation.value.valid}
           value={this.state.val}
-          onClick={this.addReservedTokensItem}
           {...valueInputParams}
         />
         {reservedTokensElements}
         {/* Actions */}
-        <div style={actionsStyle}>
+        <div className="sw-ReservedTokensListControls">
           {tokensListEmpty ? null : (
             <div className="clear-all-tokens" style={clearAllStyle} onClick={this.props.clearAll}>
               <i className="fa fa-trash" />&nbsp;Clear All
