@@ -123,7 +123,7 @@ export class StepTwo extends Component {
               <div className="st-StepContentInfo_InfoText">
                 <h1 className="st-StepContent_InfoTitle">Token setup</h1>
                 <p className="st-StepContent_InfoDescription">
-                  Configure properties of your token. Created token will be ERC-20 compatible.
+                  Configure properties for your token. Created token contract will be ERC-20 compatible.
                 </p>
               </div>
             </div>

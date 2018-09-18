@@ -92,9 +92,7 @@ export const StepTwoForm = ({
         <TokenName />
         <TokenTicker />
         <TokenDecimals disabled={disableDecimals} />
-        {crowdsaleStore.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION ? (
-          <TokenSupply errorStyle={errorStyle} />
-        ) : null}
+        {crowdsaleStore.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION ? <TokenSupply /> : null}
       </div>
       {crowdsaleStore.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE ? reservedTokens : null}
       <FormSpy onChange={onChangeForm} />

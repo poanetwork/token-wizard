@@ -7,7 +7,7 @@ import { InputField } from './InputField'
 import { RadioInputField } from './RadioInputField'
 import { TEXT_FIELDS, VALIDATION_TYPES } from '../../utils/constants'
 import update from 'immutability-helper'
-import ReservedTokensItem from './ReservedTokensItem'
+import ReservedTokensTable from './ReservedTokensTable'
 import { observer } from 'mobx-react'
 import { NumericInput } from './NumericInput'
 import { reservedTokensImported, noMoreReservedSlotAvailableCSV } from '../../utils/alerts'
@@ -176,21 +176,8 @@ export class ReservedTokensInputBlock extends Component {
   }
 
   render() {
-    const reservedTokensElements = this.props.tokens.map((token, index) => {
-      return (
-        <ReservedTokensItem
-          key={index.toString()}
-          num={index}
-          addr={token.addr}
-          dim={token.dim}
-          val={token.val}
-          onRemove={index => this.props.removeReservedToken(index)}
-        />
-      )
-    })
-
+    const reservedTokensElements = <ReservedTokensTable {...this.props} />
     const tokensListEmpty = this.props.tokens.length === 0
-
     let valueInputParams = null
 
     if (this.state.dim === 'tokens') {
@@ -261,7 +248,6 @@ export class ReservedTokensInputBlock extends Component {
           {...valueInputParams}
         />
         {reservedTokensElements}
-
         {/* Actions */}
         <div style={actionsStyle}>
           {tokensListEmpty ? null : (
