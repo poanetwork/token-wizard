@@ -54,10 +54,12 @@ export class TxProgressStatus extends Component {
                       (tierWhitelisted, index) =>
                         tierWhitelisted ? (
                           <div className="sm-text" key={index.toString()}>
-                            {tx.status[index] === true ? (
-                              <i className="material-icons">check</i>
-                            ) : tx.status[index] === false ? (
-                              <i className="material-icons">access_time</i>
+                            {tx.status.length > index ? (
+                              tx.status[index].status === true ? (
+                                <i className="material-icons">check</i>
+                              ) : (
+                                <i className="material-icons">access_time</i>
+                              )
                             ) : (
                               ''
                             )}
