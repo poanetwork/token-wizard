@@ -240,7 +240,7 @@ export const clearStorage = props => {
   }
 }
 
-export const navigateTo = (props, location, params = '') => {
+export const navigateTo = (history, location, params = '') => {
   const path =
     {
       home: '/',
@@ -254,7 +254,13 @@ export const navigateTo = (props, location, params = '') => {
     throw new Error(`invalid location specified: ${location}`)
   }
 
-  props.history.push(`${path}${params}`)
+  if (!history || !(typeof history === 'object')) {
+    throw new Error(`invalid history object: ${history}`)
+  }
+
+  history.push(`${path}${params}`)
+
+  return true
 }
 
 export const convertDateToLocalTimezoneInUnix = dateToConvert => {
