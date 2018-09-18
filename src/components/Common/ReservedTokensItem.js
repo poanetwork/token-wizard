@@ -1,22 +1,14 @@
 import React from 'react'
 
-import classNames from 'classnames'
-
 const ReservedTokensItem = props => {
+  const deleteButton = props.readOnly ? null : <div onClick={() => props.onRemove(props.num)} />
+
   return (
-    <div className="reserved-tokens-item-container">
-      <div className={classNames('reserved-tokens-item-container-inner', { monospace: props.readOnly })}>
-        <span className="reserved-tokens-item reserved-tokens-item-left">{props.addr}</span>
-        <span className="reserved-tokens-item reserved-tokens-item-middle">{props.dim}</span>
-        <span className="reserved-tokens-item reserved-tokens-item-right">{props.val}</span>
-      </div>
-      {props.readOnly ? null : (
-        <div className="reserved-tokens-item-empty">
-          <a onClick={() => props.onRemove(props.num)}>
-            <span className="item-remove" />
-          </a>
-        </div>
-      )}
+    <div className="sw-ReservedTokensItem">
+      <div className="sw-ReservedTokensItem_Column">{props.addr}</div>
+      <div className="sw-ReservedTokensItem_Column">{props.dim}</div>
+      <div className="sw-ReservedTokensItem_Column">{props.val}</div>
+      {deleteButton}
     </div>
   )
 }

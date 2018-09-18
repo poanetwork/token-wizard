@@ -22,6 +22,5 @@ export const TokenTicker = ({ errorStyle }) => (
     type="text"
     description={`${DESCRIPTION.TOKEN_TICKER} There are 11,881,376 combinations for 26 english letters. Be hurry.`}
     label={TEXT_FIELDS.TICKER}
-    errorStyle={errorStyle}
   />
 )

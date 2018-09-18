@@ -4,7 +4,7 @@ import { TEXT_FIELDS } from '../../utils/constants'
 import { Field } from 'react-final-form'
 import { InputField2 } from './InputField2'
 
-export const TokenName = ({ errorStyle }) => (
+export const TokenName = () => (
   <Field
     validate={value => {
       const errors = composeValidators(
@@ -21,6 +21,5 @@ export const TokenName = ({ errorStyle }) => (
     type="text"
     description="The name of your token. Will be used by Etherscan and other tokenbrowsers. Be afraid of trademarks."
     label={TEXT_FIELDS.NAME}
-    errorStyle={errorStyle}
   />
 )

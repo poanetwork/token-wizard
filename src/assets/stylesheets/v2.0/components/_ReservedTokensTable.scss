@@ -1,0 +1,85 @@
+$sw-ReservedTokensTable-gradient-width: 45px;
+
+.sw-ReservedTokensTable {
+    margin-bottom: 22px;
+    position: relative;
+
+    &::after {
+        background-image: linear-gradient(96deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5), #ffffff);
+        bottom: 0;
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: $sw-ReservedTokensTable-gradient-width;
+        z-index: 3;
+
+        @media (min-width: $breakpoint-xl) {
+            display: none;
+        }
+    }
+}
+
+.sw-ReservedTokensTable_Inner {
+    overflow: auto;
+    position: relative;
+    z-index: 1;
+}
+
+.sw-ReservedTokensTable_Row {
+    align-items: center;
+    border-bottom: solid 1px $base-border-color;
+    display: flex;
+    border-right: $sw-ReservedTokensTable-gradient-width solid transparent;
+    min-width: fit-content;
+    padding: 16px 10px 16px 0;
+
+    @media (min-width: $breakpoint-xl) {
+        border-right: none;
+    }
+
+    &:first-child {
+        border-top: solid 1px $base-border-color;
+    }
+}
+
+.sw-ReservedTokensTable_Column {
+    flex-shrink: 0;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.2;
+    margin-right: 25px;
+    white-space: nowrap;
+
+    &.sw-ReservedTokensTable_Column-dimension {
+        background-position: 50% 50%;
+        background-repeat: no-repeat;
+        background-size: cover;
+        height: 35px;
+        width: 35px;
+    }
+    &.sw-ReservedTokensTable_Column-address {
+        min-width: 385px;
+    }
+    &.sw-ReservedTokensTable_Column-tokens {
+        background-image: url('#{ $base-images-path }/ReservedTokensTable/ico-tokens.svg');
+    }
+    &.sw-ReservedTokensTable_Column-percentage {
+        background-image: url('#{ $base-images-path }/ReservedTokensTable/ico-percentage.svg');
+    }
+    &.sw-ReservedTokensTable_Column-value {
+        min-width: 190px;
+        text-align: right;
+    }
+}
+
+.sw-ReservedTokensTable_Delete {
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url('#{ $base-images-path }/ReservedTokensTable/ico-delete.svg');
+    cursor: pointer;
+    height: 14.6px;
+    margin-left: auto;
+    width: 12px;
+}
