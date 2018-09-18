@@ -1,115 +1,135 @@
 import React from 'react'
 import Adapter from 'enzyme-adapter-react-15'
-import { configure, mount } from 'enzyme'
-import renderer from 'react-test-renderer'
+import { configure, mount, shallow, render } from 'enzyme'
 import { MemoryRouter } from 'react-router'
 import { Home } from '../../../src/components/Home/index'
-import {
-  contractStore,
-  crowdsaleStore,
-  deploymentStore,
-  gasPriceStore,
-  generalStore,
-  reservedTokenStore,
-  stepTwoValidationStore,
-  tierStore,
-  tokenStore,
-  web3Store
-} from '../../../src/stores'
+import { ChooseCrowdsale } from '../../../src/components/Home/ChooseCrowdsale'
+import { CreateCrowdsale } from '../../../src/components/Home/CreateCrowdsale'
+import { LogoPrimary } from '../../../src/components/LogoPrimary'
 import storage from 'store2'
 
 configure({ adapter: new Adapter() })
 
 describe('Home', () => {
-  const stores = {
-    contractStore,
-    crowdsaleStore,
-    deploymentStore,
-    gasPriceStore,
-    generalStore,
-    reservedTokenStore,
-    stepTwoValidationStore,
-    tierStore,
-    tokenStore,
-    web3Store
-  }
   const history = {
     push: jest.fn()
   }
 
-  it(`should render Home screen`, () => {
+  it('should render screen with shallow without throwing an error', () => {
     // Given
-    const component = renderer.create(
+    const wrapper = shallow(<Home />)
+
+    // When
+    const tree = wrapper.find('div.hm-Home_MainInfo')
+
+    // Then
+    expect(tree).toMatchSnapshot()
+  })
+
+  it('should render screen with mount without throwing an error', () => {
+    // Given
+    const wrapper = mount(
       <MemoryRouter initialEntries={['/']}>
-        <Home {...stores} />
+        <Home />
       </MemoryRouter>
     )
 
     // When
-    const tree = component.toJSON()
+    const buttonChooseCrowdsale = wrapper.find(ChooseCrowdsale)
+    const buttonCreateCrowdsale = wrapper.find(CreateCrowdsale)
+    const logoPrimary = wrapper.find(LogoPrimary)
 
     // Then
+    expect(buttonChooseCrowdsale).toMatchSnapshot()
+    expect(buttonCreateCrowdsale).toMatchSnapshot()
+    expect(logoPrimary).toMatchSnapshot()
+  })
+
+  it('should render screen with render without throwing an error', () => {
+    // Given
+    const wrapper = render(
+      <MemoryRouter initialEntries={['/']}>
+        <Home />
+      </MemoryRouter>
+    )
+    // When
+    const tree = wrapper.find('div.hm-Home_MainInfo')
+    const buttonChooseCrowdsale = wrapper.find(ChooseCrowdsale)
+    const buttonCreateCrowdsale = wrapper.find(CreateCrowdsale)
+    const logoPrimary = wrapper.find(LogoPrimary)
+    // Then
     expect(tree).toMatchSnapshot()
+    expect(buttonChooseCrowdsale).toMatchSnapshot()
+    expect(buttonCreateCrowdsale).toMatchSnapshot()
+    expect(logoPrimary).toMatchSnapshot()
   })
 
   it(`should navigate to Home`, () => {
     // Given
     const wrapper = mount(
       <MemoryRouter initialEntries={['/']}>
-        <Home {...stores} history={history} />
+        <Home history={history} />
       </MemoryRouter>
     )
-    const homeComponent = wrapper.find('Home')
-    const navigateToHandler = jest.spyOn(homeComponent.instance(), 'navigateTo')
-    wrapper.update()
+    const createCrowdsaleComponentWrapper = wrapper.find(CreateCrowdsale)
+    const instance = createCrowdsaleComponentWrapper.instance()
+    const goToStepOneHandler = jest.spyOn(instance, 'goToStepOne')
+    instance.forceUpdate()
 
     // When
     storage.set('DeploymentStore', { deploymentStep: 1 })
-    homeComponent.find('.hm-Home_BtnNew').simulate('click')
+    const buttonCreateCrowdsale = createCrowdsaleComponentWrapper.find('.hm-Home_BtnNew')
+    buttonCreateCrowdsale.simulate('click')
 
     // Then
-    expect(navigateToHandler).toHaveBeenCalledTimes(1)
-    expect(navigateToHandler).toHaveBeenCalledWith('home')
+    expect(buttonCreateCrowdsale.length).toBe(1)
+    expect(goToStepOneHandler).toHaveBeenCalledTimes(1)
+    expect(goToStepOneHandler).toHaveBeenCalledWith()
   })
 
   it(`should navigate to StepOne`, async () => {
     // Given
     const wrapper = mount(
       <MemoryRouter initialEntries={['/']}>
-        <Home {...stores} history={history} />
+        <Home history={history} />
       </MemoryRouter>
     )
-    const homeComponent = wrapper.find('Home')
-    const homeInstance = homeComponent.instance()
-    const reloadStorageHandler = jest.spyOn(homeInstance, 'reloadStorage').mockImplementation(() => Promise.resolve())
-    const navigateToHandler = jest.spyOn(homeInstance, 'navigateTo')
-    wrapper.update()
+    const createCrowdsaleComponentWrapper = wrapper.find(CreateCrowdsale)
+    const instance = createCrowdsaleComponentWrapper.instance()
+    const goToStepOneHandler = jest.spyOn(instance, 'goToStepOne')
+    instance.forceUpdate()
     storage.clearAll()
 
     // When
-    homeComponent.find('.hm-Home_BtnNew').simulate('click')
+    const buttonCreateCrowdsale = createCrowdsaleComponentWrapper.find('.hm-Home_BtnNew')
+    buttonCreateCrowdsale.simulate('click')
 
     // Then
-    await expect(reloadStorageHandler).toHaveBeenCalledTimes(1)
-    expect(navigateToHandler).toHaveBeenCalledTimes(1)
-    expect(navigateToHandler).toHaveBeenCalledWith('stepOne')
+    expect(buttonCreateCrowdsale.length).toBe(1)
+    expect(goToStepOneHandler).toHaveBeenCalledTimes(1)
+    expect(goToStepOneHandler).toHaveBeenCalledWith()
   })
 
-  it(`navigateTo should fail if receives invalid params`, () => {
+  it(`should navigate to Crowdsales List`, async () => {
     // Given
     const wrapper = mount(
       <MemoryRouter initialEntries={['/']}>
-        <Home {...stores} />
+        <Home history={history} />
       </MemoryRouter>
     )
-    const homeComponent = wrapper.find('Home')
-    const navigateToHandler = jest.spyOn(homeComponent.instance(), 'navigateTo')
-    const invalidLocation = 'invalidLocation'
+    const chooseCrowdsaleComponentWrapper = wrapper.find(ChooseCrowdsale)
+    const instance = chooseCrowdsaleComponentWrapper.instance()
+    const goToCrowdsalesHandler = jest.spyOn(instance, 'goToCrowdsales')
+    instance.forceUpdate()
+    storage.clearAll()
 
     // When
-    const invalidLocationCall = () => navigateToHandler(invalidLocation)
+    const chooseCrowdsale = chooseCrowdsaleComponentWrapper.find('.hm-Home_BtnChoose')
+    chooseCrowdsale.simulate('click')
 
     // Then
-    expect(invalidLocationCall).toThrowError(`invalid location specified: ${invalidLocation}`)
+    expect(chooseCrowdsale.length).toBe(1)
+    expect(goToCrowdsalesHandler).toHaveBeenCalledTimes(1)
+    expect(goToCrowdsalesHandler).toHaveBeenCalledWith()
   })
 })
