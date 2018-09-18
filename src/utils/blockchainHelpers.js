@@ -253,24 +253,19 @@ let checkEventTopics = obj => {
   }
 }
 
-const sendTXResponse = (receipt, type) => {
+const sendTXResponse = receipt => {
   logger.log('receipt:', receipt)
   logger.log('receipt.status:', receipt.status)
+
   if (0 !== +receipt.status || null === receipt.status) {
-    const logs = receipt.logs
-    const events = receipt.events
-    let eventsArr
-    if (events) {
-      eventsArr = Object.keys(events).map(ind => {
-        return events[ind]
-      })
-    }
-    const ev_logs = logs || eventsArr
+    const { logs, events } = receipt
+    const ev_logs = logs || Object.keys(events).map(ind => events[ind])
     logger.log('ev_logs:', ev_logs)
+
     if (ev_logs.some(checkEventTopics)) {
       return Promise.reject({ message: 0 })
     } else {
-      return type === DEPLOY_CONTRACT ? Promise.resolve(receipt.contractAddress, receipt) : Promise.resolve(receipt)
+      return Promise.resolve(receipt)
     }
   } else {
     return Promise.reject({ message: 0 })
