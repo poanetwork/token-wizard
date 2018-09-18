@@ -7,7 +7,7 @@ const ReservedTokensTable = props => {
     )
 
     return (
-      <div key={index.toString()} num={index} className="sw-ReservedTokensTable_Row">
+      <div key={index.toString()} className="sw-ReservedTokensTable_Row">
         <div className="sw-ReservedTokensTable_Column sw-ReservedTokensTable_Column-address">{token.addr}</div>
         <div
           className={`sw-ReservedTokensTable_Column sw-ReservedTokensTable_Column-dimension sw-ReservedTokensTable_Column-${
@@ -21,7 +21,7 @@ const ReservedTokensTable = props => {
   })
 
   return (
-    <div className="sw-ReservedTokensTable">
+    <div className={`sw-ReservedTokensTable ${props.extraClassName}`}>
       <div className="sw-ReservedTokensTable_Inner">{reservedTokensItems}</div>
     </div>
   )

@@ -2,6 +2,13 @@ $sw-NumericInput_ButtonPlus-height: 30px !default;
 
 .sw-NumericInput {
     @include form-control-block-common();
+
+    &.sw-BorderedBlock_Column-3_3Row_1 {
+        @media (min-width: $breakpoint-xl) {
+            grid-column-start: 4;
+        }
+    }
+
 }
 
 .sw-NumericInput_InputAndButtonContainer {

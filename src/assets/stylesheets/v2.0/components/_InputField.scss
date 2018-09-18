@@ -1,3 +1,15 @@
 .sw-InputField {
     @include form-control-block-common();
+
+    &.sw-BorderedBlock_Column-1_3Row_1 {
+        @media (min-width: $breakpoint-xl) {
+            grid-column-start: 1;
+        }
+    }
+
+    .sw-BorderedBlock-3columns & {
+        @media (min-width: $breakpoint-xl) {
+            margin-bottom: 0;
+        }
+    }
 }
