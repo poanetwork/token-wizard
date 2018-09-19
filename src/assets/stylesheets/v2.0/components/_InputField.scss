@@ -1,9 +1,9 @@
 .sw-InputField {
     @include form-control-block-common();
 
-    &.sw-BorderedBlock_Column-1_3Row_1 {
+    &.sw-BorderedBlock_Row1Column1 {
         @media (min-width: $breakpoint-xl) {
-            grid-column-start: 1;
+            grid-area: row-1-col-1;
         }
     }
 
