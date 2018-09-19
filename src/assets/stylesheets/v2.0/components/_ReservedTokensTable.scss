@@ -2,6 +2,7 @@ $sw-ReservedTokensTable-gradient-width: 45px;
 
 .sw-ReservedTokensTable {
     margin-bottom: 22px;
+    max-width: 100%;
     position: relative;
 
     &::after {
@@ -14,7 +15,7 @@ $sw-ReservedTokensTable-gradient-width: 45px;
         width: $sw-ReservedTokensTable-gradient-width;
         z-index: 3;
 
-        @media (min-width: $breakpoint-xl) {
+        @media (min-width: $breakpoint-xxl) {
             display: none;
         }
     }
@@ -40,7 +41,7 @@ $sw-ReservedTokensTable-gradient-width: 45px;
     min-width: fit-content;
     padding: 16px 10px 16px 0;
 
-    @media (min-width: $breakpoint-xl) {
+    @media (min-width: $breakpoint-xxl) {
         border-right: none;
     }
 

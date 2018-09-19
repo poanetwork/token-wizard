@@ -24,6 +24,7 @@ $sw-Button-height: 40px !default;
 }
 
 .sw-Button {
+    @include not-selectable-text();
     border-radius: 6px;
     border-width: 1px;
     color: #fff;

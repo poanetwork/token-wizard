@@ -9,7 +9,7 @@ $st-StepNavigation_StepLine-width: 40px !default;
     display: flex;
     flex-direction: column;
     min-height: 300px;
-    justify-content: top;
+    justify-content: flex-start;
     padding: 24px 10px 0;
 
     @media (min-width: $breakpoint-xl) {

@@ -7,8 +7,14 @@
         }
     }
 
-    .sw-BorderedBlock-3columns & {
+    .sw-BorderedBlock-3Columns & {
         @media (min-width: $breakpoint-xl) {
+            margin-bottom: 0;
+        }
+    }
+
+    .sw-BorderedBlock-2Rows2Columns & {
+        @media (min-width: $breakpoint-xxl) {
             margin-bottom: 0;
         }
     }

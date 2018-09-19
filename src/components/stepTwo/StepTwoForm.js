@@ -31,19 +31,27 @@ export const StepTwoForm = ({
 }) => {
   const status = !(submitting || invalid)
 
-  const reservedTokens = (
-    <div>
-      <h2 className="sw-BorderedBlockTitle">Reserved tokens</h2>
-      <ReservedTokensInputBlock
-        addReservedTokensItem={addReservedTokensItem}
-        clearAll={clearAll}
-        decimals={decimals}
-        removeReservedToken={removeReservedToken}
-        tokens={tokens}
-        validateReservedTokensList={validateReservedTokensList}
-      />
-    </div>
-  )
+  const reservedTokens =
+    crowdsaleStore.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE ? (
+      <div>
+        <h2 className="sw-BorderedBlockTitle">Reserved tokens</h2>
+        <ReservedTokensInputBlock
+          addReservedTokensItem={addReservedTokensItem}
+          clearAll={clearAll}
+          decimals={decimals}
+          removeReservedToken={removeReservedToken}
+          tokens={tokens}
+          validateReservedTokensList={validateReservedTokensList}
+        />
+      </div>
+    ) : null
+
+  const tokenSupply = crowdsaleStore.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION ? <TokenSupply /> : null
+
+  const topBlockExtraClass =
+    crowdsaleStore.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION
+      ? 'sw-BorderedBlock-2Rows2Columns'
+      : 'sw-BorderedBlock-3Columns'
 
   const setFieldAsTouched = ({ values, errors }) => {
     if (reload) {
@@ -79,14 +87,14 @@ export const StepTwoForm = ({
   }
 
   return (
-    <form id={id} onSubmit={handleSubmit}>
-      <div className="sw-BorderedBlock sw-BorderedBlock-3columns">
+    <form id={id} onSubmit={handleSubmit} className="st-StepContent_FormFullHeight">
+      <div className={`sw-BorderedBlock ${topBlockExtraClass}`}>
         <TokenName />
         <TokenTicker />
         <TokenDecimals disabled={disableDecimals} />
-        {crowdsaleStore.strategy === CROWDSALE_STRATEGIES.DUTCH_AUCTION ? <TokenSupply /> : null}
+        {tokenSupply}
       </div>
-      {crowdsaleStore.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE ? reservedTokens : null}
+      {reservedTokens}
       <FormSpy onChange={onChangeForm} />
       <div className="st-StepContent_Buttons">
         <ButtonBack onClick={goBack} />

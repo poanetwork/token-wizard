@@ -20,5 +20,6 @@ $sw-TextField-height: 40px !default;
     .sw-NumericInput_InputAndButtonContainer & {
         flex-grow: 1;
         margin-right: 14px;
+        min-width: 0;
     }
 }

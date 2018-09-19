@@ -94,6 +94,12 @@ $st-StepContent_Icon-dimensions-lg: 100px !default;
     }
 }
 
+.st-StepContent_FormFullHeight {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
 .st-StepContent_Buttons {
     display: flex;
     justify-content: flex-end;
