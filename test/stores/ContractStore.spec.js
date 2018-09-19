@@ -40,7 +40,7 @@ describe('ContractStore', () => {
     // Given
     const mintedCappedProxyObject = genericContractObject
     const newAddress = '0x123'
-    debugger
+
     contractStore.setContract('MintedCappedProxy', mintedCappedProxyObject)
 
     // When
