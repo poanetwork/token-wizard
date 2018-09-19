@@ -12,6 +12,10 @@ describe('CrowdsaleStore', () => {
     crowdsaleStore = new CrowdsaleStore()
   })
 
+  afterEach(() => {
+    crowdsaleStore.reset()
+  })
+
   it(`should return MintedCapped App name`, () => {
     // Given
     crowdsaleStore.setProperty('strategy', MINTED_CAPPED_CROWDSALE)
@@ -238,5 +242,84 @@ describe('CrowdsaleStore', () => {
 
     // Then
     expect(currentSuffix).toBe('')
+  })
+
+  it(`should not set wrong property`, () => {
+    // Given
+    crowdsaleStore.setSelectedProperty('wrongKey', true)
+
+    // When
+    const selected = crowdsaleStore.selected
+
+    // Then
+    expect('wrongKey' in selected).toBe(false)
+  })
+
+  it(`should properly set selected property to false`, () => {
+    // Given
+    crowdsaleStore.setSelectedProperty('updatable', false)
+
+    // When
+    const updatable = crowdsaleStore.selected.updatable
+
+    // Then
+    expect(updatable).toBe(false)
+  })
+
+  it(`should properly set selected property to true`, () => {
+    // Given
+    crowdsaleStore.setSelectedProperty('updatable', true)
+
+    // When
+    const updatable = crowdsaleStore.selected.updatable
+
+    // Then
+    expect(updatable).toBe(true)
+  })
+
+  it(`should properly set selected property initialTiersValues to empty array`, () => {
+    // Given
+    crowdsaleStore.setSelectedProperty('initialTiersValues', [])
+
+    // When
+    const initialTiersValues = crowdsaleStore.selected.initialTiersValues
+
+    // Then
+    expect(initialTiersValues.length).toBe(0)
+  })
+
+  it(`should properly set selected property initialTiersValues to an array`, () => {
+    // Given
+    crowdsaleStore.setSelectedProperty('initialTiersValues', [{ foo: 'bar' }])
+
+    // When
+    const initialTiersValues = crowdsaleStore.selected.initialTiersValues
+
+    // Then
+    expect(initialTiersValues.length).toBe(1)
+    expect(initialTiersValues[0]['foo']).toBe('bar')
+  })
+
+  it(`should properly add initial tier values`, () => {
+    // Given
+    crowdsaleStore.addInitialTierValues({ foo: 'bar' })
+
+    // When
+    const initialTiersValues = crowdsaleStore.selected.initialTiersValues
+
+    // Then
+    expect(initialTiersValues.length).toBe(1)
+    expect(initialTiersValues[0]['foo']).toBe('bar')
+  })
+
+  it(`should properly check empty values when add initial tier values`, () => {
+    // Given
+    crowdsaleStore.addInitialTierValues('')
+
+    // When
+    const initialTiersValues = crowdsaleStore.selected.initialTiersValues
+
+    // Then
+    expect(initialTiersValues.length).toBe(0)
   })
 })
