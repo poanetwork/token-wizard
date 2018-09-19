@@ -22,12 +22,15 @@
         }
     }
 
-    &.sw-BorderedBlock-3x1columns {
+    &.sw-BorderedBlock-3x1x1columns {
         @media (min-width: $breakpoint-xl) {
             display: grid;
             grid-column-gap: 39px;
             grid-template-columns: 1fr 1fr 1fr;
-            grid-template-rows: auto auto auto;
+            grid-template-areas:
+                "row-1-col-1 row-1-col-2 row-1-col-3"
+                "row-2-col-1 row-2-col-1 row-2-col-1"
+                "row-3-col-1 row-3-col-1 row-3-col-1";
         }
     }
 }

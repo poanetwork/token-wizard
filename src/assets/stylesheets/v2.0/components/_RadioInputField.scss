@@ -3,9 +3,9 @@ $sw-RadioInputField_Button-height: 40px !default;
 .sw-RadioInputField {
     @include form-control-block-common();
 
-    &.sw-BorderedBlock_Column-2_3Row_1 {
+    &.sw-BorderedBlock_Row1Column2 {
         @media (min-width: $breakpoint-xl) {
-            grid-column-start: 2;
+            grid-area: row-1-col-2;
         }
     }
 

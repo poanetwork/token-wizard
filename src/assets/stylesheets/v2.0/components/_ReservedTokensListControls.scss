@@ -1,6 +1,7 @@
 .sw-ReservedTokensListControls {
-    @media (min-width: $breakpoint-xl) {
-        grid-column-start: 1;
-            grid-column-end: 5;
+    &.sw-BorderedBlock_Row3Column1 {
+        @media (min-width: $breakpoint-xl) {
+            grid-area: row-3-col-1;
+        }
     }
 }
