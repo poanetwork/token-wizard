@@ -1,3 +1,7 @@
+$grid-column-gap-md: 15px;
+$grid-column-gap-xl: 39px;
+$grid-column-gap-xxl: 74px;
+
 .sw-BorderedBlock {
     background-color: #fff;
     border-radius: 5px;
@@ -14,23 +18,40 @@
         padding: 34px 36px 49px 35px;
     }
 
-    &.sw-BorderedBlock-3columns {
+    &.sw-BorderedBlock-3Columns {
         @media (min-width: $breakpoint-xl) {
             display: grid;
-            grid-column-gap: 39px;
+            grid-column-gap: $grid-column-gap-md;
             grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        @media (min-width: $breakpoint-xxl) {
+            grid-column-gap: $grid-column-gap-xl;
         }
     }
 
-    &.sw-BorderedBlock-3x1x1columns {
+    &.sw-BorderedBlock-2Rows2Columns {
+        @media (min-width: $breakpoint-xxl) {
+            display: grid;
+            grid-column-gap: $grid-column-gap-xxl;
+            grid-row-gap: 31px;
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    &.sw-BorderedBlock-3Rows3Columns {
         @media (min-width: $breakpoint-xl) {
             display: grid;
-            grid-column-gap: 39px;
+            grid-column-gap: $grid-column-gap-md;
             grid-template-columns: 1fr 1fr 1fr;
             grid-template-areas:
                 "row-1-col-1 row-1-col-2 row-1-col-3"
                 "row-2-col-1 row-2-col-1 row-2-col-1"
                 "row-3-col-1 row-3-col-1 row-3-col-1";
+        }
+
+        @media (min-width: $breakpoint-xxl) {
+            grid-column-gap: $grid-column-gap-xl;
         }
     }
 }

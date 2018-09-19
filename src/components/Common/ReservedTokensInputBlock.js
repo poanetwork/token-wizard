@@ -197,20 +197,10 @@ export class ReservedTokensInputBlock extends Component {
       logger.error(`unrecognized dimension '${this.state.dim}'`)
     }
 
-    const clearAllStyle = {
-      display: 'inline-block',
-      cursor: 'pointer'
-    }
-
-    const dropzoneStyle = {
-      display: 'inline-block',
-      marginLeft: '1em',
-      position: 'relative',
-      cursor: 'pointer'
-    }
+    const dropzoneStyle = {}
 
     return (
-      <div className="sw-BorderedBlock sw-BorderedBlock-3x1x1columns">
+      <div className="sw-BorderedBlock sw-BorderedBlock-3Rows3Columns">
         <InputField
           extraClassName="sw-BorderedBlock_Row1Column1"
           description="Address where to send reserved tokens."
@@ -250,13 +240,17 @@ export class ReservedTokensInputBlock extends Component {
         {/* Actions */}
         <div className="sw-ReservedTokensListControls sw-BorderedBlock_Row3Column1">
           {tokensListEmpty ? null : (
-            <div className="clear-all-tokens" style={clearAllStyle} onClick={this.props.clearAll}>
-              <i className="fa fa-trash" />&nbsp;Clear All
+            <div
+              className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-clearall"
+              onClick={this.props.clearAll}
+            >
+              Clear All
             </div>
           )}
-
           <Dropzone onDrop={this.onDrop} accept=".csv" style={dropzoneStyle}>
-            <i className="fa fa-upload" title="Upload CSV" />&nbsp; Upload CSV
+            <div className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-uploadcsv m-r-0">
+              Upload CSV
+            </div>
           </Dropzone>
         </div>
       </div>

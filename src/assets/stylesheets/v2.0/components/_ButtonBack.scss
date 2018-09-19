@@ -1,4 +1,5 @@
 .sw-ButtonBack {
+    @include not-selectable-text();
     background: none;
     border: none;
     color: $base-text-color-light;
