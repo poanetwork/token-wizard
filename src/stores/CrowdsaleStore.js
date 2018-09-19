@@ -128,13 +128,17 @@ class CrowdsaleStore {
   setSelectedProperty = (property, value) => {
     const currentCrowdsale = Object.assign({}, this.selected)
 
-    currentCrowdsale[property] = value
-    this.selected = currentCrowdsale
+    if (property in currentCrowdsale) {
+      currentCrowdsale[property] = value
+      this.selected = currentCrowdsale
+    }
   }
 
   @action
   addInitialTierValues = initialValues => {
-    this.selected.initialTiersValues.push(initialValues)
+    if( initialValues ) {
+      this.selected.initialTiersValues.push(initialValues)
+    }
   }
 }
 
