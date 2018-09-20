@@ -2,9 +2,9 @@ import React from 'react'
 import { Supply } from '../../../src/components/Common/Supply'
 import { Form } from 'react-final-form'
 import Adapter from 'enzyme-adapter-react-15'
-import { configure, mount, shallow } from 'enzyme'
+import { configure, mount } from 'enzyme'
 import renderer from 'react-test-renderer'
-import { VALIDATION_MESSAGES } from "../../../src/utils/constants";
+import { VALIDATION_MESSAGES } from '../../../src/utils/constants'
 
 configure({ adapter: new Adapter() })
 const DECRIPTION = `How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers`
@@ -35,13 +35,13 @@ describe('Supply ', () => {
     let lab = wrapper.find('label')
     expect(lab.text()).toBe(LABEL)
   })
-  it(`should be proper decription`, () => {
+  it(`should be proper description`, () => {
     const wrapper = mount(
       <Form
         onSubmit={jest.fn()} component={Supply} name='supply'
       />
     )
-    let lab = wrapper.find('p[className="description"]')
+    let lab = wrapper.find('.sw-FormControlTitle_Tooltip')
     expect(lab.text()).toBe(DECRIPTION)
   })
   it(`should give error if field is empty`, () => {
