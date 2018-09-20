@@ -69,7 +69,7 @@ describe('CrowdsaleEndTime', () => {
       expect(wrapper).toMatchSnapshot()
     })
 
-    it(`should be  proper label and description`, () => {
+    it(`should be proper label and description`, () => {
       const wrapper = mount(
         <Form
           onSubmit={jest.fn()}
@@ -86,8 +86,8 @@ describe('CrowdsaleEndTime', () => {
       )
       const label = wrapper.find('label')
       expect(label.text()).toBe(LABEL)
-      const descript = wrapper.find('p[className="description"]')
-      expect(descript.text()).toBe(DECRIPTION)
+      const description = wrapper.find('.sw-FormControlTitle_Tooltip')
+      expect(description.text()).toBe(DECRIPTION)
     })
   })
 
