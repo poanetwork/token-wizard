@@ -96,6 +96,8 @@ describe('GasPriceStore', () => {
       expect(gas.block_number).toEqual(gasPrice.block_number)
       expect(gas.block_time).toEqual(gasPrice.block_time)
       expect(gas.health).toEqual(gasPrice.health)
+
+      expect(gas.instantDescription).toEqual('Instantaneous and Expensive (40 GWei)')
     })
   })
 
