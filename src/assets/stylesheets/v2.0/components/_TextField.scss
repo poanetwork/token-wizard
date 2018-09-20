@@ -19,8 +19,9 @@ $sw-TextField-height: 40px !default;
 
     &[disabled],
     &.disabled {
-        background: rgba(0, 0, 0, 0.01);
-        cursor: pointer;
+        background: rgba(0, 0, 0, 0.05);
+        color: rgba(0, 0, 0, 0.8);
+        cursor: default;
     }
 
     .sw-NumericInput_InputAndButtonContainer & {
