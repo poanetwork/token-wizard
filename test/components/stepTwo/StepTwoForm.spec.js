@@ -1,6 +1,6 @@
 import React from 'react'
 import { Form } from 'react-final-form'
-import { StepTwoForm } from '../../../src/components/stepTwo/StepTwoForm'
+import { StepTwoForm } from '../../../src/components/StepTwo/StepTwoForm'
 import renderer from 'react-test-renderer'
 import Adapter from 'enzyme-adapter-react-15'
 import { configure, mount } from 'enzyme'
