@@ -1,4 +1,4 @@
-import { defaultCompanyStartDate, defaultCompanyEndDate } from '../../../src/components/stepThree/utils'
+import { defaultCompanyStartDate, defaultCompanyEndDate } from '../../../src/components/StepThree/utils'
 import MockDate from 'mockdate'
 import moment from 'moment'
 

@@ -20,7 +20,7 @@ import {
 } from '../../stores'
 import logdown from 'logdown'
 
-const logger = logdown('TW:stepFour:utils')
+const logger = logdown('TW:StepFour:utils')
 
 export const buildDeploymentSteps = deploymentStore => {
   let stepFnCorrelation = {

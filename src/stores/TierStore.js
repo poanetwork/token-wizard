@@ -2,7 +2,7 @@ import { observable, action, computed } from 'mobx'
 import { defaultTier, defaultTierValidations, VALIDATION_TYPES, LIMIT_WHITELISTED_ADDRESSES } from '../utils/constants'
 import { validateTime, validateSupply, validateLaterTime, validateLaterOrEqualTime, validateTier } from '../utils/utils'
 import autosave from './autosave'
-import { defaultCompanyEndDate, defaultCompanyStartDate } from '../components/stepThree/utils'
+import { defaultCompanyEndDate, defaultCompanyStartDate } from '../components/StepThree/utils'
 import logdown from 'logdown'
 
 const logger = logdown('TW:stores:Tier')
