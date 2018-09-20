@@ -3,7 +3,7 @@ import { TokenDecimals } from '../../../src/components/Common/TokenDecimals'
 import { Form } from 'react-final-form'
 import renderer from 'react-test-renderer'
 import Adapter from 'enzyme-adapter-react-15'
-import { configure, mount, shallow } from 'enzyme'
+import { configure, mount } from 'enzyme'
 import { VALIDATION_MESSAGES } from '../../../src/utils/constants'
 
 configure({ adapter: new Adapter() })
@@ -56,6 +56,6 @@ describe('TokenDecimals', () => {
     const input = wrapper.find('input[name="decimals"]')
     input.simulate('change', { target: { value: '21' } })
 
-    expect(wrapper.find('.error').text()).toBe('Should not be greater than 18')
+    expect(wrapper.find('.sw-Error').text()).toBe('Should not be greater than 18')
   })
 })
