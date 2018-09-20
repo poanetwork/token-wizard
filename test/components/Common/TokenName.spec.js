@@ -3,7 +3,7 @@ import { TokenName } from '../../../src/components/Common/TokenName'
 import { Form } from 'react-final-form'
 import renderer from 'react-test-renderer'
 import Adapter from 'enzyme-adapter-react-15'
-import { configure, mount, shallow } from 'enzyme'
+import { configure, mount } from 'enzyme'
 import { VALIDATION_MESSAGES } from '../../../src/utils/constants'
 
 configure({ adapter: new Adapter() })
@@ -30,7 +30,7 @@ describe('TokenName', () => {
     const input = wrapper.find('input[name="name"]')
     input.simulate('change', { target: { value: '               ' } })
 
-    expect(wrapper.find('.error').text()).toBe('Name should have at least one character')
+    expect(wrapper.find('.sw-Error').text()).toBe('Name should have at least one character')
   })
 
   it(`should give error if name is empty`, () => {
@@ -54,6 +54,6 @@ describe('TokenName', () => {
     const input = wrapper.find('input[name="name"]')
     input.simulate('change', { target: { value: '1234567890132546789012345678901' } })
 
-    expect(wrapper.find('.error').text()).toBe(VALIDATION_MESSAGES.NAME)
+    expect(wrapper.find('.sw-Error').text()).toBe(VALIDATION_MESSAGES.NAME)
   })
 })
