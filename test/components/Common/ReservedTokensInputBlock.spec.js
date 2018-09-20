@@ -113,7 +113,7 @@ describe('ReservedTokensInputBlock', () => {
     })
 
     it('Should render all the tokens passed', () => {
-      expect(wrapper().find('.reserved-tokens-item-container')).toHaveLength(tokenList.length)
+      expect(wrapper().find('.sw-ReservedTokensTable_Row')).toHaveLength(tokenList.length)
     })
   })
 
@@ -403,8 +403,7 @@ describe('ReservedTokensInputBlock', () => {
           valueInput().simulate('change', { target: { value: testCase.value.val } })
 
           wrapper()
-            .find('.plus-button-container')
-            .childAt(0)
+            .find('.sw-NumericInput_ButtonPlus')
             .simulate('click')
 
           const { value, expected } = testCase
@@ -421,8 +420,7 @@ describe('ReservedTokensInputBlock', () => {
     describe('removeReservedToken', () => {
       it('Should call removeReservedToken callback', () => {
         wrapper()
-          .find('.reserved-tokens-item-empty')
-          .children('a')
+          .find('.sw-ReservedTokensTable_Delete')
           .at(0)
           .simulate('click')
         expect(removeCallback).toHaveBeenCalledTimes(1)
@@ -431,7 +429,7 @@ describe('ReservedTokensInputBlock', () => {
 
     describe('clearAll', () => {
       it('Should show the "Clear all" button if there are tokens"', () => {
-        const clearAllButton = wrapper().find('.clear-all-tokens')
+        const clearAllButton = wrapper().find('.sw-ReservedTokensListControls_Button-clearall')
         expect(clearAllButton).toHaveLength(1)
       })
 
@@ -453,7 +451,7 @@ describe('ReservedTokensInputBlock', () => {
 
       it('Should call clearAll callback', () => {
         wrapper()
-          .find('.clear-all-tokens')
+          .find('.sw-ReservedTokensListControls_Button-clearall')
           .simulate('click')
         expect(clearAllCallback).toHaveBeenCalledTimes(1)
       })
