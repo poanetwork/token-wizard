@@ -2,42 +2,82 @@
 
 exports[`CrowdsaleRate  should render CrowdsaleRate component 1`] = `
 <div
-  className={undefined}
+  className="sw-InputField "
 >
-  <label
-    className="label"
-    htmlFor="CrowdsaleRate"
+  <div
+    className="sw-FormControlTitle"
   >
-    Rate
-  </label>
+    <label
+      className="sw-FormControlTitle_Label"
+    >
+      Rate
+    </label>
+    <div
+      className="sw-FormControlTitle_Info"
+      tabIndex="-1"
+    >
+      <span
+        className="sw-FormControlTitle_Tooltip"
+      >
+        Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
+      </span>
+    </div>
+  </div>
   <input
-    autoComplete="off"
-    className="input"
+    className="sw-TextField"
     disabled={false}
     id="CrowdsaleRate"
     name="CrowdsaleRate"
+    onBlur={undefined}
+    onChange={undefined}
+    onFocus={undefined}
+    onKeyPress={undefined}
+    onPaste={undefined}
     placeholder={undefined}
+    style={undefined}
     type="text"
     value="1234"
   />
-  <p
-    className="description"
+</div>
+`;
+
+exports[`CrowdsaleRate should render CrowdsaleRate component 1`] = `
+<div
+  className="sw-InputField "
+>
+  <div
+    className="sw-FormControlTitle"
   >
-    Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
-  </p>
-  <span>
-    <p
-      className="error"
-      style={
-        Object {
-          "color": "red",
-          "fontSize": "12px",
-          "fontWeight": "bold",
-          "height": "20px",
-          "width": "100%",
-        }
-      }
-    />
-  </span>
+    <label
+      className="sw-FormControlTitle_Label"
+    >
+      Rate
+    </label>
+    <div
+      className="sw-FormControlTitle_Info"
+      tabIndex="-1"
+    >
+      <span
+        className="sw-FormControlTitle_Tooltip"
+      >
+        Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
+      </span>
+    </div>
+  </div>
+  <input
+    className="sw-TextField"
+    disabled={false}
+    id="CrowdsaleRate"
+    name="CrowdsaleRate"
+    onBlur={undefined}
+    onChange={undefined}
+    onFocus={undefined}
+    onKeyPress={undefined}
+    onPaste={undefined}
+    placeholder={undefined}
+    style={undefined}
+    type="text"
+    value="1234"
+  />
 </div>
 `;

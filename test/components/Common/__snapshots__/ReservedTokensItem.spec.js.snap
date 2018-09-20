@@ -2,63 +2,47 @@
 
 exports[`ReservedTokensItem should render the component with delete button enabled 1`] = `
 <div
-  className="reserved-tokens-item-container"
+  className="sw-ReservedTokensItem"
 >
   <div
-    className="reserved-tokens-item-container-inner"
+    className="sw-ReservedTokensItem_Column"
   >
-    <span
-      className="reserved-tokens-item reserved-tokens-item-left"
-    >
-      0x1111111111111111111111111111111111111111
-    </span>
-    <span
-      className="reserved-tokens-item reserved-tokens-item-middle"
-    >
-      percentage
-    </span>
-    <span
-      className="reserved-tokens-item reserved-tokens-item-right"
-    >
-      12.1234
-    </span>
+    0x1111111111111111111111111111111111111111
   </div>
   <div
-    className="reserved-tokens-item-empty"
+    className="sw-ReservedTokensItem_Column"
   >
-    <a
-      onClick={[Function]}
-    >
-      <span
-        className="item-remove"
-      />
-    </a>
+    percentage
   </div>
+  <div
+    className="sw-ReservedTokensItem_Column"
+  >
+    12.1234
+  </div>
+  <div
+    onClick={[Function]}
+  />
 </div>
 `;
 
 exports[`ReservedTokensItem should render the component with no delete button 1`] = `
 <div
-  className="reserved-tokens-item-container"
+  className="sw-ReservedTokensItem"
 >
   <div
-    className="reserved-tokens-item-container-inner monospace"
+    className="sw-ReservedTokensItem_Column"
   >
-    <span
-      className="reserved-tokens-item reserved-tokens-item-left"
-    >
-      0x1111111111111111111111111111111111111111
-    </span>
-    <span
-      className="reserved-tokens-item reserved-tokens-item-middle"
-    >
-      percentage
-    </span>
-    <span
-      className="reserved-tokens-item reserved-tokens-item-right"
-    >
-      12.1234
-    </span>
+    0x1111111111111111111111111111111111111111
+  </div>
+  <div
+    className="sw-ReservedTokensItem_Column"
+  >
+    percentage
+  </div>
+  <div
+    className="sw-ReservedTokensItem_Column"
+  >
+    12.1234
   </div>
 </div>
 `;

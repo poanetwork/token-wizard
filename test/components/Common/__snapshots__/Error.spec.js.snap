@@ -123,23 +123,7 @@ exports[`Error  should render Error component 1`] = `
           "touched": true,
         }
       }
-    >
-      <span>
-        <p
-          className="error"
-          key="0"
-          style={
-            Object {
-              "color": "blue",
-              "fontSize": "24px",
-              "fontWeight": "bold",
-              "height": "10px",
-              "width": "50%",
-            }
-          }
-        />
-      </span>
-    </Field>
+    />
   </Error>
 </ReactFinalForm>
 `;
