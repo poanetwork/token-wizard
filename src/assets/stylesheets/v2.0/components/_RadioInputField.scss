@@ -24,13 +24,16 @@ $sw-RadioInputField_Button-height: 40px !default;
 .sw-RadioInputField_Label {
     position: relative;
 
+    &:last-child {
+        margin-right: 0;
+    }
+
     @media (min-width: $breakpoint-sm) {
         margin-right: 5px;
+    }
 
-        &:last-child {
-            margin-right: 0;
-        }
-
+    @media (min-width: $breakpoint-md) {
+        flex-grow: 1;
     }
 
     @media (min-width: $breakpoint-xxl) {

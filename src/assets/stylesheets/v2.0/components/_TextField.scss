@@ -17,6 +17,12 @@ $sw-TextField-height: 40px !default;
         border-color: darken($base-border-color, 10%);
     }
 
+    &[disabled],
+    &.disabled {
+        background: rgba(0, 0, 0, 0.01);
+        cursor: pointer;
+    }
+
     .sw-NumericInput_InputAndButtonContainer & {
         flex-grow: 1;
         margin-right: 14px;

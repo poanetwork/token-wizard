@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
-import { Home, Manage, StepOne, StepTwo, stepThree, stepFour, Crowdsale, Contribute, Stats } from './components/index'
+import { Home, Manage, StepOne, StepTwo, StepThree, StepFour, Crowdsale, Contribute, Stats } from './components/index'
 import NoWeb3 from './components/Common/NoWeb3'
 import IncompleteDeploy from './components/IncompleteDeploy'
 import { getAddrFromQuery, toast } from './utils/utils'
@@ -46,7 +46,7 @@ class App extends Component {
               <Web3Provider onChangeAccount={deploymentStore.handleAccountChange} web3UnavailableScreen={NoWeb3}>
                 <Switch>
                   {/* The route to /4 must be first for the incomplete deploy redirect to work */}
-                  <Route path="/4" component={stepFour} />
+                  <Route path="/4" component={StepFour} />
 
                   {deploymentStore.deployInProgress ? (
                     <IncompleteDeploy />
@@ -56,7 +56,7 @@ class App extends Component {
                       <Route exact path="/manage/:crowdsalePointer" component={Manage} />
                       <Route path="/1" component={StepOne} />
                       <Route path="/2" component={StepTwo} />
-                      <Route path="/3" component={stepThree} />
+                      <Route path="/3" component={StepThree} />
                     </Switch>
                   )}
                 </Switch>
