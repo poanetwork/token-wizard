@@ -20,13 +20,18 @@ const { MINTED_CAPPED_CROWDSALE } = CROWDSALE_STRATEGIES
 export class StepOne extends Component {
   state = {
     loading: false,
-    strategy: null
+    strategy: MINTED_CAPPED_CROWDSALE
   }
 
   async componentDidMount() {
     try {
       this.setState({ loading: true })
-      await checkWeb3ForErrors()
+      await checkWeb3ForErrors(result => {
+        const { value } = result
+        if (value) {
+          navigateTo(this.props.history, 'home')
+        }
+      })
 
       const { strategy } = await this.load()
       this.setState({ strategy: strategy })
@@ -44,9 +49,6 @@ export class StepOne extends Component {
 
     // Set default strategy value
     const { crowdsaleStore } = this.props
-    if (crowdsaleStore && !crowdsaleStore.strategy) {
-      crowdsaleStore.setProperty('strategy', MINTED_CAPPED_CROWDSALE)
-    }
     logger.log('CrowdsaleStore strategy', crowdsaleStore.strategy)
     return {
       strategy: crowdsaleStore.strategy
