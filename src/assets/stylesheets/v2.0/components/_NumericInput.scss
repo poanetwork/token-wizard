@@ -17,13 +17,14 @@ $sw-NumericInput_ButtonPlus-height: 30px !default;
 }
 
 .sw-NumericInput_ButtonPlus {
-    height: $sw-NumericInput_ButtonPlus-height;
-    width: $sw-NumericInput_ButtonPlus-height;
     background-image: url('#{ $base-images-path }/FormControlBlock/ico-plus.svg');
     background-position: 50% 50%;
     background-repeat: no-repeat;
     background-size: cover;
+    cursor: pointer;
     flex-shrink: 0;
+    height: $sw-NumericInput_ButtonPlus-height;
+    width: $sw-NumericInput_ButtonPlus-height;
 
     .sw-NumericInput_InputAndButtonContainer & {
         margin-right: 15px;
