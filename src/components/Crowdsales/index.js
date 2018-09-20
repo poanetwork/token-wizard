@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
 import { reloadStorage } from '../Home/utils'
-import { clearStorage } from '../../utils/utils'
+import { clearStorage, navigateTo } from '../../utils/utils'
 import { checkWeb3ForErrors, getCurrentAccount, loadRegistryAddresses } from '../../utils/blockchainHelpers'
 import logdown from 'logdown'
 import { CrowdsaleEmptyList } from './CrowdsaleEmptyList'
@@ -27,7 +27,12 @@ export class Crowdsales extends Component {
   async componentDidMount() {
     try {
       this.setState({ loading: true })
-      await checkWeb3ForErrors()
+      await checkWeb3ForErrors(result => {
+        const { value } = result
+        if (value) {
+          navigateTo(this.props.history, 'home')
+        }
+      })
 
       const { account, crowdsales } = await this.load()
       this.setState({

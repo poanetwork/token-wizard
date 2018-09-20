@@ -1,22 +1,22 @@
 import sweetAlert2 from 'sweetalert2'
 import { DEPLOYMENT_VALUES, LIMIT_RESERVED_ADDRESSES, LIMIT_WHITELISTED_ADDRESSES } from './constants'
 
-export function noMetaMaskAlert() {
+export function noMetaMaskAlert(cb) {
   sweetAlert2({
     title: 'Warning',
     html:
       "You don't have  <a href='https://chrome.google.com/webstore/detail/nifty-wallet/jbdaocneiiinmjbjlgalhcelgbejmnid'>" +
       "a Wallet </a> installed. Check Token Wizard GitHub for <a href='https://github.com/poanetwork/token-wizard' target='blank'>the instruction</a>.",
     type: 'warning'
-  })
+  }).then(cb)
 }
 
-export function MetaMaskIsLockedAlert() {
+export function MetaMaskIsLockedAlert(cb) {
   sweetAlert2({
     title: 'Warning',
     html: 'You signed out from your Wallet. Open your Wallet extension and sign in.',
     type: 'warning'
-  })
+  }).then(cb)
 }
 
 export function noContractDataAlert() {

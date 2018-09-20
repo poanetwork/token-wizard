@@ -28,7 +28,7 @@ export const checkWeb3 = async (disableAlert = false) => {
   }
 }
 
-export const checkWeb3ForErrors = async () => {
+export const checkWeb3ForErrors = async cb => {
   const { web3 } = web3Store
 
   try {
@@ -56,10 +56,10 @@ export const checkWeb3ForErrors = async () => {
     switch (code) {
       case 1:
       case 2:
-        await noMetaMaskAlert()
+        await noMetaMaskAlert(cb)
         break
       case 3:
-        await MetaMaskIsLockedAlert()
+        await MetaMaskIsLockedAlert(cb)
         break
       default:
     }
