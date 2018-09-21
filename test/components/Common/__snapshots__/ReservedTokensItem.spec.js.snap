@@ -1,30 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ReservedTokensItem should render the component with delete button enabled 1`] = `
-<div
-  className="sw-ReservedTokensItem"
->
-  <div
-    className="sw-ReservedTokensItem_Column"
-  >
-    0x1111111111111111111111111111111111111111
-  </div>
-  <div
-    className="sw-ReservedTokensItem_Column"
-  >
-    percentage
-  </div>
-  <div
-    className="sw-ReservedTokensItem_Column"
-  >
-    12.1234
-  </div>
-  <div
-    onClick={[Function]}
-  />
-</div>
-`;
-
 exports[`ReservedTokensItem should render the component with no delete button 1`] = `
 <div
   className="sw-ReservedTokensItem"
