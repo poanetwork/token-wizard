@@ -1,32 +1,33 @@
 import React from 'react'
 import Adapter from 'enzyme-adapter-react-15'
-import { configure, mount, shallow, render } from 'enzyme'
+import { configure, shallow, mount } from 'enzyme'
 import { Crowdsales } from '../../../src/components/Crowdsales'
 import { CrowdsalesList } from '../../../src/components/Common/CrowdsalesList'
 import { crowdsaleStore, contractStore, web3Store, generalStore } from '../../../src/stores'
 import { Provider } from 'mobx-react'
-import { CrowdsaleEmptyList } from '../../../src/components/Crowdsales/CrowdsaleEmptyList'
+import renderer from 'react-test-renderer'
 
 configure({ adapter: new Adapter() })
 
 describe('Crowdsales', () => {
-  const history = {
-    push: jest.fn()
-  }
-  const stores = { crowdsaleStore, contractStore, web3Store, generalStore }
+  const stores = { crowdsaleStore, web3Store, generalStore, contractStore }
 
-  it('should render screen with shallow without throwing an error', () => {
+  it('should render screen ', () => {
     // Given
-    const wrapper = shallow(<Crowdsales {...stores} />)
+    const tree = renderer.create(
+      <Provider {...stores}>
+        <Crowdsales />
+      </Provider>
+    )
 
     // When
-    const crowdsaleEmptyList = wrapper.find(CrowdsaleEmptyList)
+    const treeJson = tree.toJSON()
 
     // Then
-    expect(crowdsaleEmptyList).toMatchSnapshot()
+    expect(treeJson).toMatchSnapshot()
   })
 
-  it('should render screen with mount without throwing an error', () => {
+  it('should render screen with shallow without throwing an error', () => {
     // Given
     const wrapper = mount(
       <Provider {...stores}>
@@ -35,23 +36,41 @@ describe('Crowdsales', () => {
     )
 
     // When
-    const crowdsaleEmptyList = wrapper.find(CrowdsaleEmptyList)
+    const componentCrowdsales = wrapper.find('div').at(0)
 
     // Then
-    expect(crowdsaleEmptyList).toMatchSnapshot()
+    expect(componentCrowdsales.exists()).toBeTruthy()
   })
 
-  it('should render screen with render without throwing an error', () => {
+  it('should render screen with shallow and check functions', () => {
     // Given
-    const wrapper = render(
+    const wrapper = shallow(<Crowdsales {...stores} />)
+
+    setTimeout(() => {
+      wrapper.update()
+      const instance = wrapper.instance()
+      const spy = jest.spyOn(instance, 'load')
+
+      expect(spy).toHaveBeenCalledTimes(1)
+    }, 2000)
+  })
+
+  it('should render screen with shallow and check load functions', () => {
+    // Given
+    const restore = Crowdsales.prototype.load
+    const mock = (Crowdsales.prototype.load = jest.fn())
+
+    mount(
       <Provider {...stores}>
         <Crowdsales />
       </Provider>
     )
-    // When
-    const crowdsaleEmptyList = wrapper.find(CrowdsaleEmptyList)
 
-    // Then
-    expect(crowdsaleEmptyList).toMatchSnapshot()
+    setTimeout(() => {
+      expect(mock).toHaveBeenCalled()
+      expect(mock).toHaveBeenCalledTimes(1)
+    }, 10)
+
+    Crowdsales.prototype.load = restore
   })
 })
