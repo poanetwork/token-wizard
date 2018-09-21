@@ -5,7 +5,6 @@ import { MemoryRouter } from 'react-router'
 import { Home } from '../../../src/components/Home/index'
 import { ChooseCrowdsale } from '../../../src/components/Home/ChooseCrowdsale'
 import { CreateCrowdsale } from '../../../src/components/Home/CreateCrowdsale'
-import { LogoPrimary } from '../../../src/components/LogoPrimary'
 import storage from 'store2'
 
 configure({ adapter: new Adapter() })
@@ -34,34 +33,26 @@ describe('Home', () => {
       </MemoryRouter>
     )
 
-    // When
-    const buttonChooseCrowdsale = wrapper.find(ChooseCrowdsale)
-    const buttonCreateCrowdsale = wrapper.find(CreateCrowdsale)
-    const logoPrimary = wrapper.find(LogoPrimary)
+    // Given
+    const tree = wrapper.html()
 
     // Then
-    expect(buttonChooseCrowdsale).toMatchSnapshot()
-    expect(buttonCreateCrowdsale).toMatchSnapshot()
-    expect(logoPrimary).toMatchSnapshot()
+    expect(tree).toMatchSnapshot()
   })
 
   it('should render screen with render without throwing an error', () => {
-    // Given
+    // When
     const wrapper = render(
       <MemoryRouter initialEntries={['/']}>
         <Home />
       </MemoryRouter>
     )
-    // When
-    const tree = wrapper.find('div.hm-Home_MainInfo')
-    const buttonChooseCrowdsale = wrapper.find(ChooseCrowdsale)
-    const buttonCreateCrowdsale = wrapper.find(CreateCrowdsale)
-    const logoPrimary = wrapper.find(LogoPrimary)
+
+    // Given
+    const tree = wrapper.html()
+
     // Then
     expect(tree).toMatchSnapshot()
-    expect(buttonChooseCrowdsale).toMatchSnapshot()
-    expect(buttonCreateCrowdsale).toMatchSnapshot()
-    expect(logoPrimary).toMatchSnapshot()
   })
 
   it(`should navigate to Home`, () => {

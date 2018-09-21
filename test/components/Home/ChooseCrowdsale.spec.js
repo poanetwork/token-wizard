@@ -12,14 +12,9 @@ describe('ChooseCrowdsale', () => {
   }
 
   it('should render screen with shallow without throwing an error', () => {
-    // Given
     const wrapper = shallow(<ChooseCrowdsale />)
 
-    // When
-    const tree = wrapper.find('button.hm-Home_BtnChoose')
-
-    // Then
-    expect(tree).toMatchSnapshot()
+    expect(wrapper).toMatchSnapshot()
   })
 
   it('should render screen with mount without throwing an error', () => {
@@ -31,10 +26,10 @@ describe('ChooseCrowdsale', () => {
     )
 
     // When
-    const tree = wrapper.find('button.hm-Home_BtnChoose')
+    const tree = wrapper.find('.hm-Home_BtnChoose')
 
     // Then
-    expect(tree).toMatchSnapshot()
+    expect(tree).toHaveLength(1)
   })
 
   it('should render screen with render without throwing an error', () => {
@@ -45,7 +40,7 @@ describe('ChooseCrowdsale', () => {
       </MemoryRouter>
     )
     // When
-    const tree = wrapper.find('button.hm-Home_BtnChoose')
+    const tree = wrapper.html()
 
     // Then
     expect(tree).toMatchSnapshot()
