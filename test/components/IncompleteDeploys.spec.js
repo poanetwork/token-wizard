@@ -43,7 +43,7 @@ describe('IncompleteDeploys', () => {
 
     // Then
     expect(navigateToHandler).toHaveBeenCalledTimes(1)
-    expect(navigateToHandler).toHaveBeenCalledWith('StepFour')
+    expect(navigateToHandler).toHaveBeenCalledWith('stepFour')
   })
 
   it(`should cancel the deploy`, () => {

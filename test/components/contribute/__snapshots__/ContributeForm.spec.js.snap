@@ -229,12 +229,19 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
                 }
                 placeholder="0"
               >
-                <div>
-                  <label
-                    className="label"
-                    htmlFor="contribute"
-                  />
-                  <input
+                <div
+                  className="sw-InputField "
+                >
+                  <FormControlTitle>
+                    <div
+                      className="sw-FormControlTitle"
+                    >
+                      <label
+                        className="sw-FormControlTitle_Label"
+                      />
+                    </div>
+                  </FormControlTitle>
+                  <TextField
                     autoComplete="off"
                     className="contribute-form-input"
                     id="contribute"
@@ -244,10 +251,18 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
                     onFocus={[Function]}
                     placeholder="0"
                     value=""
-                  />
-                  <p
-                    className="description"
-                  />
+                  >
+                    <input
+                      className="sw-TextField"
+                      id="contribute"
+                      name="contribute"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder="0"
+                      value=""
+                    />
+                  </TextField>
                   <Error
                     name="contribute"
                   >
@@ -263,23 +278,7 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
                           "touched": true,
                         }
                       }
-                    >
-                      <span>
-                        <p
-                          className="error"
-                          key="0"
-                          style={
-                            Object {
-                              "color": "red",
-                              "fontSize": "12px",
-                              "fontWeight": "bold",
-                              "height": "20px",
-                              "width": "100%",
-                            }
-                          }
-                        />
-                      </span>
-                    </Field>
+                    />
                   </Error>
                 </div>
               </InputField2>
@@ -350,42 +349,30 @@ exports[`ContributeForm should render ContributeForm component 1`] = `
     className="contribute-form-input-container"
   >
     <div
-      className={undefined}
+      className="sw-InputField "
     >
-      <label
-        className="label"
-        htmlFor="contribute"
-      />
+      <div
+        className="sw-FormControlTitle"
+      >
+        <label
+          className="sw-FormControlTitle_Label"
+        />
+      </div>
       <input
-        autoComplete="off"
-        className="contribute-form-input"
+        className="sw-TextField"
         disabled={undefined}
         id="contribute"
         name="contribute"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
+        onKeyPress={undefined}
+        onPaste={undefined}
         placeholder="0"
+        style={undefined}
         type={undefined}
         value=""
       />
-      <p
-        className="description"
-      />
-      <span>
-        <p
-          className="error"
-          style={
-            Object {
-              "color": "red",
-              "fontSize": "12px",
-              "fontWeight": "bold",
-              "height": "20px",
-              "width": "100%",
-            }
-          }
-        />
-      </span>
     </div>
     <div
       className="contribute-form-label"
@@ -443,42 +430,30 @@ exports[`ContributeForm should render ContributeForm component and its children 
     className="contribute-form-input-container"
   >
     <div
-      className={undefined}
+      className="sw-InputField "
     >
-      <label
-        className="label"
-        htmlFor="contribute"
-      />
+      <div
+        className="sw-FormControlTitle"
+      >
+        <label
+          className="sw-FormControlTitle_Label"
+        />
+      </div>
       <input
-        autoComplete="off"
-        className="contribute-form-input"
+        className="sw-TextField"
         disabled={undefined}
         id="contribute"
         name="contribute"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
+        onKeyPress={undefined}
+        onPaste={undefined}
         placeholder="0"
+        style={undefined}
         type={undefined}
         value=""
       />
-      <p
-        className="description"
-      />
-      <span>
-        <p
-          className="error"
-          style={
-            Object {
-              "color": "red",
-              "fontSize": "12px",
-              "fontWeight": "bold",
-              "height": "20px",
-              "width": "100%",
-            }
-          }
-        />
-      </span>
     </div>
     <div
       className="contribute-form-label"

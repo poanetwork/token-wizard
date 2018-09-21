@@ -41,7 +41,7 @@ describe('StepOne', () => {
     wrapper.update()
 
     // When
-    stepOneComponent.find('.st-StepContent_Buttons .sw-ButtonPrimaryGradient').simulate('click')
+    stepOneComponent.find('.sw-ButtonContinue').simulate('click')
 
     // Then
     expect(navigateToHandler).toHaveBeenCalledTimes(1)
