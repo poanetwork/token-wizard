@@ -25,66 +25,67 @@ $sw-ReservedTokensTable-gradient-width: 45px;
             grid-area: row-2-col-1;
         }
     }
+
 }
 
 .sw-ReservedTokensTable_Inner {
+    max-width: 100%;
     overflow: auto;
     position: relative;
     z-index: 1;
 }
 
-.sw-ReservedTokensTable_Row {
-    align-items: center;
-    border-bottom: solid 1px $base-border-color;
-    display: flex;
-    border-right: $sw-ReservedTokensTable-gradient-width solid transparent;
-    min-width: fit-content;
-    padding: 16px 10px 16px 0;
-
-    @media (min-width: $breakpoint-xxl) {
-        border-right: none;
-    }
-
-    &:first-child {
-        border-top: solid 1px $base-border-color;
-    }
+.sw-ReservedTokensTable_Table {
+    min-width: 100%;
+    vertical-align: middle;
 }
 
 .sw-ReservedTokensTable_Column {
-    flex-shrink: 0;
+    border-bottom: solid 1px $base-border-color;
     font-size: 16px;
     font-weight: 400;
     line-height: 1.2;
-    margin-right: 25px;
-    white-space: nowrap;
+    padding: 16px 25px 16px 0;
 
-    &.sw-ReservedTokensTable_Column-dimension {
-        background-position: 50% 50%;
-        background-repeat: no-repeat;
-        background-size: cover;
-        height: 35px;
-        width: 35px;
+    .sw-ReservedTokensTable_Row:first-child & {
+        border-top: solid 1px $base-border-color;
     }
-    &.sw-ReservedTokensTable_Column-address {
-        min-width: 415px;
+
+    &:last-child {
+        padding-right: 50px;
+
+        @media (min-width: $breakpoint-xxl) {
+            padding-right: 25px;
+        }
+
     }
-    &.sw-ReservedTokensTable_Column-tokens {
-        background-image: url('#{ $base-images-path }/ReservedTokensTable/ico-tokens.svg');
-    }
-    &.sw-ReservedTokensTable_Column-percentage {
-        background-image: url('#{ $base-images-path }/ReservedTokensTable/ico-percentage.svg');
-    }
+
     &.sw-ReservedTokensTable_Column-value {
-        min-width: 190px;
         text-align: right;
     }
 }
 
-.sw-ReservedTokensTable_Delete {
+.sw-ReservedTokensTable_Dimension {
     background-position: 50% 50%;
     background-repeat: no-repeat;
     background-size: cover;
+    height: 35px;
+    width: 35px;
+
+    &.sw-ReservedTokensTable_Dimension-tokens {
+        background-image: url('#{ $base-images-path }/ReservedTokensTable/ico-tokens.svg');
+    }
+    &.sw-ReservedTokensTable_Dimension-percentage {
+        background-image: url('#{ $base-images-path }/ReservedTokensTable/ico-percentage.svg');
+    }
+
+}
+
+.sw-ReservedTokensTable_Delete {
     background-image: url('#{ $base-images-path }/ReservedTokensTable/ico-delete.svg');
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
     cursor: pointer;
     height: 14.6px;
     margin-left: auto;
