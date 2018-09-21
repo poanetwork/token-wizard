@@ -19,7 +19,7 @@ $sw-TextField-height: 40px !default;
 
     &[disabled],
     &.disabled {
-        background: rgba(0, 0, 0, 0.05);
+        background: rgba(0, 0, 0, 0.15);
         color: rgba(0, 0, 0, 0.8);
         cursor: default;
     }
