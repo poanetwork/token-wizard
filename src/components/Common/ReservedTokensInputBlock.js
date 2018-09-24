@@ -116,7 +116,6 @@ export class ReservedTokensInputBlock extends Component {
 
   handleAddressChange = address => {
     const isAddressValid = Web3.utils.isAddress(address) ? VALID : INVALID
-
     const newState = update(this.state, {
       validation: {
         address: {
@@ -225,6 +224,7 @@ export class ReservedTokensInputBlock extends Component {
           acceptFloat={true}
           extraClassName="sw-BorderedBlock_Row1Column3"
           decimals={this.props.decimals}
+          dimension={this.state.dim}
           name={VALUE}
           onClick={this.addReservedTokensItem}
           onValueUpdate={this.handleValueChange}
