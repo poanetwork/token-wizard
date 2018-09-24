@@ -18,6 +18,8 @@ export const InputField2 = props => {
         id={props.input.name}
         placeholder={props.placeholder}
         type={props.type}
+        min={props.min}
+        max={props.max}
         {...props.input}
       />
       <Error name={props.input.name} />

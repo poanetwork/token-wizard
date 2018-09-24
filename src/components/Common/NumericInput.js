@@ -5,6 +5,7 @@ import { observer } from 'mobx-react'
 import { FormControlTitle } from '../Common/FormControlTitle'
 import { TextField } from '../Common/TextField'
 import { FormError } from '../Common/FormError'
+import { BigNumber } from 'bignumber.js'
 
 const { VALID, INVALID } = VALIDATION_TYPES
 
@@ -42,7 +43,9 @@ export class NumericInput extends Component {
 
   onChange = e => {
     let value = this.props.acceptFloat ? parseFloat(e.target.value) : parseInt(e.target.value, 10)
+
     if (this.props.acceptEmpty && e.target.value === '') value = ''
+
     this.validate(value)
   }
 
@@ -111,11 +114,32 @@ export class NumericInput extends Component {
     }
   }
 
+  getMinDecimalsValue(minimum, decimals) {
+    if (decimals === '0' || decimals === 0 || !decimals) return 0
+
+    let minDecimals = new BigNumber(0)
+
+    minDecimals = minimum + 1 / Math.pow(10, decimals)
+
+    return minDecimals.toFixed(decimals)
+  }
+
   render() {
     const { value, pristine, valid } = this.state
-    const { disabled, errorMessage, title, description, name, placeholder, onClick, extraClassName } = this.props
-
+    const {
+      description,
+      disabled,
+      errorMessage,
+      extraClassName,
+      min,
+      name,
+      onClick,
+      placeholder,
+      title,
+      decimals
+    } = this.props
     const error = valid === INVALID ? <FormError errorMessage={errorMessage} /> : ''
+    const renderedValue = value === 0 ? this.getMinDecimalsValue(min, decimals) : value
 
     return (
       <div className={`sw-NumericInput ${extraClassName ? extraClassName : ''}`}>
@@ -124,12 +148,14 @@ export class NumericInput extends Component {
           <TextField
             disabled={disabled}
             id={name}
+            min={min}
             onChange={this.onChange}
             onKeyPress={this.onKeyPress}
             onPaste={this.onPaste}
             placeholder={placeholder}
+            step="1"
             type="number"
-            value={value}
+            value={renderedValue}
           />
           <div onClick={onClick} className="sw-NumericInput_ButtonPlus" />
         </div>
