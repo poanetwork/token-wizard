@@ -7,6 +7,8 @@ export const TextField = props => {
       disabled={props.disabled}
       id={props.name}
       name={props.name}
+      max={props.max}
+      min={props.min}
       onBlur={props.onBlur}
       onChange={props.onChange}
       onFocus={props.onFocus}

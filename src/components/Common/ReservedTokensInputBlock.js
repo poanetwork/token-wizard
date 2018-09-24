@@ -1,21 +1,19 @@
-import React, { Component } from 'react'
-import Web3 from 'web3'
 import Dropzone from 'react-dropzone'
 import Papa from 'papaparse'
-
+import React, { Component } from 'react'
+import ReservedTokensTable from './ReservedTokensTable'
+import Web3 from 'web3'
+import logdown from 'logdown'
+import processReservedTokens from '../../utils/processReservedTokens'
+import update from 'immutability-helper'
 import { InputField } from './InputField'
+import { NumericInput } from './NumericInput'
 import { RadioInputField } from './RadioInputField'
 import { TEXT_FIELDS, VALIDATION_TYPES } from '../../utils/constants'
-import update from 'immutability-helper'
-import ReservedTokensTable from './ReservedTokensTable'
 import { observer } from 'mobx-react'
-import { NumericInput } from './NumericInput'
 import { reservedTokensImported, noMoreReservedSlotAvailableCSV } from '../../utils/alerts'
-import processReservedTokens from '../../utils/processReservedTokens'
-import logdown from 'logdown'
 
 const logger = logdown('TW:ReservedTokensInputBlock')
-
 const { VALID, INVALID } = VALIDATION_TYPES
 const { ADDRESS, DIMENSION, VALUE } = TEXT_FIELDS
 
@@ -182,14 +180,14 @@ export class ReservedTokensInputBlock extends Component {
 
     if (this.state.dim === 'tokens') {
       valueInputParams = {
-        min: !this.props.decimals ? 0 : Number(`1e-${this.props.decimals}`),
-        maxDecimals: !this.props.decimals ? 0 : this.props.decimals,
+        min: 0,
+        maxDecimals: this.props.decimals ? this.props.decimals : 0,
         errorMessage: 'Value must be positive and decimals should not exceed the amount of decimals specified',
         description: "Value in tokens. Don't forget to click + button for each reserved token."
       }
     } else if (this.state.dim === 'percentage') {
       valueInputParams = {
-        min: Number.MIN_VALUE,
+        min: 0,
         errorMessage: 'Value must be positive',
         description: "Value in percentage. Don't forget to click + button for each reserved token."
       }
@@ -226,6 +224,7 @@ export class ReservedTokensInputBlock extends Component {
         <NumericInput
           acceptFloat={true}
           extraClassName="sw-BorderedBlock_Row1Column3"
+          decimals={this.props.decimals}
           name={VALUE}
           onClick={this.addReservedTokensItem}
           onValueUpdate={this.handleValueChange}
