@@ -120,7 +120,7 @@ export class NumericInput extends Component {
     } else return false
   }
 
-  getMinimumWithDecimals(minimum, decimals) {
+  getTokensMinimumWithDecimals(minimum, decimals) {
     if (this.zeroDecimals(decimals)) return
 
     let minDecimals = new BigNumber(0)
@@ -130,25 +130,13 @@ export class NumericInput extends Component {
     return minDecimals.toFixed(decimals)
   }
 
-  getDimensionValidMinimum(dimension, decimals) {
+  getMinimumValue(dimension, decimals, minimum) {
     if (dimension === 'tokens' && this.zeroDecimals(decimals)) {
       return 1
-    }
-
-    if (dimension === 'tokens' && !this.zeroDecimals(decimals)) {
+    } else if (dimension === 'tokens') {
+      return this.getTokensMinimumWithDecimals(minimum, decimals)
+    } else if (dimension === 'percentage') {
       return 0
-    }
-
-    if (dimension === 'percentage') {
-      return 0
-    }
-  }
-
-  getMinimumValue(dimension, decimals, minimum) {
-    if (this.zeroDecimals(decimals)) {
-      return this.getDimensionValidMinimum(dimension, decimals)
-    } else {
-      return this.getMinimumWithDecimals(minimum, decimals)
     }
   }
 
