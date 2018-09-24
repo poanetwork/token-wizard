@@ -88,6 +88,7 @@ export const StepTwoForm = ({
 
   return (
     <form id={id} onSubmit={handleSubmit} className="st-StepContent_FormFullHeight">
+      <FormSpy onChange={onChangeForm} />
       <div className={`sw-BorderedBlock ${topBlockExtraClass}`}>
         <TokenName />
         <TokenTicker />
@@ -95,7 +96,6 @@ export const StepTwoForm = ({
         {tokenSupply}
       </div>
       {reservedTokens}
-      <FormSpy onChange={onChangeForm} />
       <div className="st-StepContent_Buttons">
         <ButtonBack onClick={goBack} />
         <ButtonContinue type="submit" status={status} />
