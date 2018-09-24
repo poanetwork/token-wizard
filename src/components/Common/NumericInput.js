@@ -114,8 +114,14 @@ export class NumericInput extends Component {
     }
   }
 
-  getMinDecimalsValue(minimum, decimals) {
-    if (decimals === '0' || decimals === 0 || !decimals) return 0
+  zeroDecimals(decimals) {
+    if (decimals === '0' || decimals === 0 || !decimals) {
+      return true
+    } else return false
+  }
+
+  getMinimumWithDecimals(minimum, decimals) {
+    if (this.zeroDecimals(decimals)) return
 
     let minDecimals = new BigNumber(0)
 
@@ -124,10 +130,34 @@ export class NumericInput extends Component {
     return minDecimals.toFixed(decimals)
   }
 
+  getDimensionValidMinimum(dimension, decimals) {
+    if (dimension === 'tokens' && this.zeroDecimals(decimals)) {
+      return 1
+    }
+
+    if (dimension === 'tokens' && !this.zeroDecimals(decimals)) {
+      return 0
+    }
+
+    if (dimension === 'percentage') {
+      return 0
+    }
+  }
+
+  getMinimumValue(dimension, decimals, minimum) {
+    if (this.zeroDecimals(decimals)) {
+      return this.getDimensionValidMinimum(dimension, decimals)
+    } else {
+      return this.getMinimumWithDecimals(minimum, decimals)
+    }
+  }
+
   render() {
     const { value, pristine, valid } = this.state
     const {
+      decimals,
       description,
+      dimension,
       disabled,
       errorMessage,
       extraClassName,
@@ -135,11 +165,11 @@ export class NumericInput extends Component {
       name,
       onClick,
       placeholder,
-      title,
-      decimals
+      title
     } = this.props
     const error = valid === INVALID ? <FormError errorMessage={errorMessage} /> : ''
-    const renderedValue = value === 0 ? this.getMinDecimalsValue(min, decimals) : value
+    const minimumValue = this.getMinimumValue(dimension, decimals, min)
+    const renderedValue = value <= minimumValue ? minimumValue : value
 
     return (
       <div className={`sw-NumericInput ${extraClassName ? extraClassName : ''}`}>
@@ -148,14 +178,14 @@ export class NumericInput extends Component {
           <TextField
             disabled={disabled}
             id={name}
-            min={min}
+            min={minimumValue}
             onChange={this.onChange}
             onKeyPress={this.onKeyPress}
             onPaste={this.onPaste}
             placeholder={placeholder}
             step="1"
             type="number"
-            value={renderedValue}
+            value={pristine ? '' : renderedValue}
           />
           <div onClick={onClick} className="sw-NumericInput_ButtonPlus" />
         </div>
