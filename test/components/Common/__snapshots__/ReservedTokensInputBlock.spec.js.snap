@@ -246,7 +246,7 @@ exports[`percentage 1`] = `
             >
               <TextField
                 id="Value"
-                min={0}
+                min="0"
                 onChange={[Function]}
                 onKeyPress={[Function]}
                 onPaste={[Function]}
@@ -257,7 +257,7 @@ exports[`percentage 1`] = `
               >
                 <input
                   className="sw-TextField"
-                  min={0}
+                  min="0"
                   onChange={[Function]}
                   onKeyPress={[Function]}
                   onPaste={[Function]}
