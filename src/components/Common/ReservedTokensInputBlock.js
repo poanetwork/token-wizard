@@ -1,40 +1,48 @@
+import React, { Component } from 'react'
+import Web3 from 'web3'
 import Dropzone from 'react-dropzone'
 import Papa from 'papaparse'
-import React, { Component } from 'react'
-import ReservedTokensTable from './ReservedTokensTable'
-import Web3 from 'web3'
-import logdown from 'logdown'
-import processReservedTokens from '../../utils/processReservedTokens'
-import update from 'immutability-helper'
+
 import { InputField } from './InputField'
-import { NumericInput } from './NumericInput'
 import { RadioInputField } from './RadioInputField'
 import { TEXT_FIELDS, VALIDATION_TYPES } from '../../utils/constants'
-import { observer } from 'mobx-react'
-import { reservedTokensImported, noMoreReservedSlotAvailableCSV } from '../../utils/alerts'
+import update from 'immutability-helper'
+import ReservedTokensTable from './ReservedTokensTable'
+import { inject, observer } from 'mobx-react'
+import { NumericInput } from './NumericInput'
+import {
+  reservedTokensImported,
+  noMoreReservedSlotAvailableCSV,
+  clearingReservedTokens,
+  noMoreReservedSlotAvailable
+} from '../../utils/alerts'
+import processReservedTokens from '../../utils/processReservedTokens'
+import logdown from 'logdown'
+import { toBigNumber } from '../../utils/utils'
 
 const logger = logdown('TW:ReservedTokensInputBlock')
 const { VALID, INVALID } = VALIDATION_TYPES
 const { ADDRESS, DIMENSION, VALUE } = TEXT_FIELDS
 
+@inject('reservedTokenStore', 'tokenStore')
 @observer
 export class ReservedTokensInputBlock extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      addr: '',
-      dim: 'tokens',
-      val: '',
-      validation: {
-        address: {
-          pristine: true,
-          valid: INVALID
-        },
-        value: {
-          pristine: true,
-          valid: INVALID
-        }
+  state = {
+    addr: '',
+    dim: 'tokens',
+    val: '',
+    decimals:
+      this.props.tokenStore.validToken.decimals === VALID && this.props.tokenStore.decimals >= 0
+        ? toBigNumber(this.props.tokenStore.decimals).toFixed()
+        : 0,
+    validation: {
+      address: {
+        pristine: true,
+        valid: INVALID
+      },
+      value: {
+        pristine: true,
+        valid: INVALID
       }
     }
   }
@@ -65,12 +73,19 @@ export class ReservedTokensInputBlock extends Component {
     })
   }
 
+  validateReservedTokensList = () => {
+    if (!this.props.reservedTokenStore.validateLength) {
+      noMoreReservedSlotAvailable()
+    }
+    return this.props.reservedTokenStore.validateLength
+  }
+
   addReservedTokensItem = () => {
     const { addr, dim, val } = this.state
 
-    let response = this.props.validateReservedTokensList
+    let response = this.validateReservedTokensList()
 
-    logger.log('Validate reserved token list length', response)
+    logger.log('Valid reserved token list length', response)
 
     if (!response) {
       this.clearInput()
@@ -123,7 +138,7 @@ export class ReservedTokensInputBlock extends Component {
       val: val
     }
 
-    this.props.addReservedTokensItem(newToken)
+    this.props.reservedTokenStore.addToken(newToken)
   }
 
   handleAddressChange = address => {
@@ -167,7 +182,7 @@ export class ReservedTokensInputBlock extends Component {
           const { called, reservedTokenLengthError } = processReservedTokens(
             {
               rows: results.data,
-              decimals: this.props.decimals
+              decimals: this.state.decimals
             },
             item => {
               this.props.addReservedTokensItem(item)
@@ -184,15 +199,24 @@ export class ReservedTokensInputBlock extends Component {
     })
   }
 
+  clearAll = async () => {
+    const result = await clearingReservedTokens()
+
+    if (result && result.value) {
+      this.props.reservedTokenStore.clearAll()
+    }
+    return result
+  }
+
   render() {
     const reservedTokensElements = <ReservedTokensTable extraClassName="sw-BorderedBlock_Row2Column1" {...this.props} />
-    const tokensListEmpty = this.props.tokens.length === 0
+    const tokensListEmpty = this.props.reservedTokenStore.tokens.length === 0
     let valueInputParams = null
 
     if (this.state.dim === 'tokens') {
       valueInputParams = {
         min: 0,
-        maxDecimals: this.props.decimals ? this.props.decimals : 0,
+        maxDecimals: this.state.decimals ? this.state.decimals : 0,
         errorMessage: 'Value must be positive and decimals should not exceed the amount of decimals specified',
         description: "Value in tokens. Don't forget to click + button for each reserved token."
       }
@@ -209,60 +233,63 @@ export class ReservedTokensInputBlock extends Component {
     const dropzoneStyle = {}
 
     return (
-      <div className="sw-BorderedBlock sw-BorderedBlock-3Rows3Columns">
-        <InputField
-          extraClassName="sw-BorderedBlock_Row1Column1"
-          description="Address where to send reserved tokens."
-          errorMessage="The inserted address is invalid"
-          name={ADDRESS}
-          onChange={e => this.handleAddressChange(e.target.value)}
-          placeholder="Enter here"
-          pristine={this.state.validation.address.pristine}
-          title={ADDRESS}
-          type="text"
-          valid={this.state.validation.address.valid}
-          value={this.state.addr}
-        />
-        <RadioInputField
-          extraClassName="sw-BorderedBlock_Row1Column2"
-          items={[{ label: 'Tokens', value: 'tokens' }, { label: 'Percentage', value: 'percentage' }]}
-          onChange={e => this.updateReservedTokenInput(e.target.value, 'dim')}
-          selectedItem={this.state.dim}
-          title={DIMENSION}
-          description="Fixed amount or % of crowdsaled tokens. Will be deposited to the account after finalization
+      <div>
+        <h2 className="sw-BorderedBlockTitle">Reserved tokens</h2>
+        <div className="sw-BorderedBlock sw-BorderedBlock-3Rows3Columns">
+          <InputField
+            extraClassName="sw-BorderedBlock_Row1Column1"
+            description="Address where to send reserved tokens."
+            errorMessage="The inserted address is invalid"
+            name={ADDRESS}
+            onChange={e => this.handleAddressChange(e.target.value)}
+            placeholder="Enter here"
+            pristine={this.state.validation.address.pristine}
+            title={ADDRESS}
+            type="text"
+            valid={this.state.validation.address.valid}
+            value={this.state.addr}
+          />
+          <RadioInputField
+            extraClassName="sw-BorderedBlock_Row1Column2"
+            items={[{ label: 'Tokens', value: 'tokens' }, { label: 'Percentage', value: 'percentage' }]}
+            onChange={e => this.updateReservedTokenInput(e.target.value, 'dim')}
+            selectedItem={this.state.dim}
+            title={DIMENSION}
+            description="Fixed amount or % of crowdsaled tokens. Will be deposited to the account after finalization
               of the crowdsale."
-        />
-        <NumericInput
-          acceptFloat={true}
-          extraClassName="sw-BorderedBlock_Row1Column3"
-          decimals={this.props.decimals}
-          dimension={this.state.dim}
-          name={VALUE}
-          onClick={this.addReservedTokensItem}
-          onValueUpdate={this.handleValueChange}
-          placeholder="Enter here"
-          pristine={this.state.validation.value.pristine}
-          title={VALUE}
-          valid={this.state.validation.value.valid}
-          value={this.state.val}
-          {...valueInputParams}
-        />
-        {reservedTokensElements}
-        {/* Actions */}
-        <div className="sw-ReservedTokensListControls sw-BorderedBlock_Row3Column1">
-          {tokensListEmpty ? null : (
-            <div
-              className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-clearall"
-              onClick={this.props.clearAll}
-            >
-              Clear All
-            </div>
-          )}
-          <Dropzone onDrop={this.onDrop} accept=".csv" style={dropzoneStyle}>
-            <div className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-uploadcsv m-r-0">
-              Upload CSV
-            </div>
-          </Dropzone>
+          />
+          <NumericInput
+            acceptFloat={true}
+            extraClassName="sw-BorderedBlock_Row1Column3"
+            decimals={this.state.decimals}
+            dimension={this.state.dim}
+            name={VALUE}
+            onClick={this.addReservedTokensItem}
+            onValueUpdate={this.handleValueChange}
+            placeholder="Enter here"
+            pristine={this.state.validation.value.pristine}
+            title={VALUE}
+            valid={this.state.validation.value.valid}
+            value={this.state.val}
+            {...valueInputParams}
+          />
+          {reservedTokensElements}
+          {/* Actions */}
+          <div className="sw-ReservedTokensListControls sw-BorderedBlock_Row3Column1">
+            {tokensListEmpty ? null : (
+              <div
+                className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-clearall"
+                onClick={this.clearAll}
+              >
+                Clear All
+              </div>
+            )}
+            <Dropzone onDrop={this.onDrop} accept=".csv" style={dropzoneStyle}>
+              <div className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-uploadcsv m-r-0">
+                Upload CSV
+              </div>
+            </Dropzone>
+          </div>
         </div>
       </div>
     )
