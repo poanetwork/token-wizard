@@ -1,4 +1,6 @@
 import React from 'react'
+import { BigNumber } from 'bignumber.js'
+import { countDecimalPlaces } from '../../utils/utils'
 
 const ReservedTokensTable = props => {
   const reservedTokensItems = props.tokens.map((token, index) => {
@@ -8,13 +10,17 @@ const ReservedTokensTable = props => {
       </td>
     )
 
+    const tokenValue = new BigNumber(token.val)
+
     return (
       <tr key={index.toString()} className="sw-ReservedTokensTable_Row">
         <td className="sw-ReservedTokensTable_Column sw-ReservedTokensTable_Column-address">{token.addr}</td>
         <td className="sw-ReservedTokensTable_Column">
           <div className={`sw-ReservedTokensTable_Dimension sw-ReservedTokensTable_Dimension-${token.dim}`} />
         </td>
-        <td className="sw-ReservedTokensTable_Column sw-ReservedTokensTable_Column-value">{token.val}</td>
+        <td className="sw-ReservedTokensTable_Column sw-ReservedTokensTable_Column-value">
+          {tokenValue.toFixed(tokenValue.decimalPlaces())}
+        </td>
         {deleteButton}
       </tr>
     )

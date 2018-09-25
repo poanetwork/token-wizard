@@ -6,6 +6,7 @@ import { FormControlTitle } from '../Common/FormControlTitle'
 import { TextField } from '../Common/TextField'
 import { FormError } from '../Common/FormError'
 import { BigNumber } from 'bignumber.js'
+import { isNumber } from 'util'
 
 const { VALID, INVALID } = VALIDATION_TYPES
 
@@ -42,7 +43,7 @@ export class NumericInput extends Component {
   }
 
   onChange = e => {
-    let value = this.props.acceptFloat ? parseFloat(e.target.value) : parseInt(e.target.value, 10)
+    let value = this.props.acceptFloat ? e.target.value : parseInt(e.target.value, 10)
 
     if (this.props.acceptEmpty && e.target.value === '') value = ''
 
@@ -69,6 +70,10 @@ export class NumericInput extends Component {
 
     if (isValid && max !== undefined) {
       isValid = isValid && value <= max
+    }
+
+    if (value === 0 || value === '0') {
+      isValid = false
     }
 
     const result = {
@@ -132,11 +137,11 @@ export class NumericInput extends Component {
 
   getMinimumValue(dimension, decimals, minimum) {
     if (dimension === 'tokens' && this.zeroDecimals(decimals)) {
-      return 1
+      return '1'
     } else if (dimension === 'tokens') {
       return this.getTokensMinimumWithDecimals(minimum, decimals)
     } else if (dimension === 'percentage') {
-      return 0
+      return '0'
     }
   }
 
@@ -157,7 +162,7 @@ export class NumericInput extends Component {
     } = this.props
     const error = valid === INVALID ? <FormError errorMessage={errorMessage} /> : ''
     const minimumValue = this.getMinimumValue(dimension, decimals, min)
-    const renderedValue = value <= minimumValue ? minimumValue : value
+    const renderedValue = +value <= +minimumValue ? minimumValue : value
 
     return (
       <div className={`sw-NumericInput ${extraClassName ? extraClassName : ''}`}>
