@@ -4,10 +4,10 @@ import { toBigNumber } from '../../utils/utils'
 
 const ReservedTokensTable = inject('reservedTokenStore')(
   observer(props => {
-    const reservedTokensItems = props.tokens.map((token, index) => {
+    const reservedTokensItems = props.reservedTokenStore.tokens.map((token, index) => {
       const deleteButton = token.readOnly ? null : (
         <td className="sw-ReservedTokensTable_Column">
-          <div className="sw-ReservedTokensTable_Delete" onClick={() => props.removeReservedToken(index)} />
+          <div className="sw-ReservedTokensTable_Delete" onClick={() => props.reservedTokenStore.removeToken(index)} />
         </td>
       )
 
