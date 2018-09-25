@@ -35,6 +35,8 @@ exports[`StepTwoForm should render StepTwoForm for Dutch Auction Crowdsale 1`] =
         className="sw-TextField"
         disabled={undefined}
         id="name"
+        max={undefined}
+        min={undefined}
         name="name"
         onBlur={[Function]}
         onChange={[Function]}
@@ -73,6 +75,8 @@ exports[`StepTwoForm should render StepTwoForm for Dutch Auction Crowdsale 1`] =
         className="sw-TextField"
         disabled={undefined}
         id="ticker"
+        max={undefined}
+        min={undefined}
         name="ticker"
         onBlur={[Function]}
         onChange={[Function]}
@@ -111,6 +115,8 @@ exports[`StepTwoForm should render StepTwoForm for Dutch Auction Crowdsale 1`] =
         className="sw-TextField"
         disabled={false}
         id="decimals"
+        max="18"
+        min="0"
         name="decimals"
         onBlur={[Function]}
         onChange={[Function]}
@@ -119,7 +125,7 @@ exports[`StepTwoForm should render StepTwoForm for Dutch Auction Crowdsale 1`] =
         onPaste={undefined}
         placeholder={undefined}
         style={undefined}
-        type="text"
+        type="number"
         value="14"
       />
     </div>
@@ -149,6 +155,8 @@ exports[`StepTwoForm should render StepTwoForm for Dutch Auction Crowdsale 1`] =
         className="sw-TextField"
         disabled={undefined}
         id="supply"
+        max={undefined}
+        min={undefined}
         name="supply"
         onBlur={[Function]}
         onChange={[Function]}
@@ -223,6 +231,8 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
         className="sw-TextField"
         disabled={undefined}
         id="name"
+        max={undefined}
+        min={undefined}
         name="name"
         onBlur={[Function]}
         onChange={[Function]}
@@ -261,6 +271,8 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
         className="sw-TextField"
         disabled={undefined}
         id="ticker"
+        max={undefined}
+        min={undefined}
         name="ticker"
         onBlur={[Function]}
         onChange={[Function]}
@@ -299,6 +311,8 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
         className="sw-TextField"
         disabled={false}
         id="decimals"
+        max="18"
+        min="0"
         name="decimals"
         onBlur={[Function]}
         onChange={[Function]}
@@ -307,7 +321,7 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
         onPaste={undefined}
         placeholder={undefined}
         style={undefined}
-        type="text"
+        type="number"
         value="14"
       />
     </div>
@@ -347,6 +361,8 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
           className="sw-TextField"
           disabled={undefined}
           id={undefined}
+          max={undefined}
+          min={undefined}
           name={undefined}
           onBlur={undefined}
           onChange={[Function]}
@@ -450,6 +466,8 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
             className="sw-TextField"
             disabled={undefined}
             id={undefined}
+            max={undefined}
+            min={1}
             name={undefined}
             onBlur={undefined}
             onChange={[Function]}
@@ -473,7 +491,15 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
       >
         <div
           className="sw-ReservedTokensTable_Inner"
-        />
+        >
+          <table
+            cellPadding="0"
+            cellSpacing="0"
+            className="sw-ReservedTokensTable_Table"
+          >
+            <tbody />
+          </table>
+        </div>
       </div>
       <div
         className="sw-ReservedTokensListControls sw-BorderedBlock_Row3Column1"
