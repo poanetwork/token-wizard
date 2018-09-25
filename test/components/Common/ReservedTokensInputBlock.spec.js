@@ -135,7 +135,7 @@ describe('ReservedTokensInputBlock', () => {
         const action = testCase.expected ? 'pass' : 'fail'
         const validity = testCase.expected ? VALID : INVALID
         const calledWith = {
-          value: testCase.value === '' ? '' : parseFloat(testCase.value),
+          value: testCase.value,
           pristine: false,
           valid: validity
         }
@@ -173,7 +173,7 @@ describe('ReservedTokensInputBlock', () => {
         const action = testCase.expected ? 'pass' : 'fail'
         const validity = testCase.expected ? VALID : INVALID
         const calledWith = {
-          value: toBigNumber(testCase.value).toNumber(),
+          value: testCase.value,
           pristine: false,
           valid: validity
         }
