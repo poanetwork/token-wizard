@@ -27,6 +27,8 @@ exports[`TokenDecimals should render TokenDecimals component 1`] = `
     className="sw-TextField"
     disabled={undefined}
     id="decimals"
+    max="18"
+    min="0"
     name="decimals"
     onBlur={[Function]}
     onChange={[Function]}
@@ -35,7 +37,7 @@ exports[`TokenDecimals should render TokenDecimals component 1`] = `
     onPaste={undefined}
     placeholder={undefined}
     style={undefined}
-    type="text"
+    type="number"
     value=""
   />
 </div>
@@ -68,6 +70,8 @@ exports[`TokenDecimals should render TokenDecimals component and its children 1`
     className="sw-TextField"
     disabled={undefined}
     id="decimals"
+    max="18"
+    min="0"
     name="decimals"
     onBlur={[Function]}
     onChange={[Function]}
@@ -76,7 +80,7 @@ exports[`TokenDecimals should render TokenDecimals component and its children 1`
     onPaste={undefined}
     placeholder={undefined}
     style={undefined}
-    type="text"
+    type="number"
     value=""
   />
 </div>
@@ -177,10 +181,11 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
       }
       format={[Function]}
       label="Decimals"
+      max="18"
+      min="0"
       name="decimals"
       parse={[Function]}
-      side="left"
-      type="text"
+      type="number"
       validate={[Function]}
     >
       <InputField2
@@ -202,6 +207,7 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
           }
         }
         label="Decimals"
+        max="18"
         meta={
           Object {
             "active": false,
@@ -220,8 +226,8 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
             "visited": false,
           }
         }
-        side="left"
-        type="text"
+        min="0"
+        type="number"
       >
         <div
           className="sw-InputField "
@@ -255,22 +261,26 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
             className="input"
             disabled={true}
             id="decimals"
+            max="18"
+            min="0"
             name="decimals"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
-            type="text"
+            type="number"
             value=""
           >
             <input
               className="sw-TextField"
               disabled={true}
               id="decimals"
+              max="18"
+              min="0"
               name="decimals"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              type="text"
+              type="number"
               value=""
             />
           </TextField>

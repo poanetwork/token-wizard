@@ -362,6 +362,8 @@ exports[`ContributeForm should render ContributeForm component 1`] = `
         className="sw-TextField"
         disabled={undefined}
         id="contribute"
+        max={undefined}
+        min={undefined}
         name="contribute"
         onBlur={[Function]}
         onChange={[Function]}
@@ -443,6 +445,8 @@ exports[`ContributeForm should render ContributeForm component and its children 
         className="sw-TextField"
         disabled={undefined}
         id="contribute"
+        max={undefined}
+        min={undefined}
         name="contribute"
         onBlur={[Function]}
         onChange={[Function]}

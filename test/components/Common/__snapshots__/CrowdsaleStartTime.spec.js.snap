@@ -27,6 +27,8 @@ exports[`CrowdsaleStartTime Rendering should render CrowdsaleStartTime component
     className="sw-TextField"
     disabled={false}
     id="tiers[0].startTime"
+    max={undefined}
+    min={undefined}
     name="tiers[0].startTime"
     onBlur={[Function]}
     onChange={[Function]}
@@ -68,6 +70,8 @@ exports[`CrowdsaleStartTime Rendering should render CrowdsaleStartTime component
     className="sw-TextField"
     disabled={true}
     id="tiers[0].startTime"
+    max={undefined}
+    min={undefined}
     name="tiers[0].startTime"
     onBlur={[Function]}
     onChange={[Function]}
