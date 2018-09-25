@@ -6,7 +6,6 @@ import { FormControlTitle } from '../Common/FormControlTitle'
 import { TextField } from '../Common/TextField'
 import { FormError } from '../Common/FormError'
 import { BigNumber } from 'bignumber.js'
-import { isNumber } from 'util'
 
 const { VALID, INVALID } = VALIDATION_TYPES
 
