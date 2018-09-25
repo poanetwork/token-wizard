@@ -38,7 +38,7 @@ For a guide on how to connect to the POA network using MetaMask see [here](https
 
 ## Security Audit
 
-https://github.com/peppersec/public-audit-reports/blob/master/POA-Networks-Wizard-audit-report.md by PepperSec
+[Token Wizard security audit](https://github.com/poanetwork/token-wizard/blob/2.0/audit/POA-Network-Wizard-audit-report.pdf) by PepperSec
 
 ## Token Wizard DApp Wiki
 

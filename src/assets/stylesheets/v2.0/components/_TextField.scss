@@ -11,7 +11,7 @@ $sw-TextField-height: 40px !default;
     font-weight: 400;
     height: $sw-TextField-height;
     outline: none;
-    padding: 0 13px;
+    padding: 0 10px;
 
     &:focus {
         border-color: darken($base-border-color, 10%);

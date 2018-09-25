@@ -1,14 +1,17 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
+import { toBigNumber } from '../../utils/utils'
 
 const ReservedTokensTable = inject('reservedTokenStore')(
   observer(props => {
-    const reservedTokensItems = props.reservedTokenStore.tokens.map((token, index) => {
+    const reservedTokensItems = props.tokens.map((token, index) => {
       const deleteButton = token.readOnly ? null : (
         <td className="sw-ReservedTokensTable_Column">
-          <div className="sw-ReservedTokensTable_Delete" onClick={() => props.reservedTokenStore.removeToken(index)} />
+          <div className="sw-ReservedTokensTable_Delete" onClick={() => props.removeReservedToken(index)} />
         </td>
       )
+
+      const tokenValue = toBigNumber(token.val)
 
       return (
         <tr key={index.toString()} className="sw-ReservedTokensTable_Row">
@@ -16,7 +19,9 @@ const ReservedTokensTable = inject('reservedTokenStore')(
           <td className="sw-ReservedTokensTable_Column">
             <div className={`sw-ReservedTokensTable_Dimension sw-ReservedTokensTable_Dimension-${token.dim}`} />
           </td>
-          <td className="sw-ReservedTokensTable_Column sw-ReservedTokensTable_Column-value">{token.val}</td>
+          <td className="sw-ReservedTokensTable_Column sw-ReservedTokensTable_Column-value">
+            {tokenValue.toFixed(tokenValue.decimalPlaces())}
+          </td>
           {deleteButton}
         </tr>
       )

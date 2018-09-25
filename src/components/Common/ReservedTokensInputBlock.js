@@ -56,6 +56,18 @@ export class ReservedTokensInputBlock extends Component {
   }
 
   updateReservedTokenInput = (value, property) => {
+    this.setState(
+      update(this.state, {
+        validation: {
+          value: {
+            $set: {
+              pristine: true,
+              valid: INVALID
+            }
+          }
+        }
+      })
+    )
     this.setState({
       [property]: value
     })
