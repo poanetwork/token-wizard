@@ -6,7 +6,14 @@ import {
 } from '../../utils/blockchainHelpers'
 import { contractStore, crowdsalePageStore, tokenStore, web3Store, crowdsaleStore } from '../../stores'
 import { toJS } from 'mobx'
-import { getAddrFromQuery, getExecIDFromQuery, isAddressValid, removeTrailingNUL, toBigNumber } from '../../utils/utils'
+import {
+  getAddrFromQuery,
+  getExecIDFromQuery,
+  isAddressValid,
+  removeTrailingNUL,
+  toBigNumber,
+  convertDateObjectToLocalTimezone
+} from '../../utils/utils'
 import { BigNumber } from 'bignumber.js'
 import logdown from 'logdown'
 import { CrowdsaleConfig } from '../Common/config'
@@ -274,15 +281,17 @@ let setTierDates = (startTime, endTime) => {
 }
 
 let fillCrowdsalePageStoreDates = (startsAtMilliseconds, endsAtMilliseconds) => {
-  if (!crowdsalePageStore.startDate || crowdsalePageStore.startDate > startsAtMilliseconds)
-    crowdsalePageStore.startDate = startsAtMilliseconds
-  logger.log('startDate:' + startsAtMilliseconds)
+  const startsAtMillisecondsConverter = convertDateObjectToLocalTimezone(startsAtMilliseconds)
+  const endsAtMillisecondsConverter = convertDateObjectToLocalTimezone(endsAtMilliseconds)
 
-  if (!crowdsalePageStore.endDate || crowdsalePageStore.endDate < endsAtMilliseconds)
-    crowdsalePageStore.setProperty('endDate', endsAtMilliseconds)
-  logger.log('endDate:', endsAtMilliseconds)
+  if (!crowdsalePageStore.startDate || crowdsalePageStore.startDate > startsAtMillisecondsConverter)
+    crowdsalePageStore.startDate = startsAtMillisecondsConverter
+  logger.log('startDate:' + startsAtMillisecondsConverter)
+
+  if (!crowdsalePageStore.endDate || crowdsalePageStore.endDate < endsAtMillisecondsConverter)
+    crowdsalePageStore.setProperty('endDate', endsAtMillisecondsConverter)
+  logger.log('endDate:', endsAtMillisecondsConverter)
 }
-
 /**
  * Check if a crowdsale is finalized
  * @param methods

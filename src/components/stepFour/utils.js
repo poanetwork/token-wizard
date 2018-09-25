@@ -12,7 +12,7 @@ import {
   toBigNumber,
   toFixed,
   convertDateToUTCTimezone,
-  convertDateToTimezoneToDisplay
+  convertDateToUTCTimezoneToDisplay
 } from '../../utils/utils'
 import { CROWDSALE_STRATEGIES } from '../../utils/constants'
 import { DOWNLOAD_NAME, MINTED_PREFIX, DUTCH_PREFIX, ADDR_BOX_LEN } from './constants'
@@ -114,11 +114,15 @@ export const getCrowdSaleParams = (account, methodInterface) => {
   const { web3 } = web3Store
   const { walletAddress, whitelistEnabled, updatable, supply, tier, startTime, endTime, rate } = tierStore.tiers[0]
 
-  const startTimeToUTC = convertDateToUTCTimezone(startTime)
-  const endTimeToUTC = convertDateToUTCTimezone(endTime)
+  const startTimeTierToUTC = convertDateToUTCTimezone(startTime)
+  const endTimeTierToUTC = convertDateToUTCTimezone(endTime)
 
-  tierStore.setTierProperty(startTimeToUTC, 'startTime', 0)
-  tierStore.setTierProperty(endTimeToUTC, 'endTime', 0)
+  tierStore.setTierProperty(startTimeTierToUTC, 'startTime', 0)
+  tierStore.setTierProperty(endTimeTierToUTC, 'endTime', 0)
+
+  const lastTier = tierStore.tiers[tierStore.tiers.length - 1]
+  crowdsaleStore.setProperty('endTime', lastTier.endTime)
+
   //tier 0 oneTokenInWEI
   const rateBN = toBigNumber(rate)
   const oneTokenInETH = rateBN.pow(-1).toFixed()
@@ -126,7 +130,7 @@ export const getCrowdSaleParams = (account, methodInterface) => {
 
   //tier 0 duration
   const formatDate = date => toFixed(parseInt(Date.parse(date) / 1000, 10).toString())
-  const duration = formatDate(endTimeToUTC) - formatDate(startTimeToUTC)
+  const duration = formatDate(endTimeTierToUTC) - formatDate(startTimeTierToUTC)
   const durationBN = toBigNumber(duration).toFixed()
 
   //is tier whitelisted?
@@ -151,7 +155,7 @@ export const getCrowdSaleParams = (account, methodInterface) => {
 
   let crowdsaleParams = [
     walletAddress,
-    formatDate(startTimeToUTC),
+    formatDate(startTimeTierToUTC),
     encodedTierName,
     oneTokenInWEI,
     durationBN,
@@ -738,7 +742,7 @@ export const handlerForFile = (content, type) => {
   let value = type[content.field]
 
   if (checkIfTime) {
-    value = convertDateToTimezoneToDisplay(type[content.field])
+    value = convertDateToUTCTimezoneToDisplay(type[content.field])
   }
 
   logger.log('content:', content)

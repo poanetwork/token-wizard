@@ -245,6 +245,14 @@ export const convertDateToTimezoneToDisplay = dateToConvert => {
   return moment(dateToConvert).format('YYYY-MM-DD HH:mm (z ZZ)')
 }
 
+export const convertDateToUTCTimezoneToDisplay = dateToConvert => {
+  const offset = moment().utcOffset()
+  return moment(dateToConvert)
+    .add('minutes', offset)
+    .utc()
+    .format('YYYY-MM-DD HH:mm (z ZZ)')
+}
+
 export const convertDateObjectToLocalTimezone = dateToConvert => {
   const offset = moment().utcOffset()
   const dateConvertUnix = moment(dateToConvert)

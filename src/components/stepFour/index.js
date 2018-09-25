@@ -23,7 +23,7 @@ import {
   CROWDSALE_STRATEGIES
 } from '../../utils/constants'
 import { DOWNLOAD_TYPE } from './constants'
-import { getNetworkID, toast, convertDateToTimezoneToDisplay } from '../../utils/utils'
+import { getNetworkID, toast, convertDateToUTCTimezoneToDisplay } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { DisplayField } from '../Common/DisplayField'
 import { TxProgressStatus } from '../Common/TxProgressStatus'
@@ -446,9 +446,9 @@ export class stepFour extends Component {
       const { tiers } = tierStore
       const firstTier = tiers[0]
       const { walletAddress, startTime, burnExcess } = firstTier
-      const startTimeWithUTC = convertDateToTimezoneToDisplay(startTime)
+      const startTimeWithUTC = convertDateToUTCTimezoneToDisplay(startTime)
       const lasTierInd = tiers.length - 1
-      const endTimeWithUTC = convertDateToTimezoneToDisplay(tiers[lasTierInd].endTime)
+      const endTimeWithUTC = convertDateToUTCTimezoneToDisplay(tiers[lasTierInd].endTime)
       const {
         WALLET_ADDRESS: PD_WALLET_ADDRESS,
         CROWDSALE_START_TIME: PD_CROWDSALE_START_TIME,
@@ -514,8 +514,8 @@ export class stepFour extends Component {
           <DisplayField side="right" title={MAX_RATE} value={tierMaxRateStr} description={D_RATE} />
         </div>
       )
-      const tierStartTimeStr = convertDateToTimezoneToDisplay(startTime)
-      const tierEndTimeStr = convertDateToTimezoneToDisplay(endTime)
+      const tierStartTimeStr = convertDateToUTCTimezoneToDisplay(startTime)
+      const tierEndTimeStr = convertDateToUTCTimezoneToDisplay(endTime)
       const tierIsUpdatable = isDutchAuction ? 'on' : updatable ? updatable : 'off'
       const tierIsWhitelisted = whitelistEnabled ? whitelistEnabled : 'off'
       const tierSupplyStr = supply ? supply : ''
