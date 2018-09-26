@@ -18,23 +18,18 @@ import {
 } from '../../utils/alerts'
 import processReservedTokens from '../../utils/processReservedTokens'
 import logdown from 'logdown'
-import { toBigNumber } from '../../utils/utils'
 
 const logger = logdown('TW:ReservedTokensInputBlock')
 const { VALID, INVALID } = VALIDATION_TYPES
 const { ADDRESS, DIMENSION, VALUE } = TEXT_FIELDS
 
-@inject('reservedTokenStore', 'tokenStore')
+@inject('reservedTokenStore')
 @observer
 export class ReservedTokensInputBlock extends Component {
   state = {
     addr: '',
     dim: 'tokens',
     val: '',
-    decimals:
-      this.props.tokenStore.validToken.decimals === VALID && this.props.tokenStore.decimals >= 0
-        ? toBigNumber(this.props.tokenStore.decimals).toFixed()
-        : 0,
     validation: {
       address: {
         pristine: true,
@@ -182,7 +177,7 @@ export class ReservedTokensInputBlock extends Component {
           const { called, reservedTokenLengthError } = processReservedTokens(
             {
               rows: results.data,
-              decimals: this.state.decimals
+              decimals: this.props.decimals
             },
             newToken => {
               this.props.reservedTokenStore.addToken(newToken)
@@ -216,7 +211,7 @@ export class ReservedTokensInputBlock extends Component {
     if (this.state.dim === 'tokens') {
       valueInputParams = {
         min: 0,
-        maxDecimals: this.state.decimals ? this.state.decimals : 0,
+        maxDecimals: this.props.decimals ? this.props.decimals : 0,
         errorMessage: 'Value must be positive and decimals should not exceed the amount of decimals specified',
         description: "Value in tokens. Don't forget to click + button for each reserved token."
       }
@@ -261,7 +256,7 @@ export class ReservedTokensInputBlock extends Component {
           <NumericInput
             acceptFloat={true}
             extraClassName="sw-BorderedBlock_Row1Column3"
-            decimals={this.state.decimals}
+            decimals={this.props.decimals}
             dimension={this.state.dim}
             name={VALUE}
             onClick={this.addReservedTokensItem}

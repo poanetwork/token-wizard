@@ -1,7 +1,7 @@
 import React from 'react'
 import { ButtonBack } from '../Common/ButtonBack'
 import { ButtonContinue } from '../Common/ButtonContinue'
-import { CROWDSALE_STRATEGIES } from '../../utils/constants'
+import { CROWDSALE_STRATEGIES, VALIDATION_TYPES } from '../../utils/constants'
 import { FormSpy } from 'react-final-form'
 import { inject, observer } from 'mobx-react'
 import { ReservedTokensInputBlock } from '../Common/ReservedTokensInputBlock'
@@ -10,6 +10,7 @@ import { TokenName } from '../Common/TokenName'
 import { TokenSupply } from '../Common/TokenSupply'
 import { TokenTicker } from '../Common/TokenTicker'
 import classNames from 'classnames'
+import { toBigNumber } from '../../utils/utils'
 
 const { MINTED_CAPPED_CROWDSALE, DUTCH_AUCTION } = CROWDSALE_STRATEGIES
 
@@ -33,7 +34,10 @@ export const StepTwoForm = inject('tokenStore', 'crowdsaleStore', 'reservedToken
 
       const disableDecimals = crowdsaleStore.isMintedCappedCrowdsale && !!reservedTokenStore.tokens.length
 
-      const reservedTokens = crowdsaleStore.strategy === MINTED_CAPPED_CROWDSALE ? <ReservedTokensInputBlock /> : null
+      const decimals =
+        tokenStore.validToken.decimals === VALIDATION_TYPES.VALID && tokenStore.decimals >= 0
+          ? toBigNumber(tokenStore.decimals).toFixed()
+          : 0
 
       const tokenSupply = crowdsaleStore.strategy === DUTCH_AUCTION ? <TokenSupply /> : null
 
@@ -83,7 +87,9 @@ export const StepTwoForm = inject('tokenStore', 'crowdsaleStore', 'reservedToken
             <TokenDecimals disabled={disableDecimals} />
             {tokenSupply}
           </div>
-          {reservedTokens}
+          {crowdsaleStore.strategy === MINTED_CAPPED_CROWDSALE ? (
+            <ReservedTokensInputBlock decimals={decimals} />
+          ) : null}
           <FormSpy onChange={onChangeForm} />
           <div className="st-StepContent_Buttons">
             <ButtonBack onClick={goBack} />
