@@ -1229,12 +1229,12 @@ exports[`CrowdsaleList  should render CrowdsaleList component 1`] = `
           status={null}
         >
           <button
-            className="sw-ButtonPrimaryGradient"
+            className="sw-ButtonContinue"
             disabled={true}
             onClick={[Function]}
           >
             <span
-              className="sw-ButtonPrimaryGradient_Text"
+              className="sw-ButtonContinue_Text"
             >
               Continue
             </span>
@@ -2403,12 +2403,12 @@ exports[`CrowdsaleList  should render if list is empty   1`] = `
           status={null}
         >
           <button
-            className="sw-ButtonPrimaryGradient"
+            className="sw-ButtonContinue"
             disabled={true}
             onClick={[Function]}
           >
             <span
-              className="sw-ButtonPrimaryGradient_Text"
+              className="sw-ButtonContinue_Text"
             >
               Continue
             </span>
