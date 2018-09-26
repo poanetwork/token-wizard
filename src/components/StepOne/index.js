@@ -27,10 +27,7 @@ export class StepOne extends Component {
     try {
       this.setState({ loading: true })
       await checkWeb3ForErrors(result => {
-        const { value } = result
-        if (value) {
-          navigateTo(this.props.history, 'home')
-        }
+        navigateTo(this.props.history, 'home')
       })
 
       const { strategy } = await this.load()
@@ -49,6 +46,9 @@ export class StepOne extends Component {
 
     // Set default strategy value
     const { crowdsaleStore } = this.props
+    if (!crowdsaleStore.strategy) {
+      crowdsaleStore.setProperty('strategy', MINTED_CAPPED_CROWDSALE)
+    }
     logger.log('CrowdsaleStore strategy', crowdsaleStore.strategy)
     return {
       strategy: crowdsaleStore.strategy
