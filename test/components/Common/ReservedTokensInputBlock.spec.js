@@ -118,6 +118,7 @@ describe('ReservedTokensInputBlock', () => {
   describe('Value field', () => {
     describe('tokens', () => {
       const testCases = [
+        { value: '0', expected: false },
         { value: '-10', expected: false },
         { value: -10, expected: false },
         { value: 123.1234, expected: false },
@@ -127,9 +128,6 @@ describe('ReservedTokensInputBlock', () => {
         { value: '1e-3', expected: true },
         { value: '1.3', expected: true }
       ]
-
-      tokenStore.setProperty('decimals', 3)
-      tokenStore.updateValidity('decimals', VALID)
 
       testCases.forEach(testCase => {
         const action = testCase.expected ? 'pass' : 'fail'
@@ -141,7 +139,7 @@ describe('ReservedTokensInputBlock', () => {
         }
 
         it(`Should ${action} for '${testCase.value}' with ${tokenStore.decimals} decimals`, () => {
-          const wrapper = mount(<ReservedTokensInputBlock {...stores} />)
+          const wrapper = mount(<ReservedTokensInputBlock {...stores} decimals={3} />)
           const componentInstance = wrapper.find(ReservedTokensInputBlock).instance().wrappedInstance
           const handleValueChange = jest.spyOn(componentInstance, 'handleValueChange')
 
@@ -160,6 +158,7 @@ describe('ReservedTokensInputBlock', () => {
 
     describe('percentage', () => {
       const testCases = [
+        { value: '0', expected: false },
         { value: '-10', expected: false },
         { value: -10, expected: false },
         { value: '10', expected: true },
@@ -307,16 +306,13 @@ describe('ReservedTokensInputBlock', () => {
         }
       ]
 
-      tokenStore.setProperty('decimals', 3)
-      tokenStore.updateValidity('decimals', VALID)
-
       testCases.forEach(testCase => {
         const action = testCase.expected ? 'call' : 'not call'
 
         it(`Should ${action} addReservedTokensItem callback for: ${JSON.stringify(testCase.value)}`, () => {
           const { tokens } = reservedTokenStore
           const storedTokens = testCase.expected ? tokens.length + 1 : tokens.length
-          const wrapper = mount(<ReservedTokensInputBlock {...stores} />)
+          const wrapper = mount(<ReservedTokensInputBlock {...stores} decimals={3} />)
 
           wrapper.find(`#${testCase.value.dim}`).simulate('change')
           wrapper
