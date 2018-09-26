@@ -51,6 +51,7 @@ class App extends Component {
         <div>
           <Switch>
             <Route exact path="/" component={crowdsaleAddr ? Crowdsale : Home} />
+            <Route path="/1" component={StepOne} />
             <Route exact path="/crowdsale" component={Crowdsale} />
             <Route exact path="/contribute" component={Contribute} />
             <Route exact path="/stats" component={Stats} />
@@ -66,7 +67,6 @@ class App extends Component {
                   ) : (
                     <Switch>
                       <Route exact path="/manage/:crowdsalePointer" component={Manage} />
-                      <Route path="/1" component={StepOne} />
                       <Route path="/2" component={StepTwo} />
                       <Route path="/3" component={StepThree} />
                     </Switch>

@@ -37,7 +37,7 @@ export class Crowdsales extends Component {
         crowdsales: crowdsales
       })
     } catch (e) {
-      logger.log('An error has occurred', e)
+      logger.log('An error has occurred', e.message)
     }
 
     this.setState({ loading: false })

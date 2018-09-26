@@ -50,7 +50,7 @@ export const checkWeb3ForErrors = async cb => {
 
     return true
   } catch (err) {
-    logger.log('Web3 && metamask', err)
+    logger.log('Web3 && metamask', err.message)
     const { code } = err
 
     switch (code) {
