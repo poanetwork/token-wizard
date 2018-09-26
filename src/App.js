@@ -1,6 +1,17 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
-import { Home, Manage, StepOne, StepTwo, StepThree, StepFour, Crowdsale, Contribute, Stats } from './components/index'
+import {
+  Home,
+  Manage,
+  StepOne,
+  StepTwo,
+  StepThree,
+  StepFour,
+  Crowdsale,
+  Contribute,
+  Stats,
+  Crowdsales
+} from './components/index'
 import NoWeb3 from './components/Common/NoWeb3'
 import IncompleteDeploy from './components/IncompleteDeploy'
 import { getAddrFromQuery, toast } from './utils/utils'
@@ -42,6 +53,7 @@ class App extends Component {
             <Route exact path="/crowdsale" component={Crowdsale} />
             <Route exact path="/contribute" component={Contribute} />
             <Route exact path="/stats" component={Stats} />
+            <Route exact path="/crowdsales" component={Crowdsales} />
             <Route>
               <Web3Provider onChangeAccount={deploymentStore.handleAccountChange} web3UnavailableScreen={NoWeb3}>
                 <Switch>

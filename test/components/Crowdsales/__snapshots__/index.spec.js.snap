@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Crowdsales should render screen  1`] = `
+<div>
+  <div>
+    <div
+      className="sw-FlexTable"
+    >
+      <div
+        className="sw-FlexTable_Head sw-FlexTable_Row"
+      >
+        <div
+          className="sw-FlexTable_Td"
+        >
+          Address
+        </div>
+      </div>
+      <div
+        className="sw-FlexTable_Body sw-FlexTable_Body-scrollable sw-FlexTable_Body-crowdsale m-b-15"
+      />
+    </div>
+    <div
+      className="sw-ModalWindow_ButtonsContainer sw-ModalWindow_ButtonsContainer-right"
+    >
+      <button
+        className="sw-ButtonPrimaryGradient"
+        disabled={true}
+        onClick={[Function]}
+        type={undefined}
+      >
+        <span
+          className="sw-ButtonPrimaryGradient_Text"
+        >
+          Continue
+        </span>
+      </button>
+    </div>
+  </div>
+  <div
+    className="sw-FullscreenBackdrop"
+  >
+    <div
+      className="sw-Loader"
+    >
+      <div
+        className="sw-Loader_AnimatedItem"
+      />
+      <div
+        className="sw-Loader_AnimatedItem"
+      />
+      <div
+        className="sw-Loader_AnimatedItem"
+      />
+      <div
+        className="sw-Loader_AnimatedItem"
+      />
+      <div
+        className="sw-Loader_AnimatedItem"
+      />
+      <div
+        className="sw-Loader_AnimatedItem"
+      />
+    </div>
+  </div>
+</div>
+`;

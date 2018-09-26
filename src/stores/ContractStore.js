@@ -1,4 +1,5 @@
 import { observable, action } from 'mobx'
+import { DOWNLOAD_STATUS } from '../utils/constants'
 import autosave from './autosave'
 
 class ContractStore {
@@ -60,7 +61,7 @@ class ContractStore {
     this.saleDutch = undefined
     this.tokenDutch = undefined
     this.crowdsale = undefined
-    this.downloadStatus = undefined
+    this.downloadStatus = DOWNLOAD_STATUS.PENDING
   }
 }
 

@@ -7,7 +7,6 @@ export class ButtonContinue extends Component {
    */
   render() {
     const { status, type, onClick } = this.props
-
     return (
       <button onClick={onClick} type={type} disabled={!status} className={`sw-ButtonContinue`}>
         <span className={`sw-ButtonContinue_Text`}>Continue</span>

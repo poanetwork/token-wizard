@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ChooseCrowdsale should render screen with render without throwing an error 1`] = `"Choose Crowdsale"`;
+
+exports[`ChooseCrowdsale should render screen with shallow without throwing an error 1`] = `
+<div
+  className="hm-Home_BtnChoose"
+  onClick={[Function]}
+>
+  Choose Crowdsale
+</div>
+`;

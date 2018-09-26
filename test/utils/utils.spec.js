@@ -6,7 +6,8 @@ import {
   toBigNumber,
   truncateStringInTheMiddle,
   validateSupply,
-  validateTier
+  validateTier,
+  navigateTo
 } from '../../src/utils/utils'
 
 describe('countDecimalPlaces', () => {
@@ -234,6 +235,32 @@ describe('validateSupply', () => {
 
     it(`should ${action} for '${value}'`, () => {
       expect(validateSupply(value)).toBe(expected)
+    })
+  })
+})
+
+describe('navigateTo', () => {
+  const history = { push: jest.fn() }
+
+  const testCases = [
+    { history: history, location: 'stepOne', params: '', expected: true },
+    { history: history, location: 'manage', params: '1', expected: true },
+    { history: null, location: 'stepOne', params: '', expected: false },
+    { history: history, location: null, params: '', expected: false }
+  ]
+
+  testCases.forEach(({ history, location, params, expected }) => {
+    const action = expected ? 'pass' : 'fail'
+
+    it(`should ${action} for location '${location}'`, () => {
+      if (expected) {
+        expect(navigateTo(history, location, params)).toBe(expected)
+      } else {
+        const navigateAndThrow = () => {
+          navigateTo(history, location, params)
+        }
+        expect(navigateAndThrow).toThrow()
+      }
     })
   })
 })

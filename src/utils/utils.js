@@ -231,9 +231,32 @@ export const clearStorage = props => {
 
   const storesToClear = toArray(props)
   for (let storeToClear of storesToClear) {
-    if (typeof storeToClear.reset === 'function') {
+    if (storeToClear && typeof storeToClear.reset === 'function') {
       logger.log('Store to be cleared:', storeToClear.constructor.name)
       storeToClear.reset()
     }
   }
+}
+
+export const navigateTo = (history, location, params = '') => {
+  const path =
+    {
+      home: '/',
+      stepOne: '1',
+      stepTwo: '2',
+      manage: 'manage',
+      crowdsales: 'crowdsales'
+    }[location] || null
+
+  if (path === null) {
+    throw new Error(`invalid location specified: ${location}`)
+  }
+
+  if (!history || !(typeof history === 'object')) {
+    throw new Error(`invalid history object: ${history}`)
+  }
+
+  history.push(`${path}${params}`)
+
+  return true
 }
