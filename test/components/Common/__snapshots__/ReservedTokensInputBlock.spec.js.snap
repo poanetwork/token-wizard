@@ -9,13 +9,13 @@ exports[`percentage 1`] = `
   }
   tokenStore={
     TokenStore {
-      "decimals": 3,
+      "decimals": undefined,
       "name": undefined,
       "reservedTokensInput": Object {},
       "supply": 0,
       "ticker": undefined,
       "validToken": Object {
-        "decimals": "VALIDATED",
+        "decimals": "EMPTY",
         "name": "EMPTY",
         "ticker": "EMPTY",
       },
@@ -30,13 +30,13 @@ exports[`percentage 1`] = `
     }
     tokenStore={
       TokenStore {
-        "decimals": 3,
+        "decimals": undefined,
         "name": undefined,
         "reservedTokensInput": Object {},
         "supply": 0,
         "ticker": undefined,
         "validToken": Object {
-          "decimals": "VALIDATED",
+          "decimals": "EMPTY",
           "name": "EMPTY",
           "ticker": "EMPTY",
         },
@@ -199,7 +199,6 @@ exports[`percentage 1`] = `
         </RadioInputField>
         <NumericInput
           acceptFloat={true}
-          decimals="3"
           description="Value in percentage. Don't forget to click + button for each reserved token."
           dimension="percentage"
           errorMessage="Value must be positive"
@@ -282,13 +281,13 @@ exports[`percentage 1`] = `
           }
           tokenStore={
             TokenStore {
-              "decimals": 3,
+              "decimals": undefined,
               "name": undefined,
               "reservedTokensInput": Object {},
               "supply": 0,
               "ticker": undefined,
               "validToken": Object {
-                "decimals": "VALIDATED",
+                "decimals": "EMPTY",
                 "name": "EMPTY",
                 "ticker": "EMPTY",
               },
@@ -304,13 +303,13 @@ exports[`percentage 1`] = `
             }
             tokenStore={
               TokenStore {
-                "decimals": 3,
+                "decimals": undefined,
                 "name": undefined,
                 "reservedTokensInput": Object {},
                 "supply": 0,
                 "ticker": undefined,
                 "validToken": Object {
-                  "decimals": "VALIDATED",
+                  "decimals": "EMPTY",
                   "name": "EMPTY",
                   "ticker": "EMPTY",
                 },
@@ -362,13 +361,13 @@ exports[`tokens 1`] = `
   }
   tokenStore={
     TokenStore {
-      "decimals": 3,
+      "decimals": undefined,
       "name": undefined,
       "reservedTokensInput": Object {},
       "supply": 0,
       "ticker": undefined,
       "validToken": Object {
-        "decimals": "VALIDATED",
+        "decimals": "EMPTY",
         "name": "EMPTY",
         "ticker": "EMPTY",
       },
@@ -383,13 +382,13 @@ exports[`tokens 1`] = `
     }
     tokenStore={
       TokenStore {
-        "decimals": 3,
+        "decimals": undefined,
         "name": undefined,
         "reservedTokensInput": Object {},
         "supply": 0,
         "ticker": undefined,
         "validToken": Object {
-          "decimals": "VALIDATED",
+          "decimals": "EMPTY",
           "name": "EMPTY",
           "ticker": "EMPTY",
         },
@@ -552,12 +551,11 @@ exports[`tokens 1`] = `
         </RadioInputField>
         <NumericInput
           acceptFloat={true}
-          decimals="3"
           description="Value in tokens. Don't forget to click + button for each reserved token."
           dimension="tokens"
           errorMessage="Value must be positive and decimals should not exceed the amount of decimals specified"
           extraClassName="sw-BorderedBlock_Row1Column3"
-          maxDecimals="3"
+          maxDecimals={0}
           min={0}
           name="Value"
           onClick={[Function]}
@@ -600,7 +598,7 @@ exports[`tokens 1`] = `
             >
               <TextField
                 id="Value"
-                min="0.001"
+                min="1"
                 onChange={[Function]}
                 onKeyPress={[Function]}
                 onPaste={[Function]}
@@ -611,7 +609,7 @@ exports[`tokens 1`] = `
               >
                 <input
                   className="sw-TextField"
-                  min="0.001"
+                  min="1"
                   onChange={[Function]}
                   onKeyPress={[Function]}
                   onPaste={[Function]}
@@ -636,13 +634,13 @@ exports[`tokens 1`] = `
           }
           tokenStore={
             TokenStore {
-              "decimals": 3,
+              "decimals": undefined,
               "name": undefined,
               "reservedTokensInput": Object {},
               "supply": 0,
               "ticker": undefined,
               "validToken": Object {
-                "decimals": "VALIDATED",
+                "decimals": "EMPTY",
                 "name": "EMPTY",
                 "ticker": "EMPTY",
               },
@@ -658,13 +656,13 @@ exports[`tokens 1`] = `
             }
             tokenStore={
               TokenStore {
-                "decimals": 3,
+                "decimals": undefined,
                 "name": undefined,
                 "reservedTokensInput": Object {},
                 "supply": 0,
                 "ticker": undefined,
                 "validToken": Object {
-                  "decimals": "VALIDATED",
+                  "decimals": "EMPTY",
                   "name": "EMPTY",
                   "ticker": "EMPTY",
                 },
