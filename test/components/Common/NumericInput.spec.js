@@ -261,7 +261,7 @@ describe('NumericInput', () => {
         input().simulate(INPUT_EVENT.CHANGE, changeMock)
         expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
         expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
-          value: 1.12345,
+          value: changeMock.target.value,
           pristine: false,
           valid: VALIDATION_TYPES.INVALID
         })
@@ -272,7 +272,7 @@ describe('NumericInput', () => {
         input().simulate(INPUT_EVENT.CHANGE, changeMock)
         expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
         expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
-          value: 1.123,
+          value: changeMock.target.value,
           pristine: false,
           valid: VALIDATION_TYPES.VALID
         })
@@ -283,7 +283,7 @@ describe('NumericInput', () => {
         input().simulate(INPUT_EVENT.CHANGE, changeMock)
         expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
         expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
-          value: 1.1234,
+          value: changeMock.target.value,
           pristine: false,
           valid: VALIDATION_TYPES.VALID
         })
@@ -297,7 +297,7 @@ describe('NumericInput', () => {
         input().simulate(INPUT_EVENT.CHANGE, changeMock)
         expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
         expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
-          value: 1.1,
+          value: changeMock.target.value,
           pristine: false,
           valid: VALIDATION_TYPES.INVALID
         })
@@ -308,7 +308,7 @@ describe('NumericInput', () => {
         input().simulate(INPUT_EVENT.CHANGE, changeMock)
         expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
         expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
-          value: 1.1234,
+          value: changeMock.target.value,
           pristine: false,
           valid: VALIDATION_TYPES.VALID
         })
@@ -319,7 +319,7 @@ describe('NumericInput', () => {
         input().simulate(INPUT_EVENT.CHANGE, changeMock)
         expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
         expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
-          value: 1.12,
+          value: changeMock.target.value,
           pristine: false,
           valid: VALIDATION_TYPES.VALID
         })
@@ -333,7 +333,7 @@ describe('NumericInput', () => {
         input().simulate(INPUT_EVENT.CHANGE, changeMock)
         expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
         expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
-          value: 1.1,
+          value: changeMock.target.value,
           pristine: false,
           valid: VALIDATION_TYPES.INVALID
         })
@@ -344,7 +344,7 @@ describe('NumericInput', () => {
         input().simulate(INPUT_EVENT.CHANGE, changeMock)
         expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
         expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
-          value: 1.12345,
+          value: changeMock.target.value,
           pristine: false,
           valid: VALIDATION_TYPES.INVALID
         })
@@ -355,7 +355,7 @@ describe('NumericInput', () => {
         input().simulate(INPUT_EVENT.CHANGE, changeMock)
         expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
         expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
-          value: 1.12,
+          value: changeMock.target.value,
           pristine: false,
           valid: VALIDATION_TYPES.VALID
         })
@@ -366,7 +366,7 @@ describe('NumericInput', () => {
         input().simulate(INPUT_EVENT.CHANGE, changeMock)
         expect(numericInputComponent.onValueUpdate).toHaveBeenCalledTimes(1)
         expect(numericInputComponent.onValueUpdate).toHaveBeenCalledWith({
-          value: 1.123,
+          value: changeMock.target.value,
           pristine: false,
           valid: VALIDATION_TYPES.VALID
         })

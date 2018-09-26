@@ -4,9 +4,9 @@ import {
   Home,
   Manage,
   StepOne,
-  stepTwo,
-  stepThree,
-  stepFour,
+  StepTwo,
+  StepThree,
+  StepFour,
   Crowdsale,
   Contribute,
   Stats,
@@ -49,8 +49,6 @@ class App extends Component {
     return (
       <Router>
         <div>
-          {/* <Header /> */}
-
           <Switch>
             <Route exact path="/crowdsale" component={Crowdsale} />
             <Route exact path="/contribute" component={Contribute} />
@@ -60,7 +58,7 @@ class App extends Component {
               <Web3Provider onChangeAccount={deploymentStore.handleAccountChange} web3UnavailableScreen={NoWeb3}>
                 <Switch>
                   {/* The route to /4 must be first for the incomplete deploy redirect to work */}
-                  <Route path="/4" component={stepFour} />
+                  <Route path="/4" component={StepFour} />
 
                   {deploymentStore.deployInProgress ? (
                     <IncompleteDeploy />
@@ -69,16 +67,14 @@ class App extends Component {
                       <Route exact path="/" component={crowdsaleAddr ? Crowdsale : Home} />
                       <Route exact path="/manage/:crowdsalePointer" component={Manage} />
                       <Route path="/1" component={StepOne} />
-                      <Route path="/2" component={stepTwo} />
-                      <Route path="/3" component={stepThree} />
+                      <Route path="/2" component={StepTwo} />
+                      <Route path="/3" component={StepThree} />
                     </Switch>
                   )}
                 </Switch>
               </Web3Provider>
             </Route>
           </Switch>
-
-          {/* <Footer /> */}
           <AlertContainer ref={a => (toast.msg = a)} {...TOAST.DEFAULT_OPTIONS} />
         </div>
       </Router>

@@ -1,0 +1,21 @@
+.sw-InputField {
+    @include form-control-block-common();
+
+    &.sw-BorderedBlock_Row1Column1 {
+        @media (min-width: $breakpoint-xl) {
+            grid-area: row-1-col-1;
+        }
+    }
+
+    .sw-BorderedBlock-3Columns & {
+        @media (min-width: $breakpoint-xl) {
+            margin-bottom: 0;
+        }
+    }
+
+    .sw-BorderedBlock-2Rows2Columns & {
+        @media (min-width: $breakpoint-xxl) {
+            margin-bottom: 0;
+        }
+    }
+}

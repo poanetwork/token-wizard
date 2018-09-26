@@ -1,24 +1,25 @@
 import React from 'react'
+import { FormControlTitle } from '../Common/FormControlTitle'
 
 export const RadioInputField = props => {
   const inputs = props.items.map((item, index) => (
-    <label className="radio-inline" key={index}>
+    <label className="sw-RadioInputField_Label" key={index}>
       <input
-        type="radio"
-        id={item.value}
         checked={props.selectedItem === item.value}
+        className="sw-RadioInputField_Input"
+        id={item.value}
         onChange={props.onChange}
+        type="radio"
         value={item.value}
       />
-      <span className="title">{item.label}</span>
+      <span className="sw-RadioInputField_Button">{item.label}</span>
     </label>
   ))
 
   return (
-    <div className={props.extraClassName}>
-      <label className="label">{props.title}</label>
-      <div className="radios-inline">{inputs}</div>
-      <p className="description">{props.description}</p>
+    <div className={`sw-RadioInputField ${props.extraClassName ? props.extraClassName : ''}`}>
+      <FormControlTitle title={props.title} description={props.description} />
+      <div className="sw-RadioInputField_ButtonsContainer">{inputs}</div>
     </div>
   )
 }

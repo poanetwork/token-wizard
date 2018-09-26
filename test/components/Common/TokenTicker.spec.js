@@ -3,7 +3,7 @@ import { TokenTicker } from '../../../src/components/Common/TokenTicker'
 import { Form } from 'react-final-form'
 import renderer from 'react-test-renderer'
 import Adapter from 'enzyme-adapter-react-15'
-import { configure, mount, shallow } from 'enzyme'
+import { configure, mount } from 'enzyme'
 import { VALIDATION_MESSAGES } from '../../../src/utils/constants'
 
 configure({ adapter: new Adapter() })
@@ -30,7 +30,7 @@ describe('TokenTicker', () => {
     const input = wrapper.find('input[name="ticker"]')
     input.simulate('change', { target: { value: 'AB@C8' } })
 
-    expect(wrapper.find('.error').text()).toBe('Only alphanumeric characters')
+    expect(wrapper.find('.sw-Error').text()).toBe('Only alphanumeric characters')
   })
 
   it(`should give error if ticker name is empty`, () => {
@@ -54,6 +54,6 @@ describe('TokenTicker', () => {
     const input = wrapper.find('input[name="ticker"]')
     input.simulate('change', { target: { value: '123456' } })
 
-    expect(wrapper.find('.error').text()).toBe('Please enter a valid ticker between 1-5 characters')
+    expect(wrapper.find('.sw-Error').text()).toBe('Please enter a valid ticker between 1-5 characters')
   })
 })

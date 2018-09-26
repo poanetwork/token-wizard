@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
-import { InputField } from './InputField'
 import { VALIDATION_TYPES } from '../../utils/constants'
 import { countDecimalPlaces } from '../../utils/utils'
 import { observer } from 'mobx-react'
+import { FormControlTitle } from '../Common/FormControlTitle'
+import { TextField } from '../Common/TextField'
+import { FormError } from '../Common/FormError'
+import { BigNumber } from 'bignumber.js'
 
 const { VALID, INVALID } = VALIDATION_TYPES
 
@@ -39,8 +42,10 @@ export class NumericInput extends Component {
   }
 
   onChange = e => {
-    let value = this.props.acceptFloat ? parseFloat(e.target.value) : parseInt(e.target.value, 10)
+    let value = this.props.acceptFloat ? e.target.value : parseInt(e.target.value, 10)
+
     if (this.props.acceptEmpty && e.target.value === '') value = ''
+
     this.validate(value)
   }
 
@@ -64,6 +69,10 @@ export class NumericInput extends Component {
 
     if (isValid && max !== undefined) {
       isValid = isValid && value <= max
+    }
+
+    if (value === 0 || value === '0') {
+      isValid = false
     }
 
     const result = {
@@ -109,26 +118,71 @@ export class NumericInput extends Component {
     }
   }
 
+  zeroDecimals(decimals) {
+    if (decimals === '0' || decimals === 0 || !decimals) {
+      return true
+    } else return false
+  }
+
+  getTokensMinimumWithDecimals(minimum, decimals) {
+    if (this.zeroDecimals(decimals)) return
+
+    let minDecimals = new BigNumber(0)
+
+    minDecimals = minimum + 1 / Math.pow(10, decimals)
+
+    return minDecimals.toFixed(decimals)
+  }
+
+  getMinimumValue(dimension, decimals, minimum) {
+    if (dimension === 'tokens' && this.zeroDecimals(decimals)) {
+      return '1'
+    } else if (dimension === 'tokens') {
+      return this.getTokensMinimumWithDecimals(minimum, decimals)
+    } else if (dimension === 'percentage') {
+      return '0'
+    }
+  }
+
   render() {
     const { value, pristine, valid } = this.state
-    const { disabled, side, errorMessage, title, description, name } = this.props
+    const {
+      decimals,
+      description,
+      dimension,
+      disabled,
+      errorMessage,
+      extraClassName,
+      min,
+      name,
+      onClick,
+      placeholder,
+      title
+    } = this.props
+    const error = valid === INVALID ? <FormError errorMessage={errorMessage} /> : ''
+    const minimumValue = this.getMinimumValue(dimension, decimals, min)
+    const renderedValue = +value <= +minimumValue ? minimumValue : value
 
     return (
-      <InputField
-        disabled={disabled}
-        side={side}
-        name={name}
-        type="number"
-        errorMessage={errorMessage}
-        value={value}
-        pristine={pristine}
-        valid={valid}
-        title={title}
-        onKeyPress={this.onKeyPress}
-        onChange={this.onChange}
-        onPaste={this.onPaste}
-        description={description}
-      />
+      <div className={`sw-NumericInput ${extraClassName ? extraClassName : ''}`}>
+        <FormControlTitle title={title} description={description} />
+        <div className="sw-NumericInput_InputAndButtonContainer">
+          <TextField
+            disabled={disabled}
+            id={name}
+            min={minimumValue}
+            onChange={this.onChange}
+            onKeyPress={this.onKeyPress}
+            onPaste={this.onPaste}
+            placeholder={placeholder}
+            step="1"
+            type="number"
+            value={pristine ? '' : renderedValue}
+          />
+          <div onClick={onClick} className="sw-NumericInput_ButtonPlus" />
+        </div>
+        {pristine ? '' : error}
+      </div>
     )
   }
 }

@@ -1,0 +1,68 @@
+$sw-FormControlTitle_Info-dimensions: 13px !default;
+
+.sw-FormControlTitle {
+    align-items: center;
+    display: flex;
+    margin: 0 0 5px;
+}
+
+.sw-FormControlTitle_Label {
+    color: #000;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.2;
+    margin-right: 10px;
+}
+
+.sw-FormControlTitle_Info {
+    align-items: center;
+    background-image: url('#{ $base-images-path }/FormControlTitle/ico-info.svg');
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    height: $sw-FormControlTitle_Info-dimensions;
+    justify-content: flex-end;
+    outline: none;
+    padding: 0;
+    width: $sw-FormControlTitle_Info-dimensions;
+}
+
+.sw-FormControlTitle_Tooltip {
+    animation-duration: 0.25s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: 1;
+    animation-name: sw-FormControlTitle_Tooltip-animation;
+    animation-timing-function: linear;
+    background-color: rgba(90, 45, 165, 0.6);
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 9px 13px 0 rgba(0, 0, 0, 0.09);
+    color: #fff;
+    display: none;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.21;
+    min-width: 180px;
+    padding: 12px 10px;
+    position: relative;
+    top: -#{ $sw-FormControlTitle_Info-dimensions + 5 };
+
+    .sw-FormControlTitle_Info:focus & {
+        display: block;
+
+    }
+}
+
+@keyframes sw-FormControlTitle_Tooltip-animation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}

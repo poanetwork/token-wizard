@@ -195,13 +195,13 @@ exports[`StepOne should render StepOne screen 1`] = `
         className="st-StepContent_Buttons"
       >
         <button
-          className="sw-ButtonPrimaryGradient"
+          className="sw-ButtonContinue"
           disabled={false}
           onClick={[Function]}
           type={undefined}
         >
           <span
-            className="sw-ButtonPrimaryGradient_Text"
+            className="sw-ButtonContinue_Text"
           >
             Continue
           </span>

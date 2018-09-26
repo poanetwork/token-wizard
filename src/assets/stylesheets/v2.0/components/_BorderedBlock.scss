@@ -1,0 +1,57 @@
+$grid-column-gap-md: 15px;
+$grid-column-gap-xl: 39px;
+$grid-column-gap-xxl: 74px;
+
+.sw-BorderedBlock {
+    background-color: #fff;
+    border-radius: 5px;
+    border: solid 1px $base-border-color;
+    box-shadow: 0 9px 18px 4px rgba(224, 224, 224, 0.2);
+    margin-bottom: 28px;
+    padding: 19px 20px 31px 18px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    @media (min-width: $breakpoint-xl) {
+        padding: 34px 36px 49px 35px;
+    }
+
+    &.sw-BorderedBlock-3Columns {
+        @media (min-width: $breakpoint-xl) {
+            display: grid;
+            grid-column-gap: $grid-column-gap-md;
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        @media (min-width: $breakpoint-xxl) {
+            grid-column-gap: $grid-column-gap-xl;
+        }
+    }
+
+    &.sw-BorderedBlock-2Rows2Columns {
+        @media (min-width: $breakpoint-xxl) {
+            display: grid;
+            grid-column-gap: $grid-column-gap-xxl;
+            grid-row-gap: 31px;
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    &.sw-BorderedBlock-3Rows3Columns {
+        @media (min-width: $breakpoint-xl) {
+            display: grid;
+            grid-column-gap: $grid-column-gap-md;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-areas:
+                "row-1-col-1 row-1-col-2 row-1-col-3"
+                "row-2-col-1 row-2-col-1 row-2-col-1"
+                "row-3-col-1 row-3-col-1 row-3-col-1";
+        }
+
+        @media (min-width: $breakpoint-xxl) {
+            grid-column-gap: $grid-column-gap-xl;
+        }
+    }
+}

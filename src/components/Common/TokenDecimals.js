@@ -18,9 +18,10 @@ export const TokenDecimals = ({ disabled, errorStyle }) => (
     }}
     component={InputField2}
     parse={acceptPositiveIntegerOnly}
-    side="left"
+    min="0"
+    max="18"
     name="decimals"
-    type="text"
+    type="number"
     description="Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous)."
     label={TEXT_FIELDS.DECIMALS}
     disabled={disabled}

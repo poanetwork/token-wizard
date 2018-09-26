@@ -86,8 +86,8 @@ describe('CrowdsaleStartTime', () => {
       )
       const label = wrapper.find('label')
       expect(label.text()).toBe(LABEL)
-      const descript = wrapper.find('p[className="description"]')
-      expect(descript.text()).toBe(DECRIPTION)
+      const description = wrapper.find('.sw-FormControlTitle_Tooltip')
+      expect(description.text()).toBe(DECRIPTION)
     })
   })
 

@@ -1,0 +1,44 @@
+.sw-ReservedTokensListControls {
+    display: flex;
+    justify-content: flex-end;
+
+    @media (min-width: $breakpoint-xl) {
+        margin-bottom: -20px;
+    }
+
+    &.sw-BorderedBlock_Row3Column1 {
+        @media (min-width: $breakpoint-xl) {
+            grid-area: row-3-col-1;
+        }
+    }
+}
+
+.sw-ReservedTokensListControls_Button {
+    @include not-selectable-text();
+    background-position: 0 50%;
+    background-repeat: no-repeat;
+    color: #4a4a4a;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 30px;
+    margin: 0 38px 0 0;
+    padding: 0 0 0 25px;
+
+    &:last-child {
+        margin-right: 0;
+    }
+
+    &.sw-ReservedTokensListControls_Button-clearall {
+        background-image: url('#{ $base-images-path }/ReservedTokensListControls/ico-delete.svg');
+    }
+
+    &.sw-ReservedTokensListControls_Button-uploadcsv {
+        background-image: url('#{ $base-images-path }/ReservedTokensListControls/ico-upload.svg');
+    }
+
+    &.m-r-0 {
+        margin-right: 0;
+    }
+
+}

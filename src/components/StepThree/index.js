@@ -13,7 +13,7 @@ import logdown from 'logdown'
 import { sleep } from '../../utils/utils'
 import setFieldTouched from 'final-form-set-field-touched'
 
-const logger = logdown('TW:stepThree')
+const logger = logdown('TW:StepThree')
 
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 
@@ -29,7 +29,7 @@ const { CROWDSALE_SETUP } = NAVIGATION_STEPS
   'crowdsaleStore'
 )
 @observer
-export class stepThree extends Component {
+export class StepThree extends Component {
   state = {
     loading: false,
     reload: false,
