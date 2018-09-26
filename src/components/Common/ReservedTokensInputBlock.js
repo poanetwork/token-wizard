@@ -184,8 +184,8 @@ export class ReservedTokensInputBlock extends Component {
               rows: results.data,
               decimals: this.state.decimals
             },
-            item => {
-              this.props.addReservedTokensItem(item)
+            newToken => {
+              this.props.reservedTokenStore.addToken(newToken)
             }
           )
 
