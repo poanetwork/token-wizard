@@ -4,6 +4,7 @@ import { CrowdsaleEndTime } from './../Common/CrowdsaleEndTime'
 import { CrowdsaleRate } from './../Common/CrowdsaleRate'
 import { Supply } from './../Common/Supply'
 import { TEXT_FIELDS } from '../../utils/constants'
+import { convertDateToLocalTimezone } from '../../utils/utils'
 import { InputField } from '../Common/InputField'
 import {
   composeValidators,
@@ -35,13 +36,16 @@ export const ManageTierBlock = inject('crowdsaleStore', 'tokenStore')(
       {fields.map((name, index) => {
         const currentTier = fields.value[index]
         const { tier } = currentTier
-        const {
+        let {
           startTime: initialStartTime,
           endTime: initialEndTime,
           whitelistEnabled,
           updatable,
           supply
         } = fields.initial[index]
+
+        initialStartTime = convertDateToLocalTimezone(initialStartTime)
+        initialEndTime = convertDateToLocalTimezone(initialEndTime)
 
         const tierHasStarted = !isDateLaterThan()(dateToTimestamp(initialStartTime))(Date.now())
         const tierHasEnded = !isDateLaterThan()(dateToTimestamp(initialEndTime))(Date.now())

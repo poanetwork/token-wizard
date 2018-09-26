@@ -23,7 +23,15 @@ import {
   checkWeb3,
   isAddressValid
 } from '../../utils/blockchainHelpers'
-import { isExecIDValid, isNetworkIDValid, toast, toBigNumber, clearStorage } from '../../utils/utils'
+import {
+  isExecIDValid,
+  isNetworkIDValid,
+  toast,
+  toBigNumber,
+  clearStorage,
+  convertDateToLocalTimezoneInUnix,
+  convertDateToLocalTimezone
+} from '../../utils/utils'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import { getFieldsToUpdate, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
@@ -106,7 +114,13 @@ export class Manage extends Component {
       await this.checkOwner()
       await this.extractContractsData()
       await this.updateCrowdsaleStatus()
-      this.initialValues.tiers = JSON.parse(JSON.stringify(tierStore.tiers))
+      let tiers = JSON.parse(JSON.stringify(tierStore.tiers))
+      tiers = tiers.map(tier => {
+        tier.startTime = convertDateToLocalTimezone(tier.startTime)
+        tier.endTime = convertDateToLocalTimezone(tier.endTime)
+        return tier
+      })
+      this.initialValues.tiers = tiers
       this.initialValues.minCap = +tierStore.tiers[0].minCap
       this.hideLoader()
       if (!this.state.ownerCurrentUser) notTheOwner()
@@ -507,9 +521,17 @@ export class Manage extends Component {
     }
     const { is_finalized } = crowdsaleInfo
 
+    const startTime = convertDateToLocalTimezoneInUnix(crowdsaleStartAndEndTimes.start_time * 1000)
+    const endTime = convertDateToLocalTimezoneInUnix(crowdsaleStartAndEndTimes.end_time * 1000)
+    const crowdsaleHasEnded = startTime <= Date.now() && endTime <= Date.now()
+    const crowdsaleHasStarted = startTime <= Date.now() && endTime >= Date.now()
+
+    logger.log('Crowdsale has ended', crowdsaleHasEnded)
+    logger.log('Crowdsale has started', crowdsaleHasStarted)
+
     this.setState({
-      crowdsaleHasEnded: crowdsaleStartAndEndTimes.end_time * 1000 <= Date.now(),
-      crowdsaleHasStarted: crowdsaleStartAndEndTimes.start_time * 1000 >= Date.now(),
+      crowdsaleHasEnded: crowdsaleHasEnded,
+      crowdsaleHasStarted: crowdsaleHasStarted,
       crowdsaleIsUpdatable: initialTiersValues.some(tier => tier.updatable),
       crowdsaleIsWhitelisted: initialTiersValues.some(tier => tier.isWhitelisted),
       crowdsaleIsFinalized: is_finalized
