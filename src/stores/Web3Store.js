@@ -24,7 +24,7 @@ class Web3Store {
               this.setProperty('curAddress', accounts[0])
             }
           })
-          .catch(err => console.log(err))
+          .catch(err => logger.log('There is no accounts'))
       }
     })
   }

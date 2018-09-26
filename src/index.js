@@ -28,7 +28,14 @@ checkEnvVariable(`${REACT_PREFIX}DUTCH_APP_NAME`)
 
 const devEnvironment = process.env.NODE_ENV === 'development'
 if (devEnvironment && !window.web3) {
-  window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
+  const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
+  web3.eth.net
+    .isListening()
+    .then(() => {
+      console.log('GanacheCli is connected')
+      window.web3 = web3
+    })
+    .catch(e => console.log('Wow. Something went wrong. Web3 doesnt exist'))
 }
 
 function checkEnvVariable(envVar) {
