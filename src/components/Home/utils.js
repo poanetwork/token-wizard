@@ -20,11 +20,6 @@ export const reloadStorage = async props => {
     await getCrowdsaleAssets(networkID)
     contractStore.setProperty('downloadStatus', DOWNLOAD_STATUS.SUCCESS)
   } catch (e) {
-    toast.showToaster({
-      type: TOAST.TYPE.ERROR,
-      message:
-        'The contracts could not be downloaded. Please try to refresh the page. If the problem persists, try again later.'
-    })
     logger.error('Error downloading contracts', e)
     contractStore.setProperty('downloadStatus', DOWNLOAD_STATUS.FAILURE)
     throw e
