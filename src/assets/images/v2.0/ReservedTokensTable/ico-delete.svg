@@ -1,0 +1,29 @@
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="12"
+    height="15"
+    viewBox="0 0 12 15"
+>
+    <g
+        fill="none"
+        fill-rule="evenodd"
+    >
+        <text
+            fill="#4A4A4A"
+            font-family="Nunito-SemiBold, Nunito"
+            font-size="16"
+            font-weight="500"
+            transform="translate(-7 -3)"
+        >
+            <tspan
+                x="29.704"
+                y="16"
+            >Clear All</tspan>
+        </text>
+        <path
+            fill="#9B9B9B"
+            fill-rule="nonzero"
+            d="M.857 13.153c0 .82.772 1.49 1.714 1.49H9.43c.942 0 1.714-.67 1.714-1.49V4.214H.857v8.94zM12 .857H9L8.143 0H3.857L3 .857H0v1.714h12V.857z"
+        />
+    </g>
+</svg>

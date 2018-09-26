@@ -81,7 +81,7 @@ export const DutchAuctionBlock = inject('tierStore', 'tokenStore')(
       <div>
         {fields.map((name, index) => (
           <div style={{ marginTop: '40px' }} className="steps-content container" key={index}>
-            <div className="hidden">
+            <div>
               <div className="input-block-container">
                 <Field
                   name={`${name}.startTime`}

@@ -1,0 +1,21 @@
+.sw-ButtonBack {
+    @include not-selectable-text();
+    background: none;
+    border: none;
+    color: $base-text-color-light;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    outline: none;
+    padding: 0;
+    text-decoration: underline;
+
+    &:hover {
+        text-decoration: none;
+    }
+
+    .st-StepContent_Buttons & {
+        margin-right: 25px;
+    }
+}

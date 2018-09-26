@@ -219,7 +219,7 @@ export class Crowdsale extends React.Component {
     const crowdsaleSummary = isMintedCappedCrowdsale ? (
       <div>
         <div className="left" style={{ width: '42% ' }}>
-          <div className="hidden">
+          <div>
             <div className="left">
               <p className="title">{tokensClaimed}</p>
               <p className="description">Tokens Claimed</p>
@@ -231,7 +231,7 @@ export class Crowdsale extends React.Component {
           </div>
         </div>
         <div className="right" style={{ width: '58%' }}>
-          <div className="hidden">
+          <div>
             <div className="left">
               <p className="title">{currentRatePerETH}</p>
               <p className="description">Rate (Tokens/ETH)</p>
@@ -290,7 +290,7 @@ export class Crowdsale extends React.Component {
             </p>
           </div>
           <div className="total-funds">
-            <div className="hidden">
+            <div>
               <div className="left">
                 <p className="total-funds-title">{`${ethRaised.toFixed()}`} ETH</p>
                 <p className="total-funds-description">Total Raised Funds</p>
@@ -316,7 +316,7 @@ export class Crowdsale extends React.Component {
             </div>
           </div>
           <div className="total-funds-statistics">
-            <div className="hidden">
+            <div>
               {crowdsaleSummary}
               <div className="left">
                 <p className="hash">{crowdsaleExecID || (proxy && proxy.addr)}</p>

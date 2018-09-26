@@ -71,54 +71,17 @@ class TokenStore {
     this.setToken(newToken, newTokenValidations)
   }
 
+  /**
+   * Callback to update the token store
+   * @param values
+   * @param errors
+   */
   @action
-  checkIsEmptyMinted = () => {
-    // The decimal field is not checked, because it has a default value
-    return !this.name && !this.ticker
-  }
-
-  @action
-  checkIsEmptyDutch = () => {
-    // The decimal field is not checked, because it has a default value
-    return !this.name && !this.ticker && !this.supply
-  }
-
-  @action
-  isEmpty = crowdsaleStore => {
-    if (crowdsaleStore.isDutchAuction) {
-      return this.checkIsEmptyDutch()
-    } else {
-      return this.checkIsEmptyMinted()
-    }
-  }
-
-  @action
-  getTokenMinted = () => {
-    return {
-      name: this.name,
-      ticker: this.ticker,
-      decimals: this.decimals,
-      reservedTokensInput: this.reservedTokensInput
-    }
-  }
-
-  @action
-  getTokenDutch = () => {
-    return {
-      name: this.name,
-      ticker: this.ticker,
-      decimals: this.decimals,
-      supply: this.supply
-    }
-  }
-
-  @action
-  getToken = crowdsaleStore => {
-    if (crowdsaleStore.isDutchAuction) {
-      return this.getTokenDutch()
-    } else {
-      return this.getTokenMinted()
-    }
+  updateTokenStore = ({ values, errors }) => {
+    Object.keys(values).forEach(key => {
+      this.setProperty(key, values[key])
+      this.updateValidity(key, errors[key] !== undefined ? INVALID : VALID)
+    })
   }
 
   // Getters
@@ -129,13 +92,41 @@ class TokenStore {
     }
 
     const validKeys = Object.keys(this.validToken).filter(key => {
-      if (this.validToken[key] === VALID) {
-        return true
-      } else {
-        return false
-      }
+      return this.validToken[key] === VALID
     })
     return validKeys.length === Object.keys(this.validToken).length
+  }
+
+  @computed
+  get checkIsEmptyMinted() {
+    // The decimal field is not checked, because it has a default value
+    return !this.name && !this.ticker
+  }
+
+  @computed
+  get checkIsEmptyDutch() {
+    // The decimal field is not checked, because it has a default value
+    return !this.name && !this.ticker && !this.supply
+  }
+
+  @computed
+  get tokenMintedStructure() {
+    return {
+      name: this.name,
+      ticker: this.ticker,
+      decimals: this.decimals,
+      reservedTokensInput: this.reservedTokensInput
+    }
+  }
+
+  @computed
+  get tokenDutchStructure() {
+    return {
+      name: this.name,
+      ticker: this.ticker,
+      decimals: this.decimals,
+      supply: this.supply
+    }
   }
 }
 

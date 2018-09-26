@@ -34,7 +34,7 @@ export const ManageDutchAuctionBlock = inject('crowdsaleStore', 'tokenStore')(
         return (
           <div className="steps" key={index}>
             <div className="steps-content container">
-              <div className={classNames('hidden', { divisor: isWhitelistEnabled })}>
+              <div className={classNames('', { divisor: isWhitelistEnabled })}>
                 <div className="input-block-container">
                   <InputField
                     side="left"

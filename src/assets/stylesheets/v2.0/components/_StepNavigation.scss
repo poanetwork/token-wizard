@@ -1,7 +1,7 @@
-$st-StepNavigation_Step-dimensions: 24px;
-$st-StepNavigation_Step-background: #995cff;
-$st-StepNavigation_Step-background-active: #8ce1d7;
-$st-StepNavigation_StepLine-width: 40px;
+$st-StepNavigation_Step-dimensions: 24px !default;
+$st-StepNavigation_Step-background: #995cff !default;
+$st-StepNavigation_Step-background-active: #8ce1d7 !default;
+$st-StepNavigation_StepLine-width: 40px !default;
 
 .st-StepNavigation {
     align-items: center;
@@ -9,7 +9,7 @@ $st-StepNavigation_StepLine-width: 40px;
     display: flex;
     flex-direction: column;
     min-height: 300px;
-    justify-content: top;
+    justify-content: flex-start;
     padding: 24px 10px 0;
 
     @media (min-width: $breakpoint-xl) {

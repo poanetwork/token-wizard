@@ -5,7 +5,7 @@ import { Field } from 'react-final-form'
 import { InputField2 } from './InputField2'
 import { acceptPositiveIntegerOnly } from '../../utils/utils'
 
-export const TokenSupply = ({ errorStyle }) => (
+export const TokenSupply = () => (
   <Field
     validate={isPositive()}
     component={InputField2}
@@ -15,6 +15,5 @@ export const TokenSupply = ({ errorStyle }) => (
     type="text"
     description={DESCRIPTION.TOKEN_SUPPLY}
     label={TEXT_FIELDS.SUPPLY_SHORT}
-    errorStyle={errorStyle}
   />
 )

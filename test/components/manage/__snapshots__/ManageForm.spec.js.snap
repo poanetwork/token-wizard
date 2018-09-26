@@ -1464,33 +1464,32 @@ exports[`ManageForm should render the component with tiers 1`] = `
                       type="text"
                     >
                       <div
-                        className="left"
+                        className="sw-InputField "
                       >
-                        <label
-                          className="label"
+                        <FormControlTitle
+                          title="Wallet Address"
                         >
-                          Wallet Address
-                        </label>
-                        <input
-                          className="input"
+                          <div
+                            className="sw-FormControlTitle"
+                          >
+                            <label
+                              className="sw-FormControlTitle_Label"
+                            >
+                              Wallet Address
+                            </label>
+                          </div>
+                        </FormControlTitle>
+                        <TextField
                           disabled={true}
                           id="walletAddress"
                           type="text"
-                        />
-                        <p
-                          className="description"
-                        />
-                        <p
-                          style={
-                            Object {
-                              "color": "red",
-                              "fontSize": "12px",
-                              "fontWeight": "bold",
-                              "height": "10px",
-                              "width": "100%",
-                            }
-                          }
-                        />
+                        >
+                          <input
+                            className="sw-TextField"
+                            disabled={true}
+                            type="text"
+                          />
+                        </TextField>
                       </div>
                     </InputField>
                   </div>
@@ -2760,7 +2759,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                           className="steps-content container"
                         >
                           <div
-                            className="hidden"
+                            className=""
                           >
                             <div
                               className="input-block-container"
@@ -2774,34 +2773,34 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                 value="Tier 1"
                               >
                                 <div
-                                  className="left"
+                                  className="sw-InputField "
                                 >
-                                  <label
-                                    className="label"
+                                  <FormControlTitle
+                                    title="Crowdsale setup name"
                                   >
-                                    Crowdsale setup name
-                                  </label>
-                                  <input
-                                    className="input"
+                                    <div
+                                      className="sw-FormControlTitle"
+                                    >
+                                      <label
+                                        className="sw-FormControlTitle_Label"
+                                      >
+                                        Crowdsale setup name
+                                      </label>
+                                    </div>
+                                  </FormControlTitle>
+                                  <TextField
                                     disabled={true}
                                     id="tiers[0].crowdsale_name"
                                     type="text"
                                     value="Tier 1"
-                                  />
-                                  <p
-                                    className="description"
-                                  />
-                                  <p
-                                    style={
-                                      Object {
-                                        "color": "red",
-                                        "fontSize": "12px",
-                                        "fontWeight": "bold",
-                                        "height": "10px",
-                                        "width": "100%",
-                                      }
-                                    }
-                                  />
+                                  >
+                                    <input
+                                      className="sw-TextField"
+                                      disabled={true}
+                                      type="text"
+                                      value="Tier 1"
+                                    />
+                                  </TextField>
                                 </div>
                               </InputField>
                             </div>
@@ -2887,15 +2886,33 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                     type="datetime-local"
                                   >
                                     <div
-                                      className="left"
+                                      className="sw-InputField "
                                     >
-                                      <label
-                                        className="label"
-                                        htmlFor="tiers[0].startTime"
+                                      <FormControlTitle
+                                        description="Date and time when the tier starts. Can't be in the past from the current moment."
+                                        title="Start Time"
                                       >
-                                        Start Time
-                                      </label>
-                                      <input
+                                        <div
+                                          className="sw-FormControlTitle"
+                                        >
+                                          <label
+                                            className="sw-FormControlTitle_Label"
+                                          >
+                                            Start Time
+                                          </label>
+                                          <div
+                                            className="sw-FormControlTitle_Info"
+                                            tabIndex="-1"
+                                          >
+                                            <span
+                                              className="sw-FormControlTitle_Tooltip"
+                                            >
+                                              Date and time when the tier starts. Can't be in the past from the current moment.
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </FormControlTitle>
+                                      <TextField
                                         autoComplete="off"
                                         className="input"
                                         disabled={true}
@@ -2906,22 +2923,20 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         onFocus={[Function]}
                                         type="datetime-local"
                                         value="2018-04-13T16:07"
-                                      />
-                                      <p
-                                        className="description"
                                       >
-                                        Date and time when the tier starts. Can't be in the past from the current moment.
-                                      </p>
+                                        <input
+                                          className="sw-TextField"
+                                          disabled={true}
+                                          id="tiers[0].startTime"
+                                          name="tiers[0].startTime"
+                                          onBlur={[Function]}
+                                          onChange={[Function]}
+                                          onFocus={[Function]}
+                                          type="datetime-local"
+                                          value="2018-04-13T16:07"
+                                        />
+                                      </TextField>
                                       <Error
-                                        errorStyle={
-                                          Object {
-                                            "color": "red",
-                                            "fontSize": "12px",
-                                            "fontWeight": "bold",
-                                            "height": "20px",
-                                            "width": "100%",
-                                          }
-                                        }
                                         name="tiers[0].startTime"
                                       >
                                         <Field
@@ -2936,23 +2951,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                               "touched": true,
                                             }
                                           }
-                                        >
-                                          <span>
-                                            <p
-                                              className="error"
-                                              key="0"
-                                              style={
-                                                Object {
-                                                  "color": "red",
-                                                  "fontSize": "12px",
-                                                  "fontWeight": "bold",
-                                                  "height": "20px",
-                                                  "width": "100%",
-                                                }
-                                              }
-                                            />
-                                          </span>
-                                        </Field>
+                                        />
                                       </Error>
                                     </div>
                                   </InputField2>
@@ -3038,15 +3037,33 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                     type="datetime-local"
                                   >
                                     <div
-                                      className="right"
+                                      className="sw-InputField "
                                     >
-                                      <label
-                                        className="label"
-                                        htmlFor="tiers[0].endTime"
+                                      <FormControlTitle
+                                        description="Date and time when the tier ends. Can be only in the future."
+                                        title="End Time"
                                       >
-                                        End Time
-                                      </label>
-                                      <input
+                                        <div
+                                          className="sw-FormControlTitle"
+                                        >
+                                          <label
+                                            className="sw-FormControlTitle_Label"
+                                          >
+                                            End Time
+                                          </label>
+                                          <div
+                                            className="sw-FormControlTitle_Info"
+                                            tabIndex="-1"
+                                          >
+                                            <span
+                                              className="sw-FormControlTitle_Tooltip"
+                                            >
+                                              Date and time when the tier ends. Can be only in the future.
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </FormControlTitle>
+                                      <TextField
                                         autoComplete="off"
                                         className="input"
                                         disabled={false}
@@ -3057,22 +3074,20 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         onFocus={[Function]}
                                         type="datetime-local"
                                         value="2018-04-17T00:00"
-                                      />
-                                      <p
-                                        className="description"
                                       >
-                                        Date and time when the tier ends. Can be only in the future.
-                                      </p>
+                                        <input
+                                          className="sw-TextField"
+                                          disabled={false}
+                                          id="tiers[0].endTime"
+                                          name="tiers[0].endTime"
+                                          onBlur={[Function]}
+                                          onChange={[Function]}
+                                          onFocus={[Function]}
+                                          type="datetime-local"
+                                          value="2018-04-17T00:00"
+                                        />
+                                      </TextField>
                                       <Error
-                                        errorStyle={
-                                          Object {
-                                            "color": "red",
-                                            "fontSize": "12px",
-                                            "fontWeight": "bold",
-                                            "height": "20px",
-                                            "width": "100%",
-                                          }
-                                        }
                                         name="tiers[0].endTime"
                                       >
                                         <Field
@@ -3087,23 +3102,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                               "touched": true,
                                             }
                                           }
-                                        >
-                                          <span>
-                                            <p
-                                              className="error"
-                                              key="0"
-                                              style={
-                                                Object {
-                                                  "color": "red",
-                                                  "fontSize": "12px",
-                                                  "fontWeight": "bold",
-                                                  "height": "20px",
-                                                  "width": "100%",
-                                                }
-                                              }
-                                            />
-                                          </span>
-                                        </Field>
+                                        />
                                       </Error>
                                     </div>
                                   </InputField2>
@@ -3191,15 +3190,33 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                     type="text"
                                   >
                                     <div
-                                      className="left"
+                                      className="sw-InputField "
                                     >
-                                      <label
-                                        className="label"
-                                        htmlFor="tiers[0].rate"
+                                      <FormControlTitle
+                                        description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens"
+                                        title="Rate"
                                       >
-                                        Rate
-                                      </label>
-                                      <input
+                                        <div
+                                          className="sw-FormControlTitle"
+                                        >
+                                          <label
+                                            className="sw-FormControlTitle_Label"
+                                          >
+                                            Rate
+                                          </label>
+                                          <div
+                                            className="sw-FormControlTitle_Info"
+                                            tabIndex="-1"
+                                          >
+                                            <span
+                                              className="sw-FormControlTitle_Tooltip"
+                                            >
+                                              Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </FormControlTitle>
+                                      <TextField
                                         autoComplete="off"
                                         className="input"
                                         disabled={true}
@@ -3210,22 +3227,20 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         onFocus={[Function]}
                                         type="text"
                                         value="123"
-                                      />
-                                      <p
-                                        className="description"
                                       >
-                                        Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
-                                      </p>
+                                        <input
+                                          className="sw-TextField"
+                                          disabled={true}
+                                          id="tiers[0].rate"
+                                          name="tiers[0].rate"
+                                          onBlur={[Function]}
+                                          onChange={[Function]}
+                                          onFocus={[Function]}
+                                          type="text"
+                                          value="123"
+                                        />
+                                      </TextField>
                                       <Error
-                                        errorStyle={
-                                          Object {
-                                            "color": "red",
-                                            "fontSize": "12px",
-                                            "fontWeight": "bold",
-                                            "height": "20px",
-                                            "width": "100%",
-                                          }
-                                        }
                                         name="tiers[0].rate"
                                       >
                                         <Field
@@ -3240,23 +3255,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                               "touched": true,
                                             }
                                           }
-                                        >
-                                          <span>
-                                            <p
-                                              className="error"
-                                              key="0"
-                                              style={
-                                                Object {
-                                                  "color": "red",
-                                                  "fontSize": "12px",
-                                                  "fontWeight": "bold",
-                                                  "height": "20px",
-                                                  "width": "100%",
-                                                }
-                                              }
-                                            />
-                                          </span>
-                                        </Field>
+                                        />
                                       </Error>
                                     </div>
                                   </InputField2>
@@ -3342,15 +3341,33 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                     val={null}
                                   >
                                     <div
-                                      className="right"
+                                      className="sw-InputField "
                                     >
-                                      <label
-                                        className="label"
-                                        htmlFor="tiers[0].supply"
+                                      <FormControlTitle
+                                        description="How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers"
+                                        title="Supply"
                                       >
-                                        Supply
-                                      </label>
-                                      <input
+                                        <div
+                                          className="sw-FormControlTitle"
+                                        >
+                                          <label
+                                            className="sw-FormControlTitle_Label"
+                                          >
+                                            Supply
+                                          </label>
+                                          <div
+                                            className="sw-FormControlTitle_Info"
+                                            tabIndex="-1"
+                                          >
+                                            <span
+                                              className="sw-FormControlTitle_Tooltip"
+                                            >
+                                              How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </FormControlTitle>
+                                      <TextField
                                         autoComplete="off"
                                         className="input"
                                         disabled={true}
@@ -3361,22 +3378,20 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         onFocus={[Function]}
                                         type="text"
                                         value="132"
-                                      />
-                                      <p
-                                        className="description"
                                       >
-                                        How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
-                                      </p>
+                                        <input
+                                          className="sw-TextField"
+                                          disabled={true}
+                                          id="tiers[0].supply"
+                                          name="tiers[0].supply"
+                                          onBlur={[Function]}
+                                          onChange={[Function]}
+                                          onFocus={[Function]}
+                                          type="text"
+                                          value="132"
+                                        />
+                                      </TextField>
                                       <Error
-                                        errorStyle={
-                                          Object {
-                                            "color": "red",
-                                            "fontSize": "12px",
-                                            "fontWeight": "bold",
-                                            "height": "20px",
-                                            "width": "100%",
-                                          }
-                                        }
                                         name="tiers[0].supply"
                                       >
                                         <Field
@@ -3391,23 +3406,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                               "touched": true,
                                             }
                                           }
-                                        >
-                                          <span>
-                                            <p
-                                              className="error"
-                                              key="0"
-                                              style={
-                                                Object {
-                                                  "color": "red",
-                                                  "fontSize": "12px",
-                                                  "fontWeight": "bold",
-                                                  "height": "20px",
-                                                  "width": "100%",
-                                                }
-                                              }
-                                            />
-                                          </span>
-                                        </Field>
+                                        />
                                       </Error>
                                     </div>
                                   </InputField2>
@@ -3482,15 +3481,22 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                   type="number"
                                 >
                                   <div
-                                    className="left"
+                                    className="sw-InputField "
                                   >
-                                    <label
-                                      className="label"
-                                      htmlFor="tiers[0].minCap"
+                                    <FormControlTitle
+                                      title="Contributor min cap"
                                     >
-                                      Contributor min cap
-                                    </label>
-                                    <input
+                                      <div
+                                        className="sw-FormControlTitle"
+                                      >
+                                        <label
+                                          className="sw-FormControlTitle_Label"
+                                        >
+                                          Contributor min cap
+                                        </label>
+                                      </div>
+                                    </FormControlTitle>
+                                    <TextField
                                       autoComplete="off"
                                       className="input"
                                       disabled={false}
@@ -3501,20 +3507,20 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                       onFocus={[Function]}
                                       type="number"
                                       value="0"
-                                    />
-                                    <p
-                                      className="description"
-                                    />
+                                    >
+                                      <input
+                                        className="sw-TextField"
+                                        disabled={false}
+                                        id="tiers[0].minCap"
+                                        name="tiers[0].minCap"
+                                        onBlur={[Function]}
+                                        onChange={[Function]}
+                                        onFocus={[Function]}
+                                        type="number"
+                                        value="0"
+                                      />
+                                    </TextField>
                                     <Error
-                                      errorStyle={
-                                        Object {
-                                          "color": "red",
-                                          "fontSize": "12px",
-                                          "fontWeight": "bold",
-                                          "height": "20px",
-                                          "width": "100%",
-                                        }
-                                      }
                                       name="tiers[0].minCap"
                                     >
                                       <Field
@@ -3529,23 +3535,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                             "touched": true,
                                           }
                                         }
-                                      >
-                                        <span>
-                                          <p
-                                            className="error"
-                                            key="0"
-                                            style={
-                                              Object {
-                                                "color": "red",
-                                                "fontSize": "12px",
-                                                "fontWeight": "bold",
-                                                "height": "20px",
-                                                "width": "100%",
-                                              }
-                                            }
-                                          />
-                                        </span>
-                                      </Field>
+                                      />
                                     </Error>
                                   </div>
                                 </InputField2>
@@ -3562,7 +3552,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                           className="steps-content container"
                         >
                           <div
-                            className="hidden"
+                            className=""
                           >
                             <div
                               className="input-block-container"
@@ -3576,34 +3566,34 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                 value="Tier 2"
                               >
                                 <div
-                                  className="left"
+                                  className="sw-InputField "
                                 >
-                                  <label
-                                    className="label"
+                                  <FormControlTitle
+                                    title="Crowdsale setup name"
                                   >
-                                    Crowdsale setup name
-                                  </label>
-                                  <input
-                                    className="input"
+                                    <div
+                                      className="sw-FormControlTitle"
+                                    >
+                                      <label
+                                        className="sw-FormControlTitle_Label"
+                                      >
+                                        Crowdsale setup name
+                                      </label>
+                                    </div>
+                                  </FormControlTitle>
+                                  <TextField
                                     disabled={true}
                                     id="tiers[1].crowdsale_name"
                                     type="text"
                                     value="Tier 2"
-                                  />
-                                  <p
-                                    className="description"
-                                  />
-                                  <p
-                                    style={
-                                      Object {
-                                        "color": "red",
-                                        "fontSize": "12px",
-                                        "fontWeight": "bold",
-                                        "height": "10px",
-                                        "width": "100%",
-                                      }
-                                    }
-                                  />
+                                  >
+                                    <input
+                                      className="sw-TextField"
+                                      disabled={true}
+                                      type="text"
+                                      value="Tier 2"
+                                    />
+                                  </TextField>
                                 </div>
                               </InputField>
                             </div>
@@ -3689,15 +3679,33 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                     type="datetime-local"
                                   >
                                     <div
-                                      className="left"
+                                      className="sw-InputField "
                                     >
-                                      <label
-                                        className="label"
-                                        htmlFor="tiers[1].startTime"
+                                      <FormControlTitle
+                                        description="Date and time when the tier starts. Can't be in the past from the current moment."
+                                        title="Start Time"
                                       >
-                                        Start Time
-                                      </label>
-                                      <input
+                                        <div
+                                          className="sw-FormControlTitle"
+                                        >
+                                          <label
+                                            className="sw-FormControlTitle_Label"
+                                          >
+                                            Start Time
+                                          </label>
+                                          <div
+                                            className="sw-FormControlTitle_Info"
+                                            tabIndex="-1"
+                                          >
+                                            <span
+                                              className="sw-FormControlTitle_Tooltip"
+                                            >
+                                              Date and time when the tier starts. Can't be in the past from the current moment.
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </FormControlTitle>
+                                      <TextField
                                         autoComplete="off"
                                         className="input"
                                         disabled={true}
@@ -3708,22 +3716,20 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         onFocus={[Function]}
                                         type="datetime-local"
                                         value="2018-04-17T00:00"
-                                      />
-                                      <p
-                                        className="description"
                                       >
-                                        Date and time when the tier starts. Can't be in the past from the current moment.
-                                      </p>
+                                        <input
+                                          className="sw-TextField"
+                                          disabled={true}
+                                          id="tiers[1].startTime"
+                                          name="tiers[1].startTime"
+                                          onBlur={[Function]}
+                                          onChange={[Function]}
+                                          onFocus={[Function]}
+                                          type="datetime-local"
+                                          value="2018-04-17T00:00"
+                                        />
+                                      </TextField>
                                       <Error
-                                        errorStyle={
-                                          Object {
-                                            "color": "red",
-                                            "fontSize": "12px",
-                                            "fontWeight": "bold",
-                                            "height": "20px",
-                                            "width": "100%",
-                                          }
-                                        }
                                         name="tiers[1].startTime"
                                       >
                                         <Field
@@ -3738,23 +3744,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                               "touched": true,
                                             }
                                           }
-                                        >
-                                          <span>
-                                            <p
-                                              className="error"
-                                              key="0"
-                                              style={
-                                                Object {
-                                                  "color": "red",
-                                                  "fontSize": "12px",
-                                                  "fontWeight": "bold",
-                                                  "height": "20px",
-                                                  "width": "100%",
-                                                }
-                                              }
-                                            />
-                                          </span>
-                                        </Field>
+                                        />
                                       </Error>
                                     </div>
                                   </InputField2>
@@ -3839,15 +3829,33 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                     type="datetime-local"
                                   >
                                     <div
-                                      className="right"
+                                      className="sw-InputField "
                                     >
-                                      <label
-                                        className="label"
-                                        htmlFor="tiers[1].endTime"
+                                      <FormControlTitle
+                                        description="Date and time when the tier ends. Can be only in the future."
+                                        title="End Time"
                                       >
-                                        End Time
-                                      </label>
-                                      <input
+                                        <div
+                                          className="sw-FormControlTitle"
+                                        >
+                                          <label
+                                            className="sw-FormControlTitle_Label"
+                                          >
+                                            End Time
+                                          </label>
+                                          <div
+                                            className="sw-FormControlTitle_Info"
+                                            tabIndex="-1"
+                                          >
+                                            <span
+                                              className="sw-FormControlTitle_Tooltip"
+                                            >
+                                              Date and time when the tier ends. Can be only in the future.
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </FormControlTitle>
+                                      <TextField
                                         autoComplete="off"
                                         className="input"
                                         disabled={true}
@@ -3858,22 +3866,20 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         onFocus={[Function]}
                                         type="datetime-local"
                                         value="2018-04-21T00:00"
-                                      />
-                                      <p
-                                        className="description"
                                       >
-                                        Date and time when the tier ends. Can be only in the future.
-                                      </p>
+                                        <input
+                                          className="sw-TextField"
+                                          disabled={true}
+                                          id="tiers[1].endTime"
+                                          name="tiers[1].endTime"
+                                          onBlur={[Function]}
+                                          onChange={[Function]}
+                                          onFocus={[Function]}
+                                          type="datetime-local"
+                                          value="2018-04-21T00:00"
+                                        />
+                                      </TextField>
                                       <Error
-                                        errorStyle={
-                                          Object {
-                                            "color": "red",
-                                            "fontSize": "12px",
-                                            "fontWeight": "bold",
-                                            "height": "20px",
-                                            "width": "100%",
-                                          }
-                                        }
                                         name="tiers[1].endTime"
                                       >
                                         <Field
@@ -3888,23 +3894,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                               "touched": true,
                                             }
                                           }
-                                        >
-                                          <span>
-                                            <p
-                                              className="error"
-                                              key="0"
-                                              style={
-                                                Object {
-                                                  "color": "red",
-                                                  "fontSize": "12px",
-                                                  "fontWeight": "bold",
-                                                  "height": "20px",
-                                                  "width": "100%",
-                                                }
-                                              }
-                                            />
-                                          </span>
-                                        </Field>
+                                        />
                                       </Error>
                                     </div>
                                   </InputField2>
@@ -3992,15 +3982,33 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                     type="text"
                                   >
                                     <div
-                                      className="left"
+                                      className="sw-InputField "
                                     >
-                                      <label
-                                        className="label"
-                                        htmlFor="tiers[1].rate"
+                                      <FormControlTitle
+                                        description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens"
+                                        title="Rate"
                                       >
-                                        Rate
-                                      </label>
-                                      <input
+                                        <div
+                                          className="sw-FormControlTitle"
+                                        >
+                                          <label
+                                            className="sw-FormControlTitle_Label"
+                                          >
+                                            Rate
+                                          </label>
+                                          <div
+                                            className="sw-FormControlTitle_Info"
+                                            tabIndex="-1"
+                                          >
+                                            <span
+                                              className="sw-FormControlTitle_Tooltip"
+                                            >
+                                              Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </FormControlTitle>
+                                      <TextField
                                         autoComplete="off"
                                         className="input"
                                         disabled={true}
@@ -4011,22 +4019,20 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         onFocus={[Function]}
                                         type="text"
                                         value="55"
-                                      />
-                                      <p
-                                        className="description"
                                       >
-                                        Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
-                                      </p>
+                                        <input
+                                          className="sw-TextField"
+                                          disabled={true}
+                                          id="tiers[1].rate"
+                                          name="tiers[1].rate"
+                                          onBlur={[Function]}
+                                          onChange={[Function]}
+                                          onFocus={[Function]}
+                                          type="text"
+                                          value="55"
+                                        />
+                                      </TextField>
                                       <Error
-                                        errorStyle={
-                                          Object {
-                                            "color": "red",
-                                            "fontSize": "12px",
-                                            "fontWeight": "bold",
-                                            "height": "20px",
-                                            "width": "100%",
-                                          }
-                                        }
                                         name="tiers[1].rate"
                                       >
                                         <Field
@@ -4041,23 +4047,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                               "touched": true,
                                             }
                                           }
-                                        >
-                                          <span>
-                                            <p
-                                              className="error"
-                                              key="0"
-                                              style={
-                                                Object {
-                                                  "color": "red",
-                                                  "fontSize": "12px",
-                                                  "fontWeight": "bold",
-                                                  "height": "20px",
-                                                  "width": "100%",
-                                                }
-                                              }
-                                            />
-                                          </span>
-                                        </Field>
+                                        />
                                       </Error>
                                     </div>
                                   </InputField2>
@@ -4143,15 +4133,33 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                     val={null}
                                   >
                                     <div
-                                      className="right"
+                                      className="sw-InputField "
                                     >
-                                      <label
-                                        className="label"
-                                        htmlFor="tiers[1].supply"
+                                      <FormControlTitle
+                                        description="How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers"
+                                        title="Supply"
                                       >
-                                        Supply
-                                      </label>
-                                      <input
+                                        <div
+                                          className="sw-FormControlTitle"
+                                        >
+                                          <label
+                                            className="sw-FormControlTitle_Label"
+                                          >
+                                            Supply
+                                          </label>
+                                          <div
+                                            className="sw-FormControlTitle_Info"
+                                            tabIndex="-1"
+                                          >
+                                            <span
+                                              className="sw-FormControlTitle_Tooltip"
+                                            >
+                                              How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </FormControlTitle>
+                                      <TextField
                                         autoComplete="off"
                                         className="input"
                                         disabled={true}
@@ -4162,22 +4170,20 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         onFocus={[Function]}
                                         type="text"
                                         value="156"
-                                      />
-                                      <p
-                                        className="description"
                                       >
-                                        How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
-                                      </p>
+                                        <input
+                                          className="sw-TextField"
+                                          disabled={true}
+                                          id="tiers[1].supply"
+                                          name="tiers[1].supply"
+                                          onBlur={[Function]}
+                                          onChange={[Function]}
+                                          onFocus={[Function]}
+                                          type="text"
+                                          value="156"
+                                        />
+                                      </TextField>
                                       <Error
-                                        errorStyle={
-                                          Object {
-                                            "color": "red",
-                                            "fontSize": "12px",
-                                            "fontWeight": "bold",
-                                            "height": "20px",
-                                            "width": "100%",
-                                          }
-                                        }
                                         name="tiers[1].supply"
                                       >
                                         <Field
@@ -4192,23 +4198,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                               "touched": true,
                                             }
                                           }
-                                        >
-                                          <span>
-                                            <p
-                                              className="error"
-                                              key="0"
-                                              style={
-                                                Object {
-                                                  "color": "red",
-                                                  "fontSize": "12px",
-                                                  "fontWeight": "bold",
-                                                  "height": "20px",
-                                                  "width": "100%",
-                                                }
-                                              }
-                                            />
-                                          </span>
-                                        </Field>
+                                        />
                                       </Error>
                                     </div>
                                   </InputField2>
@@ -4283,15 +4273,22 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                   type="number"
                                 >
                                   <div
-                                    className="left"
+                                    className="sw-InputField "
                                   >
-                                    <label
-                                      className="label"
-                                      htmlFor="tiers[1].minCap"
+                                    <FormControlTitle
+                                      title="Contributor min cap"
                                     >
-                                      Contributor min cap
-                                    </label>
-                                    <input
+                                      <div
+                                        className="sw-FormControlTitle"
+                                      >
+                                        <label
+                                          className="sw-FormControlTitle_Label"
+                                        >
+                                          Contributor min cap
+                                        </label>
+                                      </div>
+                                    </FormControlTitle>
+                                    <TextField
                                       autoComplete="off"
                                       className="input"
                                       disabled={true}
@@ -4302,20 +4299,20 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                       onFocus={[Function]}
                                       type="number"
                                       value="0"
-                                    />
-                                    <p
-                                      className="description"
-                                    />
+                                    >
+                                      <input
+                                        className="sw-TextField"
+                                        disabled={true}
+                                        id="tiers[1].minCap"
+                                        name="tiers[1].minCap"
+                                        onBlur={[Function]}
+                                        onChange={[Function]}
+                                        onFocus={[Function]}
+                                        type="number"
+                                        value="0"
+                                      />
+                                    </TextField>
                                     <Error
-                                      errorStyle={
-                                        Object {
-                                          "color": "red",
-                                          "fontSize": "12px",
-                                          "fontWeight": "bold",
-                                          "height": "20px",
-                                          "width": "100%",
-                                        }
-                                      }
                                       name="tiers[1].minCap"
                                     >
                                       <Field
@@ -4330,23 +4327,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                             "touched": true,
                                           }
                                         }
-                                      >
-                                        <span>
-                                          <p
-                                            className="error"
-                                            key="0"
-                                            style={
-                                              Object {
-                                                "color": "red",
-                                                "fontSize": "12px",
-                                                "fontWeight": "bold",
-                                                "height": "20px",
-                                                "width": "100%",
-                                              }
-                                            }
-                                          />
-                                        </span>
-                                      </Field>
+                                      />
                                     </Error>
                                   </div>
                                 </InputField2>

@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ButtonBack should render ButtonBack component 1`] = `
+<button
+  className="sw-ButtonBack"
+  onClick={[Function]}
+  type="button"
+>
+  Back
+</button>
+`;
