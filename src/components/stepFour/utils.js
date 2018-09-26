@@ -725,9 +725,6 @@ export const handlerForFile = (content, type) => {
     suffix = ` (GMT ${operator} ${Math.abs(timezoneOffset)})`
   }
 
-  logger.log('content:', content)
-  logger.log('type:', type)
-
   if (content && type) {
     if (content.field === 'whitelist') {
       let whitelistItems = []
@@ -992,12 +989,7 @@ export const summaryFileContents = networkID => {
   }
 
   const getCrowdsaleID = () => {
-    logger.log('contractStore:', contractStore)
-    if (contractStore.crowdsale.execID) {
-      return { field: 'execID', value: 'Auth-os execution ID: ', parent: 'crowdsale' }
-    } else {
-      return { field: 'addr', value: authOSContractString('Crowdsale proxy'), parent: crowdsaleStore.proxyName }
-    }
+    return { field: 'addr', value: authOSContractString('Crowdsale proxy'), parent: crowdsaleStore.proxyName }
   }
 
   const getManagers = () => {
