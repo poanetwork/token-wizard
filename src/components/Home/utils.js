@@ -1,7 +1,6 @@
-import { DOWNLOAD_STATUS, TOAST } from '../../utils/constants'
+import { DOWNLOAD_STATUS } from '../../utils/constants'
 import { getNetworkVersion } from '../../utils/blockchainHelpers'
 import { getCrowdsaleAssets } from '../../stores/utils'
-import { toast } from '../../utils/utils'
 import logdown from 'logdown'
 
 const logger = logdown('TW:home:utils')
