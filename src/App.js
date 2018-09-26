@@ -51,6 +51,7 @@ class App extends Component {
       <Router>
         <div>
           <Switch>
+            <Route exact path="/" component={crowdsaleAddr ? Crowdsale : Home} />
             <Route exact path="/crowdsale" component={Crowdsale} />
             <Route exact path="/contribute" component={Contribute} />
             <Route exact path="/stats" component={Stats} />
@@ -65,7 +66,6 @@ class App extends Component {
                     <IncompleteDeploy />
                   ) : (
                     <Switch>
-                      <Route exact path="/" component={crowdsaleAddr ? Crowdsale : Home} />
                       <Route exact path="/manage/:crowdsalePointer" component={Manage} />
                       <Route path="/1" component={StepOne} />
                       <Route path="/2" component={StepTwo} />
