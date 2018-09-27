@@ -18,6 +18,7 @@ import {
 } from '../../utils/alerts'
 import processReservedTokens from '../../utils/processReservedTokens'
 import logdown from 'logdown'
+import { downloadFile } from '../../utils/utils'
 
 const logger = logdown('TW:ReservedTokensInputBlock')
 const { VALID, INVALID } = VALIDATION_TYPES
@@ -203,6 +204,18 @@ export class ReservedTokensInputBlock extends Component {
     return result
   }
 
+  downloadCSV = async () => {
+    try {
+      const response = await fetch(`/metadata/reservedTokenTemplate.csv`)
+      const text = await response.text()
+
+      // See RFC for csv MIME type http://tools.ietf.org/html/rfc4180
+      downloadFile(text, 'template.csv', 'text/csv')
+    } catch (err) {
+      logger.log('Error fetching file when download template csv')
+    }
+  }
+
   render() {
     const reservedTokensElements = <ReservedTokensTable extraClassName="sw-BorderedBlock_Row2Column1" {...this.props} />
     const tokensListEmpty = this.props.reservedTokenStore.tokens.length === 0
@@ -280,10 +293,16 @@ export class ReservedTokensInputBlock extends Component {
               </div>
             )}
             <Dropzone onDrop={this.onDrop} accept=".csv" style={dropzoneStyle}>
-              <div className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-uploadcsv m-r-0">
+              <div className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-uploadcsv">
                 Upload CSV
               </div>
             </Dropzone>
+            <div
+              className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-uploadcsv m-r-0"
+              onClick={this.downloadCSV}
+            >
+              Download CSV template
+            </div>
           </div>
         </div>
       </div>
