@@ -33,7 +33,7 @@ export class StepOne extends Component {
       const { strategy } = await this.load()
       this.setState({ strategy: strategy })
     } catch (e) {
-      logger.log('An error has occurred', e)
+      logger.log('An error has occurred', e.message)
     }
 
     this.setState({ loading: false })
