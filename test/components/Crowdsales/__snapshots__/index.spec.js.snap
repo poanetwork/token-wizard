@@ -23,13 +23,13 @@ exports[`Crowdsales should render screen  1`] = `
       className="sw-ModalWindow_ButtonsContainer sw-ModalWindow_ButtonsContainer-right"
     >
       <button
-        className="sw-ButtonPrimaryGradient"
+        className="sw-ButtonContinue"
         disabled={true}
         onClick={[Function]}
         type={undefined}
       >
         <span
-          className="sw-ButtonPrimaryGradient_Text"
+          className="sw-ButtonContinue_Text"
         >
           Continue
         </span>
