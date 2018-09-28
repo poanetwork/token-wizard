@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`percentage 1`] = `
-<inject-ReservedTokensInputBlock-with-reservedTokenStore-tokenStore
+<inject-ReservedTokensInputBlock-with-reservedTokenStore
   reservedTokenStore={
     ReservedTokenStore {
       "tokens": Array [],
@@ -346,7 +346,7 @@ exports[`percentage 1`] = `
             </span>
           </Component>
           <div
-            className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-uploadcsv m-r-0"
+            className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-downloadcsv m-r-0"
             onClick={[Function]}
           >
             Download CSV template
@@ -355,11 +355,11 @@ exports[`percentage 1`] = `
       </div>
     </div>
   </ReservedTokensInputBlock>
-</inject-ReservedTokensInputBlock-with-reservedTokenStore-tokenStore>
+</inject-ReservedTokensInputBlock-with-reservedTokenStore>
 `;
 
 exports[`tokens 1`] = `
-<inject-ReservedTokensInputBlock-with-reservedTokenStore-tokenStore
+<inject-ReservedTokensInputBlock-with-reservedTokenStore
   reservedTokenStore={
     ReservedTokenStore {
       "tokens": Array [],
@@ -705,7 +705,7 @@ exports[`tokens 1`] = `
             </span>
           </Component>
           <div
-            className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-uploadcsv m-r-0"
+            className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-downloadcsv m-r-0"
             onClick={[Function]}
           >
             Download CSV template
@@ -714,5 +714,5 @@ exports[`tokens 1`] = `
       </div>
     </div>
   </ReservedTokensInputBlock>
-</inject-ReservedTokensInputBlock-with-reservedTokenStore-tokenStore>
+</inject-ReservedTokensInputBlock-with-reservedTokenStore>
 `;
