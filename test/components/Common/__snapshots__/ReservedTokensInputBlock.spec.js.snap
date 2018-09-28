@@ -345,6 +345,12 @@ exports[`percentage 1`] = `
               Dropzone
             </span>
           </Component>
+          <div
+            className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-uploadcsv m-r-0"
+            onClick={[Function]}
+          >
+            Download CSV template
+          </div>
         </div>
       </div>
     </div>
@@ -698,6 +704,12 @@ exports[`tokens 1`] = `
               Dropzone
             </span>
           </Component>
+          <div
+            className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-uploadcsv m-r-0"
+            onClick={[Function]}
+          >
+            Download CSV template
+          </div>
         </div>
       </div>
     </div>

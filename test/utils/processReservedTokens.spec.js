@@ -1,4 +1,4 @@
-import processReservedTokens from '../../src/utils/processReservedTokens'
+import { processReservedTokens } from '../../src/utils/processReservedTokens'
 
 describe('processReservedTokens function', () => {
   it('should call the callback for each valid reserved tokens item', () => {
