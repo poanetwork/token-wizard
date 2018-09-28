@@ -37,6 +37,10 @@
         background-image: url('#{ $base-images-path }/ReservedTokensListControls/ico-upload.svg');
     }
 
+    &.sw-ReservedTokensListControls_Button-downloadcsv {
+      background-image: url('#{ $base-images-path }/ReservedTokensListControls/ico-download.svg');
+    }
+
     &.m-r-0 {
         margin-right: 0;
     }
