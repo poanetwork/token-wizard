@@ -14,9 +14,10 @@ import {
   reservedTokensImported,
   noMoreReservedSlotAvailableCSV,
   clearingReservedTokens,
-  noMoreReservedSlotAvailable
+  noMoreReservedSlotAvailable,
+  reservedTokenErrorImportingCSV
 } from '../../utils/alerts'
-import processReservedTokens from '../../utils/processReservedTokens'
+import { processReservedTokens, errorsCsv } from '../../utils/processReservedTokens'
 import logdown from 'logdown'
 import { downloadFile } from '../../utils/utils'
 
@@ -175,6 +176,13 @@ export class ReservedTokensInputBlock extends Component {
       Papa.parse(file, {
         skipEmptyLines: true,
         complete: results => {
+          const { data } = results
+          const { errorRowLength, errorAddress } = errorsCsv(data)
+
+          if ((errorRowLength && errorRowLength.length > 0) || (errorAddress && errorAddress.length > 0)) {
+            return reservedTokenErrorImportingCSV(errorRowLength, errorAddress)
+          }
+
           const { called, reservedTokenLengthError } = processReservedTokens(
             {
               rows: results.data,
@@ -298,7 +306,7 @@ export class ReservedTokensInputBlock extends Component {
               </div>
             </Dropzone>
             <div
-              className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-uploadcsv m-r-0"
+              className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-downloadcsv m-r-0"
               onClick={this.downloadCSV}
             >
               Download CSV template
