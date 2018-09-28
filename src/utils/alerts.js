@@ -1,6 +1,7 @@
 import sweetAlert2 from 'sweetalert2'
 import { weiToGwei } from './utils'
 import { DEPLOYMENT_VALUES, LIMIT_RESERVED_ADDRESSES, LIMIT_WHITELISTED_ADDRESSES } from './constants'
+
 export function noMetaMaskAlert(cb) {
   sweetAlert2({
     title: 'Warning',
@@ -268,6 +269,43 @@ export function whitelistImported(count) {
     title: 'Addresses imported',
     html: `${count} addresses were added to the whitelist`,
     type: 'info'
+  })
+}
+
+export function reservedTokenErrorImportingCSV(lines, address) {
+  let message = 'There was an error importing the file.'
+
+  if (lines && lines.length > 0) {
+    const messageHeader = `<div class="text-left">The following lines have an erroneous amount of columns: </div>`
+
+    let list = '<ul class="text-left">'
+    for (let error of lines) {
+      const { line, columns } = error
+      const columnLabel = columns > 1 ? 'columns' : 'column'
+      let item = `<li>The line number ${line} have ${columns} ${columnLabel}, must have 3 columns</li>`
+      list = `${list}${item}`
+    }
+    list = `${list}</ul>`
+    message = `${messageHeader} ${list}`
+  }
+
+  if (address && address.length > 0) {
+    const messageHeader = `<div class="text-left">The following address are wrong: </div>`
+
+    let list = '<ul class="text-left">'
+    for (let error of address) {
+      const { line, address } = error
+      let item = `<li>The line number ${line} has an incorrect address: ${address}</li>`
+      list = `${list}${item}`
+    }
+    list = `${list}</ul>`
+    message = `${message} ${messageHeader} ${list}`
+  }
+
+  return sweetAlert2({
+    title: 'Error importing the file',
+    html: message,
+    type: 'error'
   })
 }
 

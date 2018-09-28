@@ -1,6 +1,7 @@
 import { composeValidators, isAddress, isDecimalPlacesNotGreaterThan, isPositive, isRequired } from './validations'
 import { reservedTokenStore } from '../stores'
 import logdown from 'logdown'
+import Web3 from 'web3'
 
 const logger = logdown('TW:processReservedTokens')
 
@@ -14,7 +15,7 @@ const logger = logdown('TW:processReservedTokens')
  * @param {Function} cb The function to be called with each valid item
  * @returns {Object} Object with a `called` property, indicating the number of times the callback was called
  */
-export default function({ rows, decimals }, cb) {
+export const processReservedTokens = ({ rows, decimals }, cb) => {
   let called = 0
   let reservedTokenLengthError = false
   for (let row of rows) {
@@ -59,5 +60,35 @@ export default function({ rows, decimals }, cb) {
   return {
     called: called,
     reservedTokenLengthError: reservedTokenLengthError
+  }
+}
+
+export const errorsCsv = data => {
+  let errorRowLength = []
+  let errorAddress = []
+
+  for (let i = 0; i < data.length; i++) {
+    const row = data[i]
+
+    if (row.length < 3) {
+      const errorRow = {
+        line: i + 1,
+        columns: row.length
+      }
+      errorRowLength.push(errorRow)
+    }
+
+    if (row[0] && !Web3.utils.isAddress(row[0])) {
+      const errorRow = {
+        line: i + 1,
+        address: row[0]
+      }
+      errorAddress.push(errorRow)
+    }
+  }
+
+  return {
+    errorRowLength: errorRowLength,
+    errorAddress: errorAddress
   }
 }
