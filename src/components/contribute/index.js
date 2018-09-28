@@ -679,6 +679,7 @@ export class Contribute extends React.Component {
               Here you can contribute in the crowdsale campaign. At the moment, you need{' '}
               <a
                 target="_blank"
+                rel="noopener noreferrer"
                 href="https://chrome.google.com/webstore/detail/nifty-wallet/jbdaocneiiinmjbjlgalhcelgbejmnid"
               >
                 a Wallet
