@@ -676,13 +676,14 @@ export class Contribute extends React.Component {
             </div>
             <p className="contribute-title">Contribute page</p>
             <p className="contribute-description">
-              {'Here you can contribute in the crowdsale campaign. At the moment, you need' +
-                (
-                  <a href="https://chrome.google.com/webstore/detail/nifty-wallet/jbdaocneiiinmjbjlgalhcelgbejmnid">
-                    a Wallet
-                  </a>
-                ) +
-                'client to contribute into the crowdsale.'}
+              Here you can contribute in the crowdsale campaign. At the moment, you need{' '}
+              <a
+                target="_blank"
+                href="https://chrome.google.com/webstore/detail/nifty-wallet/jbdaocneiiinmjbjlgalhcelgbejmnid"
+              >
+                a Wallet
+              </a>{' '}
+              client to contribute into the crowdsale.
             </p>
           </div>
           <div className={rightColumnClasses}>

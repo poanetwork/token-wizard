@@ -526,9 +526,6 @@ export class Manage extends Component {
     const crowdsaleHasEnded = startTime <= Date.now() && endTime <= Date.now()
     const crowdsaleHasStarted = startTime <= Date.now() && endTime >= Date.now()
 
-    logger.log('Crowdsale has ended', crowdsaleHasEnded)
-    logger.log('Crowdsale has started', crowdsaleHasStarted)
-
     this.setState({
       crowdsaleHasEnded: crowdsaleHasEnded,
       crowdsaleHasStarted: crowdsaleHasStarted,
@@ -709,7 +706,11 @@ export class Manage extends Component {
 
   saveDisplayed = () => {
     const { ownerCurrentUser, crowdsaleHasEnded, crowdsaleIsFinalized, canFinalize } = this.state
-    return ownerCurrentUser && !crowdsaleHasEnded && (!crowdsaleIsFinalized || !canFinalize)
+    const { selected } = this.props.crowdsaleStore
+
+    const updatable = (selected && selected.updatable) || false
+
+    return ownerCurrentUser && !crowdsaleHasEnded && (!crowdsaleIsFinalized || !canFinalize) && updatable
   }
 
   saveCrowdsale = () => {
