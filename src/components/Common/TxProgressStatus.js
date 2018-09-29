@@ -21,14 +21,14 @@ export class TxProgressStatus extends Component {
     return table
   }
 
-  txActivity = ({ active, confirmationPending, miningPending, mined }) => {
+  txActivity = ({ active, confirmationPending, miningPending, mined }, index) => {
     let statusMessage = ''
 
     if (active && !confirmationPending) statusMessage = 'constructing tx...'
     if (confirmationPending && !miningPending) statusMessage = 'please confirm tx...'
     if (miningPending && !mined) statusMessage = 'tx pending of being mined...'
 
-    return statusMessage === '' ? null : <span>{statusMessage}</span>
+    return statusMessage === '' ? null : <span key={index.toString()}>{statusMessage}</span>
   }
 
   render() {
@@ -56,7 +56,7 @@ export class TxProgressStatus extends Component {
                 tx.status.length ? (
                   <div className="table-row datagrid" key={tx.name}>
                     <div className="text">
-                      {TX_STEP_DESCRIPTION[tx.name]} {tx.status.map(status => this.txActivity(status))}
+                      {TX_STEP_DESCRIPTION[tx.name]} {tx.status.map((status, index) => this.txActivity(status, index))}
                     </div>
                     {whitelisted.map(
                       (tierWhitelisted, index) =>

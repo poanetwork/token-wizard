@@ -146,7 +146,7 @@ export const setExistingContractParams = (abi, addr, setContractProperty) => {
   })
 }
 
-const deployContractInner = (accounts, abi, deployOpts, executionOrder) => {
+const deployContractInner = (account, abi, deployOpts, executionOrder) => {
   const { web3 } = web3Store
   const objAbi = JSON.parse(JSON.stringify(abi))
   const contractInstance = new web3.eth.Contract(objAbi)
@@ -158,7 +158,7 @@ const deployContractInner = (accounts, abi, deployOpts, executionOrder) => {
     .then(estimatedGas => {
       logger.log('gas is estimated', estimatedGas)
       const sendOpts = {
-        from: accounts[0],
+        from: account,
         gasPrice: generalStore.gasPrice,
         gas: calculateGasLimit(estimatedGas)
       }
