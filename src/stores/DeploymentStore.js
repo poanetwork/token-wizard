@@ -39,7 +39,13 @@ class DeploymentStore {
       { name: 'crowdsaleInit', dependsOnTiers: false, required: true },
       { name: 'trackProxy', dependsOnTiers: false, required: true }
     ]
-    const initialTxStatus = { status: false, txHash: '' }
+    const initialTxStatus = {
+      active: false,
+      confirmationPending: false,
+      miningPending: false,
+      mined: false,
+      txHash: ''
+    }
     const byTierWhitelistInitialValues = tiers.map(tier => {
       if (tier.whitelistEnabled === 'yes') {
         if (tier.whitelist.length > 0) {
@@ -67,27 +73,21 @@ class DeploymentStore {
   }
 
   @action
-  initializePersonalized = (hasReservedToken, hasWhitelist, tiers, listOfTx) => {
-    this.initialize(hasReservedToken, hasWhitelist, tiers)
-    // TODO: based on listOfTx, modify this.txMap so it reflects the required amount of steps
-  }
-
-  @action
   setAsSuccessful = txName => {
-    const txStatus = this.txMap.get(txName)
+    const txStatuses = this.txMap.get(txName)
 
-    if (!txStatus) return
+    if (!txStatuses) return
 
     // eslint-disable-next-line array-callback-return
-    const toBeUpdated = txStatus.findIndex(({ status }) => {
-      if (status !== null) {
-        return !status
+    const toBeUpdated = txStatuses.findIndex(({ mined }) => {
+      if (mined !== null) {
+        return !mined
       }
     })
 
     if (toBeUpdated !== -1) {
-      txStatus[toBeUpdated].status = true
-      this.txMap.set(txName, txStatus)
+      txStatuses[toBeUpdated].mined = true
+      this.txMap.set(txName, txStatuses)
     }
 
     this.logTxMap()
@@ -151,22 +151,22 @@ class DeploymentStore {
 
     this.txMap.forEach((txStatus, txName) => {
       const tiersStatuses = {}
-      txStatus.forEach(({ status }, index) => (tiersStatuses[`Tier ${index + 1}`] = status))
+      txStatus.forEach(({ mined }, index) => (tiersStatuses[`Tier ${index + 1}`] = mined))
       table.push({ txName, ...tiersStatuses })
     })
 
-    logger.table(table)
+    console.table(table)
   }
 
   @computed
   get deploymentHasFinished() {
-    return this.txMap.values().every(statuses => statuses.every(({ status }) => status))
+    return this.txMap.values().every(txStatuses => txStatuses.every(({ mined }) => mined))
   }
 
   @computed
   get nextPendingTransaction() {
     for (let [tx, txStatuses] of this.txMap) {
-      if (txStatuses.some(({ status }) => !status)) return tx
+      if (txStatuses.some(({ mined }) => !mined)) return tx
     }
   }
 
