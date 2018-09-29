@@ -1,17 +1,16 @@
 import {
   calculateGasLimit,
+  deployContract,
   getNetWorkNameById,
   getNetworkVersion,
-  sendTXToContract,
-  methodToExec,
   methodToCreateAppInstance,
-  deployContract
+  methodToExec,
+  sendTXToContract
 } from '../../utils/blockchainHelpers'
 import { countDecimalPlaces, toBigNumber, toFixed } from '../../utils/utils'
-import { CROWDSALE_STRATEGIES } from '../../utils/constants'
-import { DOWNLOAD_NAME, MINTED_PREFIX, DUTCH_PREFIX, ADDR_BOX_LEN } from './constants'
-import { REACT_PREFIX } from '../../utils/constants'
-import { isObservableArray } from 'mobx'
+import { CROWDSALE_STRATEGIES, REACT_PREFIX } from '../../utils/constants'
+import { ADDR_BOX_LEN, DOWNLOAD_NAME, DUTCH_PREFIX, MINTED_PREFIX } from './constants'
+import { isObservableArray, toJS } from 'mobx'
 import {
   contractStore,
   crowdsaleStore,
@@ -23,7 +22,6 @@ import {
   web3Store
 } from '../../stores'
 import logdown from 'logdown'
-import { toJS } from 'mobx'
 
 const logger = logdown('TW:stepFour:utils')
 
@@ -75,7 +73,7 @@ const getProxyParams = () => {
 export const deployProxy = () => {
   const { web3 } = web3Store
   return [
-    async () => {
+    async executionOrder => {
       const networkID = await getNetworkVersion()
       contractStore.setContractProperty('crowdsale', 'networkID', networkID)
 
@@ -87,14 +85,12 @@ export const deployProxy = () => {
       const binProxy = contractStore[crowdsaleStore.proxyName].bin || ''
       const abiProxy = contractStore[crowdsaleStore.proxyName].abi || []
       const paramsProxy = getProxyParams()
-      const { contractAddress, transactionHash } = await deployContract(abiProxy, binProxy, paramsProxy)
-      contractStore.setContractProperty(crowdsaleStore.proxyName, 'addr', contractAddress.toLowerCase())
+      const receipt = await deployContract(abiProxy, binProxy, paramsProxy, executionOrder)
+      contractStore.setContractProperty(crowdsaleStore.proxyName, 'addr', receipt.contractAddress.toLowerCase())
 
       const encoded = web3.eth.abi.encodeParameters(['address', 'bytes32', 'address', 'bytes32'], paramsProxy)
       contractStore.setContractProperty(crowdsaleStore.proxyName, 'abiEncoded', encoded.slice(2))
-
-      deploymentStore.setAsSuccessful('deployProxy')
-      return transactionHash
+      return receipt
     }
   ]
 }
@@ -219,7 +215,7 @@ export const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
 export const deployCrowdsale = (getParams, methodInterface, appName) => {
   logger.log('###deploy crowdsale###')
   return [
-    async () => {
+    async executionOrder => {
       const account = contractStore.crowdsale.account
 
       let params = [account, methodInterface]
@@ -234,8 +230,8 @@ export const deployCrowdsale = (getParams, methodInterface, appName) => {
       const estimatedGas = await method.estimateGas(opts)
       opts.gasLimit = calculateGasLimit(estimatedGas)
 
-      const receipt = await sendTXToContract(method.send(opts))
-      const { logs, events, transactionHash } = receipt
+      const receipt = await sendTXToContract(method.send(opts), executionOrder)
+      const { logs, events } = receipt
       logger.log('receipt:', receipt)
 
       if (events) {
@@ -263,9 +259,7 @@ export const deployCrowdsale = (getParams, methodInterface, appName) => {
         }
       }
 
-      deploymentStore.setAsSuccessful('crowdsaleCreate')
-
-      return transactionHash
+      return receipt
     }
   ]
 }
@@ -291,7 +285,7 @@ const getTokenParams = (token, methodInterface) => {
 export const initializeToken = () => {
   logger.log('###initialize token###')
   return [
-    async () => {
+    async executionOrder => {
       const methodInterface = ['bytes32', 'bytes32', 'uint256']
 
       logger.log('contractStore.crowdsale.account: ', contractStore.crowdsale.account)
@@ -310,11 +304,7 @@ export const initializeToken = () => {
 
       const estimatedGas = await method.estimateGas(opts)
       opts.gasLimit = calculateGasLimit(estimatedGas)
-
-      const receipt = await sendTXToContract(method.send(opts))
-      logger.log(receipt)
-      deploymentStore.setAsSuccessful('token')
-      return Promise.resolve(receipt.transactionHash)
+      return await sendTXToContract(method.send(opts), executionOrder)
     }
   ]
 }
@@ -330,7 +320,7 @@ export const setReservedTokensListMultiple = () => {
   logger.log('###setReservedTokensListMultiple:###')
   logger.log('reservedTokenStore:', reservedTokenStore)
   return [
-    async () => {
+    async executionOrder => {
       let map = {}
       let addrs = []
       let inTokens = []
@@ -390,9 +380,7 @@ export const setReservedTokensListMultiple = () => {
 
       const estimatedGas = await method.estimateGas(opts)
       opts.gasLimit = calculateGasLimit(estimatedGas)
-      const receipt = await sendTXToContract(method.send(opts))
-      deploymentStore.setAsSuccessful('setReservedTokens')
-      return Promise.resolve(receipt.transactionHash)
+      return await sendTXToContract(method.send(opts), executionOrder)
     }
   ]
 }
@@ -405,7 +393,7 @@ const getInitializeCrowdsaleParams = () => {
 export const initializeCrowdsale = () => {
   logger.log('###initialize crowdsale###')
   return [
-    async () => {
+    async executionOrder => {
       const account = contractStore.crowdsale.account
 
       let paramsToExec = []
@@ -421,9 +409,7 @@ export const initializeCrowdsale = () => {
 
       const estimatedGas = await method.estimateGas(opts)
       opts.gasLimit = calculateGasLimit(estimatedGas)
-      const receipt = await sendTXToContract(method.send(opts))
-      deploymentStore.setAsSuccessful('crowdsaleInit')
-      return Promise.resolve(receipt.transactionHash)
+      return await sendTXToContract(method.send(opts), executionOrder)
     }
   ]
 }
@@ -472,7 +458,7 @@ const getTiersParams = methodInterface => {
 
 export const createCrowdsaleTiers = () => {
   return [
-    async () => {
+    async executionOrder => {
       logger.log('###createCrowdsaleTiers:###')
 
       const methodInterface = ['bytes32[]', 'uint256[]', 'uint256[]', 'uint256[]', 'uint256[]', 'bool[]', 'bool[]']
@@ -490,9 +476,7 @@ export const createCrowdsaleTiers = () => {
 
       const estimatedGas = await method.estimateGas(opts)
       opts.gasLimit = calculateGasLimit(estimatedGas)
-      const receipt = await sendTXToContract(method.send(opts))
-      deploymentStore.setAsSuccessful('createCrowdsaleTiers')
-      return Promise.resolve(receipt.transactionHash)
+      return await sendTXToContract(method.send(opts), executionOrder)
     }
   ]
 }
@@ -516,7 +500,7 @@ const getWhitelistsParams = (tierIndex, addrs, minCaps, maxCaps, methodInterface
 
 export const addWhitelist = () => {
   return tierStore.tiers.map((tier, index) => {
-    return async () => {
+    return async executionOrder => {
       logger.log('###addWhitelist:###')
 
       let whitelist = []
@@ -571,9 +555,7 @@ export const addWhitelist = () => {
 
       const estimatedGas = await method.estimateGas(opts)
       opts.gasLimit = calculateGasLimit(estimatedGas)
-      const receipt = await sendTXToContract(method.send(opts))
-      deploymentStore.setAsSuccessful('whitelist')
-      return Promise.resolve(receipt.transactionHash)
+      return await sendTXToContract(method.send(opts), executionOrder)
     }
   })
 }
@@ -587,7 +569,7 @@ const getUpdateGlobalMinCapParams = methodInterface => {
 
 export const updateGlobalMinContribution = () => {
   return [
-    async () => {
+    async executionOrder => {
       logger.log('###updateGlobalMinContribution:###')
 
       const methodInterface = ['uint256']
@@ -605,9 +587,7 @@ export const updateGlobalMinContribution = () => {
 
       const estimatedGas = await method.estimateGas(opts)
       opts.gasLimit = calculateGasLimit(estimatedGas)
-      const receipt = await sendTXToContract(method.send(opts))
-      deploymentStore.setAsSuccessful('updateGlobalMinContribution')
-      return Promise.resolve(receipt.transactionHash)
+      return await sendTXToContract(method.send(opts), executionOrder)
     }
   ]
 }
@@ -623,7 +603,7 @@ const getUpdateTierMinimumParams = (tierIndex, methodInterface) => {
 
 export const updateTierMinimum = () => {
   return tierStore.tiers.map((tier, index) => {
-    return async () => {
+    return async executionOrder => {
       logger.log('###updateTierMinimum:###')
 
       const methodInterface = ['uint256', 'uint256']
@@ -641,9 +621,7 @@ export const updateTierMinimum = () => {
 
       const estimatedGas = await method.estimateGas(opts)
       opts.gasLimit = calculateGasLimit(estimatedGas)
-      const receipt = await sendTXToContract(method.send(opts))
-      deploymentStore.setAsSuccessful('updateTierMinimum')
-      return Promise.resolve(receipt.transactionHash)
+      return await sendTXToContract(method.send(opts), executionOrder)
     }
   })
 }
@@ -651,7 +629,7 @@ export const updateTierMinimum = () => {
 export const trackProxy = () => {
   const { web3 } = web3Store
   return [
-    async () => {
+    async executionOrder => {
       logger.log('###trackProxy:###')
       logger.log('contractStore:', contractStore)
 
@@ -667,9 +645,7 @@ export const trackProxy = () => {
 
       const estimatedGas = await method.estimateGas(opts)
       opts.gasLimit = calculateGasLimit(estimatedGas)
-      const receipt = await sendTXToContract(method.send(opts))
-      deploymentStore.setAsSuccessful('trackProxy')
-      return Promise.resolve(receipt.transactionHash)
+      return await sendTXToContract(method.send(opts), executionOrder)
     }
   ]
 }
