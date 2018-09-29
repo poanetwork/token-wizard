@@ -99,17 +99,22 @@ class DeploymentStore {
   }
 
   @action
-  setDeploymentStepTxHash = (overallIndex, txHash) => {
-    let activeSteps = []
-    this.txMap.forEach((steps, name) => {
-      steps.forEach((step, index) => {
-        activeSteps = activeSteps.concat({ name, innerIndex: index, ...step })
-      })
+  setDeploymentStepStatus = ({ executionOrder, status }) => {
+    if (!this.activeSteps.length) return
+
+    const currentStep = this.activeSteps[executionOrder]
+    const txStatuses = this.txMap.get(currentStep.name).map((txStatus, index) => {
+      if (currentStep.innerIndex === index) txStatus[status] = true
+      return txStatus
     })
+    this.txMap.set(currentStep.name, txStatuses)
+  }
 
-    if (!activeSteps.length) return
+  @action
+  setDeploymentStepTxHash = ({ executionOrder, txHash }) => {
+    if (!this.activeSteps.length) return
 
-    const currentStep = activeSteps[overallIndex]
+    const currentStep = this.activeSteps[executionOrder]
     const txStatuses = this.txMap.get(currentStep.name).map((txStatus, index) => {
       if (currentStep.innerIndex === index) txStatus.txHash = txHash
       return txStatus
@@ -156,6 +161,17 @@ class DeploymentStore {
     })
 
     console.table(table)
+  }
+
+  @computed
+  get activeSteps() {
+    let activeSteps = []
+    this.txMap.forEach((steps, name) => {
+      steps.forEach((step, index) => {
+        activeSteps = activeSteps.concat({ name, innerIndex: index, ...step })
+      })
+    })
+    return activeSteps
   }
 
   @computed
