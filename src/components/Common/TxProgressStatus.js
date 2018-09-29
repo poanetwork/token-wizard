@@ -6,12 +6,8 @@ import { TX_STEP_DESCRIPTION } from '../stepFour/constants'
 @inject('tierStore', 'deploymentStore')
 @observer
 export class TxProgressStatus extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      showModal: true
-    }
+  state = {
+    showModal: true
   }
 
   txStatuses = () => {
@@ -23,6 +19,16 @@ export class TxProgressStatus extends Component {
     })
 
     return table
+  }
+
+  txActivity = ({ active, confirmationPending, miningPending, mined }) => {
+    let statusMessage = ''
+
+    if (active && !confirmationPending) statusMessage = 'constructing tx...'
+    if (confirmationPending && !miningPending) statusMessage = 'please confirm tx...'
+    if (miningPending && !mined) statusMessage = 'tx pending of being mined...'
+
+    return statusMessage === '' ? null : <span>{statusMessage}</span>
   }
 
   render() {
@@ -49,17 +55,17 @@ export class TxProgressStatus extends Component {
               tx =>
                 tx.status.length ? (
                   <div className="table-row datagrid" key={tx.name}>
-                    <div className="text">{TX_STEP_DESCRIPTION[tx.name]}</div>
+                    <div className="text">
+                      {TX_STEP_DESCRIPTION[tx.name]} {tx.status.map(status => this.txActivity(status))}
+                    </div>
                     {whitelisted.map(
                       (tierWhitelisted, index) =>
                         tierWhitelisted ? (
                           <div className="sm-text" key={index.toString()}>
                             {tx.status.length > index ? (
-                              tx.status[index].status === true ? (
-                                <i className="material-icons">check</i>
-                              ) : (
-                                <i className="material-icons">access_time</i>
-                              )
+                              <i className="material-icons">
+                                {tx.status[index].mined === true ? 'check' : 'access_time'}
+                              </i>
                             ) : (
                               ''
                             )}
