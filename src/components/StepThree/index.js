@@ -180,31 +180,45 @@ export class StepThree extends Component {
     let stepThreeComponent = getStep3Component(crowdsaleStore.strategy)
 
     return (
-      <section className="steps steps_crowdsale-contract" ref="three">
-        <StepNavigation activeStep={CROWDSALE_SETUP} />
-        <Form
-          onSubmit={this.handleOnSubmit}
-          mutators={{ ...arrayMutators, setFieldTouched }}
-          decorators={[this.calculator]}
-          initialValues={{
-            walletAddress: web3Store.curAddress,
-            gasPrice: this.state.gasTypeSelected,
-            whitelistEnabled: 'no',
-            burnExcess: this.state.burnExcess,
-            tiers: this.state.initialTiers
-          }}
-          component={stepThreeComponent}
-          addCrowdsale={tierStore.addCrowdsale}
-          gasPricesInGwei={gasPriceStore.gasPricesInGwei}
-          decimals={tokenStore.decimals}
-          updateGasTypeSelected={this.updateGasTypeSelected}
-          tierStore={tierStore}
-          generalStore={generalStore}
-          crowdsaleStore={crowdsaleStore}
-          reload={this.state.reload}
-        />
+      <div>
+        <section className="lo-MenuBarAndContent" ref="three">
+          <StepNavigation activeStep={CROWDSALE_SETUP} />
+          <div className="st-StepContent">
+            <div className="st-StepContent_Info">
+              <div className="st-StepContent_InfoIcon st-StepContent_InfoIcon-step3" />
+              <div className="st-StepContentInfo_InfoText">
+                <h1 className="st-StepContent_InfoTitle">Crowdsale Setup</h1>
+                <p className="st-StepContent_InfoDescription">
+                  The most important and exciting part of the crowdsale procces. Here you can define parameters of your
+                  crowdsale campaign.
+                </p>
+              </div>
+            </div>
+            <Form
+              onSubmit={this.handleOnSubmit}
+              mutators={{ ...arrayMutators, setFieldTouched }}
+              decorators={[this.calculator]}
+              initialValues={{
+                walletAddress: web3Store.curAddress,
+                gasPrice: this.state.gasTypeSelected,
+                whitelistEnabled: 'no',
+                burnExcess: this.state.burnExcess,
+                tiers: this.state.initialTiers
+              }}
+              addCrowdsale={tierStore.addCrowdsale}
+              component={stepThreeComponent}
+              crowdsaleStore={crowdsaleStore}
+              decimals={tokenStore.decimals}
+              gasPricesInGwei={gasPriceStore.gasPricesInGwei}
+              generalStore={generalStore}
+              reload={this.state.reload}
+              tierStore={tierStore}
+              updateGasTypeSelected={this.updateGasTypeSelected}
+            />
+          </div>
+        </section>
         <Loader show={this.state.loading} />
-      </section>
+      </div>
     )
   }
 }
