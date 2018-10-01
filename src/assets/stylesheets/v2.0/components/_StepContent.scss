@@ -46,7 +46,7 @@ $st-StepContent_Icon-dimensions-lg: 100px !default;
     }
 
     &.st-StepContent_InfoIcon-step1 {
-        background-image: url(#{ $base-images-path }/StepContent/StepContent_Icon/1.svg);
+        background-image: url(#{ $base-images-path }/StepContent/StepContent_InfoIcon/1.svg);
         background-size: 31.5px 31.5px;
 
         @media (min-width: $breakpoint-xl) {
@@ -56,11 +56,21 @@ $st-StepContent_Icon-dimensions-lg: 100px !default;
     }
 
     &.st-StepContent_InfoIcon-step2 {
-        background-image: url(#{ $base-images-path }/StepContent/StepContent_Icon/2.svg);
+        background-image: url(#{ $base-images-path }/StepContent/StepContent_InfoIcon/2.svg);
         background-size: 26px 27px;
 
         @media (min-width: $breakpoint-xl) {
             background-size: 52px 55px;
+        }
+
+    }
+
+    &.st-StepContent_InfoIcon-step3 {
+        background-image: url(#{ $base-images-path }/StepContent/StepContent_InfoIcon/3.svg);
+        background-size: 25px 27px;
+
+        @media (min-width: $breakpoint-xl) {
+            background-size: 50px 53px;
         }
 
     }

@@ -20,6 +20,7 @@ import {
   NAVIGATION_STEPS
 } from '../../utils/constants'
 import { TierBlock } from '../Common/TierBlock'
+import { ButtonBack } from '../Common/ButtonBack'
 
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 const { VALID } = VALIDATION_TYPES
@@ -138,54 +139,61 @@ export const StepThreeFormMintedCapped = ({
     )
   }
 
+  const navigateTo = (location, params = '') => {
+    const path =
+      {
+        home: '/',
+        stepOne: '1',
+        manage: 'manage'
+      }[location] || null
+
+    if (path === null) {
+      throw new Error(`invalid location specified: ${location}`)
+    }
+
+    // history.push(`${path}${params}`)
+  }
+
+  const goBack = async () => {
+    navigateTo('stepOne')
+  }
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="st-StepContent_FormFullHeight">
       {whenWhitelistsChanges()}
-      <div>
-        <div className="steps-content container">
-          <div className="about-step">
-            <div className="step-icons step-icons_crowdsale-setup" />
-            <p className="title">{CROWDSALE_SETUP}</p>
-            <p className="description">{DESCRIPTION.CROWDSALE_SETUP}</p>
-          </div>
-          <div className="section-title">
-            <p className="title">Global settings</p>
-          </div>
-          <div className="input-block-container">
-            <Field
-              name="walletAddress"
-              component={InputField2}
-              validate={isAddress()}
-              errorStyle={inputErrorStyle}
-              value={values.walletAddress}
-              side="left"
-              label={WALLET_ADDRESS}
-              description={DESCRIPTION.WALLET}
-            />
-
-            <Field
-              name="gasPrice"
-              component={GasPriceInput}
-              side="right"
-              gasPrices={props.gasPricesInGwei}
-              updateGasTypeSelected={updateGasTypeSelected}
-              validate={value => handleValidateGasPrice(value)}
-            />
-          </div>
-        </div>
+      <h2 className="sw-BorderedBlockTitle">Global settings</h2>
+      <div className="sw-BorderedBlock">
+        <Field
+          name="walletAddress"
+          component={InputField2}
+          validate={isAddress()}
+          errorStyle={inputErrorStyle}
+          value={values.walletAddress}
+          side="left"
+          label={WALLET_ADDRESS}
+          description={DESCRIPTION.WALLET}
+        />
+        <Field
+          name="gasPrice"
+          component={GasPriceInput}
+          side="right"
+          gasPrices={props.gasPricesInGwei}
+          updateGasTypeSelected={updateGasTypeSelected}
+          validate={value => handleValidateGasPrice(value)}
+        />
       </div>
-
-      <FieldArray name="tiers">
-        {({ fields }) => <TierBlock fields={fields} decimals={props.decimals} tierStore={props.tierStore} />}
-      </FieldArray>
-
-      <div className="button-container">
-        <div className="button button_fill_secondary" onClick={addTier}>
-          Add Tier
-        </div>
+      <div className="sw-BorderedBlock">
+        <FieldArray name="tiers">
+          {({ fields }) => <TierBlock fields={fields} decimals={props.decimals} tierStore={props.tierStore} />}
+        </FieldArray>
+      </div>
+      <div className="button button_fill_secondary" onClick={addTier}>
+        Add Tier
+      </div>
+      <div className="st-StepContent_Buttons">
+        <ButtonBack onClick={goBack} />
         <ButtonContinue onClick={handleSubmit} status={status} />
       </div>
-
       <FormSpy subscription={{ values: true }} onChange={handleOnChange} />
     </form>
   )
