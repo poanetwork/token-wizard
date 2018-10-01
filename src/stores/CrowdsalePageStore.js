@@ -1,5 +1,4 @@
 import { observable, action } from 'mobx'
-import { convertDateObjectToLocalTimezone } from '../utils/utils'
 
 class CrowdsalePageStore {
   @observable maximumSellableTokens
