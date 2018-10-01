@@ -130,7 +130,7 @@ export const getCrowdSaleParams = (account, methodInterface) => {
 
   //tier 0 duration
   const formatDate = date => toFixed(parseInt(Date.parse(date) / 1000, 10).toString())
-  const duration = formatDate(endTimeTierToUTC) - formatDate(startTimeTierToUTC)
+  const duration = formatDate(endTime) - formatDate(startTime)
   const durationBN = toBigNumber(duration).toFixed()
 
   //is tier whitelisted?
@@ -155,7 +155,7 @@ export const getCrowdSaleParams = (account, methodInterface) => {
 
   let crowdsaleParams = [
     walletAddress,
-    formatDate(startTimeTierToUTC),
+    formatDate(startTime),
     encodedTierName,
     oneTokenInWEI,
     durationBN,
@@ -184,6 +184,15 @@ export const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
     whitelistEnabled,
     burnExcess
   } = tierStore.tiers[0]
+
+  const startTimeTierToUTC = convertDateToUTCTimezone(startTime)
+  const endTimeTierToUTC = convertDateToUTCTimezone(endTime)
+
+  tierStore.setTierProperty(startTimeTierToUTC, 'startTime', 0)
+  tierStore.setTierProperty(endTimeTierToUTC, 'endTime', 0)
+
+  const lastTier = tierStore.tiers[tierStore.tiers.length - 1]
+  crowdsaleStore.setProperty('endTime', lastTier.endTime)
 
   logger.log(tierStore.tiers[0])
 

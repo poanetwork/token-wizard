@@ -41,9 +41,6 @@ class CrowdsalePageStore {
         let endDate = tier.endDate
         const previousTickIndex = ticks.findIndex(tick => tick.type === 'end' && tick.time === startDate)
 
-        startDate = convertDateObjectToLocalTimezone(startDate)
-        endDate = convertDateObjectToLocalTimezone(endDate)
-
         if (previousTickIndex === -1) {
           ticks.push({
             type: 'start',
