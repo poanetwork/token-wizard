@@ -3,19 +3,22 @@ import { GAS_PRICE } from '../../utils/constants'
 import { objectKeysToLowerCase } from '../../utils/utils'
 import { Error } from '../Common/Error'
 import { inject, observer } from 'mobx-react'
+import { FormControlTitle } from '../Common/FormControlTitle'
+import { TextField } from '../Common/TextField'
 
 @inject('generalStore')
 @observer
 class GasPriceInput extends Component {
   state = {
-    isCustom: false,
     customGasPrice: GAS_PRICE.CUSTOM.PRICE,
-    gasTypeSelected: {}
+    gasTypeSelected: {},
+    isCustom: false
   }
 
   async componentDidMount() {
     const { generalStore } = this.props
     const gasTypeSelected = objectKeysToLowerCase(generalStore.getGasTypeSelected)
+
     this.setState({ gasTypeSelected: gasTypeSelected })
 
     if (gasTypeSelected.id === GAS_PRICE.CUSTOM.ID) {
@@ -28,11 +31,13 @@ class GasPriceInput extends Component {
 
   handleNonCustomSelected = value => {
     const { input } = this.props
+
     this.setState({
       isCustom: false
     })
 
     const gasTypeSelected = objectKeysToLowerCase(value)
+
     this.handleGasType(gasTypeSelected)
 
     input.onChange(gasTypeSelected)
@@ -40,16 +45,19 @@ class GasPriceInput extends Component {
 
   handleCustomSelected = value => {
     const { input } = this.props
+
     this.setState({
       isCustom: true
     })
 
     let gasTypeSelected = objectKeysToLowerCase(GAS_PRICE.CUSTOM)
+
     if (this.state.customGasPrice) {
       gasTypeSelected.price = this.state.customGasPrice
     }
 
     this.handleGasType(gasTypeSelected)
+
     input.onChange(
       Object.assign(
         {},
@@ -99,42 +107,45 @@ class GasPriceInput extends Component {
   }
 
   render() {
-    const { input, side, gasPrices } = this.props
+    const { input, gasPrices, extraClassName } = this.props
     return (
-      <div className={side}>
-        <label htmlFor={input.name} className="label">
-          Gas Price
-        </label>
-        {gasPrices.map((gasPrice, index) => (
-          <div key={index} className="radios-inline">
-            <label className="radio-inline">
-              <input
-                id={gasPrice.id}
-                type="radio"
-                value={gasPrice.id}
-                checked={this.compareChecked(gasPrice.id)}
-                name="gas-price"
-                onChange={e => {
-                  gasPrice.id !== GAS_PRICE.CUSTOM.ID
-                    ? this.handleNonCustomSelected(gasPrice)
-                    : this.handleCustomSelected(e.target.value)
-                }}
-              />
-              <span className="title">{gasPrice.description}</span>
-            </label>
+      <div className={`sw-GasPriceInput ${extraClassName ? extraClassName : ''}`}>
+        <FormControlTitle title="Gas Price" description="Slow is cheap, fast is expensive." />
+        <div className="sw-GasPriceInput_Select">
+          <button className="sw-GasPriceInput_SelectButton">
+            <span className="sw-GasPriceInput_SelectButtonText">Select</span>
+            <span className="sw-GasPriceInput_SelectButtonChevron" />
+          </button>
+          <div className="sw-GasPriceInput_SelectList">
+            {gasPrices.map((gasPrice, index) => (
+              <label key={index} className="sw-GasPriceInput_SelectItem">
+                <input
+                  checked={this.compareChecked(gasPrice.id)}
+                  className="sw-GasPriceInput_SelectInput"
+                  id={gasPrice.id}
+                  name="gas-price"
+                  type="radio"
+                  value={gasPrice.id}
+                  onChange={e => {
+                    gasPrice.id !== GAS_PRICE.CUSTOM.ID
+                      ? this.handleNonCustomSelected(gasPrice)
+                      : this.handleCustomSelected(e.target.value)
+                  }}
+                />
+                <span className="sw-GasPriceInput_SelectText">{gasPrice.description}</span>
+              </label>
+            ))}
           </div>
-        ))}
+        </div>
         {this.state.isCustom ? (
-          <input
+          <TextField
             id="customGasPrice"
-            type="number"
-            className="input"
-            value={this.state.customGasPrice}
             name="gas-price-custom-value"
             onChange={e => this.handleCustomGasPriceChange(e.target.value)}
+            type="number"
+            value={this.state.customGasPrice}
           />
         ) : null}
-        <p className="description">Slow is cheap, fast is expensive</p>
         <Error name={input.name} />
       </div>
     )
