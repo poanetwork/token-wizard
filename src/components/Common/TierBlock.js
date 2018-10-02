@@ -9,6 +9,7 @@ import { CrowdsaleEndTime } from './CrowdsaleEndTime'
 import { CrowdsaleRate } from './CrowdsaleRate'
 import { Supply } from './Supply'
 import { MinCap } from './MinCap'
+import { RadioInputField } from './RadioInputField'
 
 const { ALLOW_MODIFYING, CROWDSALE_SETUP_NAME, ENABLE_WHITELISTING } = TEXT_FIELDS
 
@@ -39,6 +40,47 @@ export const TierBlock = ({ fields, ...props }) => {
             type="text"
           />
           <CrowdsaleStartTime disabled={index > 0} index={index} name={`${name}.startTime`} />
+          <CrowdsaleRate name={`${name}.rate`} />
+          {/* <RadioInputField
+            extraClassName="sw-BorderedBlock_Row1Column2"
+            items={[{ label: 'Tokens', value: 'tokens' }, { label: 'Percentage', value: 'percentage' }]}
+            onChange={e => {this.updateReservedTokenInput(e.target.value, 'dim')}}
+            selectedItem={this.state.dim}
+            title={'asdf'}
+            description="Fixed amount or % of crowdsaled tokens. Will be deposited to the account after finalization
+              of the crowdsale."
+          /> */}
+          <Field
+            name={`${name}.whitelistEnabled`}
+            render={({ input }) => (
+              <div className="right">
+                <label className="label">{ENABLE_WHITELISTING}</label>
+                <div className="radios-inline">
+                  <label className="radio-inline">
+                    <input
+                      id={`${name}.enable_whitelisting_yes`}
+                      type="radio"
+                      checked={input.value === 'yes'}
+                      value="yes"
+                      onChange={() => onChangeWhitelisted('yes', input, index)}
+                    />
+                    <span className="title">yes</span>
+                  </label>
+                  <label className="radio-inline">
+                    <input
+                      id={`${name}.enable_whitelisting_no`}
+                      type="radio"
+                      checked={input.value === 'no'}
+                      value="no"
+                      onChange={() => onChangeWhitelisted('no', input, index)}
+                    />
+                    <span className="title">no</span>
+                  </label>
+                </div>
+                <p className="description">{DESCRIPTION.ENABLE_WHITELIST}</p>
+              </div>
+            )}
+          />
           <Field
             id={`${name}.updatable`}
             name={`${name}.updatable`}
@@ -71,40 +113,7 @@ export const TierBlock = ({ fields, ...props }) => {
               </div>
             )}
           />
-
-          <Field
-            name={`${name}.whitelistEnabled`}
-            render={({ input }) => (
-              <div className="right">
-                <label className="label">{ENABLE_WHITELISTING}</label>
-                <div className="radios-inline">
-                  <label className="radio-inline">
-                    <input
-                      id={`${name}.enable_whitelisting_yes`}
-                      type="radio"
-                      checked={input.value === 'yes'}
-                      value="yes"
-                      onChange={() => onChangeWhitelisted('yes', input, index)}
-                    />
-                    <span className="title">yes</span>
-                  </label>
-                  <label className="radio-inline">
-                    <input
-                      id={`${name}.enable_whitelisting_no`}
-                      type="radio"
-                      checked={input.value === 'no'}
-                      value="no"
-                      onChange={() => onChangeWhitelisted('no', input, index)}
-                    />
-                    <span className="title">no</span>
-                  </label>
-                </div>
-                <p className="description">{DESCRIPTION.ENABLE_WHITELIST}</p>
-              </div>
-            )}
-          />
           <CrowdsaleEndTime name={`${name}.endTime`} index={index} side="right" />
-          <CrowdsaleRate name={`${name}.rate`} />
           <Supply
             name={`${name}.supply`}
             side="right"
