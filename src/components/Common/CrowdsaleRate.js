@@ -16,9 +16,10 @@ export const CrowdsaleRate = ({ ...props }) => (
             isLessOrEqualThan('Should not be greater than 1 quintillion (10^18)')('1e18')
           )
     }
-    type="text"
-    label={props.label || TEXT_FIELDS.RATE}
     description={DESCRIPTION.RATE}
+    label={props.label || TEXT_FIELDS.RATE}
+    placeholder="Enter here"
+    type="text"
     {...props}
   />
 )
