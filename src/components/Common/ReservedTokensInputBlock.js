@@ -15,11 +15,15 @@ import {
   noMoreReservedSlotAvailableCSV,
   clearingReservedTokens,
   noMoreReservedSlotAvailable,
-  reservedTokenErrorImportingCSV
+  errorRowLengthCSVAlert,
+  errorEmptyCSVAlert,
+  errorAddressCSVAlert,
+  errorDimCSVAlert,
+  errorDimValueCSVAlert
 } from '../../utils/alerts'
-import { processReservedTokens, errorsCsv } from '../../utils/processReservedTokens'
+import { processCsv, errorsCsv } from '../../utils/processReservedTokens'
 import logdown from 'logdown'
-import { downloadFile } from '../../utils/utils'
+import { downloadFile, uniqueElementsBy } from '../../utils/utils'
 
 const logger = logdown('TW:ReservedTokensInputBlock')
 const { VALID, INVALID } = VALIDATION_TYPES
@@ -176,17 +180,46 @@ export class ReservedTokensInputBlock extends Component {
       Papa.parse(file, {
         skipEmptyLines: true,
         complete: results => {
-          const { data } = results
-          const { errorRowLength, errorAddress } = errorsCsv(data)
+          let { data } = results
 
-          if ((errorRowLength && errorRowLength.length > 0) || (errorAddress && errorAddress.length > 0)) {
-            return reservedTokenErrorImportingCSV(errorRowLength, errorAddress)
+          // Remove duplicate lines
+          data = uniqueElementsBy(data, (a, b) => a[0] === b[0] && a[1] === b[1])
+
+          // Check for errors
+          try {
+            errorsCsv(data, this.props.decimals)
+          } catch (err) {
+            const { code, body } = err
+
+            // Check if csv is empty
+            if (code === 100) {
+              return errorEmptyCSVAlert()
+            }
+
+            // Check for wrong amount of columns
+            if ([101, 102].includes(code)) {
+              return errorRowLengthCSVAlert(body)
+            }
+
+            // Check for wrong address
+            if (code === 103) {
+              return errorAddressCSVAlert(body)
+            }
+
+            // Check for wrong dim
+            if (code === 104) {
+              return errorDimCSVAlert(body)
+            }
+
+            // Check for wrong dim value
+            if (code === 105) {
+              return errorDimValueCSVAlert(body)
+            }
           }
 
-          const { called, reservedTokenLengthError } = processReservedTokens(
+          const { called, reservedTokenLengthError } = processCsv(
             {
-              rows: results.data,
-              decimals: this.props.decimals
+              rows: data
             },
             newToken => {
               this.props.reservedTokenStore.addToken(newToken)
