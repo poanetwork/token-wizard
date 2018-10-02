@@ -120,9 +120,9 @@ export const StepThreeFormMintedCapped = ({
   const whenWhitelistBlock = tierInd => {
     return (
       <WhenFieldChanges
-        key={`whenWhitelistBlock_${tierInd}`}
-        field={`tiers[${tierInd}].whitelistEnabled`}
         becomes={'yes'}
+        field={`tiers[${tierInd}].whitelistEnabled`}
+        key={`whenWhitelistBlock_${tierInd}`}
         set={`tiers[${tierInd}].minCap`}
         to={0}
       />
@@ -155,7 +155,7 @@ export const StepThreeFormMintedCapped = ({
   }
 
   const goBack = async () => {
-    navigateTo('stepOne')
+    navigateTo('stepTwo')
   }
 
   return (
@@ -164,20 +164,18 @@ export const StepThreeFormMintedCapped = ({
       <h2 className="sw-BorderedBlockTitle">Global settings</h2>
       <div className="sw-BorderedBlock">
         <Field
-          name="walletAddress"
           component={InputField2}
-          validate={isAddress()}
-          errorStyle={inputErrorStyle}
-          value={values.walletAddress}
-          side="left"
-          label={WALLET_ADDRESS}
           description={DESCRIPTION.WALLET}
+          errorStyle={inputErrorStyle}
+          label={WALLET_ADDRESS}
+          name="walletAddress"
+          validate={isAddress()}
+          value={values.walletAddress}
         />
         <Field
-          name="gasPrice"
           component={GasPriceInput}
-          side="right"
           gasPrices={props.gasPricesInGwei}
+          name="gasPrice"
           updateGasTypeSelected={updateGasTypeSelected}
           validate={value => handleValidateGasPrice(value)}
         />
