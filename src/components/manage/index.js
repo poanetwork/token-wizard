@@ -29,8 +29,7 @@ import {
   toast,
   toBigNumber,
   clearStorage,
-  convertDateToLocalTimezoneInUnix,
-  convertDateToLocalTimezone
+  convertDateToLocalTimezoneInUnix
 } from '../../utils/utils'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import { getFieldsToUpdate, processTier, updateTierAttribute } from './utils'
