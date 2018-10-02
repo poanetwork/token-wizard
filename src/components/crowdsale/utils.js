@@ -11,8 +11,7 @@ import {
   getExecIDFromQuery,
   isAddressValid,
   removeTrailingNUL,
-  toBigNumber,
-  convertDateObjectToLocalTimezone
+  toBigNumber
 } from '../../utils/utils'
 import { BigNumber } from 'bignumber.js'
 import logdown from 'logdown'
