@@ -32,6 +32,7 @@ export const TierBlock = ({ fields, ...props }) => {
   return (
     <div>
       {fields.map((name, index) => (
+        // TODO: FUCKING DELETE THIS
         <div style={{ marginTop: '40px' }} className="steps-content container" key={index}>
           <div>
             <div className="input-block-container">
