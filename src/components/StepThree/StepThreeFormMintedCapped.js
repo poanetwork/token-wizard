@@ -21,18 +21,11 @@ import {
 } from '../../utils/constants'
 import { TierBlock } from '../Common/TierBlock'
 import { ButtonBack } from '../Common/ButtonBack'
+import { AddTierButton } from './AddTierButton'
 
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 const { VALID } = VALIDATION_TYPES
 const { WALLET_ADDRESS } = TEXT_FIELDS
-
-const inputErrorStyle = {
-  color: 'red',
-  fontWeight: 'bold',
-  fontSize: '12px',
-  width: '100%',
-  height: '20px'
-}
 
 export const StepThreeFormMintedCapped = ({
   handleSubmit,
@@ -162,11 +155,10 @@ export const StepThreeFormMintedCapped = ({
     <form onSubmit={handleSubmit} className="st-StepContent_FormFullHeight">
       {whenWhitelistsChanges()}
       <h2 className="sw-BorderedBlockTitle">Global settings</h2>
-      <div className="sw-BorderedBlock">
+      <div className="sw-BorderedBlock sw-BorderedBlock-z-index-5">
         <Field
           component={InputField2}
           description={DESCRIPTION.WALLET}
-          errorStyle={inputErrorStyle}
           label={WALLET_ADDRESS}
           name="walletAddress"
           validate={isAddress()}
@@ -185,9 +177,7 @@ export const StepThreeFormMintedCapped = ({
           {({ fields }) => <TierBlock fields={fields} decimals={props.decimals} tierStore={props.tierStore} />}
         </FieldArray>
       </div>
-      <div className="button button_fill_secondary" onClick={addTier}>
-        Add Tier
-      </div>
+      <AddTierButton onClick={addTier} />
       <div className="st-StepContent_Buttons">
         <ButtonBack onClick={goBack} />
         <ButtonContinue onClick={handleSubmit} status={status} />

@@ -1,0 +1,90 @@
+$sw-GasPriceInput_Select-height: 40px;
+
+.sw-GasPriceInput {
+    @include form-control-block-common();
+}
+
+.sw-GasPriceInput_Select {
+    cursor: pointer;
+    height: $sw-GasPriceInput_Select-height;
+    position: relative;
+}
+
+.sw-GasPriceInput_SelectButton {
+    align-items: center;
+    background-color: #fff;
+    border-radius: 5px;
+    border: solid 1px $base-border-color;
+    display: flex;
+    height: $sw-GasPriceInput_Select-height;
+    justify-content: space-between;
+    outline: none;
+    padding: 0 15px 0 13px;
+    text-align: left;
+    width: 100%;
+}
+
+.sw-GasPriceInput_SelectButtonText {
+    color: $base-text-color;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.2;
+}
+
+.sw-GasPriceInput_SelectButtonChevron {
+    background-image: url('#{ $base-images-path }/GasPriceInput/chevron.svg');
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    flex-shrink: 0;
+    height: 7px;
+    width: 12px;
+}
+
+.sw-GasPriceInput_SelectList {
+    background-color: #fff;
+    border-radius: 5px;
+    border: solid 1px $base-border-color;
+    // display: none;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 100%;
+
+    .sw-GasPriceInput_SelectButton:focus + & {
+        display: block;
+    }
+}
+
+.sw-GasPriceInput_SelectItem {
+    display: block;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.4;
+    padding: 10px 15px 10px 13px;
+    position: relative;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.01);
+    }
+}
+
+.sw-GasPriceInput_SelectInput {
+    background-color: #ff0000;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    visibility: hidden;
+    z-index: 12;
+}
+
+.sw-GasPriceInput_SelectText {
+    position: relative;
+    z-index: 1;
+
+    .sw-GasPriceInput_SelectInput:checked + & {
+        font-weight: 700;
+    }
+}

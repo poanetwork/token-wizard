@@ -199,11 +199,11 @@ export class StepThree extends Component {
               mutators={{ ...arrayMutators, setFieldTouched }}
               decorators={[this.calculator]}
               initialValues={{
-                walletAddress: web3Store.curAddress,
-                gasPrice: this.state.gasTypeSelected,
-                whitelistEnabled: 'no',
                 burnExcess: this.state.burnExcess,
-                tiers: this.state.initialTiers
+                gasPrice: this.state.gasTypeSelected,
+                tiers: this.state.initialTiers,
+                walletAddress: web3Store.curAddress,
+                whitelistEnabled: 'no'
               }}
               addCrowdsale={tierStore.addCrowdsale}
               component={stepThreeComponent}
