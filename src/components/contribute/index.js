@@ -18,6 +18,7 @@ import {
   getCrowdsaleData,
   getCrowdsaleTargetDates,
   initializeAccumulativeData,
+  isStarted,
   isFinalized,
   isEnded,
   isSoldOut,
@@ -104,6 +105,7 @@ export class Contribute extends React.Component {
       nextTick: {},
       msToNextTick: 0,
       displaySeconds: false,
+      isStarted: false,
       isFinalized: false,
       isEnded: false,
       isSoldOut: false,
@@ -242,6 +244,7 @@ export class Contribute extends React.Component {
       await this.checkIsFinalized(initCrowdsaleContract, crowdsaleExecID)
       await this.checkIsEnded(initCrowdsaleContract, crowdsaleExecID)
       await this.checkIsSoldOut(initCrowdsaleContract, crowdsaleExecID)
+      await this.checkIsStarted(initCrowdsaleContract, crowdsaleExecID)
       await this.checkIsTierSoldOut(initCrowdsaleContract, crowdsaleExecID)
       await this.calculateContribution()
       this.setTimers()
@@ -256,6 +259,10 @@ export class Contribute extends React.Component {
 
   checkIsEnded = async (initCrowdsaleContract, crowdsaleExecID) => {
     this.setState({ isEnded: await isEnded(initCrowdsaleContract, crowdsaleExecID) })
+  }
+
+  checkIsStarted = async (initCrowdsaleContract, crowdsaleExecID) => {
+    this.setState({ isStarted: await isStarted(initCrowdsaleContract, crowdsaleExecID) })
   }
 
   checkIsSoldOut = async (initCrowdsaleContract, crowdsaleExecID) => {
@@ -701,6 +708,7 @@ export class Contribute extends React.Component {
               contributeThrough={contributeThrough}
               isFinalized={this.state.isFinalized}
               isEnded={this.state.isEnded}
+              isStarted={this.state.isStarted}
               isSoldOut={this.state.isSoldOut}
               isTierSoldOut={this.state.isTierSoldOut}
               updateContributeThrough={this.updateContributeThrough}

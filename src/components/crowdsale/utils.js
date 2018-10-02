@@ -281,16 +281,13 @@ let setTierDates = (startTime, endTime) => {
 }
 
 let fillCrowdsalePageStoreDates = (startsAtMilliseconds, endsAtMilliseconds) => {
-  const startsAtMillisecondsConverter = convertDateObjectToLocalTimezone(startsAtMilliseconds)
-  const endsAtMillisecondsConverter = convertDateObjectToLocalTimezone(endsAtMilliseconds)
+  if (!crowdsalePageStore.startDate || crowdsalePageStore.startDate > startsAtMilliseconds)
+    crowdsalePageStore.startDate = startsAtMilliseconds
+  logger.log('startDate:' + startsAtMilliseconds)
 
-  if (!crowdsalePageStore.startDate || crowdsalePageStore.startDate > startsAtMillisecondsConverter)
-    crowdsalePageStore.startDate = startsAtMillisecondsConverter
-  logger.log('startDate:' + startsAtMillisecondsConverter)
-
-  if (!crowdsalePageStore.endDate || crowdsalePageStore.endDate < endsAtMillisecondsConverter)
-    crowdsalePageStore.setProperty('endDate', endsAtMillisecondsConverter)
-  logger.log('endDate:', endsAtMillisecondsConverter)
+  if (!crowdsalePageStore.endDate || crowdsalePageStore.endDate < endsAtMilliseconds)
+    crowdsalePageStore.setProperty('endDate', endsAtMilliseconds)
+  logger.log('endDate:', endsAtMilliseconds)
 }
 /**
  * Check if a crowdsale is finalized
@@ -335,6 +332,24 @@ export const isEnded = async ({ methods }, crowdsaleExecID) => {
   logger.log(`Crowdsale end time::`, crowdsaleStartAndEndTimes[1])
   const end_time = crowdsaleStartAndEndTimes.end_time || crowdsaleStartAndEndTimes[1]
   return end_time * 1000 <= Date.now()
+}
+
+/**
+ * Check if a crowdsale is started
+ * @param methods
+ * @param crowdsaleExecID
+ * @returns {Promise<boolean>}
+ */
+export const isStarted = async ({ methods }, crowdsaleExecID) => {
+  const { addr } = contractStore.abstractStorage
+  let params = []
+  if (crowdsaleExecID) {
+    params.push(addr, crowdsaleExecID)
+  }
+  const crowdsaleStartAndEndTimes = await methods.getCrowdsaleStartAndEndTimes(...params).call()
+  const start_time = crowdsaleStartAndEndTimes.start_time || crowdsaleStartAndEndTimes[0]
+
+  return start_time * 1000 < Date.now()
 }
 
 /**
