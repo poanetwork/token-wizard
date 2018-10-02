@@ -317,3 +317,8 @@ export const downloadFile = (data, filename, mimetype) => {
   setTimeout(url.revokeObjectURL.bind(url, objectURL))
 }
 
+export const uniqueElementsBy = (arr, fn) =>
+  arr.reduce((acc, v) => {
+    if (!acc.some(x => fn(v, x))) acc.push(v)
+    return acc
+  }, [])
