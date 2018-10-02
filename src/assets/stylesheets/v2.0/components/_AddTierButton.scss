@@ -9,6 +9,7 @@ $ti-AddTierButton-height: 50px !default;
     display: flex;
     height: $ti-AddTierButton-height;
     justify-content: center;
+    margin-top: 18px;
     outline: none;
 
     &:active {

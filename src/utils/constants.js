@@ -208,7 +208,7 @@ export const TEXT_FIELDS = {
   CROWDSALE_END_TIME: 'Crowdsale End time',
   START_TIME: 'Start Time',
   END_TIME: 'End Time',
-  CROWDSALE_SETUP_NAME: 'Crowdsale setup name',
+  CROWDSALE_SETUP_NAME: 'Tier setup name',
   ADDRESS: 'Address',
   MIN: 'Min',
   MAX: 'Max',

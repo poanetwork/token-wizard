@@ -172,11 +172,9 @@ export const StepThreeFormMintedCapped = ({
           validate={value => handleValidateGasPrice(value)}
         />
       </div>
-      <div className="sw-BorderedBlock">
-        <FieldArray name="tiers">
-          {({ fields }) => <TierBlock fields={fields} decimals={props.decimals} tierStore={props.tierStore} />}
-        </FieldArray>
-      </div>
+      <FieldArray name="tiers">
+        {({ fields }) => <TierBlock fields={fields} decimals={props.decimals} tierStore={props.tierStore} />}
+      </FieldArray>
       <AddTierButton onClick={addTier} />
       <div className="st-StepContent_Buttons">
         <ButtonBack onClick={goBack} />

@@ -24,7 +24,7 @@ export const TierBlock = ({ fields, ...props }) => {
   return (
     <div>
       {fields.map((name, index) => (
-        <div key={index}>
+        <div className="sw-BorderedBlock" key={index}>
           <Field
             id={`${name}.tier`}
             name={`${name}.tier`}
@@ -34,11 +34,11 @@ export const TierBlock = ({ fields, ...props }) => {
               if (errors) return errors.shift()
             }}
             component={InputField2}
-            type="text"
-            label={CROWDSALE_SETUP_NAME}
             description={DESCRIPTION.CROWDSALE_SETUP_NAME}
+            label={CROWDSALE_SETUP_NAME}
+            type="text"
           />
-
+          <CrowdsaleStartTime disabled={index > 0} index={index} name={`${name}.startTime`} />
           <Field
             id={`${name}.updatable`}
             name={`${name}.updatable`}
@@ -103,7 +103,6 @@ export const TierBlock = ({ fields, ...props }) => {
               </div>
             )}
           />
-          <CrowdsaleStartTime disabled={index > 0} index={index} name={`${name}.startTime`} />
           <CrowdsaleEndTime name={`${name}.endTime`} index={index} side="right" />
           <CrowdsaleRate name={`${name}.rate`} />
           <Supply

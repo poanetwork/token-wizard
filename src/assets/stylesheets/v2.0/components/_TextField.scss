@@ -29,4 +29,15 @@ $sw-TextField-height: 40px !default;
         margin-right: 14px;
         min-width: 0;
     }
+
+    &[type="datetime-local"] {
+        background-image: url('#{ $base-images-path }/TextField/date.svg');
+        background-position: calc(100% - 10px) 50%;
+        background-repeat: no-repeat;
+        background-size: 23.8px 23.9px;
+
+        &:focus {
+            background-image: none;
+        }
+    }
 }
