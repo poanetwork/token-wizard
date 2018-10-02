@@ -116,8 +116,8 @@ export class Manage extends Component {
       await this.updateCrowdsaleStatus()
       let tiers = JSON.parse(JSON.stringify(tierStore.tiers))
       tiers = tiers.map(tier => {
-        tier.startTime = convertDateToLocalTimezone(tier.startTime)
-        tier.endTime = convertDateToLocalTimezone(tier.endTime)
+        tier.startTime = tier.startTime
+        tier.endTime = tier.endTime
         return tier
       })
       this.initialValues.tiers = tiers
