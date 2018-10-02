@@ -14,10 +14,16 @@ import {
   reservedTokensImported,
   noMoreReservedSlotAvailableCSV,
   clearingReservedTokens,
-  noMoreReservedSlotAvailable
+  noMoreReservedSlotAvailable,
+  errorRowLengthCSVAlert,
+  errorEmptyCSVAlert,
+  errorAddressCSVAlert,
+  errorDimCSVAlert,
+  errorDimValueCSVAlert
 } from '../../utils/alerts'
-import processReservedTokens from '../../utils/processReservedTokens'
+import { processCsv, errorsCsv } from '../../utils/processReservedTokens'
 import logdown from 'logdown'
+import { downloadFile, uniqueElementsBy } from '../../utils/utils'
 
 const logger = logdown('TW:ReservedTokensInputBlock')
 const { VALID, INVALID } = VALIDATION_TYPES
@@ -174,10 +180,46 @@ export class ReservedTokensInputBlock extends Component {
       Papa.parse(file, {
         skipEmptyLines: true,
         complete: results => {
-          const { called, reservedTokenLengthError } = processReservedTokens(
+          let { data } = results
+
+          // Remove duplicate lines
+          data = uniqueElementsBy(data, (a, b) => a[0] === b[0] && a[1] === b[1])
+
+          // Check for errors
+          try {
+            errorsCsv(data, this.props.decimals)
+          } catch (err) {
+            const { code, body } = err
+
+            // Check if csv is empty
+            if (code === 100) {
+              return errorEmptyCSVAlert()
+            }
+
+            // Check for wrong amount of columns
+            if ([101, 102].includes(code)) {
+              return errorRowLengthCSVAlert(body)
+            }
+
+            // Check for wrong address
+            if (code === 103) {
+              return errorAddressCSVAlert(body)
+            }
+
+            // Check for wrong dim
+            if (code === 104) {
+              return errorDimCSVAlert(body)
+            }
+
+            // Check for wrong dim value
+            if (code === 105) {
+              return errorDimValueCSVAlert(body)
+            }
+          }
+
+          const { called, reservedTokenLengthError } = processCsv(
             {
-              rows: results.data,
-              decimals: this.props.decimals
+              rows: data
             },
             newToken => {
               this.props.reservedTokenStore.addToken(newToken)
@@ -201,6 +243,18 @@ export class ReservedTokensInputBlock extends Component {
       this.props.reservedTokenStore.clearAll()
     }
     return result
+  }
+
+  downloadCSV = async () => {
+    try {
+      const response = await fetch(`/metadata/reservedTokenTemplate.csv`)
+      const text = await response.text()
+
+      // See RFC for csv MIME type http://tools.ietf.org/html/rfc4180
+      downloadFile(text, 'template.csv', 'text/csv')
+    } catch (err) {
+      logger.log('Error fetching file when download template csv')
+    }
   }
 
   render() {
@@ -280,10 +334,16 @@ export class ReservedTokensInputBlock extends Component {
               </div>
             )}
             <Dropzone onDrop={this.onDrop} accept=".csv" style={dropzoneStyle}>
-              <div className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-uploadcsv m-r-0">
+              <div className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-uploadcsv">
                 Upload CSV
               </div>
             </Dropzone>
+            <div
+              className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-downloadcsv m-r-0"
+              onClick={this.downloadCSV}
+            >
+              Download CSV template
+            </div>
           </div>
         </div>
       </div>

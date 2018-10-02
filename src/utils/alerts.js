@@ -1,6 +1,7 @@
 import sweetAlert2 from 'sweetalert2'
 import { weiToGwei } from './utils'
 import { DEPLOYMENT_VALUES, LIMIT_RESERVED_ADDRESSES, LIMIT_WHITELISTED_ADDRESSES } from './constants'
+
 export function noMetaMaskAlert(cb) {
   sweetAlert2({
     title: 'Warning',
@@ -271,6 +272,107 @@ export function whitelistImported(count) {
   })
 }
 
+export function errorDimCSVAlert(dimensions) {
+  let message = 'There was an error importing the file.'
+
+  if (dimensions && dimensions.length > 0) {
+    const messageHeader = `<div class="text-left">The following dimensions are wrong: </div>`
+
+    let list = '<ul class="text-left">'
+    for (let error of dimensions) {
+      const { line, dim } = error
+      let item = `<li>The line number ${line} has an incorrect dimension: ${dim}</li>`
+      list = `${list}${item}`
+    }
+    list = `${list}</ul>`
+    message = `${messageHeader} ${list}`
+  }
+
+  return sweetAlert2({
+    title: 'Error importing the file',
+    html: message,
+    type: 'error'
+  })
+}
+
+export function errorDimValueCSVAlert(dimensionsValues) {
+  let message = 'There was an error importing the file.'
+
+  if (dimensionsValues && dimensionsValues.length > 0) {
+    const messageHeader = `<div class="text-left">The following value dimensions are wrong: </div>`
+
+    let list = '<ul class="text-left">'
+    for (let error of dimensionsValues) {
+      const { line, value, validationType } = error
+      let item = `<li>The line number ${line} has an incorrect value dimension: ${value}. The field must be ${validationType}.</li>`
+      list = `${list}${item}`
+    }
+    list = `${list}</ul>`
+    message = `${messageHeader} ${list}`
+  }
+
+  return sweetAlert2({
+    title: 'Error importing the file',
+    html: message,
+    type: 'error'
+  })
+}
+
+export function errorEmptyCSVAlert() {
+  return sweetAlert2({
+    title: 'Error importing the file',
+    html: 'Empty CSV file. Nothing was imported',
+    type: 'error'
+  })
+}
+
+export function errorRowLengthCSVAlert(errors) {
+  let message = 'There was an error importing the file. The file have an erroneous amount of columns'
+
+  if (errors && errors.length > 0) {
+    const messageHeader = `<div class="text-left">The following lines have an erroneous amount of columns: </div>`
+
+    let list = '<ul class="text-left">'
+    for (let error of errors) {
+      const { line, columns } = error
+      const columnLabel = columns > 1 ? 'columns' : 'column'
+      let item = `<li>The line number ${line} have ${columns} ${columnLabel}, must have 3 columns</li>`
+      list = `${list}${item}`
+    }
+    list = `${list}</ul>`
+    message = `${messageHeader} ${list}`
+  }
+
+  return sweetAlert2({
+    title: 'Error importing the file',
+    html: message,
+    type: 'error'
+  })
+}
+
+export function errorAddressCSVAlert(address) {
+  let message = 'There was an error importing the file.'
+
+  if (address && address.length > 0) {
+    const messageHeader = `<div class="text-left">The following address are wrong: </div>`
+
+    let list = '<ul class="text-left">'
+    for (let error of address) {
+      const { line, address } = error
+      let item = `<li>The line number ${line} has an incorrect address: ${address}</li>`
+      list = `${list}${item}`
+    }
+    list = `${list}</ul>`
+    message = `${messageHeader} ${list}`
+  }
+
+  return sweetAlert2({
+    title: 'Error importing the file',
+    html: message,
+    type: 'error'
+  })
+}
+
 export function reservedTokensImported(count) {
   return sweetAlert2({
     title: 'Reserved tokens imported',
@@ -306,7 +408,7 @@ export function noMoreReservedSlotAvailable() {
 export function noMoreReservedSlotAvailableCSV(count) {
   return sweetAlert2({
     title: 'You reach the limit of reserved tokens',
-    html: `You're not able to reserve more tokens. Only ${count} reserved addresses of the file could be added. The maximum allowed is ${LIMIT_RESERVED_ADDRESSES}`,
+    html: `You're not able to reserve more tokens. Reserved tokens imported Tokens will be reserved for ${count} addresses. The maximum allowed is ${LIMIT_RESERVED_ADDRESSES}`,
     type: 'info'
   })
 }

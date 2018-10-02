@@ -7,7 +7,9 @@ import {
   truncateStringInTheMiddle,
   validateSupply,
   validateTier,
-  navigateTo
+  navigateTo,
+  downloadFile,
+  uniqueElementsBy
 } from '../../src/utils/utils'
 
 describe('countDecimalPlaces', () => {
@@ -261,6 +263,48 @@ describe('navigateTo', () => {
         }
         expect(navigateAndThrow).toThrow()
       }
+    })
+  })
+})
+
+describe('uniqueElementBy', () => {
+  const testCases = [
+    {
+      value: [
+        ['0x95ced938f7991cd0dfcb48f0a06a40fa1af46ebc', 'tokens', '3.1'],
+        ['0x95ced938f7991cd0dfcb48f0a06a40fa1af46ebc', 'tokens', '4.2']
+      ],
+      expected: 1
+    },
+    {
+      value: [
+        ['0x95ced938f7991cd0dfcb48f0a06a40fa1af46ebc1', 'tokens', '3.1'],
+        ['0x95ced938f7991cd0dfcb48f0a06a40fa1af46ebc', 'tokens', '4.2']
+      ],
+      expected: 2
+    },
+    {
+      value: [
+        ['0x95ced938f7991cd0dfcb48f0a06a40fa1af46ebc1', 'tokens', '3.1'],
+        ['0x95ced938f7991cd0dfcb48f0a06a40fa1af46ebc', 'tokens', '4.2'],
+        ['0x95ced938f7991cd0dfcb48f0a06a40fa1af46ebc', 'tokens', '4.2']
+      ],
+      expected: 2
+    },
+    {
+      value: [
+        ['0x95ced938f7991cd0dfcb48f0a06a40fa1af46ebc1', 'tokens', '3.1'],
+        ['0x95ced938f7991cd0dfcb48f0a06a40fa1af46ebc2', 'tokens', '4.2'],
+        ['0x95ced938f7991cd0dfcb48f0a06a40fa1af46ebc3', 'tokens', '4.2']
+      ],
+      expected: 3
+    }
+  ]
+
+  testCases.forEach(({ value, expected }, index) => {
+    it(`should test uniqueElementBy function #${index}`, () => {
+      const results = uniqueElementsBy(value, (a, b) => a[0] === b[0] && a[1] === b[1])
+      expect(results.length).toBe(expected)
     })
   })
 })

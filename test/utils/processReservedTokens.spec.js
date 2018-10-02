@@ -1,4 +1,4 @@
-import processReservedTokens from '../../src/utils/processReservedTokens'
+import { processReservedTokens, errorsCsv } from '../../src/utils/processReservedTokens'
 
 describe('processReservedTokens function', () => {
   it('should call the callback for each valid reserved tokens item', () => {
@@ -105,7 +105,6 @@ describe('processReservedTokens function', () => {
       ['0x6c8ca1fD00d18B69C2c14228ef3D2E4E1ce3316b', '', '10'],
       ['0x2589bd7D8A58Ac9A4aC01d68A7c63315ef184c63', 'tokens', '10'], //valid dimension
       ['0x9613130348aC610732A391063CD70b5a8c186EfC', 'percentage', '10'] //valid dimension
-
     ]
     const cb = jest.fn()
 
@@ -147,11 +146,72 @@ describe('processReservedTokens function', () => {
     const cb = jest.fn()
 
     // When
-    processReservedTokens({ rows, decimals:2 }, cb)
+    processReservedTokens({ rows, decimals: 2 }, cb)
 
     // Then
     expect(cb).toHaveBeenCalledTimes(2)
     expect(cb.mock.calls[0]).toEqual([{ addr: rows[0][0], dim: rows[0][1], val: rows[0][2] }])
     expect(cb.mock.calls[1]).toEqual([{ addr: rows[3][0], dim: rows[3][1], val: rows[3][2] }])
+  })
+})
+
+describe('errorsCSV function', () => {
+  it('should check output errors csv function #1', () => {
+    const rows = [
+      ['0x1111111111111111111111111111111111111111', 'tokens', '10'],
+      ['0x2222222222222222222222222222222222222222', 'tokens', '10'],
+      ['0x2222222222222222222222222222222222222222', 'percentage', '10'],
+      ['0x3333333333333333333333333333333333333333', 'tokens', '10']
+    ]
+
+    expect(errorsCsv(rows, 18)).toBeInstanceOf(Object)
+  })
+
+  it('should check output errors csv function #2', () => {
+    const rows = [
+      ['0x1111111111111111111111111111111111111111', 'tokens', '10'],
+      ['0x22222222222222222222222222222222222222222', 'tokens22', '10'],
+      ['0x2222222222222222222222222222222222222222', 'percentage', '10'],
+      ['0x3333333333333333333333333333333333333333', 'tokens', '10']
+    ]
+
+    const errorsCsvFunction = () => errorsCsv(rows, 18)
+    expect(errorsCsvFunction).toThrow()
+  })
+
+  it('should check output errors csv function #3', () => {
+    const rows = [
+      ['0x1111111111111111111111111111111111111111', 'tokens', '10'],
+      ['0x22222222222222222222222222222222222222222', 'tokens', '12121', '10'],
+      ['0x2222222222222222222222222222222222222222', 'percentage', '10'],
+      ['0x3333333333333333333333333333333333333333', 'tokens', '10']
+    ]
+
+    const errorsCsvFunction = () => errorsCsv(rows, 18)
+    expect(errorsCsvFunction).toThrow()
+  })
+
+  it('should check output errors csv function #4', () => {
+    const rows = [
+      ['0x1111111111111111111111111111111111111111', 'tokens', '10'],
+      ['0x22222222222222222222222222222222222222222', 'tokens'],
+      ['0x2222222222222222222222222222222222222222', 'percentage', '10'],
+      ['0x3333333333333333333333333333333333333333', 'tokens', '10']
+    ]
+
+    const errorsCsvFunction = () => errorsCsv(rows, 18)
+    expect(errorsCsvFunction).toThrow()
+  })
+
+  it('should check output errors csv function #5', () => {
+    const rows = [
+      ['0x1111111111111111111111111111111111111111', 'tokens', '10'],
+      ['0x1111111111111111111111111111111111111111', 'tokens', -10],
+      ['0x1111111111111111111111111111111111111111', 'percentage', '10'],
+      ['0x3333333333333333333333333333333333333333', 'tokens', '10']
+    ]
+
+    const errorsCsvFunction = () => errorsCsv(rows, 18)
+    expect(errorsCsvFunction).toThrow()
   })
 })

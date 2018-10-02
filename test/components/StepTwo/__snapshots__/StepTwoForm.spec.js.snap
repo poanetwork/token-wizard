@@ -507,6 +507,12 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
         <span>
           Dropzone
         </span>
+        <div
+          className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-downloadcsv m-r-0"
+          onClick={[Function]}
+        >
+          Download CSV template
+        </div>
       </div>
     </div>
   </div>
