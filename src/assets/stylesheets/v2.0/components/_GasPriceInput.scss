@@ -7,7 +7,12 @@ $sw-GasPriceInput_Select-height: 40px;
 .sw-GasPriceInput_Select {
     cursor: pointer;
     height: $sw-GasPriceInput_Select-height;
+    margin-bottom: 12px;
     position: relative;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
 }
 
 .sw-GasPriceInput_SelectButton {
@@ -45,14 +50,15 @@ $sw-GasPriceInput_Select-height: 40px;
     background-color: #fff;
     border-radius: 5px;
     border: solid 1px $base-border-color;
-    // display: none;
     left: 0;
     position: absolute;
     right: 0;
     top: 100%;
+    transition: visibility 0.15s;
+    visibility: hidden;
 
     .sw-GasPriceInput_SelectButton:focus + & {
-        display: block;
+        visibility: visible;
     }
 }
 
