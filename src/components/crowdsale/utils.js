@@ -6,13 +6,7 @@ import {
 } from '../../utils/blockchainHelpers'
 import { contractStore, crowdsalePageStore, tokenStore, web3Store, crowdsaleStore } from '../../stores'
 import { toJS } from 'mobx'
-import {
-  getAddrFromQuery,
-  getExecIDFromQuery,
-  isAddressValid,
-  removeTrailingNUL,
-  toBigNumber
-} from '../../utils/utils'
+import { getAddrFromQuery, getExecIDFromQuery, isAddressValid, removeTrailingNUL, toBigNumber } from '../../utils/utils'
 import { BigNumber } from 'bignumber.js'
 import logdown from 'logdown'
 import { CrowdsaleConfig } from '../Common/config'
