@@ -508,65 +508,63 @@ const getWhitelistsParams = (tierIndex, addrs, minCaps, maxCaps, methodInterface
 }
 
 export const addWhitelist = () => {
-  return tierStore.tiers.map((tier, index) => {
-    return async executionOrder => {
-      logger.log('###addWhitelist:###')
+  return tierStore.tiers.reduce((acc, tier, index) => {
+    const whitelist = []
+    whitelist.push.apply(whitelist, tier.whitelist)
 
-      let whitelist = []
-      whitelist.push.apply(whitelist, tier.whitelist)
+    if (whitelist.length) {
+      acc.push(async executionOrder => {
+        logger.log('###addWhitelist:###')
 
-      logger.log('whitelist:', whitelist)
+        let addrs = []
+        let minCaps = []
+        let maxCaps = []
 
-      if (whitelist.length === 0) {
-        return Promise.resolve()
-      }
+        for (let i = 0; i < whitelist.length; i++) {
+          addrs.push(whitelist[i].addr)
+          let whitelistMin = toBigNumber(whitelist[i].min)
+            .times(`1e${tokenStore.decimals}`)
+            .toFixed() // in tokens, token do have decimals accounted
+          let whitelistMax = toBigNumber(whitelist[i].max)
+            .times(`1e${tokenStore.decimals}`)
+            .toFixed() // in tokens, token do have decimals accounted
+          minCaps.push(whitelistMin ? whitelistMin.toString() : 0)
+          maxCaps.push(whitelistMax ? whitelistMax.toString() : 0)
+        }
 
-      let addrs = []
-      let minCaps = []
-      let maxCaps = []
+        logger.log('addrs:', addrs)
+        logger.log('minCaps:', minCaps)
+        logger.log('maxCaps:', maxCaps)
 
-      for (let i = 0; i < whitelist.length; i++) {
-        addrs.push(whitelist[i].addr)
-        let whitelistMin = toBigNumber(whitelist[i].min)
-          .times(`1e${tokenStore.decimals}`)
-          .toFixed() // in tokens, token do have decimals accounted
-        let whitelistMax = toBigNumber(whitelist[i].max)
-          .times(`1e${tokenStore.decimals}`)
-          .toFixed() // in tokens, token do have decimals accounted
-        minCaps.push(whitelistMin ? whitelistMin.toString() : 0)
-        maxCaps.push(whitelistMax ? whitelistMax.toString() : 0)
-      }
+        let account = contractStore.crowdsale.account
+        const opts = { gasPrice: generalStore.gasPrice, from: account }
 
-      logger.log('addrs:', addrs)
-      logger.log('minCaps:', minCaps)
-      logger.log('maxCaps:', maxCaps)
+        let methodInterface
+        let methodName
+        if (crowdsaleStore.isMintedCappedCrowdsale) {
+          methodInterface = ['uint256', 'address[]', 'uint256[]', 'uint256[]']
+          methodName = 'whitelistMultiForTier'
+        } else if (crowdsaleStore.isDutchAuction) {
+          methodInterface = ['address[]', 'uint256[]', 'uint256[]']
+          methodName = 'whitelistMulti'
+        }
 
-      let account = contractStore.crowdsale.account
-      const opts = { gasPrice: generalStore.gasPrice, from: account }
+        let paramsToExec = [index, addrs, minCaps, maxCaps, methodInterface]
+        const method = methodToExec(
+          crowdsaleStore.proxyName,
+          `${methodName}(${methodInterface.join(',')})`,
+          getWhitelistsParams,
+          paramsToExec
+        )
 
-      let methodInterface
-      let methodName
-      if (crowdsaleStore.isMintedCappedCrowdsale) {
-        methodInterface = ['uint256', 'address[]', 'uint256[]', 'uint256[]']
-        methodName = 'whitelistMultiForTier'
-      } else if (crowdsaleStore.isDutchAuction) {
-        methodInterface = ['address[]', 'uint256[]', 'uint256[]']
-        methodName = 'whitelistMulti'
-      }
-
-      let paramsToExec = [index, addrs, minCaps, maxCaps, methodInterface]
-      const method = methodToExec(
-        crowdsaleStore.proxyName,
-        `${methodName}(${methodInterface.join(',')})`,
-        getWhitelistsParams,
-        paramsToExec
-      )
-
-      const estimatedGas = await method.estimateGas(opts)
-      opts.gasLimit = calculateGasLimit(estimatedGas)
-      return await sendTXToContract(method.send(opts), executionOrder)
+        const estimatedGas = await method.estimateGas(opts)
+        opts.gasLimit = calculateGasLimit(estimatedGas)
+        return await sendTXToContract(method.send(opts), executionOrder)
+      })
     }
-  })
+
+    return acc
+  }, [])
 }
 
 const getUpdateGlobalMinCapParams = methodInterface => {
