@@ -2,86 +2,80 @@
 
 exports[`TokenName should render TokenName component 1`] = `
 <div
-  className="sw-InputField "
+  className="left"
 >
-  <div
-    className="sw-FormControlTitle"
+  <label
+    className="label"
+    htmlFor="name"
   >
-    <label
-      className="sw-FormControlTitle_Label"
-    >
-      Name
-    </label>
-    <div
-      className="sw-FormControlTitle_Info"
-      tabIndex="-1"
-    >
-      <span
-        className="sw-FormControlTitle_Tooltip"
-      >
-        The name of your token. Will be used by Etherscan and other tokenbrowsers. Be afraid of trademarks.
-      </span>
-    </div>
-  </div>
+    Name
+  </label>
   <input
-    className="sw-TextField"
-    disabled={undefined}
+    autoComplete="off"
+    className="input"
     id="name"
-    max={undefined}
-    min={undefined}
     name="name"
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
-    onKeyPress={undefined}
-    onPaste={undefined}
-    placeholder={undefined}
-    style={undefined}
     type="text"
     value=""
   />
+  <p
+    className="description"
+  >
+    The name of your token. Will be used by Etherscan and other tokenbrowsers. Be afraid of trademarks.
+  </p>
+  <span>
+    <p
+      className="error"
+      style={
+        Object {
+          "color": "red",
+          "fontWeight": "bold",
+        }
+      }
+    />
+  </span>
 </div>
 `;
 
 exports[`TokenName should render TokenName component and its children 1`] = `
 <div
-  className="sw-InputField "
+  className="left"
 >
-  <div
-    className="sw-FormControlTitle"
+  <label
+    className="label"
+    htmlFor="name"
   >
-    <label
-      className="sw-FormControlTitle_Label"
-    >
-      Name
-    </label>
-    <div
-      className="sw-FormControlTitle_Info"
-      tabIndex="-1"
-    >
-      <span
-        className="sw-FormControlTitle_Tooltip"
-      >
-        The name of your token. Will be used by Etherscan and other tokenbrowsers. Be afraid of trademarks.
-      </span>
-    </div>
-  </div>
+    Name
+  </label>
   <input
-    className="sw-TextField"
-    disabled={undefined}
+    autoComplete="off"
+    className="input"
     id="name"
-    max={undefined}
-    min={undefined}
     name="name"
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
-    onKeyPress={undefined}
-    onPaste={undefined}
-    placeholder={undefined}
-    style={undefined}
     type="text"
     value=""
   />
+  <p
+    className="description"
+  >
+    The name of your token. Will be used by Etherscan and other tokenbrowsers. Be afraid of trademarks.
+  </p>
+  <span>
+    <p
+      className="error"
+      style={
+        Object {
+          "color": "red",
+          "fontWeight": "bold",
+        }
+      }
+    />
+  </span>
 </div>
 `;

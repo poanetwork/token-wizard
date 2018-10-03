@@ -2,87 +2,81 @@
 
 exports[`TokenSupply should render TokenDecimals component 1`] = `
 <div
-  className="sw-InputField "
+  className="right"
 >
-  <div
-    className="sw-FormControlTitle"
+  <label
+    className="label"
+    htmlFor="supply"
   >
-    <label
-      className="sw-FormControlTitle_Label"
-    >
-      Supply
-    </label>
-    <div
-      className="sw-FormControlTitle_Info"
-      tabIndex="-1"
-    >
-      <span
-        className="sw-FormControlTitle_Tooltip"
-      >
-        The total supply of the token
-      </span>
-    </div>
-  </div>
+    Supply
+  </label>
   <input
-    className="sw-TextField"
-    disabled={undefined}
+    autoComplete="off"
+    className="input"
     id="supply"
-    max={undefined}
-    min={undefined}
     name="supply"
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
-    onKeyPress={undefined}
-    onPaste={undefined}
-    placeholder={undefined}
-    style={undefined}
     type="text"
     value=""
   />
+  <p
+    className="description"
+  >
+    The total supply of the token
+  </p>
+  <span>
+    <p
+      className="error"
+      style={
+        Object {
+          "color": "red",
+          "fontWeight": "bold",
+        }
+      }
+    />
+  </span>
 </div>
 `;
 
 exports[`TokenSupply should render TokenSupply component and its children 1`] = `
 <div
-  className="sw-InputField "
+  className="right"
 >
-  <div
-    className="sw-FormControlTitle"
+  <label
+    className="label"
+    htmlFor="supply"
   >
-    <label
-      className="sw-FormControlTitle_Label"
-    >
-      Supply
-    </label>
-    <div
-      className="sw-FormControlTitle_Info"
-      tabIndex="-1"
-    >
-      <span
-        className="sw-FormControlTitle_Tooltip"
-      >
-        The total supply of the token
-      </span>
-    </div>
-  </div>
+    Supply
+  </label>
   <input
-    className="sw-TextField"
-    disabled={undefined}
+    autoComplete="off"
+    className="input"
     id="supply"
-    max={undefined}
-    min={undefined}
     name="supply"
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
-    onKeyPress={undefined}
-    onPaste={undefined}
-    placeholder={undefined}
-    style={undefined}
     type="text"
     value=""
   />
+  <p
+    className="description"
+  >
+    The total supply of the token
+  </p>
+  <span>
+    <p
+      className="error"
+      style={
+        Object {
+          "color": "red",
+          "fontWeight": "bold",
+        }
+      }
+    />
+  </span>
 </div>
 `;
 
@@ -96,7 +90,7 @@ exports[`TokenSupply should render TokenSupply component and its children, with 
       "fontWeight": "bold",
     }
   }
-  onSubmit={[Function]}
+  onSubmit={[MockFunction]}
 >
   <TokenSupply
     __versions={
@@ -172,6 +166,12 @@ exports[`TokenSupply should render TokenSupply component and its children, with 
     <Field
       component={[Function]}
       description="The total supply of the token"
+      errorStyle={
+        Object {
+          "color": "red",
+          "fontWeight": "bold",
+        }
+      }
       format={[Function]}
       label="Supply"
       name="supply"
@@ -182,6 +182,12 @@ exports[`TokenSupply should render TokenSupply component and its children, with 
     >
       <InputField2
         description="The total supply of the token"
+        errorStyle={
+          Object {
+            "color": "red",
+            "fontWeight": "bold",
+          }
+        }
         input={
           Object {
             "name": "supply",
@@ -214,33 +220,15 @@ exports[`TokenSupply should render TokenSupply component and its children, with 
         type="text"
       >
         <div
-          className="sw-InputField "
+          className="right"
         >
-          <FormControlTitle
-            description="The total supply of the token"
-            title="Supply"
+          <label
+            className="label"
+            htmlFor="supply"
           >
-            <div
-              className="sw-FormControlTitle"
-            >
-              <label
-                className="sw-FormControlTitle_Label"
-              >
-                Supply
-              </label>
-              <div
-                className="sw-FormControlTitle_Info"
-                tabIndex="-1"
-              >
-                <span
-                  className="sw-FormControlTitle_Tooltip"
-                >
-                  The total supply of the token
-                </span>
-              </div>
-            </div>
-          </FormControlTitle>
-          <TextField
+            Supply
+          </label>
+          <input
             autoComplete="off"
             className="input"
             id="supply"
@@ -250,19 +238,19 @@ exports[`TokenSupply should render TokenSupply component and its children, with 
             onFocus={[Function]}
             type="text"
             value=""
+          />
+          <p
+            className="description"
           >
-            <input
-              className="sw-TextField"
-              id="supply"
-              name="supply"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              type="text"
-              value=""
-            />
-          </TextField>
+            The total supply of the token
+          </p>
           <Error
+            errorStyle={
+              Object {
+                "color": "red",
+                "fontWeight": "bold",
+              }
+            }
             name="supply"
           >
             <Field
@@ -277,7 +265,20 @@ exports[`TokenSupply should render TokenSupply component and its children, with 
                   "touched": true,
                 }
               }
-            />
+            >
+              <span>
+                <p
+                  className="error"
+                  key="0"
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontWeight": "bold",
+                    }
+                  }
+                />
+              </span>
+            </Field>
           </Error>
         </div>
       </InputField2>

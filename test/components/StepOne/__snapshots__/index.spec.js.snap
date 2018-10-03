@@ -18,7 +18,7 @@ exports[`StepOne should render StepOne screen 1`] = `
       >
         <div
           className="st-StepNavigation_StepContainer
-                active"
+        active"
         >
           <div
             className="st-StepNavigation_StepCircle"
@@ -34,7 +34,7 @@ exports[`StepOne should render StepOne screen 1`] = `
         </div>
         <div
           className="st-StepNavigation_StepContainer
-                "
+        "
         >
           <div
             className="st-StepNavigation_StepCircle"
@@ -50,7 +50,7 @@ exports[`StepOne should render StepOne screen 1`] = `
         </div>
         <div
           className="st-StepNavigation_StepContainer
-                "
+        "
         >
           <div
             className="st-StepNavigation_StepCircle"
@@ -66,7 +66,7 @@ exports[`StepOne should render StepOne screen 1`] = `
         </div>
         <div
           className="st-StepNavigation_StepContainer
-                "
+        "
         >
           <div
             className="st-StepNavigation_StepCircle"
@@ -82,7 +82,7 @@ exports[`StepOne should render StepOne screen 1`] = `
         </div>
         <div
           className="st-StepNavigation_StepContainer
-                "
+        "
         >
           <div
             className="st-StepNavigation_StepCircle"
@@ -198,7 +198,6 @@ exports[`StepOne should render StepOne screen 1`] = `
           className="sw-ButtonContinue"
           disabled={false}
           onClick={[Function]}
-          type={undefined}
         >
           <span
             className="sw-ButtonContinue_Text"

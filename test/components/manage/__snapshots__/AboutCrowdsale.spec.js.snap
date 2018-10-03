@@ -19,7 +19,7 @@ exports[`AboutCrowdsale should render the component 1`] = `
     className="description"
   >
     The most important and exciting part of the crowdsale process. Here you can
-                  define parameters of your crowdsale campaign.
+              define parameters of your crowdsale campaign.
   </p>
   <a
     className="crowdsale-page-link"

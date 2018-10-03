@@ -1,44 +1,40 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CrowdsaleRate should render CrowdsaleRate component 1`] = `
-<div
-  className="sw-InputField "
->
-  <div
-    className="sw-FormControlTitle"
+exports[`CrowdsaleRate  should render CrowdsaleRate component 1`] = `
+<div>
+  <label
+    className="label"
+    htmlFor="CrowdsaleRate"
   >
-    <label
-      className="sw-FormControlTitle_Label"
-    >
-      Rate
-    </label>
-    <div
-      className="sw-FormControlTitle_Info"
-      tabIndex="-1"
-    >
-      <span
-        className="sw-FormControlTitle_Tooltip"
-      >
-        Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
-      </span>
-    </div>
-  </div>
+    Rate
+  </label>
   <input
-    className="sw-TextField"
+    autoComplete="off"
+    className="input"
     disabled={false}
     id="CrowdsaleRate"
-    max={undefined}
-    min={undefined}
     name="CrowdsaleRate"
-    onBlur={undefined}
-    onChange={undefined}
-    onFocus={undefined}
-    onKeyPress={undefined}
-    onPaste={undefined}
-    placeholder={undefined}
-    style={undefined}
     type="text"
     value="1234"
   />
+  <p
+    className="description"
+  >
+    Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
+  </p>
+  <span>
+    <p
+      className="error"
+      style={
+        Object {
+          "color": "red",
+          "fontSize": "12px",
+          "fontWeight": "bold",
+          "height": "20px",
+          "width": "100%",
+        }
+      }
+    />
+  </span>
 </div>
 `;

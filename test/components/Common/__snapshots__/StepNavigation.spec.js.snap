@@ -14,7 +14,7 @@ exports[`StepNavigation should render StepNavigation component 1`] = `
   >
     <div
       className="st-StepNavigation_StepContainer
-            active"
+        active"
     >
       <div
         className="st-StepNavigation_StepCircle"
@@ -30,7 +30,7 @@ exports[`StepNavigation should render StepNavigation component 1`] = `
     </div>
     <div
       className="st-StepNavigation_StepContainer
-            "
+        "
     >
       <div
         className="st-StepNavigation_StepCircle"
@@ -46,7 +46,7 @@ exports[`StepNavigation should render StepNavigation component 1`] = `
     </div>
     <div
       className="st-StepNavigation_StepContainer
-            "
+        "
     >
       <div
         className="st-StepNavigation_StepCircle"
@@ -62,7 +62,7 @@ exports[`StepNavigation should render StepNavigation component 1`] = `
     </div>
     <div
       className="st-StepNavigation_StepContainer
-            "
+        "
     >
       <div
         className="st-StepNavigation_StepCircle"
@@ -78,7 +78,7 @@ exports[`StepNavigation should render StepNavigation component 1`] = `
     </div>
     <div
       className="st-StepNavigation_StepContainer
-            "
+        "
     >
       <div
         className="st-StepNavigation_StepCircle"

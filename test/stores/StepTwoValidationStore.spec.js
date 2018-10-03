@@ -21,9 +21,7 @@ describe('StepTwoValidationStore', () => {
       const invalidProperty = () => stepTwoValidationStore.setProperty(property, value)
 
       // Then
-      it(`should ${property} for '${value}' throw an error in the stepTwoValidationStore`, () => {
-        expect(invalidProperty).toThrow(`${property} is not declared as a property`)
-      })
+      expect(invalidProperty).toThrow(`${property} is not declared as a property`)
     })
   })
 
@@ -52,9 +50,7 @@ describe('StepTwoValidationStore', () => {
       stepTwoValidationStore.setProperty(property, value)
 
       // Then
-      it(`should ${property} be '${value}'`, () => {
-        expect(stepTwoValidationStore[property]).toBe(value)
-      })
+      expect(stepTwoValidationStore[property]).toBe(value)
     })
   })
 })

@@ -21,9 +21,7 @@ describe('StatsStore', () => {
       const invalidProperty = () => statsStore.setProperty(property, value)
 
       // Then
-      it(`should ${property} for '${value}' throw an error in the statsStore`, () => {
-        expect(invalidProperty).toThrow(`${property} is not declared as a property`)
-      })
+      expect(invalidProperty).toThrow(`${property} is not declared as a property`)
     })
   })
 
@@ -58,9 +56,7 @@ describe('StatsStore', () => {
       statsStore.setProperty(property, value)
 
       // Then
-      it(`should ${property} be '${value}'`, () => {
-        expect(statsStore[property]).toBe(value)
-      })
+      expect(statsStore[property]).toBe(value)
     })
   })
 })

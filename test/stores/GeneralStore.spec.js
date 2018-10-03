@@ -25,9 +25,7 @@ describe(`GeneralStore`, () => {
       generalStore.setProperty(property, value)
 
       // Then
-      it(`should ${property} for '${value}' be in the generalStore`, () => {
-        expect(generalStore[property]).toBe(value)
-      })
+      expect(generalStore[property]).toBe(value)
     })
   })
 
@@ -45,9 +43,7 @@ describe(`GeneralStore`, () => {
       const invalidProperty = () => generalStore.setProperty(property, value)
 
       // Then
-      it(`should ${property} for '${value}' throw an error in the generalStore`, () => {
-        expect(invalidProperty).toThrow(`${property} is not declared as a property`)
-      })
+      expect(invalidProperty).toThrow(`${property} is not declared as a property`)
     })
   })
 

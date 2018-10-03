@@ -2,87 +2,81 @@
 
 exports[`TokenDecimals should render TokenDecimals component 1`] = `
 <div
-  className="sw-InputField "
+  className="left"
 >
-  <div
-    className="sw-FormControlTitle"
+  <label
+    className="label"
+    htmlFor="decimals"
   >
-    <label
-      className="sw-FormControlTitle_Label"
-    >
-      Decimals
-    </label>
-    <div
-      className="sw-FormControlTitle_Info"
-      tabIndex="-1"
-    >
-      <span
-        className="sw-FormControlTitle_Tooltip"
-      >
-        Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous).
-      </span>
-    </div>
-  </div>
+    Decimals
+  </label>
   <input
-    className="sw-TextField"
-    disabled={undefined}
+    autoComplete="off"
+    className="input"
     id="decimals"
-    max="18"
-    min="0"
     name="decimals"
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
-    onKeyPress={undefined}
-    onPaste={undefined}
-    placeholder={undefined}
-    style={undefined}
-    type="number"
+    type="text"
     value=""
   />
+  <p
+    className="description"
+  >
+    Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous).
+  </p>
+  <span>
+    <p
+      className="error"
+      style={
+        Object {
+          "color": "red",
+          "fontWeight": "bold",
+        }
+      }
+    />
+  </span>
 </div>
 `;
 
 exports[`TokenDecimals should render TokenDecimals component and its children 1`] = `
 <div
-  className="sw-InputField "
+  className="left"
 >
-  <div
-    className="sw-FormControlTitle"
+  <label
+    className="label"
+    htmlFor="decimals"
   >
-    <label
-      className="sw-FormControlTitle_Label"
-    >
-      Decimals
-    </label>
-    <div
-      className="sw-FormControlTitle_Info"
-      tabIndex="-1"
-    >
-      <span
-        className="sw-FormControlTitle_Tooltip"
-      >
-        Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous).
-      </span>
-    </div>
-  </div>
+    Decimals
+  </label>
   <input
-    className="sw-TextField"
-    disabled={undefined}
+    autoComplete="off"
+    className="input"
     id="decimals"
-    max="18"
-    min="0"
     name="decimals"
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
-    onKeyPress={undefined}
-    onPaste={undefined}
-    placeholder={undefined}
-    style={undefined}
-    type="number"
+    type="text"
     value=""
   />
+  <p
+    className="description"
+  >
+    Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous).
+  </p>
+  <span>
+    <p
+      className="error"
+      style={
+        Object {
+          "color": "red",
+          "fontWeight": "bold",
+        }
+      }
+    />
+  </span>
 </div>
 `;
 
@@ -96,7 +90,7 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
       "fontWeight": "bold",
     }
   }
-  onSubmit={[Function]}
+  onSubmit={[MockFunction]}
 >
   <TokenDecimals
     __versions={
@@ -181,11 +175,10 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
       }
       format={[Function]}
       label="Decimals"
-      max="18"
-      min="0"
       name="decimals"
       parse={[Function]}
-      type="number"
+      side="left"
+      type="text"
       validate={[Function]}
     >
       <InputField2
@@ -207,7 +200,6 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
           }
         }
         label="Decimals"
-        max="18"
         meta={
           Object {
             "active": false,
@@ -226,65 +218,42 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
             "visited": false,
           }
         }
-        min="0"
-        type="number"
+        side="left"
+        type="text"
       >
         <div
-          className="sw-InputField "
+          className="left"
         >
-          <FormControlTitle
-            description="Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous)."
-            title="Decimals"
+          <label
+            className="label"
+            htmlFor="decimals"
           >
-            <div
-              className="sw-FormControlTitle"
-            >
-              <label
-                className="sw-FormControlTitle_Label"
-              >
-                Decimals
-              </label>
-              <div
-                className="sw-FormControlTitle_Info"
-                tabIndex="-1"
-              >
-                <span
-                  className="sw-FormControlTitle_Tooltip"
-                >
-                  Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous).
-                </span>
-              </div>
-            </div>
-          </FormControlTitle>
-          <TextField
+            Decimals
+          </label>
+          <input
             autoComplete="off"
             className="input"
             disabled={true}
             id="decimals"
-            max="18"
-            min="0"
             name="decimals"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
-            type="number"
+            type="text"
             value=""
+          />
+          <p
+            className="description"
           >
-            <input
-              className="sw-TextField"
-              disabled={true}
-              id="decimals"
-              max="18"
-              min="0"
-              name="decimals"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              type="number"
-              value=""
-            />
-          </TextField>
+            Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous).
+          </p>
           <Error
+            errorStyle={
+              Object {
+                "color": "red",
+                "fontWeight": "bold",
+              }
+            }
             name="decimals"
           >
             <Field
@@ -299,7 +268,20 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
                   "touched": true,
                 }
               }
-            />
+            >
+              <span>
+                <p
+                  className="error"
+                  key="0"
+                  style={
+                    Object {
+                      "color": "red",
+                      "fontWeight": "bold",
+                    }
+                  }
+                />
+              </span>
+            </Field>
           </Error>
         </div>
       </InputField2>

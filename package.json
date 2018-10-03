@@ -80,7 +80,7 @@
     "fs-extra": "3.0.1",
     "html-webpack-plugin": "2.29.0",
     "immutability-helper": "^2.5.0",
-    "jest": "20.0.4",
+    "jest": "23.6.0",
     "jquery": "^3.2.1",
     "json-loader": "^0.5.7",
     "jszip": "^3.1.4",
@@ -197,6 +197,9 @@
     ],
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
+    ],
+    "modulePathIgnorePatterns": [
+      "submodules/poa-web3-1.0/packages/web3/package.json"
     ]
   },
   "babel": {
