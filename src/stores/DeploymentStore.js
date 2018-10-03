@@ -3,6 +3,13 @@ import autosave from './autosave'
 import logdown from 'logdown'
 
 const logger = logdown('TW:stores:deployment')
+const initialTxStatus = {
+  active: false,
+  confirmationPending: false,
+  miningPending: false,
+  mined: false,
+  txHash: ''
+}
 
 class DeploymentStore {
   @observable txMap = new Map()
@@ -39,13 +46,6 @@ class DeploymentStore {
       { name: 'crowdsaleInit', dependsOnTiers: false, required: true },
       { name: 'trackProxy', dependsOnTiers: false, required: true }
     ]
-    const initialTxStatus = {
-      active: false,
-      confirmationPending: false,
-      miningPending: false,
-      mined: false,
-      txHash: ''
-    }
     const byTierWhitelistInitialValues = tiers.map(tier => {
       if (tier.whitelistEnabled === 'yes') {
         if (tier.whitelist.length > 0) {
@@ -149,6 +149,14 @@ class DeploymentStore {
     this.hasEnded = value
   }
 
+  @action
+  resetTx = tx => {
+    if (!tx) return
+    const contentToUpdate = this.txMap.get(tx.name)
+    contentToUpdate[tx.innerIndex] = initialTxStatus
+    this.txMap.set(tx.name, contentToUpdate)
+  }
+
   logTxMap = () => {
     if (process.env.NODE_ENV !== 'development') return
 
@@ -156,11 +164,40 @@ class DeploymentStore {
 
     this.txMap.forEach((txStatus, txName) => {
       const tiersStatuses = {}
-      txStatus.forEach(({ mined }, index) => (tiersStatuses[`Tier ${index + 1}`] = mined))
+      txStatus.forEach((step, index) => {
+        if (step) tiersStatuses[`Tier ${index + 1}`] = step.mined
+      })
       table.push({ txName, ...tiersStatuses })
     })
 
     console.table(table)
+  }
+
+  @action
+  getStepExecutionOrder = step => {
+    if (!step) return
+
+    const { name, innerIndex } = step
+
+    return this.activeSteps.findIndex(activeStep => activeStep.name === name && activeStep.innerIndex === innerIndex)
+  }
+
+  /**
+   * If txHash is available, then the tx is considered as recoverable
+   * @returns {*}
+   */
+  @computed
+  get txRecoverable() {
+    return this.activeSteps.find(step => step.txHash && (!step.miningPending || !step.mined))
+  }
+
+  /**
+   * If tx is active, but not txHash available. We will consider it as a lost tx
+   * @returns {*}
+   */
+  @computed
+  get txLost() {
+    return this.activeSteps.find(step => step.active && step.confirmationPending && !step.txHash)
   }
 
   @computed
@@ -168,7 +205,7 @@ class DeploymentStore {
     let activeSteps = []
     this.txMap.forEach((steps, name) => {
       steps.forEach((step, index) => {
-        activeSteps = activeSteps.concat({ name, innerIndex: index, ...step })
+        if (step) activeSteps = activeSteps.concat({ name, innerIndex: index, ...step })
       })
     })
     return activeSteps
@@ -176,7 +213,7 @@ class DeploymentStore {
 
   @computed
   get deploymentHasFinished() {
-    return this.txMap.values().every(txStatuses => txStatuses.every(({ mined }) => mined))
+    return this.txMap.values().every(txStatuses => txStatuses.every(status => (status !== null ? status.mined : true)))
   }
 
   @computed

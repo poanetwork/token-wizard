@@ -4,23 +4,31 @@ import {
   buildDeploymentSteps,
   download,
   getDownloadName,
+  getOptimizationFlagByStore,
+  getVersionFlagByStore,
   handleConstantForFile,
   handleContractsForFile,
   handlerForFile,
   scrollToBottom,
   summaryFileContents,
-  getOptimizationFlagByStore,
-  getVersionFlagByStore
+  updateCrowdsaleContractInfo,
+  updateProxyContractInfo
 } from './utils'
-import { noContractDataAlert, successfulDeployment, skippingTransaction, deployHasEnded } from '../../utils/alerts'
 import {
+  deployHasEnded,
+  noContractDataAlert,
+  skippingTransaction,
+  successfulDeployment,
+  transactionLost
+} from '../../utils/alerts'
+import {
+  CROWDSALE_STRATEGIES,
+  CROWDSALE_STRATEGIES_DISPLAYNAMES,
   DESCRIPTION,
   NAVIGATION_STEPS,
-  TOAST,
-  CROWDSALE_STRATEGIES_DISPLAYNAMES,
-  TEXT_FIELDS,
   PUBLISH_DESCRIPTION,
-  CROWDSALE_STRATEGIES
+  TEXT_FIELDS,
+  TOAST
 } from '../../utils/constants'
 import { DOWNLOAD_TYPE } from './constants'
 import { getNetworkID, toast } from '../../utils/utils'
@@ -37,7 +45,7 @@ import { PreventRefresh } from '../Common/PreventRefresh'
 import cancelDeploy from '../../utils/cancelDeploy'
 import PropTypes from 'prop-types'
 import logdown from 'logdown'
-import { checkNetWorkByID } from '../../utils/blockchainHelpers'
+import { checkNetWorkByID, sendTXResponse } from '../../utils/blockchainHelpers'
 import { CrowdsaleConfig } from '../Common/config'
 import { ButtonContinue } from '../Common/ButtonContinue'
 import classNames from 'classnames'
@@ -146,13 +154,63 @@ export class stepFour extends Component {
     }
   }
 
-  deployCrowdsale = () => {
-    this.resumeContractDeployment()
+  async deployCrowdsale() {
+    const { deploymentStore } = this.props
+    let startAt = deploymentStore.deploymentStep ? deploymentStore.deploymentStep : 0
+
+    if (deploymentStore.txLost) {
+      // temporarily hide modal to display error message
+      this.hideModal()
+      await transactionLost()
+      this.showModal()
+      // cleanup tx lost and restarts deployCrowdsale
+      deploymentStore.resetTx(deploymentStore.txLost)
+      setTimeout(() => this.deployCrowdsale(), 100)
+    } else {
+      if (deploymentStore.txRecoverable) {
+        const receipt = await this.context.web3.eth.getTransactionReceipt(deploymentStore.txRecoverable.txHash)
+
+        if (receipt && receipt.blockNumber) {
+          try {
+            // analyze receipt
+            await sendTXResponse(receipt)
+            const executionOrder = deploymentStore.getStepExecutionOrder(deploymentStore.txRecoverable)
+
+            // if is one of the contract deployment steps, call the proper method to update the information
+            if (deploymentStore.txRecoverable.name === 'deployProxy') updateProxyContractInfo(receipt)
+            if (deploymentStore.txRecoverable.name === 'crowdsaleCreate') updateCrowdsaleContractInfo(receipt)
+
+            deploymentStore.setDeploymentStep(executionOrder)
+            deploymentStore.setDeploymentStepStatus({ executionOrder, status: 'mined' })
+
+            // after the step was finished we continue with the deployment process
+            setTimeout(() => this.deployCrowdsale(), 100)
+          } catch (e) {
+            this.handleError([e, deploymentStore.deploymentStep])
+          }
+        } else {
+          // block wasn't mined yet, wait 5s and retry
+          setTimeout(() => this.deployCrowdsale(), 5000)
+        }
+      } else {
+        // if it's a tx not lost or not recoverable we assume everything is fine and continue with the deployment process
+        const nextStep = deploymentStore.activeSteps[startAt]
+
+        if (!nextStep) {
+          this.finalizeCrowdsaleDeployment()
+        } else {
+          if (nextStep.active && nextStep.mined) {
+            startAt++
+            deploymentStore.setDeploymentStep(startAt)
+          }
+          this.resumeContractDeployment(startAt)
+        }
+      }
+    }
   }
 
-  resumeContractDeployment = () => {
+  resumeContractDeployment(startAt) {
     const { deploymentStore } = this.props
-    const startAt = deploymentStore.deploymentStep ? deploymentStore.deploymentStep : 0
     const deploymentSteps = buildDeploymentSteps()
 
     executeSequentially(
@@ -166,14 +224,15 @@ export class stepFour extends Component {
         deploymentStore.setDeploymentStepStatus({ executionOrder, status: 'mined' })
       }
     )
-      .then(() => {
-        this.hideModal()
-
-        deploymentStore.setHasEnded(true)
-
-        return successfulDeployment()
-      })
+      .then(this.finalizeCrowdsaleDeployment)
       .catch(this.handleError)
+  }
+
+  finalizeCrowdsaleDeployment = () => {
+    const { deploymentStore } = this.props
+    this.hideModal()
+    deploymentStore.setHasEnded(true)
+    return successfulDeployment()
   }
 
   handleError = ([err, failedAt]) => {
@@ -206,7 +265,7 @@ export class stepFour extends Component {
           })
 
           deploymentStore.setDeploymentStep(deploymentStore.deploymentStep + 1)
-          this.resumeContractDeployment()
+          this.deployCrowdsale()
         }
       })
       .then(
