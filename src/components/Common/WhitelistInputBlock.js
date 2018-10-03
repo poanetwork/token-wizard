@@ -18,6 +18,7 @@ import {
 import processWhitelist from '../../utils/processWhitelist'
 import { isLessOrEqualThan, validateWhitelistMax, validateWhitelistMin } from '../../utils/validations'
 import logdown from 'logdown'
+import { ButtonCSV } from '../Common/ButtonCSV'
 
 const logger = logdown('TW:WhitelistInputBlock')
 const { ADDRESS, MIN, MAX } = TEXT_FIELDS
@@ -336,12 +337,10 @@ export class WhitelistInputBlock extends React.Component {
         {/* Actions */}
         <div>
           {whitelistEmpty ? null : (
-            <div className="clear-all-tokens" style={clearAllStyle} onClick={this.clearAll}>
-              <i className="fa fa-trash" />&nbsp;Clear All
-            </div>
+            <ButtonCSV extraClassName="sw-ButtonCSV-clearall" onClick={this.clearAll} text="Clear All" />
           )}
           <Dropzone onDrop={this.onDrop} accept=".csv" style={dropzoneStyle}>
-            <i className="fa fa-upload" title="Upload CSV" />&nbsp; Upload CSV
+            <ButtonCSV extraClassName="sw-ButtonCSV-uploadcsv" text="Upload CSV" type="button" />
           </Dropzone>
         </div>
       </div>
