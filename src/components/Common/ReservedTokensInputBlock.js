@@ -24,6 +24,7 @@ import {
 import { processCsv, errorsCsv } from '../../utils/processReservedTokens'
 import logdown from 'logdown'
 import { downloadFile, uniqueElementsBy } from '../../utils/utils'
+import { ButtonCSV } from '../Common/ButtonCSV'
 
 const logger = logdown('TW:ReservedTokensInputBlock')
 const { VALID, INVALID } = VALIDATION_TYPES
@@ -326,24 +327,16 @@ export class ReservedTokensInputBlock extends Component {
           {/* Actions */}
           <div className="sw-ReservedTokensListControls sw-BorderedBlock_Row3Column1">
             {tokensListEmpty ? null : (
-              <div
-                className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-clearall"
-                onClick={this.clearAll}
-              >
-                Clear All
-              </div>
+              <ButtonCSV extraClassName="sw-ButtonCSV-clearall" onClick={this.clearAll} text="Clear All" />
             )}
             <Dropzone onDrop={this.onDrop} accept=".csv" style={dropzoneStyle}>
-              <div className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-uploadcsv">
-                Upload CSV
-              </div>
+              <ButtonCSV extraClassName="sw-ButtonCSV-uploadcsv" text="Upload CSV" />
             </Dropzone>
-            <div
-              className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-downloadcsv m-r-0"
+            <ButtonCSV
+              extraClassName="sw-ButtonCSV-downloadcsv m-r-0"
               onClick={this.downloadCSV}
-            >
-              Download CSV template
-            </div>
+              text="Download CSV template"
+            />
           </div>
         </div>
       </div>
