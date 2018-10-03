@@ -259,7 +259,7 @@ let checkEventTopics = obj => {
   }
 }
 
-const sendTXResponse = receipt => {
+export const sendTXResponse = receipt => {
   logger.log('receipt:', receipt)
   logger.log('receipt.status:', receipt.status)
 
