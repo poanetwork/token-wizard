@@ -70,6 +70,15 @@ const getProxyParams = () => {
   ]
 }
 
+export function updateProxyContractInfo(receipt) {
+  const { web3 } = web3Store
+  const paramsProxy = getProxyParams()
+  const encoded = web3.eth.abi.encodeParameters(['address', 'bytes32', 'address', 'bytes32'], paramsProxy)
+
+  contractStore.setContractProperty(crowdsaleStore.proxyName, 'addr', receipt.contractAddress.toLowerCase())
+  contractStore.setContractProperty(crowdsaleStore.proxyName, 'abiEncoded', encoded.slice(2))
+}
+
 export const deployProxy = () => {
   const { web3 } = web3Store
   return [
@@ -86,10 +95,7 @@ export const deployProxy = () => {
       const abiProxy = contractStore[crowdsaleStore.proxyName].abi || []
       const paramsProxy = getProxyParams()
       const receipt = await deployContract(abiProxy, binProxy, paramsProxy, executionOrder)
-      contractStore.setContractProperty(crowdsaleStore.proxyName, 'addr', receipt.contractAddress.toLowerCase())
-
-      const encoded = web3.eth.abi.encodeParameters(['address', 'bytes32', 'address', 'bytes32'], paramsProxy)
-      contractStore.setContractProperty(crowdsaleStore.proxyName, 'abiEncoded', encoded.slice(2))
+      updateProxyContractInfo(receipt, web3, paramsProxy)
       return receipt
     }
   ]
@@ -212,6 +218,36 @@ export const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
   return { params: crowdsaleParams, paramsEncoded: crowdsaleParamsEncoded }
 }
 
+export function updateCrowdsaleContractInfo(receipt) {
+  const { logs, events } = receipt
+  logger.log('receipt:', receipt)
+
+  if (events) {
+    logger.log('events:', events)
+    if (events.ApplicationFinalization) {
+      getExecutionIDFromEvent(events, 'ApplicationFinalization')
+    } else if (events.AppInstanceCreated) {
+      getExecutionIDFromEvent(events, 'AppInstanceCreated')
+    } else if (events.ApplicationInitialized) {
+      getExecutionIDFromEvent(events, 'ApplicationInitialized')
+    }
+  } else if (logs) {
+    logger.log('logs:', logs)
+
+    const lastLog = logs.reduce((log, current) => {
+      if (!log) return (log = current)
+      if (current.logIndex > log.logIndex) log = current
+      return log
+    }, 0)
+
+    if (lastLog && lastLog.topics && lastLog.topics.length > 1) {
+      const execID = lastLog.topics[2]
+      logger.log('exec_id', execID)
+      contractStore.setContractProperty('crowdsale', 'execID', execID)
+    }
+  }
+}
+
 export const deployCrowdsale = (getParams, methodInterface, appName) => {
   logger.log('###deploy crowdsale###')
   return [
@@ -231,34 +267,7 @@ export const deployCrowdsale = (getParams, methodInterface, appName) => {
       opts.gasLimit = calculateGasLimit(estimatedGas)
 
       const receipt = await sendTXToContract(method.send(opts), executionOrder)
-      const { logs, events } = receipt
-      logger.log('receipt:', receipt)
-
-      if (events) {
-        logger.log('events:', events)
-        if (events.ApplicationFinalization) {
-          getExecutionIDFromEvent(events, 'ApplicationFinalization')
-        } else if (events.AppInstanceCreated) {
-          getExecutionIDFromEvent(events, 'AppInstanceCreated')
-        } else if (events.ApplicationInitialized) {
-          getExecutionIDFromEvent(events, 'ApplicationInitialized')
-        }
-      } else if (logs) {
-        logger.log('logs:', logs)
-
-        const lastLog = logs.reduce((log, current) => {
-          if (!log) return (log = current)
-          if (current.logIndex > log.logIndex) log = current
-          return log
-        }, 0)
-
-        if (lastLog && lastLog.topics && lastLog.topics.length > 1) {
-          const execID = lastLog.topics[2]
-          logger.log('exec_id', execID)
-          contractStore.setContractProperty('crowdsale', 'execID', execID)
-        }
-      }
-
+      updateCrowdsaleContractInfo(receipt)
       return receipt
     }
   ]
