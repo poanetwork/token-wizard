@@ -45,38 +45,7 @@ exports[`CrowdsaleList  should render CrowdsaleList component 1`] = `
       "supply": undefined,
     }
   }
-  crowdsales={
-    Array [
-      Injector {
-        "context": undefined,
-        "execID": "0xcCca436070962a1A884b88E8506C2C750E342BEA",
-        "props": undefined,
-        "refs": Object {},
-        "storeRef": [Function],
-        "updater": Object {
-          "enqueueCallback": [Function],
-          "enqueueForceUpdate": [Function],
-          "enqueueReplaceState": [Function],
-          "enqueueSetState": [Function],
-          "isMounted": [Function],
-        },
-      },
-      Injector {
-        "context": undefined,
-        "execID": "0x9726cdb82358972b7a17260e7897C8de02d584e6",
-        "props": undefined,
-        "refs": Object {},
-        "storeRef": [Function],
-        "updater": Object {
-          "enqueueCallback": [Function],
-          "enqueueForceUpdate": [Function],
-          "enqueueReplaceState": [Function],
-          "enqueueSetState": [Function],
-          "isMounted": [Function],
-        },
-      },
-    ]
-  }
+  onClick={[MockFunction]}
   web3Store={
     Web3Store {
       "accounts": undefined,
@@ -634,38 +603,7 @@ exports[`CrowdsaleList  should render CrowdsaleList component 1`] = `
         "supply": undefined,
       }
     }
-    crowdsales={
-      Array [
-        Injector {
-          "context": undefined,
-          "execID": "0xcCca436070962a1A884b88E8506C2C750E342BEA",
-          "props": undefined,
-          "refs": Object {},
-          "storeRef": [Function],
-          "updater": Object {
-            "enqueueCallback": [Function],
-            "enqueueForceUpdate": [Function],
-            "enqueueReplaceState": [Function],
-            "enqueueSetState": [Function],
-            "isMounted": [Function],
-          },
-        },
-        Injector {
-          "context": undefined,
-          "execID": "0x9726cdb82358972b7a17260e7897C8de02d584e6",
-          "props": undefined,
-          "refs": Object {},
-          "storeRef": [Function],
-          "updater": Object {
-            "enqueueCallback": [Function],
-            "enqueueForceUpdate": [Function],
-            "enqueueReplaceState": [Function],
-            "enqueueSetState": [Function],
-            "isMounted": [Function],
-          },
-        },
-      ]
-    }
+    onClick={[MockFunction]}
     web3Store={
       Web3Store {
         "accounts": undefined,
@@ -1197,7 +1135,7 @@ exports[`CrowdsaleList  should render CrowdsaleList component 1`] = `
         >
           <div
             className="sw-FlexTable_Row sw-FlexTable_Row-selectable
-                          "
+                "
             key="0"
             onClick={[Function]}
           >
@@ -1209,7 +1147,7 @@ exports[`CrowdsaleList  should render CrowdsaleList component 1`] = `
           </div>
           <div
             className="sw-FlexTable_Row sw-FlexTable_Row-selectable
-                          "
+                "
             key="1"
             onClick={[Function]}
           >
@@ -1224,22 +1162,13 @@ exports[`CrowdsaleList  should render CrowdsaleList component 1`] = `
       <div
         className="sw-ModalWindow_ButtonsContainer sw-ModalWindow_ButtonsContainer-right"
       >
-        <ButtonContinue
+        <button
+          className="sw-Button sw-Button-secondary"
+          disabled={true}
           onClick={[Function]}
-          status={null}
         >
-          <button
-            className="sw-ButtonContinue"
-            disabled={true}
-            onClick={[Function]}
-          >
-            <span
-              className="sw-ButtonContinue_Text"
-            >
-              Continue
-            </span>
-          </button>
-        </ButtonContinue>
+          Continue
+        </button>
       </div>
     </div>
   </CrowdsalesList>
@@ -1273,20 +1202,6 @@ exports[`CrowdsaleList  should render if list is empty   1`] = `
       "supply": undefined,
     }
   }
-  crowdsales={
-    Array [
-      Object {
-        "execID": "0xcCca436070962a1A884b88E8506C2C750E342BEA",
-        "refs": Object {},
-        "updater": Object {},
-      },
-      Object {
-        "execID": "0x9726cdb82358972b7a17260e7897C8de02d584e6",
-        "refs": Object {},
-        "updater": Object {},
-      },
-    ]
-  }
   web3Store={
     Web3Store {
       "accounts": undefined,
@@ -1826,20 +1741,6 @@ exports[`CrowdsaleList  should render if list is empty   1`] = `
         "supply": undefined,
       }
     }
-    crowdsales={
-      Array [
-        Object {
-          "execID": "0xcCca436070962a1A884b88E8506C2C750E342BEA",
-          "refs": Object {},
-          "updater": Object {},
-        },
-        Object {
-          "execID": "0x9726cdb82358972b7a17260e7897C8de02d584e6",
-          "refs": Object {},
-          "updater": Object {},
-        },
-      ]
-    }
     web3Store={
       Web3Store {
         "accounts": undefined,
@@ -2371,7 +2272,7 @@ exports[`CrowdsaleList  should render if list is empty   1`] = `
         >
           <div
             className="sw-FlexTable_Row sw-FlexTable_Row-selectable
-                          "
+                "
             key="0"
             onClick={[Function]}
           >
@@ -2383,7 +2284,7 @@ exports[`CrowdsaleList  should render if list is empty   1`] = `
           </div>
           <div
             className="sw-FlexTable_Row sw-FlexTable_Row-selectable
-                          "
+                "
             key="1"
             onClick={[Function]}
           >
@@ -2398,22 +2299,13 @@ exports[`CrowdsaleList  should render if list is empty   1`] = `
       <div
         className="sw-ModalWindow_ButtonsContainer sw-ModalWindow_ButtonsContainer-right"
       >
-        <ButtonContinue
+        <button
+          className="sw-Button sw-Button-secondary"
+          disabled={true}
           onClick={[Function]}
-          status={null}
         >
-          <button
-            className="sw-ButtonContinue"
-            disabled={true}
-            onClick={[Function]}
-          >
-            <span
-              className="sw-ButtonContinue_Text"
-            >
-              Continue
-            </span>
-          </button>
-        </ButtonContinue>
+          Continue
+        </button>
       </div>
     </div>
   </CrowdsalesList>

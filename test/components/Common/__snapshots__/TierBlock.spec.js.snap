@@ -10,49 +10,51 @@ exports[`TierBlock  should render TierBlock component 1`] = `
       }
     }
   >
-    <div>
+    <div
+      className="hidden"
+    >
       <div
         className="input-block-container"
       >
         <div
-          className="sw-InputField "
+          className="left"
         >
-          <div
-            className="sw-FormControlTitle"
+          <label
+            className="label"
+            htmlFor="tierblock,0.tier"
           >
-            <label
-              className="sw-FormControlTitle_Label"
-            >
-              Crowdsale setup name
-            </label>
-            <div
-              className="sw-FormControlTitle_Info"
-              tabIndex="-1"
-            >
-              <span
-                className="sw-FormControlTitle_Tooltip"
-              >
-                Name of a tier, e.g. PrePreCrowdsale, PreCrowdsale, Crowdsale with bonus A, Crowdsale with bonus B, etc. We simplified that and will increment a number after each tier.
-              </span>
-            </div>
-          </div>
+            Crowdsale setup name
+          </label>
           <input
-            className="sw-TextField"
-            disabled={undefined}
+            autoComplete="off"
+            className="input"
             id="tierblock,0.tier"
-            max={undefined}
-            min={undefined}
             name="tierblock,0.tier"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
-            onKeyPress={undefined}
-            onPaste={undefined}
-            placeholder={undefined}
-            style={undefined}
             type="text"
             value=""
           />
+          <p
+            className="description"
+          >
+            Name of a tier, e.g. PrePreCrowdsale, PreCrowdsale, Crowdsale with bonus A, Crowdsale with bonus B, etc. We simplified that and will increment a number after each tier.
+          </p>
+          <span>
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "20px",
+                  "width": "100%",
+                }
+              }
+            />
+          </span>
         </div>
       </div>
       <div
@@ -163,213 +165,300 @@ exports[`TierBlock  should render TierBlock component 1`] = `
         className="input-block-container"
       >
         <div
-          className="sw-InputField "
+          className="left"
         >
-          <div
-            className="sw-FormControlTitle"
+          <label
+            className="label"
+            htmlFor="tierblock,0.startTime"
           >
-            <label
-              className="sw-FormControlTitle_Label"
-            >
-              Start Time
-            </label>
-            <div
-              className="sw-FormControlTitle_Info"
-              tabIndex="-1"
-            >
-              <span
-                className="sw-FormControlTitle_Tooltip"
-              >
-                Date and time when the tier starts. Can't be in the past from the current moment.
-              </span>
-            </div>
-          </div>
+            Start Time
+          </label>
           <input
-            className="sw-TextField"
+            autoComplete="off"
+            className="input"
             disabled={false}
             id="tierblock,0.startTime"
-            max={undefined}
-            min={undefined}
             name="tierblock,0.startTime"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
-            onKeyPress={undefined}
-            onPaste={undefined}
-            placeholder={undefined}
-            style={undefined}
             type="datetime-local"
             value=""
           />
+          <p
+            className="description"
+          >
+            Date and time when the tier starts. Can't be in the past from the current moment.
+          </p>
+          <span>
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "20px",
+                  "width": "100%",
+                }
+              }
+            />
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "20px",
+                  "width": "100%",
+                }
+              }
+            />
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "20px",
+                  "width": "100%",
+                }
+              }
+            />
+          </span>
         </div>
         <div
-          className="sw-InputField "
+          className="right"
         >
-          <div
-            className="sw-FormControlTitle"
+          <label
+            className="label"
+            htmlFor="tierblock,0.endTime"
           >
-            <label
-              className="sw-FormControlTitle_Label"
-            >
-              End Time
-            </label>
-            <div
-              className="sw-FormControlTitle_Info"
-              tabIndex="-1"
-            >
-              <span
-                className="sw-FormControlTitle_Tooltip"
-              >
-                Date and time when the tier ends. Can be only in the future.
-              </span>
-            </div>
-          </div>
+            End Time
+          </label>
           <input
-            className="sw-TextField"
-            disabled={undefined}
+            autoComplete="off"
+            className="input"
             id="tierblock,0.endTime"
-            max={undefined}
-            min={undefined}
             name="tierblock,0.endTime"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
-            onKeyPress={undefined}
-            onPaste={undefined}
-            placeholder={undefined}
-            style={undefined}
             type="datetime-local"
             value=""
           />
+          <p
+            className="description"
+          >
+            Date and time when the tier ends. Can be only in the future.
+          </p>
+          <span>
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "20px",
+                  "width": "100%",
+                }
+              }
+            />
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "20px",
+                  "width": "100%",
+                }
+              }
+            />
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "20px",
+                  "width": "100%",
+                }
+              }
+            />
+          </span>
         </div>
       </div>
       <div
         className="input-block-container"
       >
         <div
-          className="sw-InputField "
+          className="left"
         >
-          <div
-            className="sw-FormControlTitle"
+          <label
+            className="label"
+            htmlFor="tierblock,0.rate"
           >
-            <label
-              className="sw-FormControlTitle_Label"
-            >
-              Rate
-            </label>
-            <div
-              className="sw-FormControlTitle_Info"
-              tabIndex="-1"
-            >
-              <span
-                className="sw-FormControlTitle_Tooltip"
-              >
-                Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
-              </span>
-            </div>
-          </div>
+            Rate
+          </label>
           <input
-            className="sw-TextField"
-            disabled={undefined}
+            autoComplete="off"
+            className="input"
             id="tierblock,0.rate"
-            max={undefined}
-            min={undefined}
             name="tierblock,0.rate"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
-            onKeyPress={undefined}
-            onPaste={undefined}
-            placeholder={undefined}
-            style={undefined}
             type="text"
             value=""
           />
+          <p
+            className="description"
+          >
+            Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
+          </p>
+          <span>
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "20px",
+                  "width": "100%",
+                }
+              }
+            />
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "20px",
+                  "width": "100%",
+                }
+              }
+            />
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "20px",
+                  "width": "100%",
+                }
+              }
+            />
+          </span>
         </div>
         <div
-          className="sw-InputField "
+          className="right"
         >
-          <div
-            className="sw-FormControlTitle"
+          <label
+            className="label"
+            htmlFor="tierblock,0.supply"
           >
-            <label
-              className="sw-FormControlTitle_Label"
-            >
-              Supply
-            </label>
-            <div
-              className="sw-FormControlTitle_Info"
-              tabIndex="-1"
-            >
-              <span
-                className="sw-FormControlTitle_Tooltip"
-              >
-                How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
-              </span>
-            </div>
-          </div>
+            Supply
+          </label>
           <input
-            className="sw-TextField"
+            autoComplete="off"
+            className="input"
             disabled={false}
             id="tierblock,0.supply"
-            max={undefined}
-            min={undefined}
             name="tierblock,0.supply"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
-            onKeyPress={undefined}
-            onPaste={undefined}
-            placeholder={undefined}
-            style={undefined}
             type="text"
             value=""
           />
+          <p
+            className="description"
+          >
+            How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
+          </p>
+          <span>
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "20px",
+                  "width": "100%",
+                }
+              }
+            />
+          </span>
         </div>
       </div>
       <div
         className="input-block-container"
       >
         <div
-          className="sw-InputField "
+          className="left"
         >
-          <div
-            className="sw-FormControlTitle"
+          <label
+            className="label"
+            htmlFor="tierblock,0.minCap"
           >
-            <label
-              className="sw-FormControlTitle_Label"
-            >
-              Contributor min cap
-            </label>
-            <div
-              className="sw-FormControlTitle_Info"
-              tabIndex="-1"
-            >
-              <span
-                className="sw-FormControlTitle_Tooltip"
-              >
-                Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1
-                               and a user already has 1 token from a previous transaction, they can buy any amount they want.
-              </span>
-            </div>
-          </div>
+            Contributor min cap
+          </label>
           <input
-            className="sw-TextField"
+            autoComplete="off"
+            className="input"
             disabled={false}
             id="tierblock,0.minCap"
-            max={undefined}
-            min={undefined}
             name="tierblock,0.minCap"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
-            onKeyPress={undefined}
-            onPaste={undefined}
-            placeholder={undefined}
-            style={undefined}
             type="text"
             value=""
           />
+          <p
+            className="description"
+          >
+            Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1
+               and a user already has 1 token from a previous transaction, they can buy any amount they want.
+          </p>
+          <span>
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "20px",
+                  "width": "100%",
+                }
+              }
+            />
+            <p
+              className="error"
+              style={
+                Object {
+                  "color": "red",
+                  "fontSize": "12px",
+                  "fontWeight": "bold",
+                  "height": "20px",
+                  "width": "100%",
+                }
+              }
+            />
+          </span>
         </div>
       </div>
     </div>

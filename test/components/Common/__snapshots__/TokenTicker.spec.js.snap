@@ -2,86 +2,80 @@
 
 exports[`TokenTicker should render TokenTicker component 1`] = `
 <div
-  className="sw-InputField "
+  className="right"
 >
-  <div
-    className="sw-FormControlTitle"
+  <label
+    className="label"
+    htmlFor="ticker"
   >
-    <label
-      className="sw-FormControlTitle_Label"
-    >
-      Ticker
-    </label>
-    <div
-      className="sw-FormControlTitle_Info"
-      tabIndex="-1"
-    >
-      <span
-        className="sw-FormControlTitle_Tooltip"
-      >
-        The five letter ticker for your token. There are 11,881,376 combinations for 26 english letters. Be hurry.
-      </span>
-    </div>
-  </div>
+    Ticker
+  </label>
   <input
-    className="sw-TextField"
-    disabled={undefined}
+    autoComplete="off"
+    className="input"
     id="ticker"
-    max={undefined}
-    min={undefined}
     name="ticker"
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
-    onKeyPress={undefined}
-    onPaste={undefined}
-    placeholder={undefined}
-    style={undefined}
     type="text"
     value=""
   />
+  <p
+    className="description"
+  >
+    The five letter ticker for your token. There are 11,881,376 combinations for 26 english letters. Be hurry.
+  </p>
+  <span>
+    <p
+      className="error"
+      style={
+        Object {
+          "color": "red",
+          "fontWeight": "bold",
+        }
+      }
+    />
+  </span>
 </div>
 `;
 
 exports[`TokenTicker should render TokenTicker component and its children 1`] = `
 <div
-  className="sw-InputField "
+  className="right"
 >
-  <div
-    className="sw-FormControlTitle"
+  <label
+    className="label"
+    htmlFor="ticker"
   >
-    <label
-      className="sw-FormControlTitle_Label"
-    >
-      Ticker
-    </label>
-    <div
-      className="sw-FormControlTitle_Info"
-      tabIndex="-1"
-    >
-      <span
-        className="sw-FormControlTitle_Tooltip"
-      >
-        The five letter ticker for your token. There are 11,881,376 combinations for 26 english letters. Be hurry.
-      </span>
-    </div>
-  </div>
+    Ticker
+  </label>
   <input
-    className="sw-TextField"
-    disabled={undefined}
+    autoComplete="off"
+    className="input"
     id="ticker"
-    max={undefined}
-    min={undefined}
     name="ticker"
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
-    onKeyPress={undefined}
-    onPaste={undefined}
-    placeholder={undefined}
-    style={undefined}
     type="text"
     value=""
   />
+  <p
+    className="description"
+  >
+    The five letter ticker for your token. There are 11,881,376 combinations for 26 english letters. Be hurry.
+  </p>
+  <span>
+    <p
+      className="error"
+      style={
+        Object {
+          "color": "red",
+          "fontWeight": "bold",
+        }
+      }
+    />
+  </span>
 </div>
 `;

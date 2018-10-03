@@ -1,718 +1,593 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`percentage 1`] = `
-<inject-ReservedTokensInputBlock-with-reservedTokenStore
-  reservedTokenStore={
-    ReservedTokenStore {
-      "tokens": Array [],
-    }
-  }
-  tokenStore={
-    TokenStore {
-      "decimals": undefined,
-      "name": undefined,
-      "reservedTokensInput": Object {},
-      "supply": 0,
-      "ticker": undefined,
-      "validToken": Object {
-        "decimals": "EMPTY",
-        "name": "EMPTY",
-        "ticker": "EMPTY",
-      },
-    }
-  }
+exports[`ReservedTokensInputBlock render Should render the component for percentage: percentage 1`] = `
+<div
+  className="reserved-tokens-container"
 >
-  <ReservedTokensInputBlock
-    reservedTokenStore={
-      ReservedTokenStore {
-        "tokens": Array [],
-      }
-    }
-    tokenStore={
-      TokenStore {
-        "decimals": undefined,
-        "name": undefined,
-        "reservedTokensInput": Object {},
-        "supply": 0,
-        "ticker": undefined,
-        "validToken": Object {
-          "decimals": "EMPTY",
-          "name": "EMPTY",
-          "ticker": "EMPTY",
-        },
+  <div
+    className="reserved-tokens-input-container"
+  >
+    <div
+      className="reserved-tokens-input-container-inner"
+    >
+      <div
+        className="reserved-tokens-input-property reserved-tokens-input-property-left"
+      >
+        <label
+          className="label"
+        >
+          Address
+        </label>
+        <input
+          className="input"
+          id="Address"
+          onChange={[Function]}
+          type="text"
+          value=""
+        />
+        <p
+          className="description"
+        >
+          Address where to send reserved tokens.
+        </p>
+        <p
+          className="error"
+          style={
+            Object {
+              "color": "red",
+              "fontSize": "12px",
+              "fontWeight": "bold",
+              "height": "10px",
+              "width": "100%",
+            }
+          }
+        />
+      </div>
+      <div
+        className="reserved-tokens-input-property reserved-tokens-input-property-middle"
+      >
+        <label
+          className="label"
+        >
+          Dimension
+        </label>
+        <div
+          className="radios-inline"
+        >
+          <label
+            className="radio-inline"
+          >
+            <input
+              checked={true}
+              id="tokens"
+              onChange={[Function]}
+              type="radio"
+              value="tokens"
+            />
+            <span
+              className="title"
+            >
+              tokens
+            </span>
+          </label>
+          <label
+            className="radio-inline"
+          >
+            <input
+              checked={false}
+              id="percentage"
+              onChange={[Function]}
+              type="radio"
+              value="percentage"
+            />
+            <span
+              className="title"
+            >
+              percentage
+            </span>
+          </label>
+        </div>
+        <p
+          className="description"
+        >
+          Fixed amount or % of crowdsaled tokens. Will be deposited to the account after finalization of the crowdsale.
+        </p>
+      </div>
+      <div
+        className="reserved-tokens-input-property reserved-tokens-input-property-right"
+      >
+        <label
+          className="label"
+        >
+          Value
+        </label>
+        <input
+          className="input"
+          id="Value"
+          onChange={[Function]}
+          onKeyPress={[Function]}
+          onPaste={[Function]}
+          type="number"
+          value=""
+        />
+        <p
+          className="description"
+        >
+          Value in tokens. Don't forget to click + button for each reserved token.
+        </p>
+        <p
+          className="error"
+          style={
+            Object {
+              "color": "red",
+              "fontSize": "12px",
+              "fontWeight": "bold",
+              "height": "10px",
+              "width": "100%",
+            }
+          }
+        />
+      </div>
+    </div>
+    <div
+      className="plus-button-container"
+    >
+      <div
+        className="button button_fill button_no_icon"
+        onClick={[Function]}
+      >
+        Submit
+      </div>
+    </div>
+  </div>
+  <div
+    className="reserved-tokens-item-container"
+  >
+    <div
+      className="reserved-tokens-item-container-inner"
+    >
+      <span
+        className="reserved-tokens-item reserved-tokens-item-left"
+      >
+        0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1
+      </span>
+      <span
+        className="reserved-tokens-item reserved-tokens-item-middle"
+      >
+        tokens
+      </span>
+      <span
+        className="reserved-tokens-item reserved-tokens-item-right"
+      />
+    </div>
+    <div
+      className="reserved-tokens-item-empty"
+    >
+      <a
+        onClick={[Function]}
+      >
+        <span
+          className="item-remove"
+        />
+      </a>
+    </div>
+  </div>
+  <div
+    className="reserved-tokens-item-container"
+  >
+    <div
+      className="reserved-tokens-item-container-inner"
+    >
+      <span
+        className="reserved-tokens-item reserved-tokens-item-left"
+      >
+        0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1
+      </span>
+      <span
+        className="reserved-tokens-item reserved-tokens-item-middle"
+      >
+        percentage
+      </span>
+      <span
+        className="reserved-tokens-item reserved-tokens-item-right"
+      />
+    </div>
+    <div
+      className="reserved-tokens-item-empty"
+    >
+      <a
+        onClick={[Function]}
+      >
+        <span
+          className="item-remove"
+        />
+      </a>
+    </div>
+  </div>
+  <div
+    className="reserved-tokens-item-container"
+  >
+    <div
+      className="reserved-tokens-item-container-inner"
+    >
+      <span
+        className="reserved-tokens-item reserved-tokens-item-left"
+      >
+        0xffcf8fdee72ac11b5c542428b35eef5769c409f0
+      </span>
+      <span
+        className="reserved-tokens-item reserved-tokens-item-middle"
+      >
+        percentage
+      </span>
+      <span
+        className="reserved-tokens-item reserved-tokens-item-right"
+      />
+    </div>
+    <div
+      className="reserved-tokens-item-empty"
+    >
+      <a
+        onClick={[Function]}
+      >
+        <span
+          className="item-remove"
+        />
+      </a>
+    </div>
+  </div>
+  <div
+    className="reserved-tokens-item-container"
+  >
+    <div
+      className="reserved-tokens-item-container-inner"
+    >
+      <span
+        className="reserved-tokens-item reserved-tokens-item-left"
+      >
+        0x22d491bde2303f2f43325b2108d26f1eaba1e32b
+      </span>
+      <span
+        className="reserved-tokens-item reserved-tokens-item-middle"
+      >
+        tokens
+      </span>
+      <span
+        className="reserved-tokens-item reserved-tokens-item-right"
+      />
+    </div>
+    <div
+      className="reserved-tokens-item-empty"
+    >
+      <a
+        onClick={[Function]}
+      >
+        <span
+          className="item-remove"
+        />
+      </a>
+    </div>
+  </div>
+  <div
+    style={
+      Object {
+        "textAlign": "right",
       }
     }
   >
-    <div>
-      <h2
-        className="sw-BorderedBlockTitle"
-      >
-        Reserved tokens
-      </h2>
-      <div
-        className="sw-BorderedBlock sw-BorderedBlock-3Rows3Columns"
-      >
-        <InputField
-          description="Address where to send reserved tokens."
-          errorMessage="The inserted address is invalid"
-          extraClassName="sw-BorderedBlock_Row1Column1"
-          name="Address"
-          onChange={[Function]}
-          placeholder="Enter here"
-          pristine={true}
-          title="Address"
-          type="text"
-          valid="INVALID"
-          value=""
-        >
-          <div
-            className="sw-InputField sw-BorderedBlock_Row1Column1"
-          >
-            <FormControlTitle
-              description="Address where to send reserved tokens."
-              title="Address"
-            >
-              <div
-                className="sw-FormControlTitle"
-              >
-                <label
-                  className="sw-FormControlTitle_Label"
-                >
-                  Address
-                </label>
-                <div
-                  className="sw-FormControlTitle_Info"
-                  tabIndex="-1"
-                >
-                  <span
-                    className="sw-FormControlTitle_Tooltip"
-                  >
-                    Address where to send reserved tokens.
-                  </span>
-                </div>
-              </div>
-            </FormControlTitle>
-            <TextField
-              id="Address"
-              onChange={[Function]}
-              placeholder="Enter here"
-              type="text"
-              value=""
-            >
-              <input
-                className="sw-TextField"
-                onChange={[Function]}
-                placeholder="Enter here"
-                type="text"
-                value=""
-              />
-            </TextField>
-          </div>
-        </InputField>
-        <RadioInputField
-          description="Fixed amount or % of crowdsaled tokens. Will be deposited to the account after finalization of the crowdsale."
-          extraClassName="sw-BorderedBlock_Row1Column2"
-          items={
-            Array [
-              Object {
-                "label": "Tokens",
-                "value": "tokens",
-              },
-              Object {
-                "label": "Percentage",
-                "value": "percentage",
-              },
-            ]
-          }
-          onChange={[Function]}
-          selectedItem="percentage"
-          title="Dimension"
-        >
-          <div
-            className="sw-RadioInputField sw-BorderedBlock_Row1Column2"
-          >
-            <FormControlTitle
-              description="Fixed amount or % of crowdsaled tokens. Will be deposited to the account after finalization of the crowdsale."
-              title="Dimension"
-            >
-              <div
-                className="sw-FormControlTitle"
-              >
-                <label
-                  className="sw-FormControlTitle_Label"
-                >
-                  Dimension
-                </label>
-                <div
-                  className="sw-FormControlTitle_Info"
-                  tabIndex="-1"
-                >
-                  <span
-                    className="sw-FormControlTitle_Tooltip"
-                  >
-                    Fixed amount or % of crowdsaled tokens. Will be deposited to the account after finalization of the crowdsale.
-                  </span>
-                </div>
-              </div>
-            </FormControlTitle>
-            <div
-              className="sw-RadioInputField_ButtonsContainer"
-            >
-              <label
-                className="sw-RadioInputField_Label"
-                key="0"
-              >
-                <input
-                  checked={false}
-                  className="sw-RadioInputField_Input"
-                  id="tokens"
-                  onChange={[Function]}
-                  type="radio"
-                  value="tokens"
-                />
-                <span
-                  className="sw-RadioInputField_Button"
-                >
-                  Tokens
-                </span>
-              </label>
-              <label
-                className="sw-RadioInputField_Label"
-                key="1"
-              >
-                <input
-                  checked={true}
-                  className="sw-RadioInputField_Input"
-                  id="percentage"
-                  onChange={[Function]}
-                  type="radio"
-                  value="percentage"
-                />
-                <span
-                  className="sw-RadioInputField_Button"
-                >
-                  Percentage
-                </span>
-              </label>
-            </div>
-          </div>
-        </RadioInputField>
-        <NumericInput
-          acceptFloat={true}
-          description="Value in percentage. Don't forget to click + button for each reserved token."
-          dimension="percentage"
-          errorMessage="Value must be positive"
-          extraClassName="sw-BorderedBlock_Row1Column3"
-          min={0}
-          name="Value"
-          onClick={[Function]}
-          onValueUpdate={[Function]}
-          placeholder="Enter here"
-          pristine={true}
-          title="Value"
-          valid="VALIDATED"
-          value=""
-        >
-          <div
-            className="sw-NumericInput sw-BorderedBlock_Row1Column3"
-          >
-            <FormControlTitle
-              description="Value in percentage. Don't forget to click + button for each reserved token."
-              title="Value"
-            >
-              <div
-                className="sw-FormControlTitle"
-              >
-                <label
-                  className="sw-FormControlTitle_Label"
-                >
-                  Value
-                </label>
-                <div
-                  className="sw-FormControlTitle_Info"
-                  tabIndex="-1"
-                >
-                  <span
-                    className="sw-FormControlTitle_Tooltip"
-                  >
-                    Value in percentage. Don't forget to click + button for each reserved token.
-                  </span>
-                </div>
-              </div>
-            </FormControlTitle>
-            <div
-              className="sw-NumericInput_InputAndButtonContainer"
-            >
-              <TextField
-                id="Value"
-                min="0"
-                onChange={[Function]}
-                onKeyPress={[Function]}
-                onPaste={[Function]}
-                placeholder="Enter here"
-                step="1"
-                type="number"
-                value=""
-              >
-                <input
-                  className="sw-TextField"
-                  min="0"
-                  onChange={[Function]}
-                  onKeyPress={[Function]}
-                  onPaste={[Function]}
-                  placeholder="Enter here"
-                  type="number"
-                  value=""
-                />
-              </TextField>
-              <div
-                className="sw-NumericInput_ButtonPlus"
-                onClick={[Function]}
-              />
-            </div>
-          </div>
-        </NumericInput>
-        <inject-_class-with-reservedTokenStore
-          extraClassName="sw-BorderedBlock_Row2Column1"
-          reservedTokenStore={
-            ReservedTokenStore {
-              "tokens": Array [],
-            }
-          }
-          tokenStore={
-            TokenStore {
-              "decimals": undefined,
-              "name": undefined,
-              "reservedTokensInput": Object {},
-              "supply": 0,
-              "ticker": undefined,
-              "validToken": Object {
-                "decimals": "EMPTY",
-                "name": "EMPTY",
-                "ticker": "EMPTY",
-              },
-            }
-          }
-        >
-          <_class
-            extraClassName="sw-BorderedBlock_Row2Column1"
-            reservedTokenStore={
-              ReservedTokenStore {
-                "tokens": Array [],
-              }
-            }
-            tokenStore={
-              TokenStore {
-                "decimals": undefined,
-                "name": undefined,
-                "reservedTokensInput": Object {},
-                "supply": 0,
-                "ticker": undefined,
-                "validToken": Object {
-                  "decimals": "EMPTY",
-                  "name": "EMPTY",
-                  "ticker": "EMPTY",
-                },
-              }
-            }
-          >
-            <div
-              className="sw-ReservedTokensTable sw-BorderedBlock_Row2Column1"
-            >
-              <div
-                className="sw-ReservedTokensTable_Inner"
-              >
-                <table
-                  cellPadding="0"
-                  cellSpacing="0"
-                  className="sw-ReservedTokensTable_Table"
-                >
-                  <tbody />
-                </table>
-              </div>
-            </div>
-          </_class>
-        </inject-_class-with-reservedTokenStore>
-        <div
-          className="sw-ReservedTokensListControls sw-BorderedBlock_Row3Column1"
-        >
-          <Component
-            accept=".csv"
-            onDrop={[Function]}
-            style={Object {}}
-          >
-            <span>
-              Dropzone
-            </span>
-          </Component>
-          <div
-            className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-downloadcsv m-r-0"
-            onClick={[Function]}
-          >
-            Download CSV template
-          </div>
-        </div>
-      </div>
+    <div
+      className="clear-all-tokens"
+      style={
+        Object {
+          "cursor": "pointer",
+          "display": "inline-block",
+        }
+      }
+    >
+      <i
+        className="fa fa-trash"
+      />
+       Clear All
     </div>
-  </ReservedTokensInputBlock>
-</inject-ReservedTokensInputBlock-with-reservedTokenStore>
+    <span>
+      Dropzone
+    </span>
+  </div>
+</div>
 `;
 
-exports[`tokens 1`] = `
-<inject-ReservedTokensInputBlock-with-reservedTokenStore
-  reservedTokenStore={
-    ReservedTokenStore {
-      "tokens": Array [],
-    }
-  }
-  tokenStore={
-    TokenStore {
-      "decimals": undefined,
-      "name": undefined,
-      "reservedTokensInput": Object {},
-      "supply": 0,
-      "ticker": undefined,
-      "validToken": Object {
-        "decimals": "EMPTY",
-        "name": "EMPTY",
-        "ticker": "EMPTY",
-      },
-    }
-  }
+exports[`ReservedTokensInputBlock render Should render the component for tokens: tokens 1`] = `
+<div
+  className="reserved-tokens-container"
 >
-  <ReservedTokensInputBlock
-    reservedTokenStore={
-      ReservedTokenStore {
-        "tokens": Array [],
-      }
-    }
-    tokenStore={
-      TokenStore {
-        "decimals": undefined,
-        "name": undefined,
-        "reservedTokensInput": Object {},
-        "supply": 0,
-        "ticker": undefined,
-        "validToken": Object {
-          "decimals": "EMPTY",
-          "name": "EMPTY",
-          "ticker": "EMPTY",
-        },
+  <div
+    className="reserved-tokens-input-container"
+  >
+    <div
+      className="reserved-tokens-input-container-inner"
+    >
+      <div
+        className="reserved-tokens-input-property reserved-tokens-input-property-left"
+      >
+        <label
+          className="label"
+        >
+          Address
+        </label>
+        <input
+          className="input"
+          id="Address"
+          onChange={[Function]}
+          type="text"
+          value=""
+        />
+        <p
+          className="description"
+        >
+          Address where to send reserved tokens.
+        </p>
+        <p
+          className="error"
+          style={
+            Object {
+              "color": "red",
+              "fontSize": "12px",
+              "fontWeight": "bold",
+              "height": "10px",
+              "width": "100%",
+            }
+          }
+        />
+      </div>
+      <div
+        className="reserved-tokens-input-property reserved-tokens-input-property-middle"
+      >
+        <label
+          className="label"
+        >
+          Dimension
+        </label>
+        <div
+          className="radios-inline"
+        >
+          <label
+            className="radio-inline"
+          >
+            <input
+              checked={true}
+              id="tokens"
+              onChange={[Function]}
+              type="radio"
+              value="tokens"
+            />
+            <span
+              className="title"
+            >
+              tokens
+            </span>
+          </label>
+          <label
+            className="radio-inline"
+          >
+            <input
+              checked={false}
+              id="percentage"
+              onChange={[Function]}
+              type="radio"
+              value="percentage"
+            />
+            <span
+              className="title"
+            >
+              percentage
+            </span>
+          </label>
+        </div>
+        <p
+          className="description"
+        >
+          Fixed amount or % of crowdsaled tokens. Will be deposited to the account after finalization of the crowdsale.
+        </p>
+      </div>
+      <div
+        className="reserved-tokens-input-property reserved-tokens-input-property-right"
+      >
+        <label
+          className="label"
+        >
+          Value
+        </label>
+        <input
+          className="input"
+          id="Value"
+          onChange={[Function]}
+          onKeyPress={[Function]}
+          onPaste={[Function]}
+          type="number"
+          value=""
+        />
+        <p
+          className="description"
+        >
+          Value in tokens. Don't forget to click + button for each reserved token.
+        </p>
+        <p
+          className="error"
+          style={
+            Object {
+              "color": "red",
+              "fontSize": "12px",
+              "fontWeight": "bold",
+              "height": "10px",
+              "width": "100%",
+            }
+          }
+        />
+      </div>
+    </div>
+    <div
+      className="plus-button-container"
+    >
+      <div
+        className="button button_fill button_no_icon"
+        onClick={[Function]}
+      >
+        Submit
+      </div>
+    </div>
+  </div>
+  <div
+    className="reserved-tokens-item-container"
+  >
+    <div
+      className="reserved-tokens-item-container-inner"
+    >
+      <span
+        className="reserved-tokens-item reserved-tokens-item-left"
+      >
+        0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1
+      </span>
+      <span
+        className="reserved-tokens-item reserved-tokens-item-middle"
+      >
+        tokens
+      </span>
+      <span
+        className="reserved-tokens-item reserved-tokens-item-right"
+      />
+    </div>
+    <div
+      className="reserved-tokens-item-empty"
+    >
+      <a
+        onClick={[Function]}
+      >
+        <span
+          className="item-remove"
+        />
+      </a>
+    </div>
+  </div>
+  <div
+    className="reserved-tokens-item-container"
+  >
+    <div
+      className="reserved-tokens-item-container-inner"
+    >
+      <span
+        className="reserved-tokens-item reserved-tokens-item-left"
+      >
+        0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1
+      </span>
+      <span
+        className="reserved-tokens-item reserved-tokens-item-middle"
+      >
+        percentage
+      </span>
+      <span
+        className="reserved-tokens-item reserved-tokens-item-right"
+      />
+    </div>
+    <div
+      className="reserved-tokens-item-empty"
+    >
+      <a
+        onClick={[Function]}
+      >
+        <span
+          className="item-remove"
+        />
+      </a>
+    </div>
+  </div>
+  <div
+    className="reserved-tokens-item-container"
+  >
+    <div
+      className="reserved-tokens-item-container-inner"
+    >
+      <span
+        className="reserved-tokens-item reserved-tokens-item-left"
+      >
+        0xffcf8fdee72ac11b5c542428b35eef5769c409f0
+      </span>
+      <span
+        className="reserved-tokens-item reserved-tokens-item-middle"
+      >
+        percentage
+      </span>
+      <span
+        className="reserved-tokens-item reserved-tokens-item-right"
+      />
+    </div>
+    <div
+      className="reserved-tokens-item-empty"
+    >
+      <a
+        onClick={[Function]}
+      >
+        <span
+          className="item-remove"
+        />
+      </a>
+    </div>
+  </div>
+  <div
+    className="reserved-tokens-item-container"
+  >
+    <div
+      className="reserved-tokens-item-container-inner"
+    >
+      <span
+        className="reserved-tokens-item reserved-tokens-item-left"
+      >
+        0x22d491bde2303f2f43325b2108d26f1eaba1e32b
+      </span>
+      <span
+        className="reserved-tokens-item reserved-tokens-item-middle"
+      >
+        tokens
+      </span>
+      <span
+        className="reserved-tokens-item reserved-tokens-item-right"
+      />
+    </div>
+    <div
+      className="reserved-tokens-item-empty"
+    >
+      <a
+        onClick={[Function]}
+      >
+        <span
+          className="item-remove"
+        />
+      </a>
+    </div>
+  </div>
+  <div
+    style={
+      Object {
+        "textAlign": "right",
       }
     }
   >
-    <div>
-      <h2
-        className="sw-BorderedBlockTitle"
-      >
-        Reserved tokens
-      </h2>
-      <div
-        className="sw-BorderedBlock sw-BorderedBlock-3Rows3Columns"
-      >
-        <InputField
-          description="Address where to send reserved tokens."
-          errorMessage="The inserted address is invalid"
-          extraClassName="sw-BorderedBlock_Row1Column1"
-          name="Address"
-          onChange={[Function]}
-          placeholder="Enter here"
-          pristine={true}
-          title="Address"
-          type="text"
-          valid="INVALID"
-          value=""
-        >
-          <div
-            className="sw-InputField sw-BorderedBlock_Row1Column1"
-          >
-            <FormControlTitle
-              description="Address where to send reserved tokens."
-              title="Address"
-            >
-              <div
-                className="sw-FormControlTitle"
-              >
-                <label
-                  className="sw-FormControlTitle_Label"
-                >
-                  Address
-                </label>
-                <div
-                  className="sw-FormControlTitle_Info"
-                  tabIndex="-1"
-                >
-                  <span
-                    className="sw-FormControlTitle_Tooltip"
-                  >
-                    Address where to send reserved tokens.
-                  </span>
-                </div>
-              </div>
-            </FormControlTitle>
-            <TextField
-              id="Address"
-              onChange={[Function]}
-              placeholder="Enter here"
-              type="text"
-              value=""
-            >
-              <input
-                className="sw-TextField"
-                onChange={[Function]}
-                placeholder="Enter here"
-                type="text"
-                value=""
-              />
-            </TextField>
-          </div>
-        </InputField>
-        <RadioInputField
-          description="Fixed amount or % of crowdsaled tokens. Will be deposited to the account after finalization of the crowdsale."
-          extraClassName="sw-BorderedBlock_Row1Column2"
-          items={
-            Array [
-              Object {
-                "label": "Tokens",
-                "value": "tokens",
-              },
-              Object {
-                "label": "Percentage",
-                "value": "percentage",
-              },
-            ]
-          }
-          onChange={[Function]}
-          selectedItem="tokens"
-          title="Dimension"
-        >
-          <div
-            className="sw-RadioInputField sw-BorderedBlock_Row1Column2"
-          >
-            <FormControlTitle
-              description="Fixed amount or % of crowdsaled tokens. Will be deposited to the account after finalization of the crowdsale."
-              title="Dimension"
-            >
-              <div
-                className="sw-FormControlTitle"
-              >
-                <label
-                  className="sw-FormControlTitle_Label"
-                >
-                  Dimension
-                </label>
-                <div
-                  className="sw-FormControlTitle_Info"
-                  tabIndex="-1"
-                >
-                  <span
-                    className="sw-FormControlTitle_Tooltip"
-                  >
-                    Fixed amount or % of crowdsaled tokens. Will be deposited to the account after finalization of the crowdsale.
-                  </span>
-                </div>
-              </div>
-            </FormControlTitle>
-            <div
-              className="sw-RadioInputField_ButtonsContainer"
-            >
-              <label
-                className="sw-RadioInputField_Label"
-                key="0"
-              >
-                <input
-                  checked={true}
-                  className="sw-RadioInputField_Input"
-                  id="tokens"
-                  onChange={[Function]}
-                  type="radio"
-                  value="tokens"
-                />
-                <span
-                  className="sw-RadioInputField_Button"
-                >
-                  Tokens
-                </span>
-              </label>
-              <label
-                className="sw-RadioInputField_Label"
-                key="1"
-              >
-                <input
-                  checked={false}
-                  className="sw-RadioInputField_Input"
-                  id="percentage"
-                  onChange={[Function]}
-                  type="radio"
-                  value="percentage"
-                />
-                <span
-                  className="sw-RadioInputField_Button"
-                >
-                  Percentage
-                </span>
-              </label>
-            </div>
-          </div>
-        </RadioInputField>
-        <NumericInput
-          acceptFloat={true}
-          description="Value in tokens. Don't forget to click + button for each reserved token."
-          dimension="tokens"
-          errorMessage="Value must be positive and decimals should not exceed the amount of decimals specified"
-          extraClassName="sw-BorderedBlock_Row1Column3"
-          maxDecimals={0}
-          min={0}
-          name="Value"
-          onClick={[Function]}
-          onValueUpdate={[Function]}
-          placeholder="Enter here"
-          pristine={true}
-          title="Value"
-          valid="INVALID"
-          value=""
-        >
-          <div
-            className="sw-NumericInput sw-BorderedBlock_Row1Column3"
-          >
-            <FormControlTitle
-              description="Value in tokens. Don't forget to click + button for each reserved token."
-              title="Value"
-            >
-              <div
-                className="sw-FormControlTitle"
-              >
-                <label
-                  className="sw-FormControlTitle_Label"
-                >
-                  Value
-                </label>
-                <div
-                  className="sw-FormControlTitle_Info"
-                  tabIndex="-1"
-                >
-                  <span
-                    className="sw-FormControlTitle_Tooltip"
-                  >
-                    Value in tokens. Don't forget to click + button for each reserved token.
-                  </span>
-                </div>
-              </div>
-            </FormControlTitle>
-            <div
-              className="sw-NumericInput_InputAndButtonContainer"
-            >
-              <TextField
-                id="Value"
-                min="1"
-                onChange={[Function]}
-                onKeyPress={[Function]}
-                onPaste={[Function]}
-                placeholder="Enter here"
-                step="1"
-                type="number"
-                value=""
-              >
-                <input
-                  className="sw-TextField"
-                  min="1"
-                  onChange={[Function]}
-                  onKeyPress={[Function]}
-                  onPaste={[Function]}
-                  placeholder="Enter here"
-                  type="number"
-                  value=""
-                />
-              </TextField>
-              <div
-                className="sw-NumericInput_ButtonPlus"
-                onClick={[Function]}
-              />
-            </div>
-          </div>
-        </NumericInput>
-        <inject-_class-with-reservedTokenStore
-          extraClassName="sw-BorderedBlock_Row2Column1"
-          reservedTokenStore={
-            ReservedTokenStore {
-              "tokens": Array [],
-            }
-          }
-          tokenStore={
-            TokenStore {
-              "decimals": undefined,
-              "name": undefined,
-              "reservedTokensInput": Object {},
-              "supply": 0,
-              "ticker": undefined,
-              "validToken": Object {
-                "decimals": "EMPTY",
-                "name": "EMPTY",
-                "ticker": "EMPTY",
-              },
-            }
-          }
-        >
-          <_class
-            extraClassName="sw-BorderedBlock_Row2Column1"
-            reservedTokenStore={
-              ReservedTokenStore {
-                "tokens": Array [],
-              }
-            }
-            tokenStore={
-              TokenStore {
-                "decimals": undefined,
-                "name": undefined,
-                "reservedTokensInput": Object {},
-                "supply": 0,
-                "ticker": undefined,
-                "validToken": Object {
-                  "decimals": "EMPTY",
-                  "name": "EMPTY",
-                  "ticker": "EMPTY",
-                },
-              }
-            }
-          >
-            <div
-              className="sw-ReservedTokensTable sw-BorderedBlock_Row2Column1"
-            >
-              <div
-                className="sw-ReservedTokensTable_Inner"
-              >
-                <table
-                  cellPadding="0"
-                  cellSpacing="0"
-                  className="sw-ReservedTokensTable_Table"
-                >
-                  <tbody />
-                </table>
-              </div>
-            </div>
-          </_class>
-        </inject-_class-with-reservedTokenStore>
-        <div
-          className="sw-ReservedTokensListControls sw-BorderedBlock_Row3Column1"
-        >
-          <Component
-            accept=".csv"
-            onDrop={[Function]}
-            style={Object {}}
-          >
-            <span>
-              Dropzone
-            </span>
-          </Component>
-          <div
-            className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-downloadcsv m-r-0"
-            onClick={[Function]}
-          >
-            Download CSV template
-          </div>
-        </div>
-      </div>
+    <div
+      className="clear-all-tokens"
+      style={
+        Object {
+          "cursor": "pointer",
+          "display": "inline-block",
+        }
+      }
+    >
+      <i
+        className="fa fa-trash"
+      />
+       Clear All
     </div>
-  </ReservedTokensInputBlock>
-</inject-ReservedTokensInputBlock-with-reservedTokenStore>
+    <span>
+      Dropzone
+    </span>
+  </div>
+</div>
 `;

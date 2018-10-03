@@ -1,89 +1,90 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`MinCap  should render MinCap component 1`] = `
-<div
-  className="sw-InputField "
->
-  <div
-    className="sw-FormControlTitle"
+<div>
+  <label
+    className="label"
+    htmlFor="mincap"
   >
-    <label
-      className="sw-FormControlTitle_Label"
-    >
-      Contributor min cap
-    </label>
-    <div
-      className="sw-FormControlTitle_Info"
-      tabIndex="-1"
-    >
-      <span
-        className="sw-FormControlTitle_Tooltip"
-      >
-        Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1
-                       and a user already has 1 token from a previous transaction, they can buy any amount they want.
-      </span>
-    </div>
-  </div>
+    Contributor min cap
+  </label>
   <input
-    className="sw-TextField"
+    autoComplete="off"
+    className="input"
     disabled={false}
     id="mincap"
-    max={undefined}
-    min={undefined}
     name="mincap"
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
-    onKeyPress={undefined}
-    onPaste={undefined}
-    placeholder={undefined}
-    style={undefined}
     type="text"
     value=""
   />
+  <p
+    className="description"
+  >
+    Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1
+               and a user already has 1 token from a previous transaction, they can buy any amount they want.
+  </p>
+  <span>
+    <p
+      className="error"
+      style={
+        Object {
+          "color": "red",
+          "fontWeight": "bold",
+        }
+      }
+    />
+    <p
+      className="error"
+      style={
+        Object {
+          "color": "red",
+          "fontWeight": "bold",
+        }
+      }
+    />
+  </span>
 </div>
 `;
 
 exports[`MinCap  should render MinCap component if field is disabled 1`] = `
-<div
-  className="sw-InputField "
->
-  <div
-    className="sw-FormControlTitle"
+<div>
+  <label
+    className="label"
+    htmlFor="mincap"
   >
-    <label
-      className="sw-FormControlTitle_Label"
-    >
-      Contributor min cap
-    </label>
-    <div
-      className="sw-FormControlTitle_Info"
-      tabIndex="-1"
-    >
-      <span
-        className="sw-FormControlTitle_Tooltip"
-      >
-        Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1
-                       and a user already has 1 token from a previous transaction, they can buy any amount they want.
-      </span>
-    </div>
-  </div>
+    Contributor min cap
+  </label>
   <input
-    className="sw-TextField"
+    autoComplete="off"
+    className="input"
     disabled={true}
     id="mincap"
-    max={undefined}
-    min={undefined}
     name="mincap"
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
-    onKeyPress={undefined}
-    onPaste={undefined}
-    placeholder={undefined}
-    style={undefined}
     type="text"
     value=""
   />
+  <p
+    className="description"
+  >
+    Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1
+               and a user already has 1 token from a previous transaction, they can buy any amount they want.
+  </p>
+  <span>
+    <p
+      className="error"
+      style={
+        Object {
+          "color": "red",
+          "fontWeight": "bold",
+        }
+      }
+    />
+  </span>
 </div>
 `;
