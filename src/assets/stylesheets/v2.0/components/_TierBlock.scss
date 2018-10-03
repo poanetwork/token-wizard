@@ -1,0 +1,38 @@
+$sw-TierBlock_SelectButtonsButton-height: 40px !default;
+
+.sw-TierBlock_SelectButtons {
+    @include form-control-block-common();
+}
+
+.sw-TierBlock_SelectButtonsContainer {
+    display: flex;
+    justify-content: space-between;
+
+    @media (min-width: $breakpoint-md) {
+        justify-content: flex-start;
+    }
+}
+
+.sw-TierBlock_SelectButtonsLabel {
+    flex-grow: 1;
+    margin-right: 10px;
+    position: relative;
+
+    &:last-child {
+        margin-right: 0;
+    }
+}
+
+.sw-TierBlock_SelectButtonsInput {
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    visibility: hidden;
+    z-index: 2;
+}
+
+.sw-TierBlock_SelectButtonsButton {
+    @include radio-input-button($sw-TierBlock_SelectButtonsButton-height, $brand-secondary, '.sw-TierBlock_SelectButtonsInput');
+}
