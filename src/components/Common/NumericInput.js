@@ -179,7 +179,7 @@ export class NumericInput extends Component {
             type="number"
             value={pristine ? '' : renderedValue}
           />
-          <div onClick={onClick} className="sw-NumericInput_ButtonPlus" />
+          <div onClick={onClick} className="sw-ButtonPlus" />
         </div>
         {pristine ? '' : error}
       </div>

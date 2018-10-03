@@ -271,12 +271,7 @@ export class WhitelistInputBlock extends React.Component {
   render() {
     const { num, tierStore } = this.props
     const { whitelist } = tierStore.tiers[num]
-
     const whitelistEmpty = tierStore.isWhitelistEmpty(num)
-
-    const actionsStyle = {
-      textAlign: 'right'
-    }
 
     const clearAllStyle = {
       display: 'inline-block',
@@ -291,65 +286,60 @@ export class WhitelistInputBlock extends React.Component {
     }
 
     return (
-      <div className="white-list-container">
-        <div className="white-list-input-container">
-          <div className="white-list-input-container-inner">
-            <InputField
-              side="white-list-input-property white-list-input-property-left"
-              type="text"
-              title={ADDRESS}
-              value={this.state.addr}
-              onChange={e => this.handleAddressChange(e.target.value)}
-              description={`Address of a whitelisted account. Whitelists are inherited. E.g., if an account whitelisted on Tier 1 and didn't buy max cap on Tier 1, he can buy on Tier 2, and following tiers.`}
-              pristine={this.state.validation.address.pristine}
-              valid={this.state.validation.address.valid}
-              errorMessage="The inserted address is invalid"
-            />
-            <InputField
-              side="white-list-input-property white-list-input-property-middle"
-              type="number"
-              title={MIN}
-              value={this.state.min}
-              onChange={e => this.handleMinMaxChange({ min: e.target.value })}
-              description={`Minimum amount tokens to buy. Not a minimal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.`}
-              pristine={this.state.validation.min.pristine}
-              valid={this.state.validation.min.valid}
-              errorMessage={this.state.validation.min.errorMessage}
-            />
-            <InputField
-              side="white-list-input-property white-list-input-property-right"
-              type="number"
-              title={MAX}
-              value={this.state.max}
-              onChange={e => this.handleMinMaxChange({ max: e.target.value })}
-              description={`Maximum is the hard limit.`}
-              pristine={this.state.validation.max.pristine}
-              valid={this.state.validation.max.valid}
-              errorMessage={this.state.validation.max.errorMessage}
-            />
-          </div>
-          <div className="plus-button-container">
-            <div onClick={e => this.addWhitelistItem()} className="button button_fill button_fill_plus" />
-          </div>
+      <div className="sw-WhitelistInputBlock">
+        <InputField
+          description={`Address of a whitelisted account. Whitelists are inherited. E.g., if an account whitelisted on Tier 1 and didn't buy max cap on Tier 1, he can buy on Tier 2, and following tiers.`}
+          errorMessage="The inserted address is invalid"
+          onChange={e => this.handleAddressChange(e.target.value)}
+          placeholder="Enter here"
+          pristine={this.state.validation.address.pristine}
+          title={ADDRESS}
+          type="text"
+          valid={this.state.validation.address.valid}
+          value={this.state.addr}
+        />
+        <div className="sw-WhitelistInputBlock_MinMaxFields">
+          <InputField
+            description={`Minimum amount tokens to buy. Not a minimal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.`}
+            errorMessage={this.state.validation.min.errorMessage}
+            onChange={e => this.handleMinMaxChange({ min: e.target.value })}
+            placeholder="Enter here"
+            pristine={this.state.validation.min.pristine}
+            title={MIN}
+            type="number"
+            valid={this.state.validation.min.valid}
+            value={this.state.min}
+          />
+          <InputField
+            description={`Maximum is the hard limit.`}
+            errorMessage={this.state.validation.max.errorMessage}
+            onChange={e => this.handleMinMaxChange({ max: e.target.value })}
+            placeholder="Enter here"
+            pristine={this.state.validation.max.pristine}
+            title={MAX}
+            type="number"
+            valid={this.state.validation.max.valid}
+            value={this.state.max}
+          />
+          <div onClick={e => this.addWhitelistItem()} className="sw-ButtonPlus" />
         </div>
         {whitelist &&
           whitelist.map((item, index) => (
             <WhitelistItem
-              key={`${num}-${item.addr}-${item.stored ? 0 : 1}`}
               crowdsaleNum={num}
+              key={`${num}-${item.addr}-${item.stored ? 0 : 1}`}
               whitelistNum={index}
               {...item}
             />
           ))}
 
         {/* Actions */}
-        <div style={actionsStyle}>
+        <div>
           {whitelistEmpty ? null : (
             <div className="clear-all-tokens" style={clearAllStyle} onClick={this.clearAll}>
               <i className="fa fa-trash" />&nbsp;Clear All
             </div>
           )}
-
           <Dropzone onDrop={this.onDrop} accept=".csv" style={dropzoneStyle}>
             <i className="fa fa-upload" title="Upload CSV" />&nbsp; Upload CSV
           </Dropzone>

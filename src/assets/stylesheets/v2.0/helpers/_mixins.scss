@@ -122,3 +122,26 @@
     margin: 0;
     padding: 5px 0 0 3px;
 }
+
+@mixin radio-input-button($height, $active-bg-color, $radio-input-class) {
+    @include not-selectable-text();
+    border-radius: 6px;
+    border: solid 1px $base-border-color;
+    color: #4a4a4a;
+    cursor: pointer;
+    display: block;
+    font-size: 16px;
+    font-weight: 400;
+    height: $height;
+    line-height: $height;
+    padding: 0 30px;
+    position: relative;
+    text-align: center;
+    z-index: 1;
+
+    #{ $radio-input-class }:checked + & {
+        background-color: $active-bg-color;
+        border-color: $active-bg-color;
+        color: #fff;
+    }
+}

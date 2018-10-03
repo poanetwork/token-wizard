@@ -18,7 +18,6 @@ $sw-RadioInputField_Button-height: 40px !default;
     @media (min-width: $breakpoint-md) {
         justify-content: flex-start;
     }
-
 }
 
 .sw-RadioInputField_Label {
@@ -53,26 +52,7 @@ $sw-RadioInputField_Button-height: 40px !default;
 }
 
 .sw-RadioInputField_Button {
-    @include not-selectable-text();
-    border-radius: 6px;
-    border: solid 1px $base-border-color;
-    color: #4a4a4a;
-    cursor: pointer;
-    display: block;
-    font-size: 16px;
-    font-weight: 400;
-    height: $sw-RadioInputField_Button-height;
-    line-height: $sw-RadioInputField_Button-height;
-    padding: 0 30px;
-    position: relative;
-    text-align: center;
-    z-index: 1;
-
-    .sw-RadioInputField_Input:checked + & {
-        background-color: $brand-secondary;
-        border-color: $brand-secondary;
-        color: #fff;
-    }
+    @include radio-input-button($sw-RadioInputField_Button-height, $brand-secondary, '.sw-RadioInputField_Input');
 
     .sw-BorderedBlock_Row1Column2 & {
         @media (min-width: $breakpoint-xl) {

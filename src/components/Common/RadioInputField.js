@@ -11,6 +11,7 @@ export const RadioInputField = props => {
         onChange={props.onChange}
         type="radio"
         value={item.value}
+        name={props.name}
       />
       <span className="sw-RadioInputField_Button">{item.label}</span>
     </label>
