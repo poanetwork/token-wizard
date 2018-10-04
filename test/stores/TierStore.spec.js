@@ -1,4 +1,7 @@
 import TierStore from '../../src/stores/TierStore'
+import { VALIDATION_TYPES } from '../../src/utils/constants'
+
+const { VALID, INVALID } = VALIDATION_TYPES
 
 describe('TierStore', () => {
   let whitelist
@@ -226,7 +229,7 @@ describe('TierStore', () => {
   })
 
   describe('isWhitelistEmpty', () => {
-    ;[
+    const whitelist = [
       {
         whitelist: [],
         expected: []
@@ -255,7 +258,8 @@ describe('TierStore', () => {
           { addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0', min: 2, max: 20, stored: true }
         ]
       }
-    ].forEach(({ whitelist, expected }) => {
+    ]
+    whitelist.forEach(({ whitelist, expected }) => {
       it('should remove all non-stored items', () => {
         // Given
         tierStore.setTierProperty(whitelist, 'whitelist', 0)
@@ -355,5 +359,227 @@ describe('TierStore', () => {
     tierStore.addWhitelistItem(duplicatedAddress, 0)
 
     expect(tierStore.modifiedStoredWhitelist).toBeTruthy()
+  })
+
+  it(`should test removeTier and emptyTierValidationsList`, () => {
+    const tiers = [
+      {
+        supply: 1000,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      },
+      {
+        supply: 1000,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      },
+      {
+        supply: 1000,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      }
+    ]
+
+    const validTiers = [
+      {
+        supply: VALID,
+        whitelist: INVALID,
+        startTime: VALID,
+        endTime: INVALID
+      },
+      {
+        supply: VALID,
+        whitelist: INVALID,
+        startTime: VALID,
+        endTime: INVALID
+      },
+      {
+        supply: VALID,
+        whitelist: INVALID,
+        startTime: VALID,
+        endTime: INVALID
+      }
+    ]
+
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, validTiers[index])
+    })
+    expect(tierStore.tiers.length).toEqual(4)
+
+    tierStore.removeTier(0)
+    expect(tierStore.tiers.length).toEqual(3)
+
+    tierStore.removeTier(0)
+    expect(tierStore.tiers.length).toEqual(2)
+
+    expect(tierStore.validTiers.length).toEqual(3)
+    tierStore.emptyTierValidationsList()
+    expect(tierStore.validTiers.length).toEqual(0)
+  })
+
+  it(`should test if tiers are valid`, () => {
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      },
+      {
+        tier: 'tier 2',
+        supply: 1000,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      },
+      {
+        tier: 'tier 3',
+        supply: 1000,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      }
+    ]
+
+    tiers.forEach(tier => {
+      tierStore.addTier(tier)
+    })
+
+    tiers.forEach((tier, index) => {
+      tierStore.validateTiers('tier', index)
+      tierStore.validateTiers('supply', index)
+      tierStore.validateTiers('startTime', index)
+      tierStore.validateTiers('endTime', index)
+    })
+
+    expect(tierStore.validTiers.length).toEqual(3)
+    tierStore.emptyTierValidationsList()
+    expect(tierStore.validTiers.length).toEqual(0)
+  })
+
+  it(`should test if tiers are valid - supply`, () => {
+    const tiers = [
+      {
+        supply: 1000
+      }
+    ]
+
+    tiers.forEach(tier => {
+      tierStore.addTier(tier)
+    })
+
+    tiers.forEach((tier, index) => {
+      tierStore.validateTiers('supply', index)
+    })
+
+    expect(tierStore.validTiers.length).toEqual(1)
+    tierStore.emptyTierValidationsList()
+    expect(tierStore.validTiers.length).toEqual(0)
+  })
+
+  it(`should test if tiers are valid - startTime`, () => {
+    const tiers = [
+      {
+        startTime: Date.now() * 1000
+      }
+    ]
+
+    tiers.forEach(tier => {
+      tierStore.addTier(tier)
+    })
+
+    tiers.forEach((tier, index) => {
+      tierStore.validateTiers('startTime', index)
+    })
+
+    expect(tierStore.validTiers.length).toEqual(1)
+    tierStore.emptyTierValidationsList()
+    expect(tierStore.validTiers.length).toEqual(0)
+  })
+
+  it(`should test if tiers are valid - endTime`, () => {
+    const tiers = [
+      {
+        endTime: Date.now() * 1000
+      }
+    ]
+
+    tiers.forEach(tier => {
+      tierStore.addTier(tier)
+    })
+
+    tiers.forEach((tier, index) => {
+      tierStore.validateTiers('endTime', index)
+    })
+
+    expect(tierStore.validTiers.length).toEqual(1)
+    tierStore.emptyTierValidationsList()
+    expect(tierStore.validTiers.length).toEqual(0)
+  })
+
+  it(`should test if tiers are valid fully`, () => {
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      },
+      {
+        tier: 'tier 2',
+        supply: 1000,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      },
+      {
+        tier: 'tier 3',
+        supply: 1000,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      }
+    ]
+
+    const validTiers = [
+      {
+        supply: VALID,
+        whitelist: INVALID,
+        startTime: VALID,
+        endTime: INVALID
+      },
+      {
+        supply: VALID,
+        whitelist: INVALID,
+        startTime: VALID,
+        endTime: INVALID
+      },
+      {
+        supply: VALID,
+        whitelist: INVALID,
+        startTime: VALID,
+        endTime: INVALID
+      }
+    ]
+
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, validTiers[index])
+    })
+
+    tiers.forEach((tier, index) => {
+      tierStore.validateTiers('tier', index)
+      tierStore.validateTiers('supply', index)
+      tierStore.validateTiers('startTime', index)
+      tierStore.validateTiers('endTime', index)
+    })
+
+    expect(tierStore.validTiers.length).toEqual(3)
+    tierStore.emptyTierValidationsList()
+    expect(tierStore.validTiers.length).toEqual(0)
   })
 })
