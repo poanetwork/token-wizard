@@ -1,0 +1,23 @@
+$sw-WhiteListTable-gradient-width: 45px;
+
+.sw-WhiteListTable {
+    @include datatable-styles($sw-WhiteListTable-gradient-width);
+}
+
+.sw-WhiteListTable_Inner {
+
+    @include datatable-inner-styles();
+
+}
+
+.sw-WhiteListTable_Table {
+
+    @include datatable-table-styles();
+
+}
+
+.sw-WhiteListTable_Column {
+
+    @include datatable-column-styles('.sw-WhiteListTable_Row');
+
+}

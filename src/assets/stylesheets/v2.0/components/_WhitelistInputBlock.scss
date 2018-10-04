@@ -5,3 +5,13 @@
 .sw-WhitelistInputBlock_MinMaxFields {
     display: flex;
 }
+
+.sw-WhitelistInputBlock_Controls {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    @media (min-width: $breakpoint-md) {
+        flex-direction: row;
+    }
+}

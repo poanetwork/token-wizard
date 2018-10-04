@@ -6,7 +6,7 @@ import Papa from 'papaparse'
 
 import { InputField } from './InputField'
 import { TEXT_FIELDS, VALIDATION_MESSAGES, VALIDATION_TYPES } from '../../utils/constants'
-import { WhitelistItem } from './WhitelistItem'
+import { WhitelistTable } from './WhitelistTable'
 import { inject, observer } from 'mobx-react'
 import {
   clearingWhitelist,
@@ -19,6 +19,7 @@ import processWhitelist from '../../utils/processWhitelist'
 import { isLessOrEqualThan, validateWhitelistMax, validateWhitelistMin } from '../../utils/validations'
 import logdown from 'logdown'
 import { ButtonCSV } from '../Common/ButtonCSV'
+import { downloadFile } from '../../utils/utils'
 
 const logger = logdown('TW:WhitelistInputBlock')
 const { ADDRESS, MIN, MAX } = TEXT_FIELDS
@@ -269,25 +270,27 @@ export class WhitelistInputBlock extends React.Component {
     })
   }
 
+  downloadCSV = async () => {
+    try {
+      const response = await fetch(`/metadata/whitelistTemplate.csv`)
+      const text = await response.text()
+
+      // See RFC for csv MIME type http://tools.ietf.org/html/rfc4180
+      downloadFile(text, 'whitelist-template.csv', 'text/csv')
+    } catch (err) {
+      logger.log('Error fetching file when download template csv')
+    }
+  }
+
   render() {
     const { num, tierStore } = this.props
     const { whitelist } = tierStore.tiers[num]
     const whitelistEmpty = tierStore.isWhitelistEmpty(num)
-
-    const clearAllStyle = {
-      display: 'inline-block',
-      cursor: 'pointer'
-    }
-
-    const dropzoneStyle = {
-      display: 'inline-block',
-      marginLeft: '1em',
-      position: 'relative',
-      cursor: 'pointer'
-    }
+    const dropzoneStyle = {}
 
     return (
       <div className="sw-WhitelistInputBlock">
+        <h2 className="sw-BorderedBlock_Title">Whitelist</h2>
         <InputField
           description={`Address of a whitelisted account. Whitelists are inherited. E.g., if an account whitelisted on Tier 1 and didn't buy max cap on Tier 1, he can buy on Tier 2, and following tiers.`}
           errorMessage="The inserted address is invalid"
@@ -324,24 +327,21 @@ export class WhitelistInputBlock extends React.Component {
           />
           <div onClick={e => this.addWhitelistItem()} className="sw-ButtonPlus" />
         </div>
-        {whitelist &&
-          whitelist.map((item, index) => (
-            <WhitelistItem
-              crowdsaleNum={num}
-              key={`${num}-${item.addr}-${item.stored ? 0 : 1}`}
-              whitelistNum={index}
-              {...item}
-            />
-          ))}
+        {whitelist ? <WhitelistTable list={whitelist} crowdsaleNum={num} /> : null}
 
         {/* Actions */}
-        <div>
+        <div className="sw-WhitelistInputBlock_Controls">
           {whitelistEmpty ? null : (
             <ButtonCSV extraClassName="sw-ButtonCSV-clearall" onClick={this.clearAll} text="Clear All" />
           )}
           <Dropzone onDrop={this.onDrop} accept=".csv" style={dropzoneStyle}>
             <ButtonCSV extraClassName="sw-ButtonCSV-uploadcsv" text="Upload CSV" type="button" />
           </Dropzone>
+          <ButtonCSV
+            extraClassName="sw-ButtonCSV-downloadcsv m-r-0"
+            onClick={this.downloadCSV}
+            text="Download CSV template"
+          />
         </div>
       </div>
     )

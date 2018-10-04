@@ -1,4 +1,5 @@
 import React from 'react'
+import { ButtonDelete } from '../Common/ButtonDelete'
 import { inject, observer } from 'mobx-react'
 import { BigNumber } from 'bignumber.js'
 
@@ -7,7 +8,7 @@ const ReservedTokensTable = inject('reservedTokenStore')(
     const reservedTokensItems = props.reservedTokenStore.tokens.map((token, index) => {
       const deleteButton = token.readOnly ? null : (
         <td className="sw-ReservedTokensTable_Column">
-          <div className="sw-ReservedTokensTable_Delete" onClick={() => props.reservedTokenStore.removeToken(index)} />
+          <ButtonDelete onClick={() => props.reservedTokenStore.removeToken(index)} />
         </td>
       )
 
