@@ -26,8 +26,12 @@ class TierStore {
 
   @action
   addTier = (tier, validations) => {
-    this.tiers.push(tier)
-    this.validTiers.push(validations)
+    if (tier) {
+      this.tiers.push(tier)
+    }
+    if (validations) {
+      this.validTiers.push(validations)
+    }
   }
 
   @action
@@ -56,27 +60,59 @@ class TierStore {
   validateTiers = (property, index) => {
     switch (property) {
       case 'tier':
-        this.validTiers[index][property] = validateTier(this.tiers[index][property]) ? VALID : INVALID
+        if (this.validTiers.length > 0 && this.validTiers[index]) {
+          this.validTiers[index][property] = validateTier(this.tiers[index][property]) ? VALID : INVALID
+        } else {
+          this.validTiers.push({
+            property: validateTier(this.tiers[index][property]) ? VALID : INVALID
+          })
+        }
         break
       case 'supply':
-        this.validTiers[index][property] = validateSupply(this.tiers[index][property]) ? VALID : INVALID
+        if (this.validTiers.length > 0 && this.validTiers[index]) {
+          this.validTiers[index][property] = validateSupply(this.tiers[index][property]) ? VALID : INVALID
+        } else {
+          this.validTiers.push({
+            property: validateTier(this.tiers[index][property]) ? VALID : INVALID
+          })
+        }
         break
       case 'startTime':
-        if (index > 0) {
-          this.validTiers[index][property] = validateLaterOrEqualTime(
-            this.tiers[index][property],
-            this.tiers[index - 1].endTime
-          )
-            ? VALID
-            : INVALID
+        if (this.validTiers.length > 0 && this.validTiers[index]) {
+          if (index > 0) {
+            this.validTiers[index][property] = validateLaterOrEqualTime(
+              this.tiers[index][property],
+              this.tiers[index - 1].endTime
+            )
+              ? VALID
+              : INVALID
+          } else {
+            this.validTiers[index][property] = validateTime(this.tiers[index][property]) ? VALID : INVALID
+          }
         } else {
-          this.validTiers[index][property] = validateTime(this.tiers[index][property]) ? VALID : INVALID
+          if (index > 0) {
+            this.validTiers.push({
+              property: validateLaterOrEqualTime(this.tiers[index][property], this.tiers[index - 1].endTime)
+                ? VALID
+                : INVALID
+            })
+          } else {
+            this.validTiers.push({
+              property: validateTime(this.tiers[index][property]) ? VALID : INVALID
+            })
+          }
         }
         break
       case 'endTime':
-        this.validTiers[index][property] = validateLaterTime(this.tiers[index][property], this.tiers[index].startTime)
-          ? VALID
-          : INVALID
+        if (this.validTiers.length > 0 && this.validTiers[index]) {
+          this.validTiers[index][property] = validateLaterTime(this.tiers[index][property], this.tiers[index].startTime)
+            ? VALID
+            : INVALID
+        } else {
+          this.validTiers.push({
+            property: validateLaterTime(this.tiers[index][property], this.tiers[index].startTime) ? VALID : INVALID
+          })
+        }
         break
       default:
       // do nothing
