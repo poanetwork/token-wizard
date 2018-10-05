@@ -164,7 +164,7 @@ class TierStore {
       this.tiers.push({ burnExcess: value })
     }
 
-    if (this.validTiers[0].length > 0) {
+    if (this.validTiers.length > 0) {
       this.validTiers[0].burnExcess = validity
     } else {
       this.validTiers.push({ burnExcess: validity })
@@ -348,7 +348,11 @@ class TierStore {
   }
 
   tierEndTime(index) {
-    return this.tiers[index].endTime
+    if (this.tiers.length > 0) {
+      return this.tiers[index].endTime
+    } else {
+      return
+    }
   }
 
   @computed
