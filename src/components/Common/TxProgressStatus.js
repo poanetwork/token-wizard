@@ -98,6 +98,11 @@ export class TxProgressStatus extends Component {
           </div>
         </div>
         <div className="steps">
+          {this.props.onRetry ? (
+            <a onClick={this.props.onRetry} className="no_image button button_fill" style={{ marginRight: '15px' }}>
+              Retry transaction
+            </a>
+          ) : null}
           {this.props.onSkip ? (
             <a onClick={this.props.onSkip} className="no_image button button_fill">
               Skip transaction
