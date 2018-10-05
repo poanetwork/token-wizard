@@ -20,7 +20,6 @@ import { isObservableArray, toJS } from 'mobx'
 import {
   contractStore,
   crowdsaleStore,
-  deploymentStore,
   generalStore,
   reservedTokenStore,
   tierStore,
@@ -31,7 +30,7 @@ import logdown from 'logdown'
 
 const logger = logdown('TW:stepFour:utils')
 
-export const buildDeploymentSteps = (deploymentStore) => {
+export const buildDeploymentSteps = deploymentStore => {
   let stepFnCorrelation = {
     deployProxy: deployProxy,
     crowdsaleCreate: deployCrowdsale,
