@@ -97,7 +97,8 @@ export class stepFour extends Component {
     contractDownloaded: false,
     modal: false,
     preventRefresh: true,
-    transactionFailed: false
+    transactionFailed: false,
+    allowRetry: false
   }
 
   constructor(props, context) {
@@ -156,18 +157,14 @@ export class stepFour extends Component {
 
   async deployCrowdsale() {
     const { deploymentStore } = this.props
-    const { web3 } = this.context
     let startAt = deploymentStore.deploymentStep ? deploymentStore.deploymentStep : 0
-    const deploymentSteps = buildDeploymentSteps(web3, deploymentStore)
 
     if (deploymentStore.txLost) {
       // temporarily hide modal to display error message
       this.hideModal()
       await transactionLost()
       this.showModal()
-      // cleanup tx lost and restarts deployCrowdsale
-      deploymentStore.resetTx(deploymentStore.txLost)
-      setTimeout(() => this.deployCrowdsale(), 100)
+      this.retryTransaction()
     } else {
       if (deploymentStore.txRecoverable) {
         const receipt = await this.context.web3.eth.getTransactionReceipt(deploymentStore.txRecoverable.txHash)
@@ -211,9 +208,19 @@ export class stepFour extends Component {
     }
   }
 
+  /**
+   * cleanup tx lost and restarts deployCrowdsale
+   */
+  retryTransaction = () => {
+    const { deploymentStore } = this.props
+    deploymentStore.resetTx(deploymentStore.txLost)
+    this.setState({ allowRetry: false, transactionFailed: false })
+    setTimeout(() => this.deployCrowdsale(), 100)
+  }
+
   resumeContractDeployment(startAt) {
     const { deploymentStore } = this.props
-    const deploymentSteps = buildDeploymentSteps()
+    const deploymentSteps = buildDeploymentSteps(deploymentStore)
 
     executeSequentially(
       deploymentSteps,
@@ -241,7 +248,8 @@ export class stepFour extends Component {
     const { deploymentStore } = this.props
 
     this.setState({
-      transactionFailed: true
+      transactionFailed: true,
+      allowRetry: err.message && err.message.includes('User denied transaction signature')
     })
 
     if (!deploymentStore.deploymentHasFinished) {
@@ -641,6 +649,7 @@ export class stepFour extends Component {
         txMap={deploymentStore.txMap}
         deployCrowdsale={this.deployCrowdsale}
         onSkip={this.state.transactionFailed ? this.skipTransaction : null}
+        onRetry={this.state.allowRetry ? this.retryTransaction : null}
       />
     )
 
