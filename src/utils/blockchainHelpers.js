@@ -179,7 +179,6 @@ let sendTX = (method, type, executionOrder = null) => {
     method
       .on('error', error => {
         if (isMined) return
-        logger.error(error)
         // https://github.com/poanetwork/token-wizard/issues/472
         if (
           !error.message.includes('Failed to check for transaction receipt') &&
