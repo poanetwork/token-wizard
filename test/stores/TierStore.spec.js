@@ -1,7 +1,7 @@
 import TierStore from '../../src/stores/TierStore'
 import { VALIDATION_TYPES } from '../../src/utils/constants'
 
-const { VALID, INVALID } = VALIDATION_TYPES
+const { VALID, INVALID, EMPTY } = VALIDATION_TYPES
 
 describe('TierStore', () => {
   let whitelist
@@ -880,5 +880,106 @@ describe('TierStore', () => {
     // Then
     expect(tier).toEqual('Tier 2')
     expect(whitelistEnabled).toEqual('no')
+  })
+
+  it(`should test invalidateToken I`, () => {
+    // Given
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        maxRate: 2,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      }
+    ]
+
+    const validTiers = [
+      {
+        supply: EMPTY,
+        whitelist: EMPTY,
+        maxRate: EMPTY,
+        startTime: EMPTY,
+        endTime: EMPTY
+      }
+    ]
+
+    // When
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, validTiers[index])
+    })
+    tierStore.invalidateToken()
+
+    // Then
+    tierStore.validTiers.forEach((validTier, index) => {
+      expect(validTier.supply).toEqual(INVALID)
+      expect(validTier.whitelist).toEqual(INVALID)
+      expect(validTier.maxRate).toEqual(INVALID)
+      expect(validTier.startTime).toEqual(INVALID)
+      expect(validTier.endTime).toEqual(INVALID)
+    })
+  })
+
+  it(`should test invalidateToken II`, () => {
+    // Given
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        maxRate: 2,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      }
+    ]
+
+    const validTiers = [
+      {
+        supply: VALID,
+        whitelist: EMPTY,
+        maxRate: VALID,
+        startTime: EMPTY,
+        endTime: EMPTY
+      }
+    ]
+
+    // When
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, validTiers[index])
+    })
+    tierStore.invalidateToken()
+
+    // Then
+    tierStore.validTiers.forEach((validTier, index) => {
+      expect(validTier.supply).toEqual(VALID)
+      expect(validTier.whitelist).toEqual(INVALID)
+      expect(validTier.maxRate).toEqual(VALID)
+      expect(validTier.startTime).toEqual(INVALID)
+      expect(validTier.endTime).toEqual(INVALID)
+    })
+  })
+
+  it(`should test invalidateToken III`, () => {
+    // Given
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        maxRate: 2,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      }
+    ]
+
+    // When
+    tiers.forEach(tier => {
+      tierStore.addTier(tier, null)
+    })
+    const invalidateToken = tierStore.invalidateToken()
+
+    // Then
+    expect(invalidateToken).toBeUndefined()
   })
 })
