@@ -121,8 +121,12 @@ class TierStore {
 
   @action
   updateRate = (value, validity, tierIndex) => {
-    this.tiers[tierIndex].rate = value
-    this.validTiers[tierIndex].rate = validity
+    if (this.tiers[tierIndex]) {
+      this.tiers[tierIndex].rate = value
+    }
+    if (this.validTiers[tierIndex]) {
+      this.validTiers[tierIndex].rate = validity
+    }
   }
 
   @action
