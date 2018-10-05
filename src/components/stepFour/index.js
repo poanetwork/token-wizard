@@ -274,6 +274,7 @@ export class stepFour extends Component {
             transactionFailed: false
           })
 
+          deploymentStore.resetTx(deploymentStore.activeSteps[deploymentStore.deploymentStep])
           deploymentStore.setDeploymentStep(deploymentStore.deploymentStep + 1)
           this.deployCrowdsale()
         }
