@@ -23,7 +23,7 @@ import {
   CROWDSALE_STRATEGIES
 } from '../../utils/constants'
 import { DOWNLOAD_TYPE } from './constants'
-import { getNetworkID, toast } from '../../utils/utils'
+import { getNetworkID, toast, convertDateToUTCTimezoneToDisplay } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { DisplayField } from '../Common/DisplayField'
 import { TxProgressStatus } from '../Common/TxProgressStatus'
@@ -154,7 +154,7 @@ export class stepFour extends Component {
     const { deploymentStore } = this.props
     const { web3 } = this.context
     const startAt = deploymentStore.deploymentStep ? deploymentStore.deploymentStep : 0
-    const deploymentSteps = buildDeploymentSteps(web3)
+    const deploymentSteps = buildDeploymentSteps(web3, deploymentStore)
 
     executeSequentially(deploymentSteps, startAt, index => {
       deploymentStore.setDeploymentStep(index)
@@ -229,11 +229,11 @@ export class stepFour extends Component {
       case 'tierStore': {
         if (content.field === 'minCap') {
           index = content.field === 'minCap' ? 0 : index
-          return handlerForFile(content, this.props[parent].tiers[index])
         } else {
           index = content.field === 'walletAddress' ? 0 : index
-          return handlerForFile(content, this.props[parent].tiers[index])
         }
+        logger.log('TierStore index', index)
+        return handlerForFile(content, this.props[parent].tiers[index])
       }
       case 'tokenStore':
       case 'reservedTokenStore':
@@ -446,9 +446,9 @@ export class stepFour extends Component {
       const { tiers } = tierStore
       const firstTier = tiers[0]
       const { walletAddress, startTime, burnExcess } = firstTier
-      const crowdsaleStartTimeStr = startTime ? startTime.split('T').join(' ') : ''
+      const startTimeWithUTC = convertDateToUTCTimezoneToDisplay(startTime)
       const lasTierInd = tiers.length - 1
-      const crowdsaleEndTimeStr = tiers[lasTierInd].endTime ? tiers[lasTierInd].endTime.split('T').join(' ') : ''
+      const endTimeWithUTC = convertDateToUTCTimezoneToDisplay(tiers[lasTierInd].endTime)
       const {
         WALLET_ADDRESS: PD_WALLET_ADDRESS,
         CROWDSALE_START_TIME: PD_CROWDSALE_START_TIME,
@@ -466,13 +466,13 @@ export class stepFour extends Component {
             <DisplayField
               side="left"
               title={CROWDSALE_START_TIME}
-              value={crowdsaleStartTimeStr}
+              value={startTimeWithUTC}
               description={PD_CROWDSALE_START_TIME}
             />
             <DisplayField
               side="right"
               title={CROWDSALE_END_TIME}
-              value={crowdsaleEndTimeStr}
+              value={endTimeWithUTC}
               description={PD_CROWDSALE_END_TIME}
             />
           </div>
@@ -514,8 +514,8 @@ export class stepFour extends Component {
           <DisplayField side="right" title={MAX_RATE} value={tierMaxRateStr} description={D_RATE} />
         </div>
       )
-      const tierStartTimeStr = startTime ? startTime.split('T').join(' ') : ''
-      const tierEndTimeStr = endTime ? endTime.split('T').join(' ') : ''
+      const tierStartTimeStr = convertDateToUTCTimezoneToDisplay(startTime)
+      const tierEndTimeStr = convertDateToUTCTimezoneToDisplay(endTime)
       const tierIsUpdatable = isDutchAuction ? 'on' : updatable ? updatable : 'off'
       const tierIsWhitelisted = whitelistEnabled ? whitelistEnabled : 'off'
       const tierSupplyStr = supply ? supply : ''

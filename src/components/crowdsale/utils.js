@@ -220,7 +220,7 @@ export let getCrowdsaleTargetDates = (initCrowdsaleContract, execID) => {
           return Promise.all(getTiersStartAndEndDates)
         })
         .then(tiersStartAndEndDates => {
-          logger.log('tiersStartAndEndDates:', tiersStartAndEndDates)
+          logger.log('tiersStartAndEndDates:', JSON.stringify(tiersStartAndEndDates))
           let crowdsaleStartDate = 0
           let crowdsaleEndDate = 0
           tiersStartAndEndDates.forEach(tierStartAndEndDates => {
@@ -282,7 +282,6 @@ let fillCrowdsalePageStoreDates = (startsAtMilliseconds, endsAtMilliseconds) => 
     crowdsalePageStore.setProperty('endDate', endsAtMilliseconds)
   logger.log('endDate:', endsAtMilliseconds)
 }
-
 /**
  * Check if a crowdsale is finalized
  * @param methods
@@ -326,6 +325,24 @@ export const isEnded = async ({ methods }, crowdsaleExecID) => {
   logger.log(`Crowdsale end time::`, crowdsaleStartAndEndTimes[1])
   const end_time = crowdsaleStartAndEndTimes.end_time || crowdsaleStartAndEndTimes[1]
   return end_time * 1000 <= Date.now()
+}
+
+/**
+ * Check if a crowdsale is started
+ * @param methods
+ * @param crowdsaleExecID
+ * @returns {Promise<boolean>}
+ */
+export const isStarted = async ({ methods }, crowdsaleExecID) => {
+  const { addr } = contractStore.abstractStorage
+  let params = []
+  if (crowdsaleExecID) {
+    params.push(addr, crowdsaleExecID)
+  }
+  const crowdsaleStartAndEndTimes = await methods.getCrowdsaleStartAndEndTimes(...params).call()
+  const start_time = crowdsaleStartAndEndTimes.start_time || crowdsaleStartAndEndTimes[0]
+
+  return start_time * 1000 < Date.now()
 }
 
 /**
