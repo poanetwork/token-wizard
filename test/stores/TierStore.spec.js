@@ -582,4 +582,100 @@ describe('TierStore', () => {
     tierStore.emptyTierValidationsList()
     expect(tierStore.validTiers.length).toEqual(0)
   })
+
+  it(`should test updateRate`, () => {
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        rate: 2,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      }
+    ]
+
+    const validTiers = [
+      {
+        supply: VALID,
+        whitelist: INVALID,
+        rate: INVALID,
+        startTime: VALID,
+        endTime: INVALID
+      }
+    ]
+
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, validTiers[index])
+    })
+
+    tierStore.updateRate(10, VALID, 0)
+
+    expect(tierStore.tiers[0].rate).toEqual(10)
+    expect(tierStore.validTiers[0].rate).toEqual(VALID)
+  })
+
+  it(`should test updateMinRate`, () => {
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        minRate: 2,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      }
+    ]
+
+    const validTiers = [
+      {
+        supply: VALID,
+        whitelist: INVALID,
+        minRate: INVALID,
+        startTime: VALID,
+        endTime: INVALID
+      }
+    ]
+
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, validTiers[index])
+    })
+
+    tierStore.updateMinRate(10, VALID, 0)
+
+    expect(tierStore.tiers[0].minRate).toEqual(10)
+    expect(tierStore.validTiers[0].minRate).toEqual(VALID)
+  })
+
+  it(`should test updateMaxRate`, () => {
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        maxRate: 2,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      }
+    ]
+
+    const validTiers = [
+      {
+        supply: VALID,
+        whitelist: INVALID,
+        maxRate: INVALID,
+        startTime: VALID,
+        endTime: INVALID
+      }
+    ]
+
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, validTiers[index])
+    })
+
+    tierStore.updateMaxRate(10, VALID, 0)
+
+    expect(tierStore.tiers[0].maxRate).toEqual(10)
+    expect(tierStore.validTiers[0].maxRate).toEqual(VALID)
+  })
 })
