@@ -100,7 +100,7 @@ class DeploymentStore {
 
   @action
   setDeploymentStepStatus = ({ executionOrder, status }) => {
-    if (!this.activeSteps.length) return
+    if (executionOrder === null || !this.activeSteps.length) return
 
     const currentStep = this.activeSteps[executionOrder]
     const txStatuses = this.txMap.get(currentStep.name).map((txStatus, index) => {
@@ -112,7 +112,7 @@ class DeploymentStore {
 
   @action
   setDeploymentStepTxHash = ({ executionOrder, txHash }) => {
-    if (!this.activeSteps.length) return
+    if (executionOrder === null || !this.activeSteps.length) return
 
     const currentStep = this.activeSteps[executionOrder]
     const txStatuses = this.txMap.get(currentStep.name).map((txStatus, index) => {
