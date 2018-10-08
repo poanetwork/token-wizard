@@ -7,7 +7,7 @@ import logdown from 'logdown'
 
 const logger = logdown('TW:stores:Tier')
 
-const { VALID, INVALID } = VALIDATION_TYPES
+const { VALID, EMPTY, INVALID } = VALIDATION_TYPES
 
 class TierStore {
   @observable tiers
@@ -203,27 +203,32 @@ class TierStore {
   @action
   validateEditedEndTime = index => {
     if (this.tiers.length) {
-      if (index < this.tiers.length - 1) {
-        this.validTiers[index].endTime = validateLaterOrEqualTime(
-          this.tiers[index + 1].startTime,
-          this.tiers[index].endTime
-        )
+      if (index < this.tiers.length - 1 && this.tiers.length > 1) {
+        const endTime = validateLaterOrEqualTime(this.tiers[index + 1].startTime, this.tiers[index].endTime)
           ? VALID
           : INVALID
+
+        if (this.validTiers[index] && this.validTiers[index].endTime) {
+          this.validTiers[index].endTime = endTime
+        } else if (this.validTiers[index] && !this.validTiers[index].endTime) {
+          this.validTiers[index] = { endTime: endTime }
+        }
       }
     }
   }
 
   @computed
   get individuallyValidTiers() {
-    if (!this.validTiers) return
+    if (!this.validTiers || this.validTiers.length === 0) {
+      return
+    }
 
     return this.validTiers.map((tier, index) => Object.keys(tier).every(key => this.validTiers[index][key] === VALID))
   }
 
   @computed
   get areTiersValid() {
-    if (!this.validTiers) {
+    if (!this.validTiers || this.validTiers.length === 0) {
       return
     }
 
@@ -241,7 +246,7 @@ class TierStore {
 
   @action
   invalidateToken = () => {
-    if (!this.validTiers) {
+    if (!this.validTiers || this.validTiers.length === 0) {
       return
     }
     this.validTiers.forEach((tier, index) => {
