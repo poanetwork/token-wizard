@@ -148,7 +148,7 @@
     "precommit": "pretty-quick staged",
     "coveralls": "jest --env=jsdom --coverage -w='2' && cat coverage/lcov.info | coveralls",
     "test:e2e": "nps test.e2e",
-    "test:dapp": "jest --detectOpenHandles --env=jsdom -w='2'",
+    "test:dapp": "jest --env=jsdom -w='2'",
     "test:dapp:web3": "npm run installWeb3 && npm run test:dapp",
     "test": "nps test",
     "testContractsDutchPart1": "nps test.DutchPart1",
