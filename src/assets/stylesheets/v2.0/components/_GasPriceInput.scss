@@ -34,6 +34,10 @@ $sw-GasPriceInput_Select-height: 40px;
     font-size: 16px;
     font-weight: 400;
     line-height: 1.2;
+    max-width: calc(124% - 80px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .sw-GasPriceInput_SelectButtonChevron {
