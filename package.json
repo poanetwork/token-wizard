@@ -7,6 +7,7 @@
   },
   "devDependencies": {
     "coveralls": "^3.0.0",
+    "cssom": "^0.3.4",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-15": "^1.0.5",
     "enzyme-to-json": "^3.3.1",
