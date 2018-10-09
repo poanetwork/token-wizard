@@ -74,7 +74,6 @@ class GasPriceInput extends Component {
     const { updateGasTypeSelected } = this.props
 
     updateGasTypeSelected(value)
-    this.updateSelect(value.description)
 
     this.setState({
       gasTypeSelected: value
@@ -109,20 +108,41 @@ class GasPriceInput extends Component {
     return new String(this.state.gasTypeSelected.id).valueOf() === new String(value).valueOf()
   }
 
-  updateSelect = text => {
-    this.setState({ selectText: text })
-  }
-
   render() {
+    let selectText = ''
     const { input, gasPrices, extraClassName } = this.props
+    const selectItems = gasPrices.map((gasPrice, index) => {
+      if (this.compareChecked(gasPrice.id)) selectText = gasPrice.description
+
+      return (
+        <label
+          key={index}
+          className="sw-GasPriceInput_SelectItem"
+          onClick={e => {
+            gasPrice.id !== GAS_PRICE.CUSTOM.ID
+              ? this.handleNonCustomSelected(gasPrice)
+              : this.handleCustomSelected(gasPrice.id)
+          }}
+        >
+          <input
+            checked={this.compareChecked(gasPrice.id)}
+            className="sw-GasPriceInput_SelectInput"
+            id={gasPrice.id}
+            name="gas-price"
+            type="radio"
+            value={gasPrice.id}
+          />
+          <span className="sw-GasPriceInput_SelectText">{gasPrice.description}</span>
+        </label>
+      )
+    })
+
     return (
       <div className={`sw-GasPriceInput ${extraClassName ? extraClassName : ''}`}>
         <FormControlTitle title="Gas Price" description="Slow is cheap, fast is expensive." />
         <div className="sw-GasPriceInput_Select">
           <button type="button" className={`sw-GasPriceInput_SelectButton`}>
-            <span className="sw-GasPriceInput_SelectButtonText">
-              {this.state.selectText ? this.state.selectText : 'Select'}
-            </span>
+            <span className="sw-GasPriceInput_SelectButtonText">{selectText ? selectText : 'Select'}</span>
             <span className="sw-GasPriceInput_SelectButtonChevron" />
           </button>
           <div
@@ -131,27 +151,7 @@ class GasPriceInput extends Component {
               e.stopPropagation()
             }}
           >
-            {gasPrices.map((gasPrice, index) => (
-              <label
-                key={index}
-                className="sw-GasPriceInput_SelectItem"
-                onClick={e => {
-                  gasPrice.id !== GAS_PRICE.CUSTOM.ID
-                    ? this.handleNonCustomSelected(gasPrice)
-                    : this.handleCustomSelected(gasPrice.id)
-                }}
-              >
-                <input
-                  checked={this.compareChecked(gasPrice.id)}
-                  className="sw-GasPriceInput_SelectInput"
-                  id={gasPrice.id}
-                  name="gas-price"
-                  type="radio"
-                  value={gasPrice.id}
-                />
-                <span className="sw-GasPriceInput_SelectText">{gasPrice.description}</span>
-              </label>
-            ))}
+            {selectItems}
           </div>
         </div>
         {this.state.isCustom ? (
