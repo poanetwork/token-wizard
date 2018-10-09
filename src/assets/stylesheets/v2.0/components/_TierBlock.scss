@@ -2,6 +2,19 @@ $sw-TierBlock_SelectButtonsButton-height: 40px !default;
 
 .sw-TierBlock_SelectButtons {
     @include form-control-block-common();
+
+    &.sw-InputField2-WhitelistEnabled {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-4-col-1;
+        }
+    }
+
+    &.sw-InputField2-AllowModifying {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-4-col-2;
+        }
+    }
+
 }
 
 .sw-TierBlock_SelectButtonsContainer {
