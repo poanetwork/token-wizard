@@ -23,9 +23,9 @@ export const TierBlock = ({ fields, ...props }) => {
     return input.onChange(value)
   }
 
-  const tierBlockSelectButtons = (title, description, buttons) => {
+  const tierBlockSelectButtons = (title, description, buttons, extraClassName = '') => {
     return (
-      <div className="sw-TierBlock_SelectButtons">
+      <div className={`sw-TierBlock_SelectButtons ${extraClassName ? extraClassName : ''}`}>
         <FormControlTitle title={title} description={description} />
         <div className="sw-TierBlock_SelectButtonsContainer">
           {buttons.map((item, index) => (
@@ -96,10 +96,11 @@ export const TierBlock = ({ fields, ...props }) => {
   return (
     <div className="sw-TierBlock">
       {fields.map((name, index) => (
-        <div className="sw-BorderedBlock" key={index}>
+        <div className="sw-BorderedBlock sw-BorderedBlock-6Rows2Columns" key={index}>
           <Field
             component={InputField2}
             description={DESCRIPTION.CROWDSALE_SETUP_NAME}
+            extraClassName="sw-InputField2-TierSetupName"
             id={`${name}.tier`}
             label={CROWDSALE_SETUP_NAME}
             name={`${name}.tier`}
@@ -109,8 +110,36 @@ export const TierBlock = ({ fields, ...props }) => {
               if (errors) return errors.shift()
             }}
           />
-          <CrowdsaleStartTime disabled={index > 0} index={index} name={`${name}.startTime`} />
-          <CrowdsaleRate name={`${name}.rate`} />
+          <CrowdsaleStartTime
+            disabled={index > 0}
+            extraClassName="sw-InputField2-CrowdsaleStartTime"
+            index={index}
+            name={`${name}.startTime`}
+          />
+          <CrowdsaleEndTime
+            extraClassName="sw-InputField2-CrowdsaleEndTime"
+            index={index}
+            name={`${name}.endTime`}
+            side="right"
+          />
+          <CrowdsaleRate extraClassName="sw-InputField2-CrowdsaleRate" name={`${name}.rate`} />
+          <Supply
+            disabled={
+              props.tierStore &&
+              props.tierStore.tiers[index].whitelistEnabled === 'yes' &&
+              (props.tierStore && props.tierStore.tiers[index].whitelist.length)
+            }
+            extraClassName="sw-InputField2-CrowdsaleSupply"
+            name={`${name}.supply`}
+            side="right"
+          />
+          <MinCap
+            decimals={props.decimals}
+            disabled={props.tierStore.tiers[index].whitelistEnabled === 'yes' ? true : false}
+            extraClassName="sw-InputField2-MinCap"
+            index={index}
+            name={`${name}.minCap`}
+          />
           <Field
             id={`${name}.whitelistEnabled`}
             name={`${name}.whitelistEnabled`}
@@ -118,7 +147,8 @@ export const TierBlock = ({ fields, ...props }) => {
               tierBlockSelectButtons(
                 ENABLE_WHITELISTING,
                 DESCRIPTION.ENABLE_WHITELIST,
-                getWhiteListingButtons(`${name}.whitelistEnabled`, input, index)
+                getWhiteListingButtons(`${name}.whitelistEnabled`, input, index),
+                'sw-InputField2-WhitelistEnabled'
               )
             }
           />
@@ -129,25 +159,13 @@ export const TierBlock = ({ fields, ...props }) => {
               tierBlockSelectButtons(
                 ALLOW_MODIFYING,
                 DESCRIPTION.ALLOW_MODIFYING,
-                getAllowModifiyingButtons(`${name}.updatable`, input)
+                getAllowModifiyingButtons(`${name}.updatable`, input),
+                'sw-InputField2-AllowModifying'
               )
             }
           />
-          <CrowdsaleEndTime name={`${name}.endTime`} index={index} side="right" />
-          <Supply
-            name={`${name}.supply`}
-            side="right"
-            disabled={
-              props.tierStore &&
-              props.tierStore.tiers[index].whitelistEnabled === 'yes' &&
-              (props.tierStore && props.tierStore.tiers[index].whitelist.length)
-            }
-          />
           {props.tierStore.tiers[index].whitelistEnabled === 'yes' ? (
-            <div>
-              <MinCap decimals={props.decimals} index={index} name={`${name}.minCap`} />
-              <WhitelistInputBlock num={index} decimals={props.decimals} />
-            </div>
+            <WhitelistInputBlock num={index} decimals={props.decimals} />
           ) : null}
         </div>
       ))}

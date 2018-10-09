@@ -1,5 +1,7 @@
 .sw-WhitelistInputBlock {
-
+    @media (min-width: $breakpoint-md) {
+        grid-area: row-6-col-1;
+    }
 }
 
 .sw-WhitelistInputBlock_MinMaxFields {
@@ -14,4 +16,18 @@
     @media (min-width: $breakpoint-md) {
         flex-direction: row;
     }
+}
+
+.sw-WhitelistInputBlock_AddressMinMaxGrid {
+
+    @media (min-width: $breakpoint-md) {
+        display: grid;
+        grid-column-gap: $grid-column-gap-xl;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    @media (min-width: $breakpoint-xxl) {
+        grid-column-gap: $grid-column-gap-xxl;
+    }
+
 }

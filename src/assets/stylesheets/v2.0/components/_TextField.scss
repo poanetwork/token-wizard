@@ -40,4 +40,12 @@ $sw-TextField-height: 40px !default;
             background-image: none;
         }
     }
+
+    .sw-WhitelistInputBlock_MinMaxFields & {
+
+        @media (min-width: $breakpoint-md) {
+            width: 100%;
+        }
+
+    }
 }

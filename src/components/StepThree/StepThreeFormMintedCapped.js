@@ -23,7 +23,6 @@ import { TierBlock } from '../Common/TierBlock'
 import { ButtonBack } from '../Common/ButtonBack'
 import { AddTierButton } from './AddTierButton'
 
-const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 const { VALID } = VALIDATION_TYPES
 const { WALLET_ADDRESS } = TEXT_FIELDS
 
@@ -155,7 +154,7 @@ export const StepThreeFormMintedCapped = ({
     <form onSubmit={handleSubmit} className="st-StepContent_FormFullHeight">
       {whenWhitelistsChanges()}
       <h2 className="sw-BorderedBlockTitle">Global settings</h2>
-      <div tabIndex="0" className="sw-BorderedBlock">
+      <div tabIndex="0" className="sw-BorderedBlock sw-BorderedBlock-1Row2Columns">
         <Field
           component={InputField2}
           description={DESCRIPTION.WALLET}

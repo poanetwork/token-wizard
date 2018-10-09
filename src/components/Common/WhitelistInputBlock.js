@@ -291,41 +291,43 @@ export class WhitelistInputBlock extends React.Component {
     return (
       <div className="sw-WhitelistInputBlock">
         <h2 className="sw-BorderedBlock_Title">Whitelist</h2>
-        <InputField
-          description={`Address of a whitelisted account. Whitelists are inherited. E.g., if an account whitelisted on Tier 1 and didn't buy max cap on Tier 1, he can buy on Tier 2, and following tiers.`}
-          errorMessage="The inserted address is invalid"
-          onChange={e => this.handleAddressChange(e.target.value)}
-          placeholder="Enter here"
-          pristine={this.state.validation.address.pristine}
-          title={ADDRESS}
-          type="text"
-          valid={this.state.validation.address.valid}
-          value={this.state.addr}
-        />
-        <div className="sw-WhitelistInputBlock_MinMaxFields">
+        <div className="sw-WhitelistInputBlock_AddressMinMaxGrid">
           <InputField
-            description={`Minimum amount tokens to buy. Not a minimal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.`}
-            errorMessage={this.state.validation.min.errorMessage}
-            onChange={e => this.handleMinMaxChange({ min: e.target.value })}
+            description={`Address of a whitelisted account. Whitelists are inherited. E.g., if an account whitelisted on Tier 1 and didn't buy max cap on Tier 1, he can buy on Tier 2, and following tiers.`}
+            errorMessage="The inserted address is invalid"
+            onChange={e => this.handleAddressChange(e.target.value)}
             placeholder="Enter here"
-            pristine={this.state.validation.min.pristine}
-            title={MIN}
-            type="number"
-            valid={this.state.validation.min.valid}
-            value={this.state.min}
+            pristine={this.state.validation.address.pristine}
+            title={ADDRESS}
+            type="text"
+            valid={this.state.validation.address.valid}
+            value={this.state.addr}
           />
-          <InputField
-            description={`Maximum is the hard limit.`}
-            errorMessage={this.state.validation.max.errorMessage}
-            onChange={e => this.handleMinMaxChange({ max: e.target.value })}
-            placeholder="Enter here"
-            pristine={this.state.validation.max.pristine}
-            title={MAX}
-            type="number"
-            valid={this.state.validation.max.valid}
-            value={this.state.max}
-          />
-          <div onClick={e => this.addWhitelistItem()} className="sw-ButtonPlus" />
+          <div className="sw-WhitelistInputBlock_MinMaxFields">
+            <InputField
+              description={`Minimum amount tokens to buy. Not a minimal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.`}
+              errorMessage={this.state.validation.min.errorMessage}
+              onChange={e => this.handleMinMaxChange({ min: e.target.value })}
+              placeholder="Enter here"
+              pristine={this.state.validation.min.pristine}
+              title={MIN}
+              type="number"
+              valid={this.state.validation.min.valid}
+              value={this.state.min}
+            />
+            <InputField
+              description={`Maximum is the hard limit.`}
+              errorMessage={this.state.validation.max.errorMessage}
+              onChange={e => this.handleMinMaxChange({ max: e.target.value })}
+              placeholder="Enter here"
+              pristine={this.state.validation.max.pristine}
+              title={MAX}
+              type="number"
+              valid={this.state.validation.max.valid}
+              value={this.state.max}
+            />
+            <div onClick={e => this.addWhitelistItem()} className="sw-ButtonPlus" />
+          </div>
         </div>
         {whitelist ? <WhitelistTable list={whitelist} crowdsaleNum={num} /> : null}
 

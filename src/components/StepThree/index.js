@@ -167,7 +167,7 @@ export class StepThree extends Component {
 
   render() {
     if (this.state.initialTiers.length === 0) {
-      //Not render the form until tiers are setup
+      // Do not render the form until tiers are set up
       return (
         <section className="steps steps_crowdsale-contract" ref="three">
           <StepNavigation activeStep={CROWDSALE_SETUP} />
@@ -195,9 +195,13 @@ export class StepThree extends Component {
               </div>
             </div>
             <Form
-              onSubmit={this.handleOnSubmit}
-              mutators={{ ...arrayMutators, setFieldTouched }}
+              addCrowdsale={tierStore.addCrowdsale}
+              component={stepThreeComponent}
+              crowdsaleStore={crowdsaleStore}
+              decimals={tokenStore.decimals}
               decorators={[this.calculator]}
+              gasPricesInGwei={gasPriceStore.gasPricesInGwei}
+              generalStore={generalStore}
               initialValues={{
                 burnExcess: this.state.burnExcess,
                 gasPrice: this.state.gasTypeSelected,
@@ -205,12 +209,8 @@ export class StepThree extends Component {
                 walletAddress: web3Store.curAddress,
                 whitelistEnabled: 'no'
               }}
-              addCrowdsale={tierStore.addCrowdsale}
-              component={stepThreeComponent}
-              crowdsaleStore={crowdsaleStore}
-              decimals={tokenStore.decimals}
-              gasPricesInGwei={gasPriceStore.gasPricesInGwei}
-              generalStore={generalStore}
+              mutators={{ ...arrayMutators, setFieldTouched }}
+              onSubmit={this.handleOnSubmit}
               reload={this.state.reload}
               tierStore={tierStore}
               updateGasTypeSelected={this.updateGasTypeSelected}

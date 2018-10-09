@@ -1,3 +1,52 @@
 .sw-InputField2 {
     @include form-control-block-common();
+
+    .sw-BorderedBlock-1Row2Columns & {
+        @media (min-width: $breakpoint-md) {
+            margin-bottom: 0;
+        }
+    }
+
+    .sw-BorderedBlock-6Rows2Columns & {
+        @media (min-width: $breakpoint-md) {
+            margin-bottom: 0;
+        }
+    }
+
+    &.sw-InputField2-TierSetupName {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-1-col-1;
+        }
+    }
+
+    &.sw-InputField2-CrowdsaleStartTime {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-2-col-1;
+        }
+    }
+
+    &.sw-InputField2-CrowdsaleEndTime {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-2-col-2;
+        }
+    }
+
+    &.sw-InputField2-CrowdsaleRate {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-3-col-1;
+        }
+    }
+
+    &.sw-InputField2-CrowdsaleSupply {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-3-col-2;
+        }
+    }
+
+    &.sw-InputField2-MinCap {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-5-col-1;
+        }
+    }
+
 }

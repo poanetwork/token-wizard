@@ -1,7 +1,3 @@
-$grid-column-gap-md: 15px;
-$grid-column-gap-xl: 39px;
-$grid-column-gap-xxl: 74px;
-
 .sw-BorderedBlock {
     background-color: #fff;
     border-radius: 5px;
@@ -41,9 +37,24 @@ $grid-column-gap-xxl: 74px;
         @media (min-width: $breakpoint-xxl) {
             display: grid;
             grid-column-gap: $grid-column-gap-xxl;
-            grid-row-gap: 31px;
+            grid-row-gap: $grid-row-gap-lg;
             grid-template-columns: 1fr 1fr;
         }
+    }
+
+    &.sw-BorderedBlock-1Row2Columns {
+
+        @media (min-width: $breakpoint-md) {
+            display: grid;
+            grid-column-gap: $grid-column-gap-xl;
+            grid-row-gap: $grid-row-gap-md;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        @media (min-width: $breakpoint-xxl) {
+            grid-column-gap: $grid-column-gap-xxl;
+        }
+
     }
 
     &.sw-BorderedBlock-3Rows3Columns {
@@ -60,6 +71,28 @@ $grid-column-gap-xxl: 74px;
         @media (min-width: $breakpoint-xxl) {
             grid-column-gap: $grid-column-gap-xl;
         }
+    }
+
+    &.sw-BorderedBlock-6Rows2Columns {
+
+        @media (min-width: $breakpoint-md) {
+            display: grid;
+            grid-column-gap: $grid-column-gap-xl;
+            grid-row-gap: $grid-row-gap-md;
+            grid-template-columns: 1fr 1fr;
+            grid-template-areas:
+                "row-1-col-1 ."
+                "row-2-col-1 row-2-col-2"
+                "row-3-col-1 row-3-col-2"
+                "row-4-col-1 row-4-col-2"
+                "row-5-col-1 ."
+                "row-6-col-1 row-6-col-1";
+        }
+
+        @media (min-width: $breakpoint-xxl) {
+            grid-column-gap: $grid-column-gap-xxl;
+        }
+
     }
 }
 
