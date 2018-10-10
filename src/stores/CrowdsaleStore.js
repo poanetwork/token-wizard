@@ -136,7 +136,7 @@ class CrowdsaleStore {
 
   @action
   addInitialTierValues = initialValues => {
-    if( initialValues ) {
+    if (initialValues) {
       this.selected.initialTiersValues.push(initialValues)
     }
   }
