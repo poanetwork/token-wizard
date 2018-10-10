@@ -11,9 +11,7 @@ exports[`CrowdsaleEmptyList should render screen with mount without throwing an 
 exports[`CrowdsaleEmptyList should render screen with render without account and without throwing an error 1`] = `
 <span
   class="text-bold"
->
-  
-</span>
+/>
 `;
 
 exports[`CrowdsaleEmptyList should render screen with render without throwing an error 1`] = `

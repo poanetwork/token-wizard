@@ -29,7 +29,7 @@ describe(`TokenStore`, () => {
     crowdsaleStore.setProperty('strategy', MINTED_CAPPED_CROWDSALE)
 
     // When
-    const isEmpty = tokenStore.isEmpty(crowdsaleStore)
+    const isEmpty = tokenStore.checkIsEmptyMinted
 
     // Then
     expect(isEmpty).toBeTruthy()
@@ -40,7 +40,7 @@ describe(`TokenStore`, () => {
     crowdsaleStore.setProperty('strategy', DUTCH_AUCTION)
 
     // When
-    const isEmpty = tokenStore.isEmpty(crowdsaleStore)
+    const isEmpty = tokenStore.checkIsEmptyDutch
 
     // Then
     expect(isEmpty).toBeTruthy()
@@ -52,18 +52,25 @@ describe(`TokenStore`, () => {
       name: 'test',
       ticker: 'test',
       decimals: 18,
-      supply: 1000,
       reservedTokensInput: []
     }
     const validations = []
     crowdsaleStore.setProperty('strategy', MINTED_CAPPED_CROWDSALE)
-
-    // When
     tokenStore.setToken(token, validations)
 
+    // When
+    const tokenResponse = tokenStore.tokenMintedStructure
+
     // Then
-    const tokenResponse = tokenStore.getToken(crowdsaleStore)
     expect(typeof tokenResponse).toBe('object')
+    expect(tokenResponse).toHaveProperty('name')
+    expect(tokenResponse).toHaveProperty('ticker')
+    expect(tokenResponse).toHaveProperty('decimals')
+    expect(tokenResponse).toHaveProperty('reservedTokensInput')
+    expect(tokenResponse.name).toBe(token.name)
+    expect(tokenResponse.ticker).toBe(token.ticker)
+    expect(tokenResponse.decimals).toBe(token.decimals)
+    expect(tokenResponse.reservedTokensInput.length).toBe(0)
   })
 
   it(`should set token on tokenStore DUTCH`, () => {
@@ -72,8 +79,7 @@ describe(`TokenStore`, () => {
       name: 'test',
       ticker: 'test',
       decimals: 18,
-      supply: 1000,
-      reservedTokensInput: []
+      supply: 1000
     }
     const validations = []
     crowdsaleStore.setProperty('strategy', DUTCH_AUCTION)
@@ -82,8 +88,18 @@ describe(`TokenStore`, () => {
     tokenStore.setToken(token, validations)
 
     // Then
-    const tokenResponse = tokenStore.getToken(crowdsaleStore)
+    const tokenResponse = tokenStore.tokenDutchStructure
+
+    // Then
     expect(typeof tokenResponse).toBe('object')
+    expect(tokenResponse).toHaveProperty('name')
+    expect(tokenResponse).toHaveProperty('ticker')
+    expect(tokenResponse).toHaveProperty('decimals')
+    expect(tokenResponse).toHaveProperty('supply')
+    expect(tokenResponse.name).toBe(token.name)
+    expect(tokenResponse.ticker).toBe(token.ticker)
+    expect(tokenResponse.decimals).toBe(token.decimals)
+    expect(tokenResponse.supply).toBe(token.supply)
   })
 
   it(`should check if token is valid FALSE`, () => {
@@ -162,7 +178,7 @@ describe(`TokenStore`, () => {
     tokenStore.addTokenSetup()
 
     // When
-    const tokenResult = tokenStore.getToken(crowdsaleStore)
+    const tokenResult = tokenStore.tokenMintedStructure
 
     // Then
     expect(tokenResult).toEqual({ decimals: '18', name: '', reservedTokensInput: { dim: 'tokens' }, ticker: '' })

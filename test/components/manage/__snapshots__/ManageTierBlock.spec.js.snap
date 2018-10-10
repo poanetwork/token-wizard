@@ -9,59 +9,59 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
       className="steps-content container"
     >
       <div
-        className="hidden divisor"
+        className="divisor"
       >
         <div
           className="input-block-container"
         >
           <div
-            className="left"
+            className="sw-InputField "
           >
-            <label
-              className="label"
+            <div
+              className="sw-FormControlTitle"
             >
-              Crowdsale setup name
-            </label>
+              <label
+                className="sw-FormControlTitle_Label"
+              >
+                Crowdsale setup name
+              </label>
+            </div>
             <input
-              className="input"
+              className="sw-TextField"
               disabled={true}
-              id="tiers[0].0.crowdsale_name"
               type="text"
               value="Tier 1"
             />
-            <p
-              className="description"
-            />
-            <p
-              style={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "10px",
-                  "width": "100%",
-                }
-              }
-            >
-              
-            </p>
+            
           </div>
         </div>
         <div
           className="input-block-container"
         >
           <div
-            className="left"
+            className="sw-InputField "
           >
-            <label
-              className="label"
-              htmlFor="tiers[0].0.startTime"
+            <div
+              className="sw-FormControlTitle"
             >
-              Start Time
-            </label>
+              <label
+                className="sw-FormControlTitle_Label"
+              >
+                Start Time
+              </label>
+              <div
+                className="sw-FormControlTitle_Info"
+                tabIndex="-1"
+              >
+                <span
+                  className="sw-FormControlTitle_Tooltip"
+                >
+                  Date and time when the tier starts. Can't be in the past from the current moment.
+                </span>
+              </div>
+            </div>
             <input
-              autoComplete="off"
-              className="input"
+              className="sw-TextField"
               disabled={true}
               id="tiers[0].0.startTime"
               name="tiers[0].0.startTime"
@@ -71,38 +71,31 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               type="datetime-local"
               value=""
             />
-            <p
-              className="description"
-            >
-              Date and time when the tier starts. Can't be in the past from the current moment.
-            </p>
-            <span>
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-            </span>
           </div>
           <div
-            className="right"
+            className="sw-InputField "
           >
-            <label
-              className="label"
-              htmlFor="tiers[0].0.endTime"
+            <div
+              className="sw-FormControlTitle"
             >
-              End Time
-            </label>
+              <label
+                className="sw-FormControlTitle_Label"
+              >
+                End Time
+              </label>
+              <div
+                className="sw-FormControlTitle_Info"
+                tabIndex="-1"
+              >
+                <span
+                  className="sw-FormControlTitle_Tooltip"
+                >
+                  Date and time when the tier ends. Can be only in the future.
+                </span>
+              </div>
+            </div>
             <input
-              autoComplete="off"
-              className="input"
+              className="sw-TextField"
               disabled={true}
               id="tiers[0].0.endTime"
               name="tiers[0].0.endTime"
@@ -112,42 +105,35 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               type="datetime-local"
               value=""
             />
-            <p
-              className="description"
-            >
-              Date and time when the tier ends. Can be only in the future.
-            </p>
-            <span>
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-            </span>
           </div>
         </div>
         <div
           className="input-block-container"
         >
           <div
-            className="left"
+            className="sw-InputField "
           >
-            <label
-              className="label"
-              htmlFor="tiers[0].0.rate"
+            <div
+              className="sw-FormControlTitle"
             >
-              Rate
-            </label>
+              <label
+                className="sw-FormControlTitle_Label"
+              >
+                Rate
+              </label>
+              <div
+                className="sw-FormControlTitle_Info"
+                tabIndex="-1"
+              >
+                <span
+                  className="sw-FormControlTitle_Tooltip"
+                >
+                  Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
+                </span>
+              </div>
+            </div>
             <input
-              autoComplete="off"
-              className="input"
+              className="sw-TextField"
               disabled={true}
               id="tiers[0].0.rate"
               name="tiers[0].0.rate"
@@ -157,38 +143,31 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               type="text"
               value=""
             />
-            <p
-              className="description"
-            >
-              Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
-            </p>
-            <span>
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-            </span>
           </div>
           <div
-            className="right"
+            className="sw-InputField "
           >
-            <label
-              className="label"
-              htmlFor="tiers[0].0.supply"
+            <div
+              className="sw-FormControlTitle"
             >
-              Supply
-            </label>
+              <label
+                className="sw-FormControlTitle_Label"
+              >
+                Supply
+              </label>
+              <div
+                className="sw-FormControlTitle_Info"
+                tabIndex="-1"
+              >
+                <span
+                  className="sw-FormControlTitle_Tooltip"
+                >
+                  How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
+                </span>
+              </div>
+            </div>
             <input
-              autoComplete="off"
-              className="input"
+              className="sw-TextField"
               disabled={true}
               id="tiers[0].0.supply"
               name="tiers[0].0.supply"
@@ -198,42 +177,25 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               type="text"
               value=""
             />
-            <p
-              className="description"
-            >
-              How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
-            </p>
-            <span>
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-            </span>
           </div>
         </div>
         <div
           className="input-block-container"
         >
           <div
-            className="left"
+            className="sw-InputField "
           >
-            <label
-              className="label"
-              htmlFor="tiers[0].0.minCap"
+            <div
+              className="sw-FormControlTitle"
             >
-              Contributor min cap
-            </label>
+              <label
+                className="sw-FormControlTitle_Label"
+              >
+                Contributor min cap
+              </label>
+            </div>
             <input
-              autoComplete="off"
-              className="input"
+              className="sw-TextField"
               disabled={true}
               id="tiers[0].0.minCap"
               name="tiers[0].0.minCap"
@@ -243,47 +205,6 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               type="number"
               value=""
             />
-            <p
-              className="description"
-            />
-            <span>
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-            </span>
           </div>
         </div>
       </div>
@@ -401,59 +322,59 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
       className="steps-content container"
     >
       <div
-        className="hidden"
+        className=""
       >
         <div
           className="input-block-container"
         >
           <div
-            className="left"
+            className="sw-InputField "
           >
-            <label
-              className="label"
+            <div
+              className="sw-FormControlTitle"
             >
-              Crowdsale setup name
-            </label>
+              <label
+                className="sw-FormControlTitle_Label"
+              >
+                Crowdsale setup name
+              </label>
+            </div>
             <input
-              className="input"
+              className="sw-TextField"
               disabled={true}
-              id="tiers[1].1.crowdsale_name"
               type="text"
               value="Tier 2"
             />
-            <p
-              className="description"
-            />
-            <p
-              style={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "10px",
-                  "width": "100%",
-                }
-              }
-            >
-              
-            </p>
+            
           </div>
         </div>
         <div
           className="input-block-container"
         >
           <div
-            className="left"
+            className="sw-InputField "
           >
-            <label
-              className="label"
-              htmlFor="tiers[1].1.startTime"
+            <div
+              className="sw-FormControlTitle"
             >
-              Start Time
-            </label>
+              <label
+                className="sw-FormControlTitle_Label"
+              >
+                Start Time
+              </label>
+              <div
+                className="sw-FormControlTitle_Info"
+                tabIndex="-1"
+              >
+                <span
+                  className="sw-FormControlTitle_Tooltip"
+                >
+                  Date and time when the tier starts. Can't be in the past from the current moment.
+                </span>
+              </div>
+            </div>
             <input
-              autoComplete="off"
-              className="input"
+              className="sw-TextField"
               disabled={true}
               id="tiers[1].1.startTime"
               name="tiers[1].1.startTime"
@@ -463,38 +384,31 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               type="datetime-local"
               value=""
             />
-            <p
-              className="description"
-            >
-              Date and time when the tier starts. Can't be in the past from the current moment.
-            </p>
-            <span>
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-            </span>
           </div>
           <div
-            className="right"
+            className="sw-InputField "
           >
-            <label
-              className="label"
-              htmlFor="tiers[1].1.endTime"
+            <div
+              className="sw-FormControlTitle"
             >
-              End Time
-            </label>
+              <label
+                className="sw-FormControlTitle_Label"
+              >
+                End Time
+              </label>
+              <div
+                className="sw-FormControlTitle_Info"
+                tabIndex="-1"
+              >
+                <span
+                  className="sw-FormControlTitle_Tooltip"
+                >
+                  Date and time when the tier ends. Can be only in the future.
+                </span>
+              </div>
+            </div>
             <input
-              autoComplete="off"
-              className="input"
+              className="sw-TextField"
               disabled={true}
               id="tiers[1].1.endTime"
               name="tiers[1].1.endTime"
@@ -504,42 +418,35 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               type="datetime-local"
               value=""
             />
-            <p
-              className="description"
-            >
-              Date and time when the tier ends. Can be only in the future.
-            </p>
-            <span>
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-            </span>
           </div>
         </div>
         <div
           className="input-block-container"
         >
           <div
-            className="left"
+            className="sw-InputField "
           >
-            <label
-              className="label"
-              htmlFor="tiers[1].1.rate"
+            <div
+              className="sw-FormControlTitle"
             >
-              Rate
-            </label>
+              <label
+                className="sw-FormControlTitle_Label"
+              >
+                Rate
+              </label>
+              <div
+                className="sw-FormControlTitle_Info"
+                tabIndex="-1"
+              >
+                <span
+                  className="sw-FormControlTitle_Tooltip"
+                >
+                  Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
+                </span>
+              </div>
+            </div>
             <input
-              autoComplete="off"
-              className="input"
+              className="sw-TextField"
               disabled={true}
               id="tiers[1].1.rate"
               name="tiers[1].1.rate"
@@ -549,38 +456,31 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               type="text"
               value=""
             />
-            <p
-              className="description"
-            >
-              Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
-            </p>
-            <span>
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-            </span>
           </div>
           <div
-            className="right"
+            className="sw-InputField "
           >
-            <label
-              className="label"
-              htmlFor="tiers[1].1.supply"
+            <div
+              className="sw-FormControlTitle"
             >
-              Supply
-            </label>
+              <label
+                className="sw-FormControlTitle_Label"
+              >
+                Supply
+              </label>
+              <div
+                className="sw-FormControlTitle_Info"
+                tabIndex="-1"
+              >
+                <span
+                  className="sw-FormControlTitle_Tooltip"
+                >
+                  How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
+                </span>
+              </div>
+            </div>
             <input
-              autoComplete="off"
-              className="input"
+              className="sw-TextField"
               disabled={true}
               id="tiers[1].1.supply"
               name="tiers[1].1.supply"
@@ -590,42 +490,25 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               type="text"
               value=""
             />
-            <p
-              className="description"
-            >
-              How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
-            </p>
-            <span>
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-            </span>
           </div>
         </div>
         <div
           className="input-block-container"
         >
           <div
-            className="left"
+            className="sw-InputField "
           >
-            <label
-              className="label"
-              htmlFor="tiers[1].1.minCap"
+            <div
+              className="sw-FormControlTitle"
             >
-              Contributor min cap
-            </label>
+              <label
+                className="sw-FormControlTitle_Label"
+              >
+                Contributor min cap
+              </label>
+            </div>
             <input
-              autoComplete="off"
-              className="input"
+              className="sw-TextField"
               disabled={true}
               id="tiers[1].1.minCap"
               name="tiers[1].1.minCap"
@@ -635,47 +518,6 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               type="number"
               value=""
             />
-            <p
-              className="description"
-            />
-            <span>
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-            </span>
           </div>
         </div>
       </div>
@@ -693,59 +535,59 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
       className="steps-content container"
     >
       <div
-        className="hidden divisor"
+        className="divisor"
       >
         <div
           className="input-block-container"
         >
           <div
-            className="left"
+            className="sw-InputField "
           >
-            <label
-              className="label"
+            <div
+              className="sw-FormControlTitle"
             >
-              Crowdsale setup name
-            </label>
+              <label
+                className="sw-FormControlTitle_Label"
+              >
+                Crowdsale setup name
+              </label>
+            </div>
             <input
-              className="input"
+              className="sw-TextField"
               disabled={true}
-              id="tiers[0].0.crowdsale_name"
               type="text"
               value="Tier 1"
             />
-            <p
-              className="description"
-            />
-            <p
-              style={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "10px",
-                  "width": "100%",
-                }
-              }
-            >
-              
-            </p>
+            
           </div>
         </div>
         <div
           className="input-block-container"
         >
           <div
-            className="left"
+            className="sw-InputField "
           >
-            <label
-              className="label"
-              htmlFor="tiers[0].0.startTime"
+            <div
+              className="sw-FormControlTitle"
             >
-              Start Time
-            </label>
+              <label
+                className="sw-FormControlTitle_Label"
+              >
+                Start Time
+              </label>
+              <div
+                className="sw-FormControlTitle_Info"
+                tabIndex="-1"
+              >
+                <span
+                  className="sw-FormControlTitle_Tooltip"
+                >
+                  Date and time when the tier starts. Can't be in the past from the current moment.
+                </span>
+              </div>
+            </div>
             <input
-              autoComplete="off"
-              className="input"
+              className="sw-TextField"
               disabled={true}
               id="tiers[0].0.startTime"
               name="tiers[0].0.startTime"
@@ -755,38 +597,31 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               type="datetime-local"
               value=""
             />
-            <p
-              className="description"
-            >
-              Date and time when the tier starts. Can't be in the past from the current moment.
-            </p>
-            <span>
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-            </span>
           </div>
           <div
-            className="right"
+            className="sw-InputField "
           >
-            <label
-              className="label"
-              htmlFor="tiers[0].0.endTime"
+            <div
+              className="sw-FormControlTitle"
             >
-              End Time
-            </label>
+              <label
+                className="sw-FormControlTitle_Label"
+              >
+                End Time
+              </label>
+              <div
+                className="sw-FormControlTitle_Info"
+                tabIndex="-1"
+              >
+                <span
+                  className="sw-FormControlTitle_Tooltip"
+                >
+                  Date and time when the tier ends. Can be only in the future.
+                </span>
+              </div>
+            </div>
             <input
-              autoComplete="off"
-              className="input"
+              className="sw-TextField"
               disabled={true}
               id="tiers[0].0.endTime"
               name="tiers[0].0.endTime"
@@ -796,42 +631,35 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               type="datetime-local"
               value=""
             />
-            <p
-              className="description"
-            >
-              Date and time when the tier ends. Can be only in the future.
-            </p>
-            <span>
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-            </span>
           </div>
         </div>
         <div
           className="input-block-container"
         >
           <div
-            className="left"
+            className="sw-InputField "
           >
-            <label
-              className="label"
-              htmlFor="tiers[0].0.rate"
+            <div
+              className="sw-FormControlTitle"
             >
-              Rate
-            </label>
+              <label
+                className="sw-FormControlTitle_Label"
+              >
+                Rate
+              </label>
+              <div
+                className="sw-FormControlTitle_Info"
+                tabIndex="-1"
+              >
+                <span
+                  className="sw-FormControlTitle_Tooltip"
+                >
+                  Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
+                </span>
+              </div>
+            </div>
             <input
-              autoComplete="off"
-              className="input"
+              className="sw-TextField"
               disabled={true}
               id="tiers[0].0.rate"
               name="tiers[0].0.rate"
@@ -841,38 +669,31 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               type="text"
               value=""
             />
-            <p
-              className="description"
-            >
-              Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
-            </p>
-            <span>
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-            </span>
           </div>
           <div
-            className="right"
+            className="sw-InputField "
           >
-            <label
-              className="label"
-              htmlFor="tiers[0].0.supply"
+            <div
+              className="sw-FormControlTitle"
             >
-              Supply
-            </label>
+              <label
+                className="sw-FormControlTitle_Label"
+              >
+                Supply
+              </label>
+              <div
+                className="sw-FormControlTitle_Info"
+                tabIndex="-1"
+              >
+                <span
+                  className="sw-FormControlTitle_Tooltip"
+                >
+                  How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
+                </span>
+              </div>
+            </div>
             <input
-              autoComplete="off"
-              className="input"
+              className="sw-TextField"
               disabled={true}
               id="tiers[0].0.supply"
               name="tiers[0].0.supply"
@@ -882,42 +703,25 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               type="text"
               value=""
             />
-            <p
-              className="description"
-            >
-              How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
-            </p>
-            <span>
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-            </span>
           </div>
         </div>
         <div
           className="input-block-container"
         >
           <div
-            className="left"
+            className="sw-InputField "
           >
-            <label
-              className="label"
-              htmlFor="tiers[0].0.minCap"
+            <div
+              className="sw-FormControlTitle"
             >
-              Contributor min cap
-            </label>
+              <label
+                className="sw-FormControlTitle_Label"
+              >
+                Contributor min cap
+              </label>
+            </div>
             <input
-              autoComplete="off"
-              className="input"
+              className="sw-TextField"
               disabled={true}
               id="tiers[0].0.minCap"
               name="tiers[0].0.minCap"
@@ -927,47 +731,6 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               type="number"
               value=""
             />
-            <p
-              className="description"
-            />
-            <span>
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-            </span>
           </div>
         </div>
       </div>
@@ -1085,59 +848,59 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
       className="steps-content container"
     >
       <div
-        className="hidden"
+        className=""
       >
         <div
           className="input-block-container"
         >
           <div
-            className="left"
+            className="sw-InputField "
           >
-            <label
-              className="label"
+            <div
+              className="sw-FormControlTitle"
             >
-              Crowdsale setup name
-            </label>
+              <label
+                className="sw-FormControlTitle_Label"
+              >
+                Crowdsale setup name
+              </label>
+            </div>
             <input
-              className="input"
+              className="sw-TextField"
               disabled={true}
-              id="tiers[1].1.crowdsale_name"
               type="text"
               value="Tier 2"
             />
-            <p
-              className="description"
-            />
-            <p
-              style={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "10px",
-                  "width": "100%",
-                }
-              }
-            >
-              
-            </p>
+            
           </div>
         </div>
         <div
           className="input-block-container"
         >
           <div
-            className="left"
+            className="sw-InputField "
           >
-            <label
-              className="label"
-              htmlFor="tiers[1].1.startTime"
+            <div
+              className="sw-FormControlTitle"
             >
-              Start Time
-            </label>
+              <label
+                className="sw-FormControlTitle_Label"
+              >
+                Start Time
+              </label>
+              <div
+                className="sw-FormControlTitle_Info"
+                tabIndex="-1"
+              >
+                <span
+                  className="sw-FormControlTitle_Tooltip"
+                >
+                  Date and time when the tier starts. Can't be in the past from the current moment.
+                </span>
+              </div>
+            </div>
             <input
-              autoComplete="off"
-              className="input"
+              className="sw-TextField"
               disabled={true}
               id="tiers[1].1.startTime"
               name="tiers[1].1.startTime"
@@ -1147,38 +910,31 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               type="datetime-local"
               value=""
             />
-            <p
-              className="description"
-            >
-              Date and time when the tier starts. Can't be in the past from the current moment.
-            </p>
-            <span>
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-            </span>
           </div>
           <div
-            className="right"
+            className="sw-InputField "
           >
-            <label
-              className="label"
-              htmlFor="tiers[1].1.endTime"
+            <div
+              className="sw-FormControlTitle"
             >
-              End Time
-            </label>
+              <label
+                className="sw-FormControlTitle_Label"
+              >
+                End Time
+              </label>
+              <div
+                className="sw-FormControlTitle_Info"
+                tabIndex="-1"
+              >
+                <span
+                  className="sw-FormControlTitle_Tooltip"
+                >
+                  Date and time when the tier ends. Can be only in the future.
+                </span>
+              </div>
+            </div>
             <input
-              autoComplete="off"
-              className="input"
+              className="sw-TextField"
               disabled={true}
               id="tiers[1].1.endTime"
               name="tiers[1].1.endTime"
@@ -1188,42 +944,35 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               type="datetime-local"
               value=""
             />
-            <p
-              className="description"
-            >
-              Date and time when the tier ends. Can be only in the future.
-            </p>
-            <span>
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-            </span>
           </div>
         </div>
         <div
           className="input-block-container"
         >
           <div
-            className="left"
+            className="sw-InputField "
           >
-            <label
-              className="label"
-              htmlFor="tiers[1].1.rate"
+            <div
+              className="sw-FormControlTitle"
             >
-              Rate
-            </label>
+              <label
+                className="sw-FormControlTitle_Label"
+              >
+                Rate
+              </label>
+              <div
+                className="sw-FormControlTitle_Info"
+                tabIndex="-1"
+              >
+                <span
+                  className="sw-FormControlTitle_Tooltip"
+                >
+                  Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
+                </span>
+              </div>
+            </div>
             <input
-              autoComplete="off"
-              className="input"
+              className="sw-TextField"
               disabled={true}
               id="tiers[1].1.rate"
               name="tiers[1].1.rate"
@@ -1233,38 +982,31 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               type="text"
               value=""
             />
-            <p
-              className="description"
-            >
-              Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
-            </p>
-            <span>
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-            </span>
           </div>
           <div
-            className="right"
+            className="sw-InputField "
           >
-            <label
-              className="label"
-              htmlFor="tiers[1].1.supply"
+            <div
+              className="sw-FormControlTitle"
             >
-              Supply
-            </label>
+              <label
+                className="sw-FormControlTitle_Label"
+              >
+                Supply
+              </label>
+              <div
+                className="sw-FormControlTitle_Info"
+                tabIndex="-1"
+              >
+                <span
+                  className="sw-FormControlTitle_Tooltip"
+                >
+                  How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
+                </span>
+              </div>
+            </div>
             <input
-              autoComplete="off"
-              className="input"
+              className="sw-TextField"
               disabled={true}
               id="tiers[1].1.supply"
               name="tiers[1].1.supply"
@@ -1274,42 +1016,25 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               type="text"
               value=""
             />
-            <p
-              className="description"
-            >
-              How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
-            </p>
-            <span>
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-            </span>
           </div>
         </div>
         <div
           className="input-block-container"
         >
           <div
-            className="left"
+            className="sw-InputField "
           >
-            <label
-              className="label"
-              htmlFor="tiers[1].1.minCap"
+            <div
+              className="sw-FormControlTitle"
             >
-              Contributor min cap
-            </label>
+              <label
+                className="sw-FormControlTitle_Label"
+              >
+                Contributor min cap
+              </label>
+            </div>
             <input
-              autoComplete="off"
-              className="input"
+              className="sw-TextField"
               disabled={true}
               id="tiers[1].1.minCap"
               name="tiers[1].1.minCap"
@@ -1319,47 +1044,6 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               type="number"
               value=""
             />
-            <p
-              className="description"
-            />
-            <span>
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-              <p
-                className="error"
-                style={
-                  Object {
-                    "color": "red",
-                    "fontSize": "12px",
-                    "fontWeight": "bold",
-                    "height": "20px",
-                    "width": "100%",
-                  }
-                }
-              />
-            </span>
           </div>
         </div>
       </div>

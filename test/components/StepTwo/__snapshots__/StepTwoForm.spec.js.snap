@@ -33,18 +33,11 @@ exports[`StepTwoForm should render StepTwoForm for Dutch Auction Crowdsale 1`] =
       </div>
       <input
         className="sw-TextField"
-        disabled={undefined}
         id="name"
-        max={undefined}
-        min={undefined}
         name="name"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
-        onKeyPress={undefined}
-        onPaste={undefined}
-        placeholder={undefined}
-        style={undefined}
         type="text"
         value="This is a valid name"
       />
@@ -73,18 +66,11 @@ exports[`StepTwoForm should render StepTwoForm for Dutch Auction Crowdsale 1`] =
       </div>
       <input
         className="sw-TextField"
-        disabled={undefined}
         id="ticker"
-        max={undefined}
-        min={undefined}
         name="ticker"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
-        onKeyPress={undefined}
-        onPaste={undefined}
-        placeholder={undefined}
-        style={undefined}
         type="text"
         value="TTK"
       />
@@ -121,10 +107,6 @@ exports[`StepTwoForm should render StepTwoForm for Dutch Auction Crowdsale 1`] =
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
-        onKeyPress={undefined}
-        onPaste={undefined}
-        placeholder={undefined}
-        style={undefined}
         type="number"
         value="14"
       />
@@ -153,18 +135,11 @@ exports[`StepTwoForm should render StepTwoForm for Dutch Auction Crowdsale 1`] =
       </div>
       <input
         className="sw-TextField"
-        disabled={undefined}
         id="supply"
-        max={undefined}
-        min={undefined}
         name="supply"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
-        onKeyPress={undefined}
-        onPaste={undefined}
-        placeholder={undefined}
-        style={undefined}
         type="text"
         value=""
       />
@@ -183,7 +158,6 @@ exports[`StepTwoForm should render StepTwoForm for Dutch Auction Crowdsale 1`] =
     <button
       className="sw-ButtonContinue"
       disabled={true}
-      onClick={undefined}
       type="submit"
     >
       <span
@@ -229,18 +203,11 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
       </div>
       <input
         className="sw-TextField"
-        disabled={undefined}
         id="name"
-        max={undefined}
-        min={undefined}
         name="name"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
-        onKeyPress={undefined}
-        onPaste={undefined}
-        placeholder={undefined}
-        style={undefined}
         type="text"
         value="This is a valid name"
       />
@@ -269,18 +236,11 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
       </div>
       <input
         className="sw-TextField"
-        disabled={undefined}
         id="ticker"
-        max={undefined}
-        min={undefined}
         name="ticker"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
-        onKeyPress={undefined}
-        onPaste={undefined}
-        placeholder={undefined}
-        style={undefined}
         type="text"
         value="TTK"
       />
@@ -317,10 +277,6 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
-        onKeyPress={undefined}
-        onPaste={undefined}
-        placeholder={undefined}
-        style={undefined}
         type="number"
         value="14"
       />
@@ -359,18 +315,8 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
         </div>
         <input
           className="sw-TextField"
-          disabled={undefined}
-          id={undefined}
-          max={undefined}
-          min={undefined}
-          name={undefined}
-          onBlur={undefined}
           onChange={[Function]}
-          onFocus={undefined}
-          onKeyPress={undefined}
-          onPaste={undefined}
           placeholder="Enter here"
-          style={undefined}
           type="text"
           value=""
         />
@@ -464,18 +410,11 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
         >
           <input
             className="sw-TextField"
-            disabled={undefined}
-            id={undefined}
-            max={undefined}
             min="0.00000000000001"
-            name={undefined}
-            onBlur={undefined}
             onChange={[Function]}
-            onFocus={undefined}
             onKeyPress={[Function]}
             onPaste={[Function]}
             placeholder="Enter here"
-            style={undefined}
             type="number"
             value=""
           />
@@ -529,7 +468,6 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
     <button
       className="sw-ButtonContinue"
       disabled={false}
-      onClick={undefined}
       type="submit"
     >
       <span

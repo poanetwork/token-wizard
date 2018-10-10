@@ -10,24 +10,34 @@ exports[`TierBlock  should render TierBlock component 1`] = `
       }
     }
   >
-    <div
-      className="hidden"
-    >
+    <div>
       <div
         className="input-block-container"
       >
         <div
-          className="left"
+          className="sw-InputField "
         >
-          <label
-            className="label"
-            htmlFor="tierblock,0.tier"
+          <div
+            className="sw-FormControlTitle"
           >
-            Crowdsale setup name
-          </label>
+            <label
+              className="sw-FormControlTitle_Label"
+            >
+              Crowdsale setup name
+            </label>
+            <div
+              className="sw-FormControlTitle_Info"
+              tabIndex="-1"
+            >
+              <span
+                className="sw-FormControlTitle_Tooltip"
+              >
+                Name of a tier, e.g. PrePreCrowdsale, PreCrowdsale, Crowdsale with bonus A, Crowdsale with bonus B, etc. We simplified that and will increment a number after each tier.
+              </span>
+            </div>
+          </div>
           <input
-            autoComplete="off"
-            className="input"
+            className="sw-TextField"
             id="tierblock,0.tier"
             name="tierblock,0.tier"
             onBlur={[Function]}
@@ -36,25 +46,6 @@ exports[`TierBlock  should render TierBlock component 1`] = `
             type="text"
             value=""
           />
-          <p
-            className="description"
-          >
-            Name of a tier, e.g. PrePreCrowdsale, PreCrowdsale, Crowdsale with bonus A, Crowdsale with bonus B, etc. We simplified that and will increment a number after each tier.
-          </p>
-          <span>
-            <p
-              className="error"
-              style={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "20px",
-                  "width": "100%",
-                }
-              }
-            />
-          </span>
         </div>
       </div>
       <div
@@ -165,17 +156,29 @@ exports[`TierBlock  should render TierBlock component 1`] = `
         className="input-block-container"
       >
         <div
-          className="left"
+          className="sw-InputField "
         >
-          <label
-            className="label"
-            htmlFor="tierblock,0.startTime"
+          <div
+            className="sw-FormControlTitle"
           >
-            Start Time
-          </label>
+            <label
+              className="sw-FormControlTitle_Label"
+            >
+              Start Time
+            </label>
+            <div
+              className="sw-FormControlTitle_Info"
+              tabIndex="-1"
+            >
+              <span
+                className="sw-FormControlTitle_Tooltip"
+              >
+                Date and time when the tier starts. Can't be in the past from the current moment.
+              </span>
+            </div>
+          </div>
           <input
-            autoComplete="off"
-            className="input"
+            className="sw-TextField"
             disabled={false}
             id="tierblock,0.startTime"
             name="tierblock,0.startTime"
@@ -185,62 +188,31 @@ exports[`TierBlock  should render TierBlock component 1`] = `
             type="datetime-local"
             value=""
           />
-          <p
-            className="description"
-          >
-            Date and time when the tier starts. Can't be in the past from the current moment.
-          </p>
-          <span>
-            <p
-              className="error"
-              style={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "20px",
-                  "width": "100%",
-                }
-              }
-            />
-            <p
-              className="error"
-              style={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "20px",
-                  "width": "100%",
-                }
-              }
-            />
-            <p
-              className="error"
-              style={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "20px",
-                  "width": "100%",
-                }
-              }
-            />
-          </span>
         </div>
         <div
-          className="right"
+          className="sw-InputField "
         >
-          <label
-            className="label"
-            htmlFor="tierblock,0.endTime"
+          <div
+            className="sw-FormControlTitle"
           >
-            End Time
-          </label>
+            <label
+              className="sw-FormControlTitle_Label"
+            >
+              End Time
+            </label>
+            <div
+              className="sw-FormControlTitle_Info"
+              tabIndex="-1"
+            >
+              <span
+                className="sw-FormControlTitle_Tooltip"
+              >
+                Date and time when the tier ends. Can be only in the future.
+              </span>
+            </div>
+          </div>
           <input
-            autoComplete="off"
-            className="input"
+            className="sw-TextField"
             id="tierblock,0.endTime"
             name="tierblock,0.endTime"
             onBlur={[Function]}
@@ -249,66 +221,35 @@ exports[`TierBlock  should render TierBlock component 1`] = `
             type="datetime-local"
             value=""
           />
-          <p
-            className="description"
-          >
-            Date and time when the tier ends. Can be only in the future.
-          </p>
-          <span>
-            <p
-              className="error"
-              style={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "20px",
-                  "width": "100%",
-                }
-              }
-            />
-            <p
-              className="error"
-              style={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "20px",
-                  "width": "100%",
-                }
-              }
-            />
-            <p
-              className="error"
-              style={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "20px",
-                  "width": "100%",
-                }
-              }
-            />
-          </span>
         </div>
       </div>
       <div
         className="input-block-container"
       >
         <div
-          className="left"
+          className="sw-InputField "
         >
-          <label
-            className="label"
-            htmlFor="tierblock,0.rate"
+          <div
+            className="sw-FormControlTitle"
           >
-            Rate
-          </label>
+            <label
+              className="sw-FormControlTitle_Label"
+            >
+              Rate
+            </label>
+            <div
+              className="sw-FormControlTitle_Info"
+              tabIndex="-1"
+            >
+              <span
+                className="sw-FormControlTitle_Tooltip"
+              >
+                Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
+              </span>
+            </div>
+          </div>
           <input
-            autoComplete="off"
-            className="input"
+            className="sw-TextField"
             id="tierblock,0.rate"
             name="tierblock,0.rate"
             onBlur={[Function]}
@@ -317,62 +258,31 @@ exports[`TierBlock  should render TierBlock component 1`] = `
             type="text"
             value=""
           />
-          <p
-            className="description"
-          >
-            Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
-          </p>
-          <span>
-            <p
-              className="error"
-              style={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "20px",
-                  "width": "100%",
-                }
-              }
-            />
-            <p
-              className="error"
-              style={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "20px",
-                  "width": "100%",
-                }
-              }
-            />
-            <p
-              className="error"
-              style={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "20px",
-                  "width": "100%",
-                }
-              }
-            />
-          </span>
         </div>
         <div
-          className="right"
+          className="sw-InputField "
         >
-          <label
-            className="label"
-            htmlFor="tierblock,0.supply"
+          <div
+            className="sw-FormControlTitle"
           >
-            Supply
-          </label>
+            <label
+              className="sw-FormControlTitle_Label"
+            >
+              Supply
+            </label>
+            <div
+              className="sw-FormControlTitle_Info"
+              tabIndex="-1"
+            >
+              <span
+                className="sw-FormControlTitle_Tooltip"
+              >
+                How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
+              </span>
+            </div>
+          </div>
           <input
-            autoComplete="off"
-            className="input"
+            className="sw-TextField"
             disabled={false}
             id="tierblock,0.supply"
             name="tierblock,0.supply"
@@ -382,42 +292,36 @@ exports[`TierBlock  should render TierBlock component 1`] = `
             type="text"
             value=""
           />
-          <p
-            className="description"
-          >
-            How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
-          </p>
-          <span>
-            <p
-              className="error"
-              style={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "20px",
-                  "width": "100%",
-                }
-              }
-            />
-          </span>
         </div>
       </div>
       <div
         className="input-block-container"
       >
         <div
-          className="left"
+          className="sw-InputField "
         >
-          <label
-            className="label"
-            htmlFor="tierblock,0.minCap"
+          <div
+            className="sw-FormControlTitle"
           >
-            Contributor min cap
-          </label>
+            <label
+              className="sw-FormControlTitle_Label"
+            >
+              Contributor min cap
+            </label>
+            <div
+              className="sw-FormControlTitle_Info"
+              tabIndex="-1"
+            >
+              <span
+                className="sw-FormControlTitle_Tooltip"
+              >
+                Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1
+               and a user already has 1 token from a previous transaction, they can buy any amount they want.
+              </span>
+            </div>
+          </div>
           <input
-            autoComplete="off"
-            className="input"
+            className="sw-TextField"
             disabled={false}
             id="tierblock,0.minCap"
             name="tierblock,0.minCap"
@@ -427,38 +331,6 @@ exports[`TierBlock  should render TierBlock component 1`] = `
             type="text"
             value=""
           />
-          <p
-            className="description"
-          >
-            Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1
-               and a user already has 1 token from a previous transaction, they can buy any amount they want.
-          </p>
-          <span>
-            <p
-              className="error"
-              style={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "20px",
-                  "width": "100%",
-                }
-              }
-            />
-            <p
-              className="error"
-              style={
-                Object {
-                  "color": "red",
-                  "fontSize": "12px",
-                  "fontWeight": "bold",
-                  "height": "20px",
-                  "width": "100%",
-                }
-              }
-            />
-          </span>
         </div>
       </div>
     </div>

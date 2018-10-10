@@ -2,17 +2,29 @@
 
 exports[`TokenSupply should render TokenDecimals component 1`] = `
 <div
-  className="right"
+  className="sw-InputField "
 >
-  <label
-    className="label"
-    htmlFor="supply"
+  <div
+    className="sw-FormControlTitle"
   >
-    Supply
-  </label>
+    <label
+      className="sw-FormControlTitle_Label"
+    >
+      Supply
+    </label>
+    <div
+      className="sw-FormControlTitle_Info"
+      tabIndex="-1"
+    >
+      <span
+        className="sw-FormControlTitle_Tooltip"
+      >
+        The total supply of the token
+      </span>
+    </div>
+  </div>
   <input
-    autoComplete="off"
-    className="input"
+    className="sw-TextField"
     id="supply"
     name="supply"
     onBlur={[Function]}
@@ -21,38 +33,34 @@ exports[`TokenSupply should render TokenDecimals component 1`] = `
     type="text"
     value=""
   />
-  <p
-    className="description"
-  >
-    The total supply of the token
-  </p>
-  <span>
-    <p
-      className="error"
-      style={
-        Object {
-          "color": "red",
-          "fontWeight": "bold",
-        }
-      }
-    />
-  </span>
 </div>
 `;
 
 exports[`TokenSupply should render TokenSupply component and its children 1`] = `
 <div
-  className="right"
+  className="sw-InputField "
 >
-  <label
-    className="label"
-    htmlFor="supply"
+  <div
+    className="sw-FormControlTitle"
   >
-    Supply
-  </label>
+    <label
+      className="sw-FormControlTitle_Label"
+    >
+      Supply
+    </label>
+    <div
+      className="sw-FormControlTitle_Info"
+      tabIndex="-1"
+    >
+      <span
+        className="sw-FormControlTitle_Tooltip"
+      >
+        The total supply of the token
+      </span>
+    </div>
+  </div>
   <input
-    autoComplete="off"
-    className="input"
+    className="sw-TextField"
     id="supply"
     name="supply"
     onBlur={[Function]}
@@ -61,22 +69,6 @@ exports[`TokenSupply should render TokenSupply component and its children 1`] = 
     type="text"
     value=""
   />
-  <p
-    className="description"
-  >
-    The total supply of the token
-  </p>
-  <span>
-    <p
-      className="error"
-      style={
-        Object {
-          "color": "red",
-          "fontWeight": "bold",
-        }
-      }
-    />
-  </span>
 </div>
 `;
 
@@ -166,12 +158,6 @@ exports[`TokenSupply should render TokenSupply component and its children, with 
     <Field
       component={[Function]}
       description="The total supply of the token"
-      errorStyle={
-        Object {
-          "color": "red",
-          "fontWeight": "bold",
-        }
-      }
       format={[Function]}
       label="Supply"
       name="supply"
@@ -182,12 +168,6 @@ exports[`TokenSupply should render TokenSupply component and its children, with 
     >
       <InputField2
         description="The total supply of the token"
-        errorStyle={
-          Object {
-            "color": "red",
-            "fontWeight": "bold",
-          }
-        }
         input={
           Object {
             "name": "supply",
@@ -220,15 +200,33 @@ exports[`TokenSupply should render TokenSupply component and its children, with 
         type="text"
       >
         <div
-          className="right"
+          className="sw-InputField "
         >
-          <label
-            className="label"
-            htmlFor="supply"
+          <FormControlTitle
+            description="The total supply of the token"
+            title="Supply"
           >
-            Supply
-          </label>
-          <input
+            <div
+              className="sw-FormControlTitle"
+            >
+              <label
+                className="sw-FormControlTitle_Label"
+              >
+                Supply
+              </label>
+              <div
+                className="sw-FormControlTitle_Info"
+                tabIndex="-1"
+              >
+                <span
+                  className="sw-FormControlTitle_Tooltip"
+                >
+                  The total supply of the token
+                </span>
+              </div>
+            </div>
+          </FormControlTitle>
+          <TextField
             autoComplete="off"
             className="input"
             id="supply"
@@ -238,19 +236,19 @@ exports[`TokenSupply should render TokenSupply component and its children, with 
             onFocus={[Function]}
             type="text"
             value=""
-          />
-          <p
-            className="description"
           >
-            The total supply of the token
-          </p>
+            <input
+              className="sw-TextField"
+              id="supply"
+              name="supply"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              type="text"
+              value=""
+            />
+          </TextField>
           <Error
-            errorStyle={
-              Object {
-                "color": "red",
-                "fontWeight": "bold",
-              }
-            }
             name="supply"
           >
             <Field
@@ -265,20 +263,7 @@ exports[`TokenSupply should render TokenSupply component and its children, with 
                   "touched": true,
                 }
               }
-            >
-              <span>
-                <p
-                  className="error"
-                  key="0"
-                  style={
-                    Object {
-                      "color": "red",
-                      "fontWeight": "bold",
-                    }
-                  }
-                />
-              </span>
-            </Field>
+            />
           </Error>
         </div>
       </InputField2>
