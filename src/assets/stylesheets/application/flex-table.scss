@@ -76,6 +76,20 @@
       &:nth-child(even) {
         background-color: #e8e8e8;
       }
+
+      &.active {
+        background-color: #6b0392;
+        color: #e8e8e8;
+        transition: 0.8s;
+      }
+    }
+    .tx-status {
+      border: 1px solid #e8e8e8;
+      padding: 0.15em 0.5em;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border-radius: 5px;
+      margin-left: 5px;
     }
   }
 

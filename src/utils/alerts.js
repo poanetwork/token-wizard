@@ -350,3 +350,12 @@ export function deployHasEnded() {
     type: 'info'
   })
 }
+
+export function transactionLost() {
+  return sweetAlert2({
+    title: 'Tx Lost',
+    html: "Please cancel pending transaction, if there's any, in your wallet (Nifty Wallet or Metamask) and Continue",
+    type: 'error',
+    confirmButtonText: 'Continue'
+  })
+}

@@ -1,6 +1,6 @@
 import { incorrectNetworkAlert, noMetaMaskAlert, MetaMaskIsLockedAlert, noContractAlert } from './alerts'
 import { CHAINS, MAX_GAS_PRICE, CROWDSALE_STRATEGIES, EXCEPTIONS, REACT_PREFIX } from './constants'
-import { crowdsaleStore, generalStore, web3Store, contractStore } from '../stores'
+import { crowdsaleStore, generalStore, web3Store, contractStore, deploymentStore } from '../stores'
 import { toJS } from 'mobx'
 import { removeTrailingNUL } from './utils'
 import logdown from 'logdown'
@@ -117,6 +117,17 @@ export const getNetworkVersion = () => {
   return Promise.resolve(null)
 }
 
+export const deployContract = (abi, bin, params, executionOrder) => {
+  const deployOpts = {
+    data: `0x${bin}`,
+    arguments: params
+  }
+
+  return web3Store.web3.eth
+    .getAccounts()
+    .then(accounts => deployContractInner(accounts[0], abi, deployOpts, executionOrder))
+}
+
 export const setExistingContractParams = (abi, addr, setContractProperty) => {
   attachToContract(abi, addr).then(crowdsaleContract => {
     crowdsaleContract.token.call(function(err, tokenAddr) {
@@ -135,16 +146,7 @@ export const setExistingContractParams = (abi, addr, setContractProperty) => {
   })
 }
 
-export const deployContract = (abi, bin, params) => {
-  const deployOpts = {
-    data: `0x${bin}`,
-    arguments: params
-  }
-
-  return web3Store.web3.eth.getAccounts().then(accounts => deployContractInner(accounts, abi, deployOpts))
-}
-
-const deployContractInner = (accounts, abi, deployOpts) => {
+const deployContractInner = (account, abi, deployOpts, executionOrder) => {
   const { web3 } = web3Store
   const objAbi = JSON.parse(JSON.stringify(abi))
   const contractInstance = new web3.eth.Contract(objAbi)
@@ -156,19 +158,20 @@ const deployContractInner = (accounts, abi, deployOpts) => {
     .then(estimatedGas => {
       logger.log('gas is estimated', estimatedGas)
       const sendOpts = {
-        from: accounts[0],
+        from: account,
         gasPrice: generalStore.gasPrice,
         gas: calculateGasLimit(estimatedGas)
       }
-      return sendTX(deploy.send(sendOpts), DEPLOY_CONTRACT)
+      return sendTX(deploy.send(sendOpts), DEPLOY_CONTRACT, executionOrder)
     })
 }
 
-export function sendTXToContract(method) {
-  return sendTX(method, CALL_METHOD)
+export function sendTXToContract(method, executionOrder) {
+  return sendTX(method, CALL_METHOD, executionOrder)
 }
 
-let sendTX = (method, type) => {
+let sendTX = (method, type, executionOrder = null) => {
+  deploymentStore.setDeploymentStepStatus({ executionOrder, status: 'confirmationPending' })
   let isMined = false
   let txHash
 
@@ -176,7 +179,6 @@ let sendTX = (method, type) => {
     method
       .on('error', error => {
         if (isMined) return
-        logger.error(error)
         // https://github.com/poanetwork/token-wizard/issues/472
         if (
           !error.message.includes('Failed to check for transaction receipt') &&
@@ -189,8 +191,11 @@ let sendTX = (method, type) => {
       // transaction, because there wasn't response from it, no receipt. Especially, if you switch between tabs when
       // wizard works.
       // https://github.com/poanetwork/token-wizard/pull/364/files/c86c3e8482ef078e0cb46b8bebf57a9187f32181#r152277434
-      .on('transactionHash', _txHash =>
-        checkTxMined(_txHash, function pollingReceiptCheck(err, receipt) {
+      .on('transactionHash', _txHash => {
+        deploymentStore.setDeploymentStepTxHash({ executionOrder, txHash: _txHash })
+        deploymentStore.setDeploymentStepStatus({ executionOrder, status: 'miningPending' })
+
+        return checkTxMined(_txHash, function pollingReceiptCheck(err, receipt) {
           if (isMined) return
           //https://github.com/poanetwork/token-wizard/issues/480
           if (
@@ -223,7 +228,7 @@ let sendTX = (method, type) => {
             setTimeout(() => checkTxMined(txHash, pollingReceiptCheck), 5000)
           }
         })
-      )
+      })
       .on('receipt', receipt => {
         if (isMined) return
 
@@ -253,24 +258,19 @@ let checkEventTopics = obj => {
   }
 }
 
-const sendTXResponse = (receipt, type) => {
+export const sendTXResponse = receipt => {
   logger.log('receipt:', receipt)
   logger.log('receipt.status:', receipt.status)
+
   if (0 !== +receipt.status || null === receipt.status) {
-    const logs = receipt.logs
-    const events = receipt.events
-    let eventsArr
-    if (events) {
-      eventsArr = Object.keys(events).map(ind => {
-        return events[ind]
-      })
-    }
-    const ev_logs = logs || eventsArr
+    const { logs, events } = receipt
+    const ev_logs = logs || Object.keys(events).map(ind => events[ind])
     logger.log('ev_logs:', ev_logs)
+
     if (ev_logs.some(checkEventTopics)) {
       return Promise.reject({ message: 0 })
     } else {
-      return type === DEPLOY_CONTRACT ? Promise.resolve(receipt.contractAddress, receipt) : Promise.resolve(receipt)
+      return Promise.resolve(receipt)
     }
   } else {
     return Promise.reject({ message: 0 })
