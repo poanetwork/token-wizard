@@ -1,0 +1,27 @@
+.sw-DutchAuctionBlock {
+
+    & > div {
+        @media (min-width: $breakpoint-md) {
+            display: grid;
+            grid-column-gap: $grid-column-gap-xl;
+            grid-row-gap: $grid-row-gap-md;
+            grid-template-areas:
+                "row-1-col-1 row-1-col-2"
+                "row-2-col-1 row-2-col-2"
+                "row-3-col-1 row-3-col-2"
+                "row-4-col-1 ."
+                "row-5-col-1 row-5-col-1";
+        }
+
+        @media (min-width: $breakpoint-xxl) {
+            grid-column-gap: $grid-column-gap-xxl;
+        }
+    }
+
+    .sw-BorderedBlock-3Rows2Columns & {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-3-col-1;
+        }
+    }
+
+}

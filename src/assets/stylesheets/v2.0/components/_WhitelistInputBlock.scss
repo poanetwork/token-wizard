@@ -1,7 +1,17 @@
 .sw-WhitelistInputBlock {
-    @media (min-width: $breakpoint-md) {
-        grid-area: row-6-col-1;
+
+    .sw-BorderedBlock-6Rows2Columns & {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-6-col-1;
+        }
     }
+
+    .sw-DutchAuctionBlock & {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-5-col-1;
+        }
+    }
+
 }
 
 .sw-WhitelistInputBlock_MinMaxFields {

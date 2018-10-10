@@ -13,6 +13,12 @@
         }
     }
 
+    .sw-BorderedBlock-3Rows2Columns & {
+        @media (min-width: $breakpoint-md) {
+            margin-bottom: 0;
+        }
+    }
+
     &.sw-InputField2-TierSetupName {
         @media (min-width: $breakpoint-md) {
             grid-area: row-1-col-1;
@@ -46,6 +52,54 @@
     &.sw-InputField2-MinCap {
         @media (min-width: $breakpoint-md) {
             grid-area: row-5-col-1;
+        }
+    }
+
+    &.sw-InputField2-DutchAuctionWalletAddress {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-1-col-1;
+        }
+    }
+
+    &.sw-InputField2-DutchAuctionStartTime {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-1-col-1;
+        }
+    }
+
+    &.sw-InputField2-DutchAuctionEndTime {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-1-col-2;
+        }
+    }
+
+    &.sw-InputField2-DutchAuctionMinRate {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-2-col-1;
+        }
+    }
+
+    &.sw-InputField2-DutchAuctionMaxRate {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-2-col-2;
+        }
+    }
+
+    &.sw-InputField2-DutchAuctionSupply {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-3-col-1;
+        }
+    }
+
+    &.sw-InputField2-DutchAuctionMinCap {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-3-col-2;
+        }
+    }
+
+    &.sw-InputField2-DutchAuctionWhiteList {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-4-col-1;
         }
     }
 
