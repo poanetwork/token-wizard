@@ -7,7 +7,7 @@ import logdown from 'logdown'
 
 const logger = logdown('TW:stores:Tier')
 
-const { VALID, EMPTY, INVALID } = VALIDATION_TYPES
+const { VALID, INVALID } = VALIDATION_TYPES
 
 class TierStore {
   @observable tiers
