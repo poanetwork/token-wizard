@@ -24,10 +24,7 @@ module.exports = {
       )
     },
     dev: {
-      default: series(
-        'git submodule update --init --recursive --remote',
-        'npm run installWeb3'
-      ),
+      default: series('git submodule update --init --recursive --remote', 'npm run installWeb3'),
       Minted: {
         default: series(
           'nps test.e2e.stop',
