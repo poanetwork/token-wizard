@@ -1,0 +1,57 @@
+$sw-RadioButtonButton-height: 40px !default;
+
+.sw-RadioButton {
+    @include form-control-block-common();
+
+    &.sw-InputField2-WhitelistEnabled {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-4-col-1;
+        }
+    }
+
+    &.sw-InputField2-AllowModifying {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-4-col-2;
+        }
+    }
+
+    &.sw-RadioButton-DutchAuctionBurnExcess {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-2-col-1;
+        }
+    }
+
+}
+
+.sw-RadioButton_Container {
+    display: flex;
+    justify-content: space-between;
+
+    @media (min-width: $breakpoint-md) {
+        justify-content: flex-start;
+    }
+}
+
+.sw-RadioButton_Label {
+    flex-grow: 1;
+    margin-right: 10px;
+    position: relative;
+
+    &:last-child {
+        margin-right: 0;
+    }
+}
+
+.sw-RadioButton_Input {
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    visibility: hidden;
+    z-index: 2;
+}
+
+.sw-RadioButton_Button {
+    @include radio-input-button($sw-RadioButtonButton-height, $brand-secondary, '.sw-RadioButton_Input');
+}

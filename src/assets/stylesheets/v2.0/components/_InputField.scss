@@ -25,6 +25,12 @@
         }
     }
 
+    .sw-BorderedBlock-3Rows2Columns & {
+        @media (min-width: $breakpoint-md) {
+            margin-bottom: 0;
+        }
+    }
+
     .sw-WhitelistInputBlock_MinMaxFields & {
         margin-right: 11px;
     }

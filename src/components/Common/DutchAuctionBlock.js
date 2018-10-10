@@ -20,16 +20,9 @@ import {
 import { DESCRIPTION, TEXT_FIELDS } from '../../utils/constants'
 import { inject, observer } from 'mobx-react'
 import { acceptPositiveIntegerOnly } from '../../utils/utils'
+import { RadioButton } from '../Common/RadioButton'
 
 const { START_TIME, END_TIME, MIN_RATE, MAX_RATE, SUPPLY_SHORT, ENABLE_WHITELISTING } = TEXT_FIELDS
-
-const inputErrorStyle = {
-  color: 'red',
-  fontWeight: 'bold',
-  fontSize: '12px',
-  width: '100%',
-  height: '20px'
-}
 
 export const DutchAuctionBlock = inject('tierStore', 'tokenStore')(
   observer(({ tierStore, tokenStore, fields, ...props }) => {
@@ -70,151 +63,136 @@ export const DutchAuctionBlock = inject('tierStore', 'tokenStore')(
     }
 
     const onChangeWhitelisted = (value, input, index) => {
-      //Clear whitelist
+      // Clear whitelist
       if (tierStore) {
         tierStore.emptyWhitelist(index)
       }
       return input.onChange(value)
     }
 
+    const getWhiteListingButtons = (name, input, index) => {
+      const buttons = [
+        {
+          checked: input.value === 'yes',
+          id: `${name}.enable_whitelisting_yes`,
+          label: 'Yes',
+          name: name,
+          onChange: () => onChangeWhitelisted('yes', input, index),
+          value: 'yes'
+        },
+        {
+          checked: input.value === 'no',
+          id: `${name}.enable_whitelisting_no`,
+          label: 'No',
+          name: name,
+          onChange: () => onChangeWhitelisted('no', input, index),
+          value: 'no'
+        }
+      ]
+
+      return buttons
+    }
+
     return (
-      <div>
+      <div className="sw-DutchAuctionBlock">
         {fields.map((name, index) => (
-          <div style={{ marginTop: '40px' }} className="steps-content container" key={index}>
-            <div>
-              <div className="input-block-container">
-                <Field
-                  name={`${name}.startTime`}
-                  component={InputField2}
-                  validate={validateTierStartDate(index)}
-                  errorStyle={inputErrorStyle}
-                  type="datetime-local"
-                  side="left"
-                  label={START_TIME}
-                  description={DESCRIPTION.START_TIME}
-                />
-                <Field
-                  name={`${name}.endTime`}
-                  component={InputField2}
-                  validate={validateTierEndDate(index)}
-                  errorStyle={inputErrorStyle}
-                  type="datetime-local"
-                  side="right"
-                  label={END_TIME}
-                  description={DESCRIPTION.END_TIME}
-                />
-              </div>
+          <div key={index}>
+            <Field
+              component={InputField2}
+              description={DESCRIPTION.START_TIME}
+              extraClassName="sw-InputField2-DutchAuctionStartTime"
+              label={START_TIME}
+              name={`${name}.startTime`}
+              type="datetime-local"
+              validate={validateTierStartDate(index)}
+            />
+            <Field
+              component={InputField2}
+              description={DESCRIPTION.END_TIME}
+              extraClassName="sw-InputField2-DutchAuctionEndTime"
+              label={END_TIME}
+              name={`${name}.endTime`}
+              type="datetime-local"
+              validate={validateTierEndDate(index)}
+            />
+            <Field
+              component={InputField2}
+              description={DESCRIPTION.RATE}
+              extraClassName="sw-InputField2-DutchAuctionMinRate"
+              label={MIN_RATE}
+              name={`${name}.minRate`}
+              type="text"
+              validate={(value, allValues) => {
+                const errors = composeValidators(
+                  isPositive(),
+                  isInteger(),
+                  isLessThan('Should be less than Max Rate')(allValues.tiers[index].maxRate),
+                  isLessOrEqualThan('Should be less than or equal to 1 quintillion (10^18)')('1e18')
+                )(value)
 
-              <div className="input-block-container">
-                <Field
-                  name={`${name}.minRate`}
-                  component={InputField2}
-                  validate={(value, allValues) => {
-                    const errors = composeValidators(
-                      isPositive(),
-                      isInteger(),
-                      isLessThan('Should be less than Max Rate')(allValues.tiers[index].maxRate),
-                      isLessOrEqualThan('Should be less than or equal to 1 quintillion (10^18)')('1e18')
-                    )(value)
+                if (errors) return errors.shift()
+              }}
+            />
+            <Field
+              component={InputField2}
+              description={DESCRIPTION.RATE}
+              extraClassName="sw-InputField2-DutchAuctionMaxRate"
+              label={MAX_RATE}
+              name={`${name}.maxRate`}
+              type="text"
+              validate={(value, allValues) => {
+                const errors = composeValidators(
+                  isPositive(),
+                  isInteger(),
+                  isGreaterThan('Should be greater than Min Rate')(allValues.tiers[index].minRate),
+                  isLessOrEqualThan('Should less than or equal to 1 quintillion (10^18)')('1e18')
+                )(value)
 
-                    if (errors) return errors.shift()
-                  }}
-                  errorStyle={inputErrorStyle}
-                  type="text"
-                  side="left"
-                  label={MIN_RATE}
-                  description={DESCRIPTION.RATE}
+                if (errors) return errors.shift()
+              }}
+            />
+            <Field
+              component={InputField2}
+              description={DESCRIPTION.SUPPLY}
+              disabled={
+                tierStore &&
+                tierStore.tiers[index].whitelistEnabled === 'yes' &&
+                (tierStore && tierStore.tiers[index].whitelist.length)
+              }
+              extraClassName="sw-InputField2-DutchAuctionSupply"
+              label={SUPPLY_SHORT}
+              name={`${name}.supply`}
+              parse={acceptPositiveIntegerOnly}
+              type="text"
+              validate={value => {
+                const { supply } = tokenStore
+                const errors = composeValidators(
+                  isPositive(),
+                  isLessOrEqualThan(`Should not be greater than Token's total supply: ${supply}`)(supply)
+                )(value)
+                if (errors) return errors.shift()
+              }}
+            />
+            <MinCap
+              decimals={props.decimals}
+              disabled={tierStore ? tierStore.tiers[index].whitelistEnabled === 'yes' : true}
+              extraClassName="sw-InputField2-DutchAuctionMinCap"
+              index={index}
+              name={`${name}.minCap`}
+            />
+            <Field
+              extraClassName="sw-InputField2-DutchAuctionWhiteList"
+              name={`${name}.whitelistEnabled`}
+              render={({ input }) => (
+                <RadioButton
+                  buttons={getWhiteListingButtons(`${name}.whitelistEnabled`, input, index)}
+                  description={DESCRIPTION.ENABLE_WHITELIST}
+                  title={ENABLE_WHITELISTING}
                 />
-                <Field
-                  name={`${name}.maxRate`}
-                  component={InputField2}
-                  validate={(value, allValues) => {
-                    const errors = composeValidators(
-                      isPositive(),
-                      isInteger(),
-                      isGreaterThan('Should be greater than Min Rate')(allValues.tiers[index].minRate),
-                      isLessOrEqualThan('Should less than or equal to 1 quintillion (10^18)')('1e18')
-                    )(value)
-
-                    if (errors) return errors.shift()
-                  }}
-                  errorStyle={inputErrorStyle}
-                  type="text"
-                  side="right"
-                  label={MAX_RATE}
-                  description={DESCRIPTION.RATE}
-                />
-                <Field
-                  name={`${name}.supply`}
-                  component={InputField2}
-                  validate={value => {
-                    const { supply } = tokenStore
-                    const errors = composeValidators(
-                      isPositive(),
-                      isLessOrEqualThan(`Should not be greater than Token's total supply: ${supply}`)(supply)
-                    )(value)
-                    if (errors) return errors.shift()
-                  }}
-                  parse={acceptPositiveIntegerOnly}
-                  errorStyle={inputErrorStyle}
-                  type="text"
-                  side="left"
-                  label={SUPPLY_SHORT}
-                  description={DESCRIPTION.SUPPLY}
-                  disabled={
-                    tierStore &&
-                    tierStore.tiers[index].whitelistEnabled === 'yes' &&
-                    (tierStore && tierStore.tiers[index].whitelist.length)
-                  }
-                />
-                <Field
-                  name={`${name}.whitelistEnabled`}
-                  render={({ input }) => (
-                    <div className="right">
-                      <label className="label">{ENABLE_WHITELISTING}</label>
-                      <div className="radios-inline">
-                        <label className="radio-inline">
-                          <input
-                            type="radio"
-                            checked={input.value === 'yes'}
-                            value="yes"
-                            onChange={() => onChangeWhitelisted('yes', input, index)}
-                          />
-                          <span className="title">yes</span>
-                        </label>
-                        <label className="radio-inline">
-                          <input
-                            type="radio"
-                            checked={input.value === 'no'}
-                            value="no"
-                            onChange={() => onChangeWhitelisted('no', input, index)}
-                          />
-                          <span className="title">no</span>
-                        </label>
-                      </div>
-                      <p className="description">{DESCRIPTION.ENABLE_WHITELIST}</p>
-                    </div>
-                  )}
-                />
-              </div>
-            </div>
-            <div className="input-block-container">
-              <MinCap
-                name={`${name}.minCap`}
-                errorStyle={inputErrorStyle}
-                decimals={props.decimals}
-                index={index}
-                disabled={tierStore ? tierStore.tiers[index].whitelistEnabled === 'yes' : true}
-                side="left"
-              />
-            </div>
+              )}
+            />
             {tierStore.tiers[index].whitelistEnabled === 'yes' ? (
-              <div>
-                <div className="section-title">
-                  <p className="title">Whitelist</p>
-                </div>
-                <WhitelistInputBlock num={index} decimals={props.decimals} />
-              </div>
+              <WhitelistInputBlock num={index} decimals={props.decimals} />
             ) : null}
           </div>
         ))}

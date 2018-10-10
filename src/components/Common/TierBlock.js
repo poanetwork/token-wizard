@@ -1,15 +1,15 @@
 import React from 'react'
-import { Field } from 'react-final-form'
-import { InputField2 } from './InputField2'
-import { WhitelistInputBlock } from './WhitelistInputBlock'
-import { composeValidators, isRequired, isMaxLength } from '../../utils/validations'
-import { DESCRIPTION, TEXT_FIELDS } from '../../utils/constants'
-import { CrowdsaleStartTime } from './CrowdsaleStartTime'
 import { CrowdsaleEndTime } from './CrowdsaleEndTime'
 import { CrowdsaleRate } from './CrowdsaleRate'
-import { Supply } from './Supply'
+import { CrowdsaleStartTime } from './CrowdsaleStartTime'
+import { DESCRIPTION, TEXT_FIELDS } from '../../utils/constants'
+import { Field } from 'react-final-form'
+import { InputField2 } from './InputField2'
 import { MinCap } from './MinCap'
-import { FormControlTitle } from '../Common/FormControlTitle'
+import { RadioButton } from '../Common/RadioButton'
+import { Supply } from './Supply'
+import { WhitelistInputBlock } from './WhitelistInputBlock'
+import { composeValidators, isRequired, isMaxLength } from '../../utils/validations'
 
 const { ALLOW_MODIFYING, CROWDSALE_SETUP_NAME, ENABLE_WHITELISTING } = TEXT_FIELDS
 
@@ -21,30 +21,6 @@ export const TierBlock = ({ fields, ...props }) => {
     }
 
     return input.onChange(value)
-  }
-
-  const tierBlockSelectButtons = (title, description, buttons, extraClassName = '') => {
-    return (
-      <div className={`sw-TierBlock_SelectButtons ${extraClassName ? extraClassName : ''}`}>
-        <FormControlTitle title={title} description={description} />
-        <div className="sw-TierBlock_SelectButtonsContainer">
-          {buttons.map((item, index) => (
-            <label className="sw-TierBlock_SelectButtonsLabel" key={index}>
-              <input
-                checked={item.checked}
-                className="sw-TierBlock_SelectButtonsInput"
-                id={item.id}
-                name={item.name}
-                onChange={item.onChange}
-                type="radio"
-                value={item.value}
-              />
-              <span className="sw-TierBlock_SelectButtonsButton">{item.label}</span>
-            </label>
-          ))}
-        </div>
-      </div>
-    )
   }
 
   const getWhiteListingButtons = (name, input, index) => {
@@ -143,26 +119,26 @@ export const TierBlock = ({ fields, ...props }) => {
           <Field
             id={`${name}.whitelistEnabled`}
             name={`${name}.whitelistEnabled`}
-            render={({ input }) =>
-              tierBlockSelectButtons(
-                ENABLE_WHITELISTING,
-                DESCRIPTION.ENABLE_WHITELIST,
-                getWhiteListingButtons(`${name}.whitelistEnabled`, input, index),
-                'sw-InputField2-WhitelistEnabled'
-              )
-            }
+            render={({ input }) => (
+              <RadioButton
+                buttons={getWhiteListingButtons(`${name}.whitelistEnabled`, input, index)}
+                description={DESCRIPTION.ENABLE_WHITELIST}
+                extraClassName={'sw-InputField2-WhitelistEnabled'}
+                title={ENABLE_WHITELISTING}
+              />
+            )}
           />
           <Field
             id={`${name}.updatable`}
             name={`${name}.updatable`}
-            render={({ input }) =>
-              tierBlockSelectButtons(
-                ALLOW_MODIFYING,
-                DESCRIPTION.ALLOW_MODIFYING,
-                getAllowModifiyingButtons(`${name}.updatable`, input),
-                'sw-InputField2-AllowModifying'
-              )
-            }
+            render={({ input }) => (
+              <RadioButton
+                buttons={getAllowModifiyingButtons(`${name}.updatable`, input)}
+                description={DESCRIPTION.ALLOW_MODIFYING}
+                extraClassName={'sw-InputField2-AllowModifying'}
+                title={ALLOW_MODIFYING}
+              />
+            )}
           />
           {props.tierStore.tiers[index].whitelistEnabled === 'yes' ? (
             <WhitelistInputBlock num={index} decimals={props.decimals} />

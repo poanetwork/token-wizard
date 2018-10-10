@@ -2,6 +2,13 @@ $sw-GasPriceInput_Select-height: 40px;
 
 .sw-GasPriceInput {
     @include form-control-block-common();
+
+    &.sw-GasPriceInput-DutchAuction {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-1-col-2;
+        }
+    }
+
 }
 
 .sw-GasPriceInput_Select {
