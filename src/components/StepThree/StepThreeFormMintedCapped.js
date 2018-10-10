@@ -1,45 +1,41 @@
+import GasPriceInput from './GasPriceInput'
 import React from 'react'
+import logdown from 'logdown'
+import { AddTierButton } from './AddTierButton'
+import { ButtonBack } from '../Common/ButtonBack'
+import { ButtonContinue } from '../Common/ButtonContinue'
 import { Field, FormSpy } from 'react-final-form'
 import { FieldArray } from 'react-final-form-arrays'
-import { WhenFieldChanges } from '../Common/WhenFieldChanges'
 import { InputField2 } from '../Common/InputField2'
-import GasPriceInput from './GasPriceInput'
-import { ButtonContinue } from '../Common/ButtonContinue'
-import { gweiToWei } from '../../utils/utils'
+import { TEXT_FIELDS, VALIDATION_TYPES, VALIDATION_MESSAGES, DESCRIPTION } from '../../utils/constants'
+import { TierBlock } from '../Common/TierBlock'
+import { WhenFieldChanges } from '../Common/WhenFieldChanges'
 import {
   composeValidators,
   isAddress,
   isDecimalPlacesNotGreaterThan,
   isGreaterOrEqualThan
 } from '../../utils/validations'
-import {
-  TEXT_FIELDS,
-  VALIDATION_TYPES,
-  VALIDATION_MESSAGES,
-  DESCRIPTION,
-  NAVIGATION_STEPS
-} from '../../utils/constants'
-import { TierBlock } from '../Common/TierBlock'
-import { ButtonBack } from '../Common/ButtonBack'
-import { AddTierButton } from './AddTierButton'
+import { gweiToWei, navigateTo } from '../../utils/utils'
 
 const { VALID } = VALIDATION_TYPES
 const { WALLET_ADDRESS } = TEXT_FIELDS
+const logger = logdown('TW:StepThree')
 
 export const StepThreeFormMintedCapped = ({
-  handleSubmit,
-  values,
-  invalid,
-  pristine,
-  submitting,
   errors,
-  mutators: { push, setFieldTouched },
   form,
+  handleSubmit,
+  history,
+  invalid,
+  mutators: { push, setFieldTouched },
+  pristine,
   reload,
+  submitting,
+  values,
   ...props
 }) => {
   const status = !(submitting || invalid)
-
   const addTier = () => {
     props.addCrowdsale()
     const lastTier = props.tierStore.tiers[props.tierStore.tiers.length - 1]
@@ -131,23 +127,12 @@ export const StepThreeFormMintedCapped = ({
     )
   }
 
-  const navigateTo = (location, params = '') => {
-    const path =
-      {
-        home: '/',
-        stepOne: '1',
-        manage: 'manage'
-      }[location] || null
-
-    if (path === null) {
-      throw new Error(`invalid location specified: ${location}`)
-    }
-
-    // history.push(`${path}${params}`)
-  }
-
   const goBack = async () => {
-    navigateTo('stepTwo')
+    try {
+      navigateTo(history, 'stepTwo')
+    } catch (err) {
+      logger.log('Error to navigate', err)
+    }
   }
 
   return (
