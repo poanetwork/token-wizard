@@ -229,12 +229,19 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
                 }
                 placeholder="0"
               >
-                <div>
-                  <label
-                    className="label"
-                    htmlFor="contribute"
-                  />
-                  <input
+                <div
+                  className="sw-InputField "
+                >
+                  <FormControlTitle>
+                    <div
+                      className="sw-FormControlTitle"
+                    >
+                      <label
+                        className="sw-FormControlTitle_Label"
+                      />
+                    </div>
+                  </FormControlTitle>
+                  <TextField
                     autoComplete="off"
                     className="contribute-form-input"
                     id="contribute"
@@ -244,10 +251,18 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
                     onFocus={[Function]}
                     placeholder="0"
                     value=""
-                  />
-                  <p
-                    className="description"
-                  />
+                  >
+                    <input
+                      className="sw-TextField"
+                      id="contribute"
+                      name="contribute"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder="0"
+                      value=""
+                    />
+                  </TextField>
                   <Error
                     name="contribute"
                   >
@@ -263,23 +278,7 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
                           "touched": true,
                         }
                       }
-                    >
-                      <span>
-                        <p
-                          className="error"
-                          key="0"
-                          style={
-                            Object {
-                              "color": "red",
-                              "fontSize": "12px",
-                              "fontWeight": "bold",
-                              "height": "20px",
-                              "width": "100%",
-                            }
-                          }
-                        />
-                      </span>
-                    </Field>
+                    />
                   </Error>
                 </div>
               </InputField2>
@@ -349,14 +348,18 @@ exports[`ContributeForm should render ContributeForm component 1`] = `
   <div
     className="contribute-form-input-container"
   >
-    <div>
-      <label
-        className="label"
-        htmlFor="contribute"
-      />
+    <div
+      className="sw-InputField "
+    >
+      <div
+        className="sw-FormControlTitle"
+      >
+        <label
+          className="sw-FormControlTitle_Label"
+        />
+      </div>
       <input
-        autoComplete="off"
-        className="contribute-form-input"
+        className="sw-TextField"
         id="contribute"
         name="contribute"
         onBlur={[Function]}
@@ -365,23 +368,6 @@ exports[`ContributeForm should render ContributeForm component 1`] = `
         placeholder="0"
         value=""
       />
-      <p
-        className="description"
-      />
-      <span>
-        <p
-          className="error"
-          style={
-            Object {
-              "color": "red",
-              "fontSize": "12px",
-              "fontWeight": "bold",
-              "height": "20px",
-              "width": "100%",
-            }
-          }
-        />
-      </span>
     </div>
     <div
       className="contribute-form-label"
@@ -401,7 +387,7 @@ exports[`ContributeForm should render ContributeForm component 1`] = `
         disabled={false}
         value="metamask"
       >
-        Wallet
+        Wallet 
       </option>
       <option
         value="qr"
@@ -438,14 +424,18 @@ exports[`ContributeForm should render ContributeForm component and its children 
   <div
     className="contribute-form-input-container"
   >
-    <div>
-      <label
-        className="label"
-        htmlFor="contribute"
-      />
+    <div
+      className="sw-InputField "
+    >
+      <div
+        className="sw-FormControlTitle"
+      >
+        <label
+          className="sw-FormControlTitle_Label"
+        />
+      </div>
       <input
-        autoComplete="off"
-        className="contribute-form-input"
+        className="sw-TextField"
         id="contribute"
         name="contribute"
         onBlur={[Function]}
@@ -454,23 +444,6 @@ exports[`ContributeForm should render ContributeForm component and its children 
         placeholder="0"
         value=""
       />
-      <p
-        className="description"
-      />
-      <span>
-        <p
-          className="error"
-          style={
-            Object {
-              "color": "red",
-              "fontSize": "12px",
-              "fontWeight": "bold",
-              "height": "20px",
-              "width": "100%",
-            }
-          }
-        />
-      </span>
     </div>
     <div
       className="contribute-form-label"
@@ -490,7 +463,7 @@ exports[`ContributeForm should render ContributeForm component and its children 
         disabled={false}
         value="metamask"
       >
-        Wallet
+        Wallet 
       </option>
       <option
         value="qr"

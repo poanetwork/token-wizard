@@ -1,16 +1,31 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`MinCap  should render MinCap component 1`] = `
-<div>
-  <label
-    className="label"
-    htmlFor="mincap"
+<div
+  className="sw-InputField "
+>
+  <div
+    className="sw-FormControlTitle"
   >
-    Contributor min cap
-  </label>
+    <label
+      className="sw-FormControlTitle_Label"
+    >
+      Contributor min cap
+    </label>
+    <div
+      className="sw-FormControlTitle_Info"
+      tabIndex="-1"
+    >
+      <span
+        className="sw-FormControlTitle_Tooltip"
+      >
+        Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1
+               and a user already has 1 token from a previous transaction, they can buy any amount they want.
+      </span>
+    </div>
+  </div>
   <input
-    autoComplete="off"
-    className="input"
+    className="sw-TextField"
     disabled={false}
     id="mincap"
     name="mincap"
@@ -20,46 +35,35 @@ exports[`MinCap  should render MinCap component 1`] = `
     type="text"
     value=""
   />
-  <p
-    className="description"
-  >
-    Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1
-               and a user already has 1 token from a previous transaction, they can buy any amount they want.
-  </p>
-  <span>
-    <p
-      className="error"
-      style={
-        Object {
-          "color": "red",
-          "fontWeight": "bold",
-        }
-      }
-    />
-    <p
-      className="error"
-      style={
-        Object {
-          "color": "red",
-          "fontWeight": "bold",
-        }
-      }
-    />
-  </span>
 </div>
 `;
 
 exports[`MinCap  should render MinCap component if field is disabled 1`] = `
-<div>
-  <label
-    className="label"
-    htmlFor="mincap"
+<div
+  className="sw-InputField "
+>
+  <div
+    className="sw-FormControlTitle"
   >
-    Contributor min cap
-  </label>
+    <label
+      className="sw-FormControlTitle_Label"
+    >
+      Contributor min cap
+    </label>
+    <div
+      className="sw-FormControlTitle_Info"
+      tabIndex="-1"
+    >
+      <span
+        className="sw-FormControlTitle_Tooltip"
+      >
+        Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1
+               and a user already has 1 token from a previous transaction, they can buy any amount they want.
+      </span>
+    </div>
+  </div>
   <input
-    autoComplete="off"
-    className="input"
+    className="sw-TextField"
     disabled={true}
     id="mincap"
     name="mincap"
@@ -69,22 +73,5 @@ exports[`MinCap  should render MinCap component if field is disabled 1`] = `
     type="text"
     value=""
   />
-  <p
-    className="description"
-  >
-    Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1
-               and a user already has 1 token from a previous transaction, they can buy any amount they want.
-  </p>
-  <span>
-    <p
-      className="error"
-      style={
-        Object {
-          "color": "red",
-          "fontWeight": "bold",
-        }
-      }
-    />
-  </span>
 </div>
 `;

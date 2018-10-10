@@ -2,17 +2,29 @@
 
 exports[`TokenTicker should render TokenTicker component 1`] = `
 <div
-  className="right"
+  className="sw-InputField "
 >
-  <label
-    className="label"
-    htmlFor="ticker"
+  <div
+    className="sw-FormControlTitle"
   >
-    Ticker
-  </label>
+    <label
+      className="sw-FormControlTitle_Label"
+    >
+      Ticker
+    </label>
+    <div
+      className="sw-FormControlTitle_Info"
+      tabIndex="-1"
+    >
+      <span
+        className="sw-FormControlTitle_Tooltip"
+      >
+        The five letter ticker for your token. There are 11,881,376 combinations for 26 english letters. Be hurry.
+      </span>
+    </div>
+  </div>
   <input
-    autoComplete="off"
-    className="input"
+    className="sw-TextField"
     id="ticker"
     name="ticker"
     onBlur={[Function]}
@@ -21,38 +33,34 @@ exports[`TokenTicker should render TokenTicker component 1`] = `
     type="text"
     value=""
   />
-  <p
-    className="description"
-  >
-    The five letter ticker for your token. There are 11,881,376 combinations for 26 english letters. Be hurry.
-  </p>
-  <span>
-    <p
-      className="error"
-      style={
-        Object {
-          "color": "red",
-          "fontWeight": "bold",
-        }
-      }
-    />
-  </span>
 </div>
 `;
 
 exports[`TokenTicker should render TokenTicker component and its children 1`] = `
 <div
-  className="right"
+  className="sw-InputField "
 >
-  <label
-    className="label"
-    htmlFor="ticker"
+  <div
+    className="sw-FormControlTitle"
   >
-    Ticker
-  </label>
+    <label
+      className="sw-FormControlTitle_Label"
+    >
+      Ticker
+    </label>
+    <div
+      className="sw-FormControlTitle_Info"
+      tabIndex="-1"
+    >
+      <span
+        className="sw-FormControlTitle_Tooltip"
+      >
+        The five letter ticker for your token. There are 11,881,376 combinations for 26 english letters. Be hurry.
+      </span>
+    </div>
+  </div>
   <input
-    autoComplete="off"
-    className="input"
+    className="sw-TextField"
     id="ticker"
     name="ticker"
     onBlur={[Function]}
@@ -61,21 +69,5 @@ exports[`TokenTicker should render TokenTicker component and its children 1`] = 
     type="text"
     value=""
   />
-  <p
-    className="description"
-  >
-    The five letter ticker for your token. There are 11,881,376 combinations for 26 english letters. Be hurry.
-  </p>
-  <span>
-    <p
-      className="error"
-      style={
-        Object {
-          "color": "red",
-          "fontWeight": "bold",
-        }
-      }
-    />
-  </span>
 </div>
 `;

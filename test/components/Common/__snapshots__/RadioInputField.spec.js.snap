@@ -1,52 +1,65 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Should render the component 1`] = `
-<div>
-  <label
-    className="label"
-  >
-    Some Title
-  </label>
+<div
+  className="sw-RadioInputField "
+>
   <div
-    className="radios-inline"
+    className="sw-FormControlTitle"
   >
     <label
-      className="radio-inline"
+      className="sw-FormControlTitle_Label"
+    >
+      Some Title
+    </label>
+    <div
+      className="sw-FormControlTitle_Info"
+      tabIndex="-1"
+    >
+      <span
+        className="sw-FormControlTitle_Tooltip"
+      >
+        Some Description
+      </span>
+    </div>
+  </div>
+  <div
+    className="sw-RadioInputField_ButtonsContainer"
+  >
+    <label
+      className="sw-RadioInputField_Label"
     >
       <input
         checked={true}
+        className="sw-RadioInputField_Input"
         id="item-1"
         onChange={[Function]}
         type="radio"
         value="item-1"
       />
       <span
-        className="title"
+        className="sw-RadioInputField_Button"
       >
         Item 1
       </span>
     </label>
     <label
-      className="radio-inline"
+      className="sw-RadioInputField_Label"
     >
       <input
         checked={false}
+        className="sw-RadioInputField_Input"
         id="item-2"
         onChange={[Function]}
         type="radio"
         value="item-2"
       />
       <span
-        className="title"
+        className="sw-RadioInputField_Button"
       >
         Item 2
       </span>
     </label>
   </div>
-  <p
-    className="description"
-  >
-    Some Description
-  </p>
 </div>
 `;

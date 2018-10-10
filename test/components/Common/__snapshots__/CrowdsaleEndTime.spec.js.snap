@@ -1,16 +1,30 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CrowdsaleEndTime Rendering should render CrowdsaleEndTime component 1`] = `
-<div>
-  <label
-    className="label"
-    htmlFor="tiers[0].endTime"
+<div
+  className="sw-InputField "
+>
+  <div
+    className="sw-FormControlTitle"
   >
-    End Time
-  </label>
+    <label
+      className="sw-FormControlTitle_Label"
+    >
+      End Time
+    </label>
+    <div
+      className="sw-FormControlTitle_Info"
+      tabIndex="-1"
+    >
+      <span
+        className="sw-FormControlTitle_Tooltip"
+      >
+        Date and time when the tier ends. Can be only in the future.
+      </span>
+    </div>
+  </div>
   <input
-    autoComplete="off"
-    className="input"
+    className="sw-TextField"
     disabled={false}
     id="tiers[0].endTime"
     name="tiers[0].endTime"
@@ -20,36 +34,34 @@ exports[`CrowdsaleEndTime Rendering should render CrowdsaleEndTime component 1`]
     type="datetime-local"
     value={1521716400000}
   />
-  <p
-    className="description"
-  >
-    Date and time when the tier ends. Can be only in the future.
-  </p>
-  <span>
-    <p
-      className="error"
-      style={
-        Object {
-          "color": "red",
-          "fontWeight": "bold",
-        }
-      }
-    />
-  </span>
 </div>
 `;
 
 exports[`CrowdsaleEndTime Rendering should render CrowdsaleEndTime component if field is disabled 1`] = `
-<div>
-  <label
-    className="label"
-    htmlFor="tiers[0].endTime"
+<div
+  className="sw-InputField "
+>
+  <div
+    className="sw-FormControlTitle"
   >
-    End Time
-  </label>
+    <label
+      className="sw-FormControlTitle_Label"
+    >
+      End Time
+    </label>
+    <div
+      className="sw-FormControlTitle_Info"
+      tabIndex="-1"
+    >
+      <span
+        className="sw-FormControlTitle_Tooltip"
+      >
+        Date and time when the tier ends. Can be only in the future.
+      </span>
+    </div>
+  </div>
   <input
-    autoComplete="off"
-    className="input"
+    className="sw-TextField"
     disabled={true}
     id="tiers[0].endTime"
     name="tiers[0].endTime"
@@ -59,21 +71,5 @@ exports[`CrowdsaleEndTime Rendering should render CrowdsaleEndTime component if 
     type="datetime-local"
     value={1521716400000}
   />
-  <p
-    className="description"
-  >
-    Date and time when the tier ends. Can be only in the future.
-  </p>
-  <span>
-    <p
-      className="error"
-      style={
-        Object {
-          "color": "red",
-          "fontWeight": "bold",
-        }
-      }
-    />
-  </span>
 </div>
 `;

@@ -2,17 +2,29 @@
 
 exports[`TokenName should render TokenName component 1`] = `
 <div
-  className="left"
+  className="sw-InputField "
 >
-  <label
-    className="label"
-    htmlFor="name"
+  <div
+    className="sw-FormControlTitle"
   >
-    Name
-  </label>
+    <label
+      className="sw-FormControlTitle_Label"
+    >
+      Name
+    </label>
+    <div
+      className="sw-FormControlTitle_Info"
+      tabIndex="-1"
+    >
+      <span
+        className="sw-FormControlTitle_Tooltip"
+      >
+        The name of your token. Will be used by Etherscan and other tokenbrowsers. Be afraid of trademarks.
+      </span>
+    </div>
+  </div>
   <input
-    autoComplete="off"
-    className="input"
+    className="sw-TextField"
     id="name"
     name="name"
     onBlur={[Function]}
@@ -21,38 +33,34 @@ exports[`TokenName should render TokenName component 1`] = `
     type="text"
     value=""
   />
-  <p
-    className="description"
-  >
-    The name of your token. Will be used by Etherscan and other tokenbrowsers. Be afraid of trademarks.
-  </p>
-  <span>
-    <p
-      className="error"
-      style={
-        Object {
-          "color": "red",
-          "fontWeight": "bold",
-        }
-      }
-    />
-  </span>
 </div>
 `;
 
 exports[`TokenName should render TokenName component and its children 1`] = `
 <div
-  className="left"
+  className="sw-InputField "
 >
-  <label
-    className="label"
-    htmlFor="name"
+  <div
+    className="sw-FormControlTitle"
   >
-    Name
-  </label>
+    <label
+      className="sw-FormControlTitle_Label"
+    >
+      Name
+    </label>
+    <div
+      className="sw-FormControlTitle_Info"
+      tabIndex="-1"
+    >
+      <span
+        className="sw-FormControlTitle_Tooltip"
+      >
+        The name of your token. Will be used by Etherscan and other tokenbrowsers. Be afraid of trademarks.
+      </span>
+    </div>
+  </div>
   <input
-    autoComplete="off"
-    className="input"
+    className="sw-TextField"
     id="name"
     name="name"
     onBlur={[Function]}
@@ -61,21 +69,5 @@ exports[`TokenName should render TokenName component and its children 1`] = `
     type="text"
     value=""
   />
-  <p
-    className="description"
-  >
-    The name of your token. Will be used by Etherscan and other tokenbrowsers. Be afraid of trademarks.
-  </p>
-  <span>
-    <p
-      className="error"
-      style={
-        Object {
-          "color": "red",
-          "fontWeight": "bold",
-        }
-      }
-    />
-  </span>
 </div>
 `;
