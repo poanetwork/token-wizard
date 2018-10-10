@@ -454,8 +454,10 @@ describe('TierStore', () => {
     ]
 
     // When
+    tierStore.emptyList()
+
     tiers.forEach(tier => {
-      tierStore.addTier(tier)
+      tierStore.addTier(tier, null)
     })
 
     tiers.forEach((tier, index) => {

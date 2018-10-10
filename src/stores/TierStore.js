@@ -58,9 +58,11 @@ class TierStore {
 
   @action
   validateTiers = (property, index) => {
+    const validTiers = this.validTiers.slice()
+
     switch (property) {
       case 'tier':
-        if (this.validTiers.length > 0 && this.validTiers[index]) {
+        if (validTiers.length > 0 && validTiers[index] !== undefined) {
           this.validTiers[index][property] = validateTier(this.tiers[index][property]) ? VALID : INVALID
         } else {
           this.validTiers.push({
@@ -69,7 +71,7 @@ class TierStore {
         }
         break
       case 'supply':
-        if (this.validTiers.length > 0 && this.validTiers[index]) {
+        if (validTiers.length > 0 && validTiers[index] !== undefined) {
           this.validTiers[index][property] = validateSupply(this.tiers[index][property]) ? VALID : INVALID
         } else {
           this.validTiers.push({
@@ -78,7 +80,7 @@ class TierStore {
         }
         break
       case 'startTime':
-        if (this.validTiers.length > 0 && this.validTiers[index]) {
+        if (validTiers.length > 0 && validTiers[index] !== undefined) {
           if (index > 0) {
             this.validTiers[index][property] = validateLaterOrEqualTime(
               this.tiers[index][property],
@@ -104,7 +106,7 @@ class TierStore {
         }
         break
       case 'endTime':
-        if (this.validTiers.length > 0 && this.validTiers[index]) {
+        if (validTiers.length > 0 && validTiers[index] !== undefined) {
           this.validTiers[index][property] = validateLaterTime(this.tiers[index][property], this.tiers[index].startTime)
             ? VALID
             : INVALID
