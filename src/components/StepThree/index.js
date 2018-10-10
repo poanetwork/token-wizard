@@ -1,20 +1,19 @@
 import React, { Component } from 'react'
-import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
-import { getNetworkVersion, getNetWorkNameById, checkWeb3 } from '../../utils/blockchainHelpers'
-import { StepNavigation } from '../Common/StepNavigation'
-import { NAVIGATION_STEPS, CHAINS } from '../../utils/constants'
-import { inject, observer } from 'mobx-react'
-import { Loader } from '../Common/Loader'
-import { noGasPriceAvailable, warningOnMainnetAlert } from '../../utils/alerts'
-import { getStep3Component } from './utils'
 import createDecorator from 'final-form-calculate'
 import logdown from 'logdown'
-import { sleep } from '../../utils/utils'
 import setFieldTouched from 'final-form-set-field-touched'
+import { Form } from 'react-final-form'
+import { Loader } from '../Common/Loader'
+import { NAVIGATION_STEPS, CHAINS } from '../../utils/constants'
+import { StepNavigation } from '../Common/StepNavigation'
+import { getNetworkVersion, getNetWorkNameById, checkWeb3 } from '../../utils/blockchainHelpers'
+import { getStep3Component } from './utils'
+import { inject, observer } from 'mobx-react'
+import { noGasPriceAvailable, warningOnMainnetAlert } from '../../utils/alerts'
+import { sleep, navigateTo } from '../../utils/utils'
 
 const logger = logdown('TW:StepThree')
-
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 
 @inject(
@@ -94,8 +93,12 @@ export class StepThree extends Component {
     }
   }
 
-  goToDeploymentStage = () => {
-    this.props.history.push('/4')
+  goNextStep = () => {
+    try {
+      navigateTo(this.props.history, 'stepFour')
+    } catch (err) {
+      logger.log('Error to navigate', err)
+    }
   }
 
   handleOnSubmit = () => {
@@ -129,16 +132,10 @@ export class StepThree extends Component {
             }, 0)
           }
 
-          return warningOnMainnetAlert(
-            tiersCount,
-            priceSelected,
-            reservedCount,
-            whitelistCount,
-            this.goToDeploymentStage
-          )
+          return warningOnMainnetAlert(tiersCount, priceSelected, reservedCount, whitelistCount, this.goNextStep)
         }
 
-        this.goToDeploymentStage()
+        this.goNextStep()
       })
       .catch(error => {
         logger.error(error)
@@ -202,6 +199,7 @@ export class StepThree extends Component {
               decorators={[this.calculator]}
               gasPricesInGwei={gasPriceStore.gasPricesInGwei}
               generalStore={generalStore}
+              history={this.props.history}
               initialValues={{
                 burnExcess: this.state.burnExcess,
                 gasPrice: this.state.gasTypeSelected,

@@ -245,6 +245,8 @@ export const navigateTo = (history, location, params = '') => {
       home: '/',
       stepOne: '1',
       stepTwo: '2',
+      stepThree: '3',
+      stepFour: '4',
       manage: 'manage',
       crowdsales: 'crowdsales'
     }[location] || null
