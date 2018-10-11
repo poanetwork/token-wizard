@@ -99,11 +99,15 @@
     }
 }
 
+
+
 // form control block common properties
 @mixin form-control-block-common() {
+    $form-control-block-common-margin-bottom: 18px !default;
+
     display: flex;
     flex-direction: column;
-    margin-bottom: 18px;
+    margin-bottom: $form-control-block-common-margin-bottom;
     min-width: 0;
     position: relative;
     z-index: 1;

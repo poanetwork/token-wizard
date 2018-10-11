@@ -9,6 +9,12 @@ $sw-GasPriceInput_Select-height: 40px;
         }
     }
 
+    .sw-BorderedBlock-CrowdSaleSetupGlobalSettingsDutchAuction & {
+        @media (min-width: $breakpoint-md) {
+            margin-bottom: 0;
+        }
+    }
+
 }
 
 .sw-GasPriceInput_Select {

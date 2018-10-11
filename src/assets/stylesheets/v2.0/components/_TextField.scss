@@ -35,6 +35,7 @@ $sw-TextField-height: 40px !default;
         background-position: calc(100% - 10px) 50%;
         background-repeat: no-repeat;
         background-size: 23.8px 23.9px;
+        width: 100%;
 
         &:focus {
             background-image: none;

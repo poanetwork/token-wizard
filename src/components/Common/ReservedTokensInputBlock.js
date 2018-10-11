@@ -259,8 +259,10 @@ export class ReservedTokensInputBlock extends Component {
   }
 
   render() {
-    const reservedTokensElements = <ReservedTokensTable extraClassName="sw-BorderedBlock_Row2Column1" {...this.props} />
     const tokensListEmpty = this.props.reservedTokenStore.tokens.length === 0
+    const reservedTokensElements = tokensListEmpty ? null : (
+      <ReservedTokensTable extraClassName="sw-BorderedBlock_Row2Column1" {...this.props} />
+    )
     let valueInputParams = null
 
     if (this.state.dim === 'tokens') {
@@ -285,7 +287,7 @@ export class ReservedTokensInputBlock extends Component {
     return (
       <div>
         <h2 className="sw-BorderedBlockTitle">Reserved tokens</h2>
-        <div className="sw-BorderedBlock sw-BorderedBlock-3Rows3Columns">
+        <div className="sw-BorderedBlock sw-BorderedBlock-ReservedTokensWhitelistCapped">
           <InputField
             extraClassName="sw-BorderedBlock_Row1Column1"
             description="Address where to send reserved tokens."

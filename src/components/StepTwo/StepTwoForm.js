@@ -41,8 +41,8 @@ export const StepTwoForm = inject('tokenStore', 'crowdsaleStore', 'reservedToken
       const tokenSupply = crowdsaleStore.strategy === DUTCH_AUCTION ? <TokenSupply /> : null
 
       const topBlockExtraClass = classNames({
-        'sw-BorderedBlock-2Rows2Columns': crowdsaleStore.strategy === DUTCH_AUCTION,
-        'sw-BorderedBlock-3Columns': crowdsaleStore.strategy !== DUTCH_AUCTION
+        'sw-BorderedBlock-GeneralSettingsDutchAuction': crowdsaleStore.strategy === DUTCH_AUCTION,
+        'sw-BorderedBlock-GeneralSettingsWhitelistCapped': crowdsaleStore.strategy !== DUTCH_AUCTION
       })
 
       const setFieldAsTouched = () => {

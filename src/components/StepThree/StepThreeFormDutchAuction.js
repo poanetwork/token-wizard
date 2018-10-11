@@ -147,7 +147,7 @@ export const StepThreeFormDutchAuction = ({
     <form onSubmit={handleSubmit} className="st-StepContent_FormFullHeight">
       <WhenFieldChanges field="tiers[0].whitelistEnabled" becomes={'yes'} set="tiers[0].minCap" to={0} />
       <h2 className="sw-BorderedBlockTitle">Global settings</h2>
-      <div tabIndex="0" className="sw-BorderedBlock sw-BorderedBlock-3Rows2Columns">
+      <div tabIndex="0" className="sw-BorderedBlock sw-BorderedBlock-CrowdSaleSetupGlobalSettingsDutchAuction">
         <Field
           component={InputField2}
           description={DESCRIPTION.WALLET}

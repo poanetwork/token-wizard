@@ -181,12 +181,12 @@ export const DutchAuctionBlock = inject('tierStore', 'tokenStore')(
               name={`${name}.minCap`}
             />
             <Field
-              extraClassName="sw-InputField2-DutchAuctionWhiteList"
               name={`${name}.whitelistEnabled`}
               render={({ input }) => (
                 <RadioButton
                   buttons={getWhiteListingButtons(`${name}.whitelistEnabled`, input, index)}
                   description={DESCRIPTION.ENABLE_WHITELIST}
+                  extraClassName="sw-RadioButton-DutchAuctionWhiteList"
                   title={ENABLE_WHITELISTING}
                 />
               )}

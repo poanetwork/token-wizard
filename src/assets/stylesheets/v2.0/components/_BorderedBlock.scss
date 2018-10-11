@@ -21,7 +21,7 @@
         padding: 34px 36px 49px 35px;
     }
 
-    &.sw-BorderedBlock-3Columns {
+    &.sw-BorderedBlock-GeneralSettingsWhitelistCapped {
         @media (min-width: $breakpoint-xl) {
             display: grid;
             grid-column-gap: $grid-column-gap-md;
@@ -33,7 +33,7 @@
         }
     }
 
-    &.sw-BorderedBlock-2Rows2Columns {
+    &.sw-BorderedBlock-GeneralSettingsDutchAuction {
         @media (min-width: $breakpoint-xxl) {
             display: grid;
             grid-column-gap: $grid-column-gap-xxl;
@@ -42,7 +42,7 @@
         }
     }
 
-    &.sw-BorderedBlock-1Row2Columns {
+    &.sw-BorderedBlock-CrowdSaleSetupGlobalSettingsWhitelistCapped {
 
         @media (min-width: $breakpoint-md) {
             display: grid;
@@ -57,7 +57,27 @@
 
     }
 
-    &.sw-BorderedBlock-3Rows3Columns {
+    &.sw-BorderedBlock-CrowdSaleSetupGlobalSettingsDutchAuction {
+
+        @media (min-width: $breakpoint-md) {
+            display: grid;
+            grid-column-gap: $grid-column-gap-xl;
+            grid-row-gap: $grid-row-gap-md;
+            grid-template-columns: 1fr 1fr;
+            grid-template-areas:
+                "row-1-col-1 row-1-col-2"
+                "row-2-col-1 ."
+                "row-3-col-1 row-3-col-1";
+        }
+
+        @media (min-width: $breakpoint-xxl) {
+            grid-column-gap: $grid-column-gap-xxl;
+        }
+
+    }
+
+    &.sw-BorderedBlock-ReservedTokensWhitelistCapped {
+
         @media (min-width: $breakpoint-xl) {
             display: grid;
             grid-column-gap: $grid-column-gap-md;
@@ -71,14 +91,16 @@
         @media (min-width: $breakpoint-xxl) {
             grid-column-gap: $grid-column-gap-xl;
         }
+
     }
 
-    &.sw-BorderedBlock-6Rows2Columns {
+    &.sw-BorderedBlock-TierBlocksWhitelistCapped {
 
         @media (min-width: $breakpoint-md) {
             display: grid;
             grid-column-gap: $grid-column-gap-xl;
             grid-row-gap: $grid-row-gap-md;
+            grid-template-columns: 1fr 1fr;
             grid-template-areas:
                 "row-1-col-1 ."
                 "row-2-col-1 row-2-col-2"
@@ -94,23 +116,6 @@
 
     }
 
-    &.sw-BorderedBlock-3Rows2Columns {
-
-        @media (min-width: $breakpoint-md) {
-            display: grid;
-            grid-column-gap: $grid-column-gap-xl;
-            grid-row-gap: $grid-row-gap-md;
-            grid-template-areas:
-                "row-1-col-1 row-1-col-2"
-                "row-2-col-1 ."
-                "row-3-col-1 row-3-col-1";
-        }
-
-        @media (min-width: $breakpoint-xxl) {
-            grid-column-gap: $grid-column-gap-xxl;
-        }
-
-    }
 }
 
 .sw-BorderedBlock_Title {
@@ -120,4 +125,8 @@
     line-height: 1.2;
     margin: 0 0 22px;
     padding-top: 20px;
+
+    @media (min-width: $breakpoint-md) {
+        padding-top: 0;
+    }
 }
