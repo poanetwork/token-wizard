@@ -21,6 +21,24 @@ $sw-RadioButtonButton-height: 40px !default;
         }
     }
 
+    &.sw-RadioButton-DutchAuctionWhiteList {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-4-col-1;
+        }
+    }
+
+    .sw-BorderedBlock-CrowdSaleSetupGlobalSettingsDutchAuction & {
+        @media (min-width: $breakpoint-md) {
+            margin-bottom: 0;
+        }
+    }
+
+    .sw-BorderedBlock-TierBlocksWhitelistCapped & {
+        @media (min-width: $breakpoint-md) {
+            margin-bottom: 0;
+        }
+    }
+
 }
 
 .sw-RadioButton_Container {

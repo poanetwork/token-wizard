@@ -7,25 +7,25 @@
         }
     }
 
-    .sw-BorderedBlock-3Columns & {
+    .sw-BorderedBlock-GeneralSettingsWhitelistCapped & {
         @media (min-width: $breakpoint-xl) {
             margin-bottom: 0;
         }
     }
 
-    .sw-BorderedBlock-2Rows2Columns & {
+    .sw-BorderedBlock-GeneralSettingsDutchAuction & {
         @media (min-width: $breakpoint-xxl) {
             margin-bottom: 0;
         }
     }
 
-    .sw-BorderedBlock-6Rows2Columns & {
+    .sw-BorderedBlock-TierBlocksWhitelistCapped & {
         @media (min-width: $breakpoint-md) {
             margin-bottom: 0;
         }
     }
 
-    .sw-BorderedBlock-3Rows2Columns & {
+    .sw-BorderedBlock-CrowdSaleSetupGlobalSettingsDutchAuction & {
         @media (min-width: $breakpoint-md) {
             margin-bottom: 0;
         }

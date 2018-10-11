@@ -72,7 +72,7 @@ export const TierBlock = ({ fields, ...props }) => {
   return (
     <div className="sw-TierBlock">
       {fields.map((name, index) => (
-        <div className="sw-BorderedBlock sw-BorderedBlock-6Rows2Columns" key={index}>
+        <div className="sw-BorderedBlock sw-BorderedBlock-TierBlocksWhitelistCapped" key={index}>
           <Field
             component={InputField2}
             description={DESCRIPTION.CROWDSALE_SETUP_NAME}

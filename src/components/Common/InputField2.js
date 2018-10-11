@@ -1,5 +1,5 @@
 import React from 'react'
-import { Error } from './Error'
+import { Errors } from './Errors'
 import { FormControlTitle } from '../Common/FormControlTitle'
 import { TextField } from '../Common/TextField'
 
@@ -22,7 +22,7 @@ export const InputField2 = props => {
         max={props.max}
         {...props.input}
       />
-      <Error name={props.input.name} />
+      <Errors name={props.input.name} />
     </div>
   )
 }

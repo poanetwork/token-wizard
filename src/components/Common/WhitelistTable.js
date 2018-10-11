@@ -31,7 +31,7 @@ export class WhitelistTable extends React.Component {
     })
 
     return (
-      <div className={`sw-WhiteListTable ${extraClassName}`}>
+      <div className={`sw-WhiteListTable ${extraClassName ? extraClassName : ''}`}>
         <div className="sw-WhiteListTable_Inner">
           <table className={`sw-WhiteListTable_Table`} cellPadding="0" cellSpacing="0">
             <tbody>{whitelistItems}</tbody>

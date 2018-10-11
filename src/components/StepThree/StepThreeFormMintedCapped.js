@@ -139,7 +139,7 @@ export const StepThreeFormMintedCapped = ({
     <form onSubmit={handleSubmit} className="st-StepContent_FormFullHeight">
       {whenWhitelistsChanges()}
       <h2 className="sw-BorderedBlockTitle">Global settings</h2>
-      <div tabIndex="0" className="sw-BorderedBlock sw-BorderedBlock-1Row2Columns">
+      <div tabIndex="0" className="sw-BorderedBlock sw-BorderedBlock-CrowdSaleSetupGlobalSettingsWhitelistCapped">
         <Field
           component={InputField2}
           description={DESCRIPTION.WALLET}

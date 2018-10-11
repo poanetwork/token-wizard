@@ -1,6 +1,6 @@
 .sw-WhitelistInputBlock {
 
-    .sw-BorderedBlock-6Rows2Columns & {
+    .sw-BorderedBlock-TierBlocksWhitelistCapped & {
         @media (min-width: $breakpoint-md) {
             grid-area: row-6-col-1;
         }
@@ -29,6 +29,10 @@
 }
 
 .sw-WhitelistInputBlock_AddressMinMaxGrid {
+
+    $form-control-block-common-margin-bottom: 18px !default;
+
+    margin-bottom: $form-control-block-common-margin-bottom;
 
     @media (min-width: $breakpoint-md) {
         display: grid;

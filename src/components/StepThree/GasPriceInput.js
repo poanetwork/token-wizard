@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { GAS_PRICE } from '../../utils/constants'
 import { objectKeysToLowerCase } from '../../utils/utils'
-import { Error } from '../Common/Error'
+import { Errors } from '../Common/Errors'
 import { inject, observer } from 'mobx-react'
 import { FormControlTitle } from '../Common/FormControlTitle'
 import { TextField } from '../Common/TextField'
@@ -163,7 +163,7 @@ class GasPriceInput extends Component {
             value={this.state.customGasPrice}
           />
         ) : null}
-        <Error name={input.name} />
+        <Errors name={input.name} />
       </div>
     )
   }
