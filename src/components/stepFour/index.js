@@ -2,15 +2,9 @@ import React, { Component } from 'react'
 import '../../assets/stylesheets/application.css'
 import {
   buildDeploymentSteps,
-  download,
-  getDownloadName,
   getOptimizationFlagByStore,
   getVersionFlagByStore,
-  handleConstantForFile,
-  handleContractsForFile,
-  handlerForFile,
   scrollToBottom,
-  summaryFileContents,
   updateCrowdsaleContractInfo,
   updateProxyContractInfo
 } from './utils'
@@ -22,7 +16,6 @@ import {
   transactionLost
 } from '../../utils/alerts'
 import {
-  CROWDSALE_STRATEGIES,
   CROWDSALE_STRATEGIES_DISPLAYNAMES,
   DESCRIPTION,
   NAVIGATION_STEPS,
@@ -30,16 +23,13 @@ import {
   TEXT_FIELDS,
   TOAST
 } from '../../utils/constants'
-import { DOWNLOAD_TYPE } from './constants'
-import { getNetworkID, toast, convertDateToUTCTimezoneToDisplay } from '../../utils/utils'
+import { convertDateToUTCTimezoneToDisplay, getContractBySourceType, getNetworkID, toast } from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { DisplayField } from '../Common/DisplayField'
 import { TxProgressStatus } from '../Common/TxProgressStatus'
 import { ModalContainer } from '../Common/ModalContainer'
 import { copy } from '../../utils/copy'
 import { inject, observer } from 'mobx-react'
-import { isObservableArray } from 'mobx'
-import JSZip from 'jszip'
 import executeSequentially from '../../utils/executeSequentially'
 import { PreventRefresh } from '../Common/PreventRefresh'
 import cancelDeploy from '../../utils/cancelDeploy'
@@ -50,6 +40,7 @@ import { CrowdsaleConfig } from '../Common/config'
 import { ButtonContinue } from '../Common/ButtonContinue'
 import classNames from 'classnames'
 import { DisplayTextArea } from '../Common/DisplayTextArea'
+import downloadCrowdsaleInfo from '../../utils/downloadCrowdsaleInfo'
 
 const logger = logdown('TW:stepFour')
 
@@ -294,87 +285,9 @@ export class stepFour extends Component {
     this.setState({ modal: true })
   }
 
-  handleContentByParent(content, index = 0) {
-    const { parent } = content
-    switch (parent) {
-      case 'crowdsale':
-      case 'MintedCappedProxy':
-      case 'DutchProxy':
-        return handlerForFile(content, this.props.contractStore[parent])
-      case 'crowdsaleStore':
-        return handlerForFile(content, this.props[parent])
-      case 'tierStore': {
-        if (content.field === 'minCap') {
-          index = content.field === 'minCap' ? 0 : index
-        } else {
-          index = content.field === 'walletAddress' ? 0 : index
-        }
-        logger.log('TierStore index', index)
-        return handlerForFile(content, this.props[parent].tiers[index])
-      }
-      case 'tokenStore':
-      case 'reservedTokenStore':
-        return handlerForFile(content, this.props[parent])
-      case 'contracts':
-        return handleContractsForFile(content, index, this.props.contractStore, this.props.tierStore)
-      case 'none':
-        return handleConstantForFile(content)
-      default:
-      // do nothing
-    }
-  }
-
-  downloadCrowdsaleInfo = () => {
-    const { contractStore, crowdsaleStore } = this.props
-    const zip = new JSZip()
-    const fileContents = summaryFileContents(contractStore.crowdsale.networkID)
-    let files = fileContents.files
-    const tiersCount = isObservableArray(this.props.tierStore.tiers) ? this.props.tierStore.tiers.length : 1
-    const contractsKeys = files.order
-    const orderNumber = order => order.toString().padStart(3, '0')
-    let prefix = 1
-
-    contractsKeys.forEach(key => {
-      if (contractStore.hasOwnProperty(key)) {
-        logger.log(files[key])
-        logger.log(contractStore[key])
-        const { txt, name } = files[key]
-
-        const authOS = fileContents.auth_os
-        const authOSHeader = authOS.map(content => this.handleContentByParent(content))
-
-        zip.file(`Auth-os_addresses.txt`, authOSHeader.join('\n'))
-
-        const common = fileContents.common
-        const commonHeader = common.map(content => this.handleContentByParent(content))
-
-        zip.file(`${name}_data.txt`, commonHeader.join('\n'))
-
-        if (crowdsaleStore.isMintedCappedCrowdsale) {
-          for (let tier = 0; tier < tiersCount; tier++) {
-            const txtFilename = `${orderNumber(prefix++)}_tier`
-            const tierNumber = tier
-
-            zip.file(
-              `${txtFilename}.txt`,
-              txt.map(content => this.handleContentByParent(content, tierNumber)).join('\n')
-            )
-          }
-        }
-      }
-    })
-
-    const fileName = crowdsaleStore.isMintedCappedCrowdsale ? 'MintedCappedProxy.sol' : 'DutchProxy.sol'
-    zip.file(fileName, this.getContractBySourceType('src'))
-
-    zip.generateAsync({ type: DOWNLOAD_TYPE.blob }).then(content => {
-      const downloadName = getDownloadName()
-      download({ zip: content, filename: downloadName })
-    })
-  }
-
   downloadContractButton = () => {
-    this.downloadCrowdsaleInfo()
+    const { tokenStore, tierStore, reservedTokenStore, contractStore, crowdsaleStore } = this.props
+    downloadCrowdsaleInfo({ tokenStore, tierStore, reservedTokenStore, contractStore, crowdsaleStore })
     this.contractDownloadSuccess({ offset: 14 })
   }
 
@@ -397,7 +310,8 @@ export class stepFour extends Component {
     }`
 
     if (!this.state.contractDownloaded) {
-      this.downloadCrowdsaleInfo()
+      const { tokenStore, tierStore, reservedTokenStore, contractStore, crowdsaleStore } = this.props
+      downloadCrowdsaleInfo({ tokenStore, tierStore, reservedTokenStore, contractStore, crowdsaleStore })
       this.contractDownloadSuccess()
     }
 
@@ -431,16 +345,9 @@ export class stepFour extends Component {
     )
   }
 
-  getContractBySourceType = sourceType => {
-    const { crowdsaleStore, contractStore } = this.props
-    const parseContent = content => (isObservableArray(content) ? JSON.stringify(content.slice()) : content)
-
-    return crowdsaleStore.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE
-      ? parseContent(contractStore.MintedCappedProxy[sourceType])
-      : parseContent(contractStore.DutchProxy[sourceType])
-  }
-
   renderContractSource = sourceType => {
+    const { crowdsaleStore, contractStore } = this.props
+    const { isMintedCappedCrowdsale } = crowdsaleStore
     const sourceTypeName = {
       abi: 'ABI',
       bin: 'Creation Code',
@@ -448,7 +355,7 @@ export class stepFour extends Component {
     }
 
     const label = `Crowdsale Proxy Contract ${sourceTypeName[sourceType]}`
-    const value = this.getContractBySourceType(sourceType)
+    const value = getContractBySourceType(sourceType, isMintedCappedCrowdsale, contractStore)
 
     return <DisplayTextArea label={label} value={value} description={label} />
   }

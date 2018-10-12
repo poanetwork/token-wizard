@@ -5,6 +5,7 @@ import { BigNumber } from 'bignumber.js'
 import logdown from 'logdown'
 import Web3 from 'web3'
 import moment from 'moment'
+import { isObservableArray } from 'mobx'
 
 const logger = logdown('TW:utils:utils')
 
@@ -248,4 +249,9 @@ export const convertDateToUTCTimezoneToDisplay = dateToConvert => {
   return moment(dateToConvert)
     .utc()
     .format('YYYY-MM-DD HH:mm (z ZZ)')
+}
+
+export function getContractBySourceType(sourceType, isMintedCappedCrowdsale, { DutchProxy, MintedCappedProxy }) {
+  const parseContent = content => (isObservableArray(content) ? JSON.stringify(content.slice()) : content)
+  return isMintedCappedCrowdsale ? parseContent(MintedCappedProxy[sourceType]) : parseContent(DutchProxy[sourceType])
 }

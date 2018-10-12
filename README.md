@@ -9,7 +9,8 @@
 [![Coverage Status](https://coveralls.io/repos/github/poanetwork/token-wizard/badge.svg?branch=master)](https://coveralls.io/github/poanetwork/token-wizard?branch=master)
 
 ### **_Attention_!**
-#### __Please, read the wiki or watch demo before you start to create crowdsales using Token Wizard. Consider deploying on the Mainnet after testing on Kovan testnet or POA's Sokol testnet.__
+
+#### **Please, read the wiki or watch demo before you start to create crowdsales using Token Wizard. Consider deploying on the Mainnet after testing on Kovan testnet or POA's Sokol testnet.**
 
 _A Quote_
 
@@ -21,25 +22,26 @@ ICOs usually have two or more contracts. One token contract and one or more crow
 
 This tool is free to use and open source. Although the tool is free to use, deploying contracts to the Ethereum network requires GAS in the form of ETHER. See "Deployment Time & Gas" part of Wiki for estimates. It is recommended to test the Token Wizard on Kovan testnet or POA's Sokol testnet, before deploying to the main network. See below for links to obtain testnet tokens for the Kovan or Sokol networks:
 
-__Deploying on POA's Sokol or Main network is much faster then using Ethereum's networks.__
+**Deploying on POA's Sokol or Main network is much faster then using Ethereum's networks.**
 
- [Kovan Testnet/faucet - Gitter](https://gitter.im/kovan-testnet/faucet)
+[Kovan Testnet/faucet - Gitter](https://gitter.im/kovan-testnet/faucet)
 
- [Find out other ways to obtain kETH](https://github.com/kovan-testnet/faucet)
+[Find out other ways to obtain kETH](https://github.com/kovan-testnet/faucet)
 
- [Sokol Testnet/faucet](https://faucet-sokol.herokuapp.com/)
+[Sokol Testnet/faucet](https://faucet-sokol.herokuapp.com/)
 
- POA Sokol Network RPC URL: https://sokol.poa.network
+POA Sokol Network RPC URL: https://sokol.poa.network
 
- POA Main Network RPC URL: https://core.poa.network
+POA Main Network RPC URL: https://core.poa.network
 
- For a guide on how to connect to the POA network using MetaMask see [here](https://github.com/poanetwork/token-wizard/wiki/Connecting-to-POA-Networks).
+For a guide on how to connect to the POA network using MetaMask see [here](https://github.com/poanetwork/token-wizard/wiki/Connecting-to-POA-Networks).
 
 ## Security Audit
 
 [Token Wizard security audit](https://github.com/poanetwork/token-wizard/blob/2.0/audit/POA-Network-Wizard-audit-report.pdf) by PepperSec
 
 ## Token Wizard DApp Wiki
+
 - [Introduction](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Introduction)
 - [Demo](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Demo)
 - [Requirements](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Requirements)
@@ -52,9 +54,13 @@ __Deploying on POA's Sokol or Main network is much faster then using Ethereum's 
 - [Notable Contributors](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Notable-Contributors)
 - [Support](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Support)
 - [Disclaimer](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Disclaimer)
+
 ### Policies
+
 - [Pull Request Policy](https://github.com/poanetwork/token-wizard/wiki/Pull-Request-Policy)
+
 ### Managing your Crowdsale
+
 - [Methods for Management](https://github.com/poanetwork/token-wizard/wiki/Token-Wizard-Managing-Crowdsale)
 
 ## Support
