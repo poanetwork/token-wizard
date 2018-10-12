@@ -19,15 +19,24 @@ const { MINTED_CAPPED_CROWDSALE } = CROWDSALE_STRATEGIES
 @observer
 export class StepOne extends Component {
   state = {
-    loading: false,
-    strategy: MINTED_CAPPED_CROWDSALE
+    loading: true,
+    strategy: null
   }
 
   async componentDidMount() {
+    window.addEventListener('beforeunload', () => {
+      navigateTo({
+        history: this.props.history,
+        location: 'stepOne'
+      })
+    })
+
     try {
-      this.setState({ loading: true })
       await checkWeb3ForErrors(result => {
-        navigateTo(this.props.history, 'home')
+        navigateTo({
+          history: this.props.history,
+          location: 'home'
+        })
       })
 
       const { strategy } = await this.load()
@@ -40,24 +49,31 @@ export class StepOne extends Component {
   }
 
   async load() {
+    const { crowdsaleStore } = this.props
     // Reload storage
-    clearStorage(this.props)
-    await reloadStorage(this.props)
+    const { state } = this.props.history.location
+    if (state && state.fromLocation && state.fromLocation === 'home') {
+      clearStorage(this.props)
+      await reloadStorage(this.props)
+    }
 
     // Set default strategy value
-    const { crowdsaleStore } = this.props
-    if (!crowdsaleStore.strategy) {
-      crowdsaleStore.setProperty('strategy', MINTED_CAPPED_CROWDSALE)
-    }
-    logger.log('CrowdsaleStore strategy', crowdsaleStore.strategy)
+    const strategy = crowdsaleStore && crowdsaleStore.strategy ? crowdsaleStore.strategy : MINTED_CAPPED_CROWDSALE
+
+    logger.log('CrowdsaleStore strategy', strategy)
+    crowdsaleStore.setProperty('strategy', strategy)
+
     return {
-      strategy: crowdsaleStore.strategy
+      strategy: strategy
     }
   }
 
   goNextStep = () => {
     try {
-      navigateTo(this.props.history, 'stepTwo')
+      navigateTo({
+        history: this.props.history,
+        location: 'stepTwo'
+      })
     } catch (err) {
       logger.log('Error to navigate', err)
     }
