@@ -240,7 +240,8 @@ export const clearStorage = props => {
   }
 }
 
-export const navigateTo = (history, location, params = '') => {
+export const navigateTo = data => {
+  const { history, location, params = '', fromLocation } = data
   const path =
     {
       home: '/',
@@ -260,7 +261,12 @@ export const navigateTo = (history, location, params = '') => {
     throw new Error(`invalid history object: ${history}`)
   }
 
-  history.push(`${path}${params}`)
+  history.push({
+    pathname: `${path}${params}`,
+    state: {
+      fromLocation: fromLocation
+    }
+  })
 
   return true
 }

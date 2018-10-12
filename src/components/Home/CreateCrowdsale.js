@@ -9,9 +9,17 @@ export class CreateCrowdsale extends Component {
   goToStepOne = () => {
     try {
       if (storage.has('DeploymentStore') && storage.get('DeploymentStore').deploymentStep) {
-        navigateTo(this.props.history, 'home')
+        navigateTo({
+          history: this.props.history,
+          location: 'home',
+          fromLocation: 'home'
+        })
       } else {
-        navigateTo(this.props.history, 'stepOne')
+        navigateTo({
+          history: this.props.history,
+          location: 'stepOne',
+          fromLocation: 'home'
+        })
       }
     } catch (err) {
       logger.log('Error to navigate', err)
