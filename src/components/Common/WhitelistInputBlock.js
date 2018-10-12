@@ -3,7 +3,6 @@ import Web3 from 'web3'
 import update from 'immutability-helper'
 import Dropzone from 'react-dropzone'
 import Papa from 'papaparse'
-
 import { InputField } from './InputField'
 import { TEXT_FIELDS, VALIDATION_MESSAGES, VALIDATION_TYPES } from '../../utils/constants'
 import { WhitelistTable } from './WhitelistTable'
@@ -19,6 +18,7 @@ import processWhitelist from '../../utils/processWhitelist'
 import { isLessOrEqualThan, validateWhitelistMax, validateWhitelistMin } from '../../utils/validations'
 import logdown from 'logdown'
 import { ButtonCSV } from '../Common/ButtonCSV'
+import { ButtonPlus } from '../Common/ButtonPlus'
 import { downloadFile } from '../../utils/utils'
 
 const logger = logdown('TW:WhitelistInputBlock')
@@ -326,7 +326,7 @@ export class WhitelistInputBlock extends React.Component {
               valid={this.state.validation.max.valid}
               value={this.state.max}
             />
-            <div onClick={e => this.addWhitelistItem()} className="sw-ButtonPlus" />
+            <ButtonPlus onClick={e => this.addWhitelistItem()} />
           </div>
         </div>
         {whitelist ? <WhitelistTable list={whitelist} crowdsaleNum={num} /> : null}

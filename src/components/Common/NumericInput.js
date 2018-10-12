@@ -155,7 +155,6 @@ export class NumericInput extends Component {
       extraClassName,
       min,
       name,
-      onClick,
       placeholder,
       title
     } = this.props
@@ -166,21 +165,18 @@ export class NumericInput extends Component {
     return (
       <div className={`sw-NumericInput ${extraClassName ? extraClassName : ''}`}>
         <FormControlTitle title={title} description={description} />
-        <div className="sw-NumericInput_InputAndButtonContainer">
-          <TextField
-            disabled={disabled}
-            id={name}
-            min={minimumValue}
-            onChange={this.onChange}
-            onKeyPress={this.onKeyPress}
-            onPaste={this.onPaste}
-            placeholder={placeholder}
-            step="1"
-            type="number"
-            value={pristine ? '' : renderedValue}
-          />
-          <div onClick={onClick} className="sw-ButtonPlus" />
-        </div>
+        <TextField
+          disabled={disabled}
+          id={name}
+          min={minimumValue}
+          onChange={this.onChange}
+          onKeyPress={this.onKeyPress}
+          onPaste={this.onPaste}
+          placeholder={placeholder}
+          step="1"
+          type="number"
+          value={pristine ? '' : renderedValue}
+        />
         {pristine ? '' : error}
       </div>
     )

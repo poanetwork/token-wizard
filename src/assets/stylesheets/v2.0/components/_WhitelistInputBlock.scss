@@ -30,10 +30,6 @@
 
 .sw-WhitelistInputBlock_AddressMinMaxGrid {
 
-    $form-control-block-common-margin-bottom: 18px !default;
-
-    margin-bottom: $form-control-block-common-margin-bottom;
-
     @media (min-width: $breakpoint-md) {
         display: grid;
         grid-column-gap: $grid-column-gap-xl;

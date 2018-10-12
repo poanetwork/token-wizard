@@ -1,0 +1,12 @@
+.sw-NumericInputAndButtonContainer {
+    display: flex;
+
+    &.sw-NumericInputAndButtonContainer-RerservedTokensValue {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-2-col-2;
+        }
+        @media (min-width: $breakpoint-lg) {
+            grid-area: row-1-col-3;
+        }
+    }
+}

@@ -10,8 +10,10 @@ $sw-ButtonPlus-height: 30px !default;
     height: $sw-ButtonPlus-height;
     width: $sw-ButtonPlus-height;
 
-    .sw-NumericInput_InputAndButtonContainer & {
-        margin-right: 15px;
+    .sw-NumericInputAndButtonContainer & {
+        margin-left: 14px;
+        margin-right: 10px;
+        margin-top: 29px;
 
         @media (min-width: $breakpoint-md) {
             margin-right: 0;
@@ -19,7 +21,7 @@ $sw-ButtonPlus-height: 30px !default;
     }
 
     .sw-WhitelistInputBlock_MinMaxFields & {
-        margin-left: 5px;
+        margin-left: 3px;
         margin-right: 10px;
         margin-top: 29px;
 

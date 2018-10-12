@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Web3 from 'web3'
 import Dropzone from 'react-dropzone'
 import Papa from 'papaparse'
-
+import { ButtonPlus } from '../Common/ButtonPlus'
 import { InputField } from './InputField'
 import { RadioInputField } from './RadioInputField'
 import { TEXT_FIELDS, VALIDATION_TYPES } from '../../utils/constants'
@@ -289,7 +289,7 @@ export class ReservedTokensInputBlock extends Component {
         <h2 className="sw-BorderedBlockTitle">Reserved tokens</h2>
         <div className="sw-BorderedBlock sw-BorderedBlock-ReservedTokensWhitelistCapped">
           <InputField
-            extraClassName="sw-BorderedBlock_Row1Column1"
+            extraClassName="sw-InputField-ReservedTokensAddress"
             description="Address where to send reserved tokens."
             errorMessage="The inserted address is invalid"
             name={ADDRESS}
@@ -302,7 +302,7 @@ export class ReservedTokensInputBlock extends Component {
             value={this.state.addr}
           />
           <RadioInputField
-            extraClassName="sw-BorderedBlock_Row1Column2"
+            extraClassName="sw-RadioInputField-ReservedTokensDimension"
             items={[{ label: 'Tokens', value: 'tokens' }, { label: 'Percentage', value: 'percentage' }]}
             onChange={e => this.updateReservedTokenInput(e.target.value, 'dim')}
             selectedItem={this.state.dim}
@@ -310,24 +310,25 @@ export class ReservedTokensInputBlock extends Component {
             description="Fixed amount or % of crowdsaled tokens. Will be deposited to the account after finalization
               of the crowdsale."
           />
-          <NumericInput
-            acceptFloat={true}
-            extraClassName="sw-BorderedBlock_Row1Column3"
-            decimals={this.props.decimals}
-            dimension={this.state.dim}
-            name={VALUE}
-            onClick={this.addReservedTokensItem}
-            onValueUpdate={this.handleValueChange}
-            placeholder="Enter here"
-            pristine={this.state.validation.value.pristine}
-            title={VALUE}
-            valid={this.state.validation.value.valid}
-            value={this.state.val}
-            {...valueInputParams}
-          />
+          <div className="sw-NumericInputAndButtonContainer sw-NumericInputAndButtonContainer-RerservedTokensValue">
+            <NumericInput
+              acceptFloat={true}
+              decimals={this.props.decimals}
+              dimension={this.state.dim}
+              name={VALUE}
+              onValueUpdate={this.handleValueChange}
+              placeholder="Enter here"
+              pristine={this.state.validation.value.pristine}
+              title={VALUE}
+              valid={this.state.validation.value.valid}
+              value={this.state.val}
+              {...valueInputParams}
+            />
+            <ButtonPlus onClick={this.addReservedTokensItem} />
+          </div>
           {reservedTokensElements}
           {/* Actions */}
-          <div className="sw-ReservedTokensListControls sw-BorderedBlock_Row3Column1">
+          <div className="sw-ReservedTokensListControls">
             {tokensListEmpty ? null : (
               <ButtonCSV extraClassName="sw-ButtonCSV-clearall" onClick={this.clearAll} text="Clear All" />
             )}

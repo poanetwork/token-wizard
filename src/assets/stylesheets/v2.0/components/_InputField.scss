@@ -1,8 +1,8 @@
 .sw-InputField {
     @include form-control-block-common();
 
-    &.sw-BorderedBlock_Row1Column1 {
-        @media (min-width: $breakpoint-xl) {
+    &.sw-InputField-ReservedTokensAddress {
+        @media (min-width: $breakpoint-md) {
             grid-area: row-1-col-1;
         }
     }
@@ -32,6 +32,8 @@
     }
 
     .sw-WhitelistInputBlock_MinMaxFields & {
+        flex-grow: 1;
         margin-right: 11px;
     }
+
 }
