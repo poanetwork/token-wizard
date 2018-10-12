@@ -26,17 +26,16 @@ class App extends Component {
       <Router>
         <div>
           <Header/>
-
+          <Web3Provider
+            onChangeAccount={deploymentStore.handleAccountChange}
+            web3UnavailableScreen={NoWeb3}
+          >
           <Switch>
             <Route exact path="/crowdsale" component={Crowdsale}/>
             <Route exact path="/invest" component={Invest}/>
             <Route exact path="/stats" component={Stats}/>
 
             <Route>
-              <Web3Provider
-                onChangeAccount={deploymentStore.handleAccountChange}
-                web3UnavailableScreen={NoWeb3}
-              >
                 <Switch>
                   {/* The route to /4 must be first for the incomplete deploy redirect to work */}
                   <Route path="/4" component={stepFour}/>
@@ -55,9 +54,9 @@ class App extends Component {
                     )
                   }
                 </Switch>
-              </Web3Provider>
             </Route>
           </Switch>
+          </Web3Provider>
 
           <Footer/>
           <AlertContainer ref={a => toast.msg = a} {...TOAST.DEFAULT_OPTIONS} />
