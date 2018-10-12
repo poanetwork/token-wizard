@@ -2,6 +2,18 @@ $sw-WhiteListTable-gradient-width: 45px;
 
 .sw-WhiteListTable {
     @include datatable-styles($sw-WhiteListTable-gradient-width);
+
+    .sw-BorderedBlock-TierBlocksWhitelistCapped & {
+        @media (min-width: $breakpoint-md) {
+            margin-top: 18px;
+        }
+    }
+
+    .sw-BorderedBlock-CrowdSaleSetupGlobalSettingsDutchAuction & {
+        @media (min-width: $breakpoint-md) {
+            margin-top: 18px;
+        }
+    }
 }
 
 .sw-WhiteListTable_Inner {
