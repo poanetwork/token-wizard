@@ -3,8 +3,12 @@ $sw-RadioInputField_Button-height: 40px !default;
 .sw-RadioInputField {
     @include form-control-block-common();
 
-    &.sw-BorderedBlock_Row1Column2 {
-        @media (min-width: $breakpoint-xl) {
+    &.sw-RadioInputField-ReservedTokensDimension {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-2-col-1;
+        }
+
+        @media (min-width: $breakpoint-lg) {
             grid-area: row-1-col-2;
         }
     }
@@ -54,7 +58,7 @@ $sw-RadioInputField_Button-height: 40px !default;
 .sw-RadioInputField_Button {
     @include radio-input-button($sw-RadioInputField_Button-height, $brand-secondary, '.sw-RadioInputField_Input');
 
-    .sw-BorderedBlock_Row1Column2 & {
+    .sw-RadioInputField-ReservedTokensDimension & {
         @media (min-width: $breakpoint-xl) {
             padding-left: 8px;
             padding-right: 8px;

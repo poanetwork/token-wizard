@@ -1,15 +1,4 @@
 .sw-NumericInput {
     @include form-control-block-common();
-
-    &.sw-BorderedBlock_Row1Column3 {
-        @media (min-width: $breakpoint-xl) {
-            grid-area: row-1-col-3;
-        }
-    }
-
-}
-
-.sw-NumericInput_InputAndButtonContainer {
-    align-items: center;
-    display: flex;
+    flex-grow: 1;
 }

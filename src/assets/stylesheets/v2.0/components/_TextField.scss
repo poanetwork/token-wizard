@@ -49,4 +49,8 @@ $sw-TextField-height: 40px !default;
         }
 
     }
+
+    .sw-NumericInputAndButtonContainer & {
+        width: 100%;
+    }
 }

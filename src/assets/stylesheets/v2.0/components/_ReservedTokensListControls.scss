@@ -5,15 +5,11 @@
 
     @media (min-width: $breakpoint-md) {
         flex-direction: row;
+        grid-area: row-3-col-1;
     }
 
     @media (min-width: $breakpoint-xl) {
         margin-bottom: -20px;
     }
 
-    &.sw-BorderedBlock_Row3Column1 {
-        @media (min-width: $breakpoint-xl) {
-            grid-area: row-3-col-1;
-        }
-    }
 }
