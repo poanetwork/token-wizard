@@ -261,7 +261,7 @@ export const deployCrowdsale = (getParams, methodInterface, appName) => {
       opts.gasLimit = calculateGasLimit(estimatedGas)
 
       const receipt = await sendTXToContract(method.send(opts), executionOrder)
-      updateCrowdsaleContractInfo(receipt)
+      updateCrowdsaleContractInfo(receipt, { contractStore })
       return receipt
     }
   ]
