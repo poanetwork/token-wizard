@@ -18,39 +18,36 @@ const headerFrame = '*****************************'
 const newLine = '\n'
 
 export default function downloadCrowdsaleInfo(stores) {
-  const { crowdsaleStore, contractStore, tierStore } = stores
+  const { crowdsaleStore, contractStore } = stores
   const { isMintedCappedCrowdsale } = crowdsaleStore
   const { crowdsale } = contractStore
-  const { tiers } = tierStore
   const zip = new JSZip()
   const fileContents = summaryFileContents(crowdsale.networkID, stores)
-  const { files, auth_os, common } = fileContents
+  const { common, auth_os, tiers } = fileContents
   const orderNumber = order => order.toString().padStart(3, '0')
 
-  files.order.forEach(key => {
-    if (contractStore.hasOwnProperty(key)) {
-      const { txt, name } = files[key]
-      const authOSHeader = auth_os.filter(content => content).map(content => handleContentByParent({ content, stores }))
-      const commonHeader = common.filter(content => content).map(content => handleContentByParent({ content, stores }))
+  const authOSContent = auth_os.content
+    .filter(content => content)
+    .map(content => handleContentByParent({ content, stores }))
+  zip.file(`Auth-os_addresses.txt`, authOSContent.join(newLine))
 
-      zip.file(`Auth-os_addresses.txt`, authOSHeader.join(newLine))
-      zip.file(`${name}_data.txt`, commonHeader.join(newLine))
+  const commonContent = common.content
+    .filter(content => content)
+    .map(content => handleContentByParent({ content, stores }))
+  zip.file(`${common.name}_data.txt`, commonContent.join(newLine))
 
-      if (isMintedCappedCrowdsale) {
-        for (let tierNumber = 0; tierNumber < tiers.length; tierNumber++) {
-          const txtFilename = `${orderNumber(tierNumber + 1)}_tier.txt`
-
-          zip.file(
-            txtFilename,
-            txt
-              .filter(content => content)
-              .map(content => handleContentByParent({ content, index: tierNumber, stores }))
-              .join(newLine)
-          )
-        }
-      }
-    }
-  })
+  if (isMintedCappedCrowdsale) {
+    tiers.content.forEach((tier, index) => {
+      const txtFilename = `${orderNumber(index + 1)}_tier.txt`
+      zip.file(
+        txtFilename,
+        tier
+          .filter(content => content)
+          .map(content => handleContentByParent({ content, index, stores }))
+          .join(newLine)
+      )
+    })
+  }
 
   const fileName = isMintedCappedCrowdsale ? 'MintedCappedProxy.sol' : 'DutchProxy.sol'
   zip.file(fileName, getContractBySourceType('src', isMintedCappedCrowdsale, contractStore))
@@ -104,87 +101,88 @@ function summaryFileContents(networkID, stores) {
   const { abiEncoded } = contractStore[proxyName]
 
   return {
-    common: [
-      ...bigHeaderElements('TOKEN SETUP'),
-      newLine,
-      { field: 'name', value: 'Token name: ', parent: 'tokenStore' },
-      { field: 'ticker', value: 'Token ticker: ', parent: 'tokenStore' },
-      { field: 'decimals', value: 'Token decimals: ', parent: 'tokenStore' },
-      isDutchAuction ? { field: 'supply', value: 'Token total supply: ', parent: 'tokenStore' } : null,
-      ...reservedTokensElements(hasReservedTokens),
-      newLine,
-      ...bigHeaderElements('CROWDSALE SETUP'),
-      newLine,
-      { field: 'walletAddress', value: 'Multisig wallet address: ', parent: 'tierStore' },
-      ...burn(isDutchAuction),
-      ...rates(isDutchAuction),
-      ...minCapEl(hasWhitelist),
-      { field: 'supply', value: 'Crowdsale hard cap: ', parent: 'crowdsaleStore' },
-      { field: 'startTime', value: 'Crowdsale start time: ', parent: 'tierStore' },
-      { field: 'endTime', value: 'Crowdsale end time: ', parent: 'crowdsaleStore' },
-      ...crowdsaleIsModifiableEl(isDutchAuction),
-      ...crowdsaleIsWhitelistedEl(isDutchAuction),
-      ...crowdsaleWhitelistEl(isDutchAuction, hasWhitelist),
-      newLine,
-      ...bigHeaderElements('METADATA'),
-      newLine,
-      { field: 'proxyName', value: 'Contract name: ', parent: 'crowdsaleStore' },
-      {
-        value: 'Compiler version: ',
-        parent: 'none',
-        fileValue: getVersionFlagByStore(crowdsaleStore)
-      },
-      {
-        value: 'Optimized: ',
-        parent: 'none',
-        fileValue: getOptimizationFlagByStore(crowdsaleStore)
-      },
-      { value: 'Encoded ABI parameters: ', parent: 'none', fileValue: abiEncoded },
-      newLine,
-      ...footerElements(),
-      newLine
-    ],
+    common: {
+      name: appName,
+      content: [
+        ...bigHeaderElements('TOKEN SETUP'),
+        newLine,
+        { field: 'name', value: 'Token name: ', parent: 'tokenStore' },
+        { field: 'ticker', value: 'Token ticker: ', parent: 'tokenStore' },
+        { field: 'decimals', value: 'Token decimals: ', parent: 'tokenStore' },
+        isDutchAuction ? { field: 'supply', value: 'Token total supply: ', parent: 'tokenStore' } : null,
+        ...reservedTokensElements(hasReservedTokens),
+        newLine,
+        ...bigHeaderElements('CROWDSALE SETUP'),
+        newLine,
+        { field: 'walletAddress', value: 'Multisig wallet address: ', parent: 'tierStore' },
+        ...burn(isDutchAuction),
+        ...rates(isDutchAuction),
+        ...minCapEl(hasWhitelist),
+        { field: 'supply', value: 'Crowdsale hard cap: ', parent: 'crowdsaleStore' },
+        { field: 'startTime', value: 'Crowdsale start time: ', parent: 'tierStore' },
+        { field: 'endTime', value: 'Crowdsale end time: ', parent: 'crowdsaleStore' },
+        ...crowdsaleIsModifiableEl(isDutchAuction),
+        ...crowdsaleIsWhitelistedEl(isDutchAuction),
+        ...crowdsaleWhitelistEl(isDutchAuction, hasWhitelist),
+        newLine,
+        ...bigHeaderElements('METADATA'),
+        newLine,
+        { field: 'proxyName', value: 'Contract name: ', parent: 'crowdsaleStore' },
+        {
+          value: 'Compiler version: ',
+          parent: 'none',
+          fileValue: getVersionFlagByStore(crowdsaleStore)
+        },
+        {
+          value: 'Optimized: ',
+          parent: 'none',
+          fileValue: getOptimizationFlagByStore(crowdsaleStore)
+        },
+        { value: 'Encoded ABI parameters: ', parent: 'none', fileValue: abiEncoded },
+        newLine,
+        ...footerElements(),
+        newLine
+      ]
+    },
     // prettier-ignore
-    auth_os: [
-      ...bigHeaderElements('AUTH-OS METADATA'),
-      newLine,
-      smallHeader('REGISTRY'),
-      newLine,
-      { value: authOSContractString('abstract storage'), parent: 'none', fileValue: getAddr("ABSTRACT_STORAGE", networkID) },
-      { value: authOSContractString('registry idx'), parent: 'none', fileValue: getAddr("REGISTRY_IDX", networkID) },
-      { value: authOSContractString('script executor'), parent: 'none', fileValue: getAddr("REGISTRY_EXEC", networkID) },
-      { value: authOSContractString('provider'), parent: 'none', fileValue: getAddr("PROVIDER", networkID) },
-      newLine,
-      smallHeader('CROWDSALE'),
-      newLine,
-      { value: 'Auth-os application name: ', parent: 'none', fileValue: appName },
-      getCrowdsaleID(proxyName),
-      ...getCrowdsaleENV(networkID, crowdsaleStore),
-      ...getManagers(networkID, crowdsaleStore),
-      newLine,
-      ...footerElements(),
-      newLine
-    ],
-    files: {
-      order: ['crowdsale'],
-      crowdsale: {
-        name: appName,
-        txt: [
-          ...bigHeaderElements('TIER SETUP'),
-          newLine,
-          { field: 'tier', value: 'Tier name: ', parent: 'tierStore' },
-          { field: 'rate', value: 'Tier rate: ', parent: 'tierStore' },
-          { field: 'supply', value: 'Tier max cap: ', parent: 'tierStore' },
-          { field: 'startTime', value: 'Tier start time: ', parent: 'tierStore' },
-          { field: 'endTime', value: 'Tier end time: ', parent: 'tierStore' },
-          { field: 'updatable', value: "Tier's duration is modifiable: ", parent: 'tierStore' },
-          { field: 'whitelistEnabled', value: 'Tier is whitelisted: ', parent: 'tierStore' },
-          ...tierWhitelistElements(hasWhitelist),
-          newLine,
-          ...footerElements(),
-          newLine
-        ]
-      }
+    auth_os: {
+      content: [
+        ...bigHeaderElements('AUTH-OS METADATA'),
+        newLine,
+        smallHeader('REGISTRY'),
+        newLine,
+        { value: authOSContractString('abstract storage'), parent: 'none', fileValue: getAddr("ABSTRACT_STORAGE", networkID) },
+        { value: authOSContractString('registry idx'), parent: 'none', fileValue: getAddr("REGISTRY_IDX", networkID) },
+        { value: authOSContractString('script executor'), parent: 'none', fileValue: getAddr("REGISTRY_EXEC", networkID) },
+        { value: authOSContractString('provider'), parent: 'none', fileValue: getAddr("PROVIDER", networkID) },
+        newLine,
+        smallHeader('CROWDSALE'),
+        newLine,
+        { value: 'Auth-os application name: ', parent: 'none', fileValue: appName },
+        getCrowdsaleID(proxyName),
+        ...getCrowdsaleENV(networkID, crowdsaleStore),
+        ...getManagers(networkID, crowdsaleStore),
+        newLine,
+        ...footerElements(),
+        newLine
+      ]
+    },
+    tiers: {
+      content: tierStore.tiers.map(tier => [
+        ...bigHeaderElements('TIER SETUP'),
+        newLine,
+        { field: 'tier', value: 'Tier name: ', parent: 'tierStore' },
+        { field: 'rate', value: 'Tier rate: ', parent: 'tierStore' },
+        { field: 'supply', value: 'Tier max cap: ', parent: 'tierStore' },
+        { field: 'startTime', value: 'Tier start time: ', parent: 'tierStore' },
+        { field: 'endTime', value: 'Tier end time: ', parent: 'tierStore' },
+        { field: 'updatable', value: "Tier's duration is modifiable: ", parent: 'tierStore' },
+        { field: 'whitelistEnabled', value: 'Tier is whitelisted: ', parent: 'tierStore' },
+        ...tierWhitelistElements(tier.whitelistEnabled === 'yes'),
+        newLine,
+        ...footerElements(),
+        newLine
+      ])
     }
   }
 }
