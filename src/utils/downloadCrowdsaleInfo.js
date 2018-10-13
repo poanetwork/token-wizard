@@ -109,20 +109,20 @@ function summaryFileContents(networkID, stores) {
         { field: 'name', value: 'Token name: ', parent: 'tokenStore' },
         { field: 'ticker', value: 'Token ticker: ', parent: 'tokenStore' },
         { field: 'decimals', value: 'Token decimals: ', parent: 'tokenStore' },
-        isDutchAuction ? { field: 'supply', value: 'Token total supply: ', parent: 'tokenStore' } : null,
+        tokenSupply(isDutchAuction),
         ...reservedTokensElements(hasReservedTokens),
         newLine,
         ...bigHeaderElements('CROWDSALE SETUP'),
         newLine,
         { field: 'walletAddress', value: 'Multisig wallet address: ', parent: 'tierStore' },
-        ...burn(isDutchAuction),
+        burn(isDutchAuction),
         ...rates(isDutchAuction),
-        ...minCapEl(hasWhitelist),
+        minCapEl(hasWhitelist),
         { field: 'supply', value: 'Crowdsale hard cap: ', parent: 'crowdsaleStore' },
         { field: 'startTime', value: 'Crowdsale start time: ', parent: 'tierStore' },
         { field: 'endTime', value: 'Crowdsale end time: ', parent: 'crowdsaleStore' },
-        ...crowdsaleIsModifiableEl(isDutchAuction),
-        ...crowdsaleIsWhitelistedEl(isDutchAuction),
+        crowdsaleIsModifiableEl(isDutchAuction),
+        crowdsaleIsWhitelistedEl(isDutchAuction),
         ...crowdsaleWhitelistEl(isDutchAuction, hasWhitelist),
         newLine,
         ...bigHeaderElements('METADATA'),
@@ -174,6 +174,7 @@ function summaryFileContents(networkID, stores) {
         { field: 'tier', value: 'Tier name: ', parent: 'tierStore' },
         { field: 'rate', value: 'Tier rate: ', parent: 'tierStore' },
         { field: 'supply', value: 'Tier max cap: ', parent: 'tierStore' },
+        tierMinCap(tier.whitelistEnabled === 'yes'),
         { field: 'startTime', value: 'Tier start time: ', parent: 'tierStore' },
         { field: 'endTime', value: 'Tier end time: ', parent: 'tierStore' },
         { field: 'updatable', value: "Tier's duration is modifiable: ", parent: 'tierStore' },
@@ -219,9 +220,16 @@ function reservedTokensHeaderTableElements() {
   ]
 }
 
+function tokenSupply(isDutchAuction) {
+  if (isDutchAuction) {
+    return { field: 'supply', value: 'Token total supply: ', parent: 'tokenStore' }
+  }
+}
+
 function burn(isDutchAuction) {
-  if (!isDutchAuction) return []
-  else return [{ field: 'burnExcess', value: 'Burn Excess: ', parent: 'tierStore' }]
+  if (isDutchAuction) {
+    return { field: 'burnExcess', value: 'Burn Excess: ', parent: 'tierStore' }
+  }
 }
 
 function rates(isDutchAuction) {
@@ -234,18 +242,21 @@ function rates(isDutchAuction) {
 }
 
 function minCapEl(hasWhitelist) {
-  if (hasWhitelist) return []
-  return [{ field: 'minCap', value: 'Crowdsale global min cap: ', parent: 'tierStore' }]
+  if (!hasWhitelist) {
+    return { field: 'minCap', value: 'Crowdsale global min cap: ', parent: 'tierStore' }
+  }
 }
 
 function crowdsaleIsModifiableEl(isDutchAuction) {
-  if (!isDutchAuction) return []
-  else return [{ value: "Crowdsale's duration is modifiable: ", parent: 'none', fileValue: 'no' }]
+  if (isDutchAuction) {
+    return { value: "Crowdsale's duration is modifiable: ", parent: 'none', fileValue: 'no' }
+  }
 }
 
 function crowdsaleIsWhitelistedEl(isDutchAuction) {
-  if (!isDutchAuction) return []
-  else return [{ field: 'whitelistEnabled', value: 'Crowdsale is whitelisted: ', parent: 'tierStore' }]
+  if (isDutchAuction) {
+    return { field: 'whitelistEnabled', value: 'Crowdsale is whitelisted: ', parent: 'tierStore' }
+  }
 }
 
 function crowdsaleWhitelistEl(isDutchAuction, hasWhitelist) {
@@ -274,6 +285,12 @@ function whitelistHeaderTableElements() {
     { value: '│                                            │                            │                            │', parent: 'none', fileValue: '' },
     { value: '├────────────────────────────────────────────┼────────────────────────────┼────────────────────────────┤', parent: 'none', fileValue: '' },
   ]
+}
+
+function tierMinCap(hasWhitelist) {
+  if (!hasWhitelist) {
+    return { field: 'minCap', value: 'Tier min cap: ', parent: 'tierStore' }
+  }
 }
 
 function footerElements() {
