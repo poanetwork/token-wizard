@@ -3,11 +3,18 @@ import {
   deployContract,
   getNetWorkNameById,
   getNetworkVersion,
+  getProxyParams,
   methodToCreateAppInstance,
   methodToExec,
   sendTXToContract
 } from '../../utils/blockchainHelpers'
-import { countDecimalPlaces, toBigNumber, toFixed, convertDateToUTCTimezoneToDisplay } from '../../utils/utils'
+import {
+  convertDateToUTCTimezoneToDisplay,
+  countDecimalPlaces,
+  toBigNumber,
+  toFixed,
+  updateProxyContractInfo
+} from '../../utils/utils'
 import { CROWDSALE_STRATEGIES, REACT_PREFIX } from '../../utils/constants'
 import { ADDR_BOX_LEN, DOWNLOAD_NAME, DUTCH_PREFIX, MINTED_PREFIX } from './constants'
 import { isObservableArray, toJS } from 'mobx'
@@ -61,24 +68,6 @@ export const buildDeploymentSteps = deploymentStore => {
   return list
 }
 
-const getProxyParams = () => {
-  return [
-    contractStore.abstractStorage.addr,
-    JSON.parse(process.env['REACT_APP_REGISTRY_EXEC_ID'] || '{}')[contractStore.crowdsale.networkID],
-    JSON.parse(process.env['REACT_APP_PROXY_PROVIDER_ADDRESS'] || '{}')[contractStore.crowdsale.networkID],
-    crowdsaleStore.appNameHash
-  ]
-}
-
-export function updateProxyContractInfo(receipt) {
-  const { web3 } = web3Store
-  const paramsProxy = getProxyParams()
-  const encoded = web3.eth.abi.encodeParameters(['address', 'bytes32', 'address', 'bytes32'], paramsProxy)
-
-  contractStore.setContractProperty(crowdsaleStore.proxyName, 'addr', receipt.contractAddress.toLowerCase())
-  contractStore.setContractProperty(crowdsaleStore.proxyName, 'abiEncoded', encoded.slice(2))
-}
-
 export const deployProxy = () => {
   const { web3 } = web3Store
   return [
@@ -93,9 +82,13 @@ export const deployProxy = () => {
 
       const binProxy = contractStore[crowdsaleStore.proxyName].bin || ''
       const abiProxy = contractStore[crowdsaleStore.proxyName].abi || []
-      const paramsProxy = getProxyParams()
-      const receipt = await deployContract(abiProxy, binProxy, paramsProxy, executionOrder)
-      updateProxyContractInfo(receipt, web3, paramsProxy)
+      const proxyParams = getProxyParams({
+        abstractStorageAddr: contractStore.abstractStorage.addr,
+        networkID: contractStore.crowdsale.networkID,
+        appNameHash: crowdsaleStore.appNameHash
+      })
+      const receipt = await deployContract(abiProxy, binProxy, proxyParams, executionOrder)
+      updateProxyContractInfo(receipt, { web3Store, contractStore, crowdsaleStore }, proxyParams)
       return receipt
     }
   ]
@@ -222,10 +215,7 @@ export const getDutchAuctionCrowdSaleParams = (account, methodInterface) => {
   return { params: crowdsaleParams, paramsEncoded: crowdsaleParamsEncoded }
 }
 
-export function updateCrowdsaleContractInfo(receipt) {
-  const { logs, events } = receipt
-  logger.log('receipt:', receipt)
-
+export function updateCrowdsaleContractInfo({ logs, events }, { contractStore }) {
   if (events) {
     logger.log('events:', events)
     if (events.ApplicationFinalization) {

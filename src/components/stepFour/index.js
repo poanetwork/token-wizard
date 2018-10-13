@@ -5,8 +5,7 @@ import {
   getOptimizationFlagByStore,
   getVersionFlagByStore,
   scrollToBottom,
-  updateCrowdsaleContractInfo,
-  updateProxyContractInfo
+  updateCrowdsaleContractInfo
 } from './utils'
 import {
   deployHasEnded,
@@ -23,7 +22,13 @@ import {
   TEXT_FIELDS,
   TOAST
 } from '../../utils/constants'
-import { convertDateToUTCTimezoneToDisplay, getContractBySourceType, getNetworkID, toast } from '../../utils/utils'
+import {
+  convertDateToUTCTimezoneToDisplay,
+  getContractBySourceType,
+  getNetworkID,
+  toast,
+  updateProxyContractInfo
+} from '../../utils/utils'
 import { StepNavigation } from '../Common/StepNavigation'
 import { DisplayField } from '../Common/DisplayField'
 import { TxProgressStatus } from '../Common/TxProgressStatus'
@@ -165,10 +170,15 @@ export class stepFour extends Component {
             // analyze receipt
             await sendTXResponse(receipt)
             const executionOrder = deploymentStore.getStepExecutionOrder(deploymentStore.txRecoverable)
+            const stores = {
+              web3Store: this.props.web3Store,
+              crowdsaleStore: this.props.crowdsaleStore,
+              contractStore: this.props.contractStore
+            }
 
             // if is one of the contract deployment steps, call the proper method to update the information
-            if (deploymentStore.txRecoverable.name === 'deployProxy') updateProxyContractInfo(receipt)
-            if (deploymentStore.txRecoverable.name === 'crowdsaleCreate') updateCrowdsaleContractInfo(receipt)
+            if (deploymentStore.txRecoverable.name === 'deployProxy') updateProxyContractInfo(receipt, stores)
+            if (deploymentStore.txRecoverable.name === 'crowdsaleCreate') updateCrowdsaleContractInfo(receipt, stores)
 
             deploymentStore.setDeploymentStep(executionOrder)
             deploymentStore.setDeploymentStepStatus({ executionOrder, status: 'mined' })

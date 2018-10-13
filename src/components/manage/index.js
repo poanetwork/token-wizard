@@ -3,38 +3,40 @@ import { inject, observer } from 'mobx-react'
 import { TOAST } from '../../utils/constants'
 import '../../assets/stylesheets/application.css'
 import {
+  invalidCrowdsaleExecIDProxyAlert,
+  invalidNetworkIDAlert,
+  notTheOwner,
   successfulFinalizeAlert,
   successfulUpdateCrowdsaleAlert,
-  warningOnFinalizeCrowdsale,
-  notTheOwner,
-  invalidNetworkIDAlert,
-  invalidCrowdsaleExecIDProxyAlert
+  warningOnFinalizeCrowdsale
 } from '../../utils/alerts'
 import {
-  getCurrentAccount,
-  getNetworkVersion,
-  sendTXToContract,
-  calculateGasLimit,
   attachToSpecificCrowdsaleContract,
   attachToSpecificCrowdsaleContractByAddr,
-  methodToExec,
+  calculateGasLimit,
+  checkWeb3,
   getCrowdsaleStrategy,
   getCrowdsaleStrategyByName,
-  checkWeb3,
-  isAddressValid
+  getCurrentAccount,
+  getNetworkVersion,
+  getProxyParams,
+  isAddressValid,
+  methodToExec,
+  sendTXToContract
 } from '../../utils/blockchainHelpers'
 import {
+  clearStorage,
+  convertDateToLocalTimezoneInUnix,
   isExecIDValid,
   isNetworkIDValid,
   toast,
   toBigNumber,
-  clearStorage,
-  convertDateToLocalTimezoneInUnix
+  updateProxyContractInfo
 } from '../../utils/utils'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import { getFieldsToUpdate, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
-import { getTiersLength, getCurrentTierInfoCustom } from '../crowdsale/utils'
+import { getCurrentTierInfoCustom, getTiersLength } from '../crowdsale/utils'
 import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import createDecorator from 'final-form-calculate'
@@ -43,6 +45,7 @@ import { ReservedTokensList } from './ReservedTokensList'
 import { ManageForm } from './ManageForm'
 import moment from 'moment'
 import logdown from 'logdown'
+import downloadCrowdsaleInfo from '../../utils/downloadCrowdsaleInfo'
 
 const logger = logdown('TW:manage')
 
@@ -195,7 +198,7 @@ export class Manage extends Component {
 
   extractContractsData = async () => {
     try {
-      const { crowdsaleStore, contractStore } = this.props
+      const { crowdsaleStore, contractStore, web3Store, match } = this.props
       const { addr: abstractStorageAddr } = contractStore.abstractStorage
       const { isMintedCappedCrowdsale, isDutchAuction, execID, contractTargetSuffix } = crowdsaleStore
 
@@ -460,6 +463,17 @@ export class Manage extends Component {
       logger.log('tiers:', tiers)
 
       tiers.forEach((tier, index) => processTier(crowdsale, token, reserved_tokens_info, tier, index))
+
+      const networkID = await getNetworkVersion()
+      contractStore.setContractProperty('crowdsale', 'networkID', networkID)
+
+      const { crowdsalePointer: contractAddress } = match.params
+      const proxyParams = getProxyParams({
+        abstractStorageAddr: contractStore.abstractStorage.addr,
+        networkID: contractStore.crowdsale.networkID,
+        appNameHash: crowdsaleStore.appNameHash
+      })
+      updateProxyContractInfo({ contractAddress }, { web3Store, contractStore, crowdsaleStore }, proxyParams)
     } catch (err) {
       return Promise.reject(err)
     }
@@ -774,6 +788,12 @@ export class Manage extends Component {
     }
   })
 
+  handleDownloadCrowdsaleFiles = () => {
+    const { tokenStore, tierStore, reservedTokenStore, contractStore, crowdsaleStore } = this.props
+    downloadCrowdsaleInfo({ tokenStore, tierStore, reservedTokenStore, contractStore, crowdsaleStore })
+    toast.showToaster({ message: TOAST.MESSAGE.CONTRACT_DOWNLOAD_SUCCESS })
+  }
+
   render() {
     const {
       canFinalize,
@@ -800,9 +820,11 @@ export class Manage extends Component {
           component={ManageForm}
           canEditTiers={ownerCurrentUser && !canFinalize && !crowdsaleIsFinalized}
           canEditMinCap={ownerCurrentUser && !crowdsaleHasEnded && !crowdsaleIsWhitelisted && !crowdsaleIsFinalized}
+          canDownloadContractFiles={ownerCurrentUser}
           handleChange={this.updateTierStore}
           canSave={this.canSave()}
           displaySave={this.saveDisplayed()}
+          downloadCrowdsaleFiles={this.handleDownloadCrowdsaleFiles}
           crowdsalePointer={this.props.match.params.crowdsalePointer}
         />
 

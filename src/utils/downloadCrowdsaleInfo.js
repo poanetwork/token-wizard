@@ -14,6 +14,8 @@ import { REACT_PREFIX } from './constants'
 import { getNetWorkNameById } from './blockchainHelpers'
 
 const logger = logdown('TW:downloadCrowdsaleInfo')
+const headerFrame = '*****************************'
+const newLine = '\n'
 
 export default function downloadCrowdsaleInfo(stores) {
   const { crowdsaleStore, contractStore, tierStore } = stores
@@ -28,11 +30,11 @@ export default function downloadCrowdsaleInfo(stores) {
   files.order.forEach(key => {
     if (contractStore.hasOwnProperty(key)) {
       const { txt, name } = files[key]
-      const authOSHeader = auth_os.map(content => handleContentByParent({ content, stores }))
-      const commonHeader = common.map(content => handleContentByParent({ content, stores }))
+      const authOSHeader = auth_os.filter(content => content).map(content => handleContentByParent({ content, stores }))
+      const commonHeader = common.filter(content => content).map(content => handleContentByParent({ content, stores }))
 
-      zip.file(`Auth-os_addresses.txt`, authOSHeader.join('\n'))
-      zip.file(`${name}_data.txt`, commonHeader.join('\n'))
+      zip.file(`Auth-os_addresses.txt`, authOSHeader.join(newLine))
+      zip.file(`${name}_data.txt`, commonHeader.join(newLine))
 
       if (isMintedCappedCrowdsale) {
         for (let tierNumber = 0; tierNumber < tiers.length; tierNumber++) {
@@ -40,7 +42,10 @@ export default function downloadCrowdsaleInfo(stores) {
 
           zip.file(
             txtFilename,
-            txt.map(content => handleContentByParent({ content, index: tierNumber, stores })).join('\n')
+            txt
+              .filter(content => content)
+              .map(content => handleContentByParent({ content, index: tierNumber, stores }))
+              .join(newLine)
           )
         }
       }
@@ -93,21 +98,23 @@ function download({ data = {}, filename = '', type = '', zip = '' }) {
 
 function summaryFileContents(networkID, stores) {
   const { tierStore, reservedTokenStore, contractStore, crowdsaleStore } = stores
-  const hasWhitelist = tierStore.tiers.some(tier => tier.whitelistEnabled === 'no')
+  const hasWhitelist = tierStore.tiers.some(tier => tier.whitelistEnabled === 'yes')
   const hasReservedTokens = reservedTokenStore.tokens.length
-  const { isDutchAuction, appName, strategy, proxyName } = crowdsaleStore
+  const { isDutchAuction, appName, proxyName } = crowdsaleStore
   const { abiEncoded } = contractStore[proxyName]
 
   return {
     common: [
-      ...bigHeaderElements('*********TOKEN SETUP*********'),
+      ...bigHeaderElements('TOKEN SETUP'),
+      newLine,
       { field: 'name', value: 'Token name: ', parent: 'tokenStore' },
       { field: 'ticker', value: 'Token ticker: ', parent: 'tokenStore' },
       { field: 'decimals', value: 'Token decimals: ', parent: 'tokenStore' },
-      { field: 'supply', value: 'Token total supply: ', parent: 'tokenStore' },
+      isDutchAuction ? { field: 'supply', value: 'Token total supply: ', parent: 'tokenStore' } : null,
       ...reservedTokensElements(hasReservedTokens),
-      '\n',
-      ...bigHeaderElements('*******CROWDSALE SETUP*******'),
+      newLine,
+      ...bigHeaderElements('CROWDSALE SETUP'),
+      newLine,
       { field: 'walletAddress', value: 'Multisig wallet address: ', parent: 'tierStore' },
       ...burn(isDutchAuction),
       ...rates(isDutchAuction),
@@ -118,8 +125,9 @@ function summaryFileContents(networkID, stores) {
       ...crowdsaleIsModifiableEl(isDutchAuction),
       ...crowdsaleIsWhitelistedEl(isDutchAuction),
       ...crowdsaleWhitelistEl(isDutchAuction, hasWhitelist),
-      '\n',
-      ...bigHeaderElements('**********METADATA***********'),
+      newLine,
+      ...bigHeaderElements('METADATA'),
+      newLine,
       { field: 'proxyName', value: 'Contract name: ', parent: 'crowdsaleStore' },
       {
         value: 'Compiler version: ',
@@ -132,29 +140,38 @@ function summaryFileContents(networkID, stores) {
         fileValue: getOptimizationFlagByStore(crowdsaleStore)
       },
       { value: 'Encoded ABI parameters: ', parent: 'none', fileValue: abiEncoded },
-      ...footerElements()
+      newLine,
+      ...footerElements(),
+      newLine
     ],
     // prettier-ignore
     auth_os: [
-      ...bigHeaderElements('*******AUTH-OS METADATA******'),
-      smallHeader('**********REGISTRY***********'),
+      ...bigHeaderElements('AUTH-OS METADATA'),
+      newLine,
+      smallHeader('REGISTRY'),
+      newLine,
       { value: authOSContractString('abstract storage'), parent: 'none', fileValue: getAddr("ABSTRACT_STORAGE", networkID) },
       { value: authOSContractString('registry idx'), parent: 'none', fileValue: getAddr("REGISTRY_IDX", networkID) },
       { value: authOSContractString('script executor'), parent: 'none', fileValue: getAddr("REGISTRY_EXEC", networkID) },
       { value: authOSContractString('provider'), parent: 'none', fileValue: getAddr("PROVIDER", networkID) },
-      smallHeader('*********CROWDSALE***********'),
+      newLine,
+      smallHeader('CROWDSALE'),
+      newLine,
       { value: 'Auth-os application name: ', parent: 'none', fileValue: appName },
       getCrowdsaleID(proxyName),
       ...getCrowdsaleENV(networkID, crowdsaleStore),
-      ...getManagers(networkID, strategy, isDutchAuction),
-      ...footerElements()
+      ...getManagers(networkID, crowdsaleStore),
+      newLine,
+      ...footerElements(),
+      newLine
     ],
     files: {
       order: ['crowdsale'],
       crowdsale: {
-        name: crowdsaleStore.appName,
+        name: appName,
         txt: [
-          ...bigHeaderElements('*********TIER SETUP**********'),
+          ...bigHeaderElements('TIER SETUP'),
+          newLine,
           { field: 'tier', value: 'Tier name: ', parent: 'tierStore' },
           { field: 'rate', value: 'Tier rate: ', parent: 'tierStore' },
           { field: 'supply', value: 'Tier max cap: ', parent: 'tierStore' },
@@ -163,7 +180,9 @@ function summaryFileContents(networkID, stores) {
           { field: 'updatable', value: "Tier's duration is modifiable: ", parent: 'tierStore' },
           { field: 'whitelistEnabled', value: 'Tier is whitelisted: ', parent: 'tierStore' },
           ...tierWhitelistElements(hasWhitelist),
-          ...footerElements()
+          newLine,
+          ...footerElements(),
+          newLine
         ]
       }
     }
@@ -171,10 +190,11 @@ function summaryFileContents(networkID, stores) {
 }
 
 function bigHeaderElements(headerName) {
+  headerName = ` ${headerName} `
   return [
-    { value: '*****************************', parent: 'none', fileValue: '' },
-    { value: headerName, parent: 'none', fileValue: '' },
-    { value: '*****************************', parent: 'none', fileValue: '\n' }
+    { value: headerFrame, parent: 'none', fileValue: '' },
+    { value: centerContent(headerName, headerFrame.length, '*'), parent: 'none', fileValue: '' },
+    { value: headerFrame, parent: 'none', fileValue: '' }
   ]
 }
 
@@ -182,8 +202,9 @@ function reservedTokensElements(hasReservedTokens) {
   if (!hasReservedTokens) return []
   else
     return [
-      '\n',
-      ...bigHeaderElements('******RESERVED TOKENS********'),
+      newLine,
+      ...bigHeaderElements('RESERVED TOKENS'),
+      newLine,
       ...reservedTokensHeaderTableElements(),
       { field: 'tokens', value: '', parent: 'reservedTokenStore' }
     ]
@@ -192,10 +213,11 @@ function reservedTokensElements(hasReservedTokens) {
 function reservedTokensHeaderTableElements() {
   // prettier-ignore
   return [
-    { value: '_______________________________________________________________________________________________________', parent: 'none', fileValue: '' },
-    { value: '|                                            |                                                        |', parent: 'none', fileValue: '' },
-    { value: '|                ADDRESS                     |                        VALUE                           |', parent: 'none', fileValue: '' },
-    { value: '|____________________________________________|________________________________________________________|', parent: 'none', fileValue: '' },
+    { value: '┌────────────────────────────────────────────┬─────────────────────────────────────────────────────────┐', parent: 'none', fileValue: '' },
+    { value: '│                                            │                                                         │', parent: 'none', fileValue: '' },
+    { value: '│                  ADDRESS                   │                          VALUE                          │', parent: 'none', fileValue: '' },
+    { value: '│                                            │                                                         │', parent: 'none', fileValue: '' },
+    { value: '├────────────────────────────────────────────┼─────────────────────────────────────────────────────────┤', parent: 'none', fileValue: '' },
   ]
 }
 
@@ -237,8 +259,9 @@ function tierWhitelistElements(hasWhitelist) {
   if (!hasWhitelist) return []
   else
     return [
-      '\n',
-      ...bigHeaderElements('*********WHITELIST***********'),
+      newLine,
+      ...bigHeaderElements('WHITELIST'),
+      newLine,
       ...whitelistHeaderTableElements(),
       { field: 'whitelist', value: '', parent: 'tierStore' }
     ]
@@ -247,23 +270,25 @@ function tierWhitelistElements(hasWhitelist) {
 function whitelistHeaderTableElements() {
   // prettier-ignore
   return [
-    { value: '________________________________________________________________________________________________________', parent: 'none', fileValue: '' },
-    { value: '|                                            |                            |                            |', parent: 'none', fileValue: '' },
-    { value: '|                ADDRESS                     |     MIN CAP IN TOKENS      |     MAX CAP IN TOKENS      |', parent: 'none', fileValue: '' },
-    { value: '|____________________________________________|____________________________|____________________________|', parent: 'none', fileValue: '' },
+    { value: '┌────────────────────────────────────────────┬────────────────────────────┬────────────────────────────┐', parent: 'none', fileValue: '' },
+    { value: '│                                            │                            │                            │', parent: 'none', fileValue: '' },
+    { value: '│                  ADDRESS                   │     MIN CAP IN TOKENS      │     MAX CAP IN TOKENS      │', parent: 'none', fileValue: '' },
+    { value: '│                                            │                            │                            │', parent: 'none', fileValue: '' },
+    { value: '├────────────────────────────────────────────┼────────────────────────────┼────────────────────────────┤', parent: 'none', fileValue: '' },
   ]
 }
 
 function footerElements() {
   return [
-    { value: '\n*****************************', parent: 'none', fileValue: '' },
-    { value: '*****************************', parent: 'none', fileValue: '' },
-    { value: '*****************************', parent: 'none', fileValue: '\n' }
+    { value: headerFrame, parent: 'none', fileValue: '' },
+    { value: headerFrame, parent: 'none', fileValue: '' },
+    { value: headerFrame, parent: 'none', fileValue: '' }
   ]
 }
 
 function smallHeader(headerName) {
-  return { value: headerName, parent: 'none', fileValue: '\n' }
+  headerName = ` ${headerName} `
+  return { value: `${centerContent(headerName, headerFrame.length, '*')}`, parent: 'none', fileValue: '' }
 }
 
 function authOSContractString(contract) {
@@ -344,19 +369,21 @@ function getCrowdsaleContractAddr({ isDutchAuction, isMintedCappedCrowdsale }, c
   return JSON.parse(process.env[`${REACT_PREFIX}${prefix}${contractName}_ADDRESS`] || '{}')[networkID]
 }
 
-function getManagers(networkID, strategy, isDutchAuction) {
-  if (!isDutchAuction) return []
+function getManagers(networkID, crowdsaleStore) {
+  const { isDutchAuction } = crowdsaleStore
+
+  if (isDutchAuction) return []
   else
     return [
       {
         value: authOSContractString('SaleManager'),
         parent: 'none',
-        fileValue: getCrowdsaleContractAddr(strategy, 'CROWDSALE_MANAGER', networkID)
+        fileValue: getCrowdsaleContractAddr(crowdsaleStore, 'CROWDSALE_MANAGER', networkID)
       },
       {
         value: authOSContractString('TokenManager'),
         parent: 'none',
-        fileValue: getCrowdsaleContractAddr(strategy, 'TOKEN_MANAGER', networkID)
+        fileValue: getCrowdsaleContractAddr(crowdsaleStore, 'TOKEN_MANAGER', networkID)
       }
     ]
 }
@@ -402,52 +429,51 @@ function handlerForFile(content, type) {
   const { whitelist, tokens, [field]: value } = type
 
   if (field === 'whitelist') {
-    return whitelist.map(item => whitelistTableItem(item).join('\n'))
+    return whitelist.map((item, index, list) => whitelistTableItem(item, index + 1 === list.length).join(newLine))
   } else if (field === 'tokens' && parent === 'reservedTokenStore') {
-    return tokens.map(item => reservedTokensTableItem(item).join('\n')).join('\n')
+    return tokens
+      .map((item, index, list) => reservedTokensTableItem(item, index + 1 === list.length).join(newLine))
+      .join(newLine)
   } else {
     const isTime = field === 'startTime' || field === 'endTime'
     return `${title}${isTime ? convertDateToUTCTimezoneToDisplay(value) : value}`
   }
 }
 
-function whitelistTableItem(whiteListItem) {
+function whitelistTableItem(whiteListItem, lastItem) {
   const valBoxLen = 28
-  return [
-    '|                                            |                            |                            |',
-    `|${fillWithSpaces(whiteListItem.addr, ADDR_BOX_LEN)}|${fillWithSpaces(
-      whiteListItem.min,
-      valBoxLen
-    )}|${fillWithSpaces(whiteListItem.max, valBoxLen)}|`,
-    '|____________________________________________|____________________________|____________________________|'
-  ]
+  const address = centerContent(whiteListItem.addr, ADDR_BOX_LEN)
+  const minCap = centerContent(whiteListItem.min, valBoxLen)
+  const maxCap = centerContent(whiteListItem.max, valBoxLen)
+  const separator = !lastItem
+    ? '├────────────────────────────────────────────┼────────────────────────────┼────────────────────────────┤'
+    : '└────────────────────────────────────────────┴────────────────────────────┴────────────────────────────┘'
+  return [`│${address}│${minCap}│${maxCap}│`, separator]
 }
 
-function fillWithSpaces(val, len) {
+function reservedTokensTableItem(reservedTokensItem, lastItem) {
+  const valBoxLen = 57
+  const dim = reservedTokensItem.dim === 'percentage' ? '%' : 'tokens'
+  const address = centerContent(reservedTokensItem.addr, ADDR_BOX_LEN)
+  const value = centerContent(`${reservedTokensItem.val} ${dim}`, valBoxLen)
+  const separator = !lastItem
+    ? '├────────────────────────────────────────────┼─────────────────────────────────────────────────────────┤'
+    : '└────────────────────────────────────────────┴─────────────────────────────────────────────────────────┘'
+  return [`|${address}|${value}|`, separator]
+}
+
+function centerContent(val, len, fillWith = ' ') {
   val = val.toString()
   if (val.length < len) {
-    const whitespaceLen = len - val.length
-    const prefixLen = Math.ceil(whitespaceLen / 2)
-    const suffixLen = Number.isInteger(whitespaceLen / 2) ? prefixLen : prefixLen - 1
-    const prefix = new Array(prefixLen).fill(' ').join('')
-    const suffix = new Array(suffixLen).fill(' ').join('')
+    const spacerLen = len - val.length
+    const prefixLen = Math.ceil(spacerLen / 2)
+    const suffixLen = Number.isInteger(spacerLen / 2) ? prefixLen : prefixLen - 1
+    const prefix = new Array(prefixLen).fill(fillWith).join('')
+    const suffix = new Array(suffixLen).fill(fillWith).join('')
     return `${prefix}${val}${suffix}`
   } else {
-    return val.toString().substr(len)
+    return val.substr(len)
   }
-}
-
-function reservedTokensTableItem(reservedTokensItem) {
-  const valBoxLen = 56
-  const dim = reservedTokensItem.dim === 'percentage' ? '%' : 'tokens'
-  return [
-    '|                                            |                                                        |',
-    `|${fillWithSpaces(reservedTokensItem.addr, ADDR_BOX_LEN)}|${fillWithSpaces(
-      `${reservedTokensItem.val} ${dim}`,
-      valBoxLen
-    )}|`,
-    '|____________________________________________|________________________________________________________|'
-  ]
 }
 
 function handleContractsForFile({ field, value }, index, fields, tier) {
@@ -455,7 +481,7 @@ function handleContractsForFile({ field, value }, index, fields, tier) {
 
   if (!['src', 'abi', 'addr'].includes(field)) {
     const multipleTiers = isObservableArray(fields) ? ` for ${tier}` : ''
-    return `${value}${multipleTiers}:****${'\n\n'}${contractField}`
+    return `${value}${multipleTiers}:****${newLine * 2}${contractField}`
   } else {
     const content = field !== 'abi' ? ` for ${tier}: ${contractField}` : JSON.stringify(contractField)
     return `${value}${content}`
