@@ -117,7 +117,7 @@ function summaryFileContents(networkID, stores) {
         { field: 'walletAddress', value: 'Multisig wallet address: ', parent: 'tierStore' },
         burn(isDutchAuction),
         ...rates(isDutchAuction),
-        minCapEl(hasWhitelist),
+        minCapEl(isDutchAuction, hasWhitelist),
         { field: 'supply', value: 'Crowdsale hard cap: ', parent: 'crowdsaleStore' },
         { field: 'startTime', value: 'Crowdsale start time: ', parent: 'tierStore' },
         { field: 'endTime', value: 'Crowdsale end time: ', parent: 'crowdsaleStore' },
@@ -241,8 +241,8 @@ function rates(isDutchAuction) {
     ]
 }
 
-function minCapEl(hasWhitelist) {
-  if (!hasWhitelist) {
+function minCapEl(isDutchAuction, hasWhitelist) {
+  if (isDutchAuction && !hasWhitelist) {
     return { field: 'minCap', value: 'Crowdsale global min cap: ', parent: 'tierStore' }
   }
 }
