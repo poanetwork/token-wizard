@@ -1,23 +1,14 @@
 import {
   calculateGasLimit,
   deployContract,
-  getNetWorkNameById,
   getNetworkVersion,
   getProxyParams,
   methodToCreateAppInstance,
   methodToExec,
   sendTXToContract
 } from '../../utils/blockchainHelpers'
-import {
-  convertDateToUTCTimezoneToDisplay,
-  countDecimalPlaces,
-  toBigNumber,
-  toFixed,
-  updateProxyContractInfo
-} from '../../utils/utils'
-import { CROWDSALE_STRATEGIES, REACT_PREFIX } from '../../utils/constants'
-import { ADDR_BOX_LEN, DOWNLOAD_NAME, DUTCH_PREFIX, MINTED_PREFIX } from './constants'
-import { isObservableArray, toJS } from 'mobx'
+import { countDecimalPlaces, toBigNumber, toFixed, updateProxyContractInfo } from '../../utils/utils'
+import { toJS } from 'mobx'
 import {
   contractStore,
   crowdsaleStore,
