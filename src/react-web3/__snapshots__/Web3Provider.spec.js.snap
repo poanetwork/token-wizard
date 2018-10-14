@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Web3Provider renders without crashing 1`] = `"<div class=\\"loading-container\\"><div class=\\"loading\\"></div><div class=\\"loading-text-container\\"><div class=\\"loading-text\\">Do not refresh the webpage</div></div><div class=\\"loading-progress\\"><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div></div></div>"`;
+
+exports[`Web3Provider should find title 1`] = `undefined`;
+
+exports[`Web3Provider should render app screen 1`] = `
+<div
+  className="loading-container"
+>
+  <div
+    className="loading"
+  />
+  <div
+    className="loading-text-container"
+  >
+    <div
+      className="loading-text"
+    >
+      Do not refresh the webpage
+    </div>
+  </div>
+  <div
+    className="loading-progress"
+  >
+    <div
+      className="loading-i"
+    />
+    <div
+      className="loading-i"
+    />
+    <div
+      className="loading-i"
+    />
+    <div
+      className="loading-i"
+    />
+    <div
+      className="loading-i"
+    />
+    <div
+      className="loading-i"
+    />
+  </div>
+</div>
+`;
+
+exports[`Web3Provider should render screen with render without throwing an error 1`] = `"<div class=\\"loading\\"></div><div class=\\"loading-text-container\\"><div class=\\"loading-text\\">Do not refresh the webpage</div></div><div class=\\"loading-progress\\"><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div></div>"`;

@@ -6,14 +6,14 @@ import { Loader } from '../components/Common/Loader'
 const ONE_SECOND = 1000;
 
 class Web3Provider extends Component {
-  state = {
-    selectedAccount: null,
-    web3: null,
-    render: false
-  }
-
   constructor(props, context) {
     super(props, context)
+
+    this.state = {
+      selectedAccount: null,
+      web3: null,
+      render: false
+    }
 
     this.interval = null
   }

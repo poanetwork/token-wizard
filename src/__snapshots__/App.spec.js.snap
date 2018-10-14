@@ -1,0 +1,113 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App Index renders without crashing 1`] = `"<div><header class=\\"header\\"><div class=\\"container\\"><a class=\\"logo\\" href=\\"/\\"></a></div></header><div class=\\"loading-container\\"><div class=\\"loading\\"></div><div class=\\"loading-text-container\\"><div class=\\"loading-text\\">Do not refresh the webpage</div></div><div class=\\"loading-progress\\"><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div></div></div><footer class=\\"footer\\"><div class=\\"container\\"><p class=\\"rights\\"><!-- react-text: 19 -->2018<!-- /react-text --><!-- react-text: 20 --> POA Network. All rights reserved.<!-- /react-text --></p><a class=\\"logo\\" href=\\"/\\"></a><div class=\\"socials\\"><a href=\\"https://twitter.com/poanetwork\\" class=\\"social social_twitter\\">Twitter</a><a href=\\"https://poa.network\\" class=\\"social social_oracles\\">POA Network</a><a href=\\"https://t.me/oraclesnetwork\\" class=\\"social social_telegram\\">Telegram</a><a href=\\"https://github.com/poanetwork/\\" class=\\"social social_github\\">GitHub</a></div></div></footer><div class=\\"css-nm2dr3\\"><span></span></div></div>"`;
+
+exports[`App Index should render app screen 1`] = `
+<div>
+  <header
+    className="header"
+  >
+    <div
+      className="container"
+    >
+      <a
+        className="logo"
+        href="/"
+        onClick={[Function]}
+      />
+    </div>
+  </header>
+  <div
+    className="loading-container"
+  >
+    <div
+      className="loading"
+    />
+    <div
+      className="loading-text-container"
+    >
+      <div
+        className="loading-text"
+      >
+        Do not refresh the webpage
+      </div>
+    </div>
+    <div
+      className="loading-progress"
+    >
+      <div
+        className="loading-i"
+      />
+      <div
+        className="loading-i"
+      />
+      <div
+        className="loading-i"
+      />
+      <div
+        className="loading-i"
+      />
+      <div
+        className="loading-i"
+      />
+      <div
+        className="loading-i"
+      />
+    </div>
+  </div>
+  <footer
+    className="footer"
+  >
+    <div
+      className="container"
+    >
+      <p
+        className="rights"
+      >
+        2018
+         POA Network. All rights reserved.
+      </p>
+      <a
+        className="logo"
+        href="/"
+        onClick={[Function]}
+      />
+      <div
+        className="socials"
+      >
+        <a
+          className="social social_twitter"
+          href="https://twitter.com/poanetwork"
+        >
+          Twitter
+        </a>
+        <a
+          className="social social_oracles"
+          href="https://poa.network"
+        >
+          POA Network
+        </a>
+        <a
+          className="social social_telegram"
+          href="https://t.me/oraclesnetwork"
+        >
+          Telegram
+        </a>
+        <a
+          className="social social_github"
+          href="https://github.com/poanetwork/"
+        >
+          GitHub
+        </a>
+      </div>
+    </div>
+  </footer>
+  <div
+    className="css-nm2dr3"
+  >
+    <span />
+  </div>
+</div>
+`;
+
+exports[`App Index should render screen with render without throwing an error 1`] = `"<header class=\\"header\\"><div class=\\"container\\"><a class=\\"logo\\" href=\\"/\\"></a></div></header><div class=\\"loading-container\\"><div class=\\"loading\\"></div><div class=\\"loading-text-container\\"><div class=\\"loading-text\\">Do not refresh the webpage</div></div><div class=\\"loading-progress\\"><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div></div></div><footer class=\\"footer\\"><div class=\\"container\\"><p class=\\"rights\\">2018 POA Network. All rights reserved.</p><a class=\\"logo\\" href=\\"/\\"></a><div class=\\"socials\\"><a href=\\"https://twitter.com/poanetwork\\" class=\\"social social_twitter\\">Twitter</a><a href=\\"https://poa.network\\" class=\\"social social_oracles\\">POA Network</a><a href=\\"https://t.me/oraclesnetwork\\" class=\\"social social_telegram\\">Telegram</a><a href=\\"https://github.com/poanetwork/\\" class=\\"social social_github\\">GitHub</a></div></div></footer><div class=\\"css-nm2dr3\\"><span></span></div>"`;
