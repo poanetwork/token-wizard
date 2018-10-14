@@ -2,9 +2,9 @@
 
 exports[`Web3Provider renders without crashing 1`] = `"<div class=\\"loading-container\\"><div class=\\"loading\\"></div><div class=\\"loading-text-container\\"><div class=\\"loading-text\\">Do not refresh the webpage</div></div><div class=\\"loading-progress\\"><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div></div></div>"`;
 
-exports[`Web3Provider should find title 1`] = `undefined`;
+exports[`Web3Provider should render screen with render without throwing an error 1`] = `"<div class=\\"loading\\"></div><div class=\\"loading-text-container\\"><div class=\\"loading-text\\">Do not refresh the webpage</div></div><div class=\\"loading-progress\\"><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div></div>"`;
 
-exports[`Web3Provider should render app screen 1`] = `
+exports[`Web3Provider should render web3Provider screen 1`] = `
 <div
   className="loading-container"
 >
@@ -44,5 +44,3 @@ exports[`Web3Provider should render app screen 1`] = `
   </div>
 </div>
 `;
-
-exports[`Web3Provider should render screen with render without throwing an error 1`] = `"<div class=\\"loading\\"></div><div class=\\"loading-text-container\\"><div class=\\"loading-text\\">Do not refresh the webpage</div></div><div class=\\"loading-progress\\"><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div></div>"`;
