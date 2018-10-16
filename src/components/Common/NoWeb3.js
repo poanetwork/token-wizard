@@ -17,8 +17,8 @@ export default class NoWeb3 extends Component {
                     href="https://chrome.google.com/webstore/detail/nifty-wallet/jbdaocneiiinmjbjlgalhcelgbejmnid"
                     target="blank"
                   >
-                    a Wallet{' '}
-                  </a>
+                    a Wallet
+                  </a>{' '}
                   extension is installed on your web browser, please verify that the access to Ethereum account has been
                   granted and is available for the corresponding domain. Check Token Wizard GitHub for{' '}
                   <a href="https://github.com/poanetwork/token-wizard" target="blank">
