@@ -15,6 +15,9 @@ class GeneralStore {
 
   @action
   setProperty = (property, value) => {
+    if (!this.hasOwnProperty(property)) {
+      throw new Error(`${property} is not declared as a property`)
+    }
     this[property] = value
   }
 

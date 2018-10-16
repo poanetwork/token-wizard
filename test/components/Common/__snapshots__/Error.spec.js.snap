@@ -13,7 +13,7 @@ exports[`Error  should render Error component 1`] = `
     }
   }
   name="errorName"
-  onSubmit={[Function]}
+  onSubmit={[MockFunction]}
   validate={[Function]}
 >
   <Error

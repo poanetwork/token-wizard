@@ -26,7 +26,6 @@ exports[`Crowdsales should render screen  1`] = `
         className="sw-ButtonContinue"
         disabled={true}
         onClick={[Function]}
-        type={undefined}
       >
         <span
           className="sw-ButtonContinue_Text"

@@ -27,16 +27,10 @@ exports[`CrowdsaleStartTime Rendering should render CrowdsaleStartTime component
     className="sw-TextField"
     disabled={false}
     id="tiers[0].startTime"
-    max={undefined}
-    min={undefined}
     name="tiers[0].startTime"
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
-    onKeyPress={undefined}
-    onPaste={undefined}
-    placeholder={undefined}
-    style={undefined}
     type="datetime-local"
     value={1520852700000}
   />
@@ -70,16 +64,10 @@ exports[`CrowdsaleStartTime Rendering should render CrowdsaleStartTime component
     className="sw-TextField"
     disabled={true}
     id="tiers[0].startTime"
-    max={undefined}
-    min={undefined}
     name="tiers[0].startTime"
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
-    onKeyPress={undefined}
-    onPaste={undefined}
-    placeholder={undefined}
-    style={undefined}
     type="datetime-local"
     value={1520852700000}
   />

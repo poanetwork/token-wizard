@@ -198,7 +198,7 @@ describe('objectKeysToLowerCase', () => {
     const collectionToLowercase = objectKeysToLowerCase(collection)
 
     // Then
-    expect(JSON.stringify(collectionToLowercase)).toBe(JSON.stringify(expectedResult))
+    expect(collectionToLowercase).toEqual(expectedResult)
   })
 })
 
@@ -256,10 +256,10 @@ describe('navigateTo', () => {
 
     it(`should ${action} for location '${location}'`, () => {
       if (expected) {
-        expect(navigateTo(history, location, params)).toBe(expected)
+        expect(navigateTo({ history, location, params })).toBe(expected)
       } else {
         const navigateAndThrow = () => {
-          navigateTo(history, location, params)
+          navigateTo({ history, location, params })
         }
         expect(navigateAndThrow).toThrow()
       }

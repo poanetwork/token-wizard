@@ -28,7 +28,10 @@ export class Crowdsales extends Component {
     try {
       this.setState({ loading: true })
       await checkWeb3ForErrors(result => {
-        navigateTo(this.props.history, 'home')
+        navigateTo({
+          history: this.props.history,
+          location: 'home'
+        })
       })
 
       const { account, crowdsales } = await this.load()

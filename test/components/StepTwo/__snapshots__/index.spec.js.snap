@@ -18,7 +18,7 @@ exports[`StepTwo should render StepTwo for Dutch Auction strategy 1`] = `
       >
         <div
           className="st-StepNavigation_StepContainer
-                active"
+        active"
         >
           <div
             className="st-StepNavigation_StepCircle"
@@ -34,7 +34,7 @@ exports[`StepTwo should render StepTwo for Dutch Auction strategy 1`] = `
         </div>
         <div
           className="st-StepNavigation_StepContainer
-                active"
+        active"
         >
           <div
             className="st-StepNavigation_StepCircle"
@@ -50,7 +50,7 @@ exports[`StepTwo should render StepTwo for Dutch Auction strategy 1`] = `
         </div>
         <div
           className="st-StepNavigation_StepContainer
-                "
+        "
         >
           <div
             className="st-StepNavigation_StepCircle"
@@ -66,7 +66,7 @@ exports[`StepTwo should render StepTwo for Dutch Auction strategy 1`] = `
         </div>
         <div
           className="st-StepNavigation_StepContainer
-                "
+        "
         >
           <div
             className="st-StepNavigation_StepCircle"
@@ -82,7 +82,7 @@ exports[`StepTwo should render StepTwo for Dutch Auction strategy 1`] = `
         </div>
         <div
           className="st-StepNavigation_StepContainer
-                "
+        "
         >
           <div
             className="st-StepNavigation_StepCircle"
@@ -151,18 +151,11 @@ exports[`StepTwo should render StepTwo for Dutch Auction strategy 1`] = `
             </div>
             <input
               className="sw-TextField"
-              disabled={undefined}
               id="name"
-              max={undefined}
-              min={undefined}
               name="name"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="text"
               value=""
             />
@@ -191,18 +184,11 @@ exports[`StepTwo should render StepTwo for Dutch Auction strategy 1`] = `
             </div>
             <input
               className="sw-TextField"
-              disabled={undefined}
               id="ticker"
-              max={undefined}
-              min={undefined}
               name="ticker"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="text"
               value=""
             />
@@ -239,10 +225,6 @@ exports[`StepTwo should render StepTwo for Dutch Auction strategy 1`] = `
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="number"
               value=""
             />
@@ -271,18 +253,11 @@ exports[`StepTwo should render StepTwo for Dutch Auction strategy 1`] = `
             </div>
             <input
               className="sw-TextField"
-              disabled={undefined}
               id="supply"
-              max={undefined}
-              min={undefined}
               name="supply"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="text"
               value=""
             />
@@ -301,7 +276,6 @@ exports[`StepTwo should render StepTwo for Dutch Auction strategy 1`] = `
           <button
             className="sw-ButtonContinue"
             disabled={true}
-            onClick={undefined}
             type="submit"
           >
             <span
@@ -335,7 +309,7 @@ exports[`StepTwo should render StepTwo for Minted Capped strategy 1`] = `
       >
         <div
           className="st-StepNavigation_StepContainer
-                active"
+        active"
         >
           <div
             className="st-StepNavigation_StepCircle"
@@ -351,7 +325,7 @@ exports[`StepTwo should render StepTwo for Minted Capped strategy 1`] = `
         </div>
         <div
           className="st-StepNavigation_StepContainer
-                active"
+        active"
         >
           <div
             className="st-StepNavigation_StepCircle"
@@ -367,7 +341,7 @@ exports[`StepTwo should render StepTwo for Minted Capped strategy 1`] = `
         </div>
         <div
           className="st-StepNavigation_StepContainer
-                "
+        "
         >
           <div
             className="st-StepNavigation_StepCircle"
@@ -383,7 +357,7 @@ exports[`StepTwo should render StepTwo for Minted Capped strategy 1`] = `
         </div>
         <div
           className="st-StepNavigation_StepContainer
-                "
+        "
         >
           <div
             className="st-StepNavigation_StepCircle"
@@ -399,7 +373,7 @@ exports[`StepTwo should render StepTwo for Minted Capped strategy 1`] = `
         </div>
         <div
           className="st-StepNavigation_StepContainer
-                "
+        "
         >
           <div
             className="st-StepNavigation_StepCircle"
@@ -468,18 +442,11 @@ exports[`StepTwo should render StepTwo for Minted Capped strategy 1`] = `
             </div>
             <input
               className="sw-TextField"
-              disabled={undefined}
               id="name"
-              max={undefined}
-              min={undefined}
               name="name"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="text"
               value=""
             />
@@ -508,18 +475,11 @@ exports[`StepTwo should render StepTwo for Minted Capped strategy 1`] = `
             </div>
             <input
               className="sw-TextField"
-              disabled={undefined}
               id="ticker"
-              max={undefined}
-              min={undefined}
               name="ticker"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="text"
               value=""
             />
@@ -556,10 +516,6 @@ exports[`StepTwo should render StepTwo for Minted Capped strategy 1`] = `
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="number"
               value=""
             />
@@ -578,7 +534,6 @@ exports[`StepTwo should render StepTwo for Minted Capped strategy 1`] = `
           <button
             className="sw-ButtonContinue"
             disabled={true}
-            onClick={undefined}
             type="submit"
           >
             <span

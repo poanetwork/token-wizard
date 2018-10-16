@@ -17,6 +17,7 @@ class StatsStore {
     this.percentageOfWhitelisted = 0
     this.percentageOfFinalized = 0
     this.percentageOfMultiTiers = 0
+    this.percentageOfReserved = 0
     this.totalInvolvedContributorsAmount = 0
     this.maxTiersAmount = 0
     this.maxEthRaised = 0
@@ -24,6 +25,9 @@ class StatsStore {
 
   @action
   setProperty = (property, value) => {
+    if (!this.hasOwnProperty(property)) {
+      throw new Error(`${property} is not declared as a property`)
+    }
     this[property] = value
   }
 }

@@ -29,17 +29,6 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
             <input
               className="sw-TextField"
               disabled={true}
-              id={undefined}
-              max={undefined}
-              min={undefined}
-              name={undefined}
-              onBlur={undefined}
-              onChange={undefined}
-              onFocus={undefined}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="text"
               value="Tier 1"
             />
@@ -75,16 +64,10 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               className="sw-TextField"
               disabled={true}
               id="tiers[0].0.startTime"
-              max={undefined}
-              min={undefined}
               name="tiers[0].0.startTime"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="datetime-local"
               value=""
             />
@@ -115,16 +98,10 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               className="sw-TextField"
               disabled={true}
               id="tiers[0].0.endTime"
-              max={undefined}
-              min={undefined}
               name="tiers[0].0.endTime"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="datetime-local"
               value=""
             />
@@ -159,16 +136,10 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               className="sw-TextField"
               disabled={true}
               id="tiers[0].0.rate"
-              max={undefined}
-              min={undefined}
               name="tiers[0].0.rate"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="text"
               value=""
             />
@@ -199,16 +170,10 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               className="sw-TextField"
               disabled={true}
               id="tiers[0].0.supply"
-              max={undefined}
-              min={undefined}
               name="tiers[0].0.supply"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="text"
               value=""
             />
@@ -233,16 +198,10 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               className="sw-TextField"
               disabled={true}
               id="tiers[0].0.minCap"
-              max={undefined}
-              min={undefined}
               name="tiers[0].0.minCap"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="number"
               value=""
             />
@@ -383,17 +342,6 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
             <input
               className="sw-TextField"
               disabled={true}
-              id={undefined}
-              max={undefined}
-              min={undefined}
-              name={undefined}
-              onBlur={undefined}
-              onChange={undefined}
-              onFocus={undefined}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="text"
               value="Tier 2"
             />
@@ -429,16 +377,10 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               className="sw-TextField"
               disabled={true}
               id="tiers[1].1.startTime"
-              max={undefined}
-              min={undefined}
               name="tiers[1].1.startTime"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="datetime-local"
               value=""
             />
@@ -469,16 +411,10 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               className="sw-TextField"
               disabled={true}
               id="tiers[1].1.endTime"
-              max={undefined}
-              min={undefined}
               name="tiers[1].1.endTime"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="datetime-local"
               value=""
             />
@@ -513,16 +449,10 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               className="sw-TextField"
               disabled={true}
               id="tiers[1].1.rate"
-              max={undefined}
-              min={undefined}
               name="tiers[1].1.rate"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="text"
               value=""
             />
@@ -553,16 +483,10 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               className="sw-TextField"
               disabled={true}
               id="tiers[1].1.supply"
-              max={undefined}
-              min={undefined}
               name="tiers[1].1.supply"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="text"
               value=""
             />
@@ -587,16 +511,10 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               className="sw-TextField"
               disabled={true}
               id="tiers[1].1.minCap"
-              max={undefined}
-              min={undefined}
               name="tiers[1].1.minCap"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="number"
               value=""
             />
@@ -637,17 +555,6 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
             <input
               className="sw-TextField"
               disabled={true}
-              id={undefined}
-              max={undefined}
-              min={undefined}
-              name={undefined}
-              onBlur={undefined}
-              onChange={undefined}
-              onFocus={undefined}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="text"
               value="Tier 1"
             />
@@ -683,16 +590,10 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               className="sw-TextField"
               disabled={true}
               id="tiers[0].0.startTime"
-              max={undefined}
-              min={undefined}
               name="tiers[0].0.startTime"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="datetime-local"
               value=""
             />
@@ -723,16 +624,10 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               className="sw-TextField"
               disabled={true}
               id="tiers[0].0.endTime"
-              max={undefined}
-              min={undefined}
               name="tiers[0].0.endTime"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="datetime-local"
               value=""
             />
@@ -767,16 +662,10 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               className="sw-TextField"
               disabled={true}
               id="tiers[0].0.rate"
-              max={undefined}
-              min={undefined}
               name="tiers[0].0.rate"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="text"
               value=""
             />
@@ -807,16 +696,10 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               className="sw-TextField"
               disabled={true}
               id="tiers[0].0.supply"
-              max={undefined}
-              min={undefined}
               name="tiers[0].0.supply"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="text"
               value=""
             />
@@ -841,16 +724,10 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               className="sw-TextField"
               disabled={true}
               id="tiers[0].0.minCap"
-              max={undefined}
-              min={undefined}
               name="tiers[0].0.minCap"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="number"
               value=""
             />
@@ -991,17 +868,6 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
             <input
               className="sw-TextField"
               disabled={true}
-              id={undefined}
-              max={undefined}
-              min={undefined}
-              name={undefined}
-              onBlur={undefined}
-              onChange={undefined}
-              onFocus={undefined}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="text"
               value="Tier 2"
             />
@@ -1037,16 +903,10 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               className="sw-TextField"
               disabled={true}
               id="tiers[1].1.startTime"
-              max={undefined}
-              min={undefined}
               name="tiers[1].1.startTime"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="datetime-local"
               value=""
             />
@@ -1077,16 +937,10 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               className="sw-TextField"
               disabled={true}
               id="tiers[1].1.endTime"
-              max={undefined}
-              min={undefined}
               name="tiers[1].1.endTime"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="datetime-local"
               value=""
             />
@@ -1121,16 +975,10 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               className="sw-TextField"
               disabled={true}
               id="tiers[1].1.rate"
-              max={undefined}
-              min={undefined}
               name="tiers[1].1.rate"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="text"
               value=""
             />
@@ -1161,16 +1009,10 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               className="sw-TextField"
               disabled={true}
               id="tiers[1].1.supply"
-              max={undefined}
-              min={undefined}
               name="tiers[1].1.supply"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="text"
               value=""
             />
@@ -1195,16 +1037,10 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               className="sw-TextField"
               disabled={true}
               id="tiers[1].1.minCap"
-              max={undefined}
-              min={undefined}
               name="tiers[1].1.minCap"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              onKeyPress={undefined}
-              onPaste={undefined}
-              placeholder={undefined}
-              style={undefined}
               type="number"
               value=""
             />

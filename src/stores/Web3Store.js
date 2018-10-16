@@ -13,18 +13,22 @@ class Web3Store {
   @observable accounts
 
   constructor() {
-    this.getWeb3(web3 => {
+    this.getWeb3(async (web3, status) => {
       if (web3) {
         this.web3 = web3
-        web3.eth
-          .getAccounts()
-          .then(accounts => {
+        if (typeof web3.eth.getAccounts !== 'undefined') {
+          try {
+            const accounts = await web3.eth.getAccounts((error, response) => {
+              if (!error) return response
+            })
             this.accounts = accounts
             if (accounts.length > 0) {
               this.setProperty('curAddress', accounts[0])
             }
-          })
-          .catch(err => logger.log('There is no accounts'))
+          } catch (err) {
+            logger.log('Error trying to get accounts', err)
+          }
+        }
       }
     })
   }
@@ -39,8 +43,8 @@ class Web3Store {
     return `https://${network}.infura.io/${infuraTokenEnvVar}`
   }
 
-  getWeb3 = cb => {
-    let networkID = CrowdsaleConfig.networkID || getNetworkID()
+  getWeb3 = (cb, networkIDparam) => {
+    let { networkID = networkIDparam || getNetworkID() } = CrowdsaleConfig
     networkID = Number(networkID)
     let web3 = window.web3
     if (typeof web3 === 'undefined') {
@@ -74,15 +78,17 @@ class Web3Store {
         const httpProvider = new Web3.providers.HttpProvider(infuraLink)
         web3 = new Web3(httpProvider)
       }
+
+      cb(web3, false)
+      return web3
     } else {
       // window.web3 == web3 most of the time. Don't override the provided,
       // web3, just wrap it in your Web3.
-      web3 = new Web3(web3.currentProvider)
+      const myWeb3 = new Web3(web3.currentProvider)
+
+      cb(myWeb3, false)
+      return myWeb3
     }
-
-    cb(web3, false)
-
-    return web3
   }
 }
 

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`percentage 1`] = `
+exports[`ReservedTokensInputBlock render should render the component for percentage: percentage 1`] = `
 <inject-ReservedTokensInputBlock-with-reservedTokenStore
   reservedTokenStore={
     ReservedTokenStore {
@@ -358,7 +358,7 @@ exports[`percentage 1`] = `
 </inject-ReservedTokensInputBlock-with-reservedTokenStore>
 `;
 
-exports[`tokens 1`] = `
+exports[`ReservedTokensInputBlock render should render the component for tokens: tokens 1`] = `
 <inject-ReservedTokensInputBlock-with-reservedTokenStore
   reservedTokenStore={
     ReservedTokenStore {

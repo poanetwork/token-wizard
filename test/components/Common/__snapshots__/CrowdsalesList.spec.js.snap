@@ -1197,7 +1197,7 @@ exports[`CrowdsaleList  should render CrowdsaleList component 1`] = `
         >
           <div
             className="sw-FlexTable_Row sw-FlexTable_Row-selectable
-                          "
+                "
             key="0"
             onClick={[Function]}
           >
@@ -1209,7 +1209,7 @@ exports[`CrowdsaleList  should render CrowdsaleList component 1`] = `
           </div>
           <div
             className="sw-FlexTable_Row sw-FlexTable_Row-selectable
-                          "
+                "
             key="1"
             onClick={[Function]}
           >
@@ -2371,7 +2371,7 @@ exports[`CrowdsaleList  should render if list is empty   1`] = `
         >
           <div
             className="sw-FlexTable_Row sw-FlexTable_Row-selectable
-                          "
+                "
             key="0"
             onClick={[Function]}
           >
@@ -2383,7 +2383,7 @@ exports[`CrowdsaleList  should render if list is empty   1`] = `
           </div>
           <div
             className="sw-FlexTable_Row sw-FlexTable_Row-selectable
-                          "
+                "
             key="1"
             onClick={[Function]}
           >
