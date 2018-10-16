@@ -414,7 +414,7 @@ function handleContentByParent({ content, index = 0, stores = {} }) {
     case 'crowdsaleStore':
       return handlerForFile(content, stores[parent])
     case 'tierStore': {
-      index = ['minCap', 'walletAddress'].includes(field) ? 0 : index
+      index = field === 'walletAddress' ? 0 : index
       logger.log('TierStore index', index)
       return handlerForFile(content, stores[parent].tiers[index])
     }
