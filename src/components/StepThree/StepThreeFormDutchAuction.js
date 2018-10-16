@@ -25,7 +25,6 @@ import { gweiToWei, navigateTo } from '../../utils/utils'
 import { RadioButton } from '../Common/RadioButton'
 
 const logger = logdown('TW:StepThree')
-const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 const { VALID } = VALIDATION_TYPES
 const { WALLET_ADDRESS, BURN_EXCESS } = TEXT_FIELDS
 
@@ -114,7 +113,10 @@ export const StepThreeFormDutchAuction = ({
 
   const goBack = async () => {
     try {
-      navigateTo(history, 'stepTwo')
+      navigateTo({
+        history: history,
+        location: 'stepTwo'
+      })
     } catch (err) {
       logger.log('Error to navigate', err)
     }

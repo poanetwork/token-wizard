@@ -129,7 +129,10 @@ export const StepThreeFormMintedCapped = ({
 
   const goBack = async () => {
     try {
-      navigateTo(history, 'stepTwo')
+      navigateTo({
+        history: history,
+        location: 'stepTwo'
+      })
     } catch (err) {
       logger.log('Error to navigate', err)
     }
