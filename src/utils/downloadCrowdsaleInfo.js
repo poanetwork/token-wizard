@@ -444,7 +444,9 @@ function handlerForFile(content, type) {
   const { whitelist, tokens, [field]: value } = type
 
   if (field === 'whitelist') {
-    return whitelist.map((item, index, list) => whitelistTableItem(item, index + 1 === list.length).join(newLine))
+    return whitelist
+      .map((item, index, list) => whitelistTableItem(item, index + 1 === list.length).join(newLine))
+      .join(newLine)
   } else if (field === 'tokens' && parent === 'reservedTokenStore') {
     return tokens
       .map((item, index, list) => reservedTokensTableItem(item, index + 1 === list.length).join(newLine))
