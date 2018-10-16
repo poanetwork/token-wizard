@@ -120,8 +120,10 @@ export const DutchAuctionBlock = inject('tierStore', 'tokenStore')(
               description={DESCRIPTION.RATE}
               extraClassName="sw-InputField2-DutchAuctionMinRate"
               label={MIN_RATE}
+              min="0"
               name={`${name}.minRate`}
-              type="text"
+              placeholder="Enter here"
+              type="number"
               validate={(value, allValues) => {
                 const errors = composeValidators(
                   isPositive(),
@@ -138,8 +140,10 @@ export const DutchAuctionBlock = inject('tierStore', 'tokenStore')(
               description={DESCRIPTION.RATE}
               extraClassName="sw-InputField2-DutchAuctionMaxRate"
               label={MAX_RATE}
+              min="0"
               name={`${name}.maxRate`}
-              type="text"
+              placeholder="Enter here"
+              type="number"
               validate={(value, allValues) => {
                 const errors = composeValidators(
                   isPositive(),
@@ -161,9 +165,13 @@ export const DutchAuctionBlock = inject('tierStore', 'tokenStore')(
               }
               extraClassName="sw-InputField2-DutchAuctionSupply"
               label={SUPPLY_SHORT}
+              max={tokenStore.supply}
+              min="0"
               name={`${name}.supply`}
               parse={acceptPositiveIntegerOnly}
-              type="text"
+              placeholder="Enter here"
+              step="1"
+              type="number"
               validate={value => {
                 const { supply } = tokenStore
                 const errors = composeValidators(
@@ -175,10 +183,13 @@ export const DutchAuctionBlock = inject('tierStore', 'tokenStore')(
             />
             <MinCap
               decimals={props.decimals}
-              disabled={tierStore ? tierStore.tiers[index].whitelistEnabled === 'yes' : true}
+              disabled={tierStore.tiers[index].whitelistEnabled === 'yes' ? true : false}
               extraClassName="sw-InputField2-DutchAuctionMinCap"
               index={index}
+              max={tierStore.tiers[index].supply}
+              min="0"
               name={`${name}.minCap`}
+              type="number"
             />
             <Field
               name={`${name}.whitelistEnabled`}

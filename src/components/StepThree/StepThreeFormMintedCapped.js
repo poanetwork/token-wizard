@@ -145,6 +145,7 @@ export const StepThreeFormMintedCapped = ({
           description={DESCRIPTION.WALLET}
           label={WALLET_ADDRESS}
           name="walletAddress"
+          placeholder="Enter here"
           validate={isAddress()}
           value={values.walletAddress}
         />

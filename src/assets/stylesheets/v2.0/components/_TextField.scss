@@ -37,6 +37,7 @@ $sw-TextField-height: 40px !default;
         background-size: 23.8px 23.9px;
         width: 100%;
 
+        &:hover,
         &:focus {
             background-image: none;
         }

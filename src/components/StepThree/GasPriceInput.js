@@ -9,10 +9,18 @@ import { TextField } from '../Common/TextField'
 @inject('generalStore')
 @observer
 class GasPriceInput extends Component {
+  constructor(props) {
+    super(props)
+
+    this.setWrapperRef = this.setWrapperRef.bind(this)
+    this.handleClickOutside = this.handleClickOutside.bind(this)
+  }
+
   state = {
     customGasPrice: GAS_PRICE.CUSTOM.PRICE,
     gasTypeSelected: {},
     isCustom: false,
+    openDropdown: false,
     selectText: ''
   }
 
@@ -28,6 +36,34 @@ class GasPriceInput extends Component {
         customGasPrice: gasTypeSelected.price
       })
     }
+
+    document.addEventListener('mousedown', this.handleClickOutside)
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClickOutside)
+  }
+
+  setWrapperRef(node) {
+    this.wrapperRef = node
+  }
+
+  handleClickOutside(event) {
+    if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
+      this.closeDropdown()
+    }
+  }
+
+  openDropdown() {
+    this.setState({
+      openDropdown: true
+    })
+  }
+
+  closeDropdown() {
+    this.setState({
+      openDropdown: false
+    })
   }
 
   handleNonCustomSelected = value => {
@@ -42,6 +78,8 @@ class GasPriceInput extends Component {
     this.handleGasType(gasTypeSelected)
 
     input.onChange(gasTypeSelected)
+
+    this.closeDropdown()
   }
 
   handleCustomSelected = value => {
@@ -68,6 +106,8 @@ class GasPriceInput extends Component {
         }
       )
     )
+
+    this.closeDropdown()
   }
 
   handleGasType = value => {
@@ -138,10 +178,20 @@ class GasPriceInput extends Component {
     })
 
     return (
-      <div className={`sw-GasPriceInput ${extraClassName ? extraClassName : ''}`}>
+      <div
+        className={`sw-GasPriceInput ${extraClassName ? extraClassName : ''} ${
+          this.state.openDropdown ? 'sw-GasPriceInput-open' : ''
+        }`}
+      >
         <FormControlTitle title="Gas Price" description="Slow is cheap, fast is expensive." />
-        <div className="sw-GasPriceInput_Select">
-          <button type="button" className={`sw-GasPriceInput_SelectButton`}>
+        <div className="sw-GasPriceInput_Select" ref={this.setWrapperRef}>
+          <button
+            type="button"
+            className={`sw-GasPriceInput_SelectButton`}
+            onClick={e => {
+              this.openDropdown()
+            }}
+          >
             <span className="sw-GasPriceInput_SelectButtonText">{selectText ? selectText : 'Select'}</span>
             <span className="sw-GasPriceInput_SelectButtonChevron" />
           </button>
@@ -157,8 +207,10 @@ class GasPriceInput extends Component {
         {this.state.isCustom ? (
           <TextField
             id="customGasPrice"
+            min="0.1"
             name="gas-price-custom-value"
             onChange={e => this.handleCustomGasPriceChange(e.target.value)}
+            placeholder="Enter here"
             type="number"
             value={this.state.customGasPrice}
           />
