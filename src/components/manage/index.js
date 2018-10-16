@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
-import { TOAST } from '../../utils/constants'
+import { TOAST, VALIDATION_TYPES } from '../../utils/constants'
 import '../../assets/stylesheets/application.css'
 import {
   invalidCrowdsaleExecIDProxyAlert,
@@ -46,6 +46,7 @@ import { ManageForm } from './ManageForm'
 import moment from 'moment'
 import logdown from 'logdown'
 import downloadCrowdsaleInfo from '../../utils/downloadCrowdsaleInfo'
+import { tierStore } from '../../stores'
 
 const logger = logdown('TW:manage')
 
@@ -463,6 +464,14 @@ export class Manage extends Component {
       logger.log('tiers:', tiers)
 
       tiers.forEach((tier, index) => processTier(crowdsale, token, reserved_tokens_info, tier, index))
+
+      // used by download file action
+      tierStore.updateBurnExcess(crowdsale.burn_excess ? 'yes' : 'no', VALIDATION_TYPES.VALID)
+      crowdsaleStore.setProperty('endTime', tierStore.tiers[tierStore.tiers.length - 1].endTime)
+      crowdsaleStore.setProperty(
+        'supply',
+        tierStore.tiers.reduce((totalSupply, tier) => totalSupply.plus(tier.supply), toBigNumber(0))
+      )
 
       const networkID = await getNetworkVersion()
       contractStore.setContractProperty('crowdsale', 'networkID', networkID)

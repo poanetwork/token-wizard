@@ -352,13 +352,11 @@ export const processTier = (crowdsale, token, reserved_tokens_info, tier, tier_i
 
   tierStore.addTier(new_tier, validations)
   tierStore.sortWhitelist(tier_index)
-  tierStore.updateBurnExcess(burn_excess ? 'yes' : 'no', VALID) // used by download file action
 
   crowdsaleStore.addInitialTierValues(initial_tier_values)
   crowdsaleStore.setSelectedProperty('finalized', finalized)
   crowdsaleStore.setSelectedProperty('burn_excess', burn_excess ? 'yes' : 'no')
   crowdsaleStore.setSelectedProperty('updatable', crowdsaleStore.selected.updatable || updatable)
-  crowdsaleStore.setProperty('supply', new_tier.supply) // used by download file action
 
   crowdsale_token.reserved_accounts.forEach(reservedTokenStore.addToken)
 
