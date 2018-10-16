@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import Web3 from 'web3'
 import { Loader } from '../components/Common/Loader'
 
-const ONE_SECOND = 1000;
+const ONE_SECOND = 1000
 
 class Web3Provider extends Component {
   constructor(props, context) {
@@ -12,72 +12,95 @@ class Web3Provider extends Component {
     this.state = {
       selectedAccount: null,
       web3: null,
-      render: false
+      approvePermissions: null,
+      render: null
     }
 
-    this.interval = null
   }
 
   render() {
     const { web3UnavailableScreen: Web3UnavailableScreen } = this.props
-    let renderContainer = false
 
-    if (this.state.render) {
-      if (this.state.web3) {
-        renderContainer = this.props.children
-      } else {
-        renderContainer =  <Web3UnavailableScreen/>
-      }
-    } else {
-      renderContainer = <Loader show={true}></Loader>
+    if (this.state.render && this.state.web3 && this.state.approvePermissions) {
+      return this.props.children
     }
-    return ( renderContainer )
 
+    if (!this.state.render && (!this.state.web3 || !this.state.approvePermissions)) {
+      return <Loader show={true} />
+    }
+
+    if (this.state.render && (!this.state.web3 || !this.state.approvePermissions)) {
+      return <Web3UnavailableScreen />
+    }
+
+    return null
   }
 
   componentDidMount() {
     this.checkWeb3()
-    this.initPoll()
-
-    // Wait 1 second to render
-    setTimeout(function() {
-      this.setState({render: true})
-    }.bind(this), 1500)
+      .then(this.initPoll())
+      .then(() => {
+        this.setState({
+          render: true
+        })
+      })
+      .catch(err => {
+        console.log(err)
+        this.setState({
+          render: true
+        })
+      })
   }
 
   checkWeb3() {
     const setWeb3 = () => {
-      window.web3 = new Web3(window.web3.currentProvider)
-      this.setState({
-        web3: window.web3
-      })
-      this.fetchAccounts()
+      try {
+        window.web3 = new Web3(window.web3.currentProvider)
+        this.setState({
+          approvePermissions: true,
+          web3: window.web3
+        })
+      } catch (err) {
+        console.log('There was a problem fetching accounts', err)
+      }
     }
 
-    window.addEventListener('load', () => {
-      const { ethereum } = window
-      // Modern dapp browsers...
-      if (ethereum) {
-        window.web3 = new Web3(ethereum)
-        try {
-          // Request account access if needed
-          ethereum.enable().then(()=> {
-            if (!this.state.web3) {
-              setWeb3()
-            }
-          })
-        } catch (error) {
-          // User denied account access...
-          console.log('User denied account access')
+    return new Promise((resolve, reject) => {
+      try {
+        const { ethereum } = window
+        // Modern dapp browsers...
+        if (ethereum) {
+          window.web3 = new Web3(ethereum)
+          try {
+            // Request account access if needed
+            ethereum.enable().then(() => {
+              if (!this.state.web3) {
+                setWeb3()
+              }
+            })
+            resolve()
+          } catch (error) {
+            // User denied account access...
+            const msj = 'User denied account access'
+            throw new Error(msj)
+          }
         }
-      }
-      // Legacy dapp browsers...
-      else if (window.web3) {
-        setWeb3()
-      }
-      // Non-dapp browsers...
-      else {
-        console.log('Non-Ethereum browser detected. You should consider trying a wallet!')
+        // Legacy dapp browsers...
+        else if (window.web3) {
+          setWeb3()
+          resolve()
+        }
+        // Non-dapp browsers...
+        else {
+          const msj = 'Non-Ethereum browser detected. You should consider trying a wallet!'
+          throw new Error(msj)
+        }
+      } catch (err) {
+        this.setState({
+          approvePermissions: false
+        })
+        console.log(err.message)
+        reject()
       }
     })
   }
@@ -93,7 +116,7 @@ class Web3Provider extends Component {
   }
 
   fetchAccounts = () => {
-    const { web3  } = this
+    const { web3  } = this.state
     const { onChangeAccount } = this.props
 
     if (!web3 || !web3.eth) {
