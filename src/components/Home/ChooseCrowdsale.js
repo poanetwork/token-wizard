@@ -7,7 +7,10 @@ const logger = logdown('TW:Home:ChooseCrowdsale')
 export class ChooseCrowdsale extends Component {
   goToCrowdsales = () => {
     try {
-      navigateTo(this.props.history, 'crowdsales')
+      navigateTo({
+        history: this.props.history,
+        location: 'crowdsales'
+      })
     } catch (err) {
       logger.log('Error to navigate', err)
     }
