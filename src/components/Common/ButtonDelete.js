@@ -5,6 +5,6 @@ export class ButtonDelete extends Component {
     const { onClick, extraClassName } = this.props
     const extraClass = extraClassName ? extraClassName : ''
 
-    return <div onClick={onClick} className={`sw-ButtonDelete ${extraClass}`} />
+    return <div onClick={onClick} className={`sw-ButtonDelete ${extraClass ? extraClass : ''}`} />
   }
 }

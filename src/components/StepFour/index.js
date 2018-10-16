@@ -9,7 +9,8 @@ import {
   scrollToBottom,
   summaryFileContents,
   getOptimizationFlagByStore,
-  getVersionFlagByStore
+  getVersionFlagByStore,
+  navigateTo
 } from './utils'
 import { noContractDataAlert, successfulDeployment, skippingTransaction, deployHasEnded } from '../../utils/alerts'
 import {
@@ -21,26 +22,27 @@ import {
   PUBLISH_DESCRIPTION,
   CROWDSALE_STRATEGIES
 } from '../../utils/constants'
+import JSZip from 'jszip'
+import PropTypes from 'prop-types'
+import cancelDeploy from '../../utils/cancelDeploy'
+import executeSequentially from '../../utils/executeSequentially'
+import logdown from 'logdown'
+import { ButtonBack } from '../Common/ButtonBack'
+import { ButtonContinue } from '../Common/ButtonContinue'
+import { ButtonDownload } from '../Common/ButtonDownload'
+import { CrowdsaleConfig } from '../Common/config'
 import { DOWNLOAD_TYPE } from './constants'
-import { getNetworkID, toast, convertDateToUTCTimezoneToDisplay } from '../../utils/utils'
-import { StepNavigation } from '../Common/StepNavigation'
 import { DisplayField } from '../Common/DisplayField'
-import { TxProgressStatus } from '../Common/TxProgressStatus'
+import { DisplayTextArea } from '../Common/DisplayTextArea'
 import { ModalContainer } from '../Common/ModalContainer'
+import { PreventRefresh } from '../Common/PreventRefresh'
+import { StepNavigation } from '../Common/StepNavigation'
+import { TxProgressStatus } from '../Common/TxProgressStatus'
+import { checkNetWorkByID } from '../../utils/blockchainHelpers'
 import { copy } from '../../utils/copy'
+import { getNetworkID, toast, convertDateToUTCTimezoneToDisplay } from '../../utils/utils'
 import { inject, observer } from 'mobx-react'
 import { isObservableArray } from 'mobx'
-import JSZip from 'jszip'
-import executeSequentially from '../../utils/executeSequentially'
-import { PreventRefresh } from '../Common/PreventRefresh'
-import cancelDeploy from '../../utils/cancelDeploy'
-import PropTypes from 'prop-types'
-import logdown from 'logdown'
-import { checkNetWorkByID } from '../../utils/blockchainHelpers'
-import { CrowdsaleConfig } from '../Common/config'
-import { ButtonContinue } from '../Common/ButtonContinue'
-import classNames from 'classnames'
-import { DisplayTextArea } from '../Common/DisplayTextArea'
 
 const logger = logdown('TW:StepFour')
 
@@ -98,6 +100,7 @@ export class StepFour extends Component {
 
     logger.log(`Deployment progress`, deploymentStore.deployInProgress)
     logger.log(`Deployment has ended`, deploymentStore.hasEnded)
+
     if (!deploymentStore.deployInProgress && !deploymentStore.hasEnded) {
       deploymentStore.setDeploymentStep(0)
       deploymentStore.setDeployerAccount(context.selectedAccount)
@@ -404,6 +407,17 @@ export class StepFour extends Component {
     )
   }
 
+  goBack = async () => {
+    try {
+      navigateTo({
+        history: this.props.history,
+        location: 'stepThree'
+      })
+    } catch (err) {
+      logger.log('Error to navigate', err)
+    }
+  }
+
   render() {
     const { tierStore, tokenStore, deploymentStore, crowdsaleStore, contractStore } = this.props
     const { isMintedCappedCrowdsale, isDutchAuction } = crowdsaleStore
@@ -575,10 +589,6 @@ export class StepFour extends Component {
       />
     )
 
-    const submitButtonClass = classNames('button', 'button_fill_secondary', 'button_no_border', {
-      button_disabled: !deploymentStore.hasEnded
-    })
-
     const strategyName = isMintedCappedCrowdsale ? MINTED_CAPPED_CROWDSALE_DN : isDutchAuction ? DUTCH_AUCTION_DN : ''
 
     const { abiEncoded } = contractStore[crowdsaleStore.proxyName]
@@ -591,17 +601,19 @@ export class StepFour extends Component {
     ) : null
 
     return (
-      <section className="steps steps_publish">
+      <section className="lo-MenuBarAndContent" ref="four">
         <StepNavigation activeStep={PUBLISH} />
-        <div className="steps-content container">
-          <div className="about-step">
-            <div className="step-icons step-icons_publish" />
-            <p className="title">{PUBLISH}</p>
-            <p className="description">
-              On this step we provide you artifacts about your token and crowdsale contracts.
-            </p>
+        <div className="st-StepContent">
+          <div className="st-StepContent_Info">
+            <div className="st-StepContent_InfoIcon st-StepContent_InfoIcon-step4" />
+            <div className="st-StepContentInfo_InfoText">
+              <h1 className="st-StepContent_InfoTitle">{PUBLISH}</h1>
+              <p className="st-StepContent_InfoDescription">
+                On this step we provide you artifacts about your token and crowdsale contracts.
+              </p>
+            </div>
           </div>
-          <div>
+          <div className="sw-BorderedBlock">
             <div className="item">
               <div className="publish-title-container">
                 <p className="publish-title" data-step="1">
@@ -627,21 +639,19 @@ export class StepFour extends Component {
             {this.configurationBlock()}
             {this.renderContractSource('src')}
             {ABIEncodedParameters}
+            <div className="sw-BorderedBlock_DownloadButtonContainer">
+              <ButtonDownload onClick={this.downloadContractButton} disabled={!deploymentStore.hasEnded} />
+            </div>
+          </div>
+          <div className="st-StepContent_Buttons">
+            <ButtonBack onClick={this.goBack} />
+            <ButtonContinue onClick={this.goToCrowdsalePage} status={deploymentStore.hasEnded} />
           </div>
         </div>
-        <div className="button-container">
-          <button
-            onClick={this.downloadContractButton}
-            disabled={!deploymentStore.hasEnded}
-            className={submitButtonClass}
-          >
-            Download File
-          </button>
-          <ButtonContinue onClick={this.goToCrowdsalePage} status={deploymentStore.hasEnded} />
-        </div>
-        <ModalContainer title={'Tx Status'} showModal={this.state.modal}>
+        {/* TODO: Uncomment this */}
+        {/* <ModalContainer title={'Tx Status'} showModal={this.state.modal}>
           {modalContent}
-        </ModalContainer>
+        </ModalContainer> */}
         {this.state.preventRefresh ? <PreventRefresh /> : null}
       </section>
     )

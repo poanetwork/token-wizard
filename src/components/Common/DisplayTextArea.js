@@ -1,5 +1,7 @@
 import React from 'react'
 
+let inline = { whiteSpace: 'normal' }
+
 export const DisplayTextArea = props => {
   return (
     <div key={props.key ? props.key : ''} className="item">
@@ -11,7 +13,7 @@ export const DisplayTextArea = props => {
           <btn className="copy" data-clipboard-action="copy" data-clipboard-text={props.value} />
         </div>
       </div>
-      <pre>{props.value}</pre>
+      <pre style={inline}>{props.value}</pre>
       <p className="description">{props.description}</p>
     </div>
   )
