@@ -27,16 +27,7 @@ exports[`Supply  should render Supply component 1`] = `
     className="sw-TextField"
     disabled={false}
     id="Supply"
-    max={undefined}
-    min={undefined}
     name="Supply"
-    onBlur={undefined}
-    onChange={undefined}
-    onFocus={undefined}
-    onKeyPress={undefined}
-    onPaste={undefined}
-    placeholder={undefined}
-    style={undefined}
     type="text"
     value="1234"
   />

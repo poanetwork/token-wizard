@@ -25,7 +25,6 @@ exports[`TokenDecimals should render TokenDecimals component 1`] = `
   </div>
   <input
     className="sw-TextField"
-    disabled={undefined}
     id="decimals"
     max="18"
     min="0"
@@ -33,10 +32,6 @@ exports[`TokenDecimals should render TokenDecimals component 1`] = `
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
-    onKeyPress={undefined}
-    onPaste={undefined}
-    placeholder={undefined}
-    style={undefined}
     type="number"
     value=""
   />
@@ -68,7 +63,6 @@ exports[`TokenDecimals should render TokenDecimals component and its children 1`
   </div>
   <input
     className="sw-TextField"
-    disabled={undefined}
     id="decimals"
     max="18"
     min="0"
@@ -76,10 +70,6 @@ exports[`TokenDecimals should render TokenDecimals component and its children 1`
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
-    onKeyPress={undefined}
-    onPaste={undefined}
-    placeholder={undefined}
-    style={undefined}
     type="number"
     value=""
   />
@@ -96,7 +86,7 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
       "fontWeight": "bold",
     }
   }
-  onSubmit={[Function]}
+  onSubmit={[MockFunction]}
 >
   <TokenDecimals
     __versions={

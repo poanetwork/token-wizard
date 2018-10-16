@@ -22,8 +22,8 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
     component={[Function]}
     contributeThrough="metamask"
     isTierSoldOut={true}
-    onSubmit={[Function]}
-    updateContributeThrough={[Function]}
+    onSubmit={[MockFunction]}
+    updateContributeThrough={[MockFunction]}
     web3Available={true}
   >
     <inject-_class-with-contributeStore-tokenStore
@@ -83,7 +83,7 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
           "contribute": false,
         }
       }
-      updateContributeThrough={[Function]}
+      updateContributeThrough={[MockFunction]}
       valid={false}
       validating={false}
       values={Object {}}
@@ -166,7 +166,7 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
             "contribute": false,
           }
         }
-        updateContributeThrough={[Function]}
+        updateContributeThrough={[MockFunction]}
         valid={false}
         validating={false}
         values={Object {}}
@@ -360,19 +360,12 @@ exports[`ContributeForm should render ContributeForm component 1`] = `
       </div>
       <input
         className="sw-TextField"
-        disabled={undefined}
         id="contribute"
-        max={undefined}
-        min={undefined}
         name="contribute"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
-        onKeyPress={undefined}
-        onPaste={undefined}
         placeholder="0"
-        style={undefined}
-        type={undefined}
         value=""
       />
     </div>
@@ -443,19 +436,12 @@ exports[`ContributeForm should render ContributeForm component and its children 
       </div>
       <input
         className="sw-TextField"
-        disabled={undefined}
         id="contribute"
-        max={undefined}
-        min={undefined}
         name="contribute"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
-        onKeyPress={undefined}
-        onPaste={undefined}
         placeholder="0"
-        style={undefined}
-        type={undefined}
         value=""
       />
     </div>

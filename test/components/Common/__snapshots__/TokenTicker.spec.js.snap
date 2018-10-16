@@ -25,18 +25,11 @@ exports[`TokenTicker should render TokenTicker component 1`] = `
   </div>
   <input
     className="sw-TextField"
-    disabled={undefined}
     id="ticker"
-    max={undefined}
-    min={undefined}
     name="ticker"
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
-    onKeyPress={undefined}
-    onPaste={undefined}
-    placeholder={undefined}
-    style={undefined}
     type="text"
     value=""
   />
@@ -68,18 +61,11 @@ exports[`TokenTicker should render TokenTicker component and its children 1`] = 
   </div>
   <input
     className="sw-TextField"
-    disabled={undefined}
     id="ticker"
-    max={undefined}
-    min={undefined}
     name="ticker"
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
-    onKeyPress={undefined}
-    onPaste={undefined}
-    placeholder={undefined}
-    style={undefined}
     type="text"
     value=""
   />

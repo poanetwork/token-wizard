@@ -74,11 +74,50 @@ exports[`ManageForm should render for Dutch Auction 1`] = `
         component={[Function]}
         decorators={
           Array [
-            [Function],
+            [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "batch": [Function],
+                    "blur": [Function],
+                    "change": [Function],
+                    "focus": [Function],
+                    "getFieldState": [Function],
+                    "getRegisteredFields": [Function],
+                    "getState": [Function],
+                    "initialize": [Function],
+                    "isValidationPaused": [Function],
+                    "mutators": Object {
+                      "insert": [Function],
+                      "move": [Function],
+                      "pop": [Function],
+                      "push": [Function],
+                      "remove": [Function],
+                      "shift": [Function],
+                      "swap": [Function],
+                      "unshift": [Function],
+                    },
+                    "pauseValidation": [Function],
+                    "registerField": [Function],
+                    "reset": [Function],
+                    "resumeValidation": [Function],
+                    "setConfig": [Function],
+                    "submit": [Function],
+                    "subscribe": [Function],
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "isThrow": false,
+                  "value": undefined,
+                },
+              ],
+            },
           ]
         }
         displaySave={true}
-        handleChange={[Function]}
+        handleChange={[MockFunction]}
         initialValues={
           Object {
             "tiers": Array [],
@@ -96,7 +135,7 @@ exports[`ManageForm should render for Dutch Auction 1`] = `
             "unshift": [Function],
           }
         }
-        onSubmit={[Function]}
+        onSubmit={[MockFunction]}
       >
         <inject-_class-with-tokenStore-generalStore-crowdsaleStore
           __versions={
@@ -112,7 +151,46 @@ exports[`ManageForm should render for Dutch Auction 1`] = `
           change={[Function]}
           decorators={
             Array [
-              [Function],
+              [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "batch": [Function],
+                      "blur": [Function],
+                      "change": [Function],
+                      "focus": [Function],
+                      "getFieldState": [Function],
+                      "getRegisteredFields": [Function],
+                      "getState": [Function],
+                      "initialize": [Function],
+                      "isValidationPaused": [Function],
+                      "mutators": Object {
+                        "insert": [Function],
+                        "move": [Function],
+                        "pop": [Function],
+                        "push": [Function],
+                        "remove": [Function],
+                        "shift": [Function],
+                        "swap": [Function],
+                        "unshift": [Function],
+                      },
+                      "pauseValidation": [Function],
+                      "registerField": [Function],
+                      "reset": [Function],
+                      "resumeValidation": [Function],
+                      "setConfig": [Function],
+                      "submit": [Function],
+                      "subscribe": [Function],
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "isThrow": false,
+                    "value": undefined,
+                  },
+                ],
+              },
             ]
           }
           dirty={false}
@@ -150,7 +228,7 @@ exports[`ManageForm should render for Dutch Auction 1`] = `
               "subscribe": [Function],
             }
           }
-          handleChange={[Function]}
+          handleChange={[MockFunction]}
           handleSubmit={[Function]}
           hasSubmitErrors={false}
           hasValidationErrors={false}
@@ -216,7 +294,46 @@ exports[`ManageForm should render for Dutch Auction 1`] = `
             }
             decorators={
               Array [
-                [Function],
+                [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "batch": [Function],
+                        "blur": [Function],
+                        "change": [Function],
+                        "focus": [Function],
+                        "getFieldState": [Function],
+                        "getRegisteredFields": [Function],
+                        "getState": [Function],
+                        "initialize": [Function],
+                        "isValidationPaused": [Function],
+                        "mutators": Object {
+                          "insert": [Function],
+                          "move": [Function],
+                          "pop": [Function],
+                          "push": [Function],
+                          "remove": [Function],
+                          "shift": [Function],
+                          "swap": [Function],
+                          "unshift": [Function],
+                        },
+                        "pauseValidation": [Function],
+                        "registerField": [Function],
+                        "reset": [Function],
+                        "resumeValidation": [Function],
+                        "setConfig": [Function],
+                        "submit": [Function],
+                        "subscribe": [Function],
+                      },
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "isThrow": false,
+                      "value": undefined,
+                    },
+                  ],
+                },
               ]
             }
             dirty={false}
@@ -262,7 +379,7 @@ exports[`ManageForm should render for Dutch Auction 1`] = `
                 "networkID": undefined,
               }
             }
-            handleChange={[Function]}
+            handleChange={[MockFunction]}
             handleSubmit={[Function]}
             hasSubmitErrors={false}
             hasValidationErrors={false}
@@ -519,11 +636,181 @@ exports[`ManageForm should render the component with tiers 1`] = `
         component={[Function]}
         decorators={
           Array [
-            [Function],
+            [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "batch": [Function],
+                    "blur": [Function],
+                    "change": [Function],
+                    "focus": [Function],
+                    "getFieldState": [Function],
+                    "getRegisteredFields": [Function],
+                    "getState": [Function],
+                    "initialize": [Function],
+                    "isValidationPaused": [Function],
+                    "mutators": Object {
+                      "insert": [Function],
+                      "move": [Function],
+                      "pop": [Function],
+                      "push": [Function],
+                      "remove": [Function],
+                      "shift": [Function],
+                      "swap": [Function],
+                      "unshift": [Function],
+                    },
+                    "pauseValidation": [Function],
+                    "registerField": [Function],
+                    "reset": [Function],
+                    "resumeValidation": [Function],
+                    "setConfig": [Function],
+                    "submit": [Function],
+                    "subscribe": [Function],
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "isThrow": false,
+                  "value": undefined,
+                },
+              ],
+            },
           ]
         }
         displaySave={true}
-        handleChange={[Function]}
+        handleChange={
+          [MockFunction] {
+            "calls": Array [
+              Array [
+                Object {
+                  "values": Object {
+                    "tiers": Array [
+                      Object {
+                        "addresses": Object {
+                          "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
+                        },
+                        "duration": "1528827423500",
+                        "endTime": "2018-04-17T00:00",
+                        "index": "0",
+                        "isWhitelisted": "yes",
+                        "minCap": "0",
+                        "rate": "123",
+                        "startTime": "2018-04-13T16:07",
+                        "supply": "132",
+                        "tier": "Tier 1",
+                        "updatable": true,
+                        "whitelist": Array [
+                          Object {
+                            "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
+                            "max": 50505,
+                            "min": 1234,
+                            "stored": true,
+                          },
+                          Object {
+                            "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+                            "max": 50505,
+                            "min": 1234,
+                            "stored": true,
+                          },
+                          Object {
+                            "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
+                            "max": 50505,
+                            "min": 1234,
+                            "stored": true,
+                          },
+                          Object {
+                            "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
+                            "max": 50505,
+                            "min": 1234,
+                            "stored": true,
+                          },
+                        ],
+                      },
+                      Object {
+                        "addresses": Object {
+                          "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
+                        },
+                        "duration": "1528827423500",
+                        "endTime": "2018-04-21T00:00",
+                        "index": "1",
+                        "isWhitelisted": "yes",
+                        "minCap": "0",
+                        "rate": "55",
+                        "startTime": "2018-04-17T00:00",
+                        "supply": "156",
+                        "tier": "Tier 2",
+                        "updatable": false,
+                        "whitelist": Array [
+                          Object {
+                            "addr": "0x1dF62f291b2E969fB0849d99D9Ce41e2F137006e",
+                            "max": 50505,
+                            "min": 1234,
+                            "stored": true,
+                          },
+                          Object {
+                            "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
+                            "max": 50505,
+                            "min": 1234,
+                            "stored": true,
+                          },
+                          Object {
+                            "addr": "0x3E5e9111Ae8eB78Fe1CC3bb8915d5D461F3Ef9A9",
+                            "max": 50505,
+                            "min": 1234,
+                            "stored": true,
+                          },
+                          Object {
+                            "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+                            "max": 50505,
+                            "min": 1234,
+                            "stored": true,
+                          },
+                          Object {
+                            "addr": "0x95cED938F7991cd0dFcb48F0a06a40FA1aF46EBC",
+                            "max": 50505,
+                            "min": 1234,
+                            "stored": true,
+                          },
+                          Object {
+                            "addr": "0xACa94ef8bD5ffEE41947b4585a84BdA5a3d3DA6E",
+                            "max": 50505,
+                            "min": 1234,
+                            "stored": true,
+                          },
+                          Object {
+                            "addr": "0xd03ea8624C8C5987235048901fB614fDcA89b117",
+                            "max": 50505,
+                            "min": 1234,
+                            "stored": true,
+                          },
+                          Object {
+                            "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
+                            "max": 50505,
+                            "min": 1234,
+                            "stored": true,
+                          },
+                          Object {
+                            "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
+                            "max": 50505,
+                            "min": 1234,
+                            "stored": true,
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                },
+              ],
+            ],
+            "results": Array [
+              Object {
+                "isThrow": false,
+                "value": undefined,
+              },
+            ],
+          }
+        }
         initialValues={
           Object {
             "tiers": Array [
@@ -654,7 +941,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
             "unshift": [Function],
           }
         }
-        onSubmit={[Function]}
+        onSubmit={[MockFunction]}
       >
         <inject-_class-with-tokenStore-generalStore-crowdsaleStore
           __versions={
@@ -670,7 +957,46 @@ exports[`ManageForm should render the component with tiers 1`] = `
           change={[Function]}
           decorators={
             Array [
-              [Function],
+              [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "batch": [Function],
+                      "blur": [Function],
+                      "change": [Function],
+                      "focus": [Function],
+                      "getFieldState": [Function],
+                      "getRegisteredFields": [Function],
+                      "getState": [Function],
+                      "initialize": [Function],
+                      "isValidationPaused": [Function],
+                      "mutators": Object {
+                        "insert": [Function],
+                        "move": [Function],
+                        "pop": [Function],
+                        "push": [Function],
+                        "remove": [Function],
+                        "shift": [Function],
+                        "swap": [Function],
+                        "unshift": [Function],
+                      },
+                      "pauseValidation": [Function],
+                      "registerField": [Function],
+                      "reset": [Function],
+                      "resumeValidation": [Function],
+                      "setConfig": [Function],
+                      "submit": [Function],
+                      "subscribe": [Function],
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "isThrow": false,
+                    "value": undefined,
+                  },
+                ],
+              },
             ]
           }
           dirty={false}
@@ -723,7 +1049,138 @@ exports[`ManageForm should render the component with tiers 1`] = `
               "subscribe": [Function],
             }
           }
-          handleChange={[Function]}
+          handleChange={
+            [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "values": Object {
+                      "tiers": Array [
+                        Object {
+                          "addresses": Object {
+                            "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
+                          },
+                          "duration": "1528827423500",
+                          "endTime": "2018-04-17T00:00",
+                          "index": "0",
+                          "isWhitelisted": "yes",
+                          "minCap": "0",
+                          "rate": "123",
+                          "startTime": "2018-04-13T16:07",
+                          "supply": "132",
+                          "tier": "Tier 1",
+                          "updatable": true,
+                          "whitelist": Array [
+                            Object {
+                              "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
+                              "max": 50505,
+                              "min": 1234,
+                              "stored": true,
+                            },
+                            Object {
+                              "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+                              "max": 50505,
+                              "min": 1234,
+                              "stored": true,
+                            },
+                            Object {
+                              "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
+                              "max": 50505,
+                              "min": 1234,
+                              "stored": true,
+                            },
+                            Object {
+                              "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
+                              "max": 50505,
+                              "min": 1234,
+                              "stored": true,
+                            },
+                          ],
+                        },
+                        Object {
+                          "addresses": Object {
+                            "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
+                          },
+                          "duration": "1528827423500",
+                          "endTime": "2018-04-21T00:00",
+                          "index": "1",
+                          "isWhitelisted": "yes",
+                          "minCap": "0",
+                          "rate": "55",
+                          "startTime": "2018-04-17T00:00",
+                          "supply": "156",
+                          "tier": "Tier 2",
+                          "updatable": false,
+                          "whitelist": Array [
+                            Object {
+                              "addr": "0x1dF62f291b2E969fB0849d99D9Ce41e2F137006e",
+                              "max": 50505,
+                              "min": 1234,
+                              "stored": true,
+                            },
+                            Object {
+                              "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
+                              "max": 50505,
+                              "min": 1234,
+                              "stored": true,
+                            },
+                            Object {
+                              "addr": "0x3E5e9111Ae8eB78Fe1CC3bb8915d5D461F3Ef9A9",
+                              "max": 50505,
+                              "min": 1234,
+                              "stored": true,
+                            },
+                            Object {
+                              "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+                              "max": 50505,
+                              "min": 1234,
+                              "stored": true,
+                            },
+                            Object {
+                              "addr": "0x95cED938F7991cd0dFcb48F0a06a40FA1aF46EBC",
+                              "max": 50505,
+                              "min": 1234,
+                              "stored": true,
+                            },
+                            Object {
+                              "addr": "0xACa94ef8bD5ffEE41947b4585a84BdA5a3d3DA6E",
+                              "max": 50505,
+                              "min": 1234,
+                              "stored": true,
+                            },
+                            Object {
+                              "addr": "0xd03ea8624C8C5987235048901fB614fDcA89b117",
+                              "max": 50505,
+                              "min": 1234,
+                              "stored": true,
+                            },
+                            Object {
+                              "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
+                              "max": 50505,
+                              "min": 1234,
+                              "stored": true,
+                            },
+                            Object {
+                              "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
+                              "max": 50505,
+                              "min": 1234,
+                              "stored": true,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "isThrow": false,
+                  "value": undefined,
+                },
+              ],
+            }
+          }
           handleSubmit={[Function]}
           hasSubmitErrors={false}
           hasValidationErrors={true}
@@ -1043,7 +1500,46 @@ exports[`ManageForm should render the component with tiers 1`] = `
             }
             decorators={
               Array [
-                [Function],
+                [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "batch": [Function],
+                        "blur": [Function],
+                        "change": [Function],
+                        "focus": [Function],
+                        "getFieldState": [Function],
+                        "getRegisteredFields": [Function],
+                        "getState": [Function],
+                        "initialize": [Function],
+                        "isValidationPaused": [Function],
+                        "mutators": Object {
+                          "insert": [Function],
+                          "move": [Function],
+                          "pop": [Function],
+                          "push": [Function],
+                          "remove": [Function],
+                          "shift": [Function],
+                          "swap": [Function],
+                          "unshift": [Function],
+                        },
+                        "pauseValidation": [Function],
+                        "registerField": [Function],
+                        "reset": [Function],
+                        "resumeValidation": [Function],
+                        "setConfig": [Function],
+                        "submit": [Function],
+                        "subscribe": [Function],
+                      },
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "isThrow": false,
+                      "value": undefined,
+                    },
+                  ],
+                },
               ]
             }
             dirty={false}
@@ -1104,7 +1600,138 @@ exports[`ManageForm should render the component with tiers 1`] = `
                 "networkID": undefined,
               }
             }
-            handleChange={[Function]}
+            handleChange={
+              [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "values": Object {
+                        "tiers": Array [
+                          Object {
+                            "addresses": Object {
+                              "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
+                            },
+                            "duration": "1528827423500",
+                            "endTime": "2018-04-17T00:00",
+                            "index": "0",
+                            "isWhitelisted": "yes",
+                            "minCap": "0",
+                            "rate": "123",
+                            "startTime": "2018-04-13T16:07",
+                            "supply": "132",
+                            "tier": "Tier 1",
+                            "updatable": true,
+                            "whitelist": Array [
+                              Object {
+                                "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
+                                "max": 50505,
+                                "min": 1234,
+                                "stored": true,
+                              },
+                              Object {
+                                "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+                                "max": 50505,
+                                "min": 1234,
+                                "stored": true,
+                              },
+                              Object {
+                                "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
+                                "max": 50505,
+                                "min": 1234,
+                                "stored": true,
+                              },
+                              Object {
+                                "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
+                                "max": 50505,
+                                "min": 1234,
+                                "stored": true,
+                              },
+                            ],
+                          },
+                          Object {
+                            "addresses": Object {
+                              "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
+                            },
+                            "duration": "1528827423500",
+                            "endTime": "2018-04-21T00:00",
+                            "index": "1",
+                            "isWhitelisted": "yes",
+                            "minCap": "0",
+                            "rate": "55",
+                            "startTime": "2018-04-17T00:00",
+                            "supply": "156",
+                            "tier": "Tier 2",
+                            "updatable": false,
+                            "whitelist": Array [
+                              Object {
+                                "addr": "0x1dF62f291b2E969fB0849d99D9Ce41e2F137006e",
+                                "max": 50505,
+                                "min": 1234,
+                                "stored": true,
+                              },
+                              Object {
+                                "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
+                                "max": 50505,
+                                "min": 1234,
+                                "stored": true,
+                              },
+                              Object {
+                                "addr": "0x3E5e9111Ae8eB78Fe1CC3bb8915d5D461F3Ef9A9",
+                                "max": 50505,
+                                "min": 1234,
+                                "stored": true,
+                              },
+                              Object {
+                                "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+                                "max": 50505,
+                                "min": 1234,
+                                "stored": true,
+                              },
+                              Object {
+                                "addr": "0x95cED938F7991cd0dFcb48F0a06a40FA1aF46EBC",
+                                "max": 50505,
+                                "min": 1234,
+                                "stored": true,
+                              },
+                              Object {
+                                "addr": "0xACa94ef8bD5ffEE41947b4585a84BdA5a3d3DA6E",
+                                "max": 50505,
+                                "min": 1234,
+                                "stored": true,
+                              },
+                              Object {
+                                "addr": "0xd03ea8624C8C5987235048901fB614fDcA89b117",
+                                "max": 50505,
+                                "min": 1234,
+                                "stored": true,
+                              },
+                              Object {
+                                "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
+                                "max": 50505,
+                                "min": 1234,
+                                "stored": true,
+                              },
+                              Object {
+                                "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
+                                "max": 50505,
+                                "min": 1234,
+                                "stored": true,
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "isThrow": false,
+                    "value": undefined,
+                  },
+                ],
+              }
+            }
             handleSubmit={[Function]}
             hasSubmitErrors={false}
             hasValidationErrors={true}
@@ -1436,7 +2063,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                         className="description"
                       >
                         The most important and exciting part of the crowdsale process. Here you can
-                                      define parameters of your crowdsale campaign.
+              define parameters of your crowdsale campaign.
                       </p>
                       <Link
                         className="crowdsale-page-link"
@@ -1511,7 +2138,46 @@ exports[`ManageForm should render the component with tiers 1`] = `
                   change={[Function]}
                   decorators={
                     Array [
-                      [Function],
+                      [MockFunction] {
+                        "calls": Array [
+                          Array [
+                            Object {
+                              "batch": [Function],
+                              "blur": [Function],
+                              "change": [Function],
+                              "focus": [Function],
+                              "getFieldState": [Function],
+                              "getRegisteredFields": [Function],
+                              "getState": [Function],
+                              "initialize": [Function],
+                              "isValidationPaused": [Function],
+                              "mutators": Object {
+                                "insert": [Function],
+                                "move": [Function],
+                                "pop": [Function],
+                                "push": [Function],
+                                "remove": [Function],
+                                "shift": [Function],
+                                "swap": [Function],
+                                "unshift": [Function],
+                              },
+                              "pauseValidation": [Function],
+                              "registerField": [Function],
+                              "reset": [Function],
+                              "resumeValidation": [Function],
+                              "setConfig": [Function],
+                              "submit": [Function],
+                              "subscribe": [Function],
+                            },
+                          ],
+                        ],
+                        "results": Array [
+                          Object {
+                            "isThrow": false,
+                            "value": undefined,
+                          },
+                        ],
+                      },
                     ]
                   }
                   dirty={false}
@@ -2137,7 +2803,46 @@ exports[`ManageForm should render the component with tiers 1`] = `
                     }
                     decorators={
                       Array [
-                        [Function],
+                        [MockFunction] {
+                          "calls": Array [
+                            Array [
+                              Object {
+                                "batch": [Function],
+                                "blur": [Function],
+                                "change": [Function],
+                                "focus": [Function],
+                                "getFieldState": [Function],
+                                "getRegisteredFields": [Function],
+                                "getState": [Function],
+                                "initialize": [Function],
+                                "isValidationPaused": [Function],
+                                "mutators": Object {
+                                  "insert": [Function],
+                                  "move": [Function],
+                                  "pop": [Function],
+                                  "push": [Function],
+                                  "remove": [Function],
+                                  "shift": [Function],
+                                  "swap": [Function],
+                                  "unshift": [Function],
+                                },
+                                "pauseValidation": [Function],
+                                "registerField": [Function],
+                                "reset": [Function],
+                                "resumeValidation": [Function],
+                                "setConfig": [Function],
+                                "submit": [Function],
+                                "subscribe": [Function],
+                              },
+                            ],
+                          ],
+                          "results": Array [
+                            Object {
+                              "isThrow": false,
+                              "value": undefined,
+                            },
+                          ],
+                        },
                       ]
                     }
                     dirty={false}
@@ -4341,7 +5046,138 @@ exports[`ManageForm should render the component with tiers 1`] = `
                 </inject-_class-with-crowdsaleStore-tokenStore>
               </ReactFinalFormFieldArray(4.6.1)(undefined)>
               <FormSpy
-                onChange={[Function]}
+                onChange={
+                  [MockFunction] {
+                    "calls": Array [
+                      Array [
+                        Object {
+                          "values": Object {
+                            "tiers": Array [
+                              Object {
+                                "addresses": Object {
+                                  "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
+                                },
+                                "duration": "1528827423500",
+                                "endTime": "2018-04-17T00:00",
+                                "index": "0",
+                                "isWhitelisted": "yes",
+                                "minCap": "0",
+                                "rate": "123",
+                                "startTime": "2018-04-13T16:07",
+                                "supply": "132",
+                                "tier": "Tier 1",
+                                "updatable": true,
+                                "whitelist": Array [
+                                  Object {
+                                    "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
+                                    "max": 50505,
+                                    "min": 1234,
+                                    "stored": true,
+                                  },
+                                  Object {
+                                    "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+                                    "max": 50505,
+                                    "min": 1234,
+                                    "stored": true,
+                                  },
+                                  Object {
+                                    "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
+                                    "max": 50505,
+                                    "min": 1234,
+                                    "stored": true,
+                                  },
+                                  Object {
+                                    "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
+                                    "max": 50505,
+                                    "min": 1234,
+                                    "stored": true,
+                                  },
+                                ],
+                              },
+                              Object {
+                                "addresses": Object {
+                                  "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
+                                },
+                                "duration": "1528827423500",
+                                "endTime": "2018-04-21T00:00",
+                                "index": "1",
+                                "isWhitelisted": "yes",
+                                "minCap": "0",
+                                "rate": "55",
+                                "startTime": "2018-04-17T00:00",
+                                "supply": "156",
+                                "tier": "Tier 2",
+                                "updatable": false,
+                                "whitelist": Array [
+                                  Object {
+                                    "addr": "0x1dF62f291b2E969fB0849d99D9Ce41e2F137006e",
+                                    "max": 50505,
+                                    "min": 1234,
+                                    "stored": true,
+                                  },
+                                  Object {
+                                    "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
+                                    "max": 50505,
+                                    "min": 1234,
+                                    "stored": true,
+                                  },
+                                  Object {
+                                    "addr": "0x3E5e9111Ae8eB78Fe1CC3bb8915d5D461F3Ef9A9",
+                                    "max": 50505,
+                                    "min": 1234,
+                                    "stored": true,
+                                  },
+                                  Object {
+                                    "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+                                    "max": 50505,
+                                    "min": 1234,
+                                    "stored": true,
+                                  },
+                                  Object {
+                                    "addr": "0x95cED938F7991cd0dFcb48F0a06a40FA1aF46EBC",
+                                    "max": 50505,
+                                    "min": 1234,
+                                    "stored": true,
+                                  },
+                                  Object {
+                                    "addr": "0xACa94ef8bD5ffEE41947b4585a84BdA5a3d3DA6E",
+                                    "max": 50505,
+                                    "min": 1234,
+                                    "stored": true,
+                                  },
+                                  Object {
+                                    "addr": "0xd03ea8624C8C5987235048901fB614fDcA89b117",
+                                    "max": 50505,
+                                    "min": 1234,
+                                    "stored": true,
+                                  },
+                                  Object {
+                                    "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
+                                    "max": 50505,
+                                    "min": 1234,
+                                    "stored": true,
+                                  },
+                                  Object {
+                                    "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
+                                    "max": 50505,
+                                    "min": 1234,
+                                    "stored": true,
+                                  },
+                                ],
+                              },
+                            ],
+                          },
+                        },
+                      ],
+                    ],
+                    "results": Array [
+                      Object {
+                        "isThrow": false,
+                        "value": undefined,
+                      },
+                    ],
+                  }
+                }
                 subscription={
                   Object {
                     "values": true,
@@ -4446,11 +5282,50 @@ exports[`ManageForm should render the component without tiers 1`] = `
         component={[Function]}
         decorators={
           Array [
-            [Function],
+            [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "batch": [Function],
+                    "blur": [Function],
+                    "change": [Function],
+                    "focus": [Function],
+                    "getFieldState": [Function],
+                    "getRegisteredFields": [Function],
+                    "getState": [Function],
+                    "initialize": [Function],
+                    "isValidationPaused": [Function],
+                    "mutators": Object {
+                      "insert": [Function],
+                      "move": [Function],
+                      "pop": [Function],
+                      "push": [Function],
+                      "remove": [Function],
+                      "shift": [Function],
+                      "swap": [Function],
+                      "unshift": [Function],
+                    },
+                    "pauseValidation": [Function],
+                    "registerField": [Function],
+                    "reset": [Function],
+                    "resumeValidation": [Function],
+                    "setConfig": [Function],
+                    "submit": [Function],
+                    "subscribe": [Function],
+                  },
+                ],
+              ],
+              "results": Array [
+                Object {
+                  "isThrow": false,
+                  "value": undefined,
+                },
+              ],
+            },
           ]
         }
         displaySave={true}
-        handleChange={[Function]}
+        handleChange={[MockFunction]}
         initialValues={
           Object {
             "tiers": Array [],
@@ -4468,7 +5343,7 @@ exports[`ManageForm should render the component without tiers 1`] = `
             "unshift": [Function],
           }
         }
-        onSubmit={[Function]}
+        onSubmit={[MockFunction]}
       >
         <inject-_class-with-tokenStore-generalStore-crowdsaleStore
           __versions={
@@ -4484,7 +5359,46 @@ exports[`ManageForm should render the component without tiers 1`] = `
           change={[Function]}
           decorators={
             Array [
-              [Function],
+              [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "batch": [Function],
+                      "blur": [Function],
+                      "change": [Function],
+                      "focus": [Function],
+                      "getFieldState": [Function],
+                      "getRegisteredFields": [Function],
+                      "getState": [Function],
+                      "initialize": [Function],
+                      "isValidationPaused": [Function],
+                      "mutators": Object {
+                        "insert": [Function],
+                        "move": [Function],
+                        "pop": [Function],
+                        "push": [Function],
+                        "remove": [Function],
+                        "shift": [Function],
+                        "swap": [Function],
+                        "unshift": [Function],
+                      },
+                      "pauseValidation": [Function],
+                      "registerField": [Function],
+                      "reset": [Function],
+                      "resumeValidation": [Function],
+                      "setConfig": [Function],
+                      "submit": [Function],
+                      "subscribe": [Function],
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "isThrow": false,
+                    "value": undefined,
+                  },
+                ],
+              },
             ]
           }
           dirty={false}
@@ -4522,7 +5436,7 @@ exports[`ManageForm should render the component without tiers 1`] = `
               "subscribe": [Function],
             }
           }
-          handleChange={[Function]}
+          handleChange={[MockFunction]}
           handleSubmit={[Function]}
           hasSubmitErrors={false}
           hasValidationErrors={false}
@@ -4588,7 +5502,46 @@ exports[`ManageForm should render the component without tiers 1`] = `
             }
             decorators={
               Array [
-                [Function],
+                [MockFunction] {
+                  "calls": Array [
+                    Array [
+                      Object {
+                        "batch": [Function],
+                        "blur": [Function],
+                        "change": [Function],
+                        "focus": [Function],
+                        "getFieldState": [Function],
+                        "getRegisteredFields": [Function],
+                        "getState": [Function],
+                        "initialize": [Function],
+                        "isValidationPaused": [Function],
+                        "mutators": Object {
+                          "insert": [Function],
+                          "move": [Function],
+                          "pop": [Function],
+                          "push": [Function],
+                          "remove": [Function],
+                          "shift": [Function],
+                          "swap": [Function],
+                          "unshift": [Function],
+                        },
+                        "pauseValidation": [Function],
+                        "registerField": [Function],
+                        "reset": [Function],
+                        "resumeValidation": [Function],
+                        "setConfig": [Function],
+                        "submit": [Function],
+                        "subscribe": [Function],
+                      },
+                    ],
+                  ],
+                  "results": Array [
+                    Object {
+                      "isThrow": false,
+                      "value": undefined,
+                    },
+                  ],
+                },
               ]
             }
             dirty={false}
@@ -4634,7 +5587,7 @@ exports[`ManageForm should render the component without tiers 1`] = `
                 "networkID": undefined,
               }
             }
-            handleChange={[Function]}
+            handleChange={[MockFunction]}
             handleSubmit={[Function]}
             hasSubmitErrors={false}
             hasValidationErrors={false}

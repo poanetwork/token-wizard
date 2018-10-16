@@ -38,18 +38,11 @@ exports[`TierBlock  should render TierBlock component 1`] = `
           </div>
           <input
             className="sw-TextField"
-            disabled={undefined}
             id="tierblock,0.tier"
-            max={undefined}
-            min={undefined}
             name="tierblock,0.tier"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
-            onKeyPress={undefined}
-            onPaste={undefined}
-            placeholder={undefined}
-            style={undefined}
             type="text"
             value=""
           />
@@ -188,16 +181,10 @@ exports[`TierBlock  should render TierBlock component 1`] = `
             className="sw-TextField"
             disabled={false}
             id="tierblock,0.startTime"
-            max={undefined}
-            min={undefined}
             name="tierblock,0.startTime"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
-            onKeyPress={undefined}
-            onPaste={undefined}
-            placeholder={undefined}
-            style={undefined}
             type="datetime-local"
             value=""
           />
@@ -226,18 +213,11 @@ exports[`TierBlock  should render TierBlock component 1`] = `
           </div>
           <input
             className="sw-TextField"
-            disabled={undefined}
             id="tierblock,0.endTime"
-            max={undefined}
-            min={undefined}
             name="tierblock,0.endTime"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
-            onKeyPress={undefined}
-            onPaste={undefined}
-            placeholder={undefined}
-            style={undefined}
             type="datetime-local"
             value=""
           />
@@ -270,18 +250,11 @@ exports[`TierBlock  should render TierBlock component 1`] = `
           </div>
           <input
             className="sw-TextField"
-            disabled={undefined}
             id="tierblock,0.rate"
-            max={undefined}
-            min={undefined}
             name="tierblock,0.rate"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
-            onKeyPress={undefined}
-            onPaste={undefined}
-            placeholder={undefined}
-            style={undefined}
             type="text"
             value=""
           />
@@ -312,16 +285,10 @@ exports[`TierBlock  should render TierBlock component 1`] = `
             className="sw-TextField"
             disabled={false}
             id="tierblock,0.supply"
-            max={undefined}
-            min={undefined}
             name="tierblock,0.supply"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
-            onKeyPress={undefined}
-            onPaste={undefined}
-            placeholder={undefined}
-            style={undefined}
             type="text"
             value=""
           />
@@ -349,7 +316,7 @@ exports[`TierBlock  should render TierBlock component 1`] = `
                 className="sw-FormControlTitle_Tooltip"
               >
                 Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1
-                               and a user already has 1 token from a previous transaction, they can buy any amount they want.
+               and a user already has 1 token from a previous transaction, they can buy any amount they want.
               </span>
             </div>
           </div>
@@ -357,16 +324,10 @@ exports[`TierBlock  should render TierBlock component 1`] = `
             className="sw-TextField"
             disabled={false}
             id="tierblock,0.minCap"
-            max={undefined}
-            min={undefined}
             name="tierblock,0.minCap"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
-            onKeyPress={undefined}
-            onPaste={undefined}
-            placeholder={undefined}
-            style={undefined}
             type="text"
             value=""
           />

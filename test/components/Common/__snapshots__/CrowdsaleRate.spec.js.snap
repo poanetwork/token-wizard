@@ -27,16 +27,7 @@ exports[`CrowdsaleRate should render CrowdsaleRate component 1`] = `
     className="sw-TextField"
     disabled={false}
     id="CrowdsaleRate"
-    max={undefined}
-    min={undefined}
     name="CrowdsaleRate"
-    onBlur={undefined}
-    onChange={undefined}
-    onFocus={undefined}
-    onKeyPress={undefined}
-    onPaste={undefined}
-    placeholder={undefined}
-    style={undefined}
     type="text"
     value="1234"
   />

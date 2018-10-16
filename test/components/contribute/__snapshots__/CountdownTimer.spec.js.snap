@@ -17,7 +17,7 @@ exports[`CountdownTimer Should render the component 1`] = `
       color="#733EAB"
       font="Arial"
       fontSize="auto"
-      onComplete={[Function]}
+      onComplete={[MockFunction]}
       paused={false}
       seconds={30.445}
       showMilliseconds={false}
@@ -108,7 +108,7 @@ exports[`CountdownTimer Should render the component showing only the seconds 1`]
       color="#733EAB"
       font="Arial"
       fontSize="auto"
-      onComplete={[Function]}
+      onComplete={[MockFunction]}
       paused={false}
       seconds={30.445}
       showMilliseconds={false}
@@ -185,7 +185,7 @@ exports[`CountdownTimer Should render the component showing the time until the e
       color="#733EAB"
       font="Arial"
       fontSize="auto"
-      onComplete={[Function]}
+      onComplete={[MockFunction]}
       paused={false}
       seconds={30.445}
       showMilliseconds={false}
@@ -276,7 +276,7 @@ exports[`CountdownTimer Should render the component when the crowdsale ended 1`]
       color="#733EAB"
       font="Arial"
       fontSize="auto"
-      onComplete={[Function]}
+      onComplete={[MockFunction]}
       paused={false}
       seconds={30.445}
       showMilliseconds={false}
@@ -367,7 +367,7 @@ exports[`CountdownTimer Should render the component when the crowdsale was final
       color="#733EAB"
       font="Arial"
       fontSize="auto"
-      onComplete={[Function]}
+      onComplete={[MockFunction]}
       paused={false}
       seconds={0}
       showMilliseconds={false}
@@ -414,7 +414,7 @@ exports[`CountdownTimer Should render the component with alternative message 1`]
       color="#733EAB"
       font="Arial"
       fontSize="auto"
-      onComplete={[Function]}
+      onComplete={[MockFunction]}
       paused={false}
       seconds={30.445}
       showMilliseconds={false}

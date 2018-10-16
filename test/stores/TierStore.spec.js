@@ -1,4 +1,7 @@
 import TierStore from '../../src/stores/TierStore'
+import { VALIDATION_TYPES } from '../../src/utils/constants'
+
+const { VALID, INVALID, EMPTY } = VALIDATION_TYPES
 
 describe('TierStore', () => {
   let whitelist
@@ -226,7 +229,7 @@ describe('TierStore', () => {
   })
 
   describe('isWhitelistEmpty', () => {
-    ;[
+    const whitelist = [
       {
         whitelist: [],
         expected: []
@@ -255,7 +258,8 @@ describe('TierStore', () => {
           { addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0', min: 2, max: 20, stored: true }
         ]
       }
-    ].forEach(({ whitelist, expected }) => {
+    ]
+    whitelist.forEach(({ whitelist, expected }) => {
       it('should remove all non-stored items', () => {
         // Given
         tierStore.setTierProperty(whitelist, 'whitelist', 0)
@@ -338,8 +342,10 @@ describe('TierStore', () => {
   })
 
   it('Should set as modified the whitelist if an address was added to an "stored" list', () => {
+    // Given
     const duplicatedAddress = { addr: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0', min: 2222, max: 44444 }
 
+    // When
     tierStore.setTierProperty(
       whitelist.map(item => {
         item.stored = true
@@ -350,10 +356,1026 @@ describe('TierStore', () => {
     )
     tierStore.sortWhitelist(0)
 
+    // Then
     expect(tierStore.modifiedStoredWhitelist).toBeFalsy()
 
     tierStore.addWhitelistItem(duplicatedAddress, 0)
 
     expect(tierStore.modifiedStoredWhitelist).toBeTruthy()
+  })
+
+  it(`should test removeTier and emptyTierValidationsList`, () => {
+    // Given
+    const tiers = [
+      {
+        supply: 1000,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      },
+      {
+        supply: 1000,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      },
+      {
+        supply: 1000,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      }
+    ]
+
+    const validTiers = [
+      {
+        supply: VALID,
+        whitelist: INVALID,
+        startTime: VALID,
+        endTime: INVALID
+      },
+      {
+        supply: VALID,
+        whitelist: INVALID,
+        startTime: VALID,
+        endTime: INVALID
+      },
+      {
+        supply: VALID,
+        whitelist: INVALID,
+        startTime: VALID,
+        endTime: INVALID
+      }
+    ]
+
+    // When
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, validTiers[index])
+    })
+
+    // Then
+    expect(tierStore.tiers.length).toEqual(4)
+
+    tierStore.removeTier(0)
+    expect(tierStore.tiers.length).toEqual(3)
+
+    tierStore.removeTier(0)
+    expect(tierStore.tiers.length).toEqual(2)
+
+    expect(tierStore.validTiers.length).toEqual(3)
+    tierStore.emptyTierValidationsList()
+    expect(tierStore.validTiers.length).toEqual(0)
+  })
+
+  it(`should test if tiers are valid`, () => {
+    // Given
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      },
+      {
+        tier: 'tier 2',
+        supply: 1000,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      },
+      {
+        tier: 'tier 3',
+        supply: 1000,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      }
+    ]
+
+    // When
+    tierStore.emptyList()
+
+    tiers.forEach(tier => {
+      tierStore.addTier(tier, null)
+    })
+
+    tiers.forEach((tier, index) => {
+      tierStore.validateTiers('tier', index)
+      tierStore.validateTiers('supply', index)
+      tierStore.validateTiers('startTime', index)
+      tierStore.validateTiers('endTime', index)
+    })
+
+    // Then
+    expect(tierStore.validTiers.length).toEqual(3)
+    tierStore.emptyTierValidationsList()
+    expect(tierStore.validTiers.length).toEqual(0)
+  })
+
+  it(`should test if tiers are valid - supply`, () => {
+    // Given
+    const tiers = [
+      {
+        supply: 1000
+      }
+    ]
+
+    // When
+    tiers.forEach(tier => {
+      tierStore.addTier(tier)
+    })
+
+    tiers.forEach((tier, index) => {
+      tierStore.validateTiers('supply', index)
+    })
+
+    // Then
+    expect(tierStore.validTiers.length).toEqual(1)
+    tierStore.emptyTierValidationsList()
+    expect(tierStore.validTiers.length).toEqual(0)
+  })
+
+  it(`should test if tiers are valid - startTime`, () => {
+    // Given
+    const tiers = [
+      {
+        startTime: Date.now() * 1000
+      }
+    ]
+
+    // When
+    tiers.forEach(tier => {
+      tierStore.addTier(tier)
+    })
+
+    tiers.forEach((tier, index) => {
+      tierStore.validateTiers('startTime', index)
+    })
+
+    // Then
+    expect(tierStore.validTiers.length).toEqual(1)
+    tierStore.emptyTierValidationsList()
+    expect(tierStore.validTiers.length).toEqual(0)
+  })
+
+  it(`should test if tiers are valid - endTime`, () => {
+    // When
+    const tiers = [
+      {
+        endTime: Date.now() * 1000
+      }
+    ]
+
+    // When
+    tiers.forEach(tier => {
+      tierStore.addTier(tier)
+    })
+
+    tiers.forEach((tier, index) => {
+      tierStore.validateTiers('endTime', index)
+    })
+
+    // Then
+    expect(tierStore.validTiers.length).toEqual(1)
+    tierStore.emptyTierValidationsList()
+    expect(tierStore.validTiers.length).toEqual(0)
+  })
+
+  it(`should test if tiers are valid fully`, () => {
+    // Given
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      },
+      {
+        tier: 'tier 2',
+        supply: 1000,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      },
+      {
+        tier: 'tier 3',
+        supply: 1000,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      }
+    ]
+
+    const validTiers = [
+      {
+        supply: VALID,
+        whitelist: INVALID,
+        startTime: VALID,
+        endTime: INVALID
+      },
+      {
+        supply: VALID,
+        whitelist: INVALID,
+        startTime: VALID,
+        endTime: INVALID
+      },
+      {
+        supply: VALID,
+        whitelist: INVALID,
+        startTime: VALID,
+        endTime: INVALID
+      }
+    ]
+
+    // When
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, validTiers[index])
+    })
+
+    tiers.forEach((tier, index) => {
+      tierStore.validateTiers('tier', index)
+      tierStore.validateTiers('supply', index)
+      tierStore.validateTiers('startTime', index)
+      tierStore.validateTiers('endTime', index)
+    })
+
+    // Then
+    expect(tierStore.validTiers.length).toEqual(3)
+    tierStore.emptyTierValidationsList()
+    expect(tierStore.validTiers.length).toEqual(0)
+  })
+
+  it(`should test updateRate`, () => {
+    // Given
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        rate: 2,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      }
+    ]
+
+    const validTiers = [
+      {
+        supply: VALID,
+        whitelist: INVALID,
+        rate: INVALID,
+        startTime: VALID,
+        endTime: INVALID
+      }
+    ]
+
+    // When
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, validTiers[index])
+    })
+
+    tierStore.updateRate(10, VALID, 0)
+
+    // Then
+    expect(tierStore.tiers[0].rate).toEqual(10)
+    expect(tierStore.validTiers[0].rate).toEqual(VALID)
+  })
+
+  it(`should test updateMinRate`, () => {
+    // Given
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        minRate: 2,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      }
+    ]
+
+    const validTiers = [
+      {
+        supply: VALID,
+        whitelist: INVALID,
+        minRate: INVALID,
+        startTime: VALID,
+        endTime: INVALID
+      }
+    ]
+
+    // When
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, validTiers[index])
+    })
+
+    tierStore.updateMinRate(10, VALID, 0)
+
+    // Then
+    expect(tierStore.tiers[0].minRate).toEqual(10)
+    expect(tierStore.validTiers[0].minRate).toEqual(VALID)
+  })
+
+  it(`should test updateMaxRate`, () => {
+    // Given
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        maxRate: 2,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      }
+    ]
+
+    const validTiers = [
+      {
+        supply: VALID,
+        whitelist: INVALID,
+        maxRate: INVALID,
+        startTime: VALID,
+        endTime: INVALID
+      }
+    ]
+
+    // When
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, validTiers[index])
+    })
+
+    tierStore.updateMaxRate(10, VALID, 0)
+
+    // Then
+    expect(tierStore.tiers[0].maxRate).toEqual(10)
+    expect(tierStore.validTiers[0].maxRate).toEqual(VALID)
+  })
+
+  it(`should test updateWalletAddress with tier length`, () => {
+    // Given
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        maxRate: 2,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000,
+        walletAddress: '0xjl1k2h31l2kjl12jlk12'
+      }
+    ]
+
+    const validTiers = [
+      {
+        supply: VALID,
+        whitelist: INVALID,
+        maxRate: INVALID,
+        startTime: VALID,
+        endTime: INVALID,
+        walletAddress: VALID
+      }
+    ]
+
+    // When
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, validTiers[index])
+    })
+
+    const walletAddress = 'test'
+    tierStore.updateWalletAddress(walletAddress, INVALID)
+
+    // Then
+    expect(tierStore.tiers[0].walletAddress).toEqual(walletAddress)
+    expect(tierStore.validTiers[0].walletAddress).toEqual(INVALID)
+  })
+
+  it(`should test updateWalletAddress without tier length`, () => {
+    // Given
+    tierStore.emptyList()
+    const walletAddress = 'test'
+
+    // When
+    tierStore.updateWalletAddress(walletAddress, INVALID)
+
+    // Then
+    expect(tierStore.tiers[0].walletAddress).toEqual(walletAddress)
+    expect(tierStore.validTiers[0].walletAddress).toEqual(INVALID)
+  })
+
+  it(`should test updateburnExcess with tier length`, () => {
+    // Given
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        maxRate: 2,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000,
+        burnExcess: 'yes'
+      }
+    ]
+
+    const validTiers = [
+      {
+        supply: VALID,
+        whitelist: INVALID,
+        maxRate: INVALID,
+        startTime: VALID,
+        endTime: INVALID,
+        burnExcess: VALID
+      }
+    ]
+
+    // When
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, validTiers[index])
+    })
+
+    const burnExcess = 'yes'
+    tierStore.updateBurnExcess(burnExcess, INVALID)
+
+    // Then
+    expect(tierStore.tiers[0].burnExcess).toEqual(burnExcess)
+    expect(tierStore.validTiers[0].burnExcess).toEqual(INVALID)
+  })
+
+  it(`should test updateBurnExcess without tier length`, () => {
+    // Given
+    tierStore.emptyList()
+    const burnExcess = 'yes'
+
+    // When
+    tierStore.updateBurnExcess(burnExcess, INVALID)
+
+    // Then
+    expect(tierStore.tiers[0].burnExcess).toEqual(burnExcess)
+    expect(tierStore.validTiers[0].burnExcess).toEqual(INVALID)
+  })
+
+  it(`should test tierEndTime `, () => {
+    // Given
+    const endTime = Date.now() * 1000
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        maxRate: 2,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: endTime,
+        burnExcess: 'yes'
+      }
+    ]
+
+    const validTiers = [
+      {
+        supply: VALID,
+        whitelist: INVALID,
+        maxRate: INVALID,
+        startTime: VALID,
+        endTime: INVALID,
+        burnExcess: VALID
+      }
+    ]
+
+    // When
+    tierStore.emptyList()
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, validTiers[index])
+    })
+
+    const tierEndTimeValid = tierStore.tierEndTime(0)
+    tierStore.emptyList()
+    const tierEndTimeUndefined = tierStore.tierEndTime(0)
+
+    // Then
+    expect(tierEndTimeValid).toEqual(endTime)
+    expect(tierEndTimeUndefined).toBeUndefined()
+  })
+
+  it(`should test addCrowdsale I`, () => {
+    // Given
+    tierStore.emptyList()
+    tierStore.addCrowdsale('test')
+
+    // When
+    const tier = tierStore.tiers[0].tier
+    const whitelistEnabled = tierStore.tiers[0].whitelistEnabled
+    const walletAddress = tierStore.tiers[0].walletAddress
+
+    // Then
+    expect(tier).toEqual('Tier 1')
+    expect(whitelistEnabled).toEqual('no')
+    expect(walletAddress).toEqual('test')
+  })
+
+  it(`should test addCrowdsale II`, () => {
+    // Given
+    tierStore.addCrowdsale('test')
+
+    // When
+    const tier = tierStore.tiers[1].tier
+    const whitelistEnabled = tierStore.tiers[1].whitelistEnabled
+
+    // Then
+    expect(tier).toEqual('Tier 2')
+    expect(whitelistEnabled).toEqual('no')
+  })
+
+  it(`should test invalidateToken I`, () => {
+    // Given
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        maxRate: 2,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      }
+    ]
+
+    const validTiers = [
+      {
+        supply: EMPTY,
+        whitelist: EMPTY,
+        maxRate: EMPTY,
+        startTime: EMPTY,
+        endTime: EMPTY
+      }
+    ]
+
+    // When
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, validTiers[index])
+    })
+    tierStore.invalidateToken()
+
+    // Then
+    tierStore.validTiers.forEach((validTier, index) => {
+      expect(validTier.supply).toEqual(INVALID)
+      expect(validTier.whitelist).toEqual(INVALID)
+      expect(validTier.maxRate).toEqual(INVALID)
+      expect(validTier.startTime).toEqual(INVALID)
+      expect(validTier.endTime).toEqual(INVALID)
+    })
+  })
+
+  it(`should test invalidateToken II`, () => {
+    // Given
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        maxRate: 2,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      }
+    ]
+
+    const validTiers = [
+      {
+        supply: VALID,
+        whitelist: EMPTY,
+        maxRate: VALID,
+        startTime: EMPTY,
+        endTime: EMPTY
+      }
+    ]
+
+    // When
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, validTiers[index])
+    })
+    tierStore.invalidateToken()
+
+    // Then
+    tierStore.validTiers.forEach((validTier, index) => {
+      expect(validTier.supply).toEqual(VALID)
+      expect(validTier.whitelist).toEqual(INVALID)
+      expect(validTier.maxRate).toEqual(VALID)
+      expect(validTier.startTime).toEqual(INVALID)
+      expect(validTier.endTime).toEqual(INVALID)
+    })
+  })
+
+  it(`should test invalidateToken III`, () => {
+    // Given
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        maxRate: 2,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      }
+    ]
+
+    // When
+    tiers.forEach(tier => {
+      tierStore.addTier(tier, null)
+    })
+    const invalidateToken = tierStore.invalidateToken()
+
+    // Then
+    expect(invalidateToken).toBeUndefined()
+  })
+
+  it(`should check if tier is valid, must be false`, () => {
+    // Given
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        maxRate: 2,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      }
+    ]
+
+    const validTiers = [
+      {
+        supply: VALID,
+        whitelist: EMPTY,
+        maxRate: VALID,
+        startTime: EMPTY,
+        endTime: EMPTY
+      }
+    ]
+
+    // When
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, validTiers[index])
+    })
+    const tiersValid = tierStore.areTiersValid
+
+    // Then
+    expect(tiersValid).toBeFalsy()
+  })
+
+  it(`should check if tier is valid, must be true`, () => {
+    // Given
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        maxRate: 2,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      }
+    ]
+
+    const validTiers = [
+      {
+        supply: VALID,
+        whitelist: VALID,
+        maxRate: VALID,
+        startTime: VALID,
+        endTime: VALID
+      }
+    ]
+
+    // When
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, validTiers[index])
+    })
+    const tiersValid = tierStore.areTiersValid
+
+    // Then
+    expect(tiersValid).toBeTruthy()
+  })
+
+  it(`should check for undefined in validTiers`, () => {
+    // Given
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        maxRate: 2,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      }
+    ]
+
+    // When
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, null)
+    })
+    const areTiersValid = tierStore.areTiersValid
+    const invalidateToken = tierStore.invalidateToken()
+    const individuallyValidTiers = tierStore.individuallyValidTiers
+
+    // Then
+    expect(areTiersValid).toBeUndefined()
+    expect(invalidateToken).toBeUndefined()
+    expect(individuallyValidTiers).toBeUndefined()
+  })
+
+  it(`should check individuallyValidTiers is true`, () => {
+    // Given
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        maxRate: 2,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      }
+    ]
+
+    const validTiers = [
+      {
+        supply: VALID,
+        whitelist: VALID,
+        maxRate: VALID,
+        startTime: VALID,
+        endTime: VALID
+      }
+    ]
+
+    // When
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, validTiers[index])
+    })
+    const individuallyValidTiers = tierStore.individuallyValidTiers
+
+    // Then
+    expect(individuallyValidTiers).toEqual([true])
+  })
+
+  it(`should check individuallyValidTiers is false I`, () => {
+    // Given
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        maxRate: 2,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      }
+    ]
+
+    const validTiers = [
+      {
+        supply: VALID,
+        whitelist: VALID,
+        maxRate: VALID,
+        startTime: VALID,
+        endTime: INVALID
+      }
+    ]
+
+    // When
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, validTiers[index])
+    })
+    const individuallyValidTiers = tierStore.individuallyValidTiers
+
+    // Then
+    expect(individuallyValidTiers).toEqual([false])
+  })
+
+  it(`should check individuallyValidTiers is false II`, () => {
+    // Given
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        maxRate: 2,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: Date.now() * 1000
+      }
+    ]
+
+    const validTiers = [
+      {
+        supply: EMPTY,
+        whitelist: EMPTY,
+        maxRate: EMPTY,
+        startTime: EMPTY,
+        endTime: EMPTY
+      }
+    ]
+
+    // When
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, validTiers[index])
+    })
+    const individuallyValidTiers = tierStore.individuallyValidTiers
+
+    // Then
+    expect(individuallyValidTiers).toEqual([false])
+  })
+
+  it(`should check validateEditedEndTime is TRUE`, () => {
+    // Given
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        maxRate: 2,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: (Date.now() + 1000) * 1000
+      },
+      {
+        tier: 'tier 2',
+        supply: 1000,
+        maxRate: 2,
+        whitelist: [],
+        startTime: (Date.now() + 1000) * 1000,
+        endTime: (Date.now() + 2000) * 1000
+      }
+    ]
+
+    const validTiers = [
+      {
+        supply: EMPTY,
+        whitelist: EMPTY,
+        maxRate: EMPTY,
+        startTime: EMPTY,
+        endTime: EMPTY
+      },
+      {
+        supply: EMPTY,
+        whitelist: EMPTY,
+        maxRate: EMPTY,
+        startTime: EMPTY,
+        endTime: EMPTY
+      }
+    ]
+
+    tierStore.emptyList()
+
+    // When
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, validTiers[index])
+    })
+    tierStore.validateEditedEndTime(0)
+
+    // Then
+    expect(tierStore.validTiers[0].endTime).toEqual(VALID)
+  })
+
+  it(`should check validateEditedEndTime is FALSE I`, () => {
+    // Given
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        maxRate: 2,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: (Date.now() + 1000) * 1000
+      },
+      {
+        tier: 'tier 2',
+        supply: 1000,
+        maxRate: 2,
+        whitelist: [],
+        startTime: (Date.now() - 1000) * 1000,
+        endTime: (Date.now() + 2000) * 1000
+      }
+    ]
+
+    const validTiers = [
+      {
+        supply: EMPTY,
+        whitelist: EMPTY,
+        maxRate: EMPTY,
+        startTime: EMPTY,
+        endTime: EMPTY
+      },
+      {
+        supply: EMPTY,
+        whitelist: EMPTY,
+        maxRate: EMPTY,
+        startTime: EMPTY,
+        endTime: EMPTY
+      }
+    ]
+
+    tierStore.emptyList()
+
+    // When
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, validTiers[index])
+    })
+    tierStore.validateEditedEndTime(0)
+
+    // Then
+    expect(tierStore.validTiers[0].endTime).toEqual(INVALID)
+  })
+
+  it(`should check validateEditedEndTime is FALSE II`, () => {
+    // Given
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        maxRate: 2,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: (Date.now() + 1000) * 1000
+      },
+      {
+        tier: 'tier 2',
+        supply: 1000,
+        maxRate: 2,
+        whitelist: [],
+        startTime: (Date.now() - 1000) * 1000,
+        endTime: (Date.now() + 2000) * 1000
+      }
+    ]
+
+    const validTiers = [
+      {
+        supply: EMPTY,
+        whitelist: EMPTY,
+        maxRate: EMPTY,
+        startTime: EMPTY
+      },
+      {
+        supply: EMPTY,
+        whitelist: EMPTY,
+        maxRate: EMPTY,
+        startTime: EMPTY
+      }
+    ]
+
+    tierStore.emptyList()
+
+    // When
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, validTiers[index])
+    })
+    tierStore.validateEditedEndTime(0)
+
+    // Then
+    expect(tierStore.validTiers[0].endTime).toEqual(INVALID)
+  })
+
+  it(`should check validateEditedTier I`, () => {
+    // Given
+    const tiers = [
+      {
+        tier: 'tier 1',
+        supply: 1000,
+        maxRate: 2,
+        whitelist: [],
+        startTime: Date.now() * 1000,
+        endTime: (Date.now() + 1000) * 1000
+      },
+      {
+        tier: 'tier 2',
+        supply: 1000,
+        maxRate: 2,
+        whitelist: [],
+        startTime: (Date.now() - 1000) * 1000,
+        endTime: (Date.now() + 2000) * 1000
+      }
+    ]
+
+    const validTiers = [
+      {
+        supply: EMPTY,
+        whitelist: EMPTY,
+        maxRate: EMPTY,
+        startTime: EMPTY
+      },
+      {
+        supply: EMPTY,
+        whitelist: EMPTY,
+        maxRate: EMPTY,
+        startTime: EMPTY
+      }
+    ]
+
+    tierStore.emptyList()
+
+    // When
+    tiers.forEach((tier, index) => {
+      tierStore.addTier(tier, validTiers[index])
+    })
+    tierStore.validateEditedTier('startTime', 0)
+    tierStore.validateEditedTier('endTime', 0)
+    tierStore.validateEditedTier('startTime', 1)
+    tierStore.validateEditedTier('endTime', 1)
+
+    // Then
+    expect(tierStore.validTiers[0].startTime).toEqual(VALID)
+    expect(tierStore.validTiers[0].endTime).toEqual(INVALID)
+    expect(tierStore.validTiers[1].startTime).toEqual(INVALID)
+    expect(tierStore.validTiers[1].endTime).toEqual(VALID)
   })
 })

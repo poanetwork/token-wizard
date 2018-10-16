@@ -28,24 +28,14 @@ exports[`NumericInput Should render the component 1`] = `
   >
     <input
       className="sw-TextField"
-      disabled={undefined}
-      id={undefined}
-      max={undefined}
-      min={undefined}
-      name={undefined}
-      onBlur={undefined}
       onChange={[Function]}
-      onFocus={undefined}
       onKeyPress={[Function]}
       onPaste={[Function]}
-      placeholder={undefined}
-      style={undefined}
       type="number"
       value=""
     />
     <div
       className="sw-NumericInput_ButtonPlus"
-      onClick={undefined}
     />
   </div>
   

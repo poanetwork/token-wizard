@@ -25,18 +25,11 @@ exports[`TokenName should render TokenName component 1`] = `
   </div>
   <input
     className="sw-TextField"
-    disabled={undefined}
     id="name"
-    max={undefined}
-    min={undefined}
     name="name"
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
-    onKeyPress={undefined}
-    onPaste={undefined}
-    placeholder={undefined}
-    style={undefined}
     type="text"
     value=""
   />
@@ -68,18 +61,11 @@ exports[`TokenName should render TokenName component and its children 1`] = `
   </div>
   <input
     className="sw-TextField"
-    disabled={undefined}
     id="name"
-    max={undefined}
-    min={undefined}
     name="name"
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
-    onKeyPress={undefined}
-    onPaste={undefined}
-    placeholder={undefined}
-    style={undefined}
     type="text"
     value=""
   />

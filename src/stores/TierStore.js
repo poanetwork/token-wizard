@@ -26,8 +26,12 @@ class TierStore {
 
   @action
   addTier = (tier, validations) => {
-    this.tiers.push(tier)
-    this.validTiers.push(validations)
+    if (tier) {
+      this.tiers.push(tier)
+    }
+    if (validations) {
+      this.validTiers.push(validations)
+    }
   }
 
   @action
@@ -54,29 +58,63 @@ class TierStore {
 
   @action
   validateTiers = (property, index) => {
+    const validTiers = this.validTiers.slice()
+
     switch (property) {
       case 'tier':
-        this.validTiers[index][property] = validateTier(this.tiers[index][property]) ? VALID : INVALID
+        if (validTiers.length > 0 && validTiers[index] !== undefined) {
+          this.validTiers[index][property] = validateTier(this.tiers[index][property]) ? VALID : INVALID
+        } else {
+          this.validTiers.push({
+            property: validateTier(this.tiers[index][property]) ? VALID : INVALID
+          })
+        }
         break
       case 'supply':
-        this.validTiers[index][property] = validateSupply(this.tiers[index][property]) ? VALID : INVALID
+        if (validTiers.length > 0 && validTiers[index] !== undefined) {
+          this.validTiers[index][property] = validateSupply(this.tiers[index][property]) ? VALID : INVALID
+        } else {
+          this.validTiers.push({
+            property: validateTier(this.tiers[index][property]) ? VALID : INVALID
+          })
+        }
         break
       case 'startTime':
-        if (index > 0) {
-          this.validTiers[index][property] = validateLaterOrEqualTime(
-            this.tiers[index][property],
-            this.tiers[index - 1].endTime
-          )
-            ? VALID
-            : INVALID
+        if (validTiers.length > 0 && validTiers[index] !== undefined) {
+          if (index > 0) {
+            this.validTiers[index][property] = validateLaterOrEqualTime(
+              this.tiers[index][property],
+              this.tiers[index - 1].endTime
+            )
+              ? VALID
+              : INVALID
+          } else {
+            this.validTiers[index][property] = validateTime(this.tiers[index][property]) ? VALID : INVALID
+          }
         } else {
-          this.validTiers[index][property] = validateTime(this.tiers[index][property]) ? VALID : INVALID
+          if (index > 0) {
+            this.validTiers.push({
+              property: validateLaterOrEqualTime(this.tiers[index][property], this.tiers[index - 1].endTime)
+                ? VALID
+                : INVALID
+            })
+          } else {
+            this.validTiers.push({
+              property: validateTime(this.tiers[index][property]) ? VALID : INVALID
+            })
+          }
         }
         break
       case 'endTime':
-        this.validTiers[index][property] = validateLaterTime(this.tiers[index][property], this.tiers[index].startTime)
-          ? VALID
-          : INVALID
+        if (validTiers.length > 0 && validTiers[index] !== undefined) {
+          this.validTiers[index][property] = validateLaterTime(this.tiers[index][property], this.tiers[index].startTime)
+            ? VALID
+            : INVALID
+        } else {
+          this.validTiers.push({
+            property: validateLaterTime(this.tiers[index][property], this.tiers[index].startTime) ? VALID : INVALID
+          })
+        }
         break
       default:
       // do nothing
@@ -85,8 +123,12 @@ class TierStore {
 
   @action
   updateRate = (value, validity, tierIndex) => {
-    this.tiers[tierIndex].rate = value
-    this.validTiers[tierIndex].rate = validity
+    if (this.tiers[tierIndex]) {
+      this.tiers[tierIndex].rate = value
+    }
+    if (this.validTiers[tierIndex]) {
+      this.validTiers[tierIndex].rate = validity
+    }
   }
 
   @action
@@ -124,7 +166,7 @@ class TierStore {
       this.tiers.push({ burnExcess: value })
     }
 
-    if (this.validTiers[0].length > 0) {
+    if (this.validTiers.length > 0) {
       this.validTiers[0].burnExcess = validity
     } else {
       this.validTiers.push({ burnExcess: validity })
@@ -163,27 +205,32 @@ class TierStore {
   @action
   validateEditedEndTime = index => {
     if (this.tiers.length) {
-      if (index < this.tiers.length - 1) {
-        this.validTiers[index].endTime = validateLaterOrEqualTime(
-          this.tiers[index + 1].startTime,
-          this.tiers[index].endTime
-        )
+      if (index < this.tiers.length - 1 && this.tiers.length > 1) {
+        const endTime = validateLaterOrEqualTime(this.tiers[index + 1].startTime, this.tiers[index].endTime)
           ? VALID
           : INVALID
+
+        if (this.validTiers[index] && this.validTiers[index].endTime) {
+          this.validTiers[index].endTime = endTime
+        } else if (this.validTiers[index] && !this.validTiers[index].endTime) {
+          this.validTiers[index] = { endTime: endTime }
+        }
       }
     }
   }
 
   @computed
   get individuallyValidTiers() {
-    if (!this.validTiers) return
+    if (!this.validTiers || this.validTiers.length === 0) {
+      return
+    }
 
     return this.validTiers.map((tier, index) => Object.keys(tier).every(key => this.validTiers[index][key] === VALID))
   }
 
   @computed
   get areTiersValid() {
-    if (!this.validTiers) {
+    if (!this.validTiers || this.validTiers.length === 0) {
       return
     }
 
@@ -201,7 +248,7 @@ class TierStore {
 
   @action
   invalidateToken = () => {
-    if (!this.validTiers) {
+    if (!this.validTiers || this.validTiers.length === 0) {
       return
     }
     this.validTiers.forEach((tier, index) => {
@@ -308,7 +355,11 @@ class TierStore {
   }
 
   tierEndTime(index) {
-    return this.tiers[index].endTime
+    if (this.tiers.length > 0) {
+      return this.tiers[index].endTime
+    } else {
+      return
+    }
   }
 
   @computed
