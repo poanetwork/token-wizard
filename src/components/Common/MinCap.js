@@ -9,7 +9,7 @@ export const MinCap = ({ index, decimals, ...props }) => (
     component={InputField2}
     description={DESCRIPTION.MIN_CAP}
     label={props.label || TEXT_FIELDS.MIN_CAP}
-    type="text"
+    placeholder="Enter here"
     validate={props.disabled ? undefined : validateTierMinCap(decimals)(index)}
     {...props}
   />

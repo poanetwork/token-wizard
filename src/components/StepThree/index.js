@@ -186,8 +186,8 @@ export class StepThree extends Component {
               <div className="st-StepContentInfo_InfoText">
                 <h1 className="st-StepContent_InfoTitle">Crowdsale Setup</h1>
                 <p className="st-StepContent_InfoDescription">
-                  The most important and exciting part of the crowdsale procces. Here you can define parameters of your
-                  crowdsale campaign.
+                  The most important and exciting part of the crowdsale process.<br />Here you can define parameters of
+                  your crowdsale campaign.
                 </p>
               </div>
             </div>

@@ -73,6 +73,10 @@ export const isLessThan = (errorMsg = VALIDATION_MESSAGES.LESS) => (maxValue = I
 
 export const isLessOrEqualThan = (errorMsg = VALIDATION_MESSAGES.LESS_OR_EQUAL) => (maxValue = Infinity) => value => {
   try {
+    if (!maxValue) {
+      return undefined
+    }
+
     const max = toBigNumber(String(maxValue), false)
     const isValid = max && max.gte(value)
     return isValid ? undefined : errorMsg

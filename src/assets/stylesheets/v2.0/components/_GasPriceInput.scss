@@ -3,7 +3,7 @@ $sw-GasPriceInput_Select-height: 40px;
 .sw-GasPriceInput {
     @include form-control-block-common();
 
-    &:focus-within {
+    &.sw-GasPriceInput-open {
         outline: none;
         position: relative;
         z-index: 12;
@@ -73,15 +73,14 @@ $sw-GasPriceInput_Select-height: 40px;
     background-color: #fff;
     border-radius: 5px;
     border: solid 1px $base-border-color;
+    display: none;
     left: 0;
     position: absolute;
     right: 0;
     top: 100%;
-    transition: visibility 0.1s;
-    visibility: hidden;
 
-    .sw-GasPriceInput_SelectButton:focus + & {
-        visibility: visible;
+    .sw-GasPriceInput-open & {
+        display: block;
     }
 }
 

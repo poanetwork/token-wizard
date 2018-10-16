@@ -7,6 +7,10 @@ import { DESCRIPTION, TEXT_FIELDS } from '../../utils/constants'
 export const CrowdsaleRate = ({ ...props }) => (
   <Field
     component={InputField2}
+    description={DESCRIPTION.RATE}
+    label={props.label || TEXT_FIELDS.RATE}
+    placeholder="Enter here"
+    type="text"
     validate={
       props.disabled
         ? undefined
@@ -16,10 +20,6 @@ export const CrowdsaleRate = ({ ...props }) => (
             isLessOrEqualThan('Should not be greater than 1 quintillion (10^18)')('1e18')
           )
     }
-    description={DESCRIPTION.RATE}
-    label={props.label || TEXT_FIELDS.RATE}
-    placeholder="Enter here"
-    type="text"
     {...props}
   />
 )

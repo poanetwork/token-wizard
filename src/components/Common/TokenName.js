@@ -16,10 +16,10 @@ export const TokenName = () => (
       if (errors) return errors.shift()
     }}
     component={InputField2}
-    side="left"
-    name="name"
-    type="text"
     description="The name of your token. Will be used by Etherscan and other tokenbrowsers. Be afraid of trademarks."
     label={TEXT_FIELDS.NAME}
+    name="name"
+    placeholder="Enter here"
+    type="text"
   />
 )

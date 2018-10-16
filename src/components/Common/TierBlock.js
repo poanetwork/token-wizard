@@ -80,6 +80,7 @@ export const TierBlock = ({ fields, ...props }) => {
             id={`${name}.tier`}
             label={CROWDSALE_SETUP_NAME}
             name={`${name}.tier`}
+            placeholder="Enter here"
             type="text"
             validate={value => {
               const errors = composeValidators(isRequired(), isMaxLength()(30))(value)
@@ -98,7 +99,13 @@ export const TierBlock = ({ fields, ...props }) => {
             name={`${name}.endTime`}
             side="right"
           />
-          <CrowdsaleRate extraClassName="sw-InputField2-CrowdsaleRate" name={`${name}.rate`} />
+          <CrowdsaleRate
+            extraClassName="sw-InputField2-CrowdsaleRate"
+            max="1000000000000000000"
+            min="0"
+            name={`${name}.rate`}
+            type="number"
+          />
           <Supply
             disabled={
               props.tierStore &&
@@ -106,15 +113,20 @@ export const TierBlock = ({ fields, ...props }) => {
               (props.tierStore && props.tierStore.tiers[index].whitelist.length)
             }
             extraClassName="sw-InputField2-CrowdsaleSupply"
+            min="0"
             name={`${name}.supply`}
             side="right"
+            type="number"
           />
           <MinCap
             decimals={props.decimals}
             disabled={props.tierStore.tiers[index].whitelistEnabled === 'yes' ? true : false}
             extraClassName="sw-InputField2-MinCap"
             index={index}
+            max={props.tierStore.tiers[index].supply}
+            min="0"
             name={`${name}.minCap`}
+            type="number"
           />
           <Field
             id={`${name}.whitelistEnabled`}

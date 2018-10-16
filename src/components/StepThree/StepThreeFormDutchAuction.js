@@ -154,6 +154,7 @@ export const StepThreeFormDutchAuction = ({
           extraClassName="sw-InputField2-DutchAuctionWalletAddress"
           label={WALLET_ADDRESS}
           name="walletAddress"
+          placeholder="Enter here"
           validate={isAddress()}
         />
         <Field
