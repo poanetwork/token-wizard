@@ -320,55 +320,21 @@ function getCrowdsaleID(proxyName) {
 
 function getCrowdsaleENV(networkID, crowdsaleStore) {
   const { isDutchAuction, isMintedCappedCrowdsale } = crowdsaleStore
-  const labelIdx = isDutchAuction ? 'DutchIdx' : 'MintedCappedIdx'
-  const labelCrowdsale = isDutchAuction ? 'Dutch Crowdsale' : 'Sale'
-  const labelToken = isDutchAuction ? 'Dutch Token' : 'Token'
-  // Dutch strategy has no managers smart-contracts
-  const labelSaleManager = 'Sale manager'
-  const labelTokenManager = 'Token manager'
 
-  if (isMintedCappedCrowdsale) {
+  if (isMintedCappedCrowdsale || isDutchAuction) {
     return [
       {
-        value: authOSContractString(labelIdx),
+        value: authOSContractString(isDutchAuction ? 'DutchIdx' : 'MintedCappedIdx'),
         parent: 'none',
         fileValue: getCrowdsaleContractAddr(crowdsaleStore, 'IDX', networkID)
       },
       {
-        value: authOSContractString(labelCrowdsale),
+        value: authOSContractString(isDutchAuction ? 'Dutch Crowdsale' : 'Sale'),
         parent: 'none',
         fileValue: getCrowdsaleContractAddr(crowdsaleStore, 'CROWDSALE', networkID)
       },
       {
-        value: authOSContractString(labelToken),
-        parent: 'none',
-        fileValue: getCrowdsaleContractAddr(crowdsaleStore, 'TOKEN', networkID)
-      },
-      {
-        value: authOSContractString(labelSaleManager),
-        parent: 'none',
-        fileValue: getCrowdsaleContractAddr(crowdsaleStore, 'CROWDSALE_MANAGER', networkID)
-      },
-      {
-        value: authOSContractString(labelTokenManager),
-        parent: 'none',
-        fileValue: getCrowdsaleContractAddr(crowdsaleStore, 'TOKEN_MANAGER', networkID)
-      }
-    ]
-  } else if (isDutchAuction) {
-    return [
-      {
-        value: authOSContractString(labelIdx),
-        parent: 'none',
-        fileValue: getCrowdsaleContractAddr(crowdsaleStore, 'IDX', networkID)
-      },
-      {
-        value: authOSContractString(labelCrowdsale),
-        parent: 'none',
-        fileValue: getCrowdsaleContractAddr(crowdsaleStore, 'CROWDSALE', networkID)
-      },
-      {
-        value: authOSContractString(labelToken),
+        value: authOSContractString(isDutchAuction ? 'Dutch Token' : 'Token'),
         parent: 'none',
         fileValue: getCrowdsaleContractAddr(crowdsaleStore, 'TOKEN', networkID)
       }
@@ -391,12 +357,12 @@ function getManagers(networkID, crowdsaleStore) {
   else
     return [
       {
-        value: authOSContractString('SaleManager'),
+        value: authOSContractString('Sale Manager'),
         parent: 'none',
         fileValue: getCrowdsaleContractAddr(crowdsaleStore, 'CROWDSALE_MANAGER', networkID)
       },
       {
-        value: authOSContractString('TokenManager'),
+        value: authOSContractString('Token Manager'),
         parent: 'none',
         fileValue: getCrowdsaleContractAddr(crowdsaleStore, 'TOKEN_MANAGER', networkID)
       }
