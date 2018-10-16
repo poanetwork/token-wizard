@@ -61,7 +61,11 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
         </button>
       )
       const downloadButton = (
-        <button onClick={downloadCrowdsaleFiles} className="button button_fill_secondary button_no_border">
+        <button
+          onClick={downloadCrowdsaleFiles}
+          className="button button_fill_secondary button_no_border"
+          type="button"
+        >
           Download Files
         </button>
       )
