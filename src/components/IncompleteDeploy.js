@@ -1,30 +1,17 @@
 import React, { Component } from 'react'
 import cancelDeploy from '../utils/cancelDeploy'
+import { navigateTo } from '../utils/utils'
 
 class CheckIncompleteDeploy extends Component {
   cancel() {
     cancelDeploy()
   }
 
-  navigateTo = (location, params = '') => {
-    const path =
-      {
-        home: '/',
-        stepOne: '1',
-        stepTwo: '2',
-        stepFour: '4',
-        manage: 'manage'
-      }[location] || null
-
-    if (path === null) {
-      throw new Error(`invalid location specified: ${location}`)
-    }
-
-    this.props.history.push(`${path}${params}`)
-  }
-
   goToStepFour = () => {
-    this.navigateTo('stepFour')
+    navigateTo({
+      history: this.props.history,
+      location: 'stepFour'
+    })
   }
 
   render() {

@@ -61,7 +61,10 @@ export const StepTwoForm = inject('tokenStore', 'crowdsaleStore', 'reservedToken
 
       const goBack = async () => {
         try {
-          navigateTo(history, 'stepOne')
+          navigateTo({
+            history: history,
+            location: 'stepOne'
+          })
         } catch (err) {
           logger.log('Error to navigate', err)
         }
