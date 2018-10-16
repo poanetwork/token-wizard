@@ -13,39 +13,45 @@ class Web3Provider extends Component {
     this.state = {
       selectedAccount: null,
       web3: null,
-      approvePermissions: false,
+      approvePermissions: null,
       render: false
     }
-
-    this.web3 = null
-    this.interval = null
   }
 
   render() {
     const { web3UnavailableScreen: Web3UnavailableScreen } = this.props
 
-    if (this.state.web3 && this.state.approvePermissions) {
+    if (this.state.render && this.state.web3 && this.state.approvePermissions) {
       return this.props.children
-    } else {
+    }
+
+    if (this.state.render && (!this.state.web3 || !this.state.approvePermissions)) {
       return <Web3UnavailableScreen />
     }
+
+    return null
   }
 
   componentDidMount() {
     this.checkWeb3()
-    this.initPoll()
-
-    // Wait 1 second to render
-    setTimeout(() => {
-      this.setState({ render: true })
-    }, 500)
+      .then(this.initPoll())
+      .then(() => {
+        this.setState({
+          render: true
+        })
+      })
+      .catch(err => {
+        console.log(err)
+        this.setState({
+          render: true
+        })
+      })
   }
 
   checkWeb3() {
     const setWeb3 = () => {
       try {
         window.web3 = new Web3(window.web3.currentProvider)
-        this.fetchAccounts()
         this.setState({
           approvePermissions: true,
           web3: window.web3
@@ -55,30 +61,44 @@ class Web3Provider extends Component {
       }
     }
 
-    const { ethereum } = window
-    // Modern dapp browsers...
-    if (ethereum) {
-      window.web3 = new Web3(ethereum)
+    return new Promise((resolve, reject) => {
       try {
-        // Request account access if needed
-        ethereum.enable().then(() => {
-          if (!this.state.web3) {
-            setWeb3()
+        const { ethereum } = window
+        // Modern dapp browsers...
+        if (ethereum) {
+          window.web3 = new Web3(ethereum)
+          try {
+            // Request account access if needed
+            ethereum.enable().then(() => {
+              if (!this.state.web3) {
+                setWeb3()
+              }
+            })
+            resolve()
+          } catch (error) {
+            // User denied account access...
+            const msj = 'User denied account access'
+            throw new Error(msj)
           }
+        }
+        // Legacy dapp browsers...
+        else if (window.web3) {
+          setWeb3()
+          resolve()
+        }
+        // Non-dapp browsers...
+        else {
+          const msj = 'Non-Ethereum browser detected. You should consider trying a wallet!'
+          throw new Error(msj)
+        }
+      } catch (err) {
+        this.setState({
+          approvePermissions: false
         })
-      } catch (error) {
-        // User denied account access...
-        logger.log('User denied account access')
+        logger.log('Error ', err.message)
+        reject()
       }
-    }
-    // Legacy dapp browsers...
-    else if (window.web3) {
-      setWeb3()
-    }
-    // Non-dapp browsers...
-    else {
-      logger.log('Non-Ethereum browser detected. You should consider trying a wallet!')
-    }
+    })
   }
 
   componentWillUnmount() {
