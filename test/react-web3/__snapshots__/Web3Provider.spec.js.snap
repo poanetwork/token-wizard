@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Web3Provider renders without crashing 1`] = `"<div class=\\"sw-FullscreenBackdrop\\"><div class=\\"sw-Loader\\"><div class=\\"sw-Loader_AnimatedItem\\"></div><div class=\\"sw-Loader_AnimatedItem\\"></div><div class=\\"sw-Loader_AnimatedItem\\"></div><div class=\\"sw-Loader_AnimatedItem\\"></div><div class=\\"sw-Loader_AnimatedItem\\"></div><div class=\\"sw-Loader_AnimatedItem\\"></div></div></div>"`;
+
+exports[`Web3Provider should render screen with render without throwing an error 1`] = `"<div class=\\"sw-Loader\\"><div class=\\"sw-Loader_AnimatedItem\\"></div><div class=\\"sw-Loader_AnimatedItem\\"></div><div class=\\"sw-Loader_AnimatedItem\\"></div><div class=\\"sw-Loader_AnimatedItem\\"></div><div class=\\"sw-Loader_AnimatedItem\\"></div><div class=\\"sw-Loader_AnimatedItem\\"></div></div>"`;
+
+exports[`Web3Provider should render web3Provider screen 1`] = `
+<div
+  className="sw-FullscreenBackdrop"
+>
+  <div
+    className="sw-Loader"
+  >
+    <div
+      className="sw-Loader_AnimatedItem"
+    />
+    <div
+      className="sw-Loader_AnimatedItem"
+    />
+    <div
+      className="sw-Loader_AnimatedItem"
+    />
+    <div
+      className="sw-Loader_AnimatedItem"
+    />
+    <div
+      className="sw-Loader_AnimatedItem"
+    />
+    <div
+      className="sw-Loader_AnimatedItem"
+    />
+  </div>
+</div>
+`;
