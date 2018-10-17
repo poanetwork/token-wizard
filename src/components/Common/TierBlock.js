@@ -51,7 +51,7 @@ export const TierBlock = ({ fields, ...props }) => {
       {
         checked: input.value === 'on',
         id: `${name}.allow_modifying_on`,
-        label: 'On',
+        label: 'Yes',
         name: name,
         onChange: () => input.onChange('on'),
         value: 'on'
@@ -59,7 +59,7 @@ export const TierBlock = ({ fields, ...props }) => {
       {
         checked: input.value === 'off',
         id: `${name}.allow_modifying_off`,
-        label: 'Off',
+        label: 'No',
         name: name,
         onChange: () => input.onChange('off'),
         value: 'off'
@@ -67,6 +67,23 @@ export const TierBlock = ({ fields, ...props }) => {
     ]
 
     return buttons
+  }
+
+  const getSupplyValue = index => {
+    return props.tierStore.tiers[index].supply
+  }
+
+  const isSupplyInvalid = index => {
+    const supplyValue = getSupplyValue(index)
+
+    return supplyValue <= 0 || typeof supplyValue === 'undefined'
+  }
+
+  const onSupplyChange = (name, index) => {
+    if (isSupplyInvalid(index)) {
+      props.tierStore.setTierProperty('no', 'whitelistEnabled', index)
+      props.form.change(name, 'no')
+    }
   }
 
   return (
@@ -93,12 +110,7 @@ export const TierBlock = ({ fields, ...props }) => {
             index={index}
             name={`${name}.startTime`}
           />
-          <CrowdsaleEndTime
-            extraClassName="sw-InputField2-CrowdsaleEndTime"
-            index={index}
-            name={`${name}.endTime`}
-            side="right"
-          />
+          <CrowdsaleEndTime extraClassName="sw-InputField2-CrowdsaleEndTime" index={index} name={`${name}.endTime`} />
           <CrowdsaleRate
             extraClassName="sw-InputField2-CrowdsaleRate"
             max="1000000000000000000"
@@ -115,7 +127,7 @@ export const TierBlock = ({ fields, ...props }) => {
             extraClassName="sw-InputField2-CrowdsaleSupply"
             min="0"
             name={`${name}.supply`}
-            side="right"
+            onChange={onSupplyChange(`${name}.whitelistEnabled`, index)}
             type="number"
           />
           <MinCap
@@ -135,6 +147,7 @@ export const TierBlock = ({ fields, ...props }) => {
               <RadioButton
                 buttons={getWhiteListingButtons(`${name}.whitelistEnabled`, input, index)}
                 description={DESCRIPTION.ENABLE_WHITELIST}
+                disabled={isSupplyInvalid(index)}
                 extraClassName={'sw-InputField2-WhitelistEnabled'}
                 title={ENABLE_WHITELISTING}
               />
@@ -152,7 +165,7 @@ export const TierBlock = ({ fields, ...props }) => {
               />
             )}
           />
-          {props.tierStore.tiers[index].whitelistEnabled === 'yes' ? (
+          {props.tierStore.tiers[index].whitelistEnabled === 'yes' && !isSupplyInvalid(index) ? (
             <WhitelistInputBlock num={index} decimals={props.decimals} />
           ) : null}
         </div>

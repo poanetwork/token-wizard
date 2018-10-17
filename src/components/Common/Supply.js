@@ -10,6 +10,7 @@ export const Supply = ({ ...props }) => {
       component={InputField2}
       description={props.description || DESCRIPTION.SUPPLY}
       label={props.label || TEXT_FIELDS.SUPPLY_SHORT}
+      onChange={props.onChange}
       placeholder="Enter here"
       type="text"
       val={props.value || null}

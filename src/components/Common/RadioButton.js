@@ -3,7 +3,7 @@ import { FormControlTitle } from './FormControlTitle'
 
 export class RadioButton extends Component {
   render() {
-    const { title, description, buttons, extraClassName } = this.props
+    const { title, description, buttons, extraClassName, disabled } = this.props
 
     return (
       <div className={`sw-RadioButton ${extraClassName ? extraClassName : ''}`}>
@@ -14,6 +14,7 @@ export class RadioButton extends Component {
               <input
                 checked={item.checked}
                 className="sw-RadioButton_Input"
+                disabled={disabled}
                 id={item.id}
                 name={item.name}
                 onChange={item.onChange}
