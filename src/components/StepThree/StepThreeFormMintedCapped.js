@@ -161,7 +161,9 @@ export const StepThreeFormMintedCapped = ({
         />
       </div>
       <FieldArray name="tiers">
-        {({ fields }) => <TierBlock fields={fields} decimals={props.decimals} tierStore={props.tierStore} />}
+        {({ fields }) => (
+          <TierBlock form={form} fields={fields} decimals={props.decimals} tierStore={props.tierStore} />
+        )}
       </FieldArray>
       <AddTierButton onClick={addTier} />
       <div className="st-StepContent_Buttons">
