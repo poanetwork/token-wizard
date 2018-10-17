@@ -723,3 +723,12 @@ export const isAddressValid = addr => {
   logger.log('addr:', addr)
   return web3Store && web3Store.web3 && web3Store.web3.utils.isAddress(addr)
 }
+
+export function getProxyParams({ abstractStorageAddr, networkID, appNameHash }) {
+  return [
+    abstractStorageAddr,
+    JSON.parse(process.env['REACT_APP_REGISTRY_EXEC_ID'] || '{}')[networkID],
+    JSON.parse(process.env['REACT_APP_PROXY_PROVIDER_ADDRESS'] || '{}')[networkID],
+    appNameHash
+  ]
+}

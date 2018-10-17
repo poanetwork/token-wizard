@@ -31,6 +31,8 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
       displaySave,
       canEditMinCap,
       crowdsalePointer,
+      downloadCrowdsaleFiles,
+      canDownloadContractFiles,
       ...props
     }) => {
       const { tiers } = props.initialValues
@@ -56,6 +58,15 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
       const saveButton = (
         <button type="submit" disabled={disable} className={submitButtonClass}>
           Save
+        </button>
+      )
+      const downloadButton = (
+        <button
+          onClick={downloadCrowdsaleFiles}
+          className="button button_fill_secondary button_no_border"
+          type="button"
+        >
+          Download Files
         </button>
       )
 
@@ -124,7 +135,10 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
           <FormSpy subscription={{ values: true }} onChange={handleChange} />
 
           <div className="steps">
-            <div className="button-container">{displaySave ? saveButton : null}</div>
+            <div className="button-container">
+              {canDownloadContractFiles ? downloadButton : null}
+              {displaySave ? saveButton : null}
+            </div>
           </div>
         </form>
       )
