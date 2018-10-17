@@ -10,27 +10,28 @@ const logger = logdown('TW:blockchainHelpers')
 const DEPLOY_CONTRACT = 1
 const CALL_METHOD = 2
 
-export const checkWeb3 = async () => {
+export const checkWeb3 = async (disableAlert = false) => {
   const { web3 } = web3Store
 
   if (web3) {
-    await checkMetaMask()
+    await checkMetaMask(disableAlert)
   } else {
     setTimeout(() => {
       web3Store.getWeb3(async web3 => {
         if (!web3) {
           return noMetaMaskAlert()
         }
-        await checkMetaMask()
+        await checkMetaMask(disableAlert)
       })
     }, 500)
   }
 }
 
-const checkMetaMask = async () => {
+const checkMetaMask = async (disableAlert = false) => {
   const { web3 } = web3Store
+  const devEnvironment = process.env.NODE_ENV === 'development'
 
-  if (!web3 || !web3.currentProvider || !web3.currentProvider.isMetaMask) {
+  if ((!web3 || !web3.currentProvider || !web3.currentProvider.isMetaMask) && !devEnvironment && !disableAlert) {
     return noMetaMaskAlert()
   }
 

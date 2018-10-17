@@ -170,7 +170,7 @@ export class Contribute extends React.Component {
   validateEnvironment = async () => {
     const { web3Store, generalStore } = this.props
 
-    await checkWeb3()
+    await checkWeb3(true)
 
     if (!web3Store.web3) {
       return Promise.reject('no web3 available')
