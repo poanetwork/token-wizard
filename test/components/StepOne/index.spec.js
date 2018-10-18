@@ -4,14 +4,36 @@ import { configure, mount } from 'enzyme'
 import renderer from 'react-test-renderer'
 import { MemoryRouter } from 'react-router'
 import { StepOne } from '../../../src/components/StepOne/index'
-import { crowdsaleStore, contractStore, generalStore, web3Store } from '../../../src/stores'
+import {
+  web3Store,
+  generalStore,
+  contractStore,
+  crowdsaleStore,
+  gasPriceStore,
+  deploymentStore,
+  reservedTokenStore,
+  stepTwoValidationStore,
+  tierStore,
+  tokenStore
+} from '../../../src/stores'
 import { CROWDSALE_STRATEGIES } from '../../../src/utils/constants'
 
 configure({ adapter: new Adapter() })
 
 describe('StepOne', () => {
   const history = { push: jest.fn() }
-  const stores = { crowdsaleStore, generalStore, contractStore, web3Store }
+  const stores = {
+    web3Store,
+    generalStore,
+    contractStore,
+    crowdsaleStore,
+    gasPriceStore,
+    deploymentStore,
+    reservedTokenStore,
+    stepTwoValidationStore,
+    tierStore,
+    tokenStore
+  }
   const { MINTED_CAPPED_CROWDSALE, DUTCH_AUCTION } = CROWDSALE_STRATEGIES
 
   it(`should render StepOne screen`, () => {
