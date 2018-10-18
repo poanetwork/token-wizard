@@ -1,0 +1,26 @@
+.sw-BorderedSection {
+    border-bottom: solid 1px $base-border-color;
+    margin: 0 0 15px;
+    padding: 0 0 15px;
+}
+
+.sw-BorderedSection_Title {
+    color: #000;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0 0 8px;
+    padding: 0;
+}
+
+.sw-BorderedSection_Text {
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0;
+
+    &.sw-BorderedSection_Text-small {
+        font-size: 16px;
+    }
+}

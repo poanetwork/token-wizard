@@ -437,19 +437,10 @@ export class StepFour extends Component {
 
       return (
         <div>
-          <div>
-            <DisplayField side="left" title={NAME} value={tokenNameStr} description={PD_TOKEN_NAME} />
-            <DisplayField side="right" title={TICKER} value={ticker ? ticker : ''} description={D_TOKEN_TICKER} />
-          </div>
-          <div>
-            <DisplayField side="left" title={DECIMALS} value={tokenDecimalsStr} description={PD_TOKEN_DECIMALS} />
-            <DisplayField
-              side="right"
-              title={SUPPLY_SHORT}
-              value={tokenSupplyStr}
-              description={PD_TOKEN_TOTAL_SUPPLY}
-            />
-          </div>
+          <DisplayField title={NAME} value={tokenNameStr} description={PD_TOKEN_NAME} />
+          <DisplayField title={TICKER} value={ticker ? ticker : ''} description={D_TOKEN_TICKER} />
+          <DisplayField title={DECIMALS} value={tokenDecimalsStr} description={PD_TOKEN_DECIMALS} />
+          <DisplayField title={SUPPLY_SHORT} value={tokenSupplyStr} description={PD_TOKEN_TOTAL_SUPPLY} />
         </div>
       )
     }
@@ -614,21 +605,15 @@ export class StepFour extends Component {
             </div>
           </div>
           <div className="sw-BorderedBlock">
-            <div className="item">
-              <div className="publish-title-container">
-                <p className="publish-title" data-step="1">
-                  {CROWDSALE_STRATEGY}
-                </p>
-              </div>
-              <p className="label">{strategyName}</p>
-              <p className="description">{CROWDSALE_STRATEGY}</p>
+            <div className="sw-BorderedSection" data-step="1">
+              <h2 className="sw-BorderedSection_Title">{CROWDSALE_STRATEGY}</h2>
+              <p className="sw-BorderedSection_Text">{strategyName}</p>
+              <p className="sw-BorderedSection_Text sw-BorderedSection_Text-small">{CROWDSALE_STRATEGY}</p>
             </div>
-            <div className="publish-title-container">
-              <p className="publish-title" data-step="2">
-                {TOKEN_SETUP}
-              </p>
+            <div className="sw-BorderedSection" data-step="2">
+              <h2 className="sw-BorderedSection_Title">{TOKEN_SETUP}</h2>
+              {tokenSetupBlock()}
             </div>
-            {tokenSetupBlock()}
             <div className="publish-title-container">
               <p className="publish-title" data-step="3">
                 {CROWDSALE_SETUP}

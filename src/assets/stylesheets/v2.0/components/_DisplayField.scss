@@ -1,0 +1,25 @@
+.pb-DisplayField {
+
+}
+
+.pb-DisplayField_Title {
+    color: #000;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.pb-DisplayField_ValueContainer {
+    display: flex;
+    flex-flow: row;
+}
+
+.pb-DisplayField_Value {
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0;
+}
