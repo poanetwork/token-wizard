@@ -15,7 +15,18 @@ const logger = logdown('TW:StepOne')
 const { CROWDSALE_STRATEGY } = NAVIGATION_STEPS
 const { MINTED_CAPPED_CROWDSALE } = CROWDSALE_STRATEGIES
 
-@inject('crowdsaleStore', 'contractStore', 'web3Store', 'generalStore')
+@inject(
+  'web3Store',
+  'generalStore',
+  'contractStore',
+  'crowdsaleStore',
+  'gasPriceStore',
+  'deploymentStore',
+  'reservedTokenStore',
+  'stepTwoValidationStore',
+  'tierStore',
+  'tokenStore'
+)
 @observer
 export class StepOne extends Component {
   state = {
