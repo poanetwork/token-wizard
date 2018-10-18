@@ -24,13 +24,7 @@ module.exports = {
       )
     },
     dev: {
-      default: series(
-        'git submodule update --init --recursive --remote',
-        'npm run installWeb3',
-        'bash ./scripts/generateProxyContracts.sh',
-        'npm run moveTruffleConfigPublic',
-        'npm run moveSolcVersionOutputPublic'
-      ),
+      default: series('git submodule update --init --recursive --remote', 'npm run installWeb3'),
       Minted: {
         default: series(
           'nps test.e2e.stop',
@@ -43,6 +37,10 @@ module.exports = {
           'nps test.deployContracts',
           'cp .env ../../../../../.env',
           'cd ../../../../../',
+          'npm run installWeb3',
+          'bash ./scripts/generateProxyContracts.sh',
+          'npm run moveTruffleConfigPublic',
+          'npm run moveSolcVersionOutputPublic',
           'nps test.e2e.start'
         )
       },
@@ -58,6 +56,10 @@ module.exports = {
           'nps test.deployContracts',
           'cp .env ../../../../../.env',
           'cd ../../../../../',
+          'npm run installWeb3',
+          'bash ./scripts/generateProxyContracts.sh',
+          'npm run moveTruffleConfigPublic',
+          'npm run moveSolcVersionOutputPublic',
           'nps test.e2e.start'
         )
       }
