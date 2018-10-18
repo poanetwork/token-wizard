@@ -117,11 +117,6 @@ export const gweiToWei = x => parseInt(x * 1000000000, 10)
 
 export const weiToGwei = x => x / 1000000000
 
-export const displayHeaderAndFooterInIframe = () => {
-  const insideAnIframe = window.self !== window.top
-  return insideAnIframe ? CrowdsaleConfig.showHeaderAndFooterInIframe : true
-}
-
 export const countDecimalPlaces = num => {
   /*
     (?:

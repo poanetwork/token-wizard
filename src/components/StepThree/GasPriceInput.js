@@ -17,7 +17,7 @@ class GasPriceInput extends Component {
   }
 
   state = {
-    customGasPrice: GAS_PRICE.CUSTOM.PRICE,
+    customGasPrice: undefined,
     gasTypeSelected: {},
     isCustom: false,
     openDropdown: false,
@@ -32,8 +32,8 @@ class GasPriceInput extends Component {
 
     if (gasTypeSelected.id === GAS_PRICE.CUSTOM.ID) {
       this.setState({
-        isCustom: true,
-        customGasPrice: gasTypeSelected.price
+        customGasPrice: gasTypeSelected.price,
+        isCustom: true
       })
     }
 
@@ -122,8 +122,8 @@ class GasPriceInput extends Component {
 
   handleCustomGasPriceChange = value => {
     const { updateGasTypeSelected, input } = this.props
-
     let gasTypeSelected = this.state.gasTypeSelected
+
     gasTypeSelected.price = value
 
     updateGasTypeSelected(gasTypeSelected)
@@ -207,7 +207,8 @@ class GasPriceInput extends Component {
         {this.state.isCustom ? (
           <TextField
             id="customGasPrice"
-            min="0.1"
+            min={GAS_PRICE.CUSTOM.PRICE}
+            step="any"
             name="gas-price-custom-value"
             onChange={e => this.handleCustomGasPriceChange(e.target.value)}
             placeholder="Enter here"

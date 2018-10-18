@@ -1,10 +1,14 @@
 .sw-ButtonDelete {
+    background-color: transparent;
     background-image: url('#{ $base-images-path }/ButtonDelete/ico-delete.svg');
     background-position: 50% 50%;
     background-repeat: no-repeat;
     background-size: cover;
+    border: none;
     cursor: pointer;
     height: 14.6px;
     margin-left: auto;
+    outline: none;
+    padding: 0;
     width: 12px;
 }
