@@ -66,40 +66,34 @@ class Web3Provider extends Component {
     }
 
     return new Promise((resolve, reject) => {
-      try {
-        const { ethereum } = window
-        // Modern dapp browsers...
-        if (ethereum) {
-          window.web3 = new Web3(ethereum)
-          try {
-            // Request account access if needed
-            ethereum.enable().then(() => {
-              if (!this.state.web3) {
-                setWeb3()
-              }
-            })
-            resolve()
-          } catch (error) {
-            // User denied account access...
-            const msj = 'User denied account access'
-            throw new Error(msj)
+      const { ethereum } = window
+
+      // Modern dapp browsers...
+      if (ethereum) {
+        window.web3 = new Web3(ethereum)
+          // Request account access if needed
+        ethereum.enable().then(() => {
+          if (!this.state.web3) {
+            setWeb3()
           }
-        }
+        }).catch(err => {
+          this.setState({
+            approvePermissions: false
+          })
+          reject()
+        })
+        resolve()
+      }
         // Legacy dapp browsers...
-        else if (window.web3) {
-          setWeb3()
-          resolve()
-        }
+      else if (window.web3) {
+        setWeb3()
+        resolve()
+      }
         // Non-dapp browsers...
-        else {
-          const msj = 'Non-Ethereum browser detected. You should consider trying a wallet!'
-          throw new Error(msj)
-        }
-      } catch (err) {
+      else {
         this.setState({
           approvePermissions: false
         })
-        console.log(err.message)
         reject()
       }
     })
