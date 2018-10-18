@@ -6,16 +6,16 @@ export const TextField = props => {
       className="sw-TextField"
       disabled={props.disabled}
       id={props.name}
-      name={props.name}
       max={props.max}
       min={props.min}
+      name={props.name}
       onBlur={props.onBlur}
       onChange={props.onChange}
       onFocus={props.onFocus}
       onKeyPress={props.onKeyPress}
       onPaste={props.onPaste}
       placeholder={props.placeholder}
-      style={props.style}
+      step={props.step}
       type={props.type}
       value={props.value}
     />
