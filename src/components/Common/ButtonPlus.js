@@ -1,9 +1,10 @@
-import React, { Component } from 'react'
+import React from 'react'
 
-export class ButtonPlus extends Component {
-  render() {
-    const { onClick, extraClassName } = this.props
-
-    return <div onClick={onClick} className={`sw-ButtonPlus ${extraClassName ? extraClassName : ''}`} />
-  }
-}
+export const ButtonPlus = ({ onClick, extraClassName, disabled }) => (
+  <button
+    className={`sw-ButtonPlus ${extraClassName ? extraClassName : ''}`}
+    disabled={disabled}
+    onClick={onClick}
+    type="button"
+  />
+)

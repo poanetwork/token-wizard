@@ -11,7 +11,6 @@
 
 export const CrowdsaleConfig = {
   networkID: networks.sokolPOA,
-  showHeaderAndFooterInIframe: true,
   execID: '',
   proxyAddress: '0xf638119be6229634b3c2f7e234bfe38b368016d5'
 };*/

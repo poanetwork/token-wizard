@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
+import React from 'react'
 
-export class ButtonDelete extends Component {
-  render() {
-    const { onClick, extraClassName } = this.props
-    const extraClass = extraClassName ? extraClassName : ''
-
-    return <div onClick={onClick} className={`sw-ButtonDelete ${extraClass ? extraClass : ''}`} />
-  }
-}
+export const ButtonDelete = ({ onClick, extraClassName, disabled }) => (
+  <button
+    className={`sw-ButtonDelete ${extraClassName ? extraClassName : ''}`}
+    disabled={disabled}
+    onClick={onClick}
+    type="button"
+  />
+)
