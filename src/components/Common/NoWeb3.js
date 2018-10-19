@@ -21,7 +21,7 @@ export default class NoWeb3 extends Component {
                   </a>{' '}
                   extension is installed on your web browser, please verify that the access to Ethereum account has been
                   granted and is available for the corresponding domain. Check Token Wizard GitHub for{' '}
-                  <a href="https://github.com/poanetwork/token-wizard" target="blank">
+                  <a href="https://github.com/poanetwork/token-wizard/wiki" target="blank">
                     the instruction
                   </a>.
                 </p>
