@@ -13,7 +13,7 @@ class Web3Store {
   @observable accounts
 
   constructor() {
-    this.getWeb3( (web3, status) => {
+    this.getWeb3((web3, status) => {
       if (web3) {
         this.web3 = web3
         if (typeof web3.eth.getAccounts !== 'undefined') {
