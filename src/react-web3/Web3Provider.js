@@ -138,6 +138,7 @@ class Web3Provider extends Component {
           selectedAccount: next || null
         })
       })
+      .catch( err => console.log(err))
   }
 
   getChildContext() {
