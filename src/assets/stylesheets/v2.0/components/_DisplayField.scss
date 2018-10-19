@@ -10,10 +10,13 @@
 }
 
 .pb-DisplayField_Value {
+
+    $pb-DisplayField_Value-base-font-size: 16px;
+
     align-items: center;
     display: flex;
     flex-flow: row;
-    font-size: 16px;
+    font-size: $pb-DisplayField_Value-base-font-size;
     font-style: normal;
     font-weight: 400;
     line-height: 1.5;
@@ -24,14 +27,26 @@
 
     &.pb-DisplayField_Value-MobileTextSizeSmall {
         font-size: 14px;
+
+        @media (min-width: $breakpoint-md) {
+            font-size: $pb-DisplayField_Value-base-font-size;
+        }
     }
     &.pb-DisplayField_Value-MobileTextSizeMedium {
-        font-size: 16px;
+        font-size: $pb-DisplayField_Value-base-font-size;
     }
     &.pb-DisplayField_Value-MobileTextSizeLarge {
         font-size: 18px;
+
+        @media (min-width: $breakpoint-md) {
+            font-size: $pb-DisplayField_Value-base-font-size;
+        }
     }
     &.pb-DisplayField_Value-MobileTextSizeExtraLarge {
         font-size: 20px;
+
+        @media (min-width: $breakpoint-md) {
+            font-size: $pb-DisplayField_Value-base-font-size;
+        }
     }
 }

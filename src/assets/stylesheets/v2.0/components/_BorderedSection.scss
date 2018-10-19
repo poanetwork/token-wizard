@@ -26,16 +26,39 @@
 }
 
 .sw-BorderedSection_Items {
+    $sw-BorderedSection_Items-column-gap-xl: 90px;
+
     display: grid;
-    grid-column-gap: 90px;
+    grid-column-gap: $sw-BorderedSection_Items-column-gap-xl;
     grid-row-gap: 20px;
 
     &.sw-BorderedSection_Items-TokenSetup {
         grid-template-columns: 1fr 1fr;
+
+        @media (min-width: $breakpoint-md) {
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+    }
+
+    &.sw-BorderedSection_Items-CrowdsaleSetup {
+        @media (min-width: $breakpoint-md) {
+            grid-template-columns: 1fr 1fr;
+        }
     }
 
     &.sw-BorderedSection_Items-TierBlock {
+        grid-column-gap: 20px;
         grid-template-columns: 1fr 1fr;
+
+        @media (min-width: $breakpoint-md) {
+            grid-column-gap: $sw-BorderedSection_Items-column-gap-xl;
+        }
+    }
+
+    &.sw-BorderedSection_Items-ConfigurationBlock {
+        @media (min-width: $breakpoint-md) {
+            grid-template-columns: 1fr 1fr;
+        }
     }
 
 }
