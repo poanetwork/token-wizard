@@ -1,6 +1,5 @@
 import { TOAST } from './constants'
 import queryString from 'query-string'
-import { CrowdsaleConfig } from '../components/Common/config'
 import { BigNumber } from 'bignumber.js'
 import logdown from 'logdown'
 import Web3 from 'web3'
