@@ -7,13 +7,7 @@ import { DutchAuctionBlock } from '../Common/DutchAuctionBlock'
 import { Field, FormSpy } from 'react-final-form'
 import { FieldArray } from 'react-final-form-arrays'
 import { InputField2 } from '../Common/InputField2'
-import {
-  DESCRIPTION,
-  NAVIGATION_STEPS,
-  TEXT_FIELDS,
-  VALIDATION_MESSAGES,
-  VALIDATION_TYPES
-} from '../../utils/constants'
+import { DESCRIPTION, TEXT_FIELDS, VALIDATION_MESSAGES, VALIDATION_TYPES } from '../../utils/constants'
 import { WhenFieldChanges } from '../Common/WhenFieldChanges'
 import {
   composeValidators,
