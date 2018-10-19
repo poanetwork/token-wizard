@@ -58,7 +58,7 @@ describe(`Web3Store`, () => {
 
     // Set infura token
     process.env.REACT_APP_INFURA_TOKEN = 'kEpzZR9fIyO3a8gTqJcI'
-    web3Store.web3 = new Web3()
+    global.web3 = new Web3(new Web3.providers.HttpProvider('https://Mainnet.infura.io/kEpzZR9fIyO3a8gTqJcI'))
 
     // When
     const web3 = web3Store.getWeb3(cb, 1)
@@ -74,7 +74,7 @@ describe(`Web3Store`, () => {
 
     // Set infura token
     process.env.REACT_APP_INFURA_TOKEN = 'kEpzZR9fIyO3a8gTqJcI'
-    web3Store.web3 = new Web3()
+    web3Store.web3 = new Web3(new Web3.providers.HttpProvider('https://Morden.infura.io/kEpzZR9fIyO3a8gTqJcI'))
 
     // When
     const web3 = web3Store.getWeb3(cb, 2)
@@ -90,7 +90,7 @@ describe(`Web3Store`, () => {
 
     // Set infura token
     process.env.REACT_APP_INFURA_TOKEN = 'kEpzZR9fIyO3a8gTqJcI'
-    web3Store.web3 = new Web3()
+    web3Store.web3 = new Web3(new Web3.providers.HttpProvider('https://Ropsten.infura.io/kEpzZR9fIyO3a8gTqJcI'))
 
     // When
     const web3 = web3Store.getWeb3(cb, 3)
@@ -106,7 +106,7 @@ describe(`Web3Store`, () => {
 
     // Set infura token
     process.env.REACT_APP_INFURA_TOKEN = 'kEpzZR9fIyO3a8gTqJcI'
-    web3Store.web3 = new Web3()
+    web3Store.web3 = new Web3(new Web3.providers.HttpProvider('https://Rinkeby.infura.io/kEpzZR9fIyO3a8gTqJcI'))
 
     // When
     const web3 = web3Store.getWeb3(cb, 4)
@@ -122,7 +122,7 @@ describe(`Web3Store`, () => {
 
     // Set infura token
     process.env.REACT_APP_INFURA_TOKEN = 'kEpzZR9fIyO3a8gTqJcI'
-    web3Store.web3 = new Web3()
+    web3Store.web3 = new Web3(new Web3.providers.HttpProvider('https://Kovan.infura.io/kEpzZR9fIyO3a8gTqJcI'))
 
     // When
     const web3 = web3Store.getWeb3(cb, 42)
