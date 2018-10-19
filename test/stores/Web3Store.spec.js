@@ -43,13 +43,13 @@ describe(`Web3Store`, () => {
 
     // Set infura token
     process.env.REACT_APP_INFURA_TOKEN = 'kEpzZR9fIyO3a8gTqJcI'
-    web3Store.web3 = new Web3(new Web3.providers.HttpProvider('https://sokol.poa.network'))
+    global.web3 = new Web3(new Web3.providers.HttpProvider('https://sokol.poa.network'))
 
     // When
-    const web3 = web3Store.getWeb3(cb, 1)
+    web3Store.getWeb3(cb, 1)
 
     // Then
-    expect(typeof web3).toBe('object')
+    expect(typeof web3Store.web3).toBe('object')
   })
 
   it(`should set web3 in the web3store THEN II`, () => {
