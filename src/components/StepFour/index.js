@@ -362,17 +362,21 @@ export class StepFour extends Component {
       : parseContent(contractStore.DutchProxy[sourceType])
   }
 
-  renderContractSource = sourceType => {
+  getSourceTypeTitle = sourceType => {
     const sourceTypeName = {
       abi: 'ABI',
       bin: 'Creation Code',
       src: 'Source Code'
     }
 
-    const label = `Crowdsale Proxy Contract ${sourceTypeName[sourceType]}`
-    const value = this.getContractBySourceType(sourceType)
+    return `Crowdsale Proxy Contract ${sourceTypeName[sourceType]}`
+  }
 
-    return <DisplayTextArea label={label} value={value} description={label} />
+  renderContractSource = sourceType => {
+    const value = this.getContractBySourceType(sourceType)
+    const title = this.getSourceTypeTitle(sourceType)
+
+    return <DisplayTextArea title={title} value={value} />
   }
 
   configurationBlock = () => {
@@ -386,7 +390,7 @@ export class StepFour extends Component {
     const versionFlag = getVersionFlagByStore(crowdsaleStore)
 
     return (
-      <div>
+      <div className="sw-BorderedSection_Items sw-BorderedSection_Items-ConfigurationBlock">
         <DisplayField title={COMPILER_VERSION} value={versionFlag} description={PD_COMPILER_VERSION} />
         <DisplayField description={PD_CONTRACT_NAME} title={CONTRACT_NAME} value={crowdsaleStore.proxyName} />
         <DisplayField description={PD_COMPILING_OPTIMIZATION} title={COMPILING_OPTIMIZATION} value={optimizationFlag} />
@@ -451,8 +455,18 @@ export class StepFour extends Component {
           {isDutchAuction ? (
             <DisplayField title={BURN_EXCESS} value={burnExcess} description={DESCRIPTION.BURN_EXCESS} />
           ) : null}
-          <DisplayField title={CROWDSALE_START_TIME} value={startTimeWithUTC} description={PD_CROWDSALE_START_TIME} />
-          <DisplayField title={CROWDSALE_END_TIME} value={endTimeWithUTC} description={PD_CROWDSALE_END_TIME} />
+          <DisplayField
+            description={PD_CROWDSALE_START_TIME}
+            mobileTextSize="small"
+            title={CROWDSALE_START_TIME}
+            value={startTimeWithUTC}
+          />
+          <DisplayField
+            description={PD_CROWDSALE_END_TIME}
+            mobileTextSize="small"
+            title={CROWDSALE_END_TIME}
+            value={endTimeWithUTC}
+          />
         </div>
       )
     }
@@ -504,8 +518,18 @@ export class StepFour extends Component {
         <div className="sw-BorderedSection" key={index.toString()} data-step="4">
           <h2 className="sw-BorderedSection_Title">{tierName} Setup</h2>
           <div className="sw-BorderedSection_Items sw-BorderedSection_Items-TierBlock">
-            <DisplayField title={START_TIME} value={tierStartTimeStr} description={PD_TIER_START_TIME} />
-            <DisplayField title={END_TIME} value={tierEndTimeStr} description={PD_TIER_END_TIME} />
+            <DisplayField
+              description={PD_TIER_START_TIME}
+              mobileTextSize="small"
+              title={START_TIME}
+              value={tierStartTimeStr}
+            />
+            <DisplayField
+              description={PD_TIER_END_TIME}
+              mobileTextSize="small"
+              title={END_TIME}
+              value={tierEndTimeStr}
+            />
             {mintedCappedCrowdsaleRate}
             {dutchAuctionCrowdsaleMinRate}
             {dutchAuctionCrowdsaleMaxRate}
@@ -540,9 +564,9 @@ export class StepFour extends Component {
     const { abiEncoded } = contractStore[crowdsaleStore.proxyName]
     const ABIEncodedParameters = abiEncoded ? (
       <DisplayTextArea
-        label="Crowdsale Proxy Contract ABI-encoded parameters"
-        value={abiEncoded}
         description="Encoded ABI Parameters"
+        title="Crowdsale Proxy Contract ABI-encoded parameters"
+        value={abiEncoded}
       />
     ) : null
 
@@ -575,10 +599,17 @@ export class StepFour extends Component {
             </div>
             {tiersSetupBlock}
             <div className="sw-BorderedSection" data-step="5">
+              <h2 className="sw-BorderedSection_Title">Configuration</h2>
               {this.configurationBlock()}
+            </div>
+            <div className="sw-BorderedSection" data-step="6">
               {this.renderContractSource('src')}
             </div>
-            {/* {ABIEncodedParameters} */}
+            {abiEncoded ? (
+              <div className="sw-BorderedSection" data-step="7">
+                {ABIEncodedParameters}
+              </div>
+            ) : null}
             <div className="sw-BorderedBlock_DownloadButtonContainer">
               <ButtonDownload onClick={this.downloadContractButton} disabled={!deploymentStore.hasEnded} />
             </div>

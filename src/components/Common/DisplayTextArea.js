@@ -1,20 +1,14 @@
 import React from 'react'
+import { ButtonCopyToClipboard } from '../Common/ButtonCopyToClipboard'
 
-let inline = { whiteSpace: 'normal' }
-
-export const DisplayTextArea = props => {
+export const DisplayTextArea = ({ title, value, key = '', description = '' }) => {
   return (
-    <div key={props.key ? props.key : ''} className="item">
-      <div>
-        <div className="display-container">
-          <p className="label">{props.label}</p>
-        </div>
-        <div className="copy-area-container">
-          <btn className="copy" data-clipboard-action="copy" data-clipboard-text={props.value} />
-        </div>
-      </div>
-      <pre style={inline}>{props.value}</pre>
-      <p className="description">{props.description}</p>
+    <div key={key ? key : ''} className="pb-DisplayTextArea">
+      <h3 className="pb-DisplayTextArea_Title">
+        {title} <ButtonCopyToClipboard value={value} />
+      </h3>
+      <pre className="pb-DisplayTextArea_Content">{value}</pre>
+      {description ? <p className="pb-DisplayTextArea_Description">{description}</p> : null}
     </div>
   )
 }

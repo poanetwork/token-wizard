@@ -27,10 +27,14 @@
 
 .sw-BorderedSection_Items {
     display: grid;
+    grid-column-gap: 90px;
+    grid-row-gap: 20px;
 
     &.sw-BorderedSection_Items-TokenSetup {
-        grid-column-gap: 90px;
-        grid-row-gap: 20px;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    &.sw-BorderedSection_Items-TierBlock {
         grid-template-columns: 1fr 1fr;
     }
 

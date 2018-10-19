@@ -6,6 +6,7 @@
     background-size: contain;
     border: none;
     cursor: pointer;
+    flex-shrink: 0;
     height: 20px;
     outline: none;
     padding: 0;
@@ -15,7 +16,11 @@
         opacity: 0.6;
     }
 
-    .pb-DisplayField_ValueContainer & {
+    .pb-DisplayField_Value & {
+        margin-left: 10px;
+    }
+
+    .pb-DisplayTextArea_Title & {
         margin-left: 10px;
     }
 }
