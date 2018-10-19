@@ -46,7 +46,7 @@ describe(`Web3Store`, () => {
     web3Store.web3 = new Web3(new Web3.providers.HttpProvider('https://sokol.poa.network'))
 
     // When
-    const web3 = web3Store.getWeb3(cb)
+    const web3 = web3Store.getWeb3(cb, 1)
 
     // Then
     expect(typeof web3).toBe('object')
