@@ -5,8 +5,17 @@
     background-repeat: no-repeat;
     background-size: contain;
     border: none;
+    cursor: pointer;
     height: 20px;
     outline: none;
     padding: 0;
     width: 16px;
+
+    &:active {
+        opacity: 0.6;
+    }
+
+    .pb-DisplayField_ValueContainer & {
+        margin-left: 10px;
+    }
 }

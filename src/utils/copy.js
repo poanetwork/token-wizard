@@ -3,8 +3,8 @@ import logdown from 'logdown'
 
 const logger = logdown('TW:utils:copy')
 
-export function copy(cls) {
-  var clipboard = new Clipboard('.' + cls)
+export const copy = cls => {
+  let clipboard = new Clipboard(cls)
 
   clipboard.on('success', function(e) {
     logger.info('Action:', e.action)

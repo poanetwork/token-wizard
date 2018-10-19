@@ -39,13 +39,11 @@ import { PreventRefresh } from '../Common/PreventRefresh'
 import { StepNavigation } from '../Common/StepNavigation'
 import { TxProgressStatus } from '../Common/TxProgressStatus'
 import { checkNetWorkByID } from '../../utils/blockchainHelpers'
-import { copy } from '../../utils/copy'
 import { getNetworkID, toast, convertDateToUTCTimezoneToDisplay } from '../../utils/utils'
 import { inject, observer } from 'mobx-react'
 import { isObservableArray } from 'mobx'
 
 const logger = logdown('TW:StepFour')
-
 const { PUBLISH, CROWDSALE_STRATEGY, TOKEN_SETUP, CROWDSALE_SETUP } = NAVIGATION_STEPS
 const {
   NAME,
@@ -136,8 +134,8 @@ export class StepFour extends Component {
       return await deployHasEnded()
     }
 
-    scrollToBottom()
-    copy('copy')
+    // scrollToBottom()
+
     if (!deploymentStore.hasEnded) {
       this.showModal()
     }
@@ -329,7 +327,6 @@ export class StepFour extends Component {
     const newHistory = crowdsalePointer ? url : crowdsalePage
 
     this.props.deploymentStore.resetDeploymentStep()
-
     this.props.history.push(newHistory)
   }
 
@@ -390,19 +387,9 @@ export class StepFour extends Component {
 
     return (
       <div>
-        <DisplayField side="left" title={COMPILER_VERSION} value={versionFlag} description={PD_COMPILER_VERSION} />
-        <DisplayField
-          side="right"
-          title={CONTRACT_NAME}
-          value={crowdsaleStore.proxyName}
-          description={PD_CONTRACT_NAME}
-        />
-        <DisplayField
-          side="left"
-          title={COMPILING_OPTIMIZATION}
-          value={optimizationFlag}
-          description={PD_COMPILING_OPTIMIZATION}
-        />
+        <DisplayField title={COMPILER_VERSION} value={versionFlag} description={PD_COMPILER_VERSION} />
+        <DisplayField description={PD_CONTRACT_NAME} title={CONTRACT_NAME} value={crowdsaleStore.proxyName} />
+        <DisplayField description={PD_COMPILING_OPTIMIZATION} title={COMPILING_OPTIMIZATION} value={optimizationFlag} />
       </div>
     )
   }
@@ -436,7 +423,7 @@ export class StepFour extends Component {
       const { TOKEN_TICKER: D_TOKEN_TICKER } = DESCRIPTION
 
       return (
-        <div>
+        <div className="sw-BorderedSection_Items sw-BorderedSection_Items-TokenSetup">
           <DisplayField title={NAME} value={tokenNameStr} description={PD_TOKEN_NAME} />
           <DisplayField title={TICKER} value={ticker ? ticker : ''} description={D_TOKEN_TICKER} />
           <DisplayField title={DECIMALS} value={tokenDecimalsStr} description={PD_TOKEN_DECIMALS} />
@@ -459,27 +446,13 @@ export class StepFour extends Component {
         CROWDSALE_END_TIME: PD_CROWDSALE_END_TIME
       } = PUBLISH_DESCRIPTION
       return (
-        <div>
-          <div>
-            <DisplayField side="left" title={WALLET_ADDRESS} value={walletAddress} description={PD_WALLET_ADDRESS} />
-            {isDutchAuction ? (
-              <DisplayField side="right" title={BURN_EXCESS} value={burnExcess} description={DESCRIPTION.BURN_EXCESS} />
-            ) : null}
-          </div>
-          <div>
-            <DisplayField
-              side="left"
-              title={CROWDSALE_START_TIME}
-              value={startTimeWithUTC}
-              description={PD_CROWDSALE_START_TIME}
-            />
-            <DisplayField
-              side="right"
-              title={CROWDSALE_END_TIME}
-              value={endTimeWithUTC}
-              description={PD_CROWDSALE_END_TIME}
-            />
-          </div>
+        <div className="sw-BorderedSection_Items sw-BorderedSection_Items-CrowdsaleSetup">
+          <DisplayField title={WALLET_ADDRESS} value={walletAddress} description={PD_WALLET_ADDRESS} />
+          {isDutchAuction ? (
+            <DisplayField title={BURN_EXCESS} value={burnExcess} description={DESCRIPTION.BURN_EXCESS} />
+          ) : null}
+          <DisplayField title={CROWDSALE_START_TIME} value={startTimeWithUTC} description={PD_CROWDSALE_START_TIME} />
+          <DisplayField title={CROWDSALE_END_TIME} value={endTimeWithUTC} description={PD_CROWDSALE_END_TIME} />
         </div>
       )
     }
@@ -509,55 +482,37 @@ export class StepFour extends Component {
       const tierRateStr = rate ? rate : 0
       const tierMinRateStr = minRate ? minRate : 0
       const tierMaxRateStr = maxRate ? maxRate : 0
-      const mintedCappedCrowdsaleRateBlock = (
-        <DisplayField side="left" title={RATE} value={tierRateStr} description={D_RATE} />
-      )
-      const dutchAuctionCrowdsaleRateBlock = (
-        <div>
-          <DisplayField side="left" title={MIN_RATE} value={tierMinRateStr} description={D_RATE} />
-          <DisplayField side="right" title={MAX_RATE} value={tierMaxRateStr} description={D_RATE} />
-        </div>
-      )
+      const mintedCappedCrowdsaleRate = isMintedCappedCrowdsale ? (
+        <DisplayField title={RATE} value={tierRateStr} description={D_RATE} />
+      ) : null
+      const dutchAuctionCrowdsaleMinRate = isDutchAuction ? (
+        <DisplayField title={MIN_RATE} value={tierMinRateStr} description={D_RATE} />
+      ) : null
+      const dutchAuctionCrowdsaleMaxRate = isDutchAuction ? (
+        <DisplayField title={MAX_RATE} value={tierMaxRateStr} description={D_RATE} />
+      ) : null
       const tierStartTimeStr = convertDateToUTCTimezoneToDisplay(startTime)
       const tierEndTimeStr = convertDateToUTCTimezoneToDisplay(endTime)
       const tierIsUpdatable = isDutchAuction ? 'on' : updatable ? updatable : 'off'
       const tierIsWhitelisted = whitelistEnabled ? whitelistEnabled : 'off'
       const tierSupplyStr = supply ? supply : ''
-      const allowModifyingBlock = isMintedCappedCrowdsale ? (
-        <DisplayField side="right" title={ALLOW_MODIFYING} value={tierIsUpdatable} description={D_ALLOW_MODIFYING} />
+      const allowModifying = isMintedCappedCrowdsale ? (
+        <DisplayField title={ALLOW_MODIFYING} value={tierIsUpdatable} description={D_ALLOW_MODIFYING} />
       ) : null
+
       return (
-        <div key={index.toString()}>
-          <div className="publish-title-container">
-            <p className="publish-title" data-step="3">
-              {tierName} Setup
-            </p>
-          </div>
-          <div>
-            <div>
-              <DisplayField side="left" title={START_TIME} value={tierStartTimeStr} description={PD_TIER_START_TIME} />
-              <DisplayField side="right" title={END_TIME} value={tierEndTimeStr} description={PD_TIER_END_TIME} />
-            </div>
-            <div>
-              {isMintedCappedCrowdsale
-                ? mintedCappedCrowdsaleRateBlock
-                : isDutchAuction
-                  ? dutchAuctionCrowdsaleRateBlock
-                  : null}
-              {allowModifyingBlock}
-            </div>
-            <div>
-              <DisplayField side="left" title={MAX_CAP} value={tierSupplyStr} description={PD_HARD_CAP} />
-              <DisplayField
-                side="right"
-                title={ENABLE_WHITELISTING}
-                value={tierIsWhitelisted}
-                description={PD_ENABLE_WHITELISTING}
-              />
-            </div>
-            <div>
-              <DisplayField side="left" title={GLOBAL_MIN_CAP} value={minCap} description={PD_GLOBAL_MIN_CAP} />
-            </div>
+        <div className="sw-BorderedSection" key={index.toString()} data-step="4">
+          <h2 className="sw-BorderedSection_Title">{tierName} Setup</h2>
+          <div className="sw-BorderedSection_Items sw-BorderedSection_Items-TierBlock">
+            <DisplayField title={START_TIME} value={tierStartTimeStr} description={PD_TIER_START_TIME} />
+            <DisplayField title={END_TIME} value={tierEndTimeStr} description={PD_TIER_END_TIME} />
+            {mintedCappedCrowdsaleRate}
+            {dutchAuctionCrowdsaleMinRate}
+            {dutchAuctionCrowdsaleMaxRate}
+            {allowModifying}
+            <DisplayField title={MAX_CAP} value={tierSupplyStr} description={PD_HARD_CAP} />
+            <DisplayField title={ENABLE_WHITELISTING} value={tierIsWhitelisted} description={PD_ENABLE_WHITELISTING} />
+            <DisplayField title={GLOBAL_MIN_CAP} value={minCap} description={PD_GLOBAL_MIN_CAP} />
           </div>
         </div>
       )
@@ -614,16 +569,16 @@ export class StepFour extends Component {
               <h2 className="sw-BorderedSection_Title">{TOKEN_SETUP}</h2>
               {tokenSetupBlock()}
             </div>
-            <div className="publish-title-container">
-              <p className="publish-title" data-step="3">
-                {CROWDSALE_SETUP}
-              </p>
+            <div className="sw-BorderedSection" data-step="3">
+              <h2 className="sw-BorderedSection_Title">{CROWDSALE_SETUP}</h2>
+              {crowdsaleSetupBlock()}
             </div>
-            {crowdsaleSetupBlock()}
             {tiersSetupBlock}
-            {this.configurationBlock()}
-            {this.renderContractSource('src')}
-            {ABIEncodedParameters}
+            <div className="sw-BorderedSection" data-step="5">
+              {this.configurationBlock()}
+              {this.renderContractSource('src')}
+            </div>
+            {/* {ABIEncodedParameters} */}
             <div className="sw-BorderedBlock_DownloadButtonContainer">
               <ButtonDownload onClick={this.downloadContractButton} disabled={!deploymentStore.hasEnded} />
             </div>

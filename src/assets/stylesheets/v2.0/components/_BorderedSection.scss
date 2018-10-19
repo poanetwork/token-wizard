@@ -24,3 +24,14 @@
         font-size: 16px;
     }
 }
+
+.sw-BorderedSection_Items {
+    display: grid;
+
+    &.sw-BorderedSection_Items-TokenSetup {
+        grid-column-gap: 90px;
+        grid-row-gap: 20px;
+        grid-template-columns: 1fr 1fr;
+    }
+
+}
