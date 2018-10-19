@@ -42,6 +42,21 @@ export class StepOne extends Component {
       })
     })
 
+    // Capture back button to clear fromLocation
+    window.addEventListener(
+      'popstate',
+      event => {
+        if (event.state) {
+          this.props.history.replace({
+            state: {
+              fromLocation: null
+            }
+          })
+        }
+      },
+      false
+    )
+
     try {
       await checkWeb3ForErrors(result => {
         navigateTo({
