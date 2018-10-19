@@ -1,39 +1,37 @@
+import GasPriceInput from './GasPriceInput'
 import React from 'react'
+import logdown from 'logdown'
+import { ButtonBack } from '../Common/ButtonBack'
+import { ButtonContinue } from '../Common/ButtonContinue'
+import { DutchAuctionBlock } from '../Common/DutchAuctionBlock'
 import { Field, FormSpy } from 'react-final-form'
 import { FieldArray } from 'react-final-form-arrays'
-import { WhenFieldChanges } from '../Common/WhenFieldChanges'
 import { InputField2 } from '../Common/InputField2'
-import GasPriceInput from './GasPriceInput'
-import { ButtonContinue } from '../Common/ButtonContinue'
-import { gweiToWei } from '../../utils/utils'
+import { DESCRIPTION, TEXT_FIELDS, VALIDATION_MESSAGES, VALIDATION_TYPES } from '../../utils/constants'
+import { WhenFieldChanges } from '../Common/WhenFieldChanges'
 import {
   composeValidators,
   isAddress,
   isDecimalPlacesNotGreaterThan,
   isGreaterOrEqualThan
 } from '../../utils/validations'
-import {
-  TEXT_FIELDS,
-  VALIDATION_TYPES,
-  VALIDATION_MESSAGES,
-  DESCRIPTION,
-  NAVIGATION_STEPS
-} from '../../utils/constants'
-import { DutchAuctionBlock } from '../Common/DutchAuctionBlock'
+import { gweiToWei, navigateTo } from '../../utils/utils'
+import { RadioButton } from '../Common/RadioButton'
 
-const { CROWDSALE_SETUP } = NAVIGATION_STEPS
+const logger = logdown('TW:StepThree')
 const { VALID } = VALIDATION_TYPES
 const { WALLET_ADDRESS, BURN_EXCESS } = TEXT_FIELDS
 
-const inputErrorStyle = {
-  color: 'red',
-  fontWeight: 'bold',
-  fontSize: '12px',
-  width: '100%',
-  height: '20px'
-}
-
-export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, submitting, pristine, form, reload, ...props }) => {
+export const StepThreeFormDutchAuction = ({
+  form,
+  handleSubmit,
+  history,
+  invalid,
+  pristine,
+  reload,
+  submitting,
+  ...props
+}) => {
   const status = !(submitting || invalid)
 
   /**
@@ -99,6 +97,7 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, submitting, p
     })
 
     const endTime = tiers.length > 0 ? tiers[tiers.length - 1].endTime : null
+
     props.crowdsaleStore.setProperty('supply', totalSupply)
     props.crowdsaleStore.setProperty('endTime', endTime)
 
@@ -106,84 +105,83 @@ export const StepThreeFormDutchAuction = ({ handleSubmit, invalid, submitting, p
     setFieldAsTouched({ values, errors })
   }
 
+  const goBack = async () => {
+    try {
+      navigateTo({
+        history: history,
+        location: 'stepTwo'
+      })
+    } catch (err) {
+      logger.log('Error to navigate', err)
+    }
+  }
+
+  const getBurnExcessButtons = (name, input) => {
+    const buttons = [
+      {
+        checked: input.value === 'yes',
+        id: `${name}.enable_whitelisting_yes`,
+        label: 'Yes',
+        name: name,
+        onChange: e => handleBurnExcessChange(e.target.value, input),
+        value: 'yes'
+      },
+      {
+        checked: input.value === 'no',
+        id: `${name}.enable_whitelisting_no`,
+        label: 'No',
+        name: name,
+        onChange: e => handleBurnExcessChange(e.target.value, input),
+        value: 'no'
+      }
+    ]
+
+    return buttons
+  }
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="st-StepContent_FormFullHeight">
       <WhenFieldChanges field="tiers[0].whitelistEnabled" becomes={'yes'} set="tiers[0].minCap" to={0} />
-      <div>
-        <div className="steps-content container">
-          <div className="about-step">
-            <div className="step-icons step-icons_crowdsale-setup" />
-            <p className="title">{CROWDSALE_SETUP}</p>
-            <p className="description">{DESCRIPTION.CROWDSALE_SETUP}</p>
-          </div>
-          <div className="section-title">
-            <p className="title">Global settings</p>
-          </div>
-          <div className="input-block-container">
-            <div className="left">
-              <div>
-                <Field
-                  name="walletAddress"
-                  component={InputField2}
-                  validate={isAddress()}
-                  errorStyle={inputErrorStyle}
-                  label={WALLET_ADDRESS}
-                  description={DESCRIPTION.WALLET}
-                />
-              </div>
-              <div>
-                <Field
-                  name="burnExcess"
-                  render={({ input }) => (
-                    <div>
-                      <label className="label">{BURN_EXCESS}</label>
-                      <div className="radios-inline">
-                        <label className="radio-inline">
-                          <input
-                            type="radio"
-                            checked={input.value === 'yes'}
-                            value="yes"
-                            onChange={e => handleBurnExcessChange(e.target.value, input)}
-                          />
-                          <span className="title">yes</span>
-                        </label>
-                        <label className="radio-inline">
-                          <input
-                            type="radio"
-                            checked={input.value === 'no'}
-                            value="no"
-                            onChange={e => handleBurnExcessChange(e.target.value, input)}
-                          />
-                          <span className="title">no</span>
-                        </label>
-                      </div>
-                      <p className="description">{DESCRIPTION.BURN_EXCESS}</p>
-                    </div>
-                  )}
-                />
-              </div>
-            </div>
-            <Field
-              id="gasPrice"
-              name="gasPrice"
-              component={GasPriceInput}
-              side="right"
-              gasPrices={props.gasPricesInGwei}
-              updateGasTypeSelected={updateGasTypeSelected}
-              validate={value => handleValidateGasPrice(value)}
+      <h2 className="sw-BorderedBlockTitle">Global settings</h2>
+      <div tabIndex="0" className="sw-BorderedBlock sw-BorderedBlock-CrowdSaleSetupGlobalSettingsDutchAuction">
+        <Field
+          component={InputField2}
+          description={DESCRIPTION.WALLET}
+          extraClassName="sw-InputField2-DutchAuctionWalletAddress"
+          label={WALLET_ADDRESS}
+          name="walletAddress"
+          placeholder="Enter here"
+          validate={isAddress()}
+        />
+        <Field
+          component={GasPriceInput}
+          extraClassName="sw-GasPriceInput-DutchAuction"
+          gasPrices={props.gasPricesInGwei}
+          id="gasPrice"
+          name="gasPrice"
+          side="right"
+          updateGasTypeSelected={updateGasTypeSelected}
+          validate={value => handleValidateGasPrice(value)}
+        />
+        <Field
+          name="burnExcess"
+          render={({ input }) => (
+            <RadioButton
+              buttons={getBurnExcessButtons(`burnExcessRadioButtons`, input)}
+              description={DESCRIPTION.BURN_EXCESS}
+              extraClassName="sw-RadioButton-DutchAuctionBurnExcess"
+              title={BURN_EXCESS}
             />
-          </div>
-        </div>
+          )}
+        />
+        <FieldArray name="tiers">
+          {({ fields }) => <DutchAuctionBlock fields={fields} decimals={props.decimals} />}
+        </FieldArray>
       </div>
-
-      <FieldArray name="tiers">
-        {({ fields }) => <DutchAuctionBlock fields={fields} decimals={props.decimals} />}
-      </FieldArray>
-
-      <div className="button-container">
+      <div className="st-StepContent_Buttons">
+        <ButtonBack onClick={goBack} />
         <ButtonContinue onClick={handleSubmit} status={status} />
       </div>
-
       <FormSpy subscription={{ values: true }} onChange={handleOnChange} />
     </form>
   )

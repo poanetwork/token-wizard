@@ -1,0 +1,36 @@
+$sw-ButtonPlus-height: 30px !default;
+
+.sw-ButtonPlus {
+    background-color: transparent;
+    background-image: url('#{ $base-images-path }/ButtonPlus/ico-plus.svg');
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    height: $sw-ButtonPlus-height;
+    outline: none;
+    padding: 0;
+    width: $sw-ButtonPlus-height;
+
+    .sw-NumericInputAndButtonContainer & {
+        margin-left: 14px;
+        margin-right: 10px;
+        margin-top: 29px;
+
+        @media (min-width: $breakpoint-md) {
+            margin-right: 0;
+        }
+    }
+
+    .sw-WhitelistInputBlock_MinMaxFields & {
+        margin-left: 3px;
+        margin-right: 10px;
+        margin-top: 29px;
+
+        @media (min-width: $breakpoint-md) {
+            margin-right: 0;
+        }
+    }
+}

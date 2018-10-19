@@ -16,11 +16,11 @@ export const TokenTicker = ({ errorStyle }) => (
       if (errors) return errors.shift()
     }}
     component={InputField2}
-    parse={value => value || ''}
-    side="right"
-    name="ticker"
-    type="text"
     description={`${DESCRIPTION.TOKEN_TICKER} There are 11,881,376 combinations for 26 english letters. Be hurry.`}
     label={TEXT_FIELDS.TICKER}
+    name="ticker"
+    parse={value => value || ''}
+    placeholder="Enter here"
+    type="text"
   />
 )

@@ -3,10 +3,9 @@ import Web3 from 'web3'
 import update from 'immutability-helper'
 import Dropzone from 'react-dropzone'
 import Papa from 'papaparse'
-
 import { InputField } from './InputField'
 import { TEXT_FIELDS, VALIDATION_MESSAGES, VALIDATION_TYPES } from '../../utils/constants'
-import { WhitelistItem } from './WhitelistItem'
+import { WhitelistTable } from './WhitelistTable'
 import { inject, observer } from 'mobx-react'
 import {
   clearingWhitelist,
@@ -18,6 +17,9 @@ import {
 import processWhitelist from '../../utils/processWhitelist'
 import { isLessOrEqualThan, validateWhitelistMax, validateWhitelistMin } from '../../utils/validations'
 import logdown from 'logdown'
+import { ButtonCSV } from '../Common/ButtonCSV'
+import { ButtonPlus } from '../Common/ButtonPlus'
+import { downloadFile } from '../../utils/utils'
 
 const logger = logdown('TW:WhitelistInputBlock')
 const { ADDRESS, MIN, MAX } = TEXT_FIELDS
@@ -268,91 +270,80 @@ export class WhitelistInputBlock extends React.Component {
     })
   }
 
+  downloadCSV = async () => {
+    try {
+      const response = await fetch(`/metadata/whitelistTemplate.csv`)
+      const text = await response.text()
+
+      // See RFC for csv MIME type http://tools.ietf.org/html/rfc4180
+      downloadFile(text, 'whitelist-template.csv', 'text/csv')
+    } catch (err) {
+      logger.log('Error fetching file when download template csv')
+    }
+  }
+
   render() {
     const { num, tierStore } = this.props
     const { whitelist } = tierStore.tiers[num]
-
     const whitelistEmpty = tierStore.isWhitelistEmpty(num)
-
-    const actionsStyle = {
-      textAlign: 'right'
-    }
-
-    const clearAllStyle = {
-      display: 'inline-block',
-      cursor: 'pointer'
-    }
-
-    const dropzoneStyle = {
-      display: 'inline-block',
-      marginLeft: '1em',
-      position: 'relative',
-      cursor: 'pointer'
-    }
+    const dropzoneStyle = {}
 
     return (
-      <div className="white-list-container">
-        <div className="white-list-input-container">
-          <div className="white-list-input-container-inner">
+      <div className="sw-WhitelistInputBlock">
+        <h2 className="sw-BorderedBlock_Title">Whitelist</h2>
+        <div className="sw-WhitelistInputBlock_AddressMinMaxGrid">
+          <InputField
+            description={`Address of a whitelisted account. Whitelists are inherited. E.g., if an account whitelisted on Tier 1 and didn't buy max cap on Tier 1, he can buy on Tier 2, and following tiers.`}
+            errorMessage="The inserted address is invalid"
+            onChange={e => this.handleAddressChange(e.target.value)}
+            placeholder="Enter here"
+            pristine={this.state.validation.address.pristine}
+            title={ADDRESS}
+            type="text"
+            valid={this.state.validation.address.valid}
+            value={this.state.addr}
+          />
+          <div className="sw-WhitelistInputBlock_MinMaxFields">
             <InputField
-              side="white-list-input-property white-list-input-property-left"
-              type="text"
-              title={ADDRESS}
-              value={this.state.addr}
-              onChange={e => this.handleAddressChange(e.target.value)}
-              description={`Address of a whitelisted account. Whitelists are inherited. E.g., if an account whitelisted on Tier 1 and didn't buy max cap on Tier 1, he can buy on Tier 2, and following tiers.`}
-              pristine={this.state.validation.address.pristine}
-              valid={this.state.validation.address.valid}
-              errorMessage="The inserted address is invalid"
-            />
-            <InputField
-              side="white-list-input-property white-list-input-property-middle"
-              type="number"
-              title={MIN}
-              value={this.state.min}
-              onChange={e => this.handleMinMaxChange({ min: e.target.value })}
               description={`Minimum amount tokens to buy. Not a minimal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.`}
-              pristine={this.state.validation.min.pristine}
-              valid={this.state.validation.min.valid}
               errorMessage={this.state.validation.min.errorMessage}
+              onChange={e => this.handleMinMaxChange({ min: e.target.value })}
+              placeholder="Enter here"
+              pristine={this.state.validation.min.pristine}
+              title={MIN}
+              type="number"
+              valid={this.state.validation.min.valid}
+              value={this.state.min}
             />
             <InputField
-              side="white-list-input-property white-list-input-property-right"
-              type="number"
-              title={MAX}
-              value={this.state.max}
-              onChange={e => this.handleMinMaxChange({ max: e.target.value })}
               description={`Maximum is the hard limit.`}
-              pristine={this.state.validation.max.pristine}
-              valid={this.state.validation.max.valid}
               errorMessage={this.state.validation.max.errorMessage}
+              onChange={e => this.handleMinMaxChange({ max: e.target.value })}
+              placeholder="Enter here"
+              pristine={this.state.validation.max.pristine}
+              title={MAX}
+              type="number"
+              valid={this.state.validation.max.valid}
+              value={this.state.max}
             />
-          </div>
-          <div className="plus-button-container">
-            <div onClick={e => this.addWhitelistItem()} className="button button_fill button_fill_plus" />
+            <ButtonPlus onClick={e => this.addWhitelistItem()} />
           </div>
         </div>
-        {whitelist &&
-          whitelist.map((item, index) => (
-            <WhitelistItem
-              key={`${num}-${item.addr}-${item.stored ? 0 : 1}`}
-              crowdsaleNum={num}
-              whitelistNum={index}
-              {...item}
-            />
-          ))}
+        {whitelist ? <WhitelistTable list={whitelist} crowdsaleNum={num} /> : null}
 
         {/* Actions */}
-        <div style={actionsStyle}>
+        <div className="sw-WhitelistInputBlock_Controls">
           {whitelistEmpty ? null : (
-            <div className="clear-all-tokens" style={clearAllStyle} onClick={this.clearAll}>
-              <i className="fa fa-trash" />&nbsp;Clear All
-            </div>
+            <ButtonCSV extraClassName="sw-ButtonCSV-clearall" onClick={this.clearAll} text="Clear All" />
           )}
-
           <Dropzone onDrop={this.onDrop} accept=".csv" style={dropzoneStyle}>
-            <i className="fa fa-upload" title="Upload CSV" />&nbsp; Upload CSV
+            <ButtonCSV extraClassName="sw-ButtonCSV-uploadcsv" text="Upload CSV" type="button" />
           </Dropzone>
+          <ButtonCSV
+            extraClassName="sw-ButtonCSV-downloadcsv m-r-0"
+            onClick={this.downloadCSV}
+            text="Download CSV template"
+          />
         </div>
       </div>
     )

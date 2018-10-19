@@ -99,17 +99,25 @@
     }
 }
 
+
+
 // form control block common properties
 @mixin form-control-block-common() {
+    $form-control-block-common-margin-bottom: 18px !default;
+
     display: flex;
     flex-direction: column;
-    margin-bottom: 18px;
+    margin-bottom: $form-control-block-common-margin-bottom;
     min-width: 0;
     position: relative;
     z-index: 1;
 
     &:last-child {
         margin-bottom: 0;
+    }
+
+    &:focus-within {
+        z-index: 12;
     }
 
 }
@@ -121,4 +129,32 @@
     font-weight: 400;
     margin: 0;
     padding: 5px 0 0 3px;
+}
+
+@mixin radio-input-button($height, $active-bg-color, $radio-input-class) {
+    @include not-selectable-text();
+    border-radius: 6px;
+    border: solid 1px $base-border-color;
+    color: #4a4a4a;
+    cursor: pointer;
+    display: block;
+    font-size: 16px;
+    font-weight: 400;
+    height: $height;
+    line-height: $height;
+    padding: 0 30px;
+    position: relative;
+    text-align: center;
+    z-index: 1;
+
+    #{ $radio-input-class }:checked + & {
+        background-color: $active-bg-color;
+        border-color: $active-bg-color;
+        color: #fff;
+    }
+
+    #{ $radio-input-class }[disabled] + & {
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
 }

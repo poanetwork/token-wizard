@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Web3 from 'web3'
 import Dropzone from 'react-dropzone'
 import Papa from 'papaparse'
-
+import { ButtonPlus } from '../Common/ButtonPlus'
 import { InputField } from './InputField'
 import { RadioInputField } from './RadioInputField'
 import { TEXT_FIELDS, VALIDATION_TYPES } from '../../utils/constants'
@@ -24,6 +24,7 @@ import {
 import { processCsv, errorsCsv } from '../../utils/processReservedTokens'
 import logdown from 'logdown'
 import { downloadFile, uniqueElementsBy } from '../../utils/utils'
+import { ButtonCSV } from '../Common/ButtonCSV'
 
 const logger = logdown('TW:ReservedTokensInputBlock')
 const { VALID, INVALID } = VALIDATION_TYPES
@@ -258,8 +259,10 @@ export class ReservedTokensInputBlock extends Component {
   }
 
   render() {
-    const reservedTokensElements = <ReservedTokensTable extraClassName="sw-BorderedBlock_Row2Column1" {...this.props} />
     const tokensListEmpty = this.props.reservedTokenStore.tokens.length === 0
+    const reservedTokensElements = tokensListEmpty ? null : (
+      <ReservedTokensTable extraClassName="sw-BorderedBlock_Row2Column1" {...this.props} />
+    )
     let valueInputParams = null
 
     if (this.state.dim === 'tokens') {
@@ -284,9 +287,9 @@ export class ReservedTokensInputBlock extends Component {
     return (
       <div>
         <h2 className="sw-BorderedBlockTitle">Reserved tokens</h2>
-        <div className="sw-BorderedBlock sw-BorderedBlock-3Rows3Columns">
+        <div className="sw-BorderedBlock sw-BorderedBlock-ReservedTokensWhitelistCapped">
           <InputField
-            extraClassName="sw-BorderedBlock_Row1Column1"
+            extraClassName="sw-InputField-ReservedTokensAddress"
             description="Address where to send reserved tokens."
             errorMessage="The inserted address is invalid"
             name={ADDRESS}
@@ -299,7 +302,7 @@ export class ReservedTokensInputBlock extends Component {
             value={this.state.addr}
           />
           <RadioInputField
-            extraClassName="sw-BorderedBlock_Row1Column2"
+            extraClassName="sw-RadioInputField-ReservedTokensDimension"
             items={[{ label: 'Tokens', value: 'tokens' }, { label: 'Percentage', value: 'percentage' }]}
             onChange={e => this.updateReservedTokenInput(e.target.value, 'dim')}
             selectedItem={this.state.dim}
@@ -307,43 +310,36 @@ export class ReservedTokensInputBlock extends Component {
             description="Fixed amount or % of crowdsaled tokens. Will be deposited to the account after finalization
               of the crowdsale."
           />
-          <NumericInput
-            acceptFloat={true}
-            extraClassName="sw-BorderedBlock_Row1Column3"
-            decimals={this.props.decimals}
-            dimension={this.state.dim}
-            name={VALUE}
-            onClick={this.addReservedTokensItem}
-            onValueUpdate={this.handleValueChange}
-            placeholder="Enter here"
-            pristine={this.state.validation.value.pristine}
-            title={VALUE}
-            valid={this.state.validation.value.valid}
-            value={this.state.val}
-            {...valueInputParams}
-          />
+          <div className="sw-NumericInputAndButtonContainer sw-NumericInputAndButtonContainer-RerservedTokensValue">
+            <NumericInput
+              acceptFloat={true}
+              decimals={this.props.decimals}
+              dimension={this.state.dim}
+              name={VALUE}
+              onValueUpdate={this.handleValueChange}
+              placeholder="Enter here"
+              pristine={this.state.validation.value.pristine}
+              title={VALUE}
+              valid={this.state.validation.value.valid}
+              value={this.state.val}
+              {...valueInputParams}
+            />
+            <ButtonPlus onClick={this.addReservedTokensItem} />
+          </div>
           {reservedTokensElements}
           {/* Actions */}
-          <div className="sw-ReservedTokensListControls sw-BorderedBlock_Row3Column1">
+          <div className="sw-ReservedTokensListControls">
             {tokensListEmpty ? null : (
-              <div
-                className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-clearall"
-                onClick={this.clearAll}
-              >
-                Clear All
-              </div>
+              <ButtonCSV extraClassName="sw-ButtonCSV-clearall" onClick={this.clearAll} text="Clear All" />
             )}
             <Dropzone onDrop={this.onDrop} accept=".csv" style={dropzoneStyle}>
-              <div className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-uploadcsv">
-                Upload CSV
-              </div>
+              <ButtonCSV extraClassName="sw-ButtonCSV-uploadcsv" text="Upload CSV" />
             </Dropzone>
-            <div
-              className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-downloadcsv m-r-0"
+            <ButtonCSV
+              extraClassName="sw-ButtonCSV-downloadcsv m-r-0"
               onClick={this.downloadCSV}
-            >
-              Download CSV template
-            </div>
+              text="Download CSV template"
+            />
           </div>
         </div>
       </div>

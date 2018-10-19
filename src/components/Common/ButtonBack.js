@@ -1,17 +1,12 @@
-import React, { Component } from 'react'
+import React from 'react'
 
-export class ButtonBack extends Component {
-  /**
-   * Render method for ButtonBack component
-   * @returns {*}
-   */
-  render() {
-    const { onClick } = this.props
-
-    return (
-      <button onClick={onClick} type="button" className={`sw-ButtonBack`}>
-        Back
-      </button>
-    )
-  }
-}
+export const ButtonBack = ({ onClick, extraClassName, disabled }) => (
+  <button
+    className={`sw-ButtonBack ${extraClassName ? extraClassName : ''}`}
+    disabled={disabled}
+    onClick={onClick}
+    type="button"
+  >
+    Back
+  </button>
+)

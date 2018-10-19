@@ -7,10 +7,10 @@ import { DESCRIPTION, TEXT_FIELDS } from '../../utils/constants'
 export const MinCap = ({ index, decimals, ...props }) => (
   <Field
     component={InputField2}
-    validate={props.disabled ? undefined : validateTierMinCap(decimals)(index)}
-    type="text"
-    label={props.label || TEXT_FIELDS.MIN_CAP}
     description={DESCRIPTION.MIN_CAP}
+    label={props.label || TEXT_FIELDS.MIN_CAP}
+    placeholder="Enter here"
+    validate={props.disabled ? undefined : validateTierMinCap(decimals)(index)}
     {...props}
   />
 )

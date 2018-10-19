@@ -7,13 +7,14 @@ import { acceptPositiveIntegerOnly } from '../../utils/utils'
 
 export const TokenSupply = () => (
   <Field
-    validate={isPositive()}
     component={InputField2}
-    parse={acceptPositiveIntegerOnly}
-    side="right"
-    name="supply"
-    type="text"
     description={DESCRIPTION.TOKEN_SUPPLY}
     label={TEXT_FIELDS.SUPPLY_SHORT}
+    min="0"
+    name="supply"
+    parse={acceptPositiveIntegerOnly}
+    placeholder="Enter here"
+    type="number"
+    validate={isPositive()}
   />
 )

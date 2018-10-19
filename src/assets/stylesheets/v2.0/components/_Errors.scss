@@ -1,0 +1,7 @@
+.sw-Errors {
+    width: 100%;
+}
+
+.sw-Errors_Item {
+    @include form-error-styles();
+}

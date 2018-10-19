@@ -1,5 +1,5 @@
 import React from 'react'
-import { Error } from '../../../src/components/Common/Error'
+import { Error } from '../../../src/components/Common/Errors'
 import { Form } from 'react-final-form'
 import Adapter from 'enzyme-adapter-react-15'
 import { configure, mount, shallow } from 'enzyme'

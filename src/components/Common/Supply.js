@@ -8,11 +8,13 @@ export const Supply = ({ ...props }) => {
   return (
     <Field
       component={InputField2}
-      validate={props.disabled ? undefined : isPositive()}
-      type="text"
-      label={props.label || TEXT_FIELDS.SUPPLY_SHORT}
       description={props.description || DESCRIPTION.SUPPLY}
+      label={props.label || TEXT_FIELDS.SUPPLY_SHORT}
+      onChange={props.onChange}
+      placeholder="Enter here"
+      type="text"
       val={props.value || null}
+      validate={props.disabled ? undefined : isPositive()}
       {...props}
     />
   )

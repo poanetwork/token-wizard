@@ -35,7 +35,7 @@ export const ManageTierBlock = inject('crowdsaleStore', 'tokenStore')(
       {fields.map((name, index) => {
         const currentTier = fields.value[index]
         const { tier } = currentTier
-        const {
+        let {
           startTime: initialStartTime,
           endTime: initialEndTime,
           whitelistEnabled,
@@ -43,6 +43,7 @@ export const ManageTierBlock = inject('crowdsaleStore', 'tokenStore')(
           supply
         } = fields.initial[index]
 
+        // initialStartTime and initialEndTime already converted to local timezone
         const tierHasStarted = !isDateLaterThan()(dateToTimestamp(initialStartTime))(Date.now())
         const tierHasEnded = !isDateLaterThan()(dateToTimestamp(initialEndTime))(Date.now())
         const canEditDuration = canEditTiers && updatable && !tierHasEnded && !tierHasStarted

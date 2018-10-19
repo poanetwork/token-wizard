@@ -5,7 +5,7 @@ import { Field } from 'react-final-form'
 import { InputField2 } from './InputField2'
 import { acceptPositiveIntegerOnly } from '../../utils/utils'
 
-export const TokenDecimals = ({ disabled, errorStyle }) => (
+export const TokenDecimals = ({ disabled }) => (
   <Field
     validate={value => {
       const errors = composeValidators(
@@ -17,14 +17,14 @@ export const TokenDecimals = ({ disabled, errorStyle }) => (
       if (errors) return errors.shift()
     }}
     component={InputField2}
-    parse={acceptPositiveIntegerOnly}
-    min="0"
-    max="18"
-    name="decimals"
-    type="number"
     description="Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous)."
-    label={TEXT_FIELDS.DECIMALS}
     disabled={disabled}
-    errorStyle={errorStyle}
+    label={TEXT_FIELDS.DECIMALS}
+    max="18"
+    min="0"
+    name="decimals"
+    parse={acceptPositiveIntegerOnly}
+    placeholder="Enter here"
+    type="number"
   />
 )

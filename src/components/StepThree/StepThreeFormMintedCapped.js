@@ -1,52 +1,41 @@
+import GasPriceInput from './GasPriceInput'
 import React from 'react'
+import logdown from 'logdown'
+import { AddTierButton } from './AddTierButton'
+import { ButtonBack } from '../Common/ButtonBack'
+import { ButtonContinue } from '../Common/ButtonContinue'
 import { Field, FormSpy } from 'react-final-form'
 import { FieldArray } from 'react-final-form-arrays'
-import { WhenFieldChanges } from '../Common/WhenFieldChanges'
 import { InputField2 } from '../Common/InputField2'
-import GasPriceInput from './GasPriceInput'
-import { ButtonContinue } from '../Common/ButtonContinue'
-import { gweiToWei } from '../../utils/utils'
+import { TEXT_FIELDS, VALIDATION_TYPES, VALIDATION_MESSAGES, DESCRIPTION } from '../../utils/constants'
+import { TierBlock } from '../Common/TierBlock'
+import { WhenFieldChanges } from '../Common/WhenFieldChanges'
 import {
   composeValidators,
   isAddress,
   isDecimalPlacesNotGreaterThan,
   isGreaterOrEqualThan
 } from '../../utils/validations'
-import {
-  TEXT_FIELDS,
-  VALIDATION_TYPES,
-  VALIDATION_MESSAGES,
-  DESCRIPTION,
-  NAVIGATION_STEPS
-} from '../../utils/constants'
-import { TierBlock } from '../Common/TierBlock'
+import { gweiToWei, navigateTo } from '../../utils/utils'
 
-const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 const { VALID } = VALIDATION_TYPES
 const { WALLET_ADDRESS } = TEXT_FIELDS
-
-const inputErrorStyle = {
-  color: 'red',
-  fontWeight: 'bold',
-  fontSize: '12px',
-  width: '100%',
-  height: '20px'
-}
+const logger = logdown('TW:StepThree')
 
 export const StepThreeFormMintedCapped = ({
-  handleSubmit,
-  values,
-  invalid,
-  pristine,
-  submitting,
   errors,
-  mutators: { push, setFieldTouched },
   form,
+  handleSubmit,
+  history,
+  invalid,
+  mutators: { push, setFieldTouched },
+  pristine,
   reload,
+  submitting,
+  values,
   ...props
 }) => {
   const status = !(submitting || invalid)
-
   const addTier = () => {
     props.addCrowdsale()
     const lastTier = props.tierStore.tiers[props.tierStore.tiers.length - 1]
@@ -119,9 +108,9 @@ export const StepThreeFormMintedCapped = ({
   const whenWhitelistBlock = tierInd => {
     return (
       <WhenFieldChanges
-        key={`whenWhitelistBlock_${tierInd}`}
-        field={`tiers[${tierInd}].whitelistEnabled`}
         becomes={'yes'}
+        field={`tiers[${tierInd}].whitelistEnabled`}
+        key={`whenWhitelistBlock_${tierInd}`}
         set={`tiers[${tierInd}].minCap`}
         to={0}
       />
@@ -138,54 +127,49 @@ export const StepThreeFormMintedCapped = ({
     )
   }
 
+  const goBack = async () => {
+    try {
+      navigateTo({
+        history: history,
+        location: 'stepTwo'
+      })
+    } catch (err) {
+      logger.log('Error to navigate', err)
+    }
+  }
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="st-StepContent_FormFullHeight">
       {whenWhitelistsChanges()}
-      <div>
-        <div className="steps-content container">
-          <div className="about-step">
-            <div className="step-icons step-icons_crowdsale-setup" />
-            <p className="title">{CROWDSALE_SETUP}</p>
-            <p className="description">{DESCRIPTION.CROWDSALE_SETUP}</p>
-          </div>
-          <div className="section-title">
-            <p className="title">Global settings</p>
-          </div>
-          <div className="input-block-container">
-            <Field
-              name="walletAddress"
-              component={InputField2}
-              validate={isAddress()}
-              errorStyle={inputErrorStyle}
-              value={values.walletAddress}
-              side="left"
-              label={WALLET_ADDRESS}
-              description={DESCRIPTION.WALLET}
-            />
-
-            <Field
-              name="gasPrice"
-              component={GasPriceInput}
-              side="right"
-              gasPrices={props.gasPricesInGwei}
-              updateGasTypeSelected={updateGasTypeSelected}
-              validate={value => handleValidateGasPrice(value)}
-            />
-          </div>
-        </div>
+      <h2 className="sw-BorderedBlockTitle">Global settings</h2>
+      <div tabIndex="0" className="sw-BorderedBlock sw-BorderedBlock-CrowdSaleSetupGlobalSettingsWhitelistCapped">
+        <Field
+          component={InputField2}
+          description={DESCRIPTION.WALLET}
+          label={WALLET_ADDRESS}
+          name="walletAddress"
+          placeholder="Enter here"
+          validate={isAddress()}
+          value={values.walletAddress}
+        />
+        <Field
+          component={GasPriceInput}
+          gasPrices={props.gasPricesInGwei}
+          name="gasPrice"
+          updateGasTypeSelected={updateGasTypeSelected}
+          validate={value => handleValidateGasPrice(value)}
+        />
       </div>
-
       <FieldArray name="tiers">
-        {({ fields }) => <TierBlock fields={fields} decimals={props.decimals} tierStore={props.tierStore} />}
+        {({ fields }) => (
+          <TierBlock form={form} fields={fields} decimals={props.decimals} tierStore={props.tierStore} />
+        )}
       </FieldArray>
-
-      <div className="button-container">
-        <div className="button button_fill_secondary" onClick={addTier}>
-          Add Tier
-        </div>
+      <AddTierButton onClick={addTier} />
+      <div className="st-StepContent_Buttons">
+        <ButtonBack onClick={goBack} />
         <ButtonContinue onClick={handleSubmit} status={status} />
       </div>
-
       <FormSpy subscription={{ values: true }} onChange={handleOnChange} />
     </form>
   )

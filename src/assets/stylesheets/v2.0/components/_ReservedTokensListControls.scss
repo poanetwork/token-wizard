@@ -5,58 +5,11 @@
 
     @media (min-width: $breakpoint-md) {
         flex-direction: row;
+        grid-area: row-3-col-1;
     }
 
     @media (min-width: $breakpoint-xl) {
         margin-bottom: -20px;
-    }
-
-    &.sw-BorderedBlock_Row3Column1 {
-        @media (min-width: $breakpoint-xl) {
-            grid-area: row-3-col-1;
-        }
-    }
-}
-
-.sw-ReservedTokensListControls_Button {
-    @include not-selectable-text();
-    background-position: 0 50%;
-    background-repeat: no-repeat;
-    color: #4a4a4a;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 30px;
-    margin-bottom: 25px;
-    padding: 0 0 0 25px;
-
-    &:last-child {
-        margin-bottom: 0;
-    }
-
-    @media (min-width: $breakpoint-md) {
-        margin-bottom: 0;
-        margin-right: 38px;
-
-        &:last-child {
-            margin-right: 0;
-        }
-    }
-
-    &.sw-ReservedTokensListControls_Button-clearall {
-        background-image: url('#{ $base-images-path }/ReservedTokensListControls/ico-delete.svg');
-    }
-
-    &.sw-ReservedTokensListControls_Button-uploadcsv {
-        background-image: url('#{ $base-images-path }/ReservedTokensListControls/ico-upload.svg');
-    }
-
-    &.sw-ReservedTokensListControls_Button-downloadcsv {
-      background-image: url('#{ $base-images-path }/ReservedTokensListControls/ico-download.svg');
-    }
-
-    &.m-r-0 {
-        margin-right: 0;
     }
 
 }

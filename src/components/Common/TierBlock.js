@@ -1,166 +1,172 @@
 import React from 'react'
-import { Field } from 'react-final-form'
-import { InputField2 } from './InputField2'
-import { WhitelistInputBlock } from './WhitelistInputBlock'
-import { composeValidators, isRequired, isMaxLength } from '../../utils/validations'
-import { DESCRIPTION, TEXT_FIELDS } from '../../utils/constants'
-import { CrowdsaleStartTime } from './CrowdsaleStartTime'
 import { CrowdsaleEndTime } from './CrowdsaleEndTime'
 import { CrowdsaleRate } from './CrowdsaleRate'
-import { Supply } from './Supply'
+import { CrowdsaleStartTime } from './CrowdsaleStartTime'
+import { DESCRIPTION, TEXT_FIELDS } from '../../utils/constants'
+import { Field } from 'react-final-form'
+import { InputField2 } from './InputField2'
 import { MinCap } from './MinCap'
+import { RadioButton } from '../Common/RadioButton'
+import { Supply } from './Supply'
+import { WhitelistInputBlock } from './WhitelistInputBlock'
+import { composeValidators, isRequired, isMaxLength } from '../../utils/validations'
 
 const { ALLOW_MODIFYING, CROWDSALE_SETUP_NAME, ENABLE_WHITELISTING } = TEXT_FIELDS
 
-const inputErrorStyle = {
-  color: 'red',
-  fontWeight: 'bold',
-  fontSize: '12px',
-  width: '100%',
-  height: '20px'
-}
-
 export const TierBlock = ({ fields, ...props }) => {
   const onChangeWhitelisted = (value, input, index) => {
-    //Clear whitelist
+    // Clear whitelist
     if (props.tierStore) {
       props.tierStore.emptyWhitelist(index)
     }
+
     return input.onChange(value)
   }
 
+  const getWhiteListingButtons = (name, input, index) => {
+    const buttons = [
+      {
+        checked: input.value === 'yes',
+        id: `${name}.enable_whitelisting_yes`,
+        label: 'Yes',
+        name: name,
+        onChange: () => onChangeWhitelisted('yes', input, index),
+        value: 'yes'
+      },
+      {
+        checked: input.value === 'no',
+        id: `${name}.enable_whitelisting_no`,
+        label: 'No',
+        name: name,
+        onChange: () => onChangeWhitelisted('no', input, index),
+        value: 'no'
+      }
+    ]
+
+    return buttons
+  }
+
+  const getAllowModifiyingButtons = (name, input) => {
+    const buttons = [
+      {
+        checked: input.value === 'on',
+        id: `${name}.allow_modifying_on`,
+        label: 'Yes',
+        name: name,
+        onChange: () => input.onChange('on'),
+        value: 'on'
+      },
+      {
+        checked: input.value === 'off',
+        id: `${name}.allow_modifying_off`,
+        label: 'No',
+        name: name,
+        onChange: () => input.onChange('off'),
+        value: 'off'
+      }
+    ]
+
+    return buttons
+  }
+
+  const getSupplyValue = index => {
+    return props.tierStore.tiers[index].supply
+  }
+
+  const isSupplyInvalid = index => {
+    const supplyValue = getSupplyValue(index)
+
+    return supplyValue <= 0 || typeof supplyValue === 'undefined'
+  }
+
+  const onSupplyChange = (name, index) => {
+    if (isSupplyInvalid(index)) {
+      props.tierStore.setTierProperty('no', 'whitelistEnabled', index)
+      props.form.change(name, 'no')
+    }
+  }
+
   return (
-    <div>
+    <div className="sw-TierBlock">
       {fields.map((name, index) => (
-        <div style={{ marginTop: '40px' }} className="steps-content container" key={index}>
-          <div>
-            <div className="input-block-container">
-              <Field
-                id={`${name}.tier`}
-                name={`${name}.tier`}
-                validate={value => {
-                  const errors = composeValidators(isRequired(), isMaxLength()(30))(value)
-
-                  if (errors) return errors.shift()
-                }}
-                errorStyle={inputErrorStyle}
-                component={InputField2}
-                type="text"
-                side="left"
-                label={CROWDSALE_SETUP_NAME}
-                description={DESCRIPTION.CROWDSALE_SETUP_NAME}
+        <div className="sw-BorderedBlock sw-BorderedBlock-TierBlocksWhitelistCapped" key={index}>
+          <Field
+            component={InputField2}
+            description={DESCRIPTION.CROWDSALE_SETUP_NAME}
+            extraClassName="sw-InputField2-TierSetupName"
+            id={`${name}.tier`}
+            label={CROWDSALE_SETUP_NAME}
+            name={`${name}.tier`}
+            placeholder="Enter here"
+            type="text"
+            validate={value => {
+              const errors = composeValidators(isRequired(), isMaxLength()(30))(value)
+              if (errors) return errors.shift()
+            }}
+          />
+          <CrowdsaleStartTime
+            disabled={index > 0}
+            extraClassName="sw-InputField2-CrowdsaleStartTime"
+            index={index}
+            name={`${name}.startTime`}
+          />
+          <CrowdsaleEndTime extraClassName="sw-InputField2-CrowdsaleEndTime" index={index} name={`${name}.endTime`} />
+          <CrowdsaleRate
+            extraClassName="sw-InputField2-CrowdsaleRate"
+            max="1000000000000000000"
+            min="0"
+            name={`${name}.rate`}
+            type="number"
+          />
+          <Supply
+            disabled={
+              props.tierStore &&
+              props.tierStore.tiers[index].whitelistEnabled === 'yes' &&
+              (props.tierStore && props.tierStore.tiers[index].whitelist.length)
+            }
+            extraClassName="sw-InputField2-CrowdsaleSupply"
+            min="0"
+            name={`${name}.supply`}
+            onChange={onSupplyChange(`${name}.whitelistEnabled`, index)}
+            type="number"
+          />
+          <MinCap
+            decimals={props.decimals}
+            disabled={props.tierStore.tiers[index].whitelistEnabled === 'yes' ? true : false}
+            extraClassName="sw-InputField2-MinCap"
+            index={index}
+            max={props.tierStore.tiers[index].supply}
+            min="0"
+            name={`${name}.minCap`}
+            type="number"
+          />
+          <Field
+            id={`${name}.whitelistEnabled`}
+            name={`${name}.whitelistEnabled`}
+            render={({ input }) => (
+              <RadioButton
+                buttons={getWhiteListingButtons(`${name}.whitelistEnabled`, input, index)}
+                description={DESCRIPTION.ENABLE_WHITELIST}
+                disabled={isSupplyInvalid(index)}
+                extraClassName={'sw-InputField2-WhitelistEnabled'}
+                title={ENABLE_WHITELISTING}
               />
-            </div>
-
-            <div className="input-block-container">
-              <Field
-                id={`${name}.updatable`}
-                name={`${name}.updatable`}
-                render={({ input }) => (
-                  <div className="left">
-                    <label className="label">{ALLOW_MODIFYING}</label>
-                    <div className="radios-inline">
-                      <label className="radio-inline">
-                        <input
-                          id={`${name}.allow_modifying_on`}
-                          type="radio"
-                          checked={input.value === 'on'}
-                          onChange={() => input.onChange('on')}
-                          value="on"
-                        />
-                        <span className="title">on</span>
-                      </label>
-                      <label className="radio-inline">
-                        <input
-                          id={`${name}.allow_modifying_off`}
-                          type="radio"
-                          checked={input.value === 'off'}
-                          value="off"
-                          onChange={() => input.onChange('off')}
-                        />
-                        <span className="title">off</span>
-                      </label>
-                    </div>
-                    <p className="description">{DESCRIPTION.ALLOW_MODIFYING}</p>
-                  </div>
-                )}
+            )}
+          />
+          <Field
+            id={`${name}.updatable`}
+            name={`${name}.updatable`}
+            render={({ input }) => (
+              <RadioButton
+                buttons={getAllowModifiyingButtons(`${name}.updatable`, input)}
+                description={DESCRIPTION.ALLOW_MODIFYING}
+                extraClassName={'sw-InputField2-AllowModifying'}
+                title={ALLOW_MODIFYING}
               />
-
-              <Field
-                name={`${name}.whitelistEnabled`}
-                render={({ input }) => (
-                  <div className="right">
-                    <label className="label">{ENABLE_WHITELISTING}</label>
-                    <div className="radios-inline">
-                      <label className="radio-inline">
-                        <input
-                          id={`${name}.enable_whitelisting_yes`}
-                          type="radio"
-                          checked={input.value === 'yes'}
-                          value="yes"
-                          onChange={() => onChangeWhitelisted('yes', input, index)}
-                        />
-                        <span className="title">yes</span>
-                      </label>
-                      <label className="radio-inline">
-                        <input
-                          id={`${name}.enable_whitelisting_no`}
-                          type="radio"
-                          checked={input.value === 'no'}
-                          value="no"
-                          onChange={() => onChangeWhitelisted('no', input, index)}
-                        />
-                        <span className="title">no</span>
-                      </label>
-                    </div>
-                    <p className="description">{DESCRIPTION.ENABLE_WHITELIST}</p>
-                  </div>
-                )}
-              />
-            </div>
-
-            <div className="input-block-container">
-              <CrowdsaleStartTime
-                name={`${name}.startTime`}
-                index={index}
-                disabled={index > 0}
-                side="left"
-                errorStyle={inputErrorStyle}
-              />
-              <CrowdsaleEndTime name={`${name}.endTime`} index={index} side="right" errorStyle={inputErrorStyle} />
-            </div>
-
-            <div className="input-block-container">
-              <CrowdsaleRate name={`${name}.rate`} errorStyle={inputErrorStyle} side="left" />
-              <Supply
-                name={`${name}.supply`}
-                errorStyle={inputErrorStyle}
-                side="right"
-                disabled={
-                  props.tierStore &&
-                  props.tierStore.tiers[index].whitelistEnabled === 'yes' &&
-                  (props.tierStore && props.tierStore.tiers[index].whitelist.length)
-                }
-              />
-            </div>
-            <div className="input-block-container">
-              <MinCap
-                name={`${name}.minCap`}
-                errorStyle={inputErrorStyle}
-                decimals={props.decimals}
-                index={index}
-                disabled={props.tierStore ? props.tierStore.tiers[index].whitelistEnabled === 'yes' : true}
-                side="left"
-              />
-            </div>
-          </div>
-          {props.tierStore.tiers[index].whitelistEnabled === 'yes' ? (
-            <div>
-              <div className="section-title">
-                <p className="title">Whitelist</p>
-              </div>
-              <WhitelistInputBlock num={index} decimals={props.decimals} />
-            </div>
+            )}
+          />
+          {props.tierStore.tiers[index].whitelistEnabled === 'yes' && !isSupplyInvalid(index) ? (
+            <WhitelistInputBlock num={index} decimals={props.decimals} />
           ) : null}
         </div>
       ))}

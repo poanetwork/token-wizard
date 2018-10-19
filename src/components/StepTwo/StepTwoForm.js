@@ -1,17 +1,19 @@
 import React from 'react'
+import classNames from 'classnames'
 import { ButtonBack } from '../Common/ButtonBack'
 import { ButtonContinue } from '../Common/ButtonContinue'
 import { CROWDSALE_STRATEGIES, VALIDATION_TYPES } from '../../utils/constants'
 import { FormSpy } from 'react-final-form'
-import { inject, observer } from 'mobx-react'
 import { ReservedTokensInputBlock } from '../Common/ReservedTokensInputBlock'
 import { TokenDecimals } from '../Common/TokenDecimals'
 import { TokenName } from '../Common/TokenName'
 import { TokenSupply } from '../Common/TokenSupply'
 import { TokenTicker } from '../Common/TokenTicker'
-import classNames from 'classnames'
-import { toBigNumber } from '../../utils/utils'
+import { inject, observer } from 'mobx-react'
+import { toBigNumber, navigateTo } from '../../utils/utils'
+import logdown from 'logdown'
 
+const logger = logdown('TW:StepOne')
 const { MINTED_CAPPED_CROWDSALE, DUTCH_AUCTION } = CROWDSALE_STRATEGIES
 
 export const StepTwoForm = inject('tokenStore', 'crowdsaleStore', 'reservedTokenStore')(
@@ -31,19 +33,16 @@ export const StepTwoForm = inject('tokenStore', 'crowdsaleStore', 'reservedToken
       reservedTokenStore
     }) => {
       const status = !(submitting || invalid)
-
       const disableDecimals = crowdsaleStore.isMintedCappedCrowdsale && !!reservedTokenStore.tokens.length
-
       const decimals =
         tokenStore.validToken.decimals === VALIDATION_TYPES.VALID && tokenStore.decimals >= 0
           ? toBigNumber(tokenStore.decimals).toFixed()
           : 0
-
       const tokenSupply = crowdsaleStore.strategy === DUTCH_AUCTION ? <TokenSupply /> : null
 
       const topBlockExtraClass = classNames({
-        'sw-BorderedBlock-2Rows2Columns': crowdsaleStore.strategy === DUTCH_AUCTION,
-        'sw-BorderedBlock-3Columns': crowdsaleStore.strategy !== DUTCH_AUCTION
+        'sw-BorderedBlock-GeneralSettingsDutchAuction': crowdsaleStore.strategy === DUTCH_AUCTION,
+        'sw-BorderedBlock-GeneralSettingsWhitelistCapped': crowdsaleStore.strategy !== DUTCH_AUCTION
       })
 
       const setFieldAsTouched = () => {
@@ -60,23 +59,15 @@ export const StepTwoForm = inject('tokenStore', 'crowdsaleStore', 'reservedToken
         setFieldAsTouched()
       }
 
-      const navigateTo = (location, params = '') => {
-        const path =
-          {
-            home: '/',
-            stepOne: '1',
-            manage: 'manage'
-          }[location] || null
-
-        if (path === null) {
-          throw new Error(`invalid location specified: ${location}`)
-        }
-
-        history.push(`${path}${params}`)
-      }
-
       const goBack = async () => {
-        navigateTo('stepOne')
+        try {
+          navigateTo({
+            history: history,
+            location: 'stepOne'
+          })
+        } catch (err) {
+          logger.log('Error to navigate', err)
+        }
       }
 
       return (

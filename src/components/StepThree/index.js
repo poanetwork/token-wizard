@@ -1,20 +1,19 @@
 import React, { Component } from 'react'
-import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
-import { getNetworkVersion, getNetWorkNameById, checkWeb3 } from '../../utils/blockchainHelpers'
-import { StepNavigation } from '../Common/StepNavigation'
-import { NAVIGATION_STEPS, CHAINS } from '../../utils/constants'
-import { inject, observer } from 'mobx-react'
-import { Loader } from '../Common/Loader'
-import { noGasPriceAvailable, warningOnMainnetAlert } from '../../utils/alerts'
-import { getStep3Component } from './utils'
 import createDecorator from 'final-form-calculate'
 import logdown from 'logdown'
-import { sleep } from '../../utils/utils'
 import setFieldTouched from 'final-form-set-field-touched'
+import { Form } from 'react-final-form'
+import { Loader } from '../Common/Loader'
+import { NAVIGATION_STEPS, CHAINS } from '../../utils/constants'
+import { StepNavigation } from '../Common/StepNavigation'
+import { getNetworkVersion, getNetWorkNameById, checkWeb3 } from '../../utils/blockchainHelpers'
+import { getStep3Component } from './utils'
+import { inject, observer } from 'mobx-react'
+import { noGasPriceAvailable, warningOnMainnetAlert } from '../../utils/alerts'
+import { sleep, navigateTo } from '../../utils/utils'
 
 const logger = logdown('TW:StepThree')
-
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 
 @inject(
@@ -94,8 +93,15 @@ export class StepThree extends Component {
     }
   }
 
-  goToDeploymentStage = () => {
-    this.props.history.push('/4')
+  goNextStep = () => {
+    try {
+      navigateTo({
+        history: this.props.history,
+        location: 'stepFour'
+      })
+    } catch (err) {
+      logger.log('Error to navigate', err)
+    }
   }
 
   handleOnSubmit = () => {
@@ -129,16 +135,10 @@ export class StepThree extends Component {
             }, 0)
           }
 
-          return warningOnMainnetAlert(
-            tiersCount,
-            priceSelected,
-            reservedCount,
-            whitelistCount,
-            this.goToDeploymentStage
-          )
+          return warningOnMainnetAlert(tiersCount, priceSelected, reservedCount, whitelistCount, this.goNextStep)
         }
 
-        this.goToDeploymentStage()
+        this.goNextStep()
       })
       .catch(error => {
         logger.error(error)
@@ -167,7 +167,7 @@ export class StepThree extends Component {
 
   render() {
     if (this.state.initialTiers.length === 0) {
-      //Not render the form until tiers are setup
+      // Do not render the form until tiers are set up
       return (
         <section className="steps steps_crowdsale-contract" ref="three">
           <StepNavigation activeStep={CROWDSALE_SETUP} />
@@ -180,31 +180,46 @@ export class StepThree extends Component {
     let stepThreeComponent = getStep3Component(crowdsaleStore.strategy)
 
     return (
-      <section className="steps steps_crowdsale-contract" ref="three">
-        <StepNavigation activeStep={CROWDSALE_SETUP} />
-        <Form
-          onSubmit={this.handleOnSubmit}
-          mutators={{ ...arrayMutators, setFieldTouched }}
-          decorators={[this.calculator]}
-          initialValues={{
-            walletAddress: web3Store.curAddress,
-            gasPrice: this.state.gasTypeSelected,
-            whitelistEnabled: 'no',
-            burnExcess: this.state.burnExcess,
-            tiers: this.state.initialTiers
-          }}
-          component={stepThreeComponent}
-          addCrowdsale={tierStore.addCrowdsale}
-          gasPricesInGwei={gasPriceStore.gasPricesInGwei}
-          decimals={tokenStore.decimals}
-          updateGasTypeSelected={this.updateGasTypeSelected}
-          tierStore={tierStore}
-          generalStore={generalStore}
-          crowdsaleStore={crowdsaleStore}
-          reload={this.state.reload}
-        />
+      <div>
+        <section className="lo-MenuBarAndContent" ref="three">
+          <StepNavigation activeStep={CROWDSALE_SETUP} />
+          <div className="st-StepContent">
+            <div className="st-StepContent_Info">
+              <div className="st-StepContent_InfoIcon st-StepContent_InfoIcon-step3" />
+              <div className="st-StepContentInfo_InfoText">
+                <h1 className="st-StepContent_InfoTitle">Crowdsale Setup</h1>
+                <p className="st-StepContent_InfoDescription">
+                  The most important and exciting part of the crowdsale process.<br />Here you can define parameters of
+                  your crowdsale campaign.
+                </p>
+              </div>
+            </div>
+            <Form
+              addCrowdsale={tierStore.addCrowdsale}
+              component={stepThreeComponent}
+              crowdsaleStore={crowdsaleStore}
+              decimals={tokenStore.decimals}
+              decorators={[this.calculator]}
+              gasPricesInGwei={gasPriceStore.gasPricesInGwei}
+              generalStore={generalStore}
+              history={this.props.history}
+              initialValues={{
+                burnExcess: this.state.burnExcess,
+                gasPrice: this.state.gasTypeSelected,
+                tiers: this.state.initialTiers,
+                walletAddress: web3Store.curAddress,
+                whitelistEnabled: 'no'
+              }}
+              mutators={{ ...arrayMutators, setFieldTouched }}
+              onSubmit={this.handleOnSubmit}
+              reload={this.state.reload}
+              tierStore={tierStore}
+              updateGasTypeSelected={this.updateGasTypeSelected}
+            />
+          </div>
+        </section>
         <Loader show={this.state.loading} />
-      </section>
+      </div>
     )
   }
 }

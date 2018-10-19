@@ -1,5 +1,4 @@
 import React from 'react'
-
 import { isStepActive } from '../../utils/utils'
 import { NAVIGATION_STEPS } from '../../utils/constants'
 import { LogoWhite } from '../LogoWhite/index'

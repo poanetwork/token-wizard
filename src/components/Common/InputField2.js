@@ -1,5 +1,5 @@
 import React from 'react'
-import { Error } from './Error'
+import { Errors } from './Errors'
 import { FormControlTitle } from '../Common/FormControlTitle'
 import { TextField } from '../Common/TextField'
 
@@ -9,7 +9,7 @@ export const InputField2 = props => {
   }
 
   return (
-    <div className={`sw-InputField ${props.extraClassName ? props.extraClassName : ''}`}>
+    <div className={`sw-InputField2 ${props.extraClassName ? props.extraClassName : ''}`}>
       <FormControlTitle title={props.label} description={props.description} />
       <TextField
         autoComplete="off"
@@ -22,7 +22,7 @@ export const InputField2 = props => {
         max={props.max}
         {...props.input}
       />
-      <Error name={props.input.name} />
+      <Errors name={props.input.name} />
     </div>
   )
 }

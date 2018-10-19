@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
-import { checkWeb3 } from '../../utils/blockchainHelpers'
-import { StepNavigation } from '../Common/StepNavigation'
-import { Loader } from '../Common/Loader'
-import { NAVIGATION_STEPS } from '../../utils/constants'
-import { inject, observer } from 'mobx-react'
-import { Form } from 'react-final-form'
-import { StepTwoForm } from './StepTwoForm'
 import logdown from 'logdown'
 import setFieldTouched from 'final-form-set-field-touched'
+import { Form } from 'react-final-form'
+import { Loader } from '../Common/Loader'
+import { NAVIGATION_STEPS } from '../../utils/constants'
+import { StepNavigation } from '../Common/StepNavigation'
+import { StepTwoForm } from './StepTwoForm'
+import { checkWeb3 } from '../../utils/blockchainHelpers'
+import { inject, observer } from 'mobx-react'
+import { navigateTo } from '../../utils/utils'
 
 const { TOKEN_SETUP } = NAVIGATION_STEPS
-
 const logger = logdown('TW:stepTwo:index')
 
 @inject('tokenStore', 'crowdsaleStore', 'reservedTokenStore')
@@ -48,11 +48,15 @@ export class StepTwo extends Component {
     return token
   }
 
-  /**
-   * Goto to the step 3 on submit
-   */
-  onSubmit = () => {
-    this.props.history.push('/3')
+  goNextStep = () => {
+    try {
+      navigateTo({
+        history: this.props.history,
+        location: 'stepThree'
+      })
+    } catch (err) {
+      logger.log('Error to navigate', err)
+    }
   }
 
   render() {
@@ -72,12 +76,12 @@ export class StepTwo extends Component {
             </div>
             <Form
               component={StepTwoForm}
+              history={this.props.history}
               id="tokenData"
               initialValues={this.state.tokenValues}
               mutators={{ setFieldTouched }}
-              onSubmit={this.onSubmit}
+              onSubmit={this.goNextStep}
               reload={this.state.reload}
-              history={this.props.history}
             />
           </div>
         </section>

@@ -1,9 +1,9 @@
 import { TOAST } from './constants'
 import queryString from 'query-string'
-import { CrowdsaleConfig } from '../components/Common/config'
 import { BigNumber } from 'bignumber.js'
 import logdown from 'logdown'
 import Web3 from 'web3'
+import moment from 'moment'
 
 const logger = logdown('TW:utils:utils')
 
@@ -114,11 +114,6 @@ export const toast = {
 export const gweiToWei = x => parseInt(x * 1000000000, 10)
 
 export const weiToGwei = x => x / 1000000000
-
-export const displayHeaderAndFooterInIframe = () => {
-  const insideAnIframe = window.self !== window.top
-  return insideAnIframe ? CrowdsaleConfig.showHeaderAndFooterInIframe : true
-}
 
 export const countDecimalPlaces = num => {
   /*
@@ -245,6 +240,8 @@ export const navigateTo = data => {
       home: '/',
       stepOne: '1',
       stepTwo: '2',
+      stepThree: '3',
+      stepFour: '4',
       manage: 'manage',
       crowdsales: 'crowdsales'
     }[location] || null
@@ -298,3 +295,46 @@ export const uniqueElementsBy = (arr, fn) =>
     if (!acc.some(x => fn(v, x))) acc.push(v)
     return acc
   }, [])
+
+export const convertDateToUTCTimezone = dateToConvert => {
+  return moment(dateToConvert)
+    .utc()
+    .format('YYYY-MM-DD[T]HH:mm')
+}
+
+export const convertDateToLocalTimezone = dateToConvert => {
+  const offset = moment().utcOffset()
+  return moment(dateToConvert)
+    .add(offset, 'minutes')
+    .local()
+    .format('YYYY-MM-DD[T]HH:mm')
+}
+
+export const convertDateToLocalTimezoneInUnix = dateToConvert => {
+  const offset = moment().utcOffset()
+  const dateConvertUnix = moment(dateToConvert)
+    .add(offset, 'minutes')
+    .local()
+    .unix()
+  return dateConvertUnix * 1000
+}
+
+export const convertDateToTimezoneToDisplay = dateToConvert => {
+  return moment(dateToConvert).format('YYYY-MM-DD HH:mm (z ZZ)')
+}
+
+export const convertDateToUTCTimezoneToDisplay = dateToConvert => {
+  const offset = moment().utcOffset()
+  return moment(dateToConvert)
+    .add(offset, 'minutes')
+    .utc()
+    .format('YYYY-MM-DD HH:mm (z ZZ)')
+}
+
+export const convertDateObjectToLocalTimezone = dateToConvert => {
+  const offset = moment().utcOffset()
+  const dateConvertUnix = moment(dateToConvert)
+    .add(offset, 'minutes')
+    .unix()
+  return dateConvertUnix * 1000
+}
