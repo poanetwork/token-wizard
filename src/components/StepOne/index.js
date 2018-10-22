@@ -15,7 +15,18 @@ const logger = logdown('TW:StepOne')
 const { CROWDSALE_STRATEGY } = NAVIGATION_STEPS
 const { MINTED_CAPPED_CROWDSALE } = CROWDSALE_STRATEGIES
 
-@inject('crowdsaleStore', 'contractStore', 'web3Store', 'generalStore')
+@inject(
+  'web3Store',
+  'generalStore',
+  'contractStore',
+  'crowdsaleStore',
+  'gasPriceStore',
+  'deploymentStore',
+  'reservedTokenStore',
+  'stepTwoValidationStore',
+  'tierStore',
+  'tokenStore'
+)
 @observer
 export class StepOne extends Component {
   state = {
@@ -30,6 +41,21 @@ export class StepOne extends Component {
         location: 'stepOne'
       })
     })
+
+    // Capture back button to clear fromLocation
+    window.addEventListener(
+      'popstate',
+      event => {
+        if (event.state) {
+          this.props.history.replace({
+            state: {
+              fromLocation: null
+            }
+          })
+        }
+      },
+      false
+    )
 
     try {
       await checkWeb3ForErrors(result => {
@@ -52,9 +78,18 @@ export class StepOne extends Component {
     const { crowdsaleStore } = this.props
     // Reload storage
     const { state } = this.props.history.location
+
+    logger.log(`From location ${state && state.fromLocation ? state.fromLocation : null}`)
     if (state && state.fromLocation && state.fromLocation === 'home') {
       clearStorage(this.props)
       await reloadStorage(this.props)
+
+      // Set fromLocation to null, there is a glitch from the back button of the browser
+      this.props.history.push({
+        state: {
+          fromLocation: null
+        }
+      })
     }
 
     // Set default strategy value
@@ -72,7 +107,8 @@ export class StepOne extends Component {
     try {
       navigateTo({
         history: this.props.history,
-        location: 'stepTwo'
+        location: 'stepTwo',
+        fromLocation: 'stepOne'
       })
     } catch (err) {
       logger.log('Error to navigate', err)
