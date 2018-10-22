@@ -100,6 +100,8 @@ export const getNetWorkNameById = _id => {
       return CHAINS.SOKOL
     case 99:
       return CHAINS.CORE
+    case 100:
+      return CHAINS.XDAI
     default:
       return null
   }
