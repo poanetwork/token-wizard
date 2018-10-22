@@ -1,5 +1,5 @@
 .pb-DisplayTextArea_Title {
-    align-items: center;
+    align-items: flex-start;
     color: #000;
     display: flex;
     flex-flow: row;
@@ -16,7 +16,7 @@
     background-color: #eff0f1;
     border-radius: 5px;
     color: #393318;
-    font-family: Consolas,Menlo,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New,monospace,sans-serif;
+    font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, sans-serif;
     font-size: 15px;
     font-weight: 400;
     line-height: 1.5;
@@ -32,5 +32,12 @@
 }
 
 .pb-DisplayTextArea_Description {
-
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.4;
+    margin: 0;
+    white-space: normal;
+    word-break: break-all;
+    word-wrap: break-word;
 }

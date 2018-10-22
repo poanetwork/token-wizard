@@ -46,6 +46,14 @@
         }
     }
 
+    &.sw-BorderedSection_Items-CrowdsaleSetupMintCapped {
+        @media (min-width: $breakpoint-md) {
+            grid-template-areas:
+                "row-1-col-1 ."
+                "row-2-col-1 row-2-col-2";
+        }
+    }
+
     &.sw-BorderedSection_Items-TierBlock {
         grid-column-gap: 20px;
         grid-template-columns: 1fr 1fr;

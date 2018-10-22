@@ -409,6 +409,33 @@ export class StepFour extends Component {
     }
   }
 
+  isTierUpdatable = updatable => {
+    return (
+      {
+        on: 'Yes',
+        off: 'No'
+      }[updatable.toLowerCase()] || 'No'
+    )
+  }
+
+  isWhitelisted = whitelistEnabled => {
+    return (
+      {
+        yes: 'Yes',
+        no: 'No'
+      }[whitelistEnabled.toLowerCase()] || 'No'
+    )
+  }
+
+  getBurnExcess = burnExcess => {
+    return (
+      {
+        yes: 'Yes',
+        no: 'No'
+      }[burnExcess.toLowerCase()] || 'No'
+    )
+  }
+
   render() {
     const { tierStore, tokenStore, deploymentStore, crowdsaleStore, contractStore } = this.props
     const { isMintedCappedCrowdsale, isDutchAuction } = crowdsaleStore
@@ -449,20 +476,35 @@ export class StepFour extends Component {
         CROWDSALE_START_TIME: PD_CROWDSALE_START_TIME,
         CROWDSALE_END_TIME: PD_CROWDSALE_END_TIME
       } = PUBLISH_DESCRIPTION
+      const extraClass = isMintedCappedCrowdsale
+        ? 'sw-BorderedSection_Items-CrowdsaleSetupMintCapped'
+        : 'sw-BorderedSection_Items-CrowdsaleSetupDutchAuction'
       return (
-        <div className="sw-BorderedSection_Items sw-BorderedSection_Items-CrowdsaleSetup">
-          <DisplayField title={WALLET_ADDRESS} value={walletAddress} description={PD_WALLET_ADDRESS} />
+        <div className={`sw-BorderedSection_Items sw-BorderedSection_Items-CrowdsaleSetup ${extraClass}`}>
+          <DisplayField
+            description={PD_WALLET_ADDRESS}
+            extraClass="pb-DisplayField-WalletAddress"
+            title={WALLET_ADDRESS}
+            value={walletAddress}
+          />
           {isDutchAuction ? (
-            <DisplayField title={BURN_EXCESS} value={burnExcess} description={DESCRIPTION.BURN_EXCESS} />
+            <DisplayField
+              description={DESCRIPTION.BURN_EXCESS}
+              extraClass="pb-DisplayField-BurnExcess"
+              title={BURN_EXCESS}
+              value={this.getBurnExcess(burnExcess)}
+            />
           ) : null}
           <DisplayField
             description={PD_CROWDSALE_START_TIME}
+            extraClass="pb-DisplayField-CrowdsaleStartTime"
             mobileTextSize="small"
             title={CROWDSALE_START_TIME}
             value={startTimeWithUTC}
           />
           <DisplayField
             description={PD_CROWDSALE_END_TIME}
+            extraClass="pb-DisplayField-CrowdsaleEndTime"
             mobileTextSize="small"
             title={CROWDSALE_END_TIME}
             value={endTimeWithUTC}
@@ -507,8 +549,8 @@ export class StepFour extends Component {
       ) : null
       const tierStartTimeStr = convertDateToUTCTimezoneToDisplay(startTime)
       const tierEndTimeStr = convertDateToUTCTimezoneToDisplay(endTime)
-      const tierIsUpdatable = isDutchAuction ? 'on' : updatable ? updatable : 'off'
-      const tierIsWhitelisted = whitelistEnabled ? whitelistEnabled : 'off'
+      const tierIsUpdatable = this.isTierUpdatable(updatable)
+      const tierIsWhitelisted = this.isWhitelisted(whitelistEnabled)
       const tierSupplyStr = supply ? supply : ''
       const allowModifying = isMintedCappedCrowdsale ? (
         <DisplayField title={ALLOW_MODIFYING} value={tierIsUpdatable} description={D_ALLOW_MODIFYING} />
@@ -530,13 +572,13 @@ export class StepFour extends Component {
               title={END_TIME}
               value={tierEndTimeStr}
             />
+            <DisplayField title={ENABLE_WHITELISTING} value={tierIsWhitelisted} description={PD_ENABLE_WHITELISTING} />
+            {allowModifying}
+            <DisplayField title={GLOBAL_MIN_CAP} value={minCap} description={PD_GLOBAL_MIN_CAP} />
+            <DisplayField title={MAX_CAP} value={tierSupplyStr} description={PD_HARD_CAP} />
             {mintedCappedCrowdsaleRate}
             {dutchAuctionCrowdsaleMinRate}
             {dutchAuctionCrowdsaleMaxRate}
-            {allowModifying}
-            <DisplayField title={MAX_CAP} value={tierSupplyStr} description={PD_HARD_CAP} />
-            <DisplayField title={ENABLE_WHITELISTING} value={tierIsWhitelisted} description={PD_ENABLE_WHITELISTING} />
-            <DisplayField title={GLOBAL_MIN_CAP} value={minCap} description={PD_GLOBAL_MIN_CAP} />
           </div>
         </div>
       )
