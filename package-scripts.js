@@ -13,14 +13,14 @@ module.exports = {
         'npm install',
         'cd ../../',
         'npm install --no-save submodules/poa-web3-1.0/packages/web3',
+        'bash ./scripts/generateProxyContracts.sh',
+        'npm run moveTruffleConfigBuild',
+        'npm run moveSolcVersionOutputBuild',
         'node scripts/build.js',
         ncp('./build/index.html ./build/invest.html'),
         ncp('./build/index.html ./build/crowdsale.html'),
         ncp('./build/index.html ./build/manage.html'),
-        ncp('./build/index.html ./build/stats.html'),
-        'bash ./scripts/generateProxyContracts.sh',
-        'npm run moveTruffleConfigBuild',
-        'npm run moveSolcVersionOutputBuild'
+        ncp('./build/index.html ./build/stats.html')
       )
     },
     dev: {
