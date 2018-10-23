@@ -103,7 +103,7 @@ export const CHAINS = {
   RINKEBY: 'Rinkeby',
   KOVAN: 'Kovan',
   SOKOL: 'Sokol',
-  XDAI: 'XDai Chain',
+  XDAI: 'xDai Chain',
   CORE: 'Core_POA'
 }
 
