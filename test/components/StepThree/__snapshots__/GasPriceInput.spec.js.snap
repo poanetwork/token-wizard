@@ -34,7 +34,7 @@ exports[`GasPriceInput should render GasPriceInput component 1`] = `
       <span
         className="sw-GasPriceInput_SelectButtonText"
       >
-        Safe and Cheap (5 GWei)
+        Select
       </span>
       <span
         className="sw-GasPriceInput_SelectButtonChevron"
@@ -49,7 +49,7 @@ exports[`GasPriceInput should render GasPriceInput component 1`] = `
         onClick={[Function]}
       >
         <input
-          checked={true}
+          checked={false}
           className="sw-GasPriceInput_SelectInput"
           id="slow"
           name="gas-price"
