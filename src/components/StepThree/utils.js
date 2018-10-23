@@ -4,16 +4,16 @@ import { StepThreeFormDutchAuction } from './StepThreeFormDutchAuction'
 import { CROWDSALE_STRATEGIES } from '../../utils/constants'
 
 export function defaultCompanyStartDate() {
-  let crowdsaleStartDate = moment().add(5, 'minutes')
-  let crowdsaleStartDateFormatted = crowdsaleStartDate.format('YYYY-MM-DDTHH:mm')
-  return crowdsaleStartDateFormatted
+  return moment()
+    .add(5, 'minutes')
+    .format('YYYY-MM-DDTHH:mm')
 }
 
 export const defaultCompanyEndDate = startDate => {
-  const crowdsaleEndDate = moment(startDate)
+  return moment(startDate)
     .add(4, 'days')
     .startOf('day')
-  return crowdsaleEndDate.format('YYYY-MM-DDTHH:mm')
+    .format('YYYY-MM-DDTHH:mm')
 }
 
 export const getStep3Component = strategy => {
