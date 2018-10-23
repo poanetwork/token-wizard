@@ -15,11 +15,14 @@ export class CreateCrowdsale extends Component {
           fromLocation: 'home'
         })
       } else {
-        navigateTo({
+        const data = {
           history: this.props.history,
           location: 'stepOne',
           fromLocation: 'home'
-        })
+        }
+
+        localStorage.reload = true
+        navigateTo(data)
       }
     } catch (err) {
       logger.log('Error to navigate', err)

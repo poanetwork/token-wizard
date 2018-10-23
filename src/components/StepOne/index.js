@@ -10,6 +10,9 @@ import { clearStorage, navigateTo } from '../../utils/utils'
 import { inject, observer } from 'mobx-react'
 import { reloadStorage } from '../Home/utils'
 import { strategies } from '../../utils/strategies'
+import { Loader } from '../Common/Loader'
+import logdown from 'logdown'
+import { StrategyItem } from './StrategyItem'
 
 const logger = logdown('TW:StepOne')
 const { CROWDSALE_STRATEGY } = NAVIGATION_STEPS
@@ -35,61 +38,59 @@ export class StepOne extends Component {
   }
 
   async componentDidMount() {
-    window.addEventListener('beforeunload', () => {
-      navigateTo({
-        history: this.props.history,
-        location: 'stepOne'
-      })
-    })
+    if (localStorage.reload) {
+      delete localStorage.reload
 
-    // Capture back button to clear fromLocation
-    window.addEventListener(
-      'popstate',
-      event => {
-        if (event.state) {
-          this.props.history.replace({
-            state: {
-              fromLocation: null
-            }
-          })
-        }
-      },
-      false
-    )
-
-    try {
-      await checkWeb3ForErrors(result => {
+      localStorage.clearStorage = true
+      window.location.reload()
+    } else {
+      window.addEventListener('beforeunload', () => {
         navigateTo({
           history: this.props.history,
-          location: 'home'
+          location: 'stepOne'
         })
       })
 
-      const { strategy } = await this.load()
-      this.setState({ strategy: strategy })
-    } catch (e) {
-      logger.log('An error has occurred', e.message)
-    }
+      // Capture back button to clear fromLocation
+      window.addEventListener(
+        'popstate',
+        event => {
+          if (event.state) {
+            this.props.history.replace({
+              state: {
+                fromLocation: null
+              }
+            })
+          }
+        },
+        false
+      )
 
-    this.setState({ loading: false })
+      try {
+        await checkWeb3ForErrors(result => {
+          navigateTo({
+            history: this.props.history,
+            location: 'home'
+          })
+        })
+
+        const { strategy } = await this.load()
+        this.setState({ strategy: strategy })
+      } catch (e) {
+        logger.log('An error has occurred', e.message)
+      }
+
+      this.setState({ loading: false })
+    }
   }
 
   async load() {
     const { crowdsaleStore } = this.props
-    // Reload storage
-    const { state } = this.props.history.location
+    if (localStorage.clearStorage) {
+      delete localStorage.clearStorage
 
-    logger.log(`From location ${state && state.fromLocation ? state.fromLocation : null}`)
-    if (state && state.fromLocation && state.fromLocation === 'home') {
       clearStorage(this.props)
       await reloadStorage(this.props)
-
-      // Set fromLocation to null, there is a glitch from the back button of the browser
-      this.props.history.push({
-        state: {
-          fromLocation: null
-        }
-      })
     }
 
     // Set default strategy value
@@ -127,6 +128,11 @@ export class StepOne extends Component {
   }
 
   render() {
+    // Not render until reload
+    if (localStorage.reload) {
+      return false
+    }
+
     const { contractStore } = this.props
     const status =
       (contractStore && contractStore.downloadStatus === DOWNLOAD_STATUS.SUCCESS) || localStorage.length > 0
