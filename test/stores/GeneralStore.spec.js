@@ -78,8 +78,7 @@ describe(`GeneralStore`, () => {
     generalStore.setGasTypeSelected(gasTypeSelected)
 
     // Then
-    expect(generalStore['gasTypeSelected']).toBe(gasTypeSelected)
-    expect(generalStore.getGasTypeSelected).toBe(gasTypeSelected)
+    expect(generalStore.gasTypeSelected).toBe(gasTypeSelected)
   })
 
   it(`Should properly set burnExcess`, () => {

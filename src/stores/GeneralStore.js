@@ -27,8 +27,8 @@ class GeneralStore {
   }
 
   @action
-  setGasTypeSelected = gasTypeSeleted => {
-    this.gasTypeSelected = gasTypeSeleted
+  setGasTypeSelected = gasTypeSelected => {
+    this.gasTypeSelected = gasTypeSelected
   }
 
   @action
@@ -39,15 +39,9 @@ class GeneralStore {
   @action
   reset = () => {
     this.networkID = undefined
-    this.gasPrice = GAS_PRICE.SLOW.PRICE
+    this.gasPrice = GAS_PRICE.SLOW.price
     this.gasTypeSelected = undefined
     this.burnExcess = 'no'
-  }
-
-  // Getters
-  @computed
-  get getGasTypeSelected() {
-    return this.gasTypeSelected
   }
 }
 
