@@ -1,7 +1,7 @@
 import GasPriceInput from './GasPriceInput'
 import React from 'react'
 import logdown from 'logdown'
-import { AddTierButton } from './AddTierButton'
+import AddTierButton from './AddTierButton'
 import { ButtonBack } from '../Common/ButtonBack'
 import { ButtonContinue } from '../Common/ButtonContinue'
 import { Field, FormSpy } from 'react-final-form'
