@@ -21,10 +21,9 @@ export default class GasPriceInput extends Component {
     const { generalStore } = this.props
     const { gasTypeSelected } = generalStore
 
-    this.setState({ gasTypeSelected: gasTypeSelected })
-
     if (gasTypeSelected.id === GAS_PRICE.CUSTOM.id) {
       this.setState({
+        gasTypeSelected,
         customGasPrice: gasTypeSelected.price,
         isCustom: true
       })

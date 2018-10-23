@@ -66,29 +66,29 @@ export const MAX_GAS_PRICE = 4374900
 
 export const GAS_PRICE = {
   SLOW: {
-    ID: 'slow',
-    PRICE: 5000000000,
-    DESCRIPTION: 'Safe and Cheap'
+    id: 'slow',
+    price: 5000000000,
+    description: 'Safe and Cheap'
   },
   NORMAL: {
-    ID: 'normal',
-    PRICE: 10000000000,
-    DESCRIPTION: 'Normal'
+    id: 'normal',
+    price: 10000000000,
+    description: 'Normal'
   },
   FAST: {
-    ID: 'fast',
-    PRICE: 15000000000,
-    DESCRIPTION: 'Fast and Expensive'
+    id: 'fast',
+    price: 15000000000,
+    description: 'Fast and Expensive'
   },
   INSTANT: {
-    ID: 'instant',
-    PRICE: 45000000000,
-    DESCRIPTION: 'Instantaneous and Expensive'
+    id: 'instant',
+    price: 45000000000,
+    description: 'Instantaneous and Expensive'
   },
   CUSTOM: {
-    ID: 'custom',
-    PRICE: 0.1,
-    DESCRIPTION: 'Custom'
+    id: 'custom',
+    price: 0.1,
+    description: 'Custom'
   },
   API: {
     URL: 'https://gasprice.poa.network'
