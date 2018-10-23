@@ -56,7 +56,7 @@ async function getCrowdsaleAsset(contractName, stateProp, networkID) {
       ? setFlatFileContentToState(`./contracts/${stateProp}.sol`)
       : Promise.resolve()
   const whenBin =
-    stateProp === 'MintedCappedProxy' || stateProp === 'DutchProxy' || stateProp === 'ProxiesRegistry'
+    stateProp === 'MintedCappedProxy' || stateProp === 'DutchProxy'
       ? setFlatFileContentToState(`./contracts/${stateProp}.bin`)
       : Promise.resolve()
   let abi
