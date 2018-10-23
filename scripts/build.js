@@ -45,7 +45,9 @@ measureFileSizesBeforeBuild(paths.appBuild)
   .then(previousFileSizes => {
     // Remove all content but keep the directory so that
     // if you're in it, you don't end up in Trash
-    fs.emptyDirSync(paths.appBuild);
+
+    deleteFolderRecursive(paths.appBuild);
+
     // Merge with the public folder
     copyPublicFolder();
     // Start the webpack build
@@ -141,4 +143,31 @@ function copyPublicFolder() {
     dereference: true,
     filter: file => file !== paths.appHtml,
   });
+}
+
+function deleteFolderRecursive(pathApp) {
+  const pathBuild = path.join(__dirname, `../build`)
+  const pathContract = path.join(__dirname, `../build/contracts`)
+  const pathMetadata = path.join(__dirname, `../build/metadata`)
+
+  if (pathApp === pathContract || pathApp === pathMetadata) {
+    console.log(`Path excluded to delete: ${pathApp}`)
+    return
+  } else {
+    if (fs.existsSync(pathApp)) {
+      fs.readdirSync(pathApp).forEach(function(file) {
+        let curPath = `${pathApp}/${file}`
+        if (fs.lstatSync(curPath).isDirectory()) {
+          // recurse
+          deleteFolderRecursive(curPath)
+        } else {
+          // delete file
+          fs.unlinkSync(curPath)
+        }
+      })
+      if (pathApp !== pathBuild) {
+        fs.rmdirSync(pathApp)
+      }
+    }
+  }
 }
