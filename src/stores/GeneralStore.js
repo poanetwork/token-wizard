@@ -1,4 +1,4 @@
-import { observable, action, computed } from 'mobx'
+import { observable, action } from 'mobx'
 import { GAS_PRICE } from '../utils/constants'
 import autosave from './autosave'
 
