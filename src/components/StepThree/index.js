@@ -78,14 +78,14 @@ export class StepThree extends Component {
       initialTiers = JSON.parse(JSON.stringify(tierStore.tiers))
     }
 
-    if (!generalStore.getGasTypeSelected) {
+    if (!generalStore.gasTypeSelected) {
       generalStore.setGasTypeSelected(gasPriceStore.gasPricesInGwei[0])
     }
 
     return {
       initialTiers: initialTiers,
       burnExcess: generalStore.burnExcess,
-      gasTypeSelected: generalStore.getGasTypeSelected
+      gasTypeSelected: generalStore.gasTypeSelected
     }
   }
 
