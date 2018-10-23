@@ -2,7 +2,7 @@
 
 exports[`Should render the component 1`] = `
 <div
-  className="sw-RadioInputField "
+  className="sw-RadioInputField "
 >
   <div
     className="sw-FormControlTitle"
