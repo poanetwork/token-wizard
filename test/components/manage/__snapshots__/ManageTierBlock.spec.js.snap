@@ -23,7 +23,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               <label
                 className="sw-FormControlTitle_Label"
               >
-                Crowdsale setup name
+                Tier setup name
               </label>
             </div>
             <input
@@ -39,7 +39,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
           className="input-block-container"
         >
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"
@@ -73,7 +73,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
             />
           </div>
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"
@@ -111,7 +111,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
           className="input-block-container"
         >
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"
@@ -140,12 +140,13 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
+              placeholder="Enter here"
               type="text"
               value=""
             />
           </div>
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"
@@ -174,6 +175,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
+              placeholder="Enter here"
               type="text"
               value=""
             />
@@ -183,7 +185,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
           className="input-block-container"
         >
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"
@@ -336,7 +338,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               <label
                 className="sw-FormControlTitle_Label"
               >
-                Crowdsale setup name
+                Tier setup name
               </label>
             </div>
             <input
@@ -352,7 +354,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
           className="input-block-container"
         >
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"
@@ -386,7 +388,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
             />
           </div>
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"
@@ -424,7 +426,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
           className="input-block-container"
         >
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"
@@ -453,12 +455,13 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
+              placeholder="Enter here"
               type="text"
               value=""
             />
           </div>
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"
@@ -487,6 +490,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
+              placeholder="Enter here"
               type="text"
               value=""
             />
@@ -496,7 +500,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
           className="input-block-container"
         >
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"
@@ -549,7 +553,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               <label
                 className="sw-FormControlTitle_Label"
               >
-                Crowdsale setup name
+                Tier setup name
               </label>
             </div>
             <input
@@ -565,7 +569,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
           className="input-block-container"
         >
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"
@@ -599,7 +603,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
             />
           </div>
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"
@@ -637,7 +641,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
           className="input-block-container"
         >
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"
@@ -666,12 +670,13 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
+              placeholder="Enter here"
               type="text"
               value=""
             />
           </div>
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"
@@ -700,6 +705,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
+              placeholder="Enter here"
               type="text"
               value=""
             />
@@ -709,7 +715,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
           className="input-block-container"
         >
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"
@@ -862,7 +868,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               <label
                 className="sw-FormControlTitle_Label"
               >
-                Crowdsale setup name
+                Tier setup name
               </label>
             </div>
             <input
@@ -878,7 +884,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
           className="input-block-container"
         >
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"
@@ -912,7 +918,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
             />
           </div>
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"
@@ -950,7 +956,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
           className="input-block-container"
         >
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"
@@ -979,12 +985,13 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
+              placeholder="Enter here"
               type="text"
               value=""
             />
           </div>
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"
@@ -1013,6 +1020,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
+              placeholder="Enter here"
               type="text"
               value=""
             />
@@ -1022,7 +1030,7 @@ exports[`ManageTierBlock should render the ManageTierBlock component with tiers 
           className="input-block-container"
         >
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"

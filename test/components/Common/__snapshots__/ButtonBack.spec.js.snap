@@ -2,7 +2,7 @@
 
 exports[`ButtonBack should render ButtonBack component 1`] = `
 <button
-  className="sw-ButtonBack"
+  className="sw-ButtonBack "
   onClick={[MockFunction]}
   type="button"
 >

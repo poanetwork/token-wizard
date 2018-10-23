@@ -126,7 +126,7 @@ exports[`StepOne should render StepOne screen 1`] = `
           className="sw-RadioItems_Item"
         >
           <input
-            checked={false}
+            checked={true}
             className="sw-RadioItems_InputRadio"
             id="white-list-with-cap"
             name="contract-type"
@@ -195,7 +195,7 @@ exports[`StepOne should render StepOne screen 1`] = `
         className="st-StepContent_Buttons"
       >
         <button
-          className="sw-ButtonContinue"
+          className="sw-ButtonContinue "
           disabled={false}
           onClick={[Function]}
         >

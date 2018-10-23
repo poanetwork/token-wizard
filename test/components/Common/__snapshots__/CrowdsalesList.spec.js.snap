@@ -1229,7 +1229,7 @@ exports[`CrowdsaleList  should render CrowdsaleList component 1`] = `
           status={null}
         >
           <button
-            className="sw-ButtonContinue"
+            className="sw-ButtonContinue "
             disabled={true}
             onClick={[Function]}
           >
@@ -2403,7 +2403,7 @@ exports[`CrowdsaleList  should render if list is empty   1`] = `
           status={null}
         >
           <button
-            className="sw-ButtonContinue"
+            className="sw-ButtonContinue "
             disabled={true}
             onClick={[Function]}
           >

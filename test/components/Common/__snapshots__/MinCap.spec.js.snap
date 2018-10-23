@@ -2,7 +2,7 @@
 
 exports[`MinCap  should render MinCap component 1`] = `
 <div
-  className="sw-InputField "
+  className="sw-InputField2 "
 >
   <div
     className="sw-FormControlTitle"
@@ -32,7 +32,7 @@ exports[`MinCap  should render MinCap component 1`] = `
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
-    type="text"
+    placeholder="Enter here"
     value=""
   />
 </div>
@@ -40,7 +40,7 @@ exports[`MinCap  should render MinCap component 1`] = `
 
 exports[`MinCap  should render MinCap component if field is disabled 1`] = `
 <div
-  className="sw-InputField "
+  className="sw-InputField2 "
 >
   <div
     className="sw-FormControlTitle"
@@ -70,7 +70,7 @@ exports[`MinCap  should render MinCap component if field is disabled 1`] = `
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
-    type="text"
+    placeholder="Enter here"
     value=""
   />
 </div>
