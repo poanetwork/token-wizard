@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AddTierButton should render AddTierButton 1`] = `
+<button
+  className="ti-AddTierButton"
+  onClick={[MockFunction]}
+  type="button"
+>
+  <span
+    className="ti-AddTierButton_Text"
+  >
+    Add Tier
+  </span>
+  <span
+    className="ti-AddTierButton_PlusIcon"
+  />
+</button>
+`;
