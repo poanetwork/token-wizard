@@ -1,337 +1,349 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TierBlock  should render TierBlock component 1`] = `
-<div>
+<div
+  className="sw-TierBlock"
+>
   <div
-    className="steps-content container"
-    style={
-      Object {
-        "marginTop": "40px",
-      }
-    }
+    className="sw-BorderedBlock sw-BorderedBlock-TierBlocksWhitelistCapped"
   >
-    <div>
+    <div
+      className="sw-InputField2 sw-InputField2-TierSetupName"
+    >
       <div
-        className="input-block-container"
+        className="sw-FormControlTitle"
       >
-        <div
-          className="sw-InputField "
+        <label
+          className="sw-FormControlTitle_Label"
         >
-          <div
-            className="sw-FormControlTitle"
+          Tier setup name
+        </label>
+        <div
+          className="sw-FormControlTitle_Info"
+          tabIndex="-1"
+        >
+          <span
+            className="sw-FormControlTitle_Tooltip"
           >
-            <label
-              className="sw-FormControlTitle_Label"
-            >
-              Crowdsale setup name
-            </label>
-            <div
-              className="sw-FormControlTitle_Info"
-              tabIndex="-1"
-            >
-              <span
-                className="sw-FormControlTitle_Tooltip"
-              >
-                Name of a tier, e.g. PrePreCrowdsale, PreCrowdsale, Crowdsale with bonus A, Crowdsale with bonus B, etc. We simplified that and will increment a number after each tier.
-              </span>
-            </div>
-          </div>
-          <input
-            className="sw-TextField"
-            id="tierblock,0.tier"
-            name="tierblock,0.tier"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            type="text"
-            value=""
-          />
+            Name of a tier, e.g. PrePreCrowdsale, PreCrowdsale, Crowdsale with bonus A, Crowdsale with bonus B, etc. We simplified that and will increment a number after each tier.
+          </span>
         </div>
       </div>
+      <input
+        className="sw-TextField"
+        id="tierblock,0.tier"
+        name="tierblock,0.tier"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder="Enter here"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      className="sw-InputField2 sw-InputField2-CrowdsaleStartTime"
+    >
       <div
-        className="input-block-container"
+        className="sw-FormControlTitle"
       >
-        <div
-          className="left"
+        <label
+          className="sw-FormControlTitle_Label"
         >
-          <label
-            className="label"
+          Start Time
+        </label>
+        <div
+          className="sw-FormControlTitle_Info"
+          tabIndex="-1"
+        >
+          <span
+            className="sw-FormControlTitle_Tooltip"
           >
-            Allow modifying
-          </label>
-          <div
-            className="radios-inline"
-          >
-            <label
-              className="radio-inline"
-            >
-              <input
-                checked={false}
-                id="tierblock,0.allow_modifying_on"
-                onChange={[Function]}
-                type="radio"
-                value="on"
-              />
-              <span
-                className="title"
-              >
-                on
-              </span>
-            </label>
-            <label
-              className="radio-inline"
-            >
-              <input
-                checked={false}
-                id="tierblock,0.allow_modifying_off"
-                onChange={[Function]}
-                type="radio"
-                value="off"
-              />
-              <span
-                className="title"
-              >
-                off
-              </span>
-            </label>
-          </div>
-          <p
-            className="description"
-          >
-            If it's enabled, a creator of the crowdsale can modify crowdsale duration after publishing.
-          </p>
+            Date and time when the tier starts. Can't be in the past from the current moment.
+          </span>
         </div>
-        <div
-          className="right"
+      </div>
+      <input
+        className="sw-TextField"
+        disabled={false}
+        id="tierblock,0.startTime"
+        name="tierblock,0.startTime"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        type="datetime-local"
+        value=""
+      />
+    </div>
+    <div
+      className="sw-InputField2 sw-InputField2-CrowdsaleEndTime"
+    >
+      <div
+        className="sw-FormControlTitle"
+      >
+        <label
+          className="sw-FormControlTitle_Label"
         >
-          <label
-            className="label"
+          End Time
+        </label>
+        <div
+          className="sw-FormControlTitle_Info"
+          tabIndex="-1"
+        >
+          <span
+            className="sw-FormControlTitle_Tooltip"
           >
-            Enable whitelisting
-          </label>
-          <div
-            className="radios-inline"
+            Date and time when the tier ends. Can be only in the future.
+          </span>
+        </div>
+      </div>
+      <input
+        className="sw-TextField"
+        id="tierblock,0.endTime"
+        name="tierblock,0.endTime"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        type="datetime-local"
+        value=""
+      />
+    </div>
+    <div
+      className="sw-InputField2 sw-InputField2-CrowdsaleRate"
+    >
+      <div
+        className="sw-FormControlTitle"
+      >
+        <label
+          className="sw-FormControlTitle_Label"
+        >
+          Rate
+        </label>
+        <div
+          className="sw-FormControlTitle_Info"
+          tabIndex="-1"
+        >
+          <span
+            className="sw-FormControlTitle_Tooltip"
           >
-            <label
-              className="radio-inline"
-            >
-              <input
-                checked={false}
-                id="tierblock,0.enable_whitelisting_yes"
-                onChange={[Function]}
-                type="radio"
-                value="yes"
-              />
-              <span
-                className="title"
-              >
-                yes
-              </span>
-            </label>
-            <label
-              className="radio-inline"
-            >
-              <input
-                checked={false}
-                id="tierblock,0.enable_whitelisting_no"
-                onChange={[Function]}
-                type="radio"
-                value="no"
-              />
-              <span
-                className="title"
-              >
-                no
-              </span>
-            </label>
-          </div>
-          <p
-            className="description"
+            Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
+          </span>
+        </div>
+      </div>
+      <input
+        className="sw-TextField"
+        id="tierblock,0.rate"
+        max="1000000000000000000"
+        min="0"
+        name="tierblock,0.rate"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder="Enter here"
+        type="number"
+        value=""
+      />
+    </div>
+    <div
+      className="sw-InputField2 sw-InputField2-CrowdsaleSupply"
+    >
+      <div
+        className="sw-FormControlTitle"
+      >
+        <label
+          className="sw-FormControlTitle_Label"
+        >
+          Supply
+        </label>
+        <div
+          className="sw-FormControlTitle_Info"
+          tabIndex="-1"
+        >
+          <span
+            className="sw-FormControlTitle_Tooltip"
+          >
+            How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
+          </span>
+        </div>
+      </div>
+      <input
+        className="sw-TextField"
+        disabled={false}
+        id="tierblock,0.supply"
+        min="0"
+        name="tierblock,0.supply"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder="Enter here"
+        type="number"
+        value=""
+      />
+    </div>
+    <div
+      className="sw-InputField2 sw-InputField2-MinCap"
+    >
+      <div
+        className="sw-FormControlTitle"
+      >
+        <label
+          className="sw-FormControlTitle_Label"
+        >
+          Contributor min cap
+        </label>
+        <div
+          className="sw-FormControlTitle_Info"
+          tabIndex="-1"
+        >
+          <span
+            className="sw-FormControlTitle_Tooltip"
+          >
+            Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1
+               and a user already has 1 token from a previous transaction, they can buy any amount they want.
+          </span>
+        </div>
+      </div>
+      <input
+        className="sw-TextField"
+        disabled={false}
+        id="tierblock,0.minCap"
+        max=""
+        min="0"
+        name="tierblock,0.minCap"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder="Enter here"
+        type="number"
+        value=""
+      />
+    </div>
+    <div
+      className="sw-RadioButton sw-InputField2-WhitelistEnabled"
+    >
+      <div
+        className="sw-FormControlTitle"
+      >
+        <label
+          className="sw-FormControlTitle_Label"
+        >
+          Enable whitelisting
+        </label>
+        <div
+          className="sw-FormControlTitle_Info"
+          tabIndex="-1"
+        >
+          <span
+            className="sw-FormControlTitle_Tooltip"
           >
             Enables whitelisting. If disabled, anyone can participate in the crowdsale.
-          </p>
+          </span>
         </div>
       </div>
       <div
-        className="input-block-container"
+        className="sw-RadioButton_Container"
       >
-        <div
-          className="sw-InputField "
+        <label
+          className="sw-RadioButton_Label"
         >
-          <div
-            className="sw-FormControlTitle"
-          >
-            <label
-              className="sw-FormControlTitle_Label"
-            >
-              Start Time
-            </label>
-            <div
-              className="sw-FormControlTitle_Info"
-              tabIndex="-1"
-            >
-              <span
-                className="sw-FormControlTitle_Tooltip"
-              >
-                Date and time when the tier starts. Can't be in the past from the current moment.
-              </span>
-            </div>
-          </div>
           <input
-            className="sw-TextField"
-            disabled={false}
-            id="tierblock,0.startTime"
-            name="tierblock,0.startTime"
-            onBlur={[Function]}
+            checked={false}
+            className="sw-RadioButton_Input"
+            disabled={true}
+            id="tierblock,0.whitelistEnabled.enable_whitelisting_yes"
+            name="tierblock,0.whitelistEnabled"
             onChange={[Function]}
-            onFocus={[Function]}
-            type="datetime-local"
-            value=""
+            type="radio"
+            value="yes"
           />
-        </div>
-        <div
-          className="sw-InputField "
+          <span
+            className="sw-RadioButton_Button"
+          >
+            Yes
+          </span>
+        </label>
+        <label
+          className="sw-RadioButton_Label"
         >
-          <div
-            className="sw-FormControlTitle"
-          >
-            <label
-              className="sw-FormControlTitle_Label"
-            >
-              End Time
-            </label>
-            <div
-              className="sw-FormControlTitle_Info"
-              tabIndex="-1"
-            >
-              <span
-                className="sw-FormControlTitle_Tooltip"
-              >
-                Date and time when the tier ends. Can be only in the future.
-              </span>
-            </div>
-          </div>
           <input
-            className="sw-TextField"
-            id="tierblock,0.endTime"
-            name="tierblock,0.endTime"
-            onBlur={[Function]}
+            checked={true}
+            className="sw-RadioButton_Input"
+            disabled={true}
+            id="tierblock,0.whitelistEnabled.enable_whitelisting_no"
+            name="tierblock,0.whitelistEnabled"
             onChange={[Function]}
-            onFocus={[Function]}
-            type="datetime-local"
-            value=""
+            type="radio"
+            value="no"
           />
+          <span
+            className="sw-RadioButton_Button"
+          >
+            No
+          </span>
+        </label>
+      </div>
+    </div>
+    <div
+      className="sw-RadioButton sw-InputField2-AllowModifying"
+    >
+      <div
+        className="sw-FormControlTitle"
+      >
+        <label
+          className="sw-FormControlTitle_Label"
+        >
+          Allow modifying
+        </label>
+        <div
+          className="sw-FormControlTitle_Info"
+          tabIndex="-1"
+        >
+          <span
+            className="sw-FormControlTitle_Tooltip"
+          >
+            If it's enabled, a creator of the crowdsale can modify crowdsale duration after publishing.
+          </span>
         </div>
       </div>
       <div
-        className="input-block-container"
+        className="sw-RadioButton_Container"
       >
-        <div
-          className="sw-InputField "
+        <label
+          className="sw-RadioButton_Label"
         >
-          <div
-            className="sw-FormControlTitle"
-          >
-            <label
-              className="sw-FormControlTitle_Label"
-            >
-              Rate
-            </label>
-            <div
-              className="sw-FormControlTitle_Info"
-              tabIndex="-1"
-            >
-              <span
-                className="sw-FormControlTitle_Tooltip"
-              >
-                Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens
-              </span>
-            </div>
-          </div>
           <input
-            className="sw-TextField"
-            id="tierblock,0.rate"
-            name="tierblock,0.rate"
-            onBlur={[Function]}
+            checked={false}
+            className="sw-RadioButton_Input"
+            id="tierblock,0.updatable.allow_modifying_on"
+            name="tierblock,0.updatable"
             onChange={[Function]}
-            onFocus={[Function]}
-            type="text"
-            value=""
+            type="radio"
+            value="on"
           />
-        </div>
-        <div
-          className="sw-InputField "
+          <span
+            className="sw-RadioButton_Button"
+          >
+            Yes
+          </span>
+        </label>
+        <label
+          className="sw-RadioButton_Label"
         >
-          <div
-            className="sw-FormControlTitle"
-          >
-            <label
-              className="sw-FormControlTitle_Label"
-            >
-              Supply
-            </label>
-            <div
-              className="sw-FormControlTitle_Info"
-              tabIndex="-1"
-            >
-              <span
-                className="sw-FormControlTitle_Tooltip"
-              >
-                How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers
-              </span>
-            </div>
-          </div>
           <input
-            className="sw-TextField"
-            disabled={false}
-            id="tierblock,0.supply"
-            name="tierblock,0.supply"
-            onBlur={[Function]}
+            checked={false}
+            className="sw-RadioButton_Input"
+            id="tierblock,0.updatable.allow_modifying_off"
+            name="tierblock,0.updatable"
             onChange={[Function]}
-            onFocus={[Function]}
-            type="text"
-            value=""
+            type="radio"
+            value="off"
           />
-        </div>
-      </div>
-      <div
-        className="input-block-container"
-      >
-        <div
-          className="sw-InputField "
-        >
-          <div
-            className="sw-FormControlTitle"
+          <span
+            className="sw-RadioButton_Button"
           >
-            <label
-              className="sw-FormControlTitle_Label"
-            >
-              Contributor min cap
-            </label>
-            <div
-              className="sw-FormControlTitle_Info"
-              tabIndex="-1"
-            >
-              <span
-                className="sw-FormControlTitle_Tooltip"
-              >
-                Minimum amount of tokens to buy. Not the minimal amount for every transaction: if minCap is 1
-               and a user already has 1 token from a previous transaction, they can buy any amount they want.
-              </span>
-            </div>
-          </div>
-          <input
-            className="sw-TextField"
-            disabled={false}
-            id="tierblock,0.minCap"
-            name="tierblock,0.minCap"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            type="text"
-            value=""
-          />
-        </div>
+            No
+          </span>
+        </label>
       </div>
     </div>
   </div>

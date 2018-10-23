@@ -195,7 +195,7 @@ exports[`StepOne should render StepOne screen 1`] = `
         className="st-StepContent_Buttons"
       >
         <button
-          className="sw-ButtonContinue"
+          className="sw-ButtonContinue "
           disabled={false}
           onClick={[Function]}
         >

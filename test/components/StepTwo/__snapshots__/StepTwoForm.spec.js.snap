@@ -7,10 +7,10 @@ exports[`StepTwoForm should render StepTwoForm for Dutch Auction Crowdsale 1`] =
   onSubmit={[Function]}
 >
   <div
-    className="sw-BorderedBlock sw-BorderedBlock-2Rows2Columns"
+    className="sw-BorderedBlock sw-BorderedBlock-GeneralSettingsDutchAuction"
   >
     <div
-      className="sw-InputField "
+      className="sw-InputField2 "
     >
       <div
         className="sw-FormControlTitle"
@@ -38,12 +38,13 @@ exports[`StepTwoForm should render StepTwoForm for Dutch Auction Crowdsale 1`] =
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
+        placeholder="Enter here"
         type="text"
         value="This is a valid name"
       />
     </div>
     <div
-      className="sw-InputField "
+      className="sw-InputField2 "
     >
       <div
         className="sw-FormControlTitle"
@@ -71,12 +72,13 @@ exports[`StepTwoForm should render StepTwoForm for Dutch Auction Crowdsale 1`] =
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
+        placeholder="Enter here"
         type="text"
         value="TTK"
       />
     </div>
     <div
-      className="sw-InputField "
+      className="sw-InputField2 "
     >
       <div
         className="sw-FormControlTitle"
@@ -107,12 +109,13 @@ exports[`StepTwoForm should render StepTwoForm for Dutch Auction Crowdsale 1`] =
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
+        placeholder="Enter here"
         type="number"
         value="14"
       />
     </div>
     <div
-      className="sw-InputField "
+      className="sw-InputField2 "
     >
       <div
         className="sw-FormControlTitle"
@@ -136,11 +139,13 @@ exports[`StepTwoForm should render StepTwoForm for Dutch Auction Crowdsale 1`] =
       <input
         className="sw-TextField"
         id="supply"
+        min="0"
         name="supply"
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
-        type="text"
+        placeholder="Enter here"
+        type="number"
         value=""
       />
     </div>
@@ -149,14 +154,14 @@ exports[`StepTwoForm should render StepTwoForm for Dutch Auction Crowdsale 1`] =
     className="st-StepContent_Buttons"
   >
     <button
-      className="sw-ButtonBack"
+      className="sw-ButtonBack "
       onClick={[Function]}
       type="button"
     >
       Back
     </button>
     <button
-      className="sw-ButtonContinue"
+      className="sw-ButtonContinue "
       disabled={true}
       type="submit"
     >
@@ -177,10 +182,10 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
   onSubmit={[Function]}
 >
   <div
-    className="sw-BorderedBlock sw-BorderedBlock-3Columns"
+    className="sw-BorderedBlock sw-BorderedBlock-GeneralSettingsWhitelistCapped"
   >
     <div
-      className="sw-InputField "
+      className="sw-InputField2 "
     >
       <div
         className="sw-FormControlTitle"
@@ -208,12 +213,13 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
+        placeholder="Enter here"
         type="text"
         value="This is a valid name"
       />
     </div>
     <div
-      className="sw-InputField "
+      className="sw-InputField2 "
     >
       <div
         className="sw-FormControlTitle"
@@ -241,12 +247,13 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
+        placeholder="Enter here"
         type="text"
         value="TTK"
       />
     </div>
     <div
-      className="sw-InputField "
+      className="sw-InputField2 "
     >
       <div
         className="sw-FormControlTitle"
@@ -277,6 +284,7 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
         onBlur={[Function]}
         onChange={[Function]}
         onFocus={[Function]}
+        placeholder="Enter here"
         type="number"
         value="14"
       />
@@ -289,10 +297,10 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
       Reserved tokens
     </h2>
     <div
-      className="sw-BorderedBlock sw-BorderedBlock-3Rows3Columns"
+      className="sw-BorderedBlock sw-BorderedBlock-ReservedTokensWhitelistCapped"
     >
       <div
-        className="sw-InputField sw-BorderedBlock_Row1Column1"
+        className="sw-InputField sw-InputField-ReservedTokensAddress"
       >
         <div
           className="sw-FormControlTitle"
@@ -323,7 +331,7 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
         
       </div>
       <div
-        className="sw-RadioInputField sw-BorderedBlock_Row1Column2"
+        className="sw-RadioInputField sw-RadioInputField-ReservedTokensDimension"
       >
         <div
           className="sw-FormControlTitle"
@@ -384,30 +392,30 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
         </div>
       </div>
       <div
-        className="sw-NumericInput sw-BorderedBlock_Row1Column3"
+        className="sw-NumericInputAndButtonContainer sw-NumericInputAndButtonContainer-RerservedTokensValue"
       >
         <div
-          className="sw-FormControlTitle"
+          className="sw-NumericInput "
         >
-          <label
-            className="sw-FormControlTitle_Label"
-          >
-            Value
-          </label>
           <div
-            className="sw-FormControlTitle_Info"
-            tabIndex="-1"
+            className="sw-FormControlTitle"
           >
-            <span
-              className="sw-FormControlTitle_Tooltip"
+            <label
+              className="sw-FormControlTitle_Label"
             >
-              Value in tokens. Don't forget to click + button for each reserved token.
-            </span>
+              Value
+            </label>
+            <div
+              className="sw-FormControlTitle_Info"
+              tabIndex="-1"
+            >
+              <span
+                className="sw-FormControlTitle_Tooltip"
+              >
+                Value in tokens. Don't forget to click + button for each reserved token.
+              </span>
+            </div>
           </div>
-        </div>
-        <div
-          className="sw-NumericInput_InputAndButtonContainer"
-        >
           <input
             className="sw-TextField"
             min="0.00000000000001"
@@ -415,43 +423,31 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
             onKeyPress={[Function]}
             onPaste={[Function]}
             placeholder="Enter here"
+            step="1"
             type="number"
             value=""
           />
-          <div
-            className="sw-NumericInput_ButtonPlus"
-            onClick={[Function]}
-          />
+          
         </div>
-        
+        <button
+          className="sw-ButtonPlus "
+          onClick={[Function]}
+          type="button"
+        />
       </div>
       <div
-        className="sw-ReservedTokensTable sw-BorderedBlock_Row2Column1"
-      >
-        <div
-          className="sw-ReservedTokensTable_Inner"
-        >
-          <table
-            cellPadding="0"
-            cellSpacing="0"
-            className="sw-ReservedTokensTable_Table"
-          >
-            <tbody />
-          </table>
-        </div>
-      </div>
-      <div
-        className="sw-ReservedTokensListControls sw-BorderedBlock_Row3Column1"
+        className="sw-ReservedTokensListControls"
       >
         <span>
           Dropzone
         </span>
-        <div
-          className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-downloadcsv m-r-0"
+        <button
+          className="sw-ButtonCSV sw-ButtonCSV-downloadcsv m-r-0"
           onClick={[Function]}
+          type="button"
         >
           Download CSV template
-        </div>
+        </button>
       </div>
     </div>
   </div>
@@ -459,14 +455,14 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
     className="st-StepContent_Buttons"
   >
     <button
-      className="sw-ButtonBack"
+      className="sw-ButtonBack "
       onClick={[Function]}
       type="button"
     >
       Back
     </button>
     <button
-      className="sw-ButtonContinue"
+      className="sw-ButtonContinue "
       disabled={false}
       type="submit"
     >

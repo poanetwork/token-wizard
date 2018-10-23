@@ -4,7 +4,6 @@ import { VALIDATION_TYPES } from '../../../src/utils/constants'
 import Adapter from 'enzyme-adapter-react-15'
 import { configure, mount } from 'enzyme'
 import { reservedTokenStore, tokenStore } from '../../../src/stores'
-import { toBigNumber } from '../../../src/utils/utils'
 
 const { VALID, INVALID } = VALIDATION_TYPES
 const stores = { reservedTokenStore, tokenStore }
@@ -324,7 +323,7 @@ describe('ReservedTokensInputBlock', () => {
             .at(0)
             .simulate('change', { target: { value: testCase.value.val } })
 
-          wrapper.find('.sw-NumericInput_ButtonPlus').simulate('click')
+          wrapper.find('ButtonPlus').simulate('click')
 
           const { value } = testCase
           value.val = testCase.value.val === '' ? '' : parseFloat(testCase.value.val)
@@ -359,9 +358,9 @@ describe('ReservedTokensInputBlock', () => {
           .at(0)
           .simulate('change', { target: { value: testCase.value.val } })
 
-        wrapper.find('.sw-NumericInput_ButtonPlus').simulate('click')
+        wrapper.find('ButtonPlus').simulate('click')
 
-        const clearAllButton = wrapper.find('.sw-ReservedTokensListControls_Button-clearall')
+        const clearAllButton = wrapper.find('ButtonCSV').find('.sw-ButtonCSV-clearall')
         expect(clearAllButton).toHaveLength(1)
       })
 
