@@ -1,4 +1,14 @@
 const fs = require('fs')
+const path = require('path')
+
+const ensureDirectoryExistence = filePath => {
+  const dirname = path.dirname(filePath)
+  if (fs.existsSync(dirname)) {
+    return true
+  }
+  ensureDirectoryExistence(dirname)
+  fs.mkdirSync(dirname)
+}
 
 /**
  * Copy file from source to target
@@ -8,6 +18,9 @@ const fs = require('fs')
  */
 const copyFile = (source, target, cb) => {
   let cbCalled = false
+
+  // Create target if not exist
+  ensureDirectoryExistence(target)
 
   let rd = fs.createReadStream(source)
   rd.on('error', function(err) {
