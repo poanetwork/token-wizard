@@ -9,8 +9,7 @@ import {
   scrollToBottom,
   summaryFileContents,
   getOptimizationFlagByStore,
-  getVersionFlagByStore,
-  navigateTo
+  getVersionFlagByStore
 } from './utils'
 import { noContractDataAlert, successfulDeployment, skippingTransaction, deployHasEnded } from '../../utils/alerts'
 import {
@@ -27,7 +26,6 @@ import PropTypes from 'prop-types'
 import cancelDeploy from '../../utils/cancelDeploy'
 import executeSequentially from '../../utils/executeSequentially'
 import logdown from 'logdown'
-import { ButtonBack } from '../Common/ButtonBack'
 import { ButtonContinue } from '../Common/ButtonContinue'
 import { ButtonDownload } from '../Common/ButtonDownload'
 import { CrowdsaleConfig } from '../Common/config'
@@ -398,17 +396,6 @@ export class StepFour extends Component {
     )
   }
 
-  goBack = async () => {
-    try {
-      navigateTo({
-        history: this.props.history,
-        location: 'stepThree'
-      })
-    } catch (err) {
-      logger.log('Error to navigate', err)
-    }
-  }
-
   isTierUpdatable = updatable => {
     return (
       {
@@ -602,7 +589,6 @@ export class StepFour extends Component {
     )
 
     const strategyName = isMintedCappedCrowdsale ? MINTED_CAPPED_CROWDSALE_DN : isDutchAuction ? DUTCH_AUCTION_DN : ''
-
     const { abiEncoded } = contractStore[crowdsaleStore.proxyName]
     const ABIEncodedParameters = abiEncoded ? (
       <DisplayTextArea
@@ -611,61 +597,63 @@ export class StepFour extends Component {
         value={abiEncoded}
       />
     ) : null
+    const backgroundBlur = this.state.modal ? 'background-blur' : ''
 
     return (
-      <section className="lo-MenuBarAndContent" ref="four">
-        <StepNavigation activeStep={PUBLISH} />
-        <div className="st-StepContent">
-          <div className="st-StepContent_Info">
-            <div className="st-StepContent_InfoIcon st-StepContent_InfoIcon-step4" />
-            <div className="st-StepContentInfo_InfoText">
-              <h1 className="st-StepContent_InfoTitle">{PUBLISH}</h1>
-              <p className="st-StepContent_InfoDescription">
-                On this step we provide you artifacts about your token and crowdsale contracts.
-              </p>
-            </div>
-          </div>
-          <div className="sw-BorderedBlock">
-            <div className="sw-BorderedSection" data-step="1">
-              <h2 className="sw-BorderedSection_Title">{CROWDSALE_STRATEGY}</h2>
-              <p className="sw-BorderedSection_Text">{strategyName}</p>
-              <p className="sw-BorderedSection_Text sw-BorderedSection_Text-small">{CROWDSALE_STRATEGY}</p>
-            </div>
-            <div className="sw-BorderedSection" data-step="2">
-              <h2 className="sw-BorderedSection_Title">{TOKEN_SETUP}</h2>
-              {tokenSetupBlock()}
-            </div>
-            <div className="sw-BorderedSection" data-step="3">
-              <h2 className="sw-BorderedSection_Title">{CROWDSALE_SETUP}</h2>
-              {crowdsaleSetupBlock()}
-            </div>
-            {tiersSetupBlock}
-            <div className="sw-BorderedSection" data-step="5">
-              <h2 className="sw-BorderedSection_Title">Configuration</h2>
-              {this.configurationBlock()}
-            </div>
-            <div className="sw-BorderedSection" data-step="6">
-              {this.renderContractSource('src')}
-            </div>
-            {abiEncoded ? (
-              <div className="sw-BorderedSection" data-step="7">
-                {ABIEncodedParameters}
+      <div>
+        <section className={`lo-MenuBarAndContent ${backgroundBlur}`} ref="four">
+          <StepNavigation activeStep={PUBLISH} />
+          <div className="st-StepContent">
+            <div className="st-StepContent_Info">
+              <div className="st-StepContent_InfoIcon st-StepContent_InfoIcon-step4" />
+              <div className="st-StepContentInfo_InfoText">
+                <h1 className="st-StepContent_InfoTitle">{PUBLISH}</h1>
+                <p className="st-StepContent_InfoDescription">
+                  On this step we provide you artifacts about your token and crowdsale contracts.
+                </p>
               </div>
-            ) : null}
-            <div className="sw-BorderedBlock_DownloadButtonContainer">
-              <ButtonDownload onClick={this.downloadContractButton} disabled={!deploymentStore.hasEnded} />
+            </div>
+            <div className="sw-BorderedBlock">
+              <div className="sw-BorderedSection" data-step="1">
+                <h2 className="sw-BorderedSection_Title">{CROWDSALE_STRATEGY}</h2>
+                <p className="sw-BorderedSection_Text">{strategyName}</p>
+                <p className="sw-BorderedSection_Text sw-BorderedSection_Text-small">{CROWDSALE_STRATEGY}</p>
+              </div>
+              <div className="sw-BorderedSection" data-step="2">
+                <h2 className="sw-BorderedSection_Title">{TOKEN_SETUP}</h2>
+                {tokenSetupBlock()}
+              </div>
+              <div className="sw-BorderedSection" data-step="3">
+                <h2 className="sw-BorderedSection_Title">{CROWDSALE_SETUP}</h2>
+                {crowdsaleSetupBlock()}
+              </div>
+              {tiersSetupBlock}
+              <div className="sw-BorderedSection" data-step="5">
+                <h2 className="sw-BorderedSection_Title">Configuration</h2>
+                {this.configurationBlock()}
+              </div>
+              <div className="sw-BorderedSection" data-step="6">
+                {this.renderContractSource('src')}
+              </div>
+              {abiEncoded ? (
+                <div className="sw-BorderedSection" data-step="7">
+                  {ABIEncodedParameters}
+                </div>
+              ) : null}
+              <div className="sw-BorderedBlock_DownloadButtonContainer">
+                <ButtonDownload onClick={this.downloadContractButton} disabled={!deploymentStore.hasEnded} />
+              </div>
+            </div>
+            <div className="st-StepContent_Buttons">
+              <ButtonContinue onClick={this.goToCrowdsalePage} disabled={!deploymentStore.hasEnded} />
             </div>
           </div>
-          <div className="st-StepContent_Buttons">
-            <ButtonBack onClick={this.goBack} />
-            <ButtonContinue onClick={this.goToCrowdsalePage} status={deploymentStore.hasEnded} />
-          </div>
-        </div>
+          {this.state.preventRefresh ? <PreventRefresh /> : null}
+        </section>
         <ModalContainer title={'Tx Status'} showModal={this.state.modal}>
           {modalContent}
         </ModalContainer>
-        {this.state.preventRefresh ? <PreventRefresh /> : null}
-      </section>
+      </div>
     )
   }
 }

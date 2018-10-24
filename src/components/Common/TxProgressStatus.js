@@ -85,11 +85,9 @@ export class TxProgressStatus extends Component {
             </table>
           </div>
         </div>
-        {this.props.onSkip ? (
-          <div className="md-TxProgressStatus_ButtonsContainer md-TxProgressStatus_ButtonsContainer-right">
-            <ButtonContinue buttonText="Skip transaction" onClick={this.props.onSkip} />
-          </div>
-        ) : null}
+        <div className="md-TxProgressStatus_ButtonsContainer md-TxProgressStatus_ButtonsContainer-right">
+          <ButtonContinue buttonText="Skip transaction" onClick={this.props.onSkip} disabled={!this.props.onSkip} />
+        </div>
       </div>
     ) : null
   }

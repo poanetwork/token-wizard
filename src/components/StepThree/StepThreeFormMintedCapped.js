@@ -168,7 +168,7 @@ export const StepThreeFormMintedCapped = ({
       <AddTierButton onClick={addTier} />
       <div className="st-StepContent_Buttons">
         <ButtonBack onClick={goBack} />
-        <ButtonContinue onClick={handleSubmit} status={status} />
+        <ButtonContinue onClick={handleSubmit} disabled={!status} />
       </div>
       <FormSpy subscription={{ values: true }} onChange={handleOnChange} />
     </form>
