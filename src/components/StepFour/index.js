@@ -595,9 +595,9 @@ export class StepFour extends Component {
       </div>
     ) : (
       <TxProgressStatus
-        txMap={deploymentStore.txMap}
         deployCrowdsale={this.deployCrowdsale}
         onSkip={this.state.transactionFailed ? this.skipTransaction : null}
+        txMap={deploymentStore.txMap}
       />
     )
 
@@ -661,10 +661,9 @@ export class StepFour extends Component {
             <ButtonContinue onClick={this.goToCrowdsalePage} status={deploymentStore.hasEnded} />
           </div>
         </div>
-        {/* TODO: Uncomment this */}
-        {/* <ModalContainer title={'Tx Status'} showModal={this.state.modal}>
+        <ModalContainer title={'Tx Status'} showModal={this.state.modal}>
           {modalContent}
-        </ModalContainer> */}
+        </ModalContainer>
         {this.state.preventRefresh ? <PreventRefresh /> : null}
       </section>
     )

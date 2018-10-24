@@ -1,0 +1,90 @@
+$md-TxProgressStatus_CellPaddingHorizontal: 10px !default;
+$md-TxProgressStatus_CellPaddingVertical: 13px !default;
+$md-TxProgressStatus_CellFontSize: 16px !default;
+$md-TxProgressStatus-gradient-width: 45px !default;
+
+
+.md-TxProgressStatus_TableContainer {
+
+    @include datatable-styles($md-TxProgressStatus-gradient-width);
+    border-bottom: 1px solid $base-border-color;
+
+}
+
+.md-TxProgressStatus_Inner {
+
+    @include datatable-inner-styles();
+
+}
+
+.md-TxProgressStatus_Table {
+
+    @include datatable-table-styles();
+
+}
+
+.md-TxProgressStatus_Th {
+    font-size: $md-TxProgressStatus_CellFontSize;
+    font-weight: 700;
+    line-height: 1.2;
+    padding-bottom: $md-TxProgressStatus_CellPaddingVertical;
+    padding-left: $md-TxProgressStatus_CellPaddingHorizontal;
+    padding-right: $md-TxProgressStatus_CellPaddingHorizontal;
+    padding-top: $md-TxProgressStatus_CellPaddingVertical;
+    text-align: left;
+
+    &.md-TxProgressStatus_Th-center {
+        text-align: center;
+    }
+
+    @include datatable-column-styles-last-child();
+}
+
+.md-TxProgressStatus_Td {
+    font-size: $md-TxProgressStatus_CellFontSize;
+    line-height: 1.2;
+    padding-bottom: $md-TxProgressStatus_CellPaddingVertical;
+    padding-left: $md-TxProgressStatus_CellPaddingHorizontal;
+    padding-right: $md-TxProgressStatus_CellPaddingHorizontal;
+    padding-top: $md-TxProgressStatus_CellPaddingVertical;
+    text-align: left;
+    white-space: nowrap;
+
+    &.md-TxProgressStatus_Td-center {
+        text-align: center;
+    }
+
+    @include datatable-column-styles-last-child();
+
+    .md-TxProgressStatus_Tr:nth-child(odd) & {
+        background-color: rgba(155, 155, 155, 0.2);
+    }
+}
+
+.md-TxProgressStatus_ButtonsContainer {
+    display: flex;
+
+    &.md-TxProgressStatus_ButtonsContainer-right {
+        justify-content: flex-end;
+    }
+}
+
+.md-TxProgressStatus_StatusIcon {
+    $md-TxProgressStatus_StatusIcon-size: 20px;
+
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    display: inline-block;
+    height: $md-TxProgressStatus_StatusIcon-size;
+    width: $md-TxProgressStatus_StatusIcon-size;
+
+    &.md-TxProgressStatus_StatusIcon-clock {
+        background-image: url('#{ $base-images-path }/TxProgressStatus/clock.svg');
+        background-size: 18.8px 18.8px;
+    }
+
+    &.md-TxProgressStatus_StatusIcon-check {
+        background-image: url('#{ $base-images-path }/TxProgressStatus/check.svg');
+        background-size: 12px 10px;
+    }
+}

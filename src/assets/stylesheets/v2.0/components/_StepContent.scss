@@ -9,6 +9,7 @@ $st-StepContent_Icon-dimensions-lg: 100px !default;
     flex-grow: 1;
     justify-content: flex-start;
     margin: -130px 12px 36px;
+    overflow: auto;
     padding: 25px 10px 29px;
 
     @media (min-width: $breakpoint-xl) {
