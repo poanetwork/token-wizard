@@ -12,7 +12,9 @@ export function checkWeb3 () {
   if (!web3) {
     setTimeout(function () {
       web3Store.getWeb3(web3 => {
-        if (!web3) return noMetaMaskAlert()
+        if (!web3) {
+          return noMetaMaskAlert()
+        }
         checkMetaMask()
       })
     }, 500)
@@ -24,9 +26,8 @@ export function checkWeb3 () {
 
 const checkMetaMask = () => {
   const { web3 } = web3Store
-  console.log(web3.currentProvider)
 
-  if (!web3.currentProvider) {
+  if (!web3 || !web3.currentProvider) {
     return noMetaMaskAlert()
   }
 
