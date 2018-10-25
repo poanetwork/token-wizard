@@ -18,7 +18,6 @@ import { getAddrFromQuery, toast } from './utils/utils'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import AlertContainer from 'react-alert'
 import { TOAST } from './utils/constants'
-import { toast } from './utils/utils'
 import { Web3Provider } from './react-web3'
 import { getQueryVariable } from './utils/utils'
 

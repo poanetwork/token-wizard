@@ -1,12 +1,12 @@
 import JSZip from 'jszip'
-import { getOptimizationFlagByStore, getVersionFlagByStore } from '../components/stepFour/utils'
+import { getOptimizationFlagByStore, getVersionFlagByStore } from '../components/StepFour/utils'
 import {
   ADDR_BOX_LEN,
   DOWNLOAD_NAME,
   DOWNLOAD_TYPE,
   DUTCH_PREFIX,
   MINTED_PREFIX
-} from '../components/stepFour/constants'
+} from '../components/StepFour/constants'
 import logdown from 'logdown'
 import { convertDateToUTCTimezoneToDisplay, getContractBySourceType } from './utils'
 import { isObservableArray } from 'mobx'
