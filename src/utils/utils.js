@@ -4,6 +4,7 @@ import { BigNumber } from 'bignumber.js'
 import logdown from 'logdown'
 import Web3 from 'web3'
 import moment from 'moment'
+import { isObservableArray } from 'mobx'
 
 const logger = logdown('TW:utils:utils')
 
@@ -264,6 +265,34 @@ export const navigateTo = data => {
   return true
 }
 
+export const convertDateToLocalTimezoneInUnix = dateToConvert => {
+  const offset = moment().utcOffset()
+  const dateConvertUnix = moment(dateToConvert)
+    .add(offset, 'minutes')
+    .local()
+    .unix()
+  return dateConvertUnix * 1000
+}
+
+export const convertDateToUTCTimezoneToDisplay = dateToConvert => {
+  return moment(dateToConvert)
+    .utc()
+    .format('YYYY-MM-DD HH:mm (z ZZ)')
+}
+
+export function getContractBySourceType(sourceType, isMintedCappedCrowdsale, { DutchProxy, MintedCappedProxy }) {
+  const parseContent = content => (isObservableArray(content) ? JSON.stringify(content.slice()) : content)
+  return isMintedCappedCrowdsale ? parseContent(MintedCappedProxy[sourceType]) : parseContent(DutchProxy[sourceType])
+}
+
+export function updateProxyContractInfo({ contractAddress }, { web3Store, contractStore, crowdsaleStore }, params) {
+  const { web3 } = web3Store
+  const encoded = web3.eth.abi.encodeParameters(['address', 'bytes32', 'address', 'bytes32'], params)
+
+  contractStore.setContractProperty(crowdsaleStore.proxyName, 'addr', contractAddress.toLowerCase())
+  contractStore.setContractProperty(crowdsaleStore.proxyName, 'abiEncoded', encoded.slice(2))
+}
+
 export const downloadFile = (data, filename, mimetype) => {
   if (!data) {
     return
@@ -295,46 +324,3 @@ export const uniqueElementsBy = (arr, fn) =>
     if (!acc.some(x => fn(v, x))) acc.push(v)
     return acc
   }, [])
-
-export const convertDateToUTCTimezone = dateToConvert => {
-  return moment(dateToConvert)
-    .utc()
-    .format('YYYY-MM-DD[T]HH:mm')
-}
-
-export const convertDateToLocalTimezone = dateToConvert => {
-  const offset = moment().utcOffset()
-  return moment(dateToConvert)
-    .add(offset, 'minutes')
-    .local()
-    .format('YYYY-MM-DD[T]HH:mm')
-}
-
-export const convertDateToLocalTimezoneInUnix = dateToConvert => {
-  const offset = moment().utcOffset()
-  const dateConvertUnix = moment(dateToConvert)
-    .add(offset, 'minutes')
-    .local()
-    .unix()
-  return dateConvertUnix * 1000
-}
-
-export const convertDateToTimezoneToDisplay = dateToConvert => {
-  return moment(dateToConvert).format('YYYY-MM-DD HH:mm (z ZZ)')
-}
-
-export const convertDateToUTCTimezoneToDisplay = dateToConvert => {
-  const offset = moment().utcOffset()
-  return moment(dateToConvert)
-    .add(offset, 'minutes')
-    .utc()
-    .format('YYYY-MM-DD HH:mm (z ZZ)')
-}
-
-export const convertDateObjectToLocalTimezone = dateToConvert => {
-  const offset = moment().utcOffset()
-  const dateConvertUnix = moment(dateToConvert)
-    .add(offset, 'minutes')
-    .unix()
-  return dateConvertUnix * 1000
-}

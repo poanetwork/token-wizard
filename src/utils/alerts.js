@@ -1,5 +1,4 @@
 import sweetAlert2 from 'sweetalert2'
-import { weiToGwei } from './utils'
 import { DEPLOYMENT_VALUES, LIMIT_RESERVED_ADDRESSES, LIMIT_WHITELISTED_ADDRESSES } from './constants'
 
 export function noMetaMaskAlert(cb) {
@@ -119,6 +118,7 @@ export function warningOnMainnetAlert(tiersCount, priceSelected, reservedCount, 
   if (whitelistCount) txRequired += TX_REQUIRED.WHITELIST
   if (reservedCount) txRequired += TX_REQUIRED.RESERVED_TOKEN
 
+  const weiToGwei = x => x / 1000000000
   const n = 100 //fraction to round
   const deployCostInEth = weiToGwei(gasRequired * weiToGwei(priceSelected))
   const estimatedCost = (1.0 / n) * Math.ceil(n * tiersCount * deployCostInEth)
@@ -450,5 +450,14 @@ export function deployHasEnded() {
     title: 'Deploy ended',
     html: 'The deploy is finished',
     type: 'info'
+  })
+}
+
+export function transactionLost() {
+  return sweetAlert2({
+    title: 'Tx Lost',
+    html: "Please cancel pending transaction, if there's any, in your wallet (Nifty Wallet or Metamask) and Continue",
+    type: 'error',
+    confirmButtonText: 'Continue'
   })
 }

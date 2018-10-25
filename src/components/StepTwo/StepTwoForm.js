@@ -84,7 +84,7 @@ export const StepTwoForm = inject('tokenStore', 'crowdsaleStore', 'reservedToken
           <FormSpy onChange={onChangeForm} />
           <div className="st-StepContent_Buttons">
             <ButtonBack onClick={goBack} />
-            <ButtonContinue type="submit" disabled={!status} />
+            <ButtonContinue type="submit" status={status} />
           </div>
         </form>
       )

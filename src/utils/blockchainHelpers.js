@@ -1,6 +1,6 @@
 import { incorrectNetworkAlert, noMetaMaskAlert, MetaMaskIsLockedAlert, noContractAlert } from './alerts'
 import { CHAINS, MAX_GAS_PRICE, CROWDSALE_STRATEGIES, EXCEPTIONS, REACT_PREFIX } from './constants'
-import { crowdsaleStore, generalStore, web3Store, contractStore } from '../stores'
+import { crowdsaleStore, generalStore, web3Store, contractStore, deploymentStore } from '../stores'
 import { Web3Error } from './errors'
 import { toJS } from 'mobx'
 import { removeTrailingNUL } from './utils'
@@ -11,18 +11,18 @@ const logger = logdown('TW:blockchainHelpers')
 const DEPLOY_CONTRACT = 1
 const CALL_METHOD = 2
 
-export const checkWeb3 = async () => {
+export const checkWeb3 = async (disableAlert = false) => {
   const { web3 } = web3Store
 
   if (web3) {
-    await checkMetaMask()
+    await checkMetaMask(disableAlert)
   } else {
     setTimeout(() => {
       web3Store.getWeb3(async web3 => {
         if (!web3) {
           return noMetaMaskAlert()
         }
-        await checkMetaMask()
+        await checkMetaMask(disableAlert)
       })
     }, 500)
   }
@@ -86,10 +86,11 @@ const checkMetaMaskErrors = async () => {
   }
 }
 
-const checkMetaMask = async () => {
+const checkMetaMask = async (disableAlert = false) => {
   const { web3 } = web3Store
+  const devEnvironment = process.env.NODE_ENV === 'development'
 
-  if (!web3 || !web3.currentProvider || !web3.currentProvider.isMetaMask) {
+  if ((!web3 || !web3.currentProvider || !web3.currentProvider.isMetaMask) && !devEnvironment && !disableAlert) {
     return noMetaMaskAlert()
   }
 
@@ -158,6 +159,8 @@ export const getNetWorkNameById = _id => {
       return CHAINS.SOKOL
     case 99:
       return CHAINS.CORE
+    case 100:
+      return CHAINS.XDAI
     default:
       return null
   }
@@ -174,6 +177,17 @@ export const getNetworkVersion = () => {
     return web3.eth.net.getId()
   }
   return Promise.resolve(null)
+}
+
+export const deployContract = (abi, bin, params, executionOrder) => {
+  const deployOpts = {
+    data: `0x${bin}`,
+    arguments: params
+  }
+
+  return web3Store.web3.eth
+    .getAccounts()
+    .then(accounts => deployContractInner(accounts[0], abi, deployOpts, executionOrder))
 }
 
 export const setExistingContractParams = (abi, addr, setContractProperty) => {
@@ -194,16 +208,7 @@ export const setExistingContractParams = (abi, addr, setContractProperty) => {
   })
 }
 
-export const deployContract = (abi, bin, params) => {
-  const deployOpts = {
-    data: `0x${bin}`,
-    arguments: params
-  }
-
-  return web3Store.web3.eth.getAccounts().then(accounts => deployContractInner(accounts, abi, deployOpts))
-}
-
-const deployContractInner = (accounts, abi, deployOpts) => {
+const deployContractInner = (account, abi, deployOpts, executionOrder) => {
   const { web3 } = web3Store
   const objAbi = JSON.parse(JSON.stringify(abi))
   const contractInstance = new web3.eth.Contract(objAbi)
@@ -215,19 +220,20 @@ const deployContractInner = (accounts, abi, deployOpts) => {
     .then(estimatedGas => {
       logger.log('gas is estimated', estimatedGas)
       const sendOpts = {
-        from: accounts[0],
+        from: account,
         gasPrice: generalStore.gasPrice,
         gas: calculateGasLimit(estimatedGas)
       }
-      return sendTX(deploy.send(sendOpts), DEPLOY_CONTRACT)
+      return sendTX(deploy.send(sendOpts), DEPLOY_CONTRACT, executionOrder)
     })
 }
 
-export function sendTXToContract(method) {
-  return sendTX(method, CALL_METHOD)
+export function sendTXToContract(method, executionOrder) {
+  return sendTX(method, CALL_METHOD, executionOrder)
 }
 
-let sendTX = (method, type) => {
+let sendTX = (method, type, executionOrder = null) => {
+  deploymentStore.setDeploymentStepStatus({ executionOrder, status: 'confirmationPending' })
   let isMined = false
   let txHash
 
@@ -235,7 +241,6 @@ let sendTX = (method, type) => {
     method
       .on('error', error => {
         if (isMined) return
-        logger.error(error)
         // https://github.com/poanetwork/token-wizard/issues/472
         if (
           !error.message.includes('Failed to check for transaction receipt') &&
@@ -248,8 +253,11 @@ let sendTX = (method, type) => {
       // transaction, because there wasn't response from it, no receipt. Especially, if you switch between tabs when
       // wizard works.
       // https://github.com/poanetwork/token-wizard/pull/364/files/c86c3e8482ef078e0cb46b8bebf57a9187f32181#r152277434
-      .on('transactionHash', _txHash =>
-        checkTxMined(_txHash, function pollingReceiptCheck(err, receipt) {
+      .on('transactionHash', _txHash => {
+        deploymentStore.setDeploymentStepTxHash({ executionOrder, txHash: _txHash })
+        deploymentStore.setDeploymentStepStatus({ executionOrder, status: 'miningPending' })
+
+        return checkTxMined(_txHash, function pollingReceiptCheck(err, receipt) {
           if (isMined) return
           //https://github.com/poanetwork/token-wizard/issues/480
           if (
@@ -282,7 +290,7 @@ let sendTX = (method, type) => {
             setTimeout(() => checkTxMined(txHash, pollingReceiptCheck), 5000)
           }
         })
-      )
+      })
       .on('receipt', receipt => {
         if (isMined) return
 
@@ -312,24 +320,19 @@ let checkEventTopics = obj => {
   }
 }
 
-const sendTXResponse = (receipt, type) => {
+export const sendTXResponse = receipt => {
   logger.log('receipt:', receipt)
   logger.log('receipt.status:', receipt.status)
+
   if (0 !== +receipt.status || null === receipt.status) {
-    const logs = receipt.logs
-    const events = receipt.events
-    let eventsArr
-    if (events) {
-      eventsArr = Object.keys(events).map(ind => {
-        return events[ind]
-      })
-    }
-    const ev_logs = logs || eventsArr
+    const { logs, events } = receipt
+    const ev_logs = logs || Object.keys(events).map(ind => events[ind])
     logger.log('ev_logs:', ev_logs)
+
     if (ev_logs.some(checkEventTopics)) {
       return Promise.reject({ message: 0 })
     } else {
-      return type === DEPLOY_CONTRACT ? Promise.resolve(receipt.contractAddress, receipt) : Promise.resolve(receipt)
+      return Promise.resolve(receipt)
     }
   } else {
     return Promise.reject({ message: 0 })
@@ -781,4 +784,13 @@ export async function getAllCrowdsaleAddresses() {
 export const isAddressValid = addr => {
   logger.log('addr:', addr)
   return web3Store && web3Store.web3 && web3Store.web3.utils.isAddress(addr)
+}
+
+export function getProxyParams({ abstractStorageAddr, networkID, appNameHash }) {
+  return [
+    abstractStorageAddr,
+    JSON.parse(process.env['REACT_APP_REGISTRY_EXEC_ID'] || '{}')[networkID],
+    JSON.parse(process.env['REACT_APP_PROXY_PROVIDER_ADDRESS'] || '{}')[networkID],
+    appNameHash
+  ]
 }

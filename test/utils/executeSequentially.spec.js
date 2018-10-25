@@ -28,8 +28,8 @@ describe('executeSequentially', () => {
     let finished = 0
 
     const list = [
-      buildMockFunction({ timeout: 100, cb: () => finished++ }),
-      buildMockFunction({ timeout: 50, cb: () => finished++ })
+      buildMockFunction({ timeout: 100, before: () => finished++ }),
+      buildMockFunction({ timeout: 50, before: () => finished++ })
     ]
 
     // when
@@ -91,7 +91,7 @@ describe('executeSequentially', () => {
     let finished = 0
 
     const list = [
-      buildMockFunction({ shouldFail: true, cb: () => finished++ }),
+      buildMockFunction({ shouldFail: true, before: () => finished++ }),
       buildMockFunction(),
       buildMockFunction()
     ]
@@ -120,7 +120,7 @@ describe('executeSequentially', () => {
       buildMockFunction({
         shouldFail: true,
         rejectWith: ERR,
-        cb: () => {
+        before: () => {
           finished++
         }
       }),
@@ -189,26 +189,26 @@ describe('executeSequentially', () => {
     const list = [buildMockFunction(), buildMockFunction(), buildMockFunction()]
 
     // when
-    const cb = jest.fn()
-    return executeSequentially(list, 0, cb).then(() => {
+    const before = jest.fn()
+    return executeSequentially(list, 0, before).then(() => {
       // then
       expect(list[0]).toHaveBeenCalledTimes(1)
       expect(list[1]).toHaveBeenCalledTimes(1)
       expect(list[2]).toHaveBeenCalledTimes(1)
-      expect(cb).toHaveBeenCalledTimes(3)
-      expect(cb).toHaveBeenCalledWith(0)
-      expect(cb).toHaveBeenCalledWith(1)
-      expect(cb).toHaveBeenCalledWith(2)
+      expect(before).toHaveBeenCalledTimes(3)
+      expect(before).toHaveBeenCalledWith(0)
+      expect(before).toHaveBeenCalledWith(1)
+      expect(before).toHaveBeenCalledWith(2)
     })
   })
 
-  it('should not execute the callback after a failed function', () => {
+  it(`should not execute 'before' callback after a failed function`, () => {
     // given
     const list = [buildMockFunction(), buildMockFunction({ shouldFail: true }), buildMockFunction()]
 
     // when
-    const cb = jest.fn()
-    return executeSequentially(list, 0, cb).then(
+    const before = jest.fn()
+    return executeSequentially(list, 0, before).then(
       () => {
         throw new Error('should not resolve')
       },
@@ -217,25 +217,56 @@ describe('executeSequentially', () => {
         expect(list[0]).toHaveBeenCalledTimes(1)
         expect(list[1]).toHaveBeenCalledTimes(1)
         expect(list[2]).toHaveBeenCalledTimes(0)
-        expect(cb).toHaveBeenCalledTimes(2)
-        expect(cb).toHaveBeenCalledWith(0)
-        expect(cb).toHaveBeenCalledWith(1)
-        expect(cb).not.toHaveBeenCalledWith(2)
+        expect(before).toHaveBeenCalledTimes(2)
+        expect(before).toHaveBeenCalledWith(0)
+        expect(before).toHaveBeenCalledWith(1)
+        expect(before).not.toHaveBeenCalledWith(2)
+      }
+    )
+  })
+
+  it(`should call 'after' callback right before the failing function`, () => {
+    // Given
+    const list = [buildMockFunction(), buildMockFunction({ shouldFail: true }), buildMockFunction()]
+
+    // When
+    const before = jest.fn()
+    const after = jest.fn()
+    return executeSequentially(list, 0, before, after).then(
+      () => {
+        throw new Error('should not resolve')
+      },
+      () => {
+        // Then
+        expect(list[0]).toHaveBeenCalledTimes(1)
+        expect(list[1]).toHaveBeenCalledTimes(1)
+        expect(list[2]).toHaveBeenCalledTimes(0)
+        expect(after).toHaveBeenCalledTimes(1)
+        expect(after).toHaveBeenCalledWith(0)
+        expect(after).not.toHaveBeenCalledWith(1)
+        expect(after).not.toHaveBeenCalledWith(2)
       }
     )
   })
 })
 
-function buildMockFunction({ timeout = 0, shouldFail = false, rejectWith = null, cb = () => {} } = {}) {
+function buildMockFunction({
+  timeout = 0,
+  shouldFail = false,
+  rejectWith = null,
+  before = () => {},
+  after = () => {}
+} = {}) {
   return jest.fn(
     () =>
       new Promise((resolve, reject) => {
         setTimeout(() => {
-          cb()
+          before()
 
           if (shouldFail) {
             reject(rejectWith)
           } else {
+            after()
             resolve()
           }
         }, timeout)

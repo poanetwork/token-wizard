@@ -1,7 +1,7 @@
 import React from 'react'
 import { ButtonDelete } from '../Common/ButtonDelete'
 import { inject, observer } from 'mobx-react'
-import { toBigNumber } from '../../utils/utils'
+import { BigNumber } from 'bignumber.js'
 
 const ReservedTokensTable = inject('reservedTokenStore')(
   observer(props => {
@@ -12,7 +12,7 @@ const ReservedTokensTable = inject('reservedTokenStore')(
         </td>
       )
 
-      const tokenValue = toBigNumber(token.val)
+      const tokenValue = new BigNumber(token.val)
 
       return (
         <tr key={index.toString()} className="sw-ReservedTokensTable_Row">

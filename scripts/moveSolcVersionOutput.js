@@ -2,6 +2,7 @@
  * Script that create a json file with the truffle version in a public folder
  */
 
+const path = require('path')
 const shell = require('shelljs')
 const { writeFile } = require('./helpers/utils')
 
@@ -30,11 +31,14 @@ const createObjectVersion = (strategy, content) => {
     if (!strategiesAllowed.includes(strategy)) {
       throw new Error('Strategy doesnt exist')
     }
-    const destinyPath = `${__dirname}/../${directory}/metadata/${strategy}TruffleVersions.json`
+
+    const destinyPath = path.join(__dirname, `../${directory}/metadata/${strategy}TruffleVersions.json`)
 
     writeFile(destinyPath, content, err => {
       if (err) {
         console.log(`Error creating version file`, err)
+      } else {
+        console.log(`Move ${destinyPath} this content ${JSON.stringify(content)}`)
       }
     })
   } catch (e) {

@@ -21,6 +21,8 @@ import { TOAST } from './utils/constants'
 import { Web3Provider } from './react-web3'
 import { getQueryVariable } from './utils/utils'
 
+// import './assets/stylesheets/application.css'
+
 @inject('deploymentStore')
 @observer
 class App extends Component {

@@ -13,24 +13,18 @@ module.exports = {
         'npm install',
         'cd ../../',
         'npm install --no-save submodules/poa-web3-1.0/packages/web3',
+        'bash ./scripts/generateProxyContracts.sh',
+        'npm run moveTruffleConfigBuild',
+        'npm run moveSolcVersionOutputBuild',
         'node scripts/build.js',
         ncp('./build/index.html ./build/invest.html'),
         ncp('./build/index.html ./build/crowdsale.html'),
         ncp('./build/index.html ./build/manage.html'),
-        ncp('./build/index.html ./build/stats.html'),
-        'bash ./scripts/generateProxyContracts.sh',
-        'npm run moveTruffleConfigBuild',
-        'npm run moveSolcVersionOutputBuild'
+        ncp('./build/index.html ./build/stats.html')
       )
     },
     dev: {
-      default: series(
-        'git submodule update --init --recursive --remote',
-        'npm run installWeb3',
-        'bash ./scripts/generateProxyContracts.sh',
-        'npm run moveTruffleConfigPublic',
-        'npm run moveSolcVersionOutputPublic'
-      ),
+      default: series('git submodule update --init --recursive --remote', 'npm run installWeb3'),
       Minted: {
         default: series(
           'nps test.e2e.stop',
@@ -43,6 +37,10 @@ module.exports = {
           'nps test.deployContracts',
           'cp .env ../../../../../.env',
           'cd ../../../../../',
+          'npm run installWeb3',
+          'bash ./scripts/generateProxyContracts.sh',
+          'npm run moveTruffleConfigPublic',
+          'npm run moveSolcVersionOutputPublic',
           'nps test.e2e.start'
         )
       },
@@ -58,6 +56,10 @@ module.exports = {
           'nps test.deployContracts',
           'cp .env ../../../../../.env',
           'cd ../../../../../',
+          'npm run installWeb3',
+          'bash ./scripts/generateProxyContracts.sh',
+          'npm run moveTruffleConfigPublic',
+          'npm run moveSolcVersionOutputPublic',
           'nps test.e2e.start'
         )
       }

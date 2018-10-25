@@ -1,12 +1,12 @@
-import { getCurrentAccount, sendTXToContract, methodToExec } from '../../utils/blockchainHelpers'
+import { getCurrentAccount, methodToExec, sendTXToContract } from '../../utils/blockchainHelpers'
 import {
   contractStore,
   crowdsaleStore,
   generalStore,
+  reservedTokenStore,
   tierStore,
   tokenStore,
-  web3Store,
-  reservedTokenStore
+  web3Store
 } from '../../stores'
 import { VALIDATION_TYPES } from '../../utils/constants'
 import { removeTrailingNUL, toBigNumber, toFixed } from '../../utils/utils'

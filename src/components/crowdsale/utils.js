@@ -730,14 +730,9 @@ export const getCurrentTierInfoCustom = async (initCrowdsaleContract, execID) =>
     return {}
   }
 
-  const registryStorageObj = toJS(contractStore.abstractStorage)
-  const { addr } = registryStorageObj
+  const { addr } = toJS(contractStore.abstractStorage)
   const { methods } = initCrowdsaleContract
-
-  let params = []
-  if (execID) {
-    params.push(addr, execID)
-  }
+  const params = execID ? [addr, execID] : []
 
   if (crowdsaleStore.isMintedCappedCrowdsale) {
     // Get tiers length
@@ -745,22 +740,26 @@ export const getCurrentTierInfoCustom = async (initCrowdsaleContract, execID) =>
     logger.log('Tiers Length:', tiersLength)
 
     // Get start and end dates
-    let getTiersStartAndEndDates = []
+    const getTiersStartAndEndDates = []
     for (let ind = 0; ind < tiersLength; ind++) {
       let getTierStartAndEndDates = methods.getTierStartAndEndDates(...params, ind).call()
       getTiersStartAndEndDates.push(getTierStartAndEndDates)
     }
-    let tiersStartAndEndDates = await Promise.all(getTiersStartAndEndDates)
+    const tiersStartAndEndDates = await Promise.all(getTiersStartAndEndDates)
     logger.log('Tiers:', tiersStartAndEndDates)
 
     // Get index of actual tier
+    // if -1 crowdsale has finished
     let tierIndex = -1
-    tiersStartAndEndDates.forEach((tier, key) => {
-      const tierStart = tier.tier_start || tier[0]
-      const tierEnd = tier.tier_end || tier[1]
+    tiersStartAndEndDates.forEach((tier, index) => {
+      const tierStart = (tier.tier_start || tier[0]) * 1000
+      const tierEnd = (tier.tier_end || tier[1]) * 1000
+      const currentTime = Date.now()
 
-      if (tierEnd * 1000 >= Date.now() && tierStart * 1000 <= Date.now()) {
-        tierIndex = key
+      if (index === 0 && currentTime < tierStart) {
+        tierIndex = index
+      } else if (tierStart <= currentTime && currentTime <= tierEnd) {
+        tierIndex = index
       }
     })
 
@@ -779,7 +778,7 @@ export const getCurrentTierInfoCustom = async (initCrowdsaleContract, execID) =>
       const currentTierData = await getCurrentTierInfo(...params).call()
       logger.log('Current Tier Data', currentTierData)
 
-      //The response of the getCrowdsaleTier function is different that getCurrentTierInfo , so we need to rebuilded
+      // The response of the getCrowdsaleTier function is different that getCurrentTierInfo, so we need to rebuild it
       return {
         0: crowdSaleTierData[0],
         1: tierIndex,
