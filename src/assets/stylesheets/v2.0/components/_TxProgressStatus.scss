@@ -69,7 +69,7 @@ $md-TxProgressStatus-gradient-width: 45px !default;
         background-color: rgba(155, 155, 155, 0.2);
     }
 
-    .md-TxProgressStatus_Tr-active & {
+    .md-TxProgressStatus_Tr.md-TxProgressStatus_Tr-active & {
         background-color: $brand-primary;
         color: #fff;
     }
@@ -84,6 +84,10 @@ $md-TxProgressStatus-gradient-width: 45px !default;
 }
 
 .md-TxProgressStatus_ActiveText {
+    animation-delay: 1s;
+    animation-duration: 6s;
+    animation-iteration-count: infinite;
+    animation-name: txStatusFade;
     background: #fff;
     border-radius: 3px;
     color: #000;
@@ -91,10 +95,6 @@ $md-TxProgressStatus-gradient-width: 45px !default;
     font-weight: 700;
     margin: -5px 0 -5px 20px;
     padding: 5px 20px;
-    animation-name: txStatusFade;
-    animation-duration: 6s;
-    animation-delay: 1s;
-    animation-iteration-count: infinite;
 }
 
 @keyframes txStatusFade {

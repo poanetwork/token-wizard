@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { ButtonContinue } from './ButtonContinue'
+import { ButtonSkip } from './ButtonSkip'
+import { ButtonRetry } from './ButtonRetry'
 import { TX_STEP_DESCRIPTION } from '../StepFour/constants'
 import { TxStatusIconCheck } from './TxStatusIconCheck'
 import { TxStatusIconClock } from './TxStatusIconClock'
@@ -126,8 +127,8 @@ export class TxProgressStatus extends Component {
           </div>
         </div>
         <div className="md-TxProgressStatus_ButtonsContainer md-TxProgressStatus_ButtonsContainer-right">
-          <ButtonContinue buttonText="Retry transaction" onClick={this.props.onRetry} disabled={!this.props.onRetry} />
-          <ButtonContinue buttonText="Skip transaction" onClick={this.props.onSkip} disabled={!this.props.onSkip} />
+          <ButtonRetry buttonText="Retry transaction" onClick={this.props.onRetry} disabled={!this.props.onRetry} />
+          <ButtonSkip onClick={this.props.onSkip} disabled={!this.props.onSkip} />
         </div>
       </div>
     ) : null

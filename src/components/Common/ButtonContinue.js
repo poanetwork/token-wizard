@@ -1,6 +1,12 @@
 import React from 'react'
 
-export const ButtonContinue = ({ disabled = false, type, onClick, extraClassName, buttonText = 'Continue' }) => (
+export const ButtonContinue = ({
+  buttonText = 'Continue',
+  disabled = false,
+  extraClassName,
+  onClick,
+  type = 'button'
+}) => (
   <button
     className={`sw-ButtonContinue ${extraClassName ? extraClassName : ''}`}
     disabled={disabled}
