@@ -50,14 +50,28 @@ $md-TxProgressStatus-gradient-width: 45px !default;
     text-align: left;
     white-space: nowrap;
 
-    &.md-TxProgressStatus_Td-center {
-        text-align: center;
+    &:first-child {
+        border-bottom-left-radius: 4px;
+        border-top-left-radius: 4px;
+    }
+    &:last-child {
+        border-bottom-right-radius: 4px;
+        border-top-right-radius: 4px;
     }
 
     @include datatable-column-styles-last-child();
 
+    &.md-TxProgressStatus_Td-center {
+        text-align: center;
+    }
+
     .md-TxProgressStatus_Tr:nth-child(odd) & {
         background-color: rgba(155, 155, 155, 0.2);
+    }
+
+    .md-TxProgressStatus_Tr-active & {
+        background-color: $brand-primary;
+        color: #fff;
     }
 }
 
@@ -69,22 +83,28 @@ $md-TxProgressStatus-gradient-width: 45px !default;
     }
 }
 
-.md-TxProgressStatus_StatusIcon {
-    $md-TxProgressStatus_StatusIcon-size: 20px;
-
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
+.md-TxProgressStatus_ActiveText {
+    background: #fff;
+    border-radius: 3px;
+    color: #000;
     display: inline-block;
-    height: $md-TxProgressStatus_StatusIcon-size;
-    width: $md-TxProgressStatus_StatusIcon-size;
+    font-weight: 700;
+    margin: -5px 0 -5px 20px;
+    padding: 5px 20px;
+    animation-name: txStatusFade;
+    animation-duration: 6s;
+    animation-delay: 1s;
+    animation-iteration-count: infinite;
+}
 
-    &.md-TxProgressStatus_StatusIcon-clock {
-        background-image: url('#{ $base-images-path }/TxProgressStatus/clock.svg');
-        background-size: 18.8px 18.8px;
+@keyframes txStatusFade {
+    0% {
+        opacity: 0.8;
     }
-
-    &.md-TxProgressStatus_StatusIcon-check {
-        background-image: url('#{ $base-images-path }/TxProgressStatus/check.svg');
-        background-size: 12px 10px;
+    25% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 1;
     }
 }

@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import { ButtonContinue } from './ButtonContinue'
 import { TX_STEP_DESCRIPTION } from '../StepFour/constants'
+import { TxStatusIconCheck } from './TxStatusIconCheck'
+import { TxStatusIconClock } from './TxStatusIconClock'
+import { TxStatusIconClockActive } from './TxStatusIconClockActive'
 import { observer, inject } from 'mobx-react'
 
 @inject('tierStore', 'deploymentStore')
@@ -28,12 +31,12 @@ export class TxProgressStatus extends Component {
   txActivity = (status, index) => {
     let statusMessage = ''
 
-    if (this.isConstructing(status)) statusMessage = 'constructing tx...'
-    if (this.isConfirmationPending(status)) statusMessage = 'please confirm tx...'
-    if (this.isMiningPending(status)) statusMessage = 'tx pending of being mined...'
+    if (this.isConstructing(status)) statusMessage = 'Constructing Tx...'
+    if (this.isConfirmationPending(status)) statusMessage = 'Please confirm Tx...'
+    if (this.isMiningPending(status)) statusMessage = 'Tx pending of being mined...'
 
     return statusMessage === '' ? null : (
-      <span className="tx-status" key={index.toString()}>
+      <span className="md-TxProgressStatus_ActiveText" key={index.toString()}>
         {statusMessage}
       </span>
     )
@@ -57,16 +60,23 @@ export class TxProgressStatus extends Component {
     )
   }
 
-  // TODO: Check and refactor this
   isTxStatusActive(txStatus) {
-    let test = txStatus.some(
+    return txStatus.some(
       status =>
         status
           ? this.isMiningPending(status) || this.isConfirmationPending(status) || this.isConstructing(status)
           : false
     )
-    console.log(test)
-    return test
+  }
+
+  getStatusIcon(txStatus, index) {
+    if (this.isTxStatusActive(txStatus)) {
+      return <TxStatusIconClockActive />
+    } else if (txStatus[index] && !txStatus[index].mined) {
+      return <TxStatusIconClock />
+    } else if (txStatus[index] && txStatus[index].mined) {
+      return <TxStatusIconCheck />
+    }
   }
 
   getTableBody(tableContent, whitelisted) {
@@ -89,13 +99,7 @@ export class TxProgressStatus extends Component {
                   (tierWhitelisted, index) =>
                     tierWhitelisted || index === 0 ? (
                       <td className="md-TxProgressStatus_Td md-TxProgressStatus_Td-center" key={index.toString()}>
-                        {tx.status[index] && tx.status[index].mined ? (
-                          <span className="md-TxProgressStatus_StatusIcon md-TxProgressStatus_StatusIcon-check" />
-                        ) : tx.status[index] && !tx.status[index].mined ? (
-                          <span className="md-TxProgressStatus_StatusIcon md-TxProgressStatus_StatusIcon-clock" />
-                        ) : (
-                          ''
-                        )}
+                        {this.getStatusIcon(tx.status, index)}
                       </td>
                     ) : null
                 )}
