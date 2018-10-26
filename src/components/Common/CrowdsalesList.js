@@ -51,7 +51,7 @@ export default class CrowdsalesList extends Component {
         </div>
         <div className="sw-ModalWindow_ButtonsContainer sw-ModalWindow_ButtonsContainer-right">
           <ButtonContinue
-            status={selectedCrowdsale}
+            disabled={!selectedCrowdsale}
             onClick={() => selectedCrowdsale && this.onClick(selectedCrowdsale)}
           />
         </div>

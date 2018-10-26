@@ -158,7 +158,7 @@ export class StepOne extends Component {
               })}
             </div>
             <div className="st-StepContent_Buttons">
-              <ButtonContinue status={status} onClick={() => this.goNextStep()} />
+              <ButtonContinue disabled={!status} onClick={() => this.goNextStep()} />
             </div>
           </div>
         </section>
