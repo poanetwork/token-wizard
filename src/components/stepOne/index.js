@@ -75,7 +75,7 @@ export class stepOne extends React.Component {
   }
 
   componentDidMount() {
-    checkWeb3(this.props.web3Store.web3);
+    checkWeb3()
 
     let downloadContracts = this.getWhiteListWithCapCrowdsaleAssets();
 

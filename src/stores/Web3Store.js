@@ -29,9 +29,35 @@ class Web3Store {
   }
 
   getWeb3 = cb => {
+    let { ethereum } = window
+
+    if (ethereum) {
+      window.web3 = new Web3(ethereum);
+      try {
+        // Request account access if needed
+        ethereum.enable().then(() => {
+          this.processWeb3(window.web3, cb)
+        })
+      } catch (error) {
+        // User denied account access...
+        console.log(error)
+      }
+    }
+    // Legacy dapp browsers...
+    else if (window.web3) {
+      window.web3 = new Web3(window.web3.currentProvider);
+      // Acccounts always exposed
+      this.processWeb3(window.web3, cb)
+    }
+    // Non-dapp browsers...
+    else {
+      console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+    }
+  }
+
+  processWeb3 = (web3, cb) => {
     let networkID = CrowdsaleConfig.networkID ? CrowdsaleConfig.networkID : getQueryVariable('networkID')
     networkID = Number(networkID)
-    var web3 = window.web3;
     if (typeof web3 === 'undefined') {
       // no web3, use fallback
       console.error("Please use a web3 browser");
@@ -69,7 +95,7 @@ class Web3Store {
     } else {
       // window.web3 == web3 most of the time. Don't override the provided,
       // web3, just wrap it in your Web3.
-      var myWeb3 = new Web3(web3.currentProvider);
+      let myWeb3 = new Web3(web3.currentProvider);
 
       cb(myWeb3, false);
       return myWeb3;

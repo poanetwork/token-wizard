@@ -1,38 +1,102 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Web3 from 'web3'
+import { Loader } from '../components/Common/Loader'
 
-const ONE_SECOND = 1000;
+const ONE_SECOND = 1000
 
 class Web3Provider extends Component {
   constructor(props, context) {
     super(props, context)
 
     this.state = {
-      selectedAccount: null
+      selectedAccount: null,
+      web3: null,
+      approvePermissions: null,
+      render: null
     }
 
-    this.web3 = null
-    this.interval = null
-
   }
+
   render() {
     const { web3UnavailableScreen: Web3UnavailableScreen } = this.props
 
-    if (window.web3) {
-      if (!this.web3) {
-        this.web3 = new Web3(window.web3.currentProvider);
-        this.fetchAccounts()
-      }
-
+    if (this.state.render && this.state.web3 && this.state.approvePermissions) {
       return this.props.children
     }
 
-    return <Web3UnavailableScreen />
+    if (!this.state.render && (!this.state.web3 || !this.state.approvePermissions)) {
+      return <Loader show={true} />
+    }
+
+    if (this.state.render && (!this.state.web3 || !this.state.approvePermissions)) {
+      return <Web3UnavailableScreen />
+    }
+
+    return null
   }
 
   componentDidMount() {
-    this.initPoll();
+    this.checkWeb3()
+      .then(this.initPoll())
+      .then(() => {
+        this.setState({
+          render: true
+        })
+      })
+      .catch(err => {
+        console.log(err)
+        this.setState({
+          render: true
+        })
+      })
+  }
+
+  checkWeb3() {
+    const setWeb3 = () => {
+      try {
+        window.web3 = new Web3(window.web3.currentProvider)
+        this.setState({
+          approvePermissions: true,
+          web3: window.web3
+        })
+      } catch (err) {
+        console.log('There was a problem fetching accounts', err)
+      }
+    }
+
+    return new Promise((resolve, reject) => {
+      const { ethereum } = window
+
+      // Modern dapp browsers...
+      if (ethereum) {
+        window.web3 = new Web3(ethereum)
+          // Request account access if needed
+        ethereum.enable().then(() => {
+          if (!this.state.web3) {
+            setWeb3()
+          }
+        }).catch(err => {
+          this.setState({
+            approvePermissions: false
+          })
+          reject()
+        })
+        resolve()
+      }
+        // Legacy dapp browsers...
+      else if (window.web3) {
+        setWeb3()
+        resolve()
+      }
+        // Non-dapp browsers...
+      else {
+        this.setState({
+          approvePermissions: false
+        })
+        reject()
+      }
+    })
   }
 
   componentWillUnmount() {
@@ -46,7 +110,7 @@ class Web3Provider extends Component {
   }
 
   fetchAccounts = () => {
-    const { web3  } = this
+    const { web3  } = this.state
     const { onChangeAccount } = this.props
 
     if (!web3 || !web3.eth) {
@@ -74,11 +138,12 @@ class Web3Provider extends Component {
           selectedAccount: next || null
         })
       })
+      .catch( err => console.log(err))
   }
 
   getChildContext() {
     return {
-      web3: this.web3,
+      web3: this.state.web3,
       selectedAccount: this.state.selectedAccount
     }
   }

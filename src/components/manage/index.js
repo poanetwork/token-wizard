@@ -43,10 +43,9 @@ export class Manage extends Component {
       canFinalize: false,
       canDistribute: false,
       shouldDistribute: false,
-      ownerCurrentUser: false
+      ownerCurrentUser: false,
+      initialTiers: []
     }
-
-    this.initialTiers = []
   }
 
   componentDidMount () {
@@ -65,7 +64,9 @@ export class Manage extends Component {
     getWhiteListWithCapCrowdsaleAssets()
       .then(this.extractContractData)
       .then(() => {
-        this.initialTiers = JSON.parse(JSON.stringify(tierStore.tiers))
+        this.setState({
+          initialTiers: JSON.parse(JSON.stringify(tierStore.tiers))
+        })
       })
   }
 
@@ -401,7 +402,7 @@ export class Manage extends Component {
         <Form
           onSubmit={this.saveCrowdsale}
           mutators={{ ...arrayMutators }}
-          initialValues={{ tiers: this.initialTiers, }}
+          initialValues={{ tiers: this.state.initialTiers, }}
           component={ManageForm}
           canEditTiers={ownerCurrentUser && !canDistribute && !canFinalize && !finalized}
           decimals={tokenStore.decimals}

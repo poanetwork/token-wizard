@@ -1,0 +1,191 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Home Index renders without crashing 1`] = `"<div><section class=\\"home\\"><div class=\\"crowdsale\\"><div class=\\"container\\"><h1 class=\\"title\\">Welcome to Token Wizard</h1><p class=\\"description\\"><!-- react-text: 7 -->Token Wizard is a client side tool to create token and crowdsale contracts in five steps. It helps you to publish contracts on the Ethereum network, verify them in Etherscan, create a crowdsale page with stats. For participants, the wizard creates a page to invest into the campaign.<!-- /react-text --><br><!-- react-text: 9 -->Smart contracts based on <!-- /react-text --><a href=\\"https://github.com/TokenMarketNet/ico\\">TokenMarket</a><!-- react-text: 11 --> contracts.<!-- /react-text --></p><div class=\\"buttons\\"><a href=\\"/1\\"><span class=\\"button button_fill\\">New crowdsale</span></a><div class=\\"button button_outline\\">Choose Contract</div></div></div></div><div class=\\"process\\"><div class=\\"container\\"><div class=\\"process-item\\"><div class=\\"step-icons step-icons_crowdsale-contract\\"></div><p class=\\"title\\">Crowdsale Contract</p><p class=\\"description\\">Select a strategy for crowdsale contract</p></div><div class=\\"process-item\\"><div class=\\"step-icons step-icons_token-setup\\"></div><p class=\\"title\\">Token Setup</p><p class=\\"description\\">Setup token and reserved distribution</p></div><div class=\\"process-item\\"><div class=\\"step-icons step-icons_crowdsale-setup\\"></div><p class=\\"title\\">Crowdsale Setup</p><p class=\\"description\\">Setup tiers and crowdsale parameters</p></div><div class=\\"process-item\\"><div class=\\"step-icons step-icons_publish\\"></div><p class=\\"title\\">Publish</p><p class=\\"description\\">Get generated code and artifacts for verification in Etherscan</p></div><div class=\\"process-item\\"><div class=\\"step-icons step-icons_crowdsale-page\\"></div><p class=\\"title\\">Crowdsale Page</p><p class=\\"description\\">Bookmark this page for the campaign statistics</p></div></div></div><!-- react-empty: 38 --><div class=\\"loading-container notdisplayed\\"><div class=\\"loading\\"></div><div class=\\"loading-text-container\\"><div class=\\"loading-text\\">Do not refresh the webpage</div></div><div class=\\"loading-progress\\"><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div></div></div></section></div>"`;
+
+exports[`Home Index should render home screen 1`] = `
+<div>
+  <section
+    className="home"
+  >
+    <div
+      className="crowdsale"
+    >
+      <div
+        className="container"
+      >
+        <h1
+          className="title"
+        >
+          Welcome to Token Wizard
+        </h1>
+        <p
+          className="description"
+        >
+          Token Wizard is a client side tool to create token and crowdsale contracts in five steps. It helps you to publish contracts on the Ethereum network, verify them in Etherscan, create a crowdsale page with stats. For participants, the wizard creates a page to invest into the campaign.
+          <br />
+          Smart contracts based on 
+          <a
+            href="https://github.com/TokenMarketNet/ico"
+          >
+            TokenMarket
+          </a>
+           contracts.
+        </p>
+        <div
+          className="buttons"
+        >
+          <a
+            href="/1"
+            onClick={[Function]}
+          >
+            <span
+              className="button button_fill"
+            >
+              New crowdsale
+            </span>
+          </a>
+          <div
+            className="button button_outline"
+            onClick={[Function]}
+          >
+            Choose Contract
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="process"
+    >
+      <div
+        className="container"
+      >
+        <div
+          className="process-item"
+        >
+          <div
+            className="step-icons step-icons_crowdsale-contract"
+          />
+          <p
+            className="title"
+          >
+            Crowdsale Contract
+          </p>
+          <p
+            className="description"
+          >
+            Select a strategy for crowdsale contract
+          </p>
+        </div>
+        <div
+          className="process-item"
+        >
+          <div
+            className="step-icons step-icons_token-setup"
+          />
+          <p
+            className="title"
+          >
+            Token Setup
+          </p>
+          <p
+            className="description"
+          >
+            Setup token and reserved distribution
+          </p>
+        </div>
+        <div
+          className="process-item"
+        >
+          <div
+            className="step-icons step-icons_crowdsale-setup"
+          />
+          <p
+            className="title"
+          >
+            Crowdsale Setup
+          </p>
+          <p
+            className="description"
+          >
+            Setup tiers and crowdsale parameters
+          </p>
+        </div>
+        <div
+          className="process-item"
+        >
+          <div
+            className="step-icons step-icons_publish"
+          />
+          <p
+            className="title"
+          >
+            Publish
+          </p>
+          <p
+            className="description"
+          >
+            Get generated code and artifacts for verification in Etherscan
+          </p>
+        </div>
+        <div
+          className="process-item"
+        >
+          <div
+            className="step-icons step-icons_crowdsale-page"
+          />
+          <p
+            className="title"
+          >
+            Crowdsale Page
+          </p>
+          <p
+            className="description"
+          >
+            Bookmark this page for the campaign statistics
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      className="loading-container notdisplayed"
+    >
+      <div
+        className="loading"
+      />
+      <div
+        className="loading-text-container"
+      >
+        <div
+          className="loading-text"
+        >
+          Do not refresh the webpage
+        </div>
+      </div>
+      <div
+        className="loading-progress"
+      >
+        <div
+          className="loading-i"
+        />
+        <div
+          className="loading-i"
+        />
+        <div
+          className="loading-i"
+        />
+        <div
+          className="loading-i"
+        />
+        <div
+          className="loading-i"
+        />
+        <div
+          className="loading-i"
+        />
+      </div>
+    </div>
+  </section>
+</div>
+`;
+
+exports[`Home Index should render screen with render without throwing an error 1`] = `"<section class=\\"home\\"><div class=\\"crowdsale\\"><div class=\\"container\\"><h1 class=\\"title\\">Welcome to Token Wizard</h1><p class=\\"description\\">Token Wizard is a client side tool to create token and crowdsale contracts in five steps. It helps you to publish contracts on the Ethereum network, verify them in Etherscan, create a crowdsale page with stats. For participants, the wizard creates a page to invest into the campaign.<br>Smart contracts based on <a href=\\"https://github.com/TokenMarketNet/ico\\">TokenMarket</a> contracts.</p><div class=\\"buttons\\"><a href=\\"/1\\"><span class=\\"button button_fill\\">New crowdsale</span></a><div class=\\"button button_outline\\">Choose Contract</div></div></div></div><div class=\\"process\\"><div class=\\"container\\"><div class=\\"process-item\\"><div class=\\"step-icons step-icons_crowdsale-contract\\"></div><p class=\\"title\\">Crowdsale Contract</p><p class=\\"description\\">Select a strategy for crowdsale contract</p></div><div class=\\"process-item\\"><div class=\\"step-icons step-icons_token-setup\\"></div><p class=\\"title\\">Token Setup</p><p class=\\"description\\">Setup token and reserved distribution</p></div><div class=\\"process-item\\"><div class=\\"step-icons step-icons_crowdsale-setup\\"></div><p class=\\"title\\">Crowdsale Setup</p><p class=\\"description\\">Setup tiers and crowdsale parameters</p></div><div class=\\"process-item\\"><div class=\\"step-icons step-icons_publish\\"></div><p class=\\"title\\">Publish</p><p class=\\"description\\">Get generated code and artifacts for verification in Etherscan</p></div><div class=\\"process-item\\"><div class=\\"step-icons step-icons_crowdsale-page\\"></div><p class=\\"title\\">Crowdsale Page</p><p class=\\"description\\">Bookmark this page for the campaign statistics</p></div></div></div><div class=\\"loading-container notdisplayed\\"><div class=\\"loading\\"></div><div class=\\"loading-text-container\\"><div class=\\"loading-text\\">Do not refresh the webpage</div></div><div class=\\"loading-progress\\"><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div><div class=\\"loading-i\\"></div></div></div></section>"`;
