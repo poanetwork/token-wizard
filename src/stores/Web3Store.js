@@ -65,6 +65,7 @@ class Web3Store {
     // Non-dapp browsers...
     else {
       logger.log('Non-Ethereum browser detected. You should consider trying MetaMask!')
+      this.processWeb3(undefined, cb, networkIDparam)
     }
   }
 
