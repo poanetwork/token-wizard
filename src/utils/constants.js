@@ -289,7 +289,7 @@ export const TOAST = {
   DEFAULT_OPTIONS: {
     position: 'top center',
     offset: 10,
-    time: 1000000
+    time: 10000
   }
 }
 
