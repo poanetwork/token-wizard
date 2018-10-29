@@ -23,7 +23,9 @@ $sw-ButtonSkip-gradient-end: #5a2da5 !default;
     }
 
     .md-TxProgressStatus_ButtonsContainer & {
-        margin-left: 20px;
+        @media (min-width: $breakpoint-md) {
+            margin-left: 20px;
+        }
     }
 
 }

@@ -40,6 +40,7 @@ class App extends Component {
       require('./assets/stylesheets/styles.css')
     }
   }
+
   render() {
     const { deploymentStore } = this.props
     let crowdsaleAddr = getAddrFromQuery()
@@ -73,7 +74,9 @@ class App extends Component {
               </Web3Provider>
             </Route>
           </Switch>
-          <AlertContainer ref={a => (toast.msg = a)} {...TOAST.DEFAULT_OPTIONS} />
+          <div className="MainAlertContainer">
+            <AlertContainer ref={a => (toast.msg = a)} {...TOAST.DEFAULT_OPTIONS} />
+          </div>
         </div>
       </Router>
     )

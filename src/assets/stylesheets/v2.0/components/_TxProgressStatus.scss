@@ -77,9 +77,16 @@ $md-TxProgressStatus-gradient-width: 45px !default;
 
 .md-TxProgressStatus_ButtonsContainer {
     display: flex;
+    flex-direction: column;
+
+    @media (min-width: $breakpoint-md) {
+        flex-direction: row;
+    }
 
     &.md-TxProgressStatus_ButtonsContainer-right {
-        justify-content: flex-end;
+        @media (min-width: $breakpoint-md) {
+            justify-content: flex-end;
+        }
     }
 }
 

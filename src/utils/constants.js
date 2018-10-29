@@ -272,6 +272,7 @@ export const CONTRIBUTION_OPTIONS = {
   METAMASK: 'metamask',
   QR: 'qr'
 }
+
 export const TOAST = {
   TYPE: {
     ERROR: 'error',
@@ -286,9 +287,9 @@ export const TOAST = {
     DISTRIBUTE_FAIL: 'Was not able to distribute reserved tokens'
   },
   DEFAULT_OPTIONS: {
-    position: 'top right',
-    offset: 80,
-    time: 10000
+    position: 'top center',
+    offset: 10,
+    time: 1000000
   }
 }
 

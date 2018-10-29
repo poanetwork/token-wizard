@@ -3,6 +3,7 @@ import logdown from 'logdown'
 import { ButtonContinue } from '../Common/ButtonContinue'
 import { Loader } from '../Common/Loader'
 import { NAVIGATION_STEPS, CROWDSALE_STRATEGIES, DOWNLOAD_STATUS } from '../../utils/constants'
+import { StepInfo } from '../Common/StepInfo'
 import { StepNavigation } from '../Common/StepNavigation'
 import { StrategyItem } from './StrategyItem'
 import { checkWeb3ForErrors } from '../../utils/blockchainHelpers'
@@ -136,13 +137,11 @@ export class StepOne extends Component {
         <section className="lo-MenuBarAndContent">
           <StepNavigation activeStep={CROWDSALE_STRATEGY} />
           <div className="st-StepContent">
-            <div className="st-StepContent_Info">
-              <div className="st-StepContent_InfoIcon st-StepContent_InfoIcon-step1" />
-              <div className="st-StepContentInfo_InfoText">
-                <h1 className="st-StepContent_InfoTitle">{CROWDSALE_STRATEGY}</h1>
-                <p className="st-StepContent_InfoDescription">Select a strategy for your crowdsale contract.</p>
-              </div>
-            </div>
+            <StepInfo
+              description="Select a strategy for your crowdsale contract."
+              stepNumber="1"
+              title={CROWDSALE_STRATEGY}
+            />
             <div className="sw-RadioItems">
               {strategies.map((strategy, i) => {
                 return (

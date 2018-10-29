@@ -14,6 +14,12 @@
             grid-area: row-2-col-2;
         }
     }
+
+    .sw-BorderedSection_Items-CrowdsaleSetupDutchAuction & {
+        @media (min-width: $breakpoint-md) {
+            grid-area: initial;
+        }
+    }
 }
 
 .pb-DisplayField_Title {
