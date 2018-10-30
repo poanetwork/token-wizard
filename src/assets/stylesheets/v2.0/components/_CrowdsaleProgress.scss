@@ -1,0 +1,71 @@
+$CrowdsaleProgress_Bar-height: 35px;
+
+.cs-CrowdsaleProgress {
+    border-top: 1px solid $base-border-color;
+    margin-bottom: 37px;
+    margin-top: -10px;
+    padding-top: 25px;
+
+    @media (min-width: $breakpoint-md) {
+        border-top: none;
+        margin-top: 0;
+    }
+}
+
+.cs-CrowdsaleProgress_Funds {
+    display: flex;
+    justify-content: space-between;
+}
+
+.cs-CrowdsaleProgress_FundsAmount {
+    margin: 0 0 20px;
+
+    &:last-child {
+        text-align: right;
+    }
+}
+
+.cs-CrowdsaleProgress_FundsTitle {
+    color: $brand-secondary;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.cs-CrowdsaleProgress_FundsDescription {
+    color: #999;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.cs-CrowdsaleProgress_Division {
+    background: #fff;
+    height: $CrowdsaleProgress_Bar-height;
+    position: relative;
+    z-index: 12;
+    width: 2px;
+}
+
+.cs-CrowdsaleProgress_Bar {
+    background-color: rgba($brand-secondary, 0.2);
+    border-radius: 20.5px;
+    display: flex;
+    height: $CrowdsaleProgress_Bar-height;
+    justify-content: space-evenly;
+    overflow: hidden;
+    position: relative;
+}
+
+.cs-CrowdsaleProgress_BarWidth {
+    background-color: $brand-secondary;
+    height: $CrowdsaleProgress_Bar-height;
+    left: 0;
+    position: absolute;
+    z-index: 1;
+}

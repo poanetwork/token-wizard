@@ -32,7 +32,7 @@ import {
   getCurrentTierInfoCustom,
   getExecID,
   getAddr
-} from '../crowdsale/utils'
+} from '../Crowdsale/utils'
 import {
   countDecimalPlaces,
   getNetworkID,
