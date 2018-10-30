@@ -584,8 +584,7 @@ export class StepFour extends Component {
         value={abiEncoded}
       />
     ) : null
-    // const backgroundBlur = this.state.modal ? 'background-blur' : ''
-    const backgroundBlur = ''
+    const backgroundBlur = this.state.modal ? 'background-blur' : ''
 
     return (
       <div>
