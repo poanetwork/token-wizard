@@ -1,52 +1,131 @@
-import { isAddress, validateWhitelistMin, validateWhitelistMax } from './validations'
+import {
+  isAddress,
+  isInteger,
+  isLessOrEqualThan,
+  isGreaterOrEqualThan,
+  isNonNegative,
+  isDecimalPlacesNotGreaterThan,
+  isRequired
+} from './validations'
 
-/**
- * Execute a callback with each valid whitelist item in the given list
- *
- * @param {Object} whitelistInformation
- * @param {Array} whitelistInformation.rows Array of whitelist items. Each element in the array has the structure
- * `[address, min, max]`, for example: `['0x1234567890123456789012345678901234567890', '1', '10']`
- * @param {Number} whitelistInformation.decimals Amount of decimals allowed for the min and max values
- * @param {Function} cb The function to be called with each valid item
- * @param {Function} cbValidation The function to be called to validate length
- * @param {Function} cbSupplyValidation Called to validate that maxCap does not exceeds tier's supply
- * @returns {Object} Object with a `called` property, indicating the number of times the callback was called
- */
-export default function({ rows, decimals }, cb, cbValidation, cbSupplyValidation) {
+export const processCsv = ({ rows }, tierStore, tierIndex) => {
   let called = 0
-  let whitelistedAddressLengthError = false
-  let maxCapExceedsSupplyError
+  let whitelistAddressLengthError = false
+  let whitelistSupplyLengthError = false
   for (let row of rows) {
-    let validLength = cbValidation()
+    let validLength = tierStore.validateWhitelistedAddressLength(tierIndex)
     if (!validLength) {
-      whitelistedAddressLengthError = true
+      whitelistAddressLengthError = true
       break
     }
 
-    if (row.length !== 3) {
-      continue
+    let [addr, min, max] = row
+
+    let validSupply = typeof isLessOrEqualThan()(tierStore.tiers[tierIndex].supply)(max) === undefined
+    if (validSupply) {
+      whitelistSupplyLengthError = true
+      break
     }
 
-    const [addr, min, max] = row
-
-    maxCapExceedsSupplyError = typeof cbSupplyValidation(max) !== 'undefined'
-
-    if (
-      isAddress()(addr) ||
-      validateWhitelistMin({ min, max, decimals }) ||
-      validateWhitelistMax({ min, max, decimals }) ||
-      maxCapExceedsSupplyError
-    ) {
-      continue
+    if (addr && min && max) {
+      tierStore.addWhitelistItem({ addr, min, max }, tierIndex)
+      called++
     }
-
-    cb({ addr, min, max })
-    called++
   }
 
   return {
     called: called,
-    whitelistedAddressLengthError: whitelistedAddressLengthError,
-    maxCapExceedsSupplyError
+    whitelistAddressLengthError: whitelistAddressLengthError,
+    whitelistSupplyLengthError: whitelistSupplyLengthError
+  }
+}
+
+export const errorsCsv = (data, decimals, tierStore, num) => {
+  let errors = []
+
+  // Check for empty
+  if (data.length === 0) {
+    errors.push('Empty CSV file. Nothing was imported.')
+  }
+
+  for (let i = 0; i < data.length; i++) {
+    const row = data[i]
+    const line = i + 1
+
+    // Check for higher or less length of rows
+    if (row.length > 3 || row.length < 3) {
+      const columnLabel = row.length > 1 ? 'columns' : 'column'
+      errors.push(`The line number ${line} have ${row.length} ${columnLabel}, must have 3 columns.`)
+    }
+
+    // Check for valid address
+    let [address, min, max] = row
+    const minTitle = min ? min : 'empty'
+    const maxTitle = max ? max : 'empty'
+
+    if (isAddress()(address) !== undefined) {
+      errors.push(`The line number ${line} has an incorrect address. Actual value is ${address}.`)
+    }
+
+    // Check for min is integer
+    if (isInteger()(min) !== undefined) {
+      errors.push(`The line number ${line} has an incorrect minCap, must be a integer. Actual value is ${minTitle}.`)
+    }
+
+    // Check for max is integer
+    if (isInteger()(max) !== undefined) {
+      errors.push(`The line number ${line} has an incorrect maxCap, must be a integer. Actual value is ${maxTitle}.`)
+    }
+
+    // Check for min is required
+    if (isRequired()(min) !== undefined) {
+      errors.push(`The line number ${line} need a minCap.`)
+    }
+
+    // Check for max is required
+    if (isRequired()(max) !== undefined) {
+      errors.push(`The line number ${line} need a maxCap.`)
+    }
+
+    if (isInteger()(min) === undefined && isNonNegative()(min) !== undefined) {
+      errors.push(`The line number ${line} has a negative value for minCap. Actual value is ${minTitle}.`)
+    }
+
+    if (isInteger()(max) === undefined && isNonNegative()(max) !== undefined) {
+      errors.push(`The line number ${line} has a negative value for maxCap. Actual value is ${maxTitle}.`)
+    }
+
+    if (isDecimalPlacesNotGreaterThan()(decimals)(min) !== undefined) {
+      errors.push(`The line number ${line} has a wrong decimal places for minCap. Actual value is ${minTitle}.`)
+    }
+
+    if (isDecimalPlacesNotGreaterThan()(decimals)(max) !== undefined) {
+      errors.push(`The line number ${line} has a wrong decimal places for maxCap. Actual value is ${maxTitle}.`)
+    }
+
+    if (
+      isInteger()(min) === undefined &&
+      isInteger()(max) === undefined &&
+      isLessOrEqualThan()(max)(min) !== undefined
+    ) {
+      errors.push(`The line number ${line} has a greather minCap than maxCap. Actual value is ${minTitle}.`)
+    }
+
+    if (
+      isInteger()(min) === undefined &&
+      isInteger()(max) === undefined &&
+      isGreaterOrEqualThan()(min)(max) !== undefined
+    ) {
+      errors.push(`The line number ${line} has a less maxCap than minCap. Actual value is ${maxTitle}.`)
+    }
+
+    // Check for max cap exceeds
+    if (isInteger()(max) === undefined && isLessOrEqualThan()(tierStore.tiers[num].supply)(max) !== undefined) {
+      errors.push(`The line number ${line} has a maxCap that exceeds the total supply. Actual value is ${maxTitle}.`)
+    }
+  }
+
+  return {
+    errors: errors
   }
 }
