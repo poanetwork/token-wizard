@@ -1,0 +1,60 @@
+$cs-CrowdsaleID-gradient-width: 80px;
+
+.cs-CrowdsaleID {
+    border-bottom: 1px solid $base-border-color;
+    border-top: 1px solid $base-border-color;
+    padding-bottom: 25px;
+    padding-top: 25px;
+    overflow: hidden;
+    position: relative;
+
+    &::after {
+        background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.11), #ffffff);
+        bottom: 0;
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: $cs-CrowdsaleID-gradient-width;
+        z-index: 12;
+
+        @media (min-width: $breakpoint-md) {
+            display: none;
+        }
+    }
+}
+
+.cs-CrowdsaleID_InnerContainer {
+    overflow: auto;
+    position: relative;
+    z-index: 1;
+}
+
+.cs-CrowdsaleID_Hash {
+    color: #000;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0;
+    padding-right: $cs-CrowdsaleID-gradient-width;
+    white-space: nowrap;
+    width: fit-content;
+
+    @media (min-width: $breakpoint-md) {
+        padding-right: 0;
+    }
+}
+
+.cs-CrowdsaleID_Description {
+    color: #919191;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.75;
+    margin: 0;
+    padding-right: $cs-CrowdsaleID-gradient-width;
+    width: fit-content;
+
+    @media (min-width: $breakpoint-md) {
+        padding-right: 0;
+    }
+}

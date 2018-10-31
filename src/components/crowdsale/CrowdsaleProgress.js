@@ -2,7 +2,9 @@ import React from 'react'
 
 export const CrowdsaleProgress = ({ totalRaisedFunds, ethGoal, tokensClaimedRatio, extraClassName = '' }) => {
   const renderDividers = () => {
-    return Array.apply('', Array(9)).map(index => <div key={index} className="cs-CrowdsaleProgress_Division" />)
+    return Array.apply('', Array(9)).map((noUse, index) => (
+      <div key={index} className="cs-CrowdsaleProgress_Division" />
+    ))
   }
 
   return (
