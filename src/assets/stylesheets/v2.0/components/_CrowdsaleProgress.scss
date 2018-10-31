@@ -13,12 +13,15 @@ $CrowdsaleProgress_Bar-height: 35px;
 }
 
 .cs-CrowdsaleProgress_Funds {
+    align-items: flex-end;
     display: flex;
     justify-content: space-between;
 }
 
 .cs-CrowdsaleProgress_FundsAmount {
+    flex-grow: 0;
     margin: 0 0 20px;
+    min-width: 50%;
 
     &:last-child {
         text-align: right;
@@ -32,7 +35,7 @@ $CrowdsaleProgress_Bar-height: 35px;
     line-height: 1.2;
     margin: 0;
     text-transform: uppercase;
-    white-space: nowrap;
+    word-break: break-all;
 }
 
 .cs-CrowdsaleProgress_FundsDescription {
@@ -67,5 +70,10 @@ $CrowdsaleProgress_Bar-height: 35px;
     height: $CrowdsaleProgress_Bar-height;
     left: 0;
     position: absolute;
+    transition: width 1s ease-out;
     z-index: 1;
+}
+
+.cs-CrowdsaleProgress_NoBreak {
+    word-break: normal;
 }
