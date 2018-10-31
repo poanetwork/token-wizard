@@ -1,0 +1,83 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App Index renders without crashing 1`] = `"<div><div><section class=\\"hm-Home\\"><div class=\\"hm-Home_Scroll\\"><div class=\\"hm-Home_Top\\"><a class=\\"sw-LogoPrimary\\" href=\\"/\\"></a></div><div class=\\"hm-Home_MainInfoContainer\\"><div class=\\"hm-Home_MainInfo\\"><div class=\\"hm-Home_MainInfoTextContainer\\"><h1 class=\\"hm-Home_MainInfoTitle\\">Welcome to Token Wizard</h1><p class=\\"hm-Home_MainInfoDescription\\">Token Wizard is a client side tool to create ERC20 token and crowdsale in five steps. It helps you to publish contracts on the Ethereum network, create a crowdsale page with stats. For participants, the wizard creates a page to contribute into the campaign.</p><p class=\\"hm-Home_MainInfoPoweredBy\\"><!-- react-text: 13 -->Token Wizard is powered by <!-- /react-text --><a href=\\"https://github.com/auth-os/beta\\">Auth-os</a><!-- react-text: 15 -->.<!-- /react-text --></p></div><div class=\\"hm-Home_MainInfoButtonContainer\\"><button class=\\"hm-Home_BtnNew\\">New crowdsale</button><div class=\\"hm-Home_BtnChoose\\">Choose Crowdsale</div></div></div></div></div></section></div><div class=\\"css-nm2dr3\\"><span></span></div></div>"`;
+
+exports[`App Index should render app screen 1`] = `
+<div>
+  <div>
+    <section
+      className="hm-Home"
+    >
+      <div
+        className="hm-Home_Scroll"
+      >
+        <div
+          className="hm-Home_Top"
+        >
+          <a
+            className="sw-LogoPrimary"
+            href="/"
+            onClick={[Function]}
+          />
+        </div>
+        <div
+          className="hm-Home_MainInfoContainer"
+        >
+          <div
+            className="hm-Home_MainInfo"
+          >
+            <div
+              className="hm-Home_MainInfoTextContainer"
+            >
+              <h1
+                className="hm-Home_MainInfoTitle"
+              >
+                Welcome to Token Wizard
+              </h1>
+              <p
+                className="hm-Home_MainInfoDescription"
+              >
+                Token Wizard is a client side tool to create ERC20 token and crowdsale in five steps. It helps you to publish contracts on the Ethereum network, create a crowdsale page with stats. For participants, the wizard creates a page to contribute into the campaign.
+              </p>
+              <p
+                className="hm-Home_MainInfoPoweredBy"
+              >
+                Token Wizard is powered by 
+                <a
+                  href="https://github.com/auth-os/beta"
+                >
+                  Auth-os
+                </a>
+                .
+              </p>
+            </div>
+            <div
+              className="hm-Home_MainInfoButtonContainer"
+            >
+              <button
+                className="hm-Home_BtnNew"
+                onClick={[Function]}
+              >
+                New crowdsale
+              </button>
+              <div
+                className="hm-Home_BtnChoose"
+                onClick={[Function]}
+              >
+                Choose Crowdsale
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div
+    className="css-nm2dr3"
+  >
+    <span />
+  </div>
+</div>
+`;
+
+exports[`App Index should render screen with render without throwing an error 1`] = `"<div><section class=\\"hm-Home\\"><div class=\\"hm-Home_Scroll\\"><div class=\\"hm-Home_Top\\"><a class=\\"sw-LogoPrimary\\" href=\\"/\\"></a></div><div class=\\"hm-Home_MainInfoContainer\\"><div class=\\"hm-Home_MainInfo\\"><div class=\\"hm-Home_MainInfoTextContainer\\"><h1 class=\\"hm-Home_MainInfoTitle\\">Welcome to Token Wizard</h1><p class=\\"hm-Home_MainInfoDescription\\">Token Wizard is a client side tool to create ERC20 token and crowdsale in five steps. It helps you to publish contracts on the Ethereum network, create a crowdsale page with stats. For participants, the wizard creates a page to contribute into the campaign.</p><p class=\\"hm-Home_MainInfoPoweredBy\\">Token Wizard is powered by <a href=\\"https://github.com/auth-os/beta\\">Auth-os</a>.</p></div><div class=\\"hm-Home_MainInfoButtonContainer\\"><button class=\\"hm-Home_BtnNew\\">New crowdsale</button><div class=\\"hm-Home_BtnChoose\\">Choose Crowdsale</div></div></div></div></div></section></div><div class=\\"css-nm2dr3\\"><span></span></div>"`;
