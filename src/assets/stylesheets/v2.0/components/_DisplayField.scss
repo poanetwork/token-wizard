@@ -4,6 +4,11 @@
             grid-area: row-1-col-1;
         }
     }
+    &.pb-DisplayField-WalletAddress {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-1-col-1;
+        }
+    }
     &.pb-DisplayField-CrowdsaleStartTime {
         @media (min-width: $breakpoint-md) {
             grid-area: row-2-col-1;

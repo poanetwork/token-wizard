@@ -19,10 +19,6 @@
     font-weight: 400;
     line-height: 1.5;
     margin: 0;
-
-    &.sw-BorderedSection_Text-small {
-        font-size: 16px;
-    }
 }
 
 .sw-BorderedSection_Items {
@@ -49,7 +45,7 @@
     &.sw-BorderedSection_Items-CrowdsaleSetupMintCapped {
         @media (min-width: $breakpoint-md) {
             grid-template-areas:
-                "row-1-col-1 ."
+                "row-1-col-1 row-1-col-1"
                 "row-2-col-1 row-2-col-2";
         }
     }

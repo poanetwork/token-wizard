@@ -584,7 +584,8 @@ export class StepFour extends Component {
         value={abiEncoded}
       />
     ) : null
-    const backgroundBlur = this.state.modal ? 'background-blur' : ''
+    // const backgroundBlur = this.state.modal ? 'background-blur' : ''
+    const backgroundBlur = ''
 
     return (
       <div>
@@ -600,7 +601,6 @@ export class StepFour extends Component {
               <div className="sw-BorderedSection" data-step="1">
                 <h2 className="sw-BorderedSection_Title">{CROWDSALE_STRATEGY}</h2>
                 <p className="sw-BorderedSection_Text">{strategyName}</p>
-                <p className="sw-BorderedSection_Text sw-BorderedSection_Text-small">{CROWDSALE_STRATEGY}</p>
               </div>
               <div className="sw-BorderedSection" data-step="2">
                 <h2 className="sw-BorderedSection_Title">{TOKEN_SETUP}</h2>
@@ -637,9 +637,9 @@ export class StepFour extends Component {
           </div>
           {this.state.preventRefresh ? <PreventRefresh /> : null}
         </section>
-        <ModalContainer title={'Tx Status'} showModal={this.state.modal}>
+        {/* <ModalContainer title={'Tx Status'} showModal={this.state.modal}>
           {modalContent}
-        </ModalContainer>
+        </ModalContainer> */}
       </div>
     )
   }

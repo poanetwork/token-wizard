@@ -33,11 +33,19 @@ $md-TxProgressStatus-gradient-width: 45px !default;
     padding-top: $md-TxProgressStatus_CellPaddingVertical;
     text-align: left;
 
-    &.md-TxProgressStatus_Th-center {
+    @include datatable-column-styles-last-child();
+}
+
+.md-TxProgressStatus_ThTierInner {
+    width: 100px;
+
+    &.md-TxProgressStatus_ThTierInner-center {
         text-align: center;
     }
 
-    @include datatable-column-styles-last-child();
+    .md-TxProgressStatus_Th-right & {
+        margin-left: auto;
+    }
 }
 
 .md-TxProgressStatus_Td {
@@ -49,6 +57,7 @@ $md-TxProgressStatus-gradient-width: 45px !default;
     padding-top: $md-TxProgressStatus_CellPaddingVertical;
     text-align: left;
     white-space: nowrap;
+    width: 100px;
 
     &:first-child {
         border-bottom-left-radius: 4px;
@@ -61,8 +70,11 @@ $md-TxProgressStatus-gradient-width: 45px !default;
 
     @include datatable-column-styles-last-child();
 
-    &.md-TxProgressStatus_Td-center {
-        text-align: center;
+    &.md-TxProgressStatus_Td-status-message {
+        @media (min-width: $breakpoint-md) {
+            max-width: 500px;
+            min-width: 500px;
+        }
     }
 
     .md-TxProgressStatus_Tr:nth-child(odd) & {
@@ -72,6 +84,18 @@ $md-TxProgressStatus-gradient-width: 45px !default;
     .md-TxProgressStatus_Tr.md-TxProgressStatus_Tr-active & {
         background-color: $brand-primary;
         color: #fff;
+    }
+}
+
+.md-TxProgressStatus_TdTierInner {
+    width: 100px;
+
+    &.md-TxProgressStatus_TdTierInner-center {
+        text-align: center;
+    }
+
+    .md-TxProgressStatus_Td-right & {
+        margin-left: auto;
     }
 }
 
