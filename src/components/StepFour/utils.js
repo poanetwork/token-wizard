@@ -726,3 +726,30 @@ export const getVersionFlagByStore = crowdsaleStore => {
   }
   return getVersionFlagByStrategy(strategy)
 }
+
+export const isTierUpdatable = updatable => {
+  return (
+    {
+      on: 'Yes',
+      off: 'No'
+    }[updatable.toLowerCase()] || 'No'
+  )
+}
+
+export const isWhitelisted = whitelistEnabled => {
+  return (
+    {
+      yes: 'Yes',
+      no: 'No'
+    }[whitelistEnabled.toLowerCase()] || 'No'
+  )
+}
+
+export const getBurnExcess = burnExcess => {
+  return (
+    {
+      yes: 'Yes',
+      no: 'No'
+    }[burnExcess.toLowerCase()] || 'No'
+  )
+}

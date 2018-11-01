@@ -12,6 +12,9 @@
 @import "ButtonPlus";
 @import "ButtonRetry";
 @import "ButtonSkip";
+@import "ConfigurationBlock";
+@import "CrowdsaleSetupBlockDutchAuction";
+@import "CrowdsaleSetupBlockWhitelistWithCap";
 @import "DisplayField";
 @import "DisplayTextArea";
 @import "DutchAuctionBlock";
@@ -41,6 +44,9 @@
 @import "StepNavigation";
 @import "TextField";
 @import "TierBlock";
+@import "TierSetupDutchAuction";
+@import "TierSetupWhitelistWithCap";
+@import "TokenSetupBlock";
 @import "TxProgressStatus";
 @import "TxStatusIconCheck";
 @import "TxStatusIconClock";

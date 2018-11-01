@@ -8,7 +8,6 @@ export const DisplayTextArea = ({ title, value, key = '', description = '' }) =>
         {title} <ButtonCopyToClipboard value={value} title={title} />
       </h3>
       <pre className="pb-DisplayTextArea_Content">{value}</pre>
-      {description ? <p className="pb-DisplayTextArea_Description">{description}</p> : null}
     </div>
   )
 }
