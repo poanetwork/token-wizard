@@ -8,7 +8,6 @@ describe(`Utils in the store`, () => {
     // Given
     await getCrowdsaleAssets(3)
     const contractStore = new ContractStore()
-
     // When
     const { DutchProxy, MintedCappedProxy } = contractStore
 
