@@ -1,18 +1,18 @@
 import React, { Component } from 'react'
-import arrayMutators from 'final-form-arrays'
 import createDecorator from 'final-form-calculate'
+import arrayMutators from 'final-form-arrays'
 import logdown from 'logdown'
 import setFieldTouched from 'final-form-set-field-touched'
 import { Form } from 'react-final-form'
 import { Loader } from '../Common/Loader'
-import { NAVIGATION_STEPS, CHAINS } from '../../utils/constants'
+import { CHAINS, NAVIGATION_STEPS } from '../../utils/constants'
 import { StepInfo } from '../Common/StepInfo'
 import { StepNavigation } from '../Common/StepNavigation'
-import { getNetworkVersion, getNetWorkNameById, checkWeb3 } from '../../utils/blockchainHelpers'
+import { checkWeb3, getNetWorkNameById, getNetworkVersion } from '../../utils/blockchainHelpers'
 import { getStep3Component } from './utils'
 import { inject, observer } from 'mobx-react'
 import { noGasPriceAvailable, warningOnMainnetAlert } from '../../utils/alerts'
-import { sleep, navigateTo } from '../../utils/utils'
+import { navigateTo } from '../../utils/utils'
 
 const logger = logdown('TW:StepThree')
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
@@ -31,7 +31,7 @@ const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 @observer
 export class StepThree extends Component {
   state = {
-    loading: false,
+    loading: true,
     reload: false,
     initialTiers: [],
     burnExcess: 'no',
@@ -40,38 +40,33 @@ export class StepThree extends Component {
 
   async componentDidMount() {
     const { web3Store, gasPriceStore } = this.props
-    await checkWeb3(web3Store.web3)
 
-    this.setState({ loading: true })
-
-    try {
-      await gasPriceStore.updateValues()
-    } catch (error) {
-      noGasPriceAvailable()
-    }
-
-    const { initialTiers, burnExcess, gasTypeSelected } = await this.load()
+    checkWeb3(web3Store.web3)
+    const { initialTiers, burnExcess, gasTypeSelected } = this.load()
 
     this.setState({
-      loading: false,
       initialTiers: initialTiers,
       burnExcess: burnExcess,
       gasTypeSelected: gasTypeSelected
     })
+
     window.scrollTo(0, 0)
+
+    gasPriceStore
+      .updateValues()
+      .catch(() => noGasPriceAvailable())
+      .then(() => this.setState({ loading: false }))
   }
 
-  async load() {
+  load() {
     const { tierStore, generalStore, web3Store, crowdsaleStore, gasPriceStore } = this.props
-
-    await sleep(1000)
 
     if (tierStore.tiers.length === 0) {
       logger.log('Web3store', web3Store)
       tierStore.addCrowdsale(web3Store.curAddress)
     } else {
       this.setState({
-        reload: true
+        firstLoad: false
       })
     }
 
@@ -161,11 +156,6 @@ export class StepThree extends Component {
     }
   })
 
-  updateGasTypeSelected = value => {
-    const { generalStore } = this.props
-    generalStore.setGasTypeSelected(value)
-  }
-
   render() {
     if (this.state.initialTiers.length === 0) {
       // Do not render the form until tiers are set up
@@ -177,8 +167,9 @@ export class StepThree extends Component {
       )
     }
 
-    const { generalStore, tierStore, gasPriceStore, tokenStore, web3Store, crowdsaleStore } = this.props
-    let stepThreeComponent = getStep3Component(crowdsaleStore.strategy)
+    const { tierStore, tokenStore, gasPriceStore, generalStore, web3Store, crowdsaleStore } = this.props
+    const stepThreeComponent = getStep3Component(crowdsaleStore.strategy)
+    const stores = { tierStore, tokenStore, crowdsaleStore, generalStore, gasPriceStore }
 
     return (
       <div>
@@ -192,13 +183,8 @@ export class StepThree extends Component {
               title="Crowdsale Setup"
             />
             <Form
-              addCrowdsale={tierStore.addCrowdsale}
               component={stepThreeComponent}
-              crowdsaleStore={crowdsaleStore}
-              decimals={tokenStore.decimals}
               decorators={[this.calculator]}
-              gasPricesInGwei={gasPriceStore.gasPricesInGwei}
-              generalStore={generalStore}
               history={this.props.history}
               initialValues={{
                 burnExcess: this.state.burnExcess,
@@ -209,9 +195,8 @@ export class StepThree extends Component {
               }}
               mutators={{ ...arrayMutators, setFieldTouched }}
               onSubmit={this.handleOnSubmit}
-              reload={this.state.reload}
-              tierStore={tierStore}
-              updateGasTypeSelected={this.updateGasTypeSelected}
+              firstLoad={this.state.firstLoad}
+              {...stores}
             />
           </div>
         </section>
