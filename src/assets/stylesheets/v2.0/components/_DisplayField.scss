@@ -1,5 +1,5 @@
 .pb-DisplayField {
-    &.pb-DisplayField-BurnExcess {
+    &.pb-DisplayField-WalletAddress {
         @media (min-width: $breakpoint-md) {
             grid-area: row-1-col-1;
         }
@@ -15,7 +15,7 @@
         }
     }
 
-    .sw-BorderedSection_Items-CrowdsaleSetupDutchAuction & {
+    .cs-CrowdsaleSetupBlockDutchAuction & {
         @media (min-width: $breakpoint-md) {
             grid-area: initial;
         }

@@ -1,11 +1,5 @@
 import React, { Component } from 'react'
-import {
-  buildDeploymentSteps,
-  getOptimizationFlagByStore,
-  getVersionFlagByStore,
-  scrollToBottom,
-  updateCrowdsaleContractInfo
-} from './utils'
+import { buildDeploymentSteps, scrollToBottom, updateCrowdsaleContractInfo } from './utils'
 import {
   deployHasEnded,
   noContractDataAlert,
@@ -13,16 +7,8 @@ import {
   successfulDeployment,
   transactionLost
 } from '../../utils/alerts'
+import { CROWDSALE_STRATEGIES_DISPLAYNAMES, NAVIGATION_STEPS, TOAST } from '../../utils/constants'
 import {
-  CROWDSALE_STRATEGIES_DISPLAYNAMES,
-  DESCRIPTION,
-  NAVIGATION_STEPS,
-  PUBLISH_DESCRIPTION,
-  TEXT_FIELDS,
-  TOAST
-} from '../../utils/constants'
-import {
-  convertDateToUTCTimezoneToDisplay,
   getContractBySourceType,
   getSourceTypeTitle,
   getNetworkID,
@@ -36,42 +22,25 @@ import executeSequentially from '../../utils/executeSequentially'
 import logdown from 'logdown'
 import { ButtonContinue } from '../Common/ButtonContinue'
 import { ButtonDownload } from '../Common/ButtonDownload'
+import { ConfigurationBlock } from './ConfigurationBlock'
 import { CrowdsaleConfig } from '../Common/config'
-import { DisplayField } from '../Common/DisplayField'
+import { CrowdsaleSetupBlockDutchAuction } from './CrowdsaleSetupBlockDutchAuction'
+import { CrowdsaleSetupBlockWhitelistWithCap } from './CrowdsaleSetupBlockWhitelistWithCap'
 import { DisplayTextArea } from '../Common/DisplayTextArea'
 import { ModalContainer } from '../Common/ModalContainer'
 import { PreventRefresh } from '../Common/PreventRefresh'
-import { StepNavigation } from '../Common/StepNavigation'
 import { StepInfo } from '../Common/StepInfo'
+import { StepNavigation } from '../Common/StepNavigation'
+import { TierSetupDutchAuction } from './TierSetupDutchAuction'
+import { TierSetupWhitelistWithCap } from './TierSetupWhitelistWithCap'
+import { BorderedSection } from './BorderedSection'
+import { TokenSetupBlock } from './TokenSetupBlock'
 import { TxProgressStatus } from '../Common/TxProgressStatus'
 import { checkNetWorkByID, sendTXResponse } from '../../utils/blockchainHelpers'
 import { inject, observer } from 'mobx-react'
 
 const logger = logdown('TW:stepFour')
-
 const { PUBLISH, CROWDSALE_STRATEGY, TOKEN_SETUP, CROWDSALE_SETUP } = NAVIGATION_STEPS
-const {
-  NAME,
-  TICKER,
-  DECIMALS,
-  SUPPLY_SHORT,
-  WALLET_ADDRESS,
-  GLOBAL_MIN_CAP,
-  RATE,
-  MIN_RATE,
-  MAX_RATE,
-  CROWDSALE_START_TIME,
-  CROWDSALE_END_TIME,
-  START_TIME,
-  END_TIME,
-  ALLOW_MODIFYING,
-  ENABLE_WHITELISTING,
-  MAX_CAP,
-  BURN_EXCESS,
-  COMPILER_VERSION,
-  CONTRACT_NAME,
-  COMPILING_OPTIMIZATION
-} = TEXT_FIELDS
 const {
   MINTED_CAPPED_CROWDSALE: MINTED_CAPPED_CROWDSALE_DN,
   DUTCH_AUCTION: DUTCH_AUCTION_DN
@@ -364,199 +333,44 @@ export class StepFour extends Component {
   }
 
   configurationBlock = () => {
-    const { crowdsaleStore } = this.props
-    const {
-      COMPILER_VERSION: PD_COMPILER_VERSION,
-      CONTRACT_NAME: PD_CONTRACT_NAME,
-      COMPILING_OPTIMIZATION: PD_COMPILING_OPTIMIZATION
-    } = PUBLISH_DESCRIPTION
-    const optimizationFlag = getOptimizationFlagByStore(crowdsaleStore)
-    const versionFlag = getVersionFlagByStore(crowdsaleStore)
-
-    return (
-      <div className="sw-BorderedSection_Items sw-BorderedSection_Items-ConfigurationBlock">
-        <DisplayField title={COMPILER_VERSION} value={versionFlag} description={PD_COMPILER_VERSION} />
-        <DisplayField description={PD_CONTRACT_NAME} title={CONTRACT_NAME} value={crowdsaleStore.proxyName} />
-        <DisplayField description={PD_COMPILING_OPTIMIZATION} title={COMPILING_OPTIMIZATION} value={optimizationFlag} />
-      </div>
-    )
-  }
-
-  isTierUpdatable = updatable => {
-    return (
-      {
-        on: 'Yes',
-        off: 'No'
-      }[updatable.toLowerCase()] || 'No'
-    )
-  }
-
-  isWhitelisted = whitelistEnabled => {
-    return (
-      {
-        yes: 'Yes',
-        no: 'No'
-      }[whitelistEnabled.toLowerCase()] || 'No'
-    )
-  }
-
-  getBurnExcess = burnExcess => {
-    return (
-      {
-        yes: 'Yes',
-        no: 'No'
-      }[burnExcess.toLowerCase()] || 'No'
-    )
+    return <ConfigurationBlock store={this.props} />
   }
 
   render() {
     const { tierStore, tokenStore, deploymentStore, crowdsaleStore, contractStore } = this.props
     const { isMintedCappedCrowdsale, isDutchAuction } = crowdsaleStore
 
-    // Publish page: Token setup block
     const tokenSetupBlock = () => {
-      const { supply, name, ticker, decimals } = tokenStore
-      const tokenSupplyStr = supply ? supply.toString() : '0'
-      const tokenNameStr = name ? name : ''
-      const tokenDecimalsStr = decimals ? decimals.toString() : ''
-      const {
-        TOKEN_TOTAL_SUPPLY: PD_TOKEN_TOTAL_SUPPLY,
-        TOKEN_NAME: PD_TOKEN_NAME,
-        TOKEN_DECIMALS: PD_TOKEN_DECIMALS
-      } = PUBLISH_DESCRIPTION
-      const { TOKEN_TICKER: D_TOKEN_TICKER } = DESCRIPTION
-
-      return (
-        <div className="sw-BorderedSection_Items sw-BorderedSection_Items-TokenSetup">
-          <DisplayField title={NAME} value={tokenNameStr} description={PD_TOKEN_NAME} />
-          <DisplayField title={TICKER} value={ticker ? ticker : ''} description={D_TOKEN_TICKER} />
-          <DisplayField title={DECIMALS} value={tokenDecimalsStr} description={PD_TOKEN_DECIMALS} />
-          <DisplayField title={SUPPLY_SHORT} value={tokenSupplyStr} description={PD_TOKEN_TOTAL_SUPPLY} />
-        </div>
-      )
+      return <TokenSetupBlock tokenStore={tokenStore} />
     }
 
-    // Publish page: Crowdsale setup block
     const crowdsaleSetupBlock = () => {
-      const { tiers } = tierStore
-      const firstTier = tiers[0]
-      const { walletAddress, startTime, burnExcess } = firstTier
-      const startTimeWithUTC = convertDateToUTCTimezoneToDisplay(startTime)
-      const lasTierInd = tiers.length - 1
-      const endTimeWithUTC = convertDateToUTCTimezoneToDisplay(tiers[lasTierInd].endTime)
-      const {
-        WALLET_ADDRESS: PD_WALLET_ADDRESS,
-        CROWDSALE_START_TIME: PD_CROWDSALE_START_TIME,
-        CROWDSALE_END_TIME: PD_CROWDSALE_END_TIME
-      } = PUBLISH_DESCRIPTION
-      const crowdsaleType = isMintedCappedCrowdsale
-        ? 'sw-BorderedSection_Items-CrowdsaleSetupMintCapped'
-        : 'sw-BorderedSection_Items-CrowdsaleSetupDutchAuction'
-
-      return (
-        <div className={`sw-BorderedSection_Items sw-BorderedSection_Items-CrowdsaleSetup ${crowdsaleType}`}>
-          <DisplayField
-            description={PD_WALLET_ADDRESS}
-            extraClass="pb-DisplayField-WalletAddress"
-            title={WALLET_ADDRESS}
-            value={walletAddress}
-          />
-          {isDutchAuction ? (
-            <DisplayField
-              description={DESCRIPTION.BURN_EXCESS}
-              extraClass="pb-DisplayField-BurnExcess"
-              title={BURN_EXCESS}
-              value={this.getBurnExcess(burnExcess)}
-            />
-          ) : null}
-          <DisplayField
-            description={PD_CROWDSALE_START_TIME}
-            extraClass="pb-DisplayField-CrowdsaleStartTime"
-            mobileTextSize="small"
-            title={CROWDSALE_START_TIME}
-            value={startTimeWithUTC}
-          />
-          <DisplayField
-            description={PD_CROWDSALE_END_TIME}
-            extraClass="pb-DisplayField-CrowdsaleEndTime"
-            mobileTextSize="small"
-            title={CROWDSALE_END_TIME}
-            value={endTimeWithUTC}
-          />
-        </div>
+      return isMintedCappedCrowdsale ? (
+        <CrowdsaleSetupBlockWhitelistWithCap tierStore={tierStore} />
+      ) : (
+        <CrowdsaleSetupBlockDutchAuction tierStore={tierStore} />
       )
     }
 
-    // Publish page: Tiers setup block
-    const tiersSetupBlock = tierStore.tiers.map((tier, index) => {
-      const {
-        rate,
-        minRate,
-        maxRate,
-        startTime,
-        endTime,
-        updatable,
-        whitelistEnabled,
-        supply,
-        tier: tierName,
-        minCap
-      } = tier
-      const { RATE: D_RATE, ALLOW_MODIFYING: D_ALLOW_MODIFYING } = DESCRIPTION
-      const {
-        TIER_START_TIME: PD_TIER_START_TIME,
-        TIER_END_TIME: PD_TIER_END_TIME,
-        GLOBAL_MIN_CAP: PD_GLOBAL_MIN_CAP,
-        HARD_CAP: PD_HARD_CAP,
-        ENABLE_WHITELISTING: PD_ENABLE_WHITELISTING
-      } = PUBLISH_DESCRIPTION
-      const tierRateStr = rate ? rate : 0
-      const tierMinRateStr = minRate ? minRate : 0
-      const tierMaxRateStr = maxRate ? maxRate : 0
-      const mintedCappedCrowdsaleRate = isMintedCappedCrowdsale ? (
-        <DisplayField title={RATE} value={tierRateStr} description={D_RATE} />
-      ) : null
-      const dutchAuctionCrowdsaleMinRate = isDutchAuction ? (
-        <DisplayField title={MIN_RATE} value={tierMinRateStr} description={D_RATE} />
-      ) : null
-      const dutchAuctionCrowdsaleMaxRate = isDutchAuction ? (
-        <DisplayField title={MAX_RATE} value={tierMaxRateStr} description={D_RATE} />
-      ) : null
-      const tierStartTimeStr = convertDateToUTCTimezoneToDisplay(startTime)
-      const tierEndTimeStr = convertDateToUTCTimezoneToDisplay(endTime)
-      const tierIsUpdatable = this.isTierUpdatable(updatable)
-      const tierIsWhitelisted = this.isWhitelisted(whitelistEnabled)
-      const tierSupplyStr = supply ? supply : ''
-      const allowModifying = isMintedCappedCrowdsale ? (
-        <DisplayField title={ALLOW_MODIFYING} value={tierIsUpdatable} description={D_ALLOW_MODIFYING} />
-      ) : null
+    const tiersSetupBlock = () => {
+      return tierStore.tiers.map((tier, index) => {
+        const { tier: tierName } = tier
+        const tiersSetupBlockContents = isMintedCappedCrowdsale ? (
+          <TierSetupWhitelistWithCap tier={tier} />
+        ) : (
+          <TierSetupDutchAuction tier={tier} />
+        )
 
-      return (
-        <div className="sw-BorderedSection" key={index.toString()} data-step="4">
-          <h2 className="sw-BorderedSection_Title">{tierName} Setup</h2>
-          <div className="sw-BorderedSection_Items sw-BorderedSection_Items-TierBlock">
-            <DisplayField
-              description={PD_TIER_START_TIME}
-              mobileTextSize="small"
-              title={START_TIME}
-              value={tierStartTimeStr}
-            />
-            <DisplayField
-              description={PD_TIER_END_TIME}
-              mobileTextSize="small"
-              title={END_TIME}
-              value={tierEndTimeStr}
-            />
-            <DisplayField title={ENABLE_WHITELISTING} value={tierIsWhitelisted} description={PD_ENABLE_WHITELISTING} />
-            {allowModifying}
-            <DisplayField title={GLOBAL_MIN_CAP} value={minCap} description={PD_GLOBAL_MIN_CAP} />
-            <DisplayField title={MAX_CAP} value={tierSupplyStr} description={PD_HARD_CAP} />
-            {mintedCappedCrowdsaleRate}
-            {dutchAuctionCrowdsaleMinRate}
-            {dutchAuctionCrowdsaleMaxRate}
-          </div>
-        </div>
-      )
-    })
+        return (
+          <BorderedSection
+            contents={tiersSetupBlockContents}
+            dataStep="4"
+            key={index.toString()}
+            title={`${tierName} Setup`}
+          />
+        )
+      })
+    }
 
     const modalContent = deploymentStore.invalidAccount ? (
       <div>
@@ -569,20 +383,16 @@ export class StepFour extends Component {
       </div>
     ) : (
       <TxProgressStatus
-        txMap={deploymentStore.txMap}
         deployCrowdsale={this.deployCrowdsale}
-        onSkip={this.state.transactionFailed ? this.skipTransaction : null}
         onRetry={this.state.allowRetry ? this.retryTransaction : null}
+        onSkip={this.state.transactionFailed ? this.skipTransaction : null}
+        txMap={deploymentStore.txMap}
       />
     )
     const strategyName = isMintedCappedCrowdsale ? MINTED_CAPPED_CROWDSALE_DN : isDutchAuction ? DUTCH_AUCTION_DN : ''
     const { abiEncoded } = contractStore[crowdsaleStore.proxyName]
     const ABIEncodedParameters = abiEncoded ? (
-      <DisplayTextArea
-        description="Encoded ABI Parameters"
-        title="Crowdsale Proxy Contract ABI-encoded parameters"
-        value={abiEncoded}
-      />
+      <DisplayTextArea title="Crowdsale Proxy Contract ABI-encoded parameters" value={abiEncoded} />
     ) : null
     const backgroundBlur = this.state.modal ? 'background-blur' : ''
 
@@ -597,32 +407,13 @@ export class StepFour extends Component {
               title={PUBLISH}
             />
             <div className="sw-BorderedBlock">
-              <div className="sw-BorderedSection" data-step="1">
-                <h2 className="sw-BorderedSection_Title">{CROWDSALE_STRATEGY}</h2>
-                <p className="sw-BorderedSection_Text">{strategyName}</p>
-                <p className="sw-BorderedSection_Text sw-BorderedSection_Text-small">{CROWDSALE_STRATEGY}</p>
-              </div>
-              <div className="sw-BorderedSection" data-step="2">
-                <h2 className="sw-BorderedSection_Title">{TOKEN_SETUP}</h2>
-                {tokenSetupBlock()}
-              </div>
-              <div className="sw-BorderedSection" data-step="3">
-                <h2 className="sw-BorderedSection_Title">{CROWDSALE_SETUP}</h2>
-                {crowdsaleSetupBlock()}
-              </div>
-              {tiersSetupBlock}
-              <div className="sw-BorderedSection" data-step="5">
-                <h2 className="sw-BorderedSection_Title">Configuration</h2>
-                {this.configurationBlock()}
-              </div>
-              <div className="sw-BorderedSection" data-step="6">
-                {this.renderContractSource('src')}
-              </div>
-              {abiEncoded ? (
-                <div className="sw-BorderedSection" data-step="7">
-                  {ABIEncodedParameters}
-                </div>
-              ) : null}
+              <BorderedSection dataStep="1" title={CROWDSALE_STRATEGY} text={strategyName} />
+              <BorderedSection dataStep="2" title={TOKEN_SETUP} contents={tokenSetupBlock()} />
+              <BorderedSection dataStep="3" title={CROWDSALE_SETUP} contents={crowdsaleSetupBlock()} />
+              {tiersSetupBlock()}
+              <BorderedSection dataStep="5" title="Configuration" contents={this.configurationBlock()} />
+              <BorderedSection dataStep="6" contents={this.renderContractSource('src')} />
+              {abiEncoded ? <BorderedSection dataStep="7" contents={ABIEncodedParameters} /> : null}
               <div className="sw-BorderedBlock_DownloadButtonContainer">
                 <ButtonDownload onClick={this.downloadContractButton} disabled={!deploymentStore.hasEnded} />
               </div>

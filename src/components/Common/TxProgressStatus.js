@@ -51,8 +51,10 @@ export class TxProgressStatus extends Component {
           {whitelisted.map(
             (tierWhitelisted, index) =>
               tierWhitelisted || index === 0 ? (
-                <th className="md-TxProgressStatus_Th md-TxProgressStatus_Th-center" key={index.toString()}>
-                  Tier {index + 1}
+                <th className="md-TxProgressStatus_Th md-TxProgressStatus_Th-right" key={index.toString()}>
+                  <div className="md-TxProgressStatus_ThTierInner md-TxProgressStatus_ThTierInner-center">
+                    Tier {index + 1}
+                  </div>
                 </th>
               ) : null
           )}
@@ -92,15 +94,17 @@ export class TxProgressStatus extends Component {
                 }`}
                 key={tx.name}
               >
-                <td className="md-TxProgressStatus_Td">
+                <td className="md-TxProgressStatus_Td md-TxProgressStatus_Td-status-message">
                   {TX_STEP_DESCRIPTION[tx.name]}{' '}
                   {tx.status.map((status, index) => (status ? this.txActivity(status, index) : null))}
                 </td>
                 {whitelisted.map(
                   (tierWhitelisted, index) =>
                     tierWhitelisted || index === 0 ? (
-                      <td className="md-TxProgressStatus_Td md-TxProgressStatus_Td-center" key={index.toString()}>
-                        {this.getStatusIcon(tx.status, index)}
+                      <td className="md-TxProgressStatus_Td md-TxProgressStatus_Td-right" key={index.toString()}>
+                        <div className="md-TxProgressStatus_TdTierInner md-TxProgressStatus_TdTierInner-center">
+                          {this.getStatusIcon(tx.status, index)}
+                        </div>
                       </td>
                     ) : null
                 )}
