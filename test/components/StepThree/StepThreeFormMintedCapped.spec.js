@@ -17,7 +17,6 @@ import {
   tokenStore
 } from '../../../src/stores/index'
 import MockDate from 'mockdate'
-import { weiToGwei } from '../../../src/utils/utils'
 import { tierDurationUpdater } from '../../../src/components/StepThree/utils'
 
 configure({ adapter: new Adapter() })
@@ -101,11 +100,12 @@ describe('StepThreeFormMintedCapped', () => {
   it(`should update 2nd tier's start time, after changing 1st tier's end time`, () => {
     // Given
     tierStore.addCrowdsale()
+    const calculator = tierDurationUpdater(tierStore.tiers)
     const wrapper = mount(
       <Provider {...stores}>
         <Form
           onSubmit={jest.fn()}
-          decorators={[tierDurationUpdater(tierStore.tiers)]}
+          decorators={[calculator]}
           initialValues={{
             gasPrice: GAS_PRICE.SLOW,
             tiers: tierStore.tiers.slice(),
