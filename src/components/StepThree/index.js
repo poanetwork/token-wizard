@@ -9,7 +9,7 @@ import { CHAINS, NAVIGATION_STEPS } from '../../utils/constants'
 import { StepInfo } from '../Common/StepInfo'
 import { StepNavigation } from '../Common/StepNavigation'
 import { checkWeb3, getNetWorkNameById, getNetworkVersion } from '../../utils/blockchainHelpers'
-import { getStep3Component } from './utils'
+import { getStep3Component, tierDurationUpdater } from './utils'
 import { inject, observer } from 'mobx-react'
 import { noGasPriceAvailable, warningOnMainnetAlert } from '../../utils/alerts'
 import { navigateTo } from '../../utils/utils'
@@ -141,20 +141,7 @@ export class StepThree extends Component {
       })
   }
 
-  calculator = createDecorator({
-    field: /.+\.endTime/,
-    updates: (value, name) => {
-      const nextTierIndex = +name.match(/(\d+)/)[1] + 1
-      const { tierStore } = this.props
-      const newValue = {}
-
-      if (tierStore.tiers[nextTierIndex]) {
-        newValue[`tiers[${nextTierIndex}].startTime`] = value
-      }
-
-      return newValue
-    }
-  })
+  calculator = tierDurationUpdater(this.props.tierStore.tiers)
 
   render() {
     if (this.state.initialTiers.length === 0) {
