@@ -4,7 +4,7 @@ import logdown from 'logdown'
 const logger = logdown('TW:utils:copy')
 
 export function copy(cls) {
-  var clipboard = new Clipboard('.' + cls)
+  const clipboard = new Clipboard('.' + cls)
 
   clipboard.on('success', function(e) {
     logger.info('Action:', e.action)
@@ -18,4 +18,6 @@ export function copy(cls) {
     logger.error('Action:', e.action)
     logger.error('Trigger:', e.trigger)
   })
+
+  return clipboard
 }
