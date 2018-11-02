@@ -70,20 +70,16 @@ export const errorsCsv = (data, decimals, tierStore, num) => {
     // Check for min is integer
     if (isInteger()(min) !== undefined) {
       errors.push(`The line number ${line} has an incorrect minCap, must be a integer. Actual value is ${minTitle}.`)
+    } else if (isRequired()(min) !== undefined) {
+      // Check for min is required
+      errors.push(`The line number ${line} need a minCap.`)
     }
 
     // Check for max is integer
     if (isInteger()(max) !== undefined) {
       errors.push(`The line number ${line} has an incorrect maxCap, must be a integer. Actual value is ${maxTitle}.`)
-    }
-
-    // Check for min is required
-    if (isRequired()(min) !== undefined) {
-      errors.push(`The line number ${line} need a minCap.`)
-    }
-
-    // Check for max is required
-    if (isRequired()(max) !== undefined) {
+    } else if (isRequired()(max) !== undefined) {
+      // Check for max is required
       errors.push(`The line number ${line} need a maxCap.`)
     }
 

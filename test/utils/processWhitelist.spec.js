@@ -301,8 +301,7 @@ describe('processWhitelist', () => {
       const { errors } = errorsCsv(rows, 18, tierStore, tierIndex)
       expect(errors[0]).toBe(`The line number 2 have 2 columns, must have 3 columns.`)
       expect(errors[1]).toBe(`The line number 2 has an incorrect maxCap, must be a integer. Actual value is empty.`)
-      expect(errors[2]).toBe(`The line number 2 need a maxCap.`)
-      expect(errors.length).toBe(3)
+      expect(errors.length).toBe(2)
     })
 
     it('should check output errors csv function #5', () => {
@@ -349,8 +348,7 @@ describe('processWhitelist', () => {
 
       const { errors } = errorsCsv(rows, 18, tierStore, tierIndex)
       expect(errors[0]).toBe(`The line number 2 has an incorrect maxCap, must be a integer. Actual value is empty.`)
-      expect(errors[1]).toBe(`The line number 2 need a maxCap.`)
-      expect(errors.length).toBe(2)
+      expect(errors.length).toBe(1)
     })
 
     it('should check output errors csv function #9', () => {
@@ -361,8 +359,7 @@ describe('processWhitelist', () => {
 
       const { errors } = errorsCsv(rows, 18, tierStore, tierIndex)
       expect(errors[0]).toBe(`The line number 1 has an incorrect maxCap, must be a integer. Actual value is empty.`)
-      expect(errors[1]).toBe(`The line number 1 need a maxCap.`)
-      expect(errors.length).toBe(2)
+      expect(errors.length).toBe(1)
     })
 
     it('should check output errors csv function #10', () => {
@@ -422,9 +419,7 @@ describe('processWhitelist', () => {
       expect(errors[0]).toBe(`The line number 1 have 1 column, must have 3 columns.`)
       expect(errors[1]).toBe(`The line number 1 has an incorrect minCap, must be a integer. Actual value is empty.`)
       expect(errors[2]).toBe(`The line number 1 has an incorrect maxCap, must be a integer. Actual value is empty.`)
-      expect(errors[3]).toBe(`The line number 1 need a minCap.`)
-      expect(errors[4]).toBe(`The line number 1 need a maxCap.`)
-      expect(errors.length).toBe(5)
+      expect(errors.length).toBe(3)
     })
 
     it('should check output errors csv function #15', () => {
