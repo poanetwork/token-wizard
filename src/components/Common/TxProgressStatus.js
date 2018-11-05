@@ -19,7 +19,7 @@ export class TxProgressStatus extends Component {
     const table = []
 
     txMap.forEach((status, name) => {
-      table.push({ name, status })
+      table.push({ name, status: status.slice() })
     })
 
     return table
@@ -73,7 +73,7 @@ export class TxProgressStatus extends Component {
   }
 
   getStatusIcon(txStatus, index) {
-    if (this.isTxStatusActive(txStatus)) {
+    if (txStatus[index] && this.isTxStatusActive(txStatus)) {
       return <TxStatusIconClockActive />
     } else if (txStatus[index] && !txStatus[index].mined) {
       return <TxStatusIconClock />
@@ -117,7 +117,7 @@ export class TxProgressStatus extends Component {
 
   render() {
     const { tierStore, extraClassName = '' } = this.props
-    const whitelisted = tierStore.tiers.map((tier, index) => (index === 0 ? true : tier.whitelistEnabled === 'yes'))
+    const whitelisted = tierStore.tiers.map(tier => tier.whitelistEnabled === 'yes')
     const tableContent = this.txStatuses()
 
     return tableContent.length ? (
