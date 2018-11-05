@@ -181,7 +181,7 @@ export const StepThreeFormDutchAuction = ({
       </div>
       <div className="st-StepContent_Buttons">
         <ButtonBack onClick={goBack} />
-        <ButtonContinue onClick={handleSubmit} status={!submitting && !invalid} />
+        <ButtonContinue type="submit" disabled={submitting || invalid} />
       </div>
       <FormSpy subscription={{ values: true }} onChange={handleOnChange} />
     </form>

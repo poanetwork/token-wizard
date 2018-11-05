@@ -541,7 +541,7 @@ exports[`StepThreeFormMintedCapped should render StepThreeFormMintedCapped 1`] =
     </button>
     <button
       className="sw-ButtonContinue "
-      disabled={false}
+      disabled={true}
       onClick={[Function]}
       type="button"
     >
