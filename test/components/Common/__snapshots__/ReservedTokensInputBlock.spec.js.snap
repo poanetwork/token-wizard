@@ -50,12 +50,12 @@ exports[`ReservedTokensInputBlock render should render the component for percent
         Reserved tokens
       </h2>
       <div
-        className="sw-BorderedBlock sw-BorderedBlock-3Rows3Columns"
+        className="sw-BorderedBlock sw-BorderedBlock-ReservedTokensWhitelistCapped"
       >
         <InputField
           description="Address where to send reserved tokens."
           errorMessage="The inserted address is invalid"
-          extraClassName="sw-BorderedBlock_Row1Column1"
+          extraClassName="sw-InputField-ReservedTokensAddress"
           name="Address"
           onChange={[Function]}
           placeholder="Enter here"
@@ -66,7 +66,7 @@ exports[`ReservedTokensInputBlock render should render the component for percent
           value=""
         >
           <div
-            className="sw-InputField sw-BorderedBlock_Row1Column1"
+            className="sw-InputField sw-InputField-ReservedTokensAddress"
           >
             <FormControlTitle
               description="Address where to send reserved tokens."
@@ -111,7 +111,7 @@ exports[`ReservedTokensInputBlock render should render the component for percent
         </InputField>
         <RadioInputField
           description="Fixed amount or % of crowdsaled tokens. Will be deposited to the account after finalization of the crowdsale."
-          extraClassName="sw-BorderedBlock_Row1Column2"
+          extraClassName="sw-RadioInputField-ReservedTokensDimension"
           items={
             Array [
               Object {
@@ -129,7 +129,7 @@ exports[`ReservedTokensInputBlock render should render the component for percent
           title="Dimension"
         >
           <div
-            className="sw-RadioInputField sw-BorderedBlock_Row1Column2"
+            className="sw-RadioInputField sw-RadioInputField-ReservedTokensDimension"
           >
             <FormControlTitle
               description="Fixed amount or % of crowdsaled tokens. Will be deposited to the account after finalization of the crowdsale."
@@ -197,52 +197,50 @@ exports[`ReservedTokensInputBlock render should render the component for percent
             </div>
           </div>
         </RadioInputField>
-        <NumericInput
-          acceptFloat={true}
-          description="Value in percentage. Don't forget to click + button for each reserved token."
-          dimension="percentage"
-          errorMessage="Value must be positive"
-          extraClassName="sw-BorderedBlock_Row1Column3"
-          min={0}
-          name="Value"
-          onClick={[Function]}
-          onValueUpdate={[Function]}
-          placeholder="Enter here"
-          pristine={true}
-          title="Value"
-          valid="VALIDATED"
-          value=""
+        <div
+          className="sw-NumericInputAndButtonContainer sw-NumericInputAndButtonContainer-RerservedTokensValue"
         >
-          <div
-            className="sw-NumericInput sw-BorderedBlock_Row1Column3"
+          <NumericInput
+            acceptFloat={true}
+            description="Value in percentage. Don't forget to click + button for each reserved token."
+            dimension="percentage"
+            errorMessage="Value must be positive"
+            min={0}
+            name="Value"
+            onValueUpdate={[Function]}
+            placeholder="Enter here"
+            pristine={true}
+            title="Value"
+            valid="VALIDATED"
+            value=""
           >
-            <FormControlTitle
-              description="Value in percentage. Don't forget to click + button for each reserved token."
-              title="Value"
-            >
-              <div
-                className="sw-FormControlTitle"
-              >
-                <label
-                  className="sw-FormControlTitle_Label"
-                >
-                  Value
-                </label>
-                <div
-                  className="sw-FormControlTitle_Info"
-                  tabIndex="-1"
-                >
-                  <span
-                    className="sw-FormControlTitle_Tooltip"
-                  >
-                    Value in percentage. Don't forget to click + button for each reserved token.
-                  </span>
-                </div>
-              </div>
-            </FormControlTitle>
             <div
-              className="sw-NumericInput_InputAndButtonContainer"
+              className="sw-NumericInput "
             >
+              <FormControlTitle
+                description="Value in percentage. Don't forget to click + button for each reserved token."
+                title="Value"
+              >
+                <div
+                  className="sw-FormControlTitle"
+                >
+                  <label
+                    className="sw-FormControlTitle_Label"
+                  >
+                    Value
+                  </label>
+                  <div
+                    className="sw-FormControlTitle_Info"
+                    tabIndex="-1"
+                  >
+                    <span
+                      className="sw-FormControlTitle_Tooltip"
+                    >
+                      Value in percentage. Don't forget to click + button for each reserved token.
+                    </span>
+                  </div>
+                </div>
+              </FormControlTitle>
               <TextField
                 id="Value"
                 min="0"
@@ -261,80 +259,25 @@ exports[`ReservedTokensInputBlock render should render the component for percent
                   onKeyPress={[Function]}
                   onPaste={[Function]}
                   placeholder="Enter here"
+                  step="1"
                   type="number"
                   value=""
                 />
               </TextField>
-              <div
-                className="sw-NumericInput_ButtonPlus"
-                onClick={[Function]}
-              />
             </div>
-          </div>
-        </NumericInput>
-        <inject-_class-with-reservedTokenStore
-          extraClassName="sw-BorderedBlock_Row2Column1"
-          reservedTokenStore={
-            ReservedTokenStore {
-              "tokens": Array [],
-            }
-          }
-          tokenStore={
-            TokenStore {
-              "decimals": undefined,
-              "name": undefined,
-              "reservedTokensInput": Object {},
-              "supply": 0,
-              "ticker": undefined,
-              "validToken": Object {
-                "decimals": "EMPTY",
-                "name": "EMPTY",
-                "ticker": "EMPTY",
-              },
-            }
-          }
-        >
-          <_class
-            extraClassName="sw-BorderedBlock_Row2Column1"
-            reservedTokenStore={
-              ReservedTokenStore {
-                "tokens": Array [],
-              }
-            }
-            tokenStore={
-              TokenStore {
-                "decimals": undefined,
-                "name": undefined,
-                "reservedTokensInput": Object {},
-                "supply": 0,
-                "ticker": undefined,
-                "validToken": Object {
-                  "decimals": "EMPTY",
-                  "name": "EMPTY",
-                  "ticker": "EMPTY",
-                },
-              }
-            }
+          </NumericInput>
+          <ButtonPlus
+            onClick={[Function]}
           >
-            <div
-              className="sw-ReservedTokensTable sw-BorderedBlock_Row2Column1"
-            >
-              <div
-                className="sw-ReservedTokensTable_Inner"
-              >
-                <table
-                  cellPadding="0"
-                  cellSpacing="0"
-                  className="sw-ReservedTokensTable_Table"
-                >
-                  <tbody />
-                </table>
-              </div>
-            </div>
-          </_class>
-        </inject-_class-with-reservedTokenStore>
+            <button
+              className="sw-ButtonPlus "
+              onClick={[Function]}
+              type="button"
+            />
+          </ButtonPlus>
+        </div>
         <div
-          className="sw-ReservedTokensListControls sw-BorderedBlock_Row3Column1"
+          className="sw-ReservedTokensListControls"
         >
           <Component
             accept=".csv"
@@ -345,12 +288,19 @@ exports[`ReservedTokensInputBlock render should render the component for percent
               Dropzone
             </span>
           </Component>
-          <div
-            className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-downloadcsv m-r-0"
+          <ButtonCSV
+            extraClassName="sw-ButtonCSV-downloadcsv m-r-0"
             onClick={[Function]}
+            text="Download CSV template"
           >
-            Download CSV template
-          </div>
+            <button
+              className="sw-ButtonCSV sw-ButtonCSV-downloadcsv m-r-0"
+              onClick={[Function]}
+              type="button"
+            >
+              Download CSV template
+            </button>
+          </ButtonCSV>
         </div>
       </div>
     </div>
@@ -408,12 +358,12 @@ exports[`ReservedTokensInputBlock render should render the component for tokens:
         Reserved tokens
       </h2>
       <div
-        className="sw-BorderedBlock sw-BorderedBlock-3Rows3Columns"
+        className="sw-BorderedBlock sw-BorderedBlock-ReservedTokensWhitelistCapped"
       >
         <InputField
           description="Address where to send reserved tokens."
           errorMessage="The inserted address is invalid"
-          extraClassName="sw-BorderedBlock_Row1Column1"
+          extraClassName="sw-InputField-ReservedTokensAddress"
           name="Address"
           onChange={[Function]}
           placeholder="Enter here"
@@ -424,7 +374,7 @@ exports[`ReservedTokensInputBlock render should render the component for tokens:
           value=""
         >
           <div
-            className="sw-InputField sw-BorderedBlock_Row1Column1"
+            className="sw-InputField sw-InputField-ReservedTokensAddress"
           >
             <FormControlTitle
               description="Address where to send reserved tokens."
@@ -469,7 +419,7 @@ exports[`ReservedTokensInputBlock render should render the component for tokens:
         </InputField>
         <RadioInputField
           description="Fixed amount or % of crowdsaled tokens. Will be deposited to the account after finalization of the crowdsale."
-          extraClassName="sw-BorderedBlock_Row1Column2"
+          extraClassName="sw-RadioInputField-ReservedTokensDimension"
           items={
             Array [
               Object {
@@ -487,7 +437,7 @@ exports[`ReservedTokensInputBlock render should render the component for tokens:
           title="Dimension"
         >
           <div
-            className="sw-RadioInputField sw-BorderedBlock_Row1Column2"
+            className="sw-RadioInputField sw-RadioInputField-ReservedTokensDimension"
           >
             <FormControlTitle
               description="Fixed amount or % of crowdsaled tokens. Will be deposited to the account after finalization of the crowdsale."
@@ -555,53 +505,51 @@ exports[`ReservedTokensInputBlock render should render the component for tokens:
             </div>
           </div>
         </RadioInputField>
-        <NumericInput
-          acceptFloat={true}
-          description="Value in tokens. Don't forget to click + button for each reserved token."
-          dimension="tokens"
-          errorMessage="Value must be positive and decimals should not exceed the amount of decimals specified"
-          extraClassName="sw-BorderedBlock_Row1Column3"
-          maxDecimals={0}
-          min={0}
-          name="Value"
-          onClick={[Function]}
-          onValueUpdate={[Function]}
-          placeholder="Enter here"
-          pristine={true}
-          title="Value"
-          valid="INVALID"
-          value=""
+        <div
+          className="sw-NumericInputAndButtonContainer sw-NumericInputAndButtonContainer-RerservedTokensValue"
         >
-          <div
-            className="sw-NumericInput sw-BorderedBlock_Row1Column3"
+          <NumericInput
+            acceptFloat={true}
+            description="Value in tokens. Don't forget to click + button for each reserved token."
+            dimension="tokens"
+            errorMessage="Value must be positive and decimals should not exceed the amount of decimals specified"
+            maxDecimals={0}
+            min={0}
+            name="Value"
+            onValueUpdate={[Function]}
+            placeholder="Enter here"
+            pristine={true}
+            title="Value"
+            valid="INVALID"
+            value=""
           >
-            <FormControlTitle
-              description="Value in tokens. Don't forget to click + button for each reserved token."
-              title="Value"
-            >
-              <div
-                className="sw-FormControlTitle"
-              >
-                <label
-                  className="sw-FormControlTitle_Label"
-                >
-                  Value
-                </label>
-                <div
-                  className="sw-FormControlTitle_Info"
-                  tabIndex="-1"
-                >
-                  <span
-                    className="sw-FormControlTitle_Tooltip"
-                  >
-                    Value in tokens. Don't forget to click + button for each reserved token.
-                  </span>
-                </div>
-              </div>
-            </FormControlTitle>
             <div
-              className="sw-NumericInput_InputAndButtonContainer"
+              className="sw-NumericInput "
             >
+              <FormControlTitle
+                description="Value in tokens. Don't forget to click + button for each reserved token."
+                title="Value"
+              >
+                <div
+                  className="sw-FormControlTitle"
+                >
+                  <label
+                    className="sw-FormControlTitle_Label"
+                  >
+                    Value
+                  </label>
+                  <div
+                    className="sw-FormControlTitle_Info"
+                    tabIndex="-1"
+                  >
+                    <span
+                      className="sw-FormControlTitle_Tooltip"
+                    >
+                      Value in tokens. Don't forget to click + button for each reserved token.
+                    </span>
+                  </div>
+                </div>
+              </FormControlTitle>
               <TextField
                 id="Value"
                 min="1"
@@ -620,80 +568,25 @@ exports[`ReservedTokensInputBlock render should render the component for tokens:
                   onKeyPress={[Function]}
                   onPaste={[Function]}
                   placeholder="Enter here"
+                  step="1"
                   type="number"
                   value=""
                 />
               </TextField>
-              <div
-                className="sw-NumericInput_ButtonPlus"
-                onClick={[Function]}
-              />
             </div>
-          </div>
-        </NumericInput>
-        <inject-_class-with-reservedTokenStore
-          extraClassName="sw-BorderedBlock_Row2Column1"
-          reservedTokenStore={
-            ReservedTokenStore {
-              "tokens": Array [],
-            }
-          }
-          tokenStore={
-            TokenStore {
-              "decimals": undefined,
-              "name": undefined,
-              "reservedTokensInput": Object {},
-              "supply": 0,
-              "ticker": undefined,
-              "validToken": Object {
-                "decimals": "EMPTY",
-                "name": "EMPTY",
-                "ticker": "EMPTY",
-              },
-            }
-          }
-        >
-          <_class
-            extraClassName="sw-BorderedBlock_Row2Column1"
-            reservedTokenStore={
-              ReservedTokenStore {
-                "tokens": Array [],
-              }
-            }
-            tokenStore={
-              TokenStore {
-                "decimals": undefined,
-                "name": undefined,
-                "reservedTokensInput": Object {},
-                "supply": 0,
-                "ticker": undefined,
-                "validToken": Object {
-                  "decimals": "EMPTY",
-                  "name": "EMPTY",
-                  "ticker": "EMPTY",
-                },
-              }
-            }
+          </NumericInput>
+          <ButtonPlus
+            onClick={[Function]}
           >
-            <div
-              className="sw-ReservedTokensTable sw-BorderedBlock_Row2Column1"
-            >
-              <div
-                className="sw-ReservedTokensTable_Inner"
-              >
-                <table
-                  cellPadding="0"
-                  cellSpacing="0"
-                  className="sw-ReservedTokensTable_Table"
-                >
-                  <tbody />
-                </table>
-              </div>
-            </div>
-          </_class>
-        </inject-_class-with-reservedTokenStore>
+            <button
+              className="sw-ButtonPlus "
+              onClick={[Function]}
+              type="button"
+            />
+          </ButtonPlus>
+        </div>
         <div
-          className="sw-ReservedTokensListControls sw-BorderedBlock_Row3Column1"
+          className="sw-ReservedTokensListControls"
         >
           <Component
             accept=".csv"
@@ -704,12 +597,19 @@ exports[`ReservedTokensInputBlock render should render the component for tokens:
               Dropzone
             </span>
           </Component>
-          <div
-            className="sw-ReservedTokensListControls_Button sw-ReservedTokensListControls_Button-downloadcsv m-r-0"
+          <ButtonCSV
+            extraClassName="sw-ButtonCSV-downloadcsv m-r-0"
             onClick={[Function]}
+            text="Download CSV template"
           >
-            Download CSV template
-          </div>
+            <button
+              className="sw-ButtonCSV sw-ButtonCSV-downloadcsv m-r-0"
+              onClick={[Function]}
+              type="button"
+            >
+              Download CSV template
+            </button>
+          </ButtonCSV>
         </div>
       </div>
     </div>

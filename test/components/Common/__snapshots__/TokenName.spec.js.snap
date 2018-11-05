@@ -2,7 +2,7 @@
 
 exports[`TokenName should render TokenName component 1`] = `
 <div
-  className="sw-InputField "
+  className="sw-InputField2 "
 >
   <div
     className="sw-FormControlTitle"
@@ -30,6 +30,7 @@ exports[`TokenName should render TokenName component 1`] = `
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
+    placeholder="Enter here"
     type="text"
     value=""
   />
@@ -38,7 +39,7 @@ exports[`TokenName should render TokenName component 1`] = `
 
 exports[`TokenName should render TokenName component and its children 1`] = `
 <div
-  className="sw-InputField "
+  className="sw-InputField2 "
 >
   <div
     className="sw-FormControlTitle"
@@ -66,6 +67,7 @@ exports[`TokenName should render TokenName component and its children 1`] = `
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
+    placeholder="Enter here"
     type="text"
     value=""
   />

@@ -2,7 +2,7 @@
 
 exports[`TokenSupply should render TokenDecimals component 1`] = `
 <div
-  className="sw-InputField "
+  className="sw-InputField2 "
 >
   <div
     className="sw-FormControlTitle"
@@ -26,11 +26,13 @@ exports[`TokenSupply should render TokenDecimals component 1`] = `
   <input
     className="sw-TextField"
     id="supply"
+    min="0"
     name="supply"
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
-    type="text"
+    placeholder="Enter here"
+    type="number"
     value=""
   />
 </div>
@@ -38,7 +40,7 @@ exports[`TokenSupply should render TokenDecimals component 1`] = `
 
 exports[`TokenSupply should render TokenSupply component and its children 1`] = `
 <div
-  className="sw-InputField "
+  className="sw-InputField2 "
 >
   <div
     className="sw-FormControlTitle"
@@ -62,11 +64,13 @@ exports[`TokenSupply should render TokenSupply component and its children 1`] = 
   <input
     className="sw-TextField"
     id="supply"
+    min="0"
     name="supply"
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
-    type="text"
+    placeholder="Enter here"
+    type="number"
     value=""
   />
 </div>
@@ -160,10 +164,11 @@ exports[`TokenSupply should render TokenSupply component and its children, with 
       description="The total supply of the token"
       format={[Function]}
       label="Supply"
+      min="0"
       name="supply"
       parse={[Function]}
-      side="right"
-      type="text"
+      placeholder="Enter here"
+      type="number"
       validate={[Function]}
     >
       <InputField2
@@ -196,11 +201,12 @@ exports[`TokenSupply should render TokenSupply component and its children, with 
             "visited": false,
           }
         }
-        side="right"
-        type="text"
+        min="0"
+        placeholder="Enter here"
+        type="number"
       >
         <div
-          className="sw-InputField "
+          className="sw-InputField2 "
         >
           <FormControlTitle
             description="The total supply of the token"
@@ -230,25 +236,29 @@ exports[`TokenSupply should render TokenSupply component and its children, with 
             autoComplete="off"
             className="input"
             id="supply"
+            min="0"
             name="supply"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
-            type="text"
+            placeholder="Enter here"
+            type="number"
             value=""
           >
             <input
               className="sw-TextField"
               id="supply"
+              min="0"
               name="supply"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              type="text"
+              placeholder="Enter here"
+              type="number"
               value=""
             />
           </TextField>
-          <Error
+          <Errors
             name="supply"
           >
             <Field
@@ -264,7 +274,7 @@ exports[`TokenSupply should render TokenSupply component and its children, with 
                 }
               }
             />
-          </Error>
+          </Errors>
         </div>
       </InputField2>
     </Field>

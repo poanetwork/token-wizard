@@ -2,7 +2,6 @@
 
 exports[`Error  should render Error component 1`] = `
 <ReactFinalForm
-  component={[Function]}
   errorStyle={
     Object {
       "color": "blue",
@@ -15,115 +14,5 @@ exports[`Error  should render Error component 1`] = `
   name="errorName"
   onSubmit={[MockFunction]}
   validate={[Function]}
->
-  <Error
-    __versions={
-      Object {
-        "final-form": "4.6.1",
-        "react-final-form": "3.4.0",
-      }
-    }
-    batch={[Function]}
-    blur={[Function]}
-    change={[Function]}
-    dirty={false}
-    dirtySinceLastSubmit={false}
-    errorStyle={
-      Object {
-        "color": "blue",
-        "fontSize": "24px",
-        "fontWeight": "bold",
-        "height": "10px",
-        "width": "50%",
-      }
-    }
-    errors={
-      Object {
-        "0": "F",
-        "1": "I",
-        "10": "/",
-        "11": "f",
-        "12": "o",
-        "13": "r",
-        "14": "m",
-        "15": "-",
-        "16": "e",
-        "17": "r",
-        "18": "r",
-        "19": "o",
-        "2": "N",
-        "20": "r",
-        "3": "A",
-        "4": "L",
-        "5": "_",
-        "6": "F",
-        "7": "O",
-        "8": "R",
-        "9": "M",
-        "errorName": undefined,
-      }
-    }
-    focus={[Function]}
-    form={
-      Object {
-        "batch": [Function],
-        "blur": [Function],
-        "change": [Function],
-        "focus": [Function],
-        "getFieldState": [Function],
-        "getRegisteredFields": [Function],
-        "getState": [Function],
-        "initialize": [Function],
-        "isValidationPaused": [Function],
-        "mutators": Object {},
-        "pauseValidation": [Function],
-        "registerField": [Function],
-        "reset": [Function],
-        "resumeValidation": [Function],
-        "setConfig": [Function],
-        "submit": [Function],
-        "subscribe": [Function],
-      }
-    }
-    handleSubmit={[Function]}
-    hasSubmitErrors={false}
-    hasValidationErrors={true}
-    initialize={[Function]}
-    invalid={true}
-    mutators={Object {}}
-    name="errorName"
-    pristine={true}
-    reset={[Function]}
-    submitFailed={false}
-    submitSucceeded={false}
-    submitting={false}
-    touched={
-      Object {
-        "errorName": false,
-      }
-    }
-    valid={false}
-    validating={false}
-    values={Object {}}
-    visited={
-      Object {
-        "errorName": false,
-      }
-    }
-  >
-    <Field
-      format={[Function]}
-      name="errorName"
-      parse={[Function]}
-      render={[Function]}
-      subscription={
-        Object {
-          "error": true,
-          "pristine": true,
-          "touched": true,
-        }
-      }
-    />
-  </Error>
-</ReactFinalForm>
+/>
 `;
