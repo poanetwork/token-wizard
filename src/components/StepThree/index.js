@@ -6,6 +6,7 @@ import setFieldTouched from 'final-form-set-field-touched'
 import { Form } from 'react-final-form'
 import { Loader } from '../Common/Loader'
 import { NAVIGATION_STEPS, CHAINS } from '../../utils/constants'
+import { StepInfo } from '../Common/StepInfo'
 import { StepNavigation } from '../Common/StepNavigation'
 import { getNetworkVersion, getNetWorkNameById, checkWeb3 } from '../../utils/blockchainHelpers'
 import { getStep3Component } from './utils'
@@ -184,16 +185,12 @@ export class StepThree extends Component {
         <section className="lo-MenuBarAndContent" ref="three">
           <StepNavigation activeStep={CROWDSALE_SETUP} />
           <div className="st-StepContent">
-            <div className="st-StepContent_Info">
-              <div className="st-StepContent_InfoIcon st-StepContent_InfoIcon-step3" />
-              <div className="st-StepContentInfo_InfoText">
-                <h1 className="st-StepContent_InfoTitle">Crowdsale Setup</h1>
-                <p className="st-StepContent_InfoDescription">
-                  The most important and exciting part of the crowdsale process.<br />Here you can define parameters of
-                  your crowdsale campaign.
-                </p>
-              </div>
-            </div>
+            <StepInfo
+              description="The most important and exciting part of the crowdsale process.<br />Here you can define parameters of
+              your crowdsale campaign."
+              stepNumber="3"
+              title="Crowdsale Setup"
+            />
             <Form
               addCrowdsale={tierStore.addCrowdsale}
               component={stepThreeComponent}

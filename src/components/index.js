@@ -1,5 +1,5 @@
 export { Contribute } from './contribute'
-export { Crowdsale } from './crowdsale'
+export { Crowdsale } from './Crowdsale'
 export { Crowdsales } from './Crowdsales'
 export { Home } from './Home'
 export { LogoPrimary } from './LogoPrimary'

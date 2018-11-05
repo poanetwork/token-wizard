@@ -21,8 +21,6 @@ import { TOAST } from './utils/constants'
 import { Web3Provider } from './react-web3'
 import { getQueryVariable } from './utils/utils'
 
-// import './assets/stylesheets/application.css'
-
 @inject('deploymentStore')
 @observer
 class App extends Component {
@@ -42,6 +40,7 @@ class App extends Component {
       require('./assets/stylesheets/styles.css')
     }
   }
+
   render() {
     const { deploymentStore } = this.props
     let crowdsaleAddr = getAddrFromQuery()
@@ -77,7 +76,9 @@ class App extends Component {
               </Switch>
             </Web3Provider>
           </Switch>
-          <AlertContainer ref={a => (toast.msg = a)} {...TOAST.DEFAULT_OPTIONS} />
+          <div className="MainAlertContainer">
+            <AlertContainer ref={a => (toast.msg = a)} {...TOAST.DEFAULT_OPTIONS} />
+          </div>
         </div>
       </Router>
     )

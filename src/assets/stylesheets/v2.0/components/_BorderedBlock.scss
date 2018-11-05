@@ -140,3 +140,12 @@
         padding-top: 0;
     }
 }
+
+.sw-BorderedBlock_DownloadButtonContainer {
+    display: flex;
+    justify-content: center;
+
+    @media (min-width: $breakpoint-md) {
+        justify-content: flex-start;
+    }
+}
