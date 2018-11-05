@@ -1,0 +1,38 @@
+.MainAlertContainer {
+    position: relative;
+    z-index: 123456789;
+    > div > span {
+        > div[class*="css-"] {
+            background-color: rgba(90, 45, 165, 0.6);
+            border-radius: 8px;
+            box-shadow: 0 9px 13px 0 rgba(0, 0, 0, 0.09);
+
+            // Icon
+            > div:first-child {
+                > div {
+                    background-image: url('#{ $base-images-path }/MainAlertContainer/warning.svg');
+                    background-position: 50% 50%;
+                    background-repeat: no-repeat;
+                    background-size: cover;
+                }
+            }
+
+            // Text content
+            > div:nth-child(2) {
+                color: #fff;
+                font-family: Nunito;
+                font-size: 14px;
+                font-weight: 600;
+                line-height: 1.21;
+                margin-right: 0;
+                text-align: left;
+                text-transform: none;
+            }
+
+            // Close button
+            > div:last-child {
+                display: none;
+            }
+        }
+    }
+}

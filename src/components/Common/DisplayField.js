@@ -1,16 +1,20 @@
 import React from 'react'
+import { ButtonCopyToClipboard } from '../Common/ButtonCopyToClipboard'
 
-export const DisplayField = props => {
+export const DisplayField = ({ description, title, value, extraClass = '\b', mobileTextSize = 'medium' }) => {
+  const valueSize = {
+    small: 'Small',
+    medium: 'Medium',
+    large: 'Large',
+    extralarge: 'ExtraLarge'
+  }
+
   return (
-    <div className={props.side}>
-      <div className="display-container">
-        <p className="label">{props.title}</p>
-        <p className="value">{props.value}</p>
-        <p className="description">{props.description}</p>
-      </div>
-      <div className="copy-field-container">
-        <btn className="copy" data-clipboard-action="copy" data-clipboard-text={props.value} />
-      </div>
+    <div className={`pb-DisplayField ${extraClass}`} title={description}>
+      <h3 className="pb-DisplayField_Title">{title}</h3>
+      <p className={`pb-DisplayField_Value pb-DisplayField_Value-MobileTextSize${valueSize[mobileTextSize]}`}>
+        {value} <ButtonCopyToClipboard value={value} title={title} />
+      </p>
     </div>
   )
 }

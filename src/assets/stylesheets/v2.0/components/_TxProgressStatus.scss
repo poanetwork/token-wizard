@@ -1,0 +1,141 @@
+$md-TxProgressStatus_CellPaddingHorizontal: 10px !default;
+$md-TxProgressStatus_CellPaddingVertical: 13px !default;
+$md-TxProgressStatus_CellFontSize: 16px !default;
+$md-TxProgressStatus-gradient-width: 45px !default;
+
+
+.md-TxProgressStatus_TableContainer {
+
+    @include datatable-styles($md-TxProgressStatus-gradient-width);
+    border-bottom: 1px solid $base-border-color;
+
+}
+
+.md-TxProgressStatus_Inner {
+
+    @include datatable-inner-styles();
+
+}
+
+.md-TxProgressStatus_Table {
+
+    @include datatable-table-styles();
+
+}
+
+.md-TxProgressStatus_Th {
+    font-size: $md-TxProgressStatus_CellFontSize;
+    font-weight: 700;
+    line-height: 1.2;
+    padding-bottom: $md-TxProgressStatus_CellPaddingVertical;
+    padding-left: $md-TxProgressStatus_CellPaddingHorizontal;
+    padding-right: $md-TxProgressStatus_CellPaddingHorizontal;
+    padding-top: $md-TxProgressStatus_CellPaddingVertical;
+    text-align: left;
+
+    @include datatable-column-styles-last-child();
+}
+
+.md-TxProgressStatus_ThTierInner {
+    width: 100px;
+
+    &.md-TxProgressStatus_ThTierInner-center {
+        text-align: center;
+    }
+
+    .md-TxProgressStatus_Th-right & {
+        margin-left: auto;
+    }
+}
+
+.md-TxProgressStatus_Td {
+    font-size: $md-TxProgressStatus_CellFontSize;
+    line-height: 1.2;
+    padding-bottom: $md-TxProgressStatus_CellPaddingVertical;
+    padding-left: $md-TxProgressStatus_CellPaddingHorizontal;
+    padding-right: $md-TxProgressStatus_CellPaddingHorizontal;
+    padding-top: $md-TxProgressStatus_CellPaddingVertical;
+    text-align: left;
+    white-space: nowrap;
+    width: 100px;
+
+    &:first-child {
+        border-bottom-left-radius: 4px;
+        border-top-left-radius: 4px;
+    }
+    &:last-child {
+        border-bottom-right-radius: 4px;
+        border-top-right-radius: 4px;
+    }
+
+    @include datatable-column-styles-last-child();
+
+    &.md-TxProgressStatus_Td-status-message {
+        @media (min-width: $breakpoint-md) {
+            max-width: 500px;
+            min-width: 500px;
+        }
+    }
+
+    .md-TxProgressStatus_Tr:nth-child(odd) & {
+        background-color: rgba(155, 155, 155, 0.2);
+    }
+
+    .md-TxProgressStatus_Tr.md-TxProgressStatus_Tr-active & {
+        background-color: $brand-primary;
+        color: #fff;
+    }
+}
+
+.md-TxProgressStatus_TdTierInner {
+    width: 100px;
+
+    &.md-TxProgressStatus_TdTierInner-center {
+        text-align: center;
+    }
+
+    .md-TxProgressStatus_Td-right & {
+        margin-left: auto;
+    }
+}
+
+.md-TxProgressStatus_ButtonsContainer {
+    display: flex;
+    flex-direction: column;
+
+    @media (min-width: $breakpoint-md) {
+        flex-direction: row;
+    }
+
+    &.md-TxProgressStatus_ButtonsContainer-right {
+        @media (min-width: $breakpoint-md) {
+            justify-content: flex-end;
+        }
+    }
+}
+
+.md-TxProgressStatus_ActiveText {
+    animation-delay: 1s;
+    animation-duration: 6s;
+    animation-iteration-count: infinite;
+    animation-name: txStatusFade;
+    background: #fff;
+    border-radius: 3px;
+    color: #000;
+    display: inline-block;
+    font-weight: 700;
+    margin: -5px 0 -5px 20px;
+    padding: 5px 20px;
+}
+
+@keyframes txStatusFade {
+    0% {
+        opacity: 0.8;
+    }
+    25% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 1;
+    }
+}

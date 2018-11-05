@@ -15,26 +15,33 @@ import {
   isDecimalPlacesNotGreaterThan,
   isGreaterOrEqualThan
 } from '../../utils/validations'
-import { gweiToWei, navigateTo, toBigNumber } from '../../utils/utils'
+import { gweiToWei, navigateTo } from '../../utils/utils'
 import { RadioButton } from '../Common/RadioButton'
 
+const logger = logdown('TW:StepThree')
 const { VALID } = VALIDATION_TYPES
 const { WALLET_ADDRESS, BURN_EXCESS } = TEXT_FIELDS
-const logger = logdown('TW:StepThree')
 
 export const StepThreeFormDutchAuction = ({
-  errors,
   form,
   handleSubmit,
   history,
   invalid,
   pristine,
-  firstLoad,
+  reload,
   submitting,
-  values,
   ...props
 }) => {
-  const { setFieldTouched } = form.mutators
+  const status = !(submitting || invalid)
+
+  /**
+   * Set gas type selected on gas price input
+   * @param value
+   */
+  const updateGasTypeSelected = value => {
+    const { updateGasTypeSelected } = props
+    updateGasTypeSelected(value)
+  }
 
   const handleValidateGasPrice = value => {
     const errors = composeValidators(
@@ -50,52 +57,52 @@ export const StepThreeFormDutchAuction = ({
     input.onChange(value)
   }
 
-  const setFieldAsTouched = ({ values }) => {
-    if (firstLoad) {
-      values.tiers.forEach((tier, index) => {
-        setFieldTouched(`tiers[${index}].tier`, true)
-        setFieldTouched(`tiers[${index}].updatable`, true)
-        setFieldTouched(`tiers[${index}].whitelistEnabled`, true)
-        setFieldTouched(`tiers[${index}].startTime`, true)
-        setFieldTouched(`tiers[${index}].rate`, true)
-        setFieldTouched(`tiers[${index}].endTime`, true)
-        setFieldTouched(`tiers[${index}].minRate`, true)
-        setFieldTouched(`tiers[${index}].maxRate`, true)
-        setFieldTouched(`tiers[${index}].supply`, true)
-        setFieldTouched(`tiers[${index}].minCap`, true)
+  const setFieldAsTouched = ({ values, errors }) => {
+    if (reload) {
+      const tiers = values && values.tiers ? values.tiers : []
+      tiers.forEach((tier, index) => {
+        form.mutators.setFieldTouched(`tiers[${index}].tier`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].updatable`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].whitelistEnabled`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].startTime`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].rate`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].endTime`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].minRate`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].maxRate`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].supply`, true)
+        form.mutators.setFieldTouched(`tiers[${index}].minCap`, true)
       })
-      setFieldTouched(`gasPrice`, true)
+      form.mutators.setFieldTouched(`gasPrice`, true)
     }
   }
 
-  const handleOnChange = ({ values }) => {
-    const { tierStore, generalStore, crowdsaleStore } = props
-    const { walletAddress, gasPrice, burnExcess, tiers } = values
+  const handleOnChange = ({ values, errors }) => {
+    props.tierStore.updateWalletAddress(values.walletAddress, VALID)
+    props.tierStore.updateBurnExcess(values.burnExcess, VALID)
+    props.generalStore.setGasPrice(gweiToWei(values.gasPrice.price))
 
-    tierStore.updateWalletAddress(walletAddress, VALID)
-    tierStore.updateBurnExcess(burnExcess, VALID)
+    let totalSupply = 0
 
+    const tiers = values && values.tiers ? values.tiers : []
     tiers.forEach((tier, index) => {
-      tierStore.setTierProperty(tier.minCap, 'minCap', index)
-      tierStore.setTierProperty(tier.startTime, 'startTime', index)
-      tierStore.setTierProperty(tier.endTime, 'endTime', index)
-      tierStore.updateMinRate(tier.minRate, VALID, index)
-      tierStore.updateMaxRate(tier.maxRate, VALID, index)
-      tierStore.setTierProperty(tier.supply, 'supply', index)
-      tierStore.setTierProperty(tier.whitelistEnabled, 'whitelistEnabled', index)
-      tierStore.validateTiers('supply', index)
+      totalSupply += Number(tier.supply)
+      props.tierStore.setTierProperty(tier.minCap, 'minCap', index)
+      props.tierStore.setTierProperty(tier.startTime, 'startTime', index)
+      props.tierStore.setTierProperty(tier.endTime, 'endTime', index)
+      props.tierStore.updateMinRate(tier.minRate, VALID, index)
+      props.tierStore.updateMaxRate(tier.maxRate, VALID, index)
+      props.tierStore.setTierProperty(tier.supply, 'supply', index)
+      props.tierStore.setTierProperty(tier.whitelistEnabled, 'whitelistEnabled', index)
+      props.tierStore.validateTiers('supply', index)
     })
 
-    const totalSupply = tiers.reduce((acc, { supply }) => acc.plus(toBigNumber(supply)), toBigNumber(0)).toFixed()
-    crowdsaleStore.setProperty('supply', totalSupply)
-
     const endTime = tiers.length > 0 ? tiers[tiers.length - 1].endTime : null
-    crowdsaleStore.setProperty('endTime', endTime)
 
-    generalStore.setGasPrice(gweiToWei(gasPrice.price))
+    props.crowdsaleStore.setProperty('supply', totalSupply)
+    props.crowdsaleStore.setProperty('endTime', endTime)
 
     // Set fields as touched
-    setFieldAsTouched({ values })
+    setFieldAsTouched({ values, errors })
   }
 
   const goBack = async () => {
@@ -140,22 +147,21 @@ export const StepThreeFormDutchAuction = ({
         <Field
           component={InputField2}
           description={DESCRIPTION.WALLET}
+          extraClassName="sw-InputField2-DutchAuctionWalletAddress"
           label={WALLET_ADDRESS}
           name="walletAddress"
           placeholder="Enter here"
           validate={isAddress()}
-          value={values.walletAddress}
-          extraClassName="sw-InputField2-DutchAuctionWalletAddress"
         />
         <Field
           component={GasPriceInput}
-          gasPrices={props.gasPriceStore.gasPricesInGwei}
-          name="gasPrice"
-          updateGasTypeSelected={value => props.updateGasTypeSelected(value)}
-          validate={value => handleValidateGasPrice(value)}
-          id="gasPrice"
-          side="right"
           extraClassName="sw-GasPriceInput-DutchAuction"
+          gasPrices={props.gasPricesInGwei}
+          id="gasPrice"
+          name="gasPrice"
+          side="right"
+          updateGasTypeSelected={updateGasTypeSelected}
+          validate={value => handleValidateGasPrice(value)}
         />
         <Field
           name="burnExcess"
@@ -169,19 +175,12 @@ export const StepThreeFormDutchAuction = ({
           )}
         />
         <FieldArray name="tiers">
-          {({ fields }) => (
-            <DutchAuctionBlock
-              fields={fields}
-              decimals={props.tokenStore.decimals}
-              tierStore={props.tierStore}
-              tokenStore={props.tokenStore}
-            />
-          )}
+          {({ fields }) => <DutchAuctionBlock fields={fields} decimals={props.decimals} />}
         </FieldArray>
       </div>
       <div className="st-StepContent_Buttons">
         <ButtonBack onClick={goBack} />
-        <ButtonContinue onClick={handleSubmit} status={!submitting && !invalid} />
+        <ButtonContinue onClick={handleSubmit} disabled={!status} />
       </div>
       <FormSpy subscription={{ values: true }} onChange={handleOnChange} />
     </form>

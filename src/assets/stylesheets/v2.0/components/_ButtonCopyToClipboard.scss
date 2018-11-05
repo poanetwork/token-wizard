@@ -1,0 +1,26 @@
+.sw-ButtonCopyToClipboard {
+    background-color: transparent;
+    background-image: url('#{ $base-images-path }/ButtonCopy/copy.svg');
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: contain;
+    border: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    height: 20px;
+    outline: none;
+    padding: 0;
+    width: 16px;
+
+    &:active {
+        opacity: 0.6;
+    }
+
+    .pb-DisplayField_Value & {
+        margin-left: 10px;
+    }
+
+    .pb-DisplayTextArea_Title & {
+        margin-left: 10px;
+    }
+}

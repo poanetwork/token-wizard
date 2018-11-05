@@ -255,6 +255,16 @@ export function getContractBySourceType(sourceType, isMintedCappedCrowdsale, { D
   return isMintedCappedCrowdsale ? parseContent(MintedCappedProxy[sourceType]) : parseContent(DutchProxy[sourceType])
 }
 
+export function getSourceTypeTitle(sourceType) {
+  const sourceTypeName = {
+    abi: 'ABI',
+    bin: 'Creation Code',
+    src: 'Source Code'
+  }
+
+  return `Crowdsale Proxy Contract ${sourceTypeName[sourceType]}`
+}
+
 export function updateProxyContractInfo({ contractAddress }, { web3Store, contractStore, crowdsaleStore }, params) {
   const { web3 } = web3Store
   const encoded = web3.eth.abi.encodeParameters(['address', 'bytes32', 'address', 'bytes32'], params)
