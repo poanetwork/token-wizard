@@ -384,7 +384,7 @@ exports[`StepThree StepThree - renders should render StepThree for Dutch Auction
                   onChange={[Function]}
                   onFocus={[Function]}
                   type="datetime-local"
-                  value="2018-03-12T11:05"
+                  value="2018-03-13T11:05"
                 />
               </div>
               <div
@@ -417,7 +417,7 @@ exports[`StepThree StepThree - renders should render StepThree for Dutch Auction
                   onChange={[Function]}
                   onFocus={[Function]}
                   type="datetime-local"
-                  value="2018-03-16T00:00"
+                  value="2018-03-17T00:00"
                 />
               </div>
               <div
@@ -1046,7 +1046,7 @@ exports[`StepThree StepThree - renders should render StepThree for Whitelist wit
                 onChange={[Function]}
                 onFocus={[Function]}
                 type="datetime-local"
-                value="2018-03-12T11:05"
+                value="2018-03-13T11:05"
               />
             </div>
             <div
@@ -1079,7 +1079,7 @@ exports[`StepThree StepThree - renders should render StepThree for Whitelist wit
                 onChange={[Function]}
                 onFocus={[Function]}
                 type="datetime-local"
-                value="2018-03-16T00:00"
+                value="2018-03-17T00:00"
               />
             </div>
             <div
@@ -1385,7 +1385,7 @@ exports[`StepThree StepThree - renders should render StepThree for Whitelist wit
           </button>
           <button
             className="sw-ButtonContinue "
-            disabled={false}
+            disabled={true}
             onClick={[Function]}
             type="button"
           >

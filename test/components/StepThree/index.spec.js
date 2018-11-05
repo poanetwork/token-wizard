@@ -24,9 +24,9 @@ configure({ adapter: new Adapter() })
 global.scrollTo = jest.fn()
 
 jest.mock('../../../src/utils/api')
+jest.mock('../../../src/utils/fetchFile')
 
-// const walletAddress = '0xAC7022d55dA6C8BB229b1Ba3Ce8A16724FF79c4A'
-const currentTime = '2018-03-12T11:00:00'
+const currentTime = '2018-03-13T11:00:00'
 MockDate.set(currentTime)
 
 describe('StepThree', () => {
@@ -69,6 +69,7 @@ describe('StepThree', () => {
   // describe('StepThree - methods', () => {
   //   it(`should call onSubmit handler if form is valid`, () => {
   //     // Given
+  //     const walletAddress = '0xAC7022d55dA6C8BB229b1Ba3Ce8A16724FF79c4A'
   //     const [{ type: strategy }] = strategies
   //     stores.crowdsaleStore.setProperty('strategy', strategy)
   //     stores.tierStore.addCrowdsale(walletAddress)
@@ -81,19 +82,18 @@ describe('StepThree', () => {
   //         </MemoryRouter>
   //       </Provider>
   //     )
+  //     const handleOnSubmit = jest.spyOn(wrapper.find('StepThree').instance(), 'handleOnSubmit')
+  //     // wrapper.update()
   //
   //     // When
   //     wrapper.find('input[name="walletAddress"]').simulate('change', { target: { value: walletAddress } })
   //     wrapper.find('input[name="tiers[0].endTime"]').simulate('change', { target: { value: '2018-03-14T12:00:00' } })
   //     wrapper.find('input[name="tiers[0].rate"]').simulate('change', { target: { value: '100000' } })
   //     wrapper.find('input[name="tiers[0].supply"]').simulate('change', { target: { value: '100' } })
-  //     wrapper.update()
-  //     wrapper
-  //       .find('ButtonContinue')
-  //       .find('button')
-  //       .simulate('click')
+  //     wrapper.find('ButtonContinue').simulate('submit')
   //
   //     // Then
+  //     expect(handleOnSubmit).toHaveBeenCalledTimes(1)
   //   })
   // })
 })
