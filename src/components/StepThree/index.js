@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import createDecorator from 'final-form-calculate'
 import arrayMutators from 'final-form-arrays'
 import logdown from 'logdown'
 import setFieldTouched from 'final-form-set-field-touched'
