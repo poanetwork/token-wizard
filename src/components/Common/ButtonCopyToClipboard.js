@@ -1,26 +1,19 @@
 import React from 'react'
-import { copy } from '../../utils/copy'
-import { toast } from '../../utils/utils'
+import { copy, showClipboardCopyToast } from '../../utils/copy'
 
 const elementClass = 'sw-ButtonCopyToClipboard'
 
 copy(`.${elementClass}`)
 
-const showToast = title => {
-  let copyMessage = title ? `"${title}" copied to clipboard.` : 'Copied to clipboard'
-
-  toast.showToaster({ message: copyMessage, options: { time: 3000 } })
-}
-
-export const ButtonCopyToClipboard = ({ disabled, extraClassName, value, title = '' }) => (
+export const ButtonCopyToClipboard = ({ disabled, extraClassName = '', value, title = '' }) => (
   <button
-    className={`${elementClass} ${extraClassName ? extraClassName : ''}`}
+    className={`${elementClass} ${extraClassName}`}
     data-clipboard-action="copy"
     data-clipboard-text={value}
     disabled={disabled}
     type="button"
     onClick={() => {
-      showToast(title)
+      showClipboardCopyToast(title)
     }}
   />
 )

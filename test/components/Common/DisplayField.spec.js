@@ -1,10 +1,10 @@
 import React from 'react'
-import {DisplayField} from '../../../src/components/Common/DisplayField'
-import {Form} from 'react-final-form'
+import { DisplayField } from '../../../src/components/Common/DisplayField'
+import { Form } from 'react-final-form'
 import Adapter from 'enzyme-adapter-react-15'
-import {configure, mount, shallow} from 'enzyme'
+import { configure, mount } from 'enzyme'
 
-configure({adapter: new Adapter()})
+configure({ adapter: new Adapter() })
 describe('DisplayField ', () => {
   it(`should render DisplayField component with specified parameters`, () => {
     const description = 'DisplayField description'

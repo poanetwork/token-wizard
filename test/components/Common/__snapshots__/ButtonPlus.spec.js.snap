@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ButtonPlus should render ButtonPlus component 1`] = `
+<button
+  className="sw-ButtonPlus "
+  onClick={[MockFunction]}
+  type="button"
+/>
+`;
