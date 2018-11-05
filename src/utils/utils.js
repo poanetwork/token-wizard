@@ -237,9 +237,7 @@ export const clearStorage = props => {
 }
 
 export const convertDateToLocalTimezoneInUnix = dateToConvert => {
-  const offset = moment().utcOffset()
   const dateConvertUnix = moment(dateToConvert)
-    .add(offset, 'minutes')
     .local()
     .unix()
   return dateConvertUnix * 1000
