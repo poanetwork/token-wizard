@@ -9,7 +9,7 @@ import { StepNavigation } from '../Common/StepNavigation'
 import { StepTwoForm } from './StepTwoForm'
 import { checkWeb3 } from '../../utils/blockchainHelpers'
 import { inject, observer } from 'mobx-react'
-import { navigateTo } from '../../utils/utils'
+import { navigateTo, goBack, goBackMustBeEnabled } from '../../utils/utils'
 
 const { TOKEN_SETUP } = NAVIGATION_STEPS
 const logger = logdown('TW:stepTwo:index')
@@ -53,11 +53,34 @@ export class StepTwo extends Component {
     try {
       navigateTo({
         history: this.props.history,
-        location: 'stepThree'
+        location: 'stepThree',
+        fromLocation: 'stepTwo'
       })
     } catch (err) {
       logger.log('Error to navigate', err)
     }
+  }
+
+  goBack = () => {
+    try {
+      goBack({
+        history: this.props.history,
+        location: '/stepOne'
+      })
+    } catch (err) {
+      logger.log('Error to navigate', err)
+    }
+  }
+
+  goBackEnabled = () => {
+    let goBackEnabled = false
+    try {
+      goBackEnabled = goBackMustBeEnabled({ history: this.props.history })
+      logger.log(`Go back is enabled ${goBackEnabled}`)
+    } catch (err) {
+      logger.log(`There is an error trying to set enable/disable on back button`)
+    }
+    return goBackEnabled
   }
 
   render() {
@@ -73,12 +96,13 @@ export class StepTwo extends Component {
             />
             <Form
               component={StepTwoForm}
-              history={this.props.history}
               id="tokenData"
               initialValues={this.state.tokenValues}
               mutators={{ setFieldTouched }}
               onSubmit={this.goNextStep}
               reload={this.state.reload}
+              goBack={this.goBack}
+              goBackEnabled={this.goBackEnabled}
             />
           </div>
         </section>

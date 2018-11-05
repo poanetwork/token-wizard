@@ -236,16 +236,7 @@ export const clearStorage = props => {
 
 export const navigateTo = data => {
   const { history, location, params = '', fromLocation } = data
-  const path =
-    {
-      home: '/',
-      stepOne: '1',
-      stepTwo: '2',
-      stepThree: '3',
-      stepFour: '4',
-      manage: 'manage',
-      crowdsales: 'crowdsales'
-    }[location] || null
+  const path = convertLocationToPath(location)
 
   if (path === null) {
     throw new Error(`invalid location specified: ${location}`)
@@ -263,6 +254,40 @@ export const navigateTo = data => {
   })
 
   return true
+}
+
+export const convertLocationToPath = location => {
+  return (
+    {
+      home: '/',
+      stepOne: '1',
+      stepTwo: '2',
+      stepThree: '3',
+      stepFour: '4',
+      manage: 'manage',
+      crowdsales: 'crowdsales'
+    }[location] || null
+  )
+}
+
+export const goBack = data => {
+  const { history } = data
+
+  if (!history || !(typeof history === 'object')) {
+    throw new Error(`invalid history object: ${history}`)
+  }
+
+  history.goBack()
+}
+
+export const goBackMustBeEnabled = data => {
+  const { history } = data
+
+  if (!history || !(typeof history === 'object')) {
+    throw new Error(`invalid history object: ${history}`)
+  }
+
+  return history.length > 1
 }
 
 export const convertDateToLocalTimezoneInUnix = dateToConvert => {
