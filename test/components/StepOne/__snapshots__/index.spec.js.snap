@@ -99,24 +99,27 @@ exports[`StepOne should render StepOne screen 1`] = `
       className="st-StepContent"
     >
       <div
-        className="st-StepContent_Info"
+        className="st-StepInfo "
       >
         <div
-          className="st-StepContent_InfoIcon st-StepContent_InfoIcon-step1"
+          className="st-StepInfo_Icon st-StepInfo_Icon-step1"
         />
         <div
-          className="st-StepContentInfo_InfoText"
+          className="st-StepInfo_Text"
         >
           <h1
-            className="st-StepContent_InfoTitle"
+            className="st-StepInfo_Title"
           >
             Crowdsale Strategy
           </h1>
           <p
-            className="st-StepContent_InfoDescription"
-          >
-            Select a strategy for your crowdsale contract.
-          </p>
+            className="st-StepInfo_Description"
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "Select a strategy for your crowdsale contract.",
+              }
+            }
+          />
         </div>
       </div>
       <div
@@ -198,6 +201,7 @@ exports[`StepOne should render StepOne screen 1`] = `
           className="sw-ButtonContinue "
           disabled={false}
           onClick={[Function]}
+          type="button"
         >
           <span
             className="sw-ButtonContinue_Text"
