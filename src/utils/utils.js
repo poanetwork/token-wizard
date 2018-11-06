@@ -266,9 +266,7 @@ export const navigateTo = data => {
 }
 
 export const convertDateToLocalTimezoneInUnix = dateToConvert => {
-  const offset = moment().utcOffset()
   const dateConvertUnix = moment(dateToConvert)
-    .add(offset, 'minutes')
     .local()
     .unix()
   return dateConvertUnix * 1000
@@ -283,6 +281,16 @@ export const convertDateToUTCTimezoneToDisplay = dateToConvert => {
 export function getContractBySourceType(sourceType, isMintedCappedCrowdsale, { DutchProxy, MintedCappedProxy }) {
   const parseContent = content => (isObservableArray(content) ? JSON.stringify(content.slice()) : content)
   return isMintedCappedCrowdsale ? parseContent(MintedCappedProxy[sourceType]) : parseContent(DutchProxy[sourceType])
+}
+
+export function getSourceTypeTitle(sourceType) {
+  const sourceTypeName = {
+    abi: 'ABI',
+    bin: 'Creation Code',
+    src: 'Source Code'
+  }
+
+  return `Crowdsale Proxy Contract ${sourceTypeName[sourceType]}`
 }
 
 export function updateProxyContractInfo({ contractAddress }, { web3Store, contractStore, crowdsaleStore }, params) {

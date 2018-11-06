@@ -83,6 +83,7 @@ exports[`CrowdsaleList  should render CrowdsaleList component 1`] = `
       "curAddress": undefined,
       "getInfuraLink": [Function],
       "getWeb3": [Function],
+      "processWeb3": [Function],
       "web3": Web3 {
         "BatchRequest": [Function],
         "_provider": HttpProvider {
@@ -672,6 +673,7 @@ exports[`CrowdsaleList  should render CrowdsaleList component 1`] = `
         "curAddress": undefined,
         "getInfuraLink": [Function],
         "getWeb3": [Function],
+        "processWeb3": [Function],
         "web3": Web3 {
           "BatchRequest": [Function],
           "_provider": HttpProvider {
@@ -1225,13 +1227,14 @@ exports[`CrowdsaleList  should render CrowdsaleList component 1`] = `
         className="sw-ModalWindow_ButtonsContainer sw-ModalWindow_ButtonsContainer-right"
       >
         <ButtonContinue
+          disabled={true}
           onClick={[Function]}
-          status={null}
         >
           <button
-            className="sw-ButtonContinue"
+            className="sw-ButtonContinue "
             disabled={true}
             onClick={[Function]}
+            type="button"
           >
             <span
               className="sw-ButtonContinue_Text"
@@ -1293,6 +1296,7 @@ exports[`CrowdsaleList  should render if list is empty   1`] = `
       "curAddress": undefined,
       "getInfuraLink": [Function],
       "getWeb3": [Function],
+      "processWeb3": [Function],
       "web3": Web3 {
         "BatchRequest": [Function],
         "_provider": HttpProvider {
@@ -1846,6 +1850,7 @@ exports[`CrowdsaleList  should render if list is empty   1`] = `
         "curAddress": undefined,
         "getInfuraLink": [Function],
         "getWeb3": [Function],
+        "processWeb3": [Function],
         "web3": Web3 {
           "BatchRequest": [Function],
           "_provider": HttpProvider {
@@ -2399,13 +2404,14 @@ exports[`CrowdsaleList  should render if list is empty   1`] = `
         className="sw-ModalWindow_ButtonsContainer sw-ModalWindow_ButtonsContainer-right"
       >
         <ButtonContinue
+          disabled={true}
           onClick={[Function]}
-          status={null}
         >
           <button
-            className="sw-ButtonContinue"
+            className="sw-ButtonContinue "
             disabled={true}
             onClick={[Function]}
+            type="button"
           >
             <span
               className="sw-ButtonContinue_Text"

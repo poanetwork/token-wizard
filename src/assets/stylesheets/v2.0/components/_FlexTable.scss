@@ -13,9 +13,11 @@
     top: 0;
     width: 80px;
     z-index: 12;
+
     @media (min-width: $breakpoint-md) {
       display: none;
     }
+
   }
 
 }

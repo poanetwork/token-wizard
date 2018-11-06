@@ -1,72 +1,46 @@
 import React, { Component } from 'react'
+import { buildDeploymentSteps, scrollToBottom, updateCrowdsaleContractInfo } from './utils'
 import {
-  buildDeploymentSteps,
-  download,
-  getDownloadName,
-  handleConstantForFile,
-  handleContractsForFile,
-  handlerForFile,
-  scrollToBottom,
-  summaryFileContents,
-  getOptimizationFlagByStore,
-  getVersionFlagByStore
-} from './utils'
-import { noContractDataAlert, successfulDeployment, skippingTransaction, deployHasEnded } from '../../utils/alerts'
+  deployHasEnded,
+  noContractDataAlert,
+  skippingTransaction,
+  successfulDeployment,
+  transactionLost
+} from '../../utils/alerts'
+import { CROWDSALE_STRATEGIES_DISPLAYNAMES, NAVIGATION_STEPS, TOAST } from '../../utils/constants'
 import {
-  DESCRIPTION,
-  NAVIGATION_STEPS,
-  TOAST,
-  CROWDSALE_STRATEGIES_DISPLAYNAMES,
-  TEXT_FIELDS,
-  PUBLISH_DESCRIPTION,
-  CROWDSALE_STRATEGIES
-} from '../../utils/constants'
-import { DOWNLOAD_TYPE } from './constants'
-import { getNetworkID, toast } from '../../utils/utils'
-import { StepNavigation } from '../Common/StepNavigation'
-import { DisplayField } from '../Common/DisplayField'
-import { TxProgressStatus } from '../Common/TxProgressStatus'
-import { ModalContainer } from '../Common/ModalContainer'
-import { copy } from '../../utils/copy'
-import { inject, observer } from 'mobx-react'
-import { isObservableArray } from 'mobx'
-import JSZip from 'jszip'
-import executeSequentially from '../../utils/executeSequentially'
-import { PreventRefresh } from '../Common/PreventRefresh'
-import cancelDeploy from '../../utils/cancelDeploy'
+  getContractBySourceType,
+  getSourceTypeTitle,
+  getNetworkID,
+  toast,
+  updateProxyContractInfo
+} from '../../utils/utils'
 import PropTypes from 'prop-types'
+import cancelDeploy from '../../utils/cancelDeploy'
+import downloadCrowdsaleInfo from '../../utils/downloadCrowdsaleInfo'
+import executeSequentially from '../../utils/executeSequentially'
 import logdown from 'logdown'
-import { checkNetWorkByID } from '../../utils/blockchainHelpers'
-import { CrowdsaleConfig } from '../Common/config'
 import { ButtonContinue } from '../Common/ButtonContinue'
-import classNames from 'classnames'
+import { ButtonDownload } from '../Common/ButtonDownload'
+import { ConfigurationBlock } from './ConfigurationBlock'
+import { CrowdsaleConfig } from '../Common/config'
+import { CrowdsaleSetupBlockDutchAuction } from './CrowdsaleSetupBlockDutchAuction'
+import { CrowdsaleSetupBlockWhitelistWithCap } from './CrowdsaleSetupBlockWhitelistWithCap'
 import { DisplayTextArea } from '../Common/DisplayTextArea'
+import { ModalContainer } from '../Common/ModalContainer'
+import { PreventRefresh } from '../Common/PreventRefresh'
+import { StepInfo } from '../Common/StepInfo'
+import { StepNavigation } from '../Common/StepNavigation'
+import { TierSetupDutchAuction } from './TierSetupDutchAuction'
+import { TierSetupWhitelistWithCap } from './TierSetupWhitelistWithCap'
+import { BorderedSection } from './BorderedSection'
+import { TokenSetupBlock } from './TokenSetupBlock'
+import { TxProgressStatus } from '../Common/TxProgressStatus'
+import { checkNetWorkByID, sendTXResponse } from '../../utils/blockchainHelpers'
+import { inject, observer } from 'mobx-react'
 
-const logger = logdown('TW:StepFour')
-
+const logger = logdown('TW:stepFour')
 const { PUBLISH, CROWDSALE_STRATEGY, TOKEN_SETUP, CROWDSALE_SETUP } = NAVIGATION_STEPS
-const {
-  NAME,
-  TICKER,
-  DECIMALS,
-  SUPPLY_SHORT,
-  WALLET_ADDRESS,
-  GLOBAL_MIN_CAP,
-  RATE,
-  MIN_RATE,
-  MAX_RATE,
-  CROWDSALE_START_TIME,
-  CROWDSALE_END_TIME,
-  START_TIME,
-  END_TIME,
-  ALLOW_MODIFYING,
-  ENABLE_WHITELISTING,
-  MAX_CAP,
-  BURN_EXCESS,
-  COMPILER_VERSION,
-  CONTRACT_NAME,
-  COMPILING_OPTIMIZATION
-} = TEXT_FIELDS
 const {
   MINTED_CAPPED_CROWDSALE: MINTED_CAPPED_CROWDSALE_DN,
   DUTCH_AUCTION: DUTCH_AUCTION_DN
@@ -88,7 +62,8 @@ export class StepFour extends Component {
     contractDownloaded: false,
     modal: false,
     preventRefresh: true,
-    transactionFailed: false
+    transactionFailed: false,
+    allowRetry: false
   }
 
   constructor(props, context) {
@@ -134,7 +109,6 @@ export class StepFour extends Component {
     }
 
     scrollToBottom()
-    copy('copy')
     if (!deploymentStore.hasEnded) {
       this.showModal()
     }
@@ -145,34 +119,106 @@ export class StepFour extends Component {
     }
   }
 
-  deployCrowdsale = () => {
-    this.resumeContractDeployment()
+  async deployCrowdsale() {
+    const { deploymentStore } = this.props
+    let startAt = deploymentStore.deploymentStep ? deploymentStore.deploymentStep : 0
+
+    if (deploymentStore.txLost) {
+      // temporarily hide modal to display error message
+      this.hideModal()
+      await transactionLost()
+      this.showModal()
+      this.retryTransaction()
+    } else {
+      if (deploymentStore.txRecoverable) {
+        const receipt = await this.context.web3.eth.getTransactionReceipt(deploymentStore.txRecoverable.txHash)
+
+        if (receipt && receipt.blockNumber) {
+          try {
+            // analyze receipt
+            await sendTXResponse(receipt)
+            const executionOrder = deploymentStore.getStepExecutionOrder(deploymentStore.txRecoverable)
+            const stores = {
+              web3Store: this.props.web3Store,
+              crowdsaleStore: this.props.crowdsaleStore,
+              contractStore: this.props.contractStore
+            }
+
+            // if is one of the contract deployment steps, call the proper method to update the information
+            if (deploymentStore.txRecoverable.name === 'deployProxy') updateProxyContractInfo(receipt, stores)
+            if (deploymentStore.txRecoverable.name === 'crowdsaleCreate') updateCrowdsaleContractInfo(receipt, stores)
+
+            deploymentStore.setDeploymentStep(executionOrder)
+            deploymentStore.setDeploymentStepStatus({ executionOrder, status: 'mined' })
+
+            // after the step was finished we continue with the deployment process
+            setTimeout(() => this.deployCrowdsale(), 100)
+          } catch (e) {
+            this.handleError([e, deploymentStore.deploymentStep])
+          }
+        } else {
+          // block wasn't mined yet, wait 5s and retry
+          setTimeout(() => this.deployCrowdsale(), 5000)
+        }
+      } else {
+        // if it's a tx not lost or not recoverable we assume everything is fine and continue with the deployment process
+        const nextStep = deploymentStore.activeSteps[startAt]
+
+        if (!nextStep) {
+          this.finalizeCrowdsaleDeployment()
+        } else {
+          if (nextStep.active && nextStep.mined) {
+            startAt++
+            deploymentStore.setDeploymentStep(startAt)
+          }
+          this.resumeContractDeployment(startAt)
+        }
+      }
+    }
   }
 
-  resumeContractDeployment = () => {
+  /**
+   * cleanup tx lost and restarts deployCrowdsale
+   */
+  retryTransaction = () => {
     const { deploymentStore } = this.props
-    const { web3 } = this.context
-    const startAt = deploymentStore.deploymentStep ? deploymentStore.deploymentStep : 0
-    const deploymentSteps = buildDeploymentSteps(web3)
+    deploymentStore.resetTx(deploymentStore.txLost)
+    this.setState({ allowRetry: false, transactionFailed: false })
+    setTimeout(() => this.deployCrowdsale(), 100)
+  }
 
-    executeSequentially(deploymentSteps, startAt, index => {
-      deploymentStore.setDeploymentStep(index)
-    })
-      .then(() => {
-        this.hideModal()
+  resumeContractDeployment(startAt) {
+    const { deploymentStore } = this.props
+    const deploymentSteps = buildDeploymentSteps(deploymentStore)
 
-        deploymentStore.setHasEnded(true)
-
-        return successfulDeployment()
-      })
+    executeSequentially(
+      deploymentSteps,
+      startAt,
+      executionOrder => {
+        deploymentStore.setDeploymentStepStatus({ executionOrder, status: 'active' })
+      },
+      executionOrder => {
+        deploymentStore.setDeploymentStep(executionOrder)
+        deploymentStore.setDeploymentStepStatus({ executionOrder, status: 'mined' })
+      }
+    )
+      .then(this.finalizeCrowdsaleDeployment)
       .catch(this.handleError)
+  }
+
+  finalizeCrowdsaleDeployment = () => {
+    const { deploymentStore } = this.props
+    this.hideModal()
+    deploymentStore.setHasEnded(true)
+    return successfulDeployment()
   }
 
   handleError = ([err, failedAt]) => {
     const { deploymentStore } = this.props
 
     this.setState({
-      transactionFailed: true
+      transactionFailed: true,
+      allowRetry: err.message && err.message.includes('User denied transaction signature')
     })
 
     if (!deploymentStore.deploymentHasFinished) {
@@ -197,8 +243,9 @@ export class StepFour extends Component {
             transactionFailed: false
           })
 
+          deploymentStore.resetTx(deploymentStore.activeSteps[deploymentStore.deploymentStep])
           deploymentStore.setDeploymentStep(deploymentStore.deploymentStep + 1)
-          this.resumeContractDeployment()
+          this.deployCrowdsale()
         }
       })
       .then(
@@ -216,87 +263,9 @@ export class StepFour extends Component {
     this.setState({ modal: true })
   }
 
-  handleContentByParent(content, index = 0) {
-    const { parent } = content
-    switch (parent) {
-      case 'crowdsale':
-      case 'MintedCappedProxy':
-      case 'DutchProxy':
-        return handlerForFile(content, this.props.contractStore[parent])
-      case 'crowdsaleStore':
-        return handlerForFile(content, this.props[parent])
-      case 'tierStore': {
-        if (content.field === 'minCap') {
-          index = content.field === 'minCap' ? 0 : index
-          return handlerForFile(content, this.props[parent].tiers[index])
-        } else {
-          index = content.field === 'walletAddress' ? 0 : index
-          return handlerForFile(content, this.props[parent].tiers[index])
-        }
-      }
-      case 'tokenStore':
-      case 'reservedTokenStore':
-        return handlerForFile(content, this.props[parent])
-      case 'contracts':
-        return handleContractsForFile(content, index, this.props.contractStore, this.props.tierStore)
-      case 'none':
-        return handleConstantForFile(content)
-      default:
-      // do nothing
-    }
-  }
-
-  downloadCrowdsaleInfo = () => {
-    const { contractStore, crowdsaleStore } = this.props
-    const zip = new JSZip()
-    const fileContents = summaryFileContents(contractStore.crowdsale.networkID)
-    let files = fileContents.files
-    const tiersCount = isObservableArray(this.props.tierStore.tiers) ? this.props.tierStore.tiers.length : 1
-    const contractsKeys = files.order
-    const orderNumber = order => order.toString().padStart(3, '0')
-    let prefix = 1
-
-    contractsKeys.forEach(key => {
-      if (contractStore.hasOwnProperty(key)) {
-        logger.log(files[key])
-        logger.log(contractStore[key])
-        const { txt, name } = files[key]
-
-        const authOS = fileContents.auth_os
-        const authOSHeader = authOS.map(content => this.handleContentByParent(content))
-
-        zip.file(`Auth-os_addresses.txt`, authOSHeader.join('\n'))
-
-        const common = fileContents.common
-        const commonHeader = common.map(content => this.handleContentByParent(content))
-
-        zip.file(`${name}_data.txt`, commonHeader.join('\n'))
-
-        if (crowdsaleStore.isMintedCappedCrowdsale) {
-          for (let tier = 0; tier < tiersCount; tier++) {
-            const txtFilename = `${orderNumber(prefix++)}_tier`
-            const tierNumber = tier
-
-            zip.file(
-              `${txtFilename}.txt`,
-              txt.map(content => this.handleContentByParent(content, tierNumber)).join('\n')
-            )
-          }
-        }
-      }
-    })
-
-    const fileName = crowdsaleStore.isMintedCappedCrowdsale ? 'MintedCappedProxy.sol' : 'DutchProxy.sol'
-    zip.file(fileName, this.getContractBySourceType('src'))
-
-    zip.generateAsync({ type: DOWNLOAD_TYPE.blob }).then(content => {
-      const downloadName = getDownloadName()
-      download({ zip: content, filename: downloadName })
-    })
-  }
-
   downloadContractButton = () => {
-    this.downloadCrowdsaleInfo()
+    const { tokenStore, tierStore, reservedTokenStore, contractStore, crowdsaleStore } = this.props
+    downloadCrowdsaleInfo({ tokenStore, tierStore, reservedTokenStore, contractStore, crowdsaleStore })
     this.contractDownloadSuccess({ offset: 14 })
   }
 
@@ -319,7 +288,8 @@ export class StepFour extends Component {
     }`
 
     if (!this.state.contractDownloaded) {
-      this.downloadCrowdsaleInfo()
+      const { tokenStore, tierStore, reservedTokenStore, contractStore, crowdsaleStore } = this.props
+      downloadCrowdsaleInfo({ tokenStore, tierStore, reservedTokenStore, contractStore, crowdsaleStore })
       this.contractDownloadSuccess()
     }
 
@@ -353,210 +323,54 @@ export class StepFour extends Component {
     )
   }
 
-  getContractBySourceType = sourceType => {
-    const { crowdsaleStore, contractStore } = this.props
-    const parseContent = content => (isObservableArray(content) ? JSON.stringify(content.slice()) : content)
-
-    return crowdsaleStore.strategy === CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE
-      ? parseContent(contractStore.MintedCappedProxy[sourceType])
-      : parseContent(contractStore.DutchProxy[sourceType])
-  }
-
   renderContractSource = sourceType => {
-    const sourceTypeName = {
-      abi: 'ABI',
-      bin: 'Creation Code',
-      src: 'Source Code'
-    }
+    const { crowdsaleStore, contractStore } = this.props
+    const { isMintedCappedCrowdsale } = crowdsaleStore
+    const value = getContractBySourceType(sourceType, isMintedCappedCrowdsale, contractStore)
+    const title = getSourceTypeTitle(sourceType)
 
-    const label = `Crowdsale Proxy Contract ${sourceTypeName[sourceType]}`
-    const value = this.getContractBySourceType(sourceType)
-
-    return <DisplayTextArea label={label} value={value} description={label} />
+    return <DisplayTextArea title={title} value={value} />
   }
 
   configurationBlock = () => {
-    const { crowdsaleStore } = this.props
-    const {
-      COMPILER_VERSION: PD_COMPILER_VERSION,
-      CONTRACT_NAME: PD_CONTRACT_NAME,
-      COMPILING_OPTIMIZATION: PD_COMPILING_OPTIMIZATION
-    } = PUBLISH_DESCRIPTION
-    const optimizationFlag = getOptimizationFlagByStore(crowdsaleStore)
-    const versionFlag = getVersionFlagByStore(crowdsaleStore)
-
-    return (
-      <div>
-        <DisplayField side="left" title={COMPILER_VERSION} value={versionFlag} description={PD_COMPILER_VERSION} />
-        <DisplayField
-          side="right"
-          title={CONTRACT_NAME}
-          value={crowdsaleStore.proxyName}
-          description={PD_CONTRACT_NAME}
-        />
-        <DisplayField
-          side="left"
-          title={COMPILING_OPTIMIZATION}
-          value={optimizationFlag}
-          description={PD_COMPILING_OPTIMIZATION}
-        />
-      </div>
-    )
+    return <ConfigurationBlock store={this.props} />
   }
 
   render() {
     const { tierStore, tokenStore, deploymentStore, crowdsaleStore, contractStore } = this.props
     const { isMintedCappedCrowdsale, isDutchAuction } = crowdsaleStore
 
-    // Publish page: Token setup block
     const tokenSetupBlock = () => {
-      const { supply, name, ticker, decimals } = tokenStore
-      const tokenSupplyStr = supply ? supply.toString() : '0'
-      const tokenNameStr = name ? name : ''
-      const tokenDecimalsStr = decimals ? decimals.toString() : ''
-      const {
-        TOKEN_TOTAL_SUPPLY: PD_TOKEN_TOTAL_SUPPLY,
-        TOKEN_NAME: PD_TOKEN_NAME,
-        TOKEN_DECIMALS: PD_TOKEN_DECIMALS
-      } = PUBLISH_DESCRIPTION
-      const { TOKEN_TICKER: D_TOKEN_TICKER } = DESCRIPTION
-
-      return (
-        <div>
-          <div>
-            <DisplayField side="left" title={NAME} value={tokenNameStr} description={PD_TOKEN_NAME} />
-            <DisplayField side="right" title={TICKER} value={ticker ? ticker : ''} description={D_TOKEN_TICKER} />
-          </div>
-          <div>
-            <DisplayField side="left" title={DECIMALS} value={tokenDecimalsStr} description={PD_TOKEN_DECIMALS} />
-            <DisplayField
-              side="right"
-              title={SUPPLY_SHORT}
-              value={tokenSupplyStr}
-              description={PD_TOKEN_TOTAL_SUPPLY}
-            />
-          </div>
-        </div>
-      )
+      return <TokenSetupBlock tokenStore={tokenStore} />
     }
 
-    // Publish page: Crowdsale setup block
     const crowdsaleSetupBlock = () => {
-      const { tiers } = tierStore
-      const firstTier = tiers[0]
-      const { walletAddress, startTime, burnExcess } = firstTier
-      const crowdsaleStartTimeStr = startTime ? startTime.split('T').join(' ') : ''
-      const lasTierInd = tiers.length - 1
-      const crowdsaleEndTimeStr = tiers[lasTierInd].endTime ? tiers[lasTierInd].endTime.split('T').join(' ') : ''
-      const {
-        WALLET_ADDRESS: PD_WALLET_ADDRESS,
-        CROWDSALE_START_TIME: PD_CROWDSALE_START_TIME,
-        CROWDSALE_END_TIME: PD_CROWDSALE_END_TIME
-      } = PUBLISH_DESCRIPTION
-      return (
-        <div>
-          <div>
-            <DisplayField side="left" title={WALLET_ADDRESS} value={walletAddress} description={PD_WALLET_ADDRESS} />
-            {isDutchAuction ? (
-              <DisplayField side="right" title={BURN_EXCESS} value={burnExcess} description={DESCRIPTION.BURN_EXCESS} />
-            ) : null}
-          </div>
-          <div>
-            <DisplayField
-              side="left"
-              title={CROWDSALE_START_TIME}
-              value={crowdsaleStartTimeStr}
-              description={PD_CROWDSALE_START_TIME}
-            />
-            <DisplayField
-              side="right"
-              title={CROWDSALE_END_TIME}
-              value={crowdsaleEndTimeStr}
-              description={PD_CROWDSALE_END_TIME}
-            />
-          </div>
-        </div>
+      return isMintedCappedCrowdsale ? (
+        <CrowdsaleSetupBlockWhitelistWithCap tierStore={tierStore} />
+      ) : (
+        <CrowdsaleSetupBlockDutchAuction tierStore={tierStore} />
       )
     }
 
-    // Publish page: Tiers setup block
-    const tiersSetupBlock = tierStore.tiers.map((tier, index) => {
-      const {
-        rate,
-        minRate,
-        maxRate,
-        startTime,
-        endTime,
-        updatable,
-        whitelistEnabled,
-        supply,
-        tier: tierName,
-        minCap
-      } = tier
-      const { RATE: D_RATE, ALLOW_MODIFYING: D_ALLOW_MODIFYING } = DESCRIPTION
-      const {
-        TIER_START_TIME: PD_TIER_START_TIME,
-        TIER_END_TIME: PD_TIER_END_TIME,
-        GLOBAL_MIN_CAP: PD_GLOBAL_MIN_CAP,
-        HARD_CAP: PD_HARD_CAP,
-        ENABLE_WHITELISTING: PD_ENABLE_WHITELISTING
-      } = PUBLISH_DESCRIPTION
-      const tierRateStr = rate ? rate : 0
-      const tierMinRateStr = minRate ? minRate : 0
-      const tierMaxRateStr = maxRate ? maxRate : 0
-      const mintedCappedCrowdsaleRateBlock = (
-        <DisplayField side="left" title={RATE} value={tierRateStr} description={D_RATE} />
-      )
-      const dutchAuctionCrowdsaleRateBlock = (
-        <div>
-          <DisplayField side="left" title={MIN_RATE} value={tierMinRateStr} description={D_RATE} />
-          <DisplayField side="right" title={MAX_RATE} value={tierMaxRateStr} description={D_RATE} />
-        </div>
-      )
-      const tierStartTimeStr = startTime ? startTime.split('T').join(' ') : ''
-      const tierEndTimeStr = endTime ? endTime.split('T').join(' ') : ''
-      const tierIsUpdatable = isDutchAuction ? 'on' : updatable ? updatable : 'off'
-      const tierIsWhitelisted = whitelistEnabled ? whitelistEnabled : 'off'
-      const tierSupplyStr = supply ? supply : ''
-      const allowModifyingBlock = isMintedCappedCrowdsale ? (
-        <DisplayField side="right" title={ALLOW_MODIFYING} value={tierIsUpdatable} description={D_ALLOW_MODIFYING} />
-      ) : null
-      return (
-        <div key={index.toString()}>
-          <div className="publish-title-container">
-            <p className="publish-title" data-step="3">
-              {tierName} Setup
-            </p>
-          </div>
-          <div>
-            <div>
-              <DisplayField side="left" title={START_TIME} value={tierStartTimeStr} description={PD_TIER_START_TIME} />
-              <DisplayField side="right" title={END_TIME} value={tierEndTimeStr} description={PD_TIER_END_TIME} />
-            </div>
-            <div>
-              {isMintedCappedCrowdsale
-                ? mintedCappedCrowdsaleRateBlock
-                : isDutchAuction
-                  ? dutchAuctionCrowdsaleRateBlock
-                  : null}
-              {allowModifyingBlock}
-            </div>
-            <div>
-              <DisplayField side="left" title={MAX_CAP} value={tierSupplyStr} description={PD_HARD_CAP} />
-              <DisplayField
-                side="right"
-                title={ENABLE_WHITELISTING}
-                value={tierIsWhitelisted}
-                description={PD_ENABLE_WHITELISTING}
-              />
-            </div>
-            <div>
-              <DisplayField side="left" title={GLOBAL_MIN_CAP} value={minCap} description={PD_GLOBAL_MIN_CAP} />
-            </div>
-          </div>
-        </div>
-      )
-    })
+    const tiersSetupBlock = () => {
+      return tierStore.tiers.map((tier, index) => {
+        const { tier: tierName } = tier
+        const tiersSetupBlockContents = isMintedCappedCrowdsale ? (
+          <TierSetupWhitelistWithCap tier={tier} />
+        ) : (
+          <TierSetupDutchAuction tier={tier} />
+        )
+
+        return (
+          <BorderedSection
+            contents={tiersSetupBlockContents}
+            dataStep="4"
+            key={index.toString()}
+            title={`${tierName} Setup`}
+          />
+        )
+      })
+    }
 
     const modalContent = deploymentStore.invalidAccount ? (
       <div>
@@ -569,81 +383,55 @@ export class StepFour extends Component {
       </div>
     ) : (
       <TxProgressStatus
-        txMap={deploymentStore.txMap}
         deployCrowdsale={this.deployCrowdsale}
+        onRetry={this.state.allowRetry ? this.retryTransaction : null}
         onSkip={this.state.transactionFailed ? this.skipTransaction : null}
+        txMap={deploymentStore.txMap}
       />
     )
-
-    const submitButtonClass = classNames('button', 'button_fill_secondary', 'button_no_border', {
-      button_disabled: !deploymentStore.hasEnded
-    })
-
     const strategyName = isMintedCappedCrowdsale ? MINTED_CAPPED_CROWDSALE_DN : isDutchAuction ? DUTCH_AUCTION_DN : ''
-
     const { abiEncoded } = contractStore[crowdsaleStore.proxyName]
     const ABIEncodedParameters = abiEncoded ? (
-      <DisplayTextArea
-        label="Crowdsale Proxy Contract ABI-encoded parameters"
-        value={abiEncoded}
-        description="Encoded ABI Parameters"
-      />
+      <DisplayTextArea title="Crowdsale Proxy Contract ABI-encoded parameters" value={abiEncoded} />
     ) : null
+    const backgroundBlur = this.state.modal ? 'background-blur' : ''
 
     return (
-      <section className="steps steps_publish">
-        <StepNavigation activeStep={PUBLISH} />
-        <div className="steps-content container">
-          <div className="about-step">
-            <div className="step-icons step-icons_publish" />
-            <p className="title">{PUBLISH}</p>
-            <p className="description">
-              On this step we provide you artifacts about your token and crowdsale contracts.
-            </p>
-          </div>
-          <div>
-            <div className="item">
-              <div className="publish-title-container">
-                <p className="publish-title" data-step="1">
-                  {CROWDSALE_STRATEGY}
-                </p>
+      <div>
+        <section className={`lo-MenuBarAndContent ${backgroundBlur}`} ref="four">
+          <StepNavigation activeStep={PUBLISH} />
+          <div className="st-StepContent">
+            <StepInfo
+              description="On this step we provide you artifacts about your token and crowdsale contracts."
+              stepNumber="4"
+              title={PUBLISH}
+            />
+            <div className="sw-BorderedBlock">
+              <BorderedSection dataStep="1" title={CROWDSALE_STRATEGY} text={strategyName} />
+              <BorderedSection dataStep="2" title={TOKEN_SETUP} contents={tokenSetupBlock()} />
+              <BorderedSection dataStep="3" title={CROWDSALE_SETUP} contents={crowdsaleSetupBlock()} />
+              {tiersSetupBlock()}
+              <BorderedSection dataStep="5" title="Configuration" contents={this.configurationBlock()} />
+              <BorderedSection dataStep="6" contents={this.renderContractSource('src')} />
+              {abiEncoded ? <BorderedSection dataStep="7" contents={ABIEncodedParameters} /> : null}
+              <div className="sw-BorderedBlock_DownloadButtonContainer">
+                <ButtonDownload onClick={this.downloadContractButton} disabled={!deploymentStore.hasEnded} />
               </div>
-              <p className="label">{strategyName}</p>
-              <p className="description">{CROWDSALE_STRATEGY}</p>
             </div>
-            <div className="publish-title-container">
-              <p className="publish-title" data-step="2">
-                {TOKEN_SETUP}
-              </p>
+            <div className="st-StepContent_Buttons">
+              <ButtonContinue
+                buttonText="Publish"
+                disabled={!deploymentStore.hasEnded}
+                onClick={this.goToCrowdsalePage}
+              />
             </div>
-            {tokenSetupBlock()}
-            <div className="publish-title-container">
-              <p className="publish-title" data-step="3">
-                {CROWDSALE_SETUP}
-              </p>
-            </div>
-            {crowdsaleSetupBlock()}
-            {tiersSetupBlock}
-            {this.configurationBlock()}
-            {this.renderContractSource('src')}
-            {ABIEncodedParameters}
           </div>
-        </div>
-        <div className="button-container">
-          <button
-            onClick={this.downloadContractButton}
-            disabled={!deploymentStore.hasEnded}
-            className={submitButtonClass}
-          >
-            Download File
-          </button>
-          <ButtonContinue onClick={this.goToCrowdsalePage} status={deploymentStore.hasEnded} />
-        </div>
+          {this.state.preventRefresh ? <PreventRefresh /> : null}
+        </section>
         <ModalContainer title={'Tx Status'} showModal={this.state.modal}>
           {modalContent}
         </ModalContainer>
-        {this.state.preventRefresh ? <PreventRefresh /> : null}
-      </section>
+      </div>
     )
   }
 }

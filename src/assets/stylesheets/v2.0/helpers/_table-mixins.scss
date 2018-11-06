@@ -31,6 +31,17 @@
     vertical-align: middle;
 }
 
+@mixin datatable-column-styles-last-child() {
+    &:last-child {
+        padding-right: 50px;
+
+        @media (min-width: $breakpoint-xxl) {
+            padding-right: 25px;
+        }
+
+    }
+}
+
 @mixin datatable-column-styles($column-parent) {
     border-bottom: solid 1px $base-border-color;
     font-size: 16px;
@@ -42,14 +53,7 @@
         border-top: solid 1px $base-border-color;
     }
 
-    &:last-child {
-        padding-right: 50px;
-
-        @media (min-width: $breakpoint-xxl) {
-            padding-right: 25px;
-        }
-
-    }
+    @include datatable-column-styles-last-child();
 
     &#{ & + '-value' } {
         text-align: right;

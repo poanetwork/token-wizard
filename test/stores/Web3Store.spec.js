@@ -2,148 +2,267 @@ import Web3Store from '../../src/stores/Web3Store'
 import Web3 from 'web3'
 
 describe(`Web3Store`, () => {
-  let web3Store
+  const infuraToken = '194540d7c13c4d9789cd7d682c248cd0'
 
   beforeEach(() => {
-    web3Store = new Web3Store()
+    process.env.REACT_APP_INFURA_TOKEN = infuraToken
   })
 
-  it(`should webStore set a property I`, () => {
-    // Given
-    const curAddress = 'testcuraddress'
-    web3Store.setProperty('curAddress', curAddress)
+  describe(`Web3Store without infura`, () => {
+    it(`should webStore set a property I`, () => {
+      // Given
+      const curAddress = 'testcuraddress'
+      const web3Store = new Web3Store()
+      web3Store.setProperty('curAddress', curAddress)
 
-    // When
-    const web3StoreCurAddress = web3Store.curAddress
+      // When
+      const web3StoreCurAddress = web3Store.curAddress
 
-    // Then
-    expect(typeof web3StoreCurAddress).toBe('string')
-    expect(web3StoreCurAddress).toBe(curAddress)
+      // Then
+      expect(typeof web3StoreCurAddress).toBe('string')
+      expect(web3StoreCurAddress).toBe(curAddress)
+    })
+
+    it(`should webStore set a property II`, () => {
+      // Given
+      const curAddress1 = 'testcuraddress1'
+      const curAddress2 = 'testcuraddress2'
+      const web3Store = new Web3Store()
+      web3Store.setProperty('curAddress', curAddress1)
+      web3Store.setProperty('curAddress', curAddress2)
+
+      // When
+      const web3StoreCurAddress = web3Store.curAddress
+
+      // Then
+      expect(typeof web3StoreCurAddress).toBe('string')
+      expect(web3StoreCurAddress).not.toBe(curAddress1)
+      expect(web3StoreCurAddress).toBe(curAddress2)
+    })
+
+    it(`should set web3 in the web3store I`, () => {
+      // Given
+
+      // Set infura token
+      global.web3 = new Web3(new Web3.providers.HttpProvider('https://sokol.poa.network'))
+
+      // When
+      const web3Store = new Web3Store()
+      const cb = (web3, status) => {
+        if (web3) {
+          web3Store.setProperty('web3', web3)
+          return web3
+        }
+      }
+      web3Store.getWeb3(cb, 1)
+
+      // Then
+      expect(typeof web3Store.web3).toBe('object')
+      expect(web3Store.web3.currentProvider.host).toBe('https://sokol.poa.network')
+    })
+
+    it(`should set web3 in the web3store II`, () => {
+      // Given
+
+      // Set infura token
+      global.web3 = new Web3(new Web3.providers.HttpProvider(`https://Mainnet.infura.io/${infuraToken}`))
+
+      // When
+      const web3Store = new Web3Store()
+      const cb = (web3, status) => {
+        if (web3) {
+          web3Store.setProperty('web3', web3)
+          return web3
+        }
+      }
+      web3Store.getWeb3(cb, 1)
+
+      // Then
+      expect(typeof web3Store.web3).toBe('object')
+      expect(web3Store.web3.currentProvider.host).toBe(`https://Mainnet.infura.io/${infuraToken}`)
+    })
+
+    it(`should set web3 in the web3store III`, () => {
+      // Given
+
+      // Set infura token
+      global.web3 = new Web3(new Web3.providers.HttpProvider(`https://Morden.infura.io/${infuraToken}`))
+
+      // When
+      const web3Store = new Web3Store()
+      const cb = (web3, status) => {
+        if (web3) {
+          web3Store.setProperty('web3', web3)
+          return web3
+        }
+      }
+      web3Store.getWeb3(cb, 2)
+
+      // Then
+      expect(typeof web3Store.web3).toBe('object')
+      expect(web3Store.web3.currentProvider.host).toBe(`https://Morden.infura.io/${infuraToken}`)
+    })
+
+    it(`should set web3 in the web3store IV`, () => {
+      // Given
+
+      // Set infura token
+      global.web3 = new Web3(new Web3.providers.HttpProvider(`https://Ropsten.infura.io/${infuraToken}`))
+
+      // When
+      const web3Store = new Web3Store()
+      const cb = (web3, status) => {
+        if (web3) {
+          web3Store.setProperty('web3', web3)
+          return web3
+        }
+      }
+      web3Store.getWeb3(cb, 3)
+
+      // Then
+      expect(typeof web3Store.web3).toBe('object')
+      expect(web3Store.web3.currentProvider.host).toBe(`https://Ropsten.infura.io/${infuraToken}`)
+    })
+
+    it(`should set web3 in the web3store V`, () => {
+      // Given
+
+      // Set infura token
+      global.web3 = new Web3(new Web3.providers.HttpProvider(`https://Rinkeby.infura.io/${infuraToken}`))
+
+      // When
+      const web3Store = new Web3Store()
+      const cb = (web3, status) => {
+        if (web3) {
+          web3Store.setProperty('web3', web3)
+          return web3
+        }
+      }
+      web3Store.getWeb3(cb, 4)
+
+      // Then
+      expect(typeof web3Store.web3).toBe('object')
+      expect(web3Store.web3.currentProvider.host).toBe(`https://Rinkeby.infura.io/${infuraToken}`)
+    })
+
+    it(`should set web3 in the web3store VI`, () => {
+      // Given
+
+      // Set infura token
+      global.web3 = new Web3(new Web3.providers.HttpProvider(`https://Kovan.infura.io/${infuraToken}`))
+
+      // When
+      const web3Store = new Web3Store()
+      const cb = (web3, status) => {
+        if (web3) {
+          web3Store.setProperty('web3', web3)
+          return web3
+        }
+      }
+      web3Store.getWeb3(cb, 42)
+
+      // Then
+      expect(typeof web3Store.web3).toBe('object')
+      expect(web3Store.web3.currentProvider.host).toBe(`https://Kovan.infura.io/${infuraToken}`)
+    })
   })
 
-  it(`should webStore set a property II`, () => {
-    // Given
-    const curAddress1 = 'testcuraddress1'
-    const curAddress2 = 'testcuraddress2'
-    web3Store.setProperty('curAddress', curAddress1)
-    web3Store.setProperty('curAddress', curAddress2)
+  describe(`Web3Store infura`, () => {
+    let web3Store, cb
 
-    // When
-    const web3StoreCurAddress = web3Store.curAddress
+    beforeEach(() => {
+      process.env.NODE_ENV = 'test'
+      web3Store = new Web3Store()
+      cb = (web3, status) => {
+        if (web3) {
+          web3Store.setProperty('web3', web3)
+          return web3
+        }
+      }
+      web3Store.setProperty('web3', undefined)
+      delete global.web3
+    })
 
-    // Then
-    expect(typeof web3StoreCurAddress).toBe('string')
-    expect(web3StoreCurAddress).not.toBe(curAddress1)
-    expect(web3StoreCurAddress).toBe(curAddress2)
+    it(`should set web3 in the web3store with infura I`, () => {
+      // Given
+
+      // When
+      web3Store.getWeb3(cb, 42)
+
+      // Then
+      expect(typeof web3Store.web3).toBe('object')
+      expect(web3Store.web3.currentProvider.host).toBe(`https://Kovan.infura.io/${infuraToken}`)
+    })
+
+    it(`should set web3 in the web3store with infura II`, () => {
+      // Given
+
+      // When
+      web3Store.getWeb3(cb, 4)
+
+      // Then
+      expect(typeof web3Store.web3).toBe('object')
+      expect(web3Store.web3.currentProvider.host).toBe(`https://Rinkeby.infura.io/${infuraToken}`)
+    })
+
+    it(`should set web3 in the web3store with infura III`, () => {
+      // Given
+
+      // When
+      web3Store.getWeb3(cb, 3)
+
+      // Then
+      expect(typeof web3Store.web3).toBe('object')
+      expect(web3Store.web3.currentProvider.host).toBe(`https://Ropsten.infura.io/${infuraToken}`)
+    })
+
+    it(`should set web3 in the web3store with infura IV`, () => {
+      // Given
+
+      // When
+      web3Store.getWeb3(cb, 2)
+
+      // Then
+      expect(typeof web3Store.web3).toBe('object')
+      expect(web3Store.web3.currentProvider.host).toBe(`https://Morden.infura.io/${infuraToken}`)
+    })
+
+    it(`should set web3 in the web3store with infura V`, () => {
+      // Given
+
+      // When
+      web3Store.getWeb3(cb, 1)
+
+      // Then
+      expect(typeof web3Store.web3).toBe('object')
+      expect(web3Store.web3.currentProvider.host).toBe(`https://Mainnet.infura.io/${infuraToken}`)
+    })
   })
 
-  it(`should set web3 in the web3store THEN I`, () => {
-    // Given
-    const cb = jest.fn()
+  describe(`Web3Store Ethereum`, () => {
+    beforeEach(() => {})
 
-    // Set infura token
-    process.env.REACT_APP_INFURA_TOKEN = 'kEpzZR9fIyO3a8gTqJcI'
-    web3Store.web3 = new Web3(new Web3.providers.HttpProvider('https://sokol.poa.network'))
+    it(`should set web3 with ethereum`, () => {
+      let ethereum = require('../helpers/web3-fake-provider')
+      // Fake ethereum provider
+      global.ethereum = new ethereum()
 
-    // When
-    const web3 = web3Store.getWeb3(cb)
+      let web3Store = new Web3Store()
+      let cb = (web3, status) => {
+        if (web3) {
+          web3Store.setProperty('web3', web3)
 
-    // Then
-    expect(typeof web3).toBe('object')
-  })
+          // Then
+          expect(typeof web3Store.web3).toBe('object')
+          const currentProvider = web3Store.web3.currentProvider
+          expect(typeof currentProvider).toBe(`object`)
 
-  it(`should set web3 in the web3store THEN II`, () => {
-    // Given
-    const cb = jest.fn()
+          return web3
+        }
+      }
 
-    // Set infura token
-    process.env.REACT_APP_INFURA_TOKEN = 'kEpzZR9fIyO3a8gTqJcI'
-    web3Store.web3 = new Web3()
-
-    // When
-    const web3 = web3Store.getWeb3(cb, 1)
-
-    // Then
-    expect(typeof web3).toBe('object')
-    expect(web3.currentProvider.host).toBe('https://Mainnet.infura.io/kEpzZR9fIyO3a8gTqJcI')
-  })
-
-  it(`should set web3 in the web3store THEN III`, () => {
-    // Given
-    const cb = jest.fn()
-
-    // Set infura token
-    process.env.REACT_APP_INFURA_TOKEN = 'kEpzZR9fIyO3a8gTqJcI'
-    web3Store.web3 = new Web3()
-
-    // When
-    const web3 = web3Store.getWeb3(cb, 2)
-
-    // Then
-    expect(typeof web3).toBe('object')
-    expect(web3.currentProvider.host).toBe('https://Morden.infura.io/kEpzZR9fIyO3a8gTqJcI')
-  })
-
-  it(`should set web3 in the web3store THEN IV`, () => {
-    // Given
-    const cb = jest.fn()
-
-    // Set infura token
-    process.env.REACT_APP_INFURA_TOKEN = 'kEpzZR9fIyO3a8gTqJcI'
-    web3Store.web3 = new Web3()
-
-    // When
-    const web3 = web3Store.getWeb3(cb, 3)
-
-    // Then
-    expect(typeof web3).toBe('object')
-    expect(web3.currentProvider.host).toBe('https://Ropsten.infura.io/kEpzZR9fIyO3a8gTqJcI')
-  })
-
-  it(`should set web3 in the web3store THEN V`, () => {
-    // Given
-    const cb = jest.fn()
-
-    // Set infura token
-    process.env.REACT_APP_INFURA_TOKEN = 'kEpzZR9fIyO3a8gTqJcI'
-    web3Store.web3 = new Web3()
-
-    // When
-    const web3 = web3Store.getWeb3(cb, 4)
-
-    // Then
-    expect(typeof web3).toBe('object')
-    expect(web3.currentProvider.host).toBe('https://Rinkeby.infura.io/kEpzZR9fIyO3a8gTqJcI')
-  })
-
-  it(`should set web3 in the web3store THEN VI`, () => {
-    // Given
-    const cb = jest.fn()
-
-    // Set infura token
-    process.env.REACT_APP_INFURA_TOKEN = 'kEpzZR9fIyO3a8gTqJcI'
-    web3Store.web3 = new Web3()
-
-    // When
-    const web3 = web3Store.getWeb3(cb, 42)
-
-    // Then
-    expect(typeof web3).toBe('object')
-    expect(web3.currentProvider.host).toBe('https://Kovan.infura.io/kEpzZR9fIyO3a8gTqJcI')
-  })
-
-  it(`should set web3 in the web3store ELSE I`, async () => {
-    // Given
-    const cb = jest.fn()
-    const web3 = new Web3(new Web3.providers.HttpProvider('https://sokol.poa.network'))
-    global.web3 = web3
-
-    // When
-    const web3FromStore = web3Store.getWeb3(cb)
-    const isListening = await web3FromStore.eth.net.isListening()
-
-    // Then
-    expect(typeof web3FromStore).toBe('object')
-    expect(isListening).toBeTruthy()
+      // When
+      web3Store.getWeb3(cb, 1)
+    })
   })
 })

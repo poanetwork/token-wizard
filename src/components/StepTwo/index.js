@@ -4,6 +4,7 @@ import setFieldTouched from 'final-form-set-field-touched'
 import { Form } from 'react-final-form'
 import { Loader } from '../Common/Loader'
 import { NAVIGATION_STEPS } from '../../utils/constants'
+import { StepInfo } from '../Common/StepInfo'
 import { StepNavigation } from '../Common/StepNavigation'
 import { StepTwoForm } from './StepTwoForm'
 import { checkWeb3 } from '../../utils/blockchainHelpers'
@@ -65,15 +66,11 @@ export class StepTwo extends Component {
         <section className="lo-MenuBarAndContent" ref="two">
           <StepNavigation activeStep={TOKEN_SETUP} />
           <div className="st-StepContent">
-            <div className="st-StepContent_Info">
-              <div className="st-StepContent_InfoIcon st-StepContent_InfoIcon-step2" />
-              <div className="st-StepContentInfo_InfoText">
-                <h1 className="st-StepContent_InfoTitle">Token setup</h1>
-                <p className="st-StepContent_InfoDescription">
-                  Configure properties for your token. Created token contract will be ERC-20 compatible.
-                </p>
-              </div>
-            </div>
+            <StepInfo
+              description="Configure properties for your token. Created token contract will be ERC-20 compatible."
+              stepNumber="2"
+              title="Token Setup"
+            />
             <Form
               component={StepTwoForm}
               history={this.props.history}

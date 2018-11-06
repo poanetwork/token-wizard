@@ -3473,7 +3473,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                 disabled={true}
                                 name="tiers[0].crowdsale_name"
                                 side="left"
-                                title="Crowdsale setup name"
+                                title="Tier setup name"
                                 type="text"
                                 value="Tier 1"
                               >
@@ -3481,7 +3481,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                   className="sw-InputField "
                                 >
                                   <FormControlTitle
-                                    title="Crowdsale setup name"
+                                    title="Tier setup name"
                                   >
                                     <div
                                       className="sw-FormControlTitle"
@@ -3489,7 +3489,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                       <label
                                         className="sw-FormControlTitle_Label"
                                       >
-                                        Crowdsale setup name
+                                        Tier setup name
                                       </label>
                                     </div>
                                   </FormControlTitle>
@@ -3591,7 +3591,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                     type="datetime-local"
                                   >
                                     <div
-                                      className="sw-InputField "
+                                      className="sw-InputField2 "
                                     >
                                       <FormControlTitle
                                         description="Date and time when the tier starts. Can't be in the past from the current moment."
@@ -3641,7 +3641,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                           value="2018-04-13T16:07"
                                         />
                                       </TextField>
-                                      <Error
+                                      <Errors
                                         name="tiers[0].startTime"
                                       >
                                         <Field
@@ -3657,7 +3657,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                             }
                                           }
                                         />
-                                      </Error>
+                                      </Errors>
                                     </div>
                                   </InputField2>
                                 </Field>
@@ -3742,7 +3742,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                     type="datetime-local"
                                   >
                                     <div
-                                      className="sw-InputField "
+                                      className="sw-InputField2 "
                                     >
                                       <FormControlTitle
                                         description="Date and time when the tier ends. Can be only in the future."
@@ -3792,7 +3792,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                           value="2018-04-17T00:00"
                                         />
                                       </TextField>
-                                      <Error
+                                      <Errors
                                         name="tiers[0].endTime"
                                       >
                                         <Field
@@ -3808,7 +3808,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                             }
                                           }
                                         />
-                                      </Error>
+                                      </Errors>
                                     </div>
                                   </InputField2>
                                 </Field>
@@ -3848,6 +3848,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                   label="Rate"
                                   name="tiers[0].rate"
                                   parse={[Function]}
+                                  placeholder="Enter here"
                                   side="left"
                                   type="text"
                                 >
@@ -3891,11 +3892,12 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         "visited": false,
                                       }
                                     }
+                                    placeholder="Enter here"
                                     side="left"
                                     type="text"
                                   >
                                     <div
-                                      className="sw-InputField "
+                                      className="sw-InputField2 "
                                     >
                                       <FormControlTitle
                                         description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens"
@@ -3930,6 +3932,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         onBlur={[Function]}
                                         onChange={[Function]}
                                         onFocus={[Function]}
+                                        placeholder="Enter here"
                                         type="text"
                                         value="123"
                                       >
@@ -3941,11 +3944,12 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                           onBlur={[Function]}
                                           onChange={[Function]}
                                           onFocus={[Function]}
+                                          placeholder="Enter here"
                                           type="text"
                                           value="123"
                                         />
                                       </TextField>
-                                      <Error
+                                      <Errors
                                         name="tiers[0].rate"
                                       >
                                         <Field
@@ -3961,7 +3965,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                             }
                                           }
                                         />
-                                      </Error>
+                                      </Errors>
                                     </div>
                                   </InputField2>
                                 </Field>
@@ -3997,6 +4001,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                   label="Supply"
                                   name="tiers[0].supply"
                                   parse={[Function]}
+                                  placeholder="Enter here"
                                   side="right"
                                   type="text"
                                   val={null}
@@ -4041,12 +4046,13 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         "visited": false,
                                       }
                                     }
+                                    placeholder="Enter here"
                                     side="right"
                                     type="text"
                                     val={null}
                                   >
                                     <div
-                                      className="sw-InputField "
+                                      className="sw-InputField2 "
                                     >
                                       <FormControlTitle
                                         description="How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers"
@@ -4081,6 +4087,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         onBlur={[Function]}
                                         onChange={[Function]}
                                         onFocus={[Function]}
+                                        placeholder="Enter here"
                                         type="text"
                                         value="132"
                                       >
@@ -4092,11 +4099,12 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                           onBlur={[Function]}
                                           onChange={[Function]}
                                           onFocus={[Function]}
+                                          placeholder="Enter here"
                                           type="text"
                                           value="132"
                                         />
                                       </TextField>
-                                      <Error
+                                      <Errors
                                         name="tiers[0].supply"
                                       >
                                         <Field
@@ -4112,7 +4120,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                             }
                                           }
                                         />
-                                      </Error>
+                                      </Errors>
                                     </div>
                                   </InputField2>
                                 </Field>
@@ -4186,7 +4194,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                   type="number"
                                 >
                                   <div
-                                    className="sw-InputField "
+                                    className="sw-InputField2 "
                                   >
                                     <FormControlTitle
                                       title="Contributor min cap"
@@ -4225,7 +4233,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         value="0"
                                       />
                                     </TextField>
-                                    <Error
+                                    <Errors
                                       name="tiers[0].minCap"
                                     >
                                       <Field
@@ -4241,7 +4249,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                           }
                                         }
                                       />
-                                    </Error>
+                                    </Errors>
                                   </div>
                                 </InputField2>
                               </Field>
@@ -4266,7 +4274,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                 disabled={true}
                                 name="tiers[1].crowdsale_name"
                                 side="left"
-                                title="Crowdsale setup name"
+                                title="Tier setup name"
                                 type="text"
                                 value="Tier 2"
                               >
@@ -4274,7 +4282,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                   className="sw-InputField "
                                 >
                                   <FormControlTitle
-                                    title="Crowdsale setup name"
+                                    title="Tier setup name"
                                   >
                                     <div
                                       className="sw-FormControlTitle"
@@ -4282,7 +4290,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                       <label
                                         className="sw-FormControlTitle_Label"
                                       >
-                                        Crowdsale setup name
+                                        Tier setup name
                                       </label>
                                     </div>
                                   </FormControlTitle>
@@ -4384,7 +4392,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                     type="datetime-local"
                                   >
                                     <div
-                                      className="sw-InputField "
+                                      className="sw-InputField2 "
                                     >
                                       <FormControlTitle
                                         description="Date and time when the tier starts. Can't be in the past from the current moment."
@@ -4434,7 +4442,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                           value="2018-04-17T00:00"
                                         />
                                       </TextField>
-                                      <Error
+                                      <Errors
                                         name="tiers[1].startTime"
                                       >
                                         <Field
@@ -4450,7 +4458,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                             }
                                           }
                                         />
-                                      </Error>
+                                      </Errors>
                                     </div>
                                   </InputField2>
                                 </Field>
@@ -4534,7 +4542,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                     type="datetime-local"
                                   >
                                     <div
-                                      className="sw-InputField "
+                                      className="sw-InputField2 "
                                     >
                                       <FormControlTitle
                                         description="Date and time when the tier ends. Can be only in the future."
@@ -4584,7 +4592,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                           value="2018-04-21T00:00"
                                         />
                                       </TextField>
-                                      <Error
+                                      <Errors
                                         name="tiers[1].endTime"
                                       >
                                         <Field
@@ -4600,7 +4608,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                             }
                                           }
                                         />
-                                      </Error>
+                                      </Errors>
                                     </div>
                                   </InputField2>
                                 </Field>
@@ -4640,6 +4648,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                   label="Rate"
                                   name="tiers[1].rate"
                                   parse={[Function]}
+                                  placeholder="Enter here"
                                   side="left"
                                   type="text"
                                 >
@@ -4683,11 +4692,12 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         "visited": false,
                                       }
                                     }
+                                    placeholder="Enter here"
                                     side="left"
                                     type="text"
                                   >
                                     <div
-                                      className="sw-InputField "
+                                      className="sw-InputField2 "
                                     >
                                       <FormControlTitle
                                         description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens"
@@ -4722,6 +4732,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         onBlur={[Function]}
                                         onChange={[Function]}
                                         onFocus={[Function]}
+                                        placeholder="Enter here"
                                         type="text"
                                         value="55"
                                       >
@@ -4733,11 +4744,12 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                           onBlur={[Function]}
                                           onChange={[Function]}
                                           onFocus={[Function]}
+                                          placeholder="Enter here"
                                           type="text"
                                           value="55"
                                         />
                                       </TextField>
-                                      <Error
+                                      <Errors
                                         name="tiers[1].rate"
                                       >
                                         <Field
@@ -4753,7 +4765,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                             }
                                           }
                                         />
-                                      </Error>
+                                      </Errors>
                                     </div>
                                   </InputField2>
                                 </Field>
@@ -4789,6 +4801,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                   label="Supply"
                                   name="tiers[1].supply"
                                   parse={[Function]}
+                                  placeholder="Enter here"
                                   side="right"
                                   type="text"
                                   val={null}
@@ -4833,12 +4846,13 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         "visited": false,
                                       }
                                     }
+                                    placeholder="Enter here"
                                     side="right"
                                     type="text"
                                     val={null}
                                   >
                                     <div
-                                      className="sw-InputField "
+                                      className="sw-InputField2 "
                                     >
                                       <FormControlTitle
                                         description="How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers"
@@ -4873,6 +4887,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         onBlur={[Function]}
                                         onChange={[Function]}
                                         onFocus={[Function]}
+                                        placeholder="Enter here"
                                         type="text"
                                         value="156"
                                       >
@@ -4884,11 +4899,12 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                           onBlur={[Function]}
                                           onChange={[Function]}
                                           onFocus={[Function]}
+                                          placeholder="Enter here"
                                           type="text"
                                           value="156"
                                         />
                                       </TextField>
-                                      <Error
+                                      <Errors
                                         name="tiers[1].supply"
                                       >
                                         <Field
@@ -4904,7 +4920,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                             }
                                           }
                                         />
-                                      </Error>
+                                      </Errors>
                                     </div>
                                   </InputField2>
                                 </Field>
@@ -4978,7 +4994,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                   type="number"
                                 >
                                   <div
-                                    className="sw-InputField "
+                                    className="sw-InputField2 "
                                   >
                                     <FormControlTitle
                                       title="Contributor min cap"
@@ -5017,7 +5033,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         value="0"
                                       />
                                     </TextField>
-                                    <Error
+                                    <Errors
                                       name="tiers[1].minCap"
                                     >
                                       <Field
@@ -5033,7 +5049,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                           }
                                         }
                                       />
-                                    </Error>
+                                    </Errors>
                                   </div>
                                 </InputField2>
                               </Field>

@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TxStatusIconCheck should render TxStatusIconCheck component 1`] = `
+<svg
+  height="10"
+  viewBox="0 0 12 10"
+  width="12"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <path
+    d="M4.3 6.6L1.7 4 .3 5.4l4 4L11.8 2 10.4.6z"
+    fill="#000"
+    fillRule="evenodd"
+  />
+</svg>
+`;
