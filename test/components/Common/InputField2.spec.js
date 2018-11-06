@@ -25,6 +25,6 @@ describe('InputField2 ', () => {
     expect(wrapper.find('input').props().placeholder).toBe(placeholder)
     expect(wrapper.find('input').props().disabled).toBeFalsy()
     expect(wrapper.find('input').props().id).toBe(input.name)
-    expect(wrapper.find('Error').props().name).toBe(input.name)
+    expect(wrapper.find('Errors').props().name).toBe(input.name)
   })
 })

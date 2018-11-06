@@ -13,24 +13,24 @@ describe('GasPriceStore', () => {
 
   it('should instantiates store properly', () => {
     expect(gas.slow).toBeDefined()
-    expect(gas.slow.id).toEqual(GAS_PRICE.SLOW.ID)
-    expect(gas.slow.price).toEqual(GAS_PRICE.SLOW.PRICE)
+    expect(gas.slow.id).toEqual(GAS_PRICE.SLOW.id)
+    expect(gas.slow.price).toEqual(GAS_PRICE.SLOW.price)
 
     expect(gas.standard).toBeDefined()
-    expect(gas.standard.id).toEqual(GAS_PRICE.NORMAL.ID)
-    expect(gas.standard.price).toEqual(GAS_PRICE.NORMAL.PRICE)
+    expect(gas.standard.id).toEqual(GAS_PRICE.NORMAL.id)
+    expect(gas.standard.price).toEqual(GAS_PRICE.NORMAL.price)
 
     expect(gas.fast).toBeDefined()
-    expect(gas.fast.id).toEqual(GAS_PRICE.FAST.ID)
-    expect(gas.fast.price).toEqual(GAS_PRICE.FAST.PRICE)
+    expect(gas.fast.id).toEqual(GAS_PRICE.FAST.id)
+    expect(gas.fast.price).toEqual(GAS_PRICE.FAST.price)
 
     expect(gas.instant).toBeDefined()
-    expect(gas.instant.id).toEqual(GAS_PRICE.INSTANT.ID)
-    expect(gas.instant.price).toEqual(GAS_PRICE.INSTANT.PRICE)
+    expect(gas.instant.id).toEqual(GAS_PRICE.INSTANT.id)
+    expect(gas.instant.price).toEqual(GAS_PRICE.INSTANT.price)
 
     expect(gas.custom).toBeDefined()
-    expect(gas.custom.id).toEqual(GAS_PRICE.CUSTOM.ID)
-    expect(gas.custom.price).toEqual(GAS_PRICE.CUSTOM.PRICE)
+    expect(gas.custom.id).toEqual(GAS_PRICE.CUSTOM.id)
+    expect(gas.custom.price).toEqual(GAS_PRICE.CUSTOM.price)
 
     expect(gas.block_number).toBeUndefined()
     expect(gas.block_time).toBeUndefined()
@@ -39,46 +39,46 @@ describe('GasPriceStore', () => {
 
   it('should return gasPrices collection', () => {
     expect(gas.gasPrices[0]).toEqual({
-      id: GAS_PRICE.SLOW.ID,
-      price: GAS_PRICE.SLOW.PRICE,
+      id: GAS_PRICE.SLOW.id,
+      price: GAS_PRICE.SLOW.price,
       description: gas.slowDescription
     })
     expect(gas.gasPrices[1]).toEqual({
-      id: GAS_PRICE.NORMAL.ID,
-      price: GAS_PRICE.NORMAL.PRICE,
+      id: GAS_PRICE.NORMAL.id,
+      price: GAS_PRICE.NORMAL.price,
       description: gas.standardDescription
     })
     expect(gas.gasPrices[2]).toEqual({
-      id: GAS_PRICE.FAST.ID,
-      price: GAS_PRICE.FAST.PRICE,
+      id: GAS_PRICE.FAST.id,
+      price: GAS_PRICE.FAST.price,
       description: gas.fastDescription
     })
     expect(gas.gasPrices[3]).toEqual({
-      id: GAS_PRICE.CUSTOM.ID,
-      price: GAS_PRICE.CUSTOM.PRICE,
+      id: GAS_PRICE.CUSTOM.id,
+      price: GAS_PRICE.CUSTOM.price,
       description: gas.customDescription
     })
   })
 
   it('should return gasPrices collection in Gwei', () => {
     expect(gas.gasPricesInGwei[0]).toEqual({
-      id: GAS_PRICE.SLOW.ID,
-      price: weiToGwei(GAS_PRICE.SLOW.PRICE),
+      id: GAS_PRICE.SLOW.id,
+      price: weiToGwei(GAS_PRICE.SLOW.price),
       description: gas.slowDescription
     })
     expect(gas.gasPricesInGwei[1]).toEqual({
-      id: GAS_PRICE.NORMAL.ID,
-      price: weiToGwei(GAS_PRICE.NORMAL.PRICE),
+      id: GAS_PRICE.NORMAL.id,
+      price: weiToGwei(GAS_PRICE.NORMAL.price),
       description: gas.standardDescription
     })
     expect(gas.gasPricesInGwei[2]).toEqual({
-      id: GAS_PRICE.FAST.ID,
-      price: weiToGwei(GAS_PRICE.FAST.PRICE),
+      id: GAS_PRICE.FAST.id,
+      price: weiToGwei(GAS_PRICE.FAST.price),
       description: gas.fastDescription
     })
     expect(gas.gasPricesInGwei[3]).toEqual({
-      id: GAS_PRICE.CUSTOM.ID,
-      price: weiToGwei(GAS_PRICE.CUSTOM.PRICE),
+      id: GAS_PRICE.CUSTOM.id,
+      price: weiToGwei(GAS_PRICE.CUSTOM.price),
       description: gas.customDescription
     })
   })
@@ -91,7 +91,7 @@ describe('GasPriceStore', () => {
       expect(gas.standard.price).toEqual(gweiToWei(gasPrice.standard))
       expect(gas.fast.price).toEqual(gweiToWei(gasPrice.fast))
       expect(gas.instant.price).toEqual(gweiToWei(gasPrice.instant))
-      expect(gas.custom.price).toEqual(GAS_PRICE.CUSTOM.PRICE)
+      expect(gas.custom.price).toEqual(GAS_PRICE.CUSTOM.price)
 
       expect(gas.block_number).toEqual(gasPrice.block_number)
       expect(gas.block_time).toEqual(gasPrice.block_time)
@@ -113,7 +113,7 @@ describe('GasPriceStore', () => {
         expect(gas.standard.price).toEqual(gweiToWei(gasPrice.standard))
         expect(gas.fast.price).toEqual(gweiToWei(gasPrice.fast))
         expect(gas.instant.price).toEqual(gweiToWei(gasPrice.instant))
-        expect(gas.custom.price).toEqual(GAS_PRICE.CUSTOM.PRICE)
+        expect(gas.custom.price).toEqual(GAS_PRICE.CUSTOM.price)
 
         expect(gas.block_number).toEqual(gasPrice.block_number)
         expect(gas.block_time).toEqual(gasPrice.block_time)

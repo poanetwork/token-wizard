@@ -3,11 +3,11 @@ import renderer from 'react-test-renderer'
 import { configure, mount } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-15'
 import { MemoryRouter } from 'react-router'
-import CheckIncompleteDeploy from '../../src/components/IncompleteDeploy'
+import CheckIncompleteDeploy from '../../src/components/CheckIncompleteDeploy'
 
 configure({ adapter: new Adapter() })
 
-describe('IncompleteDeploys', () => {
+describe('CheckIncompleteDeploys', () => {
   const history = { push: jest.fn() }
   it(`should render CheckIncompleteDeploys`, () => {
     // Given
@@ -34,7 +34,7 @@ describe('IncompleteDeploys', () => {
 
     // When
     const checkIncompleteDeployComponent = wrapper.find('CheckIncompleteDeploy')
-    const navigateToHandler = jest.spyOn(checkIncompleteDeployComponent.instance(), 'navigateTo')
+    const navigateToHandler = jest.spyOn(checkIncompleteDeployComponent.instance(), 'goToStepFour')
     wrapper.update()
     checkIncompleteDeployComponent
       .find('.buttons button')
@@ -43,7 +43,6 @@ describe('IncompleteDeploys', () => {
 
     // Then
     expect(navigateToHandler).toHaveBeenCalledTimes(1)
-    expect(navigateToHandler).toHaveBeenCalledWith('stepFour')
   })
 
   it(`should cancel the deploy`, () => {

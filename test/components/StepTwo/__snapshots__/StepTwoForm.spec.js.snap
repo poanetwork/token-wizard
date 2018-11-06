@@ -155,6 +155,7 @@ exports[`StepTwoForm should render StepTwoForm for Dutch Auction Crowdsale 1`] =
   >
     <button
       className="sw-ButtonBack "
+      onClick={[Function]}
       type="button"
     >
       Back
@@ -455,6 +456,7 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
   >
     <button
       className="sw-ButtonBack "
+      onClick={[Function]}
       type="button"
     >
       Back

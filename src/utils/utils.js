@@ -4,6 +4,7 @@ import { BigNumber } from 'bignumber.js'
 import logdown from 'logdown'
 import Web3 from 'web3'
 import moment from 'moment'
+import { fetchFile } from './fetchFile'
 import { isObservableArray } from 'mobx'
 
 const logger = logdown('TW:utils:utils')
@@ -45,22 +46,6 @@ export const getNetworkID = () => {
 
 export function setFlatFileContentToState(file) {
   return fetchFile(file)
-}
-
-export function fetchFile(path) {
-  return new Promise((resolve, reject) => {
-    const rawFile = new XMLHttpRequest()
-
-    rawFile.addEventListener('error', reject)
-    rawFile.open('GET', path, true)
-    rawFile.onreadystatechange = function() {
-      if (rawFile.readyState === 4 && (rawFile.status === 200 || rawFile.status === 0)) {
-        let allText = rawFile.responseText
-        resolve(allText)
-      }
-    }
-    rawFile.send(null)
-  })
 }
 
 export const dateToTimestamp = date => new Date(date).getTime()
@@ -182,21 +167,6 @@ export const toBigNumber = (value, force = true) => {
  */
 export const sleep = async ms => {
   return new Promise(resolve => setTimeout(resolve, ms))
-}
-
-export const objectKeysToLowerCase = input => {
-  if (typeof input !== 'object') {
-    return input
-  }
-  if (Array.isArray(input)) {
-    return input.map(objectKeysToLowerCase)
-  }
-  return Object.keys(input).reduce((newObj, key) => {
-    let val = input[key]
-    let newVal = typeof val === 'object' ? objectKeysToLowerCase(val) : val
-    newObj[key.toLowerCase()] = newVal
-    return newObj
-  }, {})
 }
 
 export const clearStorage = props => {

@@ -24,36 +24,40 @@ describe('TokenTicker', () => {
   })
 
   it(`should give error if ticker name has other than alphanumeric characters`, () => {
-    const wrapper = mount(
-      <Form onSubmit={jest.fn()} component={TokenTicker} errorStyle={{ color: 'red', fontWeight: 'bold' }} />
-    )
-    const input = wrapper.find('input[name="ticker"]')
+    // Given
+    const wrapper = mount(<Form onSubmit={jest.fn()} component={TokenTicker} />)
+
+    // When
+    const input = wrapper.find('input[name="ticker"]').at(0)
     input.simulate('change', { target: { value: 'AB@C8' } })
 
-    expect(wrapper.find('.sw-Error').text()).toBe('Only alphanumeric characters')
+    // Then
+    expect(wrapper.find('InputField2').prop('meta').error).toBe('Only alphanumeric characters')
   })
 
   it(`should give error if ticker name is empty`, () => {
-    const wrapper = mount(
-      <Form onSubmit={jest.fn()} component={TokenTicker} errorStyle={{ color: 'red', fontWeight: 'bold' }} />
-    )
-
+    // Given
+    const wrapper = mount(<Form onSubmit={jest.fn()} component={TokenTicker} />)
     const input = wrapper.find('input[name="ticker"]')
 
+    // When
     input.simulate('change', { target: { value: 'VALID' } })
     expect(wrapper.find('InputField2').prop('meta').error).toBeFalsy()
-
     input.simulate('change', { target: { value: '' } })
+
+    // Then
     expect(wrapper.find('InputField2').prop('meta').error).toBe(VALIDATION_MESSAGES.REQUIRED)
   })
 
   it(`should give error if ticker name is longer than 5 characters`, () => {
-    const wrapper = mount(
-      <Form onSubmit={jest.fn()} component={TokenTicker} errorStyle={{ color: 'red', fontWeight: 'bold' }} />
-    )
+    // Given
+    const wrapper = mount(<Form onSubmit={jest.fn()} component={TokenTicker} />)
     const input = wrapper.find('input[name="ticker"]')
+
+    // When
     input.simulate('change', { target: { value: '123456' } })
 
-    expect(wrapper.find('.sw-Error').text()).toBe('Please enter a valid ticker between 1-5 characters')
+    // Then
+    expect(wrapper.find('InputField2').prop('meta').error).toBe('Please enter a valid ticker between 1-5 characters')
   })
 })

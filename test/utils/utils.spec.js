@@ -1,7 +1,6 @@
 import {
   acceptPositiveIntegerOnly,
   countDecimalPlaces,
-  objectKeysToLowerCase,
   removeTrailingNUL,
   toBigNumber,
   truncateStringInTheMiddle,
