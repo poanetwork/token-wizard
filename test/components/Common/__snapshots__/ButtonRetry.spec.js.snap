@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ButtonRetry should render ButtonRetry component 1`] = `
+<button
+  className="sw-ButtonRetry "
+  disabled={false}
+  onClick={[MockFunction]}
+  type="button"
+>
+  <span
+    className="sw-ButtonRetry_Text"
+  >
+    Retry transaction
+  </span>
+</button>
+`;

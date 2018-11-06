@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CrowdsaleID should render CrowdsaleID component 1`] = `
+<div
+  className="cs-CrowdsaleID "
+>
+  <div
+    className="cs-CrowdsaleID_InnerContainer"
+  >
+    <h3
+      className="cs-CrowdsaleID_Hash"
+    >
+      <span
+        className="cs-CrowdsaleID_HashText"
+      />
+       
+      <button
+        className="sw-ButtonCopyToClipboard "
+        data-clipboard-action="copy"
+        onClick={[Function]}
+        type="button"
+      />
+    </h3>
+    <p
+      className="cs-CrowdsaleID_Description"
+    />
+  </div>
+</div>
+`;

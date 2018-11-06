@@ -67,6 +67,16 @@ $st-StepInfo_Icon-dimensions-lg: 100px !default;
 
     }
 
+    &.st-StepInfo_Icon-step5 {
+        background-image: url(#{ $base-images-path }/StepInfo/5.svg);
+        background-size: 30px 31px;
+
+        @media (min-width: $breakpoint-xl) {
+            background-size: 52px 54px;
+        }
+
+    }
+
 }
 
 .st-StepInfo_Text {

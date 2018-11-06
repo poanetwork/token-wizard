@@ -23,21 +23,15 @@ exports[`NumericInput Should render the component 1`] = `
       </span>
     </div>
   </div>
-  <div
-    className="sw-NumericInput_InputAndButtonContainer"
-  >
-    <input
-      className="sw-TextField"
-      onChange={[Function]}
-      onKeyPress={[Function]}
-      onPaste={[Function]}
-      type="number"
-      value=""
-    />
-    <div
-      className="sw-NumericInput_ButtonPlus"
-    />
-  </div>
+  <input
+    className="sw-TextField"
+    onChange={[Function]}
+    onKeyPress={[Function]}
+    onPaste={[Function]}
+    step="1"
+    type="number"
+    value=""
+  />
   
 </div>
 `;

@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ButtonContinue should render ButtonContinue component 1`] = `
+<button
+  className="sw-ButtonContinue "
+  disabled={false}
+  onClick={[MockFunction]}
+  type="button"
+>
+  <span
+    className="sw-ButtonContinue_Text"
+  >
+    Continue
+  </span>
+</button>
+`;

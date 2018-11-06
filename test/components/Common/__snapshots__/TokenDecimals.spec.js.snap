@@ -2,7 +2,7 @@
 
 exports[`TokenDecimals should render TokenDecimals component 1`] = `
 <div
-  className="sw-InputField "
+  className="sw-InputField2 "
 >
   <div
     className="sw-FormControlTitle"
@@ -32,6 +32,7 @@ exports[`TokenDecimals should render TokenDecimals component 1`] = `
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
+    placeholder="Enter here"
     type="number"
     value=""
   />
@@ -40,7 +41,7 @@ exports[`TokenDecimals should render TokenDecimals component 1`] = `
 
 exports[`TokenDecimals should render TokenDecimals component and its children 1`] = `
 <div
-  className="sw-InputField "
+  className="sw-InputField2 "
 >
   <div
     className="sw-FormControlTitle"
@@ -70,6 +71,7 @@ exports[`TokenDecimals should render TokenDecimals component and its children 1`
     onBlur={[Function]}
     onChange={[Function]}
     onFocus={[Function]}
+    placeholder="Enter here"
     type="number"
     value=""
   />
@@ -163,30 +165,19 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
       component={[Function]}
       description="Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous)."
       disabled={true}
-      errorStyle={
-        Object {
-          "color": "red",
-          "fontWeight": "bold",
-        }
-      }
       format={[Function]}
       label="Decimals"
       max="18"
       min="0"
       name="decimals"
       parse={[Function]}
+      placeholder="Enter here"
       type="number"
       validate={[Function]}
     >
       <InputField2
         description="Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous)."
         disabled={true}
-        errorStyle={
-          Object {
-            "color": "red",
-            "fontWeight": "bold",
-          }
-        }
         input={
           Object {
             "name": "decimals",
@@ -217,10 +208,11 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
           }
         }
         min="0"
+        placeholder="Enter here"
         type="number"
       >
         <div
-          className="sw-InputField "
+          className="sw-InputField2 "
         >
           <FormControlTitle
             description="Refers to how divisible a token can be, from 0 (not at all divisible) to 18 (pretty much continuous)."
@@ -257,6 +249,7 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
+            placeholder="Enter here"
             type="number"
             value=""
           >
@@ -270,11 +263,12 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
+              placeholder="Enter here"
               type="number"
               value=""
             />
           </TextField>
-          <Error
+          <Errors
             name="decimals"
           >
             <Field
@@ -290,7 +284,7 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
                 }
               }
             />
-          </Error>
+          </Errors>
         </div>
       </InputField2>
     </Field>
