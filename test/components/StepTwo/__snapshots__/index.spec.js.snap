@@ -276,7 +276,6 @@ exports[`StepTwo should render StepTwo for Dutch Auction strategy 1`] = `
         >
           <button
             className="sw-ButtonBack "
-            disabled={false}
             onClick={[Function]}
             type="button"
           >
@@ -541,7 +540,6 @@ exports[`StepTwo should render StepTwo for Minted Capped strategy 1`] = `
         >
           <button
             className="sw-ButtonBack "
-            disabled={false}
             onClick={[Function]}
             type="button"
           >

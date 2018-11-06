@@ -1,5 +1,4 @@
 import React from 'react'
-
 import {
   getCurrentAccount,
   checkNetWorkByID,
@@ -17,18 +16,23 @@ import {
   getTokenData,
   initializeAccumulativeData
 } from './utils'
-import { getNetworkID, toBigNumber, isExecIDValid } from '../../utils/utils'
-import { getCrowdsaleAssets } from '../../stores/utils'
-import { StepNavigation } from '../Common/StepNavigation'
-import { NAVIGATION_STEPS } from '../../utils/constants'
-import { Loader } from '../Common/Loader'
+import logdown from 'logdown'
+import { ButtonContinue } from '../Common/ButtonContinue'
 import { CrowdsaleConfig } from '../Common/config'
+import { CrowdsaleID } from './CrowdsaleID'
+import { CrowdsaleProgress } from './CrowdsaleProgress'
+import { CrowdsaleSummaryMintedCapped } from './CrowdsaleSummaryMintedCapped'
+import { CrowdsaleSummaryDutchAuction } from './CrowdsaleSummaryDutchAuction'
+import { Loader } from '../Common/Loader'
+import { NAVIGATION_STEPS } from '../../utils/constants'
+import { StepInfo } from '../Common/StepInfo'
+import { StepNavigation } from '../Common/StepNavigation'
+import { getCrowdsaleAssets } from '../../stores/utils'
+import { getNetworkID, toBigNumber, isExecIDValid } from '../../utils/utils'
 import { inject, observer } from 'mobx-react'
 import { invalidCrowdsaleExecIDAlert, invalidNetworkIDAlert } from '../../utils/alerts'
-import logdown from 'logdown'
 
 const logger = logdown('TW:crowdsale')
-
 const { CROWDSALE_PAGE } = NAVIGATION_STEPS
 
 @inject('contractStore', 'crowdsaleStore', 'crowdsalePageStore', 'web3Store', 'tierStore', 'tokenStore', 'generalStore')
@@ -168,7 +172,7 @@ export class Crowdsale extends React.Component {
   render() {
     const { web3Store, tokenStore, crowdsalePageStore, contractStore, crowdsaleStore } = this.props
     const { web3 } = web3Store
-    const { proxyName, isMintedCappedCrowdsale } = crowdsaleStore
+    const { proxyName, isMintedCappedCrowdsale, isDutchAuction } = crowdsaleStore
 
     const crowdsaleExecID = getContractStoreProperty('crowdsale', 'execID')
     const contributorsCount = crowdsalePageStore.contributors ? crowdsalePageStore.contributors.toString() : 0
@@ -215,123 +219,53 @@ export class Crowdsale extends React.Component {
             .times(100)
             .toFixed()
         : '0'
-
-    const crowdsaleSummary = isMintedCappedCrowdsale ? (
-      <div>
-        <div className="left" style={{ width: '42% ' }}>
-          <div>
-            <div className="left">
-              <p className="title">{tokensClaimed}</p>
-              <p className="description">Tokens Claimed</p>
-            </div>
-            <div className="right">
-              <p className="title">{contributorsCount}</p>
-              <p className="description">Contributors</p>
-            </div>
-          </div>
-        </div>
-        <div className="right" style={{ width: '58%' }}>
-          <div>
-            <div className="left">
-              <p className="title">{currentRatePerETH}</p>
-              <p className="description">Rate (Tokens/ETH)</p>
-            </div>
-            <div className="right">
-              <p className="title">{totalSupply}</p>
-              <p className="description">Total Supply</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    ) : (
-      <div>
-        <div className="left" style={{ width: '100%' }}>
-          <div className="left" style={{ width: '33%' }}>
-            <p className="title">{tokensClaimed}</p>
-            <p className="description">Tokens Claimed</p>
-          </div>
-          <div className="left" style={{ width: '33%' }}>
-            <p className="title">{contributorsCount}</p>
-            <p className="description">Contributors</p>
-          </div>
-          <div className="left" style={{ width: '33%' }}>
-            <p className="title">{totalSupply}</p>
-            <p className="description">Total Supply</p>
-          </div>
-        </div>
-        <div className="left" style={{ width: '100%' }}>
-          <div className="left" style={{ width: '33%' }}>
-            <p className="title">{startRatePerETH}</p>
-            <p className="description">Start Rate (Tokens/ETH)</p>
-          </div>
-          <div className="left" style={{ width: '33%' }}>
-            <p className="title">{currentRatePerETH}</p>
-            <p className="description">Current Rate (Tokens/ETH)</p>
-          </div>
-          <div className="left" style={{ width: '33%' }}>
-            <p className="title">{endRatePerETH}</p>
-            <p className="description">End Rate (Tokens/ETH)</p>
-          </div>
-        </div>
-      </div>
-    )
-
     const proxy = contractStore[proxyName]
+
     return (
-      <section className="steps steps_crowdsale-page">
-        <StepNavigation activeStep={CROWDSALE_PAGE} />
-        <div className="steps-content container">
-          <div className="about-step">
-            <div className="step-icons step-icons_crowdsale-page" />
-            <p className="title">Crowdsale Page</p>
-            <p className="description">
-              Page with statistics of crowdsale. Statistics for all tiers combined on the page. Please press Ctrl-D to
-              bookmark the page.
-            </p>
-          </div>
-          <div className="total-funds">
-            <div>
-              <div className="left">
-                <p className="total-funds-title">{`${ethRaised.toFixed()}`} ETH</p>
-                <p className="total-funds-description">Total Raised Funds</p>
-              </div>
-              <div className="right">
-                <p className="total-funds-title">{`${goalInETH}`} ETH</p>
-                <p className="total-funds-description">Goal</p>
-              </div>
+      <div>
+        <section className={`lo-MenuBarAndContent`} ref="five">
+          <StepNavigation activeStep={CROWDSALE_PAGE} />
+          <div className="st-StepContent">
+            <StepInfo
+              description="Page with statistics of crowdsale. Statistics for all tiers combined on the page. Please press Ctrl-D to
+                bookmark the page."
+              stepNumber="5"
+              title="Crowdsale Page"
+            />
+            <CrowdsaleProgress
+              ethGoal={goalInETH}
+              tokensClaimedRatio={tokensClaimedRatio}
+              totalRaisedFunds={ethRaised.toFixed()}
+            />
+            {isMintedCappedCrowdsale ? (
+              <CrowdsaleSummaryMintedCapped
+                contributorsCount={contributorsCount}
+                currentRatePerETH={currentRatePerETH}
+                tokensClaimed={tokensClaimed}
+                totalSupply={totalSupply}
+              />
+            ) : null}
+            {isDutchAuction ? (
+              <CrowdsaleSummaryDutchAuction
+                contributorsCount={contributorsCount}
+                currentRatePerETH={currentRatePerETH}
+                endRatePerETH={endRatePerETH}
+                startRatePerETH={startRatePerETH}
+                tokensClaimed={tokensClaimed}
+                totalSupply={totalSupply}
+              />
+            ) : null}
+            <CrowdsaleID
+              description={crowdsaleExecID ? 'Crowdsale Execution ID' : 'Crowdsale Proxy Address'}
+              hash={crowdsaleExecID || (proxy && proxy.addr)}
+            />
+            <div className="st-StepContent_Buttons">
+              <ButtonContinue buttonText="Contribute" onClick={this.goToContributePage} />
             </div>
           </div>
-          <div className="total-funds-chart-container">
-            <div className="total-funds-chart-division" />
-            <div className="total-funds-chart-division" />
-            <div className="total-funds-chart-division" />
-            <div className="total-funds-chart-division" />
-            <div className="total-funds-chart-division" />
-            <div className="total-funds-chart-division" />
-            <div className="total-funds-chart-division" />
-            <div className="total-funds-chart-division" />
-            <div className="total-funds-chart-division" />
-            <div className="total-funds-chart">
-              <div className="total-funds-chart-active" style={{ width: `${tokensClaimedRatio}%` }} />
-            </div>
-          </div>
-          <div className="total-funds-statistics">
-            <div>
-              {crowdsaleSummary}
-              <div className="left">
-                <p className="hash">{crowdsaleExecID || (proxy && proxy.addr)}</p>
-                <p className="description">{crowdsaleExecID ? 'Crowdsale Execution ID' : 'Crowdsale Proxy Address'}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="button-container">
-          <a onClick={this.goToContributePage} className="button button_fill">
-            Contribute
-          </a>
-        </div>
+        </section>
         <Loader show={this.state.loading} />
-      </section>
+      </div>
     )
   }
 }

@@ -1,0 +1,56 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CrowdsaleSummaryMintedCapped should render CrowdsaleSummaryMintedCapped component 1`] = `
+<div
+  className="cs-CrowdsaleSummaryMintedCapped "
+>
+  <div
+    className="cs-CrowdsaleSummaryItem"
+  >
+    <h3
+      className="cs-CrowdsaleSummaryItem_Title"
+    />
+    <p
+      className="cs-CrowdsaleSummaryItem_Description"
+    >
+      Tokens Claimed
+    </p>
+  </div>
+  <div
+    className="cs-CrowdsaleSummaryItem"
+  >
+    <h3
+      className="cs-CrowdsaleSummaryItem_Title"
+    />
+    <p
+      className="cs-CrowdsaleSummaryItem_Description"
+    >
+      Contributors
+    </p>
+  </div>
+  <div
+    className="cs-CrowdsaleSummaryItem"
+  >
+    <h3
+      className="cs-CrowdsaleSummaryItem_Title"
+    />
+    <p
+      className="cs-CrowdsaleSummaryItem_Description"
+    >
+      Rate (Tokens/ETH)
+    </p>
+  </div>
+  <div
+    className="cs-CrowdsaleSummaryItem"
+  >
+    <h3
+      className="cs-CrowdsaleSummaryItem_Title"
+    />
+    <p
+      className="cs-CrowdsaleSummaryItem_Description"
+    >
+      Total Supply
+    </p>
+  </div>
+</div>
+`;
