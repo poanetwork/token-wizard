@@ -7,7 +7,7 @@ class CheckIncompleteDeploy extends Component {
     cancelDeploy()
   }
 
-  goToStepFour = () => {
+  goToStepFour() {
     navigateTo({
       history: this.props.history,
       location: 'stepFour'
@@ -23,7 +23,7 @@ class CheckIncompleteDeploy extends Component {
               <h1 className="title">Welcome to Token Wizard</h1>
               <p className="description">You have an incomplete deploy.</p>
               <div className="buttons">
-                <button onClick={this.goToStepFour} className="button button_fill">
+                <button onClick={() => this.goToStepFour()} className="button button_fill">
                   Resume
                 </button>
                 <button onClick={() => this.cancel()} className="button button_outline">

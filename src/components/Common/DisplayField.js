@@ -1,7 +1,7 @@
 import React from 'react'
 import { ButtonCopyToClipboard } from '../Common/ButtonCopyToClipboard'
 
-export const DisplayField = ({ description, title, value, extraClass = '\b', mobileTextSize = 'medium' }) => {
+export const DisplayField = ({ description, title, value, extraClass = '', mobileTextSize = 'medium' }) => {
   const valueSize = {
     small: 'Small',
     medium: 'Medium',

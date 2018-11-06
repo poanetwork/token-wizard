@@ -13,7 +13,7 @@ import {
   Crowdsales
 } from './components/index'
 import NoWeb3 from './components/Common/NoWeb3'
-import IncompleteDeploy from './components/IncompleteDeploy'
+import CheckIncompleteDeploy from './components/CheckIncompleteDeploy'
 import { getAddrFromQuery, toast } from './utils/utils'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import AlertContainer from 'react-alert'
@@ -63,7 +63,7 @@ class App extends Component {
                     <Route path="/4" component={StepFour} />
 
                     {deploymentStore.deployInProgress ? (
-                      <IncompleteDeploy />
+                      <CheckIncompleteDeploy />
                     ) : (
                       <Switch>
                         <Route exact path="/manage/:crowdsalePointer" component={Manage} />

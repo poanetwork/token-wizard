@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`IncompleteDeploys should render CheckIncompleteDeploys 1`] = `
+exports[`CheckIncompleteDeploys should render CheckIncompleteDeploys 1`] = `
 <div>
   <section
     className="home"

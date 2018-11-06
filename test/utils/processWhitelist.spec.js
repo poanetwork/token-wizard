@@ -1,6 +1,7 @@
 import TierStore from '../../src/stores/TierStore'
 import { LIMIT_WHITELISTED_ADDRESSES, VALIDATION_TYPES } from '../../src/utils/constants'
 import { processCsv, errorsCsv } from '../../src/utils/processWhitelist'
+
 const { VALID } = VALIDATION_TYPES
 
 describe('processWhitelist', () => {
@@ -60,14 +61,14 @@ describe('processWhitelist', () => {
         ['0x3333333333333333333333333333333333333333', '1', '10']
       ]
 
-      // When
+// When
       const { called, whitelistAddressLengthError, whitelistSupplyLengthError } = processCsv(
         { rows },
         tierStore,
         tierIndex
       )
 
-      // Then
+// Then
       expect(called).toBe(3)
       expect(tierStore.tiers[0].whitelist[0]).toEqual({ addr: rows[0][0], min: rows[0][1], max: rows[0][2] })
       expect(tierStore.tiers[0].whitelist[1]).toEqual({ addr: rows[1][0], min: rows[1][1], max: rows[1][2] })
@@ -86,14 +87,14 @@ describe('processWhitelist', () => {
         ['0x2589bd7D8A58Ac9A4aC01d68A7c63315ef184c63', '1', '10'] //valid parameters
       ]
 
-      // When
+// When
       const { called, whitelistAddressLengthError, whitelistSupplyLengthError } = processCsv(
         { rows, decimals: 2 },
         tierStore,
         tierIndex
       )
 
-      // Then
+// Then
       expect(called).toBe(2)
     })
 
@@ -106,14 +107,14 @@ describe('processWhitelist', () => {
         ['0x3333333333333333333333333333333333333333', '1', '10']
       ]
 
-      // When
+// When
       const { called, whitelistAddressLengthError, whitelistSupplyLengthError } = processCsv(
         { rows, decimals: 2 },
         tierStore,
         tierIndex
       )
 
-      // Then
+// Then
       expect(called).toBe(4)
     })
 
@@ -145,14 +146,14 @@ describe('processWhitelist', () => {
         ['0x3333333333333333333333333333333333333333', '1', '10']
       ]
 
-      // When
+// When
       const { called, whitelistAddressLengthError, whitelistSupplyLengthError } = processCsv(
         { rows, decimals: 2 },
         tierStore,
         tierIndex
       )
 
-      // Then
+// Then
       expect(whitelistAddressLengthError).toBeFalsy()
       expect(whitelistSupplyLengthError).toBeFalsy()
       expect(called).toBe(23)
@@ -226,14 +227,14 @@ describe('processWhitelist', () => {
         ['0x3333333333333333333333333333333333333393', '1', '10']
       ]
 
-      // When
+// When
       const { called, whitelistAddressLengthError, whitelistSupplyLengthError } = processCsv(
         { rows, decimals: 2 },
         tierStore,
         tierIndex
       )
 
-      // Then
+// Then
       expect(whitelistAddressLengthError).toBeTruthy()
       expect(called).toBe(51)
     })
@@ -456,6 +457,26 @@ describe('processWhitelist', () => {
 
       // Then
       expect(called).toBe(addressCount)
+    })
+
+    it(`should add addresses whose maxCap is not greater than 1000`, () => {
+      // Given
+      tierStore.setTierProperty(1000, 'supply', 0)
+
+      const { rows } = require('./helpers/whitelist-addresses')
+      const { supply } = tierStore.tiers[0]
+      const lessOrEqualThanSupply = isLessOrEqualThan()(supply)
+      const validAddressesCount = rows.filter(([addr, min, max]) => lessOrEqualThanSupply(max) === undefined).length
+
+      const cb = jest.fn(item => tierStore.addWhitelistItem(item, 0))
+      const cbValidation = jest.fn(() => tierStore.validateWhitelistedAddressLength(0))
+      const cbSupplyValidation = jest.fn(max => lessOrEqualThanSupply(max))
+
+      // When
+      const { called } = processWhitelist({ rows, decimals: 3 }, cb, cbValidation, cbSupplyValidation)
+
+      // Then
+      expect(called).toBe(validAddressesCount)
     })
   })
 })
