@@ -152,7 +152,7 @@ export class StepOne extends Component {
       return (
         <div>
           <section className="lo-MenuBarAndContent">
-            <StepNavigation activeStep={CROWDSALE_STRATEGY}/>
+            <StepNavigation activeStep={CROWDSALE_STRATEGY} />
             <div className="st-StepContent">
               <StepInfo
                 description="Select a strategy for your crowdsale contract."
@@ -174,11 +174,11 @@ export class StepOne extends Component {
                 })}
               </div>
               <div className="st-StepContent_Buttons">
-                <ButtonContinue disabled={!status} onClick={() => this.goNextStep()}/>
+                <ButtonContinue disabled={!status} onClick={() => this.goNextStep()} />
               </div>
             </div>
           </section>
-          <Loader show={this.state.loading}/>
+          <Loader show={this.state.loading} />
         </div>
       )
     }
