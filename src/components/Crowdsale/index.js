@@ -21,7 +21,8 @@ import { ButtonContinue } from '../Common/ButtonContinue'
 import { CrowdsaleConfig } from '../Common/config'
 import { CrowdsaleID } from './CrowdsaleID'
 import { CrowdsaleProgress } from './CrowdsaleProgress'
-import { CrowdsaleSummary } from './CrowdsaleSummary'
+import { CrowdsaleSummaryMintedCapped } from './CrowdsaleSummaryMintedCapped'
+import { CrowdsaleSummaryDutchAuction } from './CrowdsaleSummaryDutchAuction'
 import { Loader } from '../Common/Loader'
 import { NAVIGATION_STEPS } from '../../utils/constants'
 import { StepInfo } from '../Common/StepInfo'
@@ -171,7 +172,7 @@ export class Crowdsale extends React.Component {
   render() {
     const { web3Store, tokenStore, crowdsalePageStore, contractStore, crowdsaleStore } = this.props
     const { web3 } = web3Store
-    const { proxyName, isMintedCappedCrowdsale } = crowdsaleStore
+    const { proxyName, isMintedCappedCrowdsale, isDutchAuction } = crowdsaleStore
 
     const crowdsaleExecID = getContractStoreProperty('crowdsale', 'execID')
     const contributorsCount = crowdsalePageStore.contributors ? crowdsalePageStore.contributors.toString() : 0
@@ -236,15 +237,24 @@ export class Crowdsale extends React.Component {
               tokensClaimedRatio={tokensClaimedRatio}
               totalRaisedFunds={ethRaised.toFixed()}
             />
-            <CrowdsaleSummary
-              contributorsCount={contributorsCount}
-              currentRatePerETH={currentRatePerETH}
-              endRatePerETH={endRatePerETH}
-              isMintedCappedCrowdsale={isMintedCappedCrowdsale}
-              startRatePerETH={startRatePerETH}
-              tokensClaimed={tokensClaimed}
-              totalSupply={totalSupply}
-            />
+            {isMintedCappedCrowdsale ? (
+              <CrowdsaleSummaryMintedCapped
+                contributorsCount={contributorsCount}
+                currentRatePerETH={currentRatePerETH}
+                tokensClaimed={tokensClaimed}
+                totalSupply={totalSupply}
+              />
+            ) : null}
+            {isDutchAuction ? (
+              <CrowdsaleSummaryDutchAuction
+                contributorsCount={contributorsCount}
+                currentRatePerETH={currentRatePerETH}
+                endRatePerETH={endRatePerETH}
+                startRatePerETH={startRatePerETH}
+                tokensClaimed={tokensClaimed}
+                totalSupply={totalSupply}
+              />
+            ) : null}
             <CrowdsaleID
               description={crowdsaleExecID ? 'Crowdsale Execution ID' : 'Crowdsale Proxy Address'}
               hash={crowdsaleExecID || (proxy && proxy.addr)}

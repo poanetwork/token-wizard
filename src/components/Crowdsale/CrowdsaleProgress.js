@@ -10,13 +10,13 @@ export const CrowdsaleProgress = ({ totalRaisedFunds, ethGoal, tokensClaimedRati
   return (
     <div className={`cs-CrowdsaleProgress ${extraClassName}`}>
       <div className="cs-CrowdsaleProgress_Funds">
-        <div className="cs-CrowdsaleProgress_FundsAmount">
+        <div className="cs-CrowdsaleProgress_FundsAmount cs-CrowdsaleProgress_FundsAmount-total-raised">
           <h2 className="cs-CrowdsaleProgress_FundsTitle">
             {totalRaisedFunds} <span className="cs-CrowdsaleProgress_NoBreak">ETH</span>
           </h2>
           <p className="cs-CrowdsaleProgress_FundsDescription">Total Raised Funds</p>
         </div>
-        <div className="cs-CrowdsaleProgress_FundsAmount">
+        <div className="cs-CrowdsaleProgress_FundsAmount cs-CrowdsaleProgress_FundsAmount-goal">
           <h2 className="cs-CrowdsaleProgress_FundsTitle">
             {ethGoal} <span className="cs-CrowdsaleProgress_NoBreak">ETH</span>
           </h2>

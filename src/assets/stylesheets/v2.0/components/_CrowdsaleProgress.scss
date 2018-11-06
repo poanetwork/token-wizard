@@ -23,7 +23,7 @@ $CrowdsaleProgress_Bar-height: 35px;
     margin: 0 0 20px;
     min-width: 50%;
 
-    &:last-child {
+    &.cs-CrowdsaleProgress_FundsAmount-goal {
         text-align: right;
     }
 }
