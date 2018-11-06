@@ -10,10 +10,8 @@ import { TokenName } from '../Common/TokenName'
 import { TokenSupply } from '../Common/TokenSupply'
 import { TokenTicker } from '../Common/TokenTicker'
 import { inject, observer } from 'mobx-react'
-import { toBigNumber, navigateTo } from '../../utils/utils'
-import logdown from 'logdown'
+import { toBigNumber } from '../../utils/utils'
 
-const logger = logdown('TW:StepOne')
 const { MINTED_CAPPED_CROWDSALE, DUTCH_AUCTION } = CROWDSALE_STRATEGIES
 
 export const StepTwoForm = inject('tokenStore', 'crowdsaleStore', 'reservedTokenStore')(
@@ -27,7 +25,8 @@ export const StepTwoForm = inject('tokenStore', 'crowdsaleStore', 'reservedToken
       form,
       id,
       reload,
-      history,
+      goBack,
+      goBackEnabled,
       tokenStore,
       crowdsaleStore,
       reservedTokenStore
@@ -59,17 +58,6 @@ export const StepTwoForm = inject('tokenStore', 'crowdsaleStore', 'reservedToken
         setFieldAsTouched()
       }
 
-      const goBack = async () => {
-        try {
-          navigateTo({
-            history: history,
-            location: 'stepOne'
-          })
-        } catch (err) {
-          logger.log('Error to navigate', err)
-        }
-      }
-
       return (
         <form id={id} onSubmit={handleSubmit} className="st-StepContent_FormFullHeight">
           <div className={`sw-BorderedBlock ${topBlockExtraClass}`}>
@@ -83,7 +71,7 @@ export const StepTwoForm = inject('tokenStore', 'crowdsaleStore', 'reservedToken
           ) : null}
           <FormSpy onChange={onChangeForm} />
           <div className="st-StepContent_Buttons">
-            <ButtonBack onClick={goBack} />
+            <ButtonBack onClick={goBack} disabled={!goBackEnabled} />
             <ButtonContinue type="submit" disabled={!status} />
           </div>
         </form>

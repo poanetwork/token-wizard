@@ -1,6 +1,5 @@
 import GasPriceInput from './GasPriceInput'
 import React from 'react'
-import logdown from 'logdown'
 import { ButtonBack } from '../Common/ButtonBack'
 import { ButtonContinue } from '../Common/ButtonContinue'
 import { DutchAuctionBlock } from '../Common/DutchAuctionBlock'
@@ -15,10 +14,9 @@ import {
   isDecimalPlacesNotGreaterThan,
   isGreaterOrEqualThan
 } from '../../utils/validations'
-import { gweiToWei, navigateTo } from '../../utils/utils'
+import { gweiToWei } from '../../utils/utils'
 import { RadioButton } from '../Common/RadioButton'
 
-const logger = logdown('TW:StepThree')
 const { VALID } = VALIDATION_TYPES
 const { WALLET_ADDRESS, BURN_EXCESS } = TEXT_FIELDS
 
@@ -30,6 +28,8 @@ export const StepThreeFormDutchAuction = ({
   pristine,
   reload,
   submitting,
+  goBack,
+  goBackEnabled,
   ...props
 }) => {
   const status = !(submitting || invalid)
@@ -105,17 +105,6 @@ export const StepThreeFormDutchAuction = ({
     setFieldAsTouched({ values, errors })
   }
 
-  const goBack = async () => {
-    try {
-      navigateTo({
-        history: history,
-        location: 'stepTwo'
-      })
-    } catch (err) {
-      logger.log('Error to navigate', err)
-    }
-  }
-
   const getBurnExcessButtons = (name, input) => {
     const buttons = [
       {
@@ -179,7 +168,7 @@ export const StepThreeFormDutchAuction = ({
         </FieldArray>
       </div>
       <div className="st-StepContent_Buttons">
-        <ButtonBack onClick={goBack} />
+        <ButtonBack onClick={goBack} disabled={!goBackEnabled} />
         <ButtonContinue onClick={handleSubmit} disabled={!status} />
       </div>
       <FormSpy subscription={{ values: true }} onChange={handleOnChange} />

@@ -12,7 +12,7 @@ import { getNetworkVersion, getNetWorkNameById, checkWeb3 } from '../../utils/bl
 import { getStep3Component } from './utils'
 import { inject, observer } from 'mobx-react'
 import { noGasPriceAvailable, warningOnMainnetAlert } from '../../utils/alerts'
-import { sleep, navigateTo } from '../../utils/utils'
+import { sleep, navigateTo, goBack, goBackMustBeEnabled } from '../../utils/utils'
 
 const logger = logdown('TW:StepThree')
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
@@ -98,11 +98,34 @@ export class StepThree extends Component {
     try {
       navigateTo({
         history: this.props.history,
-        location: 'stepFour'
+        location: 'stepFour',
+        fromLocation: 'stepThree'
       })
     } catch (err) {
       logger.log('Error to navigate', err)
     }
+  }
+
+  goBack = () => {
+    try {
+      goBack({
+        history: this.props.history,
+        location: '/stepTwo'
+      })
+    } catch (err) {
+      logger.log('Error to navigate', err)
+    }
+  }
+
+  goBackEnabled = () => {
+    let goBackEnabled = false
+    try {
+      goBackEnabled = goBackMustBeEnabled({ history: this.props.history })
+      logger.log(`Go back is enabled ${goBackEnabled}`)
+    } catch (err) {
+      logger.log(`There is an error trying to set enable/disable on back button`)
+    }
+    return goBackEnabled
   }
 
   handleOnSubmit = () => {
@@ -199,7 +222,6 @@ export class StepThree extends Component {
               decorators={[this.calculator]}
               gasPricesInGwei={gasPriceStore.gasPricesInGwei}
               generalStore={generalStore}
-              history={this.props.history}
               initialValues={{
                 burnExcess: this.state.burnExcess,
                 gasPrice: this.state.gasTypeSelected,
@@ -212,6 +234,8 @@ export class StepThree extends Component {
               reload={this.state.reload}
               tierStore={tierStore}
               updateGasTypeSelected={this.updateGasTypeSelected}
+              goBack={this.goBack}
+              goBackEnabled={this.goBackEnabled}
             />
           </div>
         </section>
