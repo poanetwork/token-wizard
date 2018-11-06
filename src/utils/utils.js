@@ -206,16 +206,7 @@ export const clearStorage = props => {
 
 export const navigateTo = data => {
   const { history, location, params = '', fromLocation } = data
-  const path =
-    {
-      home: '/',
-      stepOne: '1',
-      stepTwo: '2',
-      stepThree: '3',
-      stepFour: '4',
-      manage: 'manage',
-      crowdsales: 'crowdsales'
-    }[location] || null
+  const path = convertLocationToPath(location)
 
   if (path === null) {
     throw new Error(`invalid location specified: ${location}`)
@@ -235,10 +226,48 @@ export const navigateTo = data => {
   return true
 }
 
+export const convertLocationToPath = location => {
+  return (
+    {
+      home: '/',
+      stepOne: '1',
+      stepTwo: '2',
+      stepThree: '3',
+      stepFour: '4',
+      manage: 'manage',
+      crowdsales: 'crowdsales'
+    }[location] || null
+  )
+}
+
+export const goBack = data => {
+  const { history } = data
+
+  if (!history || !(typeof history === 'object')) {
+    throw new Error(`invalid history object: ${history}`)
+  }
+
+  if (typeof history.goBack === undefined) {
+    throw new Error(`invalid goBack function`)
+  }
+
+  history.goBack()
+
+  return true
+}
+
+export const goBackMustBeEnabled = data => {
+  const { history } = data
+
+  if (!history || !(typeof history === 'object')) {
+    throw new Error(`invalid history object: ${history}`)
+  }
+  const length = history.length || 0
+  return length > 1
+}
+
 export const convertDateToLocalTimezoneInUnix = dateToConvert => {
-  const offset = moment().utcOffset()
   const dateConvertUnix = moment(dateToConvert)
-    .add(offset, 'minutes')
     .local()
     .unix()
   return dateConvertUnix * 1000

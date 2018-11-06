@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CrowdsaleSummaryItem should render CrowdsaleSummaryItem component 1`] = `
+<div
+  className="cs-CrowdsaleSummaryItem"
+>
+  <h3
+    className="cs-CrowdsaleSummaryItem_Title"
+  >
+    The title
+  </h3>
+  <p
+    className="cs-CrowdsaleSummaryItem_Description"
+  >
+    The item's description
+  </p>
+</div>
+`;

@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ButtonCopyToClipboard should render ButtonCopyToClipboard component 1`] = `
+<button
+  className="sw-ButtonCopyToClipboard "
+  data-clipboard-action="copy"
+  onClick={[Function]}
+  type="button"
+/>
+`;

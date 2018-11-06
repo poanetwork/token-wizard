@@ -1,6 +1,5 @@
 import GasPriceInput from './GasPriceInput'
 import React from 'react'
-import logdown from 'logdown'
 import AddTierButton from './AddTierButton'
 import { ButtonBack } from '../Common/ButtonBack'
 import { ButtonContinue } from '../Common/ButtonContinue'
@@ -20,7 +19,6 @@ import { gweiToWei, navigateTo, toBigNumber } from '../../utils/utils'
 
 const { VALID } = VALIDATION_TYPES
 const { WALLET_ADDRESS } = TEXT_FIELDS
-const logger = logdown('TW:StepThree')
 
 export const StepThreeFormMintedCapped = ({
   errors,
@@ -32,6 +30,8 @@ export const StepThreeFormMintedCapped = ({
   firstLoad,
   submitting,
   values,
+  goBack,
+  goBackEnabled,
   ...props
 }) => {
   const { push, setFieldTouched } = form.mutators
@@ -113,17 +113,6 @@ export const StepThreeFormMintedCapped = ({
     </div>
   )
 
-  const goBack = async () => {
-    try {
-      navigateTo({
-        history: history,
-        location: 'stepTwo'
-      })
-    } catch (err) {
-      logger.log('Error to navigate', err)
-    }
-  }
-
   return (
     <form onSubmit={handleSubmit} className="st-StepContent_FormFullHeight">
       {WhenWhitelistsChange}
@@ -153,7 +142,7 @@ export const StepThreeFormMintedCapped = ({
       </FieldArray>
       <AddTierButton onClick={addTier} />
       <div className="st-StepContent_Buttons">
-        <ButtonBack onClick={goBack} />
+        <ButtonBack onClick={goBack} disabled={!goBackEnabled} />
         <ButtonContinue type="submit" disabled={submitting || invalid} />
       </div>
       <FormSpy subscription={{ values: true }} onChange={handleOnChange} />

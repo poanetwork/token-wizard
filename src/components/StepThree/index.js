@@ -11,7 +11,7 @@ import { checkWeb3, getNetWorkNameById, getNetworkVersion } from '../../utils/bl
 import { getStep3Component, tierDurationUpdater } from './utils'
 import { inject, observer } from 'mobx-react'
 import { noGasPriceAvailable, warningOnMainnetAlert } from '../../utils/alerts'
-import { navigateTo } from '../../utils/utils'
+import { navigateTo, goBack, goBackMustBeEnabled } from '../../utils/utils'
 
 const logger = logdown('TW:StepThree')
 const { CROWDSALE_SETUP } = NAVIGATION_STEPS
@@ -92,11 +92,34 @@ export class StepThree extends Component {
     try {
       navigateTo({
         history: this.props.history,
-        location: 'stepFour'
+        location: 'stepFour',
+        fromLocation: 'stepThree'
       })
     } catch (err) {
       logger.log('Error to navigate', err)
     }
+  }
+
+  goBack = () => {
+    try {
+      goBack({
+        history: this.props.history,
+        location: '/stepTwo'
+      })
+    } catch (err) {
+      logger.log('Error to navigate', err)
+    }
+  }
+
+  goBackEnabled = () => {
+    let goBackEnabled = false
+    try {
+      goBackEnabled = goBackMustBeEnabled({ history: this.props.history })
+      logger.log(`Go back is enabled ${goBackEnabled}`)
+    } catch (err) {
+      logger.log(`There is an error trying to set enable/disable on back button`)
+    }
+    return goBackEnabled
   }
 
   handleOnSubmit = () => {
@@ -183,6 +206,8 @@ export class StepThree extends Component {
               onSubmit={this.handleOnSubmit}
               firstLoad={this.state.firstLoad}
               {...stores}
+              goBack={this.goBack}
+              goBackEnabled={this.goBackEnabled}
             />
           </div>
         </section>
