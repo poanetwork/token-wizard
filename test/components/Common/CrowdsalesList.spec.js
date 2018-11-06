@@ -8,7 +8,7 @@ import Web3 from 'web3'
 
 configure({ adapter: new Adapter() })
 
-const Crowdsale = require('../../../src/components/crowdsale/index.js').Crowdsale
+const Crowdsale = require('../../../src/components/Crowdsale/index.js').Crowdsale
 const accounts = ['0xcCca436070962a1A884b88E8506C2C750E342BEA', '0x9726cdb82358972b7a17260e7897C8de02d584e6']
 
 describe('CrowdsaleList ', () => {

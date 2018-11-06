@@ -4,6 +4,7 @@ import { BigNumber } from 'bignumber.js'
 import logdown from 'logdown'
 import Web3 from 'web3'
 import moment from 'moment'
+import { fetchFile } from './fetchFile'
 import { isObservableArray } from 'mobx'
 
 const logger = logdown('TW:utils:utils')
@@ -45,22 +46,6 @@ export const getNetworkID = () => {
 
 export function setFlatFileContentToState(file) {
   return fetchFile(file)
-}
-
-export function fetchFile(path) {
-  return new Promise((resolve, reject) => {
-    const rawFile = new XMLHttpRequest()
-
-    rawFile.addEventListener('error', reject)
-    rawFile.open('GET', path, true)
-    rawFile.onreadystatechange = function() {
-      if (rawFile.readyState === 4 && (rawFile.status === 200 || rawFile.status === 0)) {
-        let allText = rawFile.responseText
-        resolve(allText)
-      }
-    }
-    rawFile.send(null)
-  })
 }
 
 export const dateToTimestamp = date => new Date(date).getTime()
@@ -184,21 +169,6 @@ export const sleep = async ms => {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-export const objectKeysToLowerCase = input => {
-  if (typeof input !== 'object') {
-    return input
-  }
-  if (Array.isArray(input)) {
-    return input.map(objectKeysToLowerCase)
-  }
-  return Object.keys(input).reduce((newObj, key) => {
-    let val = input[key]
-    let newVal = typeof val === 'object' ? objectKeysToLowerCase(val) : val
-    newObj[key.toLowerCase()] = newVal
-    return newObj
-  }, {})
-}
-
 export const clearStorage = props => {
   // Generate of stores to clear
   const toArray = ({
@@ -236,16 +206,7 @@ export const clearStorage = props => {
 
 export const navigateTo = data => {
   const { history, location, params = '', fromLocation } = data
-  const path =
-    {
-      home: '/',
-      stepOne: '1',
-      stepTwo: '2',
-      stepThree: '3',
-      stepFour: '4',
-      manage: 'manage',
-      crowdsales: 'crowdsales'
-    }[location] || null
+  const path = convertLocationToPath(location)
 
   if (path === null) {
     throw new Error(`invalid location specified: ${location}`)
@@ -263,6 +224,46 @@ export const navigateTo = data => {
   })
 
   return true
+}
+
+export const convertLocationToPath = location => {
+  return (
+    {
+      home: '/',
+      stepOne: '1',
+      stepTwo: '2',
+      stepThree: '3',
+      stepFour: '4',
+      manage: 'manage',
+      crowdsales: 'crowdsales'
+    }[location] || null
+  )
+}
+
+export const goBack = data => {
+  const { history } = data
+
+  if (!history || !(typeof history === 'object')) {
+    throw new Error(`invalid history object: ${history}`)
+  }
+
+  if (typeof history.goBack === undefined) {
+    throw new Error(`invalid goBack function`)
+  }
+
+  history.goBack()
+
+  return true
+}
+
+export const goBackMustBeEnabled = data => {
+  const { history } = data
+
+  if (!history || !(typeof history === 'object')) {
+    throw new Error(`invalid history object: ${history}`)
+  }
+  const length = history.length || 0
+  return length > 1
 }
 
 export const convertDateToLocalTimezoneInUnix = dateToConvert => {

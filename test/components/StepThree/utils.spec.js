@@ -1,6 +1,11 @@
-import { defaultCompanyStartDate, defaultCompanyEndDate } from '../../../src/components/StepThree/utils'
+import {
+  defaultCompanyStartDate,
+  defaultCompanyEndDate,
+  getStep3Component
+} from '../../../src/components/StepThree/utils'
 import MockDate from 'mockdate'
 import moment from 'moment'
+import { CROWDSALE_STRATEGIES } from '../../../src/utils/constants'
 
 beforeEach(() => {
   const currentTime = '2018-03-05T11:00:00'
@@ -45,5 +50,40 @@ describe('defaultComanyEndDate', () => {
         .startOf('day')
         .isSame(endDate)
     ).toBeTruthy()
+  })
+})
+
+describe('getStep3Component', () => {
+  it(`should return Minted Capped Component if mintedCapped strategy is selected`, () => {
+    // Given
+    const strategy = CROWDSALE_STRATEGIES.MINTED_CAPPED_CROWDSALE
+
+    // When
+    const component = getStep3Component(strategy)
+
+    // Then
+    expect(component.name).toBe('StepThreeFormMintedCapped')
+  })
+
+  it(`should return Dutch Auction Component if dutchAuction strategy is selected`, () => {
+    // Given
+    const strategy = CROWDSALE_STRATEGIES.DUTCH_AUCTION
+
+    // When
+    const component = getStep3Component(strategy)
+
+    // Then
+    expect(component.name).toBe('StepThreeFormDutchAuction')
+  })
+
+  it(`should return Minted Capped Component as default`, () => {
+    // Given
+    const strategy = 'none'
+
+    // When
+    const component = getStep3Component(strategy)
+
+    // Then
+    expect(component.name).toBe('StepThreeFormMintedCapped')
   })
 })

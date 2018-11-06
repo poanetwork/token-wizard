@@ -30,7 +30,7 @@ describe('TokenName', () => {
     const input = wrapper.find('input[name="name"]')
     input.simulate('change', { target: { value: '               ' } })
 
-    expect(wrapper.find('.sw-Error').text()).toBe('Name should have at least one character')
+    expect(wrapper.find('InputField2').prop('meta').error).toBe('Name should have at least one character')
   })
 
   it(`should give error if name is empty`, () => {
@@ -54,6 +54,6 @@ describe('TokenName', () => {
     const input = wrapper.find('input[name="name"]')
     input.simulate('change', { target: { value: '1234567890132546789012345678901' } })
 
-    expect(wrapper.find('.sw-Error').text()).toBe(VALIDATION_MESSAGES.NAME)
+    expect(wrapper.find('InputField2').prop('meta').error).toBe(VALIDATION_MESSAGES.NAME)
   })
 })
