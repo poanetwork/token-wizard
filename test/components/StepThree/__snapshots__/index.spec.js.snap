@@ -643,9 +643,8 @@ exports[`StepThree StepThree - renders should render StepThree for Dutch Auction
           </button>
           <button
             className="sw-ButtonContinue "
-            disabled={false}
-            onClick={[Function]}
-            type="button"
+            disabled={true}
+            type="submit"
           >
             <span
               className="sw-ButtonContinue_Text"
@@ -1386,8 +1385,7 @@ exports[`StepThree StepThree - renders should render StepThree for Whitelist wit
           <button
             className="sw-ButtonContinue "
             disabled={true}
-            onClick={[Function]}
-            type="button"
+            type="submit"
           >
             <span
               className="sw-ButtonContinue_Text"
