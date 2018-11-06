@@ -1,7 +1,6 @@
 import GasPriceInput from './GasPriceInput'
 import React from 'react'
-import logdown from 'logdown'
-import { AddTierButton } from './AddTierButton'
+import AddTierButton from './AddTierButton'
 import { ButtonBack } from '../Common/ButtonBack'
 import { ButtonContinue } from '../Common/ButtonContinue'
 import { Field, FormSpy } from 'react-final-form'
@@ -16,11 +15,10 @@ import {
   isDecimalPlacesNotGreaterThan,
   isGreaterOrEqualThan
 } from '../../utils/validations'
-import { gweiToWei, navigateTo } from '../../utils/utils'
+import { gweiToWei, toBigNumber } from '../../utils/utils'
 
 const { VALID } = VALIDATION_TYPES
 const { WALLET_ADDRESS } = TEXT_FIELDS
-const logger = logdown('TW:StepThree')
 
 export const StepThreeFormMintedCapped = ({
   errors,
@@ -28,119 +26,96 @@ export const StepThreeFormMintedCapped = ({
   handleSubmit,
   history,
   invalid,
-  mutators: { push, setFieldTouched },
   pristine,
-  reload,
+  firstLoad,
   submitting,
   values,
+  goBack,
+  goBackEnabled,
   ...props
 }) => {
-  const status = !(submitting || invalid)
-  const addTier = () => {
-    props.addCrowdsale()
-    const lastTier = props.tierStore.tiers[props.tierStore.tiers.length - 1]
-    push('tiers', JSON.parse(JSON.stringify(lastTier)))
-  }
+  const { push, setFieldTouched } = form.mutators
 
-  /**
-   * Set gas type selected on gas price input
-   * @param value
-   */
-  const updateGasTypeSelected = value => {
-    const { updateGasTypeSelected } = props
-    updateGasTypeSelected(value)
+  const addTier = () => {
+    const { tierStore } = props
+    tierStore.addCrowdsale()
+    const lastTier = tierStore.tiers.slice()[tierStore.tiers.length - 1]
+    push('tiers', lastTier)
   }
 
   const handleValidateGasPrice = value => {
-    const errors = composeValidators(
+    const hasErrors = composeValidators(
       isDecimalPlacesNotGreaterThan(VALIDATION_MESSAGES.DECIMAL_PLACES_9)(9),
-      isGreaterOrEqualThan(VALIDATION_MESSAGES.NUMBER_GREATER_OR_EQUAL_THAN)(0.1)
+      isGreaterOrEqualThan(`${VALIDATION_MESSAGES.NUMBER_GREATER_OR_EQUAL_THAN} 0.1`)(0.1)
     )(value.price)
-    if (errors) return errors.shift()
+    if (hasErrors) return hasErrors.shift()
   }
 
-  const setFieldAsTouched = ({ values, errors }) => {
-    if (reload) {
-      const tiers = values && values.tiers ? values.tiers : []
-      tiers.forEach((tier, index) => {
-        form.mutators.setFieldTouched(`tiers[${index}].tier`, true)
-        form.mutators.setFieldTouched(`tiers[${index}].updatable`, true)
-        form.mutators.setFieldTouched(`tiers[${index}].whitelistEnabled`, true)
-        form.mutators.setFieldTouched(`tiers[${index}].startTime`, true)
-        form.mutators.setFieldTouched(`tiers[${index}].rate`, true)
-        form.mutators.setFieldTouched(`tiers[${index}].endTime`, true)
-        form.mutators.setFieldTouched(`tiers[${index}].minRate`, true)
-        form.mutators.setFieldTouched(`tiers[${index}].maxRate`, true)
-        form.mutators.setFieldTouched(`tiers[${index}].supply`, true)
-        form.mutators.setFieldTouched(`tiers[${index}].minCap`, true)
+  const setFieldAsTouched = ({ values }) => {
+    if (!firstLoad) {
+      values.tiers.forEach((tier, index) => {
+        setFieldTouched(`tiers[${index}].tier`, true)
+        setFieldTouched(`tiers[${index}].updatable`, true)
+        setFieldTouched(`tiers[${index}].whitelistEnabled`, true)
+        setFieldTouched(`tiers[${index}].startTime`, true)
+        setFieldTouched(`tiers[${index}].rate`, true)
+        setFieldTouched(`tiers[${index}].endTime`, true)
+        setFieldTouched(`tiers[${index}].minRate`, true)
+        setFieldTouched(`tiers[${index}].maxRate`, true)
+        setFieldTouched(`tiers[${index}].supply`, true)
+        setFieldTouched(`tiers[${index}].minCap`, true)
       })
-      form.mutators.setFieldTouched(`gasPrice`, true)
+      setFieldTouched(`gasPrice`, true)
     }
   }
 
   const handleOnChange = ({ values }) => {
-    props.tierStore.updateWalletAddress(values.walletAddress, VALID)
-    props.generalStore.setGasPrice(gweiToWei(values.gasPrice.price))
+    const { tierStore, generalStore, crowdsaleStore } = props
+    const { walletAddress, gasPrice, tiers } = values
 
-    let totalSupply = 0
+    tierStore.updateWalletAddress(walletAddress, VALID)
 
-    values.tiers.forEach((tier, index) => {
-      totalSupply += Number(tier.supply)
-      props.tierStore.setTierProperty(tier.tier, 'tier', index)
-      props.tierStore.setTierProperty(tier.minCap, 'minCap', index)
-      props.tierStore.setTierProperty(tier.updatable, 'updatable', index)
-      props.tierStore.setTierProperty(tier.startTime, 'startTime', index)
-      props.tierStore.setTierProperty(tier.endTime, 'endTime', index)
-      props.tierStore.updateRate(tier.rate, VALID, index)
-      props.tierStore.setTierProperty(tier.supply, 'supply', index)
-      props.tierStore.setTierProperty(tier.whitelistEnabled, 'whitelistEnabled', index)
-      props.tierStore.validateTiers('supply', index)
+    tiers.forEach((tier, index) => {
+      tierStore.setTierProperty(tier.tier, 'tier', index)
+      tierStore.setTierProperty(tier.minCap, 'minCap', index)
+      tierStore.setTierProperty(tier.updatable, 'updatable', index)
+      tierStore.setTierProperty(tier.startTime, 'startTime', index)
+      tierStore.setTierProperty(tier.endTime, 'endTime', index)
+      tierStore.updateRate(tier.rate, VALID, index)
+      tierStore.setTierProperty(tier.supply, 'supply', index)
+      tierStore.setTierProperty(tier.whitelistEnabled, 'whitelistEnabled', index)
+      tierStore.validateTiers('supply', index)
     })
-    const endTime =
-      values && values.tiers && values.tiers.length > 0 ? values.tiers[values.tiers.length - 1].endTime : null
-    props.crowdsaleStore.setProperty('supply', totalSupply)
-    props.crowdsaleStore.setProperty('endTime', endTime)
+
+    const totalSupply = tiers.reduce((acc, { supply }) => acc.plus(toBigNumber(supply)), toBigNumber(0)).toFixed()
+    crowdsaleStore.setProperty('supply', totalSupply)
+
+    const endTime = tiers.length > 0 ? tiers[tiers.length - 1].endTime : null
+    crowdsaleStore.setProperty('endTime', endTime)
+
+    generalStore.setGasPrice(gweiToWei(gasPrice.price))
 
     // Set fields as touched
-    setFieldAsTouched({ values, errors })
+    setFieldAsTouched({ values })
   }
 
-  const whenWhitelistBlock = tierInd => {
-    return (
-      <WhenFieldChanges
-        becomes={'yes'}
-        field={`tiers[${tierInd}].whitelistEnabled`}
-        key={`whenWhitelistBlock_${tierInd}`}
-        set={`tiers[${tierInd}].minCap`}
-        to={0}
-      />
-    )
-  }
-
-  const whenWhitelistsChanges = () => {
-    return (
-      <div>
-        {values.tiers.map((tier, ind) => {
-          return whenWhitelistBlock(ind)
-        })}
-      </div>
-    )
-  }
-
-  const goBack = async () => {
-    try {
-      navigateTo({
-        history: history,
-        location: 'stepTwo'
-      })
-    } catch (err) {
-      logger.log('Error to navigate', err)
-    }
-  }
+  const WhenWhitelistsChange = (
+    <div>
+      {values.tiers.map((tier, index) => (
+        <WhenFieldChanges
+          becomes={'yes'}
+          field={`tiers[${index}].whitelistEnabled`}
+          key={`whenWhitelistBlock_${index}`}
+          set={`tiers[${index}].minCap`}
+          to={0}
+        />
+      ))}
+    </div>
+  )
 
   return (
     <form onSubmit={handleSubmit} className="st-StepContent_FormFullHeight">
-      {whenWhitelistsChanges()}
+      {WhenWhitelistsChange}
       <h2 className="sw-BorderedBlockTitle">Global settings</h2>
       <div tabIndex="0" className="sw-BorderedBlock sw-BorderedBlock-CrowdSaleSetupGlobalSettingsWhitelistCapped">
         <Field
@@ -154,21 +129,21 @@ export const StepThreeFormMintedCapped = ({
         />
         <Field
           component={GasPriceInput}
-          gasPrices={props.gasPricesInGwei}
+          gasPrices={props.gasPriceStore.gasPricesInGwei}
           name="gasPrice"
-          updateGasTypeSelected={updateGasTypeSelected}
+          updateGasTypeSelected={value => props.generalStore.setGasTypeSelected(value)}
           validate={value => handleValidateGasPrice(value)}
         />
       </div>
       <FieldArray name="tiers">
         {({ fields }) => (
-          <TierBlock form={form} fields={fields} decimals={props.decimals} tierStore={props.tierStore} />
+          <TierBlock form={form} fields={fields} decimals={props.tokenStore.decimals} tierStore={props.tierStore} />
         )}
       </FieldArray>
       <AddTierButton onClick={addTier} />
       <div className="st-StepContent_Buttons">
-        <ButtonBack onClick={goBack} />
-        <ButtonContinue onClick={handleSubmit} status={status} />
+        <ButtonBack onClick={goBack} disabled={!goBackEnabled} />
+        <ButtonContinue type="submit" disabled={submitting || invalid} />
       </div>
       <FormSpy subscription={{ values: true }} onChange={handleOnChange} />
     </form>

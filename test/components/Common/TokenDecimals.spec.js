@@ -56,6 +56,6 @@ describe('TokenDecimals', () => {
     const input = wrapper.find('input[name="decimals"]')
     input.simulate('change', { target: { value: '21' } })
 
-    expect(wrapper.find('.sw-Error').text()).toBe('Should not be greater than 18')
+    expect(wrapper.find('InputField2').prop('meta').error).toBe('Should not be greater than 18')
   })
 })

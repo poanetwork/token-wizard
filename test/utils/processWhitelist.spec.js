@@ -2,7 +2,6 @@ import processWhitelist from '../../src/utils/processWhitelist'
 import TierStore from '../../src/stores/TierStore'
 import { defaultTier, defaultTierValidations, LIMIT_WHITELISTED_ADDRESSES } from '../../src/utils/constants'
 import { isLessOrEqualThan } from '../../src/utils/validations'
-import { toBigNumber } from '../../src/utils/utils'
 
 describe('processWhitelist function', () => {
   it('should call the callback for each whitelist item', () => {
@@ -219,12 +218,12 @@ describe('processWhitelist function', () => {
 
     it(`should add addresses whose maxCap is not greater than 1000`, () => {
       // Given
+      tierStore.setTierProperty(1000, 'supply', 0)
+
       const { rows } = require('./helpers/whitelist-addresses')
       const { supply } = tierStore.tiers[0]
       const lessOrEqualThanSupply = isLessOrEqualThan()(supply)
-      const validAddressesCount = rows.filter(({ max }) => lessOrEqualThanSupply(max) === undefined).length
-
-      tierStore.setTierProperty(1000, 'supply', 0)
+      const validAddressesCount = rows.filter(([addr, min, max]) => lessOrEqualThanSupply(max) === undefined).length
 
       const cb = jest.fn(item => tierStore.addWhitelistItem(item, 0))
       const cbValidation = jest.fn(() => tierStore.validateWhitelistedAddressLength(0))

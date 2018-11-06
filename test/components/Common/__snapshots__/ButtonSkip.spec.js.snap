@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ButtonSkip should render ButtonSkip component 1`] = `
+<button
+  className="sw-ButtonSkip "
+  disabled={false}
+  onClick={[MockFunction]}
+  type="button"
+>
+  <span
+    className="sw-ButtonSkip_Text"
+  >
+    Skip transaction
+  </span>
+</button>
+`;

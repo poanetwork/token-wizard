@@ -11,13 +11,7 @@ describe('DisplayTextArea ', () => {
   const key = false
   const value = 'Value'
   it(`should render DisplayTextArea component`, () => {
-    const wrapper = shallow(
-      <DisplayTextArea
-        label={label}
-        description={description}
-        value={value}
-      />
-    )
+    const wrapper = shallow(<DisplayTextArea label={label} description={description} value={value} />)
     expect(wrapper).toMatchSnapshot()
   })
 })

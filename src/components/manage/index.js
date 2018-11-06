@@ -35,7 +35,7 @@ import {
 import { getCrowdsaleAssets } from '../../stores/utils'
 import { getFieldsToUpdate, processTier, updateTierAttribute } from './utils'
 import { Loader } from '../Common/Loader'
-import { getCurrentTierInfoCustom, getTiersLength } from '../crowdsale/utils'
+import { getCurrentTierInfoCustom, getTiersLength } from '../Crowdsale/utils'
 import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import createDecorator from 'final-form-calculate'

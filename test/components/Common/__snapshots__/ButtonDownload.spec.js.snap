@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ButtonDownload should render ButtonDownload component 1`] = `
+<button
+  className="sw-ButtonDownload "
+  onClick={[MockFunction]}
+  type="button"
+>
+  Download
+</button>
+`;

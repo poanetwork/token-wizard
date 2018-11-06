@@ -1,0 +1,10 @@
+.ts-TokenSetupBlock {
+    display: grid;
+    grid-column-gap: $grid-column-gap-xxl;
+    grid-row-gap: 20px;
+    grid-template-columns: 1fr 1fr;
+
+    @media (min-width: $breakpoint-md) {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+}

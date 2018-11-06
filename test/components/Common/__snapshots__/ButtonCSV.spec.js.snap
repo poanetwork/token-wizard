@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ButtonCSV should render ButtonCSV component 1`] = `
+<button
+  className="sw-ButtonCSV "
+  onClick={[MockFunction]}
+  type="button"
+/>
+`;

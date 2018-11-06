@@ -2,35 +2,20 @@
 
 exports[`DisplayTextArea  should render DisplayTextArea component 1`] = `
 <div
-  className="item"
+  className="pb-DisplayTextArea"
 >
-  <div>
-    <div
-      className="display-container"
-    >
-      <p
-        className="label"
-      >
-        Label
-      </p>
-    </div>
-    <div
-      className="copy-area-container"
-    >
-      <btn
-        className="copy"
-        data-clipboard-action="copy"
-        data-clipboard-text="Value"
-      />
-    </div>
-  </div>
-  <pre>
+  <h3
+    className="pb-DisplayTextArea_Title"
+  >
+     
+    <ButtonCopyToClipboard
+      value="Value"
+    />
+  </h3>
+  <pre
+    className="pb-DisplayTextArea_Content"
+  >
     Value
   </pre>
-  <p
-    className="description"
-  >
-    Description
-  </p>
 </div>
 `;

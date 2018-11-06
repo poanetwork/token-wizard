@@ -50,27 +50,27 @@ class GasPriceStore {
 
   @computed
   get slowDescription() {
-    return `${GAS_PRICE.SLOW.DESCRIPTION} (${weiToGwei(this.slow.price)} GWei)`
+    return `${GAS_PRICE.SLOW.description} (${weiToGwei(this.slow.price)} GWei)`
   }
 
   @computed
   get standardDescription() {
-    return `${GAS_PRICE.NORMAL.DESCRIPTION} (${weiToGwei(this.standard.price)} GWei)`
+    return `${GAS_PRICE.NORMAL.description} (${weiToGwei(this.standard.price)} GWei)`
   }
 
   @computed
   get fastDescription() {
-    return `${GAS_PRICE.FAST.DESCRIPTION} (${weiToGwei(this.fast.price)} GWei)`
+    return `${GAS_PRICE.FAST.description} (${weiToGwei(this.fast.price)} GWei)`
   }
 
   @computed
   get instantDescription() {
-    return `${GAS_PRICE.INSTANT.DESCRIPTION} (${weiToGwei(this.instant.price)} GWei)`
+    return `${GAS_PRICE.INSTANT.description} (${weiToGwei(this.instant.price)} GWei)`
   }
 
   @computed
   get customDescription() {
-    return GAS_PRICE.CUSTOM.DESCRIPTION
+    return GAS_PRICE.CUSTOM.description
   }
 
   @computed
@@ -94,28 +94,28 @@ class GasPriceStore {
   @action
   reset = () => {
     this.slow = {
-      id: GAS_PRICE.SLOW.ID,
-      price: GAS_PRICE.SLOW.PRICE
+      id: GAS_PRICE.SLOW.id,
+      price: GAS_PRICE.SLOW.price
     }
 
     this.standard = {
-      id: GAS_PRICE.NORMAL.ID,
-      price: GAS_PRICE.NORMAL.PRICE
+      id: GAS_PRICE.NORMAL.id,
+      price: GAS_PRICE.NORMAL.price
     }
 
     this.fast = {
-      id: GAS_PRICE.FAST.ID,
-      price: GAS_PRICE.FAST.PRICE
+      id: GAS_PRICE.FAST.id,
+      price: GAS_PRICE.FAST.price
     }
 
     this.instant = {
-      id: GAS_PRICE.INSTANT.ID,
-      price: GAS_PRICE.INSTANT.PRICE
+      id: GAS_PRICE.INSTANT.id,
+      price: GAS_PRICE.INSTANT.price
     }
 
     this.custom = {
-      id: GAS_PRICE.CUSTOM.ID,
-      price: GAS_PRICE.CUSTOM.PRICE
+      id: GAS_PRICE.CUSTOM.id,
+      price: GAS_PRICE.CUSTOM.price
     }
 
     this.block_number = undefined
