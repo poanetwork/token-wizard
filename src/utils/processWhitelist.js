@@ -55,7 +55,7 @@ export const errorsCsv = (data, decimals, tierStore, num) => {
     // Check for higher or less length of rows
     if (row.length > 3 || row.length < 3) {
       const columnLabel = row.length > 1 ? 'columns' : 'column'
-      errors.push(`The line number ${line} have ${row.length} ${columnLabel}, must have 3 columns.`)
+      errors.push(`Line #${line} have ${row.length} ${columnLabel}, must have 3 columns.`)
     }
 
     // Check for valid address
@@ -64,39 +64,39 @@ export const errorsCsv = (data, decimals, tierStore, num) => {
     const maxTitle = max ? max : 'empty'
 
     if (isAddress()(address) !== undefined) {
-      errors.push(`The line number ${line} has an incorrect address. Actual value is ${address}.`)
+      errors.push(`Line #${line} has an incorrect address. Current value is ${address}.`)
     }
 
     // Check for min is integer
     if (isInteger()(min) !== undefined) {
-      errors.push(`The line number ${line} has an incorrect minCap, must be a integer. Actual value is ${minTitle}.`)
+      errors.push(`Line #${line} has an incorrect minCap, must be an integer. Current value is ${minTitle}.`)
     } else if (isRequired()(min) !== undefined) {
       // Check for min is required
-      errors.push(`The line number ${line} need a minCap.`)
+      errors.push(`Line #${line} need a minCap.`)
     }
 
     // Check for max is integer
     if (isInteger()(max) !== undefined) {
-      errors.push(`The line number ${line} has an incorrect maxCap, must be a integer. Actual value is ${maxTitle}.`)
+      errors.push(`Line #${line} has an incorrect maxCap, must be an integer. Current value is ${maxTitle}.`)
     } else if (isRequired()(max) !== undefined) {
       // Check for max is required
-      errors.push(`The line number ${line} need a maxCap.`)
+      errors.push(`Line #${line} need a maxCap.`)
     }
 
     if (isInteger()(min) === undefined && isNonNegative()(min) !== undefined) {
-      errors.push(`The line number ${line} has a negative value for minCap. Actual value is ${minTitle}.`)
+      errors.push(`Line #${line} has a negative value for minCap. Current value is ${minTitle}.`)
     }
 
     if (isInteger()(max) === undefined && isNonNegative()(max) !== undefined) {
-      errors.push(`The line number ${line} has a negative value for maxCap. Actual value is ${maxTitle}.`)
+      errors.push(`Line #${line} has a negative value for maxCap. Current value is ${maxTitle}.`)
     }
 
     if (isDecimalPlacesNotGreaterThan()(decimals)(min) !== undefined) {
-      errors.push(`The line number ${line} has a wrong decimal places for minCap. Actual value is ${minTitle}.`)
+      errors.push(`Line #${line} has a wrong decimal places for minCap. Current value is ${minTitle}.`)
     }
 
     if (isDecimalPlacesNotGreaterThan()(decimals)(max) !== undefined) {
-      errors.push(`The line number ${line} has a wrong decimal places for maxCap. Actual value is ${maxTitle}.`)
+      errors.push(`Line #${line} has a wrong decimal places for maxCap. Current value is ${maxTitle}.`)
     }
 
     if (
@@ -104,7 +104,7 @@ export const errorsCsv = (data, decimals, tierStore, num) => {
       isInteger()(max) === undefined &&
       isLessOrEqualThan()(max)(min) !== undefined
     ) {
-      errors.push(`The line number ${line} has a greather minCap than maxCap. Actual value is ${minTitle}.`)
+      errors.push(`Line #${line} has a greather minCap than maxCap. Current value is ${minTitle}.`)
     }
 
     if (
@@ -112,12 +112,12 @@ export const errorsCsv = (data, decimals, tierStore, num) => {
       isInteger()(max) === undefined &&
       isGreaterOrEqualThan()(min)(max) !== undefined
     ) {
-      errors.push(`The line number ${line} has a less maxCap than minCap. Actual value is ${maxTitle}.`)
+      errors.push(`Line #${line} has a less maxCap than minCap. Current value is ${maxTitle}.`)
     }
 
     // Check for max cap exceeds
     if (isInteger()(max) === undefined && isLessOrEqualThan()(tierStore.tiers[num].supply)(max) !== undefined) {
-      errors.push(`The line number ${line} has a maxCap that exceeds the total supply. Actual value is ${maxTitle}.`)
+      errors.push(`Line #${line} has a maxCap that exceeds the total supply. Current value is ${maxTitle}.`)
     }
   }
 
