@@ -19,7 +19,6 @@ import { RadioButton } from '../Common/RadioButton'
 
 const { VALID } = VALIDATION_TYPES
 const { WALLET_ADDRESS, BURN_EXCESS } = TEXT_FIELDS
-const logger = logdown('TW:StepThree')
 
 export const StepThreeFormDutchAuction = ({
   errors,

@@ -15,7 +15,7 @@ import {
   isDecimalPlacesNotGreaterThan,
   isGreaterOrEqualThan
 } from '../../utils/validations'
-import { gweiToWei, navigateTo, toBigNumber } from '../../utils/utils'
+import { gweiToWei, toBigNumber } from '../../utils/utils'
 
 const { VALID } = VALIDATION_TYPES
 const { WALLET_ADDRESS } = TEXT_FIELDS
