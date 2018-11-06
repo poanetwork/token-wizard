@@ -277,7 +277,13 @@ export const goBack = data => {
     throw new Error(`invalid history object: ${history}`)
   }
 
+  if (typeof history.goBack === undefined) {
+    throw new Error(`invalid goBack function`)
+  }
+
   history.goBack()
+
+  return true
 }
 
 export const goBackMustBeEnabled = data => {
@@ -286,8 +292,8 @@ export const goBackMustBeEnabled = data => {
   if (!history || !(typeof history === 'object')) {
     throw new Error(`invalid history object: ${history}`)
   }
-
-  return history.length > 1
+  const length = history.length || 0
+  return length > 1
 }
 
 export const convertDateToLocalTimezoneInUnix = dateToConvert => {

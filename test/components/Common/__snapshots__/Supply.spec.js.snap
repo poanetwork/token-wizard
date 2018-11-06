@@ -2,7 +2,7 @@
 
 exports[`Supply  should render Supply component 1`] = `
 <div
-  className="sw-InputField "
+  className="sw-InputField2 "
 >
   <div
     className="sw-FormControlTitle"
@@ -28,6 +28,7 @@ exports[`Supply  should render Supply component 1`] = `
     disabled={false}
     id="Supply"
     name="Supply"
+    placeholder="Enter here"
     type="text"
     value="1234"
   />

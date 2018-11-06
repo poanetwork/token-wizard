@@ -2,7 +2,7 @@
 
 exports[`CrowdsaleEndTime Rendering should render CrowdsaleEndTime component 1`] = `
 <div
-  className="sw-InputField "
+  className="sw-InputField2 "
 >
   <div
     className="sw-FormControlTitle"
@@ -39,7 +39,7 @@ exports[`CrowdsaleEndTime Rendering should render CrowdsaleEndTime component 1`]
 
 exports[`CrowdsaleEndTime Rendering should render CrowdsaleEndTime component if field is disabled 1`] = `
 <div
-  className="sw-InputField "
+  className="sw-InputField2 "
 >
   <div
     className="sw-FormControlTitle"

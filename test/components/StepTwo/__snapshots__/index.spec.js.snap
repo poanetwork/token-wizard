@@ -99,24 +99,27 @@ exports[`StepTwo should render StepTwo for Dutch Auction strategy 1`] = `
       className="st-StepContent"
     >
       <div
-        className="st-StepContent_Info"
+        className="st-StepInfo "
       >
         <div
-          className="st-StepContent_InfoIcon st-StepContent_InfoIcon-step2"
+          className="st-StepInfo_Icon st-StepInfo_Icon-step2"
         />
         <div
-          className="st-StepContentInfo_InfoText"
+          className="st-StepInfo_Text"
         >
           <h1
-            className="st-StepContent_InfoTitle"
+            className="st-StepInfo_Title"
           >
-            Token setup
+            Token Setup
           </h1>
           <p
-            className="st-StepContent_InfoDescription"
-          >
-            Configure properties for your token. Created token contract will be ERC-20 compatible.
-          </p>
+            className="st-StepInfo_Description"
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "Configure properties for your token. Created token contract will be ERC-20 compatible.",
+              }
+            }
+          />
         </div>
       </div>
       <form
@@ -125,10 +128,10 @@ exports[`StepTwo should render StepTwo for Dutch Auction strategy 1`] = `
         onSubmit={[Function]}
       >
         <div
-          className="sw-BorderedBlock sw-BorderedBlock-2Rows2Columns"
+          className="sw-BorderedBlock sw-BorderedBlock-GeneralSettingsDutchAuction"
         >
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"
@@ -156,12 +159,13 @@ exports[`StepTwo should render StepTwo for Dutch Auction strategy 1`] = `
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
+              placeholder="Enter here"
               type="text"
               value=""
             />
           </div>
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"
@@ -189,12 +193,13 @@ exports[`StepTwo should render StepTwo for Dutch Auction strategy 1`] = `
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
+              placeholder="Enter here"
               type="text"
               value=""
             />
           </div>
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"
@@ -225,12 +230,13 @@ exports[`StepTwo should render StepTwo for Dutch Auction strategy 1`] = `
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
+              placeholder="Enter here"
               type="number"
               value=""
             />
           </div>
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"
@@ -254,11 +260,13 @@ exports[`StepTwo should render StepTwo for Dutch Auction strategy 1`] = `
             <input
               className="sw-TextField"
               id="supply"
+              min="0"
               name="supply"
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
-              type="text"
+              placeholder="Enter here"
+              type="number"
               value=""
             />
           </div>
@@ -267,14 +275,15 @@ exports[`StepTwo should render StepTwo for Dutch Auction strategy 1`] = `
           className="st-StepContent_Buttons"
         >
           <button
-            className="sw-ButtonBack"
+            className="sw-ButtonBack "
+            disabled={false}
             onClick={[Function]}
             type="button"
           >
             Back
           </button>
           <button
-            className="sw-ButtonContinue"
+            className="sw-ButtonContinue "
             disabled={true}
             type="submit"
           >
@@ -390,24 +399,27 @@ exports[`StepTwo should render StepTwo for Minted Capped strategy 1`] = `
       className="st-StepContent"
     >
       <div
-        className="st-StepContent_Info"
+        className="st-StepInfo "
       >
         <div
-          className="st-StepContent_InfoIcon st-StepContent_InfoIcon-step2"
+          className="st-StepInfo_Icon st-StepInfo_Icon-step2"
         />
         <div
-          className="st-StepContentInfo_InfoText"
+          className="st-StepInfo_Text"
         >
           <h1
-            className="st-StepContent_InfoTitle"
+            className="st-StepInfo_Title"
           >
-            Token setup
+            Token Setup
           </h1>
           <p
-            className="st-StepContent_InfoDescription"
-          >
-            Configure properties for your token. Created token contract will be ERC-20 compatible.
-          </p>
+            className="st-StepInfo_Description"
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "Configure properties for your token. Created token contract will be ERC-20 compatible.",
+              }
+            }
+          />
         </div>
       </div>
       <form
@@ -416,10 +428,10 @@ exports[`StepTwo should render StepTwo for Minted Capped strategy 1`] = `
         onSubmit={[Function]}
       >
         <div
-          className="sw-BorderedBlock sw-BorderedBlock-3Columns"
+          className="sw-BorderedBlock sw-BorderedBlock-GeneralSettingsWhitelistCapped"
         >
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"
@@ -447,12 +459,13 @@ exports[`StepTwo should render StepTwo for Minted Capped strategy 1`] = `
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
+              placeholder="Enter here"
               type="text"
               value=""
             />
           </div>
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"
@@ -480,12 +493,13 @@ exports[`StepTwo should render StepTwo for Minted Capped strategy 1`] = `
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
+              placeholder="Enter here"
               type="text"
               value=""
             />
           </div>
           <div
-            className="sw-InputField "
+            className="sw-InputField2 "
           >
             <div
               className="sw-FormControlTitle"
@@ -516,6 +530,7 @@ exports[`StepTwo should render StepTwo for Minted Capped strategy 1`] = `
               onBlur={[Function]}
               onChange={[Function]}
               onFocus={[Function]}
+              placeholder="Enter here"
               type="number"
               value=""
             />
@@ -525,14 +540,15 @@ exports[`StepTwo should render StepTwo for Minted Capped strategy 1`] = `
           className="st-StepContent_Buttons"
         >
           <button
-            className="sw-ButtonBack"
+            className="sw-ButtonBack "
+            disabled={false}
             onClick={[Function]}
             type="button"
           >
             Back
           </button>
           <button
-            className="sw-ButtonContinue"
+            className="sw-ButtonContinue "
             disabled={true}
             type="submit"
           >

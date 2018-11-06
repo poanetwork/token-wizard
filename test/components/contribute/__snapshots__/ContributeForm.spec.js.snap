@@ -230,7 +230,7 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
                 placeholder="0"
               >
                 <div
-                  className="sw-InputField "
+                  className="sw-InputField2 "
                 >
                   <FormControlTitle>
                     <div
@@ -263,7 +263,7 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
                       value=""
                     />
                   </TextField>
-                  <Error
+                  <Errors
                     name="contribute"
                   >
                     <Field
@@ -279,7 +279,7 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
                         }
                       }
                     />
-                  </Error>
+                  </Errors>
                 </div>
               </InputField2>
             </Field>
@@ -349,7 +349,7 @@ exports[`ContributeForm should render ContributeForm component 1`] = `
     className="contribute-form-input-container"
   >
     <div
-      className="sw-InputField "
+      className="sw-InputField2 "
     >
       <div
         className="sw-FormControlTitle"
@@ -425,7 +425,7 @@ exports[`ContributeForm should render ContributeForm component and its children 
     className="contribute-form-input-container"
   >
     <div
-      className="sw-InputField "
+      className="sw-InputField2 "
     >
       <div
         className="sw-FormControlTitle"
