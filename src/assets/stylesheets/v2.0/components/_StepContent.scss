@@ -1,6 +1,3 @@
-$st-StepContent_Icon-dimensions-xs: 60px !default;
-$st-StepContent_Icon-dimensions-lg: 100px !default;
-
 .st-StepContent {
     background-color: #fff;
     box-shadow: 0 9px 13px 0 rgba(0, 0, 0, 0.16), 0 0 9px 0 rgba(0, 0, 0, 0.04);
@@ -9,6 +6,7 @@ $st-StepContent_Icon-dimensions-lg: 100px !default;
     flex-grow: 1;
     justify-content: flex-start;
     margin: -130px 12px 36px;
+    overflow: auto;
     padding: 25px 10px 29px;
 
     @media (min-width: $breakpoint-xl) {
@@ -17,91 +15,6 @@ $st-StepContent_Icon-dimensions-lg: 100px !default;
         padding: 41px 52px 41px 50px;
     }
 
-}
-
-.st-StepContent_Info {
-    display: flex;
-    margin-bottom: 34px;
-
-    @media (min-width: $breakpoint-xl) {
-        align-items: center;
-        margin-bottom: 38px;
-    }
-}
-
-.st-StepContent_InfoIcon {
-    background-color: $brand-secondary;
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
-    border-radius: 50%;
-    flex-shrink: 0;
-    height: $st-StepContent_Icon-dimensions-xs;
-    margin-right: 15px;
-    width: $st-StepContent_Icon-dimensions-xs;
-
-    @media (min-width: $breakpoint-xl) {
-        height: $st-StepContent_Icon-dimensions-lg;
-        margin-right: 28px;
-        width: $st-StepContent_Icon-dimensions-lg;
-    }
-
-    &.st-StepContent_InfoIcon-step1 {
-        background-image: url(#{ $base-images-path }/StepContent/StepContent_InfoIcon/1.svg);
-        background-size: 31.5px 31.5px;
-
-        @media (min-width: $breakpoint-xl) {
-            background-size: 55px 55px;
-        }
-
-    }
-
-    &.st-StepContent_InfoIcon-step2 {
-        background-image: url(#{ $base-images-path }/StepContent/StepContent_InfoIcon/2.svg);
-        background-size: 26px 27px;
-
-        @media (min-width: $breakpoint-xl) {
-            background-size: 52px 55px;
-        }
-
-    }
-
-    &.st-StepContent_InfoIcon-step3 {
-        background-image: url(#{ $base-images-path }/StepContent/StepContent_InfoIcon/3.svg);
-        background-size: 25px 27px;
-
-        @media (min-width: $breakpoint-xl) {
-            background-size: 50px 53px;
-        }
-
-    }
-
-}
-
-.st-StepContentInfo_InfoText {
-    padding-right: 30px;
-}
-
-.st-StepContent_InfoTitle {
-    color: #000;
-    font-size: 22px;
-    font-weight: 600;
-    line-height: 1.2;
-    margin: 0;
-
-    @media (min-width: $breakpoint-xl) {
-        font-size: 36px;
-    }
-}
-
-.st-StepContent_InfoDescription {
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 1.29;
-    margin: 0;
-
-    @media (min-width: $breakpoint-xl) {
-        font-size: 18px;
-    }
 }
 
 .st-StepContent_FormFullHeight {

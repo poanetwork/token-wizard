@@ -9,17 +9,18 @@ import { WhitelistTable } from './WhitelistTable'
 import { inject, observer } from 'mobx-react'
 import {
   clearingWhitelist,
-  maxCapExceedsSupply,
+  errorWhitelistedCSVAlert,
   noMoreWhitelistedSlotAvailable,
   noMoreWhitelistedSlotAvailableCSV,
-  whitelistImported
+  whitelistImported,
+  maxCapExceedsSupply
 } from '../../utils/alerts'
-import processWhitelist from '../../utils/processWhitelist'
+import { processCsv, errorsCsv } from '../../utils/processWhitelist'
 import { isLessOrEqualThan, validateWhitelistMax, validateWhitelistMin } from '../../utils/validations'
 import logdown from 'logdown'
 import { ButtonCSV } from '../Common/ButtonCSV'
 import { ButtonPlus } from '../Common/ButtonPlus'
-import { downloadFile } from '../../utils/utils'
+import { downloadFile, uniqueElementsBy } from '../../utils/utils'
 
 const logger = logdown('TW:WhitelistInputBlock')
 const { ADDRESS, MIN, MAX } = TEXT_FIELDS
@@ -226,26 +227,33 @@ export class WhitelistInputBlock extends React.Component {
       Papa.parse(file, {
         skipEmptyLines: true,
         complete: results => {
-          const { called, whitelistedAddressLengthError, maxCapExceedsSupplyError } = processWhitelist(
-            {
-              rows: results.data,
-              decimals: decimals
-            },
-            item => {
-              tierStore.addWhitelistItem(item, num)
-            },
-            () => {
-              return tierStore.validateWhitelistedAddressLength(num)
-            },
-            isLessOrEqualThan()(tierStore.tiers[num].supply)
-          )
+          let { data } = results
 
-          if (whitelistedAddressLengthError) {
-            noMoreWhitelistedSlotAvailableCSV(called)
-          } else if (maxCapExceedsSupplyError) {
-            maxCapExceedsSupply(called)
+          // Remove duplicate lines
+          data = uniqueElementsBy(data, (a, b) => a[0] === b[0])
+
+          // Check for errors
+          const { errors } = errorsCsv(data, decimals, tierStore, num)
+
+          if (errors && errors.length > 0) {
+            errorWhitelistedCSVAlert(errors)
           } else {
-            whitelistImported(called)
+            const { called, whitelistAddressLengthError, whitelistSupplyLengthError } = processCsv(
+              {
+                rows: data,
+                decimals: decimals
+              },
+              tierStore,
+              num
+            )
+
+            if (whitelistAddressLengthError) {
+              noMoreWhitelistedSlotAvailableCSV(called)
+            } else if (whitelistSupplyLengthError) {
+              maxCapExceedsSupply(called)
+            } else {
+              whitelistImported(called)
+            }
           }
         }
       })

@@ -1,0 +1,457 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GasPriceInput should render GasPriceInput component 1`] = `
+<div
+  className="sw-GasPriceInput"
+>
+  <div
+    className="sw-FormControlTitle"
+  >
+    <label
+      className="sw-FormControlTitle_Label"
+    >
+      Gas Price
+    </label>
+    <div
+      className="sw-FormControlTitle_Info"
+      tabIndex="-1"
+    >
+      <span
+        className="sw-FormControlTitle_Tooltip"
+      >
+        Slow is cheap, fast is expensive.
+      </span>
+    </div>
+  </div>
+  <div
+    className="sw-GasPriceInput_Select"
+  >
+    <button
+      className="sw-GasPriceInput_SelectButton"
+      onClick={[Function]}
+      type="button"
+    >
+      <span
+        className="sw-GasPriceInput_SelectButtonText"
+      >
+        Safe and Cheap (5 GWei)
+      </span>
+      <span
+        className="sw-GasPriceInput_SelectButtonChevron"
+      />
+    </button>
+    <div
+      className="sw-GasPriceInput_SelectList"
+      onClick={[Function]}
+    >
+      <label
+        className="sw-GasPriceInput_SelectItem"
+        onClick={[Function]}
+      >
+        <input
+          checked={true}
+          className="sw-GasPriceInput_SelectInput"
+          id="slow"
+          name="gas-price"
+          type="radio"
+          value="slow"
+        />
+        <span
+          className="sw-GasPriceInput_SelectText"
+        >
+          Safe and Cheap (5 GWei)
+        </span>
+      </label>
+      <label
+        className="sw-GasPriceInput_SelectItem"
+        onClick={[Function]}
+      >
+        <input
+          checked={false}
+          className="sw-GasPriceInput_SelectInput"
+          id="normal"
+          name="gas-price"
+          type="radio"
+          value="normal"
+        />
+        <span
+          className="sw-GasPriceInput_SelectText"
+        >
+          Normal (10 GWei)
+        </span>
+      </label>
+      <label
+        className="sw-GasPriceInput_SelectItem"
+        onClick={[Function]}
+      >
+        <input
+          checked={false}
+          className="sw-GasPriceInput_SelectInput"
+          id="fast"
+          name="gas-price"
+          type="radio"
+          value="fast"
+        />
+        <span
+          className="sw-GasPriceInput_SelectText"
+        >
+          Fast and Expensive (15 GWei)
+        </span>
+      </label>
+      <label
+        className="sw-GasPriceInput_SelectItem"
+        onClick={[Function]}
+      >
+        <input
+          checked={false}
+          className="sw-GasPriceInput_SelectInput"
+          id="custom"
+          name="gas-price"
+          type="radio"
+          value="custom"
+        />
+        <span
+          className="sw-GasPriceInput_SelectText"
+        >
+          Custom
+        </span>
+      </label>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`GasPriceInput should render GasPriceInput component with custom gasType selected 1`] = `
+<ReactFinalForm
+  initialValues={Object {}}
+  onSubmit={[MockFunction]}
+  render={[Function]}
+>
+  <inject-GasPriceInput-with-generalStore
+    gasPrices={
+      Array [
+        Object {
+          "description": "Safe and Cheap (5 GWei)",
+          "id": "slow",
+          "price": 5,
+        },
+        Object {
+          "description": "Normal (10 GWei)",
+          "id": "normal",
+          "price": 10,
+        },
+        Object {
+          "description": "Fast and Expensive (15 GWei)",
+          "id": "fast",
+          "price": 15,
+        },
+        Object {
+          "description": "Custom",
+          "id": "custom",
+          "price": 1e-10,
+        },
+      ]
+    }
+    generalStore={
+      GeneralStore {
+        "burnExcess": "no",
+        "gasPrice": 5000000000,
+        "gasTypeSelected": Object {
+          "description": "Custom",
+          "id": "custom",
+          "price": 0.1,
+        },
+        "networkID": undefined,
+      }
+    }
+    input={
+      Object {
+        "name": "gasPrice",
+        "onChange": [MockFunction] {
+          "calls": Array [
+            Array [
+              Object {
+                "id": "custom",
+                "price": 0.1,
+              },
+            ],
+          ],
+          "results": Array [
+            Object {
+              "isThrow": false,
+              "value": undefined,
+            },
+          ],
+        },
+      }
+    }
+    updateGasTypeSelected={
+      [MockFunction] {
+        "calls": Array [
+          Array [
+            Object {
+              "description": "Custom",
+              "id": "custom",
+              "price": 0.1,
+            },
+          ],
+        ],
+        "results": Array [
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+        ],
+      }
+    }
+    validate={[MockFunction]}
+  >
+    <GasPriceInput
+      gasPrices={
+        Array [
+          Object {
+            "description": "Safe and Cheap (5 GWei)",
+            "id": "slow",
+            "price": 5,
+          },
+          Object {
+            "description": "Normal (10 GWei)",
+            "id": "normal",
+            "price": 10,
+          },
+          Object {
+            "description": "Fast and Expensive (15 GWei)",
+            "id": "fast",
+            "price": 15,
+          },
+          Object {
+            "description": "Custom",
+            "id": "custom",
+            "price": 1e-10,
+          },
+        ]
+      }
+      generalStore={
+        GeneralStore {
+          "burnExcess": "no",
+          "gasPrice": 5000000000,
+          "gasTypeSelected": Object {
+            "description": "Custom",
+            "id": "custom",
+            "price": 0.1,
+          },
+          "networkID": undefined,
+        }
+      }
+      input={
+        Object {
+          "name": "gasPrice",
+          "onChange": [MockFunction] {
+            "calls": Array [
+              Array [
+                Object {
+                  "id": "custom",
+                  "price": 0.1,
+                },
+              ],
+            ],
+            "results": Array [
+              Object {
+                "isThrow": false,
+                "value": undefined,
+              },
+            ],
+          },
+        }
+      }
+      updateGasTypeSelected={
+        [MockFunction] {
+          "calls": Array [
+            Array [
+              Object {
+                "description": "Custom",
+                "id": "custom",
+                "price": 0.1,
+              },
+            ],
+          ],
+          "results": Array [
+            Object {
+              "isThrow": false,
+              "value": undefined,
+            },
+          ],
+        }
+      }
+      validate={[MockFunction]}
+    >
+      <div
+        className="sw-GasPriceInput"
+      >
+        <FormControlTitle
+          description="Slow is cheap, fast is expensive."
+          title="Gas Price"
+        >
+          <div
+            className="sw-FormControlTitle"
+          >
+            <label
+              className="sw-FormControlTitle_Label"
+            >
+              Gas Price
+            </label>
+            <div
+              className="sw-FormControlTitle_Info"
+              tabIndex="-1"
+            >
+              <span
+                className="sw-FormControlTitle_Tooltip"
+              >
+                Slow is cheap, fast is expensive.
+              </span>
+            </div>
+          </div>
+        </FormControlTitle>
+        <div
+          className="sw-GasPriceInput_Select"
+        >
+          <button
+            className="sw-GasPriceInput_SelectButton"
+            onClick={[Function]}
+            type="button"
+          >
+            <span
+              className="sw-GasPriceInput_SelectButtonText"
+            >
+              Custom
+            </span>
+            <span
+              className="sw-GasPriceInput_SelectButtonChevron"
+            />
+          </button>
+          <div
+            className="sw-GasPriceInput_SelectList"
+            onClick={[Function]}
+          >
+            <label
+              className="sw-GasPriceInput_SelectItem"
+              key="0"
+              onClick={[Function]}
+            >
+              <input
+                checked={false}
+                className="sw-GasPriceInput_SelectInput"
+                id="slow"
+                name="gas-price"
+                type="radio"
+                value="slow"
+              />
+              <span
+                className="sw-GasPriceInput_SelectText"
+              >
+                Safe and Cheap (5 GWei)
+              </span>
+            </label>
+            <label
+              className="sw-GasPriceInput_SelectItem"
+              key="1"
+              onClick={[Function]}
+            >
+              <input
+                checked={false}
+                className="sw-GasPriceInput_SelectInput"
+                id="normal"
+                name="gas-price"
+                type="radio"
+                value="normal"
+              />
+              <span
+                className="sw-GasPriceInput_SelectText"
+              >
+                Normal (10 GWei)
+              </span>
+            </label>
+            <label
+              className="sw-GasPriceInput_SelectItem"
+              key="2"
+              onClick={[Function]}
+            >
+              <input
+                checked={false}
+                className="sw-GasPriceInput_SelectInput"
+                id="fast"
+                name="gas-price"
+                type="radio"
+                value="fast"
+              />
+              <span
+                className="sw-GasPriceInput_SelectText"
+              >
+                Fast and Expensive (15 GWei)
+              </span>
+            </label>
+            <label
+              className="sw-GasPriceInput_SelectItem"
+              key="3"
+              onClick={[Function]}
+            >
+              <input
+                checked={true}
+                className="sw-GasPriceInput_SelectInput"
+                id="custom"
+                name="gas-price"
+                type="radio"
+                value="custom"
+              />
+              <span
+                className="sw-GasPriceInput_SelectText"
+              >
+                Custom
+              </span>
+            </label>
+          </div>
+        </div>
+        <TextField
+          id="customGasPrice"
+          min={0.1}
+          name="gas-price-custom-value"
+          onChange={[Function]}
+          placeholder="Enter here"
+          step="any"
+          type="number"
+          value={0.1}
+        >
+          <input
+            className="sw-TextField"
+            id="gas-price-custom-value"
+            min={0.1}
+            name="gas-price-custom-value"
+            onChange={[Function]}
+            placeholder="Enter here"
+            step="any"
+            type="number"
+            value={0.1}
+          />
+        </TextField>
+        <Errors
+          name="gasPrice"
+        >
+          <Field
+            format={[Function]}
+            name="gasPrice"
+            parse={[Function]}
+            render={[Function]}
+            subscription={
+              Object {
+                "error": true,
+                "pristine": true,
+                "touched": true,
+              }
+            }
+          />
+        </Errors>
+      </div>
+    </GasPriceInput>
+  </inject-GasPriceInput-with-generalStore>
+</ReactFinalForm>
+`;

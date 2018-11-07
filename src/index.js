@@ -11,7 +11,7 @@ import 'airbnb-js-shims'
 
 useStrict(true)
 
-//todo: remove unused contracts
+// TODO: remove unused contracts
 checkEnvVariable(`${REACT_PREFIX}REGISTRY_IDX_ADDRESS`)
 checkEnvVariable(`${REACT_PREFIX}PROVIDER_ADDRESS`)
 checkEnvVariable(`${REACT_PREFIX}REGISTRY_EXEC_ADDRESS`)

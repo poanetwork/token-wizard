@@ -99,24 +99,27 @@ exports[`StepTwo should render StepTwo for Dutch Auction strategy 1`] = `
       className="st-StepContent"
     >
       <div
-        className="st-StepContent_Info"
+        className="st-StepInfo "
       >
         <div
-          className="st-StepContent_InfoIcon st-StepContent_InfoIcon-step2"
+          className="st-StepInfo_Icon st-StepInfo_Icon-step2"
         />
         <div
-          className="st-StepContentInfo_InfoText"
+          className="st-StepInfo_Text"
         >
           <h1
-            className="st-StepContent_InfoTitle"
+            className="st-StepInfo_Title"
           >
-            Token setup
+            Token Setup
           </h1>
           <p
-            className="st-StepContent_InfoDescription"
-          >
-            Configure properties for your token. Created token contract will be ERC-20 compatible.
-          </p>
+            className="st-StepInfo_Description"
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "Configure properties for your token. Created token contract will be ERC-20 compatible.",
+              }
+            }
+          />
         </div>
       </div>
       <form
@@ -273,6 +276,7 @@ exports[`StepTwo should render StepTwo for Dutch Auction strategy 1`] = `
         >
           <button
             className="sw-ButtonBack "
+            disabled={false}
             onClick={[Function]}
             type="button"
           >
@@ -395,24 +399,27 @@ exports[`StepTwo should render StepTwo for Minted Capped strategy 1`] = `
       className="st-StepContent"
     >
       <div
-        className="st-StepContent_Info"
+        className="st-StepInfo "
       >
         <div
-          className="st-StepContent_InfoIcon st-StepContent_InfoIcon-step2"
+          className="st-StepInfo_Icon st-StepInfo_Icon-step2"
         />
         <div
-          className="st-StepContentInfo_InfoText"
+          className="st-StepInfo_Text"
         >
           <h1
-            className="st-StepContent_InfoTitle"
+            className="st-StepInfo_Title"
           >
-            Token setup
+            Token Setup
           </h1>
           <p
-            className="st-StepContent_InfoDescription"
-          >
-            Configure properties for your token. Created token contract will be ERC-20 compatible.
-          </p>
+            className="st-StepInfo_Description"
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "Configure properties for your token. Created token contract will be ERC-20 compatible.",
+              }
+            }
+          />
         </div>
       </div>
       <form
@@ -534,6 +541,7 @@ exports[`StepTwo should render StepTwo for Minted Capped strategy 1`] = `
         >
           <button
             className="sw-ButtonBack "
+            disabled={false}
             onClick={[Function]}
             type="button"
           >

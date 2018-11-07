@@ -1,10 +1,11 @@
 import Clipboard from 'clipboard'
 import logdown from 'logdown'
+import { toast } from './utils'
 
 const logger = logdown('TW:utils:copy')
 
-export function copy(cls) {
-  var clipboard = new Clipboard('.' + cls)
+export const copy = cls => {
+  let clipboard = new Clipboard(cls)
 
   clipboard.on('success', function(e) {
     logger.info('Action:', e.action)
@@ -18,4 +19,12 @@ export function copy(cls) {
     logger.error('Action:', e.action)
     logger.error('Trigger:', e.trigger)
   })
+
+  return clipboard
+}
+
+export const showClipboardCopyToast = title => {
+  let copyMessage = title ? `"${title}" copied to clipboard.` : 'Copied to clipboard'
+
+  toast.showToaster({ message: copyMessage, options: { time: 3000 } })
 }

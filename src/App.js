@@ -13,15 +13,13 @@ import {
   Crowdsales
 } from './components/index'
 import NoWeb3 from './components/Common/NoWeb3'
-import IncompleteDeploy from './components/IncompleteDeploy'
+import CheckIncompleteDeploy from './components/CheckIncompleteDeploy'
 import { getAddrFromQuery, toast } from './utils/utils'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import AlertContainer from 'react-alert'
 import { TOAST } from './utils/constants'
 import { Web3Provider } from './react-web3'
 import { getQueryVariable } from './utils/utils'
-
-// import './assets/stylesheets/application.css'
 
 @inject('deploymentStore')
 @observer
@@ -42,6 +40,7 @@ class App extends Component {
       require('./assets/stylesheets/styles.css')
     }
   }
+
   render() {
     const { deploymentStore } = this.props
     let crowdsaleAddr = getAddrFromQuery()
@@ -51,31 +50,35 @@ class App extends Component {
         <div>
           <Switch>
             <Route exact path="/" component={crowdsaleAddr ? Crowdsale : Home} />
-            <Route path="/1" component={StepOne} />
-            <Route exact path="/crowdsale" component={Crowdsale} />
-            <Route exact path="/contribute" component={Contribute} />
-            <Route exact path="/stats" component={Stats} />
-            <Route exact path="/crowdsales" component={Crowdsales} />
-            <Route>
-              <Web3Provider onChangeAccount={deploymentStore.handleAccountChange} web3UnavailableScreen={NoWeb3}>
-                <Switch>
-                  {/* The route to /4 must be first for the incomplete deploy redirect to work */}
-                  <Route path="/4" component={StepFour} />
+            <Web3Provider onChangeAccount={deploymentStore.handleAccountChange} web3UnavailableScreen={NoWeb3}>
+              <Switch>
+                <Route path="/1" component={StepOne} />
+                <Route exact path="/crowdsale" component={Crowdsale} />
+                <Route exact path="/contribute" component={Contribute} />
+                <Route exact path="/stats" component={Stats} />
+                <Route exact path="/crowdsales" component={Crowdsales} />
+                <Route>
+                  <Switch>
+                    {/* The route to /4 must be first for the incomplete deploy redirect to work */}
+                    <Route path="/4" component={StepFour} />
 
-                  {deploymentStore.deployInProgress ? (
-                    <IncompleteDeploy />
-                  ) : (
-                    <Switch>
-                      <Route exact path="/manage/:crowdsalePointer" component={Manage} />
-                      <Route path="/2" component={StepTwo} />
-                      <Route path="/3" component={StepThree} />
-                    </Switch>
-                  )}
-                </Switch>
-              </Web3Provider>
-            </Route>
+                    {deploymentStore.deployInProgress ? (
+                      <CheckIncompleteDeploy />
+                    ) : (
+                      <Switch>
+                        <Route exact path="/manage/:crowdsalePointer" component={Manage} />
+                        <Route path="/2" component={StepTwo} />
+                        <Route path="/3" component={StepThree} />
+                      </Switch>
+                    )}
+                  </Switch>
+                </Route>
+              </Switch>
+            </Web3Provider>
           </Switch>
-          <AlertContainer ref={a => (toast.msg = a)} {...TOAST.DEFAULT_OPTIONS} />
+          <div className="MainAlertContainer">
+            <AlertContainer ref={a => (toast.msg = a)} {...TOAST.DEFAULT_OPTIONS} />
+          </div>
         </div>
       </Router>
     )

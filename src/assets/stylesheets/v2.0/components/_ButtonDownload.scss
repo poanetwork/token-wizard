@@ -1,0 +1,39 @@
+.sw-ButtonDownload {
+    background-color: $brand-secondary;
+    background-image: url('#{ $base-images-path }/ButtonDownload/icon-download.svg');
+    background-position: calc(100% - 17.5px) 50%;
+    background-repeat: no-repeat;
+    background-size: 21px 24px;
+    border-radius: 6px;
+    border: none;
+    box-shadow: 0 12px 22px 0 rgba(0, 0, 0, 0.24);
+    color: #fff;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    height: 50px;
+    line-height: 50px;
+    min-width: 262px;
+    outline: none;
+    padding: 0 38.5px 0 18px;
+    text-align: left;
+
+    &:focus,
+    &.active,
+    &:hover {
+        background-color: darken($brand-secondary, 10%);
+        border-color: darken($brand-secondary, 10%);
+    }
+
+    &[disabled] {
+        cursor: not-allowed;
+        opacity: 0.7;
+
+        &:focus,
+        &.active,
+        &:hover {
+            background-color: $brand-secondary;
+            border-color: $brand-secondary;
+        }
+    }
+}

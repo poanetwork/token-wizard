@@ -1,0 +1,21 @@
+@mixin crowdsale-summary() {
+    display: grid;
+    grid-column-gap: 55px;
+    grid-row-gap: 25px;
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: 35px;
+
+    @media (min-width: $breakpoint-md) {
+        grid-column-gap: 50px;
+
+    }
+
+    @media (min-width: $breakpoint-lg) {
+        grid-column-gap: 30px;
+    }
+
+    @media (min-width: $breakpoint-xxl) {
+        grid-column-gap: 60px;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+}

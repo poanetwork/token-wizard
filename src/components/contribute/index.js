@@ -32,7 +32,7 @@ import {
   getCurrentTierInfoCustom,
   getExecID,
   getAddr
-} from '../crowdsale/utils'
+} from '../Crowdsale/utils'
 import {
   countDecimalPlaces,
   getNetworkID,
@@ -73,6 +73,7 @@ import { DEPLOYMENT_VALUES } from '../../utils/constants'
 let promiseRetry = require('promise-retry')
 
 const logger = logdown('TW:contribute')
+const TWO_SECONDS = 2000
 
 @inject(
   'contractStore',
@@ -116,6 +117,17 @@ export class Contribute extends React.Component {
 
   componentDidMount() {
     this.preparePage()
+    setTimeout(this.fetchAccount, TWO_SECONDS)
+  }
+
+  fetchAccount = async () => {
+    const account = await getCurrentAccount()
+    logger.log(`Check for account has changed:`, account !== this.state.curAddr)
+    if (account !== this.state.curAddr) {
+      await this.extractContractsData()
+    }
+    // We cant use setInterval, because we dont know what the function takes in time
+    setTimeout(this.fetchAccount, TWO_SECONDS)
   }
 
   preparePage = async () => {
