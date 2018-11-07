@@ -1,0 +1,108 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NoWeb3 should render ButtonNiftyWallet component 1`] = `
+<section
+  className="sw-NoWeb3"
+>
+  <div
+    className="sw-NoWeb3_Background background-blur"
+  />
+  <div
+    className="sw-NoWeb3_Container"
+  >
+    <div
+      className="sw-NoWeb3_Block"
+    >
+      <div
+        className="sw-NoWeb3_InfoIcon"
+      />
+      <h1
+        className="sw-NoWeb3_Title"
+      >
+        Wallet not found, or access to your Ethereum account was not granted.
+      </h1>
+      <p
+        className="sw-NoWeb3_Description"
+      >
+        If a wallet extension is installed on your web browser, please verify that access to your Ethereum account has been granted and that it's available for this domain.
+        <br />
+        <strong>
+          Need more help?
+        </strong>
+        <br />
+        <a
+          href="https://poanet.zendesk.com/hc/en-us/categories/360000586593-Wallets"
+          target="blank"
+        >
+          Wallets HowTo
+        </a>
+         
+        -
+         
+        <a
+          href="https://github.com/poanetwork/token-wizard/wiki"
+          target="blank"
+        >
+          Token Wizard Wiki
+        </a>
+      </p>
+      <div
+        className="sw-NoWeb3_ButtonsContainer"
+      >
+        <button
+          className="btn-ButtonMetamask "
+          onClick={[Function]}
+          type="button"
+        >
+          <span
+            className="btn-ButtonMetamask_Icon"
+          />
+          <span
+            className="btn-ButtonMetamask_TextContainer"
+          >
+            <span
+              className="btn-ButtonMetamask_TopText"
+            >
+              Download
+            </span>
+            <span
+              className="btn-ButtonMetamask_BottomText"
+            >
+              Metamask
+            </span>
+          </span>
+        </button>
+        <button
+          className="btn-ButtonNiftyWallet "
+          onClick={[Function]}
+          type="button"
+        >
+          <span
+            className="btn-ButtonNiftyWallet_Icon"
+          />
+          <span
+            className="btn-ButtonNiftyWallet_TextContainer"
+          >
+            <span
+              className="btn-ButtonNiftyWallet_TopText"
+            >
+              Download
+            </span>
+            <span
+              className="btn-ButtonNiftyWallet_BottomText"
+            >
+              Nifty Wallet
+            </span>
+          </span>
+        </button>
+        <a
+          className="sw-NoWeb3_Button"
+          href="/"
+        >
+          Cancel
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+`;
