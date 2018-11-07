@@ -551,7 +551,7 @@ exports[`StepThreeFormDutchAuction should render StepThreeFormDutchAuction 1`] =
   >
     <button
       className="sw-ButtonBack "
-      onClick={[Function]}
+      disabled={true}
       type="button"
     >
       Back

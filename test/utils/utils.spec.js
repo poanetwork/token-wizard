@@ -175,36 +175,6 @@ describe('Utils', () => {
     })
   })
 
-  describe('objectKeysToLowerCase', () => {
-    it(`should return an object with all keys in lower case`, () => {
-      // Given
-      const collection = [
-        {
-          KEY_UPPERCASED: ['thing', 'Another thing'],
-          KEY_Mixed: 'a value'
-        },
-        ['this is a mixed thing', { KEY: 'will it cast this key as well?' }],
-        {
-          ANOTHER_KEY: 'text'
-        }
-      ]
-      const expectedResult = [
-        {
-          key_uppercased: ['thing', 'Another thing'],
-          key_mixed: 'a value'
-        },
-        ['this is a mixed thing', { key: 'will it cast this key as well?' }],
-        { another_key: 'text' }
-      ]
-
-      // When
-      const collectionToLowercase = objectKeysToLowerCase(collection)
-
-      // Then
-      expect(collectionToLowercase).toEqual(expectedResult)
-    })
-  })
-
   describe('validateTier', () => {
     const testCases = [
       { value: 'really long string that will not pass the validation', expected: false },

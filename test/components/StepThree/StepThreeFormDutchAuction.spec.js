@@ -69,42 +69,4 @@ describe('StepThreeFormDutchAuction', () => {
     // Then
     expect(tree).toMatchSnapshot()
   })
-
-  it(`should call updateGasTypeSelected`, () => {
-    // Given
-    const updateGasTypeSelected = jest.fn()
-    const wrapper = mount(
-      <Provider {...stores}>
-        <Form
-          onSubmit={jest.fn()}
-          decorators={[jest.fn()]}
-          initialValues={{
-            gasPrice: GAS_PRICE.SLOW,
-            tiers: tierStore.tiers.slice(),
-            walletAddress: walletAddress,
-            whitelistEnabled: 'no'
-          }}
-          mutators={{ ...arrayMutators, setFieldTouched }}
-          history={{ push: jest.fn() }}
-          firstLoad={false}
-          updateGasTypeSelected={updateGasTypeSelected}
-          component={StepThreeFormDutchAuction}
-          {...stores}
-        />
-      </Provider>
-    )
-    const fast = gasPriceStore.gasPrices[2]
-    fast.price = weiToGwei(fast.price)
-
-    // When
-    wrapper
-      .find('.sw-GasPriceInput_SelectInput')
-      .find(`[value="${GAS_PRICE.FAST.id}"]`)
-      .simulate('click')
-
-    // Then
-    expect(updateGasTypeSelected).toHaveBeenCalled()
-    expect(updateGasTypeSelected).toHaveBeenCalledTimes(1)
-    expect(updateGasTypeSelected).toHaveBeenCalledWith(fast)
-  })
 })
