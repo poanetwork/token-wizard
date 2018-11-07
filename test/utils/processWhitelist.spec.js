@@ -255,7 +255,7 @@ describe('processWhitelist', () => {
       ]
 
       const { errors } = errorsCsv(rows, 18, tierStore, tierIndex)
-      expect(errors[0]).toBe(`Line #2 has a greather minCap than maxCap. Current value is ${rows[1][1]}.`)
+      expect(errors[0]).toBe(`Line #2 has a greater minCap than maxCap. Current value is ${rows[1][1]}.`)
       expect(errors[1]).toBe(`Line #2 has a less maxCap than minCap. Current value is ${rows[1][2]}.`)
       expect(errors.length).toBe(2)
     })
@@ -298,7 +298,7 @@ describe('processWhitelist', () => {
 
       const { errors } = errorsCsv(rows, 18, tierStore, tierIndex)
       expect(errors[0]).toBe(`Line #2 has a negative value for maxCap. Current value is ${rows[1][2]}.`)
-      expect(errors[1]).toBe(`Line #2 has a greather minCap than maxCap. Current value is ${rows[1][1]}.`)
+      expect(errors[1]).toBe(`Line #2 has a greater minCap than maxCap. Current value is ${rows[1][1]}.`)
       expect(errors[2]).toBe(`Line #2 has a less maxCap than minCap. Current value is ${rows[1][2]}.`)
       expect(errors.length).toBe(3)
     })
@@ -319,7 +319,7 @@ describe('processWhitelist', () => {
 
       const { errors } = errorsCsv(rows, 18, tierStore, tierIndex)
       expect(errors[0]).toBe(`Line #2 has a negative value for maxCap. Current value is ${rows[1][2]}.`)
-      expect(errors[1]).toBe(`Line #2 has a greather minCap than maxCap. Current value is ${rows[1][1]}.`)
+      expect(errors[1]).toBe(`Line #2 has a greater minCap than maxCap. Current value is ${rows[1][1]}.`)
       expect(errors[2]).toBe(`Line #2 has a less maxCap than minCap. Current value is ${rows[1][2]}.`)
       expect(errors.length).toBe(3)
     })
