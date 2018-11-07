@@ -24,7 +24,6 @@ export const StepThreeFormMintedCapped = ({
   errors,
   form,
   handleSubmit,
-  history,
   invalid,
   pristine,
   firstLoad,
@@ -52,7 +51,7 @@ export const StepThreeFormMintedCapped = ({
   }
 
   const setFieldAsTouched = ({ values }) => {
-    if (!firstLoad) {
+    if (firstLoad) {
       values.tiers.forEach((tier, index) => {
         setFieldTouched(`tiers[${index}].tier`, true)
         setFieldTouched(`tiers[${index}].updatable`, true)

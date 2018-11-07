@@ -1,6 +1,7 @@
 import TierStore from '../../src/stores/TierStore'
 import { LIMIT_WHITELISTED_ADDRESSES, VALIDATION_TYPES } from '../../src/utils/constants'
-import { processCsv, errorsCsv } from '../../src/utils/processWhitelist'
+import { errorsCsv, processCsv } from '../../src/utils/processWhitelist'
+import { isLessOrEqualThan } from '../../src/utils/validations'
 
 const { VALID } = VALIDATION_TYPES
 
@@ -61,14 +62,10 @@ describe('processWhitelist', () => {
         ['0x3333333333333333333333333333333333333333', '1', '10']
       ]
 
-// When
-      const { called, whitelistAddressLengthError, whitelistSupplyLengthError } = processCsv(
-        { rows },
-        tierStore,
-        tierIndex
-      )
+      // When
+      const { called } = processCsv({ rows }, tierStore, tierIndex)
 
-// Then
+      // Then
       expect(called).toBe(3)
       expect(tierStore.tiers[0].whitelist[0]).toEqual({ addr: rows[0][0], min: rows[0][1], max: rows[0][2] })
       expect(tierStore.tiers[0].whitelist[1]).toEqual({ addr: rows[1][0], min: rows[1][1], max: rows[1][2] })
@@ -87,14 +84,10 @@ describe('processWhitelist', () => {
         ['0x2589bd7D8A58Ac9A4aC01d68A7c63315ef184c63', '1', '10'] //valid parameters
       ]
 
-// When
-      const { called, whitelistAddressLengthError, whitelistSupplyLengthError } = processCsv(
-        { rows, decimals: 2 },
-        tierStore,
-        tierIndex
-      )
+      // When
+      const { called } = processCsv({ rows, decimals: 2 }, tierStore, tierIndex)
 
-// Then
+      // Then
       expect(called).toBe(2)
     })
 
@@ -107,14 +100,10 @@ describe('processWhitelist', () => {
         ['0x3333333333333333333333333333333333333333', '1', '10']
       ]
 
-// When
-      const { called, whitelistAddressLengthError, whitelistSupplyLengthError } = processCsv(
-        { rows, decimals: 2 },
-        tierStore,
-        tierIndex
-      )
+      // When
+      const { called } = processCsv({ rows, decimals: 2 }, tierStore, tierIndex)
 
-// Then
+      // Then
       expect(called).toBe(4)
     })
 
@@ -146,14 +135,14 @@ describe('processWhitelist', () => {
         ['0x3333333333333333333333333333333333333333', '1', '10']
       ]
 
-// When
+      // When
       const { called, whitelistAddressLengthError, whitelistSupplyLengthError } = processCsv(
         { rows, decimals: 2 },
         tierStore,
         tierIndex
       )
 
-// Then
+      // Then
       expect(whitelistAddressLengthError).toBeFalsy()
       expect(whitelistSupplyLengthError).toBeFalsy()
       expect(called).toBe(23)
@@ -227,14 +216,10 @@ describe('processWhitelist', () => {
         ['0x3333333333333333333333333333333333333393', '1', '10']
       ]
 
-// When
-      const { called, whitelistAddressLengthError, whitelistSupplyLengthError } = processCsv(
-        { rows, decimals: 2 },
-        tierStore,
-        tierIndex
-      )
+      // When
+      const { called, whitelistAddressLengthError } = processCsv({ rows, decimals: 2 }, tierStore, tierIndex)
 
-// Then
+      // Then
       expect(whitelistAddressLengthError).toBeTruthy()
       expect(called).toBe(51)
     })
@@ -270,8 +255,8 @@ describe('processWhitelist', () => {
       ]
 
       const { errors } = errorsCsv(rows, 18, tierStore, tierIndex)
-      expect(errors[0]).toBe(`The line number 2 has a greather minCap than maxCap. Actual value is ${rows[1][1]}.`)
-      expect(errors[1]).toBe(`The line number 2 has a less maxCap than minCap. Actual value is ${rows[1][2]}.`)
+      expect(errors[0]).toBe(`Line #2 has a greater minCap than maxCap. Current value is ${rows[1][1]}.`)
+      expect(errors[1]).toBe(`Line #2 has a less maxCap than minCap. Current value is ${rows[1][2]}.`)
       expect(errors.length).toBe(2)
     })
 
@@ -284,10 +269,8 @@ describe('processWhitelist', () => {
       ]
 
       const { errors } = errorsCsv(rows, 18, tierStore, tierIndex)
-      expect(errors[0]).toBe(`The line number 2 have 4 columns, must have 3 columns.`)
-      expect(errors[1]).toBe(
-        `The line number 2 has a maxCap that exceeds the total supply. Actual value is ${rows[1][2]}.`
-      )
+      expect(errors[0]).toBe(`Line #2 have 4 columns, must have 3 columns.`)
+      expect(errors[1]).toBe(`Line #2 has a maxCap that exceeds the total supply. Current value is ${rows[1][2]}.`)
       expect(errors.length).toBe(2)
     })
 
@@ -300,8 +283,8 @@ describe('processWhitelist', () => {
       ]
 
       const { errors } = errorsCsv(rows, 18, tierStore, tierIndex)
-      expect(errors[0]).toBe(`The line number 2 have 2 columns, must have 3 columns.`)
-      expect(errors[1]).toBe(`The line number 2 has an incorrect maxCap, must be a integer. Actual value is empty.`)
+      expect(errors[0]).toBe(`Line #2 have 2 columns, must have 3 columns.`)
+      expect(errors[1]).toBe(`Line #2 has an incorrect maxCap, must be an integer. Current value is empty.`)
       expect(errors.length).toBe(2)
     })
 
@@ -314,9 +297,9 @@ describe('processWhitelist', () => {
       ]
 
       const { errors } = errorsCsv(rows, 18, tierStore, tierIndex)
-      expect(errors[0]).toBe(`The line number 2 has a negative value for maxCap. Actual value is ${rows[1][2]}.`)
-      expect(errors[1]).toBe(`The line number 2 has a greather minCap than maxCap. Actual value is ${rows[1][1]}.`)
-      expect(errors[2]).toBe(`The line number 2 has a less maxCap than minCap. Actual value is ${rows[1][2]}.`)
+      expect(errors[0]).toBe(`Line #2 has a negative value for maxCap. Current value is ${rows[1][2]}.`)
+      expect(errors[1]).toBe(`Line #2 has a greater minCap than maxCap. Current value is ${rows[1][1]}.`)
+      expect(errors[2]).toBe(`Line #2 has a less maxCap than minCap. Current value is ${rows[1][2]}.`)
       expect(errors.length).toBe(3)
     })
 
@@ -335,9 +318,9 @@ describe('processWhitelist', () => {
       ]
 
       const { errors } = errorsCsv(rows, 18, tierStore, tierIndex)
-      expect(errors[0]).toBe(`The line number 2 has a negative value for maxCap. Actual value is ${rows[1][2]}.`)
-      expect(errors[1]).toBe(`The line number 2 has a greather minCap than maxCap. Actual value is ${rows[1][1]}.`)
-      expect(errors[2]).toBe(`The line number 2 has a less maxCap than minCap. Actual value is ${rows[1][2]}.`)
+      expect(errors[0]).toBe(`Line #2 has a negative value for maxCap. Current value is ${rows[1][2]}.`)
+      expect(errors[1]).toBe(`Line #2 has a greater minCap than maxCap. Current value is ${rows[1][1]}.`)
+      expect(errors[2]).toBe(`Line #2 has a less maxCap than minCap. Current value is ${rows[1][2]}.`)
       expect(errors.length).toBe(3)
     })
 
@@ -348,7 +331,7 @@ describe('processWhitelist', () => {
       ]
 
       const { errors } = errorsCsv(rows, 18, tierStore, tierIndex)
-      expect(errors[0]).toBe(`The line number 2 has an incorrect maxCap, must be a integer. Actual value is empty.`)
+      expect(errors[0]).toBe(`Line #2 has an incorrect maxCap, must be an integer. Current value is empty.`)
       expect(errors.length).toBe(1)
     })
 
@@ -359,7 +342,7 @@ describe('processWhitelist', () => {
       ]
 
       const { errors } = errorsCsv(rows, 18, tierStore, tierIndex)
-      expect(errors[0]).toBe(`The line number 1 has an incorrect maxCap, must be a integer. Actual value is empty.`)
+      expect(errors[0]).toBe(`Line #1 has an incorrect maxCap, must be an integer. Current value is empty.`)
       expect(errors.length).toBe(1)
     })
 
@@ -370,9 +353,7 @@ describe('processWhitelist', () => {
       ]
 
       const { errors } = errorsCsv(rows, 18, tierStore, tierIndex)
-      expect(errors[0]).toBe(
-        `The line number 1 has an incorrect maxCap, must be a integer. Actual value is ${rows[0][2]}.`
-      )
+      expect(errors[0]).toBe(`Line #1 has an incorrect maxCap, must be an integer. Current value is ${rows[0][2]}.`)
       expect(errors.length).toBe(1)
     })
 
@@ -383,9 +364,7 @@ describe('processWhitelist', () => {
       ]
 
       const { errors } = errorsCsv(rows, 18, tierStore, tierIndex)
-      expect(errors[0]).toBe(
-        `The line number 2 has an incorrect minCap, must be a integer. Actual value is ${rows[1][1]}.`
-      )
+      expect(errors[0]).toBe(`Line #2 has an incorrect minCap, must be an integer. Current value is ${rows[1][1]}.`)
       expect(errors.length).toBe(1)
     })
 
@@ -395,9 +374,7 @@ describe('processWhitelist', () => {
         ['0x665772109Eb2dc9F5B7c28F987Ec58949d4Eeb87', '1', '10']
       ]
       const { errors } = errorsCsv(rows, 18, tierStore, tierIndex)
-      expect(errors[0]).toBe(
-        `The line number 1 has an incorrect minCap, must be a integer. Actual value is ${rows[0][1]}.`
-      )
+      expect(errors[0]).toBe(`Line #1 has an incorrect minCap, must be an integer. Current value is ${rows[0][1]}.`)
       expect(errors.length).toBe(1)
     })
 
@@ -407,7 +384,7 @@ describe('processWhitelist', () => {
         ['0x665772109Eb2dc9F5B7c28F987Ec58949d4Eeb87', '1', '10']
       ]
       const { errors } = errorsCsv(rows, 18, tierStore, tierIndex)
-      expect(errors[0]).toBe(`The line number 1 has an incorrect address. Actual value is ${rows[0][0]}.`)
+      expect(errors[0]).toBe(`Line #1 has an incorrect address. Current value is ${rows[0][0]}.`)
       expect(errors.length).toBe(1)
     })
 
@@ -417,9 +394,9 @@ describe('processWhitelist', () => {
         ['0x665772109Eb2dc9F5B7c28F987Ec58949d4Eeb87', '1', '10']
       ]
       const { errors } = errorsCsv(rows, 18, tierStore, tierIndex)
-      expect(errors[0]).toBe(`The line number 1 have 1 column, must have 3 columns.`)
-      expect(errors[1]).toBe(`The line number 1 has an incorrect minCap, must be a integer. Actual value is empty.`)
-      expect(errors[2]).toBe(`The line number 1 has an incorrect maxCap, must be a integer. Actual value is empty.`)
+      expect(errors[0]).toBe(`Line #1 have 1 column, must have 3 columns.`)
+      expect(errors[1]).toBe(`Line #1 has an incorrect minCap, must be an integer. Current value is empty.`)
+      expect(errors[2]).toBe(`Line #1 has an incorrect maxCap, must be an integer. Current value is empty.`)
       expect(errors.length).toBe(3)
     })
 
@@ -432,7 +409,7 @@ describe('processWhitelist', () => {
       ]
 
       const { errors } = errorsCsv(rows, 18, tierStore, tierIndex)
-      expect(errors[0]).toBe(`The line number 2 has a negative value for minCap. Actual value is ${rows[1][1]}.`)
+      expect(errors[0]).toBe(`Line #2 has a negative value for minCap. Current value is ${rows[1][1]}.`)
       expect(errors.length).toBe(1)
     })
 
@@ -457,26 +434,6 @@ describe('processWhitelist', () => {
 
       // Then
       expect(called).toBe(addressCount)
-    })
-
-    it(`should add addresses whose maxCap is not greater than 1000`, () => {
-      // Given
-      tierStore.setTierProperty(1000, 'supply', 0)
-
-      const { rows } = require('./helpers/whitelist-addresses')
-      const { supply } = tierStore.tiers[0]
-      const lessOrEqualThanSupply = isLessOrEqualThan()(supply)
-      const validAddressesCount = rows.filter(([addr, min, max]) => lessOrEqualThanSupply(max) === undefined).length
-
-      const cb = jest.fn(item => tierStore.addWhitelistItem(item, 0))
-      const cbValidation = jest.fn(() => tierStore.validateWhitelistedAddressLength(0))
-      const cbSupplyValidation = jest.fn(max => lessOrEqualThanSupply(max))
-
-      // When
-      const { called } = processWhitelist({ rows, decimals: 3 }, cb, cbValidation, cbSupplyValidation)
-
-      // Then
-      expect(called).toBe(validAddressesCount)
     })
   })
 })

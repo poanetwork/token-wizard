@@ -37,7 +37,7 @@ export class StepThree extends Component {
     gasTypeSelected: {}
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const { web3Store, gasPriceStore } = this.props
 
     checkWeb3(web3Store.web3)
@@ -194,7 +194,6 @@ export class StepThree extends Component {
             <Form
               component={stepThreeComponent}
               decorators={[this.calculator]}
-              history={this.props.history}
               initialValues={{
                 burnExcess: this.state.burnExcess,
                 gasPrice: this.state.gasTypeSelected,

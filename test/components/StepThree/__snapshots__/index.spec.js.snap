@@ -636,6 +636,7 @@ exports[`StepThree StepThree - renders should render StepThree for Dutch Auction
         >
           <button
             className="sw-ButtonBack "
+            disabled={false}
             onClick={[Function]}
             type="button"
           >
@@ -1116,25 +1117,6 @@ exports[`StepThree StepThree - renders should render StepThree for Whitelist wit
                 type="number"
                 value=""
               />
-              <div
-                className="sw-Errors"
-              >
-                <div
-                  className="sw-Errors_Item"
-                >
-                  Please enter a valid number greater than 0
-                </div>
-                <div
-                  className="sw-Errors_Item"
-                >
-                  Should be integer
-                </div>
-                <div
-                  className="sw-Errors_Item"
-                >
-                  Should not be greater than 1 quintillion (10^18)
-                </div>
-              </div>
             </div>
             <div
               className="sw-InputField2 sw-InputField2-CrowdsaleSupply"
@@ -1171,15 +1153,6 @@ exports[`StepThree StepThree - renders should render StepThree for Whitelist wit
                 type="number"
                 value=""
               />
-              <div
-                className="sw-Errors"
-              >
-                <div
-                  className="sw-Errors_Item"
-                >
-                  Please enter a valid number greater than 0
-                </div>
-              </div>
             </div>
             <div
               className="sw-InputField2 sw-InputField2-MinCap"
@@ -1218,15 +1191,6 @@ exports[`StepThree StepThree - renders should render StepThree for Whitelist wit
                 type="number"
                 value="0"
               />
-              <div
-                className="sw-Errors"
-              >
-                <div
-                  className="sw-Errors_Item"
-                >
-                  Decimals should not exceed undefined places
-                </div>
-              </div>
             </div>
             <div
               className="sw-RadioButton sw-InputField2-WhitelistEnabled"
@@ -1377,6 +1341,7 @@ exports[`StepThree StepThree - renders should render StepThree for Whitelist wit
         >
           <button
             className="sw-ButtonBack "
+            disabled={false}
             onClick={[Function]}
             type="button"
           >

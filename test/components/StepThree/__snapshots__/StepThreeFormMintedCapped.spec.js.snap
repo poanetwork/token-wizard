@@ -310,6 +310,25 @@ exports[`StepThreeFormMintedCapped should render StepThreeFormMintedCapped 1`] =
           type="number"
           value=""
         />
+        <div
+          className="sw-Errors"
+        >
+          <div
+            className="sw-Errors_Item"
+          >
+            Please enter a valid number greater than 0
+          </div>
+          <div
+            className="sw-Errors_Item"
+          >
+            Should be integer
+          </div>
+          <div
+            className="sw-Errors_Item"
+          >
+            Should not be greater than 1 quintillion (10^18)
+          </div>
+        </div>
       </div>
       <div
         className="sw-InputField2 sw-InputField2-CrowdsaleSupply"
@@ -346,6 +365,15 @@ exports[`StepThreeFormMintedCapped should render StepThreeFormMintedCapped 1`] =
           type="number"
           value=""
         />
+        <div
+          className="sw-Errors"
+        >
+          <div
+            className="sw-Errors_Item"
+          >
+            Please enter a valid number greater than 0
+          </div>
+        </div>
       </div>
       <div
         className="sw-InputField2 sw-InputField2-MinCap"
@@ -384,6 +412,15 @@ exports[`StepThreeFormMintedCapped should render StepThreeFormMintedCapped 1`] =
           type="number"
           value="0"
         />
+        <div
+          className="sw-Errors"
+        >
+          <div
+            className="sw-Errors_Item"
+          >
+            Decimals should not exceed undefined places
+          </div>
+        </div>
       </div>
       <div
         className="sw-RadioButton sw-InputField2-WhitelistEnabled"
@@ -534,7 +571,7 @@ exports[`StepThreeFormMintedCapped should render StepThreeFormMintedCapped 1`] =
   >
     <button
       className="sw-ButtonBack "
-      onClick={[Function]}
+      disabled={true}
       type="button"
     >
       Back

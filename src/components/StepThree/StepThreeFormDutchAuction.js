@@ -6,7 +6,7 @@ import { DutchAuctionBlock } from '../Common/DutchAuctionBlock'
 import { Field, FormSpy } from 'react-final-form'
 import { FieldArray } from 'react-final-form-arrays'
 import { InputField2 } from '../Common/InputField2'
-import { DESCRIPTION, TEXT_FIELDS, VALIDATION_MESSAGES, VALIDATION_TYPES } from '../../utils/constants'
+import { TEXT_FIELDS, VALIDATION_TYPES, VALIDATION_MESSAGES, DESCRIPTION } from '../../utils/constants'
 import { WhenFieldChanges } from '../Common/WhenFieldChanges'
 import {
   composeValidators,
@@ -24,7 +24,6 @@ export const StepThreeFormDutchAuction = ({
   errors,
   form,
   handleSubmit,
-  history,
   invalid,
   pristine,
   firstLoad,
@@ -37,11 +36,11 @@ export const StepThreeFormDutchAuction = ({
   const { setFieldTouched } = form.mutators
 
   const handleValidateGasPrice = value => {
-    const errors = composeValidators(
+    const hasErrors = composeValidators(
       isDecimalPlacesNotGreaterThan(VALIDATION_MESSAGES.DECIMAL_PLACES_9)(9),
-      isGreaterOrEqualThan(VALIDATION_MESSAGES.NUMBER_GREATER_OR_EQUAL_THAN)(0.1)
+      isGreaterOrEqualThan(`${VALIDATION_MESSAGES.NUMBER_GREATER_OR_EQUAL_THAN} 0.1`)(0.1)
     )(value.price)
-    if (errors) return errors.shift()
+    if (hasErrors) return hasErrors.shift()
   }
 
   const handleBurnExcessChange = (value, input) => {
@@ -70,7 +69,7 @@ export const StepThreeFormDutchAuction = ({
 
   const handleOnChange = ({ values }) => {
     const { tierStore, generalStore, crowdsaleStore } = props
-    const { walletAddress, gasPrice, burnExcess, tiers } = values
+    const { walletAddress, gasPrice, tiers, burnExcess } = values
 
     tierStore.updateWalletAddress(walletAddress, VALID)
     tierStore.updateBurnExcess(burnExcess, VALID)
@@ -140,7 +139,7 @@ export const StepThreeFormDutchAuction = ({
           component={GasPriceInput}
           gasPrices={props.gasPriceStore.gasPricesInGwei}
           name="gasPrice"
-          updateGasTypeSelected={value => props.updateGasTypeSelected(value)}
+          updateGasTypeSelected={value => props.generalStore.setGasTypeSelected(value)}
           validate={value => handleValidateGasPrice(value)}
           id="gasPrice"
           side="right"

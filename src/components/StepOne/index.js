@@ -32,65 +32,78 @@ const { MINTED_CAPPED_CROWDSALE } = CROWDSALE_STRATEGIES
 export class StepOne extends Component {
   state = {
     loading: true,
-    strategy: null
+    strategy: MINTED_CAPPED_CROWDSALE
+  }
+
+  constructor(props) {
+    super(props)
+
+    if (localStorage.reload) {
+      // We made a reload, to verify metamask inject web3 when is enabled
+      delete localStorage.reload
+      localStorage.clearStorage = true
+      this.block = false
+      window.location.reload()
+    } else {
+      this.block = true
+    }
   }
 
   async componentDidMount() {
-    window.addEventListener('beforeunload', () => {
-      navigateTo({
-        history: this.props.history,
-        location: 'stepOne'
+    if (this.block) {
+      this.setState({
+        loading: true
       })
-    })
 
-    // Capture back button to clear fromLocation
-    window.addEventListener(
-      'popstate',
-      event => {
-        if (event.state) {
-          this.props.history.replace({
-            state: {
-              fromLocation: null
-            }
-          })
-        }
-      },
-      false
-    )
-
-    try {
-      await checkWeb3ForErrors(result => {
+      window.addEventListener('beforeunload', () => {
         navigateTo({
           history: this.props.history,
-          location: 'home'
+          location: 'stepOne'
         })
       })
 
-      const { strategy } = await this.load()
-      this.setState({ strategy: strategy })
-    } catch (e) {
-      logger.log('An error has occurred', e.message)
-    }
+      // Capture back button to clear fromLocation
+      window.addEventListener(
+        'popstate',
+        event => {
+          if (event.state) {
+            this.props.history.replace({
+              state: {
+                fromLocation: null
+              }
+            })
+          }
+        },
+        false
+      )
 
-    this.setState({ loading: false })
+      try {
+        await checkWeb3ForErrors(result => {
+          navigateTo({
+            history: this.props.history,
+            location: 'home'
+          })
+        })
+
+        const { strategy } = await this.load()
+        this.setState({ strategy: strategy })
+      } catch (e) {
+        logger.log('An error has occurred', e.message)
+      }
+
+      this.setState({
+        loading: false
+      })
+    }
   }
 
   async load() {
     const { crowdsaleStore } = this.props
-    // Reload storage
-    const { state } = this.props.history.location
+    if (localStorage.clearStorage) {
+      delete localStorage.clearStorage
 
-    logger.log(`From location ${state && state.fromLocation ? state.fromLocation : null}`)
-    if (state && state.fromLocation && state.fromLocation === 'home') {
       clearStorage(this.props)
       await reloadStorage(this.props)
-
-      // Set fromLocation to null, there is a glitch from the back button of the browser
-      this.props.history.push({
-        state: {
-          fromLocation: null
-        }
-      })
     }
 
     // Set default strategy value
@@ -128,41 +141,46 @@ export class StepOne extends Component {
   }
 
   render() {
-    const { contractStore } = this.props
-    const status =
-      (contractStore && contractStore.downloadStatus === DOWNLOAD_STATUS.SUCCESS) || localStorage.length > 0
+    // Not render until reload
+    if (!this.block) {
+      return false
+    } else {
+      const { contractStore } = this.props
+      const status =
+        (contractStore && contractStore.downloadStatus === DOWNLOAD_STATUS.SUCCESS) || localStorage.length > 0
 
-    return (
-      <div>
-        <section className="lo-MenuBarAndContent">
-          <StepNavigation activeStep={CROWDSALE_STRATEGY} />
-          <div className="st-StepContent">
-            <StepInfo
-              description="Select a strategy for your crowdsale contract."
-              stepNumber="1"
-              title={CROWDSALE_STRATEGY}
-            />
-            <div className="sw-RadioItems">
-              {strategies.map((strategy, i) => {
-                return (
-                  <StrategyItem
-                    key={i}
-                    strategy={this.state.strategy}
-                    strategyType={strategy.type}
-                    strategyDisplayTitle={strategy.display}
-                    stragegyDisplayDescription={strategy.description}
-                    handleChange={this.handleChange}
-                  />
-                )
-              })}
+      return (
+        <div>
+          <section className="lo-MenuBarAndContent">
+            <StepNavigation activeStep={CROWDSALE_STRATEGY} />
+            <div className="st-StepContent">
+              <StepInfo
+                description="Select a strategy for your crowdsale contract."
+                stepNumber="1"
+                title={CROWDSALE_STRATEGY}
+              />
+              <div className="sw-RadioItems">
+                {strategies.map((strategy, i) => {
+                  return (
+                    <StrategyItem
+                      key={i}
+                      strategy={this.state.strategy}
+                      strategyType={strategy.type}
+                      strategyDisplayTitle={strategy.display}
+                      stragegyDisplayDescription={strategy.description}
+                      handleChange={this.handleChange}
+                    />
+                  )
+                })}
+              </div>
+              <div className="st-StepContent_Buttons">
+                <ButtonContinue disabled={!status} onClick={() => this.goNextStep()} />
+              </div>
             </div>
-            <div className="st-StepContent_Buttons">
-              <ButtonContinue disabled={!status} onClick={() => this.goNextStep()} />
-            </div>
-          </div>
-        </section>
-        <Loader show={this.state.loading} />
-      </div>
-    )
+          </section>
+          <Loader show={this.state.loading} />
+        </div>
+      )
+    }
   }
 }

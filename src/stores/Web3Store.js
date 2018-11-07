@@ -13,7 +13,7 @@ class Web3Store {
   @observable accounts
 
   constructor() {
-    this.getWeb3((web3, status) => {
+    this.getWeb3(web3 => {
       if (web3) {
         this.web3 = web3
         if (typeof web3.eth.getAccounts !== 'undefined') {
@@ -21,11 +21,14 @@ class Web3Store {
             .getAccounts()
             .then(accounts => {
               this.accounts = accounts
+
               if (accounts.length > 0) {
                 this.setProperty('curAddress', accounts[0])
               }
             })
-            .catch(err => logger.log('There is no accounts'))
+            .catch(err => {
+              logger.log('Error trying to get accounts', err)
+            })
         }
       }
     })
@@ -103,14 +106,15 @@ class Web3Store {
         const httpProvider = new Web3.providers.HttpProvider(infuraLink)
         web3 = new Web3(httpProvider)
       }
+
+      cb(web3)
     } else {
       // window.web3 == web3 most of the time. Don't override the provided,
       // web3, just wrap it in your Web3.
       web3 = new Web3(web3.currentProvider)
+
+      cb(web3)
     }
-
-    cb(web3, false)
-
     return web3
   }
 }
