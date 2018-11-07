@@ -19,6 +19,8 @@ export const copy = cls => {
     logger.error('Action:', e.action)
     logger.error('Trigger:', e.trigger)
   })
+
+  return clipboard
 }
 
 export const showClipboardCopyToast = title => {

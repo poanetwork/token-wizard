@@ -326,6 +326,25 @@ export function errorEmptyCSVAlert() {
   })
 }
 
+export function errorWhitelistedCSVAlert(errors) {
+  let message = 'There was an error importing the file. The file have an erroneous amount of columns'
+
+  if (errors && errors.length > 0) {
+    const plural1 = errors.length > 1 ? 'lines' : 'line'
+    const plural2 = errors.length > 1 ? 'are' : 'is'
+    const messageHeader = `<div class="text-left">The following ${plural1} ${plural2} wrong: </div>`
+
+    let list = `<ul class="text-left"><li>${errors.join(`</li><li>`)}</ul>`
+    message = `${messageHeader} ${list}`
+  }
+
+  return sweetAlert2({
+    title: 'Error importing the file',
+    html: message,
+    type: 'error'
+  })
+}
+
 export function errorRowLengthCSVAlert(errors) {
   let message = 'There was an error importing the file. The file have an erroneous amount of columns'
 

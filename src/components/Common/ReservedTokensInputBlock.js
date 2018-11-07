@@ -224,7 +224,8 @@ export class ReservedTokensInputBlock extends Component {
             },
             newToken => {
               this.props.reservedTokenStore.addToken(newToken)
-            }
+            },
+            this.props.reservedTokenStore
           )
 
           if (reservedTokenLengthError) {

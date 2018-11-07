@@ -7,8 +7,10 @@ import {
   isDateSameOrLaterThan,
   isDateSameOrPreviousThan,
   isDecimalPlacesNotGreaterThan,
+  isGreaterThan,
   isGreaterOrEqualThan,
   isInteger,
+  isLessThan,
   isLessOrEqualThan,
   isMatchingPattern,
   isMaxLength,
@@ -857,5 +859,72 @@ describe('validateTierMinCap', () => {
     const validationResult = validateTierMinCap(decimals)(index)(minCap, values)
 
     expect(validationResult).toBeUndefined()
+  })
+})
+
+describe('isGreaterThan', () => {
+  const testCases = [
+    { value: '10', errorMessage: undefined, comparedTo: '5', expected: undefined },
+    { value: '10.1', errorMessage: undefined, comparedTo: '5', expected: undefined },
+    { value: '20', errorMessage: undefined, comparedTo: '5', expected: undefined },
+    { value: '30', errorMessage: undefined, comparedTo: '5', expected: undefined },
+    { value: '40', errorMessage: undefined, comparedTo: '5', expected: undefined },
+    { value: '50', errorMessage: undefined, comparedTo: undefined, expected: undefined },
+    { value: '0.1', errorMessage: undefined, comparedTo: '0.1', expected: VALIDATION_MESSAGES.GREATER },
+    { value: '0.1234', errorMessage: undefined, comparedTo: '0.1', expected: undefined },
+    {
+      value: 'not-a-number',
+      errorMessage: undefined,
+      comparedTo: '0.1',
+      expected: VALIDATION_MESSAGES.GREATER
+    },
+    { value: '0.0001', errorMessage: undefined, comparedTo: '0.1', expected: VALIDATION_MESSAGES.GREATER },
+    { value: '0', errorMessage: undefined, comparedTo: '0.1', expected: VALIDATION_MESSAGES.GREATER },
+    { value: '-10', errorMessage: undefined, comparedTo: '0.1', expected: VALIDATION_MESSAGES.GREATER },
+    {
+      value: '-10',
+      errorMessage: 'Personalized error message',
+      comparedTo: '0.1',
+      expected: 'Personalized error message'
+    }
+  ]
+
+  testCases.forEach(testCase => {
+    const action = testCase.expected === undefined ? 'pass' : 'fail'
+
+    it(`Should ${action} for '${testCase.value}'`, () => {
+      expect(isGreaterThan(testCase.errorMessage)(testCase.comparedTo)(testCase.value)).toBe(testCase.expected)
+    })
+  })
+})
+
+describe('isLessThan', () => {
+  const testCases = [
+    { value: '1', errorMessage: undefined, comparedTo: '5', expected: undefined },
+    { value: '1.1', errorMessage: undefined, comparedTo: '5', expected: undefined },
+    { value: '2', errorMessage: undefined, comparedTo: '5', expected: undefined },
+    { value: '3', errorMessage: undefined, comparedTo: '5', expected: undefined },
+    { value: '4', errorMessage: undefined, comparedTo: '5', expected: undefined },
+    { value: '5', errorMessage: undefined, comparedTo: undefined, expected: undefined },
+    { value: '1000000000000000000', errorMessage: undefined, comparedTo: '1e18', expected: VALIDATION_MESSAGES.LESS },
+    { value: '999999999999999999', errorMessage: undefined, comparedTo: '1e18', expected: undefined },
+    { value: 'not-a-number', errorMessage: undefined, comparedTo: '1e18', expected: VALIDATION_MESSAGES.LESS },
+    {
+      value: '10000000000000000001',
+      errorMessage: undefined,
+      comparedTo: '1e18',
+      expected: VALIDATION_MESSAGES.LESS
+    },
+    { value: '5.1', errorMessage: undefined, comparedTo: '5', expected: VALIDATION_MESSAGES.LESS },
+    { value: '6', errorMessage: undefined, comparedTo: '5', expected: VALIDATION_MESSAGES.LESS },
+    { value: '6', errorMessage: 'Personalized error message', comparedTo: '5', expected: 'Personalized error message' }
+  ]
+
+  testCases.forEach(testCase => {
+    const action = testCase.expected === undefined ? 'pass' : 'fail'
+
+    it(`Should ${action} for '${testCase.value}'`, () => {
+      expect(isLessThan(testCase.errorMessage)(testCase.comparedTo)(testCase.value)).toBe(testCase.expected)
+    })
   })
 })
