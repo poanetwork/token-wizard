@@ -104,7 +104,7 @@ export const errorsCsv = (data, decimals, tierStore, num) => {
       isInteger()(max) === undefined &&
       isLessOrEqualThan()(max)(min) !== undefined
     ) {
-      errors.push(`Line #${line} has a greather minCap than maxCap. Current value is ${minTitle}.`)
+      errors.push(`Line #${line} has a greater minCap than maxCap. Current value is ${minTitle}.`)
     }
 
     if (

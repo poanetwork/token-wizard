@@ -15,6 +15,7 @@ export class CreateCrowdsale extends Component {
           fromLocation: 'home'
         })
       } else {
+        localStorage.reload = true
         navigateTo({
           history: this.props.history,
           location: 'stepOne',
