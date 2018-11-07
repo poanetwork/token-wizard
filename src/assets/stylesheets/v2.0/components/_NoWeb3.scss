@@ -25,6 +25,7 @@ $sw-NoWeb3_Button-height: 40px !default;
     display: flex;
     height: 100%;
     justify-content: center;
+    min-height: fit-content;
     padding: 10px;
     position: relative;
     z-index: 12;
@@ -34,6 +35,7 @@ $sw-NoWeb3_Button-height: 40px !default;
     background-color: #fff;
     border-radius: 5px;
     max-width: 580px;
+    min-height: fit-content;
     padding: 20px;
 
     @media (min-width: $breakpoint-sm) {
