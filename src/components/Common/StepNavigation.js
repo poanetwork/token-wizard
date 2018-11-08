@@ -1,54 +1,48 @@
 import React from 'react'
-import { isStepActive } from '../../utils/utils'
 import { NAVIGATION_STEPS } from '../../utils/constants'
 import { LogoWhite } from '../LogoWhite/index'
+import { StepItem } from './StepItem'
 
-const { CROWDSALE_STRATEGY, TOKEN_SETUP, CROWDSALE_SETUP, PUBLISH, CROWDSALE_PAGE } = NAVIGATION_STEPS
-const stepsTextArray = Object.values(NAVIGATION_STEPS)
+export const StepNavigation = ({ activeStepTitle }) => {
+  const { CONTRIBUTE_PAGE } = NAVIGATION_STEPS
+  const stepsTitlesArray = Object.values(NAVIGATION_STEPS)
+  const stepsTextArrayWithContributePage = stepsTitlesArray.slice(0, stepsTitlesArray.length - 1)
 
-export const StepNavigation = ({ activeStep }) => (
-  <div className="st-StepNavigation">
-    <LogoWhite />
-    <div className="st-StepNavigation_Container">
-      <div
-        className={`st-StepNavigation_StepContainer
-        ${isStepActive(stepsTextArray, CROWDSALE_STRATEGY, activeStep)}`}
-      >
-        <div className="st-StepNavigation_StepCircle" />
-        <div className="st-StepNavigation_StepLine" />
-        <span className="st-StepNavigation_StepText">{CROWDSALE_STRATEGY}</span>
-      </div>
-      <div
-        className={`st-StepNavigation_StepContainer
-        ${isStepActive(stepsTextArray, TOKEN_SETUP, activeStep)}`}
-      >
-        <div className="st-StepNavigation_StepCircle" />
-        <div className="st-StepNavigation_StepLine" />
-        <span className="st-StepNavigation_StepText">{TOKEN_SETUP}</span>
-      </div>
-      <div
-        className={`st-StepNavigation_StepContainer
-        ${isStepActive(stepsTextArray, CROWDSALE_SETUP, activeStep)}`}
-      >
-        <div className="st-StepNavigation_StepCircle" />
-        <div className="st-StepNavigation_StepLine" />
-        <span className="st-StepNavigation_StepText">{CROWDSALE_SETUP}</span>
-      </div>
-      <div
-        className={`st-StepNavigation_StepContainer
-        ${isStepActive(stepsTextArray, PUBLISH, activeStep)}`}
-      >
-        <div className="st-StepNavigation_StepCircle" />
-        <div className="st-StepNavigation_StepLine" />
-        <span className="st-StepNavigation_StepText">{PUBLISH}</span>
-      </div>
-      <div
-        className={`st-StepNavigation_StepContainer
-        ${isStepActive(stepsTextArray, CROWDSALE_PAGE, activeStep)}`}
-      >
-        <div className="st-StepNavigation_StepCircle" />
-        <span className="st-StepNavigation_StepText">{CROWDSALE_PAGE}</span>
+  const showContributePageItem = () => {
+    return CONTRIBUTE_PAGE === activeStepTitle
+  }
+
+  const isLastItem = index => {
+    return index + 1 === stepsTextArrayWithContributePage.length
+  }
+
+  const isStepActive = (stepsTextArray, stepText, activeStepText) => {
+    const stepIndex = stepsTextArray.indexOf(stepText)
+    const activeStepIndex = stepsTextArray.indexOf(activeStepText)
+
+    return stepIndex <= activeStepIndex ? true : false
+  }
+
+  const stepItems = stepsTextArrayWithContributePage.map((item, index) => (
+    <StepItem
+      active={isStepActive(stepsTextArrayWithContributePage, item, activeStepTitle) || showContributePageItem()}
+      itemTitle={item}
+      key={index}
+      hideSeparator={isLastItem(index) && !showContributePageItem()}
+    />
+  ))
+
+  const contributePageStepItem = showContributePageItem() ? (
+    <StepItem active={true} itemTitle={CONTRIBUTE_PAGE} showSeparator={false} size={'sm'} />
+  ) : null
+
+  return (
+    <div className="st-StepNavigation">
+      <LogoWhite />
+      <div className="st-StepNavigation_Container">
+        {stepItems}
+        {contributePageStepItem}
       </div>
     </div>
-  </div>
-)
+  )
+}

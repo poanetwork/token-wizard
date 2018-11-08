@@ -1,79 +1,83 @@
 import React from 'react'
 import {
-  getCurrentAccount,
-  checkNetWorkByID,
-  checkTxMined,
-  sendTXToContract,
-  calculateGasLimit,
   attachToSpecificCrowdsaleContract,
   attachToSpecificCrowdsaleContractByAddr,
-  methodToExec,
+  calculateGasLimit,
+  checkNetWorkByID,
+  checkTxMined,
+  checkWeb3,
   getCrowdsaleStrategy,
   getCrowdsaleStrategyByName,
-  checkWeb3,
-  getExecBuyCallData
+  getCurrentAccount,
+  getExecBuyCallData,
+  methodToExec,
+  sendTXToContract
 } from '../../utils/blockchainHelpers'
 import {
-  getTokenData,
+  getAddr,
   getCrowdsaleData,
   getCrowdsaleTargetDates,
-  initializeAccumulativeData,
-  isStarted,
-  isFinalized,
-  isEnded,
-  isSoldOut,
-  isTierSoldOut,
-  getUserMaxLimits,
-  getUserMinLimits,
-  getUserMaxContribution,
-  isCrowdSaleFull,
-  getUserBalanceByStore,
-  getUserBalance,
   getCurrentTierInfoCustom,
   getExecID,
-  getAddr
+  getTokenData,
+  getUserBalance,
+  getUserBalanceByStore,
+  getUserMaxContribution,
+  getUserMaxLimits,
+  getUserMinLimits,
+  initializeAccumulativeData,
+  isCrowdSaleFull,
+  isEnded,
+  isFinalized,
+  isSoldOut,
+  isStarted,
+  isTierSoldOut
 } from '../Crowdsale/utils'
 import {
   countDecimalPlaces,
   getNetworkID,
-  toast,
-  toBigNumber,
-  truncateStringInTheMiddle,
   isAddressValid,
-  isExecIDValid
+  isExecIDValid,
+  toBigNumber,
+  toast,
+  truncateStringInTheMiddle
 } from '../../utils/utils'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import {
-  contributionDisabledAlertInTime,
-  noGasPriceAvailable,
   MetaMaskIsLockedAlert,
-  successfulContributionAlert,
+  contributionDisabledAlertInTime,
+  invalidCrowdsaleExecIDAlert,
+  invalidCrowdsaleProxyAlert,
+  invalidNetworkIDAlert,
+  noGasPriceAvailable,
   noMoreTokensAvailable,
   notAllowedContributor,
-  invalidCrowdsaleExecIDAlert,
-  invalidNetworkIDAlert,
-  invalidCrowdsaleProxyAlert
+  successfulContributionAlert
 } from '../../utils/alerts'
-import { Loader } from '../Common/Loader'
-import { CrowdsaleConfig } from '../Common/config'
-import { CONTRIBUTION_OPTIONS, TOAST } from '../../utils/constants'
-import { inject, observer } from 'mobx-react'
-import { toJS } from 'mobx'
-import QRPaymentProcess from './QRPaymentProcess'
 import CountdownTimer from './CountdownTimer'
+import QRPaymentProcess from './QRPaymentProcess'
+import ReactTooltip from 'react-tooltip'
 import classNames from 'classnames'
+import logdown from 'logdown'
 import moment from 'moment'
 import { BigNumber } from 'bignumber.js'
-import { Form } from 'react-final-form'
+import { CONTRIBUTION_OPTIONS, TOAST, NAVIGATION_STEPS } from '../../utils/constants'
 import { ContributeForm } from './ContributeForm'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
-import ReactTooltip from 'react-tooltip'
-import logdown from 'logdown'
+import { CrowdsaleConfig } from '../Common/config'
 import { DEPLOYMENT_VALUES } from '../../utils/constants'
-let promiseRetry = require('promise-retry')
+import { Form } from 'react-final-form'
+import { Loader } from '../Common/Loader'
+import { SectionInfo } from '../Common/SectionInfo'
+import { StepNavigation } from '../Common/StepNavigation'
+import { inject, observer } from 'mobx-react'
+import { toJS } from 'mobx'
 
+const { CONTRIBUTE_PAGE } = NAVIGATION_STEPS
 const logger = logdown('TW:contribute')
 const TWO_SECONDS = 2000
+
+let promiseRetry = require('promise-retry')
 
 @inject(
   'contractStore',
@@ -640,97 +644,107 @@ export class Contribute extends React.Component {
       : `Crowdsale ID ${crowdsaleAddress}`
 
     return (
-      <div className="contribute container">
-        <div className="contribute-table">
-          <div className="contribute-table-cell contribute-table-cell_left">
-            <CountdownTimer
-              displaySeconds={this.state.displaySeconds}
-              nextTick={nextTick}
-              tiersLength={crowdsalePageStore && crowdsalePageStore.tiers.length}
-              days={days}
-              hours={hours}
-              minutes={minutes}
-              seconds={seconds}
-              msToNextTick={this.state.msToNextTick}
-              onComplete={this.resetTimers}
-              isFinalized={this.state.isFinalized}
-              altMessage={this.state.clockAltMessage}
+      <div>
+        <section className="lo-MenuBarAndContent">
+          <StepNavigation activeStepTitle={CONTRIBUTE_PAGE} />
+          <div className="st-StepContent">
+            <SectionInfo
+              description="Here you can contribute in the crowdsale campaign."
+              stepNumber="6"
+              title={CONTRIBUTE_PAGE}
             />
-            <div className="hashes">
-              <div className="hashes-i">
-                <p className="hashes-title">{curAddr}</p>
-                <p className="hashes-description">Current Account</p>
-              </div>
-              <div className="hashes-i">
-                <p className="hashes-title">{crowdsaleAddressTruncated}</p>
-                <p className="hashes-description_cp_address">
-                  {crowdsaleAddressDescription}
-                  <CopyToClipboard text={crowdsaleAddress}>
-                    <btn data-tip={crowdsaleAddressTooltip} className="copy" />
-                  </CopyToClipboard>
+            <div className="contribute-table">
+              <div className="contribute-table-cell contribute-table-cell_left">
+                <CountdownTimer
+                  altMessage={this.state.clockAltMessage}
+                  days={days}
+                  displaySeconds={this.state.displaySeconds}
+                  hours={hours}
+                  isFinalized={this.state.isFinalized}
+                  minutes={minutes}
+                  msToNextTick={this.state.msToNextTick}
+                  nextTick={nextTick}
+                  onComplete={this.resetTimers}
+                  seconds={seconds}
+                  tiersLength={crowdsalePageStore && crowdsalePageStore.tiers.length}
+                />
+                <div className="hashes">
+                  <div className="hashes-i">
+                    <p className="hashes-title">{curAddr}</p>
+                    <p className="hashes-description">Current Account</p>
+                  </div>
+                  <div className="hashes-i">
+                    <p className="hashes-title">{crowdsaleAddressTruncated}</p>
+                    <p className="hashes-description_cp_address">
+                      {crowdsaleAddressDescription}
+                      <CopyToClipboard text={crowdsaleAddress}>
+                        <btn data-tip={crowdsaleAddressTooltip} className="copy" />
+                      </CopyToClipboard>
+                    </p>
+                  </div>
+                  <div className="hashes-i">
+                    <p className="hashes-title">{tokenName}</p>
+                    <p className="hashes-description">Name</p>
+                  </div>
+                  <div className="hashes-i">
+                    <p className="hashes-title">{tokenTicker}</p>
+                    <p className="hashes-description">Ticker</p>
+                  </div>
+                  <div className="hashes-i">
+                    <p className="hashes-title">
+                      {totalSupply} {tokenTicker}
+                    </p>
+                    <p className="hashes-description">Total Supply</p>
+                  </div>
+                  <div className="hashes-i">
+                    <p className="hashes-title">{minimumContributionDisplay}</p>
+                    <p className="hashes-description">Minimum Contribution</p>
+                  </div>
+                  <div className="hashes-i">
+                    <p className="hashes-title">{maximumContributionDisplay}</p>
+                    <p className="hashes-description">Maximum Contribution</p>
+                  </div>
+                </div>
+                <p className="contribute-title">Contribute page</p>
+                <p className="contribute-description">
+                  Here you can contribute in the crowdsale campaign. At the moment, you need{' '}
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://chrome.google.com/webstore/detail/nifty-wallet/jbdaocneiiinmjbjlgalhcelgbejmnid"
+                  >
+                    a Wallet
+                  </a>{' '}
+                  client to contribute into the crowdsale.
                 </p>
               </div>
-              <div className="hashes-i">
-                <p className="hashes-title">{tokenName}</p>
-                <p className="hashes-description">Name</p>
-              </div>
-              <div className="hashes-i">
-                <p className="hashes-title">{tokenTicker}</p>
-                <p className="hashes-description">Ticker</p>
-              </div>
-              <div className="hashes-i">
-                <p className="hashes-title">
-                  {totalSupply} {tokenTicker}
-                </p>
-                <p className="hashes-description">Total Supply</p>
-              </div>
-              <div className="hashes-i">
-                <p className="hashes-title">{minimumContributionDisplay}</p>
-                <p className="hashes-description">Minimum Contribution</p>
-              </div>
-              <div className="hashes-i">
-                <p className="hashes-title">{maximumContributionDisplay}</p>
-                <p className="hashes-description">Maximum Contribution</p>
+              <div className={rightColumnClasses}>
+                <div className="balance">
+                  <p className="balance-title">
+                    {contributorBalance} {tokenTicker}
+                  </p>
+                  <p className="balance-description">Balance</p>
+                  <p className="description">Your balance in tokens.</p>
+                </div>
+                <Form
+                  onSubmit={this.contributeToTokens}
+                  component={ContributeForm}
+                  contributeThrough={contributeThrough}
+                  isFinalized={this.state.isFinalized}
+                  isEnded={this.state.isEnded}
+                  isStarted={this.state.isStarted}
+                  isSoldOut={this.state.isSoldOut}
+                  isTierSoldOut={this.state.isTierSoldOut}
+                  updateContributeThrough={this.updateContributeThrough}
+                  web3Available={web3Available}
+                  minimumContribution={minimumContribution}
+                />
+                {QRPaymentProcessElement}
               </div>
             </div>
-            <p className="contribute-title">Contribute page</p>
-            <p className="contribute-description">
-              Here you can contribute in the crowdsale campaign. At the moment, you need{' '}
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href="https://chrome.google.com/webstore/detail/nifty-wallet/jbdaocneiiinmjbjlgalhcelgbejmnid"
-              >
-                a Wallet
-              </a>{' '}
-              client to contribute into the crowdsale.
-            </p>
+            <ReactTooltip />
           </div>
-          <div className={rightColumnClasses}>
-            <div className="balance">
-              <p className="balance-title">
-                {contributorBalance} {tokenTicker}
-              </p>
-              <p className="balance-description">Balance</p>
-              <p className="description">Your balance in tokens.</p>
-            </div>
-            <Form
-              onSubmit={this.contributeToTokens}
-              component={ContributeForm}
-              contributeThrough={contributeThrough}
-              isFinalized={this.state.isFinalized}
-              isEnded={this.state.isEnded}
-              isStarted={this.state.isStarted}
-              isSoldOut={this.state.isSoldOut}
-              isTierSoldOut={this.state.isTierSoldOut}
-              updateContributeThrough={this.updateContributeThrough}
-              web3Available={web3Available}
-              minimumContribution={minimumContribution}
-            />
-            {QRPaymentProcessElement}
-          </div>
-        </div>
-        <ReactTooltip />
+        </section>
         <Loader show={this.state.loading} />
       </div>
     )

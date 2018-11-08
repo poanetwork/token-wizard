@@ -1,0 +1,84 @@
+$st-StepItem_Step-dimensions: 24px !default;
+$st-StepItem_Step-dimensions-small: 17px !default;
+$st-StepItem_Step-background: #995cff !default;
+$st-StepItem_Step-background-active: #8ce1d7 !default;
+$st-StepItem_StepLine-width: 40px !default;
+
+.st-StepItem {
+    align-items: center;
+    display: flex;
+    position: relative;
+
+    @media (min-width: $breakpoint-xl) {
+        flex-direction: column;
+    }
+
+}
+
+.st-StepItem_Circle {
+    background-color: $st-StepItem_Step-background;
+    border-radius: 50%;
+    box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
+    height: $st-StepItem_Step-dimensions;
+    width: $st-StepItem_Step-dimensions;
+
+    .active & {
+        background-color: $st-StepItem_Step-background-active;
+        box-shadow: 0 8px 11px 0 rgba(0, 0, 0, 0.16), 0 0 8px 0 rgba(0, 0, 0, 0.04);
+    }
+
+    .st-StepItem-small & {
+        @media (min-width: $breakpoint-lg) {
+            height: $st-StepItem_Step-dimensions-small;
+            width: $st-StepItem_Step-dimensions-small;
+        }
+    }
+}
+
+.st-StepItem_Line {
+    background-color: $st-StepItem_Step-background;
+    box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
+    height: 1px;
+    width: $st-StepItem_StepLine-width;
+
+    .active & {
+        background-color: $st-StepItem_Step-background-active;
+    }
+
+    @media (min-width: $breakpoint-xl) {
+        height: $st-StepItem_StepLine-width;
+        width: 1px;
+    }
+}
+
+.st-StepItem_Text {
+    align-items: center;
+    color: $st-StepItem_Step-background;
+    cursor: default;
+    display: none;
+    font-size: 18px;
+    font-weight: 300;
+    height: 24px;
+    left: $st-StepItem_Step-dimensions + 13;
+    line-height: 1.2;
+    position: absolute;
+    white-space: nowrap;
+
+    .active & {
+        color: #fff;
+    }
+
+    .st-StepItem-small & {
+        @media (min-width: $breakpoint-lg) {
+            font-size: 16px;
+            font-weight: 700;
+            left: 38px;
+            top: -2px;
+        }
+    }
+
+    @media (min-width: $breakpoint-xl) {
+        display: flex;
+    }
+
+}

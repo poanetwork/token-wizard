@@ -50,13 +50,6 @@ export function setFlatFileContentToState(file) {
 
 export const dateToTimestamp = date => new Date(date).getTime()
 
-export const isStepActive = (stepsTextArray, stepText, activeStepText) => {
-  const stepIndex = stepsTextArray.indexOf(stepText)
-  const activeStepIndex = stepsTextArray.indexOf(activeStepText)
-
-  return stepIndex <= activeStepIndex ? 'active' : ''
-}
-
 export const validateTier = tier => typeof tier === 'string' && tier.length > 0 && tier.length < 30
 
 export const validateSupply = supply => isNaN(Number(supply)) === false && Number(supply) > 0

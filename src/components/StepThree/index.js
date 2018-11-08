@@ -5,7 +5,7 @@ import setFieldTouched from 'final-form-set-field-touched'
 import { Form } from 'react-final-form'
 import { Loader } from '../Common/Loader'
 import { CHAINS, NAVIGATION_STEPS } from '../../utils/constants'
-import { StepInfo } from '../Common/StepInfo'
+import { SectionInfo } from '../Common/SectionInfo'
 import { StepNavigation } from '../Common/StepNavigation'
 import { checkWeb3, getNetWorkNameById, getNetworkVersion } from '../../utils/blockchainHelpers'
 import { getStep3Component, tierDurationUpdater } from './utils'
@@ -170,7 +170,7 @@ export class StepThree extends Component {
       // Do not render the form until tiers are set up
       return (
         <section className="steps steps_crowdsale-contract" ref="three">
-          <StepNavigation activeStep={CROWDSALE_SETUP} />
+          <StepNavigation activeStepTitle={CROWDSALE_SETUP} />
           <Loader show={this.state.loading} />
         </section>
       )
@@ -183,9 +183,9 @@ export class StepThree extends Component {
     return (
       <div>
         <section className="lo-MenuBarAndContent" ref="three">
-          <StepNavigation activeStep={CROWDSALE_SETUP} />
+          <StepNavigation activeStepTitle={CROWDSALE_SETUP} />
           <div className="st-StepContent">
-            <StepInfo
+            <SectionInfo
               description="The most important and exciting part of the crowdsale process.<br />Here you can define parameters of
               your crowdsale campaign."
               stepNumber="3"
