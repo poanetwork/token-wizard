@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ButtonNiftyWallet should render ButtonNiftyWallet component 1`] = `
+<button
+  className="btn-ButtonNiftyWallet "
+  onClick={[MockFunction]}
+  type="button"
+>
+  <span
+    className="btn-ButtonNiftyWallet_Icon"
+  />
+  <span
+    className="btn-ButtonNiftyWallet_TextContainer"
+  >
+    <span
+      className="btn-ButtonNiftyWallet_TopText"
+    >
+      Download
+    </span>
+    <span
+      className="btn-ButtonNiftyWallet_BottomText"
+    >
+      Nifty Wallet
+    </span>
+  </span>
+</button>
+`;
