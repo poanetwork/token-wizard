@@ -2,10 +2,16 @@ import React, { Component } from 'react'
 import { LogoPrimary } from '../LogoPrimary/index'
 import { ChooseCrowdsale } from './ChooseCrowdsale'
 import { CreateCrowdsale } from './CreateCrowdsale'
+import { ResumeCrowdsale } from './ResumeCrowdsale'
+import { CancelCrowdsale } from './CancelCrowdsale'
+import { inject, observer } from 'mobx-react/index'
 
+@inject('deploymentStore')
+@observer
 export class Home extends Component {
   render() {
-    const { history } = this.props
+    const { history, deploymentStore } = this.props
+
     return (
       <div>
         <section className={`hm-Home`}>
@@ -26,10 +32,17 @@ export class Home extends Component {
                     Token Wizard is powered by <a href="https://github.com/auth-os/beta">Auth-os</a>.
                   </p>
                 </div>
-                <div className="hm-Home_MainInfoButtonContainer">
-                  <CreateCrowdsale history={history} />
-                  <ChooseCrowdsale history={history} />
-                </div>
+                {deploymentStore.deployInProgress ? (
+                  <div className="hm-Home_MainInfoButtonContainer">
+                    <ResumeCrowdsale history={history} />
+                    <CancelCrowdsale history={history} />
+                  </div>
+                ) : (
+                  <div className="hm-Home_MainInfoButtonContainer">
+                    <CreateCrowdsale history={history} />
+                    <ChooseCrowdsale history={history} />
+                  </div>
+                )}
               </div>
             </div>
           </div>

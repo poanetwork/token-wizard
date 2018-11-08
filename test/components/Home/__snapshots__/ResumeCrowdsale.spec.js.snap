@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ResumeCrowdsale should render screen with render without throwing an error 1`] = `"Resume crowdsale"`;
+
+exports[`ResumeCrowdsale should render screen with shallow without throwing an error 1`] = `
+<button
+  className="hm-Home_BtnNew"
+  onClick={[Function]}
+>
+  Resume crowdsale
+</button>
+`;
