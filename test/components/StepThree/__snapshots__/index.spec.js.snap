@@ -656,32 +656,6 @@ exports[`StepThree StepThree - renders should render StepThree for Dutch Auction
       </form>
     </div>
   </section>
-  <div
-    className="sw-FullscreenBackdrop"
-  >
-    <div
-      className="sw-Loader"
-    >
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-    </div>
-  </div>
 </div>
 `;
 
@@ -1360,31 +1334,5 @@ exports[`StepThree StepThree - renders should render StepThree for Whitelist wit
       </form>
     </div>
   </section>
-  <div
-    className="sw-FullscreenBackdrop"
-  >
-    <div
-      className="sw-Loader"
-    >
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-    </div>
-  </div>
 </div>
 `;
