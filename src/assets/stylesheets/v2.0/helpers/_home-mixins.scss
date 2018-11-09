@@ -1,0 +1,47 @@
+@mixin hm-button-color() {
+    background-color: $brand-secondary;
+    border: 1px solid $brand-secondary;
+    border-radius: 4px;
+    box-shadow: 0 12px 22px 0 rgba(0, 0, 0, 0.24);
+    color: #fff;
+    cursor: pointer;
+    display: block;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 50px;
+    margin-bottom: 18px;
+    outline: none;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.15s linear;
+    width: $hm-Home_Btn-width;
+    &:hover {
+        background-color: darken($brand-secondary, 10%);
+        border-color: darken($brand-secondary, 10%);
+    }
+
+    @media (min-width: $breakpoint-md) {
+        margin-bottom: 36px;
+    }
+}
+
+@mixin hm-button-transparent() {
+    background-color: transparent;
+    border-radius: 4px;
+    border: 1px solid #fff;
+    box-shadow: 0 12px 22px 0 rgba(0, 0, 0, 0.24);
+    color: #fff;
+    cursor: pointer;
+    display: block;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 50px;
+    outline: none;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.15s linear;
+    width: $hm-Home_Btn-width;
+    &:hover {
+        background-color: darken($brand-primary, 10%);
+    }
+}

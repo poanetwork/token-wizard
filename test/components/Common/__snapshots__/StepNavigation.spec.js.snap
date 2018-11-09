@@ -7,7 +7,6 @@ exports[`StepNavigation should render StepNavigation component 1`] = `
   <a
     className="sw-LogoWhite"
     href="/"
-    onClick={[Function]}
   />
   <div
     className="st-StepNavigation_Container"

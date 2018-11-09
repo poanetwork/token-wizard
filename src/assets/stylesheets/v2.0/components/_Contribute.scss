@@ -1,0 +1,17 @@
+.cnt-Contribute {
+
+}
+
+.cnt-Contribute_Contents {
+    display: flex;
+    flex-direction: column;
+
+    @media (min-width: $breakpoint-lg) {
+        flex-direction: row;
+    }
+}
+
+.cnt-Contribute_ShadowedBlock {
+    border-radius: 5px;
+    box-shadow: 0 9px 18px 4px rgba(224, 224, 224, 0.2);
+}

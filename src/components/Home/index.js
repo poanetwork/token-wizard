@@ -1,11 +1,17 @@
 import React, { Component } from 'react'
 import { LogoPrimary } from '../LogoPrimary/index'
-import { ChooseCrowdsale } from './ChooseCrowdsale'
-import { CreateCrowdsale } from './CreateCrowdsale'
+import { ButtonChooseCrowdsale } from './ButtonChooseCrowdsale'
+import { ButtonCreateCrowdsale } from './ButtonCreateCrowdsale'
+import { ButtonResumeCrowdsale } from './ButtonResumeCrowdsale'
+import { ButtonCancelCrowdsale } from './ButtonCancelCrowdsale'
+import { inject, observer } from 'mobx-react/index'
 
+@inject('deploymentStore')
+@observer
 export class Home extends Component {
   render() {
-    const { history } = this.props
+    const { history, deploymentStore } = this.props
+
     return (
       <div>
         <section className={`hm-Home`}>
@@ -26,10 +32,18 @@ export class Home extends Component {
                     Token Wizard is powered by <a href="https://github.com/auth-os/beta">Auth-os</a>.
                   </p>
                 </div>
-                <div className="hm-Home_MainInfoButtonContainer">
-                  <CreateCrowdsale history={history} />
-                  <ChooseCrowdsale history={history} />
-                </div>
+                {deploymentStore.deployInProgress ? (
+                  <div className="hm-Home_MainInfoButtonContainer">
+                    <p className="hm-Home_DeployInProgressText">Pending crowdsale creation.</p>
+                    <ButtonResumeCrowdsale history={history} />
+                    <ButtonCancelCrowdsale history={history} />
+                  </div>
+                ) : (
+                  <div className="hm-Home_MainInfoButtonContainer">
+                    <ButtonCreateCrowdsale history={history} />
+                    <ButtonChooseCrowdsale history={history} />
+                  </div>
+                )}
               </div>
             </div>
           </div>
