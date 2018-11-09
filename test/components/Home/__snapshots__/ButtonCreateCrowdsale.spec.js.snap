@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ButtonCreateCrowdsale should render screen with render without throwing an error 1`] = `"New crowdsale"`;
+
+exports[`ButtonCreateCrowdsale should render screen with shallow without throwing an error 1`] = `
+<button
+  className="hm-ButtonCreateCrowdsale"
+  onClick={[Function]}
+>
+  New crowdsale
+</button>
+`;

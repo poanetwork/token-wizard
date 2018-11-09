@@ -2,17 +2,17 @@ import React from 'react'
 import Adapter from 'enzyme-adapter-react-15'
 import { configure, mount, shallow, render } from 'enzyme'
 import { MemoryRouter } from 'react-router'
-import { CreateCrowdsale } from '../../../src/components/Home/CreateCrowdsale'
+import { ButtonCreateCrowdsale } from '../../../src/components/Home/ButtonCreateCrowdsale'
 
 configure({ adapter: new Adapter() })
 
-describe('CreateCrowdsale', () => {
+describe('ButtonCreateCrowdsale', () => {
   const history = {
     push: jest.fn()
   }
 
   it('should render screen with shallow without throwing an error', () => {
-    const wrapper = shallow(<CreateCrowdsale />)
+    const wrapper = shallow(<ButtonCreateCrowdsale />)
 
     expect(wrapper).toMatchSnapshot()
   })
@@ -21,12 +21,12 @@ describe('CreateCrowdsale', () => {
     // Given
     const wrapper = mount(
       <MemoryRouter initialEntries={['/']}>
-        <CreateCrowdsale />
+        <ButtonCreateCrowdsale />
       </MemoryRouter>
     )
 
     // When
-    const tree = wrapper.find('.hm-Home_BtnNew')
+    const tree = wrapper.find('.hm-ButtonCreateCrowdsale')
 
     // Then
     expect(tree).toHaveLength(1)
@@ -36,7 +36,7 @@ describe('CreateCrowdsale', () => {
     // Given
     const wrapper = render(
       <MemoryRouter initialEntries={['/']}>
-        <CreateCrowdsale />
+        <ButtonCreateCrowdsale />
       </MemoryRouter>
     )
     // When
@@ -48,12 +48,12 @@ describe('CreateCrowdsale', () => {
 
   it(`should simulate click`, () => {
     // Given
-    const wrapper = shallow(<CreateCrowdsale history={history} />)
+    const wrapper = shallow(<ButtonCreateCrowdsale history={history} />)
     const instance = wrapper.instance()
     const goToStepOneHandler = jest.spyOn(instance, 'goToStepOne')
     instance.forceUpdate()
     // When
-    const buttonCreateCrowdsale = wrapper.find('.hm-Home_BtnNew')
+    const buttonCreateCrowdsale = wrapper.find('.hm-ButtonCreateCrowdsale')
     buttonCreateCrowdsale.simulate('click')
 
     // Then

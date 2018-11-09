@@ -13,7 +13,7 @@ import {
   Crowdsales
 } from './components/index'
 import NoWeb3 from './components/Common/NoWeb3'
-import CheckIncompleteDeploy from './components/CheckIncompleteDeploy'
+import { ProtectedRoute } from './components/Common/ProtectedRoute'
 import { getAddrFromQuery, toast } from './utils/utils'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import AlertContainer from 'react-alert'
@@ -52,27 +52,15 @@ class App extends Component {
             <Route exact path="/" component={crowdsaleAddr ? Crowdsale : Home} />
             <Web3Provider onChangeAccount={deploymentStore.handleAccountChange} web3UnavailableScreen={NoWeb3}>
               <Switch>
-                <Route path="/1" component={StepOne} />
-                <Route exact path="/crowdsale" component={Crowdsale} />
+                <ProtectedRoute path="/1" component={StepOne} />
+                <ProtectedRoute path="/2" component={StepTwo} />
+                <ProtectedRoute path="/3" component={StepThree} />
+                <Route path="/4" component={StepFour} />
+                <ProtectedRoute exact path="/manage/:crowdsalePointer" component={Manage} />
+                <ProtectedRoute exact path="/crowdsale" component={Crowdsale} />
+                <ProtectedRoute exact path="/stats" component={Stats} />
+                <ProtectedRoute exact path="/crowdsales" component={Crowdsales} />
                 <Route exact path="/contribute" component={Contribute} />
-                <Route exact path="/stats" component={Stats} />
-                <Route exact path="/crowdsales" component={Crowdsales} />
-                <Route>
-                  <Switch>
-                    {/* The route to /4 must be first for the incomplete deploy redirect to work */}
-                    <Route path="/4" component={StepFour} />
-
-                    {deploymentStore.deployInProgress ? (
-                      <CheckIncompleteDeploy />
-                    ) : (
-                      <Switch>
-                        <Route exact path="/manage/:crowdsalePointer" component={Manage} />
-                        <Route path="/2" component={StepTwo} />
-                        <Route path="/3" component={StepThree} />
-                      </Switch>
-                    )}
-                  </Switch>
-                </Route>
               </Switch>
             </Web3Provider>
           </Switch>

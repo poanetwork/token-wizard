@@ -1,7 +1,7 @@
 import React from 'react'
 import Adapter from 'enzyme-adapter-react-15'
 import { configure, mount, render } from 'enzyme'
-import { MemoryRouter } from 'react-router'
+import { Provider } from 'mobx-react'
 import renderer from 'react-test-renderer'
 import { Web3Provider } from '../src/react-web3'
 import { deploymentStore } from '../src/stores'
@@ -23,9 +23,9 @@ describe('App Index', () => {
   it(`should render app screen`, () => {
     // Given
     const component = renderer.create(
-      <MemoryRouter initialEntries={['/']}>
-        <App {...stores} />
-      </MemoryRouter>
+      <Provider {...stores}>
+        <App />
+      </Provider>
     )
 
     // When
@@ -38,9 +38,9 @@ describe('App Index', () => {
   it('renders without crashing', () => {
     // Given
     const wrapper = mount(
-      <MemoryRouter initialEntries={['/']}>
-        <App {...stores} />
-      </MemoryRouter>
+      <Provider {...stores}>
+        <App />
+      </Provider>
     )
 
     // Given
@@ -53,9 +53,9 @@ describe('App Index', () => {
   it('should render screen with render without throwing an error', () => {
     // When
     const wrapper = render(
-      <MemoryRouter initialEntries={['/']}>
-        <App {...stores} />
-      </MemoryRouter>
+      <Provider {...stores}>
+        <App />
+      </Provider>
     )
 
     // Given
@@ -67,7 +67,11 @@ describe('App Index', () => {
 
   it(`should not find web3Provider at home`, () => {
     // Given
-    const wrapper = mount(<App {...stores} />)
+    const wrapper = mount(
+      <Provider {...stores}>
+        <App />
+      </Provider>
+    )
     jest.runTimersToTime(2000)
 
     // When
@@ -76,5 +80,4 @@ describe('App Index', () => {
     // Then
     expect(web3ProviderWrapper).toHaveLength(0)
   })
-
 })

@@ -2,17 +2,17 @@ import React from 'react'
 import Adapter from 'enzyme-adapter-react-15'
 import { configure, mount, shallow, render } from 'enzyme'
 import { MemoryRouter } from 'react-router'
-import { ChooseCrowdsale } from '../../../src/components/Home/ChooseCrowdsale'
+import { ButtonResumeCrowdsale } from '../../../src/components/Home/ButtonResumeCrowdsale'
 
 configure({ adapter: new Adapter() })
 
-describe('ChooseCrowdsale', () => {
+describe('ButtonResumeCrowdsale', () => {
   const history = {
     push: jest.fn()
   }
 
   it('should render screen with shallow without throwing an error', () => {
-    const wrapper = shallow(<ChooseCrowdsale />)
+    const wrapper = shallow(<ButtonResumeCrowdsale />)
 
     expect(wrapper).toMatchSnapshot()
   })
@@ -21,12 +21,12 @@ describe('ChooseCrowdsale', () => {
     // Given
     const wrapper = mount(
       <MemoryRouter initialEntries={['/']}>
-        <ChooseCrowdsale />
+        <ButtonResumeCrowdsale />
       </MemoryRouter>
     )
 
     // When
-    const tree = wrapper.find('.hm-Home_BtnChoose')
+    const tree = wrapper.find('.hm-ButtonResumeCrowdsale')
 
     // Then
     expect(tree).toHaveLength(1)
@@ -36,7 +36,7 @@ describe('ChooseCrowdsale', () => {
     // Given
     const wrapper = render(
       <MemoryRouter initialEntries={['/']}>
-        <ChooseCrowdsale />
+        <ButtonResumeCrowdsale />
       </MemoryRouter>
     )
     // When
@@ -48,16 +48,16 @@ describe('ChooseCrowdsale', () => {
 
   it(`should simulate click`, () => {
     // Given
-    const wrapper = shallow(<ChooseCrowdsale history={history} />)
+    const wrapper = shallow(<ButtonResumeCrowdsale history={history} />)
     const instance = wrapper.instance()
-    const goToCrowdsalesHandler = jest.spyOn(instance, 'goToCrowdsales')
+    const resumeHandler = jest.spyOn(instance, 'resume')
     instance.forceUpdate()
     // When
-    const buttonChooseCrowdsale = wrapper.find('.hm-Home_BtnChoose')
-    buttonChooseCrowdsale.simulate('click')
+    const buttonResumeCrowdsale = wrapper.find('.hm-ButtonResumeCrowdsale')
+    buttonResumeCrowdsale.simulate('click')
 
     // Then
-    expect(buttonChooseCrowdsale.length).toBe(1)
-    expect(goToCrowdsalesHandler).toHaveBeenCalledTimes(1)
+    expect(buttonResumeCrowdsale.length).toBe(1)
+    expect(resumeHandler).toHaveBeenCalledTimes(1)
   })
 })

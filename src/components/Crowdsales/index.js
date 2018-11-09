@@ -16,7 +16,7 @@ export class Crowdsales extends Component {
   state = {
     account: null,
     crowdsales: [],
-    loading: true
+    loading: false
   }
 
   constructor(props) {
