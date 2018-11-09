@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Web3 from 'web3'
-import { Loader } from '../components/Common/Loader'
 
 const ONE_SECOND = 1000
 
@@ -68,7 +67,7 @@ class Web3Provider extends Component {
       return <Web3UnavailableScreen />
     }
 
-    return <Loader show={true} />
+    return null
   }
 
   componentWillUnmount() {
