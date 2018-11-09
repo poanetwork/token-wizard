@@ -211,31 +211,5 @@ exports[`StepOne should render StepOne screen 1`] = `
       </div>
     </div>
   </section>
-  <div
-    className="sw-FullscreenBackdrop"
-  >
-    <div
-      className="sw-Loader"
-    >
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-    </div>
-  </div>
 </div>
 `;

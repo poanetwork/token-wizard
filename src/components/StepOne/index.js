@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import logdown from 'logdown'
 import { ButtonContinue } from '../Common/ButtonContinue'
-import { Loader } from '../Common/Loader'
 import { NAVIGATION_STEPS, CROWDSALE_STRATEGIES, DOWNLOAD_STATUS } from '../../utils/constants'
 import { SectionInfo } from '../Common/SectionInfo'
 import { StepNavigation } from '../Common/StepNavigation'
@@ -31,7 +30,6 @@ const { MINTED_CAPPED_CROWDSALE } = CROWDSALE_STRATEGIES
 @observer
 export class StepOne extends Component {
   state = {
-    loading: true,
     strategy: MINTED_CAPPED_CROWDSALE
   }
 
@@ -51,10 +49,6 @@ export class StepOne extends Component {
 
   async componentDidMount() {
     if (this.block) {
-      this.setState({
-        loading: true
-      })
-
       window.addEventListener('beforeunload', () => {
         navigateTo({
           history: this.props.history,
@@ -90,10 +84,6 @@ export class StepOne extends Component {
       } catch (e) {
         logger.log('An error has occurred', e.message)
       }
-
-      this.setState({
-        loading: false
-      })
     }
   }
 
@@ -178,7 +168,6 @@ export class StepOne extends Component {
               </div>
             </div>
           </section>
-          <Loader show={this.state.loading} />
         </div>
       )
     }

@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import logdown from 'logdown'
 import setFieldTouched from 'final-form-set-field-touched'
 import { Form } from 'react-final-form'
-import { Loader } from '../Common/Loader'
 import { NAVIGATION_STEPS } from '../../utils/constants'
 import { SectionInfo } from '../Common/SectionInfo'
 import { StepNavigation } from '../Common/StepNavigation'
@@ -18,7 +17,6 @@ const logger = logdown('TW:stepTwo:index')
 @observer
 export class StepTwo extends Component {
   state = {
-    loading: false,
     tokenValues: {},
     reload: false
   }
@@ -26,10 +24,9 @@ export class StepTwo extends Component {
   async componentDidMount() {
     await checkWeb3()
 
-    this.setState({ loading: true })
     const tokenValues = this.load()
     logger.log('Token Values', tokenValues)
-    this.setState({ loading: false, tokenValues })
+    this.setState({ tokenValues: tokenValues })
   }
 
   load() {
@@ -50,26 +47,18 @@ export class StepTwo extends Component {
   }
 
   goNextStep = () => {
-    try {
-      navigateTo({
-        history: this.props.history,
-        location: 'stepThree',
-        fromLocation: 'stepTwo'
-      })
-    } catch (err) {
-      logger.log('Error to navigate', err)
-    }
+    navigateTo({
+      history: this.props.history,
+      location: 'stepThree',
+      fromLocation: 'stepTwo'
+    })
   }
 
   goBack = () => {
-    try {
-      goBack({
-        history: this.props.history,
-        location: '/stepOne'
-      })
-    } catch (err) {
-      logger.log('Error to navigate', err)
-    }
+    goBack({
+      history: this.props.history,
+      location: '/stepOne'
+    })
   }
 
   goBackEnabled = () => {
@@ -106,7 +95,6 @@ export class StepTwo extends Component {
             />
           </div>
         </section>
-        <Loader show={this.state.loading} />
       </div>
     )
   }
