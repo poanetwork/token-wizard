@@ -653,8 +653,8 @@ export class Contribute extends React.Component {
               stepNumber="6"
               title={CONTRIBUTE_PAGE}
             />
-            <div className="contribute-table">
-              <div className="contribute-table-cell contribute-table-cell_left">
+            <div className="cnt-Contribute_Contents">
+              <div className="cnt-Contribute_ShadowedBlock">
                 <CountdownTimer
                   altMessage={this.state.clockAltMessage}
                   days={days}
@@ -668,6 +668,10 @@ export class Contribute extends React.Component {
                   seconds={seconds}
                   tiersLength={crowdsalePageStore && crowdsalePageStore.tiers.length}
                 />
+              </div>
+            </div>
+            <div className="contribute-table">
+              <div className="contribute-table-cell contribute-table-cell_left">
                 <div className="hashes">
                   <div className="hashes-i">
                     <p className="hashes-title">{curAddr}</p>
