@@ -11,7 +11,6 @@ exports[`StepThree StepThree - renders should render StepThree for Dutch Auction
       <a
         className="sw-LogoWhite"
         href="/"
-        onClick={[Function]}
       />
       <div
         className="st-StepNavigation_Container"
@@ -697,7 +696,6 @@ exports[`StepThree StepThree - renders should render StepThree for Whitelist wit
       <a
         className="sw-LogoWhite"
         href="/"
-        onClick={[Function]}
       />
       <div
         className="st-StepNavigation_Container"
