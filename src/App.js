@@ -55,11 +55,11 @@ class App extends Component {
                 <ProtectedRoute path="/1" component={StepOne} />
                 <ProtectedRoute path="/2" component={StepTwo} />
                 <ProtectedRoute path="/3" component={StepThree} />
+                <Route path="/4" component={StepFour} />
                 <ProtectedRoute exact path="/manage/:crowdsalePointer" component={Manage} />
                 <ProtectedRoute exact path="/crowdsale" component={Crowdsale} />
                 <ProtectedRoute exact path="/stats" component={Stats} />
                 <ProtectedRoute exact path="/crowdsales" component={Crowdsales} />
-                <Route path="/4" component={StepFour} />
                 <Route exact path="/contribute" component={Contribute} />
               </Switch>
             </Web3Provider>
