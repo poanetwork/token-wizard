@@ -2,17 +2,17 @@ import React from 'react'
 import Adapter from 'enzyme-adapter-react-15'
 import { configure, mount, shallow, render } from 'enzyme'
 import { MemoryRouter } from 'react-router'
-import { CreateCrowdsale } from '../../../src/components/Home/CreateCrowdsale'
+import { ButtonCancelCrowdsale } from '../../../src/components/Home/ButtonCancelCrowdsale'
 
 configure({ adapter: new Adapter() })
 
-describe('CreateCrowdsale', () => {
+describe('ButtonCancelCrowdsale', () => {
   const history = {
     push: jest.fn()
   }
 
   it('should render screen with shallow without throwing an error', () => {
-    const wrapper = shallow(<CreateCrowdsale />)
+    const wrapper = shallow(<ButtonCancelCrowdsale />)
 
     expect(wrapper).toMatchSnapshot()
   })
@@ -21,12 +21,12 @@ describe('CreateCrowdsale', () => {
     // Given
     const wrapper = mount(
       <MemoryRouter initialEntries={['/']}>
-        <CreateCrowdsale />
+        <ButtonCancelCrowdsale />
       </MemoryRouter>
     )
 
     // When
-    const tree = wrapper.find('.hm-Home_BtnNew')
+    const tree = wrapper.find('.hm-ButtonCancelCrowdsale')
 
     // Then
     expect(tree).toHaveLength(1)
@@ -36,7 +36,7 @@ describe('CreateCrowdsale', () => {
     // Given
     const wrapper = render(
       <MemoryRouter initialEntries={['/']}>
-        <CreateCrowdsale />
+        <ButtonCancelCrowdsale />
       </MemoryRouter>
     )
     // When
@@ -48,16 +48,16 @@ describe('CreateCrowdsale', () => {
 
   it(`should simulate click`, () => {
     // Given
-    const wrapper = shallow(<CreateCrowdsale history={history} />)
+    const wrapper = shallow(<ButtonCancelCrowdsale history={history} />)
     const instance = wrapper.instance()
-    const goToStepOneHandler = jest.spyOn(instance, 'goToStepOne')
+    const cancelHandler = jest.spyOn(instance, 'cancel')
     instance.forceUpdate()
     // When
-    const buttonCreateCrowdsale = wrapper.find('.hm-Home_BtnNew')
-    buttonCreateCrowdsale.simulate('click')
+    const buttonCancelCrowdsale = wrapper.find('.hm-ButtonCancelCrowdsale')
+    buttonCancelCrowdsale.simulate('click')
 
     // Then
-    expect(buttonCreateCrowdsale.length).toBe(1)
-    expect(goToStepOneHandler).toHaveBeenCalledTimes(1)
+    expect(buttonCancelCrowdsale.length).toBe(1)
+    expect(cancelHandler).toHaveBeenCalledTimes(1)
   })
 })

@@ -4,7 +4,7 @@ import cancelDeploy from '../../utils/cancelDeploy'
 
 const logger = logdown('TW:Home:CancelCrowdsale')
 
-export class CancelCrowdsale extends Component {
+export class ButtonCancelCrowdsale extends Component {
   cancel = () => {
     logger.log('Cancel crowdsale')
     cancelDeploy()
@@ -12,7 +12,7 @@ export class CancelCrowdsale extends Component {
 
   render() {
     return (
-      <button onClick={() => this.cancel()} className="hm-Home_BtnChoose">
+      <button onClick={() => this.cancel()} className="hm-ButtonCancelCrowdsale">
         Cancel crowdsale
       </button>
     )

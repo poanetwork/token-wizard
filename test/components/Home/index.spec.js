@@ -4,8 +4,8 @@ import { configure, mount, shallow, render } from 'enzyme'
 import { MemoryRouter } from 'react-router'
 import { Provider } from 'mobx-react'
 import { Home } from '../../../src/components/Home/index'
-import { ChooseCrowdsale } from '../../../src/components/Home/ChooseCrowdsale'
-import { CreateCrowdsale } from '../../../src/components/Home/CreateCrowdsale'
+import { ButtonChooseCrowdsale } from '../../../src/components/Home/ButtonChooseCrowdsale'
+import { ButtonCreateCrowdsale } from '../../../src/components/Home/ButtonCreateCrowdsale'
 import storage from 'store2'
 import { deploymentStore } from '../../../src/stores'
 
@@ -75,14 +75,14 @@ describe('Home', () => {
         </MemoryRouter>
       </Provider>
     )
-    const createCrowdsaleComponentWrapper = wrapper.find(CreateCrowdsale)
+    const createCrowdsaleComponentWrapper = wrapper.find(ButtonCreateCrowdsale)
     const instance = createCrowdsaleComponentWrapper.instance()
     const goToStepOneHandler = jest.spyOn(instance, 'goToStepOne')
     instance.forceUpdate()
     storage.clearAll()
 
     // When
-    const buttonCreateCrowdsale = createCrowdsaleComponentWrapper.find('.hm-Home_BtnNew')
+    const buttonCreateCrowdsale = createCrowdsaleComponentWrapper.find('.hm-ButtonCreateCrowdsale')
     buttonCreateCrowdsale.simulate('click')
 
     // Then
@@ -100,14 +100,14 @@ describe('Home', () => {
         </MemoryRouter>
       </Provider>
     )
-    const chooseCrowdsaleComponentWrapper = wrapper.find(ChooseCrowdsale)
+    const chooseCrowdsaleComponentWrapper = wrapper.find(ButtonChooseCrowdsale)
     const instance = chooseCrowdsaleComponentWrapper.instance()
     const goToCrowdsalesHandler = jest.spyOn(instance, 'goToCrowdsales')
     instance.forceUpdate()
     storage.clearAll()
 
     // When
-    const chooseCrowdsale = chooseCrowdsaleComponentWrapper.find('.hm-Home_BtnChoose')
+    const chooseCrowdsale = chooseCrowdsaleComponentWrapper.find('.hm-ButtonChooseCrowdsale')
     chooseCrowdsale.simulate('click')
 
     // Then

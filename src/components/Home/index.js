@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { LogoPrimary } from '../LogoPrimary/index'
-import { ChooseCrowdsale } from './ChooseCrowdsale'
-import { CreateCrowdsale } from './CreateCrowdsale'
-import { ResumeCrowdsale } from './ResumeCrowdsale'
-import { CancelCrowdsale } from './CancelCrowdsale'
+import { ButtonChooseCrowdsale } from './ButtonChooseCrowdsale'
+import { ButtonCreateCrowdsale } from './ButtonCreateCrowdsale'
+import { ButtonResumeCrowdsale } from './ButtonResumeCrowdsale'
+import { ButtonCancelCrowdsale } from './ButtonCancelCrowdsale'
 import { inject, observer } from 'mobx-react/index'
 
 @inject('deploymentStore')
@@ -34,13 +34,14 @@ export class Home extends Component {
                 </div>
                 {deploymentStore.deployInProgress ? (
                   <div className="hm-Home_MainInfoButtonContainer">
-                    <ResumeCrowdsale history={history} />
-                    <CancelCrowdsale history={history} />
+                    <p className="hm-Home_DeployInProgressText">Pending crowdsale creation.</p>
+                    <ButtonResumeCrowdsale history={history} />
+                    <ButtonCancelCrowdsale history={history} />
                   </div>
                 ) : (
                   <div className="hm-Home_MainInfoButtonContainer">
-                    <CreateCrowdsale history={history} />
-                    <ChooseCrowdsale history={history} />
+                    <ButtonCreateCrowdsale history={history} />
+                    <ButtonChooseCrowdsale history={history} />
                   </div>
                 )}
               </div>

@@ -1,21 +1,21 @@
 import React, { Component } from 'react'
 import { navigateTo } from '../../utils/utils'
 
-export class CreateCrowdsale extends Component {
-  goToStepOne = () => {
+export class ButtonChooseCrowdsale extends Component {
+  goToCrowdsales = () => {
     localStorage.reload = true
     navigateTo({
       history: this.props.history,
-      location: 'stepOne',
+      location: 'crowdsales',
       fromLocation: 'home'
     })
   }
 
   render() {
     return (
-      <button onClick={() => this.goToStepOne()} className="hm-Home_BtnNew">
-        New crowdsale
-      </button>
+      <div onClick={() => this.goToCrowdsales()} className="hm-ButtonChooseCrowdsale">
+        Choose Crowdsale
+      </div>
     )
   }
 }

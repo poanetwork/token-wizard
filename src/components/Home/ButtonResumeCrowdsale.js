@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-export class ResumeCrowdsale extends Component {
+export class ButtonResumeCrowdsale extends Component {
   resume = () => {
     localStorage.reload = true
     window.location = '/4'
@@ -8,7 +8,7 @@ export class ResumeCrowdsale extends Component {
 
   render() {
     return (
-      <button onClick={() => this.resume()} className="hm-Home_BtnNew">
+      <button onClick={() => this.resume()} className="hm-ButtonResumeCrowdsale">
         Resume crowdsale
       </button>
     )
