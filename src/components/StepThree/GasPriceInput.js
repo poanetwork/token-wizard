@@ -74,6 +74,10 @@ export default class GasPriceInput extends Component {
 
     if (this.state.customGasPrice) {
       gasTypeSelected.price = this.state.customGasPrice
+    } else {
+      this.setState({
+        customGasPrice: gasTypeSelected.price
+      })
     }
 
     this.handleGasType(gasTypeSelected)
