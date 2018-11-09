@@ -1,6 +1,6 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 
 export const LogoWhite = () => {
-  return <Link className="sw-LogoWhite" to="/" />
+  // eslint-disable-next-line
+  return <a className="sw-LogoWhite" href="/" />
 }
