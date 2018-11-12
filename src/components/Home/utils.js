@@ -9,6 +9,9 @@ export const reloadStorage = async props => {
   let { generalStore, contractStore } = props
 
   try {
+    if (!contractStore || !generalStore) {
+      throw new Error('There is no stores to set')
+    }
     contractStore.setProperty('downloadStatus', DOWNLOAD_STATUS.PENDING)
 
     // General store, check network
@@ -18,9 +21,12 @@ export const reloadStorage = async props => {
     // Contract store, get contract and abi
     await getCrowdsaleAssets(networkID)
     contractStore.setProperty('downloadStatus', DOWNLOAD_STATUS.SUCCESS)
+    return true
   } catch (e) {
     logger.error('Error downloading contracts', e)
-    contractStore.setProperty('downloadStatus', DOWNLOAD_STATUS.FAILURE)
+    if (contractStore) {
+      contractStore.setProperty('downloadStatus', DOWNLOAD_STATUS.FAILURE)
+    }
     throw e
   }
 }
