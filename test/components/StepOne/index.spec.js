@@ -1,6 +1,6 @@
 import React from 'react'
 import Adapter from 'enzyme-adapter-react-15'
-import { configure, mount } from 'enzyme'
+import { configure, mount, shallow } from 'enzyme'
 import renderer from 'react-test-renderer'
 import { MemoryRouter } from 'react-router'
 import { StepOne } from '../../../src/components/StepOne/index'
@@ -17,6 +17,7 @@ import {
   tokenStore
 } from '../../../src/stores'
 import { CROWDSALE_STRATEGIES } from '../../../src/utils/constants'
+import GasPriceInput from '../../../src/components/StepThree/GasPriceInput'
 
 configure({ adapter: new Adapter() })
 
@@ -105,5 +106,49 @@ describe('StepOne', () => {
 
     // Then
     expect(stepOneComponent.instance().state.strategy).toBe(MINTED_CAPPED_CROWDSALE)
+  })
+
+  it(`should render StepOne screen and test load method`, async () => {
+    // Given
+    const wrapper = shallow(<StepOne {...stores} />)
+    // When
+    const result = await wrapper
+      .dive()
+      .instance()
+      .load()
+    // Then
+    expect(result).toEqual({ strategy: 'white-list-with-cap' })
+  })
+
+  it(`should render StepOne screen and test load method with clearStorage`, async () => {
+    // Given
+    global.localStorage.clearStorage = true
+    const wrapper = shallow(<StepOne {...stores} />)
+    // When
+    const result = await wrapper
+      .dive()
+      .instance()
+      .load()
+    // Then
+    expect(result).toEqual({ strategy: 'white-list-with-cap' })
+  })
+
+  it(`should render StepOne screen and test reload`, async () => {
+    // Given
+    global.localStorage.reload = true
+    global.location = jest.fn()
+    global.location.assign = jest.fn()
+    const wrapper = mount(<StepOne {...stores} />)
+
+    // When
+
+    expect(global.localStorage.reload).toBe(undefined)
+    expect(global.localStorage.clearStorage).toBeTruthy()
+  })
+
+  it(`should render StepOne screen and test beforeUnloadSpy`, async () => {
+    const wrapper = mount(<StepOne {...stores} />)
+    window.location.reload()
+    expect(global.localStorage.reload).toBe(undefined)
   })
 })

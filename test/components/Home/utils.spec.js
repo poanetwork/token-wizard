@@ -13,7 +13,7 @@ describe('Home utils', () => {
   }
 
   it('Test reloadStorage with data', async () => {
-    const result = await reloadStorage(data)
+    const result = async () => await reloadStorage(data)
     expect(result).toBeTruthy()
   })
 
