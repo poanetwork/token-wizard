@@ -10,7 +10,7 @@ export const InputField2 = props => {
 
   return (
     <div className={`sw-InputField2 ${props.extraClassName ? props.extraClassName : ''}`}>
-      <FormControlTitle title={props.label} description={props.description} />
+      {props.label ? <FormControlTitle title={props.label} description={props.description} /> : null}
       <TextField
         autoComplete="off"
         className={props.inputClassName ? props.inputClassName : 'input'}

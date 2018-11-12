@@ -29,19 +29,3 @@ $sw-ReservedTokensTable-gradient-width: 45px;
     @include datatable-column-styles('.sw-ReservedTokensTable_Row');
 
 }
-
-.sw-ReservedTokensTable_Dimension {
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
-    background-size: cover;
-    height: 35px;
-    width: 35px;
-
-    &.sw-ReservedTokensTable_Dimension-tokens {
-        background-image: url('#{ $base-images-path }/ReservedTokensTable/ico-tokens.svg');
-    }
-    &.sw-ReservedTokensTable_Dimension-percentage {
-        background-image: url('#{ $base-images-path }/ReservedTokensTable/ico-percentage.svg');
-    }
-
-}

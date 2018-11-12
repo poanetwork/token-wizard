@@ -1,0 +1,24 @@
+.sw-TokenDimension {
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 35px;
+    width: 35px;
+
+    &.sw-TokenDimension-tokens {
+        background-image: url('#{ $base-images-path }/TokenDimension/ico-tokens.svg');
+    }
+    &.sw-TokenDimension-percentage {
+        background-image: url('#{ $base-images-path }/TokenDimension/ico-percentage.svg');
+    }
+
+    .cnt-ContributeForm_AmountContainer & {
+        height: 30px;
+        position: absolute;
+        right: 5px;
+        top: 5px;
+        width: 30px;
+        z-index: 12;
+    }
+
+}

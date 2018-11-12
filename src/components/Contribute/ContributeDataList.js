@@ -1,0 +1,20 @@
+import React from 'react'
+import { ButtonCopyToClipboard } from '../Common/ButtonCopyToClipboard'
+
+export const ContributeDataList = ({ currentAccount, crowdsaleAddress, extraClassName = '' }) => (
+  <div className={`cnt-ContributeDataList ${extraClassName}`}>
+    <div className="cnt-ContributeDataList_Item">
+      <p className="cnt-ContributeDataList_ItemData">
+        <span className="cnt-ContributeDataList_ItemDataValue">{currentAccount}</span>
+      </p>
+      <h4 className="cnt-ContributeDataList_ItemTitle">Current Account</h4>
+    </div>
+    <div className="cnt-ContributeDataList_Item">
+      <p className="cnt-ContributeDataList_ItemData">
+        <span className="cnt-ContributeDataList_ItemDataValue">{crowdsaleAddress}</span>{' '}
+        <ButtonCopyToClipboard value={crowdsaleAddress} />
+      </p>
+      <h4 className="cnt-ContributeDataList_ItemTitle">Crowdsale Execution ID</h4>
+    </div>
+  </div>
+)

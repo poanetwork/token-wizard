@@ -1,0 +1,48 @@
+.cnt-ContributeForm {
+    display: flex;
+    flex-direction: column;
+
+    &.cnt-ContributeForm-full-height {
+        flex-grow: 1;
+    }
+}
+
+.cnt-ContributeForm_Title {
+    color: #000;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0 0 20px;
+}
+
+.cnt-ContributeForm_AmountContainer {
+    height: 40px;
+    margin: 0 0 20px;
+    position: relative;
+}
+
+.cnt-ContributeForm_Description {
+    color: #000;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.43;
+    margin: auto 0 0;
+    text-align: center;
+}
+
+.cnt-ContributeForm_ContributeButton {
+    background-image: linear-gradient(98deg, #8035b7, #5a2da5);
+    border-radius: 6px;
+    border: none;
+    box-shadow: 0 12px 22px 0 rgba(0, 0, 0, 0.24);
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    height: 40px;
+    line-height: 1;
+    margin: 0 0 25px;
+    outline: none;
+    padding: 0;
+    text-align: center;
+}

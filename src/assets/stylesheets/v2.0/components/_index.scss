@@ -1,4 +1,5 @@
 @import "AddTierButton";
+@import "BalanceTokens";
 @import "BorderedBlock";
 @import "BorderedBlockTitle";
 @import "BorderedSection";
@@ -20,6 +21,9 @@
 @import "ButtonSkip";
 @import "ConfigurationBlock";
 @import "Contribute";
+@import "ContributeDataColumns";
+@import "ContributeDataList";
+@import "ContributeForm";
 @import "CrowdsaleID";
 @import "CrowdsaleProgress";
 @import "CrowdsaleSetupBlockDutchAuction";
@@ -47,12 +51,14 @@
 @import "NoWeb3";
 @import "NumericInput";
 @import "NumericInputAndButtonContainer";
+@import "QRPaymentProcess";
 @import "RadioButton";
 @import "RadioInputField";
 @import "RadioItems";
 @import "ReservedTokensListControls";
 @import "ReservedTokensTable";
 @import "SectionInfo";
+@import "Select";
 @import "StepContent";
 @import "StepItem";
 @import "StepNavigation";
@@ -60,6 +66,7 @@
 @import "TierBlock";
 @import "TierSetupDutchAuction";
 @import "TierSetupWhitelistWithCap";
+@import "TokenDimension";
 @import "TokenSetupBlock";
 @import "TxProgressStatus";
 @import "TxStatusIconCheck";

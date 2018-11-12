@@ -9,7 +9,7 @@ import {
   isGreaterOrEqualThan,
   isRequired
 } from '../../utils/validations'
-import classNames from 'classnames'
+import { TokenDimension } from '../Common/TokenDimension'
 
 export const ContributeForm = inject('contributeStore', 'tokenStore')(
   observer(({ handleSubmit, pristine, invalid, ...props }) => {
@@ -25,18 +25,25 @@ export const ContributeForm = inject('contributeStore', 'tokenStore')(
       isTierSoldOut
     } = props
     const { decimals } = tokenStore
-
     const buttonDisabled = pristine || invalid || isEnded || isFinalized || isSoldOut || isTierSoldOut
-    const contributeButtonClasses = classNames('button', 'button_fill', 'button_no_border', {
-      button_disabled: buttonDisabled
-    })
 
-    const ContributeButton =
-      contributeThrough === CONTRIBUTION_OPTIONS.METAMASK ? (
-        <button className={contributeButtonClasses} onClick={handleSubmit} disabled={buttonDisabled}>
-          Contribute
-        </button>
-      ) : null
+    const contributeThroughWallet = () => {
+      return contributeThrough === CONTRIBUTION_OPTIONS.METAMASK
+    }
+
+    const ContributeButton = contributeThroughWallet() ? (
+      <button className="cnt-ContributeForm_ContributeButton" onClick={handleSubmit} disabled={buttonDisabled}>
+        Contribute
+      </button>
+    ) : null
+
+    const ContributeWarningText = contributeThroughWallet() ? (
+      <p className="cnt-ContributeForm_Description">
+        Think twice before contributing to Crowdsales. Tokens will be deposited on a wallet you used to buy tokens.
+      </p>
+    ) : null
+
+    const fullHeightForm = contributeThroughWallet() ? 'cnt-ContributeForm-full-height' : ''
 
     const canContribute = !(isEnded || isFinalized || isSoldOut)
 
@@ -61,38 +68,27 @@ export const ContributeForm = inject('contributeStore', 'tokenStore')(
     }
 
     return (
-      <form className="contribute-form" onSubmit={handleSubmit}>
-        <label className="contribute-form-label">Choose amount to contribute</label>
-
-        <div className="contribute-form-input-container">
+      <form className={`cnt-ContributeForm ${fullHeightForm}`} onSubmit={handleSubmit}>
+        <h3 className="cnt-ContributeForm_Title">Choose amount to contribute</h3>
+        <div className="cnt-ContributeForm_AmountContainer">
           <Field
-            name="contribute"
             component={InputField2}
-            validate={validateContribute}
+            extraClassName="cnt-ContributeForm_Amount"
+            name="contribute"
             placeholder="0"
-            inputClassName="contribute-form-input"
+            validate={validateContribute}
           />
-          <FormSpy subscription={{ values: true }} onChange={tokensToContributeOnChange} />
-          <div className="contribute-form-label">TOKENS</div>
+          <TokenDimension type="tokens" />
         </div>
-
-        <div className="contribute-through-container">
-          <select
-            value={contributeThrough}
-            className="contribute-through"
-            onChange={e => updateContributeThrough(e.target.value)}
-          >
-            <option disabled={!web3Available} value={CONTRIBUTION_OPTIONS.METAMASK}>
-              Wallet {!web3Available ? ' (not available)' : null}
-            </option>
-            <option value={CONTRIBUTION_OPTIONS.QR}>QR</option>
-          </select>
-          {ContributeButton}
-        </div>
-
-        <p className="description">
-          Think twice before contributing to Crowdsales. Tokens will be deposited on a wallet you used to buy tokens.
-        </p>
+        <select value={contributeThrough} className="sw_Select" onChange={e => updateContributeThrough(e.target.value)}>
+          <option disabled={!web3Available} value={CONTRIBUTION_OPTIONS.METAMASK}>
+            Wallet {!web3Available ? ' (not available)' : null}
+          </option>
+          <option value={CONTRIBUTION_OPTIONS.QR}>QR</option>
+        </select>
+        {ContributeButton}
+        {ContributeWarningText}
+        <FormSpy subscription={{ values: true }} onChange={tokensToContributeOnChange} />
       </form>
     )
   })

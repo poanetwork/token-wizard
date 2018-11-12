@@ -56,14 +56,14 @@ import {
 } from '../../utils/alerts'
 import CountdownTimer from './CountdownTimer'
 import QRPaymentProcess from './QRPaymentProcess'
-import ReactTooltip from 'react-tooltip'
-import classNames from 'classnames'
+import { BalanceTokens } from './BalanceTokens'
 import logdown from 'logdown'
 import moment from 'moment'
 import { BigNumber } from 'bignumber.js'
 import { CONTRIBUTION_OPTIONS, TOAST, NAVIGATION_STEPS } from '../../utils/constants'
 import { ContributeForm } from './ContributeForm'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { ContributeDataColumns } from './ContributeDataColumns'
+import { ContributeDataList } from './ContributeDataList'
 import { CrowdsaleConfig } from '../Common/config'
 import { DEPLOYMENT_VALUES } from '../../utils/constants'
 import { Form } from 'react-final-form'
@@ -126,10 +126,13 @@ export class Contribute extends React.Component {
 
   fetchAccount = async () => {
     const account = await getCurrentAccount()
+
     logger.log(`Check for account has changed:`, account !== this.state.curAddr)
+
     if (account !== this.state.curAddr) {
       await this.extractContractsData()
     }
+
     // We cant use setInterval, because we dont know what the function takes in time
     setTimeout(this.fetchAccount, TWO_SECONDS)
   }
@@ -137,6 +140,7 @@ export class Contribute extends React.Component {
   preparePage = async () => {
     const { gasPriceStore, generalStore, crowdsaleStore, contractStore } = this.props
     const crowdsaleExecID = getExecID()
+
     contractStore.setContractProperty('crowdsale', 'execID', crowdsaleExecID)
 
     try {
@@ -243,6 +247,7 @@ export class Contribute extends React.Component {
     let target
 
     logger.log(`Crowdsale Exec Id`, contractStore.crowdsale.execID)
+
     if (contractStore.crowdsale.execID) {
       const targetPrefix = 'idx'
       const targetSuffix = crowdsaleStore.contractTargetSuffix
@@ -250,7 +255,9 @@ export class Contribute extends React.Component {
     } else {
       target = crowdsaleStore.proxyName
     }
+
     const crowdsaleExecID = contractStore.crowdsale && contractStore.crowdsale.execID
+
     try {
       const initCrowdsaleContract = await attachToSpecificCrowdsaleContract(target)
       await initializeAccumulativeData()
@@ -380,6 +387,7 @@ export class Contribute extends React.Component {
     const { web3Store } = this.props
     const { web3 } = web3Store
     let encodedParameters = web3.eth.abi.encodeParameters(methodInterface, [])
+
     return encodedParameters
   }
 
@@ -389,9 +397,11 @@ export class Contribute extends React.Component {
     const { addr } = toJS(contractStore.abstractStorage)
 
     let target
+
     if (contractStore.crowdsale.execID) {
       const targetPrefix = 'idx'
       const targetSuffix = crowdsaleStore.contractTargetSuffix
+
       target = `${targetPrefix}${targetSuffix}`
     } else {
       target = crowdsaleStore.proxyName
@@ -522,7 +532,7 @@ export class Contribute extends React.Component {
         })
 
         if (!userBalanceAfterBuy) {
-          throw new Error(`Is not a big numnber instance`)
+          throw new Error(`Is not a big number instance`)
         }
 
         logger.log(`User balance after buy`, userBalanceAfterBuy.toFixed())
@@ -567,7 +577,6 @@ export class Contribute extends React.Component {
     const { tokenAmountOf } = crowdsalePageStore
     const { crowdsale } = contractStore
     const { proxyName } = crowdsaleStore
-
     const {
       curAddr,
       contributeThrough,
@@ -579,9 +588,7 @@ export class Contribute extends React.Component {
     } = this.state
     const crowdsaleExecID = crowdsale && crowdsale.execID
     const { days, hours, minutes, seconds } = toNextTick
-
     const { decimals, ticker, name } = tokenStore
-
     const tokenDecimals = !isNaN(decimals) ? decimals : 0
     const tokenTicker = ticker ? ticker.toString() : ''
     const tokenName = name ? name.toString() : ''
@@ -597,7 +604,6 @@ export class Contribute extends React.Component {
 
     //total supply
     const totalSupply = maxCapBeforeDecimals.toFixed()
-
     const canContribute = !(this.state.isEnded || this.state.isFinalized || this.state.isSoldOut)
     //min contribution
     const minimumContributionDisplay =
@@ -622,10 +628,6 @@ export class Contribute extends React.Component {
           txData={getExecBuyCallData(crowdsaleExecID)}
         />
       ) : null
-
-    const rightColumnClasses = classNames('contribute-table-cell', 'contribute-table-cell_right', {
-      'qr-selected': contributeThrough === CONTRIBUTION_OPTIONS.QR
-    })
 
     const crowdsaleAddress =
       (crowdsale && crowdsale.execID) || (contractStore[proxyName] && contractStore[proxyName].addr)
@@ -668,68 +670,17 @@ export class Contribute extends React.Component {
                   seconds={seconds}
                   tiersLength={crowdsalePageStore && crowdsalePageStore.tiers.length}
                 />
+                <ContributeDataList currentAccount={curAddr} crowdsaleAddress={crowdsaleAddressTruncated} />
+                <ContributeDataColumns
+                  tokenName={tokenName}
+                  tokenTicker={tokenTicker}
+                  totalSupply={totalSupply}
+                  minimumContribution={minimumContributionDisplay}
+                  maximumContribution={maximumContributionDisplay}
+                />
               </div>
-            </div>
-            <div className="contribute-table">
-              <div className="contribute-table-cell contribute-table-cell_left">
-                <div className="hashes">
-                  <div className="hashes-i">
-                    <p className="hashes-title">{curAddr}</p>
-                    <p className="hashes-description">Current Account</p>
-                  </div>
-                  <div className="hashes-i">
-                    <p className="hashes-title">{crowdsaleAddressTruncated}</p>
-                    <p className="hashes-description_cp_address">
-                      {crowdsaleAddressDescription}
-                      <CopyToClipboard text={crowdsaleAddress}>
-                        <btn data-tip={crowdsaleAddressTooltip} className="copy" />
-                      </CopyToClipboard>
-                    </p>
-                  </div>
-                  <div className="hashes-i">
-                    <p className="hashes-title">{tokenName}</p>
-                    <p className="hashes-description">Name</p>
-                  </div>
-                  <div className="hashes-i">
-                    <p className="hashes-title">{tokenTicker}</p>
-                    <p className="hashes-description">Ticker</p>
-                  </div>
-                  <div className="hashes-i">
-                    <p className="hashes-title">
-                      {totalSupply} {tokenTicker}
-                    </p>
-                    <p className="hashes-description">Total Supply</p>
-                  </div>
-                  <div className="hashes-i">
-                    <p className="hashes-title">{minimumContributionDisplay}</p>
-                    <p className="hashes-description">Minimum Contribution</p>
-                  </div>
-                  <div className="hashes-i">
-                    <p className="hashes-title">{maximumContributionDisplay}</p>
-                    <p className="hashes-description">Maximum Contribution</p>
-                  </div>
-                </div>
-                <p className="contribute-title">Contribute page</p>
-                <p className="contribute-description">
-                  Here you can contribute in the crowdsale campaign. At the moment, you need{' '}
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href="https://chrome.google.com/webstore/detail/nifty-wallet/jbdaocneiiinmjbjlgalhcelgbejmnid"
-                  >
-                    a Wallet
-                  </a>{' '}
-                  client to contribute into the crowdsale.
-                </p>
-              </div>
-              <div className={rightColumnClasses}>
-                <div className="balance">
-                  <p className="balance-title">
-                    {contributorBalance} {tokenTicker}
-                  </p>
-                  <p className="balance-description">Balance</p>
-                  <p className="description">Your balance in tokens.</p>
-                </div>
+              <div className="cnt-Contribute_BalanceBlock">
+                <BalanceTokens balance={contributorBalance} ticker={tokenTicker} />
                 <Form
                   onSubmit={this.contributeToTokens}
                   component={ContributeForm}
@@ -746,7 +697,17 @@ export class Contribute extends React.Component {
                 {QRPaymentProcessElement}
               </div>
             </div>
-            <ReactTooltip />
+            <div className="cnt-Contribute_Description">
+              Here you can contribute in the crowdsale campaign. At the moment, you need{' '}
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://chrome.google.com/webstore/detail/nifty-wallet/jbdaocneiiinmjbjlgalhcelgbejmnid"
+              >
+                a Wallet
+              </a>{' '}
+              client to contribute into the crowdsale.
+            </div>
           </div>
         </section>
         <Loader show={this.state.loading} />

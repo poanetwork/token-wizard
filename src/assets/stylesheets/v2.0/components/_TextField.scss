@@ -54,4 +54,8 @@ $sw-TextField-height: 40px !default;
     .sw-NumericInputAndButtonContainer & {
         width: 100%;
     }
+
+    .cnt-ContributeForm_AmountContainer & {
+        padding-right: 40px;
+    }
 }

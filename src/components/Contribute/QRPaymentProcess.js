@@ -1,30 +1,24 @@
 import React from 'react'
 import QRCode from 'qrcode.react'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { ButtonCopyToClipboard } from '../Common/ButtonCopyToClipboard'
 
 const QRPaymentProcess = ({ crowdsaleProxyAddr, registryExecAddr, txData }) => {
   const targetContractStr = crowdsaleProxyAddr ? 'Proxy' : 'RegistryExec'
   const targetAddr = crowdsaleProxyAddr ? crowdsaleProxyAddr : registryExecAddr
   return (
-    <div>
-      <div className="payment-process">
-        <div className="payment-process-qr">
-          <QRCode value={targetAddr} />
-        </div>
-        <p className="payment-process-hash">{targetAddr}</p>
-
-        <CopyToClipboard text={targetAddr}>
-          <a href="" onClick={e => e.preventDefault()} className="payment-process-copy">
-            Copy Address
-          </a>
-        </CopyToClipboard>
-
-        <div className="payment-process-notation">
-          <p className="payment-process-notation-title">Important</p>
-          <p className="payment-process-notation-description">
-            Send ethers to the Auth-os {targetContractStr} smart-contract address with a data: {txData}
-          </p>
-        </div>
+    <div className="cnt-QRPaymentProcess">
+      <div className="cnt-QRPaymentProcess_QR">
+        <QRCode fgColor="#5a2da5" value={targetAddr} size="115" bgColor="#f6f6f6" />
+      </div>
+      <div className="cnt-QRPaymentProcess_HashContainer">
+        <span className="cnt-QRPaymentProcess_Hash">{targetAddr}</span>
+        <ButtonCopyToClipboard value={targetAddr} />
+      </div>
+      <div className="cnt-QRPaymentProcess_Note">
+        <h3 className="cnt-QRPaymentProcess_NoteTitle">Important</h3>
+        <p className="cnt-QRPaymentProcess_NoteDescription">
+          Send ethers to the Auth-os {targetContractStr} smart-contract address with a MethodID: {txData}
+        </p>
       </div>
     </div>
   )

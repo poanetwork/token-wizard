@@ -31,6 +31,13 @@
         }
     }
 
+    .cnt-ContributeForm_AmountContainer & {
+        margin: 0;
+        position: absolute;
+        width: 100%;
+        z-index: 1;
+    }
+
     &.sw-InputField2-TierSetupName {
         @media (min-width: $breakpoint-md) {
             grid-area: row-1-col-1;
