@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Stats should render Stats 1`] = `
+exports[`Stats index should render Stats 1`] = `
 <div
   className="stats container"
 >

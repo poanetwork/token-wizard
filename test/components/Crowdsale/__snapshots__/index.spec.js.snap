@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Crowdsale should render Crowdsale 1`] = `
+exports[`Crowdsale index should render Crowdsale 1`] = `
 <div>
   <section
     className="lo-MenuBarAndContent"

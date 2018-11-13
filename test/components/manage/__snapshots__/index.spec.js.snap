@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Manage should render Manage 1`] = `
+exports[`Manage index should render Manage 1`] = `
 <section
   className="manage"
 >
