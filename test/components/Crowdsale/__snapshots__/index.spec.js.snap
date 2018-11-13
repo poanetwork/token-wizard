@@ -1,0 +1,283 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Crowdsale should render Crowdsale 1`] = `
+<div>
+  <section
+    className="lo-MenuBarAndContent"
+  >
+    <div
+      className="st-StepNavigation"
+    >
+      <a
+        className="sw-LogoWhite"
+        href="/"
+      />
+      <div
+        className="st-StepNavigation_Container"
+      >
+        <div
+          className="st-StepNavigation_StepContainer
+        active"
+        >
+          <div
+            className="st-StepNavigation_StepCircle"
+          />
+          <div
+            className="st-StepNavigation_StepLine"
+          />
+          <span
+            className="st-StepNavigation_StepText"
+          >
+            Crowdsale Strategy
+          </span>
+        </div>
+        <div
+          className="st-StepNavigation_StepContainer
+        active"
+        >
+          <div
+            className="st-StepNavigation_StepCircle"
+          />
+          <div
+            className="st-StepNavigation_StepLine"
+          />
+          <span
+            className="st-StepNavigation_StepText"
+          >
+            Token Setup
+          </span>
+        </div>
+        <div
+          className="st-StepNavigation_StepContainer
+        active"
+        >
+          <div
+            className="st-StepNavigation_StepCircle"
+          />
+          <div
+            className="st-StepNavigation_StepLine"
+          />
+          <span
+            className="st-StepNavigation_StepText"
+          >
+            Crowdsale Setup
+          </span>
+        </div>
+        <div
+          className="st-StepNavigation_StepContainer
+        active"
+        >
+          <div
+            className="st-StepNavigation_StepCircle"
+          />
+          <div
+            className="st-StepNavigation_StepLine"
+          />
+          <span
+            className="st-StepNavigation_StepText"
+          >
+            Publish
+          </span>
+        </div>
+        <div
+          className="st-StepNavigation_StepContainer
+        active"
+        >
+          <div
+            className="st-StepNavigation_StepCircle"
+          />
+          <span
+            className="st-StepNavigation_StepText"
+          >
+            Crowdsale Page
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      className="st-StepContent"
+    >
+      <div
+        className="st-StepInfo "
+      >
+        <div
+          className="st-StepInfo_Icon st-StepInfo_Icon-step5"
+        />
+        <div
+          className="st-StepInfo_Text"
+        >
+          <h1
+            className="st-StepInfo_Title"
+          >
+            Crowdsale Page
+          </h1>
+          <p
+            className="st-StepInfo_Description"
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "Page with statistics of crowdsale. Statistics for all tiers combined on the page. Please press Ctrl-D to bookmark the page.",
+              }
+            }
+          />
+        </div>
+      </div>
+      <div
+        className="cs-CrowdsaleProgress "
+      >
+        <div
+          className="cs-CrowdsaleProgress_Funds"
+        >
+          <div
+            className="cs-CrowdsaleProgress_FundsAmount cs-CrowdsaleProgress_FundsAmount-total-raised"
+          >
+            <h2
+              className="cs-CrowdsaleProgress_FundsTitle"
+            >
+              0
+               
+              <span
+                className="cs-CrowdsaleProgress_NoBreak"
+              >
+                ETH
+              </span>
+            </h2>
+            <p
+              className="cs-CrowdsaleProgress_FundsDescription"
+            >
+              Total Raised Funds
+            </p>
+          </div>
+          <div
+            className="cs-CrowdsaleProgress_FundsAmount cs-CrowdsaleProgress_FundsAmount-goal"
+          >
+            <h2
+              className="cs-CrowdsaleProgress_FundsTitle"
+            >
+              0
+               
+              <span
+                className="cs-CrowdsaleProgress_NoBreak"
+              >
+                ETH
+              </span>
+            </h2>
+            <p
+              className="cs-CrowdsaleProgress_FundsDescription"
+            >
+              Goal
+            </p>
+          </div>
+        </div>
+        <div
+          className="cs-CrowdsaleProgress_Bar"
+        >
+          <div
+            className="cs-CrowdsaleProgress_BarWidth"
+            style={
+              Object {
+                "width": "0%",
+              }
+            }
+          />
+          <div
+            className="cs-CrowdsaleProgress_Division"
+          />
+          <div
+            className="cs-CrowdsaleProgress_Division"
+          />
+          <div
+            className="cs-CrowdsaleProgress_Division"
+          />
+          <div
+            className="cs-CrowdsaleProgress_Division"
+          />
+          <div
+            className="cs-CrowdsaleProgress_Division"
+          />
+          <div
+            className="cs-CrowdsaleProgress_Division"
+          />
+          <div
+            className="cs-CrowdsaleProgress_Division"
+          />
+          <div
+            className="cs-CrowdsaleProgress_Division"
+          />
+          <div
+            className="cs-CrowdsaleProgress_Division"
+          />
+        </div>
+      </div>
+      <div
+        className="cs-CrowdsaleID "
+      >
+        <div
+          className="cs-CrowdsaleID_InnerContainer"
+        >
+          <h3
+            className="cs-CrowdsaleID_Hash"
+          >
+            <span
+              className="cs-CrowdsaleID_HashText"
+            />
+             
+            <button
+              className="sw-ButtonCopyToClipboard "
+              data-clipboard-action="copy"
+              onClick={[Function]}
+              type="button"
+            />
+          </h3>
+          <p
+            className="cs-CrowdsaleID_Description"
+          >
+            Crowdsale Proxy Address
+          </p>
+        </div>
+      </div>
+      <div
+        className="st-StepContent_Buttons"
+      >
+        <button
+          className="sw-ButtonContinue "
+          disabled={false}
+          onClick={[Function]}
+          type="button"
+        >
+          <span
+            className="sw-ButtonContinue_Text"
+          >
+            Contribute
+          </span>
+        </button>
+      </div>
+    </div>
+  </section>
+  <div
+    className="sw-FullscreenBackdrop"
+  >
+    <div
+      className="sw-Loader"
+    >
+      <div
+        className="sw-Loader_AnimatedItem"
+      />
+      <div
+        className="sw-Loader_AnimatedItem"
+      />
+      <div
+        className="sw-Loader_AnimatedItem"
+      />
+      <div
+        className="sw-Loader_AnimatedItem"
+      />
+      <div
+        className="sw-Loader_AnimatedItem"
+      />
+      <div
+        className="sw-Loader_AnimatedItem"
+      />
+    </div>
+  </div>
+</div>
+`;
