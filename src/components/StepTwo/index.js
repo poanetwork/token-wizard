@@ -24,6 +24,9 @@ export class StepTwo extends Component {
   async componentDidMount() {
     await checkWeb3()
 
+    logger.log('Component did mount')
+    window.addEventListener('beforeunload', this.onUnload)
+
     const tokenValues = this.load()
     logger.log('Token Values', tokenValues)
     this.setState({ tokenValues: tokenValues })
@@ -47,18 +50,26 @@ export class StepTwo extends Component {
   }
 
   goNextStep = () => {
-    navigateTo({
-      history: this.props.history,
-      location: 'stepThree',
-      fromLocation: 'stepTwo'
-    })
+    try {
+      navigateTo({
+        history: this.props.history,
+        location: 'stepThree',
+        fromLocation: 'stepTwo'
+      })
+    } catch (err) {
+      logger.log('Error to navigate', err)
+    }
   }
 
   goBack = () => {
-    goBack({
-      history: this.props.history,
-      location: '/stepOne'
-    })
+    try {
+      goBack({
+        history: this.props.history,
+        location: '/stepOne'
+      })
+    } catch (err) {
+      logger.log('Error to navigate', err)
+    }
   }
 
   goBackEnabled = () => {
@@ -70,6 +81,16 @@ export class StepTwo extends Component {
       logger.log(`There is an error trying to set enable/disable on back button`)
     }
     return goBackEnabled
+  }
+
+  onUnload = e => {
+    logger.log('On unload')
+    e.returnValue = 'Are you sure you want to leave?'
+  }
+
+  componentWillUnmount() {
+    logger.log('Component unmount')
+    window.removeEventListener('beforeunload', this.onUnload)
   }
 
   render() {
