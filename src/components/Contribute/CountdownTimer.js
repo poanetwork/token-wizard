@@ -1,85 +1,95 @@
 import React from 'react'
-import ReactCountdownClock from 'react-countdown-clock'
+import Circle from 'react-circle'
 
 const CountdownTimer = ({
-  displaySeconds,
-  nextTick,
-  tiersLength,
+  altMessage,
+  crowdsaleTimePassedPercentage,
   days,
   hours,
-  minutes,
-  seconds,
-  msToNextTick,
-  onComplete,
   isFinalized,
-  altMessage
+  isLoading,
+  minutes,
+  nextTick,
+  seconds,
+  tiersLength
 }) => {
+  const noTimeLeft = days <= 0 && hours <= 0 && minutes <= 0 && seconds <= 0
+  const crowdsaleIsRunning = !isFinalized && nextTick.type
+
   const countdownClock = (
-    <div>
-      {displaySeconds ? null : (
-        <div className="timer-i">
-          <div className="timer-count">{days}</div>
-          <div className="timer-interval">Days</div>
+    <div className="cnt-CountdownTimer_Time">
+      {days ? (
+        <div className="cnt-CountdownTimer_TimeItem">
+          <div className="cnt-CountdownTimer_TimeCount">{days}</div>
+          <div className="cnt-CountdownTimer_TimeInterval">Days</div>
         </div>
-      )}
-      {displaySeconds ? null : (
-        <div className="timer-i">
-          <div className="timer-count">{hours}</div>
-          <div className="timer-interval">Hours</div>
+      ) : null}
+      {hours ? (
+        <div className="cnt-CountdownTimer_TimeItem">
+          <div className="cnt-CountdownTimer_TimeCount">{hours}</div>
+          <div className="cnt-CountdownTimer_TimeInterval">Hours</div>
         </div>
-      )}
-      <div className="timer-i">
-        <div className="timer-count">{minutes}</div>
-        <div className="timer-interval">Mins</div>
+      ) : null}
+      <div className="cnt-CountdownTimer_TimeItem">
+        <div className="cnt-CountdownTimer_TimeCount">{minutes}</div>
+        <div className="cnt-CountdownTimer_TimeInterval">Mins</div>
       </div>
-      {!displaySeconds ? null : (
-        <div className="timer-i">
-          <div className="timer-count">{seconds}</div>
-          <div className="timer-interval">Secs</div>
+      {days ? null : (
+        <div className="cnt-CountdownTimer_TimeItem">
+          <div className="cnt-CountdownTimer_TimeCount">{seconds}</div>
+          <div className="cnt-CountdownTimer_TimeInterval">Secs</div>
         </div>
       )}
     </div>
   )
 
-  let message = null
+  const getCrowdsaleMessage = () => {
+    let theMessage = 'Crowdsale has ended'
 
-  if (isFinalized) {
-    message = 'crowdsale has been finalized'
-    msToNextTick = 0
-  } else {
-    if (nextTick.type) {
+    if (crowdsaleIsRunning) {
       if (nextTick.type === 'start') {
-        message = `to start of tier ${nextTick.order} of ${tiersLength}`
+        theMessage = `To start of tier ${nextTick.order} of ${tiersLength}`
       } else {
-        message = `to end of tier ${nextTick.order} of ${tiersLength}`
+        theMessage = `To end of tier ${nextTick.order} of ${tiersLength}`
       }
-    } else {
-      message = 'crowdsale has ended'
     }
+
+    return <div className="cnt-CountdownTimer_Message">{theMessage}</div>
+  }
+
+  const getCrowdsaleAltMessage = () => {
+    return altMessage ? <div className="cnt-CountdownTimer_AltMessage">{altMessage}</div> : null
+  }
+
+  const getCrowdsaleProgress = () => {
+    if (noTimeLeft || !crowdsaleIsRunning) {
+      return 100
+    }
+
+    return crowdsaleTimePassedPercentage
   }
 
   return (
-    <div className="timer-container">
-      <div style={{ marginLeft: '-20px', marginTop: '-20px' }}>
-        <ReactCountdownClock
-          seconds={msToNextTick / 1000}
-          color="#733EAB"
-          alpha={0.9}
-          size={270}
-          showMilliseconds={false}
-          onComplete={onComplete}
+    <div className="cnt-CountdownTimer">
+      <div className="cnt-CountdownTimer_ReactCountdownClock">
+        <Circle
+          animate={true}
+          bgColor="#5a2da5"
+          lineWidth="50"
+          progress={getCrowdsaleProgress()}
+          progressColor="#a971f9"
+          responsive={false}
+          roundedStroke={false}
+          showPercentage={false}
+          size="250"
         />
-      </div>
-      <div className="timer">
-        <div className="timer-inner">
-          {isFinalized ? null : countdownClock}
-          <div className="timer-i">
-            <div className="timer-interval">
-              <strong>{message}</strong>
-              {altMessage ? <div className="timer__altMessage">{altMessage}</div> : null}
-            </div>
+        {isLoading ? null : (
+          <div className="cnt-CountdownTimer_TimeContainer">
+            {noTimeLeft ? null : countdownClock}
+            {getCrowdsaleMessage()}
+            {getCrowdsaleAltMessage()}
           </div>
-        </div>
+        )}
       </div>
     </div>
   )

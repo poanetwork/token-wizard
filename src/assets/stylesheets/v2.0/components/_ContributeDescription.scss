@@ -1,0 +1,17 @@
+.cnt-ContributeDescription {
+    color: #000;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.2;
+    margin: 0;
+    padding: 30px 0 0 0;
+
+    a {
+        color: $brand-primary;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}

@@ -56,14 +56,15 @@ import {
 } from '../../utils/alerts'
 import CountdownTimer from './CountdownTimer'
 import QRPaymentProcess from './QRPaymentProcess'
-import { BalanceTokens } from './BalanceTokens'
 import logdown from 'logdown'
 import moment from 'moment'
+import { BalanceTokens } from './BalanceTokens'
 import { BigNumber } from 'bignumber.js'
 import { CONTRIBUTION_OPTIONS, TOAST, NAVIGATION_STEPS } from '../../utils/constants'
-import { ContributeForm } from './ContributeForm'
 import { ContributeDataColumns } from './ContributeDataColumns'
 import { ContributeDataList } from './ContributeDataList'
+import { ContributeDescription } from './ContributeDescription'
+import { ContributeForm } from './ContributeForm'
 import { CrowdsaleConfig } from '../Common/config'
 import { DEPLOYMENT_VALUES } from '../../utils/constants'
 import { Form } from 'react-final-form'
@@ -94,7 +95,6 @@ let promiseRetry = require('promise-retry')
 export class Contribute extends React.Component {
   constructor(props) {
     super(props)
-    window.scrollTo(0, 0)
 
     this.state = {
       loading: true,
@@ -109,6 +109,8 @@ export class Contribute extends React.Component {
       },
       nextTick: {},
       msToNextTick: 0,
+      crowdsaleDurationSeconds: 0,
+      crowdsaleSecondsLeft: 0,
       displaySeconds: false,
       isStarted: false,
       isFinalized: false,
@@ -133,7 +135,7 @@ export class Contribute extends React.Component {
       await this.extractContractsData()
     }
 
-    // We cant use setInterval, because we dont know what the function takes in time
+    // We can't use setInterval, because we dont know what the function takes in time
     setTimeout(this.fetchAccount, TWO_SECONDS)
   }
 
@@ -296,15 +298,30 @@ export class Contribute extends React.Component {
     this.setState({ isTierSoldOut: await isTierSoldOut(initCrowdsaleContract, crowdsaleExecID) })
   }
 
+  getCrowdsaleSecondsLeft = endDate => {
+    return Math.trunc((moment(endDate) - moment(Date.now())) / 1000)
+  }
+
+  getCrowdsaleSecondsDuration = (startDate, endDate) => {
+    return Math.trunc((moment(endDate) - moment(startDate)) / 1000)
+  }
+
   setTimers = () => {
     const { crowdsalePageStore } = this.props
+    const { startDate, endDate } = crowdsalePageStore
+
     let nextTick = 0
     let millisecondsToNextTick = 0
     let timeInterval
+    let durationSeconds = 0
+    let secondsLeft = 0
 
     if (crowdsalePageStore.ticks.length) {
       nextTick = crowdsalePageStore.extractNextTick()
       millisecondsToNextTick = nextTick.time - Date.now()
+      durationSeconds = this.getCrowdsaleSecondsDuration(startDate, endDate)
+      secondsLeft = this.getCrowdsaleSecondsLeft(endDate)
+
       const FIVE_MINUTES_BEFORE_TICK = moment(millisecondsToNextTick)
         .subtract(5, 'minutes')
         .valueOf()
@@ -325,7 +342,8 @@ export class Contribute extends React.Component {
             hours: time.hours() || 0,
             minutes: time.minutes() || 0,
             seconds: time.seconds() || 0
-          }
+          },
+          crowdsaleSecondsLeft: this.getCrowdsaleSecondsLeft(endDate)
         })
       }, 1000)
     }
@@ -333,6 +351,8 @@ export class Contribute extends React.Component {
     this.setState({
       nextTick,
       msToNextTick: millisecondsToNextTick,
+      crowdsaleDurationSeconds: durationSeconds,
+      crowdsaleSecondsLeft: secondsLeft,
       displaySeconds: false,
       timeInterval
     })
@@ -594,31 +614,23 @@ export class Contribute extends React.Component {
     const tokenName = name ? name.toString() : ''
     const maximumSellableTokens = toBigNumber(crowdsalePageStore.maximumSellableTokens)
     const maxCapBeforeDecimals = toBigNumber(maximumSellableTokens).div(`1e${tokenDecimals}`)
-
-    //balance
     const contributorBalance = tokenAmountOf
       ? toBigNumber(tokenAmountOf)
           .div(`1e${tokenDecimals}`)
           .toFixed()
       : '0'
-
-    //total supply
     const totalSupply = maxCapBeforeDecimals.toFixed()
     const canContribute = !(this.state.isEnded || this.state.isFinalized || this.state.isSoldOut)
-    //min contribution
     const minimumContributionDisplay =
       minimumContribution >= 0 && isFinite(minimumContribution) && canContribute
         ? `${minimumContribution} ${tokenTicker}`
         : 'You are not allowed'
-    //max contribution
     const maximumContributionDisplay =
       maximumContribution >= 0 && isFinite(maximumContribution) && canContribute
         ? `${maximumContribution} ${tokenTicker}`
         : 'You are not allowed'
-
     const registryExecAddr =
       contractStore.registryExec && contractStore.registryExec.addr ? contractStore.registryExec.addr : ''
-
     const crowdsaleProxyAddr = contractStore[proxyName] && contractStore[proxyName].addr
     const QRPaymentProcessElement =
       contributeThrough === CONTRIBUTION_OPTIONS.QR && (crowdsaleExecID || crowdsaleProxyAddr) ? (
@@ -628,22 +640,38 @@ export class Contribute extends React.Component {
           txData={getExecBuyCallData(crowdsaleExecID)}
         />
       ) : null
-
-    const crowdsaleAddress =
-      (crowdsale && crowdsale.execID) || (contractStore[proxyName] && contractStore[proxyName].addr)
     const crowdsaleAddressTruncated =
       (crowdsale && truncateStringInTheMiddle(crowdsale.execID)) ||
       (contractStore[proxyName] && contractStore[proxyName].addr)
-    const crowdsaleAddressDescription = crowdsale
-      ? crowdsale.execID
-        ? 'Crowdsale Execution ID'
-        : 'Crowdsale Proxy Address'
-      : 'Crowdsale ID'
-    const crowdsaleAddressTooltip = crowdsale
-      ? crowdsale.execID
-        ? `Crowdsale execution ID to copy: ${crowdsaleAddress}`
-        : `Crowdsale proxy address to copy: ${crowdsaleAddress}`
-      : `Crowdsale ID ${crowdsaleAddress}`
+
+    const getContributeDataColumnsObject = () => {
+      return [
+        {
+          description: tokenName,
+          title: 'Name'
+        },
+        {
+          description: tokenTicker,
+          title: 'Ticker'
+        },
+        {
+          description: `${totalSupply}  ${tokenTicker}`,
+          title: 'Total Supply'
+        },
+        {
+          description: minimumContributionDisplay,
+          title: 'Minimum Contribution'
+        },
+        {
+          description: maximumContributionDisplay,
+          title: 'Maximum Contribution'
+        }
+      ]
+    }
+
+    const getCrowdsaleTimePassedPercentage = () => {
+      return 100 - Math.trunc((this.state.crowdsaleSecondsLeft * 100) / this.state.crowdsaleDurationSeconds)
+    }
 
     return (
       <div>
@@ -659,25 +687,18 @@ export class Contribute extends React.Component {
               <div className="cnt-Contribute_ShadowedBlock">
                 <CountdownTimer
                   altMessage={this.state.clockAltMessage}
+                  crowdsaleTimePassedPercentage={getCrowdsaleTimePassedPercentage()}
                   days={days}
-                  displaySeconds={this.state.displaySeconds}
                   hours={hours}
                   isFinalized={this.state.isFinalized}
+                  isLoading={this.state.loading}
                   minutes={minutes}
-                  msToNextTick={this.state.msToNextTick}
                   nextTick={nextTick}
-                  onComplete={this.resetTimers}
                   seconds={seconds}
                   tiersLength={crowdsalePageStore && crowdsalePageStore.tiers.length}
                 />
                 <ContributeDataList currentAccount={curAddr} crowdsaleAddress={crowdsaleAddressTruncated} />
-                <ContributeDataColumns
-                  tokenName={tokenName}
-                  tokenTicker={tokenTicker}
-                  totalSupply={totalSupply}
-                  minimumContribution={minimumContributionDisplay}
-                  maximumContribution={maximumContributionDisplay}
-                />
+                <ContributeDataColumns data={getContributeDataColumnsObject()} />
               </div>
               <div className="cnt-Contribute_BalanceBlock">
                 <BalanceTokens balance={contributorBalance} ticker={tokenTicker} />
@@ -697,17 +718,7 @@ export class Contribute extends React.Component {
                 {QRPaymentProcessElement}
               </div>
             </div>
-            <div className="cnt-Contribute_Description">
-              Here you can contribute in the crowdsale campaign. At the moment, you need{' '}
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href="https://chrome.google.com/webstore/detail/nifty-wallet/jbdaocneiiinmjbjlgalhcelgbejmnid"
-              >
-                a Wallet
-              </a>{' '}
-              client to contribute into the crowdsale.
-            </div>
+            <ContributeDescription />
           </div>
         </section>
         <Loader show={this.state.loading} />
