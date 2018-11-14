@@ -25,12 +25,10 @@ const CountdownTimer = ({
           <div className="cnt-CountdownTimer_TimeInterval">Days</div>
         </div>
       ) : null}
-      {hours ? (
-        <div className={`cnt-CountdownTimer_TimeItem ${hoursHaveBlinker}`}>
-          <div className="cnt-CountdownTimer_TimeCount">{hours}</div>
-          <div className="cnt-CountdownTimer_TimeInterval">Hours</div>
-        </div>
-      ) : null}
+      <div className={`cnt-CountdownTimer_TimeItem ${hoursHaveBlinker}`}>
+        <div className="cnt-CountdownTimer_TimeCount">{hours}</div>
+        <div className="cnt-CountdownTimer_TimeInterval">Hours</div>
+      </div>
       <div className="cnt-CountdownTimer_TimeItem">
         <div className="cnt-CountdownTimer_TimeCount">{minutes}</div>
         <div className="cnt-CountdownTimer_TimeInterval">Mins</div>
