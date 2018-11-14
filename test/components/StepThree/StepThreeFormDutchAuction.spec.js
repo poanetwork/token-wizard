@@ -174,7 +174,6 @@ describe('StepThreeFormDutchAuction', () => {
     ).toBeTruthy()
   })
 
-
   it(`should render StepThreeFormDutchAuction- test props III`, () => {
     const props = {
       onSubmit: jest.fn(),
@@ -211,5 +210,42 @@ describe('StepThreeFormDutchAuction', () => {
         .find(`[value="yes"]`)
         .props('checked')
     ).toBeTruthy()
+  })
+
+  it(`should render StepThreeFormDutchAuction- test submit`, () => {
+    const onSubmit = jest.fn()
+
+    const props = {
+      handleSubmit: onSubmit,
+      decorators: jest.fn(),
+      values: {
+        burnExcess: false,
+        gasPrice: GAS_PRICE.SLOW,
+        tiers: tierStore.tiers.slice(),
+        walletAddress: walletAddress,
+        whitelistEnabled: 'no'
+      },
+      generalStore: generalStore,
+      crowdsaleStore: crowdsaleStore,
+      gasPriceStore: gasPriceStore,
+      reservedTokenStore: reservedTokenStore,
+      tierStore: tierStore,
+      tokenStore: tokenStore,
+      form: { mutators: {} }
+    }
+    const FormComponent = mount(
+      <Provider {...stores}>
+        <StepThreeFormDutchAuction {...props} />
+      </Provider>
+    )
+
+    const form = FormComponent.find('form').at(0)
+    const children = form
+      .render()
+      .children()
+      .children()
+    form.simulate('submit', { target: { children } })
+
+    expect(onSubmit).toHaveBeenCalledTimes(1)
   })
 })

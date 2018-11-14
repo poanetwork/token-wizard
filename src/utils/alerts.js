@@ -1,7 +1,7 @@
 import sweetAlert2 from 'sweetalert2'
 import { DEPLOYMENT_VALUES, LIMIT_RESERVED_ADDRESSES, LIMIT_WHITELISTED_ADDRESSES } from './constants'
 
-export function noMetaMaskAlert(cb) {
+export const noMetaMaskAlert = cb => {
   sweetAlert2({
     title: 'Warning',
     html:
@@ -11,7 +11,7 @@ export function noMetaMaskAlert(cb) {
   }).then(cb)
 }
 
-export function MetaMaskIsLockedAlert(cb) {
+export const MetaMaskIsLockedAlert = cb => {
   sweetAlert2({
     title: 'Warning',
     html: 'You signed out from your Wallet. Open your Wallet extension and sign in.',
@@ -19,7 +19,7 @@ export function MetaMaskIsLockedAlert(cb) {
   }).then(cb)
 }
 
-export function noContractDataAlert() {
+export const noContractDataAlert = () => {
   sweetAlert2({
     title: 'Warning',
     html: 'The crowdsale data is empty. There is nothing to deploy. Please, start Token Wizard from the beginning.',
@@ -27,7 +27,7 @@ export function noContractDataAlert() {
   })
 }
 
-export function noContractAlert() {
+export const noContractAlert = () => {
   sweetAlert2({
     title: 'Warning',
     html: 'There is no contract at this address',
@@ -35,7 +35,7 @@ export function noContractAlert() {
   })
 }
 
-export function invalidCrowdsaleExecIDAlert() {
+export const invalidCrowdsaleExecIDAlert = () => {
   sweetAlert2({
     title: 'Warning',
     html: 'Invalid crowdsale exec-id is indicated in config and/or in query string.',
@@ -43,7 +43,7 @@ export function invalidCrowdsaleExecIDAlert() {
   })
 }
 
-export function invalidCrowdsaleExecIDProxyAlert() {
+export const invalidCrowdsaleExecIDProxyAlert = () => {
   sweetAlert2({
     title: 'Warning',
     html: 'Invalid crowdsale exec-id or proxy address indicated in config and/or in query string.',
@@ -51,7 +51,7 @@ export function invalidCrowdsaleExecIDProxyAlert() {
   })
 }
 
-export function invalidCrowdsaleProxyAlert() {
+export const invalidCrowdsaleProxyAlert = () => {
   sweetAlert2({
     title: 'Warning',
     html: 'Invalid crowdsale proxy address is indicated in config and/or in query string.',
@@ -59,7 +59,7 @@ export function invalidCrowdsaleProxyAlert() {
   })
 }
 
-export function invalidCrowdsaleAddrAlert() {
+export const invalidCrowdsaleAddrAlert = () => {
   sweetAlert2({
     title: 'Warning',
     html: 'Invalid crowdsale address is indicated in config and/or in query string.',
@@ -67,7 +67,7 @@ export function invalidCrowdsaleAddrAlert() {
   })
 }
 
-export function invalidNetworkIDAlert() {
+export const invalidNetworkIDAlert = () => {
   sweetAlert2({
     title: 'Warning',
     html: 'Invalid network ID is indicated in config and/or in query string.',
@@ -75,7 +75,7 @@ export function invalidNetworkIDAlert() {
   })
 }
 
-export function successfulContributionAlert(tokensToContribute) {
+export const successfulContributionAlert = tokensToContribute => {
   sweetAlert2({
     title: 'Success',
     html: "Congrats! You've successfully bought " + tokensToContribute + ' tokens!',
@@ -87,7 +87,7 @@ export function successfulContributionAlert(tokensToContribute) {
   })
 }
 
-export function contributionDisabledAlertInTime(startTime) {
+export const contributionDisabledAlertInTime = startTime => {
   sweetAlert2({
     title: 'Warning',
     html: "Wait, please. Crowdsale company hasn't started yet. It'll start from <b>" + new Date(startTime) + '</b>.',
@@ -95,7 +95,7 @@ export function contributionDisabledAlertInTime(startTime) {
   })
 }
 
-export function incorrectNetworkAlert(correctNetworkName, incorrectNetworkName) {
+export const incorrectNetworkAlert = (correctNetworkName, incorrectNetworkName) => {
   sweetAlert2({
     title: 'Warning',
     html:
@@ -108,7 +108,7 @@ export function incorrectNetworkAlert(correctNetworkName, incorrectNetworkName) 
   })
 }
 
-export function warningOnMainnetAlert(tiersCount, priceSelected, reservedCount, whitelistCount, cb) {
+export const warningOnMainnetAlert = (tiersCount, priceSelected, reservedCount, whitelistCount, cb) => {
   const { GAS_REQUIRED, TX_REQUIRED } = DEPLOYMENT_VALUES
 
   let gasRequired =
@@ -141,7 +141,7 @@ export function warningOnMainnetAlert(tiersCount, priceSelected, reservedCount, 
   })
 }
 
-export function warningOnFinalizeCrowdsale() {
+export const warningOnFinalizeCrowdsale = () => {
   return sweetAlert2({
     title: 'Finalize Crowdsale',
     html:
@@ -154,7 +154,7 @@ export function warningOnFinalizeCrowdsale() {
   })
 }
 
-export function successfulFinalizeAlert() {
+export const successfulFinalizeAlert = () => {
   return sweetAlert2({
     title: 'Success',
     html: "Congrats! You've successfully finalized the Crowdsale!",
@@ -162,7 +162,7 @@ export function successfulFinalizeAlert() {
   })
 }
 
-export function successfulDistributeAlert() {
+export const successfulDistributeAlert = () => {
   sweetAlert2({
     title: 'Success',
     html: "Congrats! You've successfully distributed reserved tokens!",
@@ -170,7 +170,7 @@ export function successfulDistributeAlert() {
   })
 }
 
-export function noGasPriceAvailable() {
+export const noGasPriceAvailable = () => {
   sweetAlert2({
     title: 'No Gas Price Available',
     html: "Token Wizard wasn't able to request current Gas Prices from the blockchain, custom values will be used",
@@ -178,7 +178,7 @@ export function noGasPriceAvailable() {
   })
 }
 
-export function successfulUpdateCrowdsaleAlert() {
+export const successfulUpdateCrowdsaleAlert = () => {
   sweetAlert2({
     title: 'Success',
     html: "Congrats! You've successfully updated the Crowdsale!",
@@ -190,7 +190,7 @@ export function successfulUpdateCrowdsaleAlert() {
   })
 }
 
-export function successfulDeployment() {
+export const successfulDeployment = () => {
   sweetAlert2({
     title: 'Success',
     html: 'Transactions signed successfully!',
@@ -198,7 +198,7 @@ export function successfulDeployment() {
   })
 }
 
-export function mainnetIsOnMaintenance() {
+export const mainnetIsOnMaintenance = () => {
   sweetAlert2({
     title: 'Warning',
     html:
@@ -207,7 +207,7 @@ export function mainnetIsOnMaintenance() {
   })
 }
 
-export function notTheOwner() {
+export const notTheOwner = () => {
   sweetAlert2({
     title: 'Not The Owner',
     html: "Current user is not the owner of the Crowdsale, thus you won't be able to modify it",
@@ -215,7 +215,7 @@ export function notTheOwner() {
   })
 }
 
-export function cancellingIncompleteDeploy() {
+export const cancellingIncompleteDeploy = () => {
   return sweetAlert2({
     title: 'Cancel crowdsale deploy',
     html: 'Are you sure you want to cancel the deployment of the crowdsale? This action cannot be undone.',
@@ -227,7 +227,7 @@ export function cancellingIncompleteDeploy() {
   })
 }
 
-export function skippingTransaction() {
+export const skippingTransaction = () => {
   return sweetAlert2({
     title: 'Skip transaction',
     html:
@@ -240,7 +240,7 @@ export function skippingTransaction() {
   })
 }
 
-export function clearingReservedTokens() {
+export const clearingReservedTokens = () => {
   return sweetAlert2({
     title: 'Clear all reserved tokens',
     html: 'Are you sure you want to remove all reserved tokens?',
@@ -252,7 +252,7 @@ export function clearingReservedTokens() {
   })
 }
 
-export function clearingWhitelist() {
+export const clearingWhitelist = () => {
   return sweetAlert2({
     title: 'Clear all whitelist addresses',
     html: 'Are you sure you want to remove all the whitelist addresses for this tier?',
@@ -264,7 +264,7 @@ export function clearingWhitelist() {
   })
 }
 
-export function whitelistImported(count) {
+export const whitelistImported = count => {
   return sweetAlert2({
     title: 'Addresses imported',
     html: `${count} addresses were added to the whitelist`,
@@ -272,7 +272,7 @@ export function whitelistImported(count) {
   })
 }
 
-export function errorDimCSVAlert(dimensions) {
+export const errorDimCSVAlert = dimensions => {
   let message = 'There was an error importing the file.'
 
   if (dimensions && dimensions.length > 0) {
@@ -295,7 +295,7 @@ export function errorDimCSVAlert(dimensions) {
   })
 }
 
-export function errorDimValueCSVAlert(dimensionsValues) {
+export const errorDimValueCSVAlert = dimensionsValues => {
   let message = 'There was an error importing the file.'
 
   if (dimensionsValues && dimensionsValues.length > 0) {
@@ -318,7 +318,7 @@ export function errorDimValueCSVAlert(dimensionsValues) {
   })
 }
 
-export function errorEmptyCSVAlert() {
+export const errorEmptyCSVAlert = () => {
   return sweetAlert2({
     title: 'Error importing the file',
     html: 'Empty CSV file. Nothing was imported',
@@ -326,7 +326,7 @@ export function errorEmptyCSVAlert() {
   })
 }
 
-export function errorWhitelistedCSVAlert(errors) {
+export const errorWhitelistedCSVAlert = errors => {
   let message = 'There was an error importing the file. The file have an erroneous amount of columns'
 
   if (errors && errors.length > 0) {
@@ -345,7 +345,7 @@ export function errorWhitelistedCSVAlert(errors) {
   })
 }
 
-export function errorRowLengthCSVAlert(errors) {
+export const errorRowLengthCSVAlert = errors => {
   let message = 'There was an error importing the file. The file have an erroneous amount of columns'
 
   if (errors && errors.length > 0) {
@@ -369,7 +369,7 @@ export function errorRowLengthCSVAlert(errors) {
   })
 }
 
-export function errorAddressCSVAlert(address) {
+export const errorAddressCSVAlert = address => {
   let message = 'There was an error importing the file.'
 
   if (address && address.length > 0) {
@@ -392,7 +392,7 @@ export function errorAddressCSVAlert(address) {
   })
 }
 
-export function reservedTokensImported(count) {
+export const reservedTokensImported = count => {
   return sweetAlert2({
     title: 'Reserved tokens imported',
     html: `Tokens will be reserved for ${count} addresses`,
@@ -400,7 +400,7 @@ export function reservedTokensImported(count) {
   })
 }
 
-export function noMoreTokensAvailable() {
+export const noMoreTokensAvailable = () => {
   return sweetAlert2({
     title: 'No more tokens available',
     html: `You're not able to buy more tokens. You have bought your maximum allowed or tier has reached its hard cap`,
@@ -408,7 +408,7 @@ export function noMoreTokensAvailable() {
   })
 }
 
-export function notAllowedContributor() {
+export const notAllowedContributor = () => {
   return sweetAlert2({
     title: 'Not allowed',
     html: `You're not allowed to buy tokens during this tier.`,
@@ -416,7 +416,7 @@ export function notAllowedContributor() {
   })
 }
 
-export function noMoreReservedSlotAvailable() {
+export const noMoreReservedSlotAvailable = () => {
   return sweetAlert2({
     title: 'No more reserved tokens available',
     html: `You're not able to reserve more tokens. The maximum allowed is ${LIMIT_RESERVED_ADDRESSES}`,
@@ -424,7 +424,7 @@ export function noMoreReservedSlotAvailable() {
   })
 }
 
-export function noMoreReservedSlotAvailableCSV(count) {
+export const noMoreReservedSlotAvailableCSV = count => {
   return sweetAlert2({
     title: 'You reach the limit of reserved tokens',
     html: `You're not able to reserve more tokens. Reserved tokens imported Tokens will be reserved for ${count} addresses. The maximum allowed is ${LIMIT_RESERVED_ADDRESSES}`,
@@ -432,7 +432,7 @@ export function noMoreReservedSlotAvailableCSV(count) {
   })
 }
 
-export function noMoreWhitelistedSlotAvailable() {
+export const noMoreWhitelistedSlotAvailable = () => {
   return sweetAlert2({
     title: 'Maximum limit of addresses reached',
     html: `You're not able to add more addresses to the whitelist. The maximum allowed is ${LIMIT_WHITELISTED_ADDRESSES}`,
@@ -440,7 +440,7 @@ export function noMoreWhitelistedSlotAvailable() {
   })
 }
 
-export function noMoreWhitelistedSlotAvailableCSV(count) {
+export const noMoreWhitelistedSlotAvailableCSV = count => {
   return sweetAlert2({
     title: 'Maximum limit of addresses reached',
     html: `You're not able to add more addresses to the whitelist. Only ${count} addresses of the file could be added. The maximum allowed is ${LIMIT_WHITELISTED_ADDRESSES}`,
@@ -448,7 +448,7 @@ export function noMoreWhitelistedSlotAvailableCSV(count) {
   })
 }
 
-export function maxCapExceedsSupply(count) {
+export const maxCapExceedsSupply = count => {
   return sweetAlert2({
     title: `Max Cap exceeded tier's supply`,
     html: `<strong>${count}</strong> addresses where added. Addresses with <code>maxCap</code> greater than tier's supply where discarded.`,
@@ -456,7 +456,7 @@ export function maxCapExceedsSupply(count) {
   })
 }
 
-export function networkChanged() {
+export const networkChanged = () => {
   return sweetAlert2({
     title: 'Network changed',
     html: 'The network id was modified, please set up nifty wallet with the network id which you started',
@@ -464,7 +464,7 @@ export function networkChanged() {
   })
 }
 
-export function deployHasEnded() {
+export const deployHasEnded = () => {
   return sweetAlert2({
     title: 'Deploy ended',
     html: 'The deploy is finished',
@@ -472,7 +472,7 @@ export function deployHasEnded() {
   })
 }
 
-export function transactionLost() {
+export const transactionLost = () => {
   return sweetAlert2({
     title: 'Tx Lost',
     html: "Please cancel pending transaction, if there's any, in your wallet (Nifty Wallet or Metamask) and Continue",

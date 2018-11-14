@@ -120,34 +120,43 @@ describe('StepThree', () => {
     expect(stepThreeComponentInstance.state.goBackEnabledTriggered).toBeTruthy()
   })
   // This tests is expected to trigger 'handleOnSubmit' method... but up to this point it wasn't working
-  // describe('StepThree - methods', () => {
-  //   it(`should call onSubmit handler if form is valid`, () => {
-  //     // Given
-  //     const walletAddress = '0xAC7022d55dA6C8BB229b1Ba3Ce8A16724FF79c4A'
-  //     const [{ type: strategy }] = strategies
-  //     stores.crowdsaleStore.setProperty('strategy', strategy)
-  //     stores.tierStore.addCrowdsale(walletAddress)
-  //     stores.tokenStore.setProperty('decimals', 18)
-  //
-  //     const wrapper = mount(
-  //       <Provider {...stores}>
-  //         <MemoryRouter initialEntries={['/']}>
-  //           <StepThree {...stores} />
-  //         </MemoryRouter>
-  //       </Provider>
-  //     )
-  //     const handleOnSubmit = jest.spyOn(wrapper.find('StepThree').instance(), 'handleOnSubmit')
-  //     // wrapper.update()
-  //
-  //     // When
-  //     wrapper.find('input[name="walletAddress"]').simulate('change', { target: { value: walletAddress } })
-  //     wrapper.find('input[name="tiers[0].endTime"]').simulate('change', { target: { value: '2018-03-14T12:00:00' } })
-  //     wrapper.find('input[name="tiers[0].rate"]').simulate('change', { target: { value: '100000' } })
-  //     wrapper.find('input[name="tiers[0].supply"]').simulate('change', { target: { value: '100' } })
-  //     wrapper.find('ButtonContinue').simulate('submit')
-  //
-  //     // Then
-  //     expect(handleOnSubmit).toHaveBeenCalledTimes(1)
-  //   })
-  // })
+
+  it(`should call onSubmit handler if form is valid`, () => {
+    // Given
+    process.NODE_ENV = 'test'
+    const walletAddress = '0xAC7022d55dA6C8BB229b1Ba3Ce8A16724FF79c4A'
+    const [{ type: strategy }] = strategies
+    stores.crowdsaleStore.setProperty('strategy', strategy)
+    stores.tierStore.addCrowdsale(walletAddress)
+    stores.tokenStore.setProperty('decimals', 18)
+
+    const wrapper = mount(
+      <Provider {...stores}>
+        <MemoryRouter initialEntries={['/']}>
+          <StepThree {...stores} history={history} />
+        </MemoryRouter>
+      </Provider>
+    )
+    const handleOnSubmit = jest.spyOn(wrapper.find('StepThree').instance(), 'handleOnSubmit')
+
+    // When
+    wrapper.find('input[name="walletAddress"]').simulate('change', { target: { value: walletAddress } })
+    wrapper.find('input[name="tiers[0].endTime"]').simulate('change', { target: { value: '2018-03-14T12:00:00' } })
+    wrapper.find('input[name="tiers[0].rate"]').simulate('change', { target: { value: '100000' } })
+    wrapper.find('input[name="tiers[0].supply"]').simulate('change', { target: { value: '100' } })
+
+    // Then
+
+    const form = wrapper.find('form').at(0)
+    const children = form
+      .render()
+      .children()
+      .children()
+    form.simulate('submit', { target: { children } })
+
+    setTimeout(() => {
+      wrapper.update()
+      expect(handleOnSubmit).toHaveBeenCalledTimes(1)
+    }, 2000)
+  })
 })

@@ -228,7 +228,7 @@ const deployContractInner = (account, abi, deployOpts, executionOrder) => {
     })
 }
 
-export function sendTXToContract(method, executionOrder) {
+export const sendTXToContract = (method, executionOrder) => {
   return sendTX(method, CALL_METHOD, executionOrder)
 }
 

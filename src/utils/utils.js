@@ -9,7 +9,7 @@ import { isObservableArray } from 'mobx'
 
 const logger = logdown('TW:utils:utils')
 
-export function getQueryVariable(variable) {
+export const getQueryVariable = variable => {
   return queryString.parse(window.location.search)[variable]
 }
 
@@ -44,7 +44,7 @@ export const getNetworkID = () => {
   return isNetworkIDValid(networkID) ? networkID : null
 }
 
-export function setFlatFileContentToState(file) {
+export const setFlatFileContentToState = file => {
   return fetchFile(file)
 }
 
@@ -68,7 +68,7 @@ export const validateLaterTime = (laterTime, previousTime) => dateToTimestamp(la
 export const validateLaterOrEqualTime = (laterTime, previousTime) =>
   dateToTimestamp(laterTime) >= dateToTimestamp(previousTime)
 
-export function toFixed(x) {
+export const toFixed = x => {
   if (Math.abs(x) < 1.0) {
     let e = parseInt(x.toString().split('e-')[1], 10)
     if (e) {
@@ -279,12 +279,12 @@ export const convertDateToUTCTimezoneToDisplay = dateToConvert => {
     .format('YYYY-MM-DD HH:mm (z ZZ)')
 }
 
-export function getContractBySourceType(sourceType, isMintedCappedCrowdsale, { DutchProxy, MintedCappedProxy }) {
+export const getContractBySourceType = (sourceType, isMintedCappedCrowdsale, { DutchProxy, MintedCappedProxy }) => {
   const parseContent = content => (isObservableArray(content) ? JSON.stringify(content.slice()) : content)
   return isMintedCappedCrowdsale ? parseContent(MintedCappedProxy[sourceType]) : parseContent(DutchProxy[sourceType])
 }
 
-export function getSourceTypeTitle(sourceType) {
+export const getSourceTypeTitle = sourceType => {
   const sourceTypeName = {
     abi: 'ABI',
     bin: 'Creation Code',
@@ -294,7 +294,7 @@ export function getSourceTypeTitle(sourceType) {
   return `Crowdsale Proxy Contract ${sourceTypeName[sourceType]}`
 }
 
-export function updateProxyContractInfo({ contractAddress }, { web3Store, contractStore, crowdsaleStore }, params) {
+export const updateProxyContractInfo = ({ contractAddress }, { web3Store, contractStore, crowdsaleStore }, params) => {
   const { web3 } = web3Store
   const encoded = web3.eth.abi.encodeParameters(['address', 'bytes32', 'address', 'bytes32'], params)
 
