@@ -43,9 +43,19 @@ $cnt-CountdownTimer_ReactCountdownClock-dimensions: 250px;
 .cnt-CountdownTimer_TimeItem {
     margin-right: 15px;
     text-align: center;
+    position: relative;
 
     &:last-child {
         margin-right: 0;
+    }
+
+    &.cnt-CountdownTimer_TimeItem-blinking:after {
+        animation: blinking 1s step-end infinite;
+        content: ":";
+        font-weight: 700;
+        position: absolute;
+        right: -5px;
+        top: 4px;
     }
 }
 
@@ -82,4 +92,13 @@ $cnt-CountdownTimer_ReactCountdownClock-dimensions: 250px;
     line-height: 1.2;
     padding-top: 6px;
     text-align: center;
+}
+
+@keyframes blinking {
+    0% {
+        color: transparent;
+    }
+    50% {
+        color: #000;
+    }
 }

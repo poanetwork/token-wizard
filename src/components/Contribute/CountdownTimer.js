@@ -15,6 +15,7 @@ const CountdownTimer = ({
 }) => {
   const noTimeLeft = days <= 0 && hours <= 0 && minutes <= 0 && seconds <= 0
   const crowdsaleIsRunning = !isFinalized && nextTick.type
+  const hoursHaveBlinker = days ? 'cnt-CountdownTimer_TimeItem-blinking' : ''
 
   const countdownClock = (
     <div className="cnt-CountdownTimer_Time">
@@ -25,7 +26,7 @@ const CountdownTimer = ({
         </div>
       ) : null}
       {hours ? (
-        <div className="cnt-CountdownTimer_TimeItem">
+        <div className={`cnt-CountdownTimer_TimeItem ${hoursHaveBlinker}`}>
           <div className="cnt-CountdownTimer_TimeCount">{hours}</div>
           <div className="cnt-CountdownTimer_TimeInterval">Hours</div>
         </div>

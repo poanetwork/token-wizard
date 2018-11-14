@@ -173,7 +173,6 @@ export class Contribute extends React.Component {
       if (this.state.isTierSoldOut) {
         if (this.state.isSoldOut) {
           this.resetTimers()
-        } else {
           this.setState({ clockAltMessage: 'Tier sold out' })
         }
       }
@@ -318,20 +317,8 @@ export class Contribute extends React.Component {
 
     if (crowdsalePageStore.ticks.length) {
       nextTick = crowdsalePageStore.extractNextTick()
-      millisecondsToNextTick = nextTick.time - Date.now()
       durationSeconds = this.getCrowdsaleSecondsDuration(startDate, endDate)
       secondsLeft = this.getCrowdsaleSecondsLeft(endDate)
-
-      const FIVE_MINUTES_BEFORE_TICK = moment(millisecondsToNextTick)
-        .subtract(5, 'minutes')
-        .valueOf()
-      const ONE_DAY = 24 * 3600 * 1000
-
-      if (FIVE_MINUTES_BEFORE_TICK < ONE_DAY) {
-        setTimeout(() => {
-          this.setState({ displaySeconds: true })
-        }, FIVE_MINUTES_BEFORE_TICK)
-      }
 
       timeInterval = setInterval(() => {
         const time = moment.duration(this.state.nextTick.time - Date.now())
