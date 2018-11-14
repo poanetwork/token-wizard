@@ -7,7 +7,7 @@ import Adapter from 'enzyme-adapter-react-15'
 import { configure, mount } from 'enzyme'
 import setFieldTouched from 'final-form-set-field-touched'
 import arrayMutators from 'final-form-arrays'
-import { GAS_PRICE } from '../../../src/utils/constants'
+import { CONTRIBUTION_OPTIONS, GAS_PRICE } from '../../../src/utils/constants'
 import {
   crowdsaleStore,
   gasPriceStore,
@@ -15,9 +15,10 @@ import {
   reservedTokenStore,
   tierStore,
   tokenStore
-} from '../../../src/stores/index'
+} from '../../../src/stores'
 import MockDate from 'mockdate'
 import { weiToGwei } from '../../../src/utils/utils'
+import { ReservedTokensInputBlock } from '../../../src/components/Common/ReservedTokensInputBlock'
 
 configure({ adapter: new Adapter() })
 jest.mock('react-dropzone', () => () => <span>Dropzone</span>)
@@ -39,34 +40,176 @@ describe('StepThreeFormDutchAuction', () => {
     generalStore.reset()
   })
 
-  it(`should render StepThreeFormDutchAuction`, () => {
-    // Given
-    const component = renderer.create(
+  it(`should render StepThreeFormDutchAuction- test snapshots`, () => {
+    const component = renderer
+      .create(
+        <Provider {...stores}>
+          <Form
+            onSubmit={jest.fn()}
+            decorators={[jest.fn()]}
+            initialValues={{
+              burnExcess: false,
+              gasPrice: GAS_PRICE.SLOW,
+              tiers: tierStore.tiers.slice(),
+              walletAddress: walletAddress,
+              whitelistEnabled: 'no'
+            }}
+            mutators={{ ...arrayMutators, setFieldTouched }}
+            history={{ push: jest.fn() }}
+            firstLoad={true}
+            updateGasTypeSelected={jest.fn()}
+            component={StepThreeFormDutchAuction}
+            {...stores}
+            goBack={jest.fn()}
+            goBackEnabled={jest.fn()}
+          />
+        </Provider>
+      )
+      .toJSON()
+
+    expect(component).toMatchSnapshot()
+  })
+
+  it(`should render StepThreeFormDutchAuction- test snapshot form`, () => {
+    const props = {
+      onSubmit: jest.fn(),
+      decorators: jest.fn(),
+      values: {
+        burnExcess: false,
+        gasPrice: GAS_PRICE.SLOW,
+        tiers: tierStore.tiers.slice(),
+        walletAddress: walletAddress,
+        whitelistEnabled: 'no'
+      },
+      generalStore: generalStore,
+      crowdsaleStore: crowdsaleStore,
+      gasPriceStore: gasPriceStore,
+      reservedTokenStore: reservedTokenStore,
+      tierStore: tierStore,
+      tokenStore: tokenStore,
+      form: { mutators: {} }
+    }
+    const FormComponent = mount(
       <Provider {...stores}>
-        <Form
-          onSubmit={jest.fn()}
-          decorators={[jest.fn()]}
-          initialValues={{
-            burnExcess: false,
-            gasPrice: GAS_PRICE.SLOW,
-            tiers: tierStore.tiers.slice(),
-            walletAddress: walletAddress,
-            whitelistEnabled: 'no'
-          }}
-          mutators={{ ...arrayMutators, setFieldTouched }}
-          history={{ push: jest.fn() }}
-          firstLoad={true}
-          updateGasTypeSelected={jest.fn()}
-          component={StepThreeFormDutchAuction}
-          {...stores}
-        />
+        <StepThreeFormDutchAuction {...props} />
       </Provider>
     )
 
-    // When
-    const tree = component.toJSON()
+    expect(FormComponent).toMatchSnapshot()
+  })
 
-    // Then
-    expect(tree).toMatchSnapshot()
+  it(`should render StepThreeFormDutchAuction- test props I`, () => {
+    const props = {
+      onSubmit: jest.fn(),
+      decorators: jest.fn(),
+      values: {
+        burnExcess: false,
+        gasPrice: GAS_PRICE.SLOW,
+        tiers: tierStore.tiers.slice(),
+        walletAddress: walletAddress,
+        whitelistEnabled: 'no'
+      },
+      generalStore: generalStore,
+      crowdsaleStore: crowdsaleStore,
+      gasPriceStore: gasPriceStore,
+      reservedTokenStore: reservedTokenStore,
+      tierStore: tierStore,
+      tokenStore: tokenStore,
+      form: { mutators: {} }
+    }
+    const FormComponent = mount(
+      <Provider {...stores}>
+        <StepThreeFormDutchAuction {...props} />
+      </Provider>
+    )
+
+    const componentInstance = FormComponent.instance()
+
+    FormComponent.find('input[name="burnExcessRadioButtons"]')
+      .at(0)
+      .simulate('click')
+
+    expect(
+      FormComponent.find('input[name="burnExcessRadioButtons"]')
+        .find(`[value="yes"]`)
+        .props('checked')
+    ).toBeTruthy()
+  })
+
+  it(`should render StepThreeFormDutchAuction- test props II`, () => {
+    const props = {
+      onSubmit: jest.fn(),
+      decorators: jest.fn(),
+      values: {
+        burnExcess: false,
+        gasPrice: GAS_PRICE.SLOW,
+        tiers: tierStore.tiers.slice(),
+        walletAddress: walletAddress,
+        whitelistEnabled: 'no'
+      },
+      generalStore: generalStore,
+      crowdsaleStore: crowdsaleStore,
+      gasPriceStore: gasPriceStore,
+      reservedTokenStore: reservedTokenStore,
+      tierStore: tierStore,
+      tokenStore: tokenStore,
+      form: { mutators: {} }
+    }
+    const FormComponent = mount(
+      <Provider {...stores}>
+        <StepThreeFormDutchAuction {...props} />
+      </Provider>
+    )
+
+    const componentInstance = FormComponent.instance()
+
+    FormComponent.find('input[name="burnExcessRadioButtons"]')
+      .at(1)
+      .simulate('click')
+
+    expect(
+      FormComponent.find('input[name="burnExcessRadioButtons"]')
+        .find(`[value="no"]`)
+        .props('checked')
+    ).toBeTruthy()
+  })
+
+
+  it(`should render StepThreeFormDutchAuction- test props III`, () => {
+    const props = {
+      onSubmit: jest.fn(),
+      decorators: jest.fn(),
+      values: {
+        burnExcess: false,
+        gasPrice: GAS_PRICE.SLOW,
+        tiers: tierStore.tiers.slice(),
+        walletAddress: walletAddress,
+        whitelistEnabled: 'no'
+      },
+      generalStore: generalStore,
+      crowdsaleStore: crowdsaleStore,
+      gasPriceStore: gasPriceStore,
+      reservedTokenStore: reservedTokenStore,
+      tierStore: tierStore,
+      tokenStore: tokenStore,
+      form: { mutators: {} }
+    }
+    const FormComponent = mount(
+      <Provider {...stores}>
+        <StepThreeFormDutchAuction {...props} />
+      </Provider>
+    )
+
+    const componentInstance = FormComponent.instance()
+
+    FormComponent.find('input[name="burnExcessRadioButtons"]')
+      .at(1)
+      .simulate('change', { target: { value: 'yes' } })
+
+    expect(
+      FormComponent.find('input[name="burnExcessRadioButtons"]')
+        .find(`[value="yes"]`)
+        .props('checked')
+    ).toBeTruthy()
   })
 })

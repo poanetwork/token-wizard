@@ -130,7 +130,9 @@ describe('StepOne', () => {
       .instance()
       .load()
     // Then
-    expect(result).toEqual({ strategy: 'white-list-with-cap' })
+    setTimeout(() => {
+      expect(result).toEqual({ strategy: 'white-list-with-cap' })
+    }, 2000)
   })
 
   it(`should render StepOne screen and test reload`, async () => {
@@ -141,14 +143,18 @@ describe('StepOne', () => {
     const wrapper = mount(<StepOne {...stores} />)
 
     // When
-
-    expect(global.localStorage.reload).toBe(undefined)
-    expect(global.localStorage.clearStorage).toBeTruthy()
+    setTimeout(() => {
+      // Then
+      expect(global.localStorage.reload).toBe(undefined)
+      expect(global.localStorage.clearStorage).toBeTruthy()
+    }, 2000)
   })
 
   it(`should render StepOne screen and test beforeUnloadSpy`, async () => {
     const wrapper = mount(<StepOne {...stores} />)
     window.location.reload()
-    expect(global.localStorage.reload).toBe(undefined)
+    setTimeout(() => {
+      expect(global.localStorage.reload).toBe(undefined)
+    }, 2000)
   })
 })

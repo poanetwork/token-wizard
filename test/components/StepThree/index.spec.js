@@ -18,6 +18,7 @@ import {
 import { MemoryRouter } from 'react-router'
 import { Provider } from 'mobx-react'
 import MockDate from 'mockdate'
+import { mount } from 'enzyme/build/index'
 
 configure({ adapter: new Adapter() })
 
@@ -40,6 +41,9 @@ describe('StepThree', () => {
     deploymentStore,
     tokenStore,
     crowdsaleStore
+  }
+  const history = {
+    push: jest.fn()
   }
 
   describe('StepThree - renders', () => {
@@ -65,6 +69,56 @@ describe('StepThree', () => {
     })
   })
 
+  it(`should execute goBack`, () => {
+    const wrapper = mount(
+      <Provider {...stores}>
+        <MemoryRouter initialEntries={['/', '1', '2']} initialIndex={2}>
+          <StepThree />
+        </MemoryRouter>
+      </Provider>
+    )
+    // Then
+    const stepThreeComponent = wrapper.find('StepThree')
+    const stepThreeComponentInstance = stepThreeComponent.instance()
+    stepThreeComponentInstance.goBack()
+
+    // When
+    expect(stepThreeComponentInstance.state.backButtonTriggered).toBeTruthy()
+  })
+
+  it(`should execute goNextStep`, () => {
+    const wrapper = mount(
+      <Provider {...stores}>
+        <MemoryRouter initialEntries={['/', '1', '2']} initialIndex={2}>
+          <StepThree />
+        </MemoryRouter>
+      </Provider>
+    )
+    // Then
+    const stepThreeComponent = wrapper.find('StepThree')
+    const stepThreeComponentInstance = stepThreeComponent.instance()
+    stepThreeComponentInstance.goNextStep()
+
+    // When
+    expect(stepThreeComponentInstance.state.nextButtonTriggered).toBeTruthy()
+  })
+
+  it(`should execute goBackEnabled`, () => {
+    const wrapper = mount(
+      <Provider {...stores}>
+        <MemoryRouter initialEntries={['/', '1', '2']} initialIndex={2}>
+          <StepThree history={history} />
+        </MemoryRouter>
+      </Provider>
+    )
+    // Then
+    const stepThreeComponent = wrapper.find('StepThree')
+    const stepThreeComponentInstance = stepThreeComponent.instance()
+    stepThreeComponentInstance.goBackEnabled()
+
+    // When
+    expect(stepThreeComponentInstance.state.goBackEnabledTriggered).toBeTruthy()
+  })
   // This tests is expected to trigger 'handleOnSubmit' method... but up to this point it wasn't working
   // describe('StepThree - methods', () => {
   //   it(`should call onSubmit handler if form is valid`, () => {

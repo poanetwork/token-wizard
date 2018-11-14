@@ -34,6 +34,8 @@ describe('StepTwoForm', () => {
           component={StepTwoForm}
           id="tokenData"
           reload={true}
+          goBack={jest.fn()}
+          goBackEnabled={jest.fn()}
         />
       </Provider>
     )
@@ -59,6 +61,8 @@ describe('StepTwoForm', () => {
           component={StepTwoForm}
           id="tokenData"
           reload={false}
+          goBack={jest.fn()}
+          goBackEnabled={jest.fn()}
         />
       </Provider>
     )
@@ -81,6 +85,9 @@ describe('StepTwoForm', () => {
           }}
           component={StepTwoForm}
           id="tokenData"
+          reload={false}
+          goBack={jest.fn()}
+          goBackEnabled={jest.fn()}
         />
       </Provider>
     )
@@ -103,6 +110,9 @@ describe('StepTwoForm', () => {
           }}
           component={StepTwoForm}
           id="tokenData"
+          reload={false}
+          goBack={jest.fn()}
+          goBackEnabled={jest.fn()}
         />
       </Provider>
     )
