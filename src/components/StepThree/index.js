@@ -39,6 +39,10 @@ export class StepThree extends Component {
     const { web3Store, gasPriceStore } = this.props
 
     checkWeb3(web3Store.web3)
+
+    logger.log('Component did mount')
+    window.addEventListener('beforeunload', this.onUnload)
+
     const { initialTiers, burnExcess, gasTypeSelected } = this.load()
 
     this.setState({
@@ -81,6 +85,16 @@ export class StepThree extends Component {
       burnExcess: generalStore.burnExcess,
       gasTypeSelected: generalStore.gasTypeSelected
     }
+  }
+
+  onUnload = e => {
+    logger.log('On unload')
+    e.returnValue = 'Are you sure you want to leave?'
+  }
+
+  componentWillUnmount() {
+    logger.log('Component unmount')
+    window.removeEventListener('beforeunload', this.onUnload)
   }
 
   goNextStep = () => {

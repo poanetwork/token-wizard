@@ -28,7 +28,6 @@ import { CrowdsaleSetupBlockDutchAuction } from './CrowdsaleSetupBlockDutchAucti
 import { CrowdsaleSetupBlockWhitelistWithCap } from './CrowdsaleSetupBlockWhitelistWithCap'
 import { DisplayTextArea } from '../Common/DisplayTextArea'
 import { ModalContainer } from '../Common/ModalContainer'
-import { PreventRefresh } from '../Common/PreventRefresh'
 import { SectionInfo } from '../Common/SectionInfo'
 import { StepNavigation } from '../Common/StepNavigation'
 import { TierSetupDutchAuction } from './TierSetupDutchAuction'
@@ -61,7 +60,6 @@ export class StepFour extends Component {
   state = {
     contractDownloaded: false,
     modal: false,
-    preventRefresh: true,
     transactionFailed: false,
     allowRetry: false
   }
@@ -91,6 +89,9 @@ export class StepFour extends Component {
 
   async componentDidMount() {
     const { deploymentStore, generalStore } = this.props
+
+    logger.log('Component did mount')
+    window.addEventListener('beforeunload', this.onUnload)
 
     // Check if network has changed
     const networkID = generalStore.networkID || CrowdsaleConfig.networkID || getNetworkID()
@@ -305,17 +306,9 @@ export class StepFour extends Component {
 
     this.hideModal() // hide modal, otherwise the warning doesn't show up
 
-    // avoid the beforeunload alert when user cancels the deploy
-    this.setState({
-      preventRefresh: false
-    })
-
     cancelDeploy().then(
       cancelled => {
         if (!cancelled) {
-          this.setState({
-            preventRefresh: true
-          })
           this.showModal()
         }
       },
@@ -334,6 +327,16 @@ export class StepFour extends Component {
 
   configurationBlock = () => {
     return <ConfigurationBlock store={this.props} />
+  }
+
+  onUnload = e => {
+    logger.log('On unload')
+    e.returnValue = 'Are you sure you want to leave?'
+  }
+
+  componentWillUnmount() {
+    logger.log('Component unmount')
+    window.removeEventListener('beforeunload', this.onUnload)
   }
 
   render() {
@@ -426,7 +429,6 @@ export class StepFour extends Component {
               />
             </div>
           </div>
-          {this.state.preventRefresh ? <PreventRefresh /> : null}
         </section>
         <ModalContainer title={'Tx Status'} showModal={this.state.modal}>
           {modalContent}
