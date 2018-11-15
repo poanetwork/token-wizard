@@ -49,12 +49,8 @@ export class StepOne extends Component {
 
   async componentDidMount() {
     if (this.block) {
-      window.addEventListener('beforeunload', () => {
-        navigateTo({
-          history: this.props.history,
-          location: 'stepOne'
-        })
-      })
+      logger.log('Component did mount')
+      window.addEventListener('beforeunload', this.onUnload)
 
       // Capture back button to clear fromLocation
       window.addEventListener(
@@ -128,6 +124,16 @@ export class StepOne extends Component {
       strategy: crowdsaleStore.strategy
     })
     logger.log('CrowdsaleStore strategy selected:', strategy)
+  }
+
+  onUnload = e => {
+    logger.log('On unload')
+    e.returnValue = 'Are you sure you want to leave?'
+  }
+
+  componentWillUnmount() {
+    logger.log('Component unmount')
+    window.removeEventListener('beforeunload', this.onUnload)
   }
 
   render() {
