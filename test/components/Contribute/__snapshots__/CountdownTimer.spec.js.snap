@@ -2,89 +2,84 @@
 
 exports[`CountdownTimer Should render the component 1`] = `
 <div
-  className="timer-container"
+  className="cnt-CountdownTimer"
 >
   <div
-    style={
-      Object {
-        "marginLeft": "-20px",
-        "marginTop": "-20px",
+    className="cnt-CountdownTimer_ReactCountdownClock"
+  >
+    <Circle
+      animate={true}
+      animationDuration="1s"
+      bgColor="#5a2da5"
+      lineWidth="50"
+      percentSpacing={10}
+      progress={0}
+      progressColor="#a971f9"
+      responsive={false}
+      roundedStroke={false}
+      showPercentage={false}
+      showPercentageSymbol={true}
+      size="250"
+      textColor="#6b778c"
+      textStyle={
+        Object {
+          "font": "bold 4rem Helvetica, Arial, sans-serif",
+        }
       }
-    }
-  >
-    <ReactCountdownClock
-      alpha={0.9}
-      color="#733EAB"
-      font="Arial"
-      fontSize="auto"
-      onComplete={[MockFunction]}
-      paused={false}
-      seconds={30.445}
-      showMilliseconds={false}
-      size={270}
-      timeFormat="hms"
     />
-  </div>
-  <div
-    className="timer"
-  >
     <div
-      className="timer-inner"
+      className="cnt-CountdownTimer_TimeContainer"
     >
-      <div>
+      <div
+        className="cnt-CountdownTimer_Time"
+      >
         <div
-          className="timer-i"
+          className="cnt-CountdownTimer_TimeItem"
         >
           <div
-            className="timer-count"
+            className="cnt-CountdownTimer_TimeCount"
           >
             1
           </div>
           <div
-            className="timer-interval"
+            className="cnt-CountdownTimer_TimeInterval"
           >
             Days
           </div>
         </div>
         <div
-          className="timer-i"
+          className="cnt-CountdownTimer_TimeItem cnt-CountdownTimer_TimeItem-blinking"
         >
           <div
-            className="timer-count"
+            className="cnt-CountdownTimer_TimeCount"
           >
             4
           </div>
           <div
-            className="timer-interval"
+            className="cnt-CountdownTimer_TimeInterval"
           >
             Hours
           </div>
         </div>
         <div
-          className="timer-i"
+          className="cnt-CountdownTimer_TimeItem"
         >
           <div
-            className="timer-count"
+            className="cnt-CountdownTimer_TimeCount"
           >
             45
           </div>
           <div
-            className="timer-interval"
+            className="cnt-CountdownTimer_TimeInterval"
           >
             Mins
           </div>
         </div>
       </div>
       <div
-        className="timer-i"
+        className="cnt-CountdownTimer_Message"
       >
-        <div
-          className="timer-interval"
-        >
-          <strong>
-            to start of tier 1 of 2
-          </strong>
-        </div>
+        To start of tier 1 of 2
       </div>
     </div>
   </div>
@@ -93,75 +88,84 @@ exports[`CountdownTimer Should render the component 1`] = `
 
 exports[`CountdownTimer Should render the component showing only the seconds 1`] = `
 <div
-  className="timer-container"
+  className="cnt-CountdownTimer"
 >
   <div
-    style={
-      Object {
-        "marginLeft": "-20px",
-        "marginTop": "-20px",
+    className="cnt-CountdownTimer_ReactCountdownClock"
+  >
+    <Circle
+      animate={true}
+      animationDuration="1s"
+      bgColor="#5a2da5"
+      lineWidth="50"
+      percentSpacing={10}
+      progress={0}
+      progressColor="#a971f9"
+      responsive={false}
+      roundedStroke={false}
+      showPercentage={false}
+      showPercentageSymbol={true}
+      size="250"
+      textColor="#6b778c"
+      textStyle={
+        Object {
+          "font": "bold 4rem Helvetica, Arial, sans-serif",
+        }
       }
-    }
-  >
-    <ReactCountdownClock
-      alpha={0.9}
-      color="#733EAB"
-      font="Arial"
-      fontSize="auto"
-      onComplete={[MockFunction]}
-      paused={false}
-      seconds={30.445}
-      showMilliseconds={false}
-      size={270}
-      timeFormat="hms"
     />
-  </div>
-  <div
-    className="timer"
-  >
     <div
-      className="timer-inner"
+      className="cnt-CountdownTimer_TimeContainer"
     >
-      <div>
+      <div
+        className="cnt-CountdownTimer_Time"
+      >
         <div
-          className="timer-i"
+          className="cnt-CountdownTimer_TimeItem"
         >
           <div
-            className="timer-count"
+            className="cnt-CountdownTimer_TimeCount"
+          >
+            1
+          </div>
+          <div
+            className="cnt-CountdownTimer_TimeInterval"
+          >
+            Days
+          </div>
+        </div>
+        <div
+          className="cnt-CountdownTimer_TimeItem cnt-CountdownTimer_TimeItem-blinking"
+        >
+          <div
+            className="cnt-CountdownTimer_TimeCount"
+          >
+            4
+          </div>
+          <div
+            className="cnt-CountdownTimer_TimeInterval"
+          >
+            Hours
+          </div>
+        </div>
+        <div
+          className="cnt-CountdownTimer_TimeItem"
+        >
+          <div
+            className="cnt-CountdownTimer_TimeCount"
           >
             45
           </div>
           <div
-            className="timer-interval"
+            className="cnt-CountdownTimer_TimeInterval"
           >
             Mins
           </div>
         </div>
-        <div
-          className="timer-i"
-        >
-          <div
-            className="timer-count"
-          >
-            30
-          </div>
-          <div
-            className="timer-interval"
-          >
-            Secs
-          </div>
-        </div>
       </div>
       <div
-        className="timer-i"
+        className="cnt-CountdownTimer_Message"
       >
-        <div
-          className="timer-interval"
-        >
-          <strong>
-            to start of tier 1 of 2
-          </strong>
-        </div>
+        To start of tier 1 of 2
       </div>
     </div>
   </div>
@@ -170,89 +174,84 @@ exports[`CountdownTimer Should render the component showing only the seconds 1`]
 
 exports[`CountdownTimer Should render the component showing the time until the end of the tier 1`] = `
 <div
-  className="timer-container"
+  className="cnt-CountdownTimer"
 >
   <div
-    style={
-      Object {
-        "marginLeft": "-20px",
-        "marginTop": "-20px",
+    className="cnt-CountdownTimer_ReactCountdownClock"
+  >
+    <Circle
+      animate={true}
+      animationDuration="1s"
+      bgColor="#5a2da5"
+      lineWidth="50"
+      percentSpacing={10}
+      progress={0}
+      progressColor="#a971f9"
+      responsive={false}
+      roundedStroke={false}
+      showPercentage={false}
+      showPercentageSymbol={true}
+      size="250"
+      textColor="#6b778c"
+      textStyle={
+        Object {
+          "font": "bold 4rem Helvetica, Arial, sans-serif",
+        }
       }
-    }
-  >
-    <ReactCountdownClock
-      alpha={0.9}
-      color="#733EAB"
-      font="Arial"
-      fontSize="auto"
-      onComplete={[MockFunction]}
-      paused={false}
-      seconds={30.445}
-      showMilliseconds={false}
-      size={270}
-      timeFormat="hms"
     />
-  </div>
-  <div
-    className="timer"
-  >
     <div
-      className="timer-inner"
+      className="cnt-CountdownTimer_TimeContainer"
     >
-      <div>
+      <div
+        className="cnt-CountdownTimer_Time"
+      >
         <div
-          className="timer-i"
+          className="cnt-CountdownTimer_TimeItem"
         >
           <div
-            className="timer-count"
+            className="cnt-CountdownTimer_TimeCount"
           >
             1
           </div>
           <div
-            className="timer-interval"
+            className="cnt-CountdownTimer_TimeInterval"
           >
             Days
           </div>
         </div>
         <div
-          className="timer-i"
+          className="cnt-CountdownTimer_TimeItem cnt-CountdownTimer_TimeItem-blinking"
         >
           <div
-            className="timer-count"
+            className="cnt-CountdownTimer_TimeCount"
           >
             4
           </div>
           <div
-            className="timer-interval"
+            className="cnt-CountdownTimer_TimeInterval"
           >
             Hours
           </div>
         </div>
         <div
-          className="timer-i"
+          className="cnt-CountdownTimer_TimeItem"
         >
           <div
-            className="timer-count"
+            className="cnt-CountdownTimer_TimeCount"
           >
             45
           </div>
           <div
-            className="timer-interval"
+            className="cnt-CountdownTimer_TimeInterval"
           >
             Mins
           </div>
         </div>
       </div>
       <div
-        className="timer-i"
+        className="cnt-CountdownTimer_Message"
       >
-        <div
-          className="timer-interval"
-        >
-          <strong>
-            to end of tier 1 of 2
-          </strong>
-        </div>
+        To end of tier 1 of 2
       </div>
     </div>
   </div>
@@ -261,89 +260,84 @@ exports[`CountdownTimer Should render the component showing the time until the e
 
 exports[`CountdownTimer Should render the component when the crowdsale ended 1`] = `
 <div
-  className="timer-container"
+  className="cnt-CountdownTimer"
 >
   <div
-    style={
-      Object {
-        "marginLeft": "-20px",
-        "marginTop": "-20px",
+    className="cnt-CountdownTimer_ReactCountdownClock"
+  >
+    <Circle
+      animate={true}
+      animationDuration="1s"
+      bgColor="#5a2da5"
+      lineWidth="50"
+      percentSpacing={10}
+      progress={100}
+      progressColor="#a971f9"
+      responsive={false}
+      roundedStroke={false}
+      showPercentage={false}
+      showPercentageSymbol={true}
+      size="250"
+      textColor="#6b778c"
+      textStyle={
+        Object {
+          "font": "bold 4rem Helvetica, Arial, sans-serif",
+        }
       }
-    }
-  >
-    <ReactCountdownClock
-      alpha={0.9}
-      color="#733EAB"
-      font="Arial"
-      fontSize="auto"
-      onComplete={[MockFunction]}
-      paused={false}
-      seconds={30.445}
-      showMilliseconds={false}
-      size={270}
-      timeFormat="hms"
     />
-  </div>
-  <div
-    className="timer"
-  >
     <div
-      className="timer-inner"
+      className="cnt-CountdownTimer_TimeContainer"
     >
-      <div>
+      <div
+        className="cnt-CountdownTimer_Time"
+      >
         <div
-          className="timer-i"
+          className="cnt-CountdownTimer_TimeItem"
         >
           <div
-            className="timer-count"
+            className="cnt-CountdownTimer_TimeCount"
           >
             1
           </div>
           <div
-            className="timer-interval"
+            className="cnt-CountdownTimer_TimeInterval"
           >
             Days
           </div>
         </div>
         <div
-          className="timer-i"
+          className="cnt-CountdownTimer_TimeItem cnt-CountdownTimer_TimeItem-blinking"
         >
           <div
-            className="timer-count"
+            className="cnt-CountdownTimer_TimeCount"
           >
             4
           </div>
           <div
-            className="timer-interval"
+            className="cnt-CountdownTimer_TimeInterval"
           >
             Hours
           </div>
         </div>
         <div
-          className="timer-i"
+          className="cnt-CountdownTimer_TimeItem"
         >
           <div
-            className="timer-count"
+            className="cnt-CountdownTimer_TimeCount"
           >
             45
           </div>
           <div
-            className="timer-interval"
+            className="cnt-CountdownTimer_TimeInterval"
           >
             Mins
           </div>
         </div>
       </div>
       <div
-        className="timer-i"
+        className="cnt-CountdownTimer_Message"
       >
-        <div
-          className="timer-interval"
-        >
-          <strong>
-            crowdsale has ended
-          </strong>
-        </div>
+        Crowdsale has ended
       </div>
     </div>
   </div>
@@ -352,45 +346,84 @@ exports[`CountdownTimer Should render the component when the crowdsale ended 1`]
 
 exports[`CountdownTimer Should render the component when the crowdsale was finalized 1`] = `
 <div
-  className="timer-container"
+  className="cnt-CountdownTimer"
 >
   <div
-    style={
-      Object {
-        "marginLeft": "-20px",
-        "marginTop": "-20px",
+    className="cnt-CountdownTimer_ReactCountdownClock"
+  >
+    <Circle
+      animate={true}
+      animationDuration="1s"
+      bgColor="#5a2da5"
+      lineWidth="50"
+      percentSpacing={10}
+      progress={100}
+      progressColor="#a971f9"
+      responsive={false}
+      roundedStroke={false}
+      showPercentage={false}
+      showPercentageSymbol={true}
+      size="250"
+      textColor="#6b778c"
+      textStyle={
+        Object {
+          "font": "bold 4rem Helvetica, Arial, sans-serif",
+        }
       }
-    }
-  >
-    <ReactCountdownClock
-      alpha={0.9}
-      color="#733EAB"
-      font="Arial"
-      fontSize="auto"
-      onComplete={[MockFunction]}
-      paused={false}
-      seconds={0}
-      showMilliseconds={false}
-      size={270}
-      timeFormat="hms"
     />
-  </div>
-  <div
-    className="timer"
-  >
     <div
-      className="timer-inner"
+      className="cnt-CountdownTimer_TimeContainer"
     >
       <div
-        className="timer-i"
+        className="cnt-CountdownTimer_Time"
       >
         <div
-          className="timer-interval"
+          className="cnt-CountdownTimer_TimeItem"
         >
-          <strong>
-            crowdsale has been finalized
-          </strong>
+          <div
+            className="cnt-CountdownTimer_TimeCount"
+          >
+            1
+          </div>
+          <div
+            className="cnt-CountdownTimer_TimeInterval"
+          >
+            Days
+          </div>
         </div>
+        <div
+          className="cnt-CountdownTimer_TimeItem cnt-CountdownTimer_TimeItem-blinking"
+        >
+          <div
+            className="cnt-CountdownTimer_TimeCount"
+          >
+            4
+          </div>
+          <div
+            className="cnt-CountdownTimer_TimeInterval"
+          >
+            Hours
+          </div>
+        </div>
+        <div
+          className="cnt-CountdownTimer_TimeItem"
+        >
+          <div
+            className="cnt-CountdownTimer_TimeCount"
+          >
+            45
+          </div>
+          <div
+            className="cnt-CountdownTimer_TimeInterval"
+          >
+            Mins
+          </div>
+        </div>
+      </div>
+      <div
+        className="cnt-CountdownTimer_Message"
+      >
+        Crowdsale has ended
       </div>
     </div>
   </div>
@@ -399,94 +432,89 @@ exports[`CountdownTimer Should render the component when the crowdsale was final
 
 exports[`CountdownTimer Should render the component with alternative message 1`] = `
 <div
-  className="timer-container"
+  className="cnt-CountdownTimer"
 >
   <div
-    style={
-      Object {
-        "marginLeft": "-20px",
-        "marginTop": "-20px",
+    className="cnt-CountdownTimer_ReactCountdownClock"
+  >
+    <Circle
+      animate={true}
+      animationDuration="1s"
+      bgColor="#5a2da5"
+      lineWidth="50"
+      percentSpacing={10}
+      progress={0}
+      progressColor="#a971f9"
+      responsive={false}
+      roundedStroke={false}
+      showPercentage={false}
+      showPercentageSymbol={true}
+      size="250"
+      textColor="#6b778c"
+      textStyle={
+        Object {
+          "font": "bold 4rem Helvetica, Arial, sans-serif",
+        }
       }
-    }
-  >
-    <ReactCountdownClock
-      alpha={0.9}
-      color="#733EAB"
-      font="Arial"
-      fontSize="auto"
-      onComplete={[MockFunction]}
-      paused={false}
-      seconds={30.445}
-      showMilliseconds={false}
-      size={270}
-      timeFormat="hms"
     />
-  </div>
-  <div
-    className="timer"
-  >
     <div
-      className="timer-inner"
+      className="cnt-CountdownTimer_TimeContainer"
     >
-      <div>
+      <div
+        className="cnt-CountdownTimer_Time"
+      >
         <div
-          className="timer-i"
+          className="cnt-CountdownTimer_TimeItem"
         >
           <div
-            className="timer-count"
+            className="cnt-CountdownTimer_TimeCount"
           >
             1
           </div>
           <div
-            className="timer-interval"
+            className="cnt-CountdownTimer_TimeInterval"
           >
             Days
           </div>
         </div>
         <div
-          className="timer-i"
+          className="cnt-CountdownTimer_TimeItem cnt-CountdownTimer_TimeItem-blinking"
         >
           <div
-            className="timer-count"
+            className="cnt-CountdownTimer_TimeCount"
           >
             4
           </div>
           <div
-            className="timer-interval"
+            className="cnt-CountdownTimer_TimeInterval"
           >
             Hours
           </div>
         </div>
         <div
-          className="timer-i"
+          className="cnt-CountdownTimer_TimeItem"
         >
           <div
-            className="timer-count"
+            className="cnt-CountdownTimer_TimeCount"
           >
             45
           </div>
           <div
-            className="timer-interval"
+            className="cnt-CountdownTimer_TimeInterval"
           >
             Mins
           </div>
         </div>
       </div>
       <div
-        className="timer-i"
+        className="cnt-CountdownTimer_Message"
       >
-        <div
-          className="timer-interval"
-        >
-          <strong>
-            to start of tier 1 of 2
-          </strong>
-          <div
-            className="timer__altMessage"
-          >
-            Alternative Message
-          </div>
-        </div>
+        To start of tier 1 of 2
+      </div>
+      <div
+        className="cnt-CountdownTimer_AltMessage"
+      >
+        Alternative Message
       </div>
     </div>
   </div>
