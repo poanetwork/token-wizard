@@ -5,10 +5,11 @@ import { ButtonCopyToClipboard } from '../Common/ButtonCopyToClipboard'
 const QRPaymentProcess = ({ crowdsaleProxyAddr, registryExecAddr, txData }) => {
   const targetContractStr = crowdsaleProxyAddr ? 'Proxy' : 'RegistryExec'
   const targetAddr = crowdsaleProxyAddr ? crowdsaleProxyAddr : registryExecAddr
+
   return (
     <div className="cnt-QRPaymentProcess">
       <div className="cnt-QRPaymentProcess_QR">
-        <QRCode fgColor="#5a2da5" value={targetAddr} size="115" bgColor="#f6f6f6" />
+        <QRCode fgColor="#5a2da5" value={targetAddr} size={115} bgColor="#f6f6f6" />
       </div>
       <div className="cnt-QRPaymentProcess_HashContainer">
         <span className="cnt-QRPaymentProcess_Hash">{targetAddr}</span>

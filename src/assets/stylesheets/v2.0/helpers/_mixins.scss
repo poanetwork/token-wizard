@@ -158,3 +158,10 @@
         opacity: 0.5;
     }
 }
+
+@mixin disabled-button-styles() {
+    &[disabled] {
+        cursor: default;
+        opacity: 0.7;
+    }
+}

@@ -36,10 +36,7 @@ $sw-Button-height: 40px !default;
     line-height: $sw-Button-height;
     padding: 0 20px;
 
-    &[disabled] {
-        cursor: not-allowed;
-        opacity: 0.7;
-    }
+    @include disabled-button-styles();
 }
 
 .sw-Button-primary {

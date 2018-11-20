@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BalanceTokens should render BalanceTokens component 1`] = `
+<div
+  className="ba-BalanceTokens "
+>
+  <h2
+    className="ba-BalanceTokens_Title"
+  >
+    29.200000000002817
+     
+    <span
+      className="ba-BalanceTokens_Title-uppercase"
+    >
+      TCK
+    </span>
+  </h2>
+  <p
+    className="ba-BalanceTokens_Description"
+  >
+    Your Balance
+  </p>
+</div>
+`;

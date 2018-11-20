@@ -6,6 +6,7 @@
     "node": "8.9.0"
   },
   "devDependencies": {
+    "canvas": "^2.1.0",
     "coveralls": "^3.0.0",
     "cssom": "^0.3.4",
     "enzyme": "^3.3.0",

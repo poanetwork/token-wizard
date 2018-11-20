@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ContributeDataList should render ContributeDataList component 1`] = `
+<div
+  className="cnt-ContributeDataList "
+>
+  <div
+    className="cnt-ContributeDataList_Item"
+  >
+    <p
+      className="cnt-ContributeDataList_ItemData"
+    >
+      <span
+        className="cnt-ContributeDataList_ItemDataValue"
+      >
+        0x1237612212322c1237Cc7c8bBC123cE4D0Cb4123
+      </span>
+    </p>
+    <h4
+      className="cnt-ContributeDataList_ItemTitle"
+    >
+      Current Account
+    </h4>
+  </div>
+  <div
+    className="cnt-ContributeDataList_Item"
+  >
+    <p
+      className="cnt-ContributeDataList_ItemData"
+    >
+      <span
+        className="cnt-ContributeDataList_ItemDataValue"
+      >
+        0x1234eb123743c123631a1231e158123bb21b2864
+      </span>
+       
+      <button
+        className="sw-ButtonCopyToClipboard "
+        data-clipboard-action="copy"
+        data-clipboard-text="0x1234eb123743c123631a1231e158123bb21b2864"
+        onClick={[Function]}
+        type="button"
+      />
+    </p>
+    <h4
+      className="cnt-ContributeDataList_ItemTitle"
+    >
+      Crowdsale Execution ID
+    </h4>
+  </div>
+</div>
+`;
