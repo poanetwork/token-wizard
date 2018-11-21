@@ -75,16 +75,12 @@ export function invalidNetworkIDAlert() {
   })
 }
 
-export function successfulContributionAlert(tokensToContribute) {
+export function successfulContributionAlert(tokensToContribute, cb) {
   sweetAlert2({
     title: 'Success',
     html: "Congrats! You've successfully bought " + tokensToContribute + ' tokens!',
     type: 'success'
-  }).then(result => {
-    if (result.value) {
-      window.location.reload()
-    }
-  })
+  }).then(cb)
 }
 
 export function contributionDisabledAlertInTime(startTime) {

@@ -228,7 +228,8 @@ export const convertLocationToPath = location => {
       stepThree: '3',
       stepFour: '4',
       manage: 'manage',
-      crowdsales: 'crowdsales'
+      crowdsales: 'crowdsales',
+      contribute: 'contribute'
     }[location] || null
   )
 }

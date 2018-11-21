@@ -123,8 +123,8 @@ export class Contribute extends React.Component {
     }
   }
 
-  componentDidMount() {
-    this.preparePage()
+  async componentDidMount() {
+    await this.preparePage()
     setTimeout(this.fetchAccount, TWO_SECONDS)
   }
 
@@ -581,13 +581,17 @@ export class Contribute extends React.Component {
         const tokensContributed = userBalanceAfterBuy.minus(toBigNumber(userBalanceBeforeBuy)).toFixed()
         logger.log(`Tokens to contributed`, tokensContributed)
 
-        successfulContributionAlert(tokensContributed)
+        this.setState({ loading: false })
+
+        successfulContributionAlert(tokensContributed, result => {
+          window.location.reload()
+        })
       })
       .catch(err => {
         logger.error(err)
+        this.setState({ loading: false })
         return toast.showToaster({ type: TOAST.TYPE.ERROR, message: TOAST.MESSAGE.TRANSACTION_FAILED })
       })
-      .then(() => this.setState({ loading: false }))
   }
 
   txMinedCallback(txHash, receipt) {
