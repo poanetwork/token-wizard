@@ -1,5 +1,5 @@
 import React from 'react'
-import CountdownTimer from '../../../src/components/contribute/CountdownTimer'
+import CountdownTimer from '../../../src/components/Contribute/CountdownTimer'
 import Adapter from 'enzyme-adapter-react-15'
 import { configure, shallow } from 'enzyme'
 

@@ -178,27 +178,28 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
         web3Available={true}
       >
         <form
-          className="contribute-form"
+          className="cnt-ContributeForm cnt-ContributeForm-full-height"
           onSubmit={[Function]}
         >
-          <label
-            className="contribute-form-label"
+          <h3
+            className="cnt-ContributeForm_Title"
           >
             Choose amount to contribute
-          </label>
+          </h3>
           <div
-            className="contribute-form-input-container"
+            className="cnt-ContributeForm_AmountContainer"
           >
             <Field
               component={[Function]}
+              extraClassName="cnt-ContributeForm_Amount"
               format={[Function]}
-              inputClassName="contribute-form-input"
               name="contribute"
               parse={[Function]}
               placeholder="0"
               validate={[Function]}
             >
               <InputField2
+                extraClassName="cnt-ContributeForm_Amount"
                 input={
                   Object {
                     "name": "contribute",
@@ -208,7 +209,6 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
                     "value": "",
                   }
                 }
-                inputClassName="contribute-form-input"
                 meta={
                   Object {
                     "active": false,
@@ -230,20 +230,11 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
                 placeholder="0"
               >
                 <div
-                  className="sw-InputField2 "
+                  className="sw-InputField2 cnt-ContributeForm_Amount"
                 >
-                  <FormControlTitle>
-                    <div
-                      className="sw-FormControlTitle"
-                    >
-                      <label
-                        className="sw-FormControlTitle_Label"
-                      />
-                    </div>
-                  </FormControlTitle>
                   <TextField
                     autoComplete="off"
-                    className="contribute-form-input"
+                    className="input"
                     id="contribute"
                     name="contribute"
                     onBlur={[Function]}
@@ -283,51 +274,49 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
                 </div>
               </InputField2>
             </Field>
-            <FormSpy
-              onChange={[Function]}
-              subscription={
-                Object {
-                  "values": true,
-                }
-              }
-            />
-            <div
-              className="contribute-form-label"
+            <TokenDimension
+              type="tokens"
             >
-              TOKENS
-            </div>
-          </div>
-          <div
-            className="contribute-through-container"
-          >
-            <select
-              className="contribute-through"
-              onChange={[Function]}
-              value="metamask"
-            >
-              <option
-                disabled={false}
-                value="metamask"
+              <div
+                className="sw-TokenDimension sw-TokenDimension-tokens "
               />
-              <option
-                value="qr"
-              >
-                QR
-              </option>
-            </select>
-            <button
-              className="button button_fill button_no_border button_disabled"
-              disabled={true}
-              onClick={[Function]}
-            >
-              Contribute
-            </button>
+            </TokenDimension>
           </div>
+          <select
+            className="sw_Select"
+            onChange={[Function]}
+            value="metamask"
+          >
+            <option
+              disabled={false}
+              value="metamask"
+            />
+            <option
+              value="qr"
+            >
+              QR
+            </option>
+          </select>
+          <button
+            className="cnt-ContributeForm_ContributeButton"
+            disabled={true}
+            onClick={[Function]}
+          >
+            Contribute
+          </button>
           <p
-            className="description"
+            className="cnt-ContributeForm_Description"
           >
             Think twice before contributing to Crowdsales. Tokens will be deposited on a wallet you used to buy tokens.
           </p>
+          <FormSpy
+            onChange={[Function]}
+            subscription={
+              Object {
+                "values": true,
+              }
+            }
+          />
         </form>
       </_class>
     </inject-_class-with-contributeStore-tokenStore>
@@ -337,27 +326,20 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
 
 exports[`ContributeForm should render ContributeForm component 1`] = `
 <form
-  className="contribute-form"
+  className="cnt-ContributeForm cnt-ContributeForm-full-height"
   onSubmit={[Function]}
 >
-  <label
-    className="contribute-form-label"
+  <h3
+    className="cnt-ContributeForm_Title"
   >
     Choose amount to contribute
-  </label>
+  </h3>
   <div
-    className="contribute-form-input-container"
+    className="cnt-ContributeForm_AmountContainer"
   >
     <div
-      className="sw-InputField2 "
+      className="sw-InputField2 cnt-ContributeForm_Amount"
     >
-      <div
-        className="sw-FormControlTitle"
-      >
-        <label
-          className="sw-FormControlTitle_Label"
-        />
-      </div>
       <input
         className="sw-TextField"
         id="contribute"
@@ -370,41 +352,35 @@ exports[`ContributeForm should render ContributeForm component 1`] = `
       />
     </div>
     <div
-      className="contribute-form-label"
-    >
-      TOKENS
-    </div>
+      className="sw-TokenDimension sw-TokenDimension-tokens "
+    />
   </div>
-  <div
-    className="contribute-through-container"
+  <select
+    className="sw_Select"
+    onChange={[Function]}
+    value="metamask"
   >
-    <select
-      className="contribute-through"
-      onChange={[Function]}
+    <option
+      disabled={false}
       value="metamask"
     >
-      <option
-        disabled={false}
-        value="metamask"
-      >
-        Wallet 
-      </option>
-      <option
-        value="qr"
-      >
-        QR
-      </option>
-    </select>
-    <button
-      className="button button_fill button_no_border button_disabled"
-      disabled={true}
-      onClick={[Function]}
+      Wallet 
+    </option>
+    <option
+      value="qr"
     >
-      Contribute
-    </button>
-  </div>
+      QR
+    </option>
+  </select>
+  <button
+    className="cnt-ContributeForm_ContributeButton"
+    disabled={true}
+    onClick={[Function]}
+  >
+    Contribute
+  </button>
   <p
-    className="description"
+    className="cnt-ContributeForm_Description"
   >
     Think twice before contributing to Crowdsales. Tokens will be deposited on a wallet you used to buy tokens.
   </p>
@@ -413,27 +389,20 @@ exports[`ContributeForm should render ContributeForm component 1`] = `
 
 exports[`ContributeForm should render ContributeForm component and its children 1`] = `
 <form
-  className="contribute-form"
+  className="cnt-ContributeForm cnt-ContributeForm-full-height"
   onSubmit={[Function]}
 >
-  <label
-    className="contribute-form-label"
+  <h3
+    className="cnt-ContributeForm_Title"
   >
     Choose amount to contribute
-  </label>
+  </h3>
   <div
-    className="contribute-form-input-container"
+    className="cnt-ContributeForm_AmountContainer"
   >
     <div
-      className="sw-InputField2 "
+      className="sw-InputField2 cnt-ContributeForm_Amount"
     >
-      <div
-        className="sw-FormControlTitle"
-      >
-        <label
-          className="sw-FormControlTitle_Label"
-        />
-      </div>
       <input
         className="sw-TextField"
         id="contribute"
@@ -446,41 +415,35 @@ exports[`ContributeForm should render ContributeForm component and its children 
       />
     </div>
     <div
-      className="contribute-form-label"
-    >
-      TOKENS
-    </div>
+      className="sw-TokenDimension sw-TokenDimension-tokens "
+    />
   </div>
-  <div
-    className="contribute-through-container"
+  <select
+    className="sw_Select"
+    onChange={[Function]}
+    value="metamask"
   >
-    <select
-      className="contribute-through"
-      onChange={[Function]}
+    <option
+      disabled={false}
       value="metamask"
     >
-      <option
-        disabled={false}
-        value="metamask"
-      >
-        Wallet 
-      </option>
-      <option
-        value="qr"
-      >
-        QR
-      </option>
-    </select>
-    <button
-      className="button button_fill button_no_border button_disabled"
-      disabled={true}
-      onClick={[Function]}
+      Wallet 
+    </option>
+    <option
+      value="qr"
     >
-      Contribute
-    </button>
-  </div>
+      QR
+    </option>
+  </select>
+  <button
+    className="cnt-ContributeForm_ContributeButton"
+    disabled={true}
+    onClick={[Function]}
+  >
+    Contribute
+  </button>
   <p
-    className="description"
+    className="cnt-ContributeForm_Description"
   >
     Think twice before contributing to Crowdsales. Tokens will be deposited on a wallet you used to buy tokens.
   </p>
