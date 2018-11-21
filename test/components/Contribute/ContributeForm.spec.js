@@ -6,7 +6,7 @@ import TokenStore from '../../../src/stores/TokenStore'
 import { ContributeForm } from '../../../src/components/Contribute/ContributeForm'
 import renderer from 'react-test-renderer'
 import Adapter from 'enzyme-adapter-react-15'
-import { configure, mount, shallow } from 'enzyme'
+import { configure, mount } from 'enzyme'
 import { CONTRIBUTION_OPTIONS } from '../../../src/utils/constants'
 
 configure({ adapter: new Adapter() })
@@ -92,7 +92,7 @@ describe('ContributeForm', () => {
     )
 
     wrapper.find('input').simulate('change', { target: { value: 55 } })
-    wrapper.find('.button_fill').simulate('click')
+    wrapper.find('.cnt-ContributeForm_ContributeButton').simulate('click')
 
     expect(onSubmit).toHaveBeenCalledTimes(1)
   })
@@ -134,7 +134,7 @@ describe('ContributeForm', () => {
 
     expect(wrapper).toMatchSnapshot()
 
-    const contributeButton = wrapper.find('.button.button_fill.button_no_border.button_disabled')
+    const contributeButton = wrapper.find('.cnt-ContributeForm_ContributeButton')
     expect(contributeButton.is('[disabled]')).toBeTruthy()
   })
 })

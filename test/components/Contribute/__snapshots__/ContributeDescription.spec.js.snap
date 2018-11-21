@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ContributeDescription should render ContributeDescription component 1`] = `
+<div
+  className="cnt-ContributeDescription "
+>
+  Here you can contribute in the crowdsale campaign. At the moment, you need
+   
+  <a
+    href="https://chrome.google.com/webstore/detail/nifty-wallet/jbdaocneiiinmjbjlgalhcelgbejmnid"
+    rel="noopener noreferrer"
+    target="_blank"
+  >
+    a Wallet
+  </a>
+   
+  client to contribute into the crowdsale.
+</div>
+`;

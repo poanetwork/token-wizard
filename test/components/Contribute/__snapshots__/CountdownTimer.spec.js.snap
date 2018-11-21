@@ -423,7 +423,7 @@ exports[`CountdownTimer Should render the component when the crowdsale was final
       <div
         className="cnt-CountdownTimer_Message"
       >
-        crowdsale has been finalized
+        Crowdsale has ended
       </div>
     </div>
   </div>

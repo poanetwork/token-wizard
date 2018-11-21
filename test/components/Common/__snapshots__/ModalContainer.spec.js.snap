@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ModalContainer should render ModalContainer component 1`] = `
+<div
+  className="sw-ModalWindowBackdrop"
+>
+  <div
+    className="sw-ModalWindow"
+  >
+    <h2
+      className="sw-ModalWindow_Title"
+    >
+      Modal Title
+       
+      <div
+        className="sw-ModalWindow_CloseButton"
+        onClick={[Function]}
+      />
+    </h2>
+    <p
+      className="sw-ModalWindow_description"
+    >
+      Some text...
+    </p>
+  </div>
+</div>
+`;

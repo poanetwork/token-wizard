@@ -16,10 +16,10 @@ $sw-ButtonRetry-gradient-end: #5a2da5 !default;
         background-image: linear-gradient(101deg, darken($sw-ButtonRetry-gradient-start, 5%), darken($sw-ButtonRetry-gradient-end, 5%));
     }
 
+    @include disabled-button-styles();
+
     &[disabled] {
         background-image: linear-gradient(101deg, $sw-ButtonRetry-gradient-start, $sw-ButtonRetry-gradient-end);
-        cursor: not-allowed;
-        opacity: 0.7;
     }
 
     .md-TxProgressStatus_ButtonsContainer & {

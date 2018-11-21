@@ -234,7 +234,6 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
                 >
                   <TextField
                     autoComplete="off"
-                    className="input"
                     id="contribute"
                     name="contribute"
                     onBlur={[Function]}
@@ -364,7 +363,7 @@ exports[`ContributeForm should render ContributeForm component 1`] = `
       disabled={false}
       value="metamask"
     >
-      Wallet 
+      Wallet
     </option>
     <option
       value="qr"
@@ -427,7 +426,7 @@ exports[`ContributeForm should render ContributeForm component and its children 
       disabled={false}
       value="metamask"
     >
-      Wallet 
+      Wallet
     </option>
     <option
       value="qr"
