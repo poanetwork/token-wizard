@@ -89,7 +89,8 @@ let promiseRetry = require('promise-retry')
   'generalStore',
   'contributeStore',
   'gasPriceStore',
-  'crowdsaleStore'
+  'crowdsaleStore',
+  'tierStore'
 )
 @observer
 export class Contribute extends React.Component {
@@ -117,6 +118,7 @@ export class Contribute extends React.Component {
       isEnded: false,
       isSoldOut: false,
       isTierSoldOut: false,
+      isStartedClock: false,
       clockAltMessage: ''
     }
   }
@@ -297,12 +299,20 @@ export class Contribute extends React.Component {
     this.setState({ isTierSoldOut: await isTierSoldOut(initCrowdsaleContract, crowdsaleExecID) })
   }
 
-  getCrowdsaleSecondsLeft = endDate => {
-    return Math.trunc((moment(endDate) - moment(Date.now())) / 1000)
+  getCrowdsaleSecondsLeft = (startDate, endDate) => {
+    if (this.state.isStartedClock) {
+      return Math.trunc((moment(endDate) - moment(Date.now())) / 1000)
+    } else {
+      return Math.trunc((moment(startDate) - moment(Date.now())) / 1000)
+    }
   }
 
   getCrowdsaleSecondsDuration = (startDate, endDate) => {
-    return Math.trunc((moment(endDate) - moment(startDate)) / 1000)
+    if (this.state.isStartedClock) {
+      return Math.trunc((moment(endDate) - moment(startDate)) / 1000)
+    } else {
+      return Math.trunc((moment(startDate) - moment(Date.now())) / 1000)
+    }
   }
 
   setTimers = () => {
@@ -318,30 +328,54 @@ export class Contribute extends React.Component {
     if (crowdsalePageStore.ticks.length) {
       nextTick = crowdsalePageStore.extractNextTick()
       durationSeconds = this.getCrowdsaleSecondsDuration(startDate, endDate)
-      secondsLeft = this.getCrowdsaleSecondsLeft(endDate)
+      secondsLeft = this.getCrowdsaleSecondsLeft(startDate, endDate)
 
       timeInterval = setInterval(() => {
-        const time = moment.duration(this.state.nextTick.time - Date.now())
+        if (this.state.nextTick) {
+          const time = moment.duration(this.state.nextTick.time - Date.now())
+          const isStartedClock = moment(startDate) <= moment(Date.now())
+          const isEndClock = moment(Date.now()) > moment(endDate)
+          this.setState({
+            toNextTick: {
+              days: Math.floor(time.asDays()) || 0,
+              hours: time.hours() || 0,
+              minutes: time.minutes() || 0,
+              seconds: time.seconds() || 0
+            },
+            isStartedClock: isStartedClock,
+            crowdsaleSecondsLeft: this.getCrowdsaleSecondsLeft(startDate, endDate)
+          })
 
-        this.setState({
-          toNextTick: {
-            days: Math.floor(time.asDays()) || 0,
-            hours: time.hours() || 0,
-            minutes: time.minutes() || 0,
-            seconds: time.seconds() || 0
-          },
-          crowdsaleSecondsLeft: this.getCrowdsaleSecondsLeft(endDate)
-        })
+          if (isStartedClock) {
+            this.setState({
+              crowdsaleDurationSeconds: this.getCrowdsaleSecondsDuration(startDate, endDate)
+            })
+          }
+
+          // If started, change to nextTick
+          if (isStartedClock && this.state.nextTick.type === 'start') {
+            this.setState({
+              nextTick: crowdsalePageStore.extractNextTick()
+            })
+          }
+
+          // If ended, get last undefined tick
+          if (isEndClock && this.state.nextTick.type === 'end') {
+            this.setState({
+              nextTick: crowdsalePageStore.extractNextTick()
+            })
+          }
+        }
       }, 1000)
     }
 
     this.setState({
-      nextTick,
+      nextTick: nextTick,
       msToNextTick: millisecondsToNextTick,
       crowdsaleDurationSeconds: durationSeconds,
       crowdsaleSecondsLeft: secondsLeft,
       displaySeconds: false,
-      timeInterval
+      timeInterval: timeInterval
     })
   }
 
@@ -580,21 +614,12 @@ export class Contribute extends React.Component {
   }
 
   render() {
-    const { crowdsalePageStore, tokenStore, contractStore, crowdsaleStore } = this.props
+    const { crowdsalePageStore, tokenStore, contractStore, crowdsaleStore, tierStore } = this.props
     const { tokenAmountOf } = crowdsalePageStore
     const { crowdsale } = contractStore
     const { proxyName } = crowdsaleStore
-    const {
-      curAddr,
-      contributeThrough,
-      web3Available,
-      toNextTick,
-      nextTick,
-      minimumContribution,
-      maximumContribution
-    } = this.state
+    const { curAddr, contributeThrough, web3Available, minimumContribution, maximumContribution } = this.state
     const crowdsaleExecID = crowdsale && crowdsale.execID
-    const { days, hours, minutes, seconds } = toNextTick
     const { decimals, ticker, name } = tokenStore
     const tokenDecimals = !isNaN(decimals) ? decimals : 0
     const tokenTicker = ticker ? ticker.toString() : ''
@@ -675,14 +700,14 @@ export class Contribute extends React.Component {
                 <CountdownTimer
                   altMessage={this.state.clockAltMessage}
                   crowdsaleTimePassedPercentage={getCrowdsaleTimePassedPercentage()}
-                  days={days}
-                  hours={hours}
+                  days={this.state.toNextTick.days}
+                  hours={this.state.toNextTick.hours}
+                  minutes={this.state.toNextTick.minutes}
+                  seconds={this.state.toNextTick.seconds}
                   isFinalized={this.state.isFinalized}
                   isLoading={this.state.loading}
-                  minutes={minutes}
-                  nextTick={nextTick}
-                  seconds={seconds}
-                  tiersLength={crowdsalePageStore && crowdsalePageStore.tiers.length}
+                  nextTick={this.state.nextTick}
+                  tiersLength={tierStore && tierStore.tiers.length}
                 />
                 <ContributeDataList currentAccount={curAddr} crowdsaleAddress={crowdsaleAddressTruncated} />
                 <ContributeDataColumns data={getContributeDataColumnsObject()} />

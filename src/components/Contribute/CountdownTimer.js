@@ -14,7 +14,7 @@ const CountdownTimer = ({
   tiersLength
 }) => {
   const noTimeLeft = days <= 0 && hours <= 0 && minutes <= 0 && seconds <= 0
-  const crowdsaleIsRunning = !isFinalized && nextTick.type
+  const crowdsaleIsRunning = !isFinalized && nextTick && nextTick.type
   const hoursHaveBlinker = days ? 'cnt-CountdownTimer_TimeItem-blinking' : ''
 
   const countdownClock = (
@@ -43,13 +43,21 @@ const CountdownTimer = ({
   )
 
   const getCrowdsaleMessage = () => {
-    let theMessage = 'Crowdsale has ended'
+    let theMessage
 
-    if (crowdsaleIsRunning) {
-      if (nextTick.type === 'start') {
-        theMessage = `To start of tier ${nextTick.order} of ${tiersLength}`
+    if (isFinalized) {
+      theMessage = 'crowdsale has been finalized'
+    } else {
+      if (nextTick && nextTick.type) {
+        if (nextTick.type === 'start' && !noTimeLeft) {
+          theMessage = `To start of tier ${nextTick.order} of ${tiersLength}`
+        } else if (nextTick.type === 'end' && !noTimeLeft) {
+          theMessage = `To end of tier ${nextTick.order} of ${tiersLength}`
+        } else {
+          theMessage = `Waiting...`
+        }
       } else {
-        theMessage = `To end of tier ${nextTick.order} of ${tiersLength}`
+        theMessage = 'Crowdsale has ended'
       }
     }
 

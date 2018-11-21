@@ -1,4 +1,5 @@
 import { observable, action } from 'mobx'
+import { uniqueElementsBy } from '../utils/utils'
 
 class CrowdsalePageStore {
   @observable maximumSellableTokens
@@ -22,6 +23,11 @@ class CrowdsalePageStore {
   @action
   addTier = tier => {
     this.tiers.push(tier)
+    this.tiers = uniqueElementsBy(
+      this.tiers,
+      (a, b) => a['startDate'] === b['startDate'] && a['endDate'] === b['endDate']
+    )
+
     this.sortTiers()
     this.buildTicksCollection()
   }
