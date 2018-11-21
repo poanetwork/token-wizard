@@ -271,13 +271,13 @@ export class ReservedTokensInputBlock extends Component {
         min: 0,
         maxDecimals: this.props.decimals ? this.props.decimals : 0,
         errorMessage: 'Value must be positive and decimals should not exceed the amount of decimals specified',
-        description: "Value in tokens. Don't forget to click + button for each reserved token."
+        description: "Value in tokens. Don't forget to click submit button for each reserved token."
       }
     } else if (this.state.dim === 'percentage') {
       valueInputParams = {
         min: 0,
         errorMessage: 'Value must be positive',
-        description: "Value in percentage. Don't forget to click + button for each reserved token."
+        description: "Value in percentage. Don't forget to click submit button for each reserved token."
       }
     } else {
       logger.error(`unrecognized dimension '${this.state.dim}'`)
