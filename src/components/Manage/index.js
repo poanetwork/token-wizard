@@ -37,18 +37,20 @@ import createDecorator from 'final-form-calculate'
 import downloadCrowdsaleInfo from '../../utils/downloadCrowdsaleInfo'
 import logdown from 'logdown'
 import moment from 'moment'
+import { ButtonBack } from '../Common/ButtonBack'
 import { FinalizeCrowdsaleStep } from './FinalizeCrowdsaleStep'
 import { Form } from 'react-final-form'
 import { Loader } from '../Common/Loader'
+import { MANAGE_SECTIONS } from '../../utils/constants'
 import { ManageForm } from './ManageForm'
+import { ManageNavigation } from '../Common/ManageNavigation'
 import { ReservedTokensList } from './ReservedTokensList'
+import { SectionInfo } from '../Common/SectionInfo'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import { getCurrentTierInfoCustom, getTiersLength } from '../Crowdsale/utils'
 import { getFieldsToUpdate, processTier, updateTierAttribute } from './utils'
+import { goBack } from '../../utils/utils'
 import { tierStore } from '../../stores'
-import { SectionInfo } from '../Common/SectionInfo'
-import { ManageNavigation } from '../Common/ManageNavigation'
-import { MANAGE_SECTIONS } from '../../utils/constants'
 
 const logger = logdown('TW:manage')
 const { MANAGE_CROWDSALE } = MANAGE_SECTIONS
@@ -806,6 +808,12 @@ export class Manage extends Component {
     toast.showToaster({ message: TOAST.MESSAGE.CONTRACT_DOWNLOAD_SUCCESS })
   }
 
+  goToCrowdsales = () => {
+    goBack({
+      history: this.props.history
+    })
+  }
+
   render() {
     const {
       canFinalize,
@@ -846,6 +854,13 @@ export class Manage extends Component {
               mutators={{ ...arrayMutators }}
               onSubmit={this.saveCrowdsale}
             />
+            <div className="st-StepContent_Buttons">
+              <ButtonBack
+                onClick={() => {
+                  this.goToCrowdsales()
+                }}
+              />
+            </div>
           </div>
         </section>
         <Loader show={this.state.loading} />
