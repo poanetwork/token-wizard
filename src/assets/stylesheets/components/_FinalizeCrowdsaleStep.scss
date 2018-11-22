@@ -1,0 +1,56 @@
+$mng-FinalizeCrowdsaleStep_Button-start: #8035b7 !default;
+$mng-FinalizeCrowdsaleStep_Button-end: #5a2da5 !default;
+
+.mng-FinalizeCrowdsaleStep {
+    align-items: center;
+    background-color: #fff;
+    border-radius: 5px;
+    border: 1px solid $base-border-color;
+    box-shadow: 0 9px 18px 4px rgba(224, 224, 224, 0.2);
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 24px;
+    padding: 28px 35px 35px;
+
+    @media (min-width: $breakpoint-md) {
+        flex-direction: row;
+    }
+}
+
+.mng-FinalizeCrowdsaleStep_Description {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.39;
+    margin-bottom: 30px;
+
+    @media (min-width: $breakpoint-md) {
+        margin-bottom: 0;
+        padding-right: 50px;
+    }
+}
+
+.mng-FinalizeCrowdsaleStep_Button {
+    @include not-selectable-text();
+    background-image: linear-gradient(101deg, $mng-FinalizeCrowdsaleStep_Button-start, $mng-FinalizeCrowdsaleStep_Button-end);
+    border-radius: 4px;
+    border: none;
+    box-shadow: 0 12px 22px 0 rgba(0, 0, 0, 0.24);
+    color: #fff;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-size: 20px;
+    font-weight: 600;
+    height: 50px;
+    outline: none;
+    padding: 0 42px 0 42px;
+
+    &:hover {
+        background-image: linear-gradient(101deg, darken($mng-FinalizeCrowdsaleStep_Button-start, 5%), darken($mng-FinalizeCrowdsaleStep_Button-end, 5%));
+    }
+
+    @include disabled-button-styles();
+
+    &[disabled] {
+        background-image: linear-gradient(101deg, $mng-FinalizeCrowdsaleStep_Button-start, $mng-FinalizeCrowdsaleStep_Button-end);
+    }
+}
