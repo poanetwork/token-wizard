@@ -159,12 +159,12 @@ export class StepOne extends Component {
                 {strategies.map((strategy, i) => {
                   return (
                     <StrategyItem
-                      key={i}
-                      strategy={this.state.strategy}
-                      strategyType={strategy.type}
-                      strategyDisplayTitle={strategy.display}
-                      stragegyDisplayDescription={strategy.description}
                       handleChange={this.handleChange}
+                      key={i}
+                      stragegyDisplayDescription={strategy.description}
+                      strategy={this.state.strategy}
+                      strategyDisplayTitle={strategy.display}
+                      strategyType={strategy.type}
                     />
                   )
                 })}

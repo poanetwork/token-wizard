@@ -31,23 +31,30 @@ export default class CrowdsalesList extends Component {
     const { crowdsales } = this.props
 
     return (
-      <div>
-        <div className="sw-FlexTable">
-          <div className="sw-FlexTable_Head sw-FlexTable_Row">
-            <div className="sw-FlexTable_Td">Address</div>
-          </div>
-          <div className="sw-FlexTable_Body sw-FlexTable_Body-scrollable sw-FlexTable_Body-crowdsale m-b-15">
-            {crowdsales.map((crowdsale, index) => (
-              <div
-                className={`sw-FlexTable_Row sw-FlexTable_Row-selectable
-                ${selectedRow === index ? 'selected' : ''}`}
-                key={index.toString()}
-                onClick={() => this.selectCrowdsale(index, crowdsale.execID)}
-              >
-                <div className="sw-FlexTable_Td">{crowdsale.execID}</div>
-              </div>
-            ))}
-          </div>
+      <div className="mng-CrowdsalesList">
+        <h2 className="mng-CrowdsalesList_Title">Select Address</h2>
+        <div className="mng-CrowdsalesList_Container">
+          {crowdsales.map((crowdsale, index) => (
+            <label
+              className="mng-CrowdsalesList_Item"
+              key={index.toString()}
+              onClick={() => this.selectCrowdsale(index, crowdsale.execID)}
+            >
+              <input
+                checked={selectedRow === index}
+                className="mng-CrowdsalesList_InputRadio"
+                name="crowdsale-item"
+                type="radio"
+                value={index.toString()}
+              />
+              <span className="mng-CrowdsalesList_ItemContent">
+                <span className="mng-CrowdsalesList_ItemContentText">
+                  <span className="mng-CrowdsalesList_ItemDescription">{crowdsale.execID}</span>
+                </span>
+                <span className="mng-CrowdsalesList_Radio" />
+              </span>
+            </label>
+          ))}
         </div>
         <div className="st-StepContent_Buttons">
           <ButtonContinue
