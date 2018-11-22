@@ -1,12 +1,16 @@
 import React, { Component } from 'react'
-import { inject, observer } from 'mobx-react'
-import { getCurrentAccount, getAllCrowdsaleAddresses, getNetworkVersion } from '../../utils/blockchainHelpers'
-import { getCrowdsaleAssets } from '../../stores/utils'
-import { Loader } from '../Common/Loader'
-import { toBigNumber } from '../../utils/utils'
 import logdown from 'logdown'
+import { Loader } from '../Common/Loader'
+import { ManageNavigation } from '../Common/ManageNavigation'
+import { SectionInfo } from '../Common/SectionInfo'
+import { getCrowdsaleAssets } from '../../stores/utils'
+import { getCurrentAccount, getAllCrowdsaleAddresses, getNetworkVersion } from '../../utils/blockchainHelpers'
+import { inject, observer } from 'mobx-react'
+import { toBigNumber } from '../../utils/utils'
+import { TW_STATISTICS_SECTION } from '../../utils/constants'
 
 const logger = logdown('TW:stats')
+const { TW_STATISTICS } = TW_STATISTICS_SECTION
 
 @inject('web3Store', 'statsStore')
 @observer
@@ -190,79 +194,84 @@ export class Stats extends Component {
       )
     }
     return (
-      <div className="stats container">
-        <p className="title">Token Wizard statistics</p>
-        <div className="stats-table">
-          <div className="stats-table-cell">
-            <div className="stats-items">{statsItem(valToStr(totalCrowdsales), 'Total crowdsales amount')}</div>
-          </div>
-          <div className="stats-table-cell">
-            <div className="stats-items">{statsItem(valToStr(totalEthRaised), 'Total amount of eth raised')}</div>
-          </div>
-          <div className="stats-table-cell">
-            <div className="stats-items">
-              {statsItem(valToStr(totalContributorsAmount), 'Total contributors amount')}
+      <div>
+        <section className="lo-MenuBarAndContent">
+          <ManageNavigation activeStepTitle={TW_STATISTICS} navigationSteps={TW_STATISTICS_SECTION} />
+          <div className="st-StepContent">
+            <SectionInfo description="Useful statistics about the Token Wizard" stepNumber="0" title={TW_STATISTICS} />
+            <div className="stats-table">
+              <div className="stats-table-cell">
+                <div className="stats-items">{statsItem(valToStr(totalCrowdsales), 'Total crowdsales amount')}</div>
+              </div>
+              <div className="stats-table-cell">
+                <div className="stats-items">{statsItem(valToStr(totalEthRaised), 'Total amount of eth raised')}</div>
+              </div>
+              <div className="stats-table-cell">
+                <div className="stats-items">
+                  {statsItem(valToStr(totalContributorsAmount), 'Total contributors amount')}
+                </div>
+              </div>
+              <div className="stats-table-cell">
+                <div className="stats-items">
+                  {statsItem(valToStr(maxEthRaised), 'Max amount of eth raised in one crowdsale')}
+                </div>
+              </div>
+            </div>
+            <p className="title-secondary">Minted capped crowdsales statistics</p>
+            <div className="stats-table">
+              <div className="stats-table-cell">
+                <div className="stats-items">
+                  {statsItem(valToStr(mintedCappedCrowdsales), 'Crowdsales amount')}
+                  {statsItem(valToStr(mintedCappedEthRaised), 'Total amount of eth raised')}
+                  {statsItem(valToStr(mintedCappedContributorsAmount), 'Total contributors amount')}
+                </div>
+              </div>
+              <div className="stats-table-cell">
+                <div className="stats-items">
+                  {statsItem(valToStr(mintedCappedOngoingCrowdsales), 'Ongoing crowdsales amount')}
+                  {statsItem(valToStr(mintedCappedFutureCrowdsales), 'Future crowdsales amount')}
+                  {statsItem(valToStr(mintedCappedPastCrowdsales), 'Past crowdsales amount')}
+                </div>
+              </div>
+              <div className="stats-table-cell">
+                <div className="stats-items">
+                  {statsItem(valToStr(mintedCappedMaxEthRaised), 'Max amount of eth raised in one crowdsale')}
+                  {statsItem(valToStr(mintedCappedPercentageOfFinalized), '% of finalized crowdsales from ended')}
+                  {statsItem(valToStr(mintedCappedPercentageOfMultiTiers), '% of crowdsales with multiple tiers')}
+                </div>
+              </div>
+              <div className="stats-table-cell">
+                <div className="stats-items">
+                  {statsItem(valToStr(mintedCappedMaxTiersAmount), 'Max tiers amount in one crowdsale')}
+                </div>
+              </div>
+            </div>
+            <p className="title-secondary">Dutch auction crowdsales statistics</p>
+            <div className="stats-table">
+              <div className="stats-table-cell">
+                <div className="stats-items">
+                  {statsItem(valToStr(dutchAuctionCrowdsales), 'Crowdsales amount')}
+                  {statsItem(valToStr(dutchAuctionEthRaised), 'Total amount of eth raised')}
+                  {statsItem(valToStr(dutchAuctionContributorsAmount), 'Total contributors amount')}
+                </div>
+              </div>
+              <div className="stats-table-cell">
+                <div className="stats-items">
+                  {statsItem(valToStr(dutchAuctionOngoingCrowdsales), 'Ongoing crowdsales amount')}
+                  {statsItem(valToStr(dutchAuctionFutureCrowdsales), 'Future crowdsales amount')}
+                  {statsItem(valToStr(dutchAuctionPastCrowdsales), 'Past crowdsales amount')}
+                </div>
+              </div>
+              <div className="stats-table-cell">
+                <div className="stats-items">
+                  {statsItem(valToStr(dutchAuctionMaxEthRaised), 'Max amount of eth raised in one crowdsale')}
+                  {statsItem(valToStr(dutchAuctionPercentageOfFinalized), '% of finalized crowdsales from ended')}
+                </div>
+              </div>
             </div>
           </div>
-          <div className="stats-table-cell">
-            <div className="stats-items">
-              {statsItem(valToStr(maxEthRaised), 'Max amount of eth raised in one crowdsale')}
-            </div>
-          </div>
-        </div>
-        <p className="title-secondary">Minted capped crowdsales statistics</p>
-        <div className="stats-table">
-          <div className="stats-table-cell">
-            <div className="stats-items">
-              {statsItem(valToStr(mintedCappedCrowdsales), 'Crowdsales amount')}
-              {statsItem(valToStr(mintedCappedEthRaised), 'Total amount of eth raised')}
-              {statsItem(valToStr(mintedCappedContributorsAmount), 'Total contributors amount')}
-            </div>
-          </div>
-          <div className="stats-table-cell">
-            <div className="stats-items">
-              {statsItem(valToStr(mintedCappedOngoingCrowdsales), 'Ongoing crowdsales amount')}
-              {statsItem(valToStr(mintedCappedFutureCrowdsales), 'Future crowdsales amount')}
-              {statsItem(valToStr(mintedCappedPastCrowdsales), 'Past crowdsales amount')}
-            </div>
-          </div>
-          <div className="stats-table-cell">
-            <div className="stats-items">
-              {statsItem(valToStr(mintedCappedMaxEthRaised), 'Max amount of eth raised in one crowdsale')}
-              {statsItem(valToStr(mintedCappedPercentageOfFinalized), '% of finalized crowdsales from ended')}
-              {statsItem(valToStr(mintedCappedPercentageOfMultiTiers), '% of crowdsales with multiple tiers')}
-            </div>
-          </div>
-          <div className="stats-table-cell">
-            <div className="stats-items">
-              {statsItem(valToStr(mintedCappedMaxTiersAmount), 'Max tiers amount in one crowdsale')}
-            </div>
-          </div>
-        </div>
-        <p className="title-secondary">Dutch auction crowdsales statistics</p>
-        <div className="stats-table">
-          <div className="stats-table-cell">
-            <div className="stats-items">
-              {statsItem(valToStr(dutchAuctionCrowdsales), 'Crowdsales amount')}
-              {statsItem(valToStr(dutchAuctionEthRaised), 'Total amount of eth raised')}
-              {statsItem(valToStr(dutchAuctionContributorsAmount), 'Total contributors amount')}
-            </div>
-          </div>
-          <div className="stats-table-cell">
-            <div className="stats-items">
-              {statsItem(valToStr(dutchAuctionOngoingCrowdsales), 'Ongoing crowdsales amount')}
-              {statsItem(valToStr(dutchAuctionFutureCrowdsales), 'Future crowdsales amount')}
-              {statsItem(valToStr(dutchAuctionPastCrowdsales), 'Past crowdsales amount')}
-            </div>
-          </div>
-          <div className="stats-table-cell">
-            <div className="stats-items">
-              {statsItem(valToStr(dutchAuctionMaxEthRaised), 'Max amount of eth raised in one crowdsale')}
-              {statsItem(valToStr(dutchAuctionPercentageOfFinalized), '% of finalized crowdsales from ended')}
-            </div>
-          </div>
-        </div>
-        <Loader show={this.state ? this.state.loading : true} />
+        </section>
+        {/* <Loader show={this.state ? this.state.loading : true} /> */}
       </div>
     )
   }

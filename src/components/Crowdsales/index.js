@@ -1,14 +1,18 @@
+import CrowdsalesList from '../Common/CrowdsalesList'
 import React, { Component } from 'react'
-import { inject, observer } from 'mobx-react'
-import { reloadStorage } from '../Home/utils'
-import { clearStorage, navigateTo } from '../../utils/utils'
-import { checkWeb3ForErrors, getCurrentAccount, loadRegistryAddresses } from '../../utils/blockchainHelpers'
 import logdown from 'logdown'
 import { CrowdsaleEmptyList } from './CrowdsaleEmptyList'
-import CrowdsalesList from '../Common/CrowdsalesList'
 import { Loader } from '../Common/Loader'
+import { checkWeb3ForErrors, getCurrentAccount, loadRegistryAddresses } from '../../utils/blockchainHelpers'
+import { clearStorage, navigateTo } from '../../utils/utils'
+import { inject, observer } from 'mobx-react'
+import { reloadStorage } from '../Home/utils'
+import { SectionInfo } from '../Common/SectionInfo'
+import { ManageNavigation } from '../Common/ManageNavigation'
+import { MANAGE_SECTIONS } from '../../utils/constants'
 
 const logger = logdown('TW:CrowdsalesList')
+const { CROWDSALE_LIST } = MANAGE_SECTIONS
 
 @inject('crowdsaleStore', 'web3Store', 'generalStore', 'contractStore')
 @observer
@@ -87,13 +91,24 @@ export class Crowdsales extends Component {
       const { account, crowdsales, loading } = this.state
       const { history } = this.props
 
-      if (crowdsales.length === 0 && !loading) {
-        return <CrowdsaleEmptyList account={account} />
-      }
-
       return (
         <div>
-          <CrowdsalesList crowdsales={crowdsales} history={history} />
+          <section className="lo-MenuBarAndContent">
+            <ManageNavigation activeStepTitle={CROWDSALE_LIST} navigationSteps={MANAGE_SECTIONS} />
+            <div className="st-StepContent">
+              <SectionInfo
+                description="The list of your updatable crowdsales. Choose crowdsale address, click Continue and you’ll
+                be able to update the parameters of crowdsale."
+                stepNumber="0"
+                title={CROWDSALE_LIST}
+              />
+              {crowdsales.length === 0 && !loading ? (
+                <CrowdsaleEmptyList account={account} />
+              ) : (
+                <CrowdsalesList crowdsales={crowdsales} history={history} />
+              )}
+            </div>
+          </section>
           <Loader show={loading} />
         </div>
       )

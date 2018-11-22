@@ -32,22 +32,26 @@ import {
   toBigNumber,
   updateProxyContractInfo
 } from '../../utils/utils'
-import { getCrowdsaleAssets } from '../../stores/utils'
-import { getFieldsToUpdate, processTier, updateTierAttribute } from './utils'
-import { Loader } from '../Common/Loader'
-import { getCurrentTierInfoCustom, getTiersLength } from '../Crowdsale/utils'
-import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import createDecorator from 'final-form-calculate'
-import { FinalizeCrowdsaleStep } from './FinalizeCrowdsaleStep'
-import { ReservedTokensList } from './ReservedTokensList'
-import { ManageForm } from './ManageForm'
-import moment from 'moment'
-import logdown from 'logdown'
 import downloadCrowdsaleInfo from '../../utils/downloadCrowdsaleInfo'
+import logdown from 'logdown'
+import moment from 'moment'
+import { FinalizeCrowdsaleStep } from './FinalizeCrowdsaleStep'
+import { Form } from 'react-final-form'
+import { Loader } from '../Common/Loader'
+import { ManageForm } from './ManageForm'
+import { ReservedTokensList } from './ReservedTokensList'
+import { getCrowdsaleAssets } from '../../stores/utils'
+import { getCurrentTierInfoCustom, getTiersLength } from '../Crowdsale/utils'
+import { getFieldsToUpdate, processTier, updateTierAttribute } from './utils'
 import { tierStore } from '../../stores'
+import { SectionInfo } from '../Common/SectionInfo'
+import { ManageNavigation } from '../Common/ManageNavigation'
+import { MANAGE_SECTIONS } from '../../utils/constants'
 
 const logger = logdown('TW:manage')
+const { MANAGE_CROWDSALE } = MANAGE_SECTIONS
 
 @inject(
   'crowdsaleStore',
@@ -812,32 +816,40 @@ export class Manage extends Component {
     } = this.state
 
     return (
-      <section className="manage">
-        <FinalizeCrowdsaleStep
-          disabled={!ownerCurrentUser || crowdsaleIsFinalized || !canFinalize}
-          handleClick={this.finalizeCrowdsale}
-        />
-
-        <ReservedTokensList owner={ownerCurrentUser} />
-
-        <Form
-          onSubmit={this.saveCrowdsale}
-          mutators={{ ...arrayMutators }}
-          decorators={[this.calculator]}
-          initialValues={{ ...this.initialValues }}
-          component={ManageForm}
-          canEditTiers={ownerCurrentUser && !canFinalize && !crowdsaleIsFinalized}
-          canEditMinCap={ownerCurrentUser && !crowdsaleHasEnded && !crowdsaleIsWhitelisted && !crowdsaleIsFinalized}
-          canDownloadContractFiles={ownerCurrentUser}
-          handleChange={this.updateTierStore}
-          canSave={this.canSave()}
-          displaySave={this.saveDisplayed()}
-          downloadCrowdsaleFiles={this.handleDownloadCrowdsaleFiles}
-          crowdsalePointer={this.props.match.params.crowdsalePointer}
-        />
-
+      <div>
+        <section className="lo-MenuBarAndContent">
+          <ManageNavigation activeStepTitle={MANAGE_CROWDSALE} navigationSteps={MANAGE_SECTIONS} />
+          <div className="st-StepContent">
+            <SectionInfo
+              description="Here you can manage parameters of your crowdsale campaign.
+              Crowdsale page."
+              stepNumber="0"
+              title={MANAGE_CROWDSALE}
+            />
+            <FinalizeCrowdsaleStep
+              disabled={!ownerCurrentUser || crowdsaleIsFinalized || !canFinalize}
+              handleClick={this.finalizeCrowdsale}
+            />
+            <ReservedTokensList owner={ownerCurrentUser} />
+            <Form
+              canDownloadContractFiles={ownerCurrentUser}
+              canEditMinCap={ownerCurrentUser && !crowdsaleHasEnded && !crowdsaleIsWhitelisted && !crowdsaleIsFinalized}
+              canEditTiers={ownerCurrentUser && !canFinalize && !crowdsaleIsFinalized}
+              canSave={this.canSave()}
+              component={ManageForm}
+              crowdsalePointer={this.props.match.params.crowdsalePointer}
+              decorators={[this.calculator]}
+              displaySave={this.saveDisplayed()}
+              downloadCrowdsaleFiles={this.handleDownloadCrowdsaleFiles}
+              handleChange={this.updateTierStore}
+              initialValues={{ ...this.initialValues }}
+              mutators={{ ...arrayMutators }}
+              onSubmit={this.saveCrowdsale}
+            />
+          </div>
+        </section>
         <Loader show={this.state.loading} />
-      </section>
+      </div>
     )
   }
 }
