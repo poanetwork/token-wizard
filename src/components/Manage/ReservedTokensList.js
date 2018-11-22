@@ -1,42 +1,57 @@
 import React from 'react'
 import ReservedTokensItem from '../Common/ReservedTokensItem'
 import { inject, observer } from 'mobx-react'
+import { TokenDimension } from '../Common/TokenDimension'
 
 export const ReservedTokensList = inject('reservedTokenStore')(
   observer(({ reservedTokenStore, owner }) => {
     const { tokens } = reservedTokenStore
 
     return tokens.length === 0 ? null : (
-      <div className="steps-content container">
-        <div className="about-step">
-          <div className="swal2-icon swal2-info warning-logo">!</div>
-          <p className="title">Reserved tokens</p>
-          {!owner ? null : (
-            <div className="reserved-tokens read-only">
-              <div className="reserved-tokens-item-container-inner">
-                <span className="reserved-tokens-item reserved-tokens-item-left">
-                  <strong>Address</strong>
-                </span>
-                <span className="reserved-tokens-item reserved-tokens-item-middle">
-                  <strong>Dimension</strong>
-                </span>
-                <span className="reserved-tokens-item reserved-tokens-item-right">
-                  <strong>Value</strong>
-                </span>
+      <div className="mng-ReservedTokensList">
+        <h3 className="mng-ReservedTokensList_Title">Reserved tokens</h3>
+        {!owner ? null : (
+          <div className="mng-ReservedTokensList_Container">
+            {/* <div className={`mng-ReservedTokensList_Table ${props.extraClassName}`}>
+              <div className="mng-ReservedTokensList_Table_Inner">
+                <table className={`mng-ReservedTokensList_Table_Table`} cellPadding="0" cellSpacing="0">
+                  <tbody>{reservedTokensItems}</tbody>
+                </table>
               </div>
-              {tokens.map((token, index) => (
-                <ReservedTokensItem
-                  key={index}
-                  num={index}
-                  addr={token.addr}
-                  dim={token.dim}
-                  val={token.val}
-                  readOnly={true}
-                />
-              ))}
+            </div> */}
+            <div className="mng-ReservedTokensList_TableContainer">
+              <div className="mng-ReservedTokensList_Inner">
+                {/* Table */}
+                <table className={`mng-ReservedTokensList_Table`} cellPadding="0" cellSpacing="0">
+                  <thead>
+                    <tr className="mng-ReservedTokensList_TableRow">
+                      <th className="mng-ReservedTokensList_TableTH mng-ReservedTokensList_TableTH-address">Address</th>
+                      <th className="mng-ReservedTokensList_TableTH mng-ReservedTokensList_TableTH-dimension">
+                        Dimension
+                      </th>
+                      <th className="mng-ReservedTokensList_TableTH mng-ReservedTokensList_TableTH-value">Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tokens.map((token, index) => (
+                      <tr key={index.toString()} className="mng-ReservedTokensList_TableRow">
+                        <td className="mng-ReservedTokensList_TableColumn mng-ReservedTokensList_TableColumn-address">
+                          {token.addr}
+                        </td>
+                        <td className="mng-ReservedTokensList_TableColumn mng-ReservedTokensList_TableColumn-dimension">
+                          <TokenDimension type={token.dim} />
+                        </td>
+                        <td className="mng-ReservedTokensList_TableColumn mng-ReservedTokensList_TableColumn-value">
+                          {token.val}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     )
   })
