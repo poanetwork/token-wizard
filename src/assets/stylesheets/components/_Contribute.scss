@@ -6,7 +6,7 @@
     display: flex;
     flex-direction: column;
 
-    @media (min-width: $breakpoint-lg) {
+    @media (min-width: $breakpoint-xxl) {
         flex-direction: row;
         justify-content: space-between;
     }
@@ -20,7 +20,7 @@
     margin-bottom: 30px;
     padding: 22px 28px 25px;
 
-    @media (min-width: $breakpoint-lg) {
+    @media (min-width: $breakpoint-xxl) {
         margin-bottom: 0;
     }
 }
@@ -34,7 +34,7 @@
     flex-direction: column;
     padding: 24px 30px 43px;
 
-    @media (min-width: $breakpoint-lg) {
+    @media (min-width: $breakpoint-xxl) {
         flex-shrink: 0;
         margin-left: 58px;
         width: 333px;
