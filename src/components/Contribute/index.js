@@ -300,24 +300,15 @@ export class Contribute extends React.Component {
   }
 
   getCrowdsaleSecondsLeft = (startDate, endDate) => {
-    if (this.state.isStartedClock) {
-      return Math.trunc((moment(endDate) - moment(Date.now())) / 1000)
-    } else {
-      return Math.trunc((moment(startDate) - moment(Date.now())) / 1000)
-    }
+    return Math.trunc((moment(endDate) - moment(Date.now())) / 1000)
   }
 
   getCrowdsaleSecondsDuration = (startDate, endDate) => {
-    if (this.state.isStartedClock) {
-      return Math.trunc((moment(endDate) - moment(startDate)) / 1000)
-    } else {
-      return Math.trunc((moment(startDate) - moment(Date.now())) / 1000)
-    }
+    return Math.trunc((moment(endDate) - moment(startDate)) / 1000)
   }
 
   setTimers = () => {
     const { crowdsalePageStore } = this.props
-    const { startDate, endDate } = crowdsalePageStore
 
     let nextTick = 0
     let millisecondsToNextTick = 0
@@ -325,16 +316,29 @@ export class Contribute extends React.Component {
     let durationSeconds = 0
     let secondsLeft = 0
 
+    logger.log(`Ticks ${JSON.stringify(crowdsalePageStore.ticks)}`)
     if (crowdsalePageStore.ticks.length) {
       nextTick = crowdsalePageStore.extractNextTick()
-      durationSeconds = this.getCrowdsaleSecondsDuration(startDate, endDate)
-      secondsLeft = this.getCrowdsaleSecondsLeft(startDate, endDate)
+      const { startDate, endDate } = nextTick
+      logger.log(`NextTick ${JSON.stringify(nextTick)}`)
+      durationSeconds = this.getCrowdsaleSecondsDuration(startDate, endDate, nextTick)
+      secondsLeft = this.getCrowdsaleSecondsLeft(startDate, endDate, nextTick)
 
       timeInterval = setInterval(() => {
+        logger.log(`NextTick ${JSON.stringify(this.state.nextTick)}`)
         if (this.state.nextTick) {
-          const time = moment.duration(this.state.nextTick.time - Date.now())
-          const isStartedClock = moment(startDate) <= moment(Date.now())
-          const isEndClock = moment(Date.now()) > moment(endDate)
+          const { startDate, endDate } = this.state.nextTick
+          const time = moment.duration(this.state.nextTick.endDate - Date.now())
+
+          let isStartedClock = false
+          if (this.state.nextTick.type === 'start') {
+            isStartedClock = moment(endDate) <= moment(Date.now())
+          }
+
+          let isEndClock = false
+          if (this.state.nextTick.type === 'end') {
+            isEndClock = moment(Date.now()) > moment(endDate)
+          }
           this.setState({
             toNextTick: {
               days: Math.floor(time.asDays()) || 0,
@@ -346,24 +350,30 @@ export class Contribute extends React.Component {
             crowdsaleSecondsLeft: this.getCrowdsaleSecondsLeft(startDate, endDate)
           })
 
-          if (isStartedClock) {
-            this.setState({
-              crowdsaleDurationSeconds: this.getCrowdsaleSecondsDuration(startDate, endDate)
-            })
-          }
-
           // If started, change to nextTick
           if (isStartedClock && this.state.nextTick.type === 'start') {
+            const nextTick = crowdsalePageStore.extractNextTick()
             this.setState({
-              nextTick: crowdsalePageStore.extractNextTick()
+              nextTick: nextTick
             })
+            if (nextTick) {
+              this.setState({
+                crowdsaleDurationSeconds: this.getCrowdsaleSecondsDuration(nextTick.startDate, nextTick.endDate)
+              })
+            }
           }
 
           // If ended, get last undefined tick
           if (isEndClock && this.state.nextTick.type === 'end') {
+            const nextTick = crowdsalePageStore.extractNextTick()
             this.setState({
-              nextTick: crowdsalePageStore.extractNextTick()
+              nextTick: nextTick
             })
+            if (nextTick) {
+              this.setState({
+                crowdsaleDurationSeconds: this.getCrowdsaleSecondsDuration(nextTick.startDate, nextTick.endDate)
+              })
+            }
           }
         }
       }, 1000)

@@ -44,25 +44,27 @@ class CrowdsalePageStore {
       .reduce((ticks, tier, index) => {
         let startDate = tier.startDate
         let endDate = tier.endDate
-        const previousTickIndex = ticks.findIndex(tick => tick.type === 'end' && tick.time === startDate)
+        const previousTickIndex = ticks.findIndex(tick => tick.type === 'end' && tick.endDate === startDate)
 
         if (previousTickIndex === -1) {
           ticks.push({
             type: 'start',
-            time: startDate,
+            startDate: Date.now(),
+            endDate: startDate,
             order: index + 1
           })
         }
 
         ticks.push({
           type: 'end',
-          time: endDate,
+          startDate: startDate,
+          endDate: endDate,
           order: index + 1
         })
 
         return ticks
       }, [])
-      .filter(tick => tick.time - Date.now() > 0)
+      .filter(tick => tick.endDate - Date.now() > 0)
   }
 
   @action
