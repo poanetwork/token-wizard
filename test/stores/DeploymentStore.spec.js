@@ -308,4 +308,64 @@ describe('DeploymentStore', () => {
     deploymentStore.setDeploymentStepTxHash({ executionOrder: 1, txHash: 'asdasd' })
     expect(deploymentStore.txRecoverable.name).toBe('crowdsaleCreate')
   })
+
+  it('should get getStepExecutionOrder I', () => {
+    deploymentStore.initialize(false, true, false, tiers, false)
+
+    expect(deploymentStore.txMap.get('deployProxy')).toBeDefined()
+    expect(deploymentStore.txMap.get('crowdsaleCreate')).toBeDefined()
+    expect(deploymentStore.txMap.get('token')).toBeDefined()
+    expect(deploymentStore.txMap.get('setReservedTokens')).toBeDefined()
+    expect(deploymentStore.txMap.get('updateGlobalMinContribution')).toBeDefined()
+    expect(deploymentStore.txMap.get('createCrowdsaleTiers')).toBeDefined()
+    expect(deploymentStore.txMap.get('whitelist')).toBeDefined()
+    expect(deploymentStore.txMap.get('crowdsaleInit')).toBeDefined()
+    expect(deploymentStore.txMap.get('trackProxy')).toBeDefined()
+
+    const step = deploymentStore.getStepExecutionOrder()
+    expect(step).toBeUndefined()
+  })
+
+  it('should get getStepExecutionOrder II', () => {
+    deploymentStore.initialize(false, true, false, tiers, false)
+
+    expect(deploymentStore.txMap.get('deployProxy')).toBeDefined()
+    expect(deploymentStore.txMap.get('crowdsaleCreate')).toBeDefined()
+    expect(deploymentStore.txMap.get('token')).toBeDefined()
+    expect(deploymentStore.txMap.get('setReservedTokens')).toBeDefined()
+    expect(deploymentStore.txMap.get('updateGlobalMinContribution')).toBeDefined()
+    expect(deploymentStore.txMap.get('createCrowdsaleTiers')).toBeDefined()
+    expect(deploymentStore.txMap.get('whitelist')).toBeDefined()
+    expect(deploymentStore.txMap.get('crowdsaleInit')).toBeDefined()
+    expect(deploymentStore.txMap.get('trackProxy')).toBeDefined()
+
+    const stepsValues = [
+      {
+        value: {
+          name: 'deployProxy',
+          innerIndex: 0
+        },
+        expected: 0
+      },
+      {
+        value: {
+          name: 'crowdsaleCreate',
+          innerIndex: 0
+        },
+        expected: 1
+      },
+      {
+        value: {
+          name: 'token',
+          innerIndex: 0
+        },
+        expected: 2
+      }
+    ]
+
+    stepsValues.forEach((step, index) => {
+      const stepIndex = deploymentStore.getStepExecutionOrder(step.value)
+      expect(stepIndex).toBe(step.expected)
+    })
+  })
 })
