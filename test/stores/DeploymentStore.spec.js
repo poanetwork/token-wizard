@@ -411,4 +411,67 @@ describe('DeploymentStore', () => {
     expect(getStep.mined).toBeFalsy()
     expect(getStep.txHash).toBe('')
   })
+
+  it('should setDeploymentStepStatus I', () => {
+    deploymentStore.initialize(false, true, false, tiers, false)
+
+    expect(deploymentStore.txMap.get('deployProxy')).toBeDefined()
+    expect(deploymentStore.txMap.get('crowdsaleCreate')).toBeDefined()
+    expect(deploymentStore.txMap.get('token')).toBeDefined()
+    expect(deploymentStore.txMap.get('setReservedTokens')).toBeDefined()
+    expect(deploymentStore.txMap.get('updateGlobalMinContribution')).toBeDefined()
+    expect(deploymentStore.txMap.get('createCrowdsaleTiers')).toBeDefined()
+    expect(deploymentStore.txMap.get('whitelist')).toBeDefined()
+    expect(deploymentStore.txMap.get('crowdsaleInit')).toBeDefined()
+    expect(deploymentStore.txMap.get('trackProxy')).toBeDefined()
+
+    const step = deploymentStore.setDeploymentStepStatus({ executionOrder: null, status: null })
+    expect(step).toBeUndefined()
+  })
+
+  it('should setDeploymentStepStatus II', () => {
+    deploymentStore.initialize(false, true, false, tiers, false)
+
+    expect(deploymentStore.txMap.get('deployProxy')).toBeDefined()
+    expect(deploymentStore.txMap.get('crowdsaleCreate')).toBeDefined()
+    expect(deploymentStore.txMap.get('token')).toBeDefined()
+    expect(deploymentStore.txMap.get('setReservedTokens')).toBeDefined()
+    expect(deploymentStore.txMap.get('updateGlobalMinContribution')).toBeDefined()
+    expect(deploymentStore.txMap.get('createCrowdsaleTiers')).toBeDefined()
+    expect(deploymentStore.txMap.get('whitelist')).toBeDefined()
+    expect(deploymentStore.txMap.get('crowdsaleInit')).toBeDefined()
+    expect(deploymentStore.txMap.get('trackProxy')).toBeDefined()
+
+    deploymentStore.setDeploymentStepStatus({ executionOrder: 0, status: 'active' })
+    deploymentStore.activeSteps.forEach((step, index) => {
+      if (step.name === 'deployProxy') {
+        expect(step.active).toBeTruthy()
+      } else {
+        expect(step.active).toBeFalsy()
+      }
+    })
+  })
+
+  it('should setDeploymentStepStatus III', () => {
+    deploymentStore.initialize(false, true, false, tiers, false)
+
+    expect(deploymentStore.txMap.get('deployProxy')).toBeDefined()
+    expect(deploymentStore.txMap.get('crowdsaleCreate')).toBeDefined()
+    expect(deploymentStore.txMap.get('token')).toBeDefined()
+    expect(deploymentStore.txMap.get('setReservedTokens')).toBeDefined()
+    expect(deploymentStore.txMap.get('updateGlobalMinContribution')).toBeDefined()
+    expect(deploymentStore.txMap.get('createCrowdsaleTiers')).toBeDefined()
+    expect(deploymentStore.txMap.get('whitelist')).toBeDefined()
+    expect(deploymentStore.txMap.get('crowdsaleInit')).toBeDefined()
+    expect(deploymentStore.txMap.get('trackProxy')).toBeDefined()
+
+    deploymentStore.setDeploymentStepStatus({ executionOrder: 1, status: 'active' })
+    deploymentStore.activeSteps.forEach((step, index) => {
+      if (step.name === 'crowdsaleCreate') {
+        expect(step.active).toBeTruthy()
+      } else {
+        expect(step.active).toBeFalsy()
+      }
+    })
+  })
 })
