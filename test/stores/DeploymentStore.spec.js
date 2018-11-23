@@ -368,4 +368,47 @@ describe('DeploymentStore', () => {
       expect(stepIndex).toBe(step.expected)
     })
   })
+
+  it('should get resetTx I', () => {
+    deploymentStore.initialize(false, true, false, tiers, false)
+
+    expect(deploymentStore.txMap.get('deployProxy')).toBeDefined()
+    expect(deploymentStore.txMap.get('crowdsaleCreate')).toBeDefined()
+    expect(deploymentStore.txMap.get('token')).toBeDefined()
+    expect(deploymentStore.txMap.get('setReservedTokens')).toBeDefined()
+    expect(deploymentStore.txMap.get('updateGlobalMinContribution')).toBeDefined()
+    expect(deploymentStore.txMap.get('createCrowdsaleTiers')).toBeDefined()
+    expect(deploymentStore.txMap.get('whitelist')).toBeDefined()
+    expect(deploymentStore.txMap.get('crowdsaleInit')).toBeDefined()
+    expect(deploymentStore.txMap.get('trackProxy')).toBeDefined()
+
+    const step = deploymentStore.resetTx()
+    expect(step).toBeUndefined()
+  })
+
+  it('should get resetTx II', () => {
+    deploymentStore.initialize(false, true, false, tiers, false)
+
+    expect(deploymentStore.txMap.get('deployProxy')).toBeDefined()
+    expect(deploymentStore.txMap.get('crowdsaleCreate')).toBeDefined()
+    expect(deploymentStore.txMap.get('token')).toBeDefined()
+    expect(deploymentStore.txMap.get('setReservedTokens')).toBeDefined()
+    expect(deploymentStore.txMap.get('updateGlobalMinContribution')).toBeDefined()
+    expect(deploymentStore.txMap.get('createCrowdsaleTiers')).toBeDefined()
+    expect(deploymentStore.txMap.get('whitelist')).toBeDefined()
+    expect(deploymentStore.txMap.get('crowdsaleInit')).toBeDefined()
+    expect(deploymentStore.txMap.get('trackProxy')).toBeDefined()
+
+    const step = deploymentStore.resetTx({
+      name: 'deployProxy',
+      innerIndex: 0
+    })
+
+    const getStep = deploymentStore.txMap.get('deployProxy').slice()[0]
+    expect(getStep.active).toBeFalsy()
+    expect(getStep.confirmationPending).toBeFalsy()
+    expect(getStep.miningPending).toBeFalsy()
+    expect(getStep.mined).toBeFalsy()
+    expect(getStep.txHash).toBe('')
+  })
 })
