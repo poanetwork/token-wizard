@@ -1,0 +1,284 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProtectedRoute should render ProtectedRoute component 1`] = `
+<Provider
+  deploymentStore={
+    DeploymentStore {
+      "deployerAccount": null,
+      "deploymentStep": null,
+      "hasEnded": false,
+      "invalidAccount": false,
+      "logTxMap": [Function],
+      "txMap": Object {},
+    }
+  }
+>
+  <BrowserRouter>
+    <Router
+      history={
+        Object {
+          "action": "POP",
+          "block": [Function],
+          "createHref": [Function],
+          "go": [Function],
+          "goBack": [Function],
+          "goForward": [Function],
+          "length": 1,
+          "listen": [Function],
+          "location": Object {
+            "hash": "",
+            "pathname": "/",
+            "search": "",
+            "state": undefined,
+          },
+          "push": [Function],
+          "replace": [Function],
+        }
+      }
+    >
+      <inject-ProtectedRoute-with-deploymentStore
+        component={[Function]}
+        deploymentStore={
+          DeploymentStore {
+            "deployerAccount": null,
+            "deploymentStep": null,
+            "hasEnded": false,
+            "invalidAccount": false,
+            "logTxMap": [Function],
+            "txMap": Object {},
+          }
+        }
+      >
+        <ProtectedRoute
+          component={[Function]}
+          deploymentStore={
+            DeploymentStore {
+              "deployerAccount": null,
+              "deploymentStep": null,
+              "hasEnded": false,
+              "invalidAccount": false,
+              "logTxMap": [Function],
+              "txMap": Object {},
+            }
+          }
+        >
+          <Route
+            render={[Function]}
+          >
+            <inject-Home-with-deploymentStore
+              history={
+                Object {
+                  "action": "POP",
+                  "block": [Function],
+                  "createHref": [Function],
+                  "go": [Function],
+                  "goBack": [Function],
+                  "goForward": [Function],
+                  "length": 1,
+                  "listen": [Function],
+                  "location": Object {
+                    "hash": "",
+                    "pathname": "/",
+                    "search": "",
+                    "state": undefined,
+                  },
+                  "push": [Function],
+                  "replace": [Function],
+                }
+              }
+              location={
+                Object {
+                  "hash": "",
+                  "pathname": "/",
+                  "search": "",
+                  "state": undefined,
+                }
+              }
+              match={
+                Object {
+                  "isExact": true,
+                  "params": Object {},
+                  "path": "/",
+                  "url": "/",
+                }
+              }
+            >
+              <Home
+                deploymentStore={
+                  DeploymentStore {
+                    "deployerAccount": null,
+                    "deploymentStep": null,
+                    "hasEnded": false,
+                    "invalidAccount": false,
+                    "logTxMap": [Function],
+                    "txMap": Object {},
+                  }
+                }
+                history={
+                  Object {
+                    "action": "POP",
+                    "block": [Function],
+                    "createHref": [Function],
+                    "go": [Function],
+                    "goBack": [Function],
+                    "goForward": [Function],
+                    "length": 1,
+                    "listen": [Function],
+                    "location": Object {
+                      "hash": "",
+                      "pathname": "/",
+                      "search": "",
+                      "state": undefined,
+                    },
+                    "push": [Function],
+                    "replace": [Function],
+                  }
+                }
+                location={
+                  Object {
+                    "hash": "",
+                    "pathname": "/",
+                    "search": "",
+                    "state": undefined,
+                  }
+                }
+                match={
+                  Object {
+                    "isExact": true,
+                    "params": Object {},
+                    "path": "/",
+                    "url": "/",
+                  }
+                }
+              >
+                <div>
+                  <section
+                    className="hm-Home"
+                  >
+                    <div
+                      className="hm-Home_Scroll"
+                    >
+                      <div
+                        className="hm-Home_Top"
+                      >
+                        <LogoPrimary>
+                          <Link
+                            className="sw-LogoPrimary"
+                            replace={false}
+                            to="/"
+                          >
+                            <a
+                              className="sw-LogoPrimary"
+                              href="/"
+                              onClick={[Function]}
+                            />
+                          </Link>
+                        </LogoPrimary>
+                      </div>
+                      <div
+                        className="hm-Home_MainInfoContainer"
+                      >
+                        <div
+                          className="hm-Home_MainInfo"
+                        >
+                          <div
+                            className="hm-Home_MainInfoTextContainer"
+                          >
+                            <h1
+                              className="hm-Home_MainInfoTitle"
+                            >
+                              Welcome to Token Wizard
+                            </h1>
+                            <p
+                              className="hm-Home_MainInfoDescription"
+                            >
+                              Token Wizard is a client side tool to create ERC20 token and crowdsale in five steps. It helps you to publish contracts on the Ethereum network, create a crowdsale page with stats. For participants, the wizard creates a page to contribute into the campaign.
+                            </p>
+                            <p
+                              className="hm-Home_MainInfoPoweredBy"
+                            >
+                              Token Wizard is powered by 
+                              <a
+                                href="https://github.com/auth-os/beta"
+                              >
+                                Auth-os
+                              </a>
+                              .
+                            </p>
+                          </div>
+                          <div
+                            className="hm-Home_MainInfoButtonContainer"
+                          >
+                            <ButtonCreateCrowdsale
+                              history={
+                                Object {
+                                  "action": "POP",
+                                  "block": [Function],
+                                  "createHref": [Function],
+                                  "go": [Function],
+                                  "goBack": [Function],
+                                  "goForward": [Function],
+                                  "length": 1,
+                                  "listen": [Function],
+                                  "location": Object {
+                                    "hash": "",
+                                    "pathname": "/",
+                                    "search": "",
+                                    "state": undefined,
+                                  },
+                                  "push": [Function],
+                                  "replace": [Function],
+                                }
+                              }
+                            >
+                              <button
+                                className="hm-ButtonCreateCrowdsale"
+                                onClick={[Function]}
+                              >
+                                New crowdsale
+                              </button>
+                            </ButtonCreateCrowdsale>
+                            <ButtonChooseCrowdsale
+                              history={
+                                Object {
+                                  "action": "POP",
+                                  "block": [Function],
+                                  "createHref": [Function],
+                                  "go": [Function],
+                                  "goBack": [Function],
+                                  "goForward": [Function],
+                                  "length": 1,
+                                  "listen": [Function],
+                                  "location": Object {
+                                    "hash": "",
+                                    "pathname": "/",
+                                    "search": "",
+                                    "state": undefined,
+                                  },
+                                  "push": [Function],
+                                  "replace": [Function],
+                                }
+                              }
+                            >
+                              <div
+                                className="hm-ButtonChooseCrowdsale"
+                                onClick={[Function]}
+                              >
+                                Choose Crowdsale
+                              </div>
+                            </ButtonChooseCrowdsale>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+              </Home>
+            </inject-Home-with-deploymentStore>
+          </Route>
+        </ProtectedRoute>
+      </inject-ProtectedRoute-with-deploymentStore>
+    </Router>
+  </BrowserRouter>
+</Provider>
+`;
