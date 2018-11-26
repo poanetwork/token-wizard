@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TierSetupDutchAuction should render the component  1`] = `
+<div
+  className="ts-TierSetupDutchAuction"
+>
+  <DisplayField
+    description="Date and time when the tier starts."
+    mobileTextSize="small"
+    title="Start Time"
+    value="Invalid date"
+  />
+  <DisplayField
+    description="Date and time when the tier ends."
+    mobileTextSize="small"
+    title="End Time"
+    value="1970-01-01 00:00 (UTC +0000)"
+  />
+  <DisplayField
+    description="Global Min Cap for all contributors for the 1st contribution transaction."
+    title="Global Min Cap"
+    value="0"
+  />
+  <DisplayField
+    description="How many tokens will be sold on this tier."
+    title="Max cap"
+    value=""
+  />
+  <DisplayField
+    description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens"
+    title="Min Rate"
+    value={0}
+  />
+  <DisplayField
+    description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens"
+    title="Max Rate"
+    value={0}
+  />
+  <DisplayField
+    description="Is whitelist enabled on this tier?"
+    title="Enable whitelisting"
+    value="No"
+  />
+</div>
+`;

@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Configuration block should render the component  1`] = `
+<div
+  className="cb-ConfigurationBlock"
+>
+  <DisplayField
+    description="Compiler Version"
+    title="Compiler Version"
+    value="0.4.24"
+  />
+  <DisplayField
+    description="Crowdsale contract name"
+    title="Contract Name"
+    value="MintedCappedProxy"
+  />
+  <DisplayField
+    description="Optimization in compiling"
+    title="Optimized"
+    value="Yes"
+  />
+</div>
+`;
