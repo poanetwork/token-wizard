@@ -23,7 +23,7 @@ import { RadioButton } from '../Common/RadioButton'
 
 const { START_TIME, END_TIME, MIN_RATE, MAX_RATE, SUPPLY_SHORT, ENABLE_WHITELISTING } = TEXT_FIELDS
 
-export const DutchAuctionBlock = ({ tierStore, tokenStore, fields, ...props }) => {
+export const DutchAuctionBlock = ({ tierStore, tokenStore, fields, form, ...props }) => {
   const validateTierStartDate = index => (value, values) => {
     const listOfValidations = [
       isRequired(),
@@ -97,6 +97,13 @@ export const DutchAuctionBlock = ({ tierStore, tokenStore, fields, ...props }) =
     const supplyValue = getSupplyValue(index)
 
     return supplyValue <= 0 || typeof supplyValue === 'undefined'
+  }
+
+  const onSupplyChange = (name, index) => {
+    if (isSupplyInvalid(index)) {
+      tierStore.setTierProperty('no', 'whitelistEnabled', index)
+      form.change(name, 'no')
+    }
   }
 
   return (
@@ -186,6 +193,7 @@ export const DutchAuctionBlock = ({ tierStore, tokenStore, fields, ...props }) =
               )(value)
               if (errors) return errors.shift()
             }}
+            onChange={onSupplyChange(`${name}.whitelistEnabled`, index)}
           />
           <MinCap
             decimals={props.decimals}
