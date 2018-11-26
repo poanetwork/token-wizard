@@ -95,8 +95,7 @@ export const DutchAuctionBlock = ({ tierStore, tokenStore, fields, form, ...prop
 
   const isSupplyInvalid = index => {
     const supplyValue = getSupplyValue(index)
-
-    return supplyValue <= 0 || typeof supplyValue === 'undefined'
+    return supplyValue <= 0 || typeof supplyValue === 'undefined' || supplyValue > tokenStore.supply
   }
 
   const onSupplyChange = (name, index) => {
