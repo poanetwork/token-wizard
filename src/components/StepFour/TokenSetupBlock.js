@@ -17,8 +17,13 @@ export const TokenSetupBlock = tokenStore => {
 
   return (
     <div className="ts-TokenSetupBlock">
-      <DisplayField title={NAME} value={tokenNameStr} description={PD_TOKEN_NAME} />
-      <DisplayField title={TICKER} value={ticker ? ticker : ''} description={D_TOKEN_TICKER} />
+      <DisplayField description={PD_TOKEN_NAME} title={NAME} value={tokenNameStr} />
+      <DisplayField
+        extraClassName={'pb-DisplayField_Value-uppercase'}
+        title={TICKER}
+        value={ticker ? ticker : ''}
+        description={D_TOKEN_TICKER}
+      />
       <DisplayField title={DECIMALS} value={tokenDecimalsStr} description={PD_TOKEN_DECIMALS} />
       <DisplayField title={SUPPLY_SHORT} value={tokenSupplyStr} description={PD_TOKEN_TOTAL_SUPPLY} />
     </div>
