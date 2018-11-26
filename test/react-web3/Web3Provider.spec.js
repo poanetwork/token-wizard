@@ -8,12 +8,6 @@ import DeploymentStore from '../../src/stores/DeploymentStore'
 configure({ adapter: new Adapter() })
 
 describe('Web3Provider', () => {
-  let deploymentStore
-
-  beforeEach(() => {
-    deploymentStore = new DeploymentStore()
-  })
-
   it(`should render the component `, () => {
     const wrapper = renderer.create(<Web3Provider />)
 
