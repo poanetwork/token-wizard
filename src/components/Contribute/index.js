@@ -636,7 +636,7 @@ export class Contribute extends React.Component {
     const crowdsaleExecID = crowdsale && crowdsale.execID
     const { decimals, ticker, name } = tokenStore
     const tokenDecimals = !isNaN(decimals) ? decimals : 0
-    const tokenTicker = ticker ? ticker.toString() : ''
+    const tokenTicker = ticker ? ticker.toString().toUpperCase() : ''
     const tokenName = name ? name.toString() : ''
     const maximumSellableTokens = toBigNumber(crowdsalePageStore.maximumSellableTokens)
     const maxCapBeforeDecimals = toBigNumber(maximumSellableTokens).div(`1e${tokenDecimals}`)
@@ -729,19 +729,23 @@ export class Contribute extends React.Component {
               <div className="cnt-Contribute_BalanceBlock">
                 <BalanceTokens balance={contributorBalance} ticker={tokenTicker} />
                 <Form
-                  onSubmit={this.contributeToTokens}
                   component={ContributeForm}
                   contributeThrough={contributeThrough}
-                  isFinalized={this.state.isFinalized}
                   isEnded={this.state.isEnded}
-                  isStarted={this.state.isStarted}
+                  isFinalized={this.state.isFinalized}
                   isSoldOut={this.state.isSoldOut}
+                  isStarted={this.state.isStarted}
                   isTierSoldOut={this.state.isTierSoldOut}
+                  minimumContribution={minimumContribution}
+                  onSubmit={this.contributeToTokens}
                   updateContributeThrough={this.updateContributeThrough}
                   web3Available={web3Available}
-                  minimumContribution={minimumContribution}
                 />
                 {QRPaymentProcessElement}
+                <p className="cnt-Contribute_Warning">
+                  Think twice before contributing to crowdsales. Tokens will be deposited on a wallet you used to buy
+                  tokens.
+                </p>
               </div>
             </div>
             <ContributeDescription />

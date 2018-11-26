@@ -37,14 +37,6 @@ export const ContributeForm = inject('contributeStore', 'tokenStore')(
       </button>
     ) : null
 
-    const ContributeWarningText = contributeThroughWallet() ? (
-      <p className="cnt-ContributeForm_Description">
-        Think twice before contributing to Crowdsales. Tokens will be deposited on a wallet you used to buy tokens.
-      </p>
-    ) : null
-
-    const fullHeightForm = contributeThroughWallet() ? 'cnt-ContributeForm-full-height' : ''
-
     const canContribute = !(isEnded || isFinalized || isSoldOut)
 
     const validateContribute = value => {
@@ -68,7 +60,7 @@ export const ContributeForm = inject('contributeStore', 'tokenStore')(
     }
 
     return (
-      <form className={`cnt-ContributeForm ${fullHeightForm}`} onSubmit={handleSubmit}>
+      <form className={`cnt-ContributeForm`} onSubmit={handleSubmit}>
         <h3 className="cnt-ContributeForm_Title">Choose amount to contribute</h3>
         <div className="cnt-ContributeForm_AmountContainer">
           <Field
@@ -87,7 +79,6 @@ export const ContributeForm = inject('contributeStore', 'tokenStore')(
           <option value={CONTRIBUTION_OPTIONS.QR}>QR</option>
         </select>
         {ContributeButton}
-        {ContributeWarningText}
         <FormSpy subscription={{ values: true }} onChange={tokensToContributeOnChange} />
       </form>
     )

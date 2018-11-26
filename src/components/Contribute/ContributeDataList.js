@@ -7,6 +7,7 @@ export const ContributeDataList = ({ currentAccount, crowdsaleAddress, extraClas
       <div className="cnt-ContributeDataList_Item">
         <p className="cnt-ContributeDataList_ItemData">
           <span className="cnt-ContributeDataList_ItemDataValue">{currentAccount}</span>
+          <ButtonCopyToClipboard value={currentAccount} />
         </p>
         <h4 className="cnt-ContributeDataList_ItemTitle">Current Account</h4>
       </div>
@@ -17,7 +18,7 @@ export const ContributeDataList = ({ currentAccount, crowdsaleAddress, extraClas
           <span className="cnt-ContributeDataList_ItemDataValue">{crowdsaleAddress}</span>{' '}
           <ButtonCopyToClipboard value={crowdsaleAddress} />
         </p>
-        <h4 className="cnt-ContributeDataList_ItemTitle">Crowdsale Execution ID</h4>
+        <h4 className="cnt-ContributeDataList_ItemTitle">Proxy Address</h4>
       </div>
     ) : null}
   </div>
