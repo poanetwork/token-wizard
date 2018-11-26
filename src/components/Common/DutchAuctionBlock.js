@@ -89,6 +89,16 @@ export const DutchAuctionBlock = ({ tierStore, tokenStore, fields, ...props }) =
     return buttons
   }
 
+  const getSupplyValue = index => {
+    return tierStore.tiers[index].supply
+  }
+
+  const isSupplyInvalid = index => {
+    const supplyValue = getSupplyValue(index)
+
+    return supplyValue <= 0 || typeof supplyValue === 'undefined'
+  }
+
   return (
     <div className="sw-DutchAuctionBlock">
       {fields.map((name, index) => (
@@ -193,6 +203,7 @@ export const DutchAuctionBlock = ({ tierStore, tokenStore, fields, ...props }) =
               <RadioButton
                 buttons={getWhiteListingButtons(`${name}.whitelistEnabled`, input, index)}
                 description={DESCRIPTION.ENABLE_WHITELIST}
+                disabled={isSupplyInvalid(index)}
                 extraClassName="sw-RadioButton-DutchAuctionWhiteList"
                 title={ENABLE_WHITELISTING}
               />
