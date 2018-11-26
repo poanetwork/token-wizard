@@ -11,10 +11,10 @@ class Web3Provider extends Component {
     super(props, context)
 
     this.state = {
-      selectedAccount: null,
-      web3: null,
-      approvePermissions: null,
-      render: false
+      selectedAccount: props.selectedAccount || null,
+      web3: props.web3 || null,
+      approvePermissions: props.approvePermissions || null,
+      render: props.render || false
     }
   }
 
@@ -41,7 +41,6 @@ class Web3Provider extends Component {
         })
       })
       .catch(err => {
-        console.log(err)
         this.setState({
           render: true
         })
