@@ -814,6 +814,19 @@ export class Manage extends Component {
     })
   }
 
+  getCrowdsaleLink = () => {
+    let queryParam
+    const { generalStore } = this.props
+
+    if (isExecIDValid(this.props.match.params.crowdsalePointer)) {
+      queryParam = 'exec-id'
+    } else if (isAddressValid(this.props.match.params.crowdsalePointer)) {
+      queryParam = 'addr'
+    }
+
+    return `/crowdsale/?${queryParam}=${this.props.match.params.crowdsalePointer}&networkID=${generalStore.networkID}`
+  }
+
   render() {
     const {
       canFinalize,
@@ -834,6 +847,7 @@ export class Manage extends Component {
               stepNumber="0"
               title={MANAGE_CROWDSALE}
             />
+            <p>Crowdsale page link: {this.getCrowdsaleLink()}</p>
             <FinalizeCrowdsaleStep
               disabled={!ownerCurrentUser || crowdsaleIsFinalized || !canFinalize}
               handleClick={this.finalizeCrowdsale}

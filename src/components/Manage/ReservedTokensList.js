@@ -12,13 +12,6 @@ export const ReservedTokensList = inject('reservedTokenStore')(
         <h3 className="mng-ReservedTokensList_Title">Reserved tokens</h3>
         {!owner ? null : (
           <div className="mng-ReservedTokensList_Container">
-            {/* <div className={`mng-ReservedTokensList_Table ${props.extraClassName}`}>
-              <div className="mng-ReservedTokensList_Table_Inner">
-                <table className={`mng-ReservedTokensList_Table_Table`} cellPadding="0" cellSpacing="0">
-                  <tbody>{reservedTokensItems}</tbody>
-                </table>
-              </div>
-            </div> */}
             <div className="mng-ReservedTokensList_TableContainer">
               <div className="mng-ReservedTokensList_Inner">
                 {/* Table */}

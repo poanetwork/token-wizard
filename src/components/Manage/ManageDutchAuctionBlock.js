@@ -8,17 +8,8 @@ import { InputField } from '../Common/InputField'
 import { isDateLaterThan } from '../../utils/validations'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
 import { ReadOnlyWhitelistAddresses } from './ReadOnlyWhitelistAddresses'
-import classNames from 'classnames'
 import { inject, observer } from 'mobx-react'
 import { dateToTimestamp } from '../../utils/utils'
-
-const inputErrorStyle = {
-  color: 'red',
-  fontWeight: 'bold',
-  fontSize: '12px',
-  width: '100%',
-  height: '20px'
-}
 
 export const ManageDutchAuctionBlock = inject('crowdsaleStore', 'tokenStore')(
   observer(({ fields, canEditTiers, crowdsaleStore, tokenStore, aboutTier, ...props }) => (
@@ -32,86 +23,57 @@ export const ManageDutchAuctionBlock = inject('crowdsaleStore', 'tokenStore')(
         const isWhitelistEnabled = whitelistEnabled === 'yes'
 
         return (
-          <div className="steps" key={index}>
-            <div className="steps-content container">
-              <div className={classNames('', { divisor: isWhitelistEnabled })}>
-                <div className="input-block-container">
-                  <InputField
-                    side="left"
-                    type="text"
-                    title={TEXT_FIELDS.STRATEGY}
-                    value={CROWDSALE_STRATEGIES_DISPLAYNAMES.DUTCH_AUCTION}
-                    disabled={true}
-                  />
-                </div>
+          <div className="mng-ManageDutchAuctionBlock" key={index}>
+            <div className="mng-ManageDutchAuctionBlock_ItemsContainer">
+              <InputField
+                type="text"
+                title={TEXT_FIELDS.STRATEGY}
+                value={CROWDSALE_STRATEGIES_DISPLAYNAMES.DUTCH_AUCTION}
+                disabled={true}
+              />
 
-                <div className="input-block-container">
-                  <CrowdsaleStartTime
-                    name={`${name}.startTime`}
-                    index={index}
-                    disabled={true}
-                    side="left"
-                    description={DESCRIPTION.START_TIME_DUTCH_AUCTION}
-                    errorStyle={inputErrorStyle}
-                  />
-                  <CrowdsaleEndTime
-                    name={`${name}.endTime`}
-                    index={index}
-                    disabled={true}
-                    side="right"
-                    description={DESCRIPTION.END_TIME_DUTCH_AUCTION}
-                    errorStyle={inputErrorStyle}
-                  />
-                </div>
+              <CrowdsaleStartTime
+                description={DESCRIPTION.START_TIME_DUTCH_AUCTION}
+                disabled={true}
+                index={index}
+                name={`${name}.startTime`}
+              />
 
-                <div className="input-block-container">
-                  <CrowdsaleRate name={`${name}.minRate`} side="left" label={TEXT_FIELDS.MIN_RATE} disabled={true} />
-                  <CrowdsaleRate name={`${name}.maxRate`} side="right" label={TEXT_FIELDS.MAX_RATE} disabled={true} />
-                </div>
+              <CrowdsaleEndTime
+                description={DESCRIPTION.END_TIME_DUTCH_AUCTION}
+                disabled={true}
+                index={index}
+                name={`${name}.endTime`}
+              />
 
-                <div className="input-block-container">
-                  <CrowdsaleRate
-                    name={`${name}.rate`}
-                    side="left"
-                    label={TEXT_FIELDS.CURRENT_RATE}
-                    disabled={true}
-                    errorStyle={inputErrorStyle}
-                  />
-                  <Supply
-                    name={`${name}.supply`}
-                    side="right"
-                    label={TEXT_FIELDS.CROWDSALE_SUPPLY}
-                    description={DESCRIPTION.SUPPLY_DUTCH_AUCTION}
-                    disabled={true}
-                    errorStyle={inputErrorStyle}
-                  />
-                </div>
+              <CrowdsaleRate name={`${name}.minRate`} label={TEXT_FIELDS.MIN_RATE} disabled={true} />
 
-                <div className="input-block-container">
-                  <Supply
-                    name={`token.supply`}
-                    value={tokenStore.supply}
-                    side="left"
-                    label={TEXT_FIELDS.TOKEN_SUPPLY}
-                    description={DESCRIPTION.TOKEN_SUPPLY}
-                    disabled={true}
-                    errorStyle={inputErrorStyle}
-                  />
-                </div>
-              </div>
-              {isWhitelistEnabled ? (
-                <div>
-                  <div className="section-title">
-                    <p className="title">Whitelist</p>
-                  </div>
-                  {canEditWhiteList ? (
-                    <WhitelistInputBlock key={index.toString()} num={index} decimals={tokenStore.decimals} />
-                  ) : (
-                    <ReadOnlyWhitelistAddresses tier={currentTier} />
-                  )}
-                </div>
-              ) : null}
+              <CrowdsaleRate name={`${name}.maxRate`} label={TEXT_FIELDS.MAX_RATE} disabled={true} />
+
+              <CrowdsaleRate disabled={true} label={TEXT_FIELDS.CURRENT_RATE} name={`${name}.rate`} />
+
+              <Supply
+                description={DESCRIPTION.SUPPLY_DUTCH_AUCTION}
+                disabled={true}
+                label={TEXT_FIELDS.CROWDSALE_SUPPLY}
+                name={`${name}.supply`}
+              />
+
+              <Supply
+                name={`token.supply`}
+                value={tokenStore.supply}
+                label={TEXT_FIELDS.TOKEN_SUPPLY}
+                description={DESCRIPTION.TOKEN_SUPPLY}
+                disabled={true}
+              />
             </div>
+            {isWhitelistEnabled ? (
+              canEditWhiteList ? (
+                <WhitelistInputBlock key={index.toString()} num={index} decimals={tokenStore.decimals} />
+              ) : (
+                <ReadOnlyWhitelistAddresses tier={currentTier} />
+              )
+            ) : null}
           </div>
         )
       })}

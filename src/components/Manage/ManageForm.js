@@ -13,7 +13,6 @@ import {
   isLessOrEqualThan,
   isNonNegative
 } from '../../utils/validations'
-import { AboutCrowdsale } from './AboutCrowdsale'
 import { inject, observer } from 'mobx-react'
 
 export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')(
@@ -38,14 +37,6 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
       const { tiers } = props.initialValues
 
       if (!tiers[0]) return null
-
-      const inputErrorStyle = {
-        color: 'red',
-        fontWeight: 'bold',
-        fontSize: '12px',
-        width: '100%',
-        height: '20px'
-      }
 
       const minimum_supply = tiers.reduce((min, tier) => (tier.supply < min ? tier.supply : min), Infinity)
 
@@ -80,65 +71,53 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
             isLessOrEqualThan(`Should be less than or equal to ${minimum_supply}`)(minimum_supply)
           )}
           disabled={!canEditMinCap}
-          errorStyle={inputErrorStyle}
-          type="number"
-          side="left"
           label={TEXT_FIELDS.MIN_CAP}
+          type="number"
           value={props.initialValues.minCap}
         />
       )
 
       return (
-        <form onSubmit={handleSubmit}>
-          <div className="steps">
-            <div className="steps-content container">
-              <AboutCrowdsale
-                name={tokenStore.name}
-                ticker={tokenStore.ticker}
-                crowdsalePointer={crowdsalePointer}
-                networkID={generalStore.networkID}
-              />
-              {props.aboutTier}
-              <div className="input-block-container">
-                {crowdsaleStore.isDutchAuction ? minCap : null}
+        <form className="mng-ManageForm" onSubmit={handleSubmit}>
+          <h2 className="mng-ManageForm_Title">My Token (MTK) Settings</h2>
+          <div className="mng-ManageForm_BorderedBlock">
+            <div className="mng-ManageForm_ItemsContainer">
+              <div className="mng-ManageForm_Item">
                 <InputField
-                  side={crowdsaleStore.isDutchAuction ? 'right' : 'left'}
-                  type="text"
-                  title={TEXT_FIELDS.WALLET_ADDRESS}
-                  name="walletAddress"
-                  value={tiers[0].walletAddress}
                   disabled={true}
+                  name="walletAddress"
+                  title={TEXT_FIELDS.WALLET_ADDRESS}
+                  type="text"
+                  value={tiers[0].walletAddress}
                 />
               </div>
+              {/* TODO: check if this is working */}
+              {crowdsaleStore.isDutchAuction ? <div className="mng-ManageForm_Item">{minCap}</div> : null}
               {crowdsaleStore.isDutchAuction ? (
-                <div className="input-block-container">
+                <div className="mng-ManageForm_Item">
                   <InputField
-                    side="left"
-                    type="text"
-                    title={TEXT_FIELDS.BURN_EXCESS}
-                    value={crowdsaleStore.selected.burn_excess}
                     disabled={true}
+                    title={TEXT_FIELDS.BURN_EXCESS}
+                    type="text"
+                    value={crowdsaleStore.selected.burn_excess}
                   />
                 </div>
               ) : null}
             </div>
+            <FieldArray name="tiers">
+              {({ fields }) =>
+                crowdsaleStore.isMintedCappedCrowdsale ? (
+                  <ManageTierBlock fields={fields} {...props} />
+                ) : (
+                  <ManageDutchAuctionBlock fields={fields} {...props} />
+                )
+              }
+            </FieldArray>
+            <FormSpy subscription={{ values: true }} onChange={handleChange} />
           </div>
-          <FieldArray name="tiers">
-            {({ fields }) =>
-              crowdsaleStore.isMintedCappedCrowdsale ? (
-                <ManageTierBlock fields={fields} {...props} />
-              ) : (
-                <ManageDutchAuctionBlock fields={fields} {...props} />
-              )
-            }
-          </FieldArray>
-          <FormSpy subscription={{ values: true }} onChange={handleChange} />
-
-          <div className="steps">
-            <div className="button-container">
-              {canDownloadContractFiles ? downloadButton : null}
-              {displaySave ? saveButton : null}
-            </div>
+          <div className="button-container">
+            {canDownloadContractFiles ? downloadButton : null}
+            {displaySave ? saveButton : null}
           </div>
         </form>
       )

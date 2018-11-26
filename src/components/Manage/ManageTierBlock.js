@@ -14,18 +14,10 @@ import {
 } from '../../utils/validations'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
 import { ReadOnlyWhitelistAddresses } from './ReadOnlyWhitelistAddresses'
-import classNames from 'classnames'
 import { inject, observer } from 'mobx-react'
 import { InputField2 } from '../Common/InputField2'
 import { Field } from 'react-final-form'
 
-const inputErrorStyle = {
-  color: 'red',
-  fontWeight: 'bold',
-  fontSize: '12px',
-  width: '100%',
-  height: '20px'
-}
 const { CROWDSALE_SETUP_NAME } = TEXT_FIELDS
 const dateToTimestamp = date => new Date(date).getTime()
 
@@ -52,72 +44,52 @@ export const ManageTierBlock = inject('crowdsaleStore', 'tokenStore')(
         const canEditMinCap = !isWhitelistEnabled && canEditTiers && updatable && !tierHasEnded
 
         return (
-          <div className="steps" key={index}>
-            <div className="steps-content container">
-              <div className={classNames('', { divisor: isWhitelistEnabled })}>
-                <div className="input-block-container">
-                  <InputField
-                    side="left"
-                    type="text"
-                    title={CROWDSALE_SETUP_NAME}
-                    name={`${name}.crowdsale_name`}
-                    value={tier}
-                    disabled={true}
-                  />
-                </div>
-
-                <div className="input-block-container">
-                  <CrowdsaleStartTime
-                    name={`${name}.startTime`}
-                    index={index}
-                    disabled={true}
-                    side="left"
-                    errorStyle={inputErrorStyle}
-                  />
-                  <CrowdsaleEndTime
-                    name={`${name}.endTime`}
-                    index={index}
-                    disabled={!canEditDuration}
-                    side="right"
-                    errorStyle={inputErrorStyle}
-                  />
-                </div>
-
-                <div className="input-block-container">
-                  <CrowdsaleRate name={`${name}.rate`} side="left" disabled={true} errorStyle={inputErrorStyle} />
-                  <Supply name={`${name}.supply`} side="right" disabled={true} errorStyle={inputErrorStyle} />
-                </div>
-
-                <div className="input-block-container">
-                  <Field
-                    name={`${name}.minCap`}
-                    component={InputField2}
-                    validate={composeValidators(
-                      isNonNegative(),
-                      isDecimalPlacesNotGreaterThan()(tokenStore.decimals),
-                      isLessOrEqualThan(`Should be less than or equal to ${supply}`)(supply)
-                    )}
-                    disabled={!canEditMinCap}
-                    errorStyle={inputErrorStyle}
-                    type="number"
-                    side="left"
-                    label={TEXT_FIELDS.MIN_CAP}
-                  />
-                </div>
+          <div className="mng-ManageTierBlock" key={index}>
+            <div className="mng-ManageTierBlock_ItemsContainer">
+              <div className="mng-ManageForm_Item">
+                <InputField
+                  disabled={true}
+                  name={`${name}.crowdsale_name`}
+                  title={CROWDSALE_SETUP_NAME}
+                  type="text"
+                  value={tier}
+                />
               </div>
-              {isWhitelistEnabled ? (
-                <div>
-                  <div className="section-title">
-                    <p className="title">Whitelist</p>
-                  </div>
-                  {canEditWhiteList ? (
-                    <WhitelistInputBlock key={index.toString()} num={index} decimals={tokenStore.decimals} />
-                  ) : (
-                    <ReadOnlyWhitelistAddresses tier={currentTier} />
+              <div className="mng-ManageForm_Item">
+                <CrowdsaleStartTime disabled={true} index={index} name={`${name}.startTime`} />
+              </div>
+              <div className="mng-ManageForm_Item">
+                <CrowdsaleEndTime name={`${name}.endTime`} index={index} disabled={!canEditDuration} />
+              </div>
+              <div className="mng-ManageForm_Item">
+                <CrowdsaleRate name={`${name}.rate`} disabled={true} />
+              </div>
+              <div className="mng-ManageForm_Item">
+                <Supply name={`${name}.supply`} disabled={true} />
+              </div>
+              <div className="mng-ManageForm_Item">
+                <Field
+                  name={`${name}.minCap`}
+                  component={InputField2}
+                  validate={composeValidators(
+                    isNonNegative(),
+                    isDecimalPlacesNotGreaterThan()(tokenStore.decimals),
+                    isLessOrEqualThan(`Should be less than or equal to ${supply}`)(supply)
                   )}
-                </div>
-              ) : null}
+                  disabled={!canEditMinCap}
+                  type="number"
+                  label={TEXT_FIELDS.MIN_CAP}
+                />
+              </div>
             </div>
+            {/* TODO: title should be included in read only whitelist too */}
+            {isWhitelistEnabled ? (
+              canEditWhiteList ? (
+                <WhitelistInputBlock key={index.toString()} num={index} decimals={tokenStore.decimals} />
+              ) : (
+                <ReadOnlyWhitelistAddresses tier={currentTier} />
+              )
+            ) : null}
           </div>
         )
       })}
