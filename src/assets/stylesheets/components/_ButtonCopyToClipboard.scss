@@ -1,9 +1,5 @@
 .sw-ButtonCopyToClipboard {
     background-color: transparent;
-    background-image: url('#{ $base-images-path }/ButtonCopy/copy.svg');
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
-    background-size: contain;
     border: none;
     cursor: pointer;
     flex-shrink: 0;
@@ -26,5 +22,12 @@
 
     .cs-CrowdsaleID_Hash & {
         margin-left: 10px;
+    }
+
+    .cnt-QRPaymentProcess_txDataContainer & {
+        display: inline-block;
+        margin-left: 10px;
+        position: relative;
+        top: 3px;
     }
 }

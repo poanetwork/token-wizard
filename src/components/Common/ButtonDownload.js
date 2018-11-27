@@ -1,7 +1,7 @@
 import React from 'react'
 
-export const ButtonDownload = ({ disabled, onClick, extraClass = '' }) => (
-  <button className={`sw-ButtonDownload ${extraClass}`} disabled={disabled} onClick={onClick} type="button">
+export const ButtonDownload = ({ disabled, onClick, extraClassName = '' }) => (
+  <button className={`sw-ButtonDownload ${extraClassName}`} disabled={disabled} onClick={onClick} type="button">
     Download
   </button>
 )

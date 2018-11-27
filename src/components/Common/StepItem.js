@@ -1,12 +1,12 @@
 import React from 'react'
 
-export const StepItem = ({ extraClass = '', active = false, itemTitle, hideSeparator = true, size = '' }) => {
+export const StepItem = ({ extraClassName = '', active = false, itemTitle, hideSeparator = true, size = '' }) => {
   const separator = hideSeparator ? null : <div className="st-StepItem_Line" />
 
   return (
     <div
       className={`st-StepItem
-        ${active ? 'active' : ''} ${extraClass} ${size === 'sm' ? 'st-StepItem-small' : ''}`}
+        ${active ? 'active' : ''} ${extraClassName} ${size === 'sm' ? 'st-StepItem-small' : ''}`}
     >
       <div className="st-StepItem_Circle" />
       {separator}

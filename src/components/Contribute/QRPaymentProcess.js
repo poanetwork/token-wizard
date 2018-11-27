@@ -3,7 +3,7 @@ import QRCode from 'qrcode.react'
 import { ButtonCopyToClipboard } from '../Common/ButtonCopyToClipboard'
 
 const QRPaymentProcess = ({ crowdsaleProxyAddr, registryExecAddr, txData }) => {
-  const targetContractStr = crowdsaleProxyAddr ? 'Proxy' : 'RegistryExec'
+  const targetContractStr = crowdsaleProxyAddr ? 'proxy' : 'RegistryExec'
   const targetAddr = crowdsaleProxyAddr ? crowdsaleProxyAddr : registryExecAddr
 
   return (
@@ -18,8 +18,12 @@ const QRPaymentProcess = ({ crowdsaleProxyAddr, registryExecAddr, txData }) => {
       <div className="cnt-QRPaymentProcess_Note">
         <h3 className="cnt-QRPaymentProcess_NoteTitle">Important</h3>
         <p className="cnt-QRPaymentProcess_NoteDescription">
-          Send ethers to the Auth-os {targetContractStr} smart-contract address with a MethodID: {txData}
+          Send ethers to the crowdsale {targetContractStr} address with a data:{' '}
         </p>
+        <div className="cnt-QRPaymentProcess_txDataContainer">
+          <span className="cnt-QRPaymentProcess_txData">{txData}</span>
+          <ButtonCopyToClipboard buttonColor="#270167" value={txData} />
+        </div>
       </div>
     </div>
   )

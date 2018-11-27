@@ -22,26 +22,26 @@ export const CrowdsaleSetupBlockDutchAuction = tierStore => {
     <div className="cs-CrowdsaleSetupBlockDutchAuction">
       <DisplayField
         description={PD_WALLET_ADDRESS}
-        extraClass="pb-DisplayField-WalletAddress"
+        extraClassName="pb-DisplayField-WalletAddress"
         title={WALLET_ADDRESS}
         value={walletAddress}
       />
       <DisplayField
         description={DESCRIPTION.BURN_EXCESS}
-        extraClass="pb-DisplayField-BurnExcess"
+        extraClassName="pb-DisplayField-BurnExcess"
         title={BURN_EXCESS}
         value={getBurnExcess(burnExcess)}
       />
       <DisplayField
         description={PD_CROWDSALE_START_TIME}
-        extraClass="pb-DisplayField-CrowdsaleStartTime"
+        extraClassName="pb-DisplayField-CrowdsaleStartTime"
         mobileTextSize="small"
         title={CROWDSALE_START_TIME}
         value={startTimeWithUTC}
       />
       <DisplayField
         description={PD_CROWDSALE_END_TIME}
-        extraClass="pb-DisplayField-CrowdsaleEndTime"
+        extraClassName="pb-DisplayField-CrowdsaleEndTime"
         mobileTextSize="small"
         title={CROWDSALE_END_TIME}
         value={endTimeWithUTC}

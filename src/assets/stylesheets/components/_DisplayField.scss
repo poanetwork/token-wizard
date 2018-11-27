@@ -48,24 +48,31 @@
     word-break: break-all;
     word-wrap: break-word;
 
-    &.pb-DisplayField_Value-MobileTextSizeSmall {
+    .pb-DisplayField_Value-uppercase & {
+        text-transform: uppercase;
+    }
+
+    &.pb-DisplayField_Value-mobile-text-size-small {
         font-size: 14px;
 
         @media (min-width: $breakpoint-md) {
             font-size: $pb-DisplayField_Value-base-font-size;
         }
     }
-    &.pb-DisplayField_Value-MobileTextSizeMedium {
+
+    &.pb-DisplayField_Value-mobile-text-size-medium {
         font-size: $pb-DisplayField_Value-base-font-size;
     }
-    &.pb-DisplayField_Value-MobileTextSizeLarge {
+
+    &.pb-DisplayField_Value-mobile-text-size-large {
         font-size: 18px;
 
         @media (min-width: $breakpoint-md) {
             font-size: $pb-DisplayField_Value-base-font-size;
         }
     }
-    &.pb-DisplayField_Value-MobileTextSizeExtraLarge {
+
+    &.pb-DisplayField_Value-mobile-text-size-extra-large {
         font-size: 20px;
 
         @media (min-width: $breakpoint-md) {
