@@ -13,7 +13,6 @@ import {
 } from '../../utils/validations'
 import { Field } from 'react-final-form'
 import { InputField2 } from '../Common/InputField2'
-import { ReadOnlyWhitelistAddresses } from './ReadOnlyWhitelistAddresses'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
 import { inject, observer } from 'mobx-react'
 
@@ -78,13 +77,8 @@ export const ManageTierBlock = inject('crowdsaleStore', 'tokenStore')(
                 />
               </div>
             </div>
-            {/* TODO: title should be included in read only whitelist too */}
             {isWhitelistEnabled ? (
-              canEditWhiteList ? (
-                <WhitelistInputBlock key={index.toString()} num={index} decimals={tokenStore.decimals} />
-              ) : (
-                <ReadOnlyWhitelistAddresses tier={currentTier} />
-              )
+              <WhitelistInputBlock readOnly={!canEditWhiteList} num={index} decimals={tokenStore.decimals} />
             ) : null}
           </div>
         )

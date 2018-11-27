@@ -1,5 +1,4 @@
 import React from 'react'
-import ReservedTokensItem from '../Common/ReservedTokensItem'
 import { inject, observer } from 'mobx-react'
 import { TokenDimension } from '../Common/TokenDimension'
 

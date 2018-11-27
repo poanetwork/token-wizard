@@ -3,7 +3,6 @@ import { CrowdsaleEndTime } from './../Common/CrowdsaleEndTime'
 import { CrowdsaleRate } from './../Common/CrowdsaleRate'
 import { CrowdsaleStartTime } from './../Common/CrowdsaleStartTime'
 import { InputField } from '../Common/InputField'
-import { ReadOnlyWhitelistAddresses } from './ReadOnlyWhitelistAddresses'
 import { Supply } from './../Common/Supply'
 import { TEXT_FIELDS, DESCRIPTION, CROWDSALE_STRATEGIES_DISPLAYNAMES } from '../../utils/constants'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
@@ -15,7 +14,6 @@ export const ManageDutchAuctionBlock = inject('crowdsaleStore', 'tokenStore')(
   observer(({ fields, canEditTiers, crowdsaleStore, tokenStore, aboutTier, ...props }) => (
     <div className="mng-ManageDutchAuctionBlock">
       {fields.map((name, index) => {
-        const currentTier = fields.value[index]
         const { endTime: initialEndTime, whitelistEnabled } = fields.initial[index]
 
         const tierHasEnded = !isDateLaterThan()(dateToTimestamp(initialEndTime))(Date.now())
@@ -82,11 +80,7 @@ export const ManageDutchAuctionBlock = inject('crowdsaleStore', 'tokenStore')(
               </div>
             </div>
             {isWhitelistEnabled ? (
-              canEditWhiteList ? (
-                <WhitelistInputBlock key={index.toString()} num={index} decimals={tokenStore.decimals} />
-              ) : (
-                <ReadOnlyWhitelistAddresses tier={currentTier} />
-              )
+              <WhitelistInputBlock readOnly={!canEditWhiteList} num={index} decimals={tokenStore.decimals} />
             ) : null}
           </div>
         )
