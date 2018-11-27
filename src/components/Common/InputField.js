@@ -20,6 +20,7 @@ export const InputField = props => {
         onKeyPress={props.onKeyPress}
         onPaste={props.onPaste}
         placeholder={props.placeholder}
+        readOnly={props.readOnly}
         style={props.style}
         type={props.type}
         value={props.value}

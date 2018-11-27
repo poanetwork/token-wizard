@@ -1,8 +1,20 @@
 .mng-ManageDutchAuctionBlock {
-
+    margin: 0 0 15px;
 }
 
 .mng-ManageDutchAuctionBlock_ItemsContainer {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    @media (min-width: $breakpoint-md) {
+        display: grid;
+        grid-column-gap: $grid-column-gap-xl;
+        grid-row-gap: 20px;
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.mng-ManageDutchAuctionBlock_Item {
+    margin-bottom: 10px;
+
+    @media (min-width: $breakpoint-md) {
+        margin-bottom: 0;
+    }
 }

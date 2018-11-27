@@ -837,7 +837,7 @@ export class Manage extends Component {
     } = this.state
 
     return (
-      <div>
+      <div className="mng-Manage">
         <section className="lo-MenuBarAndContent">
           <ManageNavigation activeStepTitle={MANAGE_CROWDSALE} navigationSteps={MANAGE_SECTIONS} />
           <div className="st-StepContent">

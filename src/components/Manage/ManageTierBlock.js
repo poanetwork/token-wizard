@@ -1,10 +1,9 @@
 import React from 'react'
-import { CrowdsaleStartTime } from './../Common/CrowdsaleStartTime'
 import { CrowdsaleEndTime } from './../Common/CrowdsaleEndTime'
 import { CrowdsaleRate } from './../Common/CrowdsaleRate'
+import { CrowdsaleStartTime } from './../Common/CrowdsaleStartTime'
 import { Supply } from './../Common/Supply'
 import { TEXT_FIELDS } from '../../utils/constants'
-import { InputField } from '../Common/InputField'
 import {
   composeValidators,
   isDateLaterThan,
@@ -12,18 +11,17 @@ import {
   isLessOrEqualThan,
   isNonNegative
 } from '../../utils/validations'
-import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
-import { ReadOnlyWhitelistAddresses } from './ReadOnlyWhitelistAddresses'
-import { inject, observer } from 'mobx-react'
-import { InputField2 } from '../Common/InputField2'
 import { Field } from 'react-final-form'
+import { InputField2 } from '../Common/InputField2'
+import { ReadOnlyWhitelistAddresses } from './ReadOnlyWhitelistAddresses'
+import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
+import { inject, observer } from 'mobx-react'
 
-const { CROWDSALE_SETUP_NAME } = TEXT_FIELDS
 const dateToTimestamp = date => new Date(date).getTime()
 
 export const ManageTierBlock = inject('crowdsaleStore', 'tokenStore')(
   observer(({ fields, canEditTiers, crowdsaleStore, tokenStore, aboutTier, ...props }) => (
-    <div>
+    <div className="mng-ManageTierBlock">
       {fields.map((name, index) => {
         const currentTier = fields.value[index]
         const { tier } = currentTier
@@ -44,41 +42,39 @@ export const ManageTierBlock = inject('crowdsaleStore', 'tokenStore')(
         const canEditMinCap = !isWhitelistEnabled && canEditTiers && updatable && !tierHasEnded
 
         return (
-          <div className="mng-ManageTierBlock" key={index}>
+          <div className="mng-ManageTierBlock_Content" key={index}>
+            <h3 className="mng-ManageTierBlock_Title">Tier Name: {tier}</h3>
             <div className="mng-ManageTierBlock_ItemsContainer">
-              <div className="mng-ManageForm_Item">
-                <InputField
-                  disabled={true}
-                  name={`${name}.crowdsale_name`}
-                  title={CROWDSALE_SETUP_NAME}
-                  type="text"
-                  value={tier}
+              <div className="mng-ManageTierBlock_Item">
+                <CrowdsaleStartTime disabled={true} index={index} name={`${name}.startTime`} readOnly={true} />
+              </div>
+              <div className="mng-ManageTierBlock_Item">
+                <CrowdsaleEndTime
+                  name={`${name}.endTime`}
+                  index={index}
+                  disabled={!canEditDuration}
+                  readOnly={!canEditDuration}
                 />
               </div>
-              <div className="mng-ManageForm_Item">
-                <CrowdsaleStartTime disabled={true} index={index} name={`${name}.startTime`} />
+              <div className="mng-ManageTierBlock_Item">
+                <CrowdsaleRate name={`${name}.rate`} disabled={true} readOnly={true} />
               </div>
-              <div className="mng-ManageForm_Item">
-                <CrowdsaleEndTime name={`${name}.endTime`} index={index} disabled={!canEditDuration} />
+              <div className="mng-ManageTierBlock_Item">
+                <Supply name={`${name}.supply`} disabled={true} readOnly={true} />
               </div>
-              <div className="mng-ManageForm_Item">
-                <CrowdsaleRate name={`${name}.rate`} disabled={true} />
-              </div>
-              <div className="mng-ManageForm_Item">
-                <Supply name={`${name}.supply`} disabled={true} />
-              </div>
-              <div className="mng-ManageForm_Item">
+              <div className="mng-ManageTierBlock_Item">
                 <Field
-                  name={`${name}.minCap`}
                   component={InputField2}
+                  disabled={!canEditMinCap}
+                  label={TEXT_FIELDS.MIN_CAP}
+                  name={`${name}.minCap`}
+                  readOnly={!canEditMinCap}
+                  type="number"
                   validate={composeValidators(
                     isNonNegative(),
                     isDecimalPlacesNotGreaterThan()(tokenStore.decimals),
                     isLessOrEqualThan(`Should be less than or equal to ${supply}`)(supply)
                   )}
-                  disabled={!canEditMinCap}
-                  type="number"
-                  label={TEXT_FIELDS.MIN_CAP}
                 />
               </div>
             </div>

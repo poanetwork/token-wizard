@@ -35,4 +35,12 @@
             border-color: $brand-secondary;
         }
     }
+
+    .mng-ManageForm_ButtonsContainer & {
+        margin-bottom: 20px;
+
+        @media (min-width: $breakpoint-md) {
+            margin-bottom: 0;
+        }
+    }
 }

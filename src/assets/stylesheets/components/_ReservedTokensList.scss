@@ -10,6 +10,14 @@ $mng-ReservedTokensList_TableContainer-gradient-width: 45px !default;
     border: 1px solid $base-border-color;
     box-shadow: 0 9px 18px 4px rgba(224, 224, 224, 0.2);
     padding: 24px 35px 36px 38px;
+
+    .mng-Manage & {
+        padding: 25px 10px;
+
+        @media (min-width: $breakpoint-md) {
+            padding: 24px 35px 36px 38px;
+        }
+    }
 }
 
 .mng-ReservedTokensList_Title {

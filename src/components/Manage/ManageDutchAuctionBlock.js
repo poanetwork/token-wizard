@@ -1,19 +1,19 @@
 import React from 'react'
-import { CrowdsaleStartTime } from './../Common/CrowdsaleStartTime'
 import { CrowdsaleEndTime } from './../Common/CrowdsaleEndTime'
 import { CrowdsaleRate } from './../Common/CrowdsaleRate'
+import { CrowdsaleStartTime } from './../Common/CrowdsaleStartTime'
+import { InputField } from '../Common/InputField'
+import { ReadOnlyWhitelistAddresses } from './ReadOnlyWhitelistAddresses'
 import { Supply } from './../Common/Supply'
 import { TEXT_FIELDS, DESCRIPTION, CROWDSALE_STRATEGIES_DISPLAYNAMES } from '../../utils/constants'
-import { InputField } from '../Common/InputField'
-import { isDateLaterThan } from '../../utils/validations'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
-import { ReadOnlyWhitelistAddresses } from './ReadOnlyWhitelistAddresses'
-import { inject, observer } from 'mobx-react'
 import { dateToTimestamp } from '../../utils/utils'
+import { inject, observer } from 'mobx-react'
+import { isDateLaterThan } from '../../utils/validations'
 
 export const ManageDutchAuctionBlock = inject('crowdsaleStore', 'tokenStore')(
   observer(({ fields, canEditTiers, crowdsaleStore, tokenStore, aboutTier, ...props }) => (
-    <div>
+    <div className="mng-ManageDutchAuctionBlock">
       {fields.map((name, index) => {
         const currentTier = fields.value[index]
         const { endTime: initialEndTime, whitelistEnabled } = fields.initial[index]
@@ -23,49 +23,63 @@ export const ManageDutchAuctionBlock = inject('crowdsaleStore', 'tokenStore')(
         const isWhitelistEnabled = whitelistEnabled === 'yes'
 
         return (
-          <div className="mng-ManageDutchAuctionBlock" key={index}>
+          <div className="mng-ManageDutchAuctionBlock_Content" key={index}>
             <div className="mng-ManageDutchAuctionBlock_ItemsContainer">
-              <InputField
-                type="text"
-                title={TEXT_FIELDS.STRATEGY}
-                value={CROWDSALE_STRATEGIES_DISPLAYNAMES.DUTCH_AUCTION}
-                disabled={true}
-              />
-
-              <CrowdsaleStartTime
-                description={DESCRIPTION.START_TIME_DUTCH_AUCTION}
-                disabled={true}
-                index={index}
-                name={`${name}.startTime`}
-              />
-
-              <CrowdsaleEndTime
-                description={DESCRIPTION.END_TIME_DUTCH_AUCTION}
-                disabled={true}
-                index={index}
-                name={`${name}.endTime`}
-              />
-
-              <CrowdsaleRate name={`${name}.minRate`} label={TEXT_FIELDS.MIN_RATE} disabled={true} />
-
-              <CrowdsaleRate name={`${name}.maxRate`} label={TEXT_FIELDS.MAX_RATE} disabled={true} />
-
-              <CrowdsaleRate disabled={true} label={TEXT_FIELDS.CURRENT_RATE} name={`${name}.rate`} />
-
-              <Supply
-                description={DESCRIPTION.SUPPLY_DUTCH_AUCTION}
-                disabled={true}
-                label={TEXT_FIELDS.CROWDSALE_SUPPLY}
-                name={`${name}.supply`}
-              />
-
-              <Supply
-                name={`token.supply`}
-                value={tokenStore.supply}
-                label={TEXT_FIELDS.TOKEN_SUPPLY}
-                description={DESCRIPTION.TOKEN_SUPPLY}
-                disabled={true}
-              />
+              <div className="mng-ManageDutchAuctionBlock_Item">
+                <InputField
+                  disabled={true}
+                  readOnly={true}
+                  title={TEXT_FIELDS.STRATEGY}
+                  type="text"
+                  value={CROWDSALE_STRATEGIES_DISPLAYNAMES.DUTCH_AUCTION}
+                />
+              </div>
+              <div className="mng-ManageDutchAuctionBlock_Item">
+                <CrowdsaleStartTime
+                  description={DESCRIPTION.START_TIME_DUTCH_AUCTION}
+                  disabled={true}
+                  index={index}
+                  name={`${name}.startTime`}
+                  readOnly={true}
+                />
+              </div>
+              <div className="mng-ManageDutchAuctionBlock_Item">
+                <CrowdsaleEndTime
+                  description={DESCRIPTION.END_TIME_DUTCH_AUCTION}
+                  disabled={true}
+                  index={index}
+                  name={`${name}.endTime`}
+                  readOnly={true}
+                />
+              </div>
+              <div className="mng-ManageDutchAuctionBlock_Item">
+                <CrowdsaleRate name={`${name}.minRate`} label={TEXT_FIELDS.MIN_RATE} disabled={true} readOnly={true} />
+              </div>
+              <div className="mng-ManageDutchAuctionBlock_Item">
+                <CrowdsaleRate name={`${name}.maxRate`} label={TEXT_FIELDS.MAX_RATE} disabled={true} readOnly={true} />
+              </div>
+              <div className="mng-ManageDutchAuctionBlock_Item">
+                <CrowdsaleRate disabled={true} label={TEXT_FIELDS.CURRENT_RATE} name={`${name}.rate`} readOnly={true} />
+              </div>
+              <div className="mng-ManageDutchAuctionBlock_Item">
+                <Supply
+                  description={DESCRIPTION.SUPPLY_DUTCH_AUCTION}
+                  disabled={true}
+                  label={TEXT_FIELDS.CROWDSALE_SUPPLY}
+                  name={`${name}.supply`}
+                  readOnly={true}
+                />
+              </div>
+              <div className="mng-ManageDutchAuctionBlock_Item">
+                <Supply
+                  description={DESCRIPTION.TOKEN_SUPPLY}
+                  disabled={true}
+                  label={TEXT_FIELDS.TOKEN_SUPPLY}
+                  name={`token.supply`}
+                  readOnly={true}
+                  value={tokenStore.supply}
+                />
+              </div>
             </div>
             {isWhitelistEnabled ? (
               canEditWhiteList ? (

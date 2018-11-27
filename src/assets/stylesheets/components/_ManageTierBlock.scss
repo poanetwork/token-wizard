@@ -1,8 +1,32 @@
 .mng-ManageTierBlock {
+    margin: 0 0 15px;
+}
 
+.mng-ManageTierBlock_Title {
+    color: #000;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0 0 20px;
+}
+
+.mng-ManageTierBlock_Content {
+    padding-top: 45px;
 }
 
 .mng-ManageTierBlock_ItemsContainer {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    @media (min-width: $breakpoint-md) {
+        display: grid;
+        grid-column-gap: $grid-column-gap-xl;
+        grid-row-gap: 20px;
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.mng-ManageTierBlock_Item {
+    margin-bottom: 10px;
+
+    @media (min-width: $breakpoint-md) {
+        margin-bottom: 0;
+    }
 }

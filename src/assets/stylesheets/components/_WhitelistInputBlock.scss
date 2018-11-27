@@ -12,6 +12,18 @@
         }
     }
 
+    .mng-ManageTierBlock & {
+        border-top: 1px solid $base-border-color;
+        margin-top: 15px;
+        padding-top: 30px;
+    }
+
+    .mng-ManageDutchAuctionBlock & {
+        border-top: 1px solid $base-border-color;
+        margin-top: 15px;
+        padding-top: 30px;
+    }
+
 }
 
 .sw-WhitelistInputBlock_MinMaxFields {

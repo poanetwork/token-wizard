@@ -3,6 +3,7 @@ import React from 'react'
 export const TextField = props => {
   return (
     <input
+      autoComplete="off"
       className="sw-TextField"
       disabled={props.disabled}
       id={props.name}
@@ -15,6 +16,7 @@ export const TextField = props => {
       onKeyPress={props.onKeyPress}
       onPaste={props.onPaste}
       placeholder={props.placeholder}
+      readOnly={props.readOnly}
       step={props.step}
       type={props.type}
       value={props.value}
