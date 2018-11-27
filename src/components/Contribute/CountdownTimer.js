@@ -92,7 +92,7 @@ const CountdownTimer = ({
         />
         {isLoading ? null : (
           <div className="cnt-CountdownTimer_TimeContainer">
-            {noTimeLeft ? null : countdownClock}
+            {noTimeLeft || isFinalized ? null : countdownClock}
             {getCrowdsaleMessage()}
             {getCrowdsaleAltMessage()}
           </div>
