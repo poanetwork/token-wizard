@@ -119,7 +119,8 @@ export class Contribute extends React.Component {
       isSoldOut: false,
       isTierSoldOut: false,
       isStartedClock: false,
-      clockAltMessage: ''
+      clockAltMessage: '',
+      calculateContribution: true
     }
   }
 
@@ -308,7 +309,7 @@ export class Contribute extends React.Component {
   }
 
   setTimers = () => {
-    const { crowdsalePageStore } = this.props
+    const { crowdsalePageStore, contractStore, crowdsaleStore } = this.props
 
     let nextTick = 0
     let millisecondsToNextTick = 0
@@ -350,8 +351,7 @@ export class Contribute extends React.Component {
             crowdsaleSecondsLeft: this.getCrowdsaleSecondsLeft(startDate, endDate)
           })
 
-          // If started, change to nextTick
-          if (isStartedClock && this.state.nextTick.type === 'start') {
+          const updateNextTick = () => {
             const nextTick = crowdsalePageStore.extractNextTick()
             this.setState({
               nextTick: nextTick
@@ -361,19 +361,53 @@ export class Contribute extends React.Component {
                 crowdsaleDurationSeconds: this.getCrowdsaleSecondsDuration(nextTick.startDate, nextTick.endDate)
               })
             }
+
+            setTimeout(() => {
+              this.setState({
+                calculateContribution: false
+              })
+              this.calculateContribution()
+                .then(async () => {
+                  logger.log('Contribution updated')
+                  this.setState({
+                    calculateContribution: true
+                  })
+
+                  logger.log('Check if tier is sold out update')
+
+                  let target
+
+                  logger.log(`Crowdsale Exec Id`, contractStore.crowdsale.execID)
+
+                  if (contractStore.crowdsale.execID) {
+                    const targetPrefix = 'idx'
+                    const targetSuffix = crowdsaleStore.contractTargetSuffix
+                    target = `${targetPrefix}${targetSuffix}`
+                  } else {
+                    target = crowdsaleStore.proxyName
+                  }
+
+                  const crowdsaleExecID = contractStore.crowdsale && contractStore.crowdsale.execID
+                  const initCrowdsaleContract = await attachToSpecificCrowdsaleContract(target)
+                  await this.checkIsTierSoldOut(initCrowdsaleContract, crowdsaleExecID)
+                })
+                .catch(err => {
+                  logger.log('Contribution error')
+                  this.setState({
+                    calculateContribution: true
+                  })
+                })
+            }, 1000)
+          }
+
+          // If started, change to nextTick
+          if (isStartedClock && this.state.nextTick.type === 'start') {
+            updateNextTick()
           }
 
           // If ended, get last undefined tick
           if (isEndClock && this.state.nextTick.type === 'end') {
-            const nextTick = crowdsalePageStore.extractNextTick()
-            this.setState({
-              nextTick: nextTick
-            })
-            if (nextTick) {
-              this.setState({
-                crowdsaleDurationSeconds: this.getCrowdsaleSecondsDuration(nextTick.startDate, nextTick.endDate)
-              })
-            }
+            updateNextTick()
           }
         }
       }, 1000)
@@ -511,6 +545,9 @@ export class Contribute extends React.Component {
     const userMaxLimits = await getUserMaxContribution()
     const checkIfCrowdSaleIsfull = await isCrowdSaleFull(addr, execID, methods, account)
 
+    logger.log(`Minimum contribution ${userMinLimits.toFixed()}`)
+    logger.log(`Maximum contribution ${userMaxLimits.toFixed()}`)
+
     if (checkIfCrowdSaleIsfull) {
       this.setState({
         minimumContribution: -1,
@@ -632,7 +669,7 @@ export class Contribute extends React.Component {
     const { tokenAmountOf } = crowdsalePageStore
     const { crowdsale } = contractStore
     const { proxyName } = crowdsaleStore
-    const { curAddr, contributeThrough, web3Available, minimumContribution, maximumContribution } = this.state
+    const { curAddr, contributeThrough, web3Available } = this.state
     const crowdsaleExecID = crowdsale && crowdsale.execID
     const { decimals, ticker, name } = tokenStore
     const tokenDecimals = !isNaN(decimals) ? decimals : 0
@@ -647,14 +684,7 @@ export class Contribute extends React.Component {
       : '0'
     const totalSupply = maxCapBeforeDecimals.toFixed()
     const canContribute = !(this.state.isEnded || this.state.isFinalized || this.state.isSoldOut)
-    const minimumContributionDisplay =
-      minimumContribution >= 0 && isFinite(minimumContribution) && canContribute
-        ? `${minimumContribution} ${tokenTicker}`
-        : 'You are not allowed'
-    const maximumContributionDisplay =
-      maximumContribution >= 0 && isFinite(maximumContribution) && canContribute
-        ? `${maximumContribution} ${tokenTicker}`
-        : 'You are not allowed'
+
     const registryExecAddr =
       contractStore.registryExec && contractStore.registryExec.addr ? contractStore.registryExec.addr : ''
     const crowdsaleProxyAddr = contractStore[proxyName] && contractStore[proxyName].addr
@@ -671,6 +701,20 @@ export class Contribute extends React.Component {
       (contractStore[proxyName] && contractStore[proxyName].addr)
 
     const getContributeDataColumnsObject = () => {
+      let minimumContributionDisplay = 'Waiting ...'
+      let maximumContributionDisplay = 'Waiting ...'
+
+      if (this.state.calculateContribution) {
+        minimumContributionDisplay =
+          this.state.minimumContribution >= 0 && isFinite(this.state.minimumContribution) && canContribute
+            ? `${this.state.minimumContribution} ${tokenTicker}`
+            : 'You are not allowed'
+        maximumContributionDisplay =
+          this.state.maximumContribution >= 0 && isFinite(this.state.maximumContribution) && canContribute
+            ? `${this.state.maximumContribution} ${tokenTicker}`
+            : 'You are not allowed'
+      }
+
       return [
         {
           description: tokenName,
@@ -736,7 +780,7 @@ export class Contribute extends React.Component {
                   isSoldOut={this.state.isSoldOut}
                   isStarted={this.state.isStarted}
                   isTierSoldOut={this.state.isTierSoldOut}
-                  minimumContribution={minimumContribution}
+                  minimumContribution={this.state.minimumContribution}
                   onSubmit={this.contributeToTokens}
                   updateContributeThrough={this.updateContributeThrough}
                   web3Available={web3Available}
