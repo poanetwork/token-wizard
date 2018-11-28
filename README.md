@@ -58,7 +58,7 @@ __Deploying on POA's Sokol or Main network is much faster then using Ethereum's 
 ## Support
 
 This open source software is currently unsupported. You can create an issue in the 
-in the [Github Issues section](https://github.com/poanetwork/token-wizard/issues) and members of the open-source community may respond.
+[Github Issues section](https://github.com/poanetwork/token-wizard/issues) and members of the open-source community may respond.
 
 ## Disclaimer
 
