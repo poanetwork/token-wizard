@@ -291,7 +291,7 @@ export class WhitelistInputBlock extends React.Component {
   }
 
   render() {
-    const { num, tierStore, readOnly } = this.props
+    const { num, tierStore, readOnly, showTableHeader } = this.props
     const { whitelist } = tierStore.tiers[num]
     const whitelistEmpty = tierStore.isWhitelistEmpty(num)
     const dropzoneStyle = {}
@@ -339,7 +339,7 @@ export class WhitelistInputBlock extends React.Component {
             </div>
           </div>
         )}
-        {whitelist ? <WhitelistTable list={whitelist} crowdsaleNum={num} /> : null}
+        {whitelist ? <WhitelistTable showTableHeader={showTableHeader} list={whitelist} crowdsaleNum={num} /> : null}
         {readOnly ? null : (
           <div className="sw-WhitelistInputBlock_Controls">
             {whitelistEmpty ? null : (

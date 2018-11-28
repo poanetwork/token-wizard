@@ -78,7 +78,12 @@ export const ManageTierBlock = inject('crowdsaleStore', 'tokenStore')(
               </div>
             </div>
             {isWhitelistEnabled ? (
-              <WhitelistInputBlock readOnly={!canEditWhiteList} num={index} decimals={tokenStore.decimals} />
+              <WhitelistInputBlock
+                decimals={tokenStore.decimals}
+                num={index}
+                readOnly={!canEditWhiteList}
+                showTableHeader={!canEditWhiteList}
+              />
             ) : null}
           </div>
         )

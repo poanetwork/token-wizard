@@ -54,12 +54,8 @@ $mng-ReservedTokensList_TableContainer-gradient-width: 45px !default;
 }
 
 .mng-ReservedTokensList_TableTH {
-    color: #000;
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 1.2;
-    padding: 0 0 10px;
-    text-align: left;
+
+    @include datatable-th-styles();
 
     &.mng-ReservedTokensList_TableTH-dimension {
         text-align: center;
