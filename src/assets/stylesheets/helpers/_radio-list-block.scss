@@ -72,6 +72,7 @@ $radio-list-block-graphic-dimensions: 24px !default;
         letter-spacing: normal;
         line-height: 1.43;
         margin: 0;
+        word-break: break-word;
 
         @media (min-width: $breakpoint-xl) {
             font-size: 16px;

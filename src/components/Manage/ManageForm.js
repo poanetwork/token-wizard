@@ -2,18 +2,11 @@ import React from 'react'
 import { ButtonDownload } from '../Common/ButtonDownload'
 import { Button } from '../Common/Button'
 import { FieldArray } from 'react-final-form-arrays'
-import { FormSpy, Field } from 'react-final-form'
+import { FormSpy } from 'react-final-form'
 import { InputField } from '../Common/InputField'
-import { InputField2 } from '../Common/InputField2'
 import { ManageDutchAuctionBlock } from './ManageDutchAuctionBlock'
 import { ManageTierBlock } from './ManageTierBlock'
 import { TEXT_FIELDS } from '../../utils/constants'
-import {
-  composeValidators,
-  isDecimalPlacesNotGreaterThan,
-  isLessOrEqualThan,
-  isNonNegative
-} from '../../utils/validations'
 import { inject, observer } from 'mobx-react'
 
 export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')(
@@ -36,11 +29,10 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
       ...props
     }) => {
       const { tiers } = props.initialValues
-      const { ticker, name, decimals } = tokenStore
+      const { ticker, name } = tokenStore
 
       if (!tiers[0]) return null
 
-      const minimum_supply = tiers.reduce((min, tier) => (tier.supply < min ? tier.supply : min), Infinity)
       const disabled = invalid || !canSave
 
       return (
@@ -53,6 +45,16 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
               <div className="mng-ManageForm_Item">
                 <InputField
                   disabled={true}
+                  name="crowdsaleType"
+                  readOnly={true}
+                  title={TEXT_FIELDS.STRATEGY}
+                  type="text"
+                  value={crowdsaleStore.isDutchAuction ? 'Dutch Auction' : 'Whitelist With Cap'}
+                />
+              </div>
+              <div className="mng-ManageForm_Item">
+                <InputField
+                  disabled={true}
                   name="walletAddress"
                   readOnly={true}
                   title={TEXT_FIELDS.WALLET_ADDRESS}
@@ -60,35 +62,6 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
                   value={tiers[0].walletAddress}
                 />
               </div>
-              {crowdsaleStore.isDutchAuction ? (
-                <div className="mng-ManageForm_Item">
-                  <Field
-                    component={InputField2}
-                    disabled={!canEditMinCap}
-                    label={TEXT_FIELDS.MIN_CAP}
-                    name={tiers[0].minCap}
-                    readOnly={true}
-                    type="number"
-                    validate={composeValidators(
-                      isNonNegative(),
-                      isDecimalPlacesNotGreaterThan()(decimals),
-                      isLessOrEqualThan(`Should be less than or equal to ${minimum_supply}`)(minimum_supply)
-                    )}
-                    value={props.initialValues.minCap}
-                  />
-                </div>
-              ) : null}
-              {crowdsaleStore.isDutchAuction ? (
-                <div className="mng-ManageForm_Item">
-                  <InputField
-                    disabled={true}
-                    readOnly={true}
-                    title={TEXT_FIELDS.BURN_EXCESS}
-                    type="text"
-                    value={crowdsaleStore.selected.burn_excess}
-                  />
-                </div>
-              ) : null}
             </div>
             {crowdsaleStore.isDutchAuction ? (
               <FieldArray name="tiers">
