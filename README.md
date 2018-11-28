@@ -9,17 +9,18 @@
 [![Coverage Status](https://coveralls.io/repos/github/poanetwork/token-wizard/badge.svg?branch=master)](https://coveralls.io/github/poanetwork/token-wizard?branch=master)
 
 ### **_Attention_!**
-#### __Please, read the wiki or watch demo before you start to create crowdsales using Token Wizard. Consider deploying on the Mainnet after testing on Kovan testnet or POA's Sokol testnet.__
+
+#### This repository is [no longer supported by the POA Network](https://medium.com/poa-network/farewell-token-wizard-2-0-time-to-reprioritize-8cbd7319a97b). Use at your own discretion. 
 
 _A Quote_
 
 > ICO tools should be available for non-coders for free. Raising funds from a crowd is our basic human right.
 
-Token Wizard is a tool to create token and crowdsale contracts in five simple steps. Wizard is based on TokenMarket contracts. Wizard is baked how we like it: decentralized, client side, serverless, open source, free, awesome.
+Token Wizard is a tool to create token and crowdsale contracts in five simple steps. The Token Wizard is based on TokenMarket contracts, and is decentralized, client side, serverless, and open-source.
 
-ICOs usually have two or more contracts. One token contract and one or more crowdsale contract plus supplemental contracts, e.g., safe math, pricing strategy, etc. Most token contracts are the same (ERC-20); most crowdsale contracts are different. Token implementation should be stable for compatibility, and it is crucial to connect token to exchanges and wallets. Crowdsale contracts on another side should follow fashion and differentiate a project from others, e.g., create a new type of FOMO, fear of missing out.
+ICOs usually have two or more contracts - One token contract and one or more crowdsale contracts plus supplemental contracts, e.g., safe math, pricing strategy, etc. Most token contracts are the same (ERC-20); most crowdsale contracts are different. Token implementation should be stable for compatibility, and it is crucial to connect a token to exchanges and wallets. Crowdsale contracts on the other hand side should differentiate a project from others, e.g., create a new type of FOMO, fear of missing out.
 
-This tool is free to use and open source. Although the tool is free to use, deploying contracts to the Ethereum network requires GAS in the form of ETHER. See "Deployment Time & Gas" part of Wiki for estimates. It is recommended to test the Token Wizard on Kovan testnet or POA's Sokol testnet, before deploying to the main network. See below for links to obtain testnet tokens for the Kovan or Sokol networks:
+This tool is free to use and open source. Although the tool is free to use, deploying contracts to the Ethereum network requires GAS in the form of ETHER. See "Deployment Time & Gas" part of Wiki for estimates. It is recommended to **test the Token Wizard on Kovan testnet or POA's Sokol testnet, before deploying to the main network**. See below for links to obtain testnet tokens for the Kovan or Sokol networks:
 
 __Deploying on POA's Sokol or Main network is much faster then using Ethereum's networks.__
 
@@ -56,15 +57,15 @@ __Deploying on POA's Sokol or Main network is much faster then using Ethereum's 
 
 ## Support
 
-If you are having any issues while using the Token Wizard DApp, please create a "New Issue" on it's [Github Issues section](https://github.com/poanetwork/token-wizard/issues).
-
-Join the Poa Network Forum at [https://forum.poa.network/](https://forum.poa.network/)
+This open source software is currently unsupported. You can create an issue in the 
+in the [Github Issues section](https://github.com/poanetwork/token-wizard/issues) and members of the open-source community may respond.
 
 ## Disclaimer
 
 The software is in Beta stage.
+
 Token Wizard is constantly under active development. The “Beta” labelling implies that while the core features of the software have been implemented, bugs and issues may still remain undiscovered until this phase of testing is complete. As such, Token Wizard may experience the following issues, but not limited to, during usage:
 
-- lost of tokens/funds from incorrect configuration;
+- loss of tokens/funds from incorrect configuration;
 - unexpected delays;
 - unexpected visual artifacts.
