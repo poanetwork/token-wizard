@@ -327,3 +327,9 @@ export const uniqueElementsBy = (arr, fn) =>
     if (!acc.some(x => fn(v, x))) acc.push(v)
     return acc
   }, [])
+
+export const pad = (num, size) => {
+  let s = num + ''
+  while (s.length < size) s = '0' + s
+  return s
+}
