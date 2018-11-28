@@ -362,41 +362,48 @@ export class Contribute extends React.Component {
               })
             }
 
-            setTimeout(() => {
-              this.setState({
-                calculateContribution: false
-              })
-              this.calculateContribution()
-                .then(async () => {
-                  logger.log('Contribution updated')
-                  this.setState({
-                    calculateContribution: true
-                  })
-
-                  logger.log('Check if tier is sold out update')
-
-                  let target
-
-                  logger.log(`Crowdsale Exec Id`, contractStore.crowdsale.execID)
-
-                  if (contractStore.crowdsale.execID) {
-                    const targetPrefix = 'idx'
-                    const targetSuffix = crowdsaleStore.contractTargetSuffix
-                    target = `${targetPrefix}${targetSuffix}`
-                  } else {
-                    target = crowdsaleStore.proxyName
-                  }
-
-                  const crowdsaleExecID = contractStore.crowdsale && contractStore.crowdsale.execID
-                  const initCrowdsaleContract = await attachToSpecificCrowdsaleContract(target)
-                  await this.checkIsTierSoldOut(initCrowdsaleContract, crowdsaleExecID)
+            setTimeout(async () => {
+              try {
+                logger.log('Update next tick executed')
+                this.setState({
+                  calculateContribution: false
                 })
-                .catch(err => {
-                  logger.log('Contribution error')
-                  this.setState({
-                    calculateContribution: true
-                  })
+
+                logger.log('Ticks length', crowdsalePageStore.ticks.length)
+                logger.log('Ticks order', nextTick.order)
+
+                await this.calculateContribution()
+                logger.log('Contribution updated')
+                this.setState({
+                  calculateContribution: true
                 })
+
+                logger.log('Check if tier is sold out update')
+
+                let target
+
+                logger.log(`Crowdsale Exec Id`, contractStore.crowdsale.execID)
+
+                if (contractStore.crowdsale.execID) {
+                  const targetPrefix = 'idx'
+                  const targetSuffix = crowdsaleStore.contractTargetSuffix
+                  target = `${targetPrefix}${targetSuffix}`
+                } else {
+                  target = crowdsaleStore.proxyName
+                }
+
+                const crowdsaleExecID = contractStore.crowdsale && contractStore.crowdsale.execID
+                const initCrowdsaleContract = await attachToSpecificCrowdsaleContract(target)
+                await this.checkIsTierSoldOut(initCrowdsaleContract, crowdsaleExecID)
+                await this.checkIsEnded(initCrowdsaleContract, crowdsaleExecID)
+                await this.checkIsFinalized(initCrowdsaleContract, crowdsaleExecID)
+                await this.checkIsSoldOut(initCrowdsaleContract, crowdsaleExecID)
+              } catch (err) {
+                logger.log('Contribution error')
+                this.setState({
+                  calculateContribution: true
+                })
+              }
             }, 1000)
           }
 
@@ -763,6 +770,8 @@ export class Contribute extends React.Component {
                   minutes={this.state.toNextTick.minutes}
                   seconds={this.state.toNextTick.seconds}
                   isFinalized={this.state.isFinalized}
+                  isSoldOut={this.state.isSoldOut}
+                  isTierSoldOut={this.state.isTierSoldOut}
                   isLoading={this.state.loading}
                   nextTick={this.state.nextTick}
                   tiersLength={tierStore && tierStore.tiers.length}

@@ -750,6 +750,9 @@ export const getCurrentTierInfoCustom = async (initCrowdsaleContract, execID) =>
     const tiersStartAndEndDates = await Promise.all(getTiersStartAndEndDates)
     logger.log('Tiers:', tiersStartAndEndDates)
 
+    const isEndedVar = await isEnded({ methods }, execID)
+    const isFinalizedVar = await isFinalized({ methods }, execID)
+
     // Get index of actual tier
     // if -1 crowdsale has finished
     let tierIndex = -1
@@ -779,8 +782,10 @@ export const getCurrentTierInfoCustom = async (initCrowdsaleContract, execID) =>
 
       let currentTierData
       // There is a bug in the contracts
+      let retries = 0
       await promiseRetry(async retry => {
         currentTierData = await getCurrentTierInfo(...params).call()
+        logger.log('Retries', retries)
         logger.log('Current Tier Data', currentTierData)
 
         let currentTierIndex = currentTierData[1]
@@ -789,7 +794,8 @@ export const getCurrentTierInfoCustom = async (initCrowdsaleContract, execID) =>
         // eslint-disable-next-line
         logger.log(`CompareIndex`, currentTierIndex != tierIndex)
         // eslint-disable-next-line
-        if (currentTierIndex != tierIndex) {
+        if (currentTierIndex != tierIndex && retries < 8 && !isEndedVar && !isFinalizedVar) {
+          retries++
           retry()
         }
       })

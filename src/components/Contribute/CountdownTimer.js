@@ -1,5 +1,6 @@
 import React from 'react'
 import Circle from 'react-circle'
+import { pad } from '../../utils/utils'
 
 const CountdownTimer = ({
   altMessage,
@@ -7,6 +8,8 @@ const CountdownTimer = ({
   days,
   hours,
   isFinalized,
+  isSoldOut,
+  isTierSoldOut,
   isLoading,
   minutes,
   nextTick,
@@ -26,16 +29,16 @@ const CountdownTimer = ({
         </div>
       ) : null}
       <div className={`cnt-CountdownTimer_TimeItem ${hoursHaveBlinker}`}>
-        <div className="cnt-CountdownTimer_TimeCount">{hours}</div>
+        <div className="cnt-CountdownTimer_TimeCount">{pad(hours, 2)}</div>
         <div className="cnt-CountdownTimer_TimeInterval">Hours</div>
       </div>
       <div className="cnt-CountdownTimer_TimeItem">
-        <div className="cnt-CountdownTimer_TimeCount">{minutes}</div>
+        <div className="cnt-CountdownTimer_TimeCount">{pad(minutes, 2)}</div>
         <div className="cnt-CountdownTimer_TimeInterval">Mins</div>
       </div>
       {days ? null : (
         <div className="cnt-CountdownTimer_TimeItem">
-          <div className="cnt-CountdownTimer_TimeCount">{seconds}</div>
+          <div className="cnt-CountdownTimer_TimeCount">{pad(seconds, 2)}</div>
           <div className="cnt-CountdownTimer_TimeInterval">Secs</div>
         </div>
       )}
@@ -92,7 +95,7 @@ const CountdownTimer = ({
         />
         {isLoading ? null : (
           <div className="cnt-CountdownTimer_TimeContainer">
-            {noTimeLeft || isFinalized ? null : countdownClock}
+            {noTimeLeft || isFinalized || isSoldOut ? null : countdownClock}
             {getCrowdsaleMessage()}
             {getCrowdsaleAltMessage()}
           </div>
