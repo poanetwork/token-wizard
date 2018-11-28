@@ -60,7 +60,6 @@ export const ManageForm = inject('tokenStore', 'generalStore', 'crowdsaleStore')
                   value={tiers[0].walletAddress}
                 />
               </div>
-              {/* TODO: check if this is working */}
               {crowdsaleStore.isDutchAuction ? (
                 <div className="mng-ManageForm_Item">
                   <Field

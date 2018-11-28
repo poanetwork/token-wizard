@@ -1,15 +1,15 @@
-import CrowdsalesList from '../Common/CrowdsalesList'
+import CrowdsalesList from './CrowdsalesList'
 import React, { Component } from 'react'
 import logdown from 'logdown'
 import { CrowdsaleEmptyList } from './CrowdsaleEmptyList'
 import { Loader } from '../Common/Loader'
+import { MANAGE_SECTIONS } from '../../utils/constants'
+import { ManageNavigation } from '../Common/ManageNavigation'
+import { SectionInfo } from '../Common/SectionInfo'
 import { checkWeb3ForErrors, getCurrentAccount, loadRegistryAddresses } from '../../utils/blockchainHelpers'
 import { clearStorage, navigateTo } from '../../utils/utils'
 import { inject, observer } from 'mobx-react'
 import { reloadStorage } from '../Home/utils'
-import { SectionInfo } from '../Common/SectionInfo'
-import { ManageNavigation } from '../Common/ManageNavigation'
-import { MANAGE_SECTIONS } from '../../utils/constants'
 
 const logger = logdown('TW:CrowdsalesList')
 const { CROWDSALE_LIST } = MANAGE_SECTIONS

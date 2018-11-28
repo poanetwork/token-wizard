@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ButtonContinue } from './ButtonContinue'
+import { ButtonContinue } from '../Common/ButtonContinue'
 import { inject, observer } from 'mobx-react'
 import { navigateTo } from '../../utils/utils'
 
@@ -29,7 +29,6 @@ export default class CrowdsalesList extends Component {
   render() {
     const { selectedRow, selectedCrowdsale } = this.state
     const { crowdsales } = this.props
-
     return (
       <div className="mng-CrowdsalesList">
         <h2 className="mng-CrowdsalesList_Title">Select Address</h2>
@@ -43,7 +42,7 @@ export default class CrowdsalesList extends Component {
               <input
                 checked={selectedRow === index}
                 className="mng-CrowdsalesList_InputRadio"
-                name="crowdsale-item"
+                name="crowdsaleItem"
                 type="radio"
                 value={index.toString()}
               />
