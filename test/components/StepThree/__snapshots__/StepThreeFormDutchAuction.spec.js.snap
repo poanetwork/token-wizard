@@ -511,6 +511,7 @@ exports[`StepThreeFormDutchAuction should render StepThreeFormDutchAuction 1`] =
               <input
                 checked={false}
                 className="sw-RadioButton_Input"
+                disabled={true}
                 id="tiers[0].whitelistEnabled.enable_whitelisting_yes"
                 name="tiers[0].whitelistEnabled"
                 onChange={[Function]}
@@ -529,6 +530,7 @@ exports[`StepThreeFormDutchAuction should render StepThreeFormDutchAuction 1`] =
               <input
                 checked={true}
                 className="sw-RadioButton_Input"
+                disabled={true}
                 id="tiers[0].whitelistEnabled.enable_whitelisting_no"
                 name="tiers[0].whitelistEnabled"
                 onChange={[Function]}
