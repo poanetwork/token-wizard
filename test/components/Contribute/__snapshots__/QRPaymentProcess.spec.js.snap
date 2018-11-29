@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`QRPaymentProcess should render QRPaymentProcess component 1`] = `
+<div
+  className="cnt-QRPaymentProcess"
+>
+  <div
+    className="cnt-QRPaymentProcess_QR"
+  >
+    <canvas
+      height={115}
+      style={
+        Object {
+          "height": 115,
+          "width": 115,
+        }
+      }
+      width={115}
+    />
+  </div>
+  <div
+    className="cnt-QRPaymentProcess_HashContainer"
+  >
+    <span
+      className="cnt-QRPaymentProcess_Hash"
+    >
+      0xcbf4eb5e9743c335631afe21e158bf1bb21b2864
+    </span>
+    <button
+      className="sw-ButtonCopyToClipboard "
+      data-clipboard-action="copy"
+      data-clipboard-text="0xcbf4eb5e9743c335631afe21e158bf1bb21b2864"
+      onClick={[Function]}
+      type="button"
+    />
+  </div>
+  <div
+    className="cnt-QRPaymentProcess_Note"
+  >
+    <h3
+      className="cnt-QRPaymentProcess_NoteTitle"
+    >
+      Important
+    </h3>
+    <p
+      className="cnt-QRPaymentProcess_NoteDescription"
+    >
+      Send ethers to the Auth-os 
+      RegistryExec
+       smart-contract address with a MethodID: 
+      0x55f8650100000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000004a6f2ae3a00000000000000000000000000000000000000000000000000000000
+    </p>
+  </div>
+</div>
+`;

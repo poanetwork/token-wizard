@@ -1,0 +1,55 @@
+.sw-WhitelistInputBlock {
+
+    .sw-BorderedBlock-TierBlocksWhitelistCapped & {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-6-col-1;
+        }
+    }
+
+    .sw-DutchAuctionBlock & {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-5-col-1;
+        }
+    }
+
+    .mng-ManageTierBlock & {
+        border-top: 1px solid $base-border-color;
+        margin-top: 15px;
+        padding-top: 30px;
+    }
+
+    .mng-ManageDutchAuctionBlock & {
+        border-top: 1px solid $base-border-color;
+        margin-top: 15px;
+        padding-top: 30px;
+    }
+
+}
+
+.sw-WhitelistInputBlock_MinMaxFields {
+    display: flex;
+}
+
+.sw-WhitelistInputBlock_Controls {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    @media (min-width: $breakpoint-md) {
+        flex-direction: row;
+    }
+}
+
+.sw-WhitelistInputBlock_AddressMinMaxGrid {
+
+    @media (min-width: $breakpoint-md) {
+        display: grid;
+        grid-column-gap: $grid-column-gap-xl;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    @media (min-width: $breakpoint-xxl) {
+        grid-column-gap: $grid-column-gap-xxl;
+    }
+
+}

@@ -3619,7 +3619,6 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                       </FormControlTitle>
                                       <TextField
                                         autoComplete="off"
-                                        className="input"
                                         disabled={true}
                                         id="tiers[0].startTime"
                                         name="tiers[0].startTime"
@@ -3770,7 +3769,6 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                       </FormControlTitle>
                                       <TextField
                                         autoComplete="off"
-                                        className="input"
                                         disabled={false}
                                         id="tiers[0].endTime"
                                         name="tiers[0].endTime"
@@ -3925,7 +3923,6 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                       </FormControlTitle>
                                       <TextField
                                         autoComplete="off"
-                                        className="input"
                                         disabled={true}
                                         id="tiers[0].rate"
                                         name="tiers[0].rate"
@@ -4080,7 +4077,6 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                       </FormControlTitle>
                                       <TextField
                                         autoComplete="off"
-                                        className="input"
                                         disabled={true}
                                         id="tiers[0].supply"
                                         name="tiers[0].supply"
@@ -4211,7 +4207,6 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                     </FormControlTitle>
                                     <TextField
                                       autoComplete="off"
-                                      className="input"
                                       disabled={false}
                                       id="tiers[0].minCap"
                                       name="tiers[0].minCap"
@@ -4420,7 +4415,6 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                       </FormControlTitle>
                                       <TextField
                                         autoComplete="off"
-                                        className="input"
                                         disabled={true}
                                         id="tiers[1].startTime"
                                         name="tiers[1].startTime"
@@ -4570,7 +4564,6 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                       </FormControlTitle>
                                       <TextField
                                         autoComplete="off"
-                                        className="input"
                                         disabled={true}
                                         id="tiers[1].endTime"
                                         name="tiers[1].endTime"
@@ -4725,7 +4718,6 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                       </FormControlTitle>
                                       <TextField
                                         autoComplete="off"
-                                        className="input"
                                         disabled={true}
                                         id="tiers[1].rate"
                                         name="tiers[1].rate"
@@ -4880,7 +4872,6 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                       </FormControlTitle>
                                       <TextField
                                         autoComplete="off"
-                                        className="input"
                                         disabled={true}
                                         id="tiers[1].supply"
                                         name="tiers[1].supply"
@@ -5011,7 +5002,6 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                     </FormControlTitle>
                                     <TextField
                                       autoComplete="off"
-                                      className="input"
                                       disabled={true}
                                       id="tiers[1].minCap"
                                       name="tiers[1].minCap"

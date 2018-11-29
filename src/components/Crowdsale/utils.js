@@ -11,6 +11,8 @@ import { BigNumber } from 'bignumber.js'
 import logdown from 'logdown'
 import { CrowdsaleConfig } from '../Common/config'
 
+let promiseRetry = require('promise-retry')
+
 const logger = logdown('TW:crowdsale:utils')
 
 export let getTokenData = async (initCrowdsaleContract, execID, account) => {
@@ -748,6 +750,9 @@ export const getCurrentTierInfoCustom = async (initCrowdsaleContract, execID) =>
     const tiersStartAndEndDates = await Promise.all(getTiersStartAndEndDates)
     logger.log('Tiers:', tiersStartAndEndDates)
 
+    const isEndedVar = await isEnded({ methods }, execID)
+    const isFinalizedVar = await isFinalized({ methods }, execID)
+
     // Get index of actual tier
     // if -1 crowdsale has finished
     let tierIndex = -1
@@ -775,11 +780,28 @@ export const getCurrentTierInfoCustom = async (initCrowdsaleContract, execID) =>
       let crowdSaleTierData = await getCrowdsaleTier(...params, tierIndex).call()
       logger.log('Crowdsale Tier Data', crowdSaleTierData)
 
-      const currentTierData = await getCurrentTierInfo(...params).call()
-      logger.log('Current Tier Data', currentTierData)
+      let currentTierData
+      // There is a bug in the contracts
+      let retries = 0
+      await promiseRetry(async retry => {
+        currentTierData = await getCurrentTierInfo(...params).call()
+        logger.log('Retries', retries)
+        logger.log('Current Tier Data', currentTierData)
+
+        let currentTierIndex = currentTierData[1]
+        logger.log(`CurrentTierIndex`, currentTierIndex)
+        logger.log(`TierIndex`, tierIndex)
+        // eslint-disable-next-line
+        logger.log(`CompareIndex`, currentTierIndex != tierIndex)
+        // eslint-disable-next-line
+        if (currentTierIndex != tierIndex && retries < 8 && !isEndedVar && !isFinalizedVar) {
+          retries++
+          retry()
+        }
+      })
 
       // The response of the getCrowdsaleTier function is different that getCurrentTierInfo, so we need to rebuild it
-      return {
+      const currentTierDataToReturn = {
         0: crowdSaleTierData[0],
         1: tierIndex,
         2: currentTierData[2],
@@ -789,6 +811,8 @@ export const getCurrentTierInfoCustom = async (initCrowdsaleContract, execID) =>
         6: crowdSaleTierData[5],
         7: crowdSaleTierData[6]
       }
+      logger.log('Current Tier Data to return', currentTierDataToReturn)
+      return currentTierDataToReturn
     } else {
       return {}
     }

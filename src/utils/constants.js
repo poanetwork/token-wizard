@@ -112,7 +112,17 @@ export const NAVIGATION_STEPS = {
   TOKEN_SETUP: 'Token Setup',
   CROWDSALE_SETUP: 'Crowdsale Setup',
   PUBLISH: 'Publish',
-  CROWDSALE_PAGE: 'Crowdsale Page'
+  CROWDSALE_PAGE: 'Crowdsale Page',
+  CONTRIBUTE_PAGE: 'Contribute Page'
+}
+
+export const MANAGE_SECTIONS = {
+  CROWDSALE_LIST: 'Crowdsale List',
+  MANAGE_CROWDSALE: 'Manage Crowdsale'
+}
+
+export const TW_STATISTICS_SECTION = {
+  TW_STATISTICS: 'Statistics'
 }
 
 export const VALIDATION_MESSAGES = {
@@ -281,8 +291,8 @@ export const TOAST = {
   },
   MESSAGE: {
     TRANSACTION_FAILED: 'Transaction has failed, please retry',
-    CONTRACT_DOWNLOAD_FAILED: 'Contract Download failed',
-    CONTRACT_DOWNLOAD_SUCCESS: 'A file with contracts and metadata downloaded on your computer',
+    CONTRACT_DOWNLOAD_FAILED: 'Contract download failed',
+    CONTRACT_DOWNLOAD_SUCCESS: 'A file with contracts and metadata has been downloaded to your computer',
     FINALIZE_FAIL: 'Was not able to finalize Crowdsale. Please be sure that Crowdsale has ended already',
     DISTRIBUTE_FAIL: 'Was not able to distribute reserved tokens'
   },

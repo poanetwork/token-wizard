@@ -1,5 +1,6 @@
 import React from 'react'
 import { ButtonDelete } from '../Common/ButtonDelete'
+import { TokenDimension } from '../Common/TokenDimension'
 import { inject, observer } from 'mobx-react'
 import { BigNumber } from 'bignumber.js'
 
@@ -18,7 +19,7 @@ const ReservedTokensTable = inject('reservedTokenStore')(
         <tr key={index.toString()} className="sw-ReservedTokensTable_Row">
           <td className="sw-ReservedTokensTable_Column sw-ReservedTokensTable_Column-address">{token.addr}</td>
           <td className="sw-ReservedTokensTable_Column">
-            <div className={`sw-ReservedTokensTable_Dimension sw-ReservedTokensTable_Dimension-${token.dim}`} />
+            <TokenDimension type={token.dim} />
           </td>
           <td className="sw-ReservedTokensTable_Column sw-ReservedTokensTable_Column-value">
             {tokenValue.toFixed(tokenValue.decimalPlaces())}

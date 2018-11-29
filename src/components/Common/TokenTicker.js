@@ -4,7 +4,7 @@ import { DESCRIPTION, TEXT_FIELDS } from '../../utils/constants'
 import { Field } from 'react-final-form'
 import { InputField2 } from './InputField2'
 
-export const TokenTicker = ({ errorStyle }) => (
+export const TokenTicker = () => (
   <Field
     validate={value => {
       const errors = composeValidators(

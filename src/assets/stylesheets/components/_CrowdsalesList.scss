@@ -1,0 +1,7 @@
+.mng-CrowdsalesList {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+@include radio-list-block('mng-CrowdsalesList');

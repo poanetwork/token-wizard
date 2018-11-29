@@ -19,26 +19,12 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import AlertContainer from 'react-alert'
 import { TOAST } from './utils/constants'
 import { Web3Provider } from './react-web3'
-import { getQueryVariable } from './utils/utils'
 
 @inject('deploymentStore')
 @observer
 class App extends Component {
   componentWillMount() {
-    // temporary code to switch ui styling versions
-    // obviously delete this when we get the v2.0 up and running
-    const uiversion = getQueryVariable('uiversion')
-
-    if (uiversion === '12') {
-      require('./assets/stylesheets/application_styles.css')
-      require('./assets/stylesheets/styles.css')
-    } else if (uiversion === '1') {
-      require('./assets/stylesheets/application_styles.css')
-    } else if (uiversion === '2') {
-      require('./assets/stylesheets/styles.css')
-    } else {
-      require('./assets/stylesheets/styles.css')
-    }
+    require('./assets/stylesheets/application.css')
   }
 
   render() {

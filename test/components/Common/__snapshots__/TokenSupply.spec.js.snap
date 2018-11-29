@@ -234,7 +234,6 @@ exports[`TokenSupply should render TokenSupply component and its children, with 
           </FormControlTitle>
           <TextField
             autoComplete="off"
-            className="input"
             id="supply"
             min="0"
             name="supply"

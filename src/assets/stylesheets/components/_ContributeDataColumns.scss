@@ -1,0 +1,33 @@
+.cnt-ContributeDataColumns {
+    @media (min-width: $breakpoint-md) {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-row-gap: 30px;
+        grid-column-gap: 20px;
+    }
+}
+
+.cnt-ContributeDataColumns_Item {
+    margin-bottom: 30px;
+
+    @media (min-width: $breakpoint-md) {
+        margin: 0;
+    }
+}
+
+.cnt-ContributeDataColumns_ItemData {
+    color: #000;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0 0 6px;
+}
+
+.cnt-ContributeDataColumns_ItemTitle {
+    color: #919191;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.2;
+    margin: 0;
+    word-break: break-word;
+  }

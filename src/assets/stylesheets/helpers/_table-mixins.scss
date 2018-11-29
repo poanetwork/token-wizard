@@ -1,0 +1,70 @@
+@mixin datatable-styles($gradient-width: 45px) {
+    margin-bottom: 22px;
+    max-width: 100%;
+    position: relative;
+
+    &::after {
+        background-image: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5), #ffffff);
+        bottom: 0;
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: $gradient-width;
+        z-index: 3;
+
+        @media (min-width: $breakpoint-xxl) {
+            display: none;
+        }
+    }
+}
+
+@mixin datatable-inner-styles() {
+    max-width: 100%;
+    overflow: auto;
+    position: relative;
+    z-index: 1;
+}
+
+@mixin datatable-table-styles() {
+    min-width: 100%;
+    vertical-align: middle;
+}
+
+@mixin datatable-column-styles-last-child() {
+    &:last-child {
+        padding-right: 50px;
+
+        @media (min-width: $breakpoint-xxl) {
+            padding-right: 25px;
+        }
+
+    }
+}
+
+@mixin datatable-column-styles($column-parent) {
+    border-bottom: solid 1px $base-border-color;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.2;
+    padding: 16px 25px 16px 0;
+
+    #{ $column-parent }:first-child & {
+        border-top: solid 1px $base-border-color;
+    }
+
+    @include datatable-column-styles-last-child();
+
+    &#{ & + '-value' } {
+        text-align: right;
+    }
+}
+
+@mixin datatable-th-styles() {
+    color: #000;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.2;
+    padding: 0 0 10px;
+    text-align: left;
+}

@@ -50,13 +50,6 @@ export const setFlatFileContentToState = file => {
 
 export const dateToTimestamp = date => new Date(date).getTime()
 
-export const isStepActive = (stepsTextArray, stepText, activeStepText) => {
-  const stepIndex = stepsTextArray.indexOf(stepText)
-  const activeStepIndex = stepsTextArray.indexOf(activeStepText)
-
-  return stepIndex <= activeStepIndex ? 'active' : ''
-}
-
 export const validateTier = tier => typeof tier === 'string' && tier.length > 0 && tier.length < 30
 
 export const validateSupply = supply => isNaN(Number(supply)) === false && Number(supply) > 0
@@ -235,7 +228,8 @@ export const convertLocationToPath = location => {
       stepThree: '3',
       stepFour: '4',
       manage: 'manage',
-      crowdsales: 'crowdsales'
+      crowdsales: 'crowdsales',
+      contribute: 'contribute'
     }[location] || null
   )
 }
@@ -333,3 +327,9 @@ export const uniqueElementsBy = (arr, fn) =>
     if (!acc.some(x => fn(v, x))) acc.push(v)
     return acc
   }, [])
+
+export const pad = (num, size) => {
+  let s = num + ''
+  while (s.length < size) s = '0' + s
+  return s
+}

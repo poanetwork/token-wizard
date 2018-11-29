@@ -1,8 +1,12 @@
 import React from 'react'
 import render from 'react-test-renderer'
 import Adapter from 'enzyme-adapter-react-15'
-import { configure, shallow } from 'enzyme'
+import { configure, shallow, mount } from 'enzyme'
 import { ButtonCopyToClipboard } from '../../../src/components/Common/ButtonCopyToClipboard'
+
+// Mock the 'copy' function to avoid it...
+import { copy, showClipboardCopyToast } from '../../../src/utils/copy'
+jest.mock('../../../src/utils/copy')
 
 configure({ adapter: new Adapter() })
 
@@ -24,6 +28,16 @@ describe(`ButtonCopyToClipboard`, () => {
     const wrapper = shallow(<ButtonCopyToClipboard value={value} />)
 
     expect(wrapper.prop('data-clipboard-text')).toBe(value)
+  })
+
+  it(`should call onClick event`, () => {
+    const value = 'Value to copy'
+    const wrapper = mount(<ButtonCopyToClipboard value={value} />)
+    const button = wrapper.find('.sw-ButtonCopyToClipboard')
+
+    button.simulate('click')
+
+    expect(showClipboardCopyToast).toHaveBeenCalled()
   })
 
   it(`should render ButtonCopyToClipboard component`, () => {

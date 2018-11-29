@@ -21,20 +21,20 @@ export const CrowdsaleSetupBlockWhitelistWithCap = tierStore => {
     <div className="cs-CrowdsaleSetupBlockWhitelistWithCap">
       <DisplayField
         description={PD_WALLET_ADDRESS}
-        extraClass="pb-DisplayField-WalletAddress"
+        extraClassName="pb-DisplayField-WalletAddress"
         title={WALLET_ADDRESS}
         value={walletAddress}
       />
       <DisplayField
         description={PD_CROWDSALE_START_TIME}
-        extraClass="pb-DisplayField-CrowdsaleStartTime"
+        extraClassName="pb-DisplayField-CrowdsaleStartTime"
         mobileTextSize="small"
         title={CROWDSALE_START_TIME}
         value={startTimeWithUTC}
       />
       <DisplayField
         description={PD_CROWDSALE_END_TIME}
-        extraClass="pb-DisplayField-CrowdsaleEndTime"
+        extraClassName="pb-DisplayField-CrowdsaleEndTime"
         mobileTextSize="small"
         title={CROWDSALE_END_TIME}
         value={endTimeWithUTC}

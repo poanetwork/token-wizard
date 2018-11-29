@@ -33,8 +33,8 @@ export class WhitelistInputBlock extends React.Component {
     super(props)
     this.state = {
       addr: '',
-      min: '',
       max: '',
+      min: '',
       validation: {
         address: {
           pristine: true,
@@ -291,7 +291,7 @@ export class WhitelistInputBlock extends React.Component {
   }
 
   render() {
-    const { num, tierStore } = this.props
+    const { num, tierStore, readOnly, showTableHeader } = this.props
     const { whitelist } = tierStore.tiers[num]
     const whitelistEmpty = tierStore.isWhitelistEmpty(num)
     const dropzoneStyle = {}
@@ -299,60 +299,62 @@ export class WhitelistInputBlock extends React.Component {
     return (
       <div className="sw-WhitelistInputBlock">
         <h2 className="sw-BorderedBlock_Title">Whitelist</h2>
-        <div className="sw-WhitelistInputBlock_AddressMinMaxGrid">
-          <InputField
-            description={`Address of a whitelisted account. Whitelists are inherited. E.g., if an account whitelisted on Tier 1 and didn't buy max cap on Tier 1, he can buy on Tier 2, and following tiers.`}
-            errorMessage="The inserted address is invalid"
-            onChange={e => this.handleAddressChange(e.target.value)}
-            placeholder="Enter here"
-            pristine={this.state.validation.address.pristine}
-            title={ADDRESS}
-            type="text"
-            valid={this.state.validation.address.valid}
-            value={this.state.addr}
-          />
-          <div className="sw-WhitelistInputBlock_MinMaxFields">
+        {readOnly ? null : (
+          <div className="sw-WhitelistInputBlock_AddressMinMaxGrid">
             <InputField
-              description={`Minimum amount tokens to buy. Not a minimal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.`}
-              errorMessage={this.state.validation.min.errorMessage}
-              onChange={e => this.handleMinMaxChange({ min: e.target.value })}
+              description={`Address of a whitelisted account. Whitelists are inherited. E.g., if an account whitelisted on Tier 1 and didn't buy max cap on Tier 1, he can buy on Tier 2, and following tiers.`}
+              errorMessage="The inserted address is invalid"
+              onChange={e => this.handleAddressChange(e.target.value)}
               placeholder="Enter here"
-              pristine={this.state.validation.min.pristine}
-              title={MIN}
-              type="number"
-              valid={this.state.validation.min.valid}
-              value={this.state.min}
+              pristine={this.state.validation.address.pristine}
+              title={ADDRESS}
+              type="text"
+              valid={this.state.validation.address.valid}
+              value={this.state.addr}
             />
-            <InputField
-              description={`Maximum is the hard limit.`}
-              errorMessage={this.state.validation.max.errorMessage}
-              onChange={e => this.handleMinMaxChange({ max: e.target.value })}
-              placeholder="Enter here"
-              pristine={this.state.validation.max.pristine}
-              title={MAX}
-              type="number"
-              valid={this.state.validation.max.valid}
-              value={this.state.max}
-            />
-            <ButtonPlus onClick={e => this.addWhitelistItem()} />
+            <div className="sw-WhitelistInputBlock_MinMaxFields">
+              <InputField
+                description={`Minimum amount tokens to buy. Not a minimal size of a transaction. If minCap is 1 and user bought 1 token in a previous transaction and buying 0.1 token it will allow him to buy.`}
+                errorMessage={this.state.validation.min.errorMessage}
+                onChange={e => this.handleMinMaxChange({ min: e.target.value })}
+                placeholder="Enter here"
+                pristine={this.state.validation.min.pristine}
+                title={MIN}
+                type="number"
+                valid={this.state.validation.min.valid}
+                value={this.state.min}
+              />
+              <InputField
+                description={`Maximum is the hard limit.`}
+                errorMessage={this.state.validation.max.errorMessage}
+                onChange={e => this.handleMinMaxChange({ max: e.target.value })}
+                placeholder="Enter here"
+                pristine={this.state.validation.max.pristine}
+                title={MAX}
+                type="number"
+                valid={this.state.validation.max.valid}
+                value={this.state.max}
+              />
+              <ButtonPlus onClick={e => this.addWhitelistItem()} />
+            </div>
           </div>
-        </div>
-        {whitelist ? <WhitelistTable list={whitelist} crowdsaleNum={num} /> : null}
-
-        {/* Actions */}
-        <div className="sw-WhitelistInputBlock_Controls">
-          {whitelistEmpty ? null : (
-            <ButtonCSV extraClassName="sw-ButtonCSV-clearall" onClick={this.clearAll} text="Clear All" />
-          )}
-          <Dropzone onDrop={this.onDrop} accept=".csv" style={dropzoneStyle}>
-            <ButtonCSV extraClassName="sw-ButtonCSV-uploadcsv" text="Upload CSV" type="button" />
-          </Dropzone>
-          <ButtonCSV
-            extraClassName="sw-ButtonCSV-downloadcsv m-r-0"
-            onClick={this.downloadCSV}
-            text="Download CSV template"
-          />
-        </div>
+        )}
+        {whitelist ? <WhitelistTable showTableHeader={showTableHeader} list={whitelist} crowdsaleNum={num} /> : null}
+        {readOnly ? null : (
+          <div className="sw-WhitelistInputBlock_Controls">
+            {whitelistEmpty ? null : (
+              <ButtonCSV extraClassName="sw-ButtonCSV-clearall" onClick={this.clearAll} text="Clear All" />
+            )}
+            <Dropzone onDrop={this.onDrop} accept=".csv" style={dropzoneStyle}>
+              <ButtonCSV extraClassName="sw-ButtonCSV-uploadcsv" text="Upload CSV" type="button" />
+            </Dropzone>
+            <ButtonCSV
+              extraClassName="sw-ButtonCSV-downloadcsv m-r-0"
+              onClick={this.downloadCSV}
+              text="Download CSV template"
+            />
+          </div>
+        )}
       </div>
     )
   }

@@ -1,0 +1,105 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WhitelistTable should render WhitelistTable component 1`] = `
+<div
+  className="sw-WhiteListTable "
+>
+  <div
+    className="sw-WhiteListTable_Inner"
+  >
+    <table
+      cellPadding="0"
+      cellSpacing="0"
+      className="sw-WhiteListTable_Table"
+    >
+      <tbody>
+        <tr
+          className="sw-WhiteListTable_Row"
+        >
+          <td
+            className="sw-WhiteListTable_Column sw-WhiteListTable_Column-address"
+          >
+            0x2bD96eA633e8BcB468732c68B2CD632BfF4D79Db
+          </td>
+          <td
+            className="sw-WhiteListTable_Column sw-WhiteListTable_value"
+          >
+            1
+          </td>
+          <td
+            className="sw-WhiteListTable_Column sw-WhiteListTable_value"
+          >
+            5
+          </td>
+          <td
+            className="sw-WhiteListTable_Column"
+          >
+            <button
+              className="sw-ButtonDelete "
+              onClick={[Function]}
+              type="button"
+            />
+          </td>
+        </tr>
+        <tr
+          className="sw-WhiteListTable_Row"
+        >
+          <td
+            className="sw-WhiteListTable_Column sw-WhiteListTable_Column-address"
+          >
+            0x665772109Eb2dc9F5B7c28F987Ec58949d4Eeb87
+          </td>
+          <td
+            className="sw-WhiteListTable_Column sw-WhiteListTable_value"
+          >
+            1
+          </td>
+          <td
+            className="sw-WhiteListTable_Column sw-WhiteListTable_value"
+          >
+            5
+          </td>
+        </tr>
+        <tr
+          className="sw-WhiteListTable_Row"
+        >
+          <td
+            className="sw-WhiteListTable_Column sw-WhiteListTable_Column-address"
+          >
+            0x66f537cCD03f21c58172602B919884A442A3c313
+          </td>
+          <td
+            className="sw-WhiteListTable_Column sw-WhiteListTable_value"
+          >
+            1
+          </td>
+          <td
+            className="sw-WhiteListTable_Column sw-WhiteListTable_value"
+          >
+            5
+          </td>
+        </tr>
+        <tr
+          className="sw-WhiteListTable_Row"
+        >
+          <td
+            className="sw-WhiteListTable_Column sw-WhiteListTable_Column-address"
+          >
+            0x693d436da2c3C11341149522E5F6d0390B363197
+          </td>
+          <td
+            className="sw-WhiteListTable_Column sw-WhiteListTable_value"
+          >
+            1
+          </td>
+          <td
+            className="sw-WhiteListTable_Column sw-WhiteListTable_value"
+          >
+            5
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;

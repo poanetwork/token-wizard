@@ -1,0 +1,67 @@
+$mng-ReservedTokensList_TableContainer-gradient-width: 45px !default;
+
+.mng-ReservedTokensList {
+    margin-bottom: 36px;
+}
+
+.mng-ReservedTokensList_Container {
+    background-color: #fff;
+    border-radius: 5px;
+    border: 1px solid $base-border-color;
+    box-shadow: 0 9px 18px 4px rgba(224, 224, 224, 0.2);
+    padding: 24px 35px 36px 38px;
+
+    .mng-Manage & {
+        padding: 25px 10px;
+
+        @media (min-width: $breakpoint-md) {
+            padding: 24px 35px 36px 38px;
+        }
+    }
+}
+
+.mng-ReservedTokensList_Title {
+    color: #000;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0 0 10px;
+}
+
+.mng-ReservedTokensList_TableContainer {
+
+    @include datatable-styles($mng-ReservedTokensList_TableContainer-gradient-width);
+
+}
+
+.mng-ReservedTokensList_Inner {
+
+    @include datatable-inner-styles();
+
+}
+
+.mng-ReservedTokensList_Table {
+
+    @include datatable-table-styles();
+
+}
+
+.mng-ReservedTokensList_TableColumn {
+
+    @include datatable-column-styles('.mng-ReservedTokensList_TableRow');
+    padding-right: 0;
+
+}
+
+.mng-ReservedTokensList_TableTH {
+
+    @include datatable-th-styles();
+
+    &.mng-ReservedTokensList_TableTH-dimension {
+        text-align: center;
+    }
+
+    &.mng-ReservedTokensList_TableTH-value {
+        text-align: center;
+    }
+}

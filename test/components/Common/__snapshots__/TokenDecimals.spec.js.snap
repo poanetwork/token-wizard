@@ -240,7 +240,6 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
           </FormControlTitle>
           <TextField
             autoComplete="off"
-            className="input"
             disabled={true}
             id="decimals"
             max="18"

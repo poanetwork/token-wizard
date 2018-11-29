@@ -1,0 +1,27 @@
+.sw-LogoWhite {
+    background-image: url('#{ $base-images-path}/LogoWhite/logo.svg');
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: contain;
+    display: block;
+    height: 49px;
+    width: 102px;
+
+    .st-StepNavigation &,
+    .mng-ManageNavigation & {
+        margin-bottom: 37px;
+    }
+
+    @media (min-width: $breakpoint-md) {
+        height: 64px;
+        width: 126px;
+    }
+
+    @media (min-width: $breakpoint-xl) {
+        .st-StepNavigation &,
+        .mng-ManageNavigation & {
+            margin-bottom: 43px;
+        }
+    }
+
+}

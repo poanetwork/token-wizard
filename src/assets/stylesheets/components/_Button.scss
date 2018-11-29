@@ -1,0 +1,36 @@
+$sw-Button-height: 50px !default;
+
+.sw-Button {
+    @include not-selectable-text();
+    background-color: $brand-primary;
+    border-radius: 6px;
+    border: none;
+    box-shadow: 0 12px 22px 0 rgba(0, 0, 0, 0.24);
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 18px;
+    font-weight: 600;
+    height: $sw-Button-height;
+    line-height: $sw-Button-height;
+    outline: none;
+    padding: 0 25px;
+
+    &:focus,
+    &.active,
+    &:hover {
+        background-color: darken($brand-primary, 10%);
+        border-color: darken($brand-primary, 10%);
+    }
+
+    &[disabled] {
+        &:focus,
+        &.active,
+        &:hover {
+            background-color: $brand-primary;
+            border-color: $brand-primary;
+        }
+    }
+
+    @include disabled-button-styles();
+}
