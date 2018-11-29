@@ -40,6 +40,7 @@ import moment from 'moment'
 import { ButtonBack } from '../Common/ButtonBack'
 import { FinalizeCrowdsaleStep } from './FinalizeCrowdsaleStep'
 import { Form } from 'react-final-form'
+import { Link } from 'react-router-dom'
 import { Loader } from '../Common/Loader'
 import { MANAGE_SECTIONS } from '../../utils/constants'
 import { ManageForm } from './ManageForm'
@@ -842,12 +843,13 @@ export class Manage extends Component {
           <ManageNavigation activeStepTitle={MANAGE_CROWDSALE} navigationSteps={MANAGE_SECTIONS} />
           <div className="st-StepContent">
             <SectionInfo
-              description="Here you can manage parameters of your crowdsale campaign.
-              Crowdsale page."
+              description="Here you can manage parameters of your crowdsale campaign."
               stepNumber="0"
               title={MANAGE_CROWDSALE}
             />
-            <p>Crowdsale page link: {this.getCrowdsaleLink()}</p>
+            <h3 className="sw-BorderedBlockTitle sw-BorderedBlockTitle-margin-bottom-xl">
+              <Link to={this.getCrowdsaleLink()}>Crowdsale Page</Link>
+            </h3>
             <FinalizeCrowdsaleStep
               disabled={!ownerCurrentUser || crowdsaleIsFinalized || !canFinalize}
               handleClick={this.finalizeCrowdsale}

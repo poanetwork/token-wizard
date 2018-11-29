@@ -4,7 +4,7 @@ import { CrowdsaleRate } from './../Common/CrowdsaleRate'
 import { CrowdsaleStartTime } from './../Common/CrowdsaleStartTime'
 import { InputField } from '../Common/InputField'
 import { Supply } from './../Common/Supply'
-import { TEXT_FIELDS, DESCRIPTION, CROWDSALE_STRATEGIES_DISPLAYNAMES } from '../../utils/constants'
+import { TEXT_FIELDS, DESCRIPTION } from '../../utils/constants'
 import { WhitelistInputBlock } from '../Common/WhitelistInputBlock'
 import { dateToTimestamp } from '../../utils/utils'
 import { inject, observer } from 'mobx-react'
@@ -15,7 +15,6 @@ export const ManageDutchAuctionBlock = inject('crowdsaleStore', 'tokenStore')(
     <div className="mng-ManageDutchAuctionBlock">
       {fields.map((name, index) => {
         const { endTime: initialEndTime, whitelistEnabled } = fields.initial[index]
-
         const tierHasEnded = !isDateLaterThan()(dateToTimestamp(initialEndTime))(Date.now())
         const canEditWhiteList = canEditTiers && !tierHasEnded
         const isWhitelistEnabled = whitelistEnabled === 'yes'
@@ -27,9 +26,18 @@ export const ManageDutchAuctionBlock = inject('crowdsaleStore', 'tokenStore')(
                 <InputField
                   disabled={true}
                   readOnly={true}
-                  title={TEXT_FIELDS.STRATEGY}
+                  title={TEXT_FIELDS.MIN_CAP}
                   type="text"
-                  value={CROWDSALE_STRATEGIES_DISPLAYNAMES.DUTCH_AUCTION}
+                  value={fields.initial[0]['minCap']}
+                />
+              </div>
+              <div className="mng-ManageDutchAuctionBlock_Item">
+                <InputField
+                  disabled={true}
+                  readOnly={true}
+                  title={TEXT_FIELDS.BURN_EXCESS}
+                  type="text"
+                  value={fields.initial[0]['burnExcess']}
                 />
               </div>
               <div className="mng-ManageDutchAuctionBlock_Item">

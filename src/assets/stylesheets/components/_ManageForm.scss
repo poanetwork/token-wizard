@@ -23,6 +23,8 @@
 }
 
 .mng-ManageForm_ItemsContainer {
+    margin-bottom: 20px;
+
     @media (min-width: $breakpoint-md) {
         display: grid;
         grid-column-gap: $grid-column-gap-xl;
