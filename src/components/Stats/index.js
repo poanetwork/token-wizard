@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import logdown from 'logdown'
-import { Loader } from '../Common/Loader'
 import { ManageNavigation } from '../Common/ManageNavigation'
 import { SectionInfo } from '../Common/SectionInfo'
 import { getCrowdsaleAssets } from '../../stores/utils'
