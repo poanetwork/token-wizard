@@ -1,6 +1,9 @@
 import React from 'react'
 import Circle from 'react-circle'
 import { pad } from '../../utils/utils'
+import logdown from 'logdown'
+
+const logger = logdown('TW:CountDownTimer')
 
 const CountdownTimer = ({
   altMessage,
@@ -48,12 +51,17 @@ const CountdownTimer = ({
   const getCrowdsaleMessage = () => {
     let theMessage
 
+    logger.log('Is Finalized', isFinalized)
+    logger.log('Is sold out', isSoldOut)
+    logger.log('Is Tier sold out', isTierSoldOut)
     if (isFinalized) {
       theMessage = 'crowdsale has been finalized'
     } else {
       if (nextTick && nextTick.type) {
         if (nextTick.type === 'start' && !noTimeLeft) {
           theMessage = `To start of tier ${nextTick.order} of ${tiersLength}`
+        } else if (nextTick.type === 'end' && !noTimeLeft && isSoldOut && nextTick.order === tiersLength) {
+          theMessage = 'Crowdsale has ended'
         } else if (nextTick.type === 'end' && !noTimeLeft) {
           theMessage = `To end of tier ${nextTick.order} of ${tiersLength}`
         } else {
@@ -72,7 +80,7 @@ const CountdownTimer = ({
   }
 
   const getCrowdsaleProgress = () => {
-    if (noTimeLeft || !crowdsaleIsRunning) {
+    if (noTimeLeft || !crowdsaleIsRunning || isFinalized || isSoldOut) {
       return 100
     }
 
