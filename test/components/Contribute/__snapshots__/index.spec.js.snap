@@ -1,0 +1,382 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Contribute should render Contribute component 1`] = `
+<div>
+  <section
+    className="lo-MenuBarAndContent"
+  >
+    <div
+      className="st-StepNavigation"
+    >
+      <a
+        className="sw-LogoWhite"
+        href="/"
+      />
+      <div
+        className="st-StepNavigation_Container"
+      >
+        <div
+          className="st-StepItem
+        active  "
+        >
+          <div
+            className="st-StepItem_Circle"
+          />
+          <div
+            className="st-StepItem_Line"
+          />
+          <span
+            className="st-StepItem_Text"
+          >
+            Crowdsale Strategy
+          </span>
+        </div>
+        <div
+          className="st-StepItem
+        active  "
+        >
+          <div
+            className="st-StepItem_Circle"
+          />
+          <div
+            className="st-StepItem_Line"
+          />
+          <span
+            className="st-StepItem_Text"
+          >
+            Token Setup
+          </span>
+        </div>
+        <div
+          className="st-StepItem
+        active  "
+        >
+          <div
+            className="st-StepItem_Circle"
+          />
+          <div
+            className="st-StepItem_Line"
+          />
+          <span
+            className="st-StepItem_Text"
+          >
+            Crowdsale Setup
+          </span>
+        </div>
+        <div
+          className="st-StepItem
+        active  "
+        >
+          <div
+            className="st-StepItem_Circle"
+          />
+          <div
+            className="st-StepItem_Line"
+          />
+          <span
+            className="st-StepItem_Text"
+          >
+            Publish
+          </span>
+        </div>
+        <div
+          className="st-StepItem
+        active  "
+        >
+          <div
+            className="st-StepItem_Circle"
+          />
+          <div
+            className="st-StepItem_Line"
+          />
+          <span
+            className="st-StepItem_Text"
+          >
+            Crowdsale Page
+          </span>
+        </div>
+        <div
+          className="st-StepItem
+        active  st-StepItem-small"
+        >
+          <div
+            className="st-StepItem_Circle"
+          />
+          <span
+            className="st-StepItem_Text"
+          >
+            Contribute Page
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      className="st-StepContent"
+    >
+      <div
+        className="st-SectionInfo "
+      >
+        <div
+          className="st-SectionInfo_Icon st-SectionInfo_Icon-step6"
+        />
+        <div
+          className="st-SectionInfo_Text"
+        >
+          <h1
+            className="st-SectionInfo_Title"
+          >
+            Contribute Page
+          </h1>
+          <p
+            className="st-SectionInfo_Description"
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "Here you can contribute in the crowdsale campaign.",
+              }
+            }
+          />
+        </div>
+      </div>
+      <div
+        className="cnt-Contribute_Contents"
+      >
+        <div
+          className="cnt-Contribute_ShadowedBlock"
+        >
+          <div
+            className="cnt-CountdownTimer"
+          >
+            <div
+              className="cnt-CountdownTimer_ReactCountdownClock"
+            >
+              <svg
+                height="250"
+                viewBox="-25 -25 400 400"
+                width="250"
+              >
+                <circle
+                  cx="175"
+                  cy="175"
+                  fill="none"
+                  r="175"
+                  stroke="#5a2da5"
+                  strokeWidth="50"
+                />
+                <circle
+                  cx="175"
+                  cy="175"
+                  fill="none"
+                  r="175"
+                  stroke="#a971f9"
+                  strokeDasharray="1100"
+                  strokeDashoffset="1100"
+                  strokeLinecap="butt"
+                  strokeWidth="50"
+                  style={
+                    Object {
+                      "strokeDashoffset": 0,
+                      "transition": "stroke-dashoffset 1s ease-out",
+                    }
+                  }
+                  transform="rotate(-90 175 175)"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            className="cnt-ContributeDataList "
+          />
+          <div
+            className="cnt-ContributeDataColumns "
+          >
+            <div
+              className="cnt-ContributeDataColumns_Item"
+            >
+              <p
+                className="cnt-ContributeDataColumns_ItemData"
+              >
+                Name
+              </p>
+              <h4
+                className="cnt-ContributeDataColumns_ItemTitle"
+              >
+                
+              </h4>
+            </div>
+            <div
+              className="cnt-ContributeDataColumns_Item"
+            >
+              <p
+                className="cnt-ContributeDataColumns_ItemData"
+              >
+                Ticker
+              </p>
+              <h4
+                className="cnt-ContributeDataColumns_ItemTitle"
+              >
+                
+              </h4>
+            </div>
+            <div
+              className="cnt-ContributeDataColumns_Item"
+            >
+              <p
+                className="cnt-ContributeDataColumns_ItemData"
+              >
+                Total Supply
+              </p>
+              <h4
+                className="cnt-ContributeDataColumns_ItemTitle"
+              >
+                0  
+              </h4>
+            </div>
+            <div
+              className="cnt-ContributeDataColumns_Item"
+            >
+              <p
+                className="cnt-ContributeDataColumns_ItemData"
+              >
+                Minimum Contribution
+              </p>
+              <h4
+                className="cnt-ContributeDataColumns_ItemTitle"
+              >
+                You are not allowed
+              </h4>
+            </div>
+            <div
+              className="cnt-ContributeDataColumns_Item"
+            >
+              <p
+                className="cnt-ContributeDataColumns_ItemData"
+              >
+                Maximum Contribution
+              </p>
+              <h4
+                className="cnt-ContributeDataColumns_ItemTitle"
+              >
+                You are not allowed
+              </h4>
+            </div>
+          </div>
+        </div>
+        <div
+          className="cnt-Contribute_BalanceBlock"
+        >
+          <div
+            className="ba-BalanceTokens "
+          >
+            <h2
+              className="ba-BalanceTokens_Title"
+            >
+              0
+               
+              <span
+                className="ba-BalanceTokens_Title-uppercase"
+              >
+                
+              </span>
+            </h2>
+            <p
+              className="ba-BalanceTokens_Description"
+            >
+              Your Balance
+            </p>
+          </div>
+          <form
+            className="cnt-ContributeForm "
+            onSubmit={[Function]}
+          >
+            <h3
+              className="cnt-ContributeForm_Title"
+            >
+              Choose amount to contribute
+            </h3>
+            <div
+              className="cnt-ContributeForm_AmountContainer"
+            >
+              <div
+                className="sw-InputField2 cnt-ContributeForm_Amount"
+              >
+                <input
+                  className="sw-TextField"
+                  id="contribute"
+                  name="contribute"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder="0"
+                  value=""
+                />
+              </div>
+              <div
+                className="sw-TokenDimension sw-TokenDimension-tokens "
+              />
+            </div>
+            <select
+              className="sw_Select"
+              onChange={[Function]}
+              value="qr"
+            >
+              <option
+                disabled={true}
+                value="metamask"
+              >
+                Wallet 
+                 (not available)
+              </option>
+              <option
+                value="qr"
+              >
+                QR
+              </option>
+            </select>
+          </form>
+        </div>
+      </div>
+      <div
+        className="cnt-ContributeDescription "
+      >
+        Here you can contribute in the crowdsale campaign. At the moment, you need
+         
+        <a
+          href="https://chrome.google.com/webstore/detail/nifty-wallet/jbdaocneiiinmjbjlgalhcelgbejmnid"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          a Wallet
+        </a>
+         
+        client to contribute into the crowdsale.
+      </div>
+    </div>
+  </section>
+  <div
+    className="sw-FullscreenBackdrop"
+  >
+    <div
+      className="sw-Loader"
+    >
+      <div
+        className="sw-Loader_AnimatedItem"
+      />
+      <div
+        className="sw-Loader_AnimatedItem"
+      />
+      <div
+        className="sw-Loader_AnimatedItem"
+      />
+      <div
+        className="sw-Loader_AnimatedItem"
+      />
+      <div
+        className="sw-Loader_AnimatedItem"
+      />
+      <div
+        className="sw-Loader_AnimatedItem"
+      />
+    </div>
+  </div>
+</div>
+`;

@@ -1,0 +1,61 @@
+$sw-TextField-height: 40px !default;
+
+.sw-TextField {
+    @include placeholder-color(#9b9b9b);
+    @include placeholder-font-size(italic);
+    background-color: #fff;
+    border-radius: 5px;
+    border: solid 1px $base-border-color;
+    color: #000;
+    font-size: 14px;
+    font-weight: 400;
+    height: $sw-TextField-height;
+    outline: none;
+    padding: 0 10px;
+
+    &:focus {
+        border-color: darken($base-border-color, 10%);
+    }
+
+    &[disabled],
+    &.disabled {
+        background: rgba(0, 0, 0, 0.15);
+        color: rgba(0, 0, 0, 0.8);
+        cursor: default;
+    }
+
+    .sw-NumericInput_InputAndButtonContainer & {
+        flex-grow: 1;
+        margin-right: 14px;
+        min-width: 0;
+    }
+
+    &[type="datetime-local"] {
+        background-image: url('#{ $base-images-path }/TextField/date.svg');
+        background-position: calc(100% - 10px) 50%;
+        background-repeat: no-repeat;
+        background-size: 23.8px 23.9px;
+        width: 100%;
+
+        &:hover,
+        &:focus {
+            background-image: none;
+        }
+    }
+
+    .sw-WhitelistInputBlock_MinMaxFields & {
+
+        @media (min-width: $breakpoint-md) {
+            width: 100%;
+        }
+
+    }
+
+    .sw-NumericInputAndButtonContainer & {
+        width: 100%;
+    }
+
+    .cnt-ContributeForm_AmountContainer & {
+        padding-right: 40px;
+    }
+}

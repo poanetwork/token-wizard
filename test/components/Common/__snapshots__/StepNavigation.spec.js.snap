@@ -12,78 +12,78 @@ exports[`StepNavigation should render StepNavigation component 1`] = `
     className="st-StepNavigation_Container"
   >
     <div
-      className="st-StepNavigation_StepContainer
-        active"
+      className="st-StepItem
+          "
     >
       <div
-        className="st-StepNavigation_StepCircle"
+        className="st-StepItem_Circle"
       />
       <div
-        className="st-StepNavigation_StepLine"
+        className="st-StepItem_Line"
       />
       <span
-        className="st-StepNavigation_StepText"
+        className="st-StepItem_Text"
       >
         Crowdsale Strategy
       </span>
     </div>
     <div
-      className="st-StepNavigation_StepContainer
-        "
+      className="st-StepItem
+          "
     >
       <div
-        className="st-StepNavigation_StepCircle"
+        className="st-StepItem_Circle"
       />
       <div
-        className="st-StepNavigation_StepLine"
+        className="st-StepItem_Line"
       />
       <span
-        className="st-StepNavigation_StepText"
+        className="st-StepItem_Text"
       >
         Token Setup
       </span>
     </div>
     <div
-      className="st-StepNavigation_StepContainer
-        "
+      className="st-StepItem
+          "
     >
       <div
-        className="st-StepNavigation_StepCircle"
+        className="st-StepItem_Circle"
       />
       <div
-        className="st-StepNavigation_StepLine"
+        className="st-StepItem_Line"
       />
       <span
-        className="st-StepNavigation_StepText"
+        className="st-StepItem_Text"
       >
         Crowdsale Setup
       </span>
     </div>
     <div
-      className="st-StepNavigation_StepContainer
-        "
+      className="st-StepItem
+          "
     >
       <div
-        className="st-StepNavigation_StepCircle"
+        className="st-StepItem_Circle"
       />
       <div
-        className="st-StepNavigation_StepLine"
+        className="st-StepItem_Line"
       />
       <span
-        className="st-StepNavigation_StepText"
+        className="st-StepItem_Text"
       >
         Publish
       </span>
     </div>
     <div
-      className="st-StepNavigation_StepContainer
-        "
+      className="st-StepItem
+          "
     >
       <div
-        className="st-StepNavigation_StepCircle"
+        className="st-StepItem_Circle"
       />
       <span
-        className="st-StepNavigation_StepText"
+        className="st-StepItem_Text"
       >
         Crowdsale Page
       </span>

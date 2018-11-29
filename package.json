@@ -6,6 +6,7 @@
     "node": "8.9.0"
   },
   "devDependencies": {
+    "canvas": "^2.1.0",
     "coveralls": "^3.0.0",
     "cssom": "^0.3.4",
     "enzyme": "^3.3.0",
@@ -107,8 +108,8 @@
     "query-string": "^5.0.1",
     "react": "^15.6.1",
     "react-alert": "^2.4.0",
+    "react-circle": "^1.1.1",
     "react-copy-to-clipboard": "^5.0.1",
-    "react-countdown-clock": "2.4.0",
     "react-dev-utils": "^3.0.2",
     "react-dom": "^15.6.1",
     "react-dropzone": "^4.2.8",

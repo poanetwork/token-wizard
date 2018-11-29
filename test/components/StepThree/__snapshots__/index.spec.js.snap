@@ -16,78 +16,78 @@ exports[`StepThree StepThree - renders should render StepThree for Dutch Auction
         className="st-StepNavigation_Container"
       >
         <div
-          className="st-StepNavigation_StepContainer
-        active"
+          className="st-StepItem
+        active  "
         >
           <div
-            className="st-StepNavigation_StepCircle"
+            className="st-StepItem_Circle"
           />
           <div
-            className="st-StepNavigation_StepLine"
+            className="st-StepItem_Line"
           />
           <span
-            className="st-StepNavigation_StepText"
+            className="st-StepItem_Text"
           >
             Crowdsale Strategy
           </span>
         </div>
         <div
-          className="st-StepNavigation_StepContainer
-        active"
+          className="st-StepItem
+        active  "
         >
           <div
-            className="st-StepNavigation_StepCircle"
+            className="st-StepItem_Circle"
           />
           <div
-            className="st-StepNavigation_StepLine"
+            className="st-StepItem_Line"
           />
           <span
-            className="st-StepNavigation_StepText"
+            className="st-StepItem_Text"
           >
             Token Setup
           </span>
         </div>
         <div
-          className="st-StepNavigation_StepContainer
-        active"
+          className="st-StepItem
+        active  "
         >
           <div
-            className="st-StepNavigation_StepCircle"
+            className="st-StepItem_Circle"
           />
           <div
-            className="st-StepNavigation_StepLine"
+            className="st-StepItem_Line"
           />
           <span
-            className="st-StepNavigation_StepText"
+            className="st-StepItem_Text"
           >
             Crowdsale Setup
           </span>
         </div>
         <div
-          className="st-StepNavigation_StepContainer
-        "
+          className="st-StepItem
+          "
         >
           <div
-            className="st-StepNavigation_StepCircle"
+            className="st-StepItem_Circle"
           />
           <div
-            className="st-StepNavigation_StepLine"
+            className="st-StepItem_Line"
           />
           <span
-            className="st-StepNavigation_StepText"
+            className="st-StepItem_Text"
           >
             Publish
           </span>
         </div>
         <div
-          className="st-StepNavigation_StepContainer
-        "
+          className="st-StepItem
+          "
         >
           <div
-            className="st-StepNavigation_StepCircle"
+            className="st-StepItem_Circle"
           />
           <span
-            className="st-StepNavigation_StepText"
+            className="st-StepItem_Text"
           >
             Crowdsale Page
           </span>
@@ -98,21 +98,21 @@ exports[`StepThree StepThree - renders should render StepThree for Dutch Auction
       className="st-StepContent"
     >
       <div
-        className="st-StepInfo "
+        className="st-SectionInfo "
       >
         <div
-          className="st-StepInfo_Icon st-StepInfo_Icon-step3"
+          className="st-SectionInfo_Icon st-SectionInfo_Icon-step3"
         />
         <div
-          className="st-StepInfo_Text"
+          className="st-SectionInfo_Text"
         >
           <h1
-            className="st-StepInfo_Title"
+            className="st-SectionInfo_Title"
           >
             Crowdsale Setup
           </h1>
           <p
-            className="st-StepInfo_Description"
+            className="st-SectionInfo_Description"
             dangerouslySetInnerHTML={
               Object {
                 "__html": "The most important and exciting part of the crowdsale process.<br />Here you can define parameters of your crowdsale campaign.",
@@ -677,78 +677,78 @@ exports[`StepThree StepThree - renders should render StepThree for Whitelist wit
         className="st-StepNavigation_Container"
       >
         <div
-          className="st-StepNavigation_StepContainer
-        active"
+          className="st-StepItem
+        active  "
         >
           <div
-            className="st-StepNavigation_StepCircle"
+            className="st-StepItem_Circle"
           />
           <div
-            className="st-StepNavigation_StepLine"
+            className="st-StepItem_Line"
           />
           <span
-            className="st-StepNavigation_StepText"
+            className="st-StepItem_Text"
           >
             Crowdsale Strategy
           </span>
         </div>
         <div
-          className="st-StepNavigation_StepContainer
-        active"
+          className="st-StepItem
+        active  "
         >
           <div
-            className="st-StepNavigation_StepCircle"
+            className="st-StepItem_Circle"
           />
           <div
-            className="st-StepNavigation_StepLine"
+            className="st-StepItem_Line"
           />
           <span
-            className="st-StepNavigation_StepText"
+            className="st-StepItem_Text"
           >
             Token Setup
           </span>
         </div>
         <div
-          className="st-StepNavigation_StepContainer
-        active"
+          className="st-StepItem
+        active  "
         >
           <div
-            className="st-StepNavigation_StepCircle"
+            className="st-StepItem_Circle"
           />
           <div
-            className="st-StepNavigation_StepLine"
+            className="st-StepItem_Line"
           />
           <span
-            className="st-StepNavigation_StepText"
+            className="st-StepItem_Text"
           >
             Crowdsale Setup
           </span>
         </div>
         <div
-          className="st-StepNavigation_StepContainer
-        "
+          className="st-StepItem
+          "
         >
           <div
-            className="st-StepNavigation_StepCircle"
+            className="st-StepItem_Circle"
           />
           <div
-            className="st-StepNavigation_StepLine"
+            className="st-StepItem_Line"
           />
           <span
-            className="st-StepNavigation_StepText"
+            className="st-StepItem_Text"
           >
             Publish
           </span>
         </div>
         <div
-          className="st-StepNavigation_StepContainer
-        "
+          className="st-StepItem
+          "
         >
           <div
-            className="st-StepNavigation_StepCircle"
+            className="st-StepItem_Circle"
           />
           <span
-            className="st-StepNavigation_StepText"
+            className="st-StepItem_Text"
           >
             Crowdsale Page
           </span>
@@ -759,21 +759,21 @@ exports[`StepThree StepThree - renders should render StepThree for Whitelist wit
       className="st-StepContent"
     >
       <div
-        className="st-StepInfo "
+        className="st-SectionInfo "
       >
         <div
-          className="st-StepInfo_Icon st-StepInfo_Icon-step3"
+          className="st-SectionInfo_Icon st-SectionInfo_Icon-step3"
         />
         <div
-          className="st-StepInfo_Text"
+          className="st-SectionInfo_Text"
         >
           <h1
-            className="st-StepInfo_Title"
+            className="st-SectionInfo_Title"
           >
             Crowdsale Setup
           </h1>
           <p
-            className="st-StepInfo_Description"
+            className="st-SectionInfo_Description"
             dangerouslySetInnerHTML={
               Object {
                 "__html": "The most important and exciting part of the crowdsale process.<br />Here you can define parameters of your crowdsale campaign.",

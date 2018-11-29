@@ -28,7 +28,7 @@ import { CrowdsaleSetupBlockDutchAuction } from './CrowdsaleSetupBlockDutchAucti
 import { CrowdsaleSetupBlockWhitelistWithCap } from './CrowdsaleSetupBlockWhitelistWithCap'
 import { DisplayTextArea } from '../Common/DisplayTextArea'
 import { ModalContainer } from '../Common/ModalContainer'
-import { StepInfo } from '../Common/StepInfo'
+import { SectionInfo } from '../Common/SectionInfo'
 import { StepNavigation } from '../Common/StepNavigation'
 import { TierSetupDutchAuction } from './TierSetupDutchAuction'
 import { TierSetupWhitelistWithCap } from './TierSetupWhitelistWithCap'
@@ -402,9 +402,9 @@ export class StepFour extends Component {
     return (
       <div>
         <section className={`lo-MenuBarAndContent ${backgroundBlur}`} ref="four">
-          <StepNavigation activeStep={PUBLISH} />
+          <StepNavigation activeStepTitle={PUBLISH} />
           <div className="st-StepContent">
-            <StepInfo
+            <SectionInfo
               description="On this step we provide you artifacts about your token and crowdsale contracts."
               stepNumber="4"
               title={PUBLISH}

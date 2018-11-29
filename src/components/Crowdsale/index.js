@@ -25,7 +25,7 @@ import { CrowdsaleSummaryMintedCapped } from './CrowdsaleSummaryMintedCapped'
 import { CrowdsaleSummaryDutchAuction } from './CrowdsaleSummaryDutchAuction'
 import { Loader } from '../Common/Loader'
 import { NAVIGATION_STEPS } from '../../utils/constants'
-import { StepInfo } from '../Common/StepInfo'
+import { SectionInfo } from '../Common/SectionInfo'
 import { StepNavigation } from '../Common/StepNavigation'
 import { getCrowdsaleAssets } from '../../stores/utils'
 import { getNetworkID, toBigNumber, isExecIDValid } from '../../utils/utils'
@@ -224,9 +224,9 @@ export class Crowdsale extends React.Component {
     return (
       <div>
         <section className={`lo-MenuBarAndContent`} ref="five">
-          <StepNavigation activeStep={CROWDSALE_PAGE} />
+          <StepNavigation activeStepTitle={CROWDSALE_PAGE} />
           <div className="st-StepContent">
-            <StepInfo
+            <SectionInfo
               description="Page with statistics of crowdsale. Statistics for all tiers combined on the page. Please press Ctrl-D to
                 bookmark the page."
               stepNumber="5"

@@ -1,4 +1,4 @@
-export { Contribute } from './contribute'
+export { Contribute } from './Contribute'
 export { Crowdsale } from './Crowdsale'
 export { Crowdsales } from './Crowdsales'
 export { Home } from './Home'

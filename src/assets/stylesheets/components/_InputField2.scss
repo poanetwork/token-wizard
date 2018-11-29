@@ -1,0 +1,118 @@
+.sw-InputField2 {
+    @include form-control-block-common();
+
+    .sw-BorderedBlock-CrowdSaleSetupGlobalSettingsWhitelistCapped & {
+        @media (min-width: $breakpoint-md) {
+            margin-bottom: 0;
+        }
+    }
+
+    .sw-BorderedBlock-CrowdSaleSetupGlobalSettingsDutchAuction & {
+        @media (min-width: $breakpoint-md) {
+            margin-bottom: 0;
+        }
+    }
+
+    .sw-BorderedBlock-GeneralSettingsWhitelistCapped & {
+        @media (min-width: $breakpoint-xl) {
+            margin-bottom: 0;
+        }
+    }
+
+    .sw-BorderedBlock-GeneralSettingsDutchAuction & {
+        @media (min-width: $breakpoint-xxl) {
+            margin-bottom: 0;
+        }
+    }
+
+    .sw-BorderedBlock-TierBlocksWhitelistCapped & {
+        @media (min-width: $breakpoint-md) {
+            margin-bottom: 0;
+        }
+    }
+
+    .cnt-ContributeForm_AmountContainer & {
+        margin: 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    &.sw-InputField2-TierSetupName {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-1-col-1;
+        }
+    }
+
+    &.sw-InputField2-CrowdsaleStartTime {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-2-col-1;
+        }
+    }
+
+    &.sw-InputField2-CrowdsaleEndTime {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-2-col-2;
+        }
+    }
+
+    &.sw-InputField2-CrowdsaleRate {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-3-col-1;
+        }
+    }
+
+    &.sw-InputField2-CrowdsaleSupply {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-3-col-2;
+        }
+    }
+
+    &.sw-InputField2-MinCap {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-5-col-1;
+        }
+    }
+
+    &.sw-InputField2-DutchAuctionWalletAddress {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-1-col-1;
+        }
+    }
+
+    &.sw-InputField2-DutchAuctionStartTime {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-1-col-1;
+        }
+    }
+
+    &.sw-InputField2-DutchAuctionEndTime {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-1-col-2;
+        }
+    }
+
+    &.sw-InputField2-DutchAuctionMinRate {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-2-col-1;
+        }
+    }
+
+    &.sw-InputField2-DutchAuctionMaxRate {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-2-col-2;
+        }
+    }
+
+    &.sw-InputField2-DutchAuctionSupply {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-3-col-1;
+        }
+    }
+
+    &.sw-InputField2-DutchAuctionMinCap {
+        @media (min-width: $breakpoint-md) {
+            grid-area: row-3-col-2;
+        }
+    }
+
+}

@@ -1,0 +1,40 @@
+.sw-TokenDimension {
+    align-items: center;
+    background-color: #DFDFDF;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 50%;
+    display: flex;
+    height: 35px;
+    justify-content: center;
+    width: 35px;
+
+    .cnt-ContributeForm_AmountContainer & {
+        height: 30px;
+        position: absolute;
+        right: 5px;
+        top: 5px;
+        width: 30px;
+        z-index: 12;
+    }
+
+}
+
+.sw-TokenDimension_Text {
+    @include not-selectable-text();
+    color: #4A4A4A;
+    font-family: Nunito, sans-serif;
+    font-size: 7px;
+    font-weight: 700;
+    text-transform: uppercase;
+    white-space: nowrap;
+
+    &.sw-TokenDimension_Text-percentage {
+        font-size: 12px;
+    }
+
+    .cnt-ContributeForm_AmountContainer & {
+        font-size: 6px;
+    }
+}

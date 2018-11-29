@@ -1,0 +1,41 @@
+.cnt-ContributeDataList {
+    border-bottom: 1px solid $base-border-color;
+    border-top: 1px solid $base-border-color;
+    margin: 0 0 25px;
+    padding: 20px 0;
+}
+
+.cnt-ContributeDataList_Item {
+    margin: 0 0 20px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.cnt-ContributeDataList_ItemData {
+    color: #000;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.cnt-ContributeDataList_ItemDataValue {
+    margin-right: 20px;
+    word-break: break-word;
+
+    &:last-child {
+        margin-right: 0;
+    }
+}
+
+.cnt-ContributeDataList_ItemTitle {
+    color: #919191;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.75;
+    margin: 0;
+}

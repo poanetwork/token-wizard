@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import logdown from 'logdown'
 import { ButtonContinue } from '../Common/ButtonContinue'
 import { NAVIGATION_STEPS, CROWDSALE_STRATEGIES, DOWNLOAD_STATUS } from '../../utils/constants'
-import { StepInfo } from '../Common/StepInfo'
+import { SectionInfo } from '../Common/SectionInfo'
 import { StepNavigation } from '../Common/StepNavigation'
 import { StrategyItem } from './StrategyItem'
 import { checkWeb3ForErrors } from '../../utils/blockchainHelpers'
@@ -148,9 +148,9 @@ export class StepOne extends Component {
       return (
         <div>
           <section className="lo-MenuBarAndContent">
-            <StepNavigation activeStep={CROWDSALE_STRATEGY} />
+            <StepNavigation activeStepTitle={CROWDSALE_STRATEGY} />
             <div className="st-StepContent">
-              <StepInfo
+              <SectionInfo
                 description="Select a strategy for your crowdsale contract."
                 stepNumber="1"
                 title={CROWDSALE_STRATEGY}

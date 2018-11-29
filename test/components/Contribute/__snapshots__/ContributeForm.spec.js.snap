@@ -1,0 +1,450 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ContributeForm Should set as disabled the contribute button if isTierSoldOut === true 1`] = `
+<Provider
+  contributeStore={ContributeStore {}}
+  tokenStore={
+    TokenStore {
+      "decimals": 18,
+      "name": undefined,
+      "reservedTokensInput": Object {},
+      "supply": 0,
+      "ticker": undefined,
+      "validToken": Object {
+        "decimals": "EMPTY",
+        "name": "EMPTY",
+        "ticker": "EMPTY",
+      },
+    }
+  }
+>
+  <ReactFinalForm
+    component={[Function]}
+    contributeThrough="metamask"
+    isTierSoldOut={true}
+    onSubmit={[MockFunction]}
+    updateContributeThrough={[MockFunction]}
+    web3Available={true}
+  >
+    <inject-_class-with-contributeStore-tokenStore
+      __versions={
+        Object {
+          "final-form": "4.6.1",
+          "react-final-form": "3.4.0",
+        }
+      }
+      batch={[Function]}
+      blur={[Function]}
+      change={[Function]}
+      contributeThrough="metamask"
+      dirty={false}
+      dirtySinceLastSubmit={false}
+      errors={
+        Object {
+          "contribute": "This field is required",
+        }
+      }
+      focus={[Function]}
+      form={
+        Object {
+          "batch": [Function],
+          "blur": [Function],
+          "change": [Function],
+          "focus": [Function],
+          "getFieldState": [Function],
+          "getRegisteredFields": [Function],
+          "getState": [Function],
+          "initialize": [Function],
+          "isValidationPaused": [Function],
+          "mutators": Object {},
+          "pauseValidation": [Function],
+          "registerField": [Function],
+          "reset": [Function],
+          "resumeValidation": [Function],
+          "setConfig": [Function],
+          "submit": [Function],
+          "subscribe": [Function],
+        }
+      }
+      handleSubmit={[Function]}
+      hasSubmitErrors={false}
+      hasValidationErrors={true}
+      initialize={[Function]}
+      invalid={true}
+      isTierSoldOut={true}
+      mutators={Object {}}
+      pristine={true}
+      reset={[Function]}
+      submitFailed={false}
+      submitSucceeded={false}
+      submitting={false}
+      touched={
+        Object {
+          "contribute": false,
+        }
+      }
+      updateContributeThrough={[MockFunction]}
+      valid={false}
+      validating={false}
+      values={Object {}}
+      visited={
+        Object {
+          "contribute": false,
+        }
+      }
+      web3Available={true}
+    >
+      <_class
+        __versions={
+          Object {
+            "final-form": "4.6.1",
+            "react-final-form": "3.4.0",
+          }
+        }
+        batch={[Function]}
+        blur={[Function]}
+        change={[Function]}
+        contributeStore={ContributeStore {}}
+        contributeThrough="metamask"
+        dirty={false}
+        dirtySinceLastSubmit={false}
+        errors={
+          Object {
+            "contribute": "This field is required",
+          }
+        }
+        focus={[Function]}
+        form={
+          Object {
+            "batch": [Function],
+            "blur": [Function],
+            "change": [Function],
+            "focus": [Function],
+            "getFieldState": [Function],
+            "getRegisteredFields": [Function],
+            "getState": [Function],
+            "initialize": [Function],
+            "isValidationPaused": [Function],
+            "mutators": Object {},
+            "pauseValidation": [Function],
+            "registerField": [Function],
+            "reset": [Function],
+            "resumeValidation": [Function],
+            "setConfig": [Function],
+            "submit": [Function],
+            "subscribe": [Function],
+          }
+        }
+        handleSubmit={[Function]}
+        hasSubmitErrors={false}
+        hasValidationErrors={true}
+        initialize={[Function]}
+        invalid={true}
+        isTierSoldOut={true}
+        mutators={Object {}}
+        pristine={true}
+        reset={[Function]}
+        submitFailed={false}
+        submitSucceeded={false}
+        submitting={false}
+        tokenStore={
+          TokenStore {
+            "decimals": 18,
+            "name": undefined,
+            "reservedTokensInput": Object {},
+            "supply": 0,
+            "ticker": undefined,
+            "validToken": Object {
+              "decimals": "EMPTY",
+              "name": "EMPTY",
+              "ticker": "EMPTY",
+            },
+          }
+        }
+        touched={
+          Object {
+            "contribute": false,
+          }
+        }
+        updateContributeThrough={[MockFunction]}
+        valid={false}
+        validating={false}
+        values={Object {}}
+        visited={
+          Object {
+            "contribute": false,
+          }
+        }
+        web3Available={true}
+      >
+        <form
+          className="cnt-ContributeForm cnt-ContributeForm-full-height"
+          onSubmit={[Function]}
+        >
+          <h3
+            className="cnt-ContributeForm_Title"
+          >
+            Choose amount to contribute
+          </h3>
+          <div
+            className="cnt-ContributeForm_AmountContainer"
+          >
+            <Field
+              component={[Function]}
+              extraClassName="cnt-ContributeForm_Amount"
+              format={[Function]}
+              name="contribute"
+              parse={[Function]}
+              placeholder="0"
+              validate={[Function]}
+            >
+              <InputField2
+                extraClassName="cnt-ContributeForm_Amount"
+                input={
+                  Object {
+                    "name": "contribute",
+                    "onBlur": [Function],
+                    "onChange": [Function],
+                    "onFocus": [Function],
+                    "value": "",
+                  }
+                }
+                meta={
+                  Object {
+                    "active": false,
+                    "data": Object {},
+                    "dirty": false,
+                    "dirtySinceLastSubmit": false,
+                    "error": "This field is required",
+                    "initial": undefined,
+                    "invalid": true,
+                    "pristine": true,
+                    "submitError": undefined,
+                    "submitFailed": false,
+                    "submitSucceeded": false,
+                    "touched": false,
+                    "valid": false,
+                    "visited": false,
+                  }
+                }
+                placeholder="0"
+              >
+                <div
+                  className="sw-InputField2 cnt-ContributeForm_Amount"
+                >
+                  <TextField
+                    autoComplete="off"
+                    id="contribute"
+                    name="contribute"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder="0"
+                    value=""
+                  >
+                    <input
+                      className="sw-TextField"
+                      id="contribute"
+                      name="contribute"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder="0"
+                      value=""
+                    />
+                  </TextField>
+                  <Errors
+                    name="contribute"
+                  >
+                    <Field
+                      format={[Function]}
+                      name="contribute"
+                      parse={[Function]}
+                      render={[Function]}
+                      subscription={
+                        Object {
+                          "error": true,
+                          "pristine": true,
+                          "touched": true,
+                        }
+                      }
+                    />
+                  </Errors>
+                </div>
+              </InputField2>
+            </Field>
+            <TokenDimension
+              type="tokens"
+            >
+              <div
+                className="sw-TokenDimension sw-TokenDimension-tokens "
+              />
+            </TokenDimension>
+          </div>
+          <select
+            className="sw_Select"
+            onChange={[Function]}
+            value="metamask"
+          >
+            <option
+              disabled={false}
+              value="metamask"
+            />
+            <option
+              value="qr"
+            >
+              QR
+            </option>
+          </select>
+          <button
+            className="cnt-ContributeForm_ContributeButton"
+            disabled={true}
+            onClick={[Function]}
+          >
+            Contribute
+          </button>
+          <p
+            className="cnt-ContributeForm_Description"
+          >
+            Think twice before contributing to Crowdsales. Tokens will be deposited on a wallet you used to buy tokens.
+          </p>
+          <FormSpy
+            onChange={[Function]}
+            subscription={
+              Object {
+                "values": true,
+              }
+            }
+          />
+        </form>
+      </_class>
+    </inject-_class-with-contributeStore-tokenStore>
+  </ReactFinalForm>
+</Provider>
+`;
+
+exports[`ContributeForm should render ContributeForm component 1`] = `
+<form
+  className="cnt-ContributeForm cnt-ContributeForm-full-height"
+  onSubmit={[Function]}
+>
+  <h3
+    className="cnt-ContributeForm_Title"
+  >
+    Choose amount to contribute
+  </h3>
+  <div
+    className="cnt-ContributeForm_AmountContainer"
+  >
+    <div
+      className="sw-InputField2 cnt-ContributeForm_Amount"
+    >
+      <input
+        className="sw-TextField"
+        id="contribute"
+        name="contribute"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder="0"
+        value=""
+      />
+    </div>
+    <div
+      className="sw-TokenDimension sw-TokenDimension-tokens "
+    />
+  </div>
+  <select
+    className="sw_Select"
+    onChange={[Function]}
+    value="metamask"
+  >
+    <option
+      disabled={false}
+      value="metamask"
+    >
+      Wallet
+    </option>
+    <option
+      value="qr"
+    >
+      QR
+    </option>
+  </select>
+  <button
+    className="cnt-ContributeForm_ContributeButton"
+    disabled={true}
+    onClick={[Function]}
+  >
+    Contribute
+  </button>
+  <p
+    className="cnt-ContributeForm_Description"
+  >
+    Think twice before contributing to Crowdsales. Tokens will be deposited on a wallet you used to buy tokens.
+  </p>
+</form>
+`;
+
+exports[`ContributeForm should render ContributeForm component and its children 1`] = `
+<form
+  className="cnt-ContributeForm cnt-ContributeForm-full-height"
+  onSubmit={[Function]}
+>
+  <h3
+    className="cnt-ContributeForm_Title"
+  >
+    Choose amount to contribute
+  </h3>
+  <div
+    className="cnt-ContributeForm_AmountContainer"
+  >
+    <div
+      className="sw-InputField2 cnt-ContributeForm_Amount"
+    >
+      <input
+        className="sw-TextField"
+        id="contribute"
+        name="contribute"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder="0"
+        value=""
+      />
+    </div>
+    <div
+      className="sw-TokenDimension sw-TokenDimension-tokens "
+    />
+  </div>
+  <select
+    className="sw_Select"
+    onChange={[Function]}
+    value="metamask"
+  >
+    <option
+      disabled={false}
+      value="metamask"
+    >
+      Wallet
+    </option>
+    <option
+      value="qr"
+    >
+      QR
+    </option>
+  </select>
+  <button
+    className="cnt-ContributeForm_ContributeButton"
+    disabled={true}
+    onClick={[Function]}
+  >
+    Contribute
+  </button>
+  <p
+    className="cnt-ContributeForm_Description"
+  >
+    Think twice before contributing to Crowdsales. Tokens will be deposited on a wallet you used to buy tokens.
+  </p>
+</form>
+`;

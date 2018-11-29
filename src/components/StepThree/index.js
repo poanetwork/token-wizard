@@ -4,7 +4,7 @@ import logdown from 'logdown'
 import setFieldTouched from 'final-form-set-field-touched'
 import { Form } from 'react-final-form'
 import { CHAINS, NAVIGATION_STEPS } from '../../utils/constants'
-import { StepInfo } from '../Common/StepInfo'
+import { SectionInfo } from '../Common/SectionInfo'
 import { StepNavigation } from '../Common/StepNavigation'
 import { checkWeb3, getNetWorkNameById, getNetworkVersion } from '../../utils/blockchainHelpers'
 import { getStep3Component, tierDurationUpdater } from './utils'
@@ -175,15 +175,6 @@ export class StepThree extends Component {
   calculator = tierDurationUpdater(this.props.tierStore.tiers)
 
   render() {
-    if (this.state.initialTiers.length === 0) {
-      // Do not render the form until tiers are set up
-      return (
-        <section className="steps steps_crowdsale-contract" ref="three">
-          <StepNavigation activeStep={CROWDSALE_SETUP} />
-        </section>
-      )
-    }
-
     const { tierStore, tokenStore, gasPriceStore, generalStore, web3Store, crowdsaleStore } = this.props
     const stepThreeComponent = getStep3Component(crowdsaleStore.strategy)
     const stores = { tierStore, tokenStore, crowdsaleStore, generalStore, gasPriceStore }
@@ -191,32 +182,35 @@ export class StepThree extends Component {
     return (
       <div>
         <section className="lo-MenuBarAndContent" ref="three">
-          <StepNavigation activeStep={CROWDSALE_SETUP} />
-          <div className="st-StepContent">
-            <StepInfo
-              description="The most important and exciting part of the crowdsale process.<br />Here you can define parameters of
+          <StepNavigation activeStepTitle={CROWDSALE_SETUP} />
+          {/* Do not render the form until tiers are set up */}
+          {this.state.initialTiers.length !== 0 ? (
+            <div className="st-StepContent">
+              <SectionInfo
+                description="The most important and exciting part of the crowdsale process.<br />Here you can define parameters of
               your crowdsale campaign."
-              stepNumber="3"
-              title="Crowdsale Setup"
-            />
-            <Form
-              component={stepThreeComponent}
-              decorators={[this.calculator]}
-              initialValues={{
-                burnExcess: this.state.burnExcess,
-                gasPrice: this.state.gasTypeSelected,
-                tiers: this.state.initialTiers,
-                walletAddress: web3Store.curAddress,
-                whitelistEnabled: 'no'
-              }}
-              mutators={{ ...arrayMutators, setFieldTouched }}
-              onSubmit={this.handleOnSubmit}
-              firstLoad={this.state.firstLoad}
-              {...stores}
-              goBack={this.goBack}
-              goBackEnabled={this.goBackEnabled}
-            />
-          </div>
+                stepNumber="3"
+                title="Crowdsale Setup"
+              />
+              <Form
+                component={stepThreeComponent}
+                decorators={[this.calculator]}
+                initialValues={{
+                  burnExcess: this.state.burnExcess,
+                  gasPrice: this.state.gasTypeSelected,
+                  tiers: this.state.initialTiers,
+                  walletAddress: web3Store.curAddress,
+                  whitelistEnabled: 'no'
+                }}
+                mutators={{ ...arrayMutators, setFieldTouched }}
+                onSubmit={this.handleOnSubmit}
+                firstLoad={this.state.firstLoad}
+                {...stores}
+                goBack={this.goBack}
+                goBackEnabled={this.goBackEnabled}
+              />
+            </div>
+          ) : null}
         </section>
       </div>
     )

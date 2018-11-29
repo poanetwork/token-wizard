@@ -1,0 +1,48 @@
+$sw-Button-height: 40px !default;
+
+@mixin btn-common($bg-color, $darken: 10%) {
+    background-color: $bg-color;
+    border-color: $bg-color;
+    border-style: solid;
+
+    &:focus,
+    &.active,
+    &:hover {
+        background-color: darken($bg-color, $darken);
+        border-color: darken($bg-color, $darken);
+    }
+
+    &[disabled] {
+        &:focus,
+        &.active,
+        &:hover {
+            background-color: $bg-color;
+            border-color: $bg-color;
+        }
+    }
+
+}
+
+.sw-Button {
+    @include not-selectable-text();
+    border-radius: 6px;
+    border-width: 1px;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: 600;
+    height: $sw-Button-height;
+    line-height: $sw-Button-height;
+    padding: 0 20px;
+
+    @include disabled-button-styles();
+}
+
+.sw-Button-primary {
+    @include btn-common($brand-primary);
+}
+
+.sw-Button-secondary {
+    @include btn-common($brand-secondary);
+}

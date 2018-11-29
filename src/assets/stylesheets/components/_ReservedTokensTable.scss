@@ -1,0 +1,31 @@
+$sw-ReservedTokensTable-gradient-width: 45px;
+
+.sw-ReservedTokensTable {
+
+    @include datatable-styles($sw-ReservedTokensTable-gradient-width);
+
+    &.sw-BorderedBlock_Row2Column1 {
+        @media (min-width: $breakpoint-xl) {
+            grid-area: row-2-col-1;
+        }
+    }
+
+}
+
+.sw-ReservedTokensTable_Inner {
+
+   @include datatable-inner-styles();
+
+}
+
+.sw-ReservedTokensTable_Table {
+
+    @include datatable-table-styles();
+
+}
+
+.sw-ReservedTokensTable_Column {
+
+    @include datatable-column-styles('.sw-ReservedTokensTable_Row');
+
+}

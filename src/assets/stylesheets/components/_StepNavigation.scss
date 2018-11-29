@@ -1,0 +1,25 @@
+.st-StepNavigation {
+    align-items: center;
+    background-color: $brand-primary;
+    display: flex;
+    flex-direction: column;
+    min-height: 300px;
+    justify-content: flex-start;
+    padding: 24px 10px 0;
+
+    @media (min-width: $breakpoint-xl) {
+        align-items: flex-start;
+        min-height: 0;
+        min-width: 350px;
+        padding: 34px 0 0 32px;
+    }
+
+}
+
+.st-StepNavigation_Container {
+    display: flex;
+
+    @media (min-width: $breakpoint-xl) {
+        flex-direction: column;
+    }
+}

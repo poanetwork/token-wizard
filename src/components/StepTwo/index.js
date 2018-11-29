@@ -3,7 +3,7 @@ import logdown from 'logdown'
 import setFieldTouched from 'final-form-set-field-touched'
 import { Form } from 'react-final-form'
 import { NAVIGATION_STEPS } from '../../utils/constants'
-import { StepInfo } from '../Common/StepInfo'
+import { SectionInfo } from '../Common/SectionInfo'
 import { StepNavigation } from '../Common/StepNavigation'
 import { StepTwoForm } from './StepTwoForm'
 import { checkWeb3 } from '../../utils/blockchainHelpers'
@@ -97,9 +97,9 @@ export class StepTwo extends Component {
     return (
       <div>
         <section className="lo-MenuBarAndContent" ref="two">
-          <StepNavigation activeStep={TOKEN_SETUP} />
+          <StepNavigation activeStepTitle={TOKEN_SETUP} />
           <div className="st-StepContent">
-            <StepInfo
+            <SectionInfo
               description="Configure properties for your token. Created token contract will be ERC-20 compatible."
               stepNumber="2"
               title="Token Setup"

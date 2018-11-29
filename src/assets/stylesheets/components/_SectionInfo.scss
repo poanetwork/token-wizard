@@ -1,0 +1,76 @@
+$st-SectionInfo_Icon-dimensions-xs: 60px !default;
+$st-SectionInfo_Icon-dimensions-lg: 100px !default;
+
+@mixin section-info-icon($step-number, $mobile-width, $mobile-height, $width, $height) {
+    &.st-SectionInfo_Icon-step#{ $step-number } {
+        background-image: url('#{ $base-images-path }/SectionInfo/#{ $step-number }.svg');
+        background-size: $mobile-width $mobile-height;
+
+        @media (min-width: $breakpoint-xl) {
+            background-size: $width $height;
+        }
+
+    }
+}
+
+.st-SectionInfo {
+    display: flex;
+    margin-bottom: 34px;
+
+    @media (min-width: $breakpoint-xl) {
+        align-items: center;
+        margin-bottom: 38px;
+    }
+}
+
+.st-SectionInfo_Icon {
+    background-color: $brand-secondary;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+    flex-shrink: 0;
+    height: $st-SectionInfo_Icon-dimensions-xs;
+    margin-right: 15px;
+    width: $st-SectionInfo_Icon-dimensions-xs;
+
+    @media (min-width: $breakpoint-xl) {
+        height: $st-SectionInfo_Icon-dimensions-lg;
+        margin-right: 28px;
+        width: $st-SectionInfo_Icon-dimensions-lg;
+    }
+
+    @include section-info-icon(1, 31.5px, 31.5px, 55px, 55px);
+    @include section-info-icon(2, 26px, 27px, 52px, 55px);
+    @include section-info-icon(3, 25px, 27px, 50px, 53px);
+    @include section-info-icon(4, 23px, 27px, 44px, 51px);
+    @include section-info-icon(5, 30px, 31px, 52px, 54px);
+    @include section-info-icon(6, 30px, 31px, 52px, 54px);
+
+}
+
+.st-SectionInfo_Text {
+    padding-right: 30px;
+}
+
+.st-SectionInfo_Title {
+    color: #000;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0;
+
+    @media (min-width: $breakpoint-xl) {
+        font-size: 36px;
+    }
+}
+
+.st-SectionInfo_Description {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.29;
+    margin: 0;
+
+    @media (min-width: $breakpoint-xl) {
+        font-size: 18px;
+    }
+}

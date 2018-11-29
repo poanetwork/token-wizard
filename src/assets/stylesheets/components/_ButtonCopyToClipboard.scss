@@ -1,0 +1,33 @@
+.sw-ButtonCopyToClipboard {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    height: 20px;
+    outline: none;
+    padding: 0;
+    width: 16px;
+
+    &:active {
+        opacity: 0.6;
+    }
+
+    .pb-DisplayField_Value & {
+        margin-left: 10px;
+    }
+
+    .pb-DisplayTextArea_Title & {
+        margin-left: 10px;
+    }
+
+    .cs-CrowdsaleID_Hash & {
+        margin-left: 10px;
+    }
+
+    .cnt-QRPaymentProcess_txDataContainer & {
+        display: inline-block;
+        margin-left: 10px;
+        position: relative;
+        top: 3px;
+    }
+}
