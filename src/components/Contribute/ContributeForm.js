@@ -21,6 +21,7 @@ export const ContributeForm = inject('contributeStore', 'tokenStore')(
       tokenStore,
       isEnded,
       isFinalized,
+      isStarted,
       isSoldOut,
       isTierSoldOut
     } = props
@@ -45,11 +46,16 @@ export const ContributeForm = inject('contributeStore', 'tokenStore')(
         isFinite(props.minimumContribution) && canContribute
           ? `Minimum valid contribution: ${props.minimumContribution}`
           : `You are not allowed`
-      const errors = composeValidators(
-        isRequired(),
-        isDecimalPlacesNotGreaterThan(decimalsErr)(decimals),
-        isGreaterOrEqualThan(minimumContributionErr)(props.minimumContribution)
-      )(value)
+      let errors
+      if (!isStarted) {
+        errors = ['You are not allowed']
+      } else {
+        errors = composeValidators(
+          isRequired(),
+          isDecimalPlacesNotGreaterThan(decimalsErr)(decimals),
+          isGreaterOrEqualThan(minimumContributionErr)(props.minimumContribution)
+        )(value)
+      }
       if (errors) return errors.shift()
     }
 

@@ -395,6 +395,7 @@ export class Contribute extends React.Component {
                 const crowdsaleExecID = contractStore.crowdsale && contractStore.crowdsale.execID
                 const initCrowdsaleContract = await attachToSpecificCrowdsaleContract(target)
                 await this.checkIsTierSoldOut(initCrowdsaleContract, crowdsaleExecID)
+                await this.checkIsStarted(initCrowdsaleContract, crowdsaleExecID)
                 await this.checkIsEnded(initCrowdsaleContract, crowdsaleExecID)
                 await this.checkIsFinalized(initCrowdsaleContract, crowdsaleExecID)
                 await this.checkIsSoldOut(initCrowdsaleContract, crowdsaleExecID)
@@ -770,6 +771,7 @@ export class Contribute extends React.Component {
                   minutes={this.state.toNextTick.minutes}
                   seconds={this.state.toNextTick.seconds}
                   isFinalized={this.state.isFinalized}
+                  isStarted={this.state.isStarted}
                   isSoldOut={this.state.isSoldOut}
                   isTierSoldOut={this.state.isTierSoldOut}
                   isLoading={this.state.loading}
