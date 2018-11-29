@@ -46,16 +46,16 @@ export const ContributeForm = inject('contributeStore', 'tokenStore')(
         isFinite(props.minimumContribution) && canContribute
           ? `Minimum valid contribution: ${props.minimumContribution}`
           : `You are not allowed`
-      let errors
-      if (!isStarted) {
+      let errors = composeValidators(
+        isRequired(),
+        isDecimalPlacesNotGreaterThan(decimalsErr)(decimals),
+        isGreaterOrEqualThan(minimumContributionErr)(props.minimumContribution)
+      )(value)
+
+      if (!isStarted && errors && errors.length > 0) {
         errors = ['You are not allowed']
-      } else {
-        errors = composeValidators(
-          isRequired(),
-          isDecimalPlacesNotGreaterThan(decimalsErr)(decimals),
-          isGreaterOrEqualThan(minimumContributionErr)(props.minimumContribution)
-        )(value)
       }
+
       if (errors) return errors.shift()
     }
 
