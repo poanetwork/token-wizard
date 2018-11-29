@@ -595,6 +595,7 @@ exports[`StepThree StepThree - renders should render StepThree for Dutch Auction
                     <input
                       checked={false}
                       className="sw-RadioButton_Input"
+                      disabled={true}
                       id="tiers[0].whitelistEnabled.enable_whitelisting_yes"
                       name="tiers[0].whitelistEnabled"
                       onChange={[Function]}
@@ -613,6 +614,7 @@ exports[`StepThree StepThree - renders should render StepThree for Dutch Auction
                     <input
                       checked={true}
                       className="sw-RadioButton_Input"
+                      disabled={true}
                       id="tiers[0].whitelistEnabled.enable_whitelisting_no"
                       name="tiers[0].whitelistEnabled"
                       onChange={[Function]}
@@ -656,32 +658,6 @@ exports[`StepThree StepThree - renders should render StepThree for Dutch Auction
       </form>
     </div>
   </section>
-  <div
-    className="sw-FullscreenBackdrop"
-  >
-    <div
-      className="sw-Loader"
-    >
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-    </div>
-  </div>
 </div>
 `;
 
@@ -1360,31 +1336,5 @@ exports[`StepThree StepThree - renders should render StepThree for Whitelist wit
       </form>
     </div>
   </section>
-  <div
-    className="sw-FullscreenBackdrop"
-  >
-    <div
-      className="sw-Loader"
-    >
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-      <div
-        className="sw-Loader_AnimatedItem"
-      />
-    </div>
-  </div>
 </div>
 `;

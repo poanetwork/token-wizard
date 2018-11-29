@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import logdown from 'logdown'
 import setFieldTouched from 'final-form-set-field-touched'
 import { Form } from 'react-final-form'
-import { Loader } from '../Common/Loader'
 import { NAVIGATION_STEPS } from '../../utils/constants'
 import { StepInfo } from '../Common/StepInfo'
 import { StepNavigation } from '../Common/StepNavigation'
@@ -18,7 +17,6 @@ const logger = logdown('TW:stepTwo:index')
 @observer
 export class StepTwo extends Component {
   state = {
-    loading: false,
     tokenValues: {},
     reload: false,
     backButtonTriggered: false, //Testing purposes
@@ -29,10 +27,12 @@ export class StepTwo extends Component {
   async componentDidMount() {
     await checkWeb3()
 
-    this.setState({ loading: true })
+    logger.log('Component did mount')
+    window.addEventListener('beforeunload', this.onUnload)
+
     const tokenValues = this.load()
     logger.log('Token Values', tokenValues)
-    this.setState({ loading: false, tokenValues })
+    this.setState({ tokenValues: tokenValues })
   }
 
   load() {
@@ -95,6 +95,16 @@ export class StepTwo extends Component {
     return goBackEnabled
   }
 
+  onUnload = e => {
+    logger.log('On unload')
+    e.returnValue = 'Are you sure you want to leave?'
+  }
+
+  componentWillUnmount() {
+    logger.log('Component unmount')
+    window.removeEventListener('beforeunload', this.onUnload)
+  }
+
   render() {
     return (
       <div>
@@ -118,7 +128,6 @@ export class StepTwo extends Component {
             />
           </div>
         </section>
-        <Loader show={this.state.loading} />
       </div>
     )
   }

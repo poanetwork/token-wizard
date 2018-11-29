@@ -3,7 +3,6 @@ import arrayMutators from 'final-form-arrays'
 import logdown from 'logdown'
 import setFieldTouched from 'final-form-set-field-touched'
 import { Form } from 'react-final-form'
-import { Loader } from '../Common/Loader'
 import { CHAINS, NAVIGATION_STEPS } from '../../utils/constants'
 import { StepInfo } from '../Common/StepInfo'
 import { StepNavigation } from '../Common/StepNavigation'
@@ -30,7 +29,6 @@ const { CROWDSALE_SETUP } = NAVIGATION_STEPS
 @observer
 export class StepThree extends Component {
   state = {
-    loading: true,
     reload: false,
     initialTiers: [],
     burnExcess: 'no',
@@ -44,6 +42,10 @@ export class StepThree extends Component {
     const { web3Store, gasPriceStore } = this.props
 
     checkWeb3(web3Store.web3)
+
+    logger.log('Component did mount')
+    window.addEventListener('beforeunload', this.onUnload)
+
     const { initialTiers, burnExcess, gasTypeSelected } = this.load()
 
     this.setState({
@@ -54,10 +56,7 @@ export class StepThree extends Component {
 
     window.scrollTo(0, 0)
 
-    gasPriceStore
-      .updateValues()
-      .catch(() => noGasPriceAvailable())
-      .then(() => this.setState({ loading: false }))
+    gasPriceStore.updateValues().catch(() => noGasPriceAvailable())
   }
 
   load() {
@@ -89,6 +88,16 @@ export class StepThree extends Component {
       burnExcess: generalStore.burnExcess,
       gasTypeSelected: generalStore.gasTypeSelected
     }
+  }
+
+  onUnload = e => {
+    logger.log('On unload')
+    e.returnValue = 'Are you sure you want to leave?'
+  }
+
+  componentWillUnmount() {
+    logger.log('Component unmount')
+    window.removeEventListener('beforeunload', this.onUnload)
   }
 
   goNextStep = () => {
@@ -183,7 +192,6 @@ export class StepThree extends Component {
       return (
         <section className="steps steps_crowdsale-contract" ref="three">
           <StepNavigation activeStep={CROWDSALE_SETUP} />
-          <Loader show={this.state.loading} />
         </section>
       )
     }
@@ -222,7 +230,6 @@ export class StepThree extends Component {
             />
           </div>
         </section>
-        <Loader show={this.state.loading} />
       </div>
     )
   }

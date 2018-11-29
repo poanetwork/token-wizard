@@ -1,21 +1,59 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Web3 from 'web3'
-import logdown from 'logdown'
 
 const ONE_SECOND = 1000
-const logger = logdown('TW:Web3Provider')
 
 class Web3Provider extends Component {
-  constructor(props, context) {
-    super(props, context)
+  state = {
+    selectedAccount: null,
+    web3: null,
+    approvePermissions: null,
+    render: false
+  }
 
-    this.state = {
-      selectedAccount: props.selectedAccount || null,
-      web3: props.web3 || null,
-      approvePermissions: props.approvePermissions || null,
-      render: props.render || false
+  checkWeb3 = async () => {
+    const setWeb3 = () => {
+      window.web3 = new Web3(window.web3.currentProvider)
+      this.setState({
+        approvePermissions: true,
+        web3: window.web3
+      })
     }
+
+    const { ethereum } = window
+
+    // Modern dapp browsers...
+    if (ethereum) {
+      window.web3 = new Web3(ethereum)
+      try {
+        await ethereum.enable() // Request account access
+        setWeb3()
+      } catch (err) {
+        this.setState({
+          approvePermissions: false
+        })
+      }
+    }
+    // Legacy dapp browsers...
+    else if (window.web3) {
+      setWeb3()
+    }
+    // Non-dapp browsers...
+    else {
+      this.setState({
+        approvePermissions: false
+      })
+    }
+  }
+
+  async componentDidMount() {
+    await this.checkWeb3()
+    this.initPoll()
+
+    this.setState({
+      render: true
+    })
   }
 
   render() {
@@ -30,71 +68,6 @@ class Web3Provider extends Component {
     }
 
     return null
-  }
-
-  componentDidMount() {
-    this.checkWeb3()
-      .then(this.initPoll())
-      .then(() => {
-        this.setState({
-          render: true
-        })
-      })
-      .catch(err => {
-        this.setState({
-          render: true
-        })
-      })
-  }
-
-  checkWeb3() {
-    const setWeb3 = () => {
-      try {
-        window.web3 = new Web3(window.web3.currentProvider)
-        this.setState({
-          approvePermissions: true,
-          web3: window.web3
-        })
-      } catch (err) {
-        logger.log('There was a problem fetching accounts', err)
-      }
-    }
-
-    return new Promise((resolve, reject) => {
-      const { ethereum } = window
-
-      // Modern dapp browsers...
-      if (ethereum) {
-        window.web3 = new Web3(ethereum)
-        // Request account access if needed
-        ethereum
-          .enable()
-          .then(() => {
-            if (!this.state.web3) {
-              setWeb3()
-            }
-          })
-          .catch(err => {
-            this.setState({
-              approvePermissions: false
-            })
-            reject()
-          })
-        resolve()
-      }
-      // Legacy dapp browsers...
-      else if (window.web3) {
-        setWeb3()
-        resolve()
-      }
-      // Non-dapp browsers...
-      else {
-        this.setState({
-          approvePermissions: false
-        })
-        reject()
-      }
-    })
   }
 
   componentWillUnmount() {

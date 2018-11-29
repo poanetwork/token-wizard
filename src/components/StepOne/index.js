@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import logdown from 'logdown'
 import { ButtonContinue } from '../Common/ButtonContinue'
-import { Loader } from '../Common/Loader'
 import { NAVIGATION_STEPS, CROWDSALE_STRATEGIES, DOWNLOAD_STATUS } from '../../utils/constants'
 import { StepInfo } from '../Common/StepInfo'
 import { StepNavigation } from '../Common/StepNavigation'
@@ -31,7 +30,6 @@ const { MINTED_CAPPED_CROWDSALE } = CROWDSALE_STRATEGIES
 @observer
 export class StepOne extends Component {
   state = {
-    loading: true,
     strategy: MINTED_CAPPED_CROWDSALE
   }
 
@@ -51,16 +49,8 @@ export class StepOne extends Component {
 
   async componentDidMount() {
     if (this.block) {
-      this.setState({
-        loading: true
-      })
-
-      window.addEventListener('beforeunload', () => {
-        navigateTo({
-          history: this.props.history,
-          location: 'stepOne'
-        })
-      })
+      logger.log('Component did mount')
+      window.addEventListener('beforeunload', this.onUnload)
 
       // Capture back button to clear fromLocation
       window.addEventListener(
@@ -90,10 +80,6 @@ export class StepOne extends Component {
       } catch (e) {
         logger.log('An error has occurred', e.message)
       }
-
-      this.setState({
-        loading: false
-      })
     }
   }
 
@@ -136,6 +122,16 @@ export class StepOne extends Component {
     logger.log('CrowdsaleStore strategy selected:', strategy)
   }
 
+  onUnload = e => {
+    logger.log('On unload')
+    e.returnValue = 'Are you sure you want to leave?'
+  }
+
+  componentWillUnmount() {
+    logger.log('Component unmount')
+    window.removeEventListener('beforeunload', this.onUnload)
+  }
+
   render() {
     // Not render until reload
     if (!this.block) {
@@ -174,7 +170,6 @@ export class StepOne extends Component {
               </div>
             </div>
           </section>
-          <Loader show={this.state.loading} />
         </div>
       )
     }
