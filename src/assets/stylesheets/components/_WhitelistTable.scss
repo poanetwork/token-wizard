@@ -32,4 +32,23 @@ $sw-WhiteListTable-gradient-width: 45px;
 
     @include datatable-column-styles('.sw-WhiteListTable_Row');
 
+    &.sw-WhiteListTable_Column-center {
+        padding-left: 10px;
+        padding-right: 10px;
+        text-align: center;
+    }
+
+}
+
+.sw-WhiteListTable_TH {
+
+    @include datatable-th-styles();
+
+    &.sw-WhiteListTable_TH-min {
+        text-align: center;
+    }
+
+    &.sw-WhiteListTable_TH-max {
+        text-align: center;
+    }
 }

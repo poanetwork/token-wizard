@@ -116,6 +116,15 @@ export const NAVIGATION_STEPS = {
   CONTRIBUTE_PAGE: 'Contribute Page'
 }
 
+export const MANAGE_SECTIONS = {
+  CROWDSALE_LIST: 'Crowdsale List',
+  MANAGE_CROWDSALE: 'Manage Crowdsale'
+}
+
+export const TW_STATISTICS_SECTION = {
+  TW_STATISTICS: 'Statistics'
+}
+
 export const VALIDATION_MESSAGES = {
   TIER: 'Please enter a valid tier name between 1-30 characters',
   NAME: 'Please enter a valid name between 1-30 characters',

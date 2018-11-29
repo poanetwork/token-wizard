@@ -35,26 +35,6 @@
 
 }
 
-// placeholder font size
-@mixin placeholder-font-size($font-size) {
-    &::-webkit-input-placeholder {
-        /* WebKit browsers */
-        font-size: $font-size !important;
-    }
-    &:-moz-placeholder {
-        /* Mozilla Firefox 4 to 18 */
-        font-size: $font-size !important;
-    }
-    &::-moz-placeholder {
-        /* Mozilla Firefox 19+ */
-        font-size: $font-size !important;
-    }
-    &:-ms-input-placeholder {
-        /* Internet Explorer 10+ */
-        font-size: $font-size !important;
-    }
-}
-
 // placeholder color
 @mixin placeholder-color($color) {
     &::-webkit-input-placeholder {
@@ -79,8 +59,28 @@
     }
 }
 
+// placeholder font size
+@mixin placeholder-font-size($font-size) {
+    &::-webkit-input-placeholder {
+        /* WebKit browsers */
+        font-size: $font-size !important;
+    }
+    &:-moz-placeholder {
+        /* Mozilla Firefox 4 to 18 */
+        font-size: $font-size !important;
+    }
+    &::-moz-placeholder {
+        /* Mozilla Firefox 19+ */
+        font-size: $font-size !important;
+    }
+    &:-ms-input-placeholder {
+        /* Internet Explorer 10+ */
+        font-size: $font-size !important;
+    }
+}
+
 // placeholder font style
-@mixin placeholder-font-size($font-style) {
+@mixin placeholder-font-style($font-style) {
     &::-webkit-input-placeholder {
         /* WebKit browsers */
         font-style: $font-style !important;

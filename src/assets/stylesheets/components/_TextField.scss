@@ -2,7 +2,7 @@ $sw-TextField-height: 40px !default;
 
 .sw-TextField {
     @include placeholder-color(#9b9b9b);
-    @include placeholder-font-size(italic);
+    @include placeholder-font-style(italic);
     background-color: #fff;
     border-radius: 5px;
     border: solid 1px $base-border-color;
@@ -41,6 +41,15 @@ $sw-TextField-height: 40px !default;
         &:focus {
             background-image: none;
         }
+    }
+
+    &[readonly] {
+        background: transparent;
+        border: none;
+        color: inherit;
+        cursor: default;
+        padding-left: 0;
+        padding-right: 0;
     }
 
     .sw-WhitelistInputBlock_MinMaxFields & {

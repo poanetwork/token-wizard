@@ -59,3 +59,12 @@
         text-align: right;
     }
 }
+
+@mixin datatable-th-styles() {
+    color: #000;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.2;
+    padding: 0 0 10px;
+    text-align: left;
+}

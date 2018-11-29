@@ -39,6 +39,7 @@ $st-SectionInfo_Icon-dimensions-lg: 100px !default;
         width: $st-SectionInfo_Icon-dimensions-lg;
     }
 
+    @include section-info-icon(0, 31.5px, 31.5px, 55px, 55px);
     @include section-info-icon(1, 31.5px, 31.5px, 55px, 55px);
     @include section-info-icon(2, 26px, 27px, 52px, 55px);
     @include section-info-icon(3, 25px, 27px, 50px, 53px);

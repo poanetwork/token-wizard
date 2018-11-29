@@ -1,0 +1,54 @@
+.mng-ManageForm_Title {
+    color: #000;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0 0 10px;
+}
+
+.mng-ManageForm_Title-uppercase {
+    text-transform: uppercase;
+}
+
+.mng-ManageForm_BorderedBlock {
+    background-color: #fff;
+    border: 1px solid $base-border-color;
+    border-radius: 5px;
+    box-shadow: 0 9px 18px 4px rgba(224, 224, 224, 0.2);
+    padding: 25px 10px;
+
+    @media (min-width: $breakpoint-md) {
+        padding: 27px 40px 31px 34px;
+    }
+}
+
+.mng-ManageForm_ItemsContainer {
+    margin-bottom: 20px;
+
+    @media (min-width: $breakpoint-md) {
+        display: grid;
+        grid-column-gap: $grid-column-gap-xl;
+        grid-row-gap: 20px;
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.mng-ManageForm_Item {
+    margin-bottom: 10px;
+
+    @media (min-width: $breakpoint-md) {
+        margin-bottom: 0;
+    }
+}
+
+.mng-ManageForm_ButtonsContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 30px;
+
+    @media (min-width: $breakpoint-md) {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}

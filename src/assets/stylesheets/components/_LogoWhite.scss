@@ -7,7 +7,8 @@
     height: 49px;
     width: 102px;
 
-    .st-StepNavigation & {
+    .st-StepNavigation &,
+    .mng-ManageNavigation & {
         margin-bottom: 37px;
     }
 
@@ -17,7 +18,8 @@
     }
 
     @media (min-width: $breakpoint-xl) {
-        .st-StepNavigation & {
+        .st-StepNavigation &,
+        .mng-ManageNavigation & {
             margin-bottom: 43px;
         }
     }
