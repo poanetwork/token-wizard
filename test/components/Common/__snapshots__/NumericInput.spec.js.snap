@@ -24,6 +24,7 @@ exports[`NumericInput Should render the component 1`] = `
     </div>
   </div>
   <input
+    autoComplete="off"
     className="sw-TextField"
     onChange={[Function]}
     onKeyPress={[Function]}

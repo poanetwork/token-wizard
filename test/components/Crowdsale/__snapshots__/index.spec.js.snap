@@ -1,0 +1,302 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Crowdsale index should render Crowdsale 1`] = `
+<div>
+  <section
+    className="lo-MenuBarAndContent"
+  >
+    <div
+      className="st-StepNavigation"
+    >
+      <a
+        className="sw-LogoWhite"
+        href="/"
+      />
+      <div
+        className="st-StepNavigation_Container"
+      >
+        <div
+          className="st-StepItem
+        active  "
+        >
+          <div
+            className="st-StepItem_Circle"
+          />
+          <div
+            className="st-StepItem_Line"
+          />
+          <span
+            className="st-StepItem_Text"
+          >
+            Crowdsale Strategy
+          </span>
+        </div>
+        <div
+          className="st-StepItem
+        active  "
+        >
+          <div
+            className="st-StepItem_Circle"
+          />
+          <div
+            className="st-StepItem_Line"
+          />
+          <span
+            className="st-StepItem_Text"
+          >
+            Token Setup
+          </span>
+        </div>
+        <div
+          className="st-StepItem
+        active  "
+        >
+          <div
+            className="st-StepItem_Circle"
+          />
+          <div
+            className="st-StepItem_Line"
+          />
+          <span
+            className="st-StepItem_Text"
+          >
+            Crowdsale Setup
+          </span>
+        </div>
+        <div
+          className="st-StepItem
+        active  "
+        >
+          <div
+            className="st-StepItem_Circle"
+          />
+          <div
+            className="st-StepItem_Line"
+          />
+          <span
+            className="st-StepItem_Text"
+          >
+            Publish
+          </span>
+        </div>
+        <div
+          className="st-StepItem
+        active  "
+        >
+          <div
+            className="st-StepItem_Circle"
+          />
+          <span
+            className="st-StepItem_Text"
+          >
+            Crowdsale Page
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      className="st-StepContent"
+    >
+      <div
+        className="st-SectionInfo "
+      >
+        <div
+          className="st-SectionInfo_Icon st-SectionInfo_Icon-step5"
+        />
+        <div
+          className="st-SectionInfo_Text"
+        >
+          <h1
+            className="st-SectionInfo_Title"
+          >
+            Crowdsale Page
+          </h1>
+          <p
+            className="st-SectionInfo_Description"
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "Page with statistics of crowdsale. Statistics for all tiers combined on the page. Please press Ctrl-D to bookmark the page.",
+              }
+            }
+          />
+        </div>
+      </div>
+      <div
+        className="cs-CrowdsaleProgress "
+      >
+        <div
+          className="cs-CrowdsaleProgress_Funds"
+        >
+          <div
+            className="cs-CrowdsaleProgress_FundsAmount cs-CrowdsaleProgress_FundsAmount-total-raised"
+          >
+            <h2
+              className="cs-CrowdsaleProgress_FundsTitle"
+            >
+              0
+               
+              <span
+                className="cs-CrowdsaleProgress_NoBreak"
+              >
+                ETH
+              </span>
+            </h2>
+            <p
+              className="cs-CrowdsaleProgress_FundsDescription"
+            >
+              Total Raised Funds
+            </p>
+          </div>
+          <div
+            className="cs-CrowdsaleProgress_FundsAmount cs-CrowdsaleProgress_FundsAmount-goal"
+          >
+            <h2
+              className="cs-CrowdsaleProgress_FundsTitle"
+            >
+              0
+               
+              <span
+                className="cs-CrowdsaleProgress_NoBreak"
+              >
+                ETH
+              </span>
+            </h2>
+            <p
+              className="cs-CrowdsaleProgress_FundsDescription"
+            >
+              Goal
+            </p>
+          </div>
+        </div>
+        <div
+          className="cs-CrowdsaleProgress_Bar"
+        >
+          <div
+            className="cs-CrowdsaleProgress_BarWidth"
+            style={
+              Object {
+                "width": "0%",
+              }
+            }
+          />
+          <div
+            className="cs-CrowdsaleProgress_Division"
+          />
+          <div
+            className="cs-CrowdsaleProgress_Division"
+          />
+          <div
+            className="cs-CrowdsaleProgress_Division"
+          />
+          <div
+            className="cs-CrowdsaleProgress_Division"
+          />
+          <div
+            className="cs-CrowdsaleProgress_Division"
+          />
+          <div
+            className="cs-CrowdsaleProgress_Division"
+          />
+          <div
+            className="cs-CrowdsaleProgress_Division"
+          />
+          <div
+            className="cs-CrowdsaleProgress_Division"
+          />
+          <div
+            className="cs-CrowdsaleProgress_Division"
+          />
+        </div>
+      </div>
+      <div
+        className="cs-CrowdsaleID "
+      >
+        <div
+          className="cs-CrowdsaleID_InnerContainer"
+        >
+          <h3
+            className="cs-CrowdsaleID_Hash"
+          >
+            <span
+              className="cs-CrowdsaleID_HashText"
+            />
+             
+            <button
+              className="sw-ButtonCopyToClipboard "
+              data-clipboard-action="copy"
+              onClick={[Function]}
+              type="button"
+            >
+              <svg
+                height="20"
+                viewBox="0 0 16 20"
+                width="16"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g
+                  fill="#8CE1D7"
+                  fillRule="nonzero"
+                >
+                  <path
+                    d="M10.867 3.493H1.602c-.87 0-1.575.707-1.575 1.579v13.32c0 .872.706 1.58 1.575 1.58h9.265c.87 0 1.576-.708 1.576-1.58V5.073a1.583 1.583 0 0 0-1.576-1.58zm.47 14.896a.474.474 0 0 1-.474.474H1.598a.474.474 0 0 1-.474-.474V5.072c0-.262.213-.475.474-.475h9.265c.261 0 .474.213.474.475v13.317z"
+                  />
+                  <path
+                    d="M14.41 0H5.145c-.87 0-1.576.708-1.576 1.579a.55.55 0 0 0 .551.552.55.55 0 0 0 .551-.552c0-.262.213-.475.474-.475h9.265c.261 0 .474.213.474.475v13.32a.474.474 0 0 1-.474.475.55.55 0 0 0-.55.552.55.55 0 0 0 .55.553c.87 0 1.576-.708 1.576-1.58V1.58C15.986.708 15.28 0 14.41 0z"
+                  />
+                </g>
+              </svg>
+            </button>
+          </h3>
+          <p
+            className="cs-CrowdsaleID_Description"
+          >
+            Crowdsale Proxy Address
+          </p>
+        </div>
+      </div>
+      <div
+        className="st-StepContent_Buttons"
+      >
+        <button
+          className="sw-ButtonContinue "
+          disabled={false}
+          onClick={[Function]}
+          type="button"
+        >
+          <span
+            className="sw-ButtonContinue_Text"
+          >
+            Contribute
+          </span>
+        </button>
+      </div>
+    </div>
+  </section>
+  <div
+    className="sw-FullscreenBackdrop"
+  >
+    <div
+      className="sw-Loader"
+    >
+      <div
+        className="sw-Loader_AnimatedItem"
+      />
+      <div
+        className="sw-Loader_AnimatedItem"
+      />
+      <div
+        className="sw-Loader_AnimatedItem"
+      />
+      <div
+        className="sw-Loader_AnimatedItem"
+      />
+      <div
+        className="sw-Loader_AnimatedItem"
+      />
+      <div
+        className="sw-Loader_AnimatedItem"
+      />
+    </div>
+  </div>
+</div>
+`;

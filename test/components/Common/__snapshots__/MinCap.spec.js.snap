@@ -25,6 +25,7 @@ exports[`MinCap  should render MinCap component 1`] = `
     </div>
   </div>
   <input
+    autoComplete="off"
     className="sw-TextField"
     disabled={false}
     id="mincap"
@@ -63,6 +64,7 @@ exports[`MinCap  should render MinCap component if field is disabled 1`] = `
     </div>
   </div>
   <input
+    autoComplete="off"
     className="sw-TextField"
     disabled={true}
     id="mincap"

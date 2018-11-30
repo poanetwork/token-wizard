@@ -1,6 +1,965 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`StepThreeFormDutchAuction should render StepThreeFormDutchAuction 1`] = `
+exports[`StepThreeFormDutchAuction should render StepThreeFormDutchAuction- test snapshot form 1`] = `
+<Provider
+  crowdsaleStore={
+    CrowdsaleStore {
+      "crowdsales": Array [],
+      "endTime": "2018-03-16T00:00",
+      "maximumSellableTokens": undefined,
+      "maximumSellableTokensInWei": undefined,
+      "selected": Object {
+        "initialTiersValues": Array [],
+        "updatable": false,
+      },
+      "strategy": undefined,
+      "supply": "0",
+    }
+  }
+  gasPriceStore={
+    GasPriceStore {
+      "block_number": undefined,
+      "block_time": undefined,
+      "custom": Object {
+        "id": "custom",
+        "price": 0.1,
+      },
+      "fast": Object {
+        "id": "fast",
+        "price": 15000000000,
+      },
+      "health": undefined,
+      "instant": Object {
+        "id": "instant",
+        "price": 45000000000,
+      },
+      "slow": Object {
+        "id": "slow",
+        "price": 5000000000,
+      },
+      "standard": Object {
+        "id": "normal",
+        "price": 10000000000,
+      },
+    }
+  }
+  generalStore={
+    GeneralStore {
+      "burnExcess": "no",
+      "gasPrice": 5000000000,
+      "gasTypeSelected": Object {
+        "description": "Safe and Cheap",
+        "id": "slow",
+        "price": 5000000000,
+      },
+      "networkID": undefined,
+    }
+  }
+  reservedTokenStore={
+    ReservedTokenStore {
+      "tokens": Array [],
+    }
+  }
+  tierStore={
+    TierStore {
+      "tiers": Array [
+        Object {
+          "endTime": "2018-03-16T00:00",
+          "minCap": "0",
+          "rate": "",
+          "startTime": "2018-03-12T11:05",
+          "supply": "",
+          "tier": "Tier 1",
+          "updatable": "off",
+          "walletAddress": "0xAC7022d55dA6C8BB229b1Ba3Ce8A16724FF79c4A",
+          "whitelist": Array [],
+          "whitelistEnabled": "no",
+        },
+      ],
+      "validTiers": Array [
+        Object {
+          "endTime": "VALIDATED",
+          "rate": "EMPTY",
+          "startTime": "VALIDATED",
+          "supply": "EMPTY",
+          "tier": "VALIDATED",
+          "updatable": "VALIDATED",
+        },
+      ],
+    }
+  }
+  tokenStore={
+    TokenStore {
+      "decimals": undefined,
+      "name": undefined,
+      "reservedTokensInput": Object {},
+      "supply": 0,
+      "ticker": undefined,
+      "validToken": Object {
+        "decimals": "EMPTY",
+        "name": "EMPTY",
+        "ticker": "EMPTY",
+      },
+    }
+  }
+>
+  <StepThreeFormDutchAuction
+    crowdsaleStore={
+      CrowdsaleStore {
+        "crowdsales": Array [],
+        "endTime": "2018-03-16T00:00",
+        "maximumSellableTokens": undefined,
+        "maximumSellableTokensInWei": undefined,
+        "selected": Object {
+          "initialTiersValues": Array [],
+          "updatable": false,
+        },
+        "strategy": undefined,
+        "supply": "0",
+      }
+    }
+    decorators={[MockFunction]}
+    form={
+      Object {
+        "mutators": Object {},
+      }
+    }
+    gasPriceStore={
+      GasPriceStore {
+        "block_number": undefined,
+        "block_time": undefined,
+        "custom": Object {
+          "id": "custom",
+          "price": 0.1,
+        },
+        "fast": Object {
+          "id": "fast",
+          "price": 15000000000,
+        },
+        "health": undefined,
+        "instant": Object {
+          "id": "instant",
+          "price": 45000000000,
+        },
+        "slow": Object {
+          "id": "slow",
+          "price": 5000000000,
+        },
+        "standard": Object {
+          "id": "normal",
+          "price": 10000000000,
+        },
+      }
+    }
+    generalStore={
+      GeneralStore {
+        "burnExcess": "no",
+        "gasPrice": 5000000000,
+        "gasTypeSelected": Object {
+          "description": "Safe and Cheap",
+          "id": "slow",
+          "price": 5000000000,
+        },
+        "networkID": undefined,
+      }
+    }
+    onSubmit={[MockFunction]}
+    reservedTokenStore={
+      ReservedTokenStore {
+        "tokens": Array [],
+      }
+    }
+    tierStore={
+      TierStore {
+        "tiers": Array [
+          Object {
+            "endTime": "2018-03-16T00:00",
+            "minCap": "0",
+            "rate": "",
+            "startTime": "2018-03-12T11:05",
+            "supply": "",
+            "tier": "Tier 1",
+            "updatable": "off",
+            "walletAddress": "0xAC7022d55dA6C8BB229b1Ba3Ce8A16724FF79c4A",
+            "whitelist": Array [],
+            "whitelistEnabled": "no",
+          },
+        ],
+        "validTiers": Array [
+          Object {
+            "endTime": "VALIDATED",
+            "rate": "EMPTY",
+            "startTime": "VALIDATED",
+            "supply": "EMPTY",
+            "tier": "VALIDATED",
+            "updatable": "VALIDATED",
+          },
+        ],
+      }
+    }
+    tokenStore={
+      TokenStore {
+        "decimals": undefined,
+        "name": undefined,
+        "reservedTokensInput": Object {},
+        "supply": 0,
+        "ticker": undefined,
+        "validToken": Object {
+          "decimals": "EMPTY",
+          "name": "EMPTY",
+          "ticker": "EMPTY",
+        },
+      }
+    }
+    values={
+      Object {
+        "burnExcess": false,
+        "gasPrice": Object {
+          "description": "Safe and Cheap",
+          "id": "slow",
+          "price": 5000000000,
+        },
+        "tiers": Array [
+          Object {
+            "endTime": "2018-03-16T00:00",
+            "minCap": "0",
+            "rate": "",
+            "startTime": "2018-03-12T11:05",
+            "supply": "",
+            "tier": "Tier 1",
+            "updatable": "off",
+            "walletAddress": "0xAC7022d55dA6C8BB229b1Ba3Ce8A16724FF79c4A",
+            "whitelist": Array [],
+            "whitelistEnabled": "no",
+          },
+        ],
+        "walletAddress": "0xAC7022d55dA6C8BB229b1Ba3Ce8A16724FF79c4A",
+        "whitelistEnabled": "no",
+      }
+    }
+  >
+    <form
+      className="st-StepContent_FormFullHeight"
+    >
+      <WhenFieldChanges
+        becomes="yes"
+        field="tiers[0].whitelistEnabled"
+        set="tiers[0].minCap"
+        to={0}
+      >
+        <Field
+          format={[Function]}
+          name="tiers[0].minCap"
+          parse={[Function]}
+          subscription={Object {}}
+        >
+          <OnChange
+            name="tiers[0].whitelistEnabled"
+          >
+            <Field
+              allowNull={true}
+              format={[Function]}
+              name="tiers[0].whitelistEnabled"
+              parse={[Function]}
+              render={[Function]}
+              subscription={
+                Object {
+                  "value": true,
+                }
+              }
+            >
+              <OnChangeState
+                input={
+                  Object {
+                    "name": "tiers[0].whitelistEnabled",
+                    "onBlur": [Function],
+                    "onChange": [Function],
+                    "onFocus": [Function],
+                    "value": "",
+                  }
+                }
+                meta={
+                  Object {
+                    "active": undefined,
+                    "data": undefined,
+                    "dirty": undefined,
+                    "dirtySinceLastSubmit": undefined,
+                    "error": undefined,
+                    "initial": undefined,
+                    "invalid": undefined,
+                    "pristine": undefined,
+                    "submitError": undefined,
+                    "submitFailed": undefined,
+                    "submitSucceeded": undefined,
+                    "touched": undefined,
+                    "valid": undefined,
+                    "visited": undefined,
+                  }
+                }
+              />
+            </Field>
+          </OnChange>
+        </Field>
+      </WhenFieldChanges>
+      <h2
+        className="sw-BorderedBlockTitle"
+      >
+        Global settings
+      </h2>
+      <div
+        className="sw-BorderedBlock sw-BorderedBlock-CrowdSaleSetupGlobalSettingsDutchAuction"
+        tabIndex="0"
+      >
+        <Field
+          component={[Function]}
+          description="Where the money goes after contributors transactions. Immediately after each transaction. We
+                        recommend to setup a multisig wallet with hardware based signers."
+          extraClassName="sw-InputField2-DutchAuctionWalletAddress"
+          format={[Function]}
+          label="Wallet Address"
+          name="walletAddress"
+          parse={[Function]}
+          placeholder="Enter here"
+          validate={[Function]}
+          value="0xAC7022d55dA6C8BB229b1Ba3Ce8A16724FF79c4A"
+        >
+          <InputField2
+            description="Where the money goes after contributors transactions. Immediately after each transaction. We
+                        recommend to setup a multisig wallet with hardware based signers."
+            extraClassName="sw-InputField2-DutchAuctionWalletAddress"
+            input={
+              Object {
+                "name": "walletAddress",
+                "onBlur": [Function],
+                "onChange": [Function],
+                "onFocus": [Function],
+                "value": "",
+              }
+            }
+            label="Wallet Address"
+            meta={
+              Object {
+                "active": undefined,
+                "data": undefined,
+                "dirty": undefined,
+                "dirtySinceLastSubmit": undefined,
+                "error": undefined,
+                "initial": undefined,
+                "invalid": undefined,
+                "pristine": undefined,
+                "submitError": undefined,
+                "submitFailed": undefined,
+                "submitSucceeded": undefined,
+                "touched": undefined,
+                "valid": undefined,
+                "visited": undefined,
+              }
+            }
+            placeholder="Enter here"
+          >
+            <div
+              className="sw-InputField2 sw-InputField2-DutchAuctionWalletAddress"
+            >
+              <FormControlTitle
+                description="Where the money goes after contributors transactions. Immediately after each transaction. We
+                        recommend to setup a multisig wallet with hardware based signers."
+                title="Wallet Address"
+              >
+                <div
+                  className="sw-FormControlTitle"
+                >
+                  <label
+                    className="sw-FormControlTitle_Label"
+                  >
+                    Wallet Address
+                  </label>
+                  <div
+                    className="sw-FormControlTitle_Info"
+                    tabIndex="-1"
+                  >
+                    <span
+                      className="sw-FormControlTitle_Tooltip"
+                    >
+                      Where the money goes after contributors transactions. Immediately after each transaction. We
+                        recommend to setup a multisig wallet with hardware based signers.
+                    </span>
+                  </div>
+                </div>
+              </FormControlTitle>
+              <TextField
+                id="walletAddress"
+                name="walletAddress"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder="Enter here"
+                value=""
+              >
+                <input
+                  autoComplete="off"
+                  className="sw-TextField"
+                  id="walletAddress"
+                  name="walletAddress"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder="Enter here"
+                  value=""
+                />
+              </TextField>
+              <Errors
+                name="walletAddress"
+              >
+                <Field
+                  format={[Function]}
+                  name="walletAddress"
+                  parse={[Function]}
+                  render={[Function]}
+                  subscription={
+                    Object {
+                      "error": true,
+                      "pristine": true,
+                      "touched": true,
+                    }
+                  }
+                />
+              </Errors>
+            </div>
+          </InputField2>
+        </Field>
+        <Field
+          component={[Function]}
+          extraClassName="sw-GasPriceInput-DutchAuction"
+          format={[Function]}
+          gasPrices={
+            Array [
+              Object {
+                "description": "Safe and Cheap (5 GWei)",
+                "id": "slow",
+                "price": 5,
+              },
+              Object {
+                "description": "Normal (10 GWei)",
+                "id": "normal",
+                "price": 10,
+              },
+              Object {
+                "description": "Fast and Expensive (15 GWei)",
+                "id": "fast",
+                "price": 15,
+              },
+              Object {
+                "description": "Custom",
+                "id": "custom",
+                "price": 1e-10,
+              },
+            ]
+          }
+          id="gasPrice"
+          name="gasPrice"
+          parse={[Function]}
+          side="right"
+          updateGasTypeSelected={[Function]}
+          validate={[Function]}
+        >
+          <inject-GasPriceInput-with-generalStore
+            extraClassName="sw-GasPriceInput-DutchAuction"
+            gasPrices={
+              Array [
+                Object {
+                  "description": "Safe and Cheap (5 GWei)",
+                  "id": "slow",
+                  "price": 5,
+                },
+                Object {
+                  "description": "Normal (10 GWei)",
+                  "id": "normal",
+                  "price": 10,
+                },
+                Object {
+                  "description": "Fast and Expensive (15 GWei)",
+                  "id": "fast",
+                  "price": 15,
+                },
+                Object {
+                  "description": "Custom",
+                  "id": "custom",
+                  "price": 1e-10,
+                },
+              ]
+            }
+            id="gasPrice"
+            input={
+              Object {
+                "name": "gasPrice",
+                "onBlur": [Function],
+                "onChange": [Function],
+                "onFocus": [Function],
+                "value": "",
+              }
+            }
+            meta={
+              Object {
+                "active": undefined,
+                "data": undefined,
+                "dirty": undefined,
+                "dirtySinceLastSubmit": undefined,
+                "error": undefined,
+                "initial": undefined,
+                "invalid": undefined,
+                "pristine": undefined,
+                "submitError": undefined,
+                "submitFailed": undefined,
+                "submitSucceeded": undefined,
+                "touched": undefined,
+                "valid": undefined,
+                "visited": undefined,
+              }
+            }
+            side="right"
+            updateGasTypeSelected={[Function]}
+          >
+            <GasPriceInput
+              extraClassName="sw-GasPriceInput-DutchAuction"
+              gasPrices={
+                Array [
+                  Object {
+                    "description": "Safe and Cheap (5 GWei)",
+                    "id": "slow",
+                    "price": 5,
+                  },
+                  Object {
+                    "description": "Normal (10 GWei)",
+                    "id": "normal",
+                    "price": 10,
+                  },
+                  Object {
+                    "description": "Fast and Expensive (15 GWei)",
+                    "id": "fast",
+                    "price": 15,
+                  },
+                  Object {
+                    "description": "Custom",
+                    "id": "custom",
+                    "price": 1e-10,
+                  },
+                ]
+              }
+              generalStore={
+                GeneralStore {
+                  "burnExcess": "no",
+                  "gasPrice": 5000000000,
+                  "gasTypeSelected": Object {
+                    "description": "Safe and Cheap",
+                    "id": "slow",
+                    "price": 5000000000,
+                  },
+                  "networkID": undefined,
+                }
+              }
+              id="gasPrice"
+              input={
+                Object {
+                  "name": "gasPrice",
+                  "onBlur": [Function],
+                  "onChange": [Function],
+                  "onFocus": [Function],
+                  "value": "",
+                }
+              }
+              meta={
+                Object {
+                  "active": undefined,
+                  "data": undefined,
+                  "dirty": undefined,
+                  "dirtySinceLastSubmit": undefined,
+                  "error": undefined,
+                  "initial": undefined,
+                  "invalid": undefined,
+                  "pristine": undefined,
+                  "submitError": undefined,
+                  "submitFailed": undefined,
+                  "submitSucceeded": undefined,
+                  "touched": undefined,
+                  "valid": undefined,
+                  "visited": undefined,
+                }
+              }
+              side="right"
+              updateGasTypeSelected={[Function]}
+            >
+              <div
+                className="sw-GasPriceInput sw-GasPriceInput-DutchAuction"
+              >
+                <FormControlTitle
+                  description="Slow is cheap, fast is expensive."
+                  title="Gas Price"
+                >
+                  <div
+                    className="sw-FormControlTitle"
+                  >
+                    <label
+                      className="sw-FormControlTitle_Label"
+                    >
+                      Gas Price
+                    </label>
+                    <div
+                      className="sw-FormControlTitle_Info"
+                      tabIndex="-1"
+                    >
+                      <span
+                        className="sw-FormControlTitle_Tooltip"
+                      >
+                        Slow is cheap, fast is expensive.
+                      </span>
+                    </div>
+                  </div>
+                </FormControlTitle>
+                <div
+                  className="sw-GasPriceInput_Select"
+                >
+                  <button
+                    className="sw-GasPriceInput_SelectButton"
+                    onClick={[Function]}
+                    type="button"
+                  >
+                    <span
+                      className="sw-GasPriceInput_SelectButtonText"
+                    >
+                      Safe and Cheap (5 GWei)
+                    </span>
+                    <span
+                      className="sw-GasPriceInput_SelectButtonChevron"
+                    />
+                  </button>
+                  <div
+                    className="sw-GasPriceInput_SelectList"
+                    onClick={[Function]}
+                  >
+                    <label
+                      className="sw-GasPriceInput_SelectItem"
+                      key="0"
+                      onClick={[Function]}
+                    >
+                      <input
+                        checked={true}
+                        className="sw-GasPriceInput_SelectInput"
+                        id="slow"
+                        name="gas-price"
+                        type="radio"
+                        value="slow"
+                      />
+                      <span
+                        className="sw-GasPriceInput_SelectText"
+                      >
+                        Safe and Cheap (5 GWei)
+                      </span>
+                    </label>
+                    <label
+                      className="sw-GasPriceInput_SelectItem"
+                      key="1"
+                      onClick={[Function]}
+                    >
+                      <input
+                        checked={false}
+                        className="sw-GasPriceInput_SelectInput"
+                        id="normal"
+                        name="gas-price"
+                        type="radio"
+                        value="normal"
+                      />
+                      <span
+                        className="sw-GasPriceInput_SelectText"
+                      >
+                        Normal (10 GWei)
+                      </span>
+                    </label>
+                    <label
+                      className="sw-GasPriceInput_SelectItem"
+                      key="2"
+                      onClick={[Function]}
+                    >
+                      <input
+                        checked={false}
+                        className="sw-GasPriceInput_SelectInput"
+                        id="fast"
+                        name="gas-price"
+                        type="radio"
+                        value="fast"
+                      />
+                      <span
+                        className="sw-GasPriceInput_SelectText"
+                      >
+                        Fast and Expensive (15 GWei)
+                      </span>
+                    </label>
+                    <label
+                      className="sw-GasPriceInput_SelectItem"
+                      key="3"
+                      onClick={[Function]}
+                    >
+                      <input
+                        checked={false}
+                        className="sw-GasPriceInput_SelectInput"
+                        id="custom"
+                        name="gas-price"
+                        type="radio"
+                        value="custom"
+                      />
+                      <span
+                        className="sw-GasPriceInput_SelectText"
+                      >
+                        Custom
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                <Errors
+                  name="gasPrice"
+                >
+                  <Field
+                    format={[Function]}
+                    name="gasPrice"
+                    parse={[Function]}
+                    render={[Function]}
+                    subscription={
+                      Object {
+                        "error": true,
+                        "pristine": true,
+                        "touched": true,
+                      }
+                    }
+                  />
+                </Errors>
+              </div>
+            </GasPriceInput>
+          </inject-GasPriceInput-with-generalStore>
+        </Field>
+        <Field
+          format={[Function]}
+          name="burnExcess"
+          parse={[Function]}
+          render={[Function]}
+        >
+          <RadioButton
+            buttons={
+              Array [
+                Object {
+                  "checked": false,
+                  "id": "burnExcessRadioButtons.enable_whitelisting_yes",
+                  "label": "Yes",
+                  "name": "burnExcessRadioButtons",
+                  "onChange": [Function],
+                  "value": "yes",
+                },
+                Object {
+                  "checked": false,
+                  "id": "burnExcessRadioButtons.enable_whitelisting_no",
+                  "label": "No",
+                  "name": "burnExcessRadioButtons",
+                  "onChange": [Function],
+                  "value": "no",
+                },
+              ]
+            }
+            description="Whether the unsold tokens will be burnt on finalization, or be sent to the team wallet"
+            extraClassName="sw-RadioButton-DutchAuctionBurnExcess"
+            title="Burn Excess"
+          >
+            <div
+              className="sw-RadioButton sw-RadioButton-DutchAuctionBurnExcess"
+            >
+              <FormControlTitle
+                description="Whether the unsold tokens will be burnt on finalization, or be sent to the team wallet"
+                title="Burn Excess"
+              >
+                <div
+                  className="sw-FormControlTitle"
+                >
+                  <label
+                    className="sw-FormControlTitle_Label"
+                  >
+                    Burn Excess
+                  </label>
+                  <div
+                    className="sw-FormControlTitle_Info"
+                    tabIndex="-1"
+                  >
+                    <span
+                      className="sw-FormControlTitle_Tooltip"
+                    >
+                      Whether the unsold tokens will be burnt on finalization, or be sent to the team wallet
+                    </span>
+                  </div>
+                </div>
+              </FormControlTitle>
+              <div
+                className="sw-RadioButton_Container"
+              >
+                <label
+                  className="sw-RadioButton_Label"
+                  key="0"
+                >
+                  <input
+                    checked={false}
+                    className="sw-RadioButton_Input"
+                    id="burnExcessRadioButtons.enable_whitelisting_yes"
+                    name="burnExcessRadioButtons"
+                    onChange={[Function]}
+                    type="radio"
+                    value="yes"
+                  />
+                  <span
+                    className="sw-RadioButton_Button"
+                  >
+                    Yes
+                  </span>
+                </label>
+                <label
+                  className="sw-RadioButton_Label"
+                  key="1"
+                >
+                  <input
+                    checked={false}
+                    className="sw-RadioButton_Input"
+                    id="burnExcessRadioButtons.enable_whitelisting_no"
+                    name="burnExcessRadioButtons"
+                    onChange={[Function]}
+                    type="radio"
+                    value="no"
+                  />
+                  <span
+                    className="sw-RadioButton_Button"
+                  >
+                    No
+                  </span>
+                </label>
+              </div>
+            </div>
+          </RadioButton>
+        </Field>
+        <ReactFinalFormFieldArray(4.6.1)(undefined)
+          name="tiers"
+        >
+          <DutchAuctionBlock
+            fields={
+              Object {
+                "active": undefined,
+                "dirty": undefined,
+                "error": undefined,
+                "forEach": [Function],
+                "initial": undefined,
+                "invalid": undefined,
+                "length": undefined,
+                "map": [Function],
+                "name": "tiers",
+                "pristine": undefined,
+                "submitError": undefined,
+                "submitFailed": undefined,
+                "submitSucceeded": undefined,
+                "touched": undefined,
+                "valid": undefined,
+                "visited": undefined,
+              }
+            }
+            form={
+              Object {
+                "mutators": Object {},
+              }
+            }
+            tierStore={
+              TierStore {
+                "tiers": Array [
+                  Object {
+                    "endTime": "2018-03-16T00:00",
+                    "minCap": "0",
+                    "rate": "",
+                    "startTime": "2018-03-12T11:05",
+                    "supply": "",
+                    "tier": "Tier 1",
+                    "updatable": "off",
+                    "walletAddress": "0xAC7022d55dA6C8BB229b1Ba3Ce8A16724FF79c4A",
+                    "whitelist": Array [],
+                    "whitelistEnabled": "no",
+                  },
+                ],
+                "validTiers": Array [
+                  Object {
+                    "endTime": "VALIDATED",
+                    "rate": "EMPTY",
+                    "startTime": "VALIDATED",
+                    "supply": "EMPTY",
+                    "tier": "VALIDATED",
+                    "updatable": "VALIDATED",
+                  },
+                ],
+              }
+            }
+            tokenStore={
+              TokenStore {
+                "decimals": undefined,
+                "name": undefined,
+                "reservedTokensInput": Object {},
+                "supply": 0,
+                "ticker": undefined,
+                "validToken": Object {
+                  "decimals": "EMPTY",
+                  "name": "EMPTY",
+                  "ticker": "EMPTY",
+                },
+              }
+            }
+          >
+            <div
+              className="sw-DutchAuctionBlock"
+            />
+          </DutchAuctionBlock>
+        </ReactFinalFormFieldArray(4.6.1)(undefined)>
+      </div>
+      <div
+        className="st-StepContent_Buttons"
+      >
+        <ButtonBack
+          disabled={true}
+        >
+          <button
+            className="sw-ButtonBack "
+            disabled={true}
+            type="button"
+          >
+            Back
+          </button>
+        </ButtonBack>
+        <ButtonContinue
+          type="submit"
+        >
+          <button
+            className="sw-ButtonContinue "
+            disabled={false}
+            type="submit"
+          >
+            <span
+              className="sw-ButtonContinue_Text"
+            >
+              Continue
+            </span>
+          </button>
+        </ButtonContinue>
+      </div>
+      <FormSpy
+        onChange={[Function]}
+        subscription={
+          Object {
+            "values": true,
+          }
+        }
+      />
+    </form>
+  </StepThreeFormDutchAuction>
+</Provider>
+`;
+
+exports[`StepThreeFormDutchAuction should render StepThreeFormDutchAuction- test snapshots 1`] = `
 <form
   className="st-StepContent_FormFullHeight"
   onSubmit={[Function]}
@@ -38,6 +997,7 @@ exports[`StepThreeFormDutchAuction should render StepThreeFormDutchAuction 1`] =
         </div>
       </div>
       <input
+        autoComplete="off"
         className="sw-TextField"
         id="walletAddress"
         name="walletAddress"
@@ -256,6 +1216,7 @@ exports[`StepThreeFormDutchAuction should render StepThreeFormDutchAuction 1`] =
             </div>
           </div>
           <input
+            autoComplete="off"
             className="sw-TextField"
             id="tiers[0].startTime"
             name="tiers[0].startTime"
@@ -289,6 +1250,7 @@ exports[`StepThreeFormDutchAuction should render StepThreeFormDutchAuction 1`] =
             </div>
           </div>
           <input
+            autoComplete="off"
             className="sw-TextField"
             id="tiers[0].endTime"
             name="tiers[0].endTime"
@@ -322,6 +1284,7 @@ exports[`StepThreeFormDutchAuction should render StepThreeFormDutchAuction 1`] =
             </div>
           </div>
           <input
+            autoComplete="off"
             className="sw-TextField"
             id="tiers[0].minRate"
             min="0"
@@ -366,6 +1329,7 @@ exports[`StepThreeFormDutchAuction should render StepThreeFormDutchAuction 1`] =
             </div>
           </div>
           <input
+            autoComplete="off"
             className="sw-TextField"
             id="tiers[0].maxRate"
             min="0"
@@ -410,6 +1374,7 @@ exports[`StepThreeFormDutchAuction should render StepThreeFormDutchAuction 1`] =
             </div>
           </div>
           <input
+            autoComplete="off"
             className="sw-TextField"
             disabled={false}
             id="tiers[0].supply"
@@ -457,6 +1422,7 @@ exports[`StepThreeFormDutchAuction should render StepThreeFormDutchAuction 1`] =
             </div>
           </div>
           <input
+            autoComplete="off"
             className="sw-TextField"
             disabled={false}
             id="tiers[0].minCap"
@@ -553,7 +1519,8 @@ exports[`StepThreeFormDutchAuction should render StepThreeFormDutchAuction 1`] =
   >
     <button
       className="sw-ButtonBack "
-      disabled={true}
+      disabled={false}
+      onClick={[MockFunction]}
       type="button"
     >
       Back

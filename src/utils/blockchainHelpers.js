@@ -228,7 +228,7 @@ const deployContractInner = (account, abi, deployOpts, executionOrder) => {
     })
 }
 
-export function sendTXToContract(method, executionOrder) {
+export const sendTXToContract = (method, executionOrder) => {
   return sendTX(method, CALL_METHOD, executionOrder)
 }
 
@@ -362,7 +362,7 @@ const getTypeOfTxDisplayName = type => {
   }
 }
 
-export function attachToContract(abi, addr) {
+export const attachToContract = (abi, addr) => {
   const { web3 } = web3Store
 
   return web3.eth.getAccounts().then(accounts => {
@@ -386,7 +386,7 @@ const getApplicationInstance = async (app_instances, appName, appNameHash, i) =>
   }
 }
 
-async function getAllApplicationsInstances() {
+const getAllApplicationsInstances = async () => {
   const whenRegistryExecContract = attachToSpecificCrowdsaleContract('registryExec')
   const {
     REACT_APP_MINTED_CAPPED_APP_NAME: MINTED_CAPPED_APP_NAME,
@@ -414,7 +414,7 @@ async function getAllApplicationsInstances() {
   return Promise.all(whenCrowdsales).then(crowdsales => crowdsales.filter(crowdsale => crowdsale !== null))
 }
 
-async function getOwnerApplicationsInstancesForProxy() {
+const getOwnerApplicationsInstancesForProxy = async () => {
   const { web3 } = web3Store
   const proxiesRegistryContract = await attachToSpecificCrowdsaleContract('ProxiesRegistry')
   const accounts = await web3.eth.getAccounts()
@@ -447,7 +447,7 @@ async function getOwnerApplicationsInstancesForProxy() {
 }
 
 // eslint-disable-next-line no-unused-vars
-async function getOwnerApplicationsInstances() {
+const getOwnerApplicationsInstances = async () => {
   const { web3 } = web3Store
   const registryExecContract = await attachToSpecificCrowdsaleContract('registryExec')
   const accounts = await web3.eth.getAccounts()
@@ -545,13 +545,13 @@ export const getCrowdsaleStrategyByName = async appName => {
   }
 }
 
-export async function loadRegistryAddresses() {
+export const loadRegistryAddresses = async () => {
   const crowdsales = await getOwnerApplicationsInstancesForProxy()
   logger.log('Crowdsales', crowdsales)
   crowdsaleStore.setCrowdsales(crowdsales)
 }
 
-export let getCurrentAccount = () => {
+export const getCurrentAccount = () => {
   const { web3 } = web3Store
   return new Promise((resolve, reject) => {
     if (!web3) {
@@ -704,27 +704,27 @@ export let methodToCreateAppInstance = (contractName, methodName, getEncodedPara
   return method
 }
 
-function getCrowdsaleInfo(initCrowdsaleContract, addr, execID) {
+const getCrowdsaleInfo = (initCrowdsaleContract, addr, execID) => {
   const whenCrowdsaleInfo = initCrowdsaleContract.methods.getCrowdsaleInfo(addr, execID).call()
   return whenCrowdsaleInfo
 }
 
-function getCrowdsaleContributors(initCrowdsaleContract, addr, execID) {
+const getCrowdsaleContributors = (initCrowdsaleContract, addr, execID) => {
   const whenCrowdsaleUniqueBuyers = initCrowdsaleContract.methods.getCrowdsaleUniqueBuyers(addr, execID).call()
   return whenCrowdsaleUniqueBuyers
 }
 
-function getCrowdsaleStartAndEndTimes(initCrowdsaleContract, addr, execID) {
+const getCrowdsaleStartAndEndTimes = (initCrowdsaleContract, addr, execID) => {
   const whenCrowdsaleStartAndEndTimes = initCrowdsaleContract.methods.getCrowdsaleStartAndEndTimes(addr, execID).call()
   return whenCrowdsaleStartAndEndTimes
 }
 
-function getCrowdsaleTierList(initCrowdsaleContract, addr, execID) {
+const getCrowdsaleTierList = (initCrowdsaleContract, addr, execID) => {
   const whenCrowdsaleTierList = initCrowdsaleContract.methods.getCrowdsaleTierList(addr, execID).call()
   return whenCrowdsaleTierList
 }
 
-export async function getAllCrowdsaleAddresses() {
+export const getAllCrowdsaleAddresses = async () => {
   const instances = await getAllApplicationsInstances()
   const targetPrefix = 'idx'
 
@@ -786,7 +786,7 @@ export const isAddressValid = addr => {
   return web3Store && web3Store.web3 && web3Store.web3.utils.isAddress(addr)
 }
 
-export function getProxyParams({ abstractStorageAddr, networkID, appNameHash }) {
+export const getProxyParams = ({ abstractStorageAddr, networkID, appNameHash }) => {
   return [
     abstractStorageAddr,
     JSON.parse(process.env['REACT_APP_REGISTRY_EXEC_ID'] || '{}')[networkID],

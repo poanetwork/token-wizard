@@ -125,11 +125,11 @@ exports[`StepOne should render StepOne screen 1`] = `
         className="sw-RadioItems"
       >
         <label
-          className="sw-RadioItems_Item"
+          className="st-StrategyItem_Item"
         >
           <input
             checked={true}
-            className="sw-RadioItems_InputRadio"
+            className="st-StrategyItem_InputRadio"
             id="white-list-with-cap"
             name="contract-type"
             onChange={[Function]}
@@ -137,33 +137,33 @@ exports[`StepOne should render StepOne screen 1`] = `
             value="white-list-with-cap"
           />
           <span
-            className="sw-RadioItems_ItemContent"
+            className="st-StrategyItem_ItemContent"
           >
             <span
-              className="sw-RadioItems_ItemContentText"
+              className="st-StrategyItem_ItemContentText"
             >
               <span
-                className="sw-RadioItems_ItemTitle"
+                className="st-StrategyItem_ItemTitle"
               >
                 Whitelist with Cap
               </span>
               <span
-                className="sw-RadioItems_ItemDescription"
+                className="st-StrategyItem_ItemDescription"
               >
                 Modern crowdsale strategy with multiple tiers, whitelists, and limits. Recommended for every crowdsale.
               </span>
             </span>
             <span
-              className="sw-RadioItems_Radio"
+              className="st-StrategyItem_Radio"
             />
           </span>
         </label>
         <label
-          className="sw-RadioItems_Item"
+          className="st-StrategyItem_Item"
         >
           <input
             checked={false}
-            className="sw-RadioItems_InputRadio"
+            className="st-StrategyItem_InputRadio"
             id="dutch-auction"
             name="contract-type"
             onChange={[Function]}
@@ -171,24 +171,24 @@ exports[`StepOne should render StepOne screen 1`] = `
             value="dutch-auction"
           />
           <span
-            className="sw-RadioItems_ItemContent"
+            className="st-StrategyItem_ItemContent"
           >
             <span
-              className="sw-RadioItems_ItemContentText"
+              className="st-StrategyItem_ItemContentText"
             >
               <span
-                className="sw-RadioItems_ItemTitle"
+                className="st-StrategyItem_ItemTitle"
               >
                 Dutch Auction
               </span>
               <span
-                className="sw-RadioItems_ItemDescription"
+                className="st-StrategyItem_ItemDescription"
               >
                 An auction with descending price.
               </span>
             </span>
             <span
-              className="sw-RadioItems_Radio"
+              className="st-StrategyItem_Radio"
             />
           </span>
         </label>

@@ -285,7 +285,7 @@ exports[`Contribute should render Contribute component 1`] = `
             </p>
           </div>
           <form
-            className="cnt-ContributeForm "
+            className="cnt-ContributeForm"
             onSubmit={[Function]}
           >
             <h3
@@ -300,6 +300,7 @@ exports[`Contribute should render Contribute component 1`] = `
                 className="sw-InputField2 cnt-ContributeForm_Amount"
               >
                 <input
+                  autoComplete="off"
                   className="sw-TextField"
                   id="contribute"
                   name="contribute"
@@ -312,7 +313,13 @@ exports[`Contribute should render Contribute component 1`] = `
               </div>
               <div
                 className="sw-TokenDimension sw-TokenDimension-tokens "
-              />
+              >
+                <span
+                  className="sw-TokenDimension_Text sw-TokenDimension_Text-tokens"
+                >
+                  tokens
+                </span>
+              </div>
             </div>
             <select
               className="sw_Select"
@@ -333,6 +340,11 @@ exports[`Contribute should render Contribute component 1`] = `
               </option>
             </select>
           </form>
+          <p
+            className="cnt-Contribute_Warning"
+          >
+            Think twice before contributing to crowdsales. Tokens will be deposited on a wallet you used to buy tokens.
+          </p>
         </div>
       </div>
       <div

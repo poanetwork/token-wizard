@@ -8,9 +8,16 @@ import {
   validateTier,
   navigateTo,
   downloadFile,
+  toFixed,
   goBackMustBeEnabled,
   goBack,
+  toast,
   convertLocationToPath,
+  convertDateToLocalTimezoneInUnix,
+  convertDateToUTCTimezoneToDisplay,
+  getContractBySourceType,
+  getSourceTypeTitle,
+  updateProxyContractInfo,
   uniqueElementsBy
 } from '../../src/utils/utils'
 
@@ -352,6 +359,68 @@ describe('Utils', () => {
           }
           expect(goBackThrow).toThrow()
         }
+      })
+    })
+  })
+
+  describe('toFixed', () => {
+    let testsValues = [
+      { value: '1.123', expected: '1.123' },
+      { value: '1.12', expected: '1.12' },
+      { value: '1.', expected: '1.' },
+      { value: '1', expected: '1' },
+      { value: '.123', expected: '.123' },
+      { value: 0.123, expected: 0.123 },
+      { value: '1e-3', expected: '0.001' },
+      { value: '1e-2', expected: '0.01' },
+      { value: '1.2e-2', expected: '0.012' },
+      { value: '1.e-2', expected: '0.01' },
+      { value: '1.e-22', expected: '0.0000000000000000000001' },
+      { value: '1.23123e2', expected: '1.23123e2' },
+      { value: '123.123e+2', expected: '123.123e+2' },
+      { value: 123.123e2, expected: 12312.3 },
+      { value: '.2e-2', expected: '0.002' },
+      { value: '1', expected: '1' },
+      { value: '123', expected: '123' },
+      { value: '0', expected: '0' },
+      { value: '-123', expected: '-123' },
+      { value: 'abc', expected: 'abc' },
+      { value: 'e', expected: 'e' },
+      { value: '', expected: '' }
+    ]
+    testsValues.forEach(testCase => {
+      it(`Should apply toFixed to ${testCase.value}`, () => {
+        expect(toFixed(testCase.value)).toBe(testCase.expected)
+      })
+    })
+  })
+
+  describe('toast', () => {
+    it(`Should use toast with empty message and return undefined`, () => {
+      expect(toast.showToaster({ message: '' })).toBeUndefined()
+    })
+
+    it(`Should use toast with a message and return undefined`, () => {
+      toast.showToaster({ message: 'heelo' })
+      expect(toast.msg.info).toBeUndefined()
+    })
+
+    it(`Should use toast with a message and return a valid message`, () => {
+      toast.msg = {
+        info: (message, options) => {
+          return message
+        }
+      }
+      toast.showToaster({ message: 'hello' })
+      expect(toast.msg.info()).toBeUndefined()
+    })
+  })
+
+  describe('convertDateToLocalTimezoneInUnix', function() {
+    let testsValues = [{ value: '2018-10-10' }, { value: '2018-01-01' }]
+    testsValues.forEach(testCase => {
+      it(`Should apply toFixed to ${testCase.value}`, () => {
+        expect(typeof convertDateToLocalTimezoneInUnix(testCase.value)).toBe('number')
       })
     })
   })

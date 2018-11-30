@@ -422,6 +422,7 @@ exports[`GasPriceInput should render GasPriceInput component with custom gasType
           value={0.1}
         >
           <input
+            autoComplete="off"
             className="sw-TextField"
             id="gas-price-custom-value"
             min={0.1}

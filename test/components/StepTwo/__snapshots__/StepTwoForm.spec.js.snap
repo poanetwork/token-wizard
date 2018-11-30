@@ -32,6 +32,7 @@ exports[`StepTwoForm should render StepTwoForm for Dutch Auction Crowdsale 1`] =
         </div>
       </div>
       <input
+        autoComplete="off"
         className="sw-TextField"
         id="name"
         name="name"
@@ -66,6 +67,7 @@ exports[`StepTwoForm should render StepTwoForm for Dutch Auction Crowdsale 1`] =
         </div>
       </div>
       <input
+        autoComplete="off"
         className="sw-TextField"
         id="ticker"
         name="ticker"
@@ -100,6 +102,7 @@ exports[`StepTwoForm should render StepTwoForm for Dutch Auction Crowdsale 1`] =
         </div>
       </div>
       <input
+        autoComplete="off"
         className="sw-TextField"
         disabled={false}
         id="decimals"
@@ -137,6 +140,7 @@ exports[`StepTwoForm should render StepTwoForm for Dutch Auction Crowdsale 1`] =
         </div>
       </div>
       <input
+        autoComplete="off"
         className="sw-TextField"
         id="supply"
         min="0"
@@ -155,7 +159,8 @@ exports[`StepTwoForm should render StepTwoForm for Dutch Auction Crowdsale 1`] =
   >
     <button
       className="sw-ButtonBack "
-      disabled={true}
+      disabled={false}
+      onClick={[MockFunction]}
       type="button"
     >
       Back
@@ -207,6 +212,7 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
         </div>
       </div>
       <input
+        autoComplete="off"
         className="sw-TextField"
         id="name"
         name="name"
@@ -241,6 +247,7 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
         </div>
       </div>
       <input
+        autoComplete="off"
         className="sw-TextField"
         id="ticker"
         name="ticker"
@@ -275,6 +282,7 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
         </div>
       </div>
       <input
+        autoComplete="off"
         className="sw-TextField"
         disabled={false}
         id="decimals"
@@ -322,6 +330,7 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
           </div>
         </div>
         <input
+          autoComplete="off"
           className="sw-TextField"
           onChange={[Function]}
           placeholder="Enter here"
@@ -417,6 +426,7 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
             </div>
           </div>
           <input
+            autoComplete="off"
             className="sw-TextField"
             min="0.00000000000001"
             onChange={[Function]}
@@ -456,7 +466,8 @@ exports[`StepTwoForm should render StepTwoForm for Minted Capped Crowdsale 1`] =
   >
     <button
       className="sw-ButtonBack "
-      disabled={true}
+      disabled={false}
+      onClick={[MockFunction]}
       type="button"
     >
       Back

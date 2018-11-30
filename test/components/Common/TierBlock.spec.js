@@ -1,21 +1,21 @@
 import React from 'react'
-import {TierBlock} from '../../../src/components/Common/TierBlock'
-import {Form} from 'react-final-form'
-import {FieldArray} from 'react-final-form-arrays'
+import { TierBlock } from '../../../src/components/Common/TierBlock'
+import { Form } from 'react-final-form'
+import { FieldArray } from 'react-final-form-arrays'
 import Adapter from 'enzyme-adapter-react-15'
-import {configure, mount, shallow} from 'enzyme'
+import { configure, mount, shallow } from 'enzyme'
 import renderer from 'react-test-renderer'
 import TierStore from '../../../src/stores/TierStore'
 import { defaultTier, defaultTierValidations } from '../../../src/utils/constants'
 import { VALIDATION_TYPES, VALIDATION_MESSAGES } from '../../../src/utils/constants'
 
-configure({adapter: new Adapter()})
+configure({ adapter: new Adapter() })
 
 describe('TierBlock ', () => {
-    let tierStore = new TierStore()
-    const fields = [['tierblock', 0]]
+  let tierStore = new TierStore()
+  const fields = [['tierblock', 0]]
 
-    const addCrowdsale = num => {
+  const addCrowdsale = num => {
     const newTier = Object.assign({}, defaultTier)
     const newTierValidations = Object.assign({}, defaultTierValidations)
     newTier.tier = `Tier ${num + 1}`
@@ -28,7 +28,7 @@ describe('TierBlock ', () => {
     tierStore.addTier(newTier, newTierValidations)
   }
 
- // tiers[index].endTime
+  // tiers[index].endTime
 
   it(`should render TierBlock component`, () => {
     addCrowdsale(0)

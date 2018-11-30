@@ -100,6 +100,7 @@ exports[`ReservedTokensInputBlock render should render the component for percent
               value=""
             >
               <input
+                autoComplete="off"
                 className="sw-TextField"
                 onChange={[Function]}
                 placeholder="Enter here"
@@ -253,6 +254,7 @@ exports[`ReservedTokensInputBlock render should render the component for percent
                 value=""
               >
                 <input
+                  autoComplete="off"
                   className="sw-TextField"
                   min="0"
                   onChange={[Function]}
@@ -408,6 +410,7 @@ exports[`ReservedTokensInputBlock render should render the component for tokens:
               value=""
             >
               <input
+                autoComplete="off"
                 className="sw-TextField"
                 onChange={[Function]}
                 placeholder="Enter here"
@@ -562,6 +565,7 @@ exports[`ReservedTokensInputBlock render should render the component for tokens:
                 value=""
               >
                 <input
+                  autoComplete="off"
                   className="sw-TextField"
                   min="1"
                   onChange={[Function]}

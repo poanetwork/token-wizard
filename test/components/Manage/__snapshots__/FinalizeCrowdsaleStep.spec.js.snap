@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FinalizeCrowdsaleStep should render the component with active button 1`] = `
+<div
+  className="mng-FinalizeCrowdsaleStep"
+>
+  <div
+    className="mng-FinalizeCrowdsaleStep_Description"
+  >
+    After finalization, it’s not possible to update tiers or buy tokens. All tokens will be movable and reserved tokens will be issued.
+  </div>
+  <button
+    className="mng-FinalizeCrowdsaleStep_Button"
+    disabled={false}
+    onClick={[Function]}
+    type="button"
+  >
+    Finalize Crowdsale
+  </button>
+</div>
+`;
+
+exports[`FinalizeCrowdsaleStep should render the component with disabled button 1`] = `
+<div
+  className="mng-FinalizeCrowdsaleStep"
+>
+  <div
+    className="mng-FinalizeCrowdsaleStep_Description"
+  >
+    After finalization, it’s not possible to update tiers or buy tokens. All tokens will be movable and reserved tokens will be issued.
+  </div>
+  <button
+    className="mng-FinalizeCrowdsaleStep_Button"
+    disabled={true}
+    onClick={[Function]}
+    type="button"
+  >
+    Finalize Crowdsale
+  </button>
+</div>
+`;

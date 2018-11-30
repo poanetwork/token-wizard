@@ -1,4 +1,4 @@
-import { getFieldsToUpdate } from '../../../src/components/manage/utils'
+import { getFieldsToUpdate } from '../../../src/components/Manage/utils'
 
 describe('getFieldsToUpdate', () => {
   it('should include only fields that have changed', () => {

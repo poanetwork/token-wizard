@@ -24,6 +24,7 @@ exports[`TokenTicker should render TokenTicker component 1`] = `
     </div>
   </div>
   <input
+    autoComplete="off"
     className="sw-TextField"
     id="ticker"
     name="ticker"
@@ -61,6 +62,7 @@ exports[`TokenTicker should render TokenTicker component and its children 1`] = 
     </div>
   </div>
   <input
+    autoComplete="off"
     className="sw-TextField"
     id="ticker"
     name="ticker"

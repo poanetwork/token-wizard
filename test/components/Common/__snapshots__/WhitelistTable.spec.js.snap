@@ -22,12 +22,12 @@ exports[`WhitelistTable should render WhitelistTable component 1`] = `
             0x2bD96eA633e8BcB468732c68B2CD632BfF4D79Db
           </td>
           <td
-            className="sw-WhiteListTable_Column sw-WhiteListTable_value"
+            className="sw-WhiteListTable_Column sw-WhiteListTable_Column-value-min "
           >
             1
           </td>
           <td
-            className="sw-WhiteListTable_Column sw-WhiteListTable_value"
+            className="sw-WhiteListTable_Column sw-WhiteListTable_Column-value-max "
           >
             5
           </td>
@@ -50,14 +50,17 @@ exports[`WhitelistTable should render WhitelistTable component 1`] = `
             0x665772109Eb2dc9F5B7c28F987Ec58949d4Eeb87
           </td>
           <td
-            className="sw-WhiteListTable_Column sw-WhiteListTable_value"
+            className="sw-WhiteListTable_Column sw-WhiteListTable_Column-value-min "
           >
             1
           </td>
           <td
-            className="sw-WhiteListTable_Column sw-WhiteListTable_value"
+            className="sw-WhiteListTable_Column sw-WhiteListTable_Column-value-max "
           >
             5
+          </td>
+          <td>
+             
           </td>
         </tr>
         <tr
@@ -69,14 +72,17 @@ exports[`WhitelistTable should render WhitelistTable component 1`] = `
             0x66f537cCD03f21c58172602B919884A442A3c313
           </td>
           <td
-            className="sw-WhiteListTable_Column sw-WhiteListTable_value"
+            className="sw-WhiteListTable_Column sw-WhiteListTable_Column-value-min "
           >
             1
           </td>
           <td
-            className="sw-WhiteListTable_Column sw-WhiteListTable_value"
+            className="sw-WhiteListTable_Column sw-WhiteListTable_Column-value-max "
           >
             5
+          </td>
+          <td>
+             
           </td>
         </tr>
         <tr
@@ -88,14 +94,17 @@ exports[`WhitelistTable should render WhitelistTable component 1`] = `
             0x693d436da2c3C11341149522E5F6d0390B363197
           </td>
           <td
-            className="sw-WhiteListTable_Column sw-WhiteListTable_value"
+            className="sw-WhiteListTable_Column sw-WhiteListTable_Column-value-min "
           >
             1
           </td>
           <td
-            className="sw-WhiteListTable_Column sw-WhiteListTable_value"
+            className="sw-WhiteListTable_Column sw-WhiteListTable_Column-value-max "
           >
             5
+          </td>
+          <td>
+             
           </td>
         </tr>
       </tbody>

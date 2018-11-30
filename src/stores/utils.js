@@ -49,15 +49,15 @@ export const getCrowdsaleAssets = async networkID => {
   return Promise.all(whenPromises)
 }
 
-async function getCrowdsaleAsset(contractName, stateProp, networkID) {
+const getCrowdsaleAsset = async (contractName, stateProp, networkID) => {
   logger.log(contractName, stateProp, networkID)
   const whenSrc =
     stateProp === 'MintedCappedProxy' || stateProp === 'DutchProxy'
-      ? setFlatFileContentToState(`./contracts/${stateProp}.sol`)
+      ? await setFlatFileContentToState(`./contracts/${stateProp}.sol`)
       : Promise.resolve()
   const whenBin =
     stateProp === 'MintedCappedProxy' || stateProp === 'DutchProxy'
-      ? setFlatFileContentToState(`./contracts/${stateProp}.bin`)
+      ? await setFlatFileContentToState(`./contracts/${stateProp}.bin`)
       : Promise.resolve()
   let abi
   //todo: get ABI or from file or from here
@@ -2553,7 +2553,7 @@ async function getCrowdsaleAsset(contractName, stateProp, networkID) {
   Promise.resolve()
 }
 
-function addContractsToState(src, bin, abi, addr, contract) {
+const addContractsToState = (src, bin, abi, addr, contract) => {
   contractStore.setContract(contract, {
     src,
     bin,

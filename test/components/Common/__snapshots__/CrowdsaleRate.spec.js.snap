@@ -24,6 +24,7 @@ exports[`CrowdsaleRate should render CrowdsaleRate component 1`] = `
     </div>
   </div>
   <input
+    autoComplete="off"
     className="sw-TextField"
     disabled={false}
     id="CrowdsaleRate"

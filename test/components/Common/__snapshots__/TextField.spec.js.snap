@@ -2,6 +2,7 @@
 
 exports[`TextField should render TextField component 1`] = `
 <input
+  autoComplete="off"
   className="sw-TextField"
 />
 `;

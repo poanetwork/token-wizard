@@ -2,40 +2,107 @@
 
 exports[`Crowdsales should render screen  1`] = `
 <div>
-  <div>
+  <section
+    className="lo-MenuBarAndContent"
+  >
     <div
-      className="sw-FlexTable"
+      className="mng-ManageNavigation"
     >
+      <a
+        className="sw-LogoWhite"
+        href="/"
+      />
       <div
-        className="sw-FlexTable_Head sw-FlexTable_Row"
+        className="mng-ManageNavigation_Container"
       >
         <div
-          className="sw-FlexTable_Td"
+          className="st-StepItem
+        active  "
         >
-          Address
+          <div
+            className="st-StepItem_Circle"
+          />
+          <div
+            className="st-StepItem_Line"
+          />
+          <span
+            className="st-StepItem_Text"
+          >
+            Crowdsale List
+          </span>
+        </div>
+        <div
+          className="st-StepItem
+          "
+        >
+          <div
+            className="st-StepItem_Circle"
+          />
+          <span
+            className="st-StepItem_Text"
+          >
+            Manage Crowdsale
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      className="st-StepContent"
+    >
+      <div
+        className="st-SectionInfo "
+      >
+        <div
+          className="st-SectionInfo_Icon st-SectionInfo_Icon-step0"
+        />
+        <div
+          className="st-SectionInfo_Text"
+        >
+          <h1
+            className="st-SectionInfo_Title"
+          >
+            Crowdsale List
+          </h1>
+          <p
+            className="st-SectionInfo_Description"
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "The list of your updatable crowdsales. Choose crowdsale address, click Continue and you’ll be able to update the parameters of crowdsale.",
+              }
+            }
+          />
         </div>
       </div>
       <div
-        className="sw-FlexTable_Body sw-FlexTable_Body-scrollable sw-FlexTable_Body-crowdsale m-b-15"
-      />
-    </div>
-    <div
-      className="sw-ModalWindow_ButtonsContainer sw-ModalWindow_ButtonsContainer-right"
-    >
-      <button
-        className="sw-ButtonContinue "
-        disabled={true}
-        onClick={[Function]}
-        type="button"
+        className="mng-CrowdsalesList"
       >
-        <span
-          className="sw-ButtonContinue_Text"
+        <h2
+          className="mng-CrowdsalesList_Title"
         >
-          Continue
-        </span>
-      </button>
+          Select Address
+        </h2>
+        <div
+          className="mng-CrowdsalesList_Container"
+        />
+        <div
+          className="st-StepContent_Buttons"
+        >
+          <button
+            className="sw-ButtonContinue "
+            disabled={true}
+            onClick={[Function]}
+            type="button"
+          >
+            <span
+              className="sw-ButtonContinue_Text"
+            >
+              Continue
+            </span>
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
   <div
     className="sw-FullscreenBackdrop"
   >

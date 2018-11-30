@@ -1,36 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`StrategyItem should render screen with mount without throwing an error 1`] = `
-<input
-  checked={true}
-  className="sw-RadioItems_InputRadio"
-  id="white-list-with-cap"
-  name="contract-type"
-  onChange={[MockFunction]}
-  type="radio"
-  value="white-list-with-cap"
-/>
-`;
+exports[`StrategyItem should render screen with mount without throwing an error 1`] = `null`;
 
-exports[`StrategyItem should render screen with render without throwing an error 1`] = `
-<input
-  checked=""
-  class="sw-RadioItems_InputRadio"
-  id="white-list-with-cap"
-  name="contract-type"
-  type="radio"
-  value="white-list-with-cap"
-/>
-`;
+exports[`StrategyItem should render screen with render without throwing an error 1`] = `null`;
 
-exports[`StrategyItem should render screen with shallow without throwing an error 1`] = `
-<input
-  checked={true}
-  className="sw-RadioItems_InputRadio"
-  id="white-list-with-cap"
-  name="contract-type"
-  onChange={[MockFunction]}
-  type="radio"
-  value="white-list-with-cap"
-/>
-`;
+exports[`StrategyItem should render screen with shallow without throwing an error 1`] = `null`;

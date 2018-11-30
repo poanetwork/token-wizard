@@ -41,7 +41,7 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
       dirtySinceLastSubmit={false}
       errors={
         Object {
-          "contribute": "This field is required",
+          "contribute": "You are not allowed",
         }
       }
       focus={[Function]}
@@ -110,7 +110,7 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
         dirtySinceLastSubmit={false}
         errors={
           Object {
-            "contribute": "This field is required",
+            "contribute": "You are not allowed",
           }
         }
         focus={[Function]}
@@ -178,7 +178,7 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
         web3Available={true}
       >
         <form
-          className="cnt-ContributeForm cnt-ContributeForm-full-height"
+          className="cnt-ContributeForm"
           onSubmit={[Function]}
         >
           <h3
@@ -215,7 +215,7 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
                     "data": Object {},
                     "dirty": false,
                     "dirtySinceLastSubmit": false,
-                    "error": "This field is required",
+                    "error": "You are not allowed",
                     "initial": undefined,
                     "invalid": true,
                     "pristine": true,
@@ -233,7 +233,6 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
                   className="sw-InputField2 cnt-ContributeForm_Amount"
                 >
                   <TextField
-                    autoComplete="off"
                     id="contribute"
                     name="contribute"
                     onBlur={[Function]}
@@ -243,6 +242,7 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
                     value=""
                   >
                     <input
+                      autoComplete="off"
                       className="sw-TextField"
                       id="contribute"
                       name="contribute"
@@ -278,7 +278,13 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
             >
               <div
                 className="sw-TokenDimension sw-TokenDimension-tokens "
-              />
+              >
+                <span
+                  className="sw-TokenDimension_Text sw-TokenDimension_Text-tokens"
+                >
+                  tokens
+                </span>
+              </div>
             </TokenDimension>
           </div>
           <select
@@ -303,11 +309,6 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
           >
             Contribute
           </button>
-          <p
-            className="cnt-ContributeForm_Description"
-          >
-            Think twice before contributing to Crowdsales. Tokens will be deposited on a wallet you used to buy tokens.
-          </p>
           <FormSpy
             onChange={[Function]}
             subscription={
@@ -325,7 +326,7 @@ exports[`ContributeForm Should set as disabled the contribute button if isTierSo
 
 exports[`ContributeForm should render ContributeForm component 1`] = `
 <form
-  className="cnt-ContributeForm cnt-ContributeForm-full-height"
+  className="cnt-ContributeForm"
   onSubmit={[Function]}
 >
   <h3
@@ -340,6 +341,7 @@ exports[`ContributeForm should render ContributeForm component 1`] = `
       className="sw-InputField2 cnt-ContributeForm_Amount"
     >
       <input
+        autoComplete="off"
         className="sw-TextField"
         id="contribute"
         name="contribute"
@@ -352,7 +354,13 @@ exports[`ContributeForm should render ContributeForm component 1`] = `
     </div>
     <div
       className="sw-TokenDimension sw-TokenDimension-tokens "
-    />
+    >
+      <span
+        className="sw-TokenDimension_Text sw-TokenDimension_Text-tokens"
+      >
+        tokens
+      </span>
+    </div>
   </div>
   <select
     className="sw_Select"
@@ -363,7 +371,7 @@ exports[`ContributeForm should render ContributeForm component 1`] = `
       disabled={false}
       value="metamask"
     >
-      Wallet
+      Wallet 
     </option>
     <option
       value="qr"
@@ -378,17 +386,12 @@ exports[`ContributeForm should render ContributeForm component 1`] = `
   >
     Contribute
   </button>
-  <p
-    className="cnt-ContributeForm_Description"
-  >
-    Think twice before contributing to Crowdsales. Tokens will be deposited on a wallet you used to buy tokens.
-  </p>
 </form>
 `;
 
 exports[`ContributeForm should render ContributeForm component and its children 1`] = `
 <form
-  className="cnt-ContributeForm cnt-ContributeForm-full-height"
+  className="cnt-ContributeForm"
   onSubmit={[Function]}
 >
   <h3
@@ -403,6 +406,7 @@ exports[`ContributeForm should render ContributeForm component and its children 
       className="sw-InputField2 cnt-ContributeForm_Amount"
     >
       <input
+        autoComplete="off"
         className="sw-TextField"
         id="contribute"
         name="contribute"
@@ -415,7 +419,13 @@ exports[`ContributeForm should render ContributeForm component and its children 
     </div>
     <div
       className="sw-TokenDimension sw-TokenDimension-tokens "
-    />
+    >
+      <span
+        className="sw-TokenDimension_Text sw-TokenDimension_Text-tokens"
+      >
+        tokens
+      </span>
+    </div>
   </div>
   <select
     className="sw_Select"
@@ -426,7 +436,7 @@ exports[`ContributeForm should render ContributeForm component and its children 
       disabled={false}
       value="metamask"
     >
-      Wallet
+      Wallet 
     </option>
     <option
       value="qr"
@@ -441,10 +451,5 @@ exports[`ContributeForm should render ContributeForm component and its children 
   >
     Contribute
   </button>
-  <p
-    className="cnt-ContributeForm_Description"
-  >
-    Think twice before contributing to Crowdsales. Tokens will be deposited on a wallet you used to buy tokens.
-  </p>
 </form>
 `;

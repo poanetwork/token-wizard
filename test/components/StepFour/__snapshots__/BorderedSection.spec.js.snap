@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BorderedSection should render the component  1`] = `
+<div
+  className="sw-BorderedSection"
+  data-step="1"
+>
+  <h2
+    className="sw-BorderedSection_Title"
+  >
+    Crowdsale Strategy
+  </h2>
+  <p
+    className="sw-BorderedSection_Text"
+  >
+    Minted Capped
+  </p>
+</div>
+`;

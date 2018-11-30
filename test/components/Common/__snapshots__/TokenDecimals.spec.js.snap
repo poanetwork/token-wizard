@@ -24,6 +24,7 @@ exports[`TokenDecimals should render TokenDecimals component 1`] = `
     </div>
   </div>
   <input
+    autoComplete="off"
     className="sw-TextField"
     id="decimals"
     max="18"
@@ -63,6 +64,7 @@ exports[`TokenDecimals should render TokenDecimals component and its children 1`
     </div>
   </div>
   <input
+    autoComplete="off"
     className="sw-TextField"
     id="decimals"
     max="18"
@@ -239,7 +241,6 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
             </div>
           </FormControlTitle>
           <TextField
-            autoComplete="off"
             disabled={true}
             id="decimals"
             max="18"
@@ -253,6 +254,7 @@ exports[`TokenDecimals should render TokenDecimals component and its children, w
             value=""
           >
             <input
+              autoComplete="off"
               className="sw-TextField"
               disabled={true}
               id="decimals"

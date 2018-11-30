@@ -32,7 +32,10 @@ export class StepThree extends Component {
     reload: false,
     initialTiers: [],
     burnExcess: 'no',
-    gasTypeSelected: {}
+    gasTypeSelected: {},
+    backButtonTriggered: false, //Testing purposes
+    nextButtonTriggered: false, //Testing purposes
+    goBackEnabledTriggered: false //Testing purposes
   }
 
   componentDidMount() {
@@ -99,6 +102,9 @@ export class StepThree extends Component {
 
   goNextStep = () => {
     try {
+      this.setState({
+        nextButtonTriggered: true
+      })
       navigateTo({
         history: this.props.history,
         location: 'stepFour',
@@ -111,6 +117,9 @@ export class StepThree extends Component {
 
   goBack = () => {
     try {
+      this.setState({
+        backButtonTriggered: true
+      })
       goBack({
         history: this.props.history,
         location: '/stepTwo'
@@ -123,6 +132,9 @@ export class StepThree extends Component {
   goBackEnabled = () => {
     let goBackEnabled = false
     try {
+      this.setState({
+        goBackEnabledTriggered: true
+      })
       goBackEnabled = goBackMustBeEnabled({ history: this.props.history })
       logger.log(`Go back is enabled ${goBackEnabled}`)
     } catch (err) {

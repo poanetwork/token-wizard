@@ -18,7 +18,10 @@ const logger = logdown('TW:stepTwo:index')
 export class StepTwo extends Component {
   state = {
     tokenValues: {},
-    reload: false
+    reload: false,
+    backButtonTriggered: false, //Testing purposes
+    nextButtonTriggered: false, //Testing purposes
+    goBackEnabledTriggered: false //Testing purposes
   }
 
   async componentDidMount() {
@@ -51,6 +54,9 @@ export class StepTwo extends Component {
 
   goNextStep = () => {
     try {
+      this.setState({
+        nextButtonTriggered: true
+      })
       navigateTo({
         history: this.props.history,
         location: 'stepThree',
@@ -63,6 +69,9 @@ export class StepTwo extends Component {
 
   goBack = () => {
     try {
+      this.setState({
+        backButtonTriggered: true
+      })
       goBack({
         history: this.props.history,
         location: '/stepOne'
@@ -75,6 +84,9 @@ export class StepTwo extends Component {
   goBackEnabled = () => {
     let goBackEnabled = false
     try {
+      this.setState({
+        goBackEnabledTriggered: true
+      })
       goBackEnabled = goBackMustBeEnabled({ history: this.props.history })
       logger.log(`Go back is enabled ${goBackEnabled}`)
     } catch (err) {

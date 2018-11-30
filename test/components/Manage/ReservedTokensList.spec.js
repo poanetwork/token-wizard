@@ -1,6 +1,6 @@
 import React from 'react'
 import { StaticRouter } from 'react-router'
-import { ReservedTokensList } from '../../../src/components/manage/ReservedTokensList'
+import { ReservedTokensList } from '../../../src/components/Manage/ReservedTokensList'
 import Adapter from 'enzyme-adapter-react-15'
 import { configure, mount } from 'enzyme'
 import ReservedTokenStore from '../../../src/stores/ReservedTokenStore'
@@ -39,25 +39,6 @@ describe('DistributeTokensStep', () => {
 
   afterEach(() => {
     reservedTokenStore.clearAll()
-  })
-
-  it(`should render reserved token addresses if it's the owner`, () => {
-    tokenList.forEach(token => reservedTokenStore.addToken(token))
-
-    const distributeTokensStateParams = {
-      disabled: false,
-      handleClick: jest.fn(),
-      reservedTokenStore,
-      owner: true
-    }
-
-    const wrapper = mount(
-      <StaticRouter location="testLocation" context={{}}>
-        <ReservedTokensList {...distributeTokensStateParams} />
-      </StaticRouter>
-    )
-
-    expect(wrapper.find('.read-only')).toHaveLength(1)
   })
 
   it(`should not render reserved token addresses if not the owner`, () => {

@@ -104,15 +104,11 @@ export class StepOne extends Component {
   }
 
   goNextStep = () => {
-    try {
-      navigateTo({
-        history: this.props.history,
-        location: 'stepTwo',
-        fromLocation: 'stepOne'
-      })
-    } catch (err) {
-      logger.log('Error to navigate', err)
-    }
+    navigateTo({
+      history: this.props.history,
+      location: 'stepTwo',
+      fromLocation: 'stepOne'
+    })
   }
 
   handleChange = e => {
