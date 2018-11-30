@@ -24,6 +24,7 @@ exports[`TokenSupply should render TokenDecimals component 1`] = `
     </div>
   </div>
   <input
+    autoComplete="off"
     className="sw-TextField"
     id="supply"
     min="0"
@@ -62,6 +63,7 @@ exports[`TokenSupply should render TokenSupply component and its children 1`] = 
     </div>
   </div>
   <input
+    autoComplete="off"
     className="sw-TextField"
     id="supply"
     min="0"
@@ -233,7 +235,6 @@ exports[`TokenSupply should render TokenSupply component and its children, with 
             </div>
           </FormControlTitle>
           <TextField
-            autoComplete="off"
             id="supply"
             min="0"
             name="supply"
@@ -245,6 +246,7 @@ exports[`TokenSupply should render TokenSupply component and its children, with 
             value=""
           >
             <input
+              autoComplete="off"
               className="sw-TextField"
               id="supply"
               min="0"

@@ -53,7 +53,7 @@ exports[`CountdownTimer Should render the component 1`] = `
           <div
             className="cnt-CountdownTimer_TimeCount"
           >
-            4
+            04
           </div>
           <div
             className="cnt-CountdownTimer_TimeInterval"
@@ -139,7 +139,7 @@ exports[`CountdownTimer Should render the component showing only the seconds 1`]
           <div
             className="cnt-CountdownTimer_TimeCount"
           >
-            4
+            04
           </div>
           <div
             className="cnt-CountdownTimer_TimeInterval"
@@ -225,7 +225,7 @@ exports[`CountdownTimer Should render the component showing the time until the e
           <div
             className="cnt-CountdownTimer_TimeCount"
           >
-            4
+            04
           </div>
           <div
             className="cnt-CountdownTimer_TimeInterval"
@@ -311,7 +311,7 @@ exports[`CountdownTimer Should render the component when the crowdsale ended 1`]
           <div
             className="cnt-CountdownTimer_TimeCount"
           >
-            4
+            04
           </div>
           <div
             className="cnt-CountdownTimer_TimeInterval"
@@ -375,146 +375,9 @@ exports[`CountdownTimer Should render the component when the crowdsale was final
       className="cnt-CountdownTimer_TimeContainer"
     >
       <div
-        className="cnt-CountdownTimer_Time"
-      >
-        <div
-          className="cnt-CountdownTimer_TimeItem"
-        >
-          <div
-            className="cnt-CountdownTimer_TimeCount"
-          >
-            1
-          </div>
-          <div
-            className="cnt-CountdownTimer_TimeInterval"
-          >
-            Days
-          </div>
-        </div>
-        <div
-          className="cnt-CountdownTimer_TimeItem cnt-CountdownTimer_TimeItem-blinking"
-        >
-          <div
-            className="cnt-CountdownTimer_TimeCount"
-          >
-            4
-          </div>
-          <div
-            className="cnt-CountdownTimer_TimeInterval"
-          >
-            Hours
-          </div>
-        </div>
-        <div
-          className="cnt-CountdownTimer_TimeItem"
-        >
-          <div
-            className="cnt-CountdownTimer_TimeCount"
-          >
-            45
-          </div>
-          <div
-            className="cnt-CountdownTimer_TimeInterval"
-          >
-            Mins
-          </div>
-        </div>
-      </div>
-      <div
         className="cnt-CountdownTimer_Message"
       >
-        Crowdsale has ended
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`CountdownTimer Should render the component with alternative message 1`] = `
-<div
-  className="cnt-CountdownTimer"
->
-  <div
-    className="cnt-CountdownTimer_ReactCountdownClock"
-  >
-    <Circle
-      animate={true}
-      animationDuration="1s"
-      bgColor="#5a2da5"
-      lineWidth="50"
-      percentSpacing={10}
-      progress={0}
-      progressColor="#a971f9"
-      responsive={false}
-      roundedStroke={false}
-      showPercentage={false}
-      showPercentageSymbol={true}
-      size="250"
-      textColor="#6b778c"
-      textStyle={
-        Object {
-          "font": "bold 4rem Helvetica, Arial, sans-serif",
-        }
-      }
-    />
-    <div
-      className="cnt-CountdownTimer_TimeContainer"
-    >
-      <div
-        className="cnt-CountdownTimer_Time"
-      >
-        <div
-          className="cnt-CountdownTimer_TimeItem"
-        >
-          <div
-            className="cnt-CountdownTimer_TimeCount"
-          >
-            1
-          </div>
-          <div
-            className="cnt-CountdownTimer_TimeInterval"
-          >
-            Days
-          </div>
-        </div>
-        <div
-          className="cnt-CountdownTimer_TimeItem cnt-CountdownTimer_TimeItem-blinking"
-        >
-          <div
-            className="cnt-CountdownTimer_TimeCount"
-          >
-            4
-          </div>
-          <div
-            className="cnt-CountdownTimer_TimeInterval"
-          >
-            Hours
-          </div>
-        </div>
-        <div
-          className="cnt-CountdownTimer_TimeItem"
-        >
-          <div
-            className="cnt-CountdownTimer_TimeCount"
-          >
-            45
-          </div>
-          <div
-            className="cnt-CountdownTimer_TimeInterval"
-          >
-            Mins
-          </div>
-        </div>
-      </div>
-      <div
-        className="cnt-CountdownTimer_Message"
-      >
-        To start of tier 1 of 2
-      </div>
-      <div
-        className="cnt-CountdownTimer_AltMessage"
-      >
-        Alternative Message
+        crowdsale has been finalized
       </div>
     </div>
   </div>

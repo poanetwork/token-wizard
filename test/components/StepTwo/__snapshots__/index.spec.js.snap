@@ -152,6 +152,7 @@ exports[`StepTwo should render StepTwo for Dutch Auction strategy 1`] = `
               </div>
             </div>
             <input
+              autoComplete="off"
               className="sw-TextField"
               id="name"
               name="name"
@@ -186,6 +187,7 @@ exports[`StepTwo should render StepTwo for Dutch Auction strategy 1`] = `
               </div>
             </div>
             <input
+              autoComplete="off"
               className="sw-TextField"
               id="ticker"
               name="ticker"
@@ -220,6 +222,7 @@ exports[`StepTwo should render StepTwo for Dutch Auction strategy 1`] = `
               </div>
             </div>
             <input
+              autoComplete="off"
               className="sw-TextField"
               disabled={false}
               id="decimals"
@@ -257,6 +260,7 @@ exports[`StepTwo should render StepTwo for Dutch Auction strategy 1`] = `
               </div>
             </div>
             <input
+              autoComplete="off"
               className="sw-TextField"
               id="supply"
               min="0"
@@ -451,6 +455,7 @@ exports[`StepTwo should render StepTwo for Minted Capped strategy 1`] = `
               </div>
             </div>
             <input
+              autoComplete="off"
               className="sw-TextField"
               id="name"
               name="name"
@@ -485,6 +490,7 @@ exports[`StepTwo should render StepTwo for Minted Capped strategy 1`] = `
               </div>
             </div>
             <input
+              autoComplete="off"
               className="sw-TextField"
               id="ticker"
               name="ticker"
@@ -519,6 +525,7 @@ exports[`StepTwo should render StepTwo for Minted Capped strategy 1`] = `
               </div>
             </div>
             <input
+              autoComplete="off"
               className="sw-TextField"
               disabled={false}
               id="decimals"

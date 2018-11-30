@@ -39,6 +39,7 @@ exports[`StepThreeFormMintedCapped should render StepThreeFormMintedCapped 1`] =
         </div>
       </div>
       <input
+        autoComplete="off"
         className="sw-TextField"
         id="walletAddress"
         name="walletAddress"
@@ -197,6 +198,7 @@ exports[`StepThreeFormMintedCapped should render StepThreeFormMintedCapped 1`] =
           </div>
         </div>
         <input
+          autoComplete="off"
           className="sw-TextField"
           id="tiers[0].tier"
           name="tiers[0].tier"
@@ -231,6 +233,7 @@ exports[`StepThreeFormMintedCapped should render StepThreeFormMintedCapped 1`] =
           </div>
         </div>
         <input
+          autoComplete="off"
           className="sw-TextField"
           disabled={false}
           id="tiers[0].startTime"
@@ -265,6 +268,7 @@ exports[`StepThreeFormMintedCapped should render StepThreeFormMintedCapped 1`] =
           </div>
         </div>
         <input
+          autoComplete="off"
           className="sw-TextField"
           id="tiers[0].endTime"
           name="tiers[0].endTime"
@@ -298,6 +302,7 @@ exports[`StepThreeFormMintedCapped should render StepThreeFormMintedCapped 1`] =
           </div>
         </div>
         <input
+          autoComplete="off"
           className="sw-TextField"
           id="tiers[0].rate"
           max="1000000000000000000"
@@ -353,6 +358,7 @@ exports[`StepThreeFormMintedCapped should render StepThreeFormMintedCapped 1`] =
           </div>
         </div>
         <input
+          autoComplete="off"
           className="sw-TextField"
           disabled={false}
           id="tiers[0].supply"
@@ -399,6 +405,7 @@ exports[`StepThreeFormMintedCapped should render StepThreeFormMintedCapped 1`] =
           </div>
         </div>
         <input
+          autoComplete="off"
           className="sw-TextField"
           disabled={false}
           id="tiers[0].minCap"

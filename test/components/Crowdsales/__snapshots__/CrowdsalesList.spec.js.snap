@@ -1181,50 +1181,78 @@ exports[`CrowdsaleList  should render CrowdsaleList component 1`] = `
       }
     }
   >
-    <div>
-      <div
-        className="sw-FlexTable"
+    <div
+      className="mng-CrowdsalesList"
+    >
+      <h2
+        className="mng-CrowdsalesList_Title"
       >
-        <div
-          className="sw-FlexTable_Head sw-FlexTable_Row"
+        Select Address
+      </h2>
+      <div
+        className="mng-CrowdsalesList_Container"
+      >
+        <label
+          className="mng-CrowdsalesList_Item"
+          key="0"
+          onClick={[Function]}
         >
-          <div
-            className="sw-FlexTable_Td"
+          <input
+            checked={false}
+            className="mng-CrowdsalesList_InputRadio"
+            name="crowdsaleItem"
+            type="radio"
+            value="0"
+          />
+          <span
+            className="mng-CrowdsalesList_ItemContent"
           >
-            Address
-          </div>
-        </div>
-        <div
-          className="sw-FlexTable_Body sw-FlexTable_Body-scrollable sw-FlexTable_Body-crowdsale m-b-15"
+            <span
+              className="mng-CrowdsalesList_ItemContentText"
+            >
+              <span
+                className="mng-CrowdsalesList_ItemDescription"
+              >
+                0xcCca436070962a1A884b88E8506C2C750E342BEA
+              </span>
+            </span>
+            <span
+              className="mng-CrowdsalesList_Radio"
+            />
+          </span>
+        </label>
+        <label
+          className="mng-CrowdsalesList_Item"
+          key="1"
+          onClick={[Function]}
         >
-          <div
-            className="sw-FlexTable_Row sw-FlexTable_Row-selectable
-                "
-            key="0"
-            onClick={[Function]}
+          <input
+            checked={false}
+            className="mng-CrowdsalesList_InputRadio"
+            name="crowdsaleItem"
+            type="radio"
+            value="1"
+          />
+          <span
+            className="mng-CrowdsalesList_ItemContent"
           >
-            <div
-              className="sw-FlexTable_Td"
+            <span
+              className="mng-CrowdsalesList_ItemContentText"
             >
-              0xcCca436070962a1A884b88E8506C2C750E342BEA
-            </div>
-          </div>
-          <div
-            className="sw-FlexTable_Row sw-FlexTable_Row-selectable
-                "
-            key="1"
-            onClick={[Function]}
-          >
-            <div
-              className="sw-FlexTable_Td"
-            >
-              0x9726cdb82358972b7a17260e7897C8de02d584e6
-            </div>
-          </div>
-        </div>
+              <span
+                className="mng-CrowdsalesList_ItemDescription"
+              >
+                0x9726cdb82358972b7a17260e7897C8de02d584e6
+              </span>
+            </span>
+            <span
+              className="mng-CrowdsalesList_Radio"
+            />
+          </span>
+        </label>
       </div>
       <div
-        className="sw-ModalWindow_ButtonsContainer sw-ModalWindow_ButtonsContainer-right"
+        className="st-StepContent_Buttons"
       >
         <ButtonContinue
           disabled={true}
@@ -2358,50 +2386,78 @@ exports[`CrowdsaleList  should render if list is empty   1`] = `
       }
     }
   >
-    <div>
-      <div
-        className="sw-FlexTable"
+    <div
+      className="mng-CrowdsalesList"
+    >
+      <h2
+        className="mng-CrowdsalesList_Title"
       >
-        <div
-          className="sw-FlexTable_Head sw-FlexTable_Row"
+        Select Address
+      </h2>
+      <div
+        className="mng-CrowdsalesList_Container"
+      >
+        <label
+          className="mng-CrowdsalesList_Item"
+          key="0"
+          onClick={[Function]}
         >
-          <div
-            className="sw-FlexTable_Td"
+          <input
+            checked={false}
+            className="mng-CrowdsalesList_InputRadio"
+            name="crowdsaleItem"
+            type="radio"
+            value="0"
+          />
+          <span
+            className="mng-CrowdsalesList_ItemContent"
           >
-            Address
-          </div>
-        </div>
-        <div
-          className="sw-FlexTable_Body sw-FlexTable_Body-scrollable sw-FlexTable_Body-crowdsale m-b-15"
+            <span
+              className="mng-CrowdsalesList_ItemContentText"
+            >
+              <span
+                className="mng-CrowdsalesList_ItemDescription"
+              >
+                0xcCca436070962a1A884b88E8506C2C750E342BEA
+              </span>
+            </span>
+            <span
+              className="mng-CrowdsalesList_Radio"
+            />
+          </span>
+        </label>
+        <label
+          className="mng-CrowdsalesList_Item"
+          key="1"
+          onClick={[Function]}
         >
-          <div
-            className="sw-FlexTable_Row sw-FlexTable_Row-selectable
-                "
-            key="0"
-            onClick={[Function]}
+          <input
+            checked={false}
+            className="mng-CrowdsalesList_InputRadio"
+            name="crowdsaleItem"
+            type="radio"
+            value="1"
+          />
+          <span
+            className="mng-CrowdsalesList_ItemContent"
           >
-            <div
-              className="sw-FlexTable_Td"
+            <span
+              className="mng-CrowdsalesList_ItemContentText"
             >
-              0xcCca436070962a1A884b88E8506C2C750E342BEA
-            </div>
-          </div>
-          <div
-            className="sw-FlexTable_Row sw-FlexTable_Row-selectable
-                "
-            key="1"
-            onClick={[Function]}
-          >
-            <div
-              className="sw-FlexTable_Td"
-            >
-              0x9726cdb82358972b7a17260e7897C8de02d584e6
-            </div>
-          </div>
-        </div>
+              <span
+                className="mng-CrowdsalesList_ItemDescription"
+              >
+                0x9726cdb82358972b7a17260e7897C8de02d584e6
+              </span>
+            </span>
+            <span
+              className="mng-CrowdsalesList_Radio"
+            />
+          </span>
+        </label>
       </div>
       <div
-        className="sw-ModalWindow_ButtonsContainer sw-ModalWindow_ButtonsContainer-right"
+        className="st-StepContent_Buttons"
       >
         <ButtonContinue
           disabled={true}

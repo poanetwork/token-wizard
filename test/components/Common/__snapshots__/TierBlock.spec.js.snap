@@ -30,6 +30,7 @@ exports[`TierBlock  should render TierBlock component 1`] = `
         </div>
       </div>
       <input
+        autoComplete="off"
         className="sw-TextField"
         id="tierblock,0.tier"
         name="tierblock,0.tier"
@@ -64,6 +65,7 @@ exports[`TierBlock  should render TierBlock component 1`] = `
         </div>
       </div>
       <input
+        autoComplete="off"
         className="sw-TextField"
         disabled={false}
         id="tierblock,0.startTime"
@@ -98,6 +100,7 @@ exports[`TierBlock  should render TierBlock component 1`] = `
         </div>
       </div>
       <input
+        autoComplete="off"
         className="sw-TextField"
         id="tierblock,0.endTime"
         name="tierblock,0.endTime"
@@ -131,6 +134,7 @@ exports[`TierBlock  should render TierBlock component 1`] = `
         </div>
       </div>
       <input
+        autoComplete="off"
         className="sw-TextField"
         id="tierblock,0.rate"
         max="1000000000000000000"
@@ -167,6 +171,7 @@ exports[`TierBlock  should render TierBlock component 1`] = `
         </div>
       </div>
       <input
+        autoComplete="off"
         className="sw-TextField"
         disabled={false}
         id="tierblock,0.supply"
@@ -204,6 +209,7 @@ exports[`TierBlock  should render TierBlock component 1`] = `
         </div>
       </div>
       <input
+        autoComplete="off"
         className="sw-TextField"
         disabled={false}
         id="tierblock,0.minCap"

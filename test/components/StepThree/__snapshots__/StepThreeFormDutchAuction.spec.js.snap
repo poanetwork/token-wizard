@@ -387,8 +387,6 @@ exports[`StepThreeFormDutchAuction should render StepThreeFormDutchAuction- test
                 </div>
               </FormControlTitle>
               <TextField
-                autoComplete="off"
-                className="input"
                 id="walletAddress"
                 name="walletAddress"
                 onBlur={[Function]}
@@ -398,6 +396,7 @@ exports[`StepThreeFormDutchAuction should render StepThreeFormDutchAuction- test
                 value=""
               >
                 <input
+                  autoComplete="off"
                   className="sw-TextField"
                   id="walletAddress"
                   name="walletAddress"
@@ -863,6 +862,11 @@ exports[`StepThreeFormDutchAuction should render StepThreeFormDutchAuction- test
                 "visited": undefined,
               }
             }
+            form={
+              Object {
+                "mutators": Object {},
+              }
+            }
             tierStore={
               TierStore {
                 "tiers": Array [
@@ -993,6 +997,7 @@ exports[`StepThreeFormDutchAuction should render StepThreeFormDutchAuction- test
         </div>
       </div>
       <input
+        autoComplete="off"
         className="sw-TextField"
         id="walletAddress"
         name="walletAddress"
@@ -1211,6 +1216,7 @@ exports[`StepThreeFormDutchAuction should render StepThreeFormDutchAuction- test
             </div>
           </div>
           <input
+            autoComplete="off"
             className="sw-TextField"
             id="tiers[0].startTime"
             name="tiers[0].startTime"
@@ -1244,6 +1250,7 @@ exports[`StepThreeFormDutchAuction should render StepThreeFormDutchAuction- test
             </div>
           </div>
           <input
+            autoComplete="off"
             className="sw-TextField"
             id="tiers[0].endTime"
             name="tiers[0].endTime"
@@ -1277,6 +1284,7 @@ exports[`StepThreeFormDutchAuction should render StepThreeFormDutchAuction- test
             </div>
           </div>
           <input
+            autoComplete="off"
             className="sw-TextField"
             id="tiers[0].minRate"
             min="0"
@@ -1321,6 +1329,7 @@ exports[`StepThreeFormDutchAuction should render StepThreeFormDutchAuction- test
             </div>
           </div>
           <input
+            autoComplete="off"
             className="sw-TextField"
             id="tiers[0].maxRate"
             min="0"
@@ -1365,6 +1374,7 @@ exports[`StepThreeFormDutchAuction should render StepThreeFormDutchAuction- test
             </div>
           </div>
           <input
+            autoComplete="off"
             className="sw-TextField"
             disabled={false}
             id="tiers[0].supply"
@@ -1412,6 +1422,7 @@ exports[`StepThreeFormDutchAuction should render StepThreeFormDutchAuction- test
             </div>
           </div>
           <input
+            autoComplete="off"
             className="sw-TextField"
             disabled={false}
             id="tiers[0].minCap"

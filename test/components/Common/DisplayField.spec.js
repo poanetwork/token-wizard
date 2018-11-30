@@ -2,7 +2,7 @@ import React from 'react'
 import { DisplayField } from '../../../src/components/Common/DisplayField'
 import { Form } from 'react-final-form'
 import Adapter from 'enzyme-adapter-react-15'
-import { configure, mount } from 'enzyme'
+import { configure, shallow } from 'enzyme'
 
 configure({ adapter: new Adapter() })
 
@@ -19,7 +19,7 @@ describe('DisplayField ', () => {
       large: 'Large',
       extralarge: 'ExtraLarge'
     }
-    const wrapper = mount(
+    const wrapper = shallow(
       <Form
         onSubmit={jest.fn()}
         component={DisplayField}
@@ -30,16 +30,7 @@ describe('DisplayField ', () => {
         mobileTextSize={mobileTextSize}
       />
     )
-    expect(wrapper.find('.pb-DisplayField').props().title).toBe(description)
-    expect(wrapper.find(`.${extraClass}`)).toHaveLength(1)
-    expect(wrapper.find('.pb-DisplayField_Title').text()).toBe(title)
-    expect(
-      wrapper
-        .find('.pb-DisplayField_Value')
-        .text()
-        .trim()
-    ).toBe(value)
-    expect(wrapper.find(`.pb-DisplayField_Value-MobileTextSize${valueSize[mobileTextSize]}`)).toHaveLength(1)
-    expect(wrapper.find(`[data-clipboard-text="${value}"]`).text()).toBeDefined()
+
+    expect(wrapper).toMatchSnapshot()
   })
 })

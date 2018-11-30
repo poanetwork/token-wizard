@@ -11,6 +11,7 @@ exports[`TokenSetupBlock should render the component  1`] = `
   />
   <DisplayField
     description="The five letter ticker for your token."
+    extraClassName="pb-DisplayField_Value-uppercase"
     title="Ticker"
     value="TTK"
   />

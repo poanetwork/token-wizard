@@ -24,6 +24,7 @@ exports[`CrowdsaleStartTime Rendering should render CrowdsaleStartTime component
     </div>
   </div>
   <input
+    autoComplete="off"
     className="sw-TextField"
     disabled={false}
     id="tiers[0].startTime"
@@ -61,6 +62,7 @@ exports[`CrowdsaleStartTime Rendering should render CrowdsaleStartTime component
     </div>
   </div>
   <input
+    autoComplete="off"
     className="sw-TextField"
     disabled={true}
     id="tiers[0].startTime"

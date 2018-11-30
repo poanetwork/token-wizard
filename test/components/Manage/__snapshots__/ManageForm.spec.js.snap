@@ -2038,55 +2038,80 @@ exports[`ManageForm should render the component with tiers 1`] = `
             }
           >
             <form
+              className="mng-ManageForm"
               onSubmit={[Function]}
             >
+              <h2
+                className="mng-ManageForm_Title"
+              >
+                 
+                <span
+                  className="mng-ManageForm_Title-uppercase"
+                >
+                  (
+                  )
+                </span>
+                 Settings
+              </h2>
               <div
-                className="steps"
+                className="mng-ManageForm_BorderedBlock"
               >
                 <div
-                  className="steps-content container"
+                  className="mng-ManageForm_ItemsContainer"
                 >
-                  <AboutCrowdsale>
-                    <div
-                      className="about-step"
+                  <div
+                    className="mng-ManageForm_Item"
+                  >
+                    <InputField
+                      disabled={true}
+                      name="crowdsaleType"
+                      readOnly={true}
+                      title="Crowdsale Type"
+                      type="text"
+                      value="Whitelist With Cap"
                     >
                       <div
-                        className="step-icons step-icons_crowdsale-setup"
-                      />
-                      <p
-                        className="title"
+                        className="sw-InputField "
                       >
-                         (
-                        ) Settings
-                      </p>
-                      <p
-                        className="description"
-                      >
-                        The most important and exciting part of the crowdsale process. Here you can
-              define parameters of your crowdsale campaign.
-                      </p>
-                      <Link
-                        className="crowdsale-page-link"
-                        replace={false}
-                        to="/crowdsale/?undefined=undefined&networkID=undefined"
-                      >
-                        <a
-                          className="crowdsale-page-link"
-                          href="/crowdsale/?undefined=undefined&networkID=undefined"
-                          onClick={[Function]}
+                        <FormControlTitle
+                          title="Crowdsale Type"
                         >
-                          Crowdsale page
-                        </a>
-                      </Link>
-                    </div>
-                  </AboutCrowdsale>
+                          <div
+                            className="sw-FormControlTitle"
+                          >
+                            <label
+                              className="sw-FormControlTitle_Label"
+                            >
+                              Crowdsale Type
+                            </label>
+                          </div>
+                        </FormControlTitle>
+                        <TextField
+                          disabled={true}
+                          id="crowdsaleType"
+                          readOnly={true}
+                          type="text"
+                          value="Whitelist With Cap"
+                        >
+                          <input
+                            autoComplete="off"
+                            className="sw-TextField"
+                            disabled={true}
+                            readOnly={true}
+                            type="text"
+                            value="Whitelist With Cap"
+                          />
+                        </TextField>
+                      </div>
+                    </InputField>
+                  </div>
                   <div
-                    className="input-block-container"
+                    className="mng-ManageForm_Item"
                   >
                     <InputField
                       disabled={true}
                       name="walletAddress"
-                      side="left"
+                      readOnly={true}
                       title="Wallet Address"
                       type="text"
                     >
@@ -2109,11 +2134,14 @@ exports[`ManageForm should render the component with tiers 1`] = `
                         <TextField
                           disabled={true}
                           id="walletAddress"
+                          readOnly={true}
                           type="text"
                         >
                           <input
+                            autoComplete="off"
                             className="sw-TextField"
                             disabled={true}
+                            readOnly={true}
                             type="text"
                           />
                         </TextField>
@@ -2121,662 +2149,10 @@ exports[`ManageForm should render the component with tiers 1`] = `
                     </InputField>
                   </div>
                 </div>
-              </div>
-              <ReactFinalFormFieldArray(4.6.1)(undefined)
-                name="tiers"
-              >
-                <inject-_class-with-crowdsaleStore-tokenStore
-                  __versions={
-                    Object {
-                      "final-form": "4.6.1",
-                      "react-final-form": "3.4.0",
-                    }
-                  }
-                  batch={[Function]}
-                  blur={[Function]}
-                  canEditTiers={true}
-                  change={[Function]}
-                  decorators={
-                    Array [
-                      [MockFunction] {
-                        "calls": Array [
-                          Array [
-                            Object {
-                              "batch": [Function],
-                              "blur": [Function],
-                              "change": [Function],
-                              "focus": [Function],
-                              "getFieldState": [Function],
-                              "getRegisteredFields": [Function],
-                              "getState": [Function],
-                              "initialize": [Function],
-                              "isValidationPaused": [Function],
-                              "mutators": Object {
-                                "insert": [Function],
-                                "move": [Function],
-                                "pop": [Function],
-                                "push": [Function],
-                                "remove": [Function],
-                                "shift": [Function],
-                                "swap": [Function],
-                                "unshift": [Function],
-                              },
-                              "pauseValidation": [Function],
-                              "registerField": [Function],
-                              "reset": [Function],
-                              "resumeValidation": [Function],
-                              "setConfig": [Function],
-                              "submit": [Function],
-                              "subscribe": [Function],
-                            },
-                          ],
-                        ],
-                        "results": Array [
-                          Object {
-                            "isThrow": false,
-                            "value": undefined,
-                          },
-                        ],
-                      },
-                    ]
-                  }
-                  dirty={false}
-                  dirtySinceLastSubmit={false}
-                  errors={
-                    Object {
-                      "tiers": Array [
-                        Object {
-                          "minCap": Array [
-                            "Decimals should not exceed the amount of decimals specified",
-                          ],
-                        },
-                        Object {
-                          "minCap": Array [
-                            "Decimals should not exceed the amount of decimals specified",
-                          ],
-                        },
-                      ],
-                    }
-                  }
-                  fields={
-                    Object {
-                      "active": false,
-                      "blur": [Function],
-                      "change": [Function],
-                      "data": Object {},
-                      "dirty": false,
-                      "dirtySinceLastSubmit": false,
-                      "error": undefined,
-                      "focus": [Function],
-                      "forEach": [Function],
-                      "initial": Array [
-                        Object {
-                          "addresses": Object {
-                            "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
-                          },
-                          "duration": "1528827423500",
-                          "endTime": "2018-04-17T00:00",
-                          "index": "0",
-                          "isWhitelisted": "yes",
-                          "minCap": "0",
-                          "rate": "123",
-                          "startTime": "2018-04-13T16:07",
-                          "supply": "132",
-                          "tier": "Tier 1",
-                          "updatable": true,
-                          "whitelist": Array [
-                            Object {
-                              "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                          ],
-                        },
-                        Object {
-                          "addresses": Object {
-                            "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
-                          },
-                          "duration": "1528827423500",
-                          "endTime": "2018-04-21T00:00",
-                          "index": "1",
-                          "isWhitelisted": "yes",
-                          "minCap": "0",
-                          "rate": "55",
-                          "startTime": "2018-04-17T00:00",
-                          "supply": "156",
-                          "tier": "Tier 2",
-                          "updatable": false,
-                          "whitelist": Array [
-                            Object {
-                              "addr": "0x1dF62f291b2E969fB0849d99D9Ce41e2F137006e",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0x3E5e9111Ae8eB78Fe1CC3bb8915d5D461F3Ef9A9",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0x95cED938F7991cd0dFcb48F0a06a40FA1aF46EBC",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0xACa94ef8bD5ffEE41947b4585a84BdA5a3d3DA6E",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0xd03ea8624C8C5987235048901fB614fDcA89b117",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                          ],
-                        },
-                      ],
-                      "insert": [Function],
-                      "invalid": false,
-                      "length": 2,
-                      "map": [Function],
-                      "move": [Function],
-                      "name": "tiers",
-                      "pop": [Function],
-                      "pristine": true,
-                      "push": [Function],
-                      "remove": [Function],
-                      "shift": [Function],
-                      "submitError": undefined,
-                      "submitFailed": false,
-                      "submitSucceeded": false,
-                      "swap": [Function],
-                      "touched": false,
-                      "unshift": [Function],
-                      "valid": true,
-                      "value": Array [
-                        Object {
-                          "addresses": Object {
-                            "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
-                          },
-                          "duration": "1528827423500",
-                          "endTime": "2018-04-17T00:00",
-                          "index": "0",
-                          "isWhitelisted": "yes",
-                          "minCap": "0",
-                          "rate": "123",
-                          "startTime": "2018-04-13T16:07",
-                          "supply": "132",
-                          "tier": "Tier 1",
-                          "updatable": true,
-                          "whitelist": Array [
-                            Object {
-                              "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                          ],
-                        },
-                        Object {
-                          "addresses": Object {
-                            "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
-                          },
-                          "duration": "1528827423500",
-                          "endTime": "2018-04-21T00:00",
-                          "index": "1",
-                          "isWhitelisted": "yes",
-                          "minCap": "0",
-                          "rate": "55",
-                          "startTime": "2018-04-17T00:00",
-                          "supply": "156",
-                          "tier": "Tier 2",
-                          "updatable": false,
-                          "whitelist": Array [
-                            Object {
-                              "addr": "0x1dF62f291b2E969fB0849d99D9Ce41e2F137006e",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0x3E5e9111Ae8eB78Fe1CC3bb8915d5D461F3Ef9A9",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0x95cED938F7991cd0dFcb48F0a06a40FA1aF46EBC",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0xACa94ef8bD5ffEE41947b4585a84BdA5a3d3DA6E",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0xd03ea8624C8C5987235048901fB614fDcA89b117",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                          ],
-                        },
-                      ],
-                      "visited": false,
-                    }
-                  }
-                  focus={[Function]}
-                  form={
-                    Object {
-                      "batch": [Function],
-                      "blur": [Function],
-                      "change": [Function],
-                      "focus": [Function],
-                      "getFieldState": [Function],
-                      "getRegisteredFields": [Function],
-                      "getState": [Function],
-                      "initialize": [Function],
-                      "isValidationPaused": [Function],
-                      "mutators": Object {
-                        "insert": [Function],
-                        "move": [Function],
-                        "pop": [Function],
-                        "push": [Function],
-                        "remove": [Function],
-                        "shift": [Function],
-                        "swap": [Function],
-                        "unshift": [Function],
-                      },
-                      "pauseValidation": [Function],
-                      "registerField": [Function],
-                      "reset": [Function],
-                      "resumeValidation": [Function],
-                      "setConfig": [Function],
-                      "submit": [Function],
-                      "subscribe": [Function],
-                    }
-                  }
-                  hasSubmitErrors={false}
-                  hasValidationErrors={true}
-                  initialValues={
-                    Object {
-                      "tiers": Array [
-                        Object {
-                          "addresses": Object {
-                            "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
-                          },
-                          "duration": "1528827423500",
-                          "endTime": "2018-04-17T00:00",
-                          "index": "0",
-                          "isWhitelisted": "yes",
-                          "minCap": "0",
-                          "rate": "123",
-                          "startTime": "2018-04-13T16:07",
-                          "supply": "132",
-                          "tier": "Tier 1",
-                          "updatable": true,
-                          "whitelist": Array [
-                            Object {
-                              "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                          ],
-                        },
-                        Object {
-                          "addresses": Object {
-                            "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
-                          },
-                          "duration": "1528827423500",
-                          "endTime": "2018-04-21T00:00",
-                          "index": "1",
-                          "isWhitelisted": "yes",
-                          "minCap": "0",
-                          "rate": "55",
-                          "startTime": "2018-04-17T00:00",
-                          "supply": "156",
-                          "tier": "Tier 2",
-                          "updatable": false,
-                          "whitelist": Array [
-                            Object {
-                              "addr": "0x1dF62f291b2E969fB0849d99D9Ce41e2F137006e",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0x3E5e9111Ae8eB78Fe1CC3bb8915d5D461F3Ef9A9",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0x95cED938F7991cd0dFcb48F0a06a40FA1aF46EBC",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0xACa94ef8bD5ffEE41947b4585a84BdA5a3d3DA6E",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0xd03ea8624C8C5987235048901fB614fDcA89b117",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                          ],
-                        },
-                      ],
-                    }
-                  }
-                  initialize={[Function]}
-                  mutators={
-                    Object {
-                      "insert": [Function],
-                      "move": [Function],
-                      "pop": [Function],
-                      "push": [Function],
-                      "remove": [Function],
-                      "shift": [Function],
-                      "swap": [Function],
-                      "unshift": [Function],
-                    }
-                  }
-                  reset={[Function]}
-                  submitFailed={false}
-                  submitSucceeded={false}
-                  touched={
-                    Object {
-                      "tiers": false,
-                      "tiers[0].endTime": false,
-                      "tiers[0].minCap": false,
-                      "tiers[0].rate": false,
-                      "tiers[0].startTime": false,
-                      "tiers[0].supply": false,
-                      "tiers[1].endTime": false,
-                      "tiers[1].minCap": false,
-                      "tiers[1].rate": false,
-                      "tiers[1].startTime": false,
-                      "tiers[1].supply": false,
-                    }
-                  }
-                  valid={false}
-                  validating={false}
-                  values={
-                    Object {
-                      "tiers": Array [
-                        Object {
-                          "addresses": Object {
-                            "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
-                          },
-                          "duration": "1528827423500",
-                          "endTime": "2018-04-17T00:00",
-                          "index": "0",
-                          "isWhitelisted": "yes",
-                          "minCap": "0",
-                          "rate": "123",
-                          "startTime": "2018-04-13T16:07",
-                          "supply": "132",
-                          "tier": "Tier 1",
-                          "updatable": true,
-                          "whitelist": Array [
-                            Object {
-                              "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                          ],
-                        },
-                        Object {
-                          "addresses": Object {
-                            "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
-                          },
-                          "duration": "1528827423500",
-                          "endTime": "2018-04-21T00:00",
-                          "index": "1",
-                          "isWhitelisted": "yes",
-                          "minCap": "0",
-                          "rate": "55",
-                          "startTime": "2018-04-17T00:00",
-                          "supply": "156",
-                          "tier": "Tier 2",
-                          "updatable": false,
-                          "whitelist": Array [
-                            Object {
-                              "addr": "0x1dF62f291b2E969fB0849d99D9Ce41e2F137006e",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0x3E5e9111Ae8eB78Fe1CC3bb8915d5D461F3Ef9A9",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0x95cED938F7991cd0dFcb48F0a06a40FA1aF46EBC",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0xACa94ef8bD5ffEE41947b4585a84BdA5a3d3DA6E",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0xd03ea8624C8C5987235048901fB614fDcA89b117",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                            Object {
-                              "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
-                              "max": 50505,
-                              "min": 1234,
-                              "stored": true,
-                            },
-                          ],
-                        },
-                      ],
-                    }
-                  }
-                  visited={
-                    Object {
-                      "tiers": false,
-                      "tiers[0].endTime": false,
-                      "tiers[0].minCap": false,
-                      "tiers[0].rate": false,
-                      "tiers[0].startTime": false,
-                      "tiers[0].supply": false,
-                      "tiers[1].endTime": false,
-                      "tiers[1].minCap": false,
-                      "tiers[1].rate": false,
-                      "tiers[1].startTime": false,
-                      "tiers[1].supply": false,
-                    }
-                  }
+                <ReactFinalFormFieldArray(4.6.1)(undefined)
+                  name="tiers"
                 >
-                  <_class
+                  <inject-_class-with-crowdsaleStore-tokenStore
                     __versions={
                       Object {
                         "final-form": "4.6.1",
@@ -2787,20 +2163,6 @@ exports[`ManageForm should render the component with tiers 1`] = `
                     blur={[Function]}
                     canEditTiers={true}
                     change={[Function]}
-                    crowdsaleStore={
-                      CrowdsaleStore {
-                        "crowdsales": Array [],
-                        "endTime": undefined,
-                        "maximumSellableTokens": undefined,
-                        "maximumSellableTokensInWei": undefined,
-                        "selected": Object {
-                          "initialTiersValues": Array [],
-                          "updatable": false,
-                        },
-                        "strategy": "white-list-with-cap",
-                        "supply": undefined,
-                      }
-                    }
                     decorators={
                       Array [
                         [MockFunction] {
@@ -3290,20 +2652,6 @@ exports[`ManageForm should render the component with tiers 1`] = `
                     reset={[Function]}
                     submitFailed={false}
                     submitSucceeded={false}
-                    tokenStore={
-                      TokenStore {
-                        "decimals": undefined,
-                        "name": undefined,
-                        "reservedTokensInput": Object {},
-                        "supply": 0,
-                        "ticker": undefined,
-                        "validToken": Object {
-                          "decimals": "EMPTY",
-                          "name": "EMPTY",
-                          "ticker": "EMPTY",
-                        },
-                      }
-                    }
                     touched={
                       Object {
                         "tiers": false,
@@ -3455,110 +2803,724 @@ exports[`ManageForm should render the component with tiers 1`] = `
                       }
                     }
                   >
-                    <div>
+                    <_class
+                      __versions={
+                        Object {
+                          "final-form": "4.6.1",
+                          "react-final-form": "3.4.0",
+                        }
+                      }
+                      batch={[Function]}
+                      blur={[Function]}
+                      canEditTiers={true}
+                      change={[Function]}
+                      crowdsaleStore={
+                        CrowdsaleStore {
+                          "crowdsales": Array [],
+                          "endTime": undefined,
+                          "maximumSellableTokens": undefined,
+                          "maximumSellableTokensInWei": undefined,
+                          "selected": Object {
+                            "initialTiersValues": Array [],
+                            "updatable": false,
+                          },
+                          "strategy": "white-list-with-cap",
+                          "supply": undefined,
+                        }
+                      }
+                      decorators={
+                        Array [
+                          [MockFunction] {
+                            "calls": Array [
+                              Array [
+                                Object {
+                                  "batch": [Function],
+                                  "blur": [Function],
+                                  "change": [Function],
+                                  "focus": [Function],
+                                  "getFieldState": [Function],
+                                  "getRegisteredFields": [Function],
+                                  "getState": [Function],
+                                  "initialize": [Function],
+                                  "isValidationPaused": [Function],
+                                  "mutators": Object {
+                                    "insert": [Function],
+                                    "move": [Function],
+                                    "pop": [Function],
+                                    "push": [Function],
+                                    "remove": [Function],
+                                    "shift": [Function],
+                                    "swap": [Function],
+                                    "unshift": [Function],
+                                  },
+                                  "pauseValidation": [Function],
+                                  "registerField": [Function],
+                                  "reset": [Function],
+                                  "resumeValidation": [Function],
+                                  "setConfig": [Function],
+                                  "submit": [Function],
+                                  "subscribe": [Function],
+                                },
+                              ],
+                            ],
+                            "results": Array [
+                              Object {
+                                "isThrow": false,
+                                "value": undefined,
+                              },
+                            ],
+                          },
+                        ]
+                      }
+                      dirty={false}
+                      dirtySinceLastSubmit={false}
+                      errors={
+                        Object {
+                          "tiers": Array [
+                            Object {
+                              "minCap": Array [
+                                "Decimals should not exceed the amount of decimals specified",
+                              ],
+                            },
+                            Object {
+                              "minCap": Array [
+                                "Decimals should not exceed the amount of decimals specified",
+                              ],
+                            },
+                          ],
+                        }
+                      }
+                      fields={
+                        Object {
+                          "active": false,
+                          "blur": [Function],
+                          "change": [Function],
+                          "data": Object {},
+                          "dirty": false,
+                          "dirtySinceLastSubmit": false,
+                          "error": undefined,
+                          "focus": [Function],
+                          "forEach": [Function],
+                          "initial": Array [
+                            Object {
+                              "addresses": Object {
+                                "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
+                              },
+                              "duration": "1528827423500",
+                              "endTime": "2018-04-17T00:00",
+                              "index": "0",
+                              "isWhitelisted": "yes",
+                              "minCap": "0",
+                              "rate": "123",
+                              "startTime": "2018-04-13T16:07",
+                              "supply": "132",
+                              "tier": "Tier 1",
+                              "updatable": true,
+                              "whitelist": Array [
+                                Object {
+                                  "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                              ],
+                            },
+                            Object {
+                              "addresses": Object {
+                                "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
+                              },
+                              "duration": "1528827423500",
+                              "endTime": "2018-04-21T00:00",
+                              "index": "1",
+                              "isWhitelisted": "yes",
+                              "minCap": "0",
+                              "rate": "55",
+                              "startTime": "2018-04-17T00:00",
+                              "supply": "156",
+                              "tier": "Tier 2",
+                              "updatable": false,
+                              "whitelist": Array [
+                                Object {
+                                  "addr": "0x1dF62f291b2E969fB0849d99D9Ce41e2F137006e",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0x3E5e9111Ae8eB78Fe1CC3bb8915d5D461F3Ef9A9",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0x95cED938F7991cd0dFcb48F0a06a40FA1aF46EBC",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0xACa94ef8bD5ffEE41947b4585a84BdA5a3d3DA6E",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0xd03ea8624C8C5987235048901fB614fDcA89b117",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                              ],
+                            },
+                          ],
+                          "insert": [Function],
+                          "invalid": false,
+                          "length": 2,
+                          "map": [Function],
+                          "move": [Function],
+                          "name": "tiers",
+                          "pop": [Function],
+                          "pristine": true,
+                          "push": [Function],
+                          "remove": [Function],
+                          "shift": [Function],
+                          "submitError": undefined,
+                          "submitFailed": false,
+                          "submitSucceeded": false,
+                          "swap": [Function],
+                          "touched": false,
+                          "unshift": [Function],
+                          "valid": true,
+                          "value": Array [
+                            Object {
+                              "addresses": Object {
+                                "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
+                              },
+                              "duration": "1528827423500",
+                              "endTime": "2018-04-17T00:00",
+                              "index": "0",
+                              "isWhitelisted": "yes",
+                              "minCap": "0",
+                              "rate": "123",
+                              "startTime": "2018-04-13T16:07",
+                              "supply": "132",
+                              "tier": "Tier 1",
+                              "updatable": true,
+                              "whitelist": Array [
+                                Object {
+                                  "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                              ],
+                            },
+                            Object {
+                              "addresses": Object {
+                                "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
+                              },
+                              "duration": "1528827423500",
+                              "endTime": "2018-04-21T00:00",
+                              "index": "1",
+                              "isWhitelisted": "yes",
+                              "minCap": "0",
+                              "rate": "55",
+                              "startTime": "2018-04-17T00:00",
+                              "supply": "156",
+                              "tier": "Tier 2",
+                              "updatable": false,
+                              "whitelist": Array [
+                                Object {
+                                  "addr": "0x1dF62f291b2E969fB0849d99D9Ce41e2F137006e",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0x3E5e9111Ae8eB78Fe1CC3bb8915d5D461F3Ef9A9",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0x95cED938F7991cd0dFcb48F0a06a40FA1aF46EBC",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0xACa94ef8bD5ffEE41947b4585a84BdA5a3d3DA6E",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0xd03ea8624C8C5987235048901fB614fDcA89b117",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                              ],
+                            },
+                          ],
+                          "visited": false,
+                        }
+                      }
+                      focus={[Function]}
+                      form={
+                        Object {
+                          "batch": [Function],
+                          "blur": [Function],
+                          "change": [Function],
+                          "focus": [Function],
+                          "getFieldState": [Function],
+                          "getRegisteredFields": [Function],
+                          "getState": [Function],
+                          "initialize": [Function],
+                          "isValidationPaused": [Function],
+                          "mutators": Object {
+                            "insert": [Function],
+                            "move": [Function],
+                            "pop": [Function],
+                            "push": [Function],
+                            "remove": [Function],
+                            "shift": [Function],
+                            "swap": [Function],
+                            "unshift": [Function],
+                          },
+                          "pauseValidation": [Function],
+                          "registerField": [Function],
+                          "reset": [Function],
+                          "resumeValidation": [Function],
+                          "setConfig": [Function],
+                          "submit": [Function],
+                          "subscribe": [Function],
+                        }
+                      }
+                      hasSubmitErrors={false}
+                      hasValidationErrors={true}
+                      initialValues={
+                        Object {
+                          "tiers": Array [
+                            Object {
+                              "addresses": Object {
+                                "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
+                              },
+                              "duration": "1528827423500",
+                              "endTime": "2018-04-17T00:00",
+                              "index": "0",
+                              "isWhitelisted": "yes",
+                              "minCap": "0",
+                              "rate": "123",
+                              "startTime": "2018-04-13T16:07",
+                              "supply": "132",
+                              "tier": "Tier 1",
+                              "updatable": true,
+                              "whitelist": Array [
+                                Object {
+                                  "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                              ],
+                            },
+                            Object {
+                              "addresses": Object {
+                                "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
+                              },
+                              "duration": "1528827423500",
+                              "endTime": "2018-04-21T00:00",
+                              "index": "1",
+                              "isWhitelisted": "yes",
+                              "minCap": "0",
+                              "rate": "55",
+                              "startTime": "2018-04-17T00:00",
+                              "supply": "156",
+                              "tier": "Tier 2",
+                              "updatable": false,
+                              "whitelist": Array [
+                                Object {
+                                  "addr": "0x1dF62f291b2E969fB0849d99D9Ce41e2F137006e",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0x3E5e9111Ae8eB78Fe1CC3bb8915d5D461F3Ef9A9",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0x95cED938F7991cd0dFcb48F0a06a40FA1aF46EBC",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0xACa94ef8bD5ffEE41947b4585a84BdA5a3d3DA6E",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0xd03ea8624C8C5987235048901fB614fDcA89b117",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                              ],
+                            },
+                          ],
+                        }
+                      }
+                      initialize={[Function]}
+                      mutators={
+                        Object {
+                          "insert": [Function],
+                          "move": [Function],
+                          "pop": [Function],
+                          "push": [Function],
+                          "remove": [Function],
+                          "shift": [Function],
+                          "swap": [Function],
+                          "unshift": [Function],
+                        }
+                      }
+                      reset={[Function]}
+                      submitFailed={false}
+                      submitSucceeded={false}
+                      tokenStore={
+                        TokenStore {
+                          "decimals": undefined,
+                          "name": undefined,
+                          "reservedTokensInput": Object {},
+                          "supply": 0,
+                          "ticker": undefined,
+                          "validToken": Object {
+                            "decimals": "EMPTY",
+                            "name": "EMPTY",
+                            "ticker": "EMPTY",
+                          },
+                        }
+                      }
+                      touched={
+                        Object {
+                          "tiers": false,
+                          "tiers[0].endTime": false,
+                          "tiers[0].minCap": false,
+                          "tiers[0].rate": false,
+                          "tiers[0].startTime": false,
+                          "tiers[0].supply": false,
+                          "tiers[1].endTime": false,
+                          "tiers[1].minCap": false,
+                          "tiers[1].rate": false,
+                          "tiers[1].startTime": false,
+                          "tiers[1].supply": false,
+                        }
+                      }
+                      valid={false}
+                      validating={false}
+                      values={
+                        Object {
+                          "tiers": Array [
+                            Object {
+                              "addresses": Object {
+                                "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
+                              },
+                              "duration": "1528827423500",
+                              "endTime": "2018-04-17T00:00",
+                              "index": "0",
+                              "isWhitelisted": "yes",
+                              "minCap": "0",
+                              "rate": "123",
+                              "startTime": "2018-04-13T16:07",
+                              "supply": "132",
+                              "tier": "Tier 1",
+                              "updatable": true,
+                              "whitelist": Array [
+                                Object {
+                                  "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                              ],
+                            },
+                            Object {
+                              "addresses": Object {
+                                "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
+                              },
+                              "duration": "1528827423500",
+                              "endTime": "2018-04-21T00:00",
+                              "index": "1",
+                              "isWhitelisted": "yes",
+                              "minCap": "0",
+                              "rate": "55",
+                              "startTime": "2018-04-17T00:00",
+                              "supply": "156",
+                              "tier": "Tier 2",
+                              "updatable": false,
+                              "whitelist": Array [
+                                Object {
+                                  "addr": "0x1dF62f291b2E969fB0849d99D9Ce41e2F137006e",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0x3E5e9111Ae8eB78Fe1CC3bb8915d5D461F3Ef9A9",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0x95cED938F7991cd0dFcb48F0a06a40FA1aF46EBC",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0xACa94ef8bD5ffEE41947b4585a84BdA5a3d3DA6E",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0xd03ea8624C8C5987235048901fB614fDcA89b117",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                                Object {
+                                  "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
+                                  "max": 50505,
+                                  "min": 1234,
+                                  "stored": true,
+                                },
+                              ],
+                            },
+                          ],
+                        }
+                      }
+                      visited={
+                        Object {
+                          "tiers": false,
+                          "tiers[0].endTime": false,
+                          "tiers[0].minCap": false,
+                          "tiers[0].rate": false,
+                          "tiers[0].startTime": false,
+                          "tiers[0].supply": false,
+                          "tiers[1].endTime": false,
+                          "tiers[1].minCap": false,
+                          "tiers[1].rate": false,
+                          "tiers[1].startTime": false,
+                          "tiers[1].supply": false,
+                        }
+                      }
+                    >
                       <div
-                        className="steps"
-                        key="0"
+                        className="mng-ManageTierBlock"
                       >
                         <div
-                          className="steps-content container"
+                          className="mng-ManageTierBlock_Content"
+                          key="0"
                         >
+                          <h3
+                            className="mng-ManageTierBlock_Title"
+                          >
+                            Tier Name: 
+                            Tier 1
+                          </h3>
                           <div
-                            className=""
+                            className="mng-ManageTierBlock_ItemsContainer"
                           >
                             <div
-                              className="input-block-container"
-                            >
-                              <InputField
-                                disabled={true}
-                                name="tiers[0].crowdsale_name"
-                                side="left"
-                                title="Tier setup name"
-                                type="text"
-                                value="Tier 1"
-                              >
-                                <div
-                                  className="sw-InputField "
-                                >
-                                  <FormControlTitle
-                                    title="Tier setup name"
-                                  >
-                                    <div
-                                      className="sw-FormControlTitle"
-                                    >
-                                      <label
-                                        className="sw-FormControlTitle_Label"
-                                      >
-                                        Tier setup name
-                                      </label>
-                                    </div>
-                                  </FormControlTitle>
-                                  <TextField
-                                    disabled={true}
-                                    id="tiers[0].crowdsale_name"
-                                    type="text"
-                                    value="Tier 1"
-                                  >
-                                    <input
-                                      className="sw-TextField"
-                                      disabled={true}
-                                      type="text"
-                                      value="Tier 1"
-                                    />
-                                  </TextField>
-                                </div>
-                              </InputField>
-                            </div>
-                            <div
-                              className="input-block-container"
+                              className="mng-ManageTierBlock_Item"
                             >
                               <CrowdsaleStartTime
                                 disabled={true}
-                                errorStyle={
-                                  Object {
-                                    "color": "red",
-                                    "fontSize": "12px",
-                                    "fontWeight": "bold",
-                                    "height": "20px",
-                                    "width": "100%",
-                                  }
-                                }
                                 index={0}
                                 name="tiers[0].startTime"
-                                side="left"
+                                readOnly={true}
                               >
                                 <Field
                                   component={[Function]}
                                   description="Date and time when the tier starts. Can't be in the past from the current moment."
                                   disabled={true}
-                                  errorStyle={
-                                    Object {
-                                      "color": "red",
-                                      "fontSize": "12px",
-                                      "fontWeight": "bold",
-                                      "height": "20px",
-                                      "width": "100%",
-                                    }
-                                  }
                                   format={[Function]}
                                   label="Start Time"
                                   name="tiers[0].startTime"
                                   parse={[Function]}
-                                  side="left"
+                                  readOnly={true}
                                   type="datetime-local"
                                 >
                                   <InputField2
                                     description="Date and time when the tier starts. Can't be in the past from the current moment."
                                     disabled={true}
-                                    errorStyle={
-                                      Object {
-                                        "color": "red",
-                                        "fontSize": "12px",
-                                        "fontWeight": "bold",
-                                        "height": "20px",
-                                        "width": "100%",
-                                      }
-                                    }
                                     input={
                                       Object {
                                         "name": "tiers[0].startTime",
@@ -3587,7 +3549,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         "visited": false,
                                       }
                                     }
-                                    side="left"
+                                    readOnly={true}
                                     type="datetime-local"
                                   >
                                     <div
@@ -3618,17 +3580,18 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         </div>
                                       </FormControlTitle>
                                       <TextField
-                                        autoComplete="off"
                                         disabled={true}
                                         id="tiers[0].startTime"
                                         name="tiers[0].startTime"
                                         onBlur={[Function]}
                                         onChange={[Function]}
                                         onFocus={[Function]}
+                                        readOnly={true}
                                         type="datetime-local"
                                         value="2018-04-13T16:07"
                                       >
                                         <input
+                                          autoComplete="off"
                                           className="sw-TextField"
                                           disabled={true}
                                           id="tiers[0].startTime"
@@ -3636,6 +3599,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                           onBlur={[Function]}
                                           onChange={[Function]}
                                           onFocus={[Function]}
+                                          readOnly={true}
                                           type="datetime-local"
                                           value="2018-04-13T16:07"
                                         />
@@ -3661,54 +3625,31 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                   </InputField2>
                                 </Field>
                               </CrowdsaleStartTime>
+                            </div>
+                            <div
+                              className="mng-ManageTierBlock_Item"
+                            >
                               <CrowdsaleEndTime
                                 disabled={false}
-                                errorStyle={
-                                  Object {
-                                    "color": "red",
-                                    "fontSize": "12px",
-                                    "fontWeight": "bold",
-                                    "height": "20px",
-                                    "width": "100%",
-                                  }
-                                }
                                 index={0}
                                 name="tiers[0].endTime"
-                                side="right"
+                                readOnly={false}
                               >
                                 <Field
                                   component={[Function]}
                                   description="Date and time when the tier ends. Can be only in the future."
                                   disabled={false}
-                                  errorStyle={
-                                    Object {
-                                      "color": "red",
-                                      "fontSize": "12px",
-                                      "fontWeight": "bold",
-                                      "height": "20px",
-                                      "width": "100%",
-                                    }
-                                  }
                                   format={[Function]}
                                   label="End Time"
                                   name="tiers[0].endTime"
                                   parse={[Function]}
-                                  side="right"
+                                  readOnly={false}
                                   type="datetime-local"
                                   validate={[Function]}
                                 >
                                   <InputField2
                                     description="Date and time when the tier ends. Can be only in the future."
                                     disabled={false}
-                                    errorStyle={
-                                      Object {
-                                        "color": "red",
-                                        "fontSize": "12px",
-                                        "fontWeight": "bold",
-                                        "height": "20px",
-                                        "width": "100%",
-                                      }
-                                    }
                                     input={
                                       Object {
                                         "name": "tiers[0].endTime",
@@ -3737,7 +3678,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         "visited": false,
                                       }
                                     }
-                                    side="right"
+                                    readOnly={false}
                                     type="datetime-local"
                                   >
                                     <div
@@ -3768,17 +3709,18 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         </div>
                                       </FormControlTitle>
                                       <TextField
-                                        autoComplete="off"
                                         disabled={false}
                                         id="tiers[0].endTime"
                                         name="tiers[0].endTime"
                                         onBlur={[Function]}
                                         onChange={[Function]}
                                         onFocus={[Function]}
+                                        readOnly={false}
                                         type="datetime-local"
                                         value="2018-04-17T00:00"
                                       >
                                         <input
+                                          autoComplete="off"
                                           className="sw-TextField"
                                           disabled={false}
                                           id="tiers[0].endTime"
@@ -3786,6 +3728,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                           onBlur={[Function]}
                                           onChange={[Function]}
                                           onFocus={[Function]}
+                                          readOnly={false}
                                           type="datetime-local"
                                           value="2018-04-17T00:00"
                                         />
@@ -3813,55 +3756,28 @@ exports[`ManageForm should render the component with tiers 1`] = `
                               </CrowdsaleEndTime>
                             </div>
                             <div
-                              className="input-block-container"
+                              className="mng-ManageTierBlock_Item"
                             >
                               <CrowdsaleRate
                                 disabled={true}
-                                errorStyle={
-                                  Object {
-                                    "color": "red",
-                                    "fontSize": "12px",
-                                    "fontWeight": "bold",
-                                    "height": "20px",
-                                    "width": "100%",
-                                  }
-                                }
                                 name="tiers[0].rate"
-                                side="left"
+                                readOnly={true}
                               >
                                 <Field
                                   component={[Function]}
                                   description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens"
                                   disabled={true}
-                                  errorStyle={
-                                    Object {
-                                      "color": "red",
-                                      "fontSize": "12px",
-                                      "fontWeight": "bold",
-                                      "height": "20px",
-                                      "width": "100%",
-                                    }
-                                  }
                                   format={[Function]}
                                   label="Rate"
                                   name="tiers[0].rate"
                                   parse={[Function]}
                                   placeholder="Enter here"
-                                  side="left"
+                                  readOnly={true}
                                   type="text"
                                 >
                                   <InputField2
                                     description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens"
                                     disabled={true}
-                                    errorStyle={
-                                      Object {
-                                        "color": "red",
-                                        "fontSize": "12px",
-                                        "fontWeight": "bold",
-                                        "height": "20px",
-                                        "width": "100%",
-                                      }
-                                    }
                                     input={
                                       Object {
                                         "name": "tiers[0].rate",
@@ -3891,7 +3807,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                       }
                                     }
                                     placeholder="Enter here"
-                                    side="left"
+                                    readOnly={true}
                                     type="text"
                                   >
                                     <div
@@ -3922,7 +3838,6 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         </div>
                                       </FormControlTitle>
                                       <TextField
-                                        autoComplete="off"
                                         disabled={true}
                                         id="tiers[0].rate"
                                         name="tiers[0].rate"
@@ -3930,10 +3845,12 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         onChange={[Function]}
                                         onFocus={[Function]}
                                         placeholder="Enter here"
+                                        readOnly={true}
                                         type="text"
                                         value="123"
                                       >
                                         <input
+                                          autoComplete="off"
                                           className="sw-TextField"
                                           disabled={true}
                                           id="tiers[0].rate"
@@ -3942,6 +3859,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                           onChange={[Function]}
                                           onFocus={[Function]}
                                           placeholder="Enter here"
+                                          readOnly={true}
                                           type="text"
                                           value="123"
                                         />
@@ -3967,54 +3885,31 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                   </InputField2>
                                 </Field>
                               </CrowdsaleRate>
+                            </div>
+                            <div
+                              className="mng-ManageTierBlock_Item"
+                            >
                               <Supply
                                 disabled={true}
-                                errorStyle={
-                                  Object {
-                                    "color": "red",
-                                    "fontSize": "12px",
-                                    "fontWeight": "bold",
-                                    "height": "20px",
-                                    "width": "100%",
-                                  }
-                                }
                                 name="tiers[0].supply"
-                                side="right"
+                                readOnly={true}
                               >
                                 <Field
                                   component={[Function]}
                                   description="How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers"
                                   disabled={true}
-                                  errorStyle={
-                                    Object {
-                                      "color": "red",
-                                      "fontSize": "12px",
-                                      "fontWeight": "bold",
-                                      "height": "20px",
-                                      "width": "100%",
-                                    }
-                                  }
                                   format={[Function]}
                                   label="Supply"
                                   name="tiers[0].supply"
                                   parse={[Function]}
                                   placeholder="Enter here"
-                                  side="right"
+                                  readOnly={true}
                                   type="text"
                                   val={null}
                                 >
                                   <InputField2
                                     description="How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers"
                                     disabled={true}
-                                    errorStyle={
-                                      Object {
-                                        "color": "red",
-                                        "fontSize": "12px",
-                                        "fontWeight": "bold",
-                                        "height": "20px",
-                                        "width": "100%",
-                                      }
-                                    }
                                     input={
                                       Object {
                                         "name": "tiers[0].supply",
@@ -4044,7 +3939,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                       }
                                     }
                                     placeholder="Enter here"
-                                    side="right"
+                                    readOnly={true}
                                     type="text"
                                     val={null}
                                   >
@@ -4076,7 +3971,6 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         </div>
                                       </FormControlTitle>
                                       <TextField
-                                        autoComplete="off"
                                         disabled={true}
                                         id="tiers[0].supply"
                                         name="tiers[0].supply"
@@ -4084,10 +3978,12 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         onChange={[Function]}
                                         onFocus={[Function]}
                                         placeholder="Enter here"
+                                        readOnly={true}
                                         type="text"
                                         value="132"
                                       >
                                         <input
+                                          autoComplete="off"
                                           className="sw-TextField"
                                           disabled={true}
                                           id="tiers[0].supply"
@@ -4096,6 +3992,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                           onChange={[Function]}
                                           onFocus={[Function]}
                                           placeholder="Enter here"
+                                          readOnly={true}
                                           type="text"
                                           value="132"
                                         />
@@ -4123,39 +4020,21 @@ exports[`ManageForm should render the component with tiers 1`] = `
                               </Supply>
                             </div>
                             <div
-                              className="input-block-container"
+                              className="mng-ManageTierBlock_Item"
                             >
                               <Field
                                 component={[Function]}
                                 disabled={false}
-                                errorStyle={
-                                  Object {
-                                    "color": "red",
-                                    "fontSize": "12px",
-                                    "fontWeight": "bold",
-                                    "height": "20px",
-                                    "width": "100%",
-                                  }
-                                }
                                 format={[Function]}
                                 label="Contributor min cap"
                                 name="tiers[0].minCap"
                                 parse={[Function]}
-                                side="left"
+                                readOnly={false}
                                 type="number"
                                 validate={[Function]}
                               >
                                 <InputField2
                                   disabled={false}
-                                  errorStyle={
-                                    Object {
-                                      "color": "red",
-                                      "fontSize": "12px",
-                                      "fontWeight": "bold",
-                                      "height": "20px",
-                                      "width": "100%",
-                                    }
-                                  }
                                   input={
                                     Object {
                                       "name": "tiers[0].minCap",
@@ -4186,7 +4065,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                       "visited": false,
                                     }
                                   }
-                                  side="left"
+                                  readOnly={false}
                                   type="number"
                                 >
                                   <div
@@ -4206,17 +4085,18 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                       </div>
                                     </FormControlTitle>
                                     <TextField
-                                      autoComplete="off"
                                       disabled={false}
                                       id="tiers[0].minCap"
                                       name="tiers[0].minCap"
                                       onBlur={[Function]}
                                       onChange={[Function]}
                                       onFocus={[Function]}
+                                      readOnly={false}
                                       type="number"
                                       value="0"
                                     >
                                       <input
+                                        autoComplete="off"
                                         className="sw-TextField"
                                         disabled={false}
                                         id="tiers[0].minCap"
@@ -4224,6 +4104,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         onBlur={[Function]}
                                         onChange={[Function]}
                                         onFocus={[Function]}
+                                        readOnly={false}
                                         type="number"
                                         value="0"
                                       />
@@ -4251,110 +4132,42 @@ exports[`ManageForm should render the component with tiers 1`] = `
                             </div>
                           </div>
                         </div>
-                      </div>
-                      <div
-                        className="steps"
-                        key="1"
-                      >
                         <div
-                          className="steps-content container"
+                          className="mng-ManageTierBlock_Content"
+                          key="1"
                         >
+                          <h3
+                            className="mng-ManageTierBlock_Title"
+                          >
+                            Tier Name: 
+                            Tier 2
+                          </h3>
                           <div
-                            className=""
+                            className="mng-ManageTierBlock_ItemsContainer"
                           >
                             <div
-                              className="input-block-container"
-                            >
-                              <InputField
-                                disabled={true}
-                                name="tiers[1].crowdsale_name"
-                                side="left"
-                                title="Tier setup name"
-                                type="text"
-                                value="Tier 2"
-                              >
-                                <div
-                                  className="sw-InputField "
-                                >
-                                  <FormControlTitle
-                                    title="Tier setup name"
-                                  >
-                                    <div
-                                      className="sw-FormControlTitle"
-                                    >
-                                      <label
-                                        className="sw-FormControlTitle_Label"
-                                      >
-                                        Tier setup name
-                                      </label>
-                                    </div>
-                                  </FormControlTitle>
-                                  <TextField
-                                    disabled={true}
-                                    id="tiers[1].crowdsale_name"
-                                    type="text"
-                                    value="Tier 2"
-                                  >
-                                    <input
-                                      className="sw-TextField"
-                                      disabled={true}
-                                      type="text"
-                                      value="Tier 2"
-                                    />
-                                  </TextField>
-                                </div>
-                              </InputField>
-                            </div>
-                            <div
-                              className="input-block-container"
+                              className="mng-ManageTierBlock_Item"
                             >
                               <CrowdsaleStartTime
                                 disabled={true}
-                                errorStyle={
-                                  Object {
-                                    "color": "red",
-                                    "fontSize": "12px",
-                                    "fontWeight": "bold",
-                                    "height": "20px",
-                                    "width": "100%",
-                                  }
-                                }
                                 index={1}
                                 name="tiers[1].startTime"
-                                side="left"
+                                readOnly={true}
                               >
                                 <Field
                                   component={[Function]}
                                   description="Date and time when the tier starts. Can't be in the past from the current moment."
                                   disabled={true}
-                                  errorStyle={
-                                    Object {
-                                      "color": "red",
-                                      "fontSize": "12px",
-                                      "fontWeight": "bold",
-                                      "height": "20px",
-                                      "width": "100%",
-                                    }
-                                  }
                                   format={[Function]}
                                   label="Start Time"
                                   name="tiers[1].startTime"
                                   parse={[Function]}
-                                  side="left"
+                                  readOnly={true}
                                   type="datetime-local"
                                 >
                                   <InputField2
                                     description="Date and time when the tier starts. Can't be in the past from the current moment."
                                     disabled={true}
-                                    errorStyle={
-                                      Object {
-                                        "color": "red",
-                                        "fontSize": "12px",
-                                        "fontWeight": "bold",
-                                        "height": "20px",
-                                        "width": "100%",
-                                      }
-                                    }
                                     input={
                                       Object {
                                         "name": "tiers[1].startTime",
@@ -4383,7 +4196,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         "visited": false,
                                       }
                                     }
-                                    side="left"
+                                    readOnly={true}
                                     type="datetime-local"
                                   >
                                     <div
@@ -4414,17 +4227,18 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         </div>
                                       </FormControlTitle>
                                       <TextField
-                                        autoComplete="off"
                                         disabled={true}
                                         id="tiers[1].startTime"
                                         name="tiers[1].startTime"
                                         onBlur={[Function]}
                                         onChange={[Function]}
                                         onFocus={[Function]}
+                                        readOnly={true}
                                         type="datetime-local"
                                         value="2018-04-17T00:00"
                                       >
                                         <input
+                                          autoComplete="off"
                                           className="sw-TextField"
                                           disabled={true}
                                           id="tiers[1].startTime"
@@ -4432,6 +4246,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                           onBlur={[Function]}
                                           onChange={[Function]}
                                           onFocus={[Function]}
+                                          readOnly={true}
                                           type="datetime-local"
                                           value="2018-04-17T00:00"
                                         />
@@ -4457,53 +4272,30 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                   </InputField2>
                                 </Field>
                               </CrowdsaleStartTime>
+                            </div>
+                            <div
+                              className="mng-ManageTierBlock_Item"
+                            >
                               <CrowdsaleEndTime
                                 disabled={true}
-                                errorStyle={
-                                  Object {
-                                    "color": "red",
-                                    "fontSize": "12px",
-                                    "fontWeight": "bold",
-                                    "height": "20px",
-                                    "width": "100%",
-                                  }
-                                }
                                 index={1}
                                 name="tiers[1].endTime"
-                                side="right"
+                                readOnly={true}
                               >
                                 <Field
                                   component={[Function]}
                                   description="Date and time when the tier ends. Can be only in the future."
                                   disabled={true}
-                                  errorStyle={
-                                    Object {
-                                      "color": "red",
-                                      "fontSize": "12px",
-                                      "fontWeight": "bold",
-                                      "height": "20px",
-                                      "width": "100%",
-                                    }
-                                  }
                                   format={[Function]}
                                   label="End Time"
                                   name="tiers[1].endTime"
                                   parse={[Function]}
-                                  side="right"
+                                  readOnly={true}
                                   type="datetime-local"
                                 >
                                   <InputField2
                                     description="Date and time when the tier ends. Can be only in the future."
                                     disabled={true}
-                                    errorStyle={
-                                      Object {
-                                        "color": "red",
-                                        "fontSize": "12px",
-                                        "fontWeight": "bold",
-                                        "height": "20px",
-                                        "width": "100%",
-                                      }
-                                    }
                                     input={
                                       Object {
                                         "name": "tiers[1].endTime",
@@ -4532,7 +4324,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         "visited": false,
                                       }
                                     }
-                                    side="right"
+                                    readOnly={true}
                                     type="datetime-local"
                                   >
                                     <div
@@ -4563,17 +4355,18 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         </div>
                                       </FormControlTitle>
                                       <TextField
-                                        autoComplete="off"
                                         disabled={true}
                                         id="tiers[1].endTime"
                                         name="tiers[1].endTime"
                                         onBlur={[Function]}
                                         onChange={[Function]}
                                         onFocus={[Function]}
+                                        readOnly={true}
                                         type="datetime-local"
                                         value="2018-04-21T00:00"
                                       >
                                         <input
+                                          autoComplete="off"
                                           className="sw-TextField"
                                           disabled={true}
                                           id="tiers[1].endTime"
@@ -4581,6 +4374,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                           onBlur={[Function]}
                                           onChange={[Function]}
                                           onFocus={[Function]}
+                                          readOnly={true}
                                           type="datetime-local"
                                           value="2018-04-21T00:00"
                                         />
@@ -4608,55 +4402,28 @@ exports[`ManageForm should render the component with tiers 1`] = `
                               </CrowdsaleEndTime>
                             </div>
                             <div
-                              className="input-block-container"
+                              className="mng-ManageTierBlock_Item"
                             >
                               <CrowdsaleRate
                                 disabled={true}
-                                errorStyle={
-                                  Object {
-                                    "color": "red",
-                                    "fontSize": "12px",
-                                    "fontWeight": "bold",
-                                    "height": "20px",
-                                    "width": "100%",
-                                  }
-                                }
                                 name="tiers[1].rate"
-                                side="left"
+                                readOnly={true}
                               >
                                 <Field
                                   component={[Function]}
                                   description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens"
                                   disabled={true}
-                                  errorStyle={
-                                    Object {
-                                      "color": "red",
-                                      "fontSize": "12px",
-                                      "fontWeight": "bold",
-                                      "height": "20px",
-                                      "width": "100%",
-                                    }
-                                  }
                                   format={[Function]}
                                   label="Rate"
                                   name="tiers[1].rate"
                                   parse={[Function]}
                                   placeholder="Enter here"
-                                  side="left"
+                                  readOnly={true}
                                   type="text"
                                 >
                                   <InputField2
                                     description="Exchange rate Ethereum to Tokens. If it's 100, then for 1 Ether you can buy 100 tokens"
                                     disabled={true}
-                                    errorStyle={
-                                      Object {
-                                        "color": "red",
-                                        "fontSize": "12px",
-                                        "fontWeight": "bold",
-                                        "height": "20px",
-                                        "width": "100%",
-                                      }
-                                    }
                                     input={
                                       Object {
                                         "name": "tiers[1].rate",
@@ -4686,7 +4453,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                       }
                                     }
                                     placeholder="Enter here"
-                                    side="left"
+                                    readOnly={true}
                                     type="text"
                                   >
                                     <div
@@ -4717,7 +4484,6 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         </div>
                                       </FormControlTitle>
                                       <TextField
-                                        autoComplete="off"
                                         disabled={true}
                                         id="tiers[1].rate"
                                         name="tiers[1].rate"
@@ -4725,10 +4491,12 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         onChange={[Function]}
                                         onFocus={[Function]}
                                         placeholder="Enter here"
+                                        readOnly={true}
                                         type="text"
                                         value="55"
                                       >
                                         <input
+                                          autoComplete="off"
                                           className="sw-TextField"
                                           disabled={true}
                                           id="tiers[1].rate"
@@ -4737,6 +4505,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                           onChange={[Function]}
                                           onFocus={[Function]}
                                           placeholder="Enter here"
+                                          readOnly={true}
                                           type="text"
                                           value="55"
                                         />
@@ -4762,54 +4531,31 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                   </InputField2>
                                 </Field>
                               </CrowdsaleRate>
+                            </div>
+                            <div
+                              className="mng-ManageTierBlock_Item"
+                            >
                               <Supply
                                 disabled={true}
-                                errorStyle={
-                                  Object {
-                                    "color": "red",
-                                    "fontSize": "12px",
-                                    "fontWeight": "bold",
-                                    "height": "20px",
-                                    "width": "100%",
-                                  }
-                                }
                                 name="tiers[1].supply"
-                                side="right"
+                                readOnly={true}
                               >
                                 <Field
                                   component={[Function]}
                                   description="How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers"
                                   disabled={true}
-                                  errorStyle={
-                                    Object {
-                                      "color": "red",
-                                      "fontSize": "12px",
-                                      "fontWeight": "bold",
-                                      "height": "20px",
-                                      "width": "100%",
-                                    }
-                                  }
                                   format={[Function]}
                                   label="Supply"
                                   name="tiers[1].supply"
                                   parse={[Function]}
                                   placeholder="Enter here"
-                                  side="right"
+                                  readOnly={true}
                                   type="text"
                                   val={null}
                                 >
                                   <InputField2
                                     description="How many tokens will be sold on this tier. Cap of crowdsale equals to sum of supply of all tiers"
                                     disabled={true}
-                                    errorStyle={
-                                      Object {
-                                        "color": "red",
-                                        "fontSize": "12px",
-                                        "fontWeight": "bold",
-                                        "height": "20px",
-                                        "width": "100%",
-                                      }
-                                    }
                                     input={
                                       Object {
                                         "name": "tiers[1].supply",
@@ -4839,7 +4585,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                       }
                                     }
                                     placeholder="Enter here"
-                                    side="right"
+                                    readOnly={true}
                                     type="text"
                                     val={null}
                                   >
@@ -4871,7 +4617,6 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         </div>
                                       </FormControlTitle>
                                       <TextField
-                                        autoComplete="off"
                                         disabled={true}
                                         id="tiers[1].supply"
                                         name="tiers[1].supply"
@@ -4879,10 +4624,12 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         onChange={[Function]}
                                         onFocus={[Function]}
                                         placeholder="Enter here"
+                                        readOnly={true}
                                         type="text"
                                         value="156"
                                       >
                                         <input
+                                          autoComplete="off"
                                           className="sw-TextField"
                                           disabled={true}
                                           id="tiers[1].supply"
@@ -4891,6 +4638,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                           onChange={[Function]}
                                           onFocus={[Function]}
                                           placeholder="Enter here"
+                                          readOnly={true}
                                           type="text"
                                           value="156"
                                         />
@@ -4918,39 +4666,21 @@ exports[`ManageForm should render the component with tiers 1`] = `
                               </Supply>
                             </div>
                             <div
-                              className="input-block-container"
+                              className="mng-ManageTierBlock_Item"
                             >
                               <Field
                                 component={[Function]}
                                 disabled={true}
-                                errorStyle={
-                                  Object {
-                                    "color": "red",
-                                    "fontSize": "12px",
-                                    "fontWeight": "bold",
-                                    "height": "20px",
-                                    "width": "100%",
-                                  }
-                                }
                                 format={[Function]}
                                 label="Contributor min cap"
                                 name="tiers[1].minCap"
                                 parse={[Function]}
-                                side="left"
+                                readOnly={true}
                                 type="number"
                                 validate={[Function]}
                               >
                                 <InputField2
                                   disabled={true}
-                                  errorStyle={
-                                    Object {
-                                      "color": "red",
-                                      "fontSize": "12px",
-                                      "fontWeight": "bold",
-                                      "height": "20px",
-                                      "width": "100%",
-                                    }
-                                  }
                                   input={
                                     Object {
                                       "name": "tiers[1].minCap",
@@ -4981,7 +4711,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                       "visited": false,
                                     }
                                   }
-                                  side="left"
+                                  readOnly={true}
                                   type="number"
                                 >
                                   <div
@@ -5001,17 +4731,18 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                       </div>
                                     </FormControlTitle>
                                     <TextField
-                                      autoComplete="off"
                                       disabled={true}
                                       id="tiers[1].minCap"
                                       name="tiers[1].minCap"
                                       onBlur={[Function]}
                                       onChange={[Function]}
                                       onFocus={[Function]}
+                                      readOnly={true}
                                       type="number"
                                       value="0"
                                     >
                                       <input
+                                        autoComplete="off"
                                         className="sw-TextField"
                                         disabled={true}
                                         id="tiers[1].minCap"
@@ -5019,6 +4750,7 @@ exports[`ManageForm should render the component with tiers 1`] = `
                                         onBlur={[Function]}
                                         onChange={[Function]}
                                         onFocus={[Function]}
+                                        readOnly={true}
                                         type="number"
                                         value="0"
                                       />
@@ -5047,162 +4779,164 @@ exports[`ManageForm should render the component with tiers 1`] = `
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </_class>
-                </inject-_class-with-crowdsaleStore-tokenStore>
-              </ReactFinalFormFieldArray(4.6.1)(undefined)>
-              <FormSpy
-                onChange={
-                  [MockFunction] {
-                    "calls": Array [
-                      Array [
-                        Object {
-                          "values": Object {
-                            "tiers": Array [
-                              Object {
-                                "addresses": Object {
-                                  "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
+                    </_class>
+                  </inject-_class-with-crowdsaleStore-tokenStore>
+                </ReactFinalFormFieldArray(4.6.1)(undefined)>
+                <FormSpy
+                  onChange={
+                    [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          Object {
+                            "values": Object {
+                              "tiers": Array [
+                                Object {
+                                  "addresses": Object {
+                                    "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
+                                  },
+                                  "duration": "1528827423500",
+                                  "endTime": "2018-04-17T00:00",
+                                  "index": "0",
+                                  "isWhitelisted": "yes",
+                                  "minCap": "0",
+                                  "rate": "123",
+                                  "startTime": "2018-04-13T16:07",
+                                  "supply": "132",
+                                  "tier": "Tier 1",
+                                  "updatable": true,
+                                  "whitelist": Array [
+                                    Object {
+                                      "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
+                                      "max": 50505,
+                                      "min": 1234,
+                                      "stored": true,
+                                    },
+                                    Object {
+                                      "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+                                      "max": 50505,
+                                      "min": 1234,
+                                      "stored": true,
+                                    },
+                                    Object {
+                                      "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
+                                      "max": 50505,
+                                      "min": 1234,
+                                      "stored": true,
+                                    },
+                                    Object {
+                                      "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
+                                      "max": 50505,
+                                      "min": 1234,
+                                      "stored": true,
+                                    },
+                                  ],
                                 },
-                                "duration": "1528827423500",
-                                "endTime": "2018-04-17T00:00",
-                                "index": "0",
-                                "isWhitelisted": "yes",
-                                "minCap": "0",
-                                "rate": "123",
-                                "startTime": "2018-04-13T16:07",
-                                "supply": "132",
-                                "tier": "Tier 1",
-                                "updatable": true,
-                                "whitelist": Array [
-                                  Object {
-                                    "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
-                                    "max": 50505,
-                                    "min": 1234,
-                                    "stored": true,
+                                Object {
+                                  "addresses": Object {
+                                    "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
                                   },
-                                  Object {
-                                    "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
-                                    "max": 50505,
-                                    "min": 1234,
-                                    "stored": true,
-                                  },
-                                  Object {
-                                    "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
-                                    "max": 50505,
-                                    "min": 1234,
-                                    "stored": true,
-                                  },
-                                  Object {
-                                    "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
-                                    "max": 50505,
-                                    "min": 1234,
-                                    "stored": true,
-                                  },
-                                ],
-                              },
-                              Object {
-                                "addresses": Object {
-                                  "crowdsaleAddress": "0x42a7b7dd785cd69714a189dffb3fd7d7174edc9ece837694ce50f7078f7c31ae",
+                                  "duration": "1528827423500",
+                                  "endTime": "2018-04-21T00:00",
+                                  "index": "1",
+                                  "isWhitelisted": "yes",
+                                  "minCap": "0",
+                                  "rate": "55",
+                                  "startTime": "2018-04-17T00:00",
+                                  "supply": "156",
+                                  "tier": "Tier 2",
+                                  "updatable": false,
+                                  "whitelist": Array [
+                                    Object {
+                                      "addr": "0x1dF62f291b2E969fB0849d99D9Ce41e2F137006e",
+                                      "max": 50505,
+                                      "min": 1234,
+                                      "stored": true,
+                                    },
+                                    Object {
+                                      "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
+                                      "max": 50505,
+                                      "min": 1234,
+                                      "stored": true,
+                                    },
+                                    Object {
+                                      "addr": "0x3E5e9111Ae8eB78Fe1CC3bb8915d5D461F3Ef9A9",
+                                      "max": 50505,
+                                      "min": 1234,
+                                      "stored": true,
+                                    },
+                                    Object {
+                                      "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
+                                      "max": 50505,
+                                      "min": 1234,
+                                      "stored": true,
+                                    },
+                                    Object {
+                                      "addr": "0x95cED938F7991cd0dFcb48F0a06a40FA1aF46EBC",
+                                      "max": 50505,
+                                      "min": 1234,
+                                      "stored": true,
+                                    },
+                                    Object {
+                                      "addr": "0xACa94ef8bD5ffEE41947b4585a84BdA5a3d3DA6E",
+                                      "max": 50505,
+                                      "min": 1234,
+                                      "stored": true,
+                                    },
+                                    Object {
+                                      "addr": "0xd03ea8624C8C5987235048901fB614fDcA89b117",
+                                      "max": 50505,
+                                      "min": 1234,
+                                      "stored": true,
+                                    },
+                                    Object {
+                                      "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
+                                      "max": 50505,
+                                      "min": 1234,
+                                      "stored": true,
+                                    },
+                                    Object {
+                                      "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
+                                      "max": 50505,
+                                      "min": 1234,
+                                      "stored": true,
+                                    },
+                                  ],
                                 },
-                                "duration": "1528827423500",
-                                "endTime": "2018-04-21T00:00",
-                                "index": "1",
-                                "isWhitelisted": "yes",
-                                "minCap": "0",
-                                "rate": "55",
-                                "startTime": "2018-04-17T00:00",
-                                "supply": "156",
-                                "tier": "Tier 2",
-                                "updatable": false,
-                                "whitelist": Array [
-                                  Object {
-                                    "addr": "0x1dF62f291b2E969fB0849d99D9Ce41e2F137006e",
-                                    "max": 50505,
-                                    "min": 1234,
-                                    "stored": true,
-                                  },
-                                  Object {
-                                    "addr": "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b",
-                                    "max": 50505,
-                                    "min": 1234,
-                                    "stored": true,
-                                  },
-                                  Object {
-                                    "addr": "0x3E5e9111Ae8eB78Fe1CC3bb8915d5D461F3Ef9A9",
-                                    "max": 50505,
-                                    "min": 1234,
-                                    "stored": true,
-                                  },
-                                  Object {
-                                    "addr": "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
-                                    "max": 50505,
-                                    "min": 1234,
-                                    "stored": true,
-                                  },
-                                  Object {
-                                    "addr": "0x95cED938F7991cd0dFcb48F0a06a40FA1aF46EBC",
-                                    "max": 50505,
-                                    "min": 1234,
-                                    "stored": true,
-                                  },
-                                  Object {
-                                    "addr": "0xACa94ef8bD5ffEE41947b4585a84BdA5a3d3DA6E",
-                                    "max": 50505,
-                                    "min": 1234,
-                                    "stored": true,
-                                  },
-                                  Object {
-                                    "addr": "0xd03ea8624C8C5987235048901fB614fDcA89b117",
-                                    "max": 50505,
-                                    "min": 1234,
-                                    "stored": true,
-                                  },
-                                  Object {
-                                    "addr": "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d",
-                                    "max": 50505,
-                                    "min": 1234,
-                                    "stored": true,
-                                  },
-                                  Object {
-                                    "addr": "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0",
-                                    "max": 50505,
-                                    "min": 1234,
-                                    "stored": true,
-                                  },
-                                ],
-                              },
-                            ],
+                              ],
+                            },
                           },
+                        ],
+                      ],
+                      "results": Array [
+                        Object {
+                          "isThrow": false,
+                          "value": undefined,
                         },
                       ],
-                    ],
-                    "results": Array [
-                      Object {
-                        "isThrow": false,
-                        "value": undefined,
-                      },
-                    ],
+                    }
                   }
-                }
-                subscription={
-                  Object {
-                    "values": true,
+                  subscription={
+                    Object {
+                      "values": true,
+                    }
                   }
-                }
-              />
-              <div
-                className="steps"
-              >
+                />
                 <div
-                  className="button-container"
+                  className="mng-ManageForm_ButtonsContainer"
                 >
-                  <button
-                    className="no_arrow button button_fill button_no_border button_disabled"
+                  <Button
+                    buttonText="Save"
                     disabled={true}
                     type="submit"
                   >
-                    Save
-                  </button>
+                    <button
+                      className="sw-Button "
+                      disabled={true}
+                      type="submit"
+                    >
+                      Save
+                    </button>
+                  </Button>
                 </div>
               </div>
             </form>

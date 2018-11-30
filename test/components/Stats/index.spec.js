@@ -4,7 +4,7 @@ import { Provider } from 'mobx-react'
 import { configure } from 'enzyme'
 import renderer from 'react-test-renderer'
 import { MemoryRouter } from 'react-router'
-import { Stats } from '../../../src/components/stats/index'
+import { Stats } from '../../../src/components/Stats/index'
 import { web3Store, statsStore } from '../../../src/stores'
 
 configure({ adapter: new Adapter() })

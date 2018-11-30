@@ -13,10 +13,8 @@ describe(`ContributeDataList`, () => {
   it(`should contain the current account address, crowdsale address and a copy button`, () => {
     const wrapper = mount(<ContributeDataList currentAccount={currentAccount} crowdsaleAddress={crowdsaleAddress} />)
     const dataItems = wrapper.find('.cnt-ContributeDataList_Item')
-    const copyButton = wrapper.find('.sw-ButtonCopyToClipboard')
 
     expect(dataItems.length).toBe(2)
-    expect(copyButton.length).toBe(1)
   })
 
   it(`should contain only one children`, () => {

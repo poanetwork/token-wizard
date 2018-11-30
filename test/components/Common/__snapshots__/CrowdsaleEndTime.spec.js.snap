@@ -24,6 +24,7 @@ exports[`CrowdsaleEndTime Rendering should render CrowdsaleEndTime component 1`]
     </div>
   </div>
   <input
+    autoComplete="off"
     className="sw-TextField"
     disabled={false}
     id="tiers[0].endTime"
@@ -61,6 +62,7 @@ exports[`CrowdsaleEndTime Rendering should render CrowdsaleEndTime component if 
     </div>
   </div>
   <input
+    autoComplete="off"
     className="sw-TextField"
     disabled={true}
     id="tiers[0].endTime"

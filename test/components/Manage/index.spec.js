@@ -4,7 +4,7 @@ import { Provider } from 'mobx-react'
 import { configure } from 'enzyme'
 import renderer from 'react-test-renderer'
 import { MemoryRouter } from 'react-router'
-import { Manage } from '../../../src/components/manage/index'
+import { Manage } from '../../../src/components/Manage/index'
 import {
   crowdsaleStore,
   web3Store,

@@ -24,6 +24,7 @@ exports[`Supply  should render Supply component 1`] = `
     </div>
   </div>
   <input
+    autoComplete="off"
     className="sw-TextField"
     disabled={false}
     id="Supply"

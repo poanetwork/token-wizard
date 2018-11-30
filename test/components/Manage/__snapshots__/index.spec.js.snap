@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Crowdsales should render screen  1`] = `
-<div>
+exports[`Manage index should render Manage 1`] = `
+<div
+  className="mng-Manage"
+>
   <section
     className="lo-MenuBarAndContent"
   >
@@ -33,7 +35,7 @@ exports[`Crowdsales should render screen  1`] = `
         </div>
         <div
           className="st-StepItem
-          "
+        active  "
         >
           <div
             className="st-StepItem_Circle"
@@ -61,45 +63,55 @@ exports[`Crowdsales should render screen  1`] = `
           <h1
             className="st-SectionInfo_Title"
           >
-            Crowdsale List
+            Manage Crowdsale
           </h1>
           <p
             className="st-SectionInfo_Description"
             dangerouslySetInnerHTML={
               Object {
-                "__html": "The list of your updatable crowdsales. Choose crowdsale address, click Continue and you’ll be able to update the parameters of crowdsale.",
+                "__html": "Here you can manage parameters of your crowdsale campaign.",
               }
             }
           />
         </div>
       </div>
-      <div
-        className="mng-CrowdsalesList"
+      <h3
+        className="sw-BorderedBlockTitle sw-BorderedBlockTitle-margin-bottom-xl"
       >
-        <h2
-          className="mng-CrowdsalesList_Title"
+        <a
+          href="/crowdsale/?undefined=test&networkID=undefined"
+          onClick={[Function]}
         >
-          Select Address
-        </h2>
+          Crowdsale Page
+        </a>
+      </h3>
+      <div
+        className="mng-FinalizeCrowdsaleStep"
+      >
         <div
-          className="mng-CrowdsalesList_Container"
-        />
-        <div
-          className="st-StepContent_Buttons"
+          className="mng-FinalizeCrowdsaleStep_Description"
         >
-          <button
-            className="sw-ButtonContinue "
-            disabled={true}
-            onClick={[Function]}
-            type="button"
-          >
-            <span
-              className="sw-ButtonContinue_Text"
-            >
-              Continue
-            </span>
-          </button>
+          After finalization, it’s not possible to update tiers or buy tokens. All tokens will be movable and reserved tokens will be issued.
         </div>
+        <button
+          className="mng-FinalizeCrowdsaleStep_Button"
+          disabled={true}
+          onClick={[Function]}
+          type="button"
+        >
+          Finalize Crowdsale
+        </button>
+      </div>
+      <div
+        className="st-StepContent_Buttons"
+      >
+        <button
+          className="sw-ButtonBack "
+          onClick={[Function]}
+          type="button"
+        >
+          Back
+        </button>
       </div>
     </div>
   </section>

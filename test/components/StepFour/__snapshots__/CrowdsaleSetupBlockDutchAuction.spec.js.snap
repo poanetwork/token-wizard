@@ -6,26 +6,26 @@ exports[`CrowdsalSetupBlockDutchAuction should render the component  1`] = `
 >
   <DisplayField
     description="Where the money goes after contributors' transactions."
-    extraClass="pb-DisplayField-WalletAddress"
+    extraClassName="pb-DisplayField-WalletAddress"
     title="Wallet Address"
     value="0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1"
   />
   <DisplayField
     description="Whether the unsold tokens will be burnt on finalization, or be sent to the team wallet"
-    extraClass="pb-DisplayField-BurnExcess"
+    extraClassName="pb-DisplayField-BurnExcess"
     title="Burn Excess"
     value="No"
   />
   <DisplayField
     description="Date and time when the crowdsale starts."
-    extraClass="pb-DisplayField-CrowdsaleStartTime"
+    extraClassName="pb-DisplayField-CrowdsaleStartTime"
     mobileTextSize="small"
     title="Crowdsale Start time"
     value="Invalid date"
   />
   <DisplayField
     description="Date and time when the crowdsale ends."
-    extraClass="pb-DisplayField-CrowdsaleEndTime"
+    extraClassName="pb-DisplayField-CrowdsaleEndTime"
     mobileTextSize="small"
     title="Crowdsale End time"
     value="1970-01-01 00:00 (UTC +0000)"

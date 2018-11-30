@@ -44,8 +44,8 @@ export const getNetworkID = () => {
   return isNetworkIDValid(networkID) ? networkID : null
 }
 
-export const setFlatFileContentToState = file => {
-  return fetchFile(file)
+export const setFlatFileContentToState = async file => {
+  return await fetchFile(file)
 }
 
 export const dateToTimestamp = date => new Date(date).getTime()
