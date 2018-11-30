@@ -13,6 +13,11 @@ import {
   goBack,
   toast,
   convertLocationToPath,
+  convertDateToLocalTimezoneInUnix,
+  convertDateToUTCTimezoneToDisplay,
+  getContractBySourceType,
+  getSourceTypeTitle,
+  updateProxyContractInfo,
   uniqueElementsBy
 } from '../../src/utils/utils'
 
@@ -408,6 +413,15 @@ describe('Utils', () => {
       }
       toast.showToaster({ message: 'hello' })
       expect(toast.msg.info()).toBeUndefined()
+    })
+  })
+
+  describe('convertDateToLocalTimezoneInUnix', function() {
+    let testsValues = [{ value: '2018-10-10' }, { value: '2018-01-01' }]
+    testsValues.forEach(testCase => {
+      it(`Should apply toFixed to ${testCase.value}`, () => {
+        expect(typeof convertDateToLocalTimezoneInUnix(testCase.value)).toBe('number')
+      })
     })
   })
 })
