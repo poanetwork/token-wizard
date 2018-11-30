@@ -86,7 +86,11 @@ export const toast = {
       return
     }
 
-    this.msg[type](message, options)
+    if (typeof this.msg[type] === 'function') {
+      this.msg[type](message, options)
+    } else {
+      return
+    }
   }
 }
 
